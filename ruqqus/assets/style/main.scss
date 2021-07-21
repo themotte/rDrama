@@ -47,7 +47,7 @@ $medium-font-size: 0.9rem;
 
 $small-font-size: 12px;
 
-$extra-small-font-size: 11px;
+$extra-small-font-size: 10.1px;
 
 $display5-size:	3rem !default;
 
@@ -89,9 +89,9 @@ $sizes: map-merge(
 
 // Box Shadow
 
-$box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+$box-shadow-sm: 0 0.1px 3px 0 rgba(0, 0, 0, 0.05), 0 0.1px 2px 0 rgba(0, 0, 0, 0.03);
 
-$box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
+$box-shadow: 0 0.1px 3px rgba(0, 0, 0, 0.05), 0 0 0 0.1px rgba(0, 0, 0, 0.05);
 
 // Tool Tips
 
@@ -359,12 +359,12 @@ ol > li::before {
 
 .btn-group.btn-integration {
 	border-radius: $border-radius;
-	border: 1px solid $border-color;
+	border: 0.1px solid $border-color;
 }
 
 .btn-integration {
 	font-weight: $font-weight-bold;
-	border-left: 1px solid $border-color;
+	border-left: 0.1px solid $border-color;
 }
 
 .btn-integration .fab, .btn-integration .fas, .btn-integration .far {
@@ -440,7 +440,7 @@ ol > li::before {
 
 .navbar-light {
 	background-color: $gray-500!important;
-	box-shadow: 0 1px 2px rgba(0,0,0,.15),0 0 2px rgba(0,0,0,.1)!important;
+	box-shadow: 0 0.1px 2px rgba(0,0,0,.15),0 0 2px rgba(0,0,0,.1)!important;
 }
 
 .navbar-toggler-icon {
@@ -484,7 +484,7 @@ ol > li::before {
 }
 
 .tab-bar {
-	box-shadow: inset 0 -1px 0 $border-color;
+	box-shadow: inset 0 -0.1px 0 $border-color;
 	border-top-left-radius: $border-radius;
 	border-top-right-radius: $border-radius;
 	padding: .75rem 1rem 0 1rem;
@@ -775,7 +775,7 @@ label.color-radio span {
 }
 
 .input-group-append-focus {
-	margin-left: -1px;
+	margin-left: -0.1px;
 }
 
 .form-control:hover {
@@ -1075,13 +1075,13 @@ color: $dark;
 // Custom Box Shadows (behaves like borders)
 
 .box-shadow-bottom {
-	box-shadow: inset 0 -1px 0 $border-color;
+	box-shadow: inset 0 -0.1px 0 $border-color;
 }
 
 // Custom Borders
 
 .border-1 {
-	border-width: 1px;
+	border-width: 0.1px;
 	border-style: solid;
 }
 
@@ -1166,7 +1166,7 @@ color: $dark;
 
 //.posts, #thread #main-content-col {
 	//background-color: $light;
-	//border: 1px solid $border-color;
+	//border: 0.1px solid $border-color;
 	//box-shadow: $box-shadow-sm;
 	//border-radius: $border-radius;
 //}
@@ -1185,7 +1185,7 @@ color: $dark;
 }
 
 .scrollspy.sidebar-sticky .list-group {
-	border-left: 1px solid $border-color;
+	border-left: 0.1px solid $border-color;
 }
 .scrollspy.sidebar-sticky .list-group .list-group-item {
 	position: relative;
@@ -1209,7 +1209,7 @@ color: $dark;
 	background-color: transparent;
 	color: $primary;
 	font-weight: $font-weight-bold;
-	left: -1px;
+	left: -0.1px;
 	border-left: solid 2px $primary;
 	z-index: 2;
 }
@@ -1240,7 +1240,7 @@ color: $dark;
 	padding: 1rem;
 	color: $black;
 	//border: solid $border-color;
-	border-width: 0 1px 1px 1px;
+	border-width: 0 0.1px 0.1px 0.1px;
 	border-bottom-left-radius: .35rem;
 	border-bottom-right-radius: .35rem;
 }
@@ -1248,7 +1248,7 @@ color: $dark;
 .sidebar-section {
 	margin-bottom: 1rem;
 	background-color: $gray-700;
-	//border: 1px solid $border-color;
+	//border: 0.1px solid $border-color;
 	//box-shadow: $box-shadow-sm;
 	border-radius: $border-radius;
 	overflow: hidden;
@@ -1264,7 +1264,7 @@ color: $dark;
 	padding-bottom: 1rem;
 	color: $muted;
 	font-weight: $font-weight-bold;
-	border-bottom: 1px solid $border-color;
+	border-bottom: 0.1px solid $border-color;
 }
 
 .sidebar-section.sidebar-trending .trending-hashtag:last-child, .sidebar-section.sidebar-trending .trending-guild:last-of-type {
@@ -1363,7 +1363,7 @@ color: $dark;
 }
 
 .sidebar-section.sidebar-alert {
-	border: 1px solid $border-color;
+	border: 0.1px solid $border-color;
 	//box-shadow: $box-shadow-sm;
 }
 
@@ -1410,7 +1410,7 @@ color: $dark;
 	color: $black;
 	background-color: $light;
 	border-radius: $border-radius;
-	//border: 1px solid $border-color;
+	//border: 0.1px solid $border-color;
 }
 
 .filter-list .filter-item .fa, .filter-list .filter-item .fas, .filter-list .filter-item .far, .filter-list .filter-item .fab, .filter-list .filter-item .fal {
@@ -1467,7 +1467,7 @@ color: $dark;
 	color: $black;
 	background-color: $white;
 	border-radius: $border-radius;
-	border: 1px solid $border-color;
+	border: 0.1px solid $border-color;
 }
 
 .guild-recommendations-list .guild-recommendations-item .fa, .guild-recommendations-list .guild-recommendations-item .fas, .guild-recommendations-list .guild-recommendations-item .far, .guild-recommendations-list .guild-recommendations-item .fab, .guild-recommendations-list .guild-recommendations-item .fal {
@@ -1746,7 +1746,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, #guild.toggle-card-view .posts .card{
-	border: 1px solid $border-color;
+	border: 0.1px solid $border-color;
 	border-radius: $border-radius;
 	margin-top: 1rem;
 	//box-shadow: $box-shadow-sm;
@@ -1755,7 +1755,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 #frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type, #guild.toggle-card-view .posts .card:last-of-type {
 	border-bottom-left-radius: $border-radius;
 	border-bottom-right-radius: $border-radius;
-	border: 1px solid $border-color;
+	border: 0.1px solid $border-color;
 	border-radius: $border-radius;
 }
 
@@ -1840,7 +1840,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	font-weight: $font-weight-bold;
 	color: $black;
 	padding: 0.5rem 1rem;
-	border-bottom: 1px solid $input-border-color;
+	border-bottom: 0.1px solid $input-border-color;
 }
 
 .card {
@@ -1859,11 +1859,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 #frontpage .posts .card:nth-last-of-type(2), #userpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2), #guild .posts .card:nth-last-of-type(2), #settings-guild .posts .card:last-of-type	{
 	border-bottom-left-radius: $border-radius;
 	border-bottom-right-radius: $border-radius;
-	border-bottom: 1px solid $border-color;
+	border-bottom: 0.1px solid $border-color;
 }
 
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card, #guild .posts .card, #settings-guild .posts .card {
-	border-width: 1px 1px 0 1px;
+	border-width: 0.1px 0.1px 0 0.1px;
 	border-color: $border-color;
 	border-style: solid;
 	border-radius: 0;
@@ -2234,7 +2234,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .page-link {
 	font-weight: $font-weight-bold;
 	background-color: $dark;
-	border: 1px solid $dark;
+	border: 0.1px solid $dark;
 }
 
 .page-link:hover {
@@ -2244,7 +2244,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .page-item.disabled .page-link {
 	font-weight: $font-weight-bold;
 	background-color: $dark;
-	border: 1px solid $dark;
+	border: 0.1px solid $dark;
 	opacity: 0.5;
 }
 
@@ -2285,7 +2285,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	width: 100px;
 	height: 70px;
 	object-fit: cover;
-	border: 1px solid $primary;
+	border: 0.1px solid $primary;
 	border-radius: $border-radius;
 	z-index: 2;
 	background-color: $gray-300;
@@ -2320,7 +2320,7 @@ div:hover .thumb-img-link-overlay {
 	color: $white;
 	line-height: 2;
 	text-transform: uppercase;
-	font-size: 11px;
+	font-size: 10.1px;
 }
 
 .embed-lg {
@@ -2416,7 +2416,7 @@ div:hover .thumb-img-link-overlay {
 }
 
 .comment .comment-body .comment-image {
-	border: 1px solid $primary
+	border: 0.1px solid $primary
 }
 
 blockquote {
@@ -2633,7 +2633,7 @@ ul.comment-section {
 	font-weight: 900;
 	border-left: none;
 	color: $gray-500;
-	top: -1px;
+	top: -0.1px;
 	left: -3px;
 	font-size: 10px;
 }
@@ -2686,7 +2686,7 @@ ul.comment-section {
 }
 
 .reaction {
-	border: 1px solid $gray-300;
+	border: 0.1px solid $gray-300;
 	background-color: $light;
 	padding: 0.25rem 0.5rem;
 	border-radius: .35rem;
@@ -2801,7 +2801,7 @@ ul.comment-section {
 }
 
 #settings-guild .settings .settings-section {
-	border: 1px solid $border-color;
+	border: 0.1px solid $border-color;
 }
 
 // Settings Page
@@ -2809,7 +2809,7 @@ ul.comment-section {
 .settings .settings-section {
 	margin-bottom: 3rem;
 	background: $gray-500;
-	border: 1px solid $border-color;
+	border: 0.1px solid $border-color;
 	//box-shadow: $box-shadow-sm;
 	border-radius: $border-radius;
 	overflow: hidden;
@@ -3140,7 +3140,7 @@ ul.comment-section {
 	left: 0;
 	padding: .5rem;
 	width: 100%;
-	border-width: 0 1px 1px 1px;
+	border-width: 0 0.1px 0.1px 0.1px;
 	border-style: solid;
 	border-color: $gray-300;
 	border-bottom-left-radius: .25rem;
@@ -3184,7 +3184,7 @@ ul.comment-section {
 
 .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
 	background-color: $purple;
-	border: 1px solid $purple;
+	border: 0.1px solid $purple;
 }
 
 // Custom Switch (iOS-like toggle)
@@ -3203,7 +3203,7 @@ ul.comment-section {
 .custom-control-input:checked ~ .custom-control-label::before {
 	opacity: 1;
 	background-color: $success;
-	border: $success solid 1px;
+	border: $success solid 0.1px;
 
 }
 
@@ -3218,7 +3218,7 @@ ul.comment-section {
 	pointer-events: all;
 	border-radius: 1rem;
 	background-color: $gray-100;
-	border: $gray-100 solid 1px;
+	border: $gray-100 solid 0.1px;
 	opacity: .7;
 }
 
@@ -3449,14 +3449,14 @@ body, #settings, #notifications, #submit {
 }
 
 #search .search-results.card	{
-	border-bottom: 1px solid $border-color;
-	border-width: 0 0 1px 0;
+	border-bottom: 0.1px solid $border-color;
+	border-width: 0 0 0.1px 0;
 	border-radius: 0;
 }
 
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card, #guild .posts .card {
 	padding: 7px;
-	border-width: 0 0 1px 0;
+	border-width: 0 0 0.1px 0;
 }
 
 #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type {
@@ -3468,7 +3468,7 @@ body, #settings, #notifications, #submit {
 }
 
 #frontpage .posts .card:last-of-type, #search .posts .card:last-of-type {
-	border-bottom: 1px solid $border-color;
+	border-bottom: 0.1px solid $border-color;
 }
 
 #frontpage .posts .card:hover .post-title a, #search .posts .card:hover .post-title a{
@@ -3499,7 +3499,7 @@ body, #settings, #notifications, #submit {
 /*
 
 #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, #guild.toggle-card-view .posts .card {
-	border-width: 0 0 1px 0;
+	border-width: 0 0 0.1px 0;
 	border-color: $border-color;
 	border-style: solid;
 	border-radius: 0;
@@ -4230,7 +4230,7 @@ img.emoji {
     }
     16% {
 		color: red;
-		text-shadow:0px 0px 1px red, 0px 0px 1px red, 0px 0px 1px red, 0px 0px 1px red;
+		text-shadow:0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red;
     }
     32% {
 		color: orange;
@@ -4238,7 +4238,7 @@ img.emoji {
     }
     48% {
 		color: yellow;
-		text-shadow:0px 0px 1px yellow, 0px 0px 1px yellow, 0px 0px 1px yellow, 0px 0px 1px yellow;
+		text-shadow:0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow;
     }
     64% {
 		color: green;
@@ -4246,7 +4246,7 @@ img.emoji {
     }
     80% {
 		color: blue;
-		text-shadow:0px 0px 1px blue, 0px 0px 1px blue, 0px 0px 1px blue, 0px 0px 1px blue;
+		text-shadow:0px 0px 0.1px blue, 0px 0px 0.1px blue, 0px 0px 0.1px blue, 0px 0px 0.1px blue;
     }
     100% {
 		color: violet;

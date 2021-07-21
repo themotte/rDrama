@@ -215,7 +215,7 @@
 
 				<div class="{% if p.is_deleted %}deleted {% endif %}card-block w-100 my-md-auto">
 
-					<div class="post-meta text-left mb--2">
+					<div class="post-meta text-left mb-2">
 						{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-toggle="tooltip" data-placement="bottom" title="Shadowbanned user"></i>&nbsp;{% endif %}
 						{% if p.stickied %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned post"></i>&nbsp;{% endif %}
 						{% if p.is_pinned %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to profile"></i>&nbsp;{% endif %}
