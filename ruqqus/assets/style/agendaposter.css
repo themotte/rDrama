@@ -23,7 +23,7 @@ html {
     font-size: 11px !important
 }
 
-h1, h2, h3, h4, h5, h6, p, span, label {
+/*h1, h2, h3, h4, h5, h6, p, span, label {
  background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
  -webkit-background-clip: text;
  -webkit-text-fill-color: transparent;
@@ -35,4 +35,4 @@ a {
  -webkit-background-clip: text;
  -webkit-text-fill-color: transparent;
  color: transparent;
-}
+}*/
