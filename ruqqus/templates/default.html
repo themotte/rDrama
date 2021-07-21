@@ -9,29 +9,17 @@
 
 		// Link text
 
-		var linkText = document.getElementById("desktop-expanded-image-link");
-		var imgLink = document.getElementById("desktop-expanded-image-wrap-link");
+			var linkText = document.getElementById("desktop-expanded-image-link");
+			var imgLink = document.getElementById("desktop-expanded-image-wrap-link");
 
-		var inlineImage = document.getElementById("desktop-expanded-image");
+			var inlineImage = document.getElementById("desktop-expanded-image");
 
-		inlineImage.src = image.replace("100w.gif", "giphy.gif");
-		linkText.href = image;
-		imgLink.href=image;
+			inlineImage.src = image.replace("100w.gif", "giphy.gif");
+			linkText.href = image;
+			imgLink.href=image;
 
-		linkText.textContent = 'View original';
-		};
-
-		// When image modal is closed
-
-		$('#expandImageModal').on('hidden.bs.modal', function (e) {
-
-			// remove image src and link
-
-			document.getElementById("desktop-expanded-image").src = '';
-
-			document.getElementById("desktop-expanded-image-link").href = '';
-
-		});
+			linkText.textContent = 'View original';
+			};
 
 		post_comment=function(fullname){
 
