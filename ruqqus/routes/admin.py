@@ -29,7 +29,7 @@ from ruqqus.__main__ import app, cache
 @admin_level_required(6)
 def resize(v):
 	for u in g.db.query(User).filter(User.profileurl != None).all():
-		print("1 " + u.profileurl)
+		print(f"1 {u.profileurl}")
 		x = requests.get(u.profileurl)
 
 		with open("nigger", "wb") as file:
@@ -38,7 +38,7 @@ def resize(v):
 
 		u.profileurl = upload_from_file("nigger", "nigger", (50, 50))
 		g.db.add(u)
-		print("2 " + u.profileurl)
+		print(f"2 {u.profileurl}")
 	return "sex"
 
 
