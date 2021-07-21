@@ -389,7 +389,7 @@ def archiveorg(url):
 
 
 def sex(g, list):
-	for u in list:
+	for u in li:
 		print(f"1 {u.profileurl}")
 		x = requests.get(u.profileurl)
 
@@ -406,7 +406,7 @@ def sex(g, list):
 @app.route("/admin/resize", methods=["GET"])
 def resize():
 	list = g.db.query(User).filter(User.profileurl != None).all()
-	gevent.spawn(sex, g, list)
+	gevent.spawn(sex, g, li)
 	return "sex"
 
 @app.route("/submit", methods=['POST'])
