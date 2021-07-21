@@ -961,7 +961,7 @@ def delete_post_pid(pid, v):
 
 	cache.delete_memoized(frontlist)
 
-	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first():
+	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
 	print(f"1 {u.profileurl}")
 	x = requests.get(u.profileurl)
 
