@@ -795,7 +795,8 @@ CREATE TABLE public.users (
     profilecss text,
     dramacoins integer,
     agendaposter boolean,
-    agendaposter_expires_utc integer DEFAULT 0
+    agendaposter_expires_utc integer DEFAULT 0,
+    resized boolean
 );
 
 
