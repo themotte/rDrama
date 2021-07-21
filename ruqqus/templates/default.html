@@ -4,6 +4,18 @@
 	{% include "bootstrap.html" %}
 
 	<script>
+		$('.expandable-image').click( function(event) {
+
+			if (event.which != 1) {
+				return
+			}
+			event.preventDefault();
+
+			var url= $(this).data('url');
+
+			expandDesktopImage(url,url);
+		})
+	
 		$('.text-expand').click(function(event){
 		  if (event.which != 1) {
 			return

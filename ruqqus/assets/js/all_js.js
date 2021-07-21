@@ -713,16 +713,6 @@ $(document).ready(function() {
 		});
 });
 
-$(document).ready(function() {
-	$('#submitform').submit(function() {
-			// disable button
-			$("#create_button").prop("disabled", true);
-			// add spinner to button
-			$("#create_button").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Creating post');
-		});
-});
-
-
 // Mobile bottom navigation bar
 
 window.onload = function () {
@@ -792,15 +782,3 @@ $('.mention-user').click(function (event) {
 	window.location.href='/@' + $(this).data('original-name');
 
 });
-
-$('.expandable-image').click( function(event) {
-
-	if (event.which != 1) {
-		return
-	}
-	event.preventDefault();
-
-	var url= $(this).data('url');
-
-	expandDesktopImage(url,url);
-})
