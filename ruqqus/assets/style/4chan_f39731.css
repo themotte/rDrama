@@ -27671,17 +27671,14 @@ img.emoji {
   0% {
     color: violet;
   }
-  16% {
+  20% {
     color: red;
   }
-  32% {
+  40% {
     color: orange;
   }
-  48% {
+  60% {
     color: yellow;
-  }
-  64% {
-    color: green;
   }
   80% {
     color: blue;
@@ -27924,21 +27921,17 @@ img.emoji {
     color: violet;
     text-shadow: 0px 0px 10px violet, 0px 0px 10px violet, 0px 0px 10px violet, 0px 0px 10px violet;
   }
-  16% {
+  20% {
     color: red;
     text-shadow: 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red;
   }
-  32% {
+  40% {
     color: orange;
     text-shadow: 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange;
   }
-  48% {
+  60% {
     color: yellow;
     text-shadow: 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow;
-  }
-  64% {
-    color: green;
-    text-shadow: 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green, 0px 0px 10px green;
   }
   80% {
     color: blue;
