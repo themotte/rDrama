@@ -49,7 +49,7 @@
 	var userid = document.getElementById("userid").value;
 	if (userid != "nosong")
 	{
-		var audio = new Audio("/songs/{{u.id}}");
+		var audio = new Audio(`/songs/${userid}`);
 		audio.loop=true;
 		audio.play();
 		document.getElementById('userpage').addEventListener('click', () => {
@@ -57,7 +57,7 @@
 		}, {once : true});
 	}
 </script>
-
+<textarea id="userid" style="display: none;">{% if u.song %}{{u.id}}{% else %}nosong{% endif %}</textarea>
 <div class="row d-none d-md-block">
 	<div class="col px-0">
 		<div class="jumbotron jumbotron-fluid jumbotron-guild d-none d-md-block" style="background-image: url({{u.banner_url}})">
