@@ -10,32 +10,6 @@ document.body.addEventListener('keydown', function(event) {
 	}
 });
 
-// 2FA toggle modal
-
-$('#2faModal').on('hidden.bs.modal', function () {
-
-	var box = document.getElementById("2faToggle");
-	
-	box.checked = !box.checked;
-
-});
-
-//email change
-
-// Show confirm password field when user clicks email box
-
-$('#new_email').on('input', function () {
-
-	var id = document.getElementById("email-password");
-	var id2 = document.getElementById("email-password-label");
-	var id3 = document.getElementById("emailpasswordRequired");
-
-	id.classList.remove("d-none");
-	id2.classList.remove("d-none");
-	id3.classList.remove("d-none");
-
-});
-
 //GIFS
 
 	// Identify which comment form to insert GIF into
