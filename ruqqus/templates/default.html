@@ -3,6 +3,26 @@
 <head>
 	{% include "bootstrap.html" %}
 
+	{% if v and v.agendaposter %}
+	<script src="/assets/js/bug-min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		new BugController({
+			imageSprite: "/assets/js/fly-sprite.png",
+			canDie: false,
+			minBugs: 5,
+			maxBugs: 30,
+			mouseOver: "fly"
+		});
+		new SpiderController({
+			imageSprite: "/assets/js/spider-sprite.png",
+			canDie: false,
+			minBugs: 2,
+			maxBugs: 20,
+			mouseOver: "fly"
+		});
+	</script>
+	{% endif %}
+
 	<script>
 
 		// comment collapse
