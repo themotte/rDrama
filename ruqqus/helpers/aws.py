@@ -43,7 +43,7 @@ def upload_from_url(name, url):
 	if tempname.split('.')[-1] in ['jpg', 'jpeg']:
 		piexif.remove(tempname)
 
-	imagurl = upload_file(tempname, tempname, (50, 50))
+	imagurl = upload_from_file(tempname, tempname, (50, 50))
 
 	remove(tempname)
 
