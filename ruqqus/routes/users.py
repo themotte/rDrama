@@ -28,11 +28,9 @@ def user_info(v, username):
 @app.route("/leaderboard", methods=["GET"])
 @auth_desired
 def leaderboard(v):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+	if v and v.is_banned and not v.unban_utc:return render_template("seized.html")
 	users1, users2 = leaderboard()
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2)
-	if request.path == "/": render_template("mods.html", v=v, b=board, me=me)
-	else: return jsonify({"data":[x.json for x in board.mods_list]})
 
 @cache.memoize(timeout=86400)
 def leaderboard():
