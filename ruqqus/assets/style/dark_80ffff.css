@@ -19734,11 +19734,11 @@ button.bg-reddit:focus {
 }
 
 .shadow-sm {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+  box-shadow: 0 0.1px 3px 0 rgba(0, 0, 0, 0.05), 0 0.1px 2px 0 rgba(0, 0, 0, 0.03) !important;
 }
 
 .shadow {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 0.1px 3px rgba(0, 0, 0, 0.05), 0 0 0 0.1px rgba(0, 0, 0, 0.05) !important;
 }
 
 .shadow-lg {
@@ -23699,7 +23699,7 @@ body.using-mouse :focus {
 }
 
 .text-small-extra {
-  font-size: 11px !important;
+  font-size: 10.1px !important;
 }
 
 .display-5 {
@@ -23793,12 +23793,12 @@ ol > li::before {
 
 .btn-group.btn-integration {
   border-radius: 0.35rem;
-  border: 1px solid #303030;
+  border: 0.1px solid #303030;
 }
 
 .btn-integration {
   font-weight: 600;
-  border-left: 1px solid #303030;
+  border-left: 0.1px solid #303030;
 }
 
 .btn-integration .fab, .btn-integration .fas, .btn-integration .far {
@@ -23866,7 +23866,7 @@ ol > li::before {
 
 .navbar-light {
   background-color: #000000 !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 0.1px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.1) !important;
 }
 
 .navbar-toggler-icon {
@@ -23910,7 +23910,7 @@ ol > li::before {
 }
 
 .tab-bar {
-  box-shadow: inset 0 -1px 0 #303030;
+  box-shadow: inset 0 -0.1px 0 #303030;
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
   padding: 0.75rem 1rem 0 1rem;
@@ -24188,7 +24188,7 @@ label.color-radio span {
 }
 
 .input-group-append-focus {
-  margin-left: -1px;
+  margin-left: -0.1px;
 }
 
 .form-control:hover {
@@ -24472,11 +24472,11 @@ a:hover .link-arrow {
 }
 
 .box-shadow-bottom {
-  box-shadow: inset 0 -1px 0 #303030;
+  box-shadow: inset 0 -0.1px 0 #303030;
 }
 
 .border-1 {
-  border-width: 1px;
+  border-width: 0.1px;
   border-style: solid;
 }
 
@@ -24547,7 +24547,7 @@ a:hover .link-arrow {
 }
 
 .post-filter .fa, .post-filter .fas {
-  font-size: 11px;
+  font-size: 10.1px;
   margin-right: 0.5rem;
   opacity: 0.9;
   color: #80ffff;
@@ -24562,7 +24562,7 @@ a:hover .link-arrow {
 }
 
 .scrollspy.sidebar-sticky .list-group {
-  border-left: 1px solid #303030;
+  border-left: 0.1px solid #303030;
 }
 
 .scrollspy.sidebar-sticky .list-group .list-group-item {
@@ -24587,7 +24587,7 @@ a:hover .link-arrow {
   background-color: transparent;
   color: #80ffff;
   font-weight: 600;
-  left: -1px;
+  left: -0.1px;
   border-left: solid 2px #80ffff;
   z-index: 2;
 }
@@ -24615,7 +24615,7 @@ a:hover .link-arrow {
 .sidebar .sidebar-section .body {
   padding: 1rem;
   color: #CFCFCF;
-  border-width: 0 1px 1px 1px;
+  border-width: 0 0.1px 0.1px 0.1px;
   border-bottom-left-radius: 0.35rem;
   border-bottom-right-radius: 0.35rem;
 }
@@ -24636,7 +24636,7 @@ a:hover .link-arrow {
   padding-bottom: 1rem;
   color: #E1E1E1;
   font-weight: 600;
-  border-bottom: 1px solid #303030;
+  border-bottom: 0.1px solid #303030;
 }
 
 .sidebar-section.sidebar-trending .trending-hashtag:last-child, .sidebar-section.sidebar-trending .trending-guild:last-of-type {
@@ -24732,7 +24732,7 @@ a:hover .link-arrow {
 }
 
 .sidebar-section.sidebar-alert {
-  border: 1px solid #303030;
+  border: 0.1px solid #303030;
 }
 
 .sidebar-left .sidebar-section.sidebar-filters {
@@ -24825,7 +24825,7 @@ a:hover .link-arrow {
   color: #CFCFCF;
   background-color: #E1E1E1;
   border-radius: 0.35rem;
-  border: 1px solid #303030;
+  border: 0.1px solid #303030;
 }
 
 .guild-recommendations-list .guild-recommendations-item .fa, .guild-recommendations-list .guild-recommendations-item .fas, .guild-recommendations-list .guild-recommendations-item .far, .guild-recommendations-list .guild-recommendations-item .fab, .guild-recommendations-list .guild-recommendations-item .fal {
@@ -24851,7 +24851,7 @@ a:hover .link-arrow {
   height: 35px;
   object-fit: cover;
   border-radius: 0.35rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 0.1px 3px 0 rgba(0, 0, 0, 0.05), 0 0.1px 2px 0 rgba(0, 0, 0, 0.03);
 }
 
 .sidebar-left .sidebar-section.sidebar-dashboard {
@@ -25094,7 +25094,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, #guild.toggle-card-view .posts .card{
-	border: 1px solid $border-color;
+	border: 0.1px solid $border-color;
 	border-radius: $border-radius;
 	margin-top: 1rem;
 	//box-shadow: $box-shadow-sm;
@@ -25103,7 +25103,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 #frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type, #guild.toggle-card-view .posts .card:last-of-type {
 	border-bottom-left-radius: $border-radius;
 	border-bottom-right-radius: $border-radius;
-	border: 1px solid $border-color;
+	border: 0.1px solid $border-color;
 	border-radius: $border-radius;
 }
 
@@ -25185,7 +25185,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   font-weight: 600;
   color: #CFCFCF;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid #303030;
+  border-bottom: 0.1px solid #303030;
 }
 
 .card {
@@ -25204,11 +25204,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 #frontpage .posts .card:nth-last-of-type(2), #userpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2), #guild .posts .card:nth-last-of-type(2), #settings-guild .posts .card:last-of-type {
   border-bottom-left-radius: 0.35rem;
   border-bottom-right-radius: 0.35rem;
-  border-bottom: 1px solid #303030;
+  border-bottom: 0.1px solid #303030;
 }
 
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card, #guild .posts .card, #settings-guild .posts .card {
-  border-width: 1px 1px 0 1px;
+  border-width: 0.1px 0.1px 0 0.1px;
   border-color: #303030;
   border-style: solid;
   border-radius: 0;
@@ -25278,7 +25278,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
   padding: 0.5rem 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.1px 3px rgba(0, 0, 0, 0.05), 0 0 0 0.1px rgba(0, 0, 0, 0.05);
 }
 
 .modal-header .close {
@@ -25289,7 +25289,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border: none;
   background-color: #303030;
   border-radius: 0.35rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.1px 3px rgba(0, 0, 0, 0.05), 0 0 0 0.1px rgba(0, 0, 0, 0.05);
 }
 
 .modal-footer {
@@ -25569,7 +25569,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .page-link {
   font-weight: 600;
   background-color: #383838;
-  border: 1px solid #383838;
+  border: 0.1px solid #383838;
 }
 
 .page-link:hover {
@@ -25579,7 +25579,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .page-item.disabled .page-link {
   font-weight: 600;
   background-color: #383838;
-  border: 1px solid #383838;
+  border: 0.1px solid #383838;
   opacity: 0.5;
 }
 
@@ -25618,7 +25618,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   width: 100px;
   height: 70px;
   object-fit: cover;
-  border: 1px solid #80ffff;
+  border: 0.1px solid #80ffff;
   border-radius: 0.35rem;
   z-index: 2;
   background-color: #383838;
@@ -25653,7 +25653,7 @@ div:hover .thumb-img-link-overlay {
   color: #E1E1E1;
   line-height: 2;
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: 10.1px;
 }
 
 .embed-lg {
@@ -25744,7 +25744,7 @@ div:hover .thumb-img-link-overlay {
 }
 
 .comment .comment-body .comment-image {
-  border: 1px solid #80ffff;
+  border: 0.1px solid #80ffff;
 }
 
 blockquote {
@@ -25957,7 +25957,7 @@ ul.comment-section {
   font-weight: 900;
   border-left: none;
   color: #000000;
-  top: -1px;
+  top: -0.1px;
   left: -3px;
   font-size: 10px;
 }
@@ -26008,7 +26008,7 @@ ul.comment-section {
 }
 
 .reaction {
-  border: 1px solid #383838;
+  border: 0.1px solid #383838;
   background-color: #000000;
   padding: 0.25rem 0.5rem;
   border-radius: 0.35rem;
@@ -26036,7 +26036,7 @@ ul.comment-section {
 }
 
 .sidebar-post-meta .score-percent {
-  font-size: 11px;
+  font-size: 10.1px;
   color: #000000;
   font-weight: 400;
 }
@@ -26112,13 +26112,13 @@ ul.comment-section {
 }
 
 #settings-guild .settings .settings-section {
-  border: 1px solid #303030;
+  border: 0.1px solid #303030;
 }
 
 .settings .settings-section {
   margin-bottom: 3rem;
   background: #000000;
-  border: 1px solid #303030;
+  border: 0.1px solid #303030;
   border-radius: 0.35rem;
   overflow: hidden;
 }
@@ -26885,7 +26885,7 @@ ul.comment-section {
   left: 0;
   padding: 0.5rem;
   width: 100%;
-  border-width: 0 1px 1px 1px;
+  border-width: 0 0.1px 0.1px 0.1px;
   border-style: solid;
   border-color: #383838;
   border-bottom-left-radius: 0.25rem;
@@ -26925,7 +26925,7 @@ ul.comment-section {
 
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
   background-color: #80ffff;
-  border: 1px solid #80ffff;
+  border: 0.1px solid #80ffff;
 }
 
 .custom-switch {
@@ -26942,7 +26942,7 @@ ul.comment-section {
 .custom-control-input:checked ~ .custom-control-label::before {
   opacity: 1;
   background-color: #38A169;
-  border: #38A169 solid 1px;
+  border: #38A169 solid 0.1px;
 }
 
 .custom-control-input:checked ~ .custom-control-label:hover::before {
@@ -26956,7 +26956,7 @@ ul.comment-section {
   pointer-events: all;
   border-radius: 1rem;
   background-color: #E1E1E1;
-  border: #E1E1E1 solid 1px;
+  border: #E1E1E1 solid 0.1px;
   opacity: 0.7;
 }
 
@@ -27174,14 +27174,14 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   #search .search-results.card {
-    border-bottom: 1px solid #303030;
-    border-width: 0 0 1px 0;
+    border-bottom: 0.1px solid #303030;
+    border-width: 0 0 0.1px 0;
     border-radius: 0;
   }
 
   #frontpage .posts .card, #userpage .posts .card, #search .posts .card, #guild .posts .card {
     padding: 7px;
-    border-width: 0 0 1px 0;
+    border-width: 0 0 0.1px 0;
   }
 
   #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type {
@@ -27193,7 +27193,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   #frontpage .posts .card:last-of-type, #search .posts .card:last-of-type {
-    border-bottom: 1px solid #303030;
+    border-bottom: 0.1px solid #303030;
   }
 
   #frontpage .posts .card:hover .post-title a, #search .posts .card:hover .post-title a {
@@ -27222,7 +27222,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   /*
 
   #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, #guild.toggle-card-view .posts .card {
-  	border-width: 0 0 1px 0;
+  	border-width: 0 0 0.1px 0;
   	border-color: $border-color;
   	border-style: solid;
   	border-radius: 0;
@@ -27926,7 +27926,7 @@ img.emoji {
   }
   16% {
     color: red;
-    text-shadow: 0px 0px 1px red, 0px 0px 1px red, 0px 0px 1px red, 0px 0px 1px red;
+    text-shadow: 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red;
   }
   32% {
     color: orange;
@@ -27934,7 +27934,7 @@ img.emoji {
   }
   48% {
     color: yellow;
-    text-shadow: 0px 0px 1px yellow, 0px 0px 1px yellow, 0px 0px 1px yellow, 0px 0px 1px yellow;
+    text-shadow: 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow;
   }
   64% {
     color: green;
@@ -27942,7 +27942,7 @@ img.emoji {
   }
   80% {
     color: blue;
-    text-shadow: 0px 0px 1px blue, 0px 0px 1px blue, 0px 0px 1px blue, 0px 0px 1px blue;
+    text-shadow: 0px 0px 0.1px blue, 0px 0px 0.1px blue, 0px 0px 0.1px blue, 0px 0px 0.1px blue;
   }
   100% {
     color: violet;
