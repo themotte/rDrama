@@ -188,10 +188,10 @@ def front_all(v):
 
 	if v:
 		defaultsorting = v.defaultsorting
-		defaulttime = v.defaulttime
+		defaulttime = "day"
 	else:
 		defaultsorting = "hot"
-		defaulttime = "all"
+		defaulttime = "day"
 
 	sort=request.args.get("sort", defaultsorting)
 	t=request.args.get('t', defaulttime)
