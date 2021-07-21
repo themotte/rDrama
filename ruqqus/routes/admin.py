@@ -27,17 +27,17 @@ import gevent
 
 def sex():
 	for u in g.db.query(User).filter(User.profileurl != None).all():
-	print(f"1 {u.profileurl}")
-	x = requests.get(u.profileurl)
+		print(f"1 {u.profileurl}")
+		x = requests.get(u.profileurl)
 
-	with open("nigger", "wb") as file:
-		for chunk in x.iter_content(1024):
-			file.write(chunk)
+		with open("nigger", "wb") as file:
+			for chunk in x.iter_content(1024):
+				file.write(chunk)
 
-	u.profileurl = upload_from_file("nigger", "nigger", (50, 50))
-	g.db.add(u)
-	print(f"2 {u.profileurl}")
-	time.sleep(100)
+		u.profileurl = upload_from_file("nigger", "nigger", (50, 50))
+		g.db.add(u)
+		print(f"2 {u.profileurl}")
+		time.sleep(100)
 
 
 @app.route("/admin/resize", methods=["GET"])
