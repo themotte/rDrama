@@ -3,6 +3,27 @@
 <head>
 		{% include "bootstrap.html" %}
 		<script>
+		
+			//Signup js
+			// Display username and password requirements on input
+
+			$('#password-register').on('input', function () {
+
+				var charCount = document.getElementById("password-register").value;
+				var id = document.getElementById("passwordHelpRegister");
+				var successID = document.getElementById("passwordHelpSuccess");
+
+				if (charCount.length >= 8) {
+					id.classList.add("d-none");
+					successID.classList.remove("d-none");
+				}
+				else {
+					id.classList.remove("d-none");
+					successID.classList.add("d-none");
+				};
+
+			});
+		
 			// Check username length, special chars
 
 			$('#username-register').on('input', function () {
