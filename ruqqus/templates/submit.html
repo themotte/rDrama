@@ -3,6 +3,42 @@
 
 <head>
 		<script>
+			// Auto-suggest title given URL
+
+			function autoSuggestTitle()	{
+
+				var urlField = document.getElementById("post-URL");
+
+				var titleField = document.getElementById("post-title");
+
+				var isValidURL = urlField.checkValidity();
+
+				if (isValidURL && urlField.value.length > 0 && titleField.value === "") {
+
+					var x = new XMLHttpRequest();
+					x.withCredentials=true;
+					x.onreadystatechange = function() {
+						if (x.readyState == 4 && x.status == 200) {
+
+							title=JSON.parse(x.responseText)["title"];
+							titleField.value=title;
+
+							checkForRequired()
+						}
+					}
+					x.open('get','/submit/title?url=' + urlField.value);
+					x.send(null);
+
+				};
+
+			};
+
+			// Run AutoSuggestTitle function on load
+
+			if (window.location.pathname=='/submit') {
+				window.onload = autoSuggestTitle();
+			}
+
 			// Paste to create submission
 
 			document.addEventListener('paste', function (event) {
@@ -39,48 +75,47 @@
 
 			function checkForRequired() {
 
-			// Divs
+				// Divs
 
-			var title = document.getElementById("post-title");
+				var title = document.getElementById("post-title");
 
-			var url = document.getElementById("post-URL");
+				var url = document.getElementById("post-URL");
 
-			var text = document.getElementById("post-text");
+				var text = document.getElementById("post-text");
 
-			var button = document.getElementById("create_button");
+				var button = document.getElementById("create_button");
 
-			var image = document.getElementById("file-upload");
+				var image = document.getElementById("file-upload");
 
-			// Toggle reuqired attribute
+				// Toggle reuqired attribute
 
-			if (url.value.length > 0 || image.value.length > 0) {
-				text.required = false;
-				url.required=false;
-			} else if (text.value.length > 0 || image.value.length > 0) {
-				url.required = false;
-			} else {
-				text.required = true;
-				url.required = true;
-			}
+				if (url.value.length > 0 || image.value.length > 0) {
+					text.required = false;
+					url.required=false;
+				} else if (text.value.length > 0 || image.value.length > 0) {
+					url.required = false;
+				} else {
+					text.required = true;
+					url.required = true;
+				}
 
-			// Validity check
+				// Validity check
 
-			var isValidTitle = title.checkValidity();
+				var isValidTitle = title.checkValidity();
 
-			var isValidURL = url.checkValidity();
+				var isValidURL = url.checkValidity();
 
-			var isValidText = text.checkValidity();
+				var isValidText = text.checkValidity();
 
-			// Disable submit button if invalid inputs
+				// Disable submit button if invalid inputs
 
-			if (isValidTitle && (isValidURL || image.value.length>0)) {
-				button.disabled = false;
-			} else if (isValidTitle && isValidText) {
-				button.disabled = false;
-			} else {
-				button.disabled = true;
-			}
-
+				if (isValidTitle && (isValidURL || image.value.length>0)) {
+					button.disabled = false;
+				} else if (isValidTitle && isValidText) {
+					button.disabled = false;
+				} else {
+					button.disabled = true;
+				}
 			}
 		</script>
 		<meta charset="utf-8">
