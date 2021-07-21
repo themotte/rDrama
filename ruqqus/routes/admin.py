@@ -26,13 +26,19 @@ from ruqqus.__main__ import app, cache
 
 
 @app.route("/admin/resize", methods=["GET"])
-@auth_required
+@admin_level_required(6)
 def resize(v):
-	if not (v and v.admin_level == 6): abort(404)
 	for u in g.db.query(User).filter(User.profileurl != None).all():
-		u.profileurl = upload_from_url(u.username, u.profileurl)
+		print("1 " + u.profileurl)
+		x = requests.get(u.profileurl)
+
+		with open(tempname, "wb") as file:
+			for chunk in x.iter_content(1024):
+				file.write(chunk)
+
+		u.profileurl = upload_from_file(tempname, tempname, (50, 50))
 		g.db.add(u)
-		print(u.profileurl)
+		print("2 " + u.profileurl)
 	return "sex"
 
 

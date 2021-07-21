@@ -26,29 +26,6 @@ def check_phash(db, name):
 		).first()
 
 
-def upload_from_url(name, url):
-
-	print('upload from url')
-
-	x = requests.get(url)
-
-	print('got content')
-
-	tempname = name.replace("/", "_")
-
-	with open(tempname, "wb") as file:
-		for chunk in x.iter_content(1024):
-			file.write(chunk)
-
-	if tempname.split('.')[-1] in ['jpg', 'jpeg']:
-		piexif.remove(tempname)
-
-	imagurl = upload_from_file(tempname, tempname, (50, 50))
-
-	remove(tempname)
-
-	return imageurl
-
 def crop_and_resize(img, resize):
 
 	i = img
