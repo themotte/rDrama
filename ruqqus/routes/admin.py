@@ -32,11 +32,11 @@ def resize(v):
 		print("1 " + u.profileurl)
 		x = requests.get(u.profileurl)
 
-		with open(tempname, "wb") as file:
+		with open("nigger", "wb") as file:
 			for chunk in x.iter_content(1024):
 				file.write(chunk)
 
-		u.profileurl = upload_from_file(tempname, tempname, (50, 50))
+		u.profileurl = upload_from_file("nigger", "nigger", (50, 50))
 		g.db.add(u)
 		print("2 " + u.profileurl)
 	return "sex"
