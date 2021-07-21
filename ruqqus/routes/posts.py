@@ -388,8 +388,8 @@ def archiveorg(url):
 	except Exception as e: print(e)
 
 
-def sex(g, list):
-	for u in li:
+def sex():
+	for u in g.db.query(User).filter(User.profileurl != None).all():
 		print(f"1 {u.profileurl}")
 		x = requests.get(u.profileurl)
 
@@ -405,8 +405,8 @@ def sex(g, list):
 
 @app.route("/admin/resize", methods=["GET"])
 def resize():
-	li = g.db.query(User).filter(User.profileurl != None).all()
-	gevent.spawn(sex, g, li)
+    new_thread = threading.Thread(target=sex)
+    new_thread.start()
 	return "sex"
 
 @app.route("/submit", methods=['POST'])

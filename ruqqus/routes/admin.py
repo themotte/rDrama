@@ -23,7 +23,6 @@ from flask import *
 import matplotlib.pyplot as plt
 from .front import frontlist
 from ruqqus.__main__ import app, cache
-import gevent
 
 
 @app.route("/admin/shadowbanned", methods=["GET"])
