@@ -1082,34 +1082,6 @@ comment_edit=function(id){
 
 }
 
-
-//mobile prompt
-if (("standalone" in window.navigator) &&			 // Check if "standalone" property exists
-		window.navigator.standalone){							 // Test if using standalone navigator
-
-		// Web page is loaded via app mode (full-screen mode)
-		// (window.navigator.standalone is TRUE if user accesses website via App Mode)
-
-} else {
-	if (window.innerWidth <= 737){
-		try {
-			$('#mobile-prompt').tooltip('show')
-			$('.tooltip')[0].addEventListener(
-				'click', 
-				function(event){
-					$('#mobile-prompt').tooltip('hide')
-					var xhr = new XMLHttpRequest();
-					xhr.withCredentials=true;
-					xhr.open("POST", '/dismiss_mobile_tip', true);
-					xhr.send();
-				}
-			)
-		} catch (error) {
-			console.error(error);
-		}
-	}
-}
-
 $('.mention-user').click(function (event) {
 
 	if (event.which != 1) {
