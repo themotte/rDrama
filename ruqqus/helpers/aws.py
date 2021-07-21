@@ -26,34 +26,6 @@ def check_phash(db, name):
 		).first()
 
 
-def upload_from_url(name, url):
-
-	print('upload from url')
-
-	x = requests.get(url)
-
-	print('got content')
-
-	tempname = name.replace("/", "_")
-
-	with open(tempname, "wb") as file:
-		for chunk in x.iter_content(1024):
-			file.write(chunk)
-
-	if tempname.split('.')[-1] in ['jpg', 'jpeg']:
-		piexif.remove(tempname)
-
-	upload_file(tempname,
-				Key=name,
-				ExtraArgs={'ACL': 'public-read',
-							"ContentType": "image/png",
-							"StorageClass": "INTELLIGENT_TIERING"
-							}
-				)
-
-	remove(tempname)
-
-
 def crop_and_resize(img, resize):
 
 	i = img

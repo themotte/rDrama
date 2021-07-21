@@ -375,7 +375,7 @@ def thumbs(new_post):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = upload_from_file(name, tempname, resize=(150, 100))
+	post.thumburl = upload_from_file(name, tempname, resize=(50, 50))
 	if post.thumburl: post.has_thumb = True
 	g.db.add(post)
 	g.db.commit()
@@ -387,6 +387,7 @@ def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
 	except Exception as e: print(e)
 
+
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 @app.route("/api/vue/submit", methods=["POST"])
@@ -397,6 +398,7 @@ def archiveorg(url):
 @validate_formkey
 @api("create")
 def submit_post(v):
+
 
 	title = request.form.get("title", "").strip()
 
@@ -868,32 +870,6 @@ def submit_post(v):
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)
 		g.db.commit()
-
-		# #csam detection
-		# def del_function():
-			# db=db_session()
-			# delete_file(name)
-			# new_post.is_banned=True
-			# db.add(new_post)
-			# db.commit()
-			# ma=ModAction(
-				# kind="ban_post",
-				# user_id=2317,
-				# note="banned image",
-				# target_submission_id=new_post.id
-				# )
-			# db.add(ma)
-			# db.commit()
-			# db.close()
-
-			
-		# csam_thread=threading.Thread(target=check_csam_url, 
-									 # args=(new_post.url, 
-										   # v, 
-										   # del_function
-										  # )
-									# )
-		# csam_thread.start()
 	
 	g.db.commit()
 
@@ -960,30 +936,10 @@ def submit_post(v):
 	g.db.add(n)
 	g.db.commit()
 	send_message(f"https://rdrama.net{new_post.permalink}")
+
 	return {"html": lambda: redirect(new_post.permalink),
 			"api": lambda: jsonify(new_post.json)
 			}
-
-# @app.route("/api/nsfw/<pid>/<x>", methods=["POST"])
-# @auth_required
-# @validate_formkey
-# def api_nsfw_pid(pid, x, v):
-
-#	 try:
-#		 x=bool(int(x))
-#	 except:
-#		 abort(400)
-
-#	 post=get_post(pid)
-
-#	 if not v.admin_level >=3 and not post.author_id==v.id and not post.board.has_mod(v):
-#		 abort(403)
-
-#	 post.over_18=x
-#	 g.db.add(post)
-#
-
-#	 return "", 204
 
 
 @app.route("/delete_post/<pid>", methods=["POST"])
@@ -1005,17 +961,17 @@ def delete_post_pid(pid, v):
 
 	cache.delete_memoized(frontlist)
 
-	# delete i.ruqqus.ga
-	if post.domain == "i.ruqqus.ga":
+	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
+	print(f"1 {u.profileurl}")
+	x = requests.get(u.profileurl)
 
-		segments = post.url.split("/")
-		pid = segments[4]
-		rand = segments[5]
-		if pid == post.base36id:
-			key = f"post/{pid}/{rand}"
-			delete_file(key)
-			#post.is_image = False
-			g.db.add(post)
+	with open("resizing", "wb") as file:
+		for chunk in x.iter_content(1024):
+			file.write(chunk)
+
+	u.profileurl = upload_from_file("resizing", "resizing", (50, 50))
+	g.db.add(u)
+	print(f"2 {u.profileurl}")
 
 	return "", 204
 

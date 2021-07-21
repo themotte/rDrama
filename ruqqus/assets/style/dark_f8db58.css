@@ -27935,13 +27935,18 @@ img.emoji {
   }
   80% {
     color: blue;
-    text-shadow: 0px 0px 0.1px blue, 0px 0px 0.1px blue, 0px 0px 0.1px blue, 0px 0px 0.1px blue;
+    text-shadow: 0px 0px 10px blue, 0px 0px 10px blue, 0px 0px 10px blue, 0px 0px 10px blue;
   }
   100% {
-    color: violet;
-    text-shadow: 0px 0px 10px violet, 0px 0px 10px violet, 0px 0px 10px violet, 0px 0px 10px violet;
+    color: green;
+    text-shadow: 0px 0px 0.1px green, 0px 0px 0.1px green, 0px 0px 0.1px green, 0px 0px 0.1px green;
   }
 }
+.px-25 {
+  padding-left: 0.8rem !important;
+  padding-right: 0.8rem !important;
+}
+
 * {
   border-color: #f8db58;
 }

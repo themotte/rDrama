@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 from .front import frontlist
 from ruqqus.__main__ import app, cache
 
+
 @app.route("/admin/shadowbanned", methods=["GET"])
 @auth_required
 def shadowbanned(v):
