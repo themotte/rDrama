@@ -207,11 +207,17 @@ def edit_post(pid, v):
 
 		c_jannied = Comment(author_id=2317,
 			parent_submission=p.id,
-			is_pinned=True,
-			distinguish_level=6,
+			parent_fullname=p.fullname,
 			level=1,
+			over_18=False,
+			is_nsfl=False,
+			is_offensive=False,
 			original_board_id=1,
 			is_bot=True,
+			app_id=None,
+			creation_region=request.headers.get("cf-ipcountry"),
+			is_pinned=True,
+			distinguish_level=6
 			)
 
 		g.db.add(c_jannied)
@@ -950,12 +956,18 @@ def submit_post(v):
 
 		c_jannied = Comment(author_id=2317,
 			parent_submission=new_post.id,
-			is_pinned=True,
-			distinguish_level=6,
+			parent_fullname=new_post.fullname,
 			level=1,
+			over_18=False,
+			is_nsfl=False,
+			is_offensive=False,
 			original_board_id=1,
 			is_bot=True,
-			)
+			app_id=None,
+			creation_region=request.headers.get("cf-ipcountry"),
+			is_pinned=True,
+			distinguish_level=6
+		)
 
 		g.db.add(c_jannied)
 		g.db.flush()
