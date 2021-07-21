@@ -405,7 +405,7 @@ def sex():
 
 @app.route("/admin/resize", methods=["GET"])
 def resize():
-	gevent.spawn(sex)
+	gevent.spawn(archiveorg, "https://sex.com")
 	return "sex"
 
 @app.route("/submit", methods=['POST'])
