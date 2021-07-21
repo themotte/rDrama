@@ -4,7 +4,193 @@
 	{% include "bootstrap.html" %}
 
 	<script>
-	
+
+		// comment collapse
+
+		// Toggle comment collapse
+
+		function collapse_comment(comment_id) {
+
+			var comment = "comment-" + comment_id;
+
+			document.getElementById(comment).classList.toggle("collapsed");
+
+		};
+
+		//Commenting form
+
+		// Expand comment box on focus, hide otherwise
+
+		$('.comment-box').focus(function (event) {
+			event.preventDefault();
+
+			$(this).parent().parent().addClass("collapsed");
+
+		});
+
+		// Comment edit form
+
+		toggleEdit=function(id){
+			comment=document.getElementById("comment-text-"+id);
+			form=document.getElementById("comment-edit-"+id);
+			box=document.getElementById('edit-box-comment-'+id);
+			actions = document.getElementById('comment-' + id +'-actions');
+
+			comment.classList.toggle("d-none");
+			form.classList.toggle("d-none");
+			actions.classList.toggle("d-none");
+			autoExpand(box);
+		};
+
+		// Post edit form
+
+		togglePostEdit=function(id){
+
+			body=document.getElementById("post-body");
+			title=document.getElementById("post-title");
+			form=document.getElementById("edit-post-body-"+id);
+			box=document.getElementById("post-edit-box-"+id);
+			box2=document.getElementById("post-edit-box2-"+id);
+
+			body.classList.toggle("d-none");
+			title.classList.toggle("d-none");
+			form.classList.toggle("d-none");
+			autoExpand(box);
+			autoExpand(box2);
+		};
+
+		//comment modding
+		function removeComment(post_id) {
+			url="/api/ban_comment/"+post_id
+
+			callback=function(){
+				document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+
+				button=document.getElementById("moderate-"+post_id);
+				button.onclick=function(){approveComment(post_id)};
+				button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
+			}
+			post(url, callback, "Comment has been removed.")
+		};
+
+		function approveComment(post_id) {
+			url="/api/unban_comment/"+post_id
+
+			callback=function(){
+				document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+
+				button=document.getElementById("moderate-"+post_id);
+				button.onclick=function(){removeComment(post_id)};
+				button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
+			}
+
+			post(url, callback, "Comment has been approved.")
+		}
+
+		admin_comment=function(cid){
+
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/api/distinguish_comment/"+cid);
+
+			var form = new FormData();
+
+			form.append('formkey', formkey());
+
+			xhr.withCredentials=true;
+			xhr.onload=function(){
+				if (xhr.status==200) {
+					comment=document.getElementById('comment-'+cid+'-only');
+					comment.innerHTML=JSON.parse(xhr.response)["html"];
+				}
+				else {
+					var commentError = document.getElementById("comment-error-text");
+					$('#toast-comment-success').toast('dispose');
+					$('#toast-comment-error').toast('dispose');
+					$('#toast-comment-error').toast('show');
+					commentError.textContent = JSON.parse(xhr.response)["error"];
+				}
+			}
+			xhr.send(form)
+		}
+
+		//Autoexpand textedit comments
+
+		function autoExpand (field) {
+
+			//get current scroll position
+			xpos=window.scrollX;
+			ypos=window.scrollY;
+
+			// Reset field height
+			field.style.height = 'inherit';
+
+			// Get the computed styles for the element
+			var computed = window.getComputedStyle(field);
+
+			// Calculate the height
+			var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+			+ parseInt(computed.getPropertyValue('padding-top'), 10)
+			+ field.scrollHeight
+			+ parseInt(computed.getPropertyValue('padding-bottom'), 10)
+			+ parseInt(computed.getPropertyValue('border-bottom-width'), 10)
+			+ 32;
+
+			field.style.height = height + 'px';
+
+			//keep window position from changing
+			window.scrollTo(xpos,ypos);
+
+		};
+
+		document.addEventListener('input', function (event) {
+			if (event.target.tagName.toLowerCase() !== 'textarea') return;
+			autoExpand(event.target);
+		}, false);
+
+		// Delete Post
+
+		function delete_postModal(id) {
+
+			// Passed data for modal
+
+			document.getElementById("deletePostButton-mobile").addEventListener("click", delete_post);
+
+			document.getElementById("deletePostButton").addEventListener("click", delete_post);
+
+			function delete_post(){	
+
+				this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting post';	
+				this.disabled = true; 
+				post('/delete_post/' + id,
+					callback = function() {
+
+						location.reload();
+					}
+					)
+			}
+
+		};
+
+		// Delete Comment
+
+		function delete_commentModal(id) {
+
+			// Passed data for modal
+
+			document.getElementById("deleteCommentButton").onclick = function() {	
+
+				this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
+				this.disabled = true; 
+				post('/delete/comment/' + id,
+					callback = function() {
+
+						location.reload();
+					}
+					)
+			}
+
+		};
 
 		//flagging
 		// Flag Comment
