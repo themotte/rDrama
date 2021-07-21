@@ -179,6 +179,7 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 @app.route("/api/v1/listing", methods=["GET"])
 @auth_desired
 def front_all(v):
+	return "Upgrading server, be back in 10 minutes"
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	page = int(request.args.get("page") or 1)
