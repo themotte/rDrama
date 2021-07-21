@@ -25,27 +25,6 @@ from .front import frontlist
 from ruqqus.__main__ import app, cache
 import gevent
 
-def sex(lex):
-	for u in g.db.query(User).filter(User.profileurl != None).all():
-		print(f"1 {u.profileurl}")
-		x = requests.get(u.profileurl)
-
-		with open("nigger", "wb") as file:
-			for chunk in x.iter_content(1024):
-				file.write(chunk)
-
-		u.profileurl = upload_from_file("nigger", "nigger", (50, 50))
-		g.db.add(u)
-		print(f"2 {u.profileurl}")
-		time.sleep(100)
-
-
-@app.route("/admin/resize", methods=["GET"])
-@admin_level_required(6)
-def resize(v):
-	lex = ""
-	gevent.spawn(sex, lex)
-	return "sex"
 
 @app.route("/admin/shadowbanned", methods=["GET"])
 @auth_required

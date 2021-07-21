@@ -387,6 +387,29 @@ def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
 	except Exception as e: print(e)
 
+
+def sex(lex):
+	for u in g.db.query(User).filter(User.profileurl != None).all():
+		print(f"1 {u.profileurl}")
+		x = requests.get(u.profileurl)
+
+		with open("nigger", "wb") as file:
+			for chunk in x.iter_content(1024):
+				file.write(chunk)
+
+		u.profileurl = upload_from_file("nigger", "nigger", (50, 50))
+		g.db.add(u)
+		print(f"2 {u.profileurl}")
+		time.sleep(100)
+
+
+@app.route("/admin/resize", methods=["GET"])
+@admin_level_required(6)
+def resize(v):
+	lex = ""
+	gevent.spawn(sex, lex)
+	return "sex"
+
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 @app.route("/api/vue/submit", methods=["POST"])
