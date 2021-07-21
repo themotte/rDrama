@@ -1,0 +1,65 @@
+{% extends "default.html" %}
+
+{% block pagetype %}userpage{% endblock %}
+
+{% block enlargeThumbJS %}
+<script src="/assets/js/enlarge_thumb.js"></script>
+{% endblock %}
+
+{% block fixedMobileBarJS %}
+<script>
+	var prevScrollpos = window.pageYOffset;
+	window.onscroll = function () {
+		var currentScrollPos = window.pageYOffset;
+		if (prevScrollpos > currentScrollPos) {
+			document.getElementById("fixed-bar-mobile").style.top = "48px";
+			document.getElementById("navbar").classList.remove("shadow");
+		} 
+		else if (currentScrollPos <= 125) {
+			document.getElementById("fixed-bar-mobile").style.top = "48px";
+			document.getElementById("navbar").classList.remove("shadow");
+		}
+		else {
+			document.getElementById("fixed-bar-mobile").style.top = "-48px";
+			document.getElementById("dropdownMenuSortBy").classList.remove('show');
+			document.getElementById("dropdownMenuFrom").classList.remove('show');
+			document.getElementById("navbar").classList.add("shadow");
+		}
+		prevScrollpos = currentScrollPos;
+	}
+</script>
+{% endblock %}
+
+{% block title %}
+<title>@{{u.username}}</title>
+<meta name="description" content="Username reserved for: {{u.reserved}}">
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block adminpanel %}{% endblock %}
+
+{% block content %}
+<!-- Post filters bar visible only on medium devices or larger-->
+
+<div class="row no-gutters">
+
+	<div class="col-12">
+
+		<div class="text-center py-7 py-md-8">
+
+			<i class="fad fa-id-card text-muted mb-5" style="font-size: 5rem;"></i>
+
+
+			<div class="font-weight-bold text-muted">Account Reserved</div>
+			<div class="text-muted">The username @{{u.username}} has been pre-emptively reserved for: {{u.reserved}}</div>
+	<div class="text-muted">If that's you, or if you are their authorized representative, please contact Drama staff in order to obtain access to this account.</div>
+
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block pagenav %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>Drama - FAQ</title>
+<meta name="description" content="Drama FAQ">
+{% endblock %}
+
+{% block content %}
+{% filter markdown %}
+
+# Developer Help
+
+Tips to help ensure your website works nicely with Drama
+
+## SSL Required
+
+To help protect user privacy and safety, Drama forces HTTPS on all assets uploaded and submitted to Drama. This includes automatic conversion of all "https://" schemas into "https://".
+
+Make sure your website has a valid SSL certificate in order to ensure that Drama users can navigate to it from Drama. 
+
+We will not grant exemptions to https conversion.
+
+## Share to Drama
+
+To create a "share to Drama" button, create an element which has `onclick="window.location.href='https://rdrama.net/submit?url='+window.location.href"`
+
+Use [Drama branding and assets](/press) to style your "share to Drama" button.
+
+
+## Thumbnails
+
+Thumbnail images for posts are determined by using the first successful condition below:
+
+1. If the submitted link has a `Content-Type: image/*` header, the link itself is used as the thumbnail asset.
+2. If the submitted link has a `Content-Type: text/html` header, and there is a `<meta name="thumbnail">` element, the `content` attribute of that element will be scraped and used as the thumbnail. (Use this option to explicitly set a thumbnail)
+3. If the submitted link has a `Content-Type: text/html` header, and no thumbnail meta element is found, the `src` attribute of the first `img` element will be scraped and used as the thumbnail.
+
+## Applications
+
+To request ruqqus API keys, visit [this page](/apps)
+
+{% endfilter %}
+{% endblock %}

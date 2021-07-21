@@ -1,0 +1,143 @@
+<!-- GIF Selection Modal - Powered by GIPHY -->
+<div class="modal fade" id="gifModal" tabindex="-1" role="dialog" aria-labelledby="gifModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered p-5" role="document">
+		<div class="modal-content">
+			<div class="modal-header border-bottom-0 shadow-md d-block p-3">
+				<div class="form-group d-flex align-items-center w-100 mb-0">
+					<div id="gifs-back-btn"></div>
+					<input type="text" class="form-control" id="gifSearch" placeholder="Search and press enter" onchange="getGif(this.value);">
+					<div id="gifs-cancel-btn"></div>
+				</div>
+			</div>
+			<div style="overflow-y: scroll;">
+				<div class="modal-body p-0" id="gif-modal-body">
+
+					<div id="no-gifs-found">
+					</div>
+
+					<div class="card-columns gif-categories pt-3 px-3 pb-0" id="GIFs">
+						<div class="card" onclick="getGif('agree');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Agree</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/wGhYz3FHaRJgk/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('laugh');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Laugh</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/O5NyCibf93upy/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('confused');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Confused</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/3o7btPCcdNniyf0ArS/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('sad');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Sad</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/ISOckXUybVfQ4/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('happy');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Happy</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/XR9Dp54ZC4dji/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('awesome');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Awesome</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('yes');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Yes</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/J336VCs1JC42zGRhjH/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('no');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">No</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/1zSz5MVw4zKg0/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('love');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Love</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/4N1wOi78ZGzSB6H7vK/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('please');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Please</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/qUIm5wu6LAAog/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('scared');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Scared</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/bEVKYB487Lqxy/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('angry');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Angry</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/12Pb87uq0Vwq2c/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('awkward');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Awkward</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/unFLKoAV3TkXe/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('cringe');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Cringe</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/1jDvQyhGd3L2g/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('omg');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">OMG</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/3o72F8t9TDi2xVnxOE/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('why');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Why</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/1M9fmo1WAFVK0/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('gross');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Gross</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/pVAMI8QYM42n6/200w_d.gif">
+						</div>
+						<div class="card" onclick="getGif('meh');" style="overflow: hidden;">
+							<div class="gif-cat-overlay">
+								<div style="position: relative;top: 50%;transform: translateY(-50%);color: #cfcfcf;font-weight: bold;">Meh</div>
+							</div>
+							<img class="img-fluid" src="https://media.giphy.com/media/xT77XTpyEzJ4OJO06c/200w_d.gif">
+						</div>
+					</div>
+
+					<div id="gifs-load-more">
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+  <script>
+    function tenor_api_key() {
+      return "{{ 'TENOR_KEY' | app_config }}"
+    }
+  </script>
+
+</div>

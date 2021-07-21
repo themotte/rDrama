@@ -1,0 +1,239 @@
+{% extends "home.html" %}
+
+{% block pagetype %}search{% endblock %}
+
+{% block title %}
+<title>Search for "{{query}}" - Drama"</title> <!-- include dynamic jinja-generated text in title -->
+<meta name="description" content="{{total}} result{{'s' if total != 1 else ''}}">
+{% endblock %}
+
+{% block enlargeThumbJS %}
+<script src="/assets/js/enlarge_thumb.js"></script>
+{% endblock %}
+
+{% block toggleView %}
+<script src="/assets/js/toggle_view.js"></script>
+{% endblock %}
+
+{% block PseudoSubmitForm %}{% endblock %}
+
+{% block navbar %}
+	{% if not '/users/' in request.path %}
+		<div class="mt-5 d-flex align-items-center">
+			<div class="dropdown dropdown-actions">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if t=="day" %}<i class="fas fa-calendar-day mr-1"></i>{% endif %}
+					{% if t=="week" %}<i class="fas fa-calendar-week mr-1"></i>{% endif %}
+					{% if t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>{% endif %}
+					{% if t=="year" %}<i class="fas fa-calendar mr-1"></i>{% endif %}
+					{% if t=="all" %}<i class="fas fa-infinity mr-1"></i>{% endif %}
+					{{t | capitalize}}
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+					{% if not t=="hour" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=hour"><i class="fas fa-calendar-day mr-2"></i>Hour</a>{% endif %}
+					{% if not t=="day" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
+					{% if not t=="week" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
+					{% if not t=="month" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
+					{% if not t=="year" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
+					{% if not t=="all" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+				</div>
+			</div>
+
+			<div class="dropdown dropdown-actions">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
+					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+					{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
+					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
+					{% if sort=="comments" %}<i class="fas fa-comments mr-1"></i>{% endif %}
+					{% if sort=="random" %}<i class="fas fa-random mr-1"></i>{% endif %}
+					{{sort | capitalize}}
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+					{% if not sort=="top" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=top&t={{t}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+					{% if not sort=="bottom" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=bottom&t={{t}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
+					{% if not sort=="new" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=new&t={{t}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+					{% if not sort=="old" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=old&t={{t}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
+					{% if not sort=="controversial" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=controversial&t={{t}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
+					{% if not sort=="comments" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=comments&t={{t}}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
+					{% if not sort=="random" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=random&t={{t}}"><i class="fas fa-random mr-2"></i>Random</a>{% endif %}
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Search text -->
+
+<div class="row no-gutters my-md-3">
+
+	<div class="col">
+
+		<div class="card search-results">
+
+			<div class="card-header bg-white d-none">
+				<ul class="list-inline no-bullets mb-0">
+					<li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
+					<li class="list-inline-item"><i class="fas fa-link text-gray-400"></i></li>
+				</ul>
+			</div>
+			<div class="card-body">
+				<div class="pl-md-3">
+					<div class="text-muted text-small mb-1">Advanced search parameters (with examples): "author:quadnarca", "domain:reddit.com", "over18:true"<div>
+					<br>
+					<div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div>
+					<h1 class="h4 mb-0">{{query}}</h1>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- Post filters bar visible only on medium devices or larger-->
+
+{% if not '/users/' in request.path %}
+
+<div class="flex-row tab-bar sticky d-none">
+
+	<ul class="nav post-nav mr-auto">
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='top' %} active{% endif %}" href="?sort=top&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='bottom' %} active{% endif %}" href="?sort=bottom&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-down"></i>Bottom</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='new' %} active{% endif %}" href="?sort=new&q={{query | urlencode}}&t={{t}}"><i class="fas fa-sparkles"></i>New</a> 
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='old' %} active{% endif %}" href="?sort=old&q={{query | urlencode}}&t={{t}}"><i class="fas fa-book"></i>Old</a> 
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='fiery' %} active{% endif %}" href="?sort=fiery&q={{query | urlencode}}&t={{t}}"><i class="fas fa-bullhorn"></i>Controversial</a>
+		</li>
+		<li class="nav-item ">
+			<a class="nav-link {% if sort=='comments' %} active{% endif %}" href="/?sort=comments&q={{query | urlencode}}&t={{t}}"><i class="fas fa-comments"></i>Comments</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='random' %} active{% endif %}" href="?sort=random&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-down"></i>Random</a>
+		</li>
+	</ul>
+
+	</div>
+	{% endif %}
+
+	<div class="row no-gutters">
+		<div class="col">
+			<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
+				<ul class="nav settings-nav">
+					<li class="nav-item">
+						<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link{% if  '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link{% if  '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="row no-gutters">
+
+		<div class="col-12">
+
+			<div class="posts" id="posts">
+
+				{% block listing_template %}{% include "submission_listing.html" %}{% endblock %}
+
+			</div>
+		</div>
+	</div>
+
+	{% if not '/users/' in request.path %}
+	<div class="row fixed-top bg-white border-top d-inline-flex d-md-none py-2 px-3" id="fixed-bar-mobile" style="z-index: 100; top: 48px; transition: top cubic-bezier(0, 0, 0.2, 1) 220ms;">
+
+		<div class="col">
+
+			<div class="d-flex flex-row flex-nowrap justify-content-between">
+
+				<div class="post-filter">
+
+					<div class="d-flex align-items-center">
+
+						<div class="dropdown dropdown-actions">
+							<button class="btn btn-link text-capitalize text-muted font-weight-normal dropdown-toggle px-0" type="button" id="dropdownMenuButtonMobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+								{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
+								{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+								{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
+								{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
+								{% if sort=="comments" %}<i class="fas fa-comments mr-1"></i>{% endif %}
+								{{sort}}
+							</button>
+							<div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+								{% if not sort=="top" %}<a class="dropdown-item" href="?sort=top&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
+								{% if not sort=="bottom" %}<a class="dropdown-item" href="?sort=bottom&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-down text-primary mr-3"></i>Bottom</a>{% endif %}
+								{% if not sort=="new" %}<a class="dropdown-item" href="?sort=new&q={{query | urlencode}}&t={{t}}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
+								{% if not sort=="old" %}<a class="dropdown-item" href="?sort=old&q={{query | urlencode}}&t={{t}}"><i class="fas fa-book text-primary mr-3"></i>Old</a>{% endif %}
+								{% if not sort=="controversial" %}<a class="dropdown-item" href="?sort=controversial&q={{query | urlencode}}&t={{t}}"><i class="fas fa-bullhorn text-primary mr-3"></i>Controversial</a>{% endif %}
+								{% if not sort=="comments" %}<a class="dropdown-item" href="?sort=comments&q={{query | urlencode}}&t={{t}}"><i class="fas fa-comments text-primary mr-3"></i>Comments</a>{% endif %}
+								{% if not sort=="random" %}<a class="dropdown-item" href="?sort=random&q={{query | urlencode}}&t={{t}}"><i class="fas fa-random text-primary mr-3"></i>Random</a>{% endif %}
+							</div>
+						</div>
+
+						<div class="dropdown dropdown-actions ml-2">
+							<button class="btn btn-link text-capitalize text-muted font-weight-normal dropdown-toggle px-0" type="button" id="dropdownMenuButtonMobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{% if t=="day" %}<i class="fas fa-calendar-day mr-1"></i>{% endif %}
+								{% if t=="week" %}<i class="fas fa-calendar-week mr-1"></i>{% endif %}
+								{% if t=="month" %}<i class="fas fa-fa-calendar-alt mr-1"></i>{% endif %}
+								{% if t=="year" %}<i class="fas fa-calendar mr-1"></i>{% endif %}
+								{% if t=="all" %}<i class="fas fa-infinity mr-1"></i>{% endif %}
+								{{t | capitalize}}
+							</button>
+							<div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+								{% if not t=="hour" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=hour"><i class="fas fa-calendar-day text-primary mr-3"></i>Hour</a>{% endif %}
+								{% if not t=="day" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=day"><i class="fas fa-calendar-day text-primary mr-3"></i>Day</a>{% endif %}
+								{% if not t=="week" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=week"><i class="fas fa-calendar-week text-primary mr-3"></i>Week</a>{% endif %}
+								{% if not t=="month" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=month"><i class="fas fa-calendar-alt text-primary mr-3"></i>Month</a>{% endif %}
+								{% if not t=="year" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=year"><i class="fas fa-calendar text-primary mr-3"></i>Year</a>{% endif %}
+								{% if not t=="all" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}"><i class="fas fa-infinity text-primary mr-3"></i>All</a>{% endif %}
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+
+
+
+			</div>
+
+		</div>
+
+	</div>
+	{% endif %}
+	{% endblock %}
+
+	{% block pagenav %}
+	{% if listing %}
+	<nav aria-label="Page navigation">
+		<ul class="pagination pagination-sm mb-0">
+			<li class="page-item{% if page==1 %} disabled{% endif %}">
+
+				<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+			</li>
+			<li class="page-item{% if not next_exists %} disabled{% endif %}">
+				<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a></small>
+
+			</li>
+		</ul>
+	</nav>
+	{% endif %}
+	{% endblock %}

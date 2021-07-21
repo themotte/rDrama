@@ -1,0 +1,62 @@
+version: '2.3'
+
+services:
+  ruqqus:
+    build:
+      context: .
+    volumes:
+      - "./:/opt/Drama/service"
+    environment:
+      - PYTHONPATH="opt/Drama/service"
+      - REDIS_URL=redis://127.0.0.1
+      - DATABASE_URL=postgresql://postgres@127.0.0.1:5432/postgres
+      - DATABASE_CONNECTION_POOL_URL=postgresql://postgres@127.0.0.1:5432/postgres
+      - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
+      - SESSION_COOKIE_SECURE=false
+      - FLASK_DEBUG=1
+      - FLASK_ENV=development
+      - domain=localhost
+      - SITE_NAME=Drama
+      - CLOUDFLARE_ZONE=vcxvdfgfc6r554etrgd
+      - CLOUDFLARE_KEY=vcxvdfgfc6r554etrgd
+      - TENOR_KEY=vcxvdfgfc6r554etrgd
+      - S3_BUCKET_NAME=i.ruqqus.ga
+      - AWS_ACCESS_KEY_ID=vcxvdfgfc6r554etrgd
+      - AWS_SECRET_ACCESS_KEY=vcxvdfgfc6r554etrgd
+      - MAILGUN_KEY=vcxvdfgfc6r554etrgd
+      - admin_email=drama@rdrama.net
+      - FORCE_HTTPS=1
+      - DISCORD_SERVER_ID=vcxvdfgfc6r554etrgd
+      - DISCORD_CLIENT_ID=vcxvdfgfc6r554etrgd
+      - DISCORD_CLIENT_SECRET=vcxvdfgfc6r554etrgd
+      - DISCORD_BOT_TOKEN=vcxvdfgfc6r554etrgd
+      - imgurkey=vcxvdfgfc6r554etrgd
+      - FACEBOOK_TOKEN=vcxvdfgfc6r554etrgd
+      - HCAPTCHA_SITEKEY=vcxvdfgfc6r554etrgd
+      - HCAPTCHA_SECRET=vcxvdfgfc6r554etrgd
+      - youtubekey=vcxvdfgfc6r554etrgd
+      - PUSHER_KEY=vcxvdfgfc6r554etrgd
+    links:
+      - "redis"
+      - "postgres"
+    ports:
+      - "80:80"
+    depends_on:
+      - redis
+      - postgres
+
+  redis:
+    image: redis
+    volumes:
+      - ./redis.conf:/opt/Drama/redis.conf
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:12.3
+    volumes:
+      - "./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"

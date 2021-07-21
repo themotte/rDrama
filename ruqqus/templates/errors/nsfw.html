@@ -1,0 +1,38 @@
+{% extends "errors/default.html" %}
+
+{% block title %}
+<title>+18</title>
+{% endblock %}
+
+{% block pagetype %}error-451{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+	<div class="col col-md-5">
+		<div class="text-center px-3 mt-5">
+			<i class="fad fa-eye-evil text-danger mb-4" style="font-size: 3.5rem;"></i>
+			<h1 class="h5">Are you over 18?</h1>
+			<p class="mb-5">This post is rated +18 (Pornographic Content). You must be 18 or older to continue. Are you sure you want to proceed?</p>
+			<div class="btn-toolbar justify-content-center mb-4">
+
+				{% if v %}
+					<form action="/allow_nsfw_logged_in/{{board.base36id}}" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="hidden" name="redir" value="{{request.path}}">
+						<input type="submit" class="btn btn-danger mr-2" value="Yes, I am 18">
+					</form>
+				{% else %}
+					<form action="/allow_nsfw_logged_out/{{board.base36id}}" method="post">
+						<input type="hidden" name="formkey" value="{{lo_formkey}}">
+						<input type="hidden" name="redir" value="{{request.path}}">
+						<input type="hidden" name="time" value="{{t}}">
+						<input type="submit" class="btn btn-danger mr-2" value="Yes, I am 18">
+					</form>
+				{% endif %}
+				<div><a href="/" class="btn btn-secondary">No</a></div>
+			</div>
+
+		</div>
+	</div>
+</div>
+{% endblock %}

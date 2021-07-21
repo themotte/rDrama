@@ -1,0 +1,37 @@
+{% extends "home.html" %}
+
+{% block sidebarLeftblock %}
+
+<div class="sidebar-section sidebar-dashboard">
+	<div class="title">Dashboard</div>
+	<div class="body">
+		<ul class="no-bullets dashboard-list pl-0">
+			<li class="dashboard-item">
+				<a class="dashboard-link" href="/"><i class="fas fa-home-alt fa-width-rem"></i>Home</a>
+			</li>
+			<li class="dashboard-item">
+			 <a class="dashboard-link" href="/guilds"><i class="fas fa-chess-rook fa-width-rem"></i>Guilds</a>
+		 </li>
+		 <li class="dashboard-item">
+			 <a class="dashboard-link active" href="/subscriptions"><i class="fas fa-heart fa-width-rem"></i>Subscriptions</a>
+		 </li>
+			<li class="dashboard-item">
+				<a class="dashboard-link" href="/browse"><i class="fas fa-binoculars fa-width-rem"></i>Browse</a>
+			</li>
+	 </ul>
+ </div>
+</div>
+
+{% endblock %}
+
+{% block sidebarblock %}
+				<div class="sidebar-section sidebar-about">
+		<div class="body text-primary text-center">
+		<i class="fad fa-user-friends" style="font-size: 4rem;"></i>
+		</div>
+					<div class="title">User Subscriptions</div>
+					<div class="body">
+						<p>The users you are subscribed to.</p>
+					</div>
+				</div>
+{% endblock %}

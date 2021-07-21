@@ -1,0 +1,148 @@
+{% extends "embeds/embed_default.html" %}
+
+
+{% set score=p.score_fuzzed %}
+
+
+{% block title %}
+<title>{{p.title | safe}}</title>
+<meta name="description" content="posted {{p.age_string}} by @{{p.author.username}}">
+{% endblock %}
+
+{% block pagetype %}thread{% endblock %}
+
+
+	{% block content %}
+	<div class="row">
+
+		<div class="col-12">
+
+			<div id="post-{{p.base36id}}" class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+				<div class="d-flex flex-row-reverse flex-nowrap justify-content-end">
+
+					{% if p.thumb_url %}
+					<div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap p-0">
+						<a href="{{p.url}}" rel="nofollow"><img src="{{p.thumb_url}}" class="post-img d-none d-md-block" alt="Unable to anonymously load image"></a>
+					</div>
+					{% endif %}
+
+					<div class="card-block w-100 my-md-auto">
+
+						<div class="post-meta text-left d-block d-md-none mb-2">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom"  title="{{p.created_date}}">{{p.age_string}}</span> by {% if p.author.title and p.author.title.is_before %}<span style="color:#{{p.author.title.color}}">{{p.author.title.text}}</span> {% endif %}<a href="{{p.author.permalink}}" class="user-name">{{p.author.username}}</a>{% if p.author.title and not p.author.title.is_before %}<span style="color:#{{p.author.title.color}}">{{p.author.title.text}}</span>{% endif %}{% if p.distinguish_level %} <i class="fas fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Drama Badmin, speaking officially"></i>{% endif %} <span>&#183;</span> ({{p.domain}}){% if p.edited_utc %} &#183; Edited <span data-toggle="tooltip" data-placement="bottom"  title="{{edited_date}}">{{p.edited_string}}</span>{% endif %}</div>
+
+						<div class="post-meta text-left d-none d-md-block mb-md-2">{% if p.stickied %}<i class="fas fa-thumbtack text-success fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned post"></i> <span>&#183;</span> {% endif %}<span data-toggle="tooltip" data-placement="bottom"  title="{{p.created_date}}">{{p.age_string}}</span> by {% if p.author.title and p.author.title.is_before %}<span style="color:#{{p.author.title.color}}">{{p.author.title.text}}</span> {% endif %}<a href="{{p.author.permalink}}" class="user-name">{{p.author.username}}</a>{% if p.author.title and not p.author.title.is_before %}<span style="color:#{{p.author.title.color}}">{{p.author.title.text}}</span>{% endif %}{% if p.distinguish_level %} <i class="fas fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Drama Badmin, speaking officially"></i>{% endif %} <span>&#183;</span> ({{p.domain}}){% if p.edited_utc %} &#183; Edited <span data-toggle="tooltip" data-placement="bottom"  title="{{edited_date}}">{{p.edited_string}}</span>{% endif %}</div>
+						{% if p.url %}
+						<h1 class="card-title post-title text-left mb-2"><a target="_blank" href="{{p.url}}">{{p.title | safe}}</a></h1>
+						{% else %}
+						<h1 class="card-title post-title text-left mb-2">{{p.title | safe}}</h1>
+						{% endif %}
+
+						<div id="post-body" {% if p.body_html %}class="post-body mt-3"{% endif %}> 
+							{{p.body_html | safe}}
+
+						</div>
+
+
+								<div class="post-actions mt-2 d-none d-md-block">
+									<ul class="list-inline text-right d-flex">
+
+										<li class="list-inline-item"><a href="{{p.permalink}}"><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
+
+										<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{p.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a></li>
+
+
+
+									</ul>
+								</div>
+
+							</div>
+
+							<!-- Voting on "medium" devices or larger, hidden on smaller devices -->
+
+
+
+							<div id="voting" class="voting d-none d-md-block {% if p.body_html %} mb-auto {% else %} my-auto {% endif %} mr-3">
+								<div id="post-{{p.base36id}}-up" class="arrow-up mx-auto">
+								</div>
+								<span id="post-{{p.base36id}}-score-none" class="score text-muted">{{score}}</span>
+								{% if not p.board.downvotes_disabled %}
+								<div id="post-{{p.base36id}}-down" class="arrow-down mx-auto">
+								</div>
+
+							</div>
+
+							{% endif %}
+
+						</div>
+
+<!-- Disable card-footer for now
+																						<div class="card-footer d-none">
+																		<div class="post-actions">
+										<ul class="list-inline text-right">
+			<li id="voting-{{p.base36id}}-mobile" class="voting list-inline-item d-md-none">
+														<span id="arrow-{{p.base36id}}-mobile-up" class="mr-2 arrow-mobile-up" onclick="vote('{{p.base36id}}','0')">
+																<i class="fas fa-chevron-up mx-0" aria-hidden="true"></i>
+														</span>
+
+					<span id="post-{{p.base36id}}-score-mobile-none" class="score text-muted">{{score}}</span>
+
+
+														<span id="arrow-{{p.base36id}}-mobile-down" class="arrow-mobile-down ml-2 my-0" onclick="vote('{{p.base36id}}','-1')">
+																<i class="fas fa-chevron-down mx-0" aria-hidden="true"></i>
+														</span>
+												</li>
+
+
+									</ul>
+									</div>
+								</div>
+							-->
+
+
+						</div>
+
+					</div>
+
+					<div class="row no-gutters mb-3 d-block d-md-none">
+						<div class="col">
+						 <a target="_blank" href="{{p.url}}">{% if p.is_image and p.domain_obj and p.domain_obj.show_thumbnail %}<img src="{{p.url}}" class="img-fluid" alt="Unable to anonymously load image">
+							 <div class="post-img-overlay d-block d-md-none">{{p.domain|truncate(30, True)}}<i class="fas fa-external-link-alt text-small ml-2"></i></div>
+							 {% endif %}
+						 </a>
+					 </div>
+				 </div>
+
+			 </div>
+
+			 <div class="row mb-3 d-block d-md-none">
+				<div class="col-12">
+
+					<div class="post-actions">
+						<ul class="list-inline text-right d-flex">
+
+							<li class="list-inline-item mr-auto"><a href="{{p.permalink}}"><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
+
+							<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{p.permalink | full_link}}"><i class="fas fa-link"></i>Share</a></li>
+
+							<li id="voting-{{p.base36id}}-mobile" class="voting list-inline-item d-md-none">
+
+								<span id="arrow-{{p.base36id}}-mobile-up" class="mr-2 arrow-mobile-up">
+									<i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
+								</span>
+
+								<span id="post-{{p.base36id}}-score-mobile-none" class="score text-muted">{{score}}</span>
+
+								<span id="arrow-{{p.base36id}}-mobile-down" class="arrow-mobile-down ml-2 my-0">
+									<i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
+								</span>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+
+			</div>
+
+	 </div>
+
+	 {% endblock %}

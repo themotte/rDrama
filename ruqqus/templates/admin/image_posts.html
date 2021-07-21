@@ -1,0 +1,105 @@
+{% extends "userpage.html" %}
+
+{% block adminpanel %}{% endblock %}
+{% block pagetype %}userpage{% endblock %}
+{% block banner %}{% endblock %}
+{% block mobileBanner %}{% endblock %}
+{% block desktopBanner %}{% endblock %}
+{% block sidebarLeftblock %}{% endblock %}
+{% block desktopUserBanner %}{% endblock %}
+{% block mobileUserBanner %}{% endblock %}
+
+{% block adminscripts %}
+<script src="/assets/js/comment_modding.js"></script>
+{% endblock %}
+
+
+{% block postNav %}{% endblock %}
+
+
+{% block enlargeThumbJS %}
+<script src="/assets/js/enlarge_thumb.js"></script>
+{% endblock %}
+
+{% block fixedMobileBarJS %}
+<script>
+	var prevScrollpos = window.pageYOffset;
+	window.onscroll = function () {
+		var currentScrollPos = window.pageYOffset;
+		if (prevScrollpos > currentScrollPos) {
+			document.getElementById("fixed-bar-mobile").style.top = "48px";
+			document.getElementById("navbar").classList.remove("shadow");
+		} 
+		else if (currentScrollPos <= 125) {
+			document.getElementById("fixed-bar-mobile").style.top = "48px";
+			document.getElementById("navbar").classList.remove("shadow");
+		}
+		else {
+			document.getElementById("fixed-bar-mobile").style.top = "-48px";
+			document.getElementById("dropdownMenuSortBy").classList.remove('show');
+			document.getElementById("dropdownMenuFrom").classList.remove('show');
+			document.getElementById("navbar").classList.add("shadow");
+		}
+		prevScrollpos = currentScrollPos;
+	}
+</script>
+{% endblock %}
+
+{% block title %}
+<title>Image feed</title>
+<meta name="description" content="on Drama">
+{% endblock %}
+
+
+{% block sidebarblock %}
+<pre></pre>
+<pre></pre>
+<div class="sidebar-section sidebar-profile-basic">
+	<div class="body">
+		<pre>
+		
+		
+		
+		</pre>
+		<h5 class="h6 d-inline-block mb-0" style="color:black">Image Posts</h5>
+
+</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Post filters bar visible only on medium devices or larger-->
+
+<div class="row no-gutters">
+
+	<div class="col">
+
+	{% block listing %}
+		<div class="posts p-3">
+			{% include "submission_listing.html" %}
+		</div>
+	{% endblock %}
+	</div>
+</div>
+{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+	<ul class="pagination pagination-sm py-3 pl-3 mb-0">
+		{% if page>1 %}
+		<li class="page-item">
+			<small><a class="page-link" href="?page={{page-1}}" tabindex="-1">Prev</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Prev</span></li>
+		{% endif %}
+		{% if next_exists %}
+		<li class="page-item">
+			<small><a class="page-link" href="?page={{page+1}}">Next</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Next</span></li>
+		{% endif %}
+	</ul>
+</nav>
+{% endblock %}

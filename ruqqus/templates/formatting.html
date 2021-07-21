@@ -1,0 +1,151 @@
+{% extends "default.html" %}
+{% block title %}
+<title>Drama - Formatting</title>
+<meta name="description" content="Drama Formatting">
+{% endblock %}
+
+{% block content %}
+<pre>
+
+
+</pre>
+{% filter markdown %}
+# Formatting
+
+On Drama, you can use Markdown formatting.
+
+
+## Inline formatting
+
+{% endfilter %}
+
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Displays as</th>
+		</tr>
+	</thead>
+	<tr>
+		<td>Italics</td>
+		<td>*text*</td>
+		<td><i>text</i></td>
+	</tr>
+	<tr>
+		<td>Bold</td>
+		<td>**text**</td>
+		<td><b>text</b></td>
+	</tr>
+	<tr>
+		<td>Code</td>
+		<td>`text`</td>
+		<td><code>text</code></td>
+	</tr>
+	<tr>
+		<td>Strikethrough</td>
+		<td>~~text~~</td>
+		<td><del>text</del></td>
+	</tr>
+	<tr>
+		<td>Links</td>
+		<td>[Drama](https://rdrama.net)</td>
+		<td><a href="https://rdrama.net">Drama</a></td>
+	</tr>
+	<tr>
+		<td>Emojis</td>
+		<td>:marseylove:</td>
+		<td><img data-toggle="tooltip" title="marseylove" delay="0" height="20" src="/assets/images/emojis/marseylove.gif" <span=""></td>
+	</tr>
+</table>
+
+<p class="text-small">* We have customized image embeds to add pop-overs and operate on a whitelist system. Embeds from known safe image hosts will use a pop-up display as demonstrated here. Attempted embeds to non-whitelisted sites will be converted into a link. The whitelist may be viewed <a href="/info/image_hosts" target="_blank">here</a>.</p>
+
+{% filter markdown %}
+
+## Block formatting
+
+These Markdown tags format an entire paragraph of text at a time.
+
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Displays as</th>
+		</tr>
+	</thead>
+	<tr>
+		<td>Blockquote</td>
+		<td>&gt; text</td>
+		<td><blockquote>text</blockquote></td>
+	</tr>
+	<tr>
+		<td>Headers 1-6</td>
+		<td># Header 1<br>## Header 2<br>### Header 3<br>#### Header 4<br>##### Header 5<br>###### Header 6</td>
+		<td><h1>Header 1</h1><h2>Header 2</h2><h3>Header 3</h3><h4>Header 4</h4><h5>Header 5</h5><h6>Header 6</h6></td>
+	</tr>
+	<tr>
+		<td>Ordered list</td>
+		<td>1. First thing<br>2. Second thing</td>
+		<td><ol><li>First thing</li><li>Second thing</li></ol></td>
+	</tr>
+	<tr>
+		<td>Unordered list</td>
+		<td>* First thing<br>* Second thing</td>
+		<td><ul><li>First thing</li><li>Second thing</li></ul></td>
+	</tr>
+	<tr>
+		<td>Code Block</td>
+		<td>```<br>Use three backticks above and below.<br>Or, indent the lines with four spaces.<br>```</td>
+		<td>
+	</tr>
+	<tr>
+		<td>Spoilers</td>
+		<td>&lt;s&gt; bussy > gussy &lt;/s&gt;</td>
+		<td><p class="spoiler">bussy > gussy</p></td>
+<pre>
+Use three backticks above and below.
+Or, indent the lines with four spaces.
+</pre>
+		</td>
+	</tr>
+</table>
+
+
+## Custom Formatting
+
+We also have some custom hooks for mentioning users and subreddits. Note that these only work if the mentioned user or subreddit actually exists.
+
+{% endfilter %}
+
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Displays as</th>
+		</tr>
+	</thead>
+	<tr>
+		<td>Username Mention</td>
+		<td>@QuadNarca</td>
+		<td><a class="d-inline-block" href="/@QuadNarca"><img src="/@QuadNarca/pic/profile" class="profile-pic-20 mr-1">@QuadNarca</a></td>
+	</tr>
+	<tr>
+		<td>Subreddit Mention</td>
+		<td>r/Drama</td>
+		<td><a class="d-inline-block" href="https://www.reddit.com/r/Drama/">r/Drama</a></td>
+	</tr>
+	<tr>
+		<td>Redditor Mention</td>
+		<td>u/Bardfinn</td>
+		<td><a class="d-inline-block" href="https://www.reddit.com/u/Bardfinn/">u/Bardfinn</a></td>
+	</tr>
+</table>
+
+{% include "expanded_image_modal.html" %}
+
+<script src="/assets/js/all_js.js"></script>
+
+{% endblock %}

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% if v %}
+	<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+	
+	<script>
+		const beamsClient = new PusherPushNotifications.Client({
+			instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6',
+		});		
+		  
+		beamsClient
+		  .start()
+		  .then((beamsClient) => beamsClient.getDeviceId())
+		  .then(() => beamsClient.addDeviceInterest(v.strid))
+		  .then(() => beamsClient.getDeviceInterests())
+		  .catch(console.error);
+	</script>
+	{% endif %}
+	
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="thumbnail" content="/assets/images/preview.png">
+
+	<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+	
+	{% block title %}
+	<title>Drama</title>
+
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Drama" />
+	<meta property="og:site_name" content="rdrama.net" />
+	<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
+	<meta property="og:url" content="{{request.path | full_link}}">
+	<meta property="og:description" name="description" content="Dude bussy lmao">
+	<meta property="og:author" name="author" content="@ruqqus" />
+	<meta property="og:site_name" content="rdrama.net" />
+
+	<meta name="twitter:card" content="summary_large_image"/>
+	<meta name="twitter:site" content="@ruqqus">
+	<meta name="twitter:title" content="Drama" />
+	<meta name="twitter:creator" content="@ruqqus">
+	<meta name="twitter:description" content="Dude bussy lmao" />
+	<meta name="twitter:image" content="/assets/images/preview.png" />
+	<meta name="twitter:url" content="{{request.path | full_link}}" />
+	{% endblock %}
+
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<!-- iOS webapp -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-touch-fullscreen" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon.png">
+	<!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png">--->
+		<link rel="manifest" href="/assets/manifest.json">
+		<link rel="mask-icon" href="/assets/images/favicon.png" color="#FF66AC">
+		<link rel="shortcut icon" href="/assets/images/favicon.png">
+		<meta name="apple-mobile-web-app-title" content="Drama">
+		<meta name="application-name" content="Drama">
+		<meta name="msapplication-TileColor" content="#FF66AC">
+		<meta name="msapplication-config" content="/assets/images/browserconfig.xml">
+		<meta name="theme-color" content="#FF66AC">
+
+
+
+		<link
+		rel="apple-touch-startup-image"
+		sizes="320x480"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="640x960"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-icon"
+		sizes="640x1136"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-icon"
+		sizes="750x1334"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="768x1004"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="768x1024"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="828x1792"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1024x748"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1024x768"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1125x2436"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1242x2208"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1242x2688"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1334x750"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1536x2008"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1536x2048"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1668x2224"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="1792x828"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="2048x1496"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="2048x1536"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="2048x2732"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="2208x1242"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="2224x1668"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="2436x1125"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="2668x1242"
+		href="/assets/images/favicon.png"
+		/>
+		<link
+		rel="apple-touch-startup-image"
+		sizes="2737x2048"
+		href="/assets/images/favicon.png"
+		/>
+
+
+
+		<!-- Drama CSS -->
+		
+		{% block stylesheets %}
+
+		{% if v %}
+			<link rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/style/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+		{% else %}
+			<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
+		{% endif %}
+
+		{% endblock %}
+
+		<!-- Font Awesome -->
+		<link href="/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
+
+		{% block fixedMobileBarJS %}
+		{% endblock %}
+
+		{% if v %}
+
+		<script>
+			function formkey() {
+			 return '{{v.formkey}}';
+		 }
+	 </script>
+	 {% endif %}
+
+ </head>
+
+ <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="overflow-x: hidden;">
+	<a href="https://secure.actblue.com/donate/ms_blm_homepage_2019"><img src="/assets/images/blm.png" width="100%"></a>
+
+{% include "header.html" %}
+
+<!-- Page Content -->
+
+{% block mobileUserBanner %}
+{% endblock %}
+
+{% block mobileBanner %}
+{% endblock %}
+
+{% block postNav %}
+{% endblock %}
+
+<div class="container">
+	<div class="row justify-content-around" id="main-content-row">
+
+		{% block leftSidebar %}
+		{% block leftSidebarBlock %}
+		{% endblock %}
+		{% endblock %}
+
+		<div class="col h-100 {% block customPadding %}{% if not '/message' in request.path %}custom-gutters{% endif %}{% endblock %}" id="main-content-col">
+
+			{% block desktopUserBanner %}
+			{% endblock %}
+
+			{% block desktopBanner %}
+			{% endblock %}
+
+			{% block PseudoSubmitForm %}
+			{% endblock %}
+
+			{% block searchText %}
+			{% endblock %}
+
+			{% block content %}
+			{% endblock %}
+
+			{% block pagenav %}
+			{% endblock %}
+
+		</div>
+		
+	</div>
+</div>
+
+{% block mobilenavbar %}
+{% include "mobile_navigation_bar.html" %}
+{% endblock %}
+
+{% block actionsModal %}
+{% endblock %}
+
+{% block reportCommentModal %}
+{% endblock %}
+
+{% block guildModal %}
+{% endblock %}
+
+{% block GIFtoast %}
+{% endblock %}
+
+{% block GIFpicker %}
+{% endblock %}
+
+<!-- Clipboard Toast -->
+
+<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body text-center">
+		<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
+	</div>
+</div>
+
+<div class="toast clipboard" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body text-center">
+		<i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy link
+	</div>
+</div>
+
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body bg-success text-center text-white">
+		<i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text"></span>
+	</div>
+</div>
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body bg-danger text-center text-white">
+		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text"></span>
+	</div>
+</div>
+
+{% if v %}
+{% include "flag_post_modal.html" %}
+{% include "flag_comment_modal.html" %}
+{% include "gif_modal.html" %}
+{% include "delete_comment_modal.html" %}
+{% include "delete_post_modal.html" %}
+{% endif %}
+
+{% include "expanded_image_modal.html" %}
+
+{% include "bootstrap.html" %}
+
+<script src="/assets/js/all_js.js"></script>
+
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+	var clipboard = new ClipboardJS('.copy-link');
+	clipboard.on('success', function(e) {
+
+		jQuery(function($) {
+			$('#toast-success').toast('show');
+		})
+		console.log(e);
+	});
+	clipboard.on('error', function(e) {
+
+		jQuery(function($) {
+			$('#toast-error').toast('show');
+		})
+		console.log(e);
+	});
+</script>
+
+<!-- Mobile "install the app" tooltip -->
+
+
+{% if request.path=='/' and g.system and g.timestamp>session.get('tooltip_last_dismissed',0)+60*60*24 and (not g.system.endswith('/chrome') and not g.system.endswith('/other')) and not g.system.endswith('/webview') %}
+
+<div id="mobile-prompt-container" class="fixed-bottom">
+	<div id="mobile-prompt" href="javascript:void(0)" data-toggle="tooltip" data-container="#mobile-prompt-container" data-placement="top" data-trigger="click" title="Install the Drama webapp by saving this page to your home screen!"></div>
+</div>
+{% endif %}
+
+</body>
+
+</html>

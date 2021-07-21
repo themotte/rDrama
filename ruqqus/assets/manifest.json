@@ -1,0 +1,8 @@
+{
+  "name": "Drama",
+  "short_name": "Drama",
+  "start_url": "https://rdrama.net",
+  "display": "standalone",
+  "background_color": "#FF66AC",
+  "description": "Drama"
+}

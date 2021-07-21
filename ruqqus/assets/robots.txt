@@ -1,0 +1,19 @@
+User-Agent: *
+Disallow: /api/*
+Disallow: /mod/*
+Disallow: /submit
+Disallow: /settings
+Disallow: /me
+
+User-Agent: DotBot
+User-Agent: TurnitinBot
+User-Agent: Huaweisymantecspider
+User-Agent: SiteSnagger
+User-Agent: TeleportPro
+User-Agent: Xaldon_WebSpider
+User-Agent: MJ12bot
+User-Agent: SEMrushBot
+User-Agent: AhrefsBot
+User-Agent: CCBot
+User-agent: SBSearch
+Disallow: /

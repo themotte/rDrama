@@ -1,0 +1,20 @@
+{% extends "errors/default.html" %}
+
+{% block title %}
+<title>402 Payment Required</title>
+{% endblock %}
+
+{% block pagetype %}error-402{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+	<div class="col-10 col-md-5">
+	<div class="text-center px-3 my-8">
+			<i class="fad fa-sack-dollar text-muted mb-5" style="font-size: 5rem;"></i>
+			<h1 class="h5">402 Payment Required</h1>
+			<p class="text-muted mb-5">The royal bank has told us that you owe them some coin. You'll need to pay off your debts before you can continue.</p>
+			<div><a href="/settings/premium" class="btn btn-primary">Go to Coin settings</a></div>
+		</div>
+	</div>
+</div>
+{% endblock %}

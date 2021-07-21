@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: rdrama.net
+Token: 0774158a4aec1e891263f84cf37919c0aa19309b9fba4ad9c4a0aae8946f5d0d

@@ -1,0 +1,69 @@
+<div class="container d-inline-flex d-lg-none">
+
+		<div class="row fixed-bottom bg-white border-top p-2" id="mobile-bottom-navigation-bar"
+		style="z-index: 100; bottom: 0px; transition: bottom cubic-bezier(0, 0, 0.2, 1) 220ms;">
+
+				<button type="button" class="col px-0 pl-2 btn btn-dead m-0" style="border-color: transparent !important;">
+						<a href="/" class="text-decoration-none" role="button">
+								<div class="text-center {% if request.path=='/' and request.full_path!='/?sort=hot&t=all' and request.full_path!='/?sort=new&t=all' %}text-purple{% else %}text-muted{% endif %}">
+										<i class="fas fa-home-alt text-lg d-block"></i>
+										<div class="text-small">Home</div>
+								</div>
+						</a>
+				</button>
+{% if v and v.defaultsorting == 'new' %}
+				<button type="button" class="col px-0 btn btn-dead m-0" style="border-color: transparent !important;">
+						<a href="/?sort=hot&t=all" class="text-decoration-none" role="button">
+								<div class="text-center {% if request.full_path=='/?sort=hot&t=all' %}text-purple{% else %}text-muted{% endif %}">
+										<i class="fas fa-fire text-lg d-block"></i>
+										<div class="text-small">Hot</div>
+								</div>
+						</a>
+				</button>
+{% else %}
+				<button type="button" class="col px-0 btn btn-dead m-0" style="border-color: transparent !important;">
+						<a href="/?sort=new&t=all" class="text-decoration-none" role="button">
+								<div class="text-center {% if request.full_path=='/?sort=new&t=all' %}text-purple{% else %}text-muted{% endif %}">
+										<i class="fas fa-sparkles text-lg d-block"></i>
+										<div class="text-small">New</div>
+								</div>
+						</a>
+				</button>
+{% endif %}
+				<button type="button" class="col px-2 btn btn-dead m-0" style="border-color: transparent !important;">
+						<a href="/comments" class="text-decoration-none" role="button">
+								<div class="text-center {% if request.path=='/comments' %}text-purple{% else %}text-muted{% endif %}">
+										<i class="fas fa-comment-dots text-lg d-block"></i>
+										<div class="text-small">Comments</div>
+								</div>
+						</a>
+				</button>
+				<button type="button" class="col px-0 btn btn-dead m-0" style="border-color: transparent !important;">
+						<a href="/leaderboard" class="text-decoration-none" role="button">
+								<div class="text-center {% if request.path=='/leaderboard' %}text-purple{% else %}text-muted{% endif %}">
+										<i class="fas fa-trophy text-lg d-block"></i>
+										<div class="text-small">Users</div>
+								</div>
+						</a>
+				</button>
+{% if v %}
+				<button type="button" class="col px-0 pr-2 btn btn-dead m-0" style="border-color: transparent !important;">
+						<a href="{{v.permalink}}" class="text-decoration-none" role="button">
+								<div class="text-center {% if request.path==v.permalink %}text-purple{% else %}text-muted{% endif %}">
+										<i class="fas fa-user-circle text-lg d-block"></i>
+										<div class="text-small">Profile</div>
+								</div>
+						</a>
+				</button>
+{% else %}
+				<button type="button" class="col px-0 pr-2 btn btn-dead m-0" style="border-color: transparent !important;">
+						<a href="/signup" class="text-decoration-none" role="button">
+								<div class="text-center text-muted">
+										<i class="fas fa-user-plus text-lg d-block"></i>
+										<div class="text-small">Sign Up</div>
+								</div>
+						</a>
+				</button>
+{% endif %}
+		</div>
+</div>

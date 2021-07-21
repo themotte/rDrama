@@ -1,0 +1,30 @@
+
+{% for u in users %}
+
+<div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-4">
+	<div id="user-{{u.base36id}}" class="card h-100">
+		<div style="position: relative;"><img src="{{u.banner_url}}" class="card-img-top" alt="@{{u.username}} user banner" style="height: 175px; object-fit: cover">
+
+			<img src="{{u.profile_url}}" class="profile-pic-50 border-3 border-white" style="position: absolute; left: 15px; bottom: 15px; box-sizing: content-box;"></div>
+			<div class="card-body" style="word-wrap: break-word;">
+				<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+
+					<a class="card-title text-break stretched-link h5 mb-0" href="{{u.permalink}}">@{{u.username}}</a>
+
+					{% if v %}
+						{% if v.id!=u.id and not u.is_private and not u.is_nofollow %}
+						<div id="button-sub-{{u.base36id}}" style="z-index: 2" class="{% if u.has_follower(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post('/api/follow/{{u.username}}', callback=function(){document.getElementById('button-unsub-{{u.base36id}}').classList.toggle('d-none');document.getElementById('button-sub-{{u.base36id}}').classList.toggle('d-none');})">Follow</a></div>
+						<div id="button-unsub-{{u.base36id}}" style="z-index: 2" class="{% if not u.has_follower(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post('/api/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub-{{u.base36id}}').classList.toggle('d-none');document.getElementById('button-sub-{{u.base36id}}').classList.toggle('d-none');})">Unfollow</a></div>
+						{% endif %}
+					{% else %}
+					<div id="button-sub-{{u.base36id}}" style="z-index: 2" "><a class="btn btn-primary btn-sm" href="/signup?redirect={{request.path}}">Follow</a></div>
+					{% endif %}
+				</div>
+
+				{% if not hide_bios %}
+				<div class="card-text">{{u.bio_html | safe}}</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endfor %}

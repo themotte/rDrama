@@ -1,0 +1,33 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>{{title}}</title>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
+{% block pagetype %}message{% endblock %}
+
+{% block customPadding %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+	<div class="col-10 col-md-5">
+		<div class="text-center py-7 py-md-8">
+
+			<span class="fa-stack fa-2x text-muted mb-4">
+				<i class="fas fa-square text-gray-400 fa-stack-2x"></i>
+				<i class="fas text-gray-600 {% if message %}fa-envelope-open-text{% elif error %}fa-exclamation-triangle{% endif %} fa-stack-1x text-lg"></i>
+			</span>
+
+			<h1 class="h5">{{title}}</h1>
+			<div class="text-small text-muted mb-3">{{message if message else error}}</div>
+			{% if link and link_text %}
+			<a href="{{link}}" class="btn btn-primary btn-sm">{{link_text}}</a>
+			{% else %}
+			<a href="/" class="btn btn-primary btn-sm">Go to homepage</a>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}

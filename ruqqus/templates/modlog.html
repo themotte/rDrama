@@ -1,0 +1,86 @@
+{% extends "guild_settings.html" %}
+
+{% block pagetitle %}Moderation Log{% endblock %}
+
+{% block stylesheets %}
+
+{% if v %}
+	<link rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/style/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+{% else %}
+	<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-around">
+
+	<div class="col h-100">
+
+		<div class="d-md-flex justify-content-between mb-3">
+
+			<div>
+				<h5>Moderation Log</h5>
+			</div>
+
+		</div>
+
+		<div class="rounded border bg-white mx-auto">
+			{% for ma in actions %}
+
+				<div id="action-{{ma.base36id}}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white{% if loop.index > 1 %} border-top{% endif %}">
+
+				 <div class="d-flex flex-grow-1 align-items-center">
+					<div class="d-flex align-items-center justify-content-center {{ma.color}} mr-3 rounded-lg flex-shrink-0" style="width: 32px;height: 32px;"><i class="far text-center {{ma.icon}} text-lg text-white fa-fw"></i></div>
+					<div class="d-flex align-items-center">
+						<span class="rounded">
+						 <img src="{{ma.user.profile_url}}" alt="avatar" style="width: 42px;height: 42px;" class="rounded-circle">
+					 </span>
+						 <div class="text-muted pl-3">
+							<div>
+								{% if not ma.user.is_deleted %}
+									<a href="{{ma.user.permalink}}" class="font-weight-bold text-black" target="_self">@{{ma.user.username}}</a>
+								{% else %}
+									[deleted user]
+								{% endif %}
+
+							 <span>{{ma.string | safe}}</span>
+						 </div>
+
+						 <div class="text-gray-500">{{ma.age_string}} <a href="{{ma.permalink}}"><i class="far fa-link ml-1 text-muted"></i></a> <a href="javascript:void(0)" class="copy-link" role="button"data-clipboard-text="{{ma.permalink | full_link}}"><i class="far fa-copy ml-1 text-muted"></i></a></div>
+
+					 </div>
+				 </div>
+			 </div>
+			</div>
+
+
+			{% else %}
+			<div>There's nothing here right now.</div>
+			{% endfor %}
+		</div>
+
+
+		<nav aria-label="Page navigation" class="mb-5">
+			<ul class="pagination pagination-sm mb-0">
+				{% if page>1 %}
+				<li class="page-item">
+					<small><a class="page-link" href="?page={{page-1}}" tabindex="-1">Prev</a></small>
+				</li>
+				{% else %}
+				<li class="page-item disabled"><span class="page-link">Prev</span></li>
+				{% endif %}
+				{% if next_exists %}
+				<li class="page-item">
+					<small><a class="page-link" href="?page={{page+1}}">Next</a></small>
+				</li>
+				{% else %}
+				<li class="page-item disabled"><span class="page-link">Next</span></li>
+				{% endif %}
+			</ul>
+		</nav>
+
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% set board = b if b else p.board %}
+
+<div class="modal fade" id="guildDetailsModal" tabindex="-1" role="dialog" aria-labelledby="guildDetailsModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header position-relative border-0" style="background-image: url({{board.banner_url}}); height: 100px; overflow: hidden; object-fit: cover; background-size: cover;">
+				<div class="white-overlay position-absolute w-100 h-100" style="left: 0; top: 0; background-color: rgba(255, 255, 255, 0); background-image: linear-gradient(180deg, #cfcfcf00 25%, #cfcfcf 100%);"></div>
+				<div style="z-index: 1" class="d-flex align-items-center my-auto">
+					<img src="{{board.profile_url}}" class="profile-pic-65 bg-white mr-3"><h5 class="modal-title h4">+{{board.name}}
+					{% if board.over_18 %}
+					<span class="badge badge-danger text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild contains adult content">+18</span>
+					{% endif %}
+				</h5>
+			</div>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>			
+		<div class="modal-body p-0">
+			<div class="d-flex justify-content-between align-items-center border-bottom p-3">
+
+				<div class="">
+					<div class="font-weight-bold text-small text-uppercase text-muted mb-1" style="letter-spacing: 0.025rem;">Founded</div>
+					<div data-toggle="tooltip" data-placement="bottom" title="{{board.created_date}}">{{board.age_string}}</div>
+				</div>
+
+				<div class="">
+					<div class="font-weight-bold text-small text-uppercase text-muted mb-1" style="letter-spacing: 0.025rem;">Badmins</div>
+					<div>{{board.mods_count}}</div>
+				</div>
+
+				<div class="">
+					<div class="font-weight-bold text-small text-uppercase text-muted mb-1" style="letter-spacing: 0.025rem;">Members</div>
+					<div>{{board.subscriber_count}}</div>
+				</div>
+
+			</div>
+			<div class="p-3">
+
+				<div class="h6">About</div>
+
+				{{board.description_html | safe}}
+
+			</div>
+
+<!-- hide rules thingy
+			<div class="p-3">
+
+				<div class="h6 text-danger">Guild rules</div>
+
+				<ol class="pl-0 mb-0">	 
+					<li>
+						<span class="h6">Comply with US law</span>
+						<p style="padding: 0 0 0 22px;">Do not post copyrighted material that you are not authorized to distribute. Do not post anything not legal to publish within, or export from, the United States of America.
+						</p>
+					</li>
+					<li>
+						<span class="text-black font-weight-bold">Do not harass other users</span>
+						<p style="padding: 0 0 0 22px;">
+							Do not harass or threaten others on Drama. You are not allowed to share or publish personal information, either yours or another person.
+						</p>
+					</li>
+					<li>
+						<span class="text-black font-weight-bold">No inciting violence</span>
+						<p style="padding: 0 0 0 22px;">
+							No incitement, planning or execution of unlawful or violent activity. This does not include the exercise of human rights that may be considered unlawful in a user's home country but protected in the United States.
+						</p>
+					</li>
+					<li>
+						<span class="text-black font-weight-bold">Check for duplicates</span>
+						<p style="padding: 0 0 0 22px;">
+							Nobody likes reposts. Please make sure the content you're posting hasn't been posted on Drama before.
+						</p>
+					</li>
+				</ol>
+
+			</div>
+
+-->
+
+		</div>
+
+		<div class="modal-footer" style="background-color: transparent; background-image: linear-gradient(180deg, #cfcfcf00 25%, #cfcfcf 100%);">
+
+		</div>
+
+	</div>
+</div>
+</div>

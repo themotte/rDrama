@@ -1,0 +1,38 @@
+{% extends "embeds/embed_default.html" %}
+
+{% block title %}
+{<title>@{{c.author.username}} comments on "{{c.post.title}}"</title>
+<meta name="description" content="{{c.body}}">
+{% endblock %}
+
+{% endblock %}
+
+<div class="post-info font-weight-bold">
+		<span class="align-top"><a href="{{c.permalink}}">{{c.post.title | safe}}</a></span>
+</div>
+
+<div id="comment-{{c.base36id}}" class="comment">
+
+
+		<span class="comment-collapse"></span>
+
+		<div class="comment-body">
+
+				<div id="comment-{{c.base36id}}-only" class="">
+
+						<div class="user-info">{% if c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
+								{% if c.is_banned %}[Removed by administrators]{% else %}[Deleted by author]{% endif %}
+						</div>
+
+
+						<div id="comment-banned-warning" class="comment-text text-danger text-small">
+								{% if c.is_banned and c.ban_reason %}Reason: {{c.ban_reason}}{% endif %}
+						</div>
+
+	</div>
+
+</div>
+
+
+</div>
+{% block content %}
