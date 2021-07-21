@@ -804,16 +804,3 @@ $('.expandable-image').click( function(event) {
 
 	expandDesktopImage(url,url);
 })
-
-$('.text-expand').click(function(event){
-  if (event.which != 1) {
-    return
-  };
-  id=$(this).data('id');
-
-
-  $('#post-text-'+id).toggleClass('d-none');
-  $('.text-expand-icon-'+id).toggleClass('fa-expand-alt');
-  $('.text-expand-icon-'+id).toggleClass('fa-compress-alt');
-
-})
