@@ -405,8 +405,8 @@ def sex():
 
 @app.route("/admin/resize", methods=["GET"])
 def resize():
-    new_thread = threading.Thread(target=sex)
-    new_thread.start()
+	new_thread = threading.Thread(target=sex)
+	new_thread.start()
 	return "sex"
 
 @app.route("/submit", methods=['POST'])
