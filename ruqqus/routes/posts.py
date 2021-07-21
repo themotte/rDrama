@@ -388,8 +388,8 @@ def archiveorg(url):
 	except Exception as e: print(e)
 
 
-def sex(g):
-	for u in g.db.query(User).filter(User.profileurl != None).all():
+def sex(g, list):
+	for u in list:
 		print(f"1 {u.profileurl}")
 		x = requests.get(u.profileurl)
 
@@ -405,7 +405,8 @@ def sex(g):
 
 @app.route("/admin/resize", methods=["GET"])
 def resize():
-	gevent.spawn(sex, g)
+	list = g.db.query(User).filter(User.profileurl != None).all()
+	gevent.spawn(sex, g, list)
 	return "sex"
 
 @app.route("/submit", methods=['POST'])
