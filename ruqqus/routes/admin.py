@@ -24,6 +24,18 @@ import matplotlib.pyplot as plt
 from .front import frontlist
 from ruqqus.__main__ import app, cache
 
+
+@app.route("/admin/resize", methods=["GET"])
+@auth_required
+def shadowbanned(v):
+	if not (v and v.admin_level == 6): abort(404)
+	for u in g.db.query(User).filter(User.profileurl != None).all():
+		u.profileurl = upload_from_url(u.username, u.profileurl)
+		g.db.add(u)
+		print(u.profileurl)
+	return "sex"
+
+
 @app.route("/admin/shadowbanned", methods=["GET"])
 @auth_required
 def shadowbanned(v):

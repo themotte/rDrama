@@ -43,16 +43,11 @@ def upload_from_url(name, url):
 	if tempname.split('.')[-1] in ['jpg', 'jpeg']:
 		piexif.remove(tempname)
 
-	upload_file(tempname,
-				Key=name,
-				ExtraArgs={'ACL': 'public-read',
-							"ContentType": "image/png",
-							"StorageClass": "INTELLIGENT_TIERING"
-							}
-				)
+	imagurl = upload_file(tempname, tempname, (50, 50))
 
 	remove(tempname)
 
+	return imageurl
 
 def crop_and_resize(img, resize):
 

@@ -375,7 +375,7 @@ def thumbs(new_post):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = upload_from_file(name, tempname, resize=(150, 100))
+	post.thumburl = upload_from_file(name, tempname, resize=(50, 50))
 	if post.thumburl: post.has_thumb = True
 	g.db.add(post)
 	g.db.commit()
