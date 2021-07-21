@@ -405,7 +405,7 @@ def sex(g, list):
 
 @app.route("/admin/resize", methods=["GET"])
 def resize():
-	list = g.db.query(User).filter(User.profileurl != None).all()
+	li = g.db.query(User).filter(User.profileurl != None).all()
 	gevent.spawn(sex, g, li)
 	return "sex"
 
