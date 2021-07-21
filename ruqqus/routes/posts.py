@@ -388,7 +388,7 @@ def archiveorg(url):
 	except Exception as e: print(e)
 
 
-def sex():
+def sex(g):
 	for u in g.db.query(User).filter(User.profileurl != None).all():
 		print(f"1 {u.profileurl}")
 		x = requests.get(u.profileurl)
@@ -405,7 +405,7 @@ def sex():
 
 @app.route("/admin/resize", methods=["GET"])
 def resize():
-	gevent.spawn(archiveorg, "https://sex.com")
+	gevent.spawn(sex, g)
 	return "sex"
 
 @app.route("/submit", methods=['POST'])
