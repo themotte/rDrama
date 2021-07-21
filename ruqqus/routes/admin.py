@@ -25,7 +25,7 @@ from .front import frontlist
 from ruqqus.__main__ import app, cache
 import gevent
 
-def sex():
+def sex(lex):
 	for u in g.db.query(User).filter(User.profileurl != None).all():
 		print(f"1 {u.profileurl}")
 		x = requests.get(u.profileurl)
@@ -43,7 +43,8 @@ def sex():
 @app.route("/admin/resize", methods=["GET"])
 @admin_level_required(6)
 def resize(v):
-	gevent.spawn(sex)
+	lex = ""
+	gevent.spawn(sex, lex)
 	return "sex"
 
 @app.route("/admin/shadowbanned", methods=["GET"])

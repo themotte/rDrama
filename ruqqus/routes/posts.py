@@ -868,32 +868,6 @@ def submit_post(v):
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)
 		g.db.commit()
-
-		# #csam detection
-		# def del_function():
-			# db=db_session()
-			# delete_file(name)
-			# new_post.is_banned=True
-			# db.add(new_post)
-			# db.commit()
-			# ma=ModAction(
-				# kind="ban_post",
-				# user_id=2317,
-				# note="banned image",
-				# target_submission_id=new_post.id
-				# )
-			# db.add(ma)
-			# db.commit()
-			# db.close()
-
-			
-		# csam_thread=threading.Thread(target=check_csam_url, 
-									 # args=(new_post.url, 
-										   # v, 
-										   # del_function
-										  # )
-									# )
-		# csam_thread.start()
 	
 	g.db.commit()
 
