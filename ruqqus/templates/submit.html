@@ -2,7 +2,87 @@
 <html lang="en">
 
 <head>
+		<script>
+			// Paste to create submission
 
+			document.addEventListener('paste', function (event) {
+
+				var nothingFocused = document.activeElement === document.body;
+
+				if (nothingFocused) {
+
+					if (document.getElementById('guild-name-reference')) {
+						var guild = document.getElementById('guild-name-reference').innerText;
+					}
+
+					var clipText = event.clipboardData.getData('Text');
+
+					var url = new RegExp('^(?:[a-z]+:)?//', 'i');
+
+					if (url.test(clipText) && window.location.pathname !== '/submit' && guild == undefined) {
+						window.location.href = '/submit?url=' + clipText;
+					}
+					else if (url.test(clipText) && window.location.pathname !== '/submit' && guild !== undefined) {
+						window.location.href = '/submit?url=' + clipText + '&guild=' + guild;
+					}
+					else if (url.test(clipText) && window.location.pathname == '/submit' && guild == undefined) {
+
+						document.getElementById("post-URL").value = clipText;
+
+						autoSuggestTitle()
+
+					}
+				}
+			});
+
+			//	Submit Page Front-end Validation
+
+			function checkForRequired() {
+
+			// Divs
+
+			var title = document.getElementById("post-title");
+
+			var url = document.getElementById("post-URL");
+
+			var text = document.getElementById("post-text");
+
+			var button = document.getElementById("create_button");
+
+			var image = document.getElementById("file-upload");
+
+			// Toggle reuqired attribute
+
+			if (url.value.length > 0 || image.value.length > 0) {
+				text.required = false;
+				url.required=false;
+			} else if (text.value.length > 0 || image.value.length > 0) {
+				url.required = false;
+			} else {
+				text.required = true;
+				url.required = true;
+			}
+
+			// Validity check
+
+			var isValidTitle = title.checkValidity();
+
+			var isValidURL = url.checkValidity();
+
+			var isValidText = text.checkValidity();
+
+			// Disable submit button if invalid inputs
+
+			if (isValidTitle && (isValidURL || image.value.length>0)) {
+				button.disabled = false;
+			} else if (isValidTitle && isValidText) {
+				button.disabled = false;
+			} else {
+				button.disabled = true;
+			}
+
+			}
+		</script>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
