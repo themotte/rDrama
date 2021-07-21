@@ -19,7 +19,7 @@ Install Docker on your machine.
 
 Download the latest release of Drama from GitHub.
 
-[Drama Latest Release - GitHub](https://github.com/Drama/Drama/releases)
+[Drama Latest Release - GitHub](https://github.com/Aevann1/Drama/releases)
 
 ### PowerShell
 
