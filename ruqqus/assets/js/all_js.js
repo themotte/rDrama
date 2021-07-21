@@ -751,41 +751,6 @@ myId = getId(myUrl);
 $('#ytEmbed').html('<iframe width="100%" height="475" src="//www.youtube.com/embed/' + myId + '" frameborder="0" allowfullscreen></iframe>');
 
 
-// Expand Images on Desktop
-
-function expandDesktopImage(image, link) {
-
-// Link text
-
-var linkText = document.getElementById("desktop-expanded-image-link");
-var imgLink = document.getElementById("desktop-expanded-image-wrap-link");
-
-var inlineImage = document.getElementById("desktop-expanded-image");
-
-inlineImage.src = image.replace("100w.gif", "giphy.gif");
-linkText.href = image;
-imgLink.href=image;
-
-if (image.includes("i.ruqqus.ga")) {
-	linkText.textContent = 'Go to website';
-}
-else {
-	linkText.textContent = 'View original';
-}
-};
-
-// When image modal is closed
-
-$('#expandImageModal').on('hidden.bs.modal', function (e) {
-
-	// remove image src and link
-
-	document.getElementById("desktop-expanded-image").src = '';
-
-	document.getElementById("desktop-expanded-image-link").href = '';
-
-});
-
 // Text Formatting
 
 // Bold Text
@@ -960,4 +925,17 @@ $('.expandable-image').click( function(event) {
 	var url= $(this).data('url');
 
 	expandDesktopImage(url,url);
+})
+
+$('.text-expand').click(function(event){
+  if (event.which != 1) {
+    return
+  };
+  id=$(this).data('id');
+
+
+  $('#post-text-'+id).toggleClass('d-none');
+  $('.text-expand-icon-'+id).toggleClass('fa-expand-alt');
+  $('.text-expand-icon-'+id).toggleClass('fa-compress-alt');
+
 })

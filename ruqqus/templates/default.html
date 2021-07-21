@@ -3,18 +3,40 @@
 <head>
 	<script>
 
-		$('.text-expand').click(function(event){
-		  if (event.which != 1) {
-			return
-		  };
-		  id=$(this).data('id');
+		// Expand Images on Desktop
 
+		function expandDesktopImage(image, link) {
 
-		  $('#post-text-'+id).toggleClass('d-none');
-		  $('.text-expand-icon-'+id).toggleClass('fa-expand-alt');
-		  $('.text-expand-icon-'+id).toggleClass('fa-compress-alt');
+		// Link text
 
-		})
+		var linkText = document.getElementById("desktop-expanded-image-link");
+		var imgLink = document.getElementById("desktop-expanded-image-wrap-link");
+
+		var inlineImage = document.getElementById("desktop-expanded-image");
+
+		inlineImage.src = image.replace("100w.gif", "giphy.gif");
+		linkText.href = image;
+		imgLink.href=image;
+
+		if (image.includes("i.ruqqus.ga")) {
+			linkText.textContent = 'Go to website';
+		}
+		else {
+			linkText.textContent = 'View original';
+		}
+		};
+
+		// When image modal is closed
+
+		$('#expandImageModal').on('hidden.bs.modal', function (e) {
+
+			// remove image src and link
+
+			document.getElementById("desktop-expanded-image").src = '';
+
+			document.getElementById("desktop-expanded-image-link").href = '';
+
+		});
 
 		post_comment=function(fullname){
 
