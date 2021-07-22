@@ -42,7 +42,7 @@
 {% for user in users2 %}
 	<tr>
 		<td style="font-weight:bold;">{{users2.index(user)+1}}</td>
-		<td {% if user.patron %}class="patron"{% endif %} style="font-weight:bold;"><a style="color:#{{user.namecolor}}" href="/@{{user.username}}">{{user.username}}</a></td>
+		<td><a {% if user.patron %}class="patron"{% endif %} style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}">{{user.username}}</a></td>
 		<td style="font-weight:bold; text-align:right;">{{user.follower_count}}</td>
 	</tr>
 {% endfor %}
