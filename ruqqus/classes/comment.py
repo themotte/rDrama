@@ -38,6 +38,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	created_utc = Column(Integer, default=0)
 	edited_utc = Column(Integer, default=0)
 	is_banned = Column(Boolean, default=False)
+	shadowbanned = Column(Boolean, default=False)
 	distinguish_level = Column(Integer, default=0)
 	gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
 	distinguished_board = relationship("Board", lazy="joined", primaryjoin="Comment.gm_distinguish==Board.id")

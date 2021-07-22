@@ -360,6 +360,8 @@ def api_comment(v):
 		if badlink:
 			return jsonify({"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
 
+	if v.shadowbanned: shadowbanned = True
+	else: shadowbanned = False
 	# create comment
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
@@ -371,7 +373,7 @@ def api_comment(v):
 				original_board_id=parent_post.board_id,
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
-				creation_region=request.headers.get("cf-ipcountry")
+				shadowbanned=shadowbanned
 				)
 
 	g.db.add(c)

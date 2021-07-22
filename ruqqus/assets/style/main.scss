@@ -4065,32 +4065,31 @@ img.emoji {
 .patron {
     -webkit-animation: 3s ease-in-out 0s normal none infinite patron;
     animation: 3s ease-in-out 0s normal none infinite patron;
-    position: relative;
 }
 
 @-webkit-keyframes patron {
     0% {
-		color: violet !important;
+		color: violet;
 		text-shadow:0px 0px 10px violet, 0px 0px 10px violet, 0px 0px 10px violet, 0px 0px 10px violet;
     }
     20% {
-		color: red !important;
+		color: red;
 		text-shadow:0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red;
     }
     40% {
-		color: orange !important;
+		color: orange;
 		text-shadow:0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange;
     }
     60% {
-		color: yellow !important;
+		color: yellow;
 		text-shadow:0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow;
     }
     80% {
-		color: blue !important;
+		color: blue;
 		text-shadow:0px 0px 10px blue, 0px 0px 10px blue, 0px 0px 10px blue, 0px 0px 10px blue;
     }
     100% {
-		color: violet !important;
+		color: violet;
 		text-shadow:0px 0px 0.1px violet, 0px 0px 0.1px violet, 0px 0px 0.1px violet, 0px 0px 0.1px violet;
     }
 }
