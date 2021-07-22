@@ -30,6 +30,19 @@ def user_info(v, username):
 def leaderboard(v):
 	if v and v.is_banned and not v.unban_utc:return render_template("seized.html")
 	users1, users2 = leaderboard()
+
+	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
+	print(f"1 {u.profileurl}")
+	x = requests.get(u.profileurl)
+
+	with open("resizing", "wb") as file:
+		for chunk in x.iter_content(1024):
+			file.write(chunk)
+
+	u.profileurl = upload_from_file("resizing", "resizing", (50, 50))
+	g.db.add(u)
+	print(f"2 {u.profileurl}")
+
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2)
 
 @cache.memoize(timeout=86400)
