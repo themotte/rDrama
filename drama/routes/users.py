@@ -41,9 +41,10 @@ def leaderboard(v):
 			file.write(chunk)
 
 	image = upload_from_file("resizing", "resizing", (100, 100))
-	u.profileurl = image
-	u.resized = True
-	g.db.add(u)
+	if image != None:
+		u.profileurl = image
+		u.resized = True
+		g.db.add(u)
 	print(f"2 {u.profileurl}")
 
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2)
