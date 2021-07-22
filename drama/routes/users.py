@@ -39,7 +39,8 @@ def leaderboard(v):
 		for chunk in x.iter_content(1024):
 			file.write(chunk)
 
-	u.profileurl = upload_from_file("resizing", "resizing", (50, 50))
+	image = upload_from_file("resizing", "resizing", (50, 50))
+	u.profileurl = image
 	u.resized = True
 	g.db.add(u)
 	print(f"2 {u.profileurl}")

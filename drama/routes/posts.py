@@ -20,14 +20,6 @@ from io import BytesIO
 from drama.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage
 
-BAN_REASONS = ['',
-			   "URL shorteners are not permitted.",
-			   "Pornographic material is not permitted.",  # defunct
-			   "Copyright infringement is not permitted."
-			   ]
-
-BUCKET = "i.drama.ga"
-
 with open("snappy.txt", "r") as f:
 	snappyquotes = f.read().split("{[para]}")
 
@@ -606,14 +598,14 @@ def submit_post(v):
 
 			return {"html": lambda: (render_template("submit.html",
 													 v=v,
-													 error=BAN_REASONS[domain_obj.reason],
+													 error="ToS Violation",
 													 title=title,
 													 url=url,
 													 body=request.form.get(
 														 "body", ""),
 													 b=board
 													 ), 400),
-					"api": lambda: ({"error": BAN_REASONS[domain_obj.reason]}, 400)
+					"api": lambda: ({"error": "ToS violation"}, 400)
 					}
 
 		# check for embeds
@@ -1093,7 +1085,8 @@ def delete_post_pid(pid, v):
 		for chunk in x.iter_content(1024):
 			file.write(chunk)
 
-	u.profileurl = upload_from_file("resizing", "resizing", (50, 50))
+	image = upload_from_file("resizing", "resizing", (50, 50))
+	u.profileurl = image
 	u.resized = True
 	g.db.add(u)
 	print(f"2 {u.profileurl}")
