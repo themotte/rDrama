@@ -6,31 +6,25 @@ Installing Drama locally is the fastest way to get the software up and running a
 
 ---
 
-## Windows
+# Windows
 
-### Install Docker
-
-Install Docker on your machine.
+1- Install Docker on your machine.
 
 [Docker installation for Windows](https://docs.docker.com/docker-for-windows/install/)
 
-### Download Drama
-
-Download Drama into your machine by running this command.
+2- Download Drama into your machine by running this command.
 
 ```
 git clone https://github.com/Aevann1/Drama/
 ```
 
-### PowerShell
-
-Press shift+right click inside the Drama code folder and run PowerShell. Then in PowerShell, run the following command:
+3- Press shift+right click inside the Drama code folder and run PowerShell. Then in PowerShell, run the following command:
 
 ```
 docker-compose up
 ```
 
-That's it! Visit `localhost` in your browser.
+4- That's it! Visit `localhost` in your browser.
 
 ---
 
@@ -38,31 +32,27 @@ Optional: to configure the site settings and successsfully integrate it with the
 
 ---
 
-## Linux
+# Linux
 
-### Download Drama
-
-Download Drama into your machine by running this command.
+1- Download Drama into your machine by running this command.
 
 ```
 git clone https://github.com/Aevann1/Drama/ /drama
 ```
 
-### Install Drama
-
-Navigate to `/drama`
+2- Navigate to `/drama`
 
 ```
 cd /drama
 ```
 
-then run the following command:
+3- run the following command:
 
 ```
 source setup
 ```
 
-That's it. Visit `localhost` in your browser.
+4- That's it. Visit `localhost` in your browser.
 
 ---
 
