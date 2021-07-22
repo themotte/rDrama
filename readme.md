@@ -1,7 +1,5 @@
 # Installation
 
-## Overview
-
 Installing Drama locally is the fastest way to get the software up and running and start tinkering under the hood.
 
 ---
