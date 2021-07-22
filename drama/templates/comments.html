@@ -242,7 +242,7 @@
 
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="/votes?link=https://rdrama.net{{c.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
-					{% if v and v.id!=c.author_id %}
+					{% if v and v.id!=c.author_id and v.admin_level == 0 %}
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/banaward/comment/{{c.id}}')"><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
 					{% endif %}
 
@@ -451,7 +451,7 @@
 
 					<li class="list-group-item"><a href="/votes?link=https://rdrama.net{{c.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
-					{% if v and v.id!=c.author_id %}
+					{% if v and v.id!=c.author_id and v.admin_level == 0 %}
 					<li class="list-group-item"><a href="javascript:void(0)" onclick="post_toast('/banaward/comment/{{c.id}}')"><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
 					{% endif %}
 
