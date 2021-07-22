@@ -623,7 +623,8 @@ CREATE TABLE public.comments (
     app_id integer,
     creation_region character(2) DEFAULT NULL::bpchar,
     purged_utc integer DEFAULT 0,
-    sentto integer
+    sentto integer,
+    shadowbanned boolean
 );
 
 
