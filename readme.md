@@ -24,8 +24,6 @@ docker-compose up
 
 4- That's it! Visit `localhost` in your browser.
 
----
-
 Optional: to configure the site settings and successsfully integrate it with the external services we use (hcaptcha, cloudflare, aws S3, discord, tenor and mailgun), please edit the variables in the docker-compose.yml file.
 
 ---
@@ -52,7 +50,6 @@ source setup
 
 4- That's it. Visit `localhost` in your browser.
 
----
 
 Optional: to configure the site settings and successsfully integrate it with the external services we use (hcaptcha, cloudflare, aws S3, discord, tenor and mailgun), please run this command and edit the variables:
 
