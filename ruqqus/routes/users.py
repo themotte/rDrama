@@ -19,7 +19,7 @@ beams_client = PushNotifications(
 
 @app.route("/banaward/<user_id>", methods=["POST"])
 @auth_required
-def ban_user(user_id, v):
+def banaward(user_id, v):
 	
 	if v.banawards != 1 and v.banawards != 2: abort(403)
 	user = g.db.query(User).filter_by(id=user_id).first()
