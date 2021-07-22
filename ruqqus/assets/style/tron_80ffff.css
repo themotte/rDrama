@@ -27767,27 +27767,27 @@ img.emoji {
 
 @-webkit-keyframes patron {
   0% {
-    color: violet;
+    color: violet !important;
     text-shadow: 0px 0px 10px violet, 0px 0px 10px violet, 0px 0px 10px violet, 0px 0px 10px violet;
   }
   20% {
-    color: red;
+    color: red !important;
     text-shadow: 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red;
   }
   40% {
-    color: orange;
+    color: orange !important;
     text-shadow: 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange, 0px 0px 10px orange;
   }
   60% {
-    color: yellow;
+    color: yellow !important;
     text-shadow: 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow;
   }
   80% {
-    color: blue;
+    color: blue !important;
     text-shadow: 0px 0px 10px blue, 0px 0px 10px blue, 0px 0px 10px blue, 0px 0px 10px blue;
   }
   100% {
-    color: violet;
+    color: violet !important;
     text-shadow: 0px 0px 0.1px violet, 0px 0px 0.1px violet, 0px 0px 0.1px violet, 0px 0px 0.1px violet;
   }
 }
