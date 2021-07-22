@@ -363,7 +363,7 @@ class User(Base, Stndrd, Age_times):
 	@property
 	@lazy
 	def patron(self):
-		if self.has_badge(21) or self.has_badge(22) or self.has_badge(23) or self.has_badge(24): return True
+		if self.id != 147 and (self.has_badge(21) or self.has_badge(22) or self.has_badge(23) or self.has_badge(24)): return True
 		else: return False
 
 	def vote_status_on_post(self, post):
