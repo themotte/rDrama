@@ -137,7 +137,7 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 		abort(400)
 
 	firstrange = 25 * (page - 1)
-	secondrange = firstrange+100
+	secondrange = firstrange+1000
 	posts = posts[firstrange:secondrange]
 
 	if v and v.hidevotedon: posts = [x for x in posts if x.voted == 0]
