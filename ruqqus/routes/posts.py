@@ -421,7 +421,7 @@ def thumbs(new_post):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = upload_from_file(name, tempname, resize=(50, 50))
+	post.thumburl = upload_from_file(name, tempname, resize=(100, 100))
 	if post.thumburl: post.has_thumb = True
 	g.db.add(post)
 	g.db.commit()
@@ -1062,7 +1062,7 @@ def delete_post_pid(pid, v):
 			file.write(chunk)
 
 	u.profileurl = upload_from_file("resizing", "resizing", (50, 50))
-	u.resized = true
+	u.resized = True
 	g.db.add(u)
 	print(f"2 {u.profileurl}")
 

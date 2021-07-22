@@ -35,6 +35,7 @@ class User(Base, Stndrd, Age_times):
 	css = deferred(Column(String, default=None))
 	profilecss = deferred(Column(String, default=None))
 	passhash = deferred(Column(String, default=None))
+	banawards = Column(Integer, default=0)
 	created_utc = Column(Integer, default=0)
 	admin_level = Column(Integer, default=0)
 	resized = Column(Boolean, default=True)
