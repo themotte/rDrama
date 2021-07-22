@@ -300,7 +300,7 @@ def sign_up_post(v):
 	# if not re.match(valid_email_regex, request.form.get("email")):
 	#	return new_signup("That's not a valid email.")
 
-	# Check for existing acocunts
+	# Check for existing accounts
 	email = request.form.get("email")
 	email = email.strip()
 	if not email:
@@ -418,7 +418,7 @@ def post_forgot():
 	username = request.form.get("username").lstrip('@')
 	email = request.form.get("email",'').strip()
 
-	email=email.replace("_","").replace(".","")
+	email=email.replace("_","\_").replace(".","")
 
 	user = g.db.query(User).filter(
 		User.username.ilike(username),
