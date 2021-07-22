@@ -17249,4 +17249,101 @@ img.emoji {
   border: 2px solid #EDF2F7;
 }
 
+@-webkit-keyframes lgbt {
+  0% {
+    color: violet;
+  }
+  20% {
+    color: red;
+  }
+  40% {
+    color: orange;
+  }
+  60% {
+    color: yellow;
+  }
+  80% {
+    color: blue;
+  }
+  100% {
+    color: violet;
+  }
+}
+@-webkit-keyframes landlord {
+  0% {
+    color: #d26d3f;
+  }
+  10% {
+    color: #d49d42;
+  }
+  20% {
+    color: #d6dc58;
+  }
+  30% {
+    color: #81d94f;
+  }
+  40% {
+    color: #7de373;
+  }
+  50% {
+    color: #d26d3f;
+  }
+  60% {
+    color: #d49d42;
+  }
+  70% {
+    color: #d6dc58;
+  }
+  80% {
+    color: #81d94f;
+  }
+  90% {
+    color: #7de373;
+  }
+  100% {
+    color: #d26d3f;
+  }
+}
+* [href$="/@Dw-Im-Here"], * [href$="/@Racist_FemboyV2"], * [href$="/@DudeBussyLmao"], * [href$="/@InfoWarrior"], * [href$="/@Jew"], * [href$="/@Lysis10"], * [href$="/@fuckaveann"], * [href$="/@JimieWhales"], * [href$="/@CRUSTY"], * [href$="/@Aevann"], * [href$="/@Joan_Wayne_Gacy"], * [href$="/@Sylveon"], * [href$="/@SquisheeKisses"], * [href$="/@wangpangthankyoumaam"], * [href$="/@Chapose"], * [href$="/@cumlord"], * [href$="/@Snappy"], * [href$="/@ponyblaze"], * [href$="/@iStillMissEd"], * [href$="/@Account_109_"], * [href$="/@Yall"], * [href$="/@collectijism"], * [href$="/@Need4Sneed"], * [href$="/@BrokeBackBuck"] {
+  -webkit-animation: 3s ease-in-out 0s normal none infinite lgbt;
+  animation: 3s ease-in-out 0s normal none infinite lgbt;
+}
+
+* [href$="/@Landlord_Messiah"] {
+  -webkit-animation: 3s ease-in-out 0s normal none infinite landlord;
+  animation: 3s ease-in-out 0s normal none infinite landlord;
+}
+
+.patron {
+  -webkit-animation: 3s ease-in-out 0s normal none infinite patron;
+  animation: 3s ease-in-out 0s normal none infinite patron;
+}
+
+@-webkit-keyframes patron {
+  0% {
+    color: violet;
+    text-shadow: 0px 0px 5px violet, 0px 0px 5px violet, 0px 0px 5px violet, 0px 0px 5px violet;
+  }
+  20% {
+    color: red;
+    text-shadow: 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red;
+  }
+  40% {
+    color: orange;
+    text-shadow: 0px 0px 5px orange, 0px 0px 5px orange, 0px 0px 5px orange, 0px 0px 5px orange;
+  }
+  60% {
+    color: yellow;
+    text-shadow: 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow;
+  }
+  80% {
+    color: blue;
+    text-shadow: 0px 0px 5px blue, 0px 0px 5px blue, 0px 0px 5px blue, 0px 0px 5px blue;
+  }
+  100% {
+    color: violet;
+    text-shadow: 0px 0px 0.1px violet, 0px 0px 0.1px violet, 0px 0px 0.1px violet, 0px 0px 0.1px violet;
+  }
+}
+
 /*# sourceMappingURL=light_e4432d.css.map */
