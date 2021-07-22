@@ -31,6 +31,38 @@ BUCKET = "i.ruqqus.ga"
 with open("snappy.txt", "r") as f:
 	snappyquotes = f.read().split("{[para]}")
 
+
+@app.route("/banaward/<post_id>", methods=["POST"])
+@auth_required
+def banaward(post_id, v):
+	
+	if v.banawards != 1 and v.banawards != 2: abort(403)
+
+	post = g.db.query(Submission).filter_by(id=post_id).first()
+	if not post: abort(400)
+	u = post.author
+	if u.admin_level > 0: abort(403)
+
+	u.ban(admin=v, reason="1 day ban award", days=1)
+	send_notification(1046, u, f"Your Drama account has been suspended for 1 day for the following reason:\n\n> 1 day ban award")
+
+	ma=ModAction(
+		kind="exile_user",
+		user_id=v.id,
+		target_user_id=u.id,
+		board_id=1,
+        note=f'reason: "1 day ban award", duration: 1 day'
+		)
+	g.db.add(ma)
+
+	v.banawards -= 1
+	g.db.add(v)
+
+	post.banaward = v.username
+	g.db.add(post)
+
+	return "", 204
+
 @app.route("/api/publish/<pid>", methods=["POST"])
 @is_not_banned
 @validate_formkey

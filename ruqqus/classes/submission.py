@@ -45,6 +45,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	is_banned = Column(Boolean, default=False)
 	views = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
+	banaward = Column(String, default=None)
 	purged_utc = Column(Integer, default=0)
 	distinguish_level = Column(Integer, default=0)
 	gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
