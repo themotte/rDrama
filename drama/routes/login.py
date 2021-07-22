@@ -184,12 +184,6 @@ def sign_up_get(v):
 		return render_template("sign_up_failed_ref.html",
 							   i=random_image())
 
-	# check tor
-	# if request.headers.get("CF-IPCountry")=="T1":
-	#	return render_template("sign_up_tor.html",
-	#		i=random_image(),
-	#		ref_user=ref_user)
-
 	# Make a unique form key valid for one account creation
 	now = int(time.time())
 	token = token_hex(16)
@@ -303,15 +297,14 @@ def sign_up_post(v):
 	# Check for existing accounts
 	email = request.form.get("email")
 	email = email.strip()
-	if not email:
-		email = None
+	if not email: email = None
 
 	#counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
 	if email and email.endswith("@gmail.com"):
-		gmail_username=email.split('@')[0]
-		gmail_username=gmail_username.split('+')[0]
-		gmail_username=gmail_username.replace('.','')
-		email=f"{gmail_username}@gmail.com"
+		email=email.split('@')[0]
+		email=email.split('+')[0]
+		email=email.replace('.','')
+		email=f"{email}@gmail.com"
 
 
 	existing_account = get_user(request.form.get("username"), graceful=True)
@@ -418,7 +411,13 @@ def post_forgot():
 	username = request.form.get("username").lstrip('@')
 	email = request.form.get("email",'').strip()
 
-	email=email.replace("_","\_").replace(".","")
+	email=email.replace("_","\_")
+
+	if email.endswith("@gmail.com"):
+		email=email.split('@')[0]
+		email=email.split('+')[0]
+		email=email.replace('.','')
+		email=f"{email}@gmail.com"
 
 	user = g.db.query(User).filter(
 		User.username.ilike(username),
@@ -541,10 +540,10 @@ def request_2fa_disable():
 
 	email=request.form.get("email")
 	if email and email.endswith("@gmail.com"):
-		gmail_username=email.split('@')[0]
-		gmail_username=gmail_username.split('+')[0]
-		gmail_username=gmail_username.replace('.','')
-		email=f"{gmail_username}@gmail.com"
+		email=email.split('@')[0]
+		email=email.split('+')[0]
+		email=email.replace('.','')
+		email=f"{email}@gmail.com"
 
 	if email != user.email:
 		return render_template("message.html",
