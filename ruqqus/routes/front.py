@@ -70,7 +70,7 @@ def notifications(v):
 @cache.memoize(timeout=1500)
 def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words='', **kwargs):
 
-	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False,stickied=False,private=False,).filter(Submission.deleted_utc == 0)
+	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False,stickied=False,private=False).filter(Submission.deleted_utc == 0)
 
 	if v and v.admin_level == 0:
 		blocking = g.db.query(
