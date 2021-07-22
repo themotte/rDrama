@@ -129,6 +129,7 @@
 					<div style="height: 21px" class="d-block d-md-none mb-1">
 
 						<div class="post-meta text-left x-scroll" style="overflow-x: scroll;">
+							{% if p.banaward %} <i class="fas fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Given the 1-day ban award by @{{p.banaward}}"></i>&nbsp;{% endif %}
 							{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-toggle="tooltip" data-placement="bottom" title="Shadowbanned user"></i>&nbsp;{% endif %}
 							{% if p.stickied %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned post"></i>&nbsp;{% endif %}
 							{% if p.is_pinned and request.path.startswith('/@') %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to profile"></i>&nbsp;{% endif %}
@@ -150,6 +151,7 @@
 				</div>
 
 				<div class="post-meta text-left d-none d-md-block mb-md-2">
+					{% if p.banaward %} <i class="fas fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Given the 1-day ban award by @{{p.banaward}}"></i>&nbsp;{% endif %}
 					{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-toggle="tooltip" data-placement="bottom" title="Shadowbanned user"></i>&nbsp;{% endif %}
 					{% if p.stickied %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned post"></i>&nbsp;{% endif %}
 					{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Drama Badmin, speaking officially"></i>&nbsp;{% endif %}
