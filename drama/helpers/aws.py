@@ -51,6 +51,7 @@ def upload_file(name, file, resize=None):
 	if resize:
 		tempname = name.replace("/", "_")
 
+		print(type(file))
 		file.save(tempname)
 
 		if tempname.split('.')[-1] in ['jpg', 'jpeg']:
@@ -63,15 +64,24 @@ def upload_file(name, file, resize=None):
 		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())})
 		try: resp = req.json()['data']
 		except Exception as e:
+			print(e)
+			print(req)
+			print(req.text)
 			return
 		remove(tempname)
 	else:
 		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())})
 		try: resp = req.json()['data']
 		except Exception as e:
+			print(e)
+			print(req)
+			print(req.text)
 			return
 	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except Exception as e:
+		print(e)
+		print(req)
+		print(req.text)
 		return
 	
 	new_image = Image(
@@ -100,6 +110,9 @@ def upload_from_file(name, filename, resize=None):
 		remove(filename)
 		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except Exception as e:
+		print(e)
+		print(req)
+		print(req.text)
 		return
 	
 	new_image = Image(
