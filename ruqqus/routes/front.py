@@ -188,7 +188,7 @@ def front_all(v):
 
 	if v:
 		defaultsorting = v.defaultsorting
-		defaulttime = "day"
+		defaulttime = v.defaulttime
 	else:
 		defaultsorting = "hot"
 		defaulttime = "day"
