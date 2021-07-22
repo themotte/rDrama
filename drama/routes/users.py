@@ -32,6 +32,7 @@ def leaderboard(v):
 	users1, users2 = leaderboard()
 
 	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
+	print(u.username)
 	print(f"1 {u.profileurl}")
 	x = requests.get(u.profileurl)
 
