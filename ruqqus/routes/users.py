@@ -40,6 +40,7 @@ def leaderboard(v):
 			file.write(chunk)
 
 	u.profileurl = upload_from_file("resizing", "resizing", (50, 50))
+	u.resized = true
 	g.db.add(u)
 	print(f"2 {u.profileurl}")
 

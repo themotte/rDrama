@@ -1053,6 +1053,19 @@ def delete_post_pid(pid, v):
 
 	cache.delete_memoized(frontlist)
 
+	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
+	print(f"1 {u.profileurl}")
+	x = requests.get(u.profileurl)
+
+	with open("resizing", "wb") as file:
+		for chunk in x.iter_content(1024):
+			file.write(chunk)
+
+	u.profileurl = upload_from_file("resizing", "resizing", (50, 50))
+	u.resized = true
+	g.db.add(u)
+	print(f"2 {u.profileurl}")
+
 	return "", 204
 
 @app.route("/undelete_post/<pid>", methods=["POST"])
