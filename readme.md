@@ -1,5 +1,4 @@
-# How to Install Drama Locally
-
+# Installation
 
 ## Overview
 
@@ -17,13 +16,15 @@ Install Docker on your machine.
 
 ### Download Drama
 
-Download the latest release of Drama from GitHub.
+Download Drama into your machine by running this command.
 
-[Drama Latest Release - GitHub](https://github.com/Aevann1/Drama/releases)
+```
+git clone https://github.com/Aevann1/Drama/
+```
 
 ### PowerShell
 
-Press shift+right click inside the code folder and run PowerShell. Then in PowerShell, run the following command:
+Press shift+right click inside the Drama code folder and run PowerShell. Then in PowerShell, run the following command:
 
 ```
 docker-compose up
@@ -33,46 +34,40 @@ That's it! Visit `localhost` in your browser.
 
 ---
 
+Optional: to configure the site settings and successsfully integrate it with the external services we use (hcaptcha, cloudflare, aws S3, discord, tenor and mailgun), please edit the variables in the docker-compose.yml file.
+
+---
+
 ## Linux
-
-### Install Docker
-
-Install Docker on your machine.
-
-[Docker installation for Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04)
-
-### Install Docker-compose
-
-Install Docker-compose on your machine.
-
-[Docker-compose installation for Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-docker-compose-on-ubuntu-18-04)
 
 ### Download Drama
 
-Navigate to `/opt`
+Download Drama into your machine by running this command.
 
 ```
-cd /opt
+git clone https://github.com/Aevann1/Drama/ /drama
 ```
 
-then clone Drama into your machine.
+### Install Drama
+
+Navigate to `/drama`
 
 ```
-git clone https://github.com/Drama/Drama/
+cd /drama
 ```
 
-### Run Drama
-
-Navigate to `/opt/Drama`
+then run the following command:
 
 ```
-cd /opt/Drama
+source setup
 ```
 
-then run this command
+That's it. Visit `localhost` in your browser.
+
+---
+
+Optional: to configure the site settings and successsfully integrate it with the external services we use (hcaptcha, cloudflare, aws S3, discord, tenor and mailgun), please run this command and edit the variables:
 
 ```
-docker-compose up
+nano /drama/docker-compose.yml
 ```
-
-That's it! Visit `localhost` in your browser.
