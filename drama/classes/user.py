@@ -628,11 +628,8 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	def profile_url(self):
-		if self.has_profile and not self.is_deleted:
-			if self.profileurl:
-				return self.profileurl
-			else:
-				return f"https://s3.eu-central-1.amazonaws.com/i.drama.ga/uid/{self.base36id}/profile-{self.profile_nonce}.png"
+		if self.has_profile and self.profileurl:
+			return self.profileurl
 		else:
 			return self.defaultpicture()
 
