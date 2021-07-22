@@ -36,12 +36,12 @@ with open("snappy.txt", "r") as f:
 @auth_required
 def postbanaward(post_id, v):
 	
-	if v.banawards != 1 and v.banawards != 2: return "You must have a ban award to ban this user. You can obtain it here:\nhttps://rdrama.gumroad.com/l/tfcvri\nhttps://www.patreon.com/Aevann"
+	if v.banawards != 1 and v.banawards != 2: return jsonify({"error": "You must have a ban award to ban this user."}), 403
 
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if not post: abort(400)
 	u = post.author
-	if u.admin_level > 0: abort(403)
+	if u.admin_level > 0: return jsonify({"error": "You can't ban admins."}), 403
 
 	u.ban(admin=v, reason="1 day ban award", days=1)
 	send_notification(1046, u, f"Your Drama account has been suspended for 1 day for the following reason:\n\n> 1 day ban award")
@@ -61,7 +61,7 @@ def postbanaward(post_id, v):
 	post.banaward = v.username
 	g.db.add(post)
 
-	return "", 204
+	return jsonify({"message": "User banned successfully!"}), 200
 
 @app.route("/api/publish/<pid>", methods=["POST"])
 @is_not_banned
