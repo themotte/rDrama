@@ -32,11 +32,11 @@ with open("snappy.txt", "r") as f:
 	snappyquotes = f.read().split("{[para]}")
 
 
-@app.route("/banaward/<post_id>", methods=["POST"])
+@app.route("/banaward/post/<post_id>", methods=["POST"])
 @auth_required
-def banaward(post_id, v):
+def postbanaward(post_id, v):
 	
-	if v.banawards != 1 and v.banawards != 2: abort(403)
+	if v.banawards != 1 and v.banawards != 2: return "You must have a ban award to ban this user. You can obtain it here:\nhttps://rdrama.gumroad.com/l/tfcvri\nhttps://www.patreon.com/Aevann"
 
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if not post: abort(400)

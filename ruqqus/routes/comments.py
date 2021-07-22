@@ -21,11 +21,12 @@ beams_client = PushNotifications(
 		secret_key=PUSHER_KEY,
 )
 
-@app.route("/banaward/<comment_id>", methods=["POST"])
+@app.route("/banaward/comment/<comment_id>", methods=["POST"])
 @auth_required
-def banaward(comment_id, v):
+def banawardcomment(comment_id, v):
 	
-	if v.banawards != 1 and v.banawards != 2: abort(403)
+	
+	if v.banawards != 1 and v.banawards != 2: return "You must have a ban award to ban this user. You can obtain it here:\nhttps://rdrama.gumroad.com/l/tfcvri\nhttps://www.patreon.com/Aevann"
 
 	comment = g.db.query(Comment).filter_by(id=comment_id).first()
 	if not comment: abort(400)

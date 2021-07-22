@@ -242,6 +242,8 @@
 
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="/votes?link=https://rdrama.net{{c.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
+					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/banaward/comment/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
+
 					{% if v and c.id in v.saved_comment_idlist() %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/unsave_comment/{{c.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-save"></i>Unsave</a></li>
 					{% else %}
@@ -446,6 +448,8 @@
 				<ul class="list-group comment-actions">
 
 					<li class="list-group-item"><a href="/votes?link=https://rdrama.net{{c.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
+
+					<li class="list-group-item"><a href="javascript:void(0)" onclick="post('/banaward/comment/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
 
 					{% if v and c.id in v.saved_comment_idlist() %}
 						<li class="list-group-item"><a href="javascript:void(0)" onclick="post('/unsave_comment/{{c.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-save"></i>Unsave</a></li>
