@@ -193,7 +193,7 @@ def edit_post(pid, v):
 	p.body_html = body_html
 	title = request.form.get("title")
 	p.title = title
-	p.title_html = sanitize(title.replace('_','\_'), linkgen=True, flair=True)
+	p.title_html = sanitize(title, linkgen=True, flair=True)
 
 	if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
 	g.db.add(p)
