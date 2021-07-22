@@ -2,12 +2,12 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: ruqqus
+    destination: drama
 permissions:
-  - object: ruqqus/*
+  - object: drama/*
     mode: 4755
 hooks:
   AfterInstall:
     - location: scripts/install_pip
   ApplicationStart:
-    - location: scripts/start_ruqqus
+    - location: scripts/start_drama

@@ -1,7 +1,7 @@
 version: '2.3'
 
 services:
-  ruqqus:
+  drama:
     build:
       context: .
     volumes:
@@ -20,7 +20,7 @@ services:
       - CLOUDFLARE_ZONE=vcxvdfgfc6r554etrgd
       - CLOUDFLARE_KEY=vcxvdfgfc6r554etrgd
       - TENOR_KEY=vcxvdfgfc6r554etrgd
-      - S3_BUCKET_NAME=i.ruqqus.ga
+      - S3_BUCKET_NAME=i.drama.ga
       - AWS_ACCESS_KEY_ID=vcxvdfgfc6r554etrgd
       - AWS_SECRET_ACCESS_KEY=vcxvdfgfc6r554etrgd
       - MAILGUN_KEY=vcxvdfgfc6r554etrgd
