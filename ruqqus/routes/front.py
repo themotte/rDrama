@@ -412,7 +412,7 @@ def all_comments(v):
 	page = int(request.args.get("page", 1))
 
 	sort=request.args.get("sort", "new")
-	t=request.args.get("t", "all")
+	t=request.args.get("t", "day")
 
 	idlist = comment_idlist(v=v,
 							page=page,
