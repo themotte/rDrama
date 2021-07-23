@@ -31,6 +31,7 @@ class User(Base, Stndrd, Age_times):
 	song = Column(String, default=None)
 	profileurl = Column(String, default=None)
 	bannerurl = Column(String, default=None)
+	patron = Column(Bool, default=False)
 	email = Column(String, default=None)
 	css = deferred(Column(String, default=None))
 	profilecss = deferred(Column(String, default=None))
@@ -360,12 +361,6 @@ class User(Base, Stndrd, Age_times):
 
 	def has_badge(self, badgedef_id):
 		return self.badges.filter_by(badge_id=badgedef_id).first()
-	
-	@property
-	@lazy
-	def patron(self):
-		if self.id != 147 and (self.has_badge(21) or self.has_badge(22) or self.has_badge(23) or self.has_badge(24)): return True
-		else: return False
 
 	def vote_status_on_post(self, post):
 

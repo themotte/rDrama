@@ -134,8 +134,7 @@ def admin_home(v):
 @admin_level_required(4)
 def badge_grant_get(v):
 
-	badge_types = g.db.query(BadgeDef).filter_by(
-		kind=3).order_by(BadgeDef.rank).all()
+	badge_types = g.db.query(BadgeDef).filter_by(kind=3).order_by(BadgeDef.rank).all()
 
 	errors = {"already_owned": "That user already has that badge.",
 			  "no_user": "That user doesn't exist."
@@ -194,6 +193,10 @@ def badge_grant_post(v):
 
 	send_notification(1046, user, text)
 
+	if badge_id in [21,22,23,24]:
+		user.patron = True
+		g.db.add(user)
+	
 	return redirect(user.permalink)
 
 
@@ -588,17 +591,6 @@ def agendaposter(user_id, v):
 		return "", 204
 	else:
 		return redirect(user.url)
-
-
-@app.route("/patron/<user_id>", methods=["POST"])
-@admin_level_required(6)
-@validate_formkey
-def patron(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
-	user.patron = not user.patron
-	g.db.add(user)
-	return "", 204
-
 
 @app.route("/disablesignups", methods=["POST"])
 @admin_level_required(6)
