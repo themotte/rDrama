@@ -12,6 +12,7 @@ from flask_compress import Compress
 from flask_socketio import SocketIO
 from time import sleep
 from collections import deque
+
 import psycopg2
 
 from flaskext.markdown import Markdown
