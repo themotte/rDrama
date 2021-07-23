@@ -558,7 +558,7 @@ def request_2fa_disable():
 						   message="If username, password, and email match, we will send you an email.")
 
 	#compute token
-	valid=int(time.time())+60*60*24*3
+	valid=int(time.time())
 	token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}+{user.login_nonce}")
 
 	action_url=f"https://{app.config['SERVER_NAME']}/reset_2fa?id={user.base36id}&t={valid}&token={token}"
@@ -580,11 +580,7 @@ def reset_2fa():
 	now=int(time.time())
 	t=int(request.args.get("t"))
 
-	if now<t:
-		return render_template("message.html",
-						   title="Inactive Link",
-						   error="That link isn't active yet. Try again later.")
-	elif now > t+3600*24:
+	if now > t+3600*24:
 		return render_template("message.html",
 						   title="Expired Link",
 						   error="That link has expired.")
