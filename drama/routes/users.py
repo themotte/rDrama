@@ -212,9 +212,30 @@ def followers(username, v):
 	users = [x.user for x in u.followers]
 	return render_template("followers.html", v=v, u=u, users=users)
 
+<<<<<<< HEAD
 @app.get("/views")
 @auth_required
 def visitors(v):
+=======
+@app.route("/views", methods=["GET"])
+@auth_required
+def visitors_short(v):
+	return redirect(f"/@{v.username}/views")
+
+@app.route("/@<username>/views", methods=["GET"])
+@auth_required
+def visitors(username, v):
+
+	u = get_user(username, v=v)
+
+	if u.id != v.id:
+		abort(403)
+
+	if v.admin_level < 1 and not v.patron:
+		abort(403)
+
+	viewers=sorted(u.viewers, key = lambda x: x.last_view_utc, reverse=True)
+>>>>>>> 84626c3567662da458f7450916fa66625e6e1fb9
 
 	if v.admin_level < 1 and not v.patron: abort(403)
 	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc)
