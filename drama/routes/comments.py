@@ -717,8 +717,6 @@ def edit_comment(cid, v):
 		
 		if ban.reason:
 			reason += f" {ban.reason_text}"	
-			
-		return jsonify({"error": reason}), 401
 	
 		return {'html': lambda: render_template("comment_failed.html",
 												action=f"/edit_comment/{c.base36id}",

@@ -23,6 +23,23 @@ from PIL import Image as PILimage
 with open("snappy.txt", "r") as f:
 	snappyquotes = f.read().split("{[para]}")
 
+def resize():
+	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
+	print(u.username)
+	print(f"1 {u.profileurl}")
+	x = requests.get(u.profileurl)
+
+	with open("resizing", "wb") as file:
+		for chunk in x.iter_content(1024):
+			file.write(chunk)
+
+	image = upload_from_file("resizing", "resizing", (100, 100))
+	if image != None:
+		u.profileurl = image
+		u.resized = True
+		g.db.add(u)
+	print(f"2 {u.profileurl}")
+
 
 @app.route("/banaward/post/<post_id>", methods=["POST"])
 @auth_required
@@ -73,12 +90,7 @@ def publish(pid, v):
 def submit_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
-	board = request.args.get("guild", "general")
-	b = get_guild(board, graceful=True)
-	if not b:
-
-		b = get_guild("general")
-
+	b = get_guild("general")
 
 	return render_template("submit.html",
 						   v=v,
@@ -277,6 +289,8 @@ def edit_post(pid, v):
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
 	for x in notify_users: send_notification(1046, x, f"@{v.username} has mentioned you: https://rdrama.net{p.permalink}")
+
+	resize()
 
 	return redirect(p.permalink)
 
@@ -1053,6 +1067,8 @@ def submit_post(v):
 	g.db.commit()
 	send_message(f"https://rdrama.net{new_post.permalink}")
 
+	resize()
+	
 	return {"html": lambda: redirect(new_post.permalink),
 			"api": lambda: jsonify(new_post.json)
 			}
@@ -1077,21 +1093,7 @@ def delete_post_pid(pid, v):
 
 	cache.delete_memoized(frontlist)
 
-	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
-	print(u.username)
-	print(f"1 {u.profileurl}")
-	x = requests.get(u.profileurl)
-
-	with open("resizing", "wb") as file:
-		for chunk in x.iter_content(1024):
-			file.write(chunk)
-
-	image = upload_from_file("resizing", "resizing", (100, 100))
-	if image != None:
-		u.profileurl = image
-		u.resized = True
-		g.db.add(u)
-	print(f"2 {u.profileurl}")
+	resize()
 
 	return "", 204
 

@@ -3,7 +3,9 @@ from drama.helpers.get import *
 from drama.classes import *
 from flask import *
 from drama.__main__ import app
+from .users import leaderboard
 
+users1, users2 = leaderboard()
 
 @app.route("/api/v1/vote/post/<post_id>/<x>", methods=["POST"])
 @app.route("/api/vote/post/<post_id>/<x>", methods=["POST"])
@@ -72,6 +74,8 @@ def api_vote_post(post_id, x, v):
 	post.upvotes = post.ups
 	post.downvotes = post.downs
 	g.db.add(post)
+
+	users1, users2 = leaderboard()
 	return "", 204
 
 @app.route("/api/v1/vote/comment/<comment_id>/<x>", methods=["POST"])

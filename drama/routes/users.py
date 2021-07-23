@@ -9,6 +9,7 @@ from drama.mail import *
 from flask import *
 from drama.__main__ import app, cache, limiter, db_session
 from pusher_push_notifications import PushNotifications
+from .front import resize
 
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 
@@ -31,21 +32,7 @@ def leaderboard(v):
 	if v and v.is_banned and not v.unban_utc:return render_template("seized.html")
 	users1, users2 = leaderboard()
 
-	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
-	print(u.username)
-	print(f"1 {u.profileurl}")
-	x = requests.get(u.profileurl)
-
-	with open("resizing", "wb") as file:
-		for chunk in x.iter_content(1024):
-			file.write(chunk)
-
-	image = upload_from_file("resizing", "resizing", (100, 100))
-	if image != None:
-		u.profileurl = image
-		u.resized = True
-		g.db.add(u)
-	print(f"2 {u.profileurl}")
+	resize()
 
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2)
 
