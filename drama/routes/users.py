@@ -137,7 +137,7 @@ def mfa_qr(secret, v):
 		error_correction=qrcode.constants.ERROR_CORRECT_L
 	)
 	qr.add_data(x.provisioning_uri(v.username, issuer_name="Drama"))
-	img = qr.make_image(fill_color="#FF66AC", back_color="white")
+	img = qr.make_image(fill_color="#000000", back_color="white")
 
 	mem = io.BytesIO()
 

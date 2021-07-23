@@ -45,7 +45,7 @@ def resize():
 	print(f"2 {u.profileurl}")
 
 
-@app.route("/banaward/post/<post_id>", methods=["POST", "GET"])
+@app.route("/banaward/post/<post_id>")
 @auth_required
 def postbanaward(post_id, v):
 	
@@ -103,30 +103,10 @@ def submit_get(v):
 						   b=b
 						   )
 
-@app.route("/post_short/", methods=["GET"])
-@app.route("/post_short/<base36id>", methods=["GET"])
-@app.route("/post_short/<base36id>/", methods=["GET"])
-def incoming_post_shortlink(base36id=None):
-
-	if not base36id:
-		return redirect('/')
-
-	if base36id == "robots.txt":
-		return redirect('/robots.txt')
-
-	try:
-		x=base36decode(base36id)
-	except:
-		abort(400)
-
-	post = get_post(base36id)
-	return redirect(post.permalink)
-
 @app.route("/post/<pid>", methods=["GET"])
 @app.route("/post/<pid>/", methods=["GET"])
 @app.route("/post/<pid>/<anything>", methods=["GET"])
 @app.route("/api/v1/post/<pid>", methods=["GET"])
-@app.route("/test/post/<pid>", methods=["GET"])
 @auth_desired
 @api("read")
 def post_base36id(pid, anything=None, v=None):
