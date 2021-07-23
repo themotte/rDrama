@@ -1,3 +1,5 @@
+import jinja2.exceptions
+
 from drama.helpers.wrappers import *
 from drama.helpers.session import *
 from drama.classes.custom_errors import *
@@ -195,10 +197,12 @@ def allow_nsfl_logged_out(bid, v):
 	return redirect(request.form.get("redir"))
 
 
-@app.route("/error/<eid>", methods=["GET"])
+@app.route("/error/<error>", methods=["GET"])
 @auth_desired
-def error_all_preview(eid, v):
+def error_all_preview(error, v):
 
-	 eid=int(eid)
-	 return render_template(f"errors/{eid}.html", v=v)
+	try:
+		return render_template(f"errors/{error}.html", v=v)
+	except jinja2.exceptions.TemplateNotFound:
+		abort(400)
 
