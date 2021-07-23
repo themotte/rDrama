@@ -26,6 +26,14 @@ def user_info(v, username):
 	user = get_user(username, v=v)
 	return jsonify(user.json)
 
+@app.route("/admin/dump_cache", methods=["GET"])
+@admin_level_required(3)
+@validate_formkey
+def admin_dump_cache(v):
+	cache.delete_memoized(leaderboard)
+	cache.clear()
+	return jsonify({"message": "Internal cache cleared."})
+
 @app.route("/leaderboard", methods=["GET"])
 @auth_desired
 def leaderboard(v):

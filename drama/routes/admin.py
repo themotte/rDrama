@@ -964,15 +964,6 @@ def admin_distinguish_comment(c_id, v):
 
 	return jsonify({"html":html, "api":html})
 
-
-@app.route("/admin/dump_cache", methods=["GET"])
-@admin_level_required(3)
-@validate_formkey
-def admin_dump_cache(v):
-	cache.clear()
-	return jsonify({"message": "Internal cache cleared."})
-
-
 @app.route("/admin/ban_domain", methods=["POST"])
 @admin_level_required(4)
 @validate_formkey
