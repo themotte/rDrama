@@ -68,7 +68,8 @@ def settings_profile_post(v):
 		if v.animatedname == False:
 			users1, users2 = leaderboard()
 			print(users1)
-			if  v not in users1 and v not in users2: return jsonify({"error": "You must be in the leaderboard to apply animated name!"}), 403
+			print(v)
+			if v not in users1 and v not in users2: return jsonify({"error": "You must be in the leaderboard to apply animated name!"}), 403
 		updated = True
 		v.animatedname = request.values.get("animatedname", None) == 'true'
 
