@@ -27667,7 +27667,7 @@ img.emoji {
   border-color: #E53E3E !important;
 }
 
-@-webkit-keyframes lgbt {
+@-webkit-keyframes leaderboard {
   0% {
     color: violet;
   }
@@ -27755,9 +27755,14 @@ img.emoji {
     color: #d26d3f;
   }
 }
-* [href$="/@Dw-Im-Here"], * [href$="/@Racist_FemboyV2"], * [href$="/@DudeBussyLmao"], * [href$="/@InfoWarrior"], * [href$="/@Jew"], * [href$="/@Lysis10"], * [href$="/@fuckaveann"], * [href$="/@JimieWhales"], * [href$="/@CRUSTY"], * [href$="/@Aevann"], * [href$="/@Joan_Wayne_Gacy"], * [href$="/@Sylveon"], * [href$="/@SquisheeKisses"], * [href$="/@wangpangthankyoumaam"], * [href$="/@Chapose"], * [href$="/@cumlord"], * [href$="/@Snappy"], * [href$="/@ponyblaze"], * [href$="/@iStillMissEd"], * [href$="/@Account_109_"], * [href$="/@Yall"], * [href$="/@collectijism"], * [href$="/@Need4Sneed"], * [href$="/@BrokeBackBuck"] {
-  -webkit-animation: 3s ease-in-out 0s normal none infinite lgbt;
-  animation: 3s ease-in-out 0s normal none infinite lgbt;
+.patron {
+  -webkit-animation: 3s ease-in-out 0s normal none infinite patron;
+  animation: 3s ease-in-out 0s normal none infinite patron;
+}
+
+.leaderboard {
+  -webkit-animation: 3s ease-in-out 0s normal none infinite leaderboard;
+  animation: 3s ease-in-out 0s normal none infinite leaderboard;
 }
 
 * [href$="/@Landlord_Messiah"] {
@@ -27789,11 +27794,6 @@ img.emoji {
 }
 .btn-primary:focus, .btn-primary.focus {
   box-shadow: none !important;
-}
-
-.patron {
-  -webkit-animation: 3s ease-in-out 0s normal none infinite patron;
-  animation: 3s ease-in-out 0s normal none infinite patron;
 }
 
 .px-25 {

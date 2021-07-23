@@ -70,7 +70,7 @@ def postbanaward(post_id, v):
 	post.banaward = v.username
 	g.db.add(post)
 
-	return jsonify({"message": "User banned successfully!"}), 200
+	return jsonify({"message": "User banned successfully!"}), 204
 
 @app.route("/api/publish/<pid>", methods=["POST"])
 @is_not_banned

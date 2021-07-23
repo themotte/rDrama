@@ -84,7 +84,7 @@
 					<div class="d-flex">
 						<div><img src="{{v.profile_url}}" class="profile-pic-35"></div>
 						<div class="text-left pl-2">
-							<div class="text-small font-weight-bold">{{v.username}}</div>
+							<div style="color: #{{v.namecolor}}" class="text-small font-weight-bold {% if v.animatedname %}{% if v.patron %}patron{% else %}leaderboard{% endif %}{% endif %}">{{v.username}}</div>
 							<div class="text-small-extra text-purple"><i class="fad fa-diamond mr-1"></i>{{v.dramacoins}} Dramacoins</div>
 						</div>
 					</div>

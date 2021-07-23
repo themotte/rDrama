@@ -314,32 +314,50 @@
 							
 							<div class="body d-lg-flex border-bottom">
 
-							<label for="bio" class="text-black w-lg-25">Name Color</label>
+								<label for="bio" class="text-black w-lg-25">Name Color</label>
 
-							<div class="d-flex">
+								<div class="d-flex">
 
-								 <form action="/settings/namecolor" id="color-form" method="post" class="color-picker" style="line-height: 0">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
+									<form action="/settings/namecolor" id="color-form" method="post" class="color-picker" style="line-height: 0">
+											<input type="hidden" name="formkey" value="{{v.formkey}}">
 
-										{% for color in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
-										<input type="radio" name="color" id="color-{{color}}" value="{{color}}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-										<label class="color-radio" for="color-{{color}}">
-											<span style="background-color: #{{color}}">
-											{% if v.namecolor.lower() == color %}
-												<i class="fas fa-check text-white"></i>
-											{% else %}
-												&nbsp;
-											{% endif %}
-											</span>
-										</label>
-										{% endfor %}
+											{% for color in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
+											<input type="radio" name="color" id="color-{{color}}" value="{{color}}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+											<label class="color-radio" for="color-{{color}}">
+												<span style="background-color: #{{color}}">
+												{% if v.namecolor.lower() == color %}
+													<i class="fas fa-check text-white"></i>
+												{% else %}
+													&nbsp;
+												{% endif %}
+												</span>
+											</label>
+											{% endfor %}
 
-								</form>
+									</form>
+
+								</div>
+							
+							</div>							
+							
+
+							<div class="body d-lg-flex border-bottom">
+
+								<label for="bio" class="text-black w-lg-25">Animated Username</label>
+
+								<div class="w-lg-100">
+
+									<div class="custom-control custom-switch">
+										<input type="checkbox" class="custom-control-input" id="animatedname" name="animatedname"{% if v.animatedname%} checked{% endif %} onchange="post_toast('/settings/profile?animatedname='+document.getElementById('animatedname').checked)">
+										<label class="custom-control-label" for="animatedname"></label>
+									</div>
+
+									<span class="text-small-extra text-muted">Enable animated username (only available to users in the dramacoin leaderboard and patrons)</span>
+								</div>
 
 							</div>
-							
-						</div>							
-							
+
+
 							{% if not v.flairchanged %}
 							<div class="body d-lg-flex border-bottom">
 
