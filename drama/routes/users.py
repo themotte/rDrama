@@ -224,7 +224,7 @@ def visitors(username, v):
 	if v.admin_level < 1 and not v.patron:
 		abort(403)
 
-	viewers=sorted(u.viewers, key = lambda x: x.last_view_utc, reverse = True)
+	viewers=sorted(u.viewers, key = lambda x: x.last_view_utc)
 
 	return render_template("viewers.html", v=v, viewers=viewers)
 
