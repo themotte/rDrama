@@ -966,8 +966,7 @@ def admin_distinguish_comment(c_id, v):
 
 
 @app.route("/admin/dump_cache", methods=["GET"])
-@admin_level_required(3)
-@validate_formkey
+@admin_level_required(6)
 def admin_dump_cache(v):
 	cache.delete_memoized(leaderboard)
 	cache.clear()
