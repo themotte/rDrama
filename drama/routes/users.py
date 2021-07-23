@@ -9,7 +9,7 @@ from drama.mail import *
 from flask import *
 from drama.__main__ import app, cache, limiter, db_session
 from pusher_push_notifications import PushNotifications
-from .front import resize
+from .posts import resize
 
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 
