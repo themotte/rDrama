@@ -7,28 +7,19 @@ import secrets
 from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from flask_compress import Compress
-from flask_socketio import SocketIO
-from time import sleep
-from collections import deque
-
-import psycopg2
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.exc import OperationalError, StatementError, InternalError
-from sqlalchemy.orm import Session, sessionmaker, scoped_session, Query as _Query
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
-import threading
 import requests
-import random
 import redis
 import gevent
-import sys
 
-from redis import BlockingConnectionPool, ConnectionPool
+from redis import ConnectionPool
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
