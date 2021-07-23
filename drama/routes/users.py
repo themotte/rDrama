@@ -212,6 +212,11 @@ def followers(username, v):
 	users = [x.user for x in u.followers]
 	return render_template("followers.html", v=v, u=u, users=users)
 
+@app.route("/views", methods=["GET"])
+@auth_required
+def visitors_short(v):
+	return redirect(f"/@{v.username}/views")
+
 @app.route("/@<username>/views", methods=["GET"])
 @auth_required
 def visitors(username, v):
