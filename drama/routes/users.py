@@ -216,7 +216,7 @@ def followers(username, v):
 @auth_required
 def visitors(v):
 	if v.admin_level < 1 and not v.patron: return render_template("errors/patron.html", v=v)
-	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc)
+	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc, reverse=True)
 	return render_template("viewers.html", v=v, viewers=viewers)
 
 @app.route("/@<username>", methods=["GET"])
