@@ -21,7 +21,7 @@ beams_client = PushNotifications(
 		secret_key=PUSHER_KEY,
 )
 
-@app.route("/banaward/comment/<comment_id>", methods=["POST"])
+@app.route("/banaward/comment/<comment_id>", methods=["POST", "GET"])
 @auth_required
 def banawardcomment(comment_id, v):
 

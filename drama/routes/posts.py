@@ -45,7 +45,7 @@ def resize():
 	print(f"2 {u.profileurl}")
 
 
-@app.route("/banaward/post/<post_id>", methods=["POST"])
+@app.route("/banaward/post/<post_id>", methods=["POST", "GET"])
 @auth_required
 def postbanaward(post_id, v):
 	
