@@ -34,7 +34,10 @@ def resize():
 			file.write(chunk)
 
 	image = upload_from_file("resizing", "resizing", (100, 100))
-	if image != None:
+	if image == "sex":
+		u.resized = True
+		g.db.add(u)
+	elif image != None:
 		u.profileurl = image
 		u.resized = True
 		g.db.add(u)

@@ -62,13 +62,14 @@ def upload_file(name, file, resize=None):
 		img = io.BytesIO()
 		i.save(img, format='PNG')
 		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())})
+		remove(tempname)
 		try: resp = req.json()['data']
 		except Exception as e:
 			print(e)
 			print(req)
 			print(req.text)
-			return
-		remove(tempname)
+			if "File type invalid" in req.text: return "sex"
+			else: return
 	else:
 		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())})
 		try: resp = req.json()['data']
@@ -76,7 +77,6 @@ def upload_file(name, file, resize=None):
 			print(e)
 			print(req)
 			print(req.text)
-			return
 	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except Exception as e:
 		print(e)
