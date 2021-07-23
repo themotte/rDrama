@@ -118,6 +118,7 @@
 				
 				<div class="font-weight-bolder">
 					<span>{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp; {% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
+					{% if u.id == v.id and v.admin_level > 0 or v.patron %}<a href="/@{{u.username}}/views">Views</a>{% endif %}
 				</div>
 				{% if u.bio_html %}
 				<pre></pre>
