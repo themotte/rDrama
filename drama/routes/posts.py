@@ -93,8 +93,6 @@ def publish(pid, v):
 @no_negative_balance("html")
 def submit_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
-
-	resize()
 	
 	b = get_guild("general")
 
