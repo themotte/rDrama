@@ -2012,7 +2012,7 @@ pre code {
   background-color: #E1E1E1;
   border-color: #ffe6f1;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .form-control::placeholder {
   color: #000000;
@@ -2418,7 +2418,7 @@ textarea.form-control {
 }
 .btn:focus, .btn.focus {
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .btn.disabled, .btn:disabled {
   opacity: 0.65;
@@ -3477,7 +3477,7 @@ input[type=button].btn-block {
   background-color: #f39731;
 }
 .custom-control-input:focus ~ .custom-control-label::before {
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
   border-color: #ffe6f1;
@@ -3601,7 +3601,7 @@ input[type=button].btn-block {
 .custom-select:focus {
   border-color: #ffe6f1;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .custom-select:focus::-ms-value {
   color: #000000;
@@ -3658,7 +3658,7 @@ input[type=button].btn-block {
 }
 .custom-file-input:focus ~ .custom-file-label {
   border-color: #ffe6f1;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .custom-file-input[disabled] ~ .custom-file-label, .custom-file-input:disabled ~ .custom-file-label {
   background-color: #E1E1E1;
@@ -3713,13 +3713,13 @@ input[type=button].btn-block {
   outline: none;
 }
 .custom-range:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem f39731;
 }
 .custom-range:focus::-moz-range-thumb {
-  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem f39731;
 }
 .custom-range:focus::-ms-thumb {
-  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem f39731;
 }
 .custom-range::-moz-focus-outer {
   border: 0;
@@ -4549,7 +4549,7 @@ input[type=button].btn-block {
 .page-link:focus {
   z-index: 3;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 
 .page-item:first-child .page-link {
@@ -12387,7 +12387,7 @@ pre code {
   background-color: #E1E1E1;
   border-color: #ffe6f1;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .form-control::placeholder {
   color: #000000;
@@ -12793,7 +12793,7 @@ textarea.form-control {
 }
 .btn:focus, .btn.focus {
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .btn.disabled, .btn:disabled {
   opacity: 0.65;
@@ -14897,7 +14897,7 @@ input[type=button].btn-block {
   background-color: #f39731;
 }
 .custom-control-input:focus ~ .custom-control-label::before {
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
   border-color: #ffe6f1;
@@ -15021,7 +15021,7 @@ input[type=button].btn-block {
 .custom-select:focus {
   border-color: #ffe6f1;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .custom-select:focus::-ms-value {
   color: #000000;
@@ -15078,7 +15078,7 @@ input[type=button].btn-block {
 }
 .custom-file-input:focus ~ .custom-file-label {
   border-color: #ffe6f1;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 .custom-file-input[disabled] ~ .custom-file-label, .custom-file-input:disabled ~ .custom-file-label {
   background-color: #E1E1E1;
@@ -15133,13 +15133,13 @@ input[type=button].btn-block {
   outline: none;
 }
 .custom-range:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem f39731;
 }
 .custom-range:focus::-moz-range-thumb {
-  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem f39731;
 }
 .custom-range:focus::-ms-thumb {
-  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 1px #E1E1E1, 0 0 0 0.2rem f39731;
 }
 .custom-range::-moz-focus-outer {
   border: 0;
@@ -15969,7 +15969,7 @@ input[type=button].btn-block {
 .page-link:focus {
   z-index: 3;
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(255, 102, 172, 0.25);
+  box-shadow: 0 0 0 0.2rem f39731;
 }
 
 .page-item:first-child .page-link {
