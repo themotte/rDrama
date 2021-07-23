@@ -27,8 +27,7 @@ def user_info(v, username):
 	return jsonify(user.json)
 
 @app.route("/admin/leaderboard", methods=["GET"])
-@admin_level_required(3)
-@validate_formkey
+@admin_level_required(6)
 def dumpleaderboard(v):
 	cache.delete_memoized(leaderboard)
 	return "sex"
