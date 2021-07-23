@@ -127,7 +127,7 @@ def message2(v, username):
 			},
 		},
 	)
-	return redirect('/notifications?sent=true')
+	return redirect('/notifications?all=true')
 
 @app.route("/2faqr/<secret>", methods=["GET"])
 @auth_required
