@@ -31,8 +31,7 @@ def user_info(v, username):
 @validate_formkey
 def admin_dump_cache(v):
 	cache.delete_memoized(leaderboard)
-	cache.clear()
-	return jsonify({"message": "Internal cache cleared."})
+	return "sex"
 
 @app.route("/leaderboard", methods=["GET"])
 @auth_desired
