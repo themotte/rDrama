@@ -40,7 +40,7 @@ def leaderboard(v):
 def leaderboard():
 	users = g.db.query(User).options(lazyload('*'))
 	users1= sorted(users, key=lambda x: x.dramacoins, reverse=True)[:25]
-	users2 = users.order_by(User.follower_count.desc()).limit(10).all()
+	users1= sorted(users, key=lambda x: x.follower_count, reverse=True)[:10]
 	return users1, users2
 
 @app.get("/@<username>/css")
@@ -254,7 +254,7 @@ def u_username(username, v=None):
 				}
 
 	# viewers
-	if u.id != v.id:
+	if v and u.id != v.id:
 		view = g.db.query(ViewerRelationship).filter(
 			and_(
 				ViewerRelationship.viewer_id == v.id,
