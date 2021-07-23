@@ -117,7 +117,8 @@
 				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{{u.customtitle | safe}}</p>{% endif %}
 				
 				<div class="font-weight-bolder">
-					<span>{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp; {% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp;joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>{% endif %}
+					<span>{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp; {% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
+					{% if u.id == v.id and v.admin_level > 0 or v.patron %}<a href="/@{{u.username}}/views">Views</a>{% endif %}
 				</div>
 				{% if u.bio_html %}
 				<pre></pre>
@@ -154,7 +155,6 @@
 
 					 {% elif v and v.id == u.id %}
 						<a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
-						<a href="/views" class="btn btn-secondary">Profile views</a>
 					 {% endif %}
 					 {% if v and v.id != u.id and v.admin_level > 0 and u.admin_level == 0 %}
 						<br><br>
@@ -292,7 +292,8 @@
 				{% endif %}
 				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{{u.customtitle_}}</p>{% endif %}
 				<div class="font-weight-normal">
-					<span class="font-weight-bold">{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp;{% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp;<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
+					<span class="font-weight-bold">{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp;{% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
+					{% if u.id == v.id and v.admin_level > 0 or v.patron %}<br /><a href="/@{{u.username}}/views">Views</a>{% endif %}
 				</div>
 				{% if u.bio_html %}
 				<p class="text-muted text-break">{{u.bio_html | safe}}</p>
@@ -305,7 +306,6 @@
 				</div>
 				{% if v and v.id == u.id %}
 					 <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
-					 <a href="/views" class="btn btn-secondary">Profile views</a>
 				{% endif %}
 				{% if v and v.id != u.id %}
 					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/api/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub2').classList.toggle('d-none');document.getElementById('button-sub2').classList.toggle('d-none');})">Unfollow</a>
