@@ -9,6 +9,7 @@ from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
 
+
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import OperationalError
