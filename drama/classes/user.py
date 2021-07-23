@@ -142,6 +142,8 @@ class User(Base, Stndrd, Age_times):
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id")
 	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id")
 
+	viewers = relationship("ViewerRelationship", primaryjoin="User.id == ViewerRelationship.user_id")
+
 	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id")
 	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
 
@@ -995,3 +997,60 @@ class User(Base, Stndrd, Age_times):
 	def can_change_name(self):
 		return True
 # return self.name_changed_utc < int(time.time())-60*60*24*90
+
+
+class ViewerRelationship(Base):
+
+	__tablename__ = "viewers"
+
+	id = Column(Integer, Sequence('viewers_id_seq'), primary_key=True)
+	user_id = Column(Integer, ForeignKey('users.id'))
+	viewer_id = Column(Integer, ForeignKey('users.id'))
+	last_view_utc = Column(Integer)
+
+	user = relationship("User", lazy="joined", primaryjoin="ViewerRelationship.user_id == User.id")
+	viewer = relationship("User", lazy="joined", primaryjoin="ViewerRelationship.viewer_id == User.id")
+
+	def __init__(self, **kwargs):
+
+		if 'last_view_utc' not in kwargs:
+			kwargs['last_view_utc'] = int(time.time())
+
+		super().__init__(**kwargs)
+
+	@property
+	def last_view_since(self):
+
+		return int(time.time()) - self.last_view_utc
+
+	@property
+	def last_view_string(self):
+
+		age = self.last_view_since
+
+		if age < 60:
+			return "just now"
+		elif age < 3600:
+			minutes = int(age / 60)
+			return f"{minutes}m ago"
+		elif age < 86400:
+			hours = int(age / 3600)
+			return f"{hours}hr ago"
+		elif age < 2678400:
+			days = int(age / 86400)
+			return f"{days}d ago"
+
+		now = time.gmtime()
+		ctd = time.gmtime(self.created_utc)
+
+		# compute number of months
+		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
+		# remove a month count if current day of month < creation day of month
+		if now.tm_mday < ctd.tm_mday:
+			months -= 1
+
+		if months < 12:
+			return f"{months}mo ago"
+		else:
+			years = int(months / 12)
+			return f"{years}yr ago"
