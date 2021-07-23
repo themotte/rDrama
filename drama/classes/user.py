@@ -31,7 +31,7 @@ class User(Base, Stndrd, Age_times):
 	song = Column(String, default=None)
 	profileurl = Column(String, default=None)
 	bannerurl = Column(String, default=None)
-	patron = Column(Bool, default=False)
+	patron = Column(Boolean, default=False)
 	email = Column(String, default=None)
 	css = deferred(Column(String, default=None))
 	profilecss = deferred(Column(String, default=None))
