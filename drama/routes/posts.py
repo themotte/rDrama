@@ -49,7 +49,7 @@ def resize():
 @auth_required
 def postbanaward(post_id, v):
 	
-	if v.banawards != 1 and v.banawards != 2: return jsonify({"error": "You must have a ban award to ban this user."}), 403
+	if not v.banawards > 0: return render_template("errors/banaward.html", v=v)
 
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if not post: abort(400)

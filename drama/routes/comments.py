@@ -25,7 +25,7 @@ beams_client = PushNotifications(
 @auth_required
 def banawardcomment(comment_id, v):
 
-	if v.banawards != 1 and v.banawards != 2: return jsonify({"error": "You must have a ban award to ban this user."}), 403
+	if not v.banawards > 0: return render_template("errors/banaward.html", v=v)
 
 	comment = g.db.query(Comment).filter_by(id=comment_id).first()
 	if not comment: abort(400)
