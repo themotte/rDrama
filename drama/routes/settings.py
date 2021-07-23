@@ -66,7 +66,7 @@ def settings_profile_post(v):
 
 	if request.values.get("animatedname", v.animatedname) != v.animatedname:
 		if v.animatedname == False:
-			users1 = leaderboard()
+			users1, users2 = leaderboard()
 			print(users1)
 			print(v)
 			if v not in users1: return jsonify({"error": "You must be in the top 25 leaderboard or be a patron to apply an animated name!"}), 403
