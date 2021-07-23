@@ -649,8 +649,6 @@ class User(Base, Stndrd, Age_times):
 	def can_make_guild(self):
 		return False
 
-	# return (self.has_premium or self.dramacoins >= 250 or (self.created_utc <= 1592974538 and self.dramacoins >= 50)) and len([x for x in self.boards_modded if x.is_siegable]) < 10
-
 	@property
 	def can_join_gms(self):
 		return len([x for x in self.boards_modded if x.is_siegable]) < 10
@@ -671,19 +669,15 @@ class User(Base, Stndrd, Age_times):
 		# Has premium
 		# Has 1000 Rep, or 500 for older accounts
 		# if connecting through Tor, must have verified email
-		return (self.has_premium or self.dramacoins >= 0 or (
-				self.created_utc <= 1592974538 and self.dramacoins >= 500)) and (
-						   self.is_activated or request.headers.get("cf-ipcountry") != "T1")
+		return self.dramacoins >= 0
 
 	@property
 	def can_upload_avatar(self):
-		return (self.has_premium or self.dramacoins >= 0 or self.created_utc <= 1592974538) and (
-					self.is_activated or request.headers.get("cf-ipcountry") != "T1")
+		return self.dramacoins >= 0
 
 	@property
 	def can_upload_banner(self):
-		return (self.has_premium or self.dramacoins >= 0 or self.created_utc <= 1592974538) and (
-					self.is_activated or request.headers.get("cf-ipcountry") != "T1")
+		return self.dramacoins >= 0
 
 	@property
 	def json_raw(self):
