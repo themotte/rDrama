@@ -2,6 +2,7 @@ import qrcode
 import io
 from datetime import datetime
 
+from drama.classes.user import ViewerRelationship
 from drama.helpers.alerts import *
 from drama.helpers.sanitize import *
 from drama.helpers.markdown import *
@@ -211,6 +212,22 @@ def followers(username, v):
 	users = [x.user for x in u.followers]
 	return render_template("followers.html", v=v, u=u, users=users)
 
+@app.route("/@<username>/views", methods=["GET"])
+@auth_required
+def visitors(username, v):
+
+	u = get_user(username, v=v)
+
+	if u.id != v.id:
+		abort(403)
+
+	if v.admin_level < 1 and not v.patron:
+		abort(403)
+
+	viewers=sorted(u.viewers, key = lambda x: x.last_view_utc, reverse = True)
+
+	return render_template("viewers.html", v=v, viewers=viewers)
+
 @app.route("/@<username>", methods=["GET"])
 @app.route("/api/v1/user/<username>/listing", methods=["GET"])
 @auth_desired
@@ -235,6 +252,23 @@ def u_username(username, v=None):
 												v=v),
 				'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
 				}
+
+	# viewers
+	if u.id != v.id:
+		view = g.db.query(ViewerRelationship).filter(
+			and_(
+				ViewerRelationship.viewer_id == v.id,
+				ViewerRelationship.user_id == u.id
+			)
+		).first()
+
+		if view:
+			view.last_view_utc = g.timestamp
+		else:
+			view = ViewerRelationship(user_id = u.id,
+									  viewer_id = v.id)
+
+		g.db.add(view)
 
 	if u.is_deleted and (not v or v.admin_level < 3):
 		return {'html': lambda: render_template("userpage_deleted.html",
