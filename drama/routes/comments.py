@@ -50,7 +50,7 @@ def banawardcomment(comment_id, v):
 	comment.banaward = v.username
 	g.db.add(comment)
 
-	return jsonify({"message": "User banned successfully!"}), 200
+	return jsonify({"message": "User banned successfully!"}), 204
 
 
 @app.route("/api/v1/post/<pid>/comment/<cid>", methods=["GET"])

@@ -195,6 +195,7 @@ def badge_grant_post(v):
 
 	if badge_id in [21,22,23,24]:
 		user.patron = True
+		user.animatedname = True
 		g.db.add(user)
 	
 	return redirect(user.permalink)

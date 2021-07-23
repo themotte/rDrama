@@ -25,7 +25,6 @@ def user_info(v, username):
 	user = get_user(username, v=v)
 	return jsonify(user.json)
 
-
 @app.route("/leaderboard", methods=["GET"])
 @auth_desired
 def leaderboard(v):
@@ -39,9 +38,9 @@ def leaderboard(v):
 @cache.memoize(timeout=86400)
 def leaderboard():
 	users = g.db.query(User).options(lazyload('*'))
-	users1= sorted(users, key=lambda x: x.dramacoins, reverse=True)[:100]
-	users2 = sorted(users1, key=lambda x: x.follower_count, reverse=True)[:10]
-	return users1[:25], users2
+	users1= sorted(users, key=lambda x: x.dramacoins, reverse=True)[:25]
+	users2 = users.order_by(User.follower_count.desc()).limit(10).all()
+	return users1, users2
 
 @app.get("/@<username>/css")
 def get_css(username):

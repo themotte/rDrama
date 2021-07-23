@@ -337,6 +337,27 @@
 								</form>
 
 							</div>
+
+
+							<div class="d-lg-flex border-bottom">
+
+								<div class="title w-lg-25">
+									<label for="animatedname">Animated Username</label>
+								</div>
+	
+								<div class="body w-lg-100">
+	
+									<div class="custom-control custom-switch">
+										<input type="checkbox" class="custom-control-input" id="animatedname" name="animatedname"{% if v.animatedname%} checked{% endif %} onchange="post_toast('/settings/profile?animatedname='+document.getElementById('animatedname').checked)">
+										<label class="custom-control-label" for="animatedname"></label>
+									</div>
+	
+									<span class="text-small-extra text-muted">Enable animated username (only available to users in the leaderboard and patrons)</span>
+	
+								</div>
+	
+							</div>
+
 							
 						</div>							
 							

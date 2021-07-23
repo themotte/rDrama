@@ -125,7 +125,7 @@
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="You're blocking this user, but you can see this comment because {{'it\'s an admin comment' if c.distinguish_level else 'you\'re an admin'}}."></i>&nbsp;{% endif %}
 				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you, but you can see this comment because {{'it\'s an admin comment' if c.distinguish_level else 'you\'re an admin'}}."></i>&nbsp;{% endif %}
 
-				{% if c.author.is_deleted %}[deleted account]{% else %}<a {% if c.author.patron %}class="patron"{% endif %} style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;" href="/@{{c.author.username}}">{{c.author.username}}</a>{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}{% endif %}
+				{% if c.author.is_deleted %}[deleted account]{% else %}<a {% if c.author.animatedname %}class="{% if c.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;" href="/@{{c.author.username}}">{{c.author.username}}</a>{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{{c.author.customtitle | safe}}</bdi>{% endif %}{% endif %}
 
 				<span id="timestamp-{{c.id}}" data-toggle="tooltip" data-placement="bottom" title="" class="time-stamp">&nbsp;{{c.age_string}}</span>
 				{% if c.edited_utc %}
