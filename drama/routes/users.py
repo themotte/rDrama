@@ -29,7 +29,7 @@ def user_info(v, username):
 @app.route("/admin/dump_cache", methods=["GET"])
 @admin_level_required(3)
 @validate_formkey
-def admin_dump_cache(v):
+def dumpleaderboard(v):
 	cache.delete_memoized(leaderboard)
 	return "sex"
 
