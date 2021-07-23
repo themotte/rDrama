@@ -117,7 +117,7 @@
 				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{{u.customtitle | safe}}</p>{% endif %}
 				
 				<div class="font-weight-bolder">
-					<span>{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp; {% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>{% endif %}
+					<span>{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp; {% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp;joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>{% endif %}
 				</div>
 				{% if u.bio_html %}
 				<pre></pre>
@@ -292,7 +292,7 @@
 				{% endif %}
 				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{{u.customtitle_}}</p>{% endif %}
 				<div class="font-weight-normal">
-					<span class="font-weight-bold">{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp;{% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
+					<span class="font-weight-bold">{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp;{% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp;<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
 				</div>
 				{% if u.bio_html %}
 				<p class="text-muted text-break">{{u.bio_html | safe}}</p>
