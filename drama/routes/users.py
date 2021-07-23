@@ -1,4 +1,4 @@
-vimport qrcode
+import qrcode
 import io
 from datetime import datetime
 
