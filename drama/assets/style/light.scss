@@ -146,7 +146,6 @@ $yiq-contrasted-threshold:	160 !default;
 	}
 
 @import "D:/#D/drama/assets/style/node_modules/bootstrap/scss/bootstrap.scss";
-@import "D:/#D/drama/assets/style/main.scss";
 
 html {
 	font-size: 14px;
@@ -3892,24 +3891,58 @@ img.emoji {
     border: 2px solid $gray-200;
 }
 
-@-webkit-keyframes lgbt {
+@-webkit-keyframes leaderboard {
     0% {
         color: violet;
     }
-    20% {
+    16% {
         color: red;
     }
-    40% {
+    32% {
         color: orange;
     }
-    60% {
+    48% {
         color: yellow;
+    }
+    64% {
+        color: green;
     }
     80% {
         color: blue;
     }
     100% {
         color: violet;
+    }
+}
+
+@-webkit-keyframes patron {
+    0% {
+        color: violet;
+		text-shadow:0px 0px 5px violet, 0px 0px 5px violet, 0px 0px 5px violet, 0px 0px 5px violet;
+    }
+    16% {
+        color: red;
+		text-shadow:0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red;
+    }
+    32% {
+        color: orange;
+		text-shadow:0px 0px 5px orange, 0px 0px 5px orange, 0px 0px 5px orange, 0px 0px 5px orange;
+    }
+    48% {
+        color: yellow;
+		text-shadow:0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow;
+    }
+    64% {
+        color: green;
+		text-shadow:0px 0px 5px green, 0px 0px 5px green, 0px 0px 5px green, 0px 0px 5px green;
+    }
+    80% {
+        color: blue;
+		text-shadow:0px 0px 0.1px blue, 0px 0px 0.1px blue, 0px 0px 0.1px blue, 0px 0px 0.1px blue;
+    }
+    100% {
+        color: violet;
+		text-shadow:0px 0px 5px violet, 0px 0px 5px violet, 0px 0px 5px violet, 0px 0px 5px violet;
     }
 }
 
@@ -3949,45 +3982,17 @@ img.emoji {
     }
 }
 
-* [href$="/@Dw-Im-Here"], * [href$="/@Racist_FemboyV2"], * [href$="/@DudeBussyLmao"], * [href$="/@InfoWarrior"], * [href$="/@Jew"], * [href$="/@Lysis10"], * [href$="/@fuckaveann"], * [href$="/@JimieWhales"], * [href$="/@CRUSTY"], * [href$="/@Aevann"], * [href$="/@Joan_Wayne_Gacy"], * [href$="/@Sylveon"], * [href$="/@SquisheeKisses"], * [href$="/@wangpangthankyoumaam"], * [href$="/@Chapose"], * [href$="/@cumlord"], * [href$="/@Snappy"], * [href$="/@ponyblaze"], * [href$="/@iStillMissEd"], * [href$="/@Account_109_"], * [href$="/@Yall"], * [href$="/@collectijism"], * [href$="/@Need4Sneed"], * [href$="/@BrokeBackBuck"] {
-    -webkit-animation: 3s ease-in-out 0s normal none infinite lgbt;
-    animation: 3s ease-in-out 0s normal none infinite lgbt;
-}
-
-* [href$="/@Landlord_Messiah"] {
-    -webkit-animation: 3s ease-in-out 0s normal none infinite landlord;
-    animation: 3s ease-in-out 0s normal none infinite landlord;
-}
-
-
 .patron {
     -webkit-animation: 3s ease-in-out 0s normal none infinite patron;
     animation: 3s ease-in-out 0s normal none infinite patron;
 }
 
-@-webkit-keyframes patron {
-    0% {
-		color: violet;
-		text-shadow:0px 0px 5px violet, 0px 0px 5px violet, 0px 0px 5px violet, 0px 0px 5px violet;
-    }
-    20% {
-		color: red;
-		text-shadow:0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red, 0px 0px 0.1px red;
-    }
-    40% {
-		color: orange;
-		text-shadow:0px 0px 5px orange, 0px 0px 5px orange, 0px 0px 5px orange, 0px 0px 5px orange;
-    }
-    60% {
-		color: yellow;
-		text-shadow:0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow, 0px 0px 0.1px yellow;
-    }
-    80% {
-		color: blue;
-		text-shadow:0px 0px 5px blue, 0px 0px 5px blue, 0px 0px 5px blue, 0px 0px 5px blue;
-    }
-    100% {
-		color: violet;
-		text-shadow:0px 0px 0.1px violet, 0px 0px 0.1px violet, 0px 0px 0.1px violet, 0px 0px 0.1px violet;
-    }
+.leaderboard {
+    -webkit-animation: 3s ease-in-out 0s normal none infinite leaderboard;
+    animation: 3s ease-in-out 0s normal none infinite leaderboard;
+}
+
+* [href$="/@Landlord_Messiah"] {
+    -webkit-animation: 3s ease-in-out 0s normal none infinite landlord;
+    animation: 3s ease-in-out 0s normal none infinite landlord;
 }
