@@ -1,4 +1,4 @@
-import qrcode
+vimport qrcode
 import io
 from datetime import datetime
 
@@ -215,7 +215,7 @@ def followers(username, v):
 @app.get("/views")
 @auth_required
 def visitors(v):
-	if v.admin_level < 1 and not v.patron: abort(403)
+	if v.admin_level < 1 and not v.patron: abort(502)
 	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc)
 	return render_template("viewers.html", v=v, viewers=viewers)
 
