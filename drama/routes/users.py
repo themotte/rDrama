@@ -26,7 +26,7 @@ def user_info(v, username):
 	user = get_user(username, v=v)
 	return jsonify(user.json)
 
-@app.route("/admin/dump_cache", methods=["GET"])
+@app.route("/admin/leaderboard", methods=["GET"])
 @admin_level_required(3)
 @validate_formkey
 def dumpleaderboard(v):
