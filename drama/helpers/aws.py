@@ -80,7 +80,7 @@ def upload_file(name, file, resize=None):
 		print(e)
 		print(req)
 		print(req.text)
-		if "File type invalid" in req.text: return "sex"
+		if "File type invalid" in str(req.text): return "sex"
 		else: return
 	
 	new_image = Image(
