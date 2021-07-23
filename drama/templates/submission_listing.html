@@ -196,9 +196,9 @@
 
 						{% if v and v.id!=p.author_id and v.admin_level == 0 %}
 							{% if v.banawards > 0 %}
-								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/banaward/post/{{p.id}}')"><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
+								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/banaward/post/{{p.id}}')"><i class="fas fa-user-slash text-danger"></i>Give ban award</a></li>
 							{% else %}
-								<li class="list-inline-item"><a href="/banaward/post/{{p.id}}"><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
+								<li class="list-inline-item"><a href="/banaward/post/{{p.id}}"><i class="fas fa-user-slash text-danger"></i>Give ban award</a></li>
 							{% endif %}
 						{% endif %}
 
@@ -380,13 +380,11 @@
 				<ul class="list-group post-actions">
 					<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link=https://rdrama.net{{p.permalink}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>					 
 					
-					<li id="block-user-{{p.base36id}}" class="list-inline-item {% if p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/block?username={{p.author.username}}', callback=function(){window.location.reload(true);})"><i class="fas fa-user-slash"></i>Block user</a></li>
-
 					{% if v and v.id!=p.author_id and v.admin_level == 0 %}
 						{% if v.banawards > 0 %}
-							<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/banaward/post/{{p.id}}')"><i class="fas fa-user-slash text-danger mr-3"></i>Ban user</a></button>
+							<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/banaward/post/{{p.id}}')"><i class="fas fa-user-slash text-danger mr-3"></i>Give ban award</a></button>
 						{% else %}
-							<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/banaward/post/{{p.id}}"><i class="fas fa-user-slash text-danger mr-3"></i>Ban user</a></button>
+							<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/banaward/post/{{p.id}}"><i class="fas fa-user-slash text-danger mr-3"></i>Give ban award</a></button>
 						{% endif %}
 					{% endif %}
 
