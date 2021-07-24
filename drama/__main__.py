@@ -52,11 +52,8 @@ app.config['SQLALCHEMY_READ_URIS'] = [
 ]
 
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
-app.config["SERVER_NAME"] = environ.get(
-	"domain", environ.get(
-		"SERVER_NAME", "")).strip()
+app.config["SERVER_NAME"] = environ.get("domain", environ.get("SERVER_NAME", "")).strip()
 
-print(app.config['SECRET_KEY'])
 app.config["SHORT_DOMAIN"]=environ.get("SHORT_DOMAIN","").strip()
 app.config["SESSION_COOKIE_NAME"] = "session_drama"
 app.config["VERSION"] = _version
