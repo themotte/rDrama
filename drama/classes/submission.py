@@ -282,7 +282,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		if self.over_18: return f"/assets/images/nsfw.png"
 		elif self.has_thumb:
 			if self.thumburl: return self.thumburl
-			else: return f"https://s3.eu-central-1.amazonaws.com/i.drama.ga/posts/{self.base36id}/thumb.png"
+			else: return f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/posts/{self.base36id}/thumb.png"
 		elif self.is_image:
 			return self.url
 		else:

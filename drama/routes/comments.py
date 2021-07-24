@@ -434,7 +434,7 @@ def api_comment(v):
 				# g.db.commit()
 				
 			# csam_thread=threading.Thread(target=check_csam_url, 
-										 # args=(f"https://s3.eu-central-1.amazonaws.com/i.drama.ga/{name}", 
+										 # args=(f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{name}", 
 												 # v, 
 												 # del_function
 												# )
@@ -809,7 +809,7 @@ def edit_comment(cid, v):
 				# g.db.commit()
 				
 			# csam_thread=threading.Thread(target=check_csam_url, 
-										 # args=(f"https://s3.eu-central-1.amazonaws.com/i.drama.ga/{name}", 
+										 # args=(f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{name}", 
 												 # v, 
 												 # del_function
 												# )
