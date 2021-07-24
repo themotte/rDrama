@@ -96,6 +96,8 @@ def submit_get(v):
 	
 	b = get_guild("general")
 
+	resize()
+	
 	return render_template("submit.html",
 						   v=v,
 						   b=b
@@ -273,8 +275,6 @@ def edit_post(pid, v):
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
 	for x in notify_users: send_notification(1046, x, f"@{v.username} has mentioned you: https://rdrama.net{p.permalink}")
-
-	resize()
 
 	return redirect(p.permalink)
 
@@ -1050,8 +1050,6 @@ def submit_post(v):
 	g.db.add(n)
 	g.db.commit()
 	send_message(f"https://rdrama.net{new_post.permalink}")
-
-	resize()
 	
 	return {"html": lambda: redirect(new_post.permalink),
 			"api": lambda: jsonify(new_post.json)
@@ -1076,8 +1074,6 @@ def delete_post_pid(pid, v):
 	g.db.add(post)
 
 	cache.delete_memoized(frontlist)
-
-	resize()
 
 	return "", 204
 
