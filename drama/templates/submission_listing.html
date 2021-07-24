@@ -335,8 +335,8 @@
     <div id="flaggers-{{p.id}}" class="flaggers d-none" style="margin: 7px; border: 1px solid #999b2e; padding: 10px; border-radius: 3px;">
         <strong style="color: #999b2e;"><i class="far fa-fw fa-flag"></i> Reported by:</strong>
         <ul style="margin-bottom: 0;">
-            {% for u in p.flagged_by %}
-            <li><a href="{{ u.url }}">@{{ u.username }}</a></li>
+            {% for f in p.flags %}
+            <li><a href="{{ f.user.url }}">@{{ f.user.username }}</a>: "{{f.reason}}"</li>
             {% endfor %}
         </ul>
     </div>
