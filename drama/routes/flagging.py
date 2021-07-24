@@ -18,6 +18,7 @@ def api_flag_post(pid, v):
 		if existing:
 			return "", 409
 		reason = request.form.get("reason", "")[:100].strip()
+		print(reason)
 		flag = Flag(post_id=post.id,
 					user_id=v.id,
 					reason=reason,
