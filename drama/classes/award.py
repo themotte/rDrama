@@ -5,6 +5,21 @@ from sqlalchemy.orm import relationship
 #from .mix_ins import *
 from drama.__main__ import Base, app
 
+AWARDS = {
+	"ban": {
+		"title": "1-Day Ban",
+		"description": "Ban the author for a day.",
+		"icon": "fas fa-gavel",
+		"color": "text-danger"
+	},
+	"shit": {
+		"title": "Literal Shitpost",
+		"description": "Let OP know how much their post sucks ass.",
+		"icon": "fas fa-poop",
+		"color": "text-black-50"
+	}
+}
+
 
 class AwardRelationship(Base):
 
@@ -15,6 +30,7 @@ class AwardRelationship(Base):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	submission_id = Column(Integer, ForeignKey("submissions.id"), default=None)
 	comment_id = Column(Integer, ForeignKey("comments.id"), default=None)
+	kind = Column(String(20))
 
 	user = relationship("User", primaryjoin="AwardRelationship.user_id==User.id", lazy="joined")
 	post = relationship(
