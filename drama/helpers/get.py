@@ -44,7 +44,7 @@ def get_user(username, v=None, graceful=False):
 
 	return user
 
-def get_account(base36id, v=None, g.db=None, graceful=False):
+def get_account(base36id, v=None, graceful=False):
 
 	if isinstance(base36id, str): id = base36decode(base36id)
 	else: id = base36id
@@ -79,7 +79,7 @@ def get_account(base36id, v=None, g.db=None, graceful=False):
 	return user
 
 
-def get_post(pid, v=None, graceful=False, g.db=None, **kwargs):
+def get_post(pid, v=None, graceful=False, **kwargs):
 
 	if isinstance(pid, str):
 		i = base36decode(pid)
@@ -101,7 +101,6 @@ def get_post(pid, v=None, graceful=False, g.db=None, **kwargs):
 			aliased(ModRelationship, alias=mod),
 			boardblocks.c.id,
 			blocking.c.id,
-			# aliased(ModAction, alias=exile)
 		).options(
 			joinedload(Submission.author).joinedload(User.title)
 		)
@@ -126,10 +125,6 @@ def get_post(pid, v=None, graceful=False, g.db=None, **kwargs):
 			blocking, 
 			blocking.c.target_id == Submission.author_id, 
 			isouter=True
-		# ).join(
-		#	 exile,
-		#	 and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-		#	 isouter=True
 		).first()
 
 		if not items and not graceful:
@@ -140,25 +135,18 @@ def get_post(pid, v=None, graceful=False, g.db=None, **kwargs):
 		x._is_guildmaster = items[2] or 0
 		x._is_blocking_guild = items[3] or 0
 		x._is_blocking = items[4] or 0
-		# x._is_exiled_for=items[5] or 0
 
 	else:
 		items = g.db.query(
 			Submission,
-			# aliased(ModAction, alias=exile)
 		).options(
 			joinedload(Submission.author).joinedload(User.title)
-		# ).join(
-		#	 exile,
-		#	 and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-		#	 isouter=True
 		).filter(Submission.id == i).first()
 
 		if not items and not graceful:
 			abort(404)
 
 		x=items
-		# x._is_exiled_for=items[1] or 0
 
 	return x
 
@@ -169,13 +157,6 @@ def get_posts(pids, sort="hot", v=None):
 		return []
 
 	pids=tuple(pids)
-
-	# exile=g.db.query(ModAction).options(
-	#	 lazyload('*')
-	#	 ).filter(
-	#	 ModAction.kind=="exile_user",
-	#	 ModAction.target_submission_id.in_(pids)
-	#	 ).subquery()
 
 	if v:
 		vt = g.db.query(Vote).filter(
@@ -227,10 +208,6 @@ def get_posts(pids, sort="hot", v=None):
 			subs, 
 			subs.c.board_id == Submission.board_id, 
 			isouter=True
-		# ).join(
-		#	 exile,
-		#	 and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-		#	 isouter=True
 		).order_by(None).all()
 
 		posts=[x for x in query]
@@ -243,29 +220,16 @@ def get_posts(pids, sort="hot", v=None):
 			output[i]._is_blocking = posts[i][4] or 0
 			output[i]._is_blocked = posts[i][5] or 0
 			output[i]._is_subscribed = posts[i][6] or 0
-			# output[i]._is_exiled_for=posts[i][7] or 0
 	else:
 		query = g.db.query(
 			Submission,
-			# aliased(ModAction, alias=exile)
 		).options(
 			joinedload(Submission.author).joinedload(User.title)
 		).filter(Submission.id.in_(pids)
-		# ).join(
-		#	 exile,
-		#	 and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-		#	 isouter=True
 		).order_by(None).all()
 
-		output=[x for x in query]
 
-		# output=[]
-		# for post in posts:
-		#	 p=post[0]
-		#	 p._is_exiled_for=post[1] or 0
-		#	 output.append(p)
-
-	return sorted(output, key=lambda x: pids.index(x.id))
+	return sorted(query, key=lambda x: pids.index(x.id))
 
 
 def get_post_with_comments(pid, sort="top", v=None):
