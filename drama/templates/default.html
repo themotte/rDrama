@@ -260,11 +260,10 @@
 
 			document.getElementById("post-author").textContent = author;
 
-			selectbox=document.getElementById('report-type-dropdown');
-			selectbox.value='reason_not_selected';
-
 			submitbutton=document.getElementById("reportPostButton");
 			submitbutton.disabled=true;
+
+			reason=document.getElementById("reason").value;
 
 			submitbutton.onclick = function() {
 
@@ -275,9 +274,7 @@
 				xhr.open("POST", '/api/flag/post/'+id, true);
 				var form = new FormData()
 				form.append("formkey", formkey());
-
-				dropdown=document.getElementById("report-type-dropdown");
-				form.append("report_type", dropdown.options[dropdown.selectedIndex].value);
+				form.append("reason", reason);
 
 				xhr.withCredentials=true;
 
@@ -310,6 +307,9 @@
 
 		});
 	
+
+
+
 		$('.expandable-image').click( function(event) {
 
 			if (event.which != 1) {

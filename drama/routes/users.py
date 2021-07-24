@@ -64,7 +64,7 @@ def get_profilecss(username):
 @app.route("/@<username>/reply/<id>", methods=["POST"])
 @auth_required
 def messagereply(v, username, id):
-	message = request.form.get("message", "")
+	message = request.form.get("message", "")[:1000].strip()
 	user = get_user(username)
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
 	text_html = sanitize(text_html, linkgen=True)
@@ -113,7 +113,7 @@ def message2(v, username):
 	user = get_user(username, v=v)
 	if user.is_blocking: return jsonify({"error": "You're blocking this user."}), 403
 	if user.is_blocked: return jsonify({"error": "This user is blocking you."}), 403
-	message = request.form.get("message", "")
+	message = request.form.get("message", "")[:1000].strip()
 	send_pm(v.id, user, message)
 	beams_client.publish_to_interests(
 		interests=[str(user.id)],
