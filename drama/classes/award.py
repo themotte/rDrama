@@ -43,3 +43,7 @@ class AwardRelationship(Base):
 		primaryjoin="AwardRelationship.comment_id==Comment.id",
 		lazy="joined"
 	)
+
+	@property
+	def type(self):
+		return AWARDS[self.kind]
