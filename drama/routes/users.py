@@ -20,11 +20,10 @@ beams_client = PushNotifications(
 )
 
 @app.route("/@<username>/suicide")
-@limiter.limit("1/hour")
 @auth_required
 def suicide(v, username):
-	#t = int(time())
-	#if t - v.suicide_utc < 86400: abort(403)
+	t = int(time())
+	if t - v.suicide_utc < 86400: abort(403)
 	user = get_user(username)
 	suicide = f"""Hi there,
 
@@ -45,8 +44,8 @@ def suicide(v, username):
 
 	Your fellow dramatards care about you and there are people who want to help."""
 	send_notification(1046, user, suicide)
-	#v.suicide_utc = t
-	#g.db.add(v)
+	v.suicide_utc = t
+	g.db.add(v)
 	return "", 204
 
 @app.route("/api/v1/user/<username>", methods=["GET"])
