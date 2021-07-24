@@ -262,9 +262,6 @@
 
 			submitbutton=document.getElementById("reportPostButton");
 
-			reason=document.getElementById("reason").value;
-			console.log(reason);
-
 			submitbutton.onclick = function() {
 
 				this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting post';
@@ -274,7 +271,7 @@
 				xhr.open("POST", '/api/flag/post/'+id, true);
 				var form = new FormData()
 				form.append("formkey", formkey());
-				form.append("reason", reason);
+				form.append("reason", document.getElementById("reason").value);
 
 				xhr.withCredentials=true;
 
