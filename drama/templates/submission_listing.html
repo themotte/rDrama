@@ -126,7 +126,7 @@
 
 				<div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
-					<div class="post-meta text-left d-block mb-md-2">
+					<div class="post-meta text-left mb-md-2">
 						{% if p.banaward %} <i class="fas fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Given the 1-day ban award by @{{p.banaward}}"></i>&nbsp;{% endif %}
 						{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-toggle="tooltip" data-placement="bottom" title="Shadowbanned user"></i>&nbsp;{% endif %}
 						{% if p.stickied %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned post"></i>&nbsp;{% endif %}
