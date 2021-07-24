@@ -15,16 +15,7 @@
 						<div class="h6">We're sorry something here is wrong.</div>
 						<small class="form-text text-muted">Please select a reason for flagging below.</small>
 							<input type="hidden" name="formkey" value="{{v.formkey}}">
-							<select id="report-type-dropdown" name="report_type" form="report-post-form" class="custom-select mt-3" onchange="document.getElementById('reportPostButton').disabled=false;">
-								<option disabled selected value="reason_not_selected">
-									Reason for flagging?
-								</option>
-								<option value="admin">
-									This post breaks Drama policy
-								</option>
-								<option id="report-post-to-guild-dropdown-option" value="guild">
-								</option>
-							</select>
+							<input name="reason" value="">
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
