@@ -164,38 +164,18 @@ def get_posts(pids, sort="hot", v=None):
 			Vote.user_id==v.id
 			).subquery()
 
-		mod = g.db.query(ModRelationship).filter_by(
-			user_id=v.id, accepted=True, invite_rescinded=False).subquery()
-
-		boardblocks = g.db.query(BoardBlock).filter_by(
-			user_id=v.id).subquery()
 		blocking = v.blocking.subquery()
 		blocked = v.blocked.subquery()
-		subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
 
 		query = g.db.query(
 			Submission,
 			vt.c.vote_type,
-			aliased(ModRelationship, alias=mod),
-			boardblocks.c.id,
 			blocking.c.id,
 			blocked.c.id,
-			subs.c.id,
-			# aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Submission.author).joinedload(User.title)
 		).filter(
 			Submission.id.in_(pids)
 		).join(
 			vt, vt.c.submission_id==Submission.id, isouter=True
-		).join(
-			mod, 
-			mod.c.board_id == Submission.board_id, 
-			isouter=True
-		).join(
-			boardblocks, 
-			boardblocks.c.board_id == Submission.board_id, 
-			isouter=True
 		).join(
 			blocking, 
 			blocking.c.target_id == Submission.author_id, 
@@ -204,32 +184,21 @@ def get_posts(pids, sort="hot", v=None):
 			blocked, 
 			blocked.c.user_id == Submission.author_id, 
 			isouter=True
-		).join(
-			subs, 
-			subs.c.board_id == Submission.board_id, 
-			isouter=True
-		).order_by(None).all()
+		).order_by(Submission.id).all()
 
-		posts=[x for x in query]
-
-		output = [p[0] for p in query]
+		output = [p[0] for p in posts]
 		for i in range(len(output)):
 			output[i]._voted = posts[i][1] or 0
-			output[i]._is_guildmaster = posts[i][2] or 0
-			output[i]._is_blocking_guild = posts[i][3] or 0
 			output[i]._is_blocking = posts[i][4] or 0
 			output[i]._is_blocked = posts[i][5] or 0
-			output[i]._is_subscribed = posts[i][6] or 0
 	else:
 		query = g.db.query(
 			Submission,
-		).options(
-			joinedload(Submission.author).joinedload(User.title)
 		).filter(Submission.id.in_(pids)
-		).order_by(None).all()
+		).order_by(Submission.id).all()
 
 
-	return sorted(query, key=lambda x: x.id)
+	return query
 
 
 def get_post_with_comments(pid, sort="top", v=None):
