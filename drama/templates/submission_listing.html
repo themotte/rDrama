@@ -3,11 +3,9 @@
 <script>
 	var date = new Date('{{p.created_datetime}}');
 	document.getElementById('timestamp-{{p.id}}').title = date.toString();
-	document.getElementById('timestamp-{{p.id}}-2').title = date.toString();
 	{% if p.edited_utc %}
 		var date = new Date('{{p.edited_datetime}}');
 		document.getElementById('edited_timestamp-{{p.id}}').title = date.toString();
-		document.getElementById('edited_timestamp-{{p.id}}-2').title = date.toString();
 	{% endif %}
 </script>
 
@@ -140,11 +138,11 @@
 						{% if p.is_repost %}&nbsp;<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}
 						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Flags</a>{% endif %}
 						{% if p.author.is_deleted %}[deleted account]{% else %}&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name">{{p.author.username}}</a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}{% endif %}
-						<span data-toggle="tooltip" data-placement="bottom" id="timestamp-{{p.id}}-2" title="">&nbsp;{{p.age_string}}</span>
+						<span data-toggle="tooltip" data-placement="bottom" id="timestamp-{{p.id}}" title="">&nbsp;{{p.age_string}}</span>
 						&nbsp;
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})
 						
-						{% if p.edited_utc %}&nbsp;&nbsp;Edited <span data-toggle="tooltip" data-placement="bottom" id="edited_timestamp-{{p.id}}-2" title="">{{p.edited_string}}</span>{% endif %}
+						{% if p.edited_utc %}&nbsp;&nbsp;Edited <span data-toggle="tooltip" data-placement="bottom" id="edited_timestamp-{{p.id}}" title="">{{p.edited_string}}</span>{% endif %}
 						&nbsp;&nbsp;{{p.views}} views
 
 					</div>
