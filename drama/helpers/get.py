@@ -497,8 +497,7 @@ def get_comments(cids, v=None, g.db=None, sort="new",
 		query = g.db.query(
 			Comment, 
 			aliased(CommentVote, alias=vt),
-			).options(
-			joinedload(Comment.author))
+			)
 
 		if v.admin_level >=4:
 			query=query.options(joinedload(Comment.oauth_app))
@@ -507,8 +506,6 @@ def get_comments(cids, v=None, g.db=None, sort="new",
 			query = query.options(
 				joinedload(
 					Comment.parent_comment
-					).joinedload(
-					Comment.author
 					)
 				)
 
@@ -523,34 +520,13 @@ def get_comments(cids, v=None, g.db=None, sort="new",
 			Comment.id.in_(cids)
 			)
 
-
-
 		output = [x[0] for x in query.all()]
 		for i in range(len(output)):
 			output[i]._voted = comments[i][1].vote_type if comments[i][1] else 0
-			output[i]._is_guildmaster = comments[i][2]
-			output[i]._is_exiled_for = comments[i][3]
-
 
 
 	else:
-		query = g.db.query(
-			Comment,
-			aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Comment.author).joinedload(User.title),
-			joinedload(Comment.post).joinedload(Submission.board)
-		).filter(
-			Comment.id.in_(cids)
-		).join(
-			exile,
-			and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-			isouter=True
-		).order_by(None).all()
-
-		comments=[x for x in query]
-
-		output=[x[0] for x in comments]
+		output = g.db.query(Comment).options().filter(Comment.id.in_(cids)).all()
 		for i in range(len(output)):
 			output[i]._is_exiled_for=comments[i][1]
 
