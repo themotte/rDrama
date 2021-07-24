@@ -23,7 +23,7 @@ with open("snappy.txt", "r") as f:
 	snappyquotes = f.read().split("{[para]}")
 
 @app.route("/resize")
-def resize()
+def resize():
 	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
 	print(u.username)
 	print(f"1 {u.profileurl}")
