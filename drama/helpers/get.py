@@ -434,20 +434,15 @@ def get_comments(cids, v=None, sort="new",
 			isouter=True
 			).filter(
 			Comment.id.in_(cids)
-			)
+			).order_by(Comment.id).all()
 
-		output = [x[0] for x in query.all()]
-		for i in range(len(output)):
-			output[i]._voted = comments[i][1].vote_type if comments[i][1] else 0
+		output = [x[0] for x in query]
+		for i in range(len(output)): output[i]._voted = query[i][1].vote_type if query[i][1] else 0
 
 
 	else:
-		output = g.db.query(Comment).options().filter(Comment.id.in_(cids)).all()
-		for i in range(len(output)):
-			output[i]._is_exiled_for=comments[i][1]
+		output = g.db.query(Comment).options().filter(Comment.id.in_(cids)).order_by(Comment.id).all()
 
-
-	output = sorted(output, key=lambda x: cids.index(x.id))
 
 	return output
 
