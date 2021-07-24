@@ -13,12 +13,10 @@ from .users import leaderboard
 @validate_formkey
 def api_vote_post(post_id, x, v):
 
-	if x not in ["-1", "0", "1"]:
-		abort(400)
+	if x not in ["-1", "0", "1"]: abort(400)
 
 	# disallow bots
-	if request.headers.get("X-User-Type","") == "Bot":
-		abort(403)
+	if request.headers.get("X-User-Type","") == "Bot": abort(403)
 
 	x = int(x)
 
@@ -37,41 +35,27 @@ def api_vote_post(post_id, x, v):
 
 	post = get_post(post_id)
 
-	if post.is_banned:
-		return jsonify({"error":"That post has been removed."}), 403
-	elif post.deleted_utc > 0:
-		return jsonify({"error":"That post has been deleted."}), 403
-	elif post.is_archived:
-		return jsonify({"error":"That post is archived and can no longer be voted on."}), 403
-
 	# check for existing vote
-	existing = g.db.query(Vote).filter_by(
-		user_id=v.id, submission_id=post.id).first()
+	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
+
 	if existing:
 		existing.change_to(x)
 		g.db.add(existing)
-
 	else:
 		vote = Vote(user_id=v.id,
 					vote_type=x,
 					submission_id=base36decode(post_id),
-					creation_ip=request.remote_addr,
 					app_id=v.client.application.id if v.client else None
 					)
 
 		g.db.add(vote)
 
-	try:
-		g.db.flush()
-	except:
-		return jsonify({"error":"Vote already exists."}), 422
+	g.db.flush()
 		
-	posts = []
-	posts.append(post)
-
 	post.upvotes = post.ups
 	post.downvotes = post.downs
 	g.db.add(post)
+	g.db.commit()
 
 	users1, users2 = leaderboard()
 	return "", 204
