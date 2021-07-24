@@ -112,7 +112,7 @@
 			<div class="modal-body">
 				<ul class="list-group post-actions">
 					{% if not (v and v.id==p.author_id) %}
-						<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}','{{'@'+p.author.username if not p.author.is_deleted else '[deleted account]'}}','{{p.board.name}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Flag</button>
+						<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}','{{'@'+p.author.username if not p.author.is_deleted else '[deleted account]'}}','{{p.board.name}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 					{% endif %}
 					{% if v and v.id==p.author_id %}
 						{% if p.private %}
@@ -236,7 +236,7 @@
 						{% if p.is_nsfl %}<span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}
 						{% if p.is_repost %}<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}
-						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Flags</a>{% endif %}
+						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
 						{% if p.author.is_deleted %}[deleted account]{% else %}&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name">&nbsp;&nbsp;{{p.author.username}}</a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}{% endif %}
 						<span data-toggle="tooltip" data-placement="bottom" id="timestamp" title="">&nbsp;{{p.age_string}}</span>
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if v and v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
@@ -351,7 +351,7 @@
 						{% endif %}
 
 						{% if not (v and v.id==p.author_id) %}
-						<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}', '{{p.author.username}}','{{p.board.name}}')"><i class="fas fa-flag"></i>Flag</a></li>
+						<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}', '{{p.author.username}}','{{p.board.name}}')"><i class="fas fa-flag"></i>Report</a></li>
 						{% endif %}
 
 						{% if v and v.id==p.author_id %}

@@ -219,19 +219,26 @@
 
 			document.getElementById("comment-author").textContent = author;
 
-			//offtopic.disabled=true;
 
 			document.getElementById("reportCommentButton").onclick = function() {
 
 				this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting comment';
 				this.disabled = true;
-				post('/api/flag/comment/' + id,
-					callback = function() {
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", '/api/flag/comment/'+id, true);
+				var form = new FormData()
+				form.append("formkey", formkey());
+				form.append("reason", document.getElementById("reason").value);
 
-						document.getElementById("reportCommentFormBefore").classList.add('d-none');
-						document.getElementById("reportCommentFormAfter").classList.remove('d-none');
-					}
-					)
+				xhr.withCredentials=true;
+
+				xhr.onload=function() {
+					document.getElementById("reportCommentFormBefore").classList.add('d-none');
+					document.getElementById("reportCommentFormAfter").classList.remove('d-none');
+				};
+
+				xhr.onerror=function(){alert(errortext)};
+				xhr.send(form);
 			}
 
 		};
