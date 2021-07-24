@@ -341,7 +341,7 @@ def get_post_with_comments(pid, sort="top", v=None):
 	return post
 
 
-def get_comment(cid, g.db=None, v=None, graceful=False, **kwargs):
+def get_comment(cid, v=None, graceful=False, **kwargs):
 
 	if isinstance(cid, str):
 		i = base36decode(cid)
@@ -445,7 +445,7 @@ def get_comment(cid, g.db=None, v=None, graceful=False, **kwargs):
 	return x
 
 
-def get_comments(cids, v=None, g.db=None, sort="new",
+def get_comments(cids, v=None, sort="new",
 				 load_parent=False, **kwargs):
 
 	if not cids: return []
