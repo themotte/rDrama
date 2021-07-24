@@ -16,5 +16,5 @@ from .domains import *
 from .subscriptions import *
 from .ips import *
 from .titles import *
-from .paypal import *
+from .award import *
 from .mod_logs import *
