@@ -5,16 +5,13 @@ from sqlalchemy.orm import joinedload, aliased
 import re
 
 
-def get_user(username, v=None, nSession=None, graceful=False):
+def get_user(username, v=None, g.db=None, graceful=False):
 
 	username = username.replace('\\', '')
 	username = username.replace('_', '\_')
 	username = username.replace('%', '')
 
-	if not nSession:
-		nSession = g.db
-
-	user = nSession.query(
+	user = g.db.query(
 		User
 		).filter(
 		or_(
@@ -30,7 +27,7 @@ def get_user(username, v=None, nSession=None, graceful=False):
 			return None
 
 	if v:
-		block = nSession.query(UserBlock).filter(
+		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -47,15 +44,12 @@ def get_user(username, v=None, nSession=None, graceful=False):
 
 	return user
 
-def get_account(base36id, v=None, nSession=None, graceful=False):
-
-	if not nSession:
-		nSession = g.db
+def get_account(base36id, v=None, g.db=None, graceful=False):
 
 	if isinstance(base36id, str): id = base36decode(base36id)
 	else: id = base36id
 
-	user = nSession.query(User
+	user = g.db.query(User
 						  ).filter(
 		User.id == id
 	).first()
@@ -67,7 +61,7 @@ def get_account(base36id, v=None, nSession=None, graceful=False):
 			return None
 
 	if v:
-		block = nSession.query(UserBlock).filter(
+		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -85,25 +79,23 @@ def get_account(base36id, v=None, nSession=None, graceful=False):
 	return user
 
 
-def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
+def get_post(pid, v=None, graceful=False, g.db=None, **kwargs):
 
 	if isinstance(pid, str):
 		i = base36decode(pid)
 	else:
 		i = pid
 
-	nSession = nSession or kwargs.get("session")or g.db
-
 	if v:
-		vt = nSession.query(Vote).filter_by(
+		vt = g.db.query(Vote).filter_by(
 			user_id=v.id, submission_id=i).subquery()
-		mod = nSession.query(ModRelationship).filter_by(
+		mod = g.db.query(ModRelationship).filter_by(
 			user_id=v.id, accepted=True, invite_rescinded=False).subquery()
-		boardblocks = nSession.query(
+		boardblocks = g.db.query(
 			BoardBlock).filter_by(user_id=v.id).subquery()
 		blocking = v.blocking.subquery()
 
-		items = nSession.query(
+		items = g.db.query(
 			Submission,
 			vt.c.vote_type,
 			aliased(ModRelationship, alias=mod),
@@ -151,7 +143,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 		# x._is_exiled_for=items[5] or 0
 
 	else:
-		items = nSession.query(
+		items = g.db.query(
 			Submission,
 			# aliased(ModAction, alias=exile)
 		).options(
@@ -385,16 +377,14 @@ def get_post_with_comments(pid, sort="top", v=None):
 	return post
 
 
-def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
+def get_comment(cid, g.db=None, v=None, graceful=False, **kwargs):
 
 	if isinstance(cid, str):
 		i = base36decode(cid)
 	else:
 		i = cid
 
-	nSession = nSession or kwargs.get('session') or g.db
-
-	exile = nSession.query(ModAction
+	exile = g.db.query(ModAction
 		 ).options(
 		 lazyload('*')
 		 ).filter_by(
@@ -404,18 +394,18 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 	if v:
 		blocking = v.blocking.subquery()
 		blocked = v.blocked.subquery()
-		vt = nSession.query(CommentVote).filter(
+		vt = g.db.query(CommentVote).filter(
 			CommentVote.user_id == v.id,
 			CommentVote.comment_id == i).subquery()
 
-		mod=nSession.query(ModRelationship
+		mod=g.db.query(ModRelationship
 			).filter_by(
 			user_id=v.id,
 			accepted=True
 			).subquery()
 
 
-		items = nSession.query(
+		items = g.db.query(
 			Comment, 
 			vt.c.vote_type,
 			aliased(ModRelationship, alias=mod),
@@ -454,7 +444,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 		x._is_guildmaster=items[2] or 0
 		x._is_exiled_for=items[3] or 0
 
-		block = nSession.query(UserBlock).filter(
+		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -470,7 +460,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 		x._is_blocked = block and block.target_id == v.id
 
 	else:
-		q = nSession.query(
+		q = g.db.query(
 			Comment,
 			aliased(ModAction, alias=exile)
 		).options(
@@ -491,46 +481,24 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 	return x
 
 
-def get_comments(cids, v=None, nSession=None, sort="new",
+def get_comments(cids, v=None, g.db=None, sort="new",
 				 load_parent=False, **kwargs):
 
-	if not cids:
-		return []
+	if not cids: return []
 
 	cids=tuple(cids)
 
-	nSession = nSession or kwargs.get('session') or g.db
-
-	exile=nSession.query(ModAction
-		).options(
-		lazyload('*')
-		).filter(
-		ModAction.kind=="exile_user",
-		ModAction.target_comment_id.in_(cids)
-		).distinct(ModAction.target_comment_id).subquery()
-
 	if v:
-		vt = nSession.query(CommentVote).filter(
+		vt = g.db.query(CommentVote).filter(
 			CommentVote.comment_id.in_(cids), 
 			CommentVote.user_id==v.id
 			).subquery()
 
-		mod=nSession.query(ModRelationship
-			).filter_by(
-			user_id=v.id,
-			accepted=True
-			).subquery()
-
-
-
-		query = nSession.query(
+		query = g.db.query(
 			Comment, 
 			aliased(CommentVote, alias=vt),
-			aliased(ModRelationship, alias=mod),
-			aliased(ModAction, alias=exile)
 			).options(
-			joinedload(Comment.author).joinedload(User.title)
-			)
+			joinedload(Comment.author))
 
 		if v.admin_level >=4:
 			query=query.options(joinedload(Comment.oauth_app))
@@ -541,8 +509,6 @@ def get_comments(cids, v=None, nSession=None, sort="new",
 					Comment.parent_comment
 					).joinedload(
 					Comment.author
-					).joinedload(
-					User.title
 					)
 				)
 
@@ -553,27 +519,13 @@ def get_comments(cids, v=None, nSession=None, sort="new",
 			).join(
 			Comment.post,
 			isouter=True
-			).join(
-			mod,
-			mod.c.board_id==Submission.board_id,
-			isouter=True
-			).join(
-			exile,
-			and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-			isouter=True
 			).filter(
 			Comment.id.in_(cids)
 			)
 
 
 
-		query=query.options(
-	#		contains_eager(Comment.post).contains_eager(Submission.board)
-			).order_by(None).all()
-
-		comments=[x for x in query]
-
-		output = [x[0] for x in comments]
+		output = [x[0] for x in query.all()]
 		for i in range(len(output)):
 			output[i]._voted = comments[i][1].vote_type if comments[i][1] else 0
 			output[i]._is_guildmaster = comments[i][2]
@@ -582,7 +534,7 @@ def get_comments(cids, v=None, nSession=None, sort="new",
 
 
 	else:
-		query = nSession.query(
+		query = g.db.query(
 			Comment,
 			aliased(ModAction, alias=exile)
 		).options(
