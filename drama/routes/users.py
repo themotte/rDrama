@@ -18,6 +18,31 @@ beams_client = PushNotifications(
 		secret_key=PUSHER_KEY,
 )
 
+@app.route("/@<username>/suicide")
+@auth_required
+def suicide(v, username):
+	user = get_user(username)
+	suicide = f"""Hi there,
+
+	A [concerned dramatard]({v.permalink}) reached out to us about you.
+
+	When you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.
+
+	There are resources available in your area that are free, confidential, and available 24/7:
+
+	Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)
+	Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)
+	Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.
+	If you don't see a resource in your area above, the moderators at r/SuicideWatch keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now
+
+	If you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.
+
+	It may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.
+
+	Your fellow dramatards care about you and there are people who want to help."""
+	send_notification(1046, user, suicide)
+	return "", 204
+
 @app.route("/api/v1/user/<username>", methods=["GET"])
 @auth_desired
 @api("read")
