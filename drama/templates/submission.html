@@ -3,11 +3,9 @@
 <script>
 	var date = new Date('{{p.created_datetime}}');
 	document.getElementById('timestamp').title = date.toString();
-	document.getElementById('timestamp-2').title = date.toString();
 	{% if p.edited_utc %}
 		var date = new Date('{{p.edited_datetime}}');
 		document.getElementById('edited_timestamp').title = date.toString();
-		document.getElementById('edited_timestamp-2').title = date.toString();
 	{% endif %}
 </script>
 
