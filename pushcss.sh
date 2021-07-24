@@ -1,8 +1,3 @@
-git pull
-git add .
-git commit -m "sneed"
-git push
-
 sass ./drama/assets/style/dark.scss D:/#D/drama/assets/style/dark_ff66ac.css
 sass ./drama/assets/style/light.scss D:/#D/drama/assets/style/light_ff66ac.css
 sass ./drama/assets/style/coffee.scss D:/#D/drama/assets/style/coffee_ff66ac.css
