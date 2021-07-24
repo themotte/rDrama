@@ -9,8 +9,8 @@
 	{% endif %}
 </script>
 
-{% set ups=p.upvotes %}
-{% set downs=p.downvotes %}
+{% set ups=p.upvotes_fuzzed %}
+{% set downs=p.downvotes_fuzzed %}
 {% set score=ups-downs %}
 
 {% if v %}

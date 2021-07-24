@@ -173,14 +173,15 @@ def get_posts(pids, sort="hot", v=None):
 			output[i]._voted = query[i][1] or 0
 			output[i]._is_blocking = query[i][2] or 0
 			output[i]._is_blocked = query[i][3] or 0
+		return output
 	else:
 		query = g.db.query(
-			Submission,
+			Submission
 		).filter(Submission.id.in_(pids)
 		).order_by(Submission.id).all()
 
 
-	return query
+		return query
 
 
 def get_post_with_comments(pid, sort="top", v=None):
