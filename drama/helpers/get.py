@@ -89,20 +89,12 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 	if v:
 		vt = g.db.query(Vote).filter_by(
 			user_id=v.id, submission_id=i).subquery()
-		mod = g.db.query(ModRelationship).filter_by(
-			user_id=v.id, accepted=True, invite_rescinded=False).subquery()
-		boardblocks = g.db.query(
-			BoardBlock).filter_by(user_id=v.id).subquery()
 		blocking = v.blocking.subquery()
 
 		items = g.db.query(
 			Submission,
 			vt.c.vote_type,
-			aliased(ModRelationship, alias=mod),
-			boardblocks.c.id,
 			blocking.c.id,
-		).options(
-			joinedload(Submission.author).joinedload(User.title)
 		)
 
 		if v.admin_level>=4:
@@ -112,14 +104,6 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 		).join(
 			vt, 
 			vt.c.submission_id == Submission.id, 
-			isouter=True
-		).join(
-			mod, 
-			mod.c.board_id == Submission.board_id, 
-			isouter=True
-		).join(
-			boardblocks, 
-			boardblocks.c.board_id == Submission.board_id, 
 			isouter=True
 		).join(
 			blocking, 
@@ -132,9 +116,7 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 
 		x = items[0]
 		x._voted = items[1] or 0
-		x._is_guildmaster = items[2] or 0
-		x._is_blocking_guild = items[3] or 0
-		x._is_blocking = items[4] or 0
+		x._is_blocking = items[2] or 0
 
 	else:
 		items = g.db.query(
@@ -189,8 +171,8 @@ def get_posts(pids, sort="hot", v=None):
 		output = [p[0] for p in query]
 		for i in range(len(output)):
 			output[i]._voted = query[i][1] or 0
-			output[i]._is_blocking = query[i][4] or 0
-			output[i]._is_blocked = query[i][5] or 0
+			output[i]._is_blocking = query[i][2] or 0
+			output[i]._is_blocked = query[i][3] or 0
 	else:
 		query = g.db.query(
 			Submission,
