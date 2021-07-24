@@ -31,9 +31,6 @@ def user_info(v, username):
 def leaderboard(v):
 	if v and v.is_banned and not v.unban_utc:return render_template("seized.html")
 	users1, users2 = leaderboard()
-
-	resize()
-
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2)
 
 @cache.memoize(timeout=86400)
