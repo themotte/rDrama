@@ -931,7 +931,7 @@ def submit_post(v):
 
 		name = f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
 		new_post.url = upload_file(name, file)
-		new_post.domain_ref = 1  # id of i.drama.ga domain
+		new_post.domain_ref = 1  # id of i.ruqqus.ga domain
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)
 		g.db.commit()
