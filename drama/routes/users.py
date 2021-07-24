@@ -19,7 +19,7 @@ beams_client = PushNotifications(
 		secret_key=PUSHER_KEY,
 )
 
-@app.route("/@<username>/suicide")
+@app.post("/@<username>/suicide")
 @auth_required
 def suicide(v, username):
 	t = int(time())
