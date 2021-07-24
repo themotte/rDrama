@@ -165,8 +165,8 @@ def get_posts(pids, sort="hot", v=None):
 		).join(
 			blocked, 
 			blocked.c.user_id == Submission.author_id, 
-			isouter=True
-		).order_by(Submission.id.desc()).all()
+			isouter=True)
+		# ).order_by(Submission.id.desc()).all()
 
 		output = [p[0] for p in query]
 		for i in range(len(output)):

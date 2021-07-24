@@ -146,7 +146,7 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 
 	if page == 1: posts = g.db.query(Submission).filter_by(stickied=True).all() + posts
 
-	words = [' captainmeta4 ', ' cm4 ', ' dissident001 ', ' ladine ']
+	words = ['captainmeta4', ' cm4 ', 'dissident001', 'ladine']
 
 	for post in posts:
 		if post.author and post.author.admin_level == 0:
