@@ -188,9 +188,9 @@ def get_posts(pids, sort="hot", v=None):
 
 		output = [p[0] for p in query]
 		for i in range(len(output)):
-			output[i]._voted = posts[i][1] or 0
-			output[i]._is_blocking = posts[i][4] or 0
-			output[i]._is_blocked = posts[i][5] or 0
+			output[i]._voted = query[i][1] or 0
+			output[i]._is_blocking = query[i][4] or 0
+			output[i]._is_blocked = query[i][5] or 0
 	else:
 		query = g.db.query(
 			Submission,
