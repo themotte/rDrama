@@ -38,6 +38,7 @@ class User(Base, Stndrd, Age_times):
 	passhash = deferred(Column(String, default=None))
 	banawards = Column(Integer, default=0)
 	created_utc = Column(Integer, default=0)
+	suicide_utc = Column(Integer, default=0)
 	admin_level = Column(Integer, default=0)
 	resized = Column(Boolean, default=True)
 	agendaposter = Column(Boolean, default=False)

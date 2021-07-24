@@ -1,6 +1,7 @@
 import qrcode
 import io
 from datetime import datetime
+from time import time
 
 from drama.classes.user import ViewerRelationship
 from drama.helpers.alerts import *
@@ -21,6 +22,8 @@ beams_client = PushNotifications(
 @app.route("/@<username>/suicide")
 @auth_required
 def suicide(v, username):
+	t = int(time())
+	if t - v.suicide_utc < 86400: abort(403)
 	user = get_user(username)
 	suicide = f"""Hi there,
 
@@ -41,6 +44,8 @@ def suicide(v, username):
 
 	Your fellow dramatards care about you and there are people who want to help."""
 	send_notification(1046, user, suicide)
+	v.suicide_utc = t
+	g.db.add(v)
 	return "", 204
 
 @app.route("/api/v1/user/<username>", methods=["GET"])
