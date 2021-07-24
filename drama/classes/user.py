@@ -155,6 +155,11 @@ class User(Base, Stndrd, Age_times):
 		lazy="dynamic",
 		primaryjoin="User.id==SaveRelationship.user_id")
 
+	awards = relationship(
+		"AwardRelationship",
+		primaryjoin="User.id==AwardRelationship.user_id"
+	)
+
 	# properties defined as SQL server-side functions
 	referral_count = deferred(Column(Integer, server_default=FetchedValue()))
 	follower_count = deferred(Column(Integer, server_default=FetchedValue()))
@@ -613,6 +618,9 @@ class User(Base, Stndrd, Age_times):
 	def defaultpicture(self):
 		pic = random.randint(1, 50)
 		return f"/assets/images/defaultpictures/{pic}.png"
+
+	def has_award(self, kind):
+		return bool(len([x for x in self.awards if x.kind == kind]))
 
 	@property
 	def profile_url(self):
