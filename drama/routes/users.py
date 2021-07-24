@@ -25,9 +25,7 @@ def suicide(v, username):
 	t = int(time.time())
 	if t - v.suicide_utc < 86400: return "", 204
 	user = get_user(username)
-	suicide = f"""Hi there,
-
-	A [concerned dramatard]({v.permalink}) reached out to us about you.
+	suicide = f"""Hi there,\n\nA [concerned dramatard]({v.permalink}) reached out to us about you.
 
 	When you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.
 
