@@ -1,7 +1,7 @@
 import qrcode
 import io
 from datetime import datetime
-from time import time
+import time
 
 from drama.classes.user import ViewerRelationship
 from drama.helpers.alerts import *
@@ -22,7 +22,7 @@ beams_client = PushNotifications(
 @app.post("/@<username>/suicide")
 @auth_required
 def suicide(v, username):
-	t = int(time)
+	t = int(time.time())
 	if t - v.suicide_utc < 86400: abort(403)
 	user = get_user(username)
 	suicide = f"""Hi there,
