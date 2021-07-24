@@ -444,7 +444,7 @@ def get_comments(cids, v=None, sort="new",
 		output = g.db.query(Comment).options().filter(Comment.id.in_(cids)).order_by(Comment.id.desc()).all()
 
 
-	output = sorted(output, key=lambda x: cids.index(x.id))
+	return sorted(output, key=lambda x: cids.index(x.id))
 
 
 def get_board(bid, graceful=False):
