@@ -177,8 +177,12 @@ class User(Base, Stndrd, Age_times):
 	@property
 	@lazy
 	def dramacoins(self):
-		posts = sum([x.upvotes + x.downvotes - 1 for x in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False, deleted_utc=0).all()])
-		comments = sum([x.upvotes + x.downvotes - 1 for x in g.db.query(Comment).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False, deleted_utc=0).all()])
+		posts = sum([x[0] - 1 for x in
+					 g.db.query(Submission.score).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False,
+																				   deleted_utc=0).all()])
+		comments = sum([x[0] - 1 for x in
+						g.db.query(Comment.score).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False,
+																				   deleted_utc=0).all()])
 		return int(posts + comments)
 
 	def has_block(self, target):
