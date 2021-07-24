@@ -229,7 +229,7 @@ def get_posts(pids, sort="hot", v=None):
 		).order_by(None).all()
 
 
-	return sorted(query, key=lambda x: pids.index(x.id))
+	return sorted(query, key=lambda x: x.id)
 
 
 def get_post_with_comments(pid, sort="top", v=None):
