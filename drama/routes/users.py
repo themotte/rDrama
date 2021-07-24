@@ -23,7 +23,7 @@ beams_client = PushNotifications(
 @auth_required
 def suicide(v, username):
 	t = int(time.time())
-	if t - v.suicide_utc < 86400: return "", 204
+	#if t - v.suicide_utc < 86400: return "", 204
 	user = get_user(username)
 	suicide = f"""Hi there,
 
@@ -43,7 +43,9 @@ def suicide(v, username):
 	It may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.
 
 	Your fellow dramatards care about you and there are people who want to help."""
+	print(1)
 	send_notification(1046, user, suicide)
+	print(2)
 	v.suicide_utc = t
 	g.db.add(v)
 	return "", 204
