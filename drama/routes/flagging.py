@@ -45,6 +45,7 @@ def api_flag_comment(cid, v):
 			return "", 409
 
 		reason = request.form.get("reason", "")[:100].strip()
+		print(reason)
 		flag = CommentFlag(comment_id=comment.id,
 						   user_id=v.id,
 						   reason=reason,

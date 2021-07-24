@@ -229,6 +229,7 @@
 				xhr.open("POST", '/api/flag/comment/'+id, true);
 				var form = new FormData()
 				form.append("formkey", formkey());
+				console.log(document.getElementById("reason").value)
 				form.append("reason", document.getElementById("reason").value);
 
 				xhr.withCredentials=true;
