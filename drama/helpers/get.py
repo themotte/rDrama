@@ -166,7 +166,7 @@ def get_posts(pids, sort="hot", v=None):
 			blocked, 
 			blocked.c.user_id == Submission.author_id, 
 			isouter=True
-		).order_by(Submission.id).all()
+		).order_by(Submission.id.desc()).all()
 
 		output = [p[0] for p in query]
 		for i in range(len(output)):
@@ -178,7 +178,7 @@ def get_posts(pids, sort="hot", v=None):
 		query = g.db.query(
 			Submission
 		).filter(Submission.id.in_(pids)
-		).order_by(Submission.id).all()
+		).order_by(Submission.id.desc()).all()
 
 
 		return query
@@ -434,14 +434,14 @@ def get_comments(cids, v=None, sort="new",
 			isouter=True
 			).filter(
 			Comment.id.in_(cids)
-			).order_by(Comment.id).all()
+			).order_by(Comment.id.desc()).all()
 
 		output = [x[0] for x in query]
 		for i in range(len(output)): output[i]._voted = query[i][1].vote_type if query[i][1] else 0
 
 
 	else:
-		output = g.db.query(Comment).options().filter(Comment.id.in_(cids)).order_by(Comment.id).all()
+		output = g.db.query(Comment).options().filter(Comment.id.in_(cids)).order_by(Comment.id.desc()).all()
 
 
 	return output
