@@ -388,8 +388,7 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def formkey(self):
 
-		if "session_id" not in session:
-			session["session_id"] = token_hex(16)
+		if "session_id" not in session: session["session_id"] = token_hex(16)
 
 		msg = f"{session['session_id']}+{self.id}+{self.login_nonce}"
 

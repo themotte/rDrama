@@ -275,28 +275,24 @@ def admin_vote_info_get(v):
 		ups = g.db.query(Vote
 						 ).options(joinedload(Vote.user)
 								   ).filter_by(submission_id=thing.id, vote_type=1
-											   ).order_by(Vote.creation_ip.asc()
-														  ).all()
+											   ).all()
 
 		downs = g.db.query(Vote
 						   ).options(joinedload(Vote.user)
 									 ).filter_by(submission_id=thing.id, vote_type=-1
-												 ).order_by(Vote.creation_ip.asc()
-															).all()
+												 ).all()
 
 	elif isinstance(thing, Comment):
 
 		ups = g.db.query(CommentVote
 						 ).options(joinedload(CommentVote.user)
 								   ).filter_by(comment_id=thing.id, vote_type=1
-											   ).order_by(CommentVote.creation_ip.asc()
-														  ).all()
+											   ).all()
 
 		downs = g.db.query(CommentVote
 						   ).options(joinedload(CommentVote.user)
 									 ).filter_by(comment_id=thing.id, vote_type=-1
-												 ).order_by(CommentVote.creation_ip.asc()
-															).all()
+												 ).all()
 
 	else:
 		abort(400)
