@@ -114,7 +114,7 @@
 		<div class="user-info">
 				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.base36id}}')"></span>
 				{% if c.banaward %} <i class="fas fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Given the 1-day ban award by @{{c.banaward}}"></i>&nbsp;{% endif %}
-				{% if c.active_flags %}&nbsp;<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Reports</a>&nbsp;{% endif %}
+				{% if c.active_flags %}&nbsp;<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Flags</a>&nbsp;{% endif %}
 				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>&nbsp;{% endif %}
 				{% if c.is_nsfl %}<span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>&nbsp;{% endif %}
 				{% if v and v.admin_level==6 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-toggle="tooltip" data-placement="bottom" title="Shadowbanned user"></i>&nbsp;{% endif %}
@@ -192,10 +192,10 @@
                  <div id="flaggers-{{c.id}}" class="flaggers d-none" style="margin: 7px; border: 1px solid #999b2e; padding: 10px; border-radius: 3px;">
                     <strong style="color: #999b2e;"><i class="far fa-fw fa-flag"></i> Reported by:</strong>
                     <ul style="margin-bottom: 0;">
-						{% for f in c.flags %}
-						<li><a href="{{ f.user.url }}">@{{ f.user.username }}</a>: "{{f.reason}}"</li>
-						{% endfor %}
-					</ul>
+                        {% for u in c.flagged_by %}
+                        <li><a href="{{ u.url }}">@{{ u.username }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
             {% endif %}
 
@@ -280,7 +280,7 @@
 						<div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
 							{% if not (v and v.id==c.author_id) %}
 								{% if v %}
-								<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.base36id}}','{{c.author.username if not c.author.is_deleted else '[is_deleted]'}}',)"><i class="fas fa-flag fa-fw"></i>Report</a>
+								<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.base36id}}','{{c.author.username if not c.author.is_deleted else '[is_deleted]'}}',)"><i class="fas fa-flag fa-fw"></i>Flag</a>
 								{% else %}
 								<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick=""><i class="fas fa-flag fa-fw"></i>Flag</a>
 								{% endif %}
@@ -474,7 +474,7 @@
 					<li class="list-group-item"><a href="{{c.permalink}}?context=5#context"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-dna"></i>Context</a></li>
 
 					{% if not (v and v.id==c.author_id) %}
-					<li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.base36id}}','{{c.author.username if not c.author.is_deleted else '[is_deleted]'}}')" class="d-block"><i class="fas fa-flag"></i>Report</a></li>
+					<li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.base36id}}','{{c.author.username if not c.author.is_deleted else '[is_deleted]'}}')" class="d-block"><i class="fas fa-flag"></i>Flag</a></li>
 					{% endif %}
 
 					{% if v and c.parent_submission and c.author_id==v.id %}
