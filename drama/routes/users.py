@@ -24,7 +24,9 @@ beams_client = PushNotifications(
 def suicide(v, username):
 	t = int(time.time())
 	#if t - v.suicide_utc < 86400: return "", 204
+	print(-1)
 	user = get_user(username)
+	print(0)
 	suicide = f"""Hi there,
 
 	A [concerned dramatard]({v.permalink}) reached out to us about you.
