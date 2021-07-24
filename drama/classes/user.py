@@ -177,12 +177,8 @@ class User(Base, Stndrd, Age_times):
 	@property
 	@lazy
 	def dramacoins(self):
-		posts = sum([x[0] - 1 for x in
-					 g.db.query(Submission.score).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False,
-																				   deleted_utc=0).all()])
-		comments = sum([x[0] - 1 for x in
-						g.db.query(Comment.score).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False,
-																				   deleted_utc=0).all()])
+		posts = sum([x.upvotes + x.downvotes - 1 for x in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False, deleted_utc=0).all()])
+		comments = sum([x.upvotes + x.downvotes - 1 for x in g.db.query(Comment).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False, deleted_utc=0).all()])
 		return int(posts + comments)
 
 	def has_block(self, target):
@@ -781,8 +777,8 @@ class User(Base, Stndrd, Age_times):
 
 		# Takes care of all functions needed for account reinstatement.
 
-		self.is_banned = None
-		self.unban_utc = None
+		self.is_banned = 0
+		self.unban_utc = 0
 
 		g.db.add(self)
 
@@ -881,34 +877,6 @@ class User(Base, Stndrd, Age_times):
 		comments = comments.order_by(Comment.created_utc.desc())
 
 		return [x[0] for x in comments.offset(25 * (page - 1)).limit(26).all()]
-
-	def guild_rep(self, guild, recent=0):
-
-		posts = g.db.query(Submission.score).filter_by(
-			is_banned=False,
-			original_board_id=guild.id)
-
-		if recent:
-			cutoff = int(time.time()) - 60 * 60 * 24 * recent
-			posts = posts.filter(Submission.created_utc > cutoff)
-
-		posts = posts.all()
-
-		post_rep = sum([x[0] for x in posts]) - len(list(sum([x[0] for x in posts])))
-
-		comments = g.db.query(Comment.score).filter_by(
-			is_banned=False,
-			original_board_id=guild.id)
-
-		if recent:
-			cutoff = int(time.time()) - 60 * 60 * 24 * recent
-			comments = comments.filter(Comment.created_utc > cutoff)
-
-		comments = comments.all()
-
-		comment_rep = sum([x[0] for x in comments]) - len(list(sum([x[0] for x in comments])))
-
-		return int(post_rep + comment_rep)
 
 	@property
 	def has_premium(self):
