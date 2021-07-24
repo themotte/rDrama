@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.17 (Ubuntu 10.17-0ubuntu0.18.04.1)
--- Dumped by pg_dump version 10.17 (Ubuntu 10.17-0ubuntu0.18.04.1)
+-- Dumped from database version 12.7 (Ubuntu 12.7-0ubuntu0.20.04.1)
+-- Dumped by pg_dump version 12.7 (Ubuntu 12.7-0ubuntu0.20.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -177,6 +177,7 @@ DROP INDEX public.alts_user2_idx;
 DROP INDEX public.alts_user1_idx;
 DROP INDEX public.accepted_idx;
 ALTER TABLE ONLY public.votes DROP CONSTRAINT votes_pkey;
+ALTER TABLE ONLY public.viewers DROP CONSTRAINT viewers_pkey;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_username_key;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_original_username_key;
@@ -257,6 +258,7 @@ ALTER TABLE ONLY public.award_relationships DROP CONSTRAINT award_constraint;
 ALTER TABLE ONLY public.award_relationships DROP CONSTRAINT award_comment_constraint;
 ALTER TABLE ONLY public.alts DROP CONSTRAINT alts_pkey;
 ALTER TABLE public.votes ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.viewers ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.userflags ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.userblocks ALTER COLUMN id DROP DEFAULT;
@@ -306,6 +308,8 @@ ALTER TABLE public.award_relationships ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.alts ALTER COLUMN id DROP DEFAULT;
 DROP SEQUENCE public.votes_id_seq;
 DROP TABLE public.votes;
+DROP SEQUENCE public.viewers_id_seq;
+DROP TABLE public.viewers;
 DROP SEQUENCE public.users_id_seq;
 DROP SEQUENCE public.userflags_id_seq;
 DROP TABLE public.userflags;
@@ -445,47 +449,8 @@ DROP TABLE public.boards;
 DROP EXTENSION pg_trgm;
 DROP EXTENSION pg_stat_statements;
 DROP EXTENSION fuzzystrmatch;
-DROP EXTENSION plpgsql;
-DROP SCHEMA public;
 --
--- Name: DATABASE postgres; Type: COMMENT; Schema: -; Owner: postgres
---
-
-COMMENT ON DATABASE postgres IS 'default administrative connection database';
-
-
---
--- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
---
-
-CREATE SCHEMA public;
-
-
-ALTER SCHEMA public OWNER TO postgres;
-
---
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
---
-
-COMMENT ON SCHEMA public IS 'standard public schema';
-
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
--- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: 
+-- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
@@ -499,7 +464,7 @@ COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance betwe
 
 
 --
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: 
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
@@ -513,7 +478,7 @@ COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQ
 
 
 --
--- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: 
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
@@ -528,7 +493,7 @@ COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: boards; Type: TABLE; Schema: public; Owner: postgres
@@ -624,7 +589,8 @@ CREATE TABLE public.comments (
     creation_region character(2) DEFAULT NULL::bpchar,
     purged_utc integer DEFAULT 0,
     sentto integer,
-    shadowbanned boolean
+    shadowbanned boolean,
+    banaward text
 );
 
 
@@ -687,7 +653,8 @@ CREATE TABLE public.submissions (
     is_bot boolean DEFAULT false,
     thumburl text,
     private boolean,
-    views integer
+    views integer,
+    banaward text
 );
 
 
@@ -797,7 +764,11 @@ CREATE TABLE public.users (
     dramacoins integer,
     agendaposter boolean,
     agendaposter_expires_utc integer DEFAULT 0,
-    resized boolean
+    resized boolean,
+    banawards integer,
+    patron boolean,
+    animatedname boolean,
+    suicide_utc integer
 );
 
 
@@ -1801,7 +1772,8 @@ CREATE TABLE public.award_relationships (
     id integer NOT NULL,
     user_id integer,
     submission_id integer,
-    comment_id integer
+    comment_id integer,
+    kind character varying(20)
 );
 
 
@@ -2252,7 +2224,8 @@ CREATE TABLE public.commentflags (
     id integer NOT NULL,
     user_id integer,
     comment_id integer,
-    created_utc integer NOT NULL
+    created_utc integer NOT NULL,
+    reason text
 );
 
 
@@ -2575,7 +2548,8 @@ CREATE TABLE public.flags (
     id integer NOT NULL,
     user_id integer,
     post_id integer,
-    created_utc integer NOT NULL
+    created_utc integer NOT NULL,
+    reason text
 );
 
 
@@ -3459,6 +3433,42 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: viewers; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.viewers (
+    id integer NOT NULL,
+    user_id integer,
+    viewer_id integer,
+    last_view_utc integer
+);
+
+
+ALTER TABLE public.viewers OWNER TO postgres;
+
+--
+-- Name: viewers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.viewers_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.viewers_id_seq OWNER TO postgres;
+
+--
+-- Name: viewers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.viewers_id_seq OWNED BY public.viewers.id;
+
+
+--
 -- Name: votes; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -3824,6 +3834,13 @@ ALTER TABLE ONLY public.userflags ALTER COLUMN id SET DEFAULT nextval('public.us
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: viewers id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.viewers ALTER COLUMN id SET DEFAULT nextval('public.viewers_id_seq'::regclass);
 
 
 --
@@ -4463,6 +4480,14 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- Name: viewers viewers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.viewers
+    ADD CONSTRAINT viewers_pkey PRIMARY KEY (id);
 
 
 --
@@ -5606,13 +5631,6 @@ ALTER TABLE ONLY public.subscriptions
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_title_fkey FOREIGN KEY (title_id) REFERENCES public.titles(id);
-
-
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
---
-
-GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
