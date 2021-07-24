@@ -5,7 +5,7 @@ from sqlalchemy.orm import joinedload, aliased
 import re
 
 
-def get_user(username, v=None, g.db=None, graceful=False):
+def get_user(username, v=None, graceful=False):
 
 	username = username.replace('\\', '')
 	username = username.replace('_', '\_')
