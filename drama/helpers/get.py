@@ -186,7 +186,7 @@ def get_posts(pids, sort="hot", v=None):
 			isouter=True
 		).order_by(Submission.id).all()
 
-		output = [p[0] for p in posts]
+		output = [p[0] for p in query]
 		for i in range(len(output)):
 			output[i]._voted = posts[i][1] or 0
 			output[i]._is_blocking = posts[i][4] or 0
