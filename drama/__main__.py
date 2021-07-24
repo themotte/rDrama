@@ -176,7 +176,7 @@ def retry(f):
 		except OperationalError as e:
 			#self.session.rollback()
 			#raise(DatabaseOverload)
-			abort(500)
+			print("sex")
 		except:
 			self.session.rollback()
 			return f(self, *args, **kwargs)
