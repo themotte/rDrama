@@ -165,22 +165,23 @@ def get_posts(pids, sort="hot", v=None):
 		).join(
 			blocked, 
 			blocked.c.user_id == Submission.author_id, 
-			isouter=True)
+			isouter=True
+		)
 
 		output = [p[0] for p in query]
 		for i in range(len(output)):
 			output[i]._voted = query[i][1] or 0
 			output[i]._is_blocking = query[i][2] or 0
 			output[i]._is_blocked = query[i][3] or 0
-		return output
+
 	else:
-		query = g.db.query(
+		output = g.db.query(
 			Submission
 		).filter(Submission.id.in_(pids)
 		).order_by(Submission.id.desc()).all()
 
 
-		return query
+	return sorted(output, key=lambda x: pids.index(x.id))
 
 
 def get_post_with_comments(pid, sort="top", v=None):
@@ -443,7 +444,7 @@ def get_comments(cids, v=None, sort="new",
 		output = g.db.query(Comment).options().filter(Comment.id.in_(cids)).order_by(Comment.id.desc()).all()
 
 
-	return output
+	output = sorted(output, key=lambda x: cids.index(x.id))
 
 
 def get_board(bid, graceful=False):
