@@ -3,7 +3,6 @@ from drama.helpers.get import *
 from drama.classes import *
 from flask import *
 from drama.__main__ import app
-from .users import leaderboard
 
 
 @app.route("/votes", methods=["GET"])
@@ -113,8 +112,6 @@ def api_vote_post(post_id, x, v):
 	post.downvotes = post.downs
 	g.db.add(post)
 	g.db.commit()
-
-	users1, users2 = leaderboard()
 	return "", 204
 
 @app.route("/api/v1/vote/comment/<comment_id>/<x>", methods=["POST"])

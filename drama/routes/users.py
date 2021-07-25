@@ -42,10 +42,15 @@ def user_info(v, username):
 @auth_desired
 def leaderboard(v):
 	if v and v.is_banned and not v.unban_utc:return render_template("seized.html")
+	users1, users2 = leaderboard()
+	return render_template("leaderboard.html", v=v, users1=users1, users2=users2)
+
+@cache.memoize(timeout=86400)
+def leaderboard():
 	users = g.db.query(User).options(lazyload('*'))
 	users1= sorted(users, key=lambda x: x.dramacoins, reverse=True)[:25]
-	users2 = list(users.order_by(User.follower_count))
-	return render_template("leaderboard.html", v=v, users1=users1, users2=users2)
+	users2= sorted(users, key=lambda x: x.follower_count, reverse=True)[:10]
+	return users1, users2
 
 @app.get("/@<username>/css")
 def get_css(username):
