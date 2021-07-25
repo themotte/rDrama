@@ -14,7 +14,7 @@ class CommentAux(Base):
 
 	key_id = Column(Integer, primary_key=True)
 	id = Column(Integer, ForeignKey("comments.id"))
-	body = Column(String(10000), default=None)
+	body = Column(String(10000))
 	body_html = Column(String(20000))
 	ban_reason = Column(String(256), default='')
 
@@ -52,12 +52,12 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	over_18 = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
-	banaward = Column(String, default=None)
+	banaward = Column(String)
 	is_pinned = Column(Boolean, default=False)
-	creation_region=Column(String(2), default=None)
-	sentto=Column(Integer, default=None)
+	creation_region=Column(String(2))
+	sentto=Column(Integer)
 
-	app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
+	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	oauth_app=relationship("OauthApp")
 
 	post = relationship("Submission")
@@ -414,10 +414,10 @@ class Notification(Base):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	comment_id = Column(Integer, ForeignKey("comments.id"))
 	read = Column(Boolean, default=False)
-	followsender = Column(Integer, default=None)
-	unfollowsender = Column(Integer, default=None)
-	blocksender = Column(Integer, default=None)
-	unblocksender = Column(Integer, default=None)
+	followsender = Column(Integer)
+	unfollowsender = Column(Integer)
+	blocksender = Column(Integer)
+	unblocksender = Column(Integer)
 
 	comment = relationship("Comment", lazy="joined", innerjoin=True)
 	user=relationship("User", innerjoin=True)

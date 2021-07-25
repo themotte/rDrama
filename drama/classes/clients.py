@@ -19,7 +19,7 @@ class OauthApp(Base, Stndrd):
 	redirect_uri = Column(String(4096))
 	author_id = Column(Integer, ForeignKey("users.id"))
 	is_banned = Column(Boolean, default=False)
-	description = Column(String(256), default=None)
+	description = Column(String(256))
 
 	author = relationship("User")
 

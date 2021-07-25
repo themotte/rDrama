@@ -13,7 +13,7 @@ class ModAction(Base, Stndrd, Age_times):
 	target_user_id = Column(Integer, ForeignKey("users.id"), default=0)
 	target_submission_id = Column(Integer, ForeignKey("submissions.id"), default=0)
 	target_comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
-	_note=Column(String(256), default=None)
+	_note=Column(String(256))
 	created_utc = Column(Integer, default=0)
 
 

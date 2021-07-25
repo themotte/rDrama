@@ -38,9 +38,9 @@ def dp(v):
 @app.route("/dramacoins/comments", methods=["GET"])
 @admin_level_required(6)
 def dc(v):
-	count = g.db.query(Comment).options(lazyload('*')).count()
+	count = g.db.query(Comment).count()
 	print(count)
-	count = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission is not None).count()
+	count = g.db.query(Comment).filter(Comment.parent_submission != None).count()
 	print(count)
 	#for p in g.db.query(Comment).options(lazyload('*')).filter_by().all():
 		#print(p.id)
