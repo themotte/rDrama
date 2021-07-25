@@ -194,11 +194,6 @@ class User(Base, Stndrd, Age_times):
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
 				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
 
-	def has_blocked_guild(self, board):
-
-		return g.db.query(BoardBlock).filter_by(
-			user_id=self.id, board_id=board.id).first()
-
 	def validate_2fa(self, token):
 
 		x = pyotp.TOTP(self.mfa_secret)

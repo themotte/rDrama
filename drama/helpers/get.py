@@ -161,6 +161,10 @@ def get_posts(pids, v=None):
 			blocking, 
 			blocking.c.target_id == Submission.author_id, 
 			isouter=True
+		).join(
+			blocked, 
+			blocked.c.user_id == Submission.author_id, 
+			isouter=True
 		).all()
 
 		output = [p[0] for p in query]
