@@ -5,16 +5,13 @@ from sqlalchemy.orm import joinedload, aliased
 import re
 
 
-def get_user(username, v=None, nSession=None, graceful=False):
+def get_user(username, v=None, graceful=False):
 
 	username = username.replace('\\', '')
 	username = username.replace('_', '\_')
 	username = username.replace('%', '')
 
-	if not nSession:
-		nSession = g.db
-
-	user = nSession.query(
+	user = g.db.query(
 		User
 		).filter(
 		or_(
@@ -30,7 +27,7 @@ def get_user(username, v=None, nSession=None, graceful=False):
 			return None
 
 	if v:
-		block = nSession.query(UserBlock).filter(
+		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -47,15 +44,13 @@ def get_user(username, v=None, nSession=None, graceful=False):
 
 	return user
 
-def get_account(base36id, v=None, nSession=None, graceful=False):
+def get_account(base36id, v=None, graceful=False):
 
-	if not nSession:
-		nSession = g.db
 
 	if isinstance(base36id, str): id = base36decode(base36id)
 	else: id = base36id
 
-	user = nSession.query(User
+	user = g.db.query(User
 						  ).filter(
 		User.id == id
 	).first()
@@ -67,7 +62,7 @@ def get_account(base36id, v=None, nSession=None, graceful=False):
 			return None
 
 	if v:
-		block = nSession.query(UserBlock).filter(
+		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -85,33 +80,22 @@ def get_account(base36id, v=None, nSession=None, graceful=False):
 	return user
 
 
-def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
+def get_post(pid, v=None, graceful=False, **kwargs):
 
 	if isinstance(pid, str):
 		i = base36decode(pid)
 	else:
 		i = pid
 
-	nSession = nSession or kwargs.get("session")or g.db
-
 	if v:
-		vt = nSession.query(Vote).filter_by(
+		vt = g.db.query(Vote).filter_by(
 			user_id=v.id, submission_id=i).subquery()
-		mod = nSession.query(ModRelationship).filter_by(
-			user_id=v.id, accepted=True, invite_rescinded=False).subquery()
-		boardblocks = nSession.query(
-			BoardBlock).filter_by(user_id=v.id).subquery()
 		blocking = v.blocking.subquery()
 
-		items = nSession.query(
+		items = g.db.query(
 			Submission,
 			vt.c.vote_type,
-			aliased(ModRelationship, alias=mod),
-			boardblocks.c.id,
 			blocking.c.id,
-			# aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Submission.author).joinedload(User.title)
 		)
 
 		if v.admin_level>=4:
@@ -123,21 +107,9 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 			vt.c.submission_id == Submission.id, 
 			isouter=True
 		).join(
-			mod, 
-			mod.c.board_id == Submission.board_id, 
-			isouter=True
-		).join(
-			boardblocks, 
-			boardblocks.c.board_id == Submission.board_id, 
-			isouter=True
-		).join(
 			blocking, 
 			blocking.c.target_id == Submission.author_id, 
 			isouter=True
-		# ).join(
-		#	 exile,
-		#	 and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-		#	 isouter=True
 		).first()
 
 		if not items and not graceful:
@@ -145,28 +117,17 @@ def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
 		x = items[0]
 		x._voted = items[1] or 0
-		x._is_guildmaster = items[2] or 0
-		x._is_blocking_guild = items[3] or 0
 		x._is_blocking = items[4] or 0
-		# x._is_exiled_for=items[5] or 0
 
 	else:
-		items = nSession.query(
-			Submission,
-			# aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Submission.author).joinedload(User.title)
-		# ).join(
-		#	 exile,
-		#	 and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-		#	 isouter=True
+		items = g.db.query(
+			Submission
 		).filter(Submission.id == i).first()
 
 		if not items and not graceful:
 			abort(404)
 
 		x=items
-		# x._is_exiled_for=items[1] or 0
 
 	return x
 
@@ -178,100 +139,40 @@ def get_posts(pids, sort="hot", v=None):
 
 	pids=tuple(pids)
 
-	# exile=g.db.query(ModAction).options(
-	#	 lazyload('*')
-	#	 ).filter(
-	#	 ModAction.kind=="exile_user",
-	#	 ModAction.target_submission_id.in_(pids)
-	#	 ).subquery()
-
 	if v:
 		vt = g.db.query(Vote).filter(
 			Vote.submission_id.in_(pids), 
 			Vote.user_id==v.id
 			).subquery()
 
-		mod = g.db.query(ModRelationship).filter_by(
-			user_id=v.id, accepted=True, invite_rescinded=False).subquery()
-
-		boardblocks = g.db.query(BoardBlock).filter_by(
-			user_id=v.id).subquery()
 		blocking = v.blocking.subquery()
 		blocked = v.blocked.subquery()
-		subs = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
 
 		query = g.db.query(
 			Submission,
 			vt.c.vote_type,
-			aliased(ModRelationship, alias=mod),
-			boardblocks.c.id,
 			blocking.c.id,
 			blocked.c.id,
-			subs.c.id,
-			# aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Submission.author).joinedload(User.title)
 		).filter(
 			Submission.id.in_(pids)
 		).join(
 			vt, vt.c.submission_id==Submission.id, isouter=True
 		).join(
-			mod, 
-			mod.c.board_id == Submission.board_id, 
-			isouter=True
-		).join(
-			boardblocks, 
-			boardblocks.c.board_id == Submission.board_id, 
-			isouter=True
-		).join(
 			blocking, 
 			blocking.c.target_id == Submission.author_id, 
 			isouter=True
-		).join(
-			blocked, 
-			blocked.c.user_id == Submission.author_id, 
-			isouter=True
-		).join(
-			subs, 
-			subs.c.board_id == Submission.board_id, 
-			isouter=True
-		# ).join(
-		#	 exile,
-		#	 and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-		#	 isouter=True
-		).order_by(None).all()
-
-		posts=[x for x in query]
+		).all()
 
 		output = [p[0] for p in query]
 		for i in range(len(output)):
-			output[i]._voted = posts[i][1] or 0
-			output[i]._is_guildmaster = posts[i][2] or 0
-			output[i]._is_blocking_guild = posts[i][3] or 0
-			output[i]._is_blocking = posts[i][4] or 0
-			output[i]._is_blocked = posts[i][5] or 0
-			output[i]._is_subscribed = posts[i][6] or 0
-			# output[i]._is_exiled_for=posts[i][7] or 0
+			output[i]._voted = query[i][1] or 0
+			output[i]._is_blocking = query[i][2] or 0
+			output[i]._is_blocked = query[i][3] or 0
 	else:
-		query = g.db.query(
+		output = g.db.query(
 			Submission,
-			# aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Submission.author).joinedload(User.title)
 		).filter(Submission.id.in_(pids)
-		# ).join(
-		#	 exile,
-		#	 and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
-		#	 isouter=True
-		).order_by(None).all()
-
-		output=[x for x in query]
-
-		# output=[]
-		# for post in posts:
-		#	 p=post[0]
-		#	 p._is_exiled_for=post[1] or 0
-		#	 output.append(p)
+		).all()
 
 	return sorted(output, key=lambda x: pids.index(x.id))
 
@@ -292,8 +193,6 @@ def get_post_with_comments(pid, sort="top", v=None):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).options(
-			joinedload(Comment.author)
 		)
 		if v.admin_level >=4:
 			comms=comms.options(joinedload(Comment.oauth_app))
@@ -344,8 +243,6 @@ def get_post_with_comments(pid, sort="top", v=None):
 	else:
 		comms = g.db.query(
 			Comment
-		).options(
-			joinedload(Comment.author).joinedload(User.title)
 		).filter(
 			Comment.parent_submission == post.id
 		)
@@ -385,43 +282,23 @@ def get_post_with_comments(pid, sort="top", v=None):
 	return post
 
 
-def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
+def get_comment(cid, v=None, graceful=False, **kwargs):
 
 	if isinstance(cid, str):
 		i = base36decode(cid)
 	else:
 		i = cid
 
-	nSession = nSession or kwargs.get('session') or g.db
-
-	exile = nSession.query(ModAction
-		 ).options(
-		 lazyload('*')
-		 ).filter_by(
-		 kind="exile_user"
-		 ).subquery()
-
 	if v:
 		blocking = v.blocking.subquery()
 		blocked = v.blocked.subquery()
-		vt = nSession.query(CommentVote).filter(
+		vt = g.db.query(CommentVote).filter(
 			CommentVote.user_id == v.id,
 			CommentVote.comment_id == i).subquery()
 
-		mod=nSession.query(ModRelationship
-			).filter_by(
-			user_id=v.id,
-			accepted=True
-			).subquery()
-
-
-		items = nSession.query(
+		items = g.db.query(
 			Comment, 
 			vt.c.vote_type,
-			aliased(ModRelationship, alias=mod),
-			aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Comment.author).joinedload(User.title)
 		)
 
 		if v.admin_level >=4:
@@ -436,14 +313,6 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 		).join(
 			Comment.post,
 			isouter=True
-		).join(
-			mod,
-			mod.c.board_id==Submission.board_id,
-			isouter=True
-		).join(
-			exile,
-			and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-			isouter=True
 		).first()
 
 		if not items and not graceful:
@@ -451,10 +320,8 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
 		x = items[0]
 		x._voted = items[1] or 0
-		x._is_guildmaster=items[2] or 0
-		x._is_exiled_for=items[3] or 0
 
-		block = nSession.query(UserBlock).filter(
+		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -470,15 +337,8 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 		x._is_blocked = block and block.target_id == v.id
 
 	else:
-		q = nSession.query(
+		q = g.db.query(
 			Comment,
-			aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Comment.author).joinedload(User.title)
-		).join(
-			exile,
-			and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-			isouter=True
 		).filter(Comment.id == i).first()
 
 		if not q and not graceful:
@@ -491,7 +351,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 	return x
 
 
-def get_comments(cids, v=None, nSession=None, sort="new",
+def get_comments(cids, v=None, sort="new",
 				 load_parent=False, **kwargs):
 
 	if not cids:
@@ -499,37 +359,15 @@ def get_comments(cids, v=None, nSession=None, sort="new",
 
 	cids=tuple(cids)
 
-	nSession = nSession or kwargs.get('session') or g.db
-
-	exile=nSession.query(ModAction
-		).options(
-		lazyload('*')
-		).filter(
-		ModAction.kind=="exile_user",
-		ModAction.target_comment_id.in_(cids)
-		).distinct(ModAction.target_comment_id).subquery()
-
 	if v:
-		vt = nSession.query(CommentVote).filter(
+		vt = g.db.query(CommentVote).filter(
 			CommentVote.comment_id.in_(cids), 
 			CommentVote.user_id==v.id
 			).subquery()
 
-		mod=nSession.query(ModRelationship
-			).filter_by(
-			user_id=v.id,
-			accepted=True
-			).subquery()
-
-
-
-		query = nSession.query(
+		query = g.db.query(
 			Comment, 
 			aliased(CommentVote, alias=vt),
-			aliased(ModRelationship, alias=mod),
-			aliased(ModAction, alias=exile)
-			).options(
-			joinedload(Comment.author).joinedload(User.title)
 			)
 
 		if v.admin_level >=4:
@@ -539,10 +377,6 @@ def get_comments(cids, v=None, nSession=None, sort="new",
 			query = query.options(
 				joinedload(
 					Comment.parent_comment
-					).joinedload(
-					Comment.author
-					).joinedload(
-					User.title
 					)
 				)
 
@@ -553,54 +387,29 @@ def get_comments(cids, v=None, nSession=None, sort="new",
 			).join(
 			Comment.post,
 			isouter=True
-			).join(
-			mod,
-			mod.c.board_id==Submission.board_id,
-			isouter=True
-			).join(
-			exile,
-			and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-			isouter=True
 			).filter(
 			Comment.id.in_(cids)
 			)
 
 
-
-		query=query.options(
-	#		contains_eager(Comment.post).contains_eager(Submission.board)
-			).order_by(None).all()
-
-		comments=[x for x in query]
-
 		output = [x[0] for x in comments]
 		for i in range(len(output)):
-			output[i]._voted = comments[i][1].vote_type if comments[i][1] else 0
-			output[i]._is_guildmaster = comments[i][2]
-			output[i]._is_exiled_for = comments[i][3]
+			output[i]._voted = query[i][1].vote_type if comments[i][1] else 0
+			output[i]._is_guildmaster = query[i][2]
+			output[i]._is_exiled_for = query[i][3]
 
 
 
 	else:
-		query = nSession.query(
+		query = g.db.query(
 			Comment,
-			aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Comment.author).joinedload(User.title),
-			joinedload(Comment.post).joinedload(Submission.board)
 		).filter(
 			Comment.id.in_(cids)
-		).join(
-			exile,
-			and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-			isouter=True
-		).order_by(None).all()
+		).all()
 
-		comments=[x for x in query]
-
-		output=[x[0] for x in comments]
+		output=[x[0] for x in query]
 		for i in range(len(output)):
-			output[i]._is_exiled_for=comments[i][1]
+			output[i]._is_exiled_for=query[i][1]
 
 
 	output = sorted(output, key=lambda x: cids.index(x.id))
@@ -645,27 +454,6 @@ def get_domain(s):
 	return doms[0]
 
 
-def get_title(x):
-
-	title = g.db.query(Title).filter_by(id=x).first()
-
-	if not title:
-		abort(400)
-
-	else:
-		return title
-
-
-def get_mod(uid, bid):
-
-	mod = g.db.query(ModRelationship).filter_by(board_id=bid,
-												user_id=uid,
-												accepted=True,
-												invite_rescinded=False).first()
-
-	return mod
-
-
 def get_application(client_id, graceful=False):
 
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
@@ -703,26 +491,3 @@ def get_from_permalink(link, v=None):
 
 	else:
 		return get_post(int(post_id), v=v)
-
-
-def get_from_fullname(fullname, v=None, graceful=False):
-
-	parts = fullname.split('_')
-
-	if len(parts) != 2:
-		if graceful:
-			return None
-		else:
-			abort(400)
-
-	kind = parts[0]
-	b36 = parts[1]
-
-	if kind == 't1':
-		return get_account(b36, v=v, graceful=graceful)
-	elif kind == 't2':
-		return get_post(b36, v=v, graceful=graceful)
-	elif kind == 't3':
-		return get_comment(b36, v=v, graceful=graceful)
-	elif kind == 't4':
-		return get_board(b36, graceful=graceful)

@@ -127,22 +127,6 @@ def settings_profile_post(v):
 
 
 
-	x = request.values.get("title_id", None)
-	if x:
-		x = int(x)
-		if x == 0:
-			v.title_id = None
-			updated = True
-		elif x > 0:
-			title = get_title(x)
-			if bool(eval(title.qualification_expr)):
-				v.title_id = title.id
-				updated = True
-			else:
-				return jsonify({"error": f"You don't meet the requirements for title `{title.text}`."}), 403
-		else:
-			abort(400)
-
 	defaultsortingcomments = request.values.get("defaultsortingcomments")
 	if defaultsortingcomments:
 		if defaultsortingcomments in ["new", "old", "controversial", "top", "bottom", "random"]:
