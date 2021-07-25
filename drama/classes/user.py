@@ -123,8 +123,6 @@ class User(Base, Stndrd, Age_times):
 	original_username = deferred(Column(String(255)))
 	name_changed_utc = deferred(Column(Integer, default=0))
 
-	moderates = relationship("ModRelationship")
-	banned_from = relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
 	subscriptions = relationship("Subscription")
 
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id")
@@ -247,12 +245,7 @@ class User(Base, Stndrd, Age_times):
 			comments = comments.filter(Comment.deleted_utc == 0)
 			comments = comments.filter(Comment.is_banned == False)
 
-		if v and v.admin_level >= 4:
-			pass
-		elif v:
-			m = g.db.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
-			c = v.contributes.subquery()
-
+		if v and v.admin_level == 0:
 			comments = comments.filter(or_(Comment.author_id == v.id))
 
 		comments = comments.options(contains_eager(Comment.post))
