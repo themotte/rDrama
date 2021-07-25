@@ -14,18 +14,6 @@
 {% set downs=p.downvotes_fuzzed %}
 {% set score=ups-downs %}
 
-{% block sidebarblock %}
-<div class="sidebar-section sidebar-info">
-	<div class="title"><i class="fas fa-info-circle mr-2"></i>Post Info</div>
-	<div class="body">
-		{% if p.board_id != p.original_board_id %}
-		<div class="text-small mb-2">Originally posted in: <a href="{{p.original_board.permalink}}">+{{p.original_board.name}}</a></div>
-		{% endif %}
-		<div class="text-small mb-2">Shortlink: <input readonly="readonly" value="https://ruqq.us/{{p.base36id}}" data-clipboard-text="https://ruqq.us/{{p.base36id}}" role="button" class="copy-link form-control form-control-sm rounded"></div>
-	</div>
-</div>
-{% endblock %}
-
 {% if v %}
 {% set voted=p.voted if p.voted else 0 %}
 {% else %}
@@ -38,24 +26,23 @@
 <meta property="og:type" content="article" />
 
 {% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc > 0 %}
-<title>{{'@'+comment_info.author.username if not comment_info.author.is_deleted else '[deleted account]'}} comments on "{{title}} - Drama"</title>
+<title>{{'@'+comment_info.author.username if not comment_info.author.deleted_utc > 0 else '[deleted account]'}} comments on "{{title}} - Drama"</title>
 
 
-<meta property="og:article:author" content="{{'@'+comment_info.author.username if not comment_info.author.is_deleted else '[deleted account]'}}" />
-<meta property="article:section" content="+{{p.board.name}}" />
+<meta property="og:article:author" content="{{'@'+comment_info.author.username if not comment_info.author.deleted_utc > 0 else '[deleted account]'}}" />
 <meta property="article:published_time" content="{{comment_info.created_datetime}}" />
 {% if comment_info.edited_utc %}<meta property="article:modified_time" content="{{comment_info.edited_string}}" />{% endif %}
 <meta property="og:description" name="description" content="{{comment_info.body}}" />
-<meta property="og:author" name="author" content="{{'@'+comment_info.author.username if not comment_info.author.is_deleted else '[deleted account]'}}" />
-<meta property="og:title" content="{{'@'+comment_info.author.username if not comment_info.author.is_deleted else '[deleted account]'}} comments on {{title}} - Drama" />
+<meta property="og:author" name="author" content="{{'@'+comment_info.author.username if not comment_info.author.deleted_utc > 0 else '[deleted account]'}}" />
+<meta property="og:title" content="{{'@'+comment_info.author.username if not comment_info.author.deleted_utc > 0 else '[deleted account]'}} comments on {{title}} - Drama" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta property="og:url" content="{{comment_info.permalink | full_link}}" />
 <meta property="og:site_name" content="rdrama.net" />
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@drama">
-<meta name="twitter:title" content="{{'@'+comment_info.author.username if not comment_info.author.is_deleted else '[deleted account]'}} comments on {{title}} - Drama" />
-<meta name="twitter:creator" content="{{'@'+comment_info.author.username if not comment_info.author.is_deleted else '[deleted account]'}}">
+<meta name="twitter:title" content="{{'@'+comment_info.author.username if not comment_info.author.deleted_utc > 0 else '[deleted account]'}} comments on {{title}} - Drama" />
+<meta name="twitter:creator" content="{{'@'+comment_info.author.username if not comment_info.author.deleted_utc > 0 else '[deleted account]'}}">
 <meta name="twitter:description" content="{{comment_info.body}}" />
 <meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
@@ -68,12 +55,11 @@
 <title>{{title | safe}} - Drama</title>
 
 
-<meta property="og:article:author" content="{{'@'+p.author.username if not p.author.is_deleted else '[deleted account]'}}" />
-<meta property="article:section" content="+{{p.board.name}}" />
+<meta property="og:article:author" content="{{'@'+p.author.username if not p.author.deleted_utc > 0 else '[deleted account]'}}" />
 <meta property="article:published_time" content="{{p.created_iso}}" />
 {% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}" />{% endif %}
 <meta property="og:description" name="description" content="{{p.body}}" />
-<meta property="og:author" name="author" content="{{'@'+p.author.username if not p.author.is_deleted else '[deleted account]'}}" />
+<meta property="og:author" name="author" content="{{'@'+p.author.username if not p.author.deleted_utc > 0 else '[deleted account]'}}" />
 <meta property="og:title" content="{{title}} - Drama" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta property="og:url" content="{{p.permalink | full_link}}" />
@@ -82,7 +68,7 @@
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@drama">
 <meta name="twitter:title" content="{{title}} - Drama" />
-<meta name="twitter:creator" content="{{'@'+p.author.username if not p.author.is_deleted else '[deleted account]'}}">
+<meta name="twitter:creator" content="{{'@'+p.author.username if not p.author.deleted_utc > 0 else '[deleted account]'}}">
 <meta name="twitter:description" content="{{p.body}}" />
 <meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
@@ -110,7 +96,7 @@
 			<div class="modal-body">
 				<ul class="list-group post-actions">
 					{% if not (v and v.id==p.author_id) %}
-						<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}','{{'@'+p.author.username if not p.author.is_deleted else '[deleted account]'}}','{{p.board.name}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
+						<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}','{{'@'+p.author.username if not p.author.deleted_utc > 0 else '[deleted account]'}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 					{% endif %}
 					{% if v and v.id==p.author_id %}
 						{% if p.private %}
@@ -121,7 +107,7 @@
 
 						<button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{p.base36id}}" href="javascript:void(0)" onclick="post('/api/pin/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center text-muted mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
 
-						{% if p.is_deleted %}
+						{% if p.deleted_utc > 0 %}
 							<button class="btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post('/undelete_post/{{p.base36id}}', function(){window.location.reload(true);})"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
 						{% else %}
 							<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.base36id}}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
@@ -151,9 +137,7 @@
 					{% endif %}
 
 					{% if v and (v.id==p.author_id or v.admin_level>=3) %}
-					{% if not p.board.over_18 %}
 					<button class="btn btn-link btn-block btn-lg text-left text-muted" onclick="post('/api/toggle_post_nsfw/{{p.base36id}}', function(){window.location.reload(true);})"><i class="far fa-eye-evil text-center text-muted mr-3"></i>Toggle +18</button>
-					{% endif %}
 
 					{% endif %}
 					{% if v %}
@@ -210,7 +194,7 @@
 	<div class="col-12">
 
 		<div id="post-{{p.base36id}}" class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-			<div class="{% if p.is_deleted %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
+			<div class="{% if p.deleted_utc > 0 %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
 
 				{% if p.thumb_url and not p.embed_url %}
 				<div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap pl-3 p-0">
@@ -219,7 +203,7 @@
 				</div>
 				{% endif %}
 
-				<div class="{% if p.is_deleted %}deleted {% endif %}card-block w-100 my-md-auto">
+				<div class="{% if p.deleted_utc > 0 %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
 						{% if p.banaward %} <i class="fas fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Given the 1-day ban award by @{{p.banaward}}"></i>&nbsp;{% endif %}
@@ -229,13 +213,11 @@
 						{% if p.distinguish_level %} <i class="fas fa-broom text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Drama Badmin, speaking officially"></i>&nbsp;{% endif %}
 						{% if p.is_bot %} <i class="fad fa-robot text-info" data-toggle="tooltip" data-placement="bottom"	data-original-title="Bot"></i>{% endif %}
 						&nbsp;
-						{% if not p.is_public %}<i class="fas fa-eye-slash text-warning" data-toggle="tooltip" data-placement="bottom" title="Private post, visible because {{p.visibility_reason(v)}}"></i>{% endif %}
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-						{% if p.is_nsfl %}<span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}
 						{% if p.is_repost %}<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}
 						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
-						{% if p.author.is_deleted %}[deleted account]{% else %}&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name">&nbsp;&nbsp;<img src="{{ p.author.profile_url }}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}{% endif %}
+						{% if p.author.deleted_utc > 0 %}[deleted account]{% else %}&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name">&nbsp;&nbsp;<img src="{{ p.author.profile_url }}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}{% endif %}
 						<span data-toggle="tooltip" data-placement="bottom" id="timestamp" title="">&nbsp;{{p.age_string}}</span>
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if v and v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
 						
@@ -349,12 +331,12 @@
 						{% endif %}
 
 						{% if not (v and v.id==p.author_id) %}
-						<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}', '{{p.author.username}}','{{p.board.name}}')"><i class="fas fa-flag"></i>Report</a></li>
+						<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}', '{{p.author.username}}')"><i class="fas fa-flag"></i>Report</a></li>
 						{% endif %}
 
 						{% if v and v.id==p.author_id %}
 						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/pin/{{p.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</a></li>
-						{% if p.is_deleted %}
+						{% if p.deleted_utc > 0 %}
 							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/undelete_post/{{p.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-trash-alt"></i>Undelete</a></li>
 						{% else %}
 							<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.base36id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
@@ -363,9 +345,7 @@
 
 						{% if v and (v.id==p.author_id or v.admin_level>=3) %}
 
-						{% if not p.board.over_18 %}
 						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/toggle_post_nsfw/{{p.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
-						{% endif %}
 
 						{% endif %}
 						
@@ -548,7 +528,6 @@
 			</div>
 		</div>
 
-	{% if not p.is_banned and is_allowed_to_comment %}
 	<div id="comment-form-space-{{p.fullname}}" class="comment-write mb-3">
 		<form id="reply-to-{{p.fullname}}" class="input-group" action="/api/comment" method="post">
 			<input type="hidden" name="formkey" value="{{v.formkey}}">
@@ -584,7 +563,6 @@
 			</div>
 		</form>
 	</div>
-	{% endif %}
 
 	{% if not v and not p.is_banned %}
 	<div class="comment-write mb-3">
@@ -636,10 +614,6 @@
 {% include "delete_comment_modal.html" %}
 
 
-{% endblock %}
-
-{% block guildModal %}
-{% include "guild_details_modal.html" %}
 {% endblock %}
 
 {% block GIFtoast %}

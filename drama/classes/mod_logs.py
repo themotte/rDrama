@@ -9,7 +9,6 @@ class ModAction(Base, Stndrd, Age_times):
 	id = Column(BigInteger, primary_key=True)
 
 	user_id = Column(Integer, ForeignKey("users.id"))
-	board_id = Column(Integer, ForeignKey("boards.id"))
 	kind = Column(String(32))
 	target_user_id = Column(Integer, ForeignKey("users.id"), default=0)
 	target_submission_id = Column(Integer, ForeignKey("submissions.id"), default=0)
@@ -20,7 +19,6 @@ class ModAction(Base, Stndrd, Age_times):
 
 	user = relationship("User", lazy="joined", primaryjoin="User.id==ModAction.user_id")
 	target_user = relationship("User", lazy="joined", primaryjoin="User.id==ModAction.target_user_id")
-	board = relationship("Board", lazy="joined")
 	target_post = relationship("Submission", lazy="joined")
 	target_comment = relationship("Comment", lazy="joined")
 
@@ -70,7 +68,7 @@ class ModAction(Base, Stndrd, Age_times):
 	@property
 	def target_link(self):
 		if self.target_user:
-			if self.target_user.is_deleted:
+			if self.target_user.deleted_utc:
 				return "[deleted user]"
 			else:
 				return f'<a href="{self.target_user.permalink}">{self.target_user.username}</a>'
@@ -86,7 +84,6 @@ class ModAction(Base, Stndrd, Age_times):
 	def json(self):
 		data={
 			"id":self.base36id,
-			"guild": self.board.name,
 			"kind": self.kind,
 			"created_utc": self.created_utc,
 			"mod": self.user.username,
@@ -123,7 +120,7 @@ class ModAction(Base, Stndrd, Age_times):
 		return f"/log/{self.base36id}"
 	@property
 	def title_text(self):
-		if self.user.is_deleted:
+		if self.user.deleted_utc:
 			return f"[deleted user] {self.actiontype['title'].format(self=self)}"
 		else:
 			return f"@{self.user.username} {self.actiontype['title'].format(self=self)}"
@@ -270,36 +267,6 @@ ACTIONTYPES={
 		"color": "bg-muted",
 		"title": 'un-pinned post {self.target_post.title}'
 	},
-	"invite_mod":{
-		"str":'invited badmin {self.target_link}',
-		"icon":"fa-user-crown",
-		"color": "bg-info",
-		"title": 'invited badmin @{self.target_user.username}'
-	},
-	"uninvite_mod":{
-		"str":'rescinded badmin invitation to {self.target_link}',
-		"icon":"fa-user-crown",
-		"color": "bg-muted",
-		"title": 'rescinded badmin invitation to @{self.target_user.username}'
-	},
-	"accept_mod_invite":{
-		"str":'accepted badmin invitation',
-		"icon":"fa-user-crown",
-		"color": "bg-warning",
-		"title": 'accepted badmin invitation'
-	},
-	"remove_mod":{
-		"str":'removed badmin {self.target_link}',
-		"icon":"fa-user-crown",
-		"color": "bg-danger",
-		"title": 'removed badmin @{self.target_user.username}'
-	},
-	"dethrone_self":{
-		"str":'stepped down as guildmaster',
-		"icon":"fa-user-crown",
-		"color": "bg-danger",
-		"title": 'stepped down as guildmaster'
-	},
 	"add_mod":{
 		"str":'added badmin {self.target_link}',
 		"icon":"fa-user-crown",
@@ -327,18 +294,6 @@ ACTIONTYPES={
 	"unset_nsfw":{
 		"str":'un-set nsfw on post {self.target_link}',
 		"icon":"fa-eye-evil",
-		"color": "bg-muted",
-		"title": 'un-set nsfw on post {self.target_post.title}'
-	},
-	"set_nsfl":{
-		"str":'set nsfl on post {self.target_link}',
-		"icon":"fa-skull",
-		"color": "bg-black",
-		"title": 'set nsfl on post {self.target_post.title}'
-	},
-	"unset_nsfl":{
-		"str":'un-set nsfl on post {self.target_link}',
-		"icon":"fa-skull",
 		"color": "bg-muted",
 		"title": 'un-set nsfw on post {self.target_post.title}'
 	},
@@ -378,10 +333,4 @@ ACTIONTYPES={
 		"color": "bg-muted",
 		"title": "changed permissions on invitation to {self.target_user.username}"
 	},
-	"create_guild":{
-		"str": 'created +{self.board.name}',
-		"icon": "fa-chess-rook",
-		"color": "bg-primary",
-		"title": "created +{self.board.name}"
-	}
 }
