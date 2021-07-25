@@ -39,7 +39,6 @@ def banawardcomment(comment_id, v):
 		kind="exile_user",
 		user_id=v.id,
 		target_user_id=u.id,
-		board_id=1,
         note=f'reason: "1 day ban award", duration: 1 day'
 		)
 	g.db.add(ma)
@@ -85,16 +84,14 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	except: abort(404)
 	
 	post = get_post(pid, v=v)
-	board = post.board
 		
-	if post.over_18 and not (v and v.over_18) and not session_over18(comment.board):
+	if post.over_18 and not (v and v.over_18) and not session_over18(1):
 		t = int(time.time())
 		return {'html': lambda: render_template("errors/nsfw.html",
 												v=v,
 												t=t,
 												lo_formkey=make_logged_out_formkey(
 													t),
-												board=comment.board
 												),
 				'api': lambda: {'error': f'This content is not suitable for some users and situations.'}
 
@@ -107,7 +104,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	except: context = 0
 	comment_info = comment
 	c = comment
-	while context > 0 and not c.is_top_level:
+	while context > 0 and c.level > 1:
 
 		parent = get_comment(c.parent_comment_id, v=v)
 
@@ -312,12 +309,6 @@ def api_comment(v):
 		return jsonify(
 			{"error": "You can't reply to users who have blocked you, or users you have blocked."}), 403
 
-	# check for archive and ban state
-	post = get_post(parent_id)
-	if post.is_archived or not post.board.can_comment(v):
-
-		return jsonify({"error": "You can't comment on this."}), 403
-
 	# get bot status
 	is_bot = request.headers.get("X-User-Type","")=="Bot"
 
@@ -362,7 +353,6 @@ def api_comment(v):
 					user_id=2317,
 					target_comment_id=comment.id,
 					kind="ban_comment",
-					board_id=comment.post.board_id,
 					note="spam"
 					)
 				g.db.add(ma)
@@ -400,8 +390,6 @@ def api_comment(v):
 				parent_comment_id=parent_comment_id,
 				level=level,
 				over_18=post.over_18 or request.form.get("over_18","")=="true",
-				is_nsfl=post.is_nsfl or request.form.get("is_nsfl","")=="true",
-				original_board_id=parent_post.board_id,
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
 				shadowbanned=shadowbanned
@@ -424,21 +412,6 @@ def api_comment(v):
 			with CustomRenderer(post_id=parent_id) as renderer:
 				body_md = renderer.render(mistletoe.Document(body))
 			body_html = sanitize(body_md, linkgen=True)
-			
-			# #csam detection
-			# def del_function():
-				# delete_file(name)
-				# c.is_banned=True
-				# g.db.add(c)
-				# g.db.commit()
-				
-			# csam_thread=threading.Thread(target=check_csam_url, 
-										 # args=(f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{name}", 
-												 # v, 
-												 # del_function
-												# )
-										# )
-			# csam_thread.start()
 
 	c_aux = CommentAux(
 		id=c.id,
@@ -462,7 +435,6 @@ def api_comment(v):
 			parent_fullname=c.fullname,
 			parent_comment_id=c.id,
 			level=level+1,
-			original_board_id=1,
 			is_bot=True,
 			)
 
@@ -497,7 +469,6 @@ def api_comment(v):
 			parent_fullname=c.fullname,
 			parent_comment_id=c.id,
 			level=level+1,
-			original_board_id=1,
 			is_bot=True,
 			)
 
@@ -530,7 +501,6 @@ def api_comment(v):
 			parent_fullname=c.fullname,
 			parent_comment_id=c.id,
 			level=level+1,
-			original_board_id=1,
 			is_bot=True,
 			)
 
@@ -558,7 +528,6 @@ def api_comment(v):
 			parent_fullname=c2.fullname,
 			parent_comment_id=c2.id,
 			level=level+2,
-			original_board_id=1,
 			is_bot=True,
 			)
 
@@ -586,7 +555,6 @@ def api_comment(v):
 			parent_fullname=c3.fullname,
 			parent_comment_id=c3.id,
 			level=level+3,
-			original_board_id=1,
 			is_bot=True,
 			)
 
@@ -672,7 +640,6 @@ def api_comment(v):
 
 	# print(f"Content Event: @{v.username} comment {c.base36id}")
 
-	board = g.db.query(Board).first()
 	cache.delete_memoized(comment_idlist)
 	cache.delete_memoized(User.commentlisting, v)
 
@@ -680,7 +647,6 @@ def api_comment(v):
 															 v=v,
 															 comments=[c],
 															 render_replies=False,
-															 is_allowed_to_comment=True
 															 )}),
 			"api": lambda: c.json
 			}
@@ -835,7 +801,6 @@ def edit_comment(cid, v):
 			parent_fullname=c.fullname,
 			parent_comment_id=c.id,
 			level=c.level+1,
-			original_board_id=1,
 			is_bot=True,
 			)
 
@@ -961,15 +926,12 @@ def embed_comment_cid(cid, pid=None):
 				'api': lambda: {'error': f'Comment {cid} has been removed'}
 				}
 
-	if comment.board.is_banned:
-		abort(410)
-
 	return render_template("embeds/comment.html", c=comment)
 
 @app.route("/comment_pin/<cid>", methods=["POST"])
 @auth_required
 @validate_formkey
-def mod_toggle_comment_pin(cid, v):
+def toggle_comment_pin(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
@@ -985,7 +947,6 @@ def mod_toggle_comment_pin(cid, v):
 		ma=ModAction(
 			kind="pin_comment" if comment.is_pinned else "unpin_comment",
 			user_id=v.id,
-			board_id=1,
 			target_comment_id=comment.id
 		)
 		g.db.add(ma)
@@ -995,7 +956,6 @@ def mod_toggle_comment_pin(cid, v):
 				v=v,
 				comments=[comment],
 				render_replies=False,
-				is_allowed_to_comment=True
 				)
 
 	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))

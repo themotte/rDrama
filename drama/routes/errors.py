@@ -154,24 +154,24 @@ def error_503(e, v):
 		   }
 
 
-@app.route("/allow_nsfw_logged_in/<bid>", methods=["POST"])
+@app.route("/allow_nsfw_logged_in", methods=["POST"])
 @auth_required
 @validate_formkey
-def allow_nsfw_logged_in(bid, v):
+def allow_nsfw_logged_in(v):
 
 	cutoff = int(time.time()) + 3600
 
 	if not session.get("over_18", None):
 		session["over_18"] = {}
 
-	session["over_18"][bid] = cutoff
+	session["over_18"][1] = cutoff
 
 	return redirect(request.form.get("redir"))
 
 
-@app.route("/allow_nsfw_logged_out/<bid>", methods=["POST"])
+@app.route("/allow_nsfw_logged_out", methods=["POST"])
 @auth_desired
-def allow_nsfw_logged_out(bid, v):
+def allow_nsfw_logged_out(v):
 
 	if v:
 		return redirect('/')
@@ -187,48 +187,9 @@ def allow_nsfw_logged_out(bid, v):
 		session["over_18"] = {}
 
 	cutoff = int(time.time()) + 3600
-	session["over_18"][bid] = cutoff
+	session["over_18"][1] = cutoff
 
 	return redirect(request.form.get("redir"))
-
-
-@app.route("/allow_nsfl_logged_in/<bid>", methods=["POST"])
-@auth_required
-@validate_formkey
-def allow_nsfl_logged_in(bid, v):
-
-	cutoff = int(time.time()) + 3600
-
-	if not session.get("show_nsfl", None):
-		session["show_nsfl"] = {}
-
-	session["show_nsfl"][bid] = cutoff
-
-	return redirect(request.form.get("redir"))
-
-
-@app.route("/allow_nsfl_logged_out/<bid>", methods=["POST"])
-@auth_desired
-def allow_nsfl_logged_out(bid, v):
-
-	if v:
-		return redirect('/')
-
-	t = int(request.form.get('time'))
-
-	if not validate_logged_out_formkey(t,
-									   request.form.get("formkey")
-									   ):
-		abort(403)
-
-	if not session.get("show_nsfl", None):
-		session["show_nsfl"] = {}
-
-	cutoff = int(time.time()) + 3600
-	session["show_nsfl"][bid] = cutoff
-
-	return redirect(request.form.get("redir"))
-
 
 @app.route("/error/<error>", methods=["GET"])
 @auth_desired

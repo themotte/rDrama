@@ -59,15 +59,6 @@
 
 										<li class="list-inline-item d-none d-md-inline-block mr-2">
 											 <span id="comment-{{c.base36id}}-score-none"class="d-none text-black">{{score}}</span>										</li>
-
-{% if not c.board.downvotes_disabled %}
-
-
-
-										<li id="comment-{{c.base36id}}-down" class="list-inline-item arrow-down d-none d-md-inline-block">
-										</li>
-
-{% endif %}
 										<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{c.permalink | full_link}}"><i class="fas fa-link"></i><span>Copy link</span></a>
 										</li>
 										<li class="list-inline-item d-none d-md-inline-block">

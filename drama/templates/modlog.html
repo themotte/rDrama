@@ -1,4 +1,4 @@
-{% extends "guild_settings.html" %}
+{% extends "settings2.html" %}
 
 {% block pagetitle %}Moderation Log{% endblock %}
 
@@ -39,11 +39,7 @@
 					 </span>
 						 <div class="text-muted pl-3">
 							<div>
-								{% if not ma.user.is_deleted %}
-									<a href="{{ma.user.permalink}}" class="font-weight-bold text-black" target="_self">@{{ma.user.username}}</a>
-								{% else %}
-									[deleted user]
-								{% endif %}
+								<a href="{{ma.user.permalink}}" class="font-weight-bold text-black" target="_self">@{{ma.user.username}}</a>
 
 							 <span>{{ma.string | safe}}</span>
 						 </div>

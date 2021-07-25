@@ -20,8 +20,8 @@ class Domain(Base):
 	can_comment = Column(Boolean, default=True)
 	reason = Column(Integer, default=0)
 	show_thumbnail = Column(Boolean, default=False)
-	embed_function = Column(String(64), default=None)
-	embed_template = Column(String(32), default=None)
+	embed_function = Column(String(64))
+	embed_template = Column(String(32))
 
 	@property
 	def reason_text(self):

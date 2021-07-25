@@ -10,7 +10,7 @@ class Flag(Base, Stndrd):
 	id = Column(Integer, primary_key=True)
 	post_id = Column(Integer, ForeignKey("submissions.id"))
 	user_id = Column(Integer, ForeignKey("users.id"))
-	reason = Column(String(100), default=None)
+	reason = Column(String(100))
 	created_utc = Column(Integer)
 	
 	user = relationship("User", lazy = "joined", primaryjoin = "Flag.user_id == User.id", uselist = False)
@@ -27,7 +27,7 @@ class CommentFlag(Base, Stndrd):
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"))
 	comment_id = Column(Integer, ForeignKey("comments.id"))
-	reason = Column(String(100), default=None)
+	reason = Column(String(100))
 	created_utc = Column(Integer)
 	
 	user = relationship("User", lazy = "joined", primaryjoin = "CommentFlag.user_id == User.id", uselist = False)
@@ -45,8 +45,6 @@ class Report(Base):
 	post_id = Column(Integer, ForeignKey("submissions.id"))
 	user_id = Column(Integer, ForeignKey("users.id"))
 	created_utc = Column(Integer)
-
-	board_id = Column(Integer, server_default=FetchedValue())
 	
 	user = relationship("User", lazy = "joined", primaryjoin = "Report.user_id == User.id", uselist = False)
 

@@ -16,13 +16,13 @@
 			<div class="btn-toolbar justify-content-center mb-4">
 
 				{% if v %}
-					<form action="/allow_nsfw_logged_in/{{board.base36id}}" method="post">
+					<form action="/allow_nsfw_logged_in" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
 						<input type="hidden" name="redir" value="{{request.path}}">
 						<input type="submit" class="btn btn-danger mr-2" value="Yes, I am 18">
 					</form>
 				{% else %}
-					<form action="/allow_nsfw_logged_out/{{board.base36id}}" method="post">
+					<form action="/allow_nsfw_logged_out" method="post">
 						<input type="hidden" name="formkey" value="{{lo_formkey}}">
 						<input type="hidden" name="redir" value="{{request.path}}">
 						<input type="hidden" name="time" value="{{t}}">

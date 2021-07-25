@@ -14,8 +14,8 @@ class Vote(Base):
 	vote_type = Column(Integer)
 	submission_id = Column(Integer, ForeignKey("submissions.id"))
 	created_utc = Column(Integer, default=0)
-	creation_ip = Column(String, default=None)
-	app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
+	creation_ip = Column(String)
+	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 
 	user = relationship("User", lazy="subquery")
 	post = relationship("Submission", lazy="subquery")
@@ -76,8 +76,8 @@ class CommentVote(Base):
 	vote_type = Column(Integer)
 	comment_id = Column(Integer, ForeignKey("comments.id"))
 	created_utc = Column(Integer, default=0)
-	creation_ip = Column(String, default=None)
-	app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
+	creation_ip = Column(String)
+	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 
 	user = relationship("User", lazy="subquery")
 	comment = relationship("Comment", lazy="subquery")
