@@ -1,4 +1,3 @@
-from drama.__main__ import Base, app
 from .alts import *
 from .badges import *
 from .boards import *
