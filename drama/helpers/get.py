@@ -132,7 +132,7 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 	return x
 
 
-def get_posts(pids, sort="hot", v=None):
+def get_posts(pids, v=None):
 
 	if not pids:
 		return []
@@ -348,8 +348,7 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 	return x
 
 
-def get_comments(cids, v=None, sort="new",
-				 load_parent=False, **kwargs):
+def get_comments(cids, v=None, load_parent=False, **kwargs):
 
 	if not cids:
 		return []
