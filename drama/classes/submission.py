@@ -330,7 +330,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'score': self.score_fuzzed,
 				'upvotes': self.upvotes_fuzzed,
 				'downvotes': self.downvotes_fuzzed,
-				'award_count': self.award_count,
+				#'award_count': self.award_count,
 				'is_offensive': self.is_offensive,
 				'meta_title': self.meta_title,
 				'meta_description': self.meta_description,
@@ -539,9 +539,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def report_count(self):
 		return len(self.reports)
 
-	@property
-	def award_count(self):
-		return len(self.awards)
+	#@property
+	#def award_count(self):
+		#return len(self.awards)
 
 	@property
 	def embed_template(self):
