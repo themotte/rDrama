@@ -193,11 +193,11 @@ def badge_grant_post(v):
 
 	send_notification(1046, user, text)
 
-	if badge_id in [21,22,23,24]:
+	if badge_id in [21,22,23,24,28]:
 		user.patron = True
 		user.animatedname = True
 		if badge_id == 23: user.banawards = 1
-		elif badge_id == 24: user.banawards = 3
+		elif badge_id in [24,28]: user.banawards = 3
 		g.db.add(user)
 	
 	return redirect(user.permalink)
@@ -260,63 +260,6 @@ def participation_stats(v):
 
 
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
-
-
-@app.route("/votes", methods=["GET"])
-@auth_desired
-def admin_vote_info_get(v):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
-
-	link = request.args.get("link")
-	if not link: return render_template("admin/votes.html", v=v)
-
-	ids = re.search("://[^/]+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
-
-	try:
-		post_id = ids.group(1)
-		comment_id = ids.group(3)
-	except: abort(400)
-
-	if comment_id:
-		thing = get_comment(int(comment_id), v=v)
-
-	else:
-		thing = get_post(int(post_id), v=v)
-
-
-	if isinstance(thing, Submission):
-
-		ups = g.db.query(Vote
-						 ).options(joinedload(Vote.user)
-								   ).filter_by(submission_id=thing.id, vote_type=1
-											   ).all()
-
-		downs = g.db.query(Vote
-						   ).options(joinedload(Vote.user)
-									 ).filter_by(submission_id=thing.id, vote_type=-1
-												 ).all()
-
-	elif isinstance(thing, Comment):
-
-		ups = g.db.query(CommentVote
-						 ).options(joinedload(CommentVote.user)
-								   ).filter_by(comment_id=thing.id, vote_type=1
-											   ).all()
-
-		downs = g.db.query(CommentVote
-						   ).options(joinedload(CommentVote.user)
-									 ).filter_by(comment_id=thing.id, vote_type=-1
-												 ).all()
-
-	else:
-		abort(400)
-
-	return render_template("admin/votes.html",
-						   v=v,
-						   thing=thing,
-						   ups=ups,
-						   downs=downs,)
-
 
 @app.route("/admin/alt_votes", methods=["GET"])
 @admin_level_required(4)
