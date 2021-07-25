@@ -34,6 +34,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
 	# this column is foreignkeyed to comment(id) but we can't do that yet as
 	# "comment" class isn't yet defined
+	parent_fullname = Column(Integer)
 	created_utc = Column(Integer, default=0)
 	edited_utc = Column(Integer, default=0)
 	is_banned = Column(Boolean, default=False)
@@ -98,6 +99,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	def __repr__(self):
 
 		return f"<Comment(id={self.id})>"
+
+	@property
+	@lazy
+	def fullname(self):
+		return f"t3_{self.base36id}"
 
 	@property
 	@lazy
@@ -227,12 +233,14 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 					'id': self.base36id,
 					'post': self.post.base36id,
 					'level': self.level,
+					'parent': self.parent_fullname
 					}
 		elif self.deleted_utc > 0:
 			data= {'deleted_utc': self.deleted_utc,
 					'id': self.base36id,
 					'post': self.post.base36id,
 					'level': self.level,
+					'parent': self.parent_fullname
 					}
 		else:
 
@@ -375,6 +383,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			"deleted_utc": self.deleted_utc,
 			'created_utc': self.created_utc,
 			'id': self.base36id,
+			'fullname': self.fullname,
 			'permalink': self.permalink,
 			'post_id': self.post.base36id,
 			'level': self.level
