@@ -117,7 +117,7 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 
 		x = items[0]
 		x._voted = items[1] or 0
-		x._is_blocking = items[4] or 0
+		x._is_blocking = items[2] or 0
 
 	else:
 		items = g.db.query(
