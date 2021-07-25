@@ -294,7 +294,7 @@
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 				<span class="text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
-				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{{u.customtitle}}</p>{% endif %}
+				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{{u.customtitle | safe}}</p>{% endif %}
 				<div class="font-weight-normal">
 					<span class="font-weight-bold">{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp;{% if u.follower_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
 				</div>
