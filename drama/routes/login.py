@@ -251,7 +251,7 @@ def sign_up_post(v):
 
 	now = int(time.time())
 
-	username = request.form.get("username")
+	username = request.form.get("username").strip()
 
 	# define function that takes an error message and generates a new signup
 	# form
@@ -283,7 +283,7 @@ def sign_up_post(v):
 		return new_signup("Passwords did not match. Please try again.")
 
 	# check username/pass conditions
-	if not re.match(valid_username_regex, request.form.get("username")):
+	if not re.match(valid_username_regex, username):
 		#print(f"signup fail - {username } - mismatched passwords")
 		return new_signup("Invalid username")
 
@@ -307,7 +307,7 @@ def sign_up_post(v):
 		email=f"{email}@gmail.com"
 
 
-	existing_account = get_user(request.form.get("username"), graceful=True)
+	existing_account = get_user(username, graceful=True)
 	if existing_account and existing_account.reserved:
 		return redirect(existing_account.permalink)
 
