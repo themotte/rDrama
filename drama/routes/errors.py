@@ -27,7 +27,7 @@ def error_401(e):
 	else:
 		return redirect(output)
 
-@app.errorhandler(PaymentRequired)
+@app.errorhandler(402)
 @auth_desired
 @api()
 def error_402(e, v):
