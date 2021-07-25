@@ -24,6 +24,13 @@ import matplotlib.pyplot as plt
 from .front import frontlist
 from drama.__main__ import app, cache
 
+@app.route("/dramacoins", methods=["GET"])
+@admin_level_required(6)
+def sex(v):
+	for p in g.db.query(Submission).options(lazyload('*')).all() + g.db.query(Comment).options(lazyload('*')).all():
+		p.author.dramacoins += p.upvotes + p.downvotes - 1
+		g.db.add(p.author)
+	return "sex"
 
 @app.route("/admin/shadowbanned", methods=["GET"])
 @auth_required
