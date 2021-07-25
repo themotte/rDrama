@@ -49,7 +49,7 @@ def resize():
 @auth_required
 def postbanaward(post_id, v):
 	
-	if not v.banawards > 0: abort(402)
+	if not v.banawards > 0: return render_template("errors/402.html", v=v)
 
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if not post: abort(400)

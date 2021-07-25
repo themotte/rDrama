@@ -4,7 +4,6 @@ from .boards import *
 from .board_relationships import *
 from .clients import *
 from .comment import *
-from .custom_errors import *
 from .domains import Domain
 from .flags import *
 from .user import *

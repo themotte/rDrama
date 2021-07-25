@@ -2,12 +2,10 @@ import jinja2.exceptions
 
 from drama.helpers.wrappers import *
 from drama.helpers.session import *
-from drama.classes.custom_errors import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
-from drama.__main__ import app, r, cache, db_session
-import gevent
+from drama.__main__ import app
 
 # Errors
 
@@ -26,14 +24,6 @@ def error_401(e):
 		return jsonify({"error": "401 Not Authorized"}), 401
 	else:
 		return redirect(output)
-
-@app.errorhandler(402)
-@auth_desired
-@api()
-def error_402(e, v):
-	return{"html": lambda: (render_template('errors/402.html', v=v), 402),
-		   "api": lambda: (jsonify({"error": "402 Payment Required"}), 402)
-		   }
 
 @app.errorhandler(403)
 @auth_desired

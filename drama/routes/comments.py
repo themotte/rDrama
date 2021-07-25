@@ -25,7 +25,7 @@ beams_client = PushNotifications(
 @auth_required
 def banawardcomment(comment_id, v):
 
-	if not v.banawards > 0: abort(402)
+	if not v.banawards > 0: return render_template("errors/402.html", v=v)
 
 	comment = g.db.query(Comment).filter_by(id=comment_id).first()
 	if not comment: abort(400)
