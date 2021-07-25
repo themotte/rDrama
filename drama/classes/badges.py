@@ -73,11 +73,6 @@ class Badge(Base):
 		return self.badge.path
 
 	@property
-	def rendered(self):
-
-		return render_template("badge.html", b=self)
-
-	@property
 	def json_core(self):
 
 		return {'text': self.text,

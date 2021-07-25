@@ -247,8 +247,11 @@
 
 					<div>
 						{% for b in u.badges %}
-						{% include "badge.html" %}
-						{% else %}
+							{% if b.url %}
+								<a href="{{b.url}}"><img style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
+							{% else %}
+								<img style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
+							{% endif %}
 						{% endfor %}
 					</div>
 
@@ -299,10 +302,13 @@
 				<p class="text-muted text-break">{{u.bio_html | safe}}</p>
 				{% endif %}
 				<div class="mb-3">
-						{% for b in u.badges %}
-						{% include "badge.html" %}
+					{% for b in u.badges %}
+						{% if b.url %}
+							<a href="{{b.url}}"><img style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
 						{% else %}
-						{% endfor %}
+							<img style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
+						{% endif %}
+					{% endfor %}
 				</div>
 				{% if v and v.id == u.id %}
 					 <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
