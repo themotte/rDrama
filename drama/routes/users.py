@@ -183,17 +183,10 @@ def api_is_available(name, v):
 		return jsonify({name: True})
 
 
-@app.route("/uid/<uid>", methods=["GET"])
-def user_uid(uid):
+@app.route("/id/<id>", methods=["GET"])
+def user_id(id):
 
-	user = get_account(uid)
-
-	return redirect(user.permalink)
-
-@app.route("/id/<uid>", methods=["GET"])
-def user_uid2(uid):
-
-	user = get_account(int(uid))
+	user = get_account(int(id))
 	return redirect(user.permalink)
 
 # Allow Id of user to be queryied, and then redirect the bot to the
