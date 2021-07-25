@@ -222,9 +222,9 @@ def mod_remove_username(bid, username, board, v):
 @public("read")
 def board_about_mods(v):
 
-	g.db.query(Board).first()
+	board = g.db.query(Board).first()
 
-	me = board.has_mod(v)
+	me = (v.admin_level == 6)
 
 	return {
 		"html":lambda:render_template("mods.html", v=v, b=board, me=me),
