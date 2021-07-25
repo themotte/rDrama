@@ -265,7 +265,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 
 	def json_raw(self):
-		data = {'author_name': self.author.username if not self.author.deleted_utc > 0 else None,
+		data = {'author_name': self.author.username,
 				'permalink': self.permalink,
 				'is_banned': bool(self.is_banned),
 				'deleted_utc': self.deleted_utc,

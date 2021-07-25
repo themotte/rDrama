@@ -264,13 +264,6 @@ def u_username(username, v=None):
 
 		g.db.add(view)
 
-	if u.deleted_utc > 0 and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_deleted.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": "That user deactivated their account."}
-				}
-
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
 		return {'html': lambda: render_template("userpage_private.html",
 												u=u,

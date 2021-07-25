@@ -60,16 +60,11 @@ def login_post():
 
 	if "@" in username:
 		account = g.db.query(User).filter(
-			User.email.ilike(username),
-			User.deleted_utc == False).first()
+			User.email.ilike(username)).first()
 	else:
 		account = get_user(username, graceful=True)
 
 	if not account:
-		time.sleep(random.uniform(0, 2))
-		return render_template("login.html", failed=True, i=random_image())
-
-	if account.deleted_utc:
 		time.sleep(random.uniform(0, 2))
 		return render_template("login.html", failed=True, i=random_image())
 
@@ -417,8 +412,7 @@ def post_forgot():
 
 	user = g.db.query(User).filter(
 		User.username.ilike(username),
-		User.email.ilike(email),
-		User.deleted_utc == False).first()
+		User.email.ilike(email)).first()
 
 	if user:
 		# generate url

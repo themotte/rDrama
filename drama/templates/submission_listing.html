@@ -137,7 +137,7 @@
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}
 						{% if p.is_repost %}&nbsp;<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}
 						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
-						{% if p.author.deleted_utc > 0 %}[deleted account]{% else %}&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img src="{{ p.author.profile_url }}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}{% endif %}
+						&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img src="{{ p.author.profile_url }}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
 						<span data-toggle="tooltip" data-placement="bottom" id="timestamp-{{p.id}}" title="">&nbsp;{{p.age_string}}</span>
 						&nbsp;
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})
@@ -375,7 +375,7 @@
 					{% endif %}
 
 					{% if not (v and v.id==p.author_id) %}
-					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}','{{'@'+p.author.username if not p.author.deleted_utc > 0 else '[deleted account]'}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
+					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}','{{'@'+p.author.username}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 					{% endif %}
 					{% if v and v.id==p.author_id %}
 						<button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{p.base36id}}" href="javascript:void(0)" onclick="post('/api/pin/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center text-muted mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>

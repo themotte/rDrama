@@ -146,18 +146,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		if self.post: return f"{self.post.permalink}/{self.id}/"
 		else: return f"/comment/{self.id}/"
 
-	@property
-	def any_descendants_live(self):
-
-		if self.replies == []:
-			return False
-
-		if any([not x.is_banned and x.deleted_utc == 0 for x in self.replies]):
-			return True
-
-		else:
-			return any([x.any_descendants_live for x in self.replies])
-
 	def rendered_comment(self, v=None, render_replies=True,
 						 standalone=False, level=1, **kwargs):
 
@@ -205,7 +193,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'id': self.base36id,
 			'fullname': self.fullname,
 			'level': self.level,
-			'author_name': self.author.username if not self.author.deleted_utc > 0 else None,
+			'author_name': self.author.username,
 			'body': self.body,
 			'body_html': self.body_html,
 			'is_archived': self.is_archived,
@@ -406,13 +394,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		return data
 
 	@property
-	def is_exiled_for(self):
-		return self.__dict__.get('_is_exiled_for', None)
-
-	@property
 	@lazy
 	def is_op(self):
-		return self.author_id==self.post.author_id and not self.author.deleted_utc > 0 and not self.post.author.deleted_utc > 0 and not self.post.deleted_utc
+		return self.author_id==self.post.author_id
 	
 	
 
