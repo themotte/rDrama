@@ -209,7 +209,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'is_banned': bool(self.is_banned),
 			'deleted_utc': self.deleted_utc,
 			'is_nsfw': self.over_18,
-			'is_offensive': self.is_offensive,
 			'permalink': self.permalink,
 			'post_id': self.post.base36id,
 			'score': self.score_fuzzed,
@@ -350,9 +349,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 		if not v:
 			return False
-
-		if self.is_offensive and v.hide_offensive:
-			return True
 			
 		if self.is_bot and v.hide_bot:
 			return True

@@ -72,7 +72,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	score_hot = Column(Float, default=0)
 	score_top = Column(Float, default=1)
 	score_activity = Column(Float, default=0)
-	is_offensive = Column(Boolean, default=False)
 	author = relationship(
 		"User",
 		lazy="joined",
@@ -288,7 +287,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'upvotes': self.upvotes_fuzzed,
 				'downvotes': self.downvotes_fuzzed,
 				#'award_count': self.award_count,
-				'is_offensive': self.is_offensive,
 				'meta_title': self.meta_title,
 				'meta_description': self.meta_description,
 				'voted': self.voted
