@@ -82,7 +82,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	parent_comment = relationship("Comment", remote_side=[id])
 	child_comments = relationship("Comment", remote_side=[parent_comment_id])
 
-	awards = relationship("AwardRelationship", lazy="joined")
+	#awards = relationship("AwardRelationship", lazy="joined")
 
 	# These are virtual properties handled as postgres functions server-side
 	# There is no difference to SQLAlchemy, but they cannot be written to
