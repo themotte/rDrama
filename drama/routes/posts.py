@@ -90,7 +90,6 @@ def publish(pid, v):
 
 @app.route("/submit", methods=["GET"])
 @auth_required
-@no_negative_balance("html")
 def submit_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	
@@ -144,7 +143,6 @@ def post_base36id(pid, anything=None, v=None):
 
 @app.route("/edit_post/<pid>", methods=["POST"])
 @is_not_banned
-@no_negative_balance("html")
 @validate_formkey
 def edit_post(pid, v):
 
@@ -281,7 +279,6 @@ def edit_post(pid, v):
 @app.route("/submit/title", methods=['GET'])
 @limiter.limit("6/minute")
 @is_not_banned
-@no_negative_balance("html")
 def get_post_title(v):
 
 	url = request.args.get("url", None)
@@ -461,8 +458,6 @@ def archiveorg(url):
 @app.route("/api/vue/submit", methods=["POST"])
 @limiter.limit("6/minute")
 @is_not_banned
-@no_negative_balance('html')
-@tos_agreed
 @validate_formkey
 @api("create")
 def submit_post(v):

@@ -9,7 +9,6 @@ valid_board_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9_]{2,24}$")
 @app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
 @app.route("/api/v1/distinguish_post/<bid>/<pid>", methods=["POST"])
 @auth_required
-@is_guildmaster("content")
 @api("guildmaster")
 def mod_distinguish_post(bid, pid, board, v):
 
@@ -41,7 +40,6 @@ def mod_distinguish_post(bid, pid, board, v):
 
 @app.route("/mod/invite_mod/<bid>", methods=["POST"])
 @auth_required
-@is_guildmaster("full")
 @validate_formkey
 def mod_invite_username(bid, board, v):
 
@@ -99,7 +97,6 @@ def mod_invite_username(bid, board, v):
 
 @app.route("/mod/<bid>/rescind/<username>", methods=["POST"])
 @auth_required
-@is_guildmaster("full")
 @validate_formkey
 def mod_rescind_bid_username(bid, username, board, v):
 
@@ -158,7 +155,6 @@ def mod_accept_board(bid, v):
 
 @app.route("/mod/<bid>/step_down", methods=["POST"])
 @auth_required
-@is_guildmaster()
 @validate_formkey
 def mod_step_down(bid, board, v):
 
@@ -184,7 +180,6 @@ def mod_step_down(bid, board, v):
 
 @app.route("/mod/<bid>/remove/<username>", methods=["POST"])
 @auth_required
-@is_guildmaster("full")
 @validate_formkey
 def mod_remove_username(bid, username, board, v):
 
@@ -284,7 +279,6 @@ def mod_log_item(aid, v):
 
 @app.route("/mod/edit_perms", methods=["POST"])
 @auth_required
-@is_guildmaster("full")
 @validate_formkey
 def board_mod_perms_change(boardname, board, v):
 

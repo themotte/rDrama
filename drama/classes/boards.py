@@ -390,25 +390,3 @@ class Board(Base, Stndrd, Age_times):
 			25 * (page - 1)).limit(26).all()
 
 		return [x.id for x in comments]
-
-
-	def user_guild_rep(self, user):
-
-		return user.guild_rep(self)
-
-	def is_guildmaster(self, perm=None):
-		mod=self.__dict__.get('_is_guildmaster', False)
-		if not mod:
-			return False
-		if not perm:
-			return True
-
-		return mod.__dict__[f"perm_{perm}"]
-
-
-	@property
-	def siege_rep_requirement(self):
-
-		now=int(time.time())
-
-		return self.stored_subscriber_count//10 + min(180, (now-self.created_utc)//(60*60*24))

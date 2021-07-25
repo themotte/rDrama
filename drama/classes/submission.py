@@ -498,19 +498,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		self.submission_aux.meta_description=x
 		g.db.add(self.submission_aux)
 	
-
-	def is_guildmaster(self, perm=None):
-		mod=self.__dict__.get('_is_guildmaster', False)
-
-		if not mod:
-			return False
-		elif not perm:
-			return True
-		else:
-			return mod.perm_full or mod.__dict__[f"perm_{perm}"]
-
-		return output
-
 	@property
 	def is_blocking_guild(self):
 		return self.__dict__.get('_is_blocking_guild', False)

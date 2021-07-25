@@ -190,7 +190,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 				comment._voted = c[1] or 0
 				comment._is_blocking = c[2] or 0
 				comment._is_blocked = c[3] or 0
-				comment._is_guildmaster=top_comment._is_guildmaster
 				comment._is_exiled_for=c[4] or 0
 				output.append(comment)
 		else:
@@ -247,8 +246,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 @app.route("/api/v1/comment", methods=["POST"])
 @limiter.limit("6/minute")
 @is_not_banned
-@no_negative_balance('toast')
-@tos_agreed
 @validate_formkey
 @api("create")
 def api_comment(v):
