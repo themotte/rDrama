@@ -1,2 +1,2 @@
 
-from drama.__main__ import app
+from drama.__main__ import Base, app
