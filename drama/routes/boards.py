@@ -38,23 +38,21 @@ def mod_distinguish_post(bid, pid, board, v):
 
 	return "", 204
 
-@app.route("/mod/invite_mod/<bid>", methods=["POST"])
+@app.route("/mod/invite_mod", methods=["POST"])
 @auth_required
 @validate_formkey
-def mod_invite_username(bid, board, v):
+def mod_invite_username(v):
 
 	username = request.form.get("username", '').lstrip('@')
 	user = get_user(username)
 	if not user:
 		return jsonify({"error": "That user doesn't exist."}), 404
 
-	if board.has_ban(user):
-		return jsonify({"error": f"@{user.username} is exiled from +{board.name} and can't currently become a guildmaster."}), 409
 	if not user.can_join_gms:
 		return jsonify({"error": f"@{user.username} already leads enough guilds."}), 409
 
 	x = g.db.query(ModRelationship).filter_by(
-		user_id=user.id, board_id=board.id).first()
+		user_id=user.id, board_id=1).first()
 
 	if x and x.accepted:
 		return jsonify({"error": f"@{user.username} is already a mod."}), 409
@@ -70,7 +68,7 @@ def mod_invite_username(bid, board, v):
 	else:
 		x = ModRelationship(
 			user_id=user.id,
-			board_id=board.id,
+			board_id=1,
 			accepted=False,
 			perm_full=True,
 			perm_content=True,
