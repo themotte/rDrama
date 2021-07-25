@@ -29,7 +29,9 @@ def oauth_authorize_prompt(v):
 
 	client_id = request.args.get("client_id")
 
-	application = get_application(client_id)
+
+	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
+
 	if not application:
 		return jsonify({"oauth_error": "Invalid `client_id`"}), 401
 
@@ -90,7 +92,7 @@ def oauth_authorize_post(v):
 	state = request.form.get("state")
 	redirect_uri = request.form.get("redirect_uri")
 
-	application = get_application(client_id)
+	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
 	if not application:
 		return jsonify({"oauth_error": "Invalid `client_id`"}), 401
 	if application.is_banned:

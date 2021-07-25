@@ -413,7 +413,7 @@ def u_username_comments(username, v=None):
 
 	is_following = (v and user.has_follower(v))
 
-	board = get_board(1)
+	board = g.db.query(Board).first()
 	return {"html": lambda: render_template("userpage_comments.html",
 											u=user,
 											v=v,

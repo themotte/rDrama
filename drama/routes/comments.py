@@ -668,7 +668,7 @@ def api_comment(v):
 
 	# print(f"Content Event: @{v.username} comment {c.base36id}")
 
-	board = get_board(1)	
+	board = g.db.query(Board).first()
 	cache.delete_memoized(comment_idlist)
 	cache.delete_memoized(User.commentlisting, v)
 

@@ -180,112 +180,6 @@ def get_posts(pids, v=None):
 
 	return sorted(output, key=lambda x: pids.index(x.id))
 
-
-def get_post_with_comments(pid, sort="top", v=None):
-
-	post = get_post(pid, v=v)
-
-	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
-
-		blocking = v.blocking.subquery()
-
-		blocked = v.blocked.subquery()
-
-		comms = g.db.query(
-			Comment,
-			votes.c.vote_type,
-			blocking.c.id,
-			blocked.c.id,
-		)
-		if v.admin_level >=4:
-			comms=comms.options(joinedload(Comment.oauth_app))
- 
-		comms=comms.filter(
-			Comment.parent_submission == post.id
-		).join(
-			votes,
-			votes.c.comment_id == Comment.id,
-			isouter=True
-		).join(
-			blocking,
-			blocking.c.target_id == Comment.author_id,
-			isouter=True
-		).join(
-			blocked,
-			blocked.c.user_id == Comment.author_id,
-			isouter=True
-		)
-
-		if sort == "top":
-			comments = comms.order_by(Comment.score.desc()).all()
-		elif sort == "bottom":
-			comments = comms.order_by(Comment.score.asc()).all()
-		elif sort == "new":
-			comments = comms.order_by(Comment.created_utc.desc()).all()
-		elif sort == "old":
-			comments = comms.order_by(Comment.created_utc.asc()).all()
-		elif sort == "controversial":
-			comments = sorted(comms.all(), key=lambda x: x[0].score_disputed, reverse=True)
-		elif sort == "random":
-			c = comms.all()
-			comments = random.sample(c, k=len(c))
-		else:
-			abort(422)
-
-		output = []
-		for c in comments:
-			comment = c[0]
-			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
-			comment._voted = c[1] or 0
-			comment._is_blocking = c[2] or 0
-			comment._is_blocked = c[3] or 0
-			output.append(comment)
-
-		post._preloaded_comments = output
-
-	else:
-		comms = g.db.query(
-			Comment
-		).filter(
-			Comment.parent_submission == post.id
-		)
-
-		if sort == "top":
-			comments = comms.order_by(Comment.score.desc()).all()
-		elif sort == "bottom":
-			comments = comms.order_by(Comment.score.asc()).all()
-		elif sort == "new":
-			comments = comms.order_by(Comment.created_utc.desc()).all()
-		elif sort == "old":
-			comments = comms.order_by(Comment.created_utc.asc()).all()
-		elif sort == "controversial":
-			comments = sorted(comms.all(), key=lambda x: x.score_disputed, reverse=True)
-		elif sort == "random":
-			c = comms.all()
-			comments = random.sample(c, k=len(c))
-		else:
-			abort(422)
-
-		if random.random() < 0.1:
-			for comment in comments:
-				if comment.author and comment.author.shadowbanned:
-					rand = random.randint(500,1400)
-					vote = CommentVote(user_id=rand,
-						vote_type=random.choice([-1, 1]),
-						comment_id=comment.id)
-					g.db.add(vote)
-					try: g.db.flush()
-					except: g.db.rollback()
-					comment.upvotes = comment.ups
-					comment.downvotes = comment.downs
-					g.db.add(comment)
-
-		post._preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
-
-	return post
-
-
 def get_comment(cid, v=None, graceful=False, **kwargs):
 
 	if isinstance(cid, str):
@@ -411,16 +305,6 @@ def get_comments(cids, v=None, load_parent=False, **kwargs):
 	return output
 
 
-def get_board(bid, graceful=False):
-
-	return g.db.query(Board).first()
-
-
-def get_guild(name, graceful=False):
-
-	return g.db.query(Board).first()
-
-
 def get_domain(s):
 
 	# parse domain into all possible subdomains
@@ -446,42 +330,3 @@ def get_domain(s):
 	doms = sorted(doms, key=lambda x: len(x.domain), reverse=True)
 
 	return doms[0]
-
-
-def get_application(client_id, graceful=False):
-
-	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
-	if not application and not graceful:
-		abort(404)
-
-	return application
-
-
-def get_from_permalink(link, v=None):
-
-	if "@" in link:
-
-		name = re.search("/@(\w+)", link)
-		if name:
-			name=name.match(1)
-			return get_user(name)
-
-	if "+" in link:
-
-		x = re.search("/\+(\w+)$", link)
-		if x:
-			name=x.match(1)
-			return get_guild(name)
-
-	ids = re.search("://[^/]+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
-
-	try:
-		post_id = ids.group(1)
-		comment_id = ids.group(3)
-	except: abort(400)
-
-	if comment_id:
-		return get_comment(int(comment_id), v=v)
-
-	else:
-		return get_post(int(post_id), v=v)

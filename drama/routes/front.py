@@ -427,7 +427,7 @@ def all_comments(v):
 
 	idlist = idlist[0:25]
 
-	board = get_board(1)
+	board = g.db.query(Board).first()
 	return {"html": lambda: render_template("home_comments.html",
 											v=v,
 											sort=sort,

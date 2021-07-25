@@ -128,7 +128,7 @@ def mod_rescind_bid_username(bid, username, board, v):
 @api("guildmaster")
 def mod_accept_board(bid, v):
 
-	board = get_board(bid)
+	board = g.db.query(Board).first()
 
 	x = board.has_invite(v)
 	if not x:
@@ -222,7 +222,7 @@ def mod_remove_username(bid, username, board, v):
 @public("read")
 def board_about_mods(v):
 
-	board = get_guild("general")
+	g.db.query(Board).first()
 
 	me = board.has_mod(v)
 

@@ -11,6 +11,14 @@ from drama.__main__ import app
 
 
 
+@app.errorhandler(400)
+@auth_desired
+@api()
+def error_400(e, v):
+	return{"html": lambda: (render_template('errors/400.html', v=v), 400),
+		   "api": lambda: (jsonify({"error": "400 Bad Request"}), 400	)
+		   }
+
 
 @app.errorhandler(401)
 def error_401(e):
@@ -24,6 +32,7 @@ def error_401(e):
 		return jsonify({"error": "401 Not Authorized"}), 401
 	else:
 		return redirect(output)
+
 
 @app.errorhandler(403)
 @auth_desired
@@ -61,12 +70,28 @@ def error_409(e, v):
 		   }
 
 
+@app.errorhandler(410)
+@auth_desired
+@api()
+def error_410(e, v):
+	return{"html": lambda: (render_template('errors/410.html', v=v), 410),
+		   "api": lambda: (jsonify({"error": "410 Request Payload Too Large"}), 410)
+		   }
+
 @app.errorhandler(413)
 @auth_desired
 @api()
 def error_413(e, v):
 	return{"html": lambda: (render_template('errors/413.html', v=v), 413),
-		   "api": lambda: (jsonify({"error": "413 Request Payload Too Large"}), 413)
+		   "api": lambda: (jsonify({"error": "413 Image Size Too Large"}), 413)
+		   }
+
+@app.errorhandler(418)
+@auth_desired
+@api()
+def error_418(e, v):
+	return{"html": lambda: (render_template('errors/418.html', v=v), 418),
+		   "api": lambda: (jsonify({"error": "418 I'm A Teapot"}), 418)
 		   }
 
 
@@ -108,6 +133,24 @@ def error_500(e, v):
 
 	return{"html": lambda: (render_template('errors/500.html', v=v), 500),
 		   "api": lambda: (jsonify({"error": "500 Internal Server Error"}), 500)
+		   }
+
+
+@app.errorhandler(502)
+@auth_desired
+@api()
+def error_502(e, v):
+	return{"html": lambda: (render_template('errors/502.html', v=v), 502),
+		   "api": lambda: (jsonify({"error": "502 Bad Gateway"}), 502)
+		   }
+
+
+@app.errorhandler(503)
+@auth_desired
+@api()
+def error_503(e, v):
+	return{"html": lambda: (render_template('errors/503.html', v=v), 503),
+		   "api": lambda: (jsonify({"error": "503 Service Unavailable"}), 503)
 		   }
 
 

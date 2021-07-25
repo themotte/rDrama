@@ -93,7 +93,7 @@ def publish(pid, v):
 def submit_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	
-	b = get_guild("general")
+	b = g.db.query(Board).first()
 	
 	return render_template("submit.html",
 						   v=v,
@@ -113,9 +113,149 @@ def post_base36id(pid, anything=None, v=None):
 	if v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 	sort=request.args.get("sort", defaultsortingcomments)
-
-	post = get_post_with_comments(pid, v=v, sort=sort)
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	post = get_post(pid, v=v)
+
+	if v:
+		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
+
+		blocking = v.blocking.subquery()
+
+		blocked = v.blocked.subquery()
+
+		comms = g.db.query(
+			Comment,
+			votes.c.vote_type,
+			blocking.c.id,
+			blocked.c.id,
+		)
+		if v.admin_level >=4:
+			comms=comms.options(joinedload(Comment.oauth_app))
+ 
+		comms=comms.filter(
+			Comment.parent_submission == post.id
+		).join(
+			votes,
+			votes.c.comment_id == Comment.id,
+			isouter=True
+		).join(
+			blocking,
+			blocking.c.target_id == Comment.author_id,
+			isouter=True
+		).join(
+			blocked,
+			blocked.c.user_id == Comment.author_id,
+			isouter=True
+		)
+
+		if sort == "top":
+			comments = comms.order_by(Comment.score.desc()).all()
+		elif sort == "bottom":
+			comments = comms.order_by(Comment.score.asc()).all()
+		elif sort == "new":
+			comments = comms.order_by(Comment.created_utc.desc()).all()
+		elif sort == "old":
+			comments = comms.order_by(Comment.created_utc.asc()).all()
+		elif sort == "controversial":
+			comments = sorted(comms.all(), key=lambda x: x[0].score_disputed, reverse=True)
+		elif sort == "random":
+			c = comms.all()
+			comments = random.sample(c, k=len(c))
+		else:
+			abort(422)
+
+		output = []
+		for c in comments:
+			comment = c[0]
+			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
+			comment._voted = c[1] or 0
+			comment._is_blocking = c[2] or 0
+			comment._is_blocked = c[3] or 0
+			output.append(comment)
+
+		post._preloaded_comments = output
+
+	else:
+		comms = g.db.query(
+			Comment
+		).filter(
+			Comment.parent_submission == post.id
+		)
+
+		if sort == "top":
+			comments = comms.order_by(Comment.score.desc()).all()
+		elif sort == "bottom":
+			comments = comms.order_by(Comment.score.asc()).all()
+		elif sort == "new":
+			comments = comms.order_by(Comment.created_utc.desc()).all()
+		elif sort == "old":
+			comments = comms.order_by(Comment.created_utc.asc()).all()
+		elif sort == "controversial":
+			comments = sorted(comms.all(), key=lambda x: x.score_disputed, reverse=True)
+		elif sort == "random":
+			c = comms.all()
+			comments = random.sample(c, k=len(c))
+		else:
+			abort(422)
+
+		if random.random() < 0.1:
+			for comment in comments:
+				if comment.author and comment.author.shadowbanned:
+					rand = random.randint(500,1400)
+					vote = CommentVote(user_id=rand,
+						vote_type=random.choice([-1, 1]),
+						comment_id=comment.id)
+					g.db.add(vote)
+					try: g.db.flush()
+					except: g.db.rollback()
+					comment.upvotes = comment.ups
+					comment.downvotes = comment.downs
+					g.db.add(comment)
+
+		post._preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	post.views += 1
 	g.db.add(post)
 	g.db.commit()
@@ -482,9 +622,7 @@ def submit_post(v):
 	if repost:
 		return redirect(repost.permalink)
 
-	board = get_guild(request.form.get('board', 'general'), graceful=True)
-	if not board:
-		board = get_guild('general')
+	board = g.db.query(Board).first()
 
 	if not title:
 		return {"html": lambda: (render_template("submit.html",
@@ -616,7 +754,7 @@ def submit_post(v):
 	board_name = board_name.lstrip("+")
 	board_name = board_name.strip()
 
-	board = get_guild(board_name, graceful=True)
+	board = g.db.query(Board).first()
 
 	if not board:
 

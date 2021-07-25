@@ -196,6 +196,8 @@ def badge_grant_post(v):
 	if badge_id in [21,22,23,24]:
 		user.patron = True
 		user.animatedname = True
+		if badge_id == 23: user.banawards = 1
+		elif badge_id == 24: user.banawards = 3
 		g.db.add(user)
 	
 	return redirect(user.permalink)
@@ -265,10 +267,22 @@ def participation_stats(v):
 def admin_vote_info_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
-	if not request.args.get("link"):
-		return render_template("admin/votes.html", v=v)
+	link = request.args.get("link")
+	if not link: return render_template("admin/votes.html", v=v)
 
-	thing = get_from_permalink(request.args.get("link"), v=v)
+	ids = re.search("://[^/]+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
+
+	try:
+		post_id = ids.group(1)
+		comment_id = ids.group(3)
+	except: abort(400)
+
+	if comment_id:
+		thing = get_comment(int(comment_id), v=v)
+
+	else:
+		thing = get_post(int(post_id), v=v)
+
 
 	if isinstance(thing, Submission):
 
