@@ -135,6 +135,7 @@
 						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/api/follow/{{u.username}}', callback=function(){document.getElementById('button-sub').classList.toggle('d-none');document.getElementById('button-unsub').classList.toggle('d-none');})">Follow</a>						
 						
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('message').classList.toggle('d-none')">Message</a>
+						<a class="btn btn-primary" href="javascript:void(0)" onclick="post('/@{{u.username}}/suicide', function(){window.location.reload(true);})">Get them help</a>
 						<form class="d-none" id="message" action="/@{{u.username}}/message" method="post">
 							<pre></pre>
 							<textarea id="input-message" form="message" name="message" rows="3" class="form-control" required></textarea>
@@ -312,6 +313,7 @@
 					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/api/follow/{{u.username}}', callback=function(){document.getElementById('button-sub2').classList.toggle('d-none');document.getElementById('button-unsub2').classList.toggle('d-none');})">Follow</a>						
 					
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('message-mobile').classList.toggle('d-none')">Message</a>
+					<a class="btn btn-primary" href="javascript:void(0)" onclick="post('/@{{u.username}}/suicide', function(){window.location.reload(true);})">Get them help</a>
 					<form class="d-none" id='message-mobile' action="/@{{u.username}}/message" method="post">
 						<pre></pre>
 						<textarea id="input-message-mobile" form="message-mobile" name="message" rows="3" class="form-control" required></textarea>

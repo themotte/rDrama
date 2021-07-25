@@ -13,22 +13,13 @@
 				<form id="report-post-form" method="post">
 					<div class="modal-body">
 						<div class="h6">We're sorry something here is wrong.</div>
-						<small class="form-text text-muted">Please select a reason for flagging below.</small>
-							<input type="hidden" name="formkey" value="{{v.formkey}}">
-							<select id="report-type-dropdown" name="report_type" form="report-post-form" class="custom-select mt-3" onchange="document.getElementById('reportPostButton').disabled=false;">
-								<option disabled selected value="reason_not_selected">
-									Reason for flagging?
-								</option>
-								<option value="admin">
-									This post breaks Drama policy
-								</option>
-								<option id="report-post-to-guild-dropdown-option" value="guild">
-								</option>
-							</select>
+						<small class="form-text text-muted">Please enter a reason for reporting below.</small>
+						<pre></pre>
+						<input maxlength="100" id="reason" class="form-control"/>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-						<button type="button" id="reportPostButton" class="btn btn-danger" disabled>Report post</button>
+						<button type="button" id="reportPostButton" class="btn btn-danger">Report post</button>
 					</div>
 				</form>
 			</div>

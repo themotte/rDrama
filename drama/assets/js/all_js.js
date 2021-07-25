@@ -64,7 +64,7 @@ document.body.addEventListener('keydown', function(event) {
 		},
 		{
 			type:'flags',
-			emojis: ['saudi', 'animesexual','blacknation','blm','blueline','dreamgender','fatpride','incelpride','israel','kazakhstan','landlordlove','scalperpride','superstraight','trans','translord','transracial','usa']
+			emojis: ['lgbt', 'saudi', 'animesexual','blacknation','blm','blueline','dreamgender','fatpride','incelpride','israel','kazakhstan','landlordlove','scalperpride','superstraight','trans','translord','transracial','usa']
 		}
 		]
 

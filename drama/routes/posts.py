@@ -1,7 +1,6 @@
 from urllib.parse import urlparse
 import mistletoe
 import urllib.parse
-import threading
 import gevent
 
 from drama.helpers.wrappers import *
@@ -23,27 +22,28 @@ from PIL import Image as PILimage
 with open("snappy.txt", "r") as f:
 	snappyquotes = f.read().split("{[para]}")
 
+@app.route("/resize")
 def resize():
 	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
-	print(u.username)
-	print(f"1 {u.profileurl}")
-	x = requests.get(u.profileurl)
+	if u:
+		print(u.username)
+		print(f"1 {u.profileurl}")
+		x = requests.get(u.profileurl)
 
-	with open("resizing", "wb") as file:
-		for chunk in x.iter_content(1024):
-			file.write(chunk)
+		with open("resizing", "wb") as file:
+			for chunk in x.iter_content(1024):
+				file.write(chunk)
 
-	image = upload_from_file("resizing", "resizing", (100, 100))
-	if image == None:
-		send_notification(1, u, "fail!")
-		u.resized = True
-		g.db.add(u)
-	else:
-		u.profileurl = image
-		u.resized = True
-		g.db.add(u)
-	print(f"2 {u.profileurl}")
-
+		image = upload_from_file("resizing", "resizing", (100, 100))
+		if image == None:
+			send_notification(1, u, "fail!")
+			u.resized = True
+			g.db.add(u)
+		else:
+			u.profileurl = image
+			u.resized = True
+			g.db.add(u)
+		print(f"2 {u.profileurl}")
 
 @app.route("/banaward/post/<post_id>")
 @auth_required
@@ -94,7 +94,7 @@ def submit_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	
 	b = get_guild("general")
-
+	
 	return render_template("submit.html",
 						   v=v,
 						   b=b
@@ -271,8 +271,6 @@ def edit_post(pid, v):
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
 	for x in notify_users: send_notification(1046, x, f"@{v.username} has mentioned you: https://rdrama.net{p.permalink}")
-
-	resize()
 
 	return redirect(p.permalink)
 
@@ -1045,8 +1043,6 @@ def submit_post(v):
 	g.db.add(n)
 	g.db.commit()
 	send_message(f"https://rdrama.net{new_post.permalink}")
-
-	resize()
 	
 	return {"html": lambda: redirect(new_post.permalink),
 			"api": lambda: jsonify(new_post.json)
@@ -1071,8 +1067,6 @@ def delete_post_pid(pid, v):
 	g.db.add(post)
 
 	cache.delete_memoized(frontlist)
-
-	resize()
 
 	return "", 204
 

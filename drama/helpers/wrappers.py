@@ -271,14 +271,11 @@ def validate_formkey(f):
 
 		if not request.path.startswith("/api/v1"):
 
-			submitted_key = request.values.get("formkey", "none")
+			submitted_key = request.values.get("formkey", None)
 
-			if not submitted_key:
+			if not submitted_key: abort(401)
 
-				abort(401)
-
-			elif not v.validate_formkey(submitted_key):
-				abort(401)
+			elif not v.validate_formkey(submitted_key): abort(401)
 
 		return f(*args, v=v, **kwargs)
 

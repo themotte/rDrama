@@ -52,9 +52,7 @@ app.config['SQLALCHEMY_READ_URIS'] = [
 ]
 
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
-app.config["SERVER_NAME"] = environ.get(
-	"domain", environ.get(
-		"SERVER_NAME", "")).strip()
+app.config["SERVER_NAME"] = environ.get("domain", environ.get("SERVER_NAME", "")).strip()
 
 app.config["SHORT_DOMAIN"]=environ.get("SHORT_DOMAIN","").strip()
 app.config["SESSION_COOKIE_NAME"] = "session_drama"
@@ -177,7 +175,8 @@ def retry(f):
 			return f(self, *args, **kwargs)
 		except OperationalError as e:
 			#self.session.rollback()
-			raise(DatabaseOverload)
+			#raise(DatabaseOverload)
+			print("sex")
 		except:
 			self.session.rollback()
 			return f(self, *args, **kwargs)

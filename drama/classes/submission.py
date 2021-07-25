@@ -421,7 +421,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		elif self.url:
 			if v and not v.oldreddit: return self.url.replace("old.reddit.com", "reddit.com")
 			if self.url: return self.url
-			return ""
+		return ""
  
 	@property
 	def body(self):

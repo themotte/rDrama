@@ -17,9 +17,10 @@ def api_flag_post(pid, v):
 
 		if existing:
 			return "", 409
-
+		reason = request.form.get("reason", "")[:100].strip()
 		flag = Flag(post_id=post.id,
 					user_id=v.id,
+					reason=reason,
 					created_utc=int(time.time())
 					)
 					
@@ -43,8 +44,10 @@ def api_flag_comment(cid, v):
 		if existing:
 			return "", 409
 
+		reason = request.form.get("reason", "")[:100].strip()
 		flag = CommentFlag(comment_id=comment.id,
 						   user_id=v.id,
+						   reason=reason,
 						   created_utc=int(time.time())
 						   )
 

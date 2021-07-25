@@ -40,7 +40,7 @@ def notifications(v):
 	for c in comments:
 		c._is_blocked = False
 		c._is_blocking = False
-		if c.parent_submission:
+		if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
 			while c.parent_comment:
 				parent = c.parent_comment
 				if c not in parent.replies2:
@@ -50,6 +50,8 @@ def notifications(v):
 			if c not in listing:
 				listing.append(c)
 				c.replies = c.replies2
+		elif c.parent_submission and c not in listing:
+			listing.append(c)
 		else:
 			if c.parent_comment:
 				while c.level > 1:
@@ -71,7 +73,6 @@ def notifications(v):
 def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words='', **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False,stickied=False,private=False).filter(Submission.deleted_utc == 0)
-
 	if v and v.admin_level == 0:
 		blocking = g.db.query(
 			UserBlock.target_id).filter_by(
@@ -144,7 +145,7 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 
 	if page == 1: posts = g.db.query(Submission).filter_by(stickied=True).all() + posts
 
-	words = [' captainmeta4 ', ' cm4 ', ' dissident001 ', ' ladine ']
+	words = ['captainmeta4', ' cm4 ', 'dissident001', 'ladine']
 
 	for post in posts:
 		if post.author and post.author.admin_level == 0:
