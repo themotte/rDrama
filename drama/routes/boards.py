@@ -224,7 +224,7 @@ def board_about_mods(v):
 
 	board = g.db.query(Board).first()
 
-	me = (v.admin_level == 6)
+	me = board.has_mod(v)
 
 	return {
 		"html":lambda:render_template("mods.html", v=v, b=board, me=me),
