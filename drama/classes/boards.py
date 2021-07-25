@@ -22,7 +22,6 @@ class Board(Base, Stndrd, Age_times):
 	is_banned=Column(Boolean, default=False)
 	disablesignups=Column(Boolean, default=False)
 	has_banner=Column(Boolean, default=False)
-	has_profile=Column(Boolean, default=False)
 	creator_id=Column(Integer, ForeignKey("users.id"))
 	ban_reason=Column(String(256), default=None)
 	color=Column(String(8), default="FF66AC")

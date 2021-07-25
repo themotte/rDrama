@@ -22,29 +22,6 @@ from PIL import Image as PILimage
 with open("snappy.txt", "r") as f:
 	snappyquotes = f.read().split("{[para]}")
 
-@app.route("/resize")
-def resize():
-	u = g.db.query(User).filter(User.profileurl != None, User.resized != True).first()
-	if u:
-		print(u.username)
-		print(f"1 {u.profileurl}")
-		x = requests.get(u.profileurl)
-
-		with open("resizing", "wb") as file:
-			for chunk in x.iter_content(1024):
-				file.write(chunk)
-
-		image = upload_from_file("resizing", "resizing", (100, 100))
-		if image == None:
-			send_notification(1, u, "fail!")
-			u.resized = True
-			g.db.add(u)
-		else:
-			u.profileurl = image
-			u.resized = True
-			g.db.add(u)
-		print(f"2 {u.profileurl}")
-
 @app.route("/banaward/post/<post_id>")
 @auth_required
 def postbanaward(post_id, v):

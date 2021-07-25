@@ -40,7 +40,6 @@ class User(Base, Stndrd, Age_times):
 	created_utc = Column(Integer, default=0)
 	suicide_utc = Column(Integer, default=0)
 	admin_level = Column(Integer, default=0)
-	resized = Column(Boolean, default=True)
 	agendaposter = Column(Boolean, default=False)
 	agendaposter_expires_utc = Column(Integer, default=0)
 	changelogsub = Column(Boolean, default=False)
@@ -85,7 +84,6 @@ class User(Base, Stndrd, Age_times):
 	login_nonce = Column(Integer, default=0)
 	title_id = Column(Integer, ForeignKey("titles.id"), default=None)
 	title = relationship("Title", lazy="joined")
-	has_profile = Column(Boolean, default=False)
 	has_banner = Column(Boolean, default=False)
 	reserved = Column(String(256), default=None)
 	is_nsfw = Column(Boolean, default=False)
@@ -568,7 +566,6 @@ class User(Base, Stndrd, Age_times):
 		imageurl = upload_file(name=f"profile.gif", file=file, resize=(100, 100))
 		if imageurl:
 			self.profileurl = imageurl
-			self.has_profile = True
 			self.profile_upload_ip = request.remote_addr
 			self.profile_set_utc = int(time.time())
 			self.profile_upload_region = request.headers.get("cf-ipcountry")
@@ -590,7 +587,7 @@ class User(Base, Stndrd, Age_times):
 
 	def del_profile(self):
 
-		self.has_profile = False
+		self.profileurl = None
 		g.db.add(self)
 
 	def del_banner(self):
@@ -615,7 +612,7 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	def profile_url(self):
-		if self.has_profile and self.profileurl:
+		if self.profileurl:
 			return self.profileurl
 		else:
 			return self.defaultpicture()
@@ -753,7 +750,7 @@ class User(Base, Stndrd, Age_times):
 			self.unban_utc = 0
 			if self.has_banner:
 				self.del_banner()
-			if self.has_profile:
+			if self.profileurl:
 				self.del_profile()
 
 			delete_role(self, "linked")
