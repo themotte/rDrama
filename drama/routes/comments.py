@@ -384,6 +384,8 @@ def api_comment(v):
 	if v.shadowbanned: shadowbanned = True
 	else: shadowbanned = False
 	# create comment
+	parent_id = parent_fullname.split("_")[1]
+	post = get_post(parent_id)
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
 				parent_fullname=parent.fullname,
