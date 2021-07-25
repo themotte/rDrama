@@ -94,9 +94,6 @@ class User(Base, Stndrd, Age_times):
 	is_private = Column(Boolean, default=False)
 	read_announcement_utc = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
-
-	deleted_utc = Column(Boolean, default=False)
-	delete_reason = Column(String(500), default='')
 	filter_nsfw = Column(Boolean, default=False)
 	stored_subscriber_count = Column(Integer, default=0)
 	defaultsortingcomments = Column(String, default="top")
