@@ -883,7 +883,6 @@ def submit_post(v):
 		domain_ref=domain_obj.id if domain_obj else None,
 		over_18=bool(request.form.get("over_18","")),
 		repost_id=repost.id if repost else None,
-		is_offensive=False,
 		app_id=v.client.application.id if v.client else None,
 		creation_region=request.headers.get("cf-ipcountry"),
 		is_bot = request.headers.get("X-User-Type","").lower()=="bot"
