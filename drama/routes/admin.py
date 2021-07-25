@@ -24,11 +24,24 @@ import matplotlib.pyplot as plt
 from .front import frontlist
 from drama.__main__ import app, cache
 
-@app.route("/dramacoins", methods=["GET"])
+@app.route("/dramacoins/posts", methods=["GET"])
 @admin_level_required(6)
-def sex(v):
-	for p in g.db.query(Submission).options(lazyload('*')).all() + g.db.query(Comment).options(lazyload('*')).all():
+def dp(v):
+	for p in g.db.query(Submission).options(lazyload('*')).all():
+		print(p.id)
 		if p.author:
+			print(p.author.username)
+			p.author.dramacoins += p.upvotes + p.downvotes - 1
+			g.db.add(p.author)
+	return "sex"
+
+@app.route("/dramacoins/comments", methods=["GET"])
+@admin_level_required(6)
+def dc(v):
+	for p in g.db.query(Comment).options(lazyload('*')).all():
+		print(p.id)
+		if p.author:
+			print(p.author.username)
 			p.author.dramacoins += p.upvotes + p.downvotes - 1
 			g.db.add(p.author)
 	return "sex"
