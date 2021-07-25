@@ -47,37 +47,6 @@ def js_str_escape(s):
 	return s
 
 
-@app.template_filter("is_mod")
-@cache.memoize(60)
-def jinja_is_mod(uid, bid):
-
-	return bool(get_mod(uid, bid))
-
-@app.template_filter("coin_goal")
-@cache.cached(timeout=600, key_prefix="premium_coin_goal")
-def coin_goal(x):
-	
-	now = time.gmtime()
-	midnight_month_start = time.struct_time((now.tm_year,
-											  now.tm_mon,
-											  1,
-											  0,
-											  0,
-											  0,
-											  now.tm_wday,
-											  now.tm_yday,
-											  0)
-											 )
-	cutoff = calendar.timegm(midnight_month_start)
-	
-	coins=g.db.query(func.sum(PayPalTxn.coin_count)).filter(
-		PayPalTxn.created_utc>cutoff,
-		PayPalTxn.status==3).all()[0][0] or 0
-	
-	
-	return int(100*coins/1000)
-
-
 @app.template_filter("app_config")
 def app_config(x):
 	return app.config.get(x)
