@@ -277,7 +277,7 @@
 						<div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
 							{% if not (v and v.id==c.author_id) %}
 								{% if v %}
-								<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.base36id}}','{{c.author.username if not c.author.deleted_utc > 0 else '[deleted_utc]'}}',)"><i class="fas fa-flag fa-fw"></i>Report</a>
+								<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.base36id}}','{{c.author.username}}',)"><i class="fas fa-flag fa-fw"></i>Report</a>
 								{% else %}
 								<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick=""><i class="fas fa-flag fa-fw"></i>Flag</a>
 								{% endif %}
@@ -471,7 +471,7 @@
 					<li class="list-group-item"><a href="{{c.permalink}}?context=5#context"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-dna"></i>Context</a></li>
 
 					{% if not (v and v.id==c.author_id) %}
-					<li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.base36id}}','{{c.author.username if not c.author.deleted_utc > 0 else '[deleted_utc]'}}')" class="d-block"><i class="fas fa-flag"></i>Report</a></li>
+					<li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.base36id}}','{{c.author.username}}')" class="d-block"><i class="fas fa-flag"></i>Report</a></li>
 					{% endif %}
 
 					{% if v and c.parent_submission and c.author_id==v.id %}
@@ -521,7 +521,7 @@
 						{% endif %}
 					{% endif %}
 					{% if v and c.post and v.admin_level == 6 %}
-						{% if c.author_id != v.id and not c.author.deleted_utc > 0 %}
+						{% if c.author_id != v.id %}
 								{% if c.author.is_banned %}
 								<li class="list-group-item"><a class="d-block text-danger" id="unexile-comment2-{{c.base36id}}" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Unban user</a></li>
 								{% else %}
