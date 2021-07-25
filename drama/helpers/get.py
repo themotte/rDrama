@@ -345,7 +345,7 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 			Comment,
 		).filter(Comment.id == i).first()
 
-		if not q and not graceful:
+		if not x and not graceful:
 			abort(404)
 
 
