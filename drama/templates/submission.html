@@ -548,7 +548,7 @@
 			</div>
 		</div>
 
-	{% if not p.is_banned and is_allowed_to_comment %}
+	{% if not p.is_banned %}
 	<div id="comment-form-space-{{p.fullname}}" class="comment-write mb-3">
 		<form id="reply-to-{{p.fullname}}" class="input-group" action="/api/comment" method="post">
 			<input type="hidden" name="formkey" value="{{v.formkey}}">
