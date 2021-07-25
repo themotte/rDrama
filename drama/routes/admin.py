@@ -38,16 +38,12 @@ def dp(v):
 @app.route("/dramacoins/comments", methods=["GET"])
 @admin_level_required(6)
 def dc(v):
-	count = g.db.query(Comment).count()
-	print(count)
-	count = g.db.query(Comment).filter(Comment.parent_submission != None).count()
-	print(count)
-	#for p in g.db.query(Comment).options(lazyload('*')).filter_by().all():
-		#print(p.id)
-		#if p.author:
-			#print(p.author.username)
-			#p.author.dramacoins += p.upvotes + p.downvotes - 1
-			#g.db.add(p.author)
+	for p in g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission != None).all():
+		print(p.id)
+		if p.author:
+			print(p.author.username)
+			p.author.dramacoins += p.upvotes + p.downvotes - 1
+			g.db.add(p.author)
 	return "sex"
 
 @app.route("/admin/shadowbanned", methods=["GET"])
