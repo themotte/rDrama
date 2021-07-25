@@ -726,33 +726,3 @@ def get_from_fullname(fullname, v=None, graceful=False):
 		return get_comment(b36, v=v, graceful=graceful)
 	elif kind == 't4':
 		return get_board(b36, graceful=graceful)
-
-def get_txn(paypal_id):
-
-	txn= g.db.query(PayPalTxn).filter_by(paypal_id=paypal_id).first()
-
-	if not txn:
-		abort(404)
-
-	return txn
-
-def get_txid(txid):
-
-	txn= g.db.query(PayPalTxn).filter_by(id=base36decode(txid)).first()
-
-	if not txn:
-		abort(404)
-	elif txn.status==1:
-		abort(404)
-
-	return txn
-
-
-def get_promocode(code):
-
-	code = code.replace('\\', '')
-	code = code.replace("_", "\_")
-
-	code = g.db.query(PromoCode).filter(PromoCode.code.ilike(code)).first()
-
-	return code
