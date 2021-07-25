@@ -742,6 +742,7 @@ def ban_post(post_id, v):
 	post.is_pinned = False
 
 	ban_reason=request.form.get("reason", "")
+	ban_reason = ban_reason.replace("\n", "\n\n")
 	with CustomRenderer() as renderer:
 		ban_reason = renderer.render(mistletoe.Document(ban_reason))
 	ban_reason = sanitize(ban_reason, linkgen=True)
