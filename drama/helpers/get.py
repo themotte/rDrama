@@ -392,9 +392,6 @@ def get_comments(cids, v=None, sort="new",
 		output = [x[0] for x in query]
 		for i in range(len(output)):
 			output[i]._voted = query[i][1].vote_type if query[i][1] else 0
-			output[i]._is_guildmaster = query[i][2]
-			output[i]._is_exiled_for = query[i][3]
-
 
 
 	else:
@@ -405,9 +402,6 @@ def get_comments(cids, v=None, sort="new",
 		).all()
 
 		output=[x[0] for x in query]
-		for i in range(len(output)):
-			output[i]._is_exiled_for=query[i][1]
-
 
 	output = sorted(output, key=lambda x: cids.index(x.id))
 
