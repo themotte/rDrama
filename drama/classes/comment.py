@@ -266,7 +266,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'score': self.score_fuzzed,
 			'upvotes': self.upvotes_fuzzed,
 			'downvotes': self.downvotes_fuzzed,
-			'award_count': self.award_count,
+			#'award_count': self.award_count,
 			'is_bot': self.is_bot
 			}
 
@@ -395,9 +395,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	def flag_count(self):
 		return len(self.flags)
 
-	@property
-	def award_count(self):
-		return len(self.awards)
+	#@property
+	#def award_count(self):
+		#return len(self.awards)
 
 	def collapse_for_user(self, v):
 
