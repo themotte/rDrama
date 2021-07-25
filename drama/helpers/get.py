@@ -404,7 +404,7 @@ def get_comments(cids, v=None, load_parent=False, **kwargs):
 			Comment.id.in_(cids)
 		).all()
 
-		output=[x[0] for x in query]
+		output=[x for x in query]
 
 	output = sorted(output, key=lambda x: cids.index(x.id))
 
