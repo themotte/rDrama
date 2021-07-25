@@ -346,10 +346,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		return x
 
 	@property
-	def title(self):
-		return self.__dict__.get("_title", self.author.title)
-
-	@property
 	def is_blocking(self):
 		return self.__dict__.get('_is_blocking', 0)
 
