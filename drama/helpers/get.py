@@ -337,15 +337,12 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 		x._is_blocked = block and block.target_id == v.id
 
 	else:
-		q = g.db.query(
+		x = g.db.query(
 			Comment,
 		).filter(Comment.id == i).first()
 
 		if not q and not graceful:
 			abort(404)
-
-		x=q[0]
-		x._is_exiled_for=q[1]
 
 
 	return x
