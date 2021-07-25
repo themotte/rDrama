@@ -46,6 +46,7 @@ def get_user(username, v=None, graceful=False):
 
 def get_account(base36id, v=None, graceful=False):
 
+
 	if isinstance(base36id, str): id = base36decode(base36id)
 	else: id = base36id
 
@@ -120,9 +121,7 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 
 	else:
 		items = g.db.query(
-			Submission,
-		).options(
-			joinedload(Submission.author).joinedload(User.title)
+			Submission
 		).filter(Submission.id == i).first()
 
 		if not items and not graceful:
@@ -133,7 +132,7 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 	return x
 
 
-def get_posts(pids, sort="hot", v=None):
+def get_posts(pids, v=None):
 
 	if not pids:
 		return []
@@ -166,20 +165,18 @@ def get_posts(pids, sort="hot", v=None):
 			blocked, 
 			blocked.c.user_id == Submission.author_id, 
 			isouter=True
-		)
+		).all()
 
 		output = [p[0] for p in query]
 		for i in range(len(output)):
 			output[i]._voted = query[i][1] or 0
 			output[i]._is_blocking = query[i][2] or 0
 			output[i]._is_blocked = query[i][3] or 0
-
 	else:
 		output = g.db.query(
-			Submission
+			Submission,
 		).filter(Submission.id.in_(pids)
-		).order_by(Submission.id.desc()).all()
-
+		).all()
 
 	return sorted(output, key=lambda x: pids.index(x.id))
 
@@ -200,8 +197,6 @@ def get_post_with_comments(pid, sort="top", v=None):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).options(
-			joinedload(Comment.author)
 		)
 		if v.admin_level >=4:
 			comms=comms.options(joinedload(Comment.oauth_app))
@@ -252,8 +247,6 @@ def get_post_with_comments(pid, sort="top", v=None):
 	else:
 		comms = g.db.query(
 			Comment
-		).options(
-			joinedload(Comment.author).joinedload(User.title)
 		).filter(
 			Comment.parent_submission == post.id
 		)
@@ -300,13 +293,6 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 	else:
 		i = cid
 
-	exile = g.db.query(ModAction
-		 ).options(
-		 lazyload('*')
-		 ).filter_by(
-		 kind="exile_user"
-		 ).subquery()
-
 	if v:
 		blocking = v.blocking.subquery()
 		blocked = v.blocked.subquery()
@@ -314,20 +300,9 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 			CommentVote.user_id == v.id,
 			CommentVote.comment_id == i).subquery()
 
-		mod=g.db.query(ModRelationship
-			).filter_by(
-			user_id=v.id,
-			accepted=True
-			).subquery()
-
-
 		items = g.db.query(
 			Comment, 
 			vt.c.vote_type,
-			aliased(ModRelationship, alias=mod),
-			aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Comment.author).joinedload(User.title)
 		)
 
 		if v.admin_level >=4:
@@ -342,14 +317,6 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 		).join(
 			Comment.post,
 			isouter=True
-		).join(
-			mod,
-			mod.c.board_id==Submission.board_id,
-			isouter=True
-		).join(
-			exile,
-			and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-			isouter=True
 		).first()
 
 		if not items and not graceful:
@@ -357,8 +324,6 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 
 		x = items[0]
 		x._voted = items[1] or 0
-		x._is_guildmaster=items[2] or 0
-		x._is_exiled_for=items[3] or 0
 
 		block = g.db.query(UserBlock).filter(
 			or_(
@@ -376,31 +341,21 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 		x._is_blocked = block and block.target_id == v.id
 
 	else:
-		q = g.db.query(
+		x = g.db.query(
 			Comment,
-			aliased(ModAction, alias=exile)
-		).options(
-			joinedload(Comment.author).joinedload(User.title)
-		).join(
-			exile,
-			and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
-			isouter=True
 		).filter(Comment.id == i).first()
 
-		if not q and not graceful:
+		if not x and not graceful:
 			abort(404)
-
-		x=q[0]
-		x._is_exiled_for=q[1]
 
 
 	return x
 
 
-def get_comments(cids, v=None, sort="new",
-				 load_parent=False, **kwargs):
+def get_comments(cids, v=None, load_parent=False, **kwargs):
 
-	if not cids: return []
+	if not cids:
+		return []
 
 	cids=tuple(cids)
 
@@ -434,17 +389,26 @@ def get_comments(cids, v=None, sort="new",
 			isouter=True
 			).filter(
 			Comment.id.in_(cids)
-			).order_by(Comment.id.desc()).all()
+			)
+
 
 		output = [x[0] for x in query]
-		for i in range(len(output)): output[i]._voted = query[i][1].vote_type if query[i][1] else 0
+		for i in range(len(output)):
+			output[i]._voted = query[i][1].vote_type if query[i][1] else 0
 
 
 	else:
-		output = g.db.query(Comment).options().filter(Comment.id.in_(cids)).order_by(Comment.id.desc()).all()
+		query = g.db.query(
+			Comment,
+		).filter(
+			Comment.id.in_(cids)
+		).all()
 
+		output=[x for x in query]
 
-	return sorted(output, key=lambda x: cids.index(x.id))
+	output = sorted(output, key=lambda x: cids.index(x.id))
+
+	return output
 
 
 def get_board(bid, graceful=False):
@@ -484,27 +448,6 @@ def get_domain(s):
 	return doms[0]
 
 
-def get_title(x):
-
-	title = g.db.query(Title).filter_by(id=x).first()
-
-	if not title:
-		abort(400)
-
-	else:
-		return title
-
-
-def get_mod(uid, bid):
-
-	mod = g.db.query(ModRelationship).filter_by(board_id=bid,
-												user_id=uid,
-												accepted=True,
-												invite_rescinded=False).first()
-
-	return mod
-
-
 def get_application(client_id, graceful=False):
 
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
@@ -542,56 +485,3 @@ def get_from_permalink(link, v=None):
 
 	else:
 		return get_post(int(post_id), v=v)
-
-
-def get_from_fullname(fullname, v=None, graceful=False):
-
-	parts = fullname.split('_')
-
-	if len(parts) != 2:
-		if graceful:
-			return None
-		else:
-			abort(400)
-
-	kind = parts[0]
-	b36 = parts[1]
-
-	if kind == 't1':
-		return get_account(b36, v=v, graceful=graceful)
-	elif kind == 't2':
-		return get_post(b36, v=v, graceful=graceful)
-	elif kind == 't3':
-		return get_comment(b36, v=v, graceful=graceful)
-	elif kind == 't4':
-		return get_board(b36, graceful=graceful)
-
-def get_txn(paypal_id):
-
-	txn= g.db.query(PayPalTxn).filter_by(paypal_id=paypal_id).first()
-
-	if not txn:
-		abort(404)
-
-	return txn
-
-def get_txid(txid):
-
-	txn= g.db.query(PayPalTxn).filter_by(id=base36decode(txid)).first()
-
-	if not txn:
-		abort(404)
-	elif txn.status==1:
-		abort(404)
-
-	return txn
-
-
-def get_promocode(code):
-
-	code = code.replace('\\', '')
-	code = code.replace("_", "\_")
-
-	code = g.db.query(PromoCode).filter(PromoCode.code.ilike(code)).first()
-
-	return code

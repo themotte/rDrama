@@ -38,7 +38,6 @@ class User(Base, Stndrd, Age_times):
 	passhash = deferred(Column(String, default=None))
 	banawards = Column(Integer, default=0)
 	created_utc = Column(Integer, default=0)
-	suicide_utc = Column(Integer, default=0)
 	admin_level = Column(Integer, default=0)
 	resized = Column(Boolean, default=True)
 	agendaposter = Column(Boolean, default=False)
@@ -89,7 +88,6 @@ class User(Base, Stndrd, Age_times):
 	has_banner = Column(Boolean, default=False)
 	reserved = Column(String(256), default=None)
 	is_nsfw = Column(Boolean, default=False)
-	tos_agreed_utc = Column(Integer, default=0)
 	profile_nonce = Column(Integer, default=0)
 	banner_nonce = Column(Integer, default=0)
 	last_siege_utc = Column(Integer, default=0)
@@ -155,11 +153,6 @@ class User(Base, Stndrd, Age_times):
 		lazy="dynamic",
 		primaryjoin="User.id==SaveRelationship.user_id")
 
-	awards = relationship(
-		"AwardRelationship",
-		primaryjoin="User.id==AwardRelationship.user_id"
-	)
-
 	# properties defined as SQL server-side functions
 	referral_count = deferred(Column(Integer, server_default=FetchedValue()))
 	follower_count = deferred(Column(Integer, server_default=FetchedValue()))
@@ -200,11 +193,6 @@ class User(Base, Stndrd, Age_times):
 		return g.db.query(UserBlock).filter(
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
 				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
-
-	def has_blocked_guild(self, board):
-
-		return g.db.query(BoardBlock).filter_by(
-			user_id=self.id, board_id=board.id).first()
 
 	def validate_2fa(self, token):
 
@@ -388,7 +376,8 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def formkey(self):
 
-		if "session_id" not in session: session["session_id"] = token_hex(16)
+		if "session_id" not in session:
+			session["session_id"] = token_hex(16)
 
 		msg = f"{session['session_id']}+{self.id}+{self.login_nonce}"
 
@@ -623,9 +612,6 @@ class User(Base, Stndrd, Age_times):
 		pic = random.randint(1, 50)
 		return f"/assets/images/defaultpictures/{pic}.png"
 
-	def has_award(self, kind):
-		return bool(len([x for x in self.awards if x.kind == kind]))
-
 	@property
 	def profile_url(self):
 		if self.has_profile and self.profileurl:
@@ -784,8 +770,8 @@ class User(Base, Stndrd, Age_times):
 
 		# Takes care of all functions needed for account reinstatement.
 
-		self.is_banned = 0
-		self.unban_utc = 0
+		self.is_banned = None
+		self.unban_utc = None
 
 		g.db.add(self)
 
@@ -884,6 +870,34 @@ class User(Base, Stndrd, Age_times):
 		comments = comments.order_by(Comment.created_utc.desc())
 
 		return [x[0] for x in comments.offset(25 * (page - 1)).limit(26).all()]
+
+	def guild_rep(self, guild, recent=0):
+
+		posts = g.db.query(Submission.score).filter_by(
+			is_banned=False,
+			original_board_id=guild.id)
+
+		if recent:
+			cutoff = int(time.time()) - 60 * 60 * 24 * recent
+			posts = posts.filter(Submission.created_utc > cutoff)
+
+		posts = posts.all()
+
+		post_rep = sum([x[0] for x in posts]) - len(list(sum([x[0] for x in posts])))
+
+		comments = g.db.query(Comment.score).filter_by(
+			is_banned=False,
+			original_board_id=guild.id)
+
+		if recent:
+			cutoff = int(time.time()) - 60 * 60 * 24 * recent
+			comments = comments.filter(Comment.created_utc > cutoff)
+
+		comments = comments.all()
+
+		comment_rep = sum([x[0] for x in comments]) - len(list(sum([x[0] for x in comments])))
+
+		return int(post_rep + comment_rep)
 
 	@property
 	def has_premium(self):

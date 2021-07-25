@@ -117,7 +117,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	comment_count = Column(Integer, server_default=FetchedValue())
 	score = deferred(Column(Float, server_default=FetchedValue()))
 
-	awards = relationship("AwardRelationship", lazy="joined")
+	#awards = relationship("AwardRelationship", lazy="joined")
 
 	rank_hot = deferred(Column(Float, server_default=FetchedValue()))
 	rank_fiery = deferred(Column(Float, server_default=FetchedValue()))
@@ -330,7 +330,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'score': self.score_fuzzed,
 				'upvotes': self.upvotes_fuzzed,
 				'downvotes': self.downvotes_fuzzed,
-				'award_count': self.award_count,
+				#'award_count': self.award_count,
 				'is_offensive': self.is_offensive,
 				'meta_title': self.meta_title,
 				'meta_description': self.meta_description,
@@ -498,23 +498,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		self.submission_aux.meta_description=x
 		g.db.add(self.submission_aux)
 	
-
-	def is_guildmaster(self, perm=None):
-		mod=self.__dict__.get('_is_guildmaster', False)
-
-		if not mod:
-			return False
-		elif not perm:
-			return True
-		else:
-			return mod.perm_full or mod.__dict__[f"perm_{perm}"]
-
-		return output
-
-	@property
-	def is_blocking_guild(self):
-		return self.__dict__.get('_is_blocking_guild', False)
-
 	@property
 	def is_blocked(self):
 		return self.__dict__.get('_is_blocked', False)
@@ -522,10 +505,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	def is_blocking(self):
 		return self.__dict__.get('_is_blocking', False)
-
-	@property
-	def is_subscribed(self):
-		return self.__dict__.get('_is_subscribed', False)
 
 	@property
 	def is_public(self):
@@ -539,9 +518,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def report_count(self):
 		return len(self.reports)
 
-	@property
-	def award_count(self):
-		return len(self.awards)
+	#@property
+	#def award_count(self):
+		#return len(self.awards)
 
 	@property
 	def embed_template(self):

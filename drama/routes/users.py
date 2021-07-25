@@ -317,7 +317,7 @@ def u_username(username, v=None):
 			for p in sticky:
 				ids = [p.id] + ids
 
-	listing = get_posts(ids, v=v, sort="new")
+	listing = get_posts(ids, v=v)
 
 	if u.unban_utc:
 		unban = datetime.fromtimestamp(u.unban_utc).strftime('%c')
@@ -516,7 +516,7 @@ def saved_posts(v, username):
 
 	ids=ids[0:25]
 
-	listing = get_posts(ids, v=v, sort="new")
+	listing = get_posts(ids, v=v)
 
 	return {'html': lambda: render_template("userpage.html",
 											u=v,

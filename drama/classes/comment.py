@@ -82,7 +82,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	parent_comment = relationship("Comment", remote_side=[id])
 	child_comments = relationship("Comment", remote_side=[parent_comment_id])
 
-	awards = relationship("AwardRelationship", lazy="joined")
+	#awards = relationship("AwardRelationship", lazy="joined")
 
 	# These are virtual properties handled as postgres functions server-side
 	# There is no difference to SQLAlchemy, but they cannot be written to
@@ -266,7 +266,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'score': self.score_fuzzed,
 			'upvotes': self.upvotes_fuzzed,
 			'downvotes': self.downvotes_fuzzed,
-			'award_count': self.award_count,
+			#'award_count': self.award_count,
 			'is_bot': self.is_bot
 			}
 
@@ -346,10 +346,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		return x
 
 	@property
-	def title(self):
-		return self.__dict__.get("_title", self.author.title)
-
-	@property
 	def is_blocking(self):
 		return self.__dict__.get('_is_blocking', 0)
 
@@ -395,9 +391,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	def flag_count(self):
 		return len(self.flags)
 
-	@property
-	def award_count(self):
-		return len(self.awards)
+	#@property
+	#def award_count(self):
+		#return len(self.awards)
 
 	def collapse_for_user(self, v):
 
@@ -457,18 +453,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		data["creation_region"] = self.creation_region
 	
 		return data
-
-	def is_guildmaster(self, perm=None):
-		mod=self.__dict__.get('_is_guildmaster', False)
-
-		if not mod:
-			return False
-		elif not perm:
-			return True
-		else:
-			return mod.perm_full or mod.__dict__[f"perm_{perm}"]
-
-		return output
 
 	@property
 	def is_exiled_for(self):

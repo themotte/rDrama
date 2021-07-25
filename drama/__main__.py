@@ -260,9 +260,6 @@ def before_request():
 
 	g.db = db_session()
 
-	if g.db.query(IP).filter_by(addr=request.remote_addr).first():
-		abort(503)
-
 	g.timestamp = int(time.time())
 
 	session.permanent = True
