@@ -61,7 +61,7 @@ def login_post():
 	if "@" in username:
 		account = g.db.query(User).filter(
 			User.email.ilike(username),
-			User.is_deleted == False).first()
+			User.deleted_utc == False).first()
 	else:
 		account = get_user(username, graceful=True)
 
@@ -69,7 +69,7 @@ def login_post():
 		time.sleep(random.uniform(0, 2))
 		return render_template("login.html", failed=True, i=random_image())
 
-	if account.is_deleted:
+	if account.deleted_utc:
 		time.sleep(random.uniform(0, 2))
 		return render_template("login.html", failed=True, i=random_image())
 
@@ -161,11 +161,9 @@ def logout(v):
 @no_cors
 @auth_desired
 def sign_up_get(v):
-	board = g.db.query(Board).filter_by(id=1).first()
-	if board.disablesignups: return "Signups are disable for the time being.", 403
+	#if disablesignups: return "Signups are disable for the time being.", 403
 
-	if v:
-		return redirect("/")
+	if v: return redirect("/")
 
 	agent = request.headers.get("User-Agent", None)
 	if not agent:
@@ -219,8 +217,7 @@ def sign_up_get(v):
 @no_cors
 @auth_desired
 def sign_up_post(v):
-	board = g.db.query(Board).filter_by(id=1).first()
-	if board.disablesignups: return "Signups are disable for the time being.", 403
+	#if disablesignups: return "Signups are disable for the time being.", 403
 
 	if v:
 		abort(403)
@@ -421,7 +418,7 @@ def post_forgot():
 	user = g.db.query(User).filter(
 		User.username.ilike(username),
 		User.email.ilike(email),
-		User.is_deleted == False).first()
+		User.deleted_utc == False).first()
 
 	if user:
 		# generate url

@@ -37,6 +37,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		uselist=False,
 		innerjoin=True,
 		primaryjoin="Submission.id==SubmissionAux.id")
+	gm_distinguish = Column(Integer, default=0)
 	author_id = Column(BigInteger, ForeignKey("users.id"))
 	repost_id = Column(BigInteger, ForeignKey("submissions.id"), default=0)
 	edited_utc = Column(BigInteger, default=0)
@@ -48,8 +49,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	banaward = Column(String, default=None)
 	purged_utc = Column(Integer, default=0)
 	distinguish_level = Column(Integer, default=0)
-	gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
-	distinguished_board = relationship("Board", lazy="joined", primaryjoin="Board.id==Submission.gm_distinguish")
 	created_str = Column(String(255), default=None)
 	stickied = Column(Boolean, default=False)
 	is_pinned = Column(Boolean, default=False)
@@ -64,11 +63,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	flags = relationship("Flag", backref="submission")
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	approved_utc = Column(Integer, default=0)
-	board_id = Column(Integer, ForeignKey("boards.id"), default=None)
-	original_board_id = Column(Integer, ForeignKey("boards.id"), default=None)
 	over_18 = Column(Boolean, default=False)
-	original_board = relationship(
-		"Board", primaryjoin="Board.id==Submission.original_board_id")
 	creation_ip = Column(String(64), default="")
 	mod_approved = Column(Integer, default=None)
 	accepted_utc = Column(Integer, default=0)
@@ -78,12 +73,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	score_top = Column(Float, default=1)
 	score_activity = Column(Float, default=0)
 	is_offensive = Column(Boolean, default=False)
-	is_nsfl = Column(Boolean, default=False)
-	board = relationship(
-		"Board",
-		lazy="joined",
-		innerjoin=True,
-		primaryjoin="Submission.board_id==Board.id")
 	author = relationship(
 		"User",
 		lazy="joined",
@@ -138,16 +127,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	def __repr__(self):
 		return f"<Submission(id={self.id})>"
-
-	@property
-	@lazy
-	def board_base36id(self):
-		return base36encode(self.board_id)
-
-	@property
-	@lazy
-	def is_deleted(self):
-		return bool(self.deleted_utc)
 		
 	@property
 	@lazy
@@ -215,17 +194,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		if "replies" not in self.__dict__ and "_preloaded_comments" in self.__dict__:
 			self.tree_comments(comment=comment)
 
-		# return template
-		is_allowed_to_comment = self.board.can_comment(
-			v) and not self.is_archived
-
 		return render_template(template,
 							   v=v,
 							   p=self,
 							   sort=sort,
 							   linked_comment=comment,
 							   comment_info=comment_info,
-							   is_allowed_to_comment=is_allowed_to_comment,
 							   render_replies=True,
 							   )
 
@@ -288,33 +262,18 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		else:
 			return None
 
-	def visibility_reason(self, v):
-
-
-		if not v or self.author_id == v.id:
-			return "this is your content."
-		elif self.is_pinned:
-			return "a guildmaster has pinned it."
-		elif self.board.has_mod(v):
-			return f"you are a guildmaster of +{self.board.name}."
-		elif self.board.has_contributor(v):
-			return f"you are an approved contributor in +{self.board.name}."
-		elif v.admin_level >= 4:
-			return "you are a Drama admin."
-
 	@property
 
 	def json_raw(self):
-		data = {'author_name': self.author.username if not self.author.is_deleted else None,
+		data = {'author_name': self.author.username if not self.author.deleted_utc > 0 else None,
 				'permalink': self.permalink,
 				'is_banned': bool(self.is_banned),
-				'is_deleted': self.is_deleted,
+				'deleted_utc': self.deleted_utc,
 				'created_utc': self.created_utc,
 				'id': self.base36id,
 				'fullname': self.fullname,
 				'title': self.title,
 				'is_nsfw': self.over_18,
-				'is_nsfl': self.is_nsfl,
 				'is_bot': self.is_bot,
 				'thumb_url': self.thumb_url,
 				'domain': self.domain,
@@ -324,8 +283,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'body_html': self.body_html,
 				'created_utc': self.created_utc,
 				'edited_utc': self.edited_utc or 0,
-				'guild_name': self.board.name,
-				'guild_id': base36encode(self.board_id),
 				'comment_count': self.comment_count,
 				'score': self.score_fuzzed,
 				'upvotes': self.upvotes_fuzzed,
@@ -339,9 +296,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		if self.ban_reason:
 			data["ban_reason"]=self.ban_reason
 
-		if self.board_id != self.original_board_id and self.original_board:
-			data['original_guild_name'] = self.original_board.name
-			data['original_guild_id'] = base36encode(self.original_board_id)
 		return data
 
 	@property
@@ -349,20 +303,18 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 		if self.is_banned:
 			return {'is_banned': True,
-					'is_deleted': self.is_deleted,
+					'deleted_utc': self.deleted_utc,
 					'ban_reason': self.ban_reason,
 					'id': self.base36id,
 					'title': self.title,
 					'permalink': self.permalink,
-					'guild_name': self.board.name
 					}
-		elif self.is_deleted:
+		elif self.deleted_utc:
 			return {'is_banned': bool(self.is_banned),
-					'is_deleted': True,
+					'deleted_utc': True,
 					'id': self.base36id,
 					'title': self.title,
 					'permalink': self.permalink,
-					'guild_name': self.board.name
 					}
 
 		return self.json_raw
@@ -376,8 +328,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 			return data
 
 		data["author"]=self.author.json_core
-		data["guild"]=self.board.json_core
-		data["original_guild"]=self.original_board.json_core if not self.board_id==self.original_board_id else None
 		data["comment_count"]=self.comment_count
 
 	
@@ -507,10 +457,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		return self.__dict__.get('_is_blocking', False)
 
 	@property
-	def is_public(self):
-		return self.post_public or not self.board.is_private
-
-	@property
 	def flag_count(self):
 		return len(self.flags)
 
@@ -553,14 +499,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 			'created_utc': self.created_utc,
 			'id': self.base36id,
 			'fullname': self.fullname,
-			'guild_name': self.board.name,
 			'comment_count': self.comment_count,
 			'permalink': self.permalink
 		}
-
-		if self.original_board_id and (self.original_board_id!= self.board_id):
-
-			data['original_guild_name'] = self.original_board.name
 
 		return data
 

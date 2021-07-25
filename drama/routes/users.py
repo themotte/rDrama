@@ -264,7 +264,7 @@ def u_username(username, v=None):
 
 		g.db.add(view)
 
-	if u.is_deleted and (not v or v.admin_level < 3):
+	if u.deleted_utc > 0 and (not v or v.admin_level < 3):
 		return {'html': lambda: render_template("userpage_deleted.html",
 												u=u,
 												v=v),
@@ -407,7 +407,6 @@ def u_username_comments(username, v=None):
 
 	is_following = (v and user.has_follower(v))
 
-	board = g.db.query(Board).first()
 	return {"html": lambda: render_template("userpage_comments.html",
 											u=user,
 											v=v,

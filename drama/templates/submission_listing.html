@@ -20,7 +20,7 @@
 {% endif %}
 
 
-<div id="post-{{p.base36id}}" class="card{% if p.is_banned %} banned{% endif %}{% if p.deleted_utc > 0 %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}{% if p.is_nsfl %} nsfl {% endif %}">
+<div id="post-{{p.base36id}}" class="card{% if p.is_banned %} banned{% endif %}{% if p.deleted_utc > 0 %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
 
 	<div class="d-flex flex-row-reverse flex-md-row flex-nowrap justify-content-end">
 
@@ -137,7 +137,7 @@
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}
 						{% if p.is_repost %}&nbsp;<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}
 						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
-						{% if p.author.is_deleted %}[deleted account]{% else %}&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img src="{{ p.author.profile_url }}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}{% endif %}
+						{% if p.author.deleted_utc > 0 %}[deleted account]{% else %}&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img src="{{ p.author.profile_url }}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}{% endif %}
 						<span data-toggle="tooltip" data-placement="bottom" id="timestamp-{{p.id}}" title="">&nbsp;{{p.age_string}}</span>
 						&nbsp;
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})
@@ -191,12 +191,12 @@
 						{% endif %}
 						
 						{% if not (v and v.id==p.author_id) %}
-						<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}', '{{p.author.username}}','{{p.board.name}}')"><i class="fas fa-flag"></i>Report</a></li>
+						<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}', '{{p.author.username}}')"><i class="fas fa-flag"></i>Report</a></li>
 						{% endif %}
 
 						{% if v and v.id==p.author_id %}
 						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/pin/{{p.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</a></li>
-						{% if p.is_deleted %}
+						{% if p.deleted_utc > 0 %}
 							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/undelete_post/{{p.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-trash-alt"></i>Undelete</a></li>
 						{% else %}
 							<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.base36id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
@@ -375,11 +375,11 @@
 					{% endif %}
 
 					{% if not (v and v.id==p.author_id) %}
-					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}','{{'@'+p.author.username if not p.author.is_deleted else '[deleted account]'}}','{{p.board.name}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
+					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.base36id}}','{{'@'+p.author.username if not p.author.deleted_utc > 0 else '[deleted account]'}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 					{% endif %}
 					{% if v and v.id==p.author_id %}
 						<button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{p.base36id}}" href="javascript:void(0)" onclick="post('/api/pin/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center text-muted mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
-						{% if p.is_deleted %}
+						{% if p.deleted_utc > 0 %}
 							<button class="btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post('/undelete_post/{{p.base36id}}', function(){window.location.reload(true);})"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
 						{% else %}
 							<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.base36id}}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
@@ -387,9 +387,7 @@
 					{% endif %}
 
 					{% if v and (v.id==p.author_id or v.admin_level>=3) %}
-					{% if not p.board.over_18 %}
 					<button class="btn btn-link btn-block btn-lg text-left text-muted" onclick="post('/api/toggle_post_nsfw/{{p.base36id}}', function(){window.location.reload(true);})"><i class="far fa-eye-evil text-center text-muted mr-3"></i>Toggle +18</button>
-					{% endif %}
 
 					{% endif %}
 					{% if v %}
@@ -443,7 +441,7 @@
 
 {% else %}
 
-{% if request.path.endswith('/mod/queue') %}
+{% if request.path.endswith('/admin/queue') %}
 
 <div class="row no-gutters">	 
 	<div class="col">			
@@ -460,7 +458,7 @@
 		<div class="text-center py-7">
 			<div class="h4 p-2">+{{b.name}} is barren and needs posts!</div>
 			{% if v and b and b.can_submit(v) %}
-			<div class="p-2"><a href="/submit?guild={{b.name}}" class="btn btn-primary">Be the first to post</a></div>
+			<div class="p-2"><a href="/submit" class="btn btn-primary">Be the first to post</a></div>
 			{% endif %}
 		</div>			 
 	</div>	

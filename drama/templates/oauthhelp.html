@@ -34,7 +34,7 @@ Send your user to `https://rdrama.net/oauth/authorize`, with the following URL p
 * `client_id` - Your application's Client ID
 * `redirect_uri` - The redirect URI (or one of the URIs) specified in your application information. Must not use HTTP unless using localhost (use HTTPS instead). 
 * `state` - This is your own anti-cross-site-forgery token. We don't do anything with this, except give it to the user to pass back to you later. You are responsible for generating and validating the state token.
-* `scope` - A comma-separated list of permission scopes that you are requesting. Valid scopes are: `identity`, `create`, `read`, `update`, `delete`, `vote`, and `guildmaster`.
+* `scope` - A comma-separated list of permission scopes that you are requesting. Valid scopes are: `identity`, `create`, `read`, `update`, `delete` and `vote`.
 * `permanent` - optional. Set to `true` if you are requesting indefinite access. Omit if not.
 
 If done correctly, the user will see that your application wants to access their Drama account, and be prompted to approve or deny the request.

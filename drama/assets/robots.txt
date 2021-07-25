@@ -1,6 +1,6 @@
 User-Agent: *
 Disallow: /api/*
-Disallow: /mod/*
+Disallow: /admin/*
 Disallow: /submit
 Disallow: /settings
 Disallow: /me

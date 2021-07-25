@@ -40,7 +40,6 @@ def postbanaward(post_id, v):
 		kind="exile_user",
 		user_id=v.id,
 		target_user_id=u.id,
-		board_id=1,
         note=f'reason: "1 day ban award", duration: 1 day'
 		)
 	g.db.add(ma)
@@ -69,13 +68,9 @@ def publish(pid, v):
 @auth_required
 def submit_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
-	
-	b = g.db.query(Board).first()
-	
+		
 	return render_template("submit.html",
-						   v=v,
-						   b=b
-						   )
+						   v=v)
 
 @app.route("/post/<pid>", methods=["GET"])
 @app.route("/post/<pid>/", methods=["GET"])
@@ -237,15 +232,12 @@ def post_base36id(pid, anything=None, v=None):
 	g.db.add(post)
 	g.db.commit()
 
-	board = post.board
-
-	if post.over_18 and not (v and v.over_18) and not session_over18(board):
+	if post.over_18 and not (v and v.over_18) and not session_over18(1):
 		t = int(time.time())
 		return {"html":lambda:render_template("errors/nsfw.html",
 							   v=v,
 							   t=t,
 							   lo_formkey=make_logged_out_formkey(t),
-							   board=post.board
 
 							   ),
 				"api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
@@ -269,9 +261,6 @@ def edit_post(pid, v):
 		abort(403)
 
 	if p.is_banned:
-		abort(403)
-
-	if p.board.has_ban(v):
 		abort(403)
 
 	body = request.form.get("body", "")
@@ -346,9 +335,6 @@ def edit_post(pid, v):
 			parent_fullname=p.fullname,
 			level=1,
 			over_18=False,
-			is_nsfl=False,
-			is_offensive=False,
-			original_board_id=1,
 			is_bot=True,
 			app_id=None,
 			creation_region=request.headers.get("cf-ipcountry"),
@@ -600,8 +586,6 @@ def submit_post(v):
 	if repost:
 		return redirect(repost.permalink)
 
-	board = g.db.query(Board).first()
-
 	if not title:
 		return {"html": lambda: (render_template("submit.html",
 												 v=v,
@@ -610,21 +594,9 @@ def submit_post(v):
 												 url=url,
 												 body=request.form.get(
 													 "body", ""),
-												 b=board
 												 ), 400),
 				"api": lambda: ({"error": "Please enter a better title"}, 400)
 				}
-
-	# if len(title)<10:
-	#	 return render_template("submit.html",
-	#							v=v,
-	#							error="Please enter a better title.",
-	#							title=title,
-	#							url=url,
-	#							body=request.form.get("body",""),
-	#							b=board
-	#							)
-
 
 	elif len(title) > 500:
 		return {"html": lambda: (render_template("submit.html",
@@ -634,7 +606,6 @@ def submit_post(v):
 												 url=url,
 												 body=request.form.get(
 													 "body", ""),
-												 b=board
 												 ), 400),
 				"api": lambda: ({"error": "500 character limit for titles"}, 400)
 				}
@@ -649,7 +620,6 @@ def submit_post(v):
 												 url=url,
 												 body=request.form.get(
 													 "body", ""),
-												 b=board
 												 ), 400),
 				"api": lambda: ({"error": "`url` or `body` parameter required."}, 400)
 				}
@@ -677,7 +647,6 @@ def submit_post(v):
 
 		Submission.author_id == v.id,
 		Submission.deleted_utc == 0,
-		Submission.board_id == board.id,
 		SubmissionAux.title == title,
 		SubmissionAux.url == url,
 		SubmissionAux.body == body
@@ -710,7 +679,6 @@ def submit_post(v):
 													 url=url,
 													 body=request.form.get(
 														 "body", ""),
-													 b=board
 													 ), 400),
 					"api": lambda: ({"error": "ToS violation"}, 400)
 					}
@@ -726,65 +694,6 @@ def submit_post(v):
 	else:
 
 		embed = None
-
-	# board
-	board_name = request.form.get("board", "general")
-	board_name = board_name.lstrip("+")
-	board_name = board_name.strip()
-
-	board = g.db.query(Board).first()
-
-	if not board:
-
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error=f"Please enter a Guild to submit to.",
-												 title=title,
-												 url=url, body=request.form.get(
-													 "body", ""),
-												 b=None
-												 ), 403),
-				"api": lambda: (jsonify({"error": f"403 Forbidden - +{board.name} has been banned."}))
-				}
-
-	if board.is_banned:
-
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error=f"+{board.name} has been banned.",
-												 title=title,
-												 url=url, body=request.form.get(
-													 "body", ""),
-												 b=None
-												 ), 403),
-				"api": lambda: (jsonify({"error": f"403 Forbidden - +{board.name} has been banned."}))
-				}
-
-	if board.has_ban(v):
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error=f"You are exiled from +{board.name}.",
-												 title=title,
-												 url=url, body=request.form.get(
-													 "body", ""),
-												 b=None
-												 ), 403),
-				"api": lambda: (jsonify({"error": f"403 Not Authorized - You are exiled from +{board.name}"}), 403)
-				}
-
-	if (board.restricted_posting or board.is_private) and not (
-			board.can_submit(v)):
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error=f"You are not an approved contributor for +{board.name}.",
-												 title=title,
-												 url=url,
-												 body=request.form.get(
-													 "body", ""),
-												 b=None
-												 ), 403),
-				"api": lambda: (jsonify({"error": f"403 Not Authorized - You are not an approved contributor for +{board.name}"}), 403)
-				}
 
 	# similarity check
 	now = int(time.time())
@@ -857,7 +766,6 @@ def submit_post(v):
 					user_id=2317,
 					target_submission_id=post.id,
 					kind="ban_post",
-					board_id=post.board_id,
 					note="spam"
 					)
 			g.db.add(ma)
@@ -874,7 +782,6 @@ def submit_post(v):
 												 url=url,
 												 body=request.form.get(
 													 "body", ""),
-												 b=board
 												 ), 400),
 				"api": lambda: ({"error": "10000 character limit for text body."}, 400)
 				}
@@ -888,7 +795,6 @@ def submit_post(v):
 												 url=url,
 												 body=request.form.get(
 													 "body", ""),
-												 b=board
 												 ), 400),
 				"api": lambda: ({"error": "2048 character limit for URLs."}, 400)
 				}
@@ -920,7 +826,6 @@ def submit_post(v):
 												 url=url,
 												 body=request.form.get(
 													 "body", ""),
-												 b=board
 												 ), 403),
 				"api": lambda: ({"error": reason}, 403)
 				}
@@ -961,7 +866,6 @@ def submit_post(v):
 														 url=url,
 														 body=request.form.get(
 															 "body", ""),
-														 b=board
 														 ), 400),
 						"api": lambda: ({"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400)
 						}
@@ -977,11 +881,7 @@ def submit_post(v):
 		private=bool(request.form.get("private","")),
 		author_id=v.id,
 		domain_ref=domain_obj.id if domain_obj else None,
-		board_id=board.id,
-		original_board_id=board.id,
 		over_18=bool(request.form.get("over_18","")),
-		is_nsfl=bool(request.form.get("is_nsfl","")),
-		post_public=not board.is_private,
 		repost_id=repost.id if repost else None,
 		is_offensive=False,
 		app_id=v.client.application.id if v.client else None,
@@ -1037,7 +937,6 @@ def submit_post(v):
 														 title=title,
 														 body=request.form.get(
 															 "body", ""),
-														 b=board
 														 ), 400),
 						"api": lambda: ({"error": f"Image files only"}, 400)
 						}
@@ -1054,7 +953,6 @@ def submit_post(v):
     # spin off thumbnail generation and csam detection as  new threads
 	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbs(new_post)
 
-	# expire the relevant caches: front page new, board new
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 	g.db.commit()
@@ -1091,9 +989,6 @@ def submit_post(v):
 			parent_fullname=new_post.fullname,
 			level=1,
 			over_18=False,
-			is_nsfl=False,
-			is_offensive=False,
-			original_board_id=1,
 			is_bot=True,
 			app_id=None,
 			creation_region=request.headers.get("cf-ipcountry"),
@@ -1131,9 +1026,6 @@ def submit_post(v):
 		parent_fullname=new_post.fullname,
 		level=1,
 		over_18=False,
-		is_nsfl=False,
-		is_offensive=False,
-		original_board_id=1,
 		is_bot=True,
 		app_id=None,
 		creation_region=request.headers.get("cf-ipcountry")
@@ -1205,7 +1097,7 @@ def embed_post_pid(pid):
 
 	post = get_post(pid)
 
-	if post.is_banned or post.board.is_banned:
+	if post.is_banned:
 		abort(410)
 
 	return render_template("embeds/submission.html", p=post)
@@ -1232,12 +1124,7 @@ def toggle_post_nsfw(pid, v):
 
 	post = get_post(pid)
 
-	mod=post.board.has_mod(v)
-
-	if not post.author_id == v.id and not v.admin_level >= 3 and not mod:
-		abort(403)
-
-	if post.board.over_18 and post.over_18:
+	if not post.author_id == v.id and not v.admin_level >= 3:
 		abort(403)
 
 	post.over_18 = not post.over_18
@@ -1248,7 +1135,6 @@ def toggle_post_nsfw(pid, v):
 			kind="set_nsfw" if post.over_18 else "unset_nsfw",
 			user_id=v.id,
 			target_submission_id=post.id,
-			board_id=post.board.id,
 			)
 		g.db.add(ma)
 

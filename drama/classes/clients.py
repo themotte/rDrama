@@ -68,7 +68,6 @@ class ClientAuth(Base, Stndrd):
 	scope_update = Column(Boolean, default=False)
 	scope_delete = Column(Boolean, default=False)
 	scope_vote = Column(Boolean, default=False)
-	scope_guildmaster = Column(Boolean, default=False)
 	access_token = Column(String(128))
 	refresh_token = Column(String(128))
 	access_token_expire_utc = Column(Integer)
@@ -86,7 +85,6 @@ class ClientAuth(Base, Stndrd):
 		output += "update," if self.scope_update else ""
 		output += "delete," if self.scope_delete else ""
 		output += "vote," if self.scope_vote else ""
-		output += "guildmaster," if self.scope_guildmaster else ""
 
 		output = output.rstrip(',')
 

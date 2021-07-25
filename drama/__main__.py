@@ -24,9 +24,6 @@ from redis import ConnectionPool
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-
-_version = "2.37.4"
-
 app = Flask(__name__,
 			template_folder='./templates',
 			static_folder='./static'
@@ -56,7 +53,7 @@ app.config["SERVER_NAME"] = environ.get("domain", environ.get("SERVER_NAME", "")
 
 app.config["SHORT_DOMAIN"]=environ.get("SHORT_DOMAIN","").strip()
 app.config["SESSION_COOKIE_NAME"] = "session_drama"
-app.config["VERSION"] = _version
+app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
 app.config["SESSION_COOKIE_SECURE"] = bool(int(environ.get("FORCE_HTTPS", 1)))
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
@@ -69,7 +66,7 @@ app.config["DISABLE_SIGNUPS"]=int(environ.get("DISABLE_SIGNUPS",0))
 
 app.jinja_env.cache = {}
 
-app.config["UserAgent"] = f"Content Aquisition for Pink message board v{_version}."
+app.config["UserAgent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
 
 if "localhost" in app.config["SERVER_NAME"]:
 	app.config["CACHE_TYPE"] = "null"

@@ -1,7 +1,5 @@
 from .alts import *
 from .badges import *
-from .boards import *
-from .board_relationships import *
 from .clients import *
 from .comment import *
 from .domains import Domain

@@ -47,11 +47,9 @@ def get_logged_in_user(db=None):
 		nonce = session.get("login_nonce", 0)
 		if not uid:
 			x= (None, None)
-		v = db.query(User).options(
-			joinedload(User.moderates).joinedload(ModRelationship.board), #joinedload(Board.reports),
-			).filter_by(
+		v = db.query(User).filter_by(
 			id=uid,
-			is_deleted=False
+			deleted_utc=False
 			).first()
 
 		if v and v.agendaposter_expires_utc and v.agendaposter_expires_utc < g.timestamp:
@@ -94,7 +92,6 @@ def check_ban_evade(v):
 				kind="ban_post",
 				user_id=2317,
 				target_submission_id=post.id,
-				board_id=post.board_id,
 				note="ban evasion"
 				)
 			g.db.add(ma)
@@ -113,7 +110,6 @@ def check_ban_evade(v):
 				kind="ban_comment",
 				user_id=2317,
 				target_comment_id=comment.id,
-				board_id=comment.post.board_id,
 				note="ban evasion"
 				)
 			g.db.add(ma)

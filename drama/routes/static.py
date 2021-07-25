@@ -2,6 +2,65 @@ from drama.mail import *
 from drama.__main__ import app, limiter
 from drama.helpers.alerts import *
 
+
+@app.route("/badmins", methods=["GET"])
+@app.route("/api/vue/admin/mods",  methods=["GET"])
+@app.route("/api/v1/admin/mods", methods=["GET"])
+@auth_desired
+@public("read")
+def badmins(v):
+	badmins = g.db.query(User).filter_by(admin_level=6).all()
+	return {
+		"html":lambda:render_template("mods.html", v=v, badmins=badmins),
+		"api":lambda:jsonify({"data":[x.json for x in badmins]})
+		}
+
+@app.route("/log", methods=["GET"])
+@app.route("/api/v1/mod_log", methods=["GET"])
+@auth_desired
+@api("read")
+def log(v):
+
+	page=int(request.args.get("page",1))
+
+	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	else: actions=g.db.query(ModAction).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
+	actions=[i for i in actions]
+
+	next_exists=len(actions)==26
+	actions=actions[0:25]
+
+	return {
+		"html":lambda:render_template(
+			"modlog.html",
+			v=v,
+			actions=actions,
+			next_exists=next_exists,
+			page=page
+		),
+		"api":lambda:jsonify({"data":[x.json for x in actions]})
+		}
+
+@app.route("/log/<aid>", methods=["GET"])
+@auth_desired
+def log_item(aid, v):
+
+	action=g.db.query(ModAction).filter_by(id=base36decode(aid)).first()
+
+	if not action:
+		abort(404)
+
+	if request.path != action.permalink:
+		return redirect(action.permalink)
+
+	return render_template("modlog.html",
+		v=v,
+		actions=[action],
+		next_exists=False,
+		page=1,
+		action=action
+		)
+
 @app.route("/sex")
 def index():
     return render_template("index.html", **{"greeting": "Hello from Flask!"})

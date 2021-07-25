@@ -264,7 +264,7 @@
 
 		// Flag Submission
 
-		report_postModal = function(id, author, board) {
+		report_postModal = function(id, author) {
 
 			document.getElementById("post-author").textContent = author;
 
@@ -461,11 +461,11 @@
 
 		}
 
-		herald_comment=function(bid,cid){
+		herald_comment=function(cid){
 
 
 			var xhr = new XMLHttpRequest();
-			xhr.open("post", "/mod/distinguish_comment/"+bid+'/'+cid);
+			xhr.open("post", "/admin/distinguish_comment/"+cid);
 
 			var form = new FormData();
 
@@ -1005,11 +1005,6 @@
 <div class="container">
 	<div class="row justify-content-around" id="main-content-row">
 
-		{% block leftSidebar %}
-		{% block leftSidebarBlock %}
-		{% endblock %}
-		{% endblock %}
-
 		<div class="col h-100 {% block customPadding %}{% if not '/message' in request.path %}custom-gutters{% endif %}{% endblock %}" id="main-content-col">
 
 			{% block desktopUserBanner %}
@@ -1043,9 +1038,6 @@
 {% endblock %}
 
 {% block reportCommentModal %}
-{% endblock %}
-
-{% block guildModal %}
 {% endblock %}
 
 {% block GIFtoast %}

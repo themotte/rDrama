@@ -1,5 +1,4 @@
 from .admin import *
-from .boards import *
 from .comments import *
 from .discord import *
 from .errors import *

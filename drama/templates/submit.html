@@ -166,21 +166,14 @@
 
 				if (nothingFocused) {
 
-					if (document.getElementById('guild-name-reference')) {
-						var guild = document.getElementById('guild-name-reference').innerText;
-					}
-
 					var clipText = event.clipboardData.getData('Text');
 
 					var url = new RegExp('^(?:[a-z]+:)?//', 'i');
 
-					if (url.test(clipText) && window.location.pathname !== '/submit' && guild == undefined) {
+					if (url.test(clipText) && window.location.pathname !== '/submit') {
 						window.location.href = '/submit?url=' + clipText;
 					}
-					else if (url.test(clipText) && window.location.pathname !== '/submit' && guild !== undefined) {
-						window.location.href = '/submit?url=' + clipText + '&guild=' + guild;
-					}
-					else if (url.test(clipText) && window.location.pathname == '/submit' && guild == undefined) {
+					else if (url.test(clipText) && window.location.pathname == '/submit') {
 
 						document.getElementById("post-URL").value = clipText;
 

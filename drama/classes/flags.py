@@ -45,8 +45,6 @@ class Report(Base):
 	post_id = Column(Integer, ForeignKey("submissions.id"))
 	user_id = Column(Integer, ForeignKey("users.id"))
 	created_utc = Column(Integer)
-
-	board_id = Column(Integer, server_default=FetchedValue())
 	
 	user = relationship("User", lazy = "joined", primaryjoin = "Report.user_id == User.id", uselist = False)
 

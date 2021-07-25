@@ -8,8 +8,6 @@ from .alts import Alt
 from .titles import Title
 from .submission import SaveRelationship
 from .comment import Notification
-from .boards import Board
-from .board_relationships import *
 from .subscriptions import *
 from .userblock import *
 from .badges import *
@@ -93,12 +91,11 @@ class User(Base, Stndrd, Age_times):
 	mfa_secret = deferred(Column(String(16), default=None))
 	hide_offensive = Column(Boolean, default=False)
 	hide_bot = Column(Boolean, default=False)
-	show_nsfl = Column(Boolean, default=False)
 	is_private = Column(Boolean, default=False)
 	read_announcement_utc = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
 
-	is_deleted = Column(Boolean, default=False)
+	deleted_utc = Column(Boolean, default=False)
 	delete_reason = Column(String(500), default='')
 	filter_nsfw = Column(Boolean, default=False)
 	stored_subscriber_count = Column(Integer, default=0)
@@ -129,12 +126,6 @@ class User(Base, Stndrd, Age_times):
 	moderates = relationship("ModRelationship")
 	banned_from = relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
 	subscriptions = relationship("Subscription")
-	boards_created = relationship("Board", lazy="dynamic")
-	contributes = relationship(
-		"ContributorRelationship",
-		lazy="dynamic",
-		primaryjoin="ContributorRelationship.user_id==User.id")
-	board_blocks = relationship("BoardBlock", lazy="dynamic")
 
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id")
 	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id")
@@ -262,21 +253,7 @@ class User(Base, Stndrd, Age_times):
 			m = g.db.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
 			c = v.contributes.subquery()
 
-			comments = comments.join(m,
-									 m.c.board_id == Submission.board_id,
-									 isouter=True
-									 ).join(c,
-											c.c.board_id == Submission.board_id,
-											isouter=True
-											).join(Board, Board.id == Submission.board_id)
-			comments = comments.filter(or_(Comment.author_id == v.id,
-										   Submission.post_public == True,
-										   Board.is_private == False,
-										   m.c.board_id != None,
-										   c.c.board_id != None))
-		else:
-			comments = comments.join(Board, Board.id == Submission.board_id).filter(
-				or_(Submission.post_public == True, Board.is_private == False))
+			comments = comments.filter(or_(Comment.author_id == v.id))
 
 		comments = comments.options(contains_eager(Comment.post))
 
@@ -311,35 +288,12 @@ class User(Base, Stndrd, Age_times):
 		return [x.id for x in comments[firstrange:secondrange]]
 
 	@property
-	@lazy
-	def mods_anything(self):
-
-		return bool([i for i in self.moderates if i.accepted])
-
-	@property
-	def boards_modded(self):
-
-		z = [x.board for x in self.moderates if x and x.board and x.accepted and not x.board.is_banned]
-		z = sorted(z, key=lambda x: x.name)
-
-		return z
-
-	@property
 	def base36id(self):
 		return base36encode(self.id)
 
 	@property
 	def fullname(self):
 		return f"t1_{self.base36id}"
-
-	@property
-	@cache.memoize(timeout=60)
-	def has_report_queue(self):
-		board_ids = [
-			x.board_id for x in self.moderates.filter_by(
-				accepted=True).all()]
-		return bool(g.db.query(Submission).filter(Submission.board_id.in_(
-			board_ids), Submission.mod_approved == 0, Submission.is_banned == False).join(Submission.reports).first())
 
 	@property
 	def banned_by(self):
@@ -618,43 +572,7 @@ class User(Base, Stndrd, Age_times):
 			return self.defaultpicture()
 
 	@property
-	def available_titles(self):
-
-		locs = {"v": self,
-				"Board": Board,
-				"Submission": Submission
-				}
-
-		titles = [
-			i for i in g.db.query(Title).order_by(
-				text("id asc")).all() if eval(
-				i.qualification_expr, {}, locs)]
-		return titles
-
-	@property
-	def can_make_guild(self):
-		return False
-
-	@property
-	def can_join_gms(self):
-		return len([x for x in self.boards_modded if x.is_siegable]) < 10
-
-	@property
-	def can_siege(self):
-
-		if self.is_suspended:
-			return False
-
-		now = int(time.time())
-
-		return now - max(self.last_siege_utc,
-						 self.created_utc) > 60 * 60 * 24 * 7
-
-	@property
 	def can_submit_image(self):
-		# Has premium
-		# Has 1000 Rep, or 500 for older accounts
-		# if connecting through Tor, must have verified email
 		return self.dramacoins >= 0
 
 	@property
@@ -700,10 +618,10 @@ class User(Base, Stndrd, Age_times):
 					'id': self.base36id
 					}
 
-		elif self.is_deleted:
+		elif self.deleted_utc:
 			return {'username': self.username,
 					'permalink': self.permalink,
-					'is_deleted': True,
+					'deleted_utc': True,
 					'id': self.base36id
 					}
 		return self.json_raw
@@ -712,7 +630,7 @@ class User(Base, Stndrd, Age_times):
 	def json(self):
 		data = self.json_core
 
-		if self.is_deleted or self.is_banned:
+		if self.deleted_utc > 0 or self.is_banned:
 			return data
 
 		data["badges"] = [x.json_core for x in self.badges]
@@ -734,7 +652,7 @@ class User(Base, Stndrd, Age_times):
 		if self.is_banned and self.unban_utc == 0:
 			return False
 
-		elif self.is_deleted:
+		elif self.deleted_utc:
 			return False
 
 		else:
@@ -869,89 +787,11 @@ class User(Base, Stndrd, Age_times):
 
 		return [x[0] for x in comments.offset(25 * (page - 1)).limit(26).all()]
 
-	def guild_rep(self, guild, recent=0):
-
-		posts = g.db.query(Submission.score).filter_by(
-			is_banned=False,
-			original_board_id=guild.id)
-
-		if recent:
-			cutoff = int(time.time()) - 60 * 60 * 24 * recent
-			posts = posts.filter(Submission.created_utc > cutoff)
-
-		posts = posts.all()
-
-		post_rep = sum([x[0] for x in posts]) - len(list(sum([x[0] for x in posts])))
-
-		comments = g.db.query(Comment.score).filter_by(
-			is_banned=False,
-			original_board_id=guild.id)
-
-		if recent:
-			cutoff = int(time.time()) - 60 * 60 * 24 * recent
-			comments = comments.filter(Comment.created_utc > cutoff)
-
-		comments = comments.all()
-
-		comment_rep = sum([x[0] for x in comments]) - len(list(sum([x[0] for x in comments])))
-
-		return int(post_rep + comment_rep)
-
-	@property
-	def has_premium(self):
-
-		now = int(time.time())
-
-		if self.negative_balance_cents:
-			return False
-
-		elif self.premium_expires_utc > now:
-			return True
-
-		elif self.coin_balance >= 1:
-			self.coin_balance -= 1
-			self.premium_expires_utc = now + 60 * 60 * 24 * 7
-
-			g.db.add(self)
-
-			return True
-
-		else:
-
-			if self.premium_expires_utc:
-				self.premium_expires_utc = 0
-				g.db.add(self)
-
-			return False
-
-	@property
-	def has_premium_no_renew(self):
-
-		now = int(time.time())
-
-		if self.negative_balance_cents:
-			return False
-		elif self.premium_expires_utc > now:
-			return True
-		elif self.coin_balance >= 1:
-			return True
-		else:
-			return False
-
-	@property
-	def renew_premium_time(self):
-		return time.strftime("%d %b %Y at %H:%M:%S",
-							 time.gmtime(self.premium_expires_utc))
-
 	@property
 	def filter_words(self):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
 		return l
-
-	@property
-	def boards_modded_ids(self):
-		return [x.id for x in self.boards_modded]
 
 	@property
 	def json_admin(self):
@@ -966,7 +806,7 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	def can_upload_comment_image(self):
-		return self.dramacoins >= 0 and (request.headers.get("cf-ipcountry") != "T1" or self.is_activated)
+		return self.dramacoins >= 0 and request.headers.get("cf-ipcountry") != "T1"
 
 	@property
 	def can_change_name(self):
