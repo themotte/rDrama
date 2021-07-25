@@ -29,7 +29,7 @@ class BadPic(Base):
 
 	__tablename__="badpics"
 	id = Column(BigInteger, primary_key=True)
-	description=Column(String(255), default=None)
+	description=Column(String(255))
 	phash=Column(String(64))
 	ban_reason=Column(String(64))
 	ban_time=Column(Integer)

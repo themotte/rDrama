@@ -12,7 +12,6 @@ SCOPES = {
 	'update': 'Edit your posts and comments',
 	'delete': 'Delete your posts and comments',
 	'vote': 'Cast votes as you',
-	'guildmaster': 'Perform Badmin actions'
 }
 
 
@@ -49,9 +48,8 @@ def oauth_authorize_prompt(v):
 		if scope not in SCOPES:
 			return jsonify({"oauth_error": f"The provided scope `{scope}` is not valid."}), 400
 
-	if any(x in scopes for x in ["create", "update",
-								 "guildmaster"]) and "identity" not in scopes:
-		return jsonify({"oauth_error": f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
+	if any(x in scopes for x in ["create", "update"]) and "identity" not in scopes:
+		return jsonify({"oauth_error": f"`identity` scope required when requesting `create` or `update` scope."}), 400
 
 	redirect_uri = request.args.get("redirect_uri")
 	if not redirect_uri:
@@ -112,9 +110,8 @@ def oauth_authorize_post(v):
 		if scope not in SCOPES:
 			return jsonify({"oauth_error": f"The provided scope `{scope}` is not valid."}), 400
 
-	if any(x in scopes for x in ["create", "update",
-								 "guildmaster"]) and "identity" not in scopes:
-		return jsonify({"oauth_error": f"`identity` scope required when requesting `create`, `update`, or `guildmaster` scope."}), 400
+	if any(x in scopes for x in ["create", "update"]) and "identity" not in scopes:
+		return jsonify({"oauth_error": f"`identity` scope required when requesting `create` or `update` scope."}), 400
 
 	if not state:
 		return jsonify({'oauth_error': 'state argument required'}), 400
@@ -131,7 +128,6 @@ def oauth_authorize_post(v):
 		scope_update="update" in scopes,
 		scope_delete="delete" in scopes,
 		scope_vote="vote" in scopes,
-		scope_guildmaster="guildmaster" in scopes,
 		refresh_token=secrets.token_urlsafe(128)[0:128] if permanent else None
 	)
 

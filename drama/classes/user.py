@@ -8,8 +8,6 @@ from .alts import Alt
 from .titles import Title
 from .submission import SaveRelationship
 from .comment import Notification
-from .boards import Board
-from .board_relationships import *
 from .subscriptions import *
 from .userblock import *
 from .badges import *
@@ -20,22 +18,22 @@ from drama.helpers.security import *
 class User(Base, Stndrd, Age_times):
 	__tablename__ = "users"
 	id = Column(Integer, primary_key=True)
-	username = Column(String, default=None)
+	username = Column(String)
 	namecolor = Column(String, default='ff66ac')
-	customtitle = Column(String, default=None)
-	customtitleplain = Column(String, default=None)
+	customtitle = Column(String)
+	customtitleplain = Column(String)
 	titlecolor = Column(String, default='ff66ac')
 	theme = Column(String, default='dark')
 	themecolor = Column(String, default='ff66ac')
-	song = Column(String, default=None)
-	profileurl = Column(String, default=None)
-	bannerurl = Column(String, default=None)
+	song = Column(String)
+	profileurl = Column(String)
+	bannerurl = Column(String)
 	patron = Column(Boolean, default=False)
 	animatedname = Column(Boolean, default=False)
-	email = Column(String, default=None)
-	css = deferred(Column(String, default=None))
-	profilecss = deferred(Column(String, default=None))
-	passhash = deferred(Column(String, default=None))
+	email = Column(String)
+	css = deferred(Column(String))
+	profilecss = deferred(Column(String))
+	passhash = deferred(Column(String))
 	banawards = Column(Integer, default=0)
 	created_utc = Column(Integer, default=0)
 	suicide_utc = Column(Integer, default=0)
@@ -52,7 +50,7 @@ class User(Base, Stndrd, Age_times):
 	newtab = Column(Boolean, default=False)
 	newtabexternal = Column(Boolean, default=True)
 	oldreddit = Column(Boolean, default=False)
-	creation_ip = Column(String, default=None)
+	creation_ip = Column(String)
 	submissions = relationship(
 		"Submission",
 		lazy="dynamic",
@@ -67,7 +65,7 @@ class User(Base, Stndrd, Age_times):
 	bio = Column(String, default="")
 	bio_html = Column(String, default="")
 	badges = relationship("Badge", lazy="dynamic", backref="user")
-	real_id = Column(String, default=None)
+	real_id = Column(String)
 	notifications = relationship(
 		"Notification",
 		lazy="dynamic")
@@ -76,30 +74,27 @@ class User(Base, Stndrd, Age_times):
 	#	"Notification",
 	#	primaryjoin="and_(Notification.user_id==User.id, Notification.read==False)")
 
-	referred_by = Column(Integer, default=None)
+	referred_by = Column(Integer)
 	is_banned = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
 	ban_reason = Column(String, default="")
 	feed_nonce = Column(Integer, default=0)
 	login_nonce = Column(Integer, default=0)
-	title_id = Column(Integer, ForeignKey("titles.id"), default=None)
+	title_id = Column(Integer, ForeignKey("titles.id"))
 	title = relationship("Title", lazy="joined")
 	has_banner = Column(Boolean, default=False)
-	reserved = Column(String(256), default=None)
+	reserved = Column(String(256))
 	is_nsfw = Column(Boolean, default=False)
 	profile_nonce = Column(Integer, default=0)
+	dramacoins = Column(Integer, default=0)
 	banner_nonce = Column(Integer, default=0)
 	last_siege_utc = Column(Integer, default=0)
-	mfa_secret = deferred(Column(String(16), default=None))
+	mfa_secret = deferred(Column(String(16)))
 	hide_offensive = Column(Boolean, default=False)
 	hide_bot = Column(Boolean, default=False)
-	show_nsfl = Column(Boolean, default=False)
 	is_private = Column(Boolean, default=False)
 	read_announcement_utc = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
-
-	is_deleted = Column(Boolean, default=False)
-	delete_reason = Column(String(500), default='')
 	filter_nsfw = Column(Boolean, default=False)
 	stored_subscriber_count = Column(Integer, default=0)
 	defaultsortingcomments = Column(String, default="top")
@@ -111,12 +106,12 @@ class User(Base, Stndrd, Age_times):
 
 	is_nofollow = Column(Boolean, default=False)
 	custom_filter_list = Column(String(1000), default="")
-	discord_id = Column(String(64), default=None)
-	creation_region = Column(String(2), default=None)
+	discord_id = Column(String(64))
+	creation_region = Column(String(2))
 	ban_evade = Column(Integer, default=0)
 
-	profile_upload_ip = deferred(Column(String(255), default=None))
-	banner_upload_ip = deferred(Column(String(255), default=None))
+	profile_upload_ip = deferred(Column(String(255)))
+	banner_upload_ip = deferred(Column(String(255)))
 	profile_upload_region = deferred(Column(String(2)))
 	banner_upload_region = deferred(Column(String(2)))
 
@@ -126,15 +121,7 @@ class User(Base, Stndrd, Age_times):
 	original_username = deferred(Column(String(255)))
 	name_changed_utc = deferred(Column(Integer, default=0))
 
-	moderates = relationship("ModRelationship")
-	banned_from = relationship("BanRelationship", primaryjoin="BanRelationship.user_id==User.id")
 	subscriptions = relationship("Subscription")
-	boards_created = relationship("Board", lazy="dynamic")
-	contributes = relationship(
-		"ContributorRelationship",
-		lazy="dynamic",
-		primaryjoin="ContributorRelationship.user_id==User.id")
-	board_blocks = relationship("BoardBlock", lazy="dynamic")
 
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id")
 	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id")
@@ -165,17 +152,6 @@ class User(Base, Stndrd, Age_times):
 		kwargs["created_utc"] = int(time.time())
 
 		super().__init__(**kwargs)
-
-	@property
-	@lazy
-	def dramacoins(self):
-		posts = sum([x[0] - 1 for x in
-					 g.db.query(Submission.score).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False,
-																				   deleted_utc=0).all()])
-		comments = sum([x[0] - 1 for x in
-						g.db.query(Comment.score).options(lazyload('*')).filter_by(author_id=self.id, is_banned=False,
-																				   deleted_utc=0).all()])
-		return int(posts + comments)
 
 	def has_block(self, target):
 
@@ -256,27 +232,8 @@ class User(Base, Stndrd, Age_times):
 			comments = comments.filter(Comment.deleted_utc == 0)
 			comments = comments.filter(Comment.is_banned == False)
 
-		if v and v.admin_level >= 4:
-			pass
-		elif v:
-			m = g.db.query(ModRelationship).filter_by(user_id=v.id, invite_rescinded=False).subquery()
-			c = v.contributes.subquery()
-
-			comments = comments.join(m,
-									 m.c.board_id == Submission.board_id,
-									 isouter=True
-									 ).join(c,
-											c.c.board_id == Submission.board_id,
-											isouter=True
-											).join(Board, Board.id == Submission.board_id)
-			comments = comments.filter(or_(Comment.author_id == v.id,
-										   Submission.post_public == True,
-										   Board.is_private == False,
-										   m.c.board_id != None,
-										   c.c.board_id != None))
-		else:
-			comments = comments.join(Board, Board.id == Submission.board_id).filter(
-				or_(Submission.post_public == True, Board.is_private == False))
+		if v and v.admin_level == 0:
+			comments = comments.filter(or_(Comment.author_id == v.id))
 
 		comments = comments.options(contains_eager(Comment.post))
 
@@ -311,35 +268,12 @@ class User(Base, Stndrd, Age_times):
 		return [x.id for x in comments[firstrange:secondrange]]
 
 	@property
-	@lazy
-	def mods_anything(self):
-
-		return bool([i for i in self.moderates if i.accepted])
-
-	@property
-	def boards_modded(self):
-
-		z = [x.board for x in self.moderates if x and x.board and x.accepted and not x.board.is_banned]
-		z = sorted(z, key=lambda x: x.name)
-
-		return z
-
-	@property
 	def base36id(self):
 		return base36encode(self.id)
 
 	@property
 	def fullname(self):
 		return f"t1_{self.base36id}"
-
-	@property
-	@cache.memoize(timeout=60)
-	def has_report_queue(self):
-		board_ids = [
-			x.board_id for x in self.moderates.filter_by(
-				accepted=True).all()]
-		return bool(g.db.query(Submission).filter(Submission.board_id.in_(
-			board_ids), Submission.mod_approved == 0, Submission.is_banned == False).join(Submission.reports).first())
 
 	@property
 	def banned_by(self):
@@ -618,43 +552,7 @@ class User(Base, Stndrd, Age_times):
 			return self.defaultpicture()
 
 	@property
-	def available_titles(self):
-
-		locs = {"v": self,
-				"Board": Board,
-				"Submission": Submission
-				}
-
-		titles = [
-			i for i in g.db.query(Title).order_by(
-				text("id asc")).all() if eval(
-				i.qualification_expr, {}, locs)]
-		return titles
-
-	@property
-	def can_make_guild(self):
-		return False
-
-	@property
-	def can_join_gms(self):
-		return len([x for x in self.boards_modded if x.is_siegable]) < 10
-
-	@property
-	def can_siege(self):
-
-		if self.is_suspended:
-			return False
-
-		now = int(time.time())
-
-		return now - max(self.last_siege_utc,
-						 self.created_utc) > 60 * 60 * 24 * 7
-
-	@property
 	def can_submit_image(self):
-		# Has premium
-		# Has 1000 Rep, or 500 for older accounts
-		# if connecting through Tor, must have verified email
 		return self.dramacoins >= 0
 
 	@property
@@ -699,21 +597,11 @@ class User(Base, Stndrd, Age_times):
 					'ban_reason': self.ban_reason,
 					'id': self.base36id
 					}
-
-		elif self.is_deleted:
-			return {'username': self.username,
-					'permalink': self.permalink,
-					'is_deleted': True,
-					'id': self.base36id
-					}
 		return self.json_raw
 
 	@property
 	def json(self):
 		data = self.json_core
-
-		if self.is_deleted or self.is_banned:
-			return data
 
 		data["badges"] = [x.json_core for x in self.badges]
 		data['dramacoins'] = int(self.dramacoins)
@@ -725,20 +613,6 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def can_use_darkmode(self):
 		return True
-
-	# return self.referral_count or self.has_earned_darkmode or
-	# self.has_badge(16) or self.has_badge(17)
-
-	@property
-	def is_valid(self):
-		if self.is_banned and self.unban_utc == 0:
-			return False
-
-		elif self.is_deleted:
-			return False
-
-		else:
-			return True
 
 	def ban(self, admin=None, reason=None, days=0):
 
@@ -869,89 +743,11 @@ class User(Base, Stndrd, Age_times):
 
 		return [x[0] for x in comments.offset(25 * (page - 1)).limit(26).all()]
 
-	def guild_rep(self, guild, recent=0):
-
-		posts = g.db.query(Submission.score).filter_by(
-			is_banned=False,
-			original_board_id=guild.id)
-
-		if recent:
-			cutoff = int(time.time()) - 60 * 60 * 24 * recent
-			posts = posts.filter(Submission.created_utc > cutoff)
-
-		posts = posts.all()
-
-		post_rep = sum([x[0] for x in posts]) - len(list(sum([x[0] for x in posts])))
-
-		comments = g.db.query(Comment.score).filter_by(
-			is_banned=False,
-			original_board_id=guild.id)
-
-		if recent:
-			cutoff = int(time.time()) - 60 * 60 * 24 * recent
-			comments = comments.filter(Comment.created_utc > cutoff)
-
-		comments = comments.all()
-
-		comment_rep = sum([x[0] for x in comments]) - len(list(sum([x[0] for x in comments])))
-
-		return int(post_rep + comment_rep)
-
-	@property
-	def has_premium(self):
-
-		now = int(time.time())
-
-		if self.negative_balance_cents:
-			return False
-
-		elif self.premium_expires_utc > now:
-			return True
-
-		elif self.coin_balance >= 1:
-			self.coin_balance -= 1
-			self.premium_expires_utc = now + 60 * 60 * 24 * 7
-
-			g.db.add(self)
-
-			return True
-
-		else:
-
-			if self.premium_expires_utc:
-				self.premium_expires_utc = 0
-				g.db.add(self)
-
-			return False
-
-	@property
-	def has_premium_no_renew(self):
-
-		now = int(time.time())
-
-		if self.negative_balance_cents:
-			return False
-		elif self.premium_expires_utc > now:
-			return True
-		elif self.coin_balance >= 1:
-			return True
-		else:
-			return False
-
-	@property
-	def renew_premium_time(self):
-		return time.strftime("%d %b %Y at %H:%M:%S",
-							 time.gmtime(self.premium_expires_utc))
-
 	@property
 	def filter_words(self):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
 		return l
-
-	@property
-	def boards_modded_ids(self):
-		return [x.id for x in self.boards_modded]
 
 	@property
 	def json_admin(self):
@@ -966,7 +762,7 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	def can_upload_comment_image(self):
-		return self.dramacoins >= 0 and (request.headers.get("cf-ipcountry") != "T1" or self.is_activated)
+		return self.dramacoins >= 0 and request.headers.get("cf-ipcountry") != "T1"
 
 	@property
 	def can_change_name(self):

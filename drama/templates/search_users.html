@@ -9,7 +9,6 @@
 {% block listinglength %}{{users | length}}{% endblock %}
 
 {% block pagenav %}
-	{% if boards %}
 	<nav aria-label="Page navigation">
 		<ul class="pagination pagination-sm mb-0">
 			<li class="page-item{% if page==1 %} disabled{% endif %}">
@@ -22,5 +21,4 @@
 			</li>
 		</ul>
 	</nav>
-	{% endif %}
 {% endblock %}

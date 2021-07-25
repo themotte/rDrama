@@ -13,11 +13,11 @@ class Title(Base):
 	color = Column(String(6), default="888888")
 	kind = Column(Integer, default=1)
 
-	background_color_1 = Column(String(6), default=None)
-	background_color_2 = Column(String(6), default=None)
+	background_color_1 = Column(String(6))
+	background_color_2 = Column(String(6))
 	gradient_angle = Column(Integer, default=0)
-	box_shadow_color = Column(String(32), default=None)
-	text_shadow_color = Column(String(32), default=None)
+	box_shadow_color = Column(String(32))
+	text_shadow_color = Column(String(32))
 
 	def check_eligibility(self, v):
 

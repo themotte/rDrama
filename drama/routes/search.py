@@ -55,7 +55,6 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 		posts=posts.filter(
 				Submission.author_id==get_user(criteria['author']).id,
 				User.is_private==False,
-				User.is_deleted==False
 			)
 
 	if 'domain' in criteria:

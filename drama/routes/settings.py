@@ -392,16 +392,6 @@ def settings_delete_banner(v):
 						   msg="Banner successfully removed.")
 
 
-@app.route("/settings/toggle_collapse", methods=["POST"])
-@auth_required
-@validate_formkey
-def settings_toggle_collapse(v):
-
-	session["sidebar_collapsed"] = not session.get("sidebar_collapsed", False)
-
-	return "", 204
-
-
 @app.route("/settings/read_announcement", methods=["POST"])
 @auth_required
 @validate_formkey

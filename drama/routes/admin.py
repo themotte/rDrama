@@ -24,6 +24,27 @@ import matplotlib.pyplot as plt
 from .front import frontlist
 from drama.__main__ import app, cache
 
+@app.route("/dramacoins/posts", methods=["GET"])
+@admin_level_required(6)
+def dp(v):
+	for p in g.db.query(Submission).options(lazyload('*')).all():
+		print(p.id)
+		if p.author:
+			print(p.author.username)
+			p.author.dramacoins += p.upvotes + p.downvotes - 1
+			g.db.add(p.author)
+	return "sex"
+
+@app.route("/dramacoins/comments", methods=["GET"])
+@admin_level_required(6)
+def dc(v):
+	for p in g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission != None).all():
+		print(p.id)
+		if p.author:
+			print(p.author.username)
+			p.author.dramacoins += p.upvotes + p.downvotes - 1
+			g.db.add(p.author)
+	return "sex"
 
 @app.route("/admin/shadowbanned", methods=["GET"])
 @auth_required
@@ -126,8 +147,7 @@ def flagged_comments(v):
 @app.route("/admin", methods=["GET"])
 @admin_level_required(3)
 def admin_home(v):
-	b = g.db.query(Board).filter_by(id=1).first()
-	return render_template("admin/admin_home.html", v=v, b=b)
+	return render_template("admin/admin_home.html", v=v)
 
 
 @app.route("/admin/badge_grant", methods=["GET"])
@@ -536,7 +556,6 @@ def agendaposter(user_id, v):
 		kind=kind,
 		user_id=v.id,
 		target_user_id=user.id,
-		board_id=1,
 		note = note
 	)
 	g.db.add(ma)
@@ -546,14 +565,11 @@ def agendaposter(user_id, v):
 	else:
 		return redirect(user.url)
 
-@app.route("/disablesignups", methods=["POST"])
-@admin_level_required(6)
-@validate_formkey
-def disablesignups(v):
-	board = g.db.query(Board).filter_by(id=1).first()
-	board.disablesignups = not board.disablesignups
-	g.db.add(board)
-	return "", 204
+# @app.route("/disablesignups", methods=["POST"])
+# @admin_level_required(6)
+# @validate_formkey
+# def disablesignups(v):
+# 	return "", 204
 
 
 @app.route("/shadowban/<user_id>", methods=["POST"])
@@ -572,7 +588,6 @@ def shadowban(user_id, v):
 		kind="shadowban",
 		user_id=v.id,
 		target_user_id=user.id,
-		board_id=1,
 	)
 	g.db.add(ma)
 	cache.delete_memoized(frontlist)
@@ -595,7 +610,6 @@ def unshadowban(user_id, v):
 		kind="unshadowban",
 		user_id=v.id,
 		target_user_id=user.id,
-		board_id=1,
 	)
 	g.db.add(ma)
 	cache.delete_memoized(frontlist)
@@ -629,7 +643,6 @@ def admin_title_change(user_id, v):
 		kind=kind,
 		user_id=v.id,
 		target_user_id=user.id,
-		board_id=1,
 		note=f'"{new_name}"'
 		)
 	g.db.add(ma)
@@ -683,7 +696,6 @@ def ban_user(user_id, v):
 		kind="exile_user",
 		user_id=v.id,
 		target_user_id=user.id,
-		board_id=1,
         note=f'reason: "{reason}", duration: {duration}'
 		)
 	g.db.add(ma)
@@ -717,7 +729,6 @@ def unban_user(user_id, v):
 		kind="unexile_user",
 		user_id=v.id,
 		target_user_id=user.id,
-		board_id=1,
 		)
 	g.db.add(ma)
 	g.db.commit()
@@ -757,7 +768,6 @@ def ban_post(post_id, v):
 		kind="ban_post",
 		user_id=v.id,
 		target_submission_id=post.id,
-		board_id=post.board_id,
 		)
 	g.db.add(ma)
 	return "", 204
@@ -778,7 +788,6 @@ def unban_post(post_id, v):
 			kind="unban_post",
 			user_id=v.id,
 			target_submission_id=post.id,
-			board_id=post.board_id,
 		)
 		g.db.add(ma)
 
@@ -857,7 +866,6 @@ def api_ban_comment(c_id, v):
 		kind="ban_comment",
 		user_id=v.id,
 		target_comment_id=comment.id,
-		board_id=comment.post.board_id,
 		)
 	g.db.add(ma)
 	return "", 204
@@ -877,7 +885,6 @@ def api_unban_comment(c_id, v):
 			kind="unban_comment",
 			user_id=v.id,
 			target_comment_id=comment.id,
-			board_id=comment.post.board_id,
 			)
 		g.db.add(ma)
 
@@ -911,7 +918,6 @@ def admin_distinguish_comment(c_id, v):
 				v=v,
 				comments=[comment],
 				render_replies=False,
-				is_allowed_to_comment=True
 				)
 
 	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))
@@ -987,7 +993,6 @@ def admin_nuke_user(v):
 		kind="nuke_user",
 		user_id=v.id,
 		target_user_id=user.id,
-		board_id=1,
 		)
 	g.db.add(ma)
 
@@ -1018,7 +1023,6 @@ def admin_nunuke_user(v):
 		kind="unnuke_user",
 		user_id=v.id,
 		target_user_id=user.id,
-		board_id=1,
 		)
 	g.db.add(ma)
 
@@ -1179,3 +1183,50 @@ def multiple_plots(**kwargs):
 	plt.clf()
 
 	return upload_from_file(name, name)
+
+
+@app.route("/admin/distinguish_post/<pid>", methods=["POST"])
+@app.route("/api/v1/distinguish_post/<pid>", methods=["POST"])
+@admin_level_required(6)
+@api("update")
+def distinguish_post(pid, v):
+
+	post = get_post(pid, v=v)
+
+	if post.author_id != v.id:
+		abort(403)
+
+	if post.gm_distinguish:
+		post.gm_distinguish = 0
+	else:
+		post.gm_distinguish = 1
+	g.db.add(post)
+
+	ma=ModAction(
+		kind="herald_post" if post.gm_distinguish else "unherald_post",
+		user_id=v.id,
+		target_submission_id=post.id,
+		)
+	g.db.add(ma)
+
+	return "", 204
+
+@app.route("/admin/add_admin", methods=["POST"])
+@auth_required
+@validate_formkey
+def invite_username(v):
+
+	username = request.form.get("username", '').lstrip('@')
+	user = get_user(username)
+	if not user:
+		return jsonify({"error": "That user doesn't exist."}), 404
+	user.admin_level = 6
+	g.db.add(user)
+	ma=ModAction(
+		kind="add_mod",
+		user_id=v.id,
+		target_user_id=user.id,
+		)
+	g.db.add(ma)
+
+	return "", 204

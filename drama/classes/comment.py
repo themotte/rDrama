@@ -14,7 +14,7 @@ class CommentAux(Base):
 
 	key_id = Column(Integer, primary_key=True)
 	id = Column(Integer, ForeignKey("comments.id"))
-	body = Column(String(10000), default=None)
+	body = Column(String(10000))
 	body_html = Column(String(20000))
 	ban_reason = Column(String(256), default='')
 
@@ -40,8 +40,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	is_banned = Column(Boolean, default=False)
 	shadowbanned = Column(Boolean, default=False)
 	distinguish_level = Column(Integer, default=0)
-	gm_distinguish = Column(Integer, ForeignKey("boards.id"), default=0)
-	distinguished_board = relationship("Board", lazy="joined", primaryjoin="Comment.gm_distinguish==Board.id")
 	deleted_utc = Column(Integer, default=0)
 	purged_utc = Column(Integer, default=0)
 	is_approved = Column(Integer, default=0)
@@ -51,18 +49,15 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	score_top = Column(Integer, default=1)
 	level = Column(Integer, default=0)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
-	original_board_id = Column(Integer, ForeignKey("boards.id"))
 
 	over_18 = Column(Boolean, default=False)
-	is_offensive = Column(Boolean, default=False)
-	is_nsfl = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
-	banaward = Column(String, default=None)
+	banaward = Column(String)
 	is_pinned = Column(Boolean, default=False)
-	creation_region=Column(String(2), default=None)
-	sentto=Column(Integer, default=None)
+	creation_region=Column(String(2))
+	sentto=Column(Integer)
 
-	app_id = Column(Integer, ForeignKey("oauth_apps.id"), default=None)
+	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	oauth_app=relationship("OauthApp")
 
 	post = relationship("Submission")
@@ -72,9 +67,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		lazy="joined",
 		innerjoin=True,
 		primaryjoin="User.id==Comment.author_id")
-	board = association_proxy("post", "board")
-	original_board = relationship(
-		"Board", primaryjoin="Board.id==Comment.original_board_id")
 
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
@@ -95,8 +87,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	rank_fiery = deferred(Column(Float, server_default=FetchedValue()))
 	rank_hot = deferred(Column(Float, server_default=FetchedValue()))
 
-	board_id = deferred(Column(Integer, server_default=FetchedValue()))
-
 	def __init__(self, *args, **kwargs):
 
 		if "created_utc" not in kwargs:
@@ -112,30 +102,16 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	@property
 	@lazy
-	def score_disputed(self):
-		return (self.upvotes+1) * (self.downvotes+1)
-
-	@property
-	@lazy
 	def fullname(self):
 		return f"t3_{self.base36id}"
 
+	@property
+	@lazy
+	def score_disputed(self):
+		return (self.upvotes+1) * (self.downvotes+1)
+
 	def children(self, v):
 		return sorted([x for x in self.child_comments if not x.author.shadowbanned or (v and v.id == x.author_id)], key=lambda x: x.score, reverse=True)
-
-	@property
-	@lazy
-	def is_deleted(self):
-		return bool(self.deleted_utc)
-
-	@property
-	@lazy
-	def is_top_level(self):
-		return self.parent_fullname and self.parent_fullname.startswith("t2_")
-
-	@property
-	def is_archived(self):
-		return self.post.is_archived
 
 	@property
 	@lazy
@@ -144,7 +120,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		if not self.parent_submission:
 			return None
 
-		if self.is_top_level:
+		if self.level == 1:
 			return self.post
 
 		else:
@@ -175,18 +151,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	def permalink(self):
 		if self.post: return f"{self.post.permalink}/{self.id}/"
 		else: return f"/comment/{self.id}/"
-
-	@property
-	def any_descendants_live(self):
-
-		if self.replies == []:
-			return False
-
-		if any([not x.is_banned and x.deleted_utc == 0 for x in self.replies]):
-			return True
-
-		else:
-			return any([x.any_descendants_live for x in self.replies])
 
 	def rendered_comment(self, v=None, render_replies=True,
 						 standalone=False, level=1, **kwargs):
@@ -229,27 +193,13 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		else:
 			return self.flag_count
 
-	def visibility_reason(self, v):
-		if not v or self.author_id == v.id:
-			return "this is your content."
-		elif not self.board:
-			return None
-		elif self.board.has_mod(v):
-			return f"you are a guildmaster of +{self.board.name}."
-		elif self.board.has_contributor(v):
-			return f"you are an approved contributor in +{self.board.name}."
-		elif self.parent.author_id == v.id:
-			return "this is a reply to your content."
-		elif v.admin_level >= 4:
-			return "you are a Drama admin."
-
 	@property
 	def json_raw(self):
 		data= {
 			'id': self.base36id,
 			'fullname': self.fullname,
 			'level': self.level,
-			'author_name': self.author.username if not self.author.is_deleted else None,
+			'author_name': self.author.username,
 			'body': self.body,
 			'body_html': self.body_html,
 			'is_archived': self.is_archived,
@@ -257,10 +207,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'created_utc': self.created_utc,
 			'edited_utc': self.edited_utc or 0,
 			'is_banned': bool(self.is_banned),
-			'is_deleted': self.is_deleted,
+			'deleted_utc': self.deleted_utc,
 			'is_nsfw': self.over_18,
-			'is_offensive': self.is_offensive,
-			'is_nsfl': self.is_nsfl,
 			'permalink': self.permalink,
 			'post_id': self.post.base36id,
 			'score': self.score_fuzzed,
@@ -315,7 +263,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 		data["author"]=self.author.json_core
 		data["post"]=self.post.json_core
-		data["guild"]=self.post.board.json_core
 
 		if self.level >= 2:
 			data["parent"]=self.parent.json_core
@@ -402,9 +349,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 		if not v:
 			return False
-
-		if self.is_offensive and v.hide_offensive:
-			return True
 			
 		if self.is_bot and v.hide_bot:
 			return True
@@ -455,13 +399,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		return data
 
 	@property
-	def is_exiled_for(self):
-		return self.__dict__.get('_is_exiled_for', None)
-
-	@property
 	@lazy
 	def is_op(self):
-		return self.author_id==self.post.author_id and not self.author.is_deleted and not self.post.author.is_deleted and not self.post.is_deleted
+		return self.author_id==self.post.author_id
 	
 	
 
@@ -474,10 +414,10 @@ class Notification(Base):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	comment_id = Column(Integer, ForeignKey("comments.id"))
 	read = Column(Boolean, default=False)
-	followsender = Column(Integer, default=None)
-	unfollowsender = Column(Integer, default=None)
-	blocksender = Column(Integer, default=None)
-	unblocksender = Column(Integer, default=None)
+	followsender = Column(Integer)
+	unfollowsender = Column(Integer)
+	blocksender = Column(Integer)
+	unblocksender = Column(Integer)
 
 	comment = relationship("Comment", lazy="joined", innerjoin=True)
 	user=relationship("User", innerjoin=True)

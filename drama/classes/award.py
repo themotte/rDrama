@@ -28,8 +28,8 @@ class AwardRelationship(Base):
 	id = Column(Integer, primary_key=True)
 
 	user_id = Column(Integer, ForeignKey("users.id"))
-	submission_id = Column(Integer, ForeignKey("submissions.id"), default=None)
-	comment_id = Column(Integer, ForeignKey("comments.id"), default=None)
+	submission_id = Column(Integer, ForeignKey("submissions.id"))
+	comment_id = Column(Integer, ForeignKey("comments.id"))
 	kind = Column(String(20))
 
 	user = relationship("User", primaryjoin="AwardRelationship.user_id==User.id", lazy="joined")
