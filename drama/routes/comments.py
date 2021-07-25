@@ -419,7 +419,8 @@ def api_comment(v):
 			name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
 			url = upload_file(name, file)
 			
-			body = request.form.get("body") + f"\n\n![]({url})"
+			body = request.form.get("body") + f"\n![]({url})"
+			body = body.replace("\n", "\n\n")
 			with CustomRenderer(post_id=parent_id) as renderer:
 				body_md = renderer.render(mistletoe.Document(body))
 			body_html = sanitize(body_md, linkgen=True)
@@ -475,6 +476,7 @@ def api_comment(v):
 				included. \n\n*This is an automated message; if you need help,
 				you can message us [here](/contact).*"""
 
+		body = body.replace("\n", "\n\n")
 		with CustomRenderer(post_id=parent_id) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))
 
@@ -503,6 +505,7 @@ def api_comment(v):
 		g.db.flush()
 	
 		body = random.choice(choices)
+		body = body.replace("\n", "\n\n")
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md, linkgen=True)
 		c_aux = CommentAux(
@@ -698,6 +701,7 @@ def edit_comment(cid, v):
 
 	body = request.form.get("body", "")[0:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
+	body = body.replace("\n", "\n\n")
 	with CustomRenderer(post_id=c.post.base36id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md, linkgen=True)
 
@@ -794,7 +798,8 @@ def edit_comment(cid, v):
 			name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
 			url = upload_file(name, file)
 
-			body += f"\n\n![]({url})"
+			body += f"\n![]({url})"
+			body = body.replace("\n", "\n\n")
 			with CustomRenderer(post_id=c.parent_submission) as renderer:
 				body_md = renderer.render(mistletoe.Document(body))
 			body_html = sanitize(body_md, linkgen=True)

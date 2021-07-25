@@ -41,10 +41,7 @@ _allowed_tags = tags = ['b',
 						]
 
 _allowed_attributes = {
-	'a': ['href', 'title', "rel", "data-original-name"],
-	'i': [],
-	'img': ['src', 'class'],
-	'span': ['style']
+	'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-original-name']
 	}
 
 _allowed_protocols = [
@@ -54,7 +51,8 @@ _allowed_protocols = [
 
 _allowed_styles =[
 	'color',
-	'font-weight'
+	'font-weight',
+	'margin-bottom'
 ]
 
 # filter to make all links show domain on hover
