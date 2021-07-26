@@ -678,7 +678,6 @@ CREATE TABLE public.commentvotes (
     comment_id integer,
     vote_type integer,
     user_id integer,
-    created_utc integer,
     creation_ip character(64),
     app_id integer
 );
@@ -1240,7 +1239,6 @@ CREATE TABLE public.votes (
     id integer NOT NULL,
     user_id integer NOT NULL,
     submission_id integer,
-    created_utc integer NOT NULL,
     vote_type integer,
     creation_ip character(64),
     app_id integer
@@ -2057,13 +2055,6 @@ CREATE INDEX commentvotes_comments_type_index ON public.commentvotes USING btree
 
 
 --
--- Name: cvote_created_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX cvote_created_idx ON public.commentvotes USING btree (created_utc);
-
-
---
 -- Name: cvote_user_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -2453,13 +2444,6 @@ CREATE INDEX users_unbanutc_idx ON public.users USING btree (unban_utc DESC);
 --
 
 CREATE INDEX users_username_trgm_idx ON public.users USING gin (username public.gin_trgm_ops);
-
-
---
--- Name: vote_created_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX vote_created_idx ON public.votes USING btree (created_utc);
 
 
 --
