@@ -116,7 +116,10 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 			blocking, 
 			blocking.c.target_id == Submission.author_id, 
 			isouter=True
-		).first()
+		)
+
+		print(items.all())
+		items=items.first()
 		print('ggg')
 
 		if not items and not graceful:
