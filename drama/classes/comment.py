@@ -41,7 +41,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	shadowbanned = Column(Boolean, default=False)
 	distinguish_level = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
-	purged_utc = Column(Integer, default=0)
 	is_approved = Column(Integer, default=0)
 	approved_utc = Column(Integer, default=0)
 	creation_ip = Column(String(64), default='')

@@ -47,7 +47,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	views = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
 	banaward = Column(String)
-	purged_utc = Column(Integer, default=0)
 	distinguish_level = Column(Integer, default=0)
 	created_str = Column(String(255))
 	stickied = Column(Boolean, default=False)
