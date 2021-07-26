@@ -50,7 +50,6 @@ def flagged_posts(v):
 
 	posts = g.db.query(Submission).filter_by(
 		is_approved=0,
-		purged_utc=0,
 		is_banned=False
 	).join(Submission.flags
 		   ).options(contains_eager(Submission.flags)
@@ -103,7 +102,6 @@ def flagged_comments(v):
 	posts = g.db.query(Comment
 					   ).filter_by(
 		is_approved=0,
-		purged_utc=0,
 		is_banned=False
 	).join(Comment.flags).options(contains_eager(Comment.flags)
 								  ).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
