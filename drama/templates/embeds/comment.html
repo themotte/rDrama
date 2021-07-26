@@ -34,9 +34,9 @@
 			{% endif %}
 			<span> </span>
 		{% endif %}
-								<span class="time-stamp" data-toggle="tooltip" data-placement="bottom"  title="{{p.created_datetime}}"><span>&#183;</span> {{c.age_string}}</span>
+								<span class="time-stamp" data-toggle="tooltip" data-placement="bottom"  title="{{c.created_datetime}}"><span>&#183;</span> {{c.age_string}}</span>
 		{% if c.edited_utc %}
-		<span class="time-edited" data-toggle="tooltip" data-placement="bottom"  title="{{p.edited_datetime}}"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
+		<span class="time-edited" data-toggle="tooltip" data-placement="bottom"  title="{{c.edited_datetime}}"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 		{% endif %}
 
 				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.base36id}}')"></span>
