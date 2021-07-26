@@ -145,7 +145,7 @@ app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
 app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
-app.config["DISABLESIGNUPS"] = bool(int(environ.get("DISABLESIGNUPS", "0")))
+#app.config["DISABLESIGNUPS"] = bool(int(environ.get("DISABLESIGNUPS", "0")))
 
 
 def limiter_key_func():
