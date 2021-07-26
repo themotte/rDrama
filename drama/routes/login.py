@@ -156,8 +156,8 @@ def logout(v):
 @no_cors
 @auth_desired
 def sign_up_get(v):
-	if app.config.get("DISABLESIGNUPS", False):
-		return "Signups are disable for the time being.", 403
+	#if app.config.get("DISABLESIGNUPS", False):
+	#	return "Signups are disable for the time being.", 403
 
 	if v: return redirect("/")
 
@@ -213,8 +213,8 @@ def sign_up_get(v):
 @no_cors
 @auth_desired
 def sign_up_post(v):
-	if app.config.get("DISABLESIGNUPS", False):
-		return "Signups are disable for the time being.", 403
+	#if app.config.get("DISABLESIGNUPS", False):
+	#	return "Signups are disable for the time being.", 403
 
 	if v:
 		abort(403)
