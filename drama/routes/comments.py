@@ -399,7 +399,7 @@ def api_comment(v):
 
 	g.db.add(c)
 	g.db.flush()
-	
+	print("7")
 	if v.dramacoins >= 0:
 		if request.files.get("file"):
 			file=request.files["file"]
@@ -414,6 +414,7 @@ def api_comment(v):
 			with CustomRenderer(post_id=parent_id) as renderer:
 				body_md = renderer.render(mistletoe.Document(body))
 			body_html = sanitize(body_md, linkgen=True)
+	print("8")
 
 	c_aux = CommentAux(
 		id=c.id,
