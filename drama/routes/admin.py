@@ -6,7 +6,7 @@ from sqlalchemy.orm import lazyload
 import threading
 import subprocess
 import imagehash
-from os import remove
+from os import remove, environ
 from PIL import Image as IMAGE
 
 from drama.helpers.wrappers import *
@@ -543,11 +543,15 @@ def agendaposter(user_id, v):
 	else:
 		return redirect(user.url)
 
-# @app.route("/disablesignups", methods=["POST"])
-# @admin_level_required(6)
-# @validate_formkey
-# def disablesignups(v):
-# 	return "", 204
+@app.route("/disablesignups", methods=["POST"])
+@admin_level_required(6)
+@validate_formkey
+def disablesignups(v):
+
+	environ["DISABLESIGNUPS"] = "0" if app.config.get("DISABLESIGNUPS") else "1"
+	app.config["DISABLESIGNUPS"] = not app.config.get("DISABLESIGNUPS")
+
+	return "", 204
 
 
 @app.route("/shadowban/<user_id>", methods=["POST"])
