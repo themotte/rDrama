@@ -107,8 +107,6 @@ def discord_redirect(v):
 	url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{x['id']}"
 
 	name=v.username
-	if v.real_id:
-		name+= f" | {v.real_id}"
 
 	data={
 		"access_token":token,

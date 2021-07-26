@@ -1046,7 +1046,6 @@ def user_stat_data(v):
 				  'banned_users': g.db.query(User).filter(User.is_banned != 0).count(),
 				  'reserved_users': g.db.query(User).filter(User.reserved is not None).count(),
 				  'email_verified_users': g.db.query(User).filter_by(is_banned=0, is_activated=True).count(),
-				  'real_id_verified_users': g.db.query(User).filter(User.reserved is not None, User.real_id is not None).count()
 				  }
 
 	post_stats = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
