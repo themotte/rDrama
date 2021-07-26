@@ -20,10 +20,6 @@ class Vote(Base):
 
 	def __init__(self, *args, **kwargs):
 
-		if "created_utc" not in kwargs:
-			kwargs["created_utc"] = int(time())
-
-
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
@@ -34,7 +30,6 @@ class Vote(Base):
 		data={
 			"user_id": self.user_id,
 			"submission_id":self.submission_id,
-			"created_utc": self.created_utc,
 			"vote_type":self.vote_type
 			}
 		return data
@@ -62,9 +57,6 @@ class CommentVote(Base):
 	comment = relationship("Comment", lazy="subquery")
 
 	def __init__(self, *args, **kwargs):
-		if "created_utc" not in kwargs:
-			kwargs["created_utc"] = int(time())
-
 
 		super().__init__(*args, **kwargs)
 
@@ -76,7 +68,6 @@ class CommentVote(Base):
 		data={
 			"user_id": self.user_id,
 			"comment_id":self.comment_id,
-			"created_utc": self.created_utc,
 			"vote_type":self.vote_type
 			}
 		return data
