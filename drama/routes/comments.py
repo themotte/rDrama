@@ -306,13 +306,16 @@ def api_comment(v):
 															 ).options(contains_eager(Comment.comment_aux)).first()
 	if existing:
 		return jsonify({"error": f"You already made that comment: {existing.permalink}"}), 409
+	print('dbvc')
 
 	if parent.author.any_block_exists(v) and not v.admin_level>=3:
 		return jsonify(
 			{"error": "You can't reply to users who have blocked you, or users you have blocked."}), 403
+	print('hghggh')
 
 	# get bot status
 	is_bot = request.headers.get("X-User-Type","")=="Bot"
+	print('df')
 
 	# check spam - this should hopefully be faster
 	if not is_bot:
@@ -361,6 +364,7 @@ def api_comment(v):
 
 			g.db.commit()
 			return jsonify({"error": "Too much spam!"}), 403
+	print('d')
 
 	# check badlinks
 	soup = BeautifulSoup(body_html, features="html.parser")
@@ -382,7 +386,7 @@ def api_comment(v):
 
 		if badlink:
 			return jsonify({"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
-
+	print('z')
 	# create comment
 	parent_id = parent_fullname.split("_")[1]
 	post = get_post(parent_id)
