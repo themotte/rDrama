@@ -79,11 +79,8 @@ CREATE TABLE public.submissions (
     domain_ref integer,
     is_approved integer NOT NULL,
     approved_utc integer,
-    original_board_id integer,
     edited_utc integer,
-    creation_ip character varying(64) NOT NULL,
     mod_approved integer,
-    is_image boolean,
     has_thumb boolean,
     accepted_utc integer,
     post_public boolean,
@@ -98,7 +95,6 @@ CREATE TABLE public.submissions (
     score_best double precision,
     upvotes integer,
     downvotes integer,
-    gm_distinguish integer DEFAULT 0 NOT NULL,
     app_id integer,
     creation_region character(2) DEFAULT NULL::bpchar,
     purged_utc integer DEFAULT 0,
@@ -266,26 +262,14 @@ CREATE TABLE public.comments (
     is_approved integer NOT NULL,
     author_name character varying(64),
     approved_utc integer,
-    creation_ip character varying(64) NOT NULL,
-    score_disputed double precision,
-    score_hot double precision,
-    score_top integer,
     level integer,
     parent_comment_id integer,
-    title_id integer,
     over_18 boolean,
-    is_op boolean,
-    is_offensive boolean,
-    is_nsfl boolean,
-    original_board_id integer,
     upvotes integer,
     downvotes integer,
     is_bot boolean DEFAULT false,
-    gm_distinguish integer DEFAULT 0 NOT NULL,
     is_pinned boolean DEFAULT false,
     app_id integer,
-    creation_region character(2) DEFAULT NULL::bpchar,
-    purged_utc integer DEFAULT 0,
     sentto integer,
     shadowbanned boolean,
     banaward text
@@ -2010,13 +1994,6 @@ CREATE INDEX comment_body_trgm_idx ON public.comments_aux USING gin (body public
 
 
 --
--- Name: comment_ip_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX comment_ip_idx ON public.comments USING btree (creation_ip);
-
-
---
 -- Name: comment_parent_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -2028,13 +2005,6 @@ CREATE INDEX comment_parent_index ON public.comments USING btree (parent_comment
 --
 
 CREATE INDEX comment_post_id_index ON public.comments USING btree (parent_submission);
-
-
---
--- Name: comment_purge_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX comment_purge_idx ON public.comments USING btree (purged_utc);
 
 
 --
@@ -2052,45 +2022,10 @@ CREATE INDEX comments_aux_id_idx ON public.comments_aux USING btree (id);
 
 
 --
--- Name: comments_loader_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX comments_loader_idx ON public.comments USING btree (parent_submission, level, score_hot DESC) WHERE (level <= 8);
-
-
---
--- Name: comments_original_board_id_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX comments_original_board_id_idx ON public.comments USING btree (original_board_id);
-
-
---
 -- Name: comments_parent_id_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX comments_parent_id_idx ON public.comments USING btree (parent_comment_id);
-
-
---
--- Name: comments_score_disputed_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX comments_score_disputed_idx ON public.comments USING btree (score_disputed DESC);
-
-
---
--- Name: comments_score_hot_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX comments_score_hot_idx ON public.comments USING btree (score_hot DESC);
-
-
---
--- Name: comments_score_top_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX comments_score_top_idx ON public.comments USING btree (score_top DESC);
 
 
 --
@@ -2339,13 +2274,6 @@ CREATE INDEX submission_hot_sort_idx ON public.submissions USING btree (is_banne
 
 
 --
--- Name: submission_ip_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX submission_ip_idx ON public.submissions USING btree (creation_ip);
-
-
---
 -- Name: submission_isbanned_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -2364,13 +2292,6 @@ CREATE INDEX submission_isdeleted_idx ON public.submissions USING btree (deleted
 --
 
 CREATE INDEX submission_new_sort_idx ON public.submissions USING btree (is_banned, deleted_utc, created_utc DESC, over_18);
-
-
---
--- Name: submission_original_board_id_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX submission_original_board_id_idx ON public.submissions USING btree (original_board_id);
 
 
 --
