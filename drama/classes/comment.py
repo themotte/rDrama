@@ -42,8 +42,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	distinguish_level = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
 	is_approved = Column(Integer, default=0)
-	approved_utc = Column(Integer, default=0)
-	creation_ip = Column(String(64), default='')
 	level = Column(Integer, default=0)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
 
@@ -80,8 +78,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 		if "created_utc" not in kwargs:
 			kwargs["created_utc"] = int(time.time())
-
-		kwargs["creation_ip"] = request.remote_addr
 
 		super().__init__(*args, **kwargs)
 

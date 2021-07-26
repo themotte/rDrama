@@ -159,7 +159,6 @@ def api_vote_comment(comment_id, x, v):
 		vote = CommentVote(user_id=v.id,
 						   vote_type=x,
 						   comment_id=base36decode(comment_id),
-						   creation_ip=request.remote_addr,
 						   app_id=v.client.application.id if v.client else None
 						   )
 

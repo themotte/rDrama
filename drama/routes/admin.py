@@ -728,7 +728,6 @@ def ban_post(post_id, v):
 
 	post.is_banned = True
 	post.is_approved = 0
-	post.approved_utc = 0
 	post.stickied = False
 	post.is_pinned = False
 
@@ -773,7 +772,6 @@ def unban_post(post_id, v):
 
 	post.is_banned = False
 	post.is_approved = v.id
-	post.approved_utc = int(time.time())
 
 	g.db.add(post)
 
@@ -839,7 +837,6 @@ def api_ban_comment(c_id, v):
 
 	comment.is_banned = True
 	comment.is_approved = 0
-	comment.approved_utc = 0
 
 	g.db.add(comment)
 	ma=ModAction(
@@ -870,7 +867,6 @@ def api_unban_comment(c_id, v):
 
 	comment.is_banned = False
 	comment.is_approved = v.id
-	comment.approved_utc = int(time.time())
 
 
 	return "", 204
@@ -1162,33 +1158,6 @@ def multiple_plots(**kwargs):
 	plt.clf()
 
 	return upload_from_file(name, name)
-
-
-@app.route("/admin/distinguish_post/<pid>", methods=["POST"])
-@app.route("/api/v1/distinguish_post/<pid>", methods=["POST"])
-@admin_level_required(6)
-@api("update")
-def distinguish_post(pid, v):
-
-	post = get_post(pid, v=v)
-
-	if post.author_id != v.id:
-		abort(403)
-
-	if post.gm_distinguish:
-		post.gm_distinguish = 0
-	else:
-		post.gm_distinguish = 1
-	g.db.add(post)
-
-	ma=ModAction(
-		kind="herald_post" if post.gm_distinguish else "unherald_post",
-		user_id=v.id,
-		target_submission_id=post.id,
-		)
-	g.db.add(ma)
-
-	return "", 204
 
 @app.route("/admin/add_admin", methods=["POST"])
 @auth_required

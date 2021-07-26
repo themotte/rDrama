@@ -232,13 +232,9 @@ def post_base36id(pid, anything=None, v=None):
 	g.db.add(post)
 	g.db.commit()
 
-	if post.over_18 and not (v and v.over_18) and not session_over18():
-		t = int(time.time())
+	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		return {"html":lambda:render_template("errors/nsfw.html",
 							   v=v,
-							   t=t,
-							   lo_formkey=make_logged_out_formkey(t),
-
 							   ),
 				"api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
 				}

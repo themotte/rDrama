@@ -14,7 +14,6 @@ class Vote(Base):
 	vote_type = Column(Integer)
 	submission_id = Column(Integer, ForeignKey("submissions.id"))
 	created_utc = Column(Integer, default=0)
-	creation_ip = Column(String)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 
 	user = relationship("User", lazy="subquery")
@@ -25,7 +24,6 @@ class Vote(Base):
 		if "created_utc" not in kwargs:
 			kwargs["created_utc"] = int(time())
 
-		kwargs["creation_ip"]=request.remote_addr
 
 		super().__init__(*args, **kwargs)
 
@@ -76,7 +74,6 @@ class CommentVote(Base):
 	vote_type = Column(Integer)
 	comment_id = Column(Integer, ForeignKey("comments.id"))
 	created_utc = Column(Integer, default=0)
-	creation_ip = Column(String)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 
 	user = relationship("User", lazy="subquery")
@@ -86,7 +83,6 @@ class CommentVote(Base):
 		if "created_utc" not in kwargs:
 			kwargs["created_utc"] = int(time())
 
-		kwargs["creation_ip"]=request.remote_addr
 
 		super().__init__(*args, **kwargs)
 
