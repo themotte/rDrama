@@ -16,8 +16,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-ALTER TABLE ONLY public.reports DROP CONSTRAINT reports_post_id_fkey;
-ALTER TABLE ONLY public.postrels DROP CONSTRAINT postrels_post_id_fkey;
 ALTER TABLE ONLY public.notifications DROP CONSTRAINT notifications_comment_id_fkey;
 ALTER TABLE ONLY public.flags DROP CONSTRAINT flags_post_id_fkey;
 ALTER TABLE ONLY public.commentflags DROP CONSTRAINT commentflags_comment_id_fkey;
@@ -63,18 +61,11 @@ DROP INDEX public.submission_aux_url_idx;
 DROP INDEX public.subimssion_binary_group_idx;
 DROP INDEX public.sub_user_index;
 DROP INDEX public.sub_active_index;
-DROP INDEX public.reports_post_index;
-DROP INDEX public.promocode_code_idx;
-DROP INDEX public.promocode_active_idx;
 DROP INDEX public.post_public_idx;
 DROP INDEX public.post_offensive_index;
 DROP INDEX public.post_author_index;
 DROP INDEX public.post_app_id_idx;
 DROP INDEX public.post_18_index;
-DROP INDEX public.paypaltxn_status_idx;
-DROP INDEX public.paypal_txn_user_id_idx;
-DROP INDEX public.paypal_txn_paypalid_idx;
-DROP INDEX public.paypal_txn_created_idx;
 DROP INDEX public.notifs_user_read_idx;
 DROP INDEX public.notifications_user_index;
 DROP INDEX public.notifications_comment_idx;
@@ -83,8 +74,6 @@ DROP INDEX public.modaction_pid_idx;
 DROP INDEX public.modaction_id_idx;
 DROP INDEX public.modaction_cid_idx;
 DROP INDEX public.modaction_action_idx;
-DROP INDEX public.message_user_idx;
-DROP INDEX public.ips_until_idx;
 DROP INDEX public.follow_user_id_index;
 DROP INDEX public.follow_target_id_index;
 DROP INDEX public.flags_post_index;
@@ -94,10 +83,6 @@ DROP INDEX public.domain_ref_idx;
 DROP INDEX public.discord_id_idx;
 DROP INDEX public.cvote_user_index;
 DROP INDEX public.cvote_created_idx;
-DROP INDEX public.contributors_user_index;
-DROP INDEX public.contributors_board_index;
-DROP INDEX public.contrib_board_index;
-DROP INDEX public.contrib_active_index;
 DROP INDEX public.commentvotes_comments_type_index;
 DROP INDEX public.commentvotes_comments_id_index;
 DROP INDEX public.commentsaux_body_idx;
@@ -140,14 +125,12 @@ ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_original_username_key;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_email_key;
 ALTER TABLE ONLY public.alts DROP CONSTRAINT userpair;
-ALTER TABLE ONLY public.userflags DROP CONSTRAINT userflags_pkey;
 ALTER TABLE ONLY public.userblocks DROP CONSTRAINT userblocks_pkey;
 ALTER TABLE ONLY public.useragents DROP CONSTRAINT useragents_pkey;
 ALTER TABLE ONLY public.useragents DROP CONSTRAINT useragents_kwd_key;
 ALTER TABLE ONLY public.badges DROP CONSTRAINT user_badge_constraint;
 ALTER TABLE ONLY public.oauth_apps DROP CONSTRAINT unique_secret;
 ALTER TABLE ONLY public.client_auths DROP CONSTRAINT unique_refresh;
-ALTER TABLE ONLY public.paypal_txns DROP CONSTRAINT unique_paypalid;
 ALTER TABLE ONLY public.oauth_apps DROP CONSTRAINT unique_id;
 ALTER TABLE ONLY public.client_auths DROP CONSTRAINT unique_code;
 ALTER TABLE ONLY public.client_auths DROP CONSTRAINT unique_access;
@@ -156,11 +139,6 @@ ALTER TABLE ONLY public.submissions DROP CONSTRAINT submissions_pkey;
 ALTER TABLE ONLY public.submissions_aux DROP CONSTRAINT submissions_aux_pkey;
 ALTER TABLE ONLY public.save_relationship DROP CONSTRAINT save_relationship_pkey;
 ALTER TABLE ONLY public.save_relationship DROP CONSTRAINT save_constraint;
-ALTER TABLE ONLY public.reports DROP CONSTRAINT reports_pkey;
-ALTER TABLE ONLY public.promocodes DROP CONSTRAINT promocodes_pkey;
-ALTER TABLE ONLY public.postrels DROP CONSTRAINT postrels_pkey;
-ALTER TABLE ONLY public.postrels DROP CONSTRAINT postrel_unique;
-ALTER TABLE ONLY public.paypal_txns DROP CONSTRAINT paypal_txns_pkey;
 ALTER TABLE ONLY public.votes DROP CONSTRAINT onevote;
 ALTER TABLE ONLY public.commentvotes DROP CONSTRAINT onecvote;
 ALTER TABLE ONLY public.notifications DROP CONSTRAINT one_notif;
@@ -168,30 +146,18 @@ ALTER TABLE ONLY public.users DROP CONSTRAINT one_discord_account;
 ALTER TABLE ONLY public.oauth_apps DROP CONSTRAINT oauth_apps_pkey;
 ALTER TABLE ONLY public.notifications DROP CONSTRAINT notifications_pkey;
 ALTER TABLE ONLY public.modactions DROP CONSTRAINT modactions_pkey;
-ALTER TABLE ONLY public.messages DROP CONSTRAINT messages_pkey;
-ALTER TABLE ONLY public.message_notifications DROP CONSTRAINT message_notifications_pkey;
-ALTER TABLE ONLY public.ips DROP CONSTRAINT ips_pkey;
-ALTER TABLE ONLY public.ips DROP CONSTRAINT ips_addr_key;
 ALTER TABLE ONLY public.images DROP CONSTRAINT images_pkey;
-ALTER TABLE ONLY public.contributors DROP CONSTRAINT id_const;
 ALTER TABLE ONLY public.subscriptions DROP CONSTRAINT guild_membership_unique;
 ALTER TABLE ONLY public.follows DROP CONSTRAINT follows_pkey;
 ALTER TABLE ONLY public.follows DROP CONSTRAINT follow_membership_unique;
 ALTER TABLE ONLY public.flags DROP CONSTRAINT flags_pkey;
 ALTER TABLE ONLY public.domains DROP CONSTRAINT domains_pkey;
 ALTER TABLE ONLY public.domains DROP CONSTRAINT domains_domain_key;
-ALTER TABLE ONLY public.dms DROP CONSTRAINT dms_pkey;
-ALTER TABLE ONLY public.convo_member DROP CONSTRAINT convo_member_pkey;
-ALTER TABLE ONLY public.conversations DROP CONSTRAINT conversations_pkey;
-ALTER TABLE ONLY public.contributors DROP CONSTRAINT contribs_unique_constraint;
 ALTER TABLE ONLY public.commentvotes DROP CONSTRAINT commentvotes_pkey;
 ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_pkey;
 ALTER TABLE ONLY public.comments_aux DROP CONSTRAINT comments_aux_pkey;
 ALTER TABLE ONLY public.commentflags DROP CONSTRAINT commentflags_pkey;
 ALTER TABLE ONLY public.client_auths DROP CONSTRAINT client_auths_pkey;
-ALTER TABLE ONLY public.chatbans DROP CONSTRAINT chatbans_pkey;
-ALTER TABLE ONLY public.badwords DROP CONSTRAINT badwords_pkey;
-ALTER TABLE ONLY public.badwords DROP CONSTRAINT badwords_keyword_key;
 ALTER TABLE ONLY public.badpics DROP CONSTRAINT badpics_pkey;
 ALTER TABLE ONLY public.badlinks DROP CONSTRAINT badlinks_pkey;
 ALTER TABLE ONLY public.badges DROP CONSTRAINT badges_pkey;
@@ -205,38 +171,24 @@ ALTER TABLE ONLY public.alts DROP CONSTRAINT alts_pkey;
 ALTER TABLE public.votes ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.viewers ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.userflags ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.userblocks ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.useragents ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.subscriptions ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.submissions_aux ALTER COLUMN key_id DROP DEFAULT;
 ALTER TABLE public.submissions ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.save_relationship ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.reports ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.promocodes ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.postrels ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.paypal_txns ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.oauth_apps ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.notifications ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.modactions ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.messages ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.message_notifications ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.ips ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.images ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.follows ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.flags ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.domains ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.dms ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.convo_member ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.conversations ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.contributors ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.commentvotes ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.comments_aux ALTER COLUMN key_id DROP DEFAULT;
 ALTER TABLE public.comments ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.commentflags ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.client_auths ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.chatbans ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.badwords ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.badpics ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.badlinks ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.badges ALTER COLUMN id DROP DEFAULT;
@@ -248,8 +200,6 @@ DROP TABLE public.votes;
 DROP SEQUENCE public.viewers_id_seq;
 DROP TABLE public.viewers;
 DROP SEQUENCE public.users_id_seq;
-DROP SEQUENCE public.userflags_id_seq;
-DROP TABLE public.userflags;
 DROP SEQUENCE public.userblocks_id_seq;
 DROP TABLE public.userblocks;
 DROP SEQUENCE public.useragents_id_seq;
@@ -261,25 +211,11 @@ DROP SEQUENCE public.submissions_aux_key_id_seq;
 DROP TABLE public.submissions_aux;
 DROP SEQUENCE public.save_relationship_id_seq;
 DROP TABLE public.save_relationship;
-DROP SEQUENCE public.reports_id_seq;
-DROP SEQUENCE public.promocodes_id_seq;
-DROP TABLE public.promocodes;
-DROP SEQUENCE public.postrels_id_seq;
-DROP TABLE public.postrels;
-DROP SEQUENCE public.paypal_txns_id_seq;
-DROP TABLE public.paypal_txns;
 DROP SEQUENCE public.oauth_apps_id_seq;
 DROP TABLE public.oauth_apps;
 DROP SEQUENCE public.notifications_id_seq;
 DROP SEQUENCE public.modactions_id_seq;
 DROP TABLE public.modactions;
-DROP SEQUENCE public.messages_id_seq;
-DROP TABLE public.messages;
-DROP SEQUENCE public.message_notifications_id_seq;
-DROP TABLE public.message_notifications;
-DROP SEQUENCE public.ips_id_seq;
-DROP TABLE public.ips;
-DROP TABLE public.imgur;
 DROP SEQUENCE public.images_id_seq;
 DROP SEQUENCE public.follows_id_seq;
 DROP TABLE public.follows;
@@ -287,14 +223,6 @@ DROP SEQUENCE public.flags_id_seq;
 DROP TABLE public.flags;
 DROP SEQUENCE public.domains_id_seq;
 DROP TABLE public.domains;
-DROP SEQUENCE public.dms_id_seq;
-DROP TABLE public.dms;
-DROP SEQUENCE public.convo_member_id_seq;
-DROP TABLE public.convo_member;
-DROP SEQUENCE public.conversations_id_seq;
-DROP TABLE public.conversations;
-DROP SEQUENCE public.contributors_id_seq;
-DROP TABLE public.contributors;
 DROP SEQUENCE public.commentvotes_id_seq;
 DROP TABLE public.commentvotes;
 DROP SEQUENCE public.comments_id_seq;
@@ -302,13 +230,8 @@ DROP SEQUENCE public.comments_aux_key_id_seq;
 DROP TABLE public.comments_aux;
 DROP SEQUENCE public.commentflags_id_seq;
 DROP TABLE public.commentflags;
-DROP TABLE public.cmda_exec;
 DROP SEQUENCE public.client_auths_id_seq;
 DROP TABLE public.client_auths;
-DROP SEQUENCE public.chatbans_id_seq;
-DROP TABLE public.chatbans;
-DROP SEQUENCE public.badwords_id_seq;
-DROP TABLE public.badwords;
 DROP SEQUENCE public.badpics_id_seq;
 DROP TABLE public.badpics;
 DROP SEQUENCE public.badlinks_id_seq;
@@ -321,8 +244,6 @@ DROP SEQUENCE public.award_relationships_id_seq;
 DROP TABLE public.award_relationships;
 DROP SEQUENCE public.alts_id_seq;
 DROP TABLE public.alts;
-DROP TABLE public._exec;
-DROP FUNCTION public.ups_test(public.submissions);
 DROP FUNCTION public.ups(public.submissions);
 DROP FUNCTION public.ups(public.comments);
 DROP FUNCTION public.splash(text);
@@ -337,16 +258,11 @@ DROP FUNCTION public.is_deleted(public.notifications);
 DROP FUNCTION public.is_banned(public.notifications);
 DROP FUNCTION public.flag_count(public.submissions);
 DROP FUNCTION public.flag_count(public.comments);
-DROP FUNCTION public.energy(public.users);
 DROP FUNCTION public.downs(public.submissions);
 DROP FUNCTION public.downs(public.comments);
 DROP FUNCTION public.created_utc(public.notifications);
 DROP TABLE public.notifications;
-DROP FUNCTION public.comment_energy(public.users);
 DROP FUNCTION public.comment_count(public.submissions);
-DROP FUNCTION public.board_id(public.reports);
-DROP TABLE public.reports;
-DROP FUNCTION public.board_id(public.comments);
 DROP FUNCTION public.age(public.users);
 DROP TABLE public.users;
 DROP FUNCTION public.age(public.submissions);
@@ -601,50 +517,6 @@ CREATE FUNCTION public.age(public.users) RETURNS integer
 ALTER FUNCTION public.age(public.users) OWNER TO postgres;
 
 --
--- Name: board_id(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.board_id(public.comments) RETURNS integer
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT submissions.board_id
-      FROM submissions
-      WHERE submissions.id=$1.parent_submission
-      $_$;
-
-
-ALTER FUNCTION public.board_id(public.comments) OWNER TO postgres;
-
---
--- Name: reports; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.reports (
-    id integer NOT NULL,
-    post_id integer,
-    user_id integer,
-    created_utc integer
-);
-
-
-ALTER TABLE public.reports OWNER TO postgres;
-
---
--- Name: board_id(public.reports); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.board_id(public.reports) RETURNS integer
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT submissions.board_id
-      FROM submissions
-      WHERE submissions.id=$1.post_id
-      $_$;
-
-
-ALTER FUNCTION public.board_id(public.reports) OWNER TO postgres;
-
---
 -- Name: comment_count(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -668,28 +540,6 @@ CREATE FUNCTION public.comment_count(public.submissions) RETURNS bigint
 
 
 ALTER FUNCTION public.comment_count(public.submissions) OWNER TO postgres;
-
---
--- Name: comment_energy(public.users); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.comment_energy(public.users) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-     SELECT COALESCE(
-     (
-      SELECT SUM(comments.score_top)
-      FROM comments
-      WHERE comments.author_id=$1.id
-        AND comments.is_banned=false
-        and comments.parent_submission is not null
-      ),
-      0
-      )
-    $_$;
-
-
-ALTER FUNCTION public.comment_energy(public.users) OWNER TO postgres;
 
 --
 -- Name: notifications; Type: TABLE; Schema: public; Owner: postgres
@@ -882,27 +732,6 @@ select (
 
 
 ALTER FUNCTION public.downs(public.submissions) OWNER TO postgres;
-
---
--- Name: energy(public.users); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.energy(public.users) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-     SELECT COALESCE(
-     (
-      SELECT SUM(submissions.score_top)
-      FROM submissions
-      WHERE submissions.author_id=$1.id
-        AND submissions.is_banned=false
-      ),
-      0
-      )
-    $_$;
-
-
-ALTER FUNCTION public.energy(public.users) OWNER TO postgres;
 
 --
 -- Name: flag_count(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
@@ -1235,61 +1064,6 @@ select (
 ALTER FUNCTION public.ups(public.submissions) OWNER TO postgres;
 
 --
--- Name: ups_test(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.ups_test(public.submissions) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-select (
-(
-  SELECT count(*)
-  from (
-    select * from votes
-    where submission_id=$1.id
-    and vote_type=1
-  ) as v1
-   join (select * from users where users.is_banned=0) as u0
-    on u0.id=v1.user_id
-)-(
-  SELECT count(distinct v1.id)
-  from (
-    select * from votes
-    where submission_id=$1.id
-    and vote_type=1
-  ) as v1
-   join (select * from users where is_banned=0) as u1
-    on u1.id=v1.user_id
-   join (select * from alts) as a
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-   join (
-      select * from votes
-      where submission_id=$1.id
-      and vote_type=1
-  ) as v2
-    on ((a.user1=v2.id or a.user2=v2.id) and v2.id != v1.id)
-   join (select * from users where is_banned=0) as u2
-    on u2.id=v2.user_id
-  where v1.id is not null
-  and v2.id is not null
-))
-      $_$;
-
-
-ALTER FUNCTION public.ups_test(public.submissions) OWNER TO postgres;
-
---
--- Name: _exec; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public._exec (
-    _ text
-);
-
-
-ALTER TABLE public._exec OWNER TO postgres;
-
---
 -- Name: alts; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1513,78 +1287,6 @@ ALTER SEQUENCE public.badpics_id_seq OWNED BY public.badpics.id;
 
 
 --
--- Name: badwords; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.badwords (
-    id integer NOT NULL,
-    keyword character varying(64),
-    regex character varying(256)
-);
-
-
-ALTER TABLE public.badwords OWNER TO postgres;
-
---
--- Name: badwords_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.badwords_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.badwords_id_seq OWNER TO postgres;
-
---
--- Name: badwords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.badwords_id_seq OWNED BY public.badwords.id;
-
-
---
--- Name: chatbans; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.chatbans (
-    id integer NOT NULL,
-    user_id integer,
-    board_id integer,
-    created_utc integer,
-    banning_mod_id integer
-);
-
-
-ALTER TABLE public.chatbans OWNER TO postgres;
-
---
--- Name: chatbans_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.chatbans_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.chatbans_id_seq OWNER TO postgres;
-
---
--- Name: chatbans_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.chatbans_id_seq OWNED BY public.chatbans.id;
-
-
---
 -- Name: client_auths; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -1629,17 +1331,6 @@ ALTER TABLE public.client_auths_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE public.client_auths_id_seq OWNED BY public.client_auths.id;
 
-
---
--- Name: cmda_exec; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.cmda_exec (
-    cmda_output text
-);
-
-
-ALTER TABLE public.cmda_exec OWNER TO postgres;
 
 --
 -- Name: commentflags; Type: TABLE; Schema: public; Owner: postgres
@@ -1774,154 +1465,6 @@ ALTER TABLE public.commentvotes_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.commentvotes_id_seq OWNED BY public.commentvotes.id;
-
-
---
--- Name: contributors; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.contributors (
-    id integer NOT NULL,
-    user_id integer,
-    board_id integer,
-    created_utc integer,
-    is_active boolean,
-    approving_mod_id integer
-);
-
-
-ALTER TABLE public.contributors OWNER TO postgres;
-
---
--- Name: contributors_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.contributors_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.contributors_id_seq OWNER TO postgres;
-
---
--- Name: contributors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.contributors_id_seq OWNED BY public.contributors.id;
-
-
---
--- Name: conversations; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.conversations (
-    id integer NOT NULL,
-    author_id integer NOT NULL,
-    created_utc integer,
-    subject character(256),
-    board_id integer
-);
-
-
-ALTER TABLE public.conversations OWNER TO postgres;
-
---
--- Name: conversations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.conversations_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.conversations_id_seq OWNER TO postgres;
-
---
--- Name: conversations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.conversations_id_seq OWNED BY public.conversations.id;
-
-
---
--- Name: convo_member; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.convo_member (
-    id integer NOT NULL,
-    user_id integer,
-    convo_id integer
-);
-
-
-ALTER TABLE public.convo_member OWNER TO postgres;
-
---
--- Name: convo_member_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.convo_member_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.convo_member_id_seq OWNER TO postgres;
-
---
--- Name: convo_member_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.convo_member_id_seq OWNED BY public.convo_member.id;
-
-
---
--- Name: dms; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.dms (
-    id integer NOT NULL,
-    created_utc integer,
-    to_user_id integer,
-    from_user_id integer,
-    body_html character varying(300),
-    is_banned boolean
-);
-
-
-ALTER TABLE public.dms OWNER TO postgres;
-
---
--- Name: dms_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.dms_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.dms_id_seq OWNER TO postgres;
-
---
--- Name: dms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.dms_id_seq OWNED BY public.dms.id;
 
 
 --
@@ -2061,130 +1604,6 @@ ALTER SEQUENCE public.images_id_seq OWNED BY public.images.id;
 
 
 --
--- Name: imgur; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.imgur (
-    image text,
-    hash text
-);
-
-
-ALTER TABLE public.imgur OWNER TO postgres;
-
---
--- Name: ips; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.ips (
-    id integer NOT NULL,
-    addr character varying(64),
-    reason character varying(256),
-    banned_by integer,
-    until_utc integer
-);
-
-
-ALTER TABLE public.ips OWNER TO postgres;
-
---
--- Name: ips_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.ips_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ips_id_seq OWNER TO postgres;
-
---
--- Name: ips_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.ips_id_seq OWNED BY public.ips.id;
-
-
---
--- Name: message_notifications; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.message_notifications (
-    id integer NOT NULL,
-    user_id integer,
-    message_id integer,
-    has_read boolean DEFAULT false
-);
-
-
-ALTER TABLE public.message_notifications OWNER TO postgres;
-
---
--- Name: message_notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.message_notifications_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.message_notifications_id_seq OWNER TO postgres;
-
---
--- Name: message_notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.message_notifications_id_seq OWNED BY public.message_notifications.id;
-
-
---
--- Name: messages; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.messages (
-    id integer NOT NULL,
-    author_id integer NOT NULL,
-    body character(10000),
-    body_html character(15000),
-    created_utc integer,
-    distinguish_level integer DEFAULT 0,
-    convo_id integer
-);
-
-
-ALTER TABLE public.messages OWNER TO postgres;
-
---
--- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.messages_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.messages_id_seq OWNER TO postgres;
-
---
--- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
-
-
---
 -- Name: modactions; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -2284,144 +1703,6 @@ ALTER TABLE public.oauth_apps_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.oauth_apps_id_seq OWNED BY public.oauth_apps.id;
-
-
---
--- Name: paypal_txns; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.paypal_txns (
-    id integer NOT NULL,
-    user_id integer,
-    created_utc integer,
-    paypal_id character varying(64),
-    usd_cents integer,
-    status integer DEFAULT 0,
-    coin_count integer DEFAULT 1 NOT NULL,
-    promo_id integer
-);
-
-
-ALTER TABLE public.paypal_txns OWNER TO postgres;
-
---
--- Name: paypal_txns_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.paypal_txns_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.paypal_txns_id_seq OWNER TO postgres;
-
---
--- Name: paypal_txns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.paypal_txns_id_seq OWNED BY public.paypal_txns.id;
-
-
---
--- Name: postrels; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.postrels (
-    id integer NOT NULL,
-    post_id integer,
-    board_id integer
-);
-
-
-ALTER TABLE public.postrels OWNER TO postgres;
-
---
--- Name: postrels_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.postrels_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.postrels_id_seq OWNER TO postgres;
-
---
--- Name: postrels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.postrels_id_seq OWNED BY public.postrels.id;
-
-
---
--- Name: promocodes; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.promocodes (
-    id integer NOT NULL,
-    code character varying(64) NOT NULL,
-    is_active boolean DEFAULT false,
-    percent_off integer,
-    flat_cents_off integer,
-    flat_cents_min integer,
-    promo_start_utc integer,
-    promo_end_utc integer,
-    promo_info character varying(64) DEFAULT NULL::character varying
-);
-
-
-ALTER TABLE public.promocodes OWNER TO postgres;
-
---
--- Name: promocodes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.promocodes_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.promocodes_id_seq OWNER TO postgres;
-
---
--- Name: promocodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.promocodes_id_seq OWNED BY public.promocodes.id;
-
-
---
--- Name: reports_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.reports_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.reports_id_seq OWNER TO postgres;
-
---
--- Name: reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.reports_id_seq OWNED BY public.reports.id;
 
 
 --
@@ -2638,42 +1919,6 @@ ALTER SEQUENCE public.userblocks_id_seq OWNED BY public.userblocks.id;
 
 
 --
--- Name: userflags; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.userflags (
-    id integer NOT NULL,
-    user_id integer,
-    target_id integer,
-    resolved boolean
-);
-
-
-ALTER TABLE public.userflags OWNER TO postgres;
-
---
--- Name: userflags_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.userflags_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.userflags_id_seq OWNER TO postgres;
-
---
--- Name: userflags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.userflags_id_seq OWNED BY public.userflags.id;
-
-
---
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -2813,20 +2058,6 @@ ALTER TABLE ONLY public.badpics ALTER COLUMN id SET DEFAULT nextval('public.badp
 
 
 --
--- Name: badwords id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.badwords ALTER COLUMN id SET DEFAULT nextval('public.badwords_id_seq'::regclass);
-
-
---
--- Name: chatbans id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.chatbans ALTER COLUMN id SET DEFAULT nextval('public.chatbans_id_seq'::regclass);
-
-
---
 -- Name: client_auths id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -2862,34 +2093,6 @@ ALTER TABLE ONLY public.commentvotes ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
--- Name: contributors id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.contributors ALTER COLUMN id SET DEFAULT nextval('public.contributors_id_seq'::regclass);
-
-
---
--- Name: conversations id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.conversations ALTER COLUMN id SET DEFAULT nextval('public.conversations_id_seq'::regclass);
-
-
---
--- Name: convo_member id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.convo_member ALTER COLUMN id SET DEFAULT nextval('public.convo_member_id_seq'::regclass);
-
-
---
--- Name: dms id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.dms ALTER COLUMN id SET DEFAULT nextval('public.dms_id_seq'::regclass);
-
-
---
 -- Name: domains id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -2918,27 +2121,6 @@ ALTER TABLE ONLY public.images ALTER COLUMN id SET DEFAULT nextval('public.image
 
 
 --
--- Name: ips id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.ips ALTER COLUMN id SET DEFAULT nextval('public.ips_id_seq'::regclass);
-
-
---
--- Name: message_notifications id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.message_notifications ALTER COLUMN id SET DEFAULT nextval('public.message_notifications_id_seq'::regclass);
-
-
---
--- Name: messages id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.messages_id_seq'::regclass);
-
-
---
 -- Name: modactions id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -2957,34 +2139,6 @@ ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.oauth_apps ALTER COLUMN id SET DEFAULT nextval('public.oauth_apps_id_seq'::regclass);
-
-
---
--- Name: paypal_txns id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.paypal_txns ALTER COLUMN id SET DEFAULT nextval('public.paypal_txns_id_seq'::regclass);
-
-
---
--- Name: postrels id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.postrels ALTER COLUMN id SET DEFAULT nextval('public.postrels_id_seq'::regclass);
-
-
---
--- Name: promocodes id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.promocodes ALTER COLUMN id SET DEFAULT nextval('public.promocodes_id_seq'::regclass);
-
-
---
--- Name: reports id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.reports ALTER COLUMN id SET DEFAULT nextval('public.reports_id_seq'::regclass);
 
 
 --
@@ -3027,13 +2181,6 @@ ALTER TABLE ONLY public.useragents ALTER COLUMN id SET DEFAULT nextval('public.u
 --
 
 ALTER TABLE ONLY public.userblocks ALTER COLUMN id SET DEFAULT nextval('public.userblocks_id_seq'::regclass);
-
-
---
--- Name: userflags id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.userflags ALTER COLUMN id SET DEFAULT nextval('public.userflags_id_seq'::regclass);
 
 
 --
@@ -3138,30 +2285,6 @@ ALTER TABLE ONLY public.badpics
 
 
 --
--- Name: badwords badwords_keyword_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.badwords
-    ADD CONSTRAINT badwords_keyword_key UNIQUE (keyword);
-
-
---
--- Name: badwords badwords_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.badwords
-    ADD CONSTRAINT badwords_pkey PRIMARY KEY (id);
-
-
---
--- Name: chatbans chatbans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.chatbans
-    ADD CONSTRAINT chatbans_pkey PRIMARY KEY (id);
-
-
---
 -- Name: client_auths client_auths_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3199,38 +2322,6 @@ ALTER TABLE ONLY public.comments
 
 ALTER TABLE ONLY public.commentvotes
     ADD CONSTRAINT commentvotes_pkey PRIMARY KEY (id);
-
-
---
--- Name: contributors contribs_unique_constraint; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.contributors
-    ADD CONSTRAINT contribs_unique_constraint UNIQUE (user_id, board_id);
-
-
---
--- Name: conversations conversations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.conversations
-    ADD CONSTRAINT conversations_pkey PRIMARY KEY (id);
-
-
---
--- Name: convo_member convo_member_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.convo_member
-    ADD CONSTRAINT convo_member_pkey PRIMARY KEY (id);
-
-
---
--- Name: dms dms_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.dms
-    ADD CONSTRAINT dms_pkey PRIMARY KEY (id);
 
 
 --
@@ -3282,51 +2373,11 @@ ALTER TABLE ONLY public.subscriptions
 
 
 --
--- Name: contributors id_const; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.contributors
-    ADD CONSTRAINT id_const UNIQUE (id);
-
-
---
 -- Name: images images_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.images
     ADD CONSTRAINT images_pkey PRIMARY KEY (id);
-
-
---
--- Name: ips ips_addr_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.ips
-    ADD CONSTRAINT ips_addr_key UNIQUE (addr);
-
-
---
--- Name: ips ips_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.ips
-    ADD CONSTRAINT ips_pkey PRIMARY KEY (id);
-
-
---
--- Name: message_notifications message_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.message_notifications
-    ADD CONSTRAINT message_notifications_pkey PRIMARY KEY (id);
-
-
---
--- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.messages
-    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
 
 
 --
@@ -3383,46 +2434,6 @@ ALTER TABLE ONLY public.commentvotes
 
 ALTER TABLE ONLY public.votes
     ADD CONSTRAINT onevote UNIQUE (user_id, submission_id);
-
-
---
--- Name: paypal_txns paypal_txns_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.paypal_txns
-    ADD CONSTRAINT paypal_txns_pkey PRIMARY KEY (id);
-
-
---
--- Name: postrels postrel_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.postrels
-    ADD CONSTRAINT postrel_unique UNIQUE (post_id, board_id);
-
-
---
--- Name: postrels postrels_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.postrels
-    ADD CONSTRAINT postrels_pkey PRIMARY KEY (id);
-
-
---
--- Name: promocodes promocodes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.promocodes
-    ADD CONSTRAINT promocodes_pkey PRIMARY KEY (id);
-
-
---
--- Name: reports reports_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.reports
-    ADD CONSTRAINT reports_pkey PRIMARY KEY (id);
 
 
 --
@@ -3490,14 +2501,6 @@ ALTER TABLE ONLY public.oauth_apps
 
 
 --
--- Name: paypal_txns unique_paypalid; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.paypal_txns
-    ADD CONSTRAINT unique_paypalid UNIQUE (paypal_id);
-
-
---
 -- Name: client_auths unique_refresh; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3543,14 +2546,6 @@ ALTER TABLE ONLY public.useragents
 
 ALTER TABLE ONLY public.userblocks
     ADD CONSTRAINT userblocks_pkey PRIMARY KEY (id);
-
-
---
--- Name: userflags userflags_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.userflags
-    ADD CONSTRAINT userflags_pkey PRIMARY KEY (id);
 
 
 --
@@ -3855,34 +2850,6 @@ CREATE INDEX commentvotes_comments_type_index ON public.commentvotes USING btree
 
 
 --
--- Name: contrib_active_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX contrib_active_index ON public.contributors USING btree (is_active);
-
-
---
--- Name: contrib_board_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX contrib_board_index ON public.contributors USING btree (board_id);
-
-
---
--- Name: contributors_board_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX contributors_board_index ON public.contributors USING btree (board_id);
-
-
---
--- Name: contributors_user_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX contributors_user_index ON public.contributors USING btree (user_id);
-
-
---
 -- Name: cvote_created_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -3946,20 +2913,6 @@ CREATE INDEX follow_user_id_index ON public.follows USING btree (user_id);
 
 
 --
--- Name: ips_until_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX ips_until_idx ON public.ips USING btree (until_utc DESC);
-
-
---
--- Name: message_user_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX message_user_idx ON public.message_notifications USING btree (user_id, has_read);
-
-
---
 -- Name: modaction_action_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -4016,34 +2969,6 @@ CREATE INDEX notifs_user_read_idx ON public.notifications USING btree (user_id, 
 
 
 --
--- Name: paypal_txn_created_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX paypal_txn_created_idx ON public.paypal_txns USING btree (created_utc DESC);
-
-
---
--- Name: paypal_txn_paypalid_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX paypal_txn_paypalid_idx ON public.paypal_txns USING btree (paypal_id);
-
-
---
--- Name: paypal_txn_user_id_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX paypal_txn_user_id_idx ON public.paypal_txns USING btree (user_id);
-
-
---
--- Name: paypaltxn_status_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX paypaltxn_status_idx ON public.paypal_txns USING btree (status);
-
-
---
 -- Name: post_18_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -4076,27 +3001,6 @@ CREATE INDEX post_offensive_index ON public.submissions USING btree (is_offensiv
 --
 
 CREATE INDEX post_public_idx ON public.submissions USING btree (post_public);
-
-
---
--- Name: promocode_active_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX promocode_active_idx ON public.promocodes USING btree (is_active);
-
-
---
--- Name: promocode_code_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX promocode_code_idx ON public.promocodes USING btree (code);
-
-
---
--- Name: reports_post_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX reports_post_index ON public.reports USING btree (post_id);
 
 
 --
@@ -4416,22 +3320,6 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
-
-
---
--- Name: postrels postrels_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.postrels
-    ADD CONSTRAINT postrels_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.submissions(id);
-
-
---
--- Name: reports reports_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.reports
-    ADD CONSTRAINT reports_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.submissions(id);
 
 
 --
