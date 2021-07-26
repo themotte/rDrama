@@ -313,14 +313,14 @@ def log_event(name, link):
 @app.after_request
 def after_request(response):
 
-    try:
-        g.db.commit()
-        g.db.close()
-    except Exception as e:
-        g.db.rollback()
-        g.db.close()
+	try:
+		g.db.commit()
+		g.db.close()
+	except Exception as e:
+		g.db.rollback()
+		g.db.close()
 		print(e)
-        abort(500)
+		abort(500)
 
 	response.headers.add('Access-Control-Allow-Headers',
 						 "Origin, X-Requested-With, Content-Type, Accept, x-auth"
