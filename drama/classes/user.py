@@ -5,7 +5,6 @@ import pyotp
 from drama.helpers.discord import delete_role
 from drama.helpers.aws import *
 from .alts import Alt
-from .titles import Title
 from .submission import SaveRelationship
 from .comment import Notification
 from .subscriptions import *
@@ -77,7 +76,6 @@ class User(Base, Stndrd, Age_times):
 	unban_utc = Column(Integer, default=None)
 	ban_reason = Column(String, default="")
 	login_nonce = Column(Integer, default=0)
-	title = relationship("Title", lazy="joined")
 	reserved = Column(String(256))
 	dramacoins = Column(Integer, default=0)
 	mfa_secret = deferred(Column(String(16)))
@@ -528,7 +526,6 @@ class User(Base, Stndrd, Age_times):
 				'is_private': self.is_private,
 				'profile_url': self.profile_url,
 				'banner_url': self.banner_url,
-				'title': self.title.json if self.title else None,
 				'bio': self.bio,
 				'bio_html': self.bio_html,
 				'flair': self.customtitle
