@@ -377,8 +377,6 @@ def api_comment(v):
 		if badlink:
 			return jsonify({"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
 
-	if v.shadowbanned: shadowbanned = True
-	else: shadowbanned = False
 	# create comment
 	parent_id = parent_fullname.split("_")[1]
 	post = get_post(parent_id)
@@ -390,7 +388,7 @@ def api_comment(v):
 				over_18=post.over_18 or request.form.get("over_18","")=="true",
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
-				shadowbanned=shadowbanned
+				shadowbanned=v.shadowbanned
 				)
 
 	g.db.add(c)
@@ -581,7 +579,7 @@ def api_comment(v):
 
 
 
-	if not shadowbanned:
+	if not v.shadowbanned:
 		# queue up notification for parent author
 		notify_users = set()
 		
