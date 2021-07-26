@@ -134,7 +134,7 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 		items = g.db.query(
 			Submission
 		).filter(Submission.id == i).first()
-
+		print(items)
 		print('help')
 		if not items and not graceful:
 			abort(404)
