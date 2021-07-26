@@ -117,10 +117,7 @@ class ModAction(Base, Stndrd, Age_times):
 		return f"/log/{self.base36id}"
 	@property
 	def title_text(self):
-		if self.user.is_deleted:
-			return f"[deleted user] {self.actiontype['title'].format(self=self)}"
-		else:
-			return f"@{self.user.username} {self.actiontype['title'].format(self=self)}"
+		return f"@{self.user.username} {self.actiontype['title'].format(self=self)}"
 	
 	
 
