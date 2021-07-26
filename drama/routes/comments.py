@@ -901,7 +901,7 @@ def undelete_comment(cid, v):
 @app.route("/api/v1/embed/post/<pid>/comment/<cid>", methods=["GET"])
 def embed_comment_cid(cid, pid=None):
 
-	comment = get_comment(cid)
+	comment = get_comment(int(cid))
 
 	if not comment.parent:
 		abort(403)
