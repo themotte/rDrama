@@ -9,7 +9,7 @@ from drama.helpers.alerts import *
 @auth_desired
 @public("read")
 def badmins(v):
-	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.dramacoins).all()
+	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.dramacoins.desc()).all()
 	return {
 		"html":lambda:render_template("badmins.html", v=v, badmins=badmins),
 		"api":lambda:jsonify({"data":[x.json for x in badmins]})
