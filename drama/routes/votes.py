@@ -150,7 +150,7 @@ def api_vote_comment(comment_id, new, v):
 		elif existing.vote_type != 0 and new == 0:
 			comment.author.dramacoins -= 1
 			g.db.add(comment.author)
-		existing.change_to(new)
+		existing.vote_type = new
 		g.db.add(existing)
 	else:
 		if new != 0:
