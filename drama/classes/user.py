@@ -531,9 +531,6 @@ class User(Base, Stndrd, Age_times):
 				'flair': self.customtitle
 				}
 
-		if self.real_id:
-			data['real_id'] = self.real_id
-
 		return data
 
 	@property
