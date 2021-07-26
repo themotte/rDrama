@@ -159,12 +159,7 @@ def error_503(e, v):
 @validate_formkey
 def allow_nsfw_logged_in(v):
 
-	cutoff = int(time.time()) + 3600
-
-	if not session.get("over_18", None):
-		session["over_18"] = {}
-
-	session["over_18"][1] = cutoff
+	if not session.get("over_18"): session["over_18"] = int(time.time()) + 3600
 
 	return redirect(request.form.get("redir"))
 
@@ -183,11 +178,7 @@ def allow_nsfw_logged_out(v):
 									   ):
 		abort(403)
 
-	if not session.get("over_18", None):
-		session["over_18"] = {}
-
-	cutoff = int(time.time()) + 3600
-	session["over_18"][1] = cutoff
+	if not session.get("over_18"): session["over_18"] = int(time.time()) + 3600
 
 	return redirect(request.form.get("redir"))
 
