@@ -1060,19 +1060,9 @@ def user_stat_data(v):
 					  } for i in range(len(day_cutoffs) - 1)
 					 ]
 
-	vote_stats = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
-				   "day_start": day_cutoffs[i + 1],
-				   "votes": g.db.query(Vote).join(Vote.user).filter(Vote.created_utc < day_cutoffs[i],
-																	Vote.created_utc > day_cutoffs[i + 1],
-																	User.is_banned == 0
-																	).count()
-				   } for i in range(len(day_cutoffs) - 1)
-				  ]
-
 	x = create_plot(sign_ups={'daily_signups': daily_signups},
 					posts={'post_stats': post_stats},
 					comments={'comment_stats': comment_stats},
-					votes={'vote_stats': vote_stats}
 					)
 
 	final = {
@@ -1081,7 +1071,6 @@ def user_stat_data(v):
 			"signup_data": daily_signups,
 			"post_data": post_stats,
 			"comment_data": comment_stats,
-			"vote_data": vote_stats
 			}
 
 	return jsonify(final)
@@ -1096,13 +1085,11 @@ def create_plot(**kwargs):
 	daily_signups = [d["signups"] for d in kwargs["sign_ups"]['daily_signups']][::-1]
 	post_stats = [d["posts"] for d in kwargs["posts"]['post_stats']][::-1]
 	comment_stats = [d["comments"] for d in kwargs["comments"]['comment_stats']][::-1]
-	vote_stats = [d["votes"] for d in kwargs["votes"]['vote_stats']][::-1]
 	daily_times = [d["date"] for d in kwargs["sign_ups"]['daily_signups']]
 
 	multi_plots = multiple_plots(sign_ups=daily_signups,
 								 posts=post_stats,
 								 comments=comment_stats,
-								 votes=vote_stats,
 								 daily_times=daily_times)
 
 	return multi_plots
@@ -1112,12 +1099,10 @@ def multiple_plots(**kwargs):
 
 	# create multiple charts
 	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)
-	posts_chart = plt.subplot2grid((20, 4), (5, 0), rowspan=5, colspan=4)
-	comments_chart = plt.subplot2grid((20, 4), (10, 0), rowspan=5, colspan=4)
-	votes_chart = plt.subplot2grid((20, 4), (15, 0), rowspan=5, colspan=4)
+	posts_chart = plt.subplot2grid((20, 4), (7, 0), rowspan=5, colspan=4)
+	comments_chart = plt.subplot2grid((20, 4), (14, 0), rowspan=5, colspan=4)
 
-	signup_chart.grid(), posts_chart.grid(
-	), comments_chart.grid(), votes_chart.grid()
+	signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
 
 	signup_chart.plot(
 		kwargs['daily_times'][::-1],
@@ -1131,47 +1116,19 @@ def multiple_plots(**kwargs):
 		kwargs['daily_times'][::-1],
 		kwargs['comments'],
 		color='gold')
-	votes_chart.plot(
-		kwargs['daily_times'][::-1],
-		kwargs['votes'],
-		color='silver')
 
 	signup_chart.set_ylabel("Signups")
 	posts_chart.set_ylabel("Posts")
 	comments_chart.set_ylabel("Comments")
-	votes_chart.set_ylabel("Votes")
 	comments_chart.set_xlabel("Time (UTC)")
-	votes_chart.set_xlabel("Time (UTC)")
 
 	signup_chart.legend(loc='upper left', frameon=True)
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
-	votes_chart.legend(loc='upper left', frameon=True)
 
-	now = int(time.time())
 	name = "multiplot.png"
 
 	plt.savefig(name)
 	plt.clf()
 
 	return upload_from_file(name, name)
-
-@app.route("/admin/add_admin", methods=["POST"])
-@auth_required
-@validate_formkey
-def invite_username(v):
-
-	username = request.form.get("username", '').lstrip('@')
-	user = get_user(username)
-	if not user:
-		return jsonify({"error": "That user doesn't exist."}), 404
-	user.admin_level = 6
-	g.db.add(user)
-	ma=ModAction(
-		kind="add_mod",
-		user_id=v.id,
-		target_user_id=user.id,
-		)
-	g.db.add(ma)
-
-	return "", 204
