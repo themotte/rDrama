@@ -107,11 +107,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	#awards = relationship("AwardRelationship", lazy="joined")
 
-	rank_hot = deferred(Column(Float, server_default=FetchedValue()))
-	rank_fiery = deferred(Column(Float, server_default=FetchedValue()))
-	rank_activity = deferred(Column(Float, server_default=FetchedValue()))
-	rank_best = deferred(Column(Float, server_default=FetchedValue()))
-
 	def __init__(self, *args, **kwargs):
 
 		if "created_utc" not in kwargs:

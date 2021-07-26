@@ -83,9 +83,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	score = deferred(Column(Integer, server_default=FetchedValue()))
 
-	rank_fiery = deferred(Column(Float, server_default=FetchedValue()))
-	rank_hot = deferred(Column(Float, server_default=FetchedValue()))
-
 	def __init__(self, *args, **kwargs):
 
 		if "created_utc" not in kwargs:
