@@ -17,18 +17,12 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_title_fkey;
-ALTER TABLE ONLY public.subscriptions DROP CONSTRAINT subscriptions_board_id_fkey;
-ALTER TABLE ONLY public.submissions DROP CONSTRAINT submissions_original_board_id_fkey;
 ALTER TABLE ONLY public.subcategories DROP CONSTRAINT subcategories_cat_id_fkey;
 ALTER TABLE ONLY public.reports DROP CONSTRAINT reports_post_id_fkey;
 ALTER TABLE ONLY public.postrels DROP CONSTRAINT postrels_post_id_fkey;
-ALTER TABLE ONLY public.postrels DROP CONSTRAINT postrels_board_id_fkey;
 ALTER TABLE ONLY public.notifications DROP CONSTRAINT notifications_comment_id_fkey;
-ALTER TABLE ONLY public.mods DROP CONSTRAINT mods_board_id_fkey;
 ALTER TABLE ONLY public.flags DROP CONSTRAINT flags_post_id_fkey;
 ALTER TABLE ONLY public.commentflags DROP CONSTRAINT commentflags_comment_id_fkey;
-ALTER TABLE ONLY public.contributors DROP CONSTRAINT board_id_fkey;
-ALTER TABLE ONLY public.bans DROP CONSTRAINT bans_board_id_fkey;
 ALTER TABLE ONLY public.badges DROP CONSTRAINT badges_badge_id_fkey;
 DROP INDEX public.votes_type_index;
 DROP INDEX public.votes_submission_id_index;
@@ -142,14 +136,7 @@ DROP INDEX public.comment_body_idx;
 DROP INDEX public.client_refresh_token_idx;
 DROP INDEX public.client_access_token_idx;
 DROP INDEX public.cflag_user_idx;
-DROP INDEX public.boards_sub_idx;
-DROP INDEX public.boards_over18_idx;
-DROP INDEX public.boards_name_trgm_idx;
-DROP INDEX public.boards_isbanned_idx;
 DROP INDEX public.boardblocks_idx;
-DROP INDEX public.board_private_idx;
-DROP INDEX public.board_optout_idx;
-DROP INDEX public.board_name_idx;
 DROP INDEX public.block_user_idx;
 DROP INDEX public.block_target_idx;
 DROP INDEX public.ban_user_index;
@@ -215,7 +202,6 @@ ALTER TABLE ONLY public.ips DROP CONSTRAINT ips_pkey;
 ALTER TABLE ONLY public.ips DROP CONSTRAINT ips_addr_key;
 ALTER TABLE ONLY public.images DROP CONSTRAINT images_pkey;
 ALTER TABLE ONLY public.contributors DROP CONSTRAINT id_const;
-ALTER TABLE ONLY public.boards DROP CONSTRAINT guild_names_unique;
 ALTER TABLE ONLY public.subscriptions DROP CONSTRAINT guild_membership_unique;
 ALTER TABLE ONLY public.follows DROP CONSTRAINT follows_pkey;
 ALTER TABLE ONLY public.follows DROP CONSTRAINT follow_membership_unique;
@@ -233,7 +219,6 @@ ALTER TABLE ONLY public.commentflags DROP CONSTRAINT commentflags_pkey;
 ALTER TABLE ONLY public.client_auths DROP CONSTRAINT client_auths_pkey;
 ALTER TABLE ONLY public.chatbans DROP CONSTRAINT chatbans_pkey;
 ALTER TABLE ONLY public.categories DROP CONSTRAINT categories_pkey;
-ALTER TABLE ONLY public.boards DROP CONSTRAINT boards_pkey;
 ALTER TABLE ONLY public.boardblocks DROP CONSTRAINT boardblocks_pkey;
 ALTER TABLE ONLY public.bans DROP CONSTRAINT bans_pkey;
 ALTER TABLE ONLY public.badwords DROP CONSTRAINT badwords_pkey;
@@ -287,7 +272,6 @@ ALTER TABLE public.commentflags ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.client_auths ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.chatbans ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.categories ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.boards ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.boardblocks ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.bans ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.badwords ALTER COLUMN id DROP DEFAULT;
@@ -371,7 +355,6 @@ DROP SEQUENCE public.chatbans_id_seq;
 DROP TABLE public.chatbans;
 DROP SEQUENCE public.categories_id_seq;
 DROP TABLE public.categories;
-DROP SEQUENCE public.boards_id_seq;
 DROP SEQUENCE public.boardblocks_id_seq;
 DROP TABLE public.boardblocks;
 DROP SEQUENCE public.bans_id_seq;
@@ -394,8 +377,6 @@ DROP TABLE public._exec;
 DROP FUNCTION public.ups_test(public.submissions);
 DROP FUNCTION public.ups(public.submissions);
 DROP FUNCTION public.ups(public.comments);
-DROP FUNCTION public.trending_rank(public.boards);
-DROP FUNCTION public.subscriber_count(public.boards);
 DROP FUNCTION public.splash(text);
 DROP TABLE public.images;
 DROP FUNCTION public.similar_count(public.comments);
@@ -403,7 +384,6 @@ DROP FUNCTION public.score(public.submissions);
 DROP FUNCTION public.score(public.comments);
 DROP FUNCTION public.report_count(public.submissions);
 DROP FUNCTION public.referral_count(public.users);
-DROP FUNCTION public.recent_subscriptions(public.boards);
 DROP FUNCTION public.rank_hot(public.submissions);
 DROP FUNCTION public.rank_hot(public.comments);
 DROP FUNCTION public.rank_fiery(public.submissions);
@@ -428,15 +408,12 @@ DROP FUNCTION public.comment_count(public.submissions);
 DROP FUNCTION public.board_id(public.reports);
 DROP TABLE public.reports;
 DROP FUNCTION public.board_id(public.comments);
-DROP FUNCTION public.avg_score_computed(public.boards);
 DROP FUNCTION public.age(public.users);
 DROP TABLE public.users;
 DROP FUNCTION public.age(public.submissions);
 DROP TABLE public.submissions;
 DROP FUNCTION public.age(public.comments);
 DROP TABLE public.comments;
-DROP FUNCTION public.age(public.boards);
-DROP TABLE public.boards;
 DROP EXTENSION pg_trgm;
 DROP EXTENSION pg_stat_statements;
 DROP EXTENSION fuzzystrmatch;
@@ -485,62 +462,6 @@ COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
-
---
--- Name: boards; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.boards (
-    id integer NOT NULL,
-    name character varying(64),
-    is_banned boolean,
-    created_utc integer,
-    description character varying(1500),
-    description_html character varying(5000),
-    over_18 boolean,
-    creator_id integer,
-    has_banner boolean NOT NULL,
-    has_profile boolean NOT NULL,
-    ban_reason character varying(256),
-    color character varying(8),
-    downvotes_disabled boolean,
-    restricted_posting boolean,
-    hide_banner_data boolean,
-    profile_nonce integer NOT NULL,
-    banner_nonce integer NOT NULL,
-    is_private boolean,
-    color_nonce integer,
-    is_nsfl boolean,
-    rank_trending double precision,
-    stored_subscriber_count integer,
-    avg_score double precision,
-    all_opt_out boolean,
-    is_siegable boolean DEFAULT true,
-    last_yank_utc integer DEFAULT 0,
-    is_locked_category boolean DEFAULT false,
-    subcat_id integer,
-    secondary_color character(6) DEFAULT 'ffffff'::bpchar,
-    public_chat boolean DEFAULT false,
-    motd character varying(1000) DEFAULT ''::character varying,
-    disablesignups boolean
-);
-
-
-ALTER TABLE public.boards OWNER TO postgres;
-
---
--- Name: age(public.boards); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.age(public.boards) RETURNS integer
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
-      $_$;
-
-
-ALTER FUNCTION public.age(public.boards) OWNER TO postgres;
 
 --
 -- Name: comments; Type: TABLE; Schema: public; Owner: postgres
@@ -775,25 +696,6 @@ CREATE FUNCTION public.age(public.users) RETURNS integer
 
 
 ALTER FUNCTION public.age(public.users) OWNER TO postgres;
-
---
--- Name: avg_score_computed(public.boards); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.avg_score_computed(public.boards) RETURNS numeric
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-select coalesce (
-	(select avg(score_top) from submissions
-	where original_board_id=$1.id
-	and score_top>0)
-	,
-	1
-	)
-$_$;
-
-
-ALTER FUNCTION public.avg_score_computed(public.boards) OWNER TO postgres;
 
 --
 -- Name: board_id(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
@@ -1310,26 +1212,6 @@ CREATE FUNCTION public.rank_hot(public.submissions) RETURNS double precision
 ALTER FUNCTION public.rank_hot(public.submissions) OWNER TO postgres;
 
 --
--- Name: recent_subscriptions(public.boards); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.recent_subscriptions(public.boards) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-         select count(*)
-         from subscriptions
-         left join users
-         on subscriptions.user_id=users.id
-         where subscriptions.board_id=$1.id
-         and subscriptions.is_active=true
-         and subscriptions.created_utc > CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - 60*60*24
-         and users.is_banned=0
-        $_$;
-
-
-ALTER FUNCTION public.recent_subscriptions(public.boards) OWNER TO postgres;
-
---
 -- Name: referral_count(public.users); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1431,106 +1313,6 @@ CREATE FUNCTION public.splash(text) RETURNS SETOF public.images
 
 
 ALTER FUNCTION public.splash(text) OWNER TO postgres;
-
---
--- Name: subscriber_count(public.boards); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.subscriber_count(public.boards) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-	select
-		case 
-		when $1.is_private=false
-		then
-	         (
-	         (
-		         select count(*)
-		         from subscriptions
-		         left join users
-		         on subscriptions.user_id=users.id
-		         where subscriptions.board_id=$1.id
-		         and subscriptions.is_active=true
-		         and users.is_deleted=false and (users.is_banned=0 or users.unban_utc>0)
-	         )-(
-	         	select count(distinct s1.id)
-	         	from
-	         	(
-	         		select *
-	         		from subscriptions
-	         		where board_id=$1.id
-	         		and is_active=true
-	         	) as s1
-   				join (select * from users where is_banned=0 or unban_utc>0) as u1
-    			 on u1.id=s1.user_id
-				join (select * from alts) as a
-			     on (a.user1=s1.user_id or a.user2=s1.user_id)
-			    join (
-			    	select *
-			    	from subscriptions
-			    	where board_id=$1.id
-			    	and is_active=true
-			    ) as s2
-			    on ((a.user1=s2.user_id or a.user2=s2.user_id) and s2.id != s1.id)
-			    join (select * from users where is_banned=0 or unban_utc>0) as u2
-			     on u2.id=s2.user_id
-			    where s1.id is not null
-			    and s2.id is not null        	
-	         )
-	         )
-	    when $1.is_private=true
-	    then
-	         (
-	         (
-	         select count(*)
-	         from subscriptions
-	         left join users
-	         	on subscriptions.user_id=users.id
-	         left join (
-	         	select * from contributors
-	         	where contributors.board_id=$1.id
-	         )as contribs
-	         	on contribs.user_id=users.id
-	         left join (
-	         	select * from mods
-	         	where mods.board_id=$1.id
-	         	and accepted=true
-	         )as m
-	         	on m.user_id=users.id
-	         where subscriptions.board_id=$1.id
-	         and subscriptions.is_active=true
-	         and users.is_deleted=false and (users.is_banned=0 or users.unban_utc>0)
-	         and (contribs.user_id is not null or m.id is not null)
-	         )
-	         )
-	    end
-         
-         
-$_$;
-
-
-ALTER FUNCTION public.subscriber_count(public.boards) OWNER TO postgres;
-
---
--- Name: trending_rank(public.boards); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.trending_rank(public.boards) RETURNS double precision
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-select
-	case 
-		when $1.subscriber_count<=10 then 0
-		when $1.age < 60*60*24*5 then 0
-		when $1.recent_subscriptions<=5 then 0
-		when $1.subscriber_count>=9 then ((cast($1.subscriber_count as float))^(1/3) + cast($1.recent_subscriptions as float)) / cast($1.subscriber_count + 10000 as float)
-	end
-$_$;
-
-
-ALTER FUNCTION public.trending_rank(public.boards) OWNER TO postgres;
 
 --
 -- Name: ups(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
@@ -2048,28 +1830,6 @@ ALTER TABLE public.boardblocks_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.boardblocks_id_seq OWNED BY public.boardblocks.id;
-
-
---
--- Name: boards_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.boards_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.boards_id_seq OWNER TO postgres;
-
---
--- Name: boards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.boards_id_seq OWNED BY public.boards.id;
 
 
 --
@@ -3559,13 +3319,6 @@ ALTER TABLE ONLY public.boardblocks ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- Name: boards id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.boards ALTER COLUMN id SET DEFAULT nextval('public.boards_id_seq'::regclass);
-
-
---
 -- Name: categories id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -3951,14 +3704,6 @@ ALTER TABLE ONLY public.boardblocks
 
 
 --
--- Name: boards boards_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.boards
-    ADD CONSTRAINT boards_pkey PRIMARY KEY (id);
-
-
---
 -- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -4092,14 +3837,6 @@ ALTER TABLE ONLY public.follows
 
 ALTER TABLE ONLY public.subscriptions
     ADD CONSTRAINT guild_membership_unique UNIQUE (user_id, board_id);
-
-
---
--- Name: boards guild_names_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.boards
-    ADD CONSTRAINT guild_names_unique UNIQUE (name);
 
 
 --
@@ -4606,59 +4343,10 @@ CREATE INDEX block_user_idx ON public.userblocks USING btree (user_id);
 
 
 --
--- Name: board_name_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX board_name_idx ON public.boards USING btree (name);
-
-
---
--- Name: board_optout_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX board_optout_idx ON public.boards USING btree (all_opt_out);
-
-
---
--- Name: board_private_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX board_private_idx ON public.boards USING btree (is_private);
-
-
---
 -- Name: boardblocks_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX boardblocks_idx ON public.boardblocks USING btree (user_id, board_id);
-
-
---
--- Name: boards_isbanned_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX boards_isbanned_idx ON public.boards USING btree (is_banned);
-
-
---
--- Name: boards_name_trgm_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX boards_name_trgm_idx ON public.boards USING gin (name public.gin_trgm_ops);
-
-
---
--- Name: boards_over18_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX boards_over18_idx ON public.boards USING btree (over_18);
-
-
---
--- Name: boards_sub_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX boards_sub_idx ON public.boards USING btree (stored_subscriber_count DESC);
 
 
 --
@@ -5454,22 +5142,6 @@ ALTER TABLE ONLY public.badges
 
 
 --
--- Name: bans bans_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bans
-    ADD CONSTRAINT bans_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
-
-
---
--- Name: contributors board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.contributors
-    ADD CONSTRAINT board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
-
-
---
 -- Name: commentflags commentflags_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -5486,27 +5158,11 @@ ALTER TABLE ONLY public.flags
 
 
 --
--- Name: mods mods_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.mods
-    ADD CONSTRAINT mods_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
-
-
---
 -- Name: notifications notifications_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
-
-
---
--- Name: postrels postrels_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.postrels
-    ADD CONSTRAINT postrels_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
 
 
 --
@@ -5531,22 +5187,6 @@ ALTER TABLE ONLY public.reports
 
 ALTER TABLE ONLY public.subcategories
     ADD CONSTRAINT subcategories_cat_id_fkey FOREIGN KEY (cat_id) REFERENCES public.categories(id);
-
-
---
--- Name: submissions submissions_original_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.submissions
-    ADD CONSTRAINT submissions_original_board_id_fkey FOREIGN KEY (original_board_id) REFERENCES public.boards(id);
-
-
---
--- Name: subscriptions subscriptions_board_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.subscriptions
-    ADD CONSTRAINT subscriptions_board_id_fkey FOREIGN KEY (board_id) REFERENCES public.boards(id);
 
 
 --
