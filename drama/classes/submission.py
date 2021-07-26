@@ -37,7 +37,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		uselist=False,
 		innerjoin=True,
 		primaryjoin="Submission.id==SubmissionAux.id")
-	gm_distinguish = Column(Integer, default=0)
 	author_id = Column(BigInteger, ForeignKey("users.id"))
 	repost_id = Column(BigInteger, ForeignKey("submissions.id"), default=0)
 	edited_utc = Column(BigInteger, default=0)
@@ -102,7 +101,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				"%I:%M %p on %d %b %Y", time.gmtime(
 					kwargs["created_utc"]))
 
-		kwargs["creation_ip"] = request.remote_addr
 
 		super().__init__(*args, **kwargs)
 
