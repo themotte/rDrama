@@ -243,6 +243,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 @api("create")
 def api_comment(v):
 
+	print("wtf")
 	parent_submission = base36decode(request.form.get("submission"))
 	parent_fullname = request.form.get("parent_fullname")
 
