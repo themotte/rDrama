@@ -1,5 +1,4 @@
 from os import environ, path
-import calendar
 from .get import *
 from drama.__main__ import app, cache
 

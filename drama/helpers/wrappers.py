@@ -1,7 +1,7 @@
 from werkzeug.wrappers.response import Response as RespObj
 from .get import *
 from .alerts import send_notification
-from drama.__main__ import Base, app, db_session
+from drama.__main__ import app
 
 
 def get_logged_in_user(db=None):

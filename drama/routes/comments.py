@@ -1,5 +1,3 @@
-import threading
-
 from drama.helpers.wrappers import *
 from drama.helpers.filters import *
 from drama.helpers.alerts import *

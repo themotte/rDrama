@@ -1,6 +1,6 @@
 from drama.helpers.wrappers import *
 from drama.helpers.security import *
-from drama.helpers.discord import add_role, delete_role
+from drama.helpers.discord import add_role
 from drama.__main__ import app
 
 SERVER_ID = environ.get("DISCORD_SERVER_ID",'').strip()

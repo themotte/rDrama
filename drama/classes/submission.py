@@ -1,4 +1,4 @@
-from flask import render_template, request, g
+from flask import render_template, g
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 import re, random

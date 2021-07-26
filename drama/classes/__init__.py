@@ -2,7 +2,7 @@ from .alts import *
 from .badges import *
 from .clients import *
 from .comment import *
-from .domains import Domain
+from .domains import *
 from .flags import *
 from .user import *
 from .userblock import *

@@ -4,7 +4,7 @@ from bleach.linkifier import LinkifyFilter
 from urllib.parse import ParseResult, urlunparse
 from functools import partial
 from .get import *
-import os.path
+from os import path
 
 _allowed_tags = tags = ['b',
 						'blockquote',
@@ -189,7 +189,7 @@ def sanitize(text, linkgen=False, flair=False):
 	if flair: emojisize = 20
 	else: emojisize = 30
 	for i in re.finditer(':(.{1,30}?):', sanitized):
-		if os.path.isfile(f'/d/drama/assets/images/emojis/{i.group(1)}.gif'):
+		if path.isfile(f'/d/drama/assets/images/emojis/{i.group(1)}.gif'):
 			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height={emojisize} src="/assets/images/emojis/{i.group(1)}.gif"<span>')
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/embed/").replace("https://music.youtube.com/watch?v=", "https://youtube.com/embed/").replace("/watch?v=", "/embed/").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/embed/")

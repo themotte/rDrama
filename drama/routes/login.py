@@ -134,6 +134,7 @@ def login_post():
 
 
 @app.route("/me", methods=["GET"])
+@app.route("/@me", methods=["GET"])
 @auth_required
 def me(v):
 	return redirect(v.url)
@@ -156,8 +157,8 @@ def logout(v):
 @no_cors
 @auth_desired
 def sign_up_get(v):
-	#if app.config.get("DISABLESIGNUPS", False):
-	#	return "Signups are disable for the time being.", 403
+	with open('./disablesignups', 'r') as f:
+		if f.read() == "yes": return "Signups are disable for the time being.", 403
 
 	if v: return redirect("/")
 
@@ -213,8 +214,8 @@ def sign_up_get(v):
 @no_cors
 @auth_desired
 def sign_up_post(v):
-	#if app.config.get("DISABLESIGNUPS", False):
-	#	return "Signups are disable for the time being.", 403
+	with open('./disablesignups', 'r') as f:
+		if f.read() == "yes": return "Signups are disable for the time being.", 403
 
 	if v:
 		abort(403)

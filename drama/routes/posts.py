@@ -16,7 +16,7 @@ from drama.classes import *
 from .front import frontlist
 from flask import *
 from io import BytesIO
-from drama.__main__ import app, limiter, cache, db_session
+from drama.__main__ import app, limiter, cache
 from PIL import Image as PILimage
 
 with open("snappy.txt", "r") as f:

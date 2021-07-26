@@ -1,12 +1,8 @@
-from urllib.parse import urlparse
 import time
 import calendar
-from sqlalchemy import func
 from sqlalchemy.orm import lazyload
-import threading
-import subprocess
 import imagehash
-from os import remove, environ
+from os import remove, path
 from PIL import Image as IMAGE
 
 from drama.helpers.wrappers import *
@@ -545,9 +541,9 @@ def agendaposter(user_id, v):
 @admin_level_required(6)
 @validate_formkey
 def disablesignups(v):
-
-	environ["DISABLESIGNUPS"] = "0" if app.config.get("DISABLESIGNUPS") else "1"
-	app.config["DISABLESIGNUPS"] = not app.config.get("DISABLESIGNUPS")
+	with open('./disablesignups', 'w') as f:
+		if f.read() == "yes": f.write("no")
+		else: f.write("yes")
 
 	return "", 204
 

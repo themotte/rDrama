@@ -1,7 +1,6 @@
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
-from sqlalchemy.ext.associationproxy import association_proxy
 from .mix_ins import *
 from drama.helpers.base36 import *
 from drama.helpers.lazy import lazy

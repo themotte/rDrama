@@ -1,8 +1,7 @@
 import gevent.monkey
 gevent.monkey.patch_all()
 
-import os
-from os import environ
+from os import environ, path
 import secrets
 from flask import *
 from flask_caching import Cache
@@ -35,7 +34,7 @@ app.config["SITE_NAME"]=environ.get("SITE_NAME", "Drama").strip()
 
 app.config["SITE_COLOR"]=environ.get("SITE_COLOR", "805ad5").strip()
 
-app.config["DRAMAPATH"]=environ.get("DRAMAPATH", os.path.dirname(os.path.realpath(__file__)))
+app.config["DRAMAPATH"]=environ.get("DRAMAPATH", path.dirname(path.realpath(__file__)))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
@@ -300,7 +299,7 @@ def log_event(name, link):
 
 	text = f'> **{name}**\r> {link}'
 
-	url = os.environ.get("DISCORD_WEBHOOK")
+	url = environ.get("DISCORD_WEBHOOK")
 	headers = {"Content-Type": "application/json"}
 	data = {"username": "drama",
 			"content": text
