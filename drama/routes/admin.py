@@ -127,7 +127,7 @@ def admin_home(v):
 @admin_level_required(6)
 @validate_formkey
 def disablesignups(v):
-	with open('./disablesignups', 'wr') as f:
+	with open('./disablesignups', 'r+') as f:
 		if f.read() == "yes": f.write("no")
 		else: f.write("yes")
 
