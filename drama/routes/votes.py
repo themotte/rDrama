@@ -157,7 +157,7 @@ def api_vote_comment(comment_id, new, v):
 			comment.author.dramacoins += 1
 			g.db.add(comment.author)
 		vote = CommentVote(user_id=v.id,
-						   vote_type=x,
+						   vote_type=new,
 						   comment_id=base36decode(comment_id),
 						   app_id=v.client.application.id if v.client else None
 						   )
