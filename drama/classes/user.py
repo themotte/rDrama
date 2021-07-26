@@ -232,9 +232,6 @@ class User(Base, Stndrd, Age_times):
 			comments = comments.filter(Comment.deleted_utc == 0)
 			comments = comments.filter(Comment.is_banned == False)
 
-		if v and v.admin_level == 0:
-			comments = comments.filter(or_(Comment.author_id == v.id))
-
 		comments = comments.options(contains_eager(Comment.post))
 
 		now = int(time.time())
