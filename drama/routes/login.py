@@ -158,7 +158,7 @@ def logout(v):
 @auth_desired
 def sign_up_get(v):
 	with open('./disablesignups', 'r') as f:
-		if f.read() == "yes": return "Signups are disable for the time being.", 403
+		if f.read() == "yes": return "New account registration is currently closed. Please come back later.", 403
 
 	if v: return redirect("/")
 
@@ -215,7 +215,7 @@ def sign_up_get(v):
 @auth_desired
 def sign_up_post(v):
 	with open('./disablesignups', 'r') as f:
-		if f.read() == "yes": return "Signups are disable for the time being.", 403
+		if f.read() == "yes": return "New account registration is currently closed. Please come back later.", 403
 
 	if v:
 		abort(403)
@@ -260,9 +260,6 @@ def sign_up_post(v):
 				args["ref"] = user.username
 
 		return redirect(f"/signup?{urlencode(args)}")
-
-	if app.config["DISABLE_SIGNUPS"]:
-		return new_signup("New account registration is currently closed. Please come back later.")
 
 	if now - int(form_timestamp) < 5:
 		#print(f"signup fail - {username } - too fast")
