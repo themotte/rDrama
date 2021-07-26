@@ -8,9 +8,9 @@ services:
       - "./:/opt/Drama/service"
     environment:
       - PYTHONPATH="opt/Drama/service"
-      - REDIS_URL=redis://127.0.0.1
-      - DATABASE_URL=postgresql://postgres@127.0.0.1:5432/postgres
-      - DATABASE_CONNECTION_POOL_URL=postgresql://postgres@127.0.0.1:5432/postgres
+      - REDIS_URL=redis://redis
+      - DATABASE_URL=postgresql://postgres@postgres:5432/postgres
+      - DATABASE_CONNECTION_POOL_URL=postgresql://postgres@postgres:5432/postgres
       - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
       - SESSION_COOKIE_SECURE=false
       - FLASK_DEBUG=1
@@ -25,14 +25,14 @@ services:
       - AWS_SECRET_ACCESS_KEY=vcxvdfgfc6r554etrgd
       - MAILGUN_KEY=vcxvdfgfc6r554etrgd
       - admin_email=drama@rdrama.net
-      - FORCE_HTTPS=1
+      - FORCE_HTTPS=0
       - DISCORD_SERVER_ID=vcxvdfgfc6r554etrgd
       - DISCORD_CLIENT_ID=vcxvdfgfc6r554etrgd
       - DISCORD_CLIENT_SECRET=vcxvdfgfc6r554etrgd
       - DISCORD_BOT_TOKEN=vcxvdfgfc6r554etrgd
       - imgurkey=vcxvdfgfc6r554etrgd
       - FACEBOOK_TOKEN=vcxvdfgfc6r554etrgd
-      - HCAPTCHA_SITEKEY=vcxvdfgfc6r554etrgd
+        #- HCAPTCHA_SITEKEY=vcxvdfgfc6r554etrgd
       - HCAPTCHA_SECRET=vcxvdfgfc6r554etrgd
       - youtubekey=vcxvdfgfc6r554etrgd
       - PUSHER_KEY=vcxvdfgfc6r554etrgd
@@ -56,6 +56,7 @@ services:
     image: postgres:12.3
     volumes:
       - "./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
+      - "./seed-db.sql:/docker-entrypoint-initdb.d/01-schema.sql"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
