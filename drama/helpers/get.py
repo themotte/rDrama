@@ -90,19 +90,23 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 	print('bbb')
 
 	if v:
+		print('ccc')
 		vt = g.db.query(Vote).filter_by(
 			user_id=v.id, submission_id=i).subquery()
 		blocking = v.blocking.subquery()
+		print('ddd')
 
 		items = g.db.query(
 			Submission,
 			vt.c.vote_type,
 			blocking.c.id,
 		)
+		print('eee')
 
 		if v.admin_level>=4:
 			items=items.options(joinedload(Submission.oauth_app))
-
+		print('fff')
+		print(i)
 		items=items.filter(Submission.id == i
 		).join(
 			vt, 
@@ -113,6 +117,7 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 			blocking.c.target_id == Submission.author_id, 
 			isouter=True
 		).first()
+		print('ggg')
 
 		if not items and not graceful:
 			abort(404)
