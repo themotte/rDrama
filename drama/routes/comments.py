@@ -243,9 +243,10 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 @api("create")
 def api_comment(v):
 
-	print("wtf")
+	print("1")
 	parent_submission = base36decode(request.form.get("submission"))
 	parent_fullname = request.form.get("parent_fullname")
+	print("2")
 
 	# get parent item info
 	parent_id = parent_fullname.split("_")[1]
@@ -264,10 +265,12 @@ def api_comment(v):
 		parent_post = get_post(base36encode(parent_id))
 	else:
 		abort(400)
+	print("3")
 
 	#process and sanitize
 	body = request.form.get("body", "")[0:10000]
 	body = body.strip()
+	print("4")
 
 	if not body and not request.files.get('file'): return jsonify({"error":"You need to actually write something!"}), 400
 	
@@ -278,6 +281,7 @@ def api_comment(v):
 
 	# Run safety filter
 	bans = filter_comment_html(body_html)
+	print("5")
 
 	if bans:
 		ban = bans[0]
@@ -291,6 +295,7 @@ def api_comment(v):
 		if any([x.reason==7 for x in bans]):
 			v.ban( reason="Sexualizing minors")
 		return jsonify({"error": reason}), 401
+	print("6")
 
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
