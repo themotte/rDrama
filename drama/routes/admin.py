@@ -2,11 +2,11 @@ import time
 import calendar
 from sqlalchemy.orm import lazyload
 import imagehash
-from os import remove, path
+from os import remove, getcwd
 from PIL import Image as IMAGE
 
 from drama.helpers.wrappers import *
-from drama.helpers.alerts import *
+from drama.helpers.alerts impordft *
 from drama.helpers.base36 import *
 from drama.helpers.sanitize import *
 from drama.helpers.markdown import *
@@ -119,6 +119,7 @@ def flagged_comments(v):
 @app.route("/admin", methods=["GET"])
 @admin_level_required(3)
 def admin_home(v):
+	print(getcwd())
 	with open('./disablesignups', 'r') as f:
 		x = f.read()
 		return render_template("admin/admin_home.html", v=v, x=x)
