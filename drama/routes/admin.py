@@ -119,7 +119,9 @@ def flagged_comments(v):
 @app.route("/admin", methods=["GET"])
 @admin_level_required(3)
 def admin_home(v):
-	return render_template("admin/admin_home.html", v=v)
+	with open('./disablesignups', 'r') as f:
+		x = f.read()
+		return render_template("admin/admin_home.html", v=v, x=x)
 
 
 @app.route("/admin/badge_grant", methods=["GET"])
@@ -537,7 +539,7 @@ def agendaposter(user_id, v):
 	else:
 		return redirect(user.url)
 
-@app.route("/disablesignups", methods=["POST"])
+@app.route("/admin/disablesignups", methods=["POST"])
 @admin_level_required(6)
 @validate_formkey
 def disablesignups(v):
