@@ -45,11 +45,6 @@ def settings_profile_post(v):
 	if request.values.get("over18", v.over_18) != v.over_18:
 		updated = True
 		v.over_18 = request.values.get("over18", None) == 'true'
-
-	if request.values.get("hide_offensive",
-						  v.hide_offensive) != v.hide_offensive:
-		updated = True
-		v.hide_offensive = request.values.get("hide_offensive", None) == 'true'
 		
 	if request.values.get("private", v.is_private) != v.is_private:
 		updated = True

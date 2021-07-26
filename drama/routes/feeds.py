@@ -17,7 +17,6 @@ def feeds_user(sort='hot', t='all'):
 		page=page,
 		t=t,
 		v=None,
-		hide_offensive=False,
 		ids_only=False)
 
 	domain = environ.get(
