@@ -68,10 +68,7 @@ class ModAction(Base, Stndrd, Age_times):
 	@property
 	def target_link(self):
 		if self.target_user:
-			if self.target_user.is_deleted:
-				return "[deleted user]"
-			else:
-				return f'<a href="{self.target_user.permalink}">{self.target_user.username}</a>'
+			return f'<a href="{self.target_user.permalink}">{self.target_user.username}</a>'
 		elif self.target_post:
 			return f'<a href="{self.target_post.permalink}">{self.target_post.title}</a>'
 		elif self.target_comment:
