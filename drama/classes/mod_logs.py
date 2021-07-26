@@ -13,7 +13,7 @@ class ModAction(Base, Stndrd, Age_times):
 	target_user_id = Column(Integer, ForeignKey("users.id"), default=0)
 	target_submission_id = Column(Integer, ForeignKey("submissions.id"), default=0)
 	target_comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
-	_note=Column(String(256))
+	_note=Column(String(256), default=None)
 	created_utc = Column(Integer, default=0)
 
 
@@ -68,7 +68,10 @@ class ModAction(Base, Stndrd, Age_times):
 	@property
 	def target_link(self):
 		if self.target_user:
-			return f'<a href="{self.target_user.permalink}">{self.target_user.username}</a>'
+			if self.target_user.is_deleted:
+				return "[deleted user]"
+			else:
+				return f'<a href="{self.target_user.permalink}">{self.target_user.username}</a>'
 		elif self.target_post:
 			return f'<a href="{self.target_post.permalink}">{self.target_post.title}</a>'
 		elif self.target_comment:
@@ -114,7 +117,14 @@ class ModAction(Base, Stndrd, Age_times):
 
 	@property
 	def permalink(self):
-		return f"/log/{self.base36id}"	
+		return f"/log/{self.base36id}"
+	@property
+	def title_text(self):
+		if self.user.is_deleted:
+			return f"[deleted user] {self.actiontype['title'].format(self=self)}"
+		else:
+			return f"@{self.user.username} {self.actiontype['title'].format(self=self)}"
+	
 	
 
 
@@ -257,6 +267,36 @@ ACTIONTYPES={
 		"color": "bg-muted",
 		"title": 'un-pinned post {self.target_post.title}'
 	},
+	"invite_mod":{
+		"str":'invited badmin {self.target_link}',
+		"icon":"fa-user-crown",
+		"color": "bg-info",
+		"title": 'invited badmin @{self.target_user.username}'
+	},
+	"uninvite_mod":{
+		"str":'rescinded badmin invitation to {self.target_link}',
+		"icon":"fa-user-crown",
+		"color": "bg-muted",
+		"title": 'rescinded badmin invitation to @{self.target_user.username}'
+	},
+	"accept_mod_invite":{
+		"str":'accepted badmin invitation',
+		"icon":"fa-user-crown",
+		"color": "bg-warning",
+		"title": 'accepted badmin invitation'
+	},
+	"remove_mod":{
+		"str":'removed badmin {self.target_link}',
+		"icon":"fa-user-crown",
+		"color": "bg-danger",
+		"title": 'removed badmin @{self.target_user.username}'
+	},
+	"dethrone_self":{
+		"str":'stepped down as guildmaster',
+		"icon":"fa-user-crown",
+		"color": "bg-danger",
+		"title": 'stepped down as guildmaster'
+	},
 	"add_mod":{
 		"str":'added badmin {self.target_link}',
 		"icon":"fa-user-crown",
@@ -284,6 +324,18 @@ ACTIONTYPES={
 	"unset_nsfw":{
 		"str":'un-set nsfw on post {self.target_link}',
 		"icon":"fa-eye-evil",
+		"color": "bg-muted",
+		"title": 'un-set nsfw on post {self.target_post.title}'
+	},
+	"set_nsfl":{
+		"str":'set nsfl on post {self.target_link}',
+		"icon":"fa-skull",
+		"color": "bg-black",
+		"title": 'set nsfl on post {self.target_post.title}'
+	},
+	"unset_nsfl":{
+		"str":'un-set nsfl on post {self.target_link}',
+		"icon":"fa-skull",
 		"color": "bg-muted",
 		"title": 'un-set nsfw on post {self.target_post.title}'
 	},
@@ -323,4 +375,10 @@ ACTIONTYPES={
 		"color": "bg-muted",
 		"title": "changed permissions on invitation to {self.target_user.username}"
 	},
+	"create_guild":{
+		"str": 'created +{self.board.name}',
+		"icon": "fa-chess-rook",
+		"color": "bg-primary",
+		"title": "created +{self.board.name}"
+	}
 }

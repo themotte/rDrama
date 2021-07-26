@@ -25,10 +25,9 @@ def log(v):
 
 	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
 	else: actions=g.db.query(ModAction).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
-	actions=[i for i in actions]
 
 	next_exists=len(actions)==26
-	actions=actions[0:25]
+	actions=actions[:25]
 
 	return {
 		"html":lambda:render_template(
