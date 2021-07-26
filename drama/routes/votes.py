@@ -145,17 +145,17 @@ def api_vote_comment(comment_id, x, v):
 		user_id=v.id, comment_id=comment.id).first()
 	if existing:
 		if existing == 0 and x != 0:
-			post.author.dramacoins += 1
-			g.db.add(post.author)
+			comment.author.dramacoins += 1
+			g.db.add(comment.author)
 		elif existing != 0 and x == 0:
-			post.author.dramacoins -= 1
-			g.db.add(post.author)
+			comment.author.dramacoins -= 1
+			g.db.add(comment.author)
 		existing.change_to(x)
 		g.db.add(existing)
 	else:
 		if x != 0:
-			post.author.dramacoins += 1
-			g.db.add(post.author)
+			comment.author.dramacoins += 1
+			g.db.add(comment.author)
 		vote = CommentVote(user_id=v.id,
 						   vote_type=x,
 						   comment_id=base36decode(comment_id),
