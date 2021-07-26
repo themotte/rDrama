@@ -1083,7 +1083,7 @@ def undelete_post_pid(pid, v):
 @app.route("/embed/post/<pid>", methods=["GET"])
 def embed_post_pid(pid):
 
-	post = get_post(pid)
+	post = get_post(int(pid))
 
 	if post.is_banned:
 		abort(410)
