@@ -134,11 +134,13 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 			Submission
 		).filter(Submission.id == i).first()
 
+		print('help')
 		if not items and not graceful:
 			abort(404)
-
+		print('me')
 		x=items
 
+	('end of file')
 	return x
 
 
