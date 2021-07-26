@@ -243,10 +243,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 @api("create")
 def api_comment(v):
 
-	print("1")
 	parent_submission = base36decode(request.form.get("submission"))
 	parent_fullname = request.form.get("parent_fullname")
-	print("2")
 
 	# get parent item info
 	parent_id = parent_fullname.split("_")[1]
@@ -265,12 +263,10 @@ def api_comment(v):
 		parent_post = get_post(base36encode(parent_id))
 	else:
 		abort(400)
-	print("3")
 
 	#process and sanitize
 	body = request.form.get("body", "")[0:10000]
 	body = body.strip()
-	print("4")
 
 	if not body and not request.files.get('file'): return jsonify({"error":"You need to actually write something!"}), 400
 	
@@ -281,7 +277,6 @@ def api_comment(v):
 
 	# Run safety filter
 	bans = filter_comment_html(body_html)
-	print("5")
 
 	if bans:
 		ban = bans[0]
@@ -295,7 +290,6 @@ def api_comment(v):
 		if any([x.reason==7 for x in bans]):
 			v.ban( reason="Sexualizing minors")
 		return jsonify({"error": reason}), 401
-	print("6")
 
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
@@ -306,16 +300,13 @@ def api_comment(v):
 															 ).options(contains_eager(Comment.comment_aux)).first()
 	if existing:
 		return jsonify({"error": f"You already made that comment: {existing.permalink}"}), 409
-	print('dbvc')
 
 	if parent.author.any_block_exists(v) and not v.admin_level>=3:
 		return jsonify(
 			{"error": "You can't reply to users who have blocked you, or users you have blocked."}), 403
-	print('hghggh')
 
 	# get bot status
 	is_bot = request.headers.get("X-User-Type","")=="Bot"
-	print('df')
 
 	# check spam - this should hopefully be faster
 	if not is_bot:
@@ -364,7 +355,6 @@ def api_comment(v):
 
 			g.db.commit()
 			return jsonify({"error": "Too much spam!"}), 403
-	print('d')
 
 	# check badlinks
 	soup = BeautifulSoup(body_html, features="html.parser")
@@ -386,26 +376,20 @@ def api_comment(v):
 
 		if badlink:
 			return jsonify({"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
-	print('z')
 	# create comment
 	parent_id = parent_fullname.split("_")[1]
-	print('b')
-	post = get_post(parent_id)
-	print('re')
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
 				parent_fullname=parent.fullname,
 				parent_comment_id=parent_comment_id,
 				level=level,
-				over_18=post.over_18 or request.form.get("over_18","")=="true",
+				over_18=parent_post.over_18 or request.form.get("over_18","")=="true",
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
 				shadowbanned=v.shadowbanned
 				)
-	print('a')
 	g.db.add(c)
 	g.db.flush()
-	print("7")
 	if v.dramacoins >= 0:
 		if request.files.get("file"):
 			file=request.files["file"]
@@ -420,7 +404,6 @@ def api_comment(v):
 			with CustomRenderer(post_id=parent_id) as renderer:
 				body_md = renderer.render(mistletoe.Document(body))
 			body_html = sanitize(body_md, linkgen=True)
-	print("8")
 
 	c_aux = CommentAux(
 		id=c.id,
@@ -645,9 +628,6 @@ def api_comment(v):
 
 	g.db.add(vote)
 	c=get_comment(c.id, v=v)
-
-
-	# print(f"Content Event: @{v.username} comment {c.base36id}")
 
 	cache.delete_memoized(comment_idlist)
 	cache.delete_memoized(User.commentlisting, v)
