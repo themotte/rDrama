@@ -140,7 +140,7 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 		print('me')
 		x=items
 
-	('end of file')
+	print('end of file')
 	return x
 
 
