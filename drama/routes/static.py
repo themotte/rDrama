@@ -11,7 +11,7 @@ from drama.helpers.alerts import *
 def badmins(v):
 	badmins = g.db.query(User).filter_by(admin_level=6).all()
 	return {
-		"html":lambda:render_template("mods.html", v=v, badmins=badmins),
+		"html":lambda:render_template("badmins.html", v=v, badmins=badmins),
 		"api":lambda:jsonify({"data":[x.json for x in badmins]})
 		}
 
