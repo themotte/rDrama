@@ -321,7 +321,6 @@ class User(Base, Stndrd, Age_times):
 			g.db.add(x)
 			output.append(x.comment_id)
 
-		g.db.commit()
 		return output
 
 	def notification_commentlisting(self, page=1, all_=False):

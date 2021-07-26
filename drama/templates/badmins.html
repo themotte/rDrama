@@ -3,32 +3,23 @@
 {% block pagetitle %}Badmins{% endblock %}
 
 {% block content %}
+<pre class="d-none d-md-inline-block"></pre>
+<h5 style="font-weight:bold;">Badmins</h5>
+<pre></pre>
+<table class="table table-striped mb-5">
+<thead class="bg-primary text-white">
+	<tr>
+		<th style="font-weight:bold;">Name</th>
+	</tr>
+</thead>
+{% for user in badmins %}
+	<tr>
+		<td><a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}">{{user.username}}</a></td>
+	</tr>
+{% endfor %}
+</table>
+<pre>
 
-<div class="row justify-content-around">
 
-	<div class="card mb-5">
-		<table class="table table-hover rounded mb-0">
-			<thead class="thead-dark">
-				<tr>
-					<th scope="col">User</th>
-					<th scope="col">Badmin Since</th>
-					<th scope="col"></th>
-				</tr>
-			</thead>
-			<tbody class="text-muted">
-				{% for badmin in badmins %}
-				<tr style="font-size:12.5px">
-					<td>
-						<a href="{{badmin.permalink}}">
-							<img src="{{badmin.profile_url}}" class="profile-pic-20 align-top mr-2">@{{badmin.username}}</a>
-						</td>
-					</tr>
-				{% else %}
-					<td>There are no badmins.</td>
-				{% endfor %}
-			</tbody>
-		</table>
-	</div>
-</div>
-
+</pre>
 {% endblock %}

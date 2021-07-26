@@ -4,8 +4,8 @@ from drama.helpers.alerts import *
 
 
 @app.route("/badmins", methods=["GET"])
-@app.route("/api/vue/admin/mods",  methods=["GET"])
-@app.route("/api/v1/admin/mods", methods=["GET"])
+@app.route("/api/vue/admins",  methods=["GET"])
+@app.route("/api/v1/admins", methods=["GET"])
 @auth_desired
 @public("read")
 def badmins(v):
@@ -192,28 +192,6 @@ def googleplayapp():
 @app.route("/service-worker.js")
 def serviceworker():
 	with open(".well-known/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
-
-@app.route("/badmins", methods=["GET"])
-@auth_desired
-def help_admins(v):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
-
-	admins = g.db.query(User).filter(
-		User.admin_level > 1,
-		User.id > 1).order_by(
-		User.id.asc()).all()
-	admins = [x for x in admins]
-
-	exadmins = g.db.query(User).filter_by(
-		admin_level=1).order_by(
-		User.id.asc()).all()
-	exadmins = [x for x in exadmins]
-
-	return render_template("admins.html",
-						   v=v,
-						   admins=admins,
-						   exadmins=exadmins
-						   )
 
 
 @app.route("/settings/security", methods=["GET"])
