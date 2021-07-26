@@ -391,6 +391,7 @@ def api_comment(v):
 	parent_id = parent_fullname.split("_")[1]
 	print('b')
 	post = get_post(parent_id)
+	print('re')
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
 				parent_fullname=parent.fullname,
