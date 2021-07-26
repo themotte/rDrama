@@ -143,8 +143,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 				blocking.c.id,
 				blocked.c.id,
 				aliased(ModAction, alias=exile)
-			).select_from(Comment).options(
-				joinedload(Comment.author).joinedload(User.title)
 			).filter(
 				Comment.parent_comment_id.in_(current_ids)
 			).join(
@@ -194,8 +192,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			comms = g.db.query(
 				Comment,
 				aliased(ModAction, alias=exile)
-			).options(
-				joinedload(Comment.author).joinedload(User.title)
 			).filter(
 				Comment.parent_comment_id.in_(current_ids)
 			).join(

@@ -51,11 +51,6 @@ def settings_profile_post(v):
 		updated = True
 		v.hide_offensive = request.values.get("hide_offensive", None) == 'true'
 		
-	if request.values.get("hide_bot",
-						  v.hide_bot) != v.hide_bot:
-		updated = True
-		v.hide_bot = request.values.get("hide_bot", None) == 'true'
-
 	if request.values.get("private", v.is_private) != v.is_private:
 		updated = True
 		v.is_private = request.values.get("private", None) == 'true'
