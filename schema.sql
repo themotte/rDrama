@@ -170,211 +170,6 @@ $_$;
 ALTER FUNCTION public.created_utc(public.notifications) OWNER TO postgres;
 
 --
--- Name: comments; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.comments (
-    id integer NOT NULL,
-    author_id integer,
-    created_utc integer NOT NULL,
-    parent_submission integer,
-    is_banned boolean,
-    parent_fullname character varying(255),
-    distinguish_level integer,
-    edited_utc integer,
-    deleted_utc integer NOT NULL,
-    is_approved integer NOT NULL,
-    author_name character varying(64),
-    approved_utc integer,
-    creation_ip character varying(64) NOT NULL,
-    score_disputed double precision,
-    score_hot double precision,
-    score_top integer,
-    level integer,
-    parent_comment_id integer,
-    title_id integer,
-    over_18 boolean,
-    is_op boolean,
-    is_offensive boolean,
-    is_nsfl boolean,
-    original_board_id integer,
-    upvotes integer,
-    downvotes integer,
-    is_bot boolean DEFAULT false,
-    gm_distinguish integer DEFAULT 0 NOT NULL,
-    is_pinned boolean DEFAULT false,
-    app_id integer,
-    creation_region character(2) DEFAULT NULL::bpchar,
-    purged_utc integer DEFAULT 0,
-    sentto integer,
-    shadowbanned boolean,
-    banaward text
-);
-
-
-ALTER TABLE public.comments OWNER TO postgres;
-
---
--- Name: downs(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.downs(public.comments) RETURNS bigint
-    LANGUAGE sql
-    AS $_$
-
-select (
-
-(
-
-  SELECT count(*)
-
-  from (
-
-    select * from commentvotes
-
-    where comment_id=$1.id
-
-    and vote_type=-1
-
-  ) as v1
-
-   join (select * from users where users.is_banned=0 or users.unban_utc>0
-
-) as u0
-
-    on u0.id=v1.user_id
-
-)-(
-
-  SELECT count(distinct v1.id)
-
-  from (
-
-    select * from commentvotes
-
-    where comment_id=$1.id
-
-    and vote_type=-1
-
-
-  ) as v1
-
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
-
-    on u1.id=v1.user_id
-
-   join (select * from alts) as a
-
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-
-   join (
-
-      select * from commentvotes
-
-      where comment_id=$1.id
-
-      and vote_type=-1
-
-
-  ) as v2
-
-    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
-
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
-
-    on u2.id=v2.user_id
-
-  where v1.id is not null
-
-  and v2.id is not null
-
-))
-
-     $_$;
-
-
-ALTER FUNCTION public.downs(public.comments) OWNER TO postgres;
-
---
--- Name: downs(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.downs(public.submissions) RETURNS bigint
-    LANGUAGE sql
-    AS $_$
-
-select (
-
-(
-
-  SELECT count(*)
-
-  from (
-
-    select * from votes
-
-    where submission_id=$1.id
-
-    and vote_type=-1
-
-
-  ) as v1
-
-   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
-
-    on u0.id=v1.user_id
-
-)-(
-
-  SELECT count(distinct v1.id)
-
-  from (
-
-    select * from votes
-
-    where submission_id=$1.id
-
-    and vote_type=-1
-
-  ) as v1
-
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
-
-    on u1.id=v1.user_id
-
-   join (select * from alts) as a
-
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-
-   join (
-
-      select * from votes
-
-      where submission_id=$1.id
-
-      and vote_type=-1
-
-
-  ) as v2
-
-    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
-
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
-
-    on u2.id=v2.user_id
-
-  where v1.id is not null
-
-  and v2.id is not null
-
-))
-
-     $_$;
-
-
-ALTER FUNCTION public.downs(public.submissions) OWNER TO postgres;
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -455,6 +250,51 @@ CREATE FUNCTION public.referral_count(public.users) RETURNS bigint
 ALTER FUNCTION public.referral_count(public.users) OWNER TO postgres;
 
 --
+-- Name: comments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.comments (
+    id integer NOT NULL,
+    author_id integer,
+    created_utc integer NOT NULL,
+    parent_submission integer,
+    is_banned boolean,
+    parent_fullname character varying(255),
+    distinguish_level integer,
+    edited_utc integer,
+    deleted_utc integer NOT NULL,
+    is_approved integer NOT NULL,
+    author_name character varying(64),
+    approved_utc integer,
+    creation_ip character varying(64) NOT NULL,
+    score_disputed double precision,
+    score_hot double precision,
+    score_top integer,
+    level integer,
+    parent_comment_id integer,
+    title_id integer,
+    over_18 boolean,
+    is_op boolean,
+    is_offensive boolean,
+    is_nsfl boolean,
+    original_board_id integer,
+    upvotes integer,
+    downvotes integer,
+    is_bot boolean DEFAULT false,
+    gm_distinguish integer DEFAULT 0 NOT NULL,
+    is_pinned boolean DEFAULT false,
+    app_id integer,
+    creation_region character(2) DEFAULT NULL::bpchar,
+    purged_utc integer DEFAULT 0,
+    sentto integer,
+    shadowbanned boolean,
+    banaward text
+);
+
+
+ALTER TABLE public.comments OWNER TO postgres;
+
+--
 -- Name: score(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -479,160 +319,6 @@ CREATE FUNCTION public.score(public.submissions) RETURNS integer
 
 
 ALTER FUNCTION public.score(public.submissions) OWNER TO postgres;
-
---
--- Name: ups(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.ups(public.comments) RETURNS bigint
-    LANGUAGE sql
-    AS $_$
-
-select (
-
-(
-
-  SELECT count(*)
-
-  from (
-
-    select * from commentvotes
-
-    where comment_id=$1.id
-
-    and vote_type=1
-
-  ) as v1
-
-   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
-
-    on u0.id=v1.user_id
-
-)-(
-
-  SELECT count(distinct v1.id)
-
-  from (
-
-    select * from commentvotes
-
-    where comment_id=$1.id
-
-    and vote_type=1
-
-  ) as v1
-
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
-
-    on u1.id=v1.user_id
-
-   join (select * from alts) as a
-
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-
-   join (
-
-      select * from commentvotes
-
-      where comment_id=$1.id
-
-      and vote_type=1
-
-  ) as v2
-
-    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
-
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
-
-    on u2.id=v2.user_id
-
-  where v1.id is not null
-
-  and v2.id is not null
-
-))
-
-     $_$;
-
-
-ALTER FUNCTION public.ups(public.comments) OWNER TO postgres;
-
---
--- Name: ups(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.ups(public.submissions) RETURNS bigint
-    LANGUAGE sql
-    AS $_$
-
-select (
-
-(
-
-  SELECT count(*)
-
-  from (
-
-    select * from votes
-
-    where submission_id=$1.id
-
-    and vote_type=1
-
-  ) as v1
-
-   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
-
-    on u0.id=v1.user_id
-
-)-(
-
-  SELECT count(distinct v1.id)
-
-  from (
-
-    select * from votes
-
-    where submission_id=$1.id
-
-    and vote_type=1
-
-  ) as v1
-
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
-
-    on u1.id=v1.user_id
-
-   join (select * from alts) as a
-
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-
-   join (
-
-      select * from votes
-
-      where submission_id=$1.id
-
-      and vote_type=1
-
-  ) as v2
-
-    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
-
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
-
-    on u2.id=v2.user_id
-
-  where v1.id is not null
-
-  and v2.id is not null
-
-))
-
-     $_$;
-
-
-ALTER FUNCTION public.ups(public.submissions) OWNER TO postgres;
 
 --
 -- Name: alts; Type: TABLE; Schema: public; Owner: postgres
