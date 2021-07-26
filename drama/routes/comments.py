@@ -389,6 +389,7 @@ def api_comment(v):
 	print('z')
 	# create comment
 	parent_id = parent_fullname.split("_")[1]
+	print('b')
 	post = get_post(parent_id)
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
@@ -400,7 +401,7 @@ def api_comment(v):
 				app_id=v.client.application.id if v.client else None,
 				shadowbanned=v.shadowbanned
 				)
-
+	print('a')
 	g.db.add(c)
 	g.db.flush()
 	print("7")
