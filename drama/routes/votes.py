@@ -95,9 +95,18 @@ def api_vote_post(post_id, x, v):
 	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
 
 	if existing:
+		if existing == 0 and x != 0:
+			post.author.dramacoins += 1
+			g.db.add(post.author)
+		elif existing != 0 and x == 0:
+			post.author.dramacoins -= 1
+			g.db.add(post.author)
 		existing.change_to(x)
 		g.db.add(existing)
 	else:
+		if x != 0:
+			post.author.dramacoins += 1
+			g.db.add(post.author)
 		vote = Vote(user_id=v.id,
 					vote_type=x,
 					submission_id=base36decode(post_id),
@@ -111,7 +120,6 @@ def api_vote_post(post_id, x, v):
 	post.upvotes = post.ups
 	post.downvotes = post.downs
 	g.db.add(post)
-	g.db.commit()
 	return "", 204
 
 @app.route("/api/v1/vote/comment/<comment_id>/<x>", methods=["POST"])
@@ -136,10 +144,18 @@ def api_vote_comment(comment_id, x, v):
 	existing = g.db.query(CommentVote).filter_by(
 		user_id=v.id, comment_id=comment.id).first()
 	if existing:
+		if existing == 0 and x != 0:
+			post.author.dramacoins += 1
+			g.db.add(post.author)
+		elif existing != 0 and x == 0:
+			post.author.dramacoins -= 1
+			g.db.add(post.author)
 		existing.change_to(x)
 		g.db.add(existing)
 	else:
-
+		if x != 0:
+			post.author.dramacoins += 1
+			g.db.add(post.author)
 		vote = CommentVote(user_id=v.id,
 						   vote_type=x,
 						   comment_id=base36decode(comment_id),
