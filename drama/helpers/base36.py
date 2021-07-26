@@ -29,27 +29,6 @@ def base36decode(number):
 		abort(400)
 
 
-def base_encode(number, base):
-
-	alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'[0:base]
-
-	output = ''
-	sign = ''
-
-	if number < 0:
-		sign = '-'
-		number = -number
-
-	if 0 <= number < len(alphabet):
-		return sign + alphabet[number]
-
-	while number != 0:
-		number, i = divmod(number, len(alphabet))
-		output = alphabet[i] + output
-
-	return sign + output
-
-#got this one from stackoverflow
 def hex2bin(hexstr): 
 	value = int(hexstr, 16) 
 	bindigits = [] 

@@ -117,8 +117,8 @@ def api_vote_post(post_id, x, v):
 
 	g.db.flush()
 		
-	post.upvotes = post.ups
-	post.downvotes = post.downs
+	post.upvotes = g.db.query(Vote).filter_by(comment_id=comment.id, vote_type=1).count()
+	post.downvotes = g.db.query(Vote).filter_by(comment_id=comment.id, vote_type=-1).count()
 	g.db.add(post)
 	return "", 204
 
@@ -169,7 +169,7 @@ def api_vote_comment(comment_id, x, v):
 	except:
 		return jsonify({"error":"Vote already exists."}), 422
 
-	comment.upvotes = comment.ups
-	comment.downvotes = comment.downs
+	comment.upvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=1).count()
+	comment.downvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=-1).count()
 	g.db.add(comment)
 	return make_response(""), 204

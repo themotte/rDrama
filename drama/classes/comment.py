@@ -77,9 +77,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	# These are virtual properties handled as postgres functions server-side
 	# There is no difference to SQLAlchemy, but they cannot be written to
-	ups = deferred(Column(Integer, server_default=FetchedValue()))
-	downs = deferred(Column(Integer, server_default=FetchedValue()))
-
 	score = deferred(Column(Integer, server_default=FetchedValue()))
 
 	def __init__(self, *args, **kwargs):
