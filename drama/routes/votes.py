@@ -113,6 +113,7 @@ def api_vote_post(post_id, x, v):
 					app_id=v.client.application.id if v.client else None
 					)
 
+
 		g.db.add(vote)
 
 	g.db.flush()
