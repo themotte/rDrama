@@ -80,7 +80,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	# There is no difference to SQLAlchemy, but they cannot be written to
 	ups = deferred(Column(Integer, server_default=FetchedValue()))
 	downs = deferred(Column(Integer, server_default=FetchedValue()))
-	is_public = deferred(Column(Boolean, server_default=FetchedValue()))
 
 	score = deferred(Column(Integer, server_default=FetchedValue()))
 
