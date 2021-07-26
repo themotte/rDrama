@@ -17,7 +17,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_title_fkey;
-ALTER TABLE ONLY public.subcategories DROP CONSTRAINT subcategories_cat_id_fkey;
 ALTER TABLE ONLY public.reports DROP CONSTRAINT reports_post_id_fkey;
 ALTER TABLE ONLY public.postrels DROP CONSTRAINT postrels_post_id_fkey;
 ALTER TABLE ONLY public.notifications DROP CONSTRAINT notifications_comment_id_fkey;
@@ -94,13 +93,7 @@ DROP INDEX public.modaction_pid_idx;
 DROP INDEX public.modaction_id_idx;
 DROP INDEX public.modaction_cid_idx;
 DROP INDEX public.modaction_action_idx;
-DROP INDEX public.mod_user_index;
-DROP INDEX public.mod_rescind_index;
-DROP INDEX public.mod_board_index;
 DROP INDEX public.message_user_idx;
-DROP INDEX public.lodge_name_trgm_idx;
-DROP INDEX public.lodge_name_idx;
-DROP INDEX public.lodge_board_idx;
 DROP INDEX public.ips_until_idx;
 DROP INDEX public.follow_user_id_index;
 DROP INDEX public.follow_target_id_index;
@@ -136,11 +129,8 @@ DROP INDEX public.comment_body_idx;
 DROP INDEX public.client_refresh_token_idx;
 DROP INDEX public.client_access_token_idx;
 DROP INDEX public.cflag_user_idx;
-DROP INDEX public.boardblocks_idx;
 DROP INDEX public.block_user_idx;
 DROP INDEX public.block_target_idx;
-DROP INDEX public.ban_user_index;
-DROP INDEX public.ban_board_index;
 DROP INDEX public.badpics_phash_index;
 DROP INDEX public.badpic_phash_trgm_idx;
 DROP INDEX public.badpic_phash_idx;
@@ -153,7 +143,6 @@ DROP INDEX public.award_post_idx;
 DROP INDEX public.award_comment_idx;
 DROP INDEX public.alts_user2_idx;
 DROP INDEX public.alts_user1_idx;
-DROP INDEX public.accepted_idx;
 ALTER TABLE ONLY public.votes DROP CONSTRAINT votes_pkey;
 ALTER TABLE ONLY public.viewers DROP CONSTRAINT viewers_pkey;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_username_key;
@@ -176,7 +165,6 @@ ALTER TABLE ONLY public.titles DROP CONSTRAINT titles_pkey;
 ALTER TABLE ONLY public.subscriptions DROP CONSTRAINT subscriptions_pkey;
 ALTER TABLE ONLY public.submissions DROP CONSTRAINT submissions_pkey;
 ALTER TABLE ONLY public.submissions_aux DROP CONSTRAINT submissions_aux_pkey;
-ALTER TABLE ONLY public.subcategories DROP CONSTRAINT subcategories_pkey;
 ALTER TABLE ONLY public.save_relationship DROP CONSTRAINT save_relationship_pkey;
 ALTER TABLE ONLY public.save_relationship DROP CONSTRAINT save_constraint;
 ALTER TABLE ONLY public.reports DROP CONSTRAINT reports_pkey;
@@ -188,16 +176,11 @@ ALTER TABLE ONLY public.votes DROP CONSTRAINT onevote;
 ALTER TABLE ONLY public.commentvotes DROP CONSTRAINT onecvote;
 ALTER TABLE ONLY public.notifications DROP CONSTRAINT one_notif;
 ALTER TABLE ONLY public.users DROP CONSTRAINT one_discord_account;
-ALTER TABLE ONLY public.boardblocks DROP CONSTRAINT one_board_block;
 ALTER TABLE ONLY public.oauth_apps DROP CONSTRAINT oauth_apps_pkey;
 ALTER TABLE ONLY public.notifications DROP CONSTRAINT notifications_pkey;
-ALTER TABLE ONLY public.mods DROP CONSTRAINT mods_pkey;
 ALTER TABLE ONLY public.modactions DROP CONSTRAINT modactions_pkey;
-ALTER TABLE ONLY public.mods DROP CONSTRAINT mod_unique;
 ALTER TABLE ONLY public.messages DROP CONSTRAINT messages_pkey;
 ALTER TABLE ONLY public.message_notifications DROP CONSTRAINT message_notifications_pkey;
-ALTER TABLE ONLY public.lodges DROP CONSTRAINT lodges_pkey;
-ALTER TABLE ONLY public.lodges DROP CONSTRAINT lodge_constraint;
 ALTER TABLE ONLY public.ips DROP CONSTRAINT ips_pkey;
 ALTER TABLE ONLY public.ips DROP CONSTRAINT ips_addr_key;
 ALTER TABLE ONLY public.images DROP CONSTRAINT images_pkey;
@@ -218,9 +201,6 @@ ALTER TABLE ONLY public.comments_aux DROP CONSTRAINT comments_aux_pkey;
 ALTER TABLE ONLY public.commentflags DROP CONSTRAINT commentflags_pkey;
 ALTER TABLE ONLY public.client_auths DROP CONSTRAINT client_auths_pkey;
 ALTER TABLE ONLY public.chatbans DROP CONSTRAINT chatbans_pkey;
-ALTER TABLE ONLY public.categories DROP CONSTRAINT categories_pkey;
-ALTER TABLE ONLY public.boardblocks DROP CONSTRAINT boardblocks_pkey;
-ALTER TABLE ONLY public.bans DROP CONSTRAINT bans_pkey;
 ALTER TABLE ONLY public.badwords DROP CONSTRAINT badwords_pkey;
 ALTER TABLE ONLY public.badwords DROP CONSTRAINT badwords_keyword_key;
 ALTER TABLE ONLY public.badpics DROP CONSTRAINT badpics_pkey;
@@ -243,7 +223,6 @@ ALTER TABLE public.titles ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.subscriptions ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.submissions_aux ALTER COLUMN key_id DROP DEFAULT;
 ALTER TABLE public.submissions ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.subcategories ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.save_relationship ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.reports ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.promocodes ALTER COLUMN id DROP DEFAULT;
@@ -251,11 +230,9 @@ ALTER TABLE public.postrels ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.paypal_txns ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.oauth_apps ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.notifications ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.mods ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.modactions ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.messages ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.message_notifications ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.lodges ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.ips ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.images ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.follows ALTER COLUMN id DROP DEFAULT;
@@ -271,9 +248,6 @@ ALTER TABLE public.comments ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.commentflags ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.client_auths ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.chatbans ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.categories ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.boardblocks ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.bans ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.badwords ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.badpics ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.badlinks ALTER COLUMN id DROP DEFAULT;
@@ -299,8 +273,6 @@ DROP TABLE public.subscriptions;
 DROP SEQUENCE public.submissions_id_seq;
 DROP SEQUENCE public.submissions_aux_key_id_seq;
 DROP TABLE public.submissions_aux;
-DROP SEQUENCE public.subcategories_id_seq;
-DROP TABLE public.subcategories;
 DROP SEQUENCE public.save_relationship_id_seq;
 DROP TABLE public.save_relationship;
 DROP SEQUENCE public.reports_id_seq;
@@ -313,16 +285,12 @@ DROP TABLE public.paypal_txns;
 DROP SEQUENCE public.oauth_apps_id_seq;
 DROP TABLE public.oauth_apps;
 DROP SEQUENCE public.notifications_id_seq;
-DROP SEQUENCE public.mods_id_seq;
-DROP TABLE public.mods;
 DROP SEQUENCE public.modactions_id_seq;
 DROP TABLE public.modactions;
 DROP SEQUENCE public.messages_id_seq;
 DROP TABLE public.messages;
 DROP SEQUENCE public.message_notifications_id_seq;
 DROP TABLE public.message_notifications;
-DROP SEQUENCE public.lodges_id_seq;
-DROP TABLE public.lodges;
 DROP SEQUENCE public.ips_id_seq;
 DROP TABLE public.ips;
 DROP TABLE public.imgur;
@@ -353,12 +321,6 @@ DROP SEQUENCE public.client_auths_id_seq;
 DROP TABLE public.client_auths;
 DROP SEQUENCE public.chatbans_id_seq;
 DROP TABLE public.chatbans;
-DROP SEQUENCE public.categories_id_seq;
-DROP TABLE public.categories;
-DROP SEQUENCE public.boardblocks_id_seq;
-DROP TABLE public.boardblocks;
-DROP SEQUENCE public.bans_id_seq;
-DROP TABLE public.bans;
 DROP SEQUENCE public.badwords_id_seq;
 DROP TABLE public.badwords;
 DROP SEQUENCE public.badpics_id_seq;
@@ -391,8 +353,6 @@ DROP FUNCTION public.rank_fiery(public.comments);
 DROP FUNCTION public.rank_best(public.submissions);
 DROP FUNCTION public.rank_activity(public.submissions);
 DROP FUNCTION public.mod_count(public.users);
-DROP FUNCTION public.is_public(public.submissions);
-DROP FUNCTION public.is_public(public.comments);
 DROP FUNCTION public.is_deleted(public.notifications);
 DROP FUNCTION public.is_banned(public.notifications);
 DROP FUNCTION public.follower_count(public.users);
@@ -826,61 +786,76 @@ ALTER FUNCTION public.created_utc(public.notifications) OWNER TO postgres;
 
 CREATE FUNCTION public.downs(public.comments) RETURNS bigint
     LANGUAGE sql
-    AS $_$
-select (
-(
-  SELECT count(*)
-  from (
-    select * from commentvotes
-    where comment_id=$1.id
-    and vote_type=-1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.original_board_id
-    	and is_active=true
-    )
-  ) as v1
-   join (select * from users where users.is_banned=0 or users.unban_utc>0
-) as u0
-    on u0.id=v1.user_id
-)-(
-  SELECT count(distinct v1.id)
-  from (
-    select * from commentvotes
-    where comment_id=$1.id
-    and vote_type=-1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.original_board_id
-    	and is_active=true
-    )
-  ) as v1
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
-    on u1.id=v1.user_id
-   join (select * from alts) as a
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-   join (
-      select * from commentvotes
-      where comment_id=$1.id
-      and vote_type=-1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.original_board_id
-    	and is_active=true
-    )
-  ) as v2
-    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
-    on u2.id=v2.user_id
-  where v1.id is not null
-  and v2.id is not null
-))
+    AS $_$
+
+select (
+
+(
+
+  SELECT count(*)
+
+  from (
+
+    select * from commentvotes
+
+    where comment_id=$1.id
+
+    and vote_type=-1
+
+  ) as v1
+
+   join (select * from users where users.is_banned=0 or users.unban_utc>0
+
+) as u0
+
+    on u0.id=v1.user_id
+
+)-(
+
+  SELECT count(distinct v1.id)
+
+  from (
+
+    select * from commentvotes
+
+    where comment_id=$1.id
+
+    and vote_type=-1
+
+
+  ) as v1
+
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
+
+    on u1.id=v1.user_id
+
+   join (select * from alts) as a
+
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+
+   join (
+
+      select * from commentvotes
+
+      where comment_id=$1.id
+
+      and vote_type=-1
+
+
+  ) as v2
+
+    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
+
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
+
+    on u2.id=v2.user_id
+
+  where v1.id is not null
+
+  and v2.id is not null
+
+))
+
      $_$;
 
 
@@ -892,60 +867,74 @@ ALTER FUNCTION public.downs(public.comments) OWNER TO postgres;
 
 CREATE FUNCTION public.downs(public.submissions) RETURNS bigint
     LANGUAGE sql
-    AS $_$
-select (
-(
-  SELECT count(*)
-  from (
-    select * from votes
-    where submission_id=$1.id
-    and vote_type=-1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.board_id
-    	and is_active=true
-    )
-  ) as v1
-   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
-    on u0.id=v1.user_id
-)-(
-  SELECT count(distinct v1.id)
-  from (
-    select * from votes
-    where submission_id=$1.id
-    and vote_type=-1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.board_id
-    	and is_active=true
-    )
-  ) as v1
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
-    on u1.id=v1.user_id
-   join (select * from alts) as a
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-   join (
-      select * from votes
-      where submission_id=$1.id
-      and vote_type=-1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.board_id
-    	and is_active=true
-    )
-  ) as v2
-    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
-    on u2.id=v2.user_id
-  where v1.id is not null
-  and v2.id is not null
-))
+    AS $_$
+
+select (
+
+(
+
+  SELECT count(*)
+
+  from (
+
+    select * from votes
+
+    where submission_id=$1.id
+
+    and vote_type=-1
+
+
+  ) as v1
+
+   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
+
+    on u0.id=v1.user_id
+
+)-(
+
+  SELECT count(distinct v1.id)
+
+  from (
+
+    select * from votes
+
+    where submission_id=$1.id
+
+    and vote_type=-1
+
+  ) as v1
+
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
+
+    on u1.id=v1.user_id
+
+   join (select * from alts) as a
+
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+
+   join (
+
+      select * from votes
+
+      where submission_id=$1.id
+
+      and vote_type=-1
+
+
+  ) as v2
+
+    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
+
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
+
+    on u2.id=v2.user_id
+
+  where v1.id is not null
+
+  and v2.id is not null
+
+))
+
      $_$;
 
 
@@ -1080,47 +1069,6 @@ $_$;
 
 
 ALTER FUNCTION public.is_deleted(public.notifications) OWNER TO postgres;
-
---
--- Name: is_public(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.is_public(public.comments) RETURNS boolean
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT submissions.is_public
-      FROM submissions
-      WHERE submissions.id=$1.parent_submission
-      $_$;
-
-
-ALTER FUNCTION public.is_public(public.comments) OWNER TO postgres;
-
---
--- Name: is_public(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.is_public(public.submissions) RETURNS boolean
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-select
-	case
-		when $1.post_public=true
-			then true
-		when (select (is_private)
-			from boards
-			where id=$1.board_id
-			)=true
-			then false
-		else
-			true
-	end
-      
-      
-      $_$;
-
-
-ALTER FUNCTION public.is_public(public.submissions) OWNER TO postgres;
 
 --
 -- Name: mod_count(public.users); Type: FUNCTION; Schema: public; Owner: postgres
@@ -1320,60 +1268,72 @@ ALTER FUNCTION public.splash(text) OWNER TO postgres;
 
 CREATE FUNCTION public.ups(public.comments) RETURNS bigint
     LANGUAGE sql
-    AS $_$
-select (
-(
-  SELECT count(*)
-  from (
-    select * from commentvotes
-    where comment_id=$1.id
-    and vote_type=1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.original_board_id
-    	and is_active=true
-    )
-  ) as v1
-   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
-    on u0.id=v1.user_id
-)-(
-  SELECT count(distinct v1.id)
-  from (
-    select * from commentvotes
-    where comment_id=$1.id
-    and vote_type=1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.original_board_id
-    	and is_active=true
-    )
-  ) as v1
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
-    on u1.id=v1.user_id
-   join (select * from alts) as a
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-   join (
-      select * from commentvotes
-      where comment_id=$1.id
-      and vote_type=1
-	    and user_id not in
-	    (
-	    	select user_id
-	    	from bans
-	    	where board_id=$1.original_board_id
-    		and is_active=true
-	    )
-  ) as v2
-    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
-    on u2.id=v2.user_id
-  where v1.id is not null
-  and v2.id is not null
-))
+    AS $_$
+
+select (
+
+(
+
+  SELECT count(*)
+
+  from (
+
+    select * from commentvotes
+
+    where comment_id=$1.id
+
+    and vote_type=1
+
+  ) as v1
+
+   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
+
+    on u0.id=v1.user_id
+
+)-(
+
+  SELECT count(distinct v1.id)
+
+  from (
+
+    select * from commentvotes
+
+    where comment_id=$1.id
+
+    and vote_type=1
+
+  ) as v1
+
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
+
+    on u1.id=v1.user_id
+
+   join (select * from alts) as a
+
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+
+   join (
+
+      select * from commentvotes
+
+      where comment_id=$1.id
+
+      and vote_type=1
+
+  ) as v2
+
+    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
+
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
+
+    on u2.id=v2.user_id
+
+  where v1.id is not null
+
+  and v2.id is not null
+
+))
+
      $_$;
 
 
@@ -1385,60 +1345,72 @@ ALTER FUNCTION public.ups(public.comments) OWNER TO postgres;
 
 CREATE FUNCTION public.ups(public.submissions) RETURNS bigint
     LANGUAGE sql
-    AS $_$
-select (
-(
-  SELECT count(*)
-  from (
-    select * from votes
-    where submission_id=$1.id
-    and vote_type=1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.board_id
-    	and is_active=true
-    )
-  ) as v1
-   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
-    on u0.id=v1.user_id
-)-(
-  SELECT count(distinct v1.id)
-  from (
-    select * from votes
-    where submission_id=$1.id
-    and vote_type=1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.board_id
-    	and is_active=true
-    )
-  ) as v1
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
-    on u1.id=v1.user_id
-   join (select * from alts) as a
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-   join (
-      select * from votes
-      where submission_id=$1.id
-      and vote_type=1
-    and user_id not in
-    (
-    	select user_id
-    	from bans
-    	where board_id=$1.board_id
-    	and is_active=true
-    )
-  ) as v2
-    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
-   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
-    on u2.id=v2.user_id
-  where v1.id is not null
-  and v2.id is not null
-))
+    AS $_$
+
+select (
+
+(
+
+  SELECT count(*)
+
+  from (
+
+    select * from votes
+
+    where submission_id=$1.id
+
+    and vote_type=1
+
+  ) as v1
+
+   join (select * from users where users.is_banned=0 or users.unban_utc>0) as u0
+
+    on u0.id=v1.user_id
+
+)-(
+
+  SELECT count(distinct v1.id)
+
+  from (
+
+    select * from votes
+
+    where submission_id=$1.id
+
+    and vote_type=1
+
+  ) as v1
+
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u1
+
+    on u1.id=v1.user_id
+
+   join (select * from alts) as a
+
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+
+   join (
+
+      select * from votes
+
+      where submission_id=$1.id
+
+      and vote_type=1
+
+  ) as v2
+
+    on ((a.user1=v2.user_id or a.user2=v2.user_id) and v2.id != v1.id)
+
+   join (select * from users where is_banned=0 or users.unban_utc>0) as u2
+
+    on u2.id=v2.user_id
+
+  where v1.id is not null
+
+  and v2.id is not null
+
+))
+
      $_$;
 
 
@@ -1755,120 +1727,6 @@ ALTER TABLE public.badwords_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.badwords_id_seq OWNED BY public.badwords.id;
-
-
---
--- Name: bans; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.bans (
-    id integer NOT NULL,
-    user_id integer,
-    board_id integer,
-    created_utc integer,
-    banning_mod_id integer,
-    is_active boolean NOT NULL,
-    mod_note character varying(128)
-);
-
-
-ALTER TABLE public.bans OWNER TO postgres;
-
---
--- Name: bans_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.bans_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.bans_id_seq OWNER TO postgres;
-
---
--- Name: bans_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.bans_id_seq OWNED BY public.bans.id;
-
-
---
--- Name: boardblocks; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.boardblocks (
-    id integer NOT NULL,
-    user_id integer,
-    board_id integer,
-    created_utc integer
-);
-
-
-ALTER TABLE public.boardblocks OWNER TO postgres;
-
---
--- Name: boardblocks_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.boardblocks_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.boardblocks_id_seq OWNER TO postgres;
-
---
--- Name: boardblocks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.boardblocks_id_seq OWNED BY public.boardblocks.id;
-
-
---
--- Name: categories; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.categories (
-    id integer NOT NULL,
-    color character(6) DEFAULT '805ad5'::bpchar,
-    visible boolean DEFAULT true,
-    name character varying(64),
-    description character varying(512),
-    icon character varying(64) DEFAULT NULL::character varying,
-    is_nsfw boolean DEFAULT false
-);
-
-
-ALTER TABLE public.categories OWNER TO postgres;
-
---
--- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.categories_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.categories_id_seq OWNER TO postgres;
-
---
--- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
 
 
 --
@@ -2434,42 +2292,6 @@ ALTER SEQUENCE public.ips_id_seq OWNED BY public.ips.id;
 
 
 --
--- Name: lodges; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.lodges (
-    id integer NOT NULL,
-    created_utc integer,
-    board_id integer,
-    name character varying(32)
-);
-
-
-ALTER TABLE public.lodges OWNER TO postgres;
-
---
--- Name: lodges_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.lodges_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.lodges_id_seq OWNER TO postgres;
-
---
--- Name: lodges_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.lodges_id_seq OWNED BY public.lodges.id;
-
-
---
 -- Name: message_notifications; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -2582,50 +2404,6 @@ ALTER TABLE public.modactions_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.modactions_id_seq OWNED BY public.modactions.id;
-
-
---
--- Name: mods; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.mods (
-    id integer NOT NULL,
-    user_id integer,
-    board_id integer,
-    created_utc integer,
-    accepted boolean,
-    invite_rescinded boolean,
-    perm_full boolean DEFAULT true,
-    perm_content boolean DEFAULT true,
-    perm_appearance boolean DEFAULT true,
-    perm_access boolean DEFAULT true,
-    perm_config boolean DEFAULT true,
-    perm_chat boolean DEFAULT false
-);
-
-
-ALTER TABLE public.mods OWNER TO postgres;
-
---
--- Name: mods_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.mods_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.mods_id_seq OWNER TO postgres;
-
---
--- Name: mods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.mods_id_seq OWNED BY public.mods.id;
 
 
 --
@@ -2862,43 +2640,6 @@ ALTER TABLE public.save_relationship_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.save_relationship_id_seq OWNED BY public.save_relationship.id;
-
-
---
--- Name: subcategories; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.subcategories (
-    id integer NOT NULL,
-    cat_id integer,
-    name character varying(64),
-    description character varying(512),
-    _visible boolean
-);
-
-
-ALTER TABLE public.subcategories OWNER TO postgres;
-
---
--- Name: subcategories_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.subcategories_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.subcategories_id_seq OWNER TO postgres;
-
---
--- Name: subcategories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.subcategories_id_seq OWNED BY public.subcategories.id;
 
 
 --
@@ -3305,27 +3046,6 @@ ALTER TABLE ONLY public.badwords ALTER COLUMN id SET DEFAULT nextval('public.bad
 
 
 --
--- Name: bans id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bans ALTER COLUMN id SET DEFAULT nextval('public.bans_id_seq'::regclass);
-
-
---
--- Name: boardblocks id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.boardblocks ALTER COLUMN id SET DEFAULT nextval('public.boardblocks_id_seq'::regclass);
-
-
---
--- Name: categories id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
-
-
---
 -- Name: chatbans id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -3431,13 +3151,6 @@ ALTER TABLE ONLY public.ips ALTER COLUMN id SET DEFAULT nextval('public.ips_id_s
 
 
 --
--- Name: lodges id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.lodges ALTER COLUMN id SET DEFAULT nextval('public.lodges_id_seq'::regclass);
-
-
---
 -- Name: message_notifications id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -3456,13 +3169,6 @@ ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.mes
 --
 
 ALTER TABLE ONLY public.modactions ALTER COLUMN id SET DEFAULT nextval('public.modactions_id_seq'::regclass);
-
-
---
--- Name: mods id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.mods ALTER COLUMN id SET DEFAULT nextval('public.mods_id_seq'::regclass);
 
 
 --
@@ -3512,13 +3218,6 @@ ALTER TABLE ONLY public.reports ALTER COLUMN id SET DEFAULT nextval('public.repo
 --
 
 ALTER TABLE ONLY public.save_relationship ALTER COLUMN id SET DEFAULT nextval('public.save_relationship_id_seq'::regclass);
-
-
---
--- Name: subcategories id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.subcategories ALTER COLUMN id SET DEFAULT nextval('public.subcategories_id_seq'::regclass);
 
 
 --
@@ -3688,30 +3387,6 @@ ALTER TABLE ONLY public.badwords
 
 
 --
--- Name: bans bans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bans
-    ADD CONSTRAINT bans_pkey PRIMARY KEY (id);
-
-
---
--- Name: boardblocks boardblocks_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.boardblocks
-    ADD CONSTRAINT boardblocks_pkey PRIMARY KEY (id);
-
-
---
--- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.categories
-    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
-
-
---
 -- Name: chatbans chatbans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3872,22 +3547,6 @@ ALTER TABLE ONLY public.ips
 
 
 --
--- Name: lodges lodge_constraint; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.lodges
-    ADD CONSTRAINT lodge_constraint UNIQUE (board_id, name);
-
-
---
--- Name: lodges lodges_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.lodges
-    ADD CONSTRAINT lodges_pkey PRIMARY KEY (id);
-
-
---
 -- Name: message_notifications message_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -3904,27 +3563,11 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: mods mod_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.mods
-    ADD CONSTRAINT mod_unique UNIQUE (user_id, board_id);
-
-
---
 -- Name: modactions modactions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.modactions
     ADD CONSTRAINT modactions_pkey PRIMARY KEY (id);
-
-
---
--- Name: mods mods_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.mods
-    ADD CONSTRAINT mods_pkey PRIMARY KEY (id);
 
 
 --
@@ -3941,14 +3584,6 @@ ALTER TABLE ONLY public.notifications
 
 ALTER TABLE ONLY public.oauth_apps
     ADD CONSTRAINT oauth_apps_pkey PRIMARY KEY (id);
-
-
---
--- Name: boardblocks one_board_block; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.boardblocks
-    ADD CONSTRAINT one_board_block UNIQUE (user_id, board_id);
 
 
 --
@@ -4037,14 +3672,6 @@ ALTER TABLE ONLY public.save_relationship
 
 ALTER TABLE ONLY public.save_relationship
     ADD CONSTRAINT save_relationship_pkey PRIMARY KEY (id);
-
-
---
--- Name: subcategories subcategories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.subcategories
-    ADD CONSTRAINT subcategories_pkey PRIMARY KEY (id);
 
 
 --
@@ -4224,13 +3851,6 @@ ALTER TABLE ONLY public.votes
 
 
 --
--- Name: accepted_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX accepted_idx ON public.mods USING btree (accepted);
-
-
---
 -- Name: alts_user1_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -4315,20 +3935,6 @@ CREATE INDEX badpics_phash_index ON public.badpics USING gin (phash public.gin_t
 
 
 --
--- Name: ban_board_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX ban_board_index ON public.bans USING btree (board_id);
-
-
---
--- Name: ban_user_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX ban_user_index ON public.bans USING btree (user_id);
-
-
---
 -- Name: block_target_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -4340,13 +3946,6 @@ CREATE INDEX block_target_idx ON public.userblocks USING btree (target_id);
 --
 
 CREATE INDEX block_user_idx ON public.userblocks USING btree (user_id);
-
-
---
--- Name: boardblocks_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX boardblocks_idx ON public.boardblocks USING btree (user_id, board_id);
 
 
 --
@@ -4595,52 +4194,10 @@ CREATE INDEX ips_until_idx ON public.ips USING btree (until_utc DESC);
 
 
 --
--- Name: lodge_board_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX lodge_board_idx ON public.lodges USING btree (board_id);
-
-
---
--- Name: lodge_name_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX lodge_name_idx ON public.lodges USING btree (name);
-
-
---
--- Name: lodge_name_trgm_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX lodge_name_trgm_idx ON public.lodges USING gin (name public.gin_trgm_ops);
-
-
---
 -- Name: message_user_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX message_user_idx ON public.message_notifications USING btree (user_id, has_read);
-
-
---
--- Name: mod_board_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX mod_board_index ON public.mods USING btree (board_id);
-
-
---
--- Name: mod_rescind_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX mod_rescind_index ON public.mods USING btree (invite_rescinded);
-
-
---
--- Name: mod_user_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX mod_user_index ON public.mods USING btree (user_id);
 
 
 --
@@ -5179,14 +4736,6 @@ ALTER TABLE ONLY public.postrels
 
 ALTER TABLE ONLY public.reports
     ADD CONSTRAINT reports_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.submissions(id);
-
-
---
--- Name: subcategories subcategories_cat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.subcategories
-    ADD CONSTRAINT subcategories_cat_id_fkey FOREIGN KEY (cat_id) REFERENCES public.categories(id);
 
 
 --
