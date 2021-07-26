@@ -161,12 +161,9 @@ ALTER TABLE public.notifications OWNER TO postgres;
 
 CREATE FUNCTION public.created_utc(public.notifications) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-select created_utc from comments
-
-where comments.id=$1.comment_id
-
+    AS $_$
+select created_utc from comments
+where comments.id=$1.comment_id
 $_$;
 
 
@@ -447,16 +444,11 @@ ALTER TABLE public.users OWNER TO postgres;
 
 CREATE FUNCTION public.referral_count(public.users) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-        SELECT COUNT(*)
-
-        FROM USERS
-
-        WHERE users.is_banned=0
-
-        AND users.referred_by=$1.id
-
+    AS $_$
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE users.is_banned=0
+        AND users.referred_by=$1.id
     $_$;
 
 
@@ -468,10 +460,8 @@ ALTER FUNCTION public.referral_count(public.users) OWNER TO postgres;
 
 CREATE FUNCTION public.score(public.comments) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT ($1.upvotes - $1.downvotes)
-
+    AS $_$
+      SELECT ($1.upvotes - $1.downvotes)
       $_$;
 
 
@@ -483,10 +473,8 @@ ALTER FUNCTION public.score(public.comments) OWNER TO postgres;
 
 CREATE FUNCTION public.score(public.submissions) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT ($1.upvotes - $1.downvotes)
-
+    AS $_$
+      SELECT ($1.upvotes - $1.downvotes)
       $_$;
 
 
