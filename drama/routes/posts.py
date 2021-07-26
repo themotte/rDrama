@@ -232,7 +232,7 @@ def post_base36id(pid, anything=None, v=None):
 	g.db.add(post)
 	g.db.commit()
 
-	if post.over_18 and not (v and v.over_18) and not session_over18(1):
+	if post.over_18 and not (v and v.over_18) and not session_over18():
 		t = int(time.time())
 		return {"html":lambda:render_template("errors/nsfw.html",
 							   v=v,

@@ -85,7 +85,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	
 	post = get_post(pid, v=v)
 		
-	if post.over_18 and not (v and v.over_18) and not session_over18(1):
+	if post.over_18 and not (v and v.over_18) and not session_over18():
 		t = int(time.time())
 		return {'html': lambda: render_template("errors/nsfw.html",
 												v=v,
