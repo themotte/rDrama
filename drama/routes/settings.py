@@ -7,7 +7,6 @@ from drama.helpers.discord import remove_user, set_nick
 from drama.mail import *
 from .front import frontlist
 from drama.__main__ import app, cache
-from .users import leaderboard
 import youtube_dl
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
@@ -52,9 +51,9 @@ def settings_profile_post(v):
 
 	if request.values.get("animatedname", v.animatedname) != v.animatedname:
 		if v.animatedname == False:
-			users1, users2 = leaderboard()
-			users1 = [x.id for x in users1]
-			if v.id not in users1: return jsonify({"error": "You must be in the top 25 leaderboard or be a patron to apply an animated name!"}), 403
+			users = g.db.query(User.id).options(lazyload('*')).order_by(User.dramacoins.desc()).limit(25).all()
+			users = [x[0] for x in users]
+			if v.id not in users: return jsonify({"error": "You must be in the top 25 leaderboard or be a patron to apply an animated name!"}), 403
 		updated = True
 		v.animatedname = request.values.get("animatedname", None) == 'true'
 
