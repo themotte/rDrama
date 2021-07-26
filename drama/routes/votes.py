@@ -76,19 +76,6 @@ def api_vote_post(post_id, new, v):
 
 	new = int(new)
 
-	if new==-1:
-		count=g.db.query(Vote).filter(
-			Vote.user_id.in_(
-				tuple(
-					[v.id]+[x.id for x in v.alts]
-					)
-				),
-			Vote.created_utc > (int(time.time())-3600), 
-			Vote.vote_type==-1
-			).count()
-		if count >=15 and v.admin_level==0:
-			return jsonify({"error": "You're doing that too much. Try again later."}), 403
-
 	post = get_post(post_id)
 
 	# check for existing vote
@@ -103,6 +90,7 @@ def api_vote_post(post_id, new, v):
 			g.db.add(post.author)
 		existing.vote_type = new
 		g.db.add(existing)
+		g.db.commit()
 	else:
 		if new != 0:
 			post.author.dramacoins += 1
@@ -112,10 +100,8 @@ def api_vote_post(post_id, new, v):
 					submission_id=base36decode(post_id),
 					app_id=v.client.application.id if v.client else None
 					)
-
 		g.db.add(vote)
-
-	g.db.flush()
+		g.db.commit()
 		
 	post.upvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=1).count()
 	post.downvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=-1).count()
@@ -150,8 +136,9 @@ def api_vote_comment(comment_id, new, v):
 		elif existing.vote_type != 0 and new == 0:
 			comment.author.dramacoins -= 1
 			g.db.add(comment.author)
-		existing.change_to(new)
+		existing.vote_type = new
 		g.db.add(existing)
+		g.db.commit()
 	else:
 		if new != 0:
 			comment.author.dramacoins += 1
@@ -163,10 +150,7 @@ def api_vote_comment(comment_id, new, v):
 						   )
 
 		g.db.add(vote)
-	try:
-		g.db.flush()
-	except:
-		return jsonify({"error":"Vote already exists."}), 422
+		g.db.commit()
 
 	comment.upvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=1).count()
 	comment.downvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=-1).count()
