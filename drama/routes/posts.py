@@ -194,8 +194,8 @@ def post_base36id(pid, anything=None, v=None):
 					g.db.add(vote)
 					try: g.db.flush()
 					except: g.db.rollback()
-					comment.upvotes = comment.ups
-					comment.downvotes = comment.downs
+					comment.upvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=1).count()
+					comment.downvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=-1).count()
 					g.db.add(comment)
 
 		post._preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
@@ -971,8 +971,6 @@ def submit_post(v):
 			user = get_account(follow.user_id)
 			send_notification(2360, user, f"@{v.username} has made a new post: [{title}](https://rdrama.net{new_post.permalink})")
 
-	new_post.upvotes = new_post.ups
-	new_post.downvotes = new_post.downs
 	g.db.add(new_post)
 	g.db.commit()
 

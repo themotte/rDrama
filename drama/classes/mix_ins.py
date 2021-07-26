@@ -122,10 +122,6 @@ class Scores:
 	@property
 	#@cache.memoize(timeout=60)
 	def score_percent(self):
-		# try:
-		# return int((self.ups/(self.ups+self.downs))*100)
-		# except ZeroDivisionError:
-		# return 0
 
 		return 101
 
