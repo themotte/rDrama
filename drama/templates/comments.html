@@ -13,8 +13,7 @@
 
 <!--conditions under which a comment might be hidden-->
 
-{% if (c.is_banned or c.is_blocking or c.is_blocked) and not (v and v.admin_level>0) and not (v and v.id==c.author_id) %}
-
+{% if False %}
 
 
 <div id="comment-{{c.base36id}}" class="comment">
