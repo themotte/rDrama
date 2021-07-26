@@ -44,8 +44,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	is_approved = Column(Integer, default=0)
 	approved_utc = Column(Integer, default=0)
 	creation_ip = Column(String(64), default='')
-	score_hot = Column(Float, default=0)
-	score_top = Column(Integer, default=1)
 	level = Column(Integer, default=0)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
 
@@ -53,7 +51,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	is_bot = Column(Boolean, default=False)
 	banaward = Column(String)
 	is_pinned = Column(Boolean, default=False)
-	creation_region=Column(String(2))
 	sentto=Column(Integer)
 
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
@@ -381,9 +378,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	@property
 	def json_admin(self):
 		data= self.json_raw
-
-		data["creation_ip"] = self.creation_ip
-		data["creation_region"] = self.creation_region
 	
 		return data
 

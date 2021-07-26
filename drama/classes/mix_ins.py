@@ -128,7 +128,7 @@ class Scores:
 	@property
 	#@cache.memoize(timeout=60)
 	def score(self):
-		return int(self.score_top) or 0
+		return int(self.score) or 0
 
 
 class Fuzzing:
@@ -137,7 +137,7 @@ class Fuzzing:
 	#@cache.memoize(timeout=60)
 	def score_fuzzed(self):
 
-		real = self.score_top if self.score_top else self.score
+		real = self.score
 		real = int(real)
 		if real <= 10:
 			return real

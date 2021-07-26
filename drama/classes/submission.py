@@ -63,27 +63,17 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	approved_utc = Column(Integer, default=0)
 	over_18 = Column(Boolean, default=False)
-	creation_ip = Column(String(64), default="")
-	mod_approved = Column(Integer)
-	accepted_utc = Column(Integer, default=0)
-	has_thumb = Column(Boolean, default=False)
-	post_public = Column(Boolean, default=True)
-	score_hot = Column(Float, default=0)
-	score_top = Column(Float, default=1)
-	score_activity = Column(Float, default=0)
 	author = relationship(
 		"User",
 		lazy="joined",
 		innerjoin=True,
 		primaryjoin="Submission.author_id==User.id")
 	is_pinned = Column(Boolean, default=False)
-	score_best = Column(Float, default=0)
 	reports = relationship("Report", backref="submission")
 	is_bot = Column(Boolean, default=False)
 
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
-	creation_region=Column(String(2))
 
 	app_id=Column(Integer, ForeignKey("oauth_apps.id"))
 	oauth_app=relationship("OauthApp")
@@ -245,13 +235,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def thumb_url(self):
 		
 		if self.over_18: return f"/assets/images/nsfw.png"
-		elif self.has_thumb:
-			if self.thumburl: return self.thumburl
-			else: return f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/posts/{self.base36id}/thumb.png"
-		elif self.is_image:
-			return self.url
-		else:
-			return None
+		elif self.thumburl: return self.thumburl
+		else: return None
 
 	@property
 
@@ -499,9 +484,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def json_admin(self):
 
 		data=self.json_raw
-
-		data["creation_ip"]=self.creation_ip
-		data["creation_region"]=self.creation_region
 
 		return data
 

@@ -337,7 +337,6 @@ def edit_post(pid, v):
 			over_18=False,
 			is_bot=True,
 			app_id=None,
-			creation_region=request.headers.get("cf-ipcountry"),
 			is_pinned=True,
 			distinguish_level=6
 			)
@@ -543,7 +542,6 @@ def thumbs(new_post):
 			file.write(chunk)
 
 	post.thumburl = upload_from_file(name, tempname, resize=(100, 100))
-	if post.thumburl: post.has_thumb = True
 	g.db.add(post)
 	g.db.commit()
 
@@ -884,7 +882,6 @@ def submit_post(v):
 		over_18=bool(request.form.get("over_18","")),
 		repost_id=repost.id if repost else None,
 		app_id=v.client.application.id if v.client else None,
-		creation_region=request.headers.get("cf-ipcountry"),
 		is_bot = request.headers.get("X-User-Type","").lower()=="bot"
 	)
 
@@ -988,7 +985,6 @@ def submit_post(v):
 			over_18=False,
 			is_bot=True,
 			app_id=None,
-			creation_region=request.headers.get("cf-ipcountry"),
 			is_pinned=True,
 			distinguish_level=6
 		)
@@ -1025,7 +1021,6 @@ def submit_post(v):
 		over_18=False,
 		is_bot=True,
 		app_id=None,
-		creation_region=request.headers.get("cf-ipcountry")
 		)
 
 	g.db.add(c)

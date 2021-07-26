@@ -350,9 +350,7 @@ def sign_up_post(v):
 			password=request.form.get("password"),
 			email=email,
 			created_utc=int(time.time()),
-			#creation_ip=request.remote_addr,
 			referred_by=ref_id or None,
-			#creation_region=request.headers.get("cf-ipcountry"),
 			ban_evade =  int(any([x.is_banned for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x]))
 			)
 

@@ -699,8 +699,6 @@ class User(Base, Stndrd, Age_times):
 	def json_admin(self):
 		data = self.json_raw
 
-		data['creation_ip'] = self.creation_ip
-		data['creation_region'] = self.creation_region
 		data['email'] = self.email
 		data['email_verified'] = self.is_activated
 
