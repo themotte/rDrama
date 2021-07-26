@@ -49,7 +49,7 @@ def leaderboard(v):
 def leaderboard():
 	users = g.db.query(User).options(lazyload('*'))
 	users1= sorted(users, key=lambda x: x.dramacoins, reverse=True)[:25]
-	users2= sorted(users, key=lambda x: x.follower_count, reverse=True)[:10]
+	users2= sorted(users, key=lambda x: x.stored_subscriber_count, reverse=True)[:10]
 	return users1, users2
 
 @app.get("/@<username>/css")
@@ -446,7 +446,7 @@ def follow_user(username, v):
 
 	g.db.add(new_follow)
 	g.db.flush()
-	target.stored_subscriber_count=target.follower_count
+	target.stored_subscriber_count=target.stored_subscriber_count
 	g.db.add(target)
 	g.db.commit()
 

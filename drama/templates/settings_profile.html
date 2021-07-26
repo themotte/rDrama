@@ -158,7 +158,7 @@
 
 							<div>
 
-								{% if v.has_banner %}
+								{% if v.bannerurl %}
 								<form action="/settings/delete/banner" method="post">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>

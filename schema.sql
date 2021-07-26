@@ -355,7 +355,7 @@ DROP FUNCTION public.rank_activity(public.submissions);
 DROP FUNCTION public.mod_count(public.users);
 DROP FUNCTION public.is_deleted(public.notifications);
 DROP FUNCTION public.is_banned(public.notifications);
-DROP FUNCTION public.follower_count(public.users);
+DROP FUNCTION public.stored_subscriber_count(public.users);
 DROP FUNCTION public.flag_count(public.submissions);
 DROP FUNCTION public.flag_count(public.comments);
 DROP FUNCTION public.energy(public.users);
@@ -474,8 +474,10 @@ ALTER TABLE public.comments OWNER TO postgres;
 
 CREATE FUNCTION public.age(public.comments) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+    AS $_$
+
+      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+
       $_$;
 
 
@@ -537,8 +539,10 @@ ALTER TABLE public.submissions OWNER TO postgres;
 
 CREATE FUNCTION public.age(public.submissions) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+    AS $_$
+
+      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+
       $_$;
 
 
@@ -650,8 +654,10 @@ ALTER TABLE public.users OWNER TO postgres;
 
 CREATE FUNCTION public.age(public.users) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+    AS $_$
+
+      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
+
       $_$;
 
 
@@ -663,10 +669,14 @@ ALTER FUNCTION public.age(public.users) OWNER TO postgres;
 
 CREATE FUNCTION public.board_id(public.comments) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT submissions.board_id
-      FROM submissions
-      WHERE submissions.id=$1.parent_submission
+    AS $_$
+
+      SELECT submissions.board_id
+
+      FROM submissions
+
+      WHERE submissions.id=$1.parent_submission
+
       $_$;
 
 
@@ -692,10 +702,14 @@ ALTER TABLE public.reports OWNER TO postgres;
 
 CREATE FUNCTION public.board_id(public.reports) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT submissions.board_id
-      FROM submissions
-      WHERE submissions.id=$1.post_id
+    AS $_$
+
+      SELECT submissions.board_id
+
+      FROM submissions
+
+      WHERE submissions.id=$1.post_id
+
       $_$;
 
 
@@ -732,17 +746,28 @@ ALTER FUNCTION public.comment_count(public.submissions) OWNER TO postgres;
 
 CREATE FUNCTION public.comment_energy(public.users) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-     SELECT COALESCE(
-     (
-      SELECT SUM(comments.score_top)
-      FROM comments
-      WHERE comments.author_id=$1.id
-        AND comments.is_banned=false
-        and comments.parent_submission is not null
-      ),
-      0
-      )
+    AS $_$
+
+     SELECT COALESCE(
+
+     (
+
+      SELECT SUM(comments.score_top)
+
+      FROM comments
+
+      WHERE comments.author_id=$1.id
+
+        AND comments.is_banned=false
+
+        and comments.parent_submission is not null
+
+      ),
+
+      0
+
+      )
+
     $_$;
 
 
@@ -772,9 +797,12 @@ ALTER TABLE public.notifications OWNER TO postgres;
 
 CREATE FUNCTION public.created_utc(public.notifications) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-select created_utc from comments
-where comments.id=$1.comment_id
+    AS $_$
+
+select created_utc from comments
+
+where comments.id=$1.comment_id
+
 $_$;
 
 
@@ -946,16 +974,26 @@ ALTER FUNCTION public.downs(public.submissions) OWNER TO postgres;
 
 CREATE FUNCTION public.energy(public.users) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-     SELECT COALESCE(
-     (
-      SELECT SUM(submissions.score_top)
-      FROM submissions
-      WHERE submissions.author_id=$1.id
-        AND submissions.is_banned=false
-      ),
-      0
-      )
+    AS $_$
+
+     SELECT COALESCE(
+
+     (
+
+      SELECT SUM(submissions.score_top)
+
+      FROM submissions
+
+      WHERE submissions.author_id=$1.id
+
+        AND submissions.is_banned=false
+
+      ),
+
+      0
+
+      )
+
     $_$;
 
 
@@ -967,12 +1005,18 @@ ALTER FUNCTION public.energy(public.users) OWNER TO postgres;
 
 CREATE FUNCTION public.flag_count(public.comments) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT COUNT(*)
-      FROM commentflags
-      JOIN users ON commentflags.user_id=users.id
-      WHERE comment_id=$1.id
-      AND users.is_banned=0
+    AS $_$
+
+      SELECT COUNT(*)
+
+      FROM commentflags
+
+      JOIN users ON commentflags.user_id=users.id
+
+      WHERE comment_id=$1.id
+
+      AND users.is_banned=0
+
       $_$;
 
 
@@ -984,63 +1028,105 @@ ALTER FUNCTION public.flag_count(public.comments) OWNER TO postgres;
 
 CREATE FUNCTION public.flag_count(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT COUNT(*)
-      FROM flags
-      JOIN users ON flags.user_id=users.id
-      WHERE post_id=$1.id
-      AND users.is_banned=0
+    AS $_$
+
+      SELECT COUNT(*)
+
+      FROM flags
+
+      JOIN users ON flags.user_id=users.id
+
+      WHERE post_id=$1.id
+
+      AND users.is_banned=0
+
       $_$;
 
 
 ALTER FUNCTION public.flag_count(public.submissions) OWNER TO postgres;
 
 --
--- Name: follower_count(public.users); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: stored_subscriber_count(public.users); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.follower_count(public.users) RETURNS bigint
+CREATE FUNCTION public.stored_subscriber_count(public.users) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-	select (
-         (select count(*)
-         from follows
-         left join users
-         on follows.user_id=users.id
-         where follows.target_id=$1.id
-         and (users.is_banned=0 or users.created_utc>0)
-         and users.is_deleted=false
-         )-(
-	         select count(distinct f1.id)
-	         	from
-	         	(
-	         		select *
-	         		from follows
-	         		where target_id=$1.id
-	         	) as f1
-   				join (select * from users where is_banned=0 or unban_utc>0) as u1
-    			 on u1.id=f1.user_id
-				join (select * from alts) as a
-			     on (a.user1=f1.user_id or a.user2=f1.user_id)
-			    join (
-			    	select *
-			    	from follows
-			    	where target_id=$1.id
-			    ) as f2
-			    on ((a.user1=f2.user_id or a.user2=f2.user_id) and f2.id != f1.id)
-			    join (select * from users where is_banned=0 or unban_utc>0) as u2
-			     on u2.id=f2.user_id
-			    where f1.id is not null
-			    and f2.id is not null        	
-	         )
-         
-         
-         
-         )
+    AS $_$
+
+	select (
+
+         (select count(*)
+
+         from follows
+
+         left join users
+
+         on follows.user_id=users.id
+
+         where follows.target_id=$1.id
+
+         and (users.is_banned=0 or users.created_utc>0)
+
+         and users.is_deleted=false
+
+         )-(
+
+	         select count(distinct f1.id)
+
+	         	from
+
+	         	(
+
+	         		select *
+
+	         		from follows
+
+	         		where target_id=$1.id
+
+	         	) as f1
+
+   				join (select * from users where is_banned=0 or unban_utc>0) as u1
+
+    			 on u1.id=f1.user_id
+
+				join (select * from alts) as a
+
+			     on (a.user1=f1.user_id or a.user2=f1.user_id)
+
+			    join (
+
+			    	select *
+
+			    	from follows
+
+			    	where target_id=$1.id
+
+			    ) as f2
+
+			    on ((a.user1=f2.user_id or a.user2=f2.user_id) and f2.id != f1.id)
+
+			    join (select * from users where is_banned=0 or unban_utc>0) as u2
+
+			     on u2.id=f2.user_id
+
+			    where f1.id is not null
+
+			    and f2.id is not null        	
+
+	         )
+
+         
+
+         
+
+         
+
+         )
+
         $_$;
 
 
-ALTER FUNCTION public.follower_count(public.users) OWNER TO postgres;
+ALTER FUNCTION public.stored_subscriber_count(public.users) OWNER TO postgres;
 
 --
 -- Name: is_banned(public.notifications); Type: FUNCTION; Schema: public; Owner: postgres
@@ -1048,9 +1134,12 @@ ALTER FUNCTION public.follower_count(public.users) OWNER TO postgres;
 
 CREATE FUNCTION public.is_banned(public.notifications) RETURNS boolean
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-select is_banned from comments
-where comments.id=$1.comment_id
+    AS $_$
+
+select is_banned from comments
+
+where comments.id=$1.comment_id
+
 $_$;
 
 
@@ -1062,9 +1151,12 @@ ALTER FUNCTION public.is_banned(public.notifications) OWNER TO postgres;
 
 CREATE FUNCTION public.is_deleted(public.notifications) RETURNS boolean
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-select is_deleted from comments
-where comments.id=$1.comment_id
+    AS $_$
+
+select is_deleted from comments
+
+where comments.id=$1.comment_id
+
 $_$;
 
 
@@ -1087,8 +1179,10 @@ ALTER FUNCTION public.mod_count(public.users) OWNER TO postgres;
 
 CREATE FUNCTION public.rank_activity(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT 1000000.0*CAST($1.comment_count AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.35))
+    AS $_$
+
+      SELECT 1000000.0*CAST($1.comment_count AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.35))
+
     $_$;
 
 
@@ -1100,8 +1194,10 @@ ALTER FUNCTION public.rank_activity(public.submissions) OWNER TO postgres;
 
 CREATE FUNCTION public.rank_best(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT 10000000.0*CAST(($1.upvotes - $1.downvotes + 1) AS float)/((CAST(($1.age+3600) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+10000 as float)/1000.0)^(1.35))
+    AS $_$
+
+      SELECT 10000000.0*CAST(($1.upvotes - $1.downvotes + 1) AS float)/((CAST(($1.age+3600) AS FLOAT)*cast((select boards.subscriber_count from boards where boards.id=$1.board_id)+10000 as float)/1000.0)^(1.35))
+
       $_$;
 
 
@@ -1113,8 +1209,10 @@ ALTER FUNCTION public.rank_best(public.submissions) OWNER TO postgres;
 
 CREATE FUNCTION public.rank_fiery(public.comments) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-  SELECT SQRT(CAST(($1.upvotes * $1.downvotes) AS float))
+    AS $_$
+
+  SELECT SQRT(CAST(($1.upvotes * $1.downvotes) AS float))
+
   $_$;
 
 
@@ -1126,8 +1224,10 @@ ALTER FUNCTION public.rank_fiery(public.comments) OWNER TO postgres;
 
 CREATE FUNCTION public.rank_fiery(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT 1000000.0*SQRT(CAST(($1.upvotes * $1.downvotes) AS float))/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.35))
+    AS $_$
+
+      SELECT 1000000.0*SQRT(CAST(($1.upvotes * $1.downvotes) AS float))/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.35))
+
       $_$;
 
 
@@ -1139,8 +1239,10 @@ ALTER FUNCTION public.rank_fiery(public.submissions) OWNER TO postgres;
 
 CREATE FUNCTION public.rank_hot(public.comments) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-  SELECT CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.5))
+    AS $_$
+
+  SELECT CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+100000) AS FLOAT)/6.0)^(1.5))
+
   $_$;
 
 
@@ -1152,8 +1254,10 @@ ALTER FUNCTION public.rank_hot(public.comments) OWNER TO postgres;
 
 CREATE FUNCTION public.rank_hot(public.submissions) RETURNS double precision
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT 1000000.0*CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.5))
+    AS $_$
+
+      SELECT 1000000.0*CAST(($1.upvotes - $1.downvotes) AS float)/((CAST(($1.age+5000) AS FLOAT)/100.0)^(1.5))
+
       $_$;
 
 
@@ -1165,11 +1269,16 @@ ALTER FUNCTION public.rank_hot(public.submissions) OWNER TO postgres;
 
 CREATE FUNCTION public.referral_count(public.users) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-        SELECT COUNT(*)
-        FROM USERS
-        WHERE users.is_banned=0
-        AND users.referred_by=$1.id
+    AS $_$
+
+        SELECT COUNT(*)
+
+        FROM USERS
+
+        WHERE users.is_banned=0
+
+        AND users.referred_by=$1.id
+
     $_$;
 
 
@@ -1181,13 +1290,20 @@ ALTER FUNCTION public.referral_count(public.users) OWNER TO postgres;
 
 CREATE FUNCTION public.report_count(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT COUNT(*)
-      FROM reports
-      JOIN users ON reports.user_id=users.id
-      WHERE post_id=$1.id
-      AND users.is_banned=0
-      and reports.created_utc >= $1.edited_utc
+    AS $_$
+
+      SELECT COUNT(*)
+
+      FROM reports
+
+      JOIN users ON reports.user_id=users.id
+
+      WHERE post_id=$1.id
+
+      AND users.is_banned=0
+
+      and reports.created_utc >= $1.edited_utc
+
       $_$;
 
 
@@ -1199,8 +1315,10 @@ ALTER FUNCTION public.report_count(public.submissions) OWNER TO postgres;
 
 CREATE FUNCTION public.score(public.comments) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT ($1.upvotes - $1.downvotes)
+    AS $_$
+
+      SELECT ($1.upvotes - $1.downvotes)
+
       $_$;
 
 
@@ -1212,8 +1330,10 @@ ALTER FUNCTION public.score(public.comments) OWNER TO postgres;
 
 CREATE FUNCTION public.score(public.submissions) RETURNS integer
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT ($1.upvotes - $1.downvotes)
+    AS $_$
+
+      SELECT ($1.upvotes - $1.downvotes)
+
       $_$;
 
 
@@ -1251,12 +1371,18 @@ ALTER TABLE public.images OWNER TO postgres;
 
 CREATE FUNCTION public.splash(text) RETURNS SETOF public.images
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT *
-      FROM images
-      WHERE state=$1
-      ORDER BY random()
-      LIMIT 1
+    AS $_$
+
+      SELECT *
+
+      FROM images
+
+      WHERE state=$1
+
+      ORDER BY random()
+
+      LIMIT 1
+
     $_$;
 
 
@@ -1422,39 +1548,72 @@ ALTER FUNCTION public.ups(public.submissions) OWNER TO postgres;
 
 CREATE FUNCTION public.ups_test(public.submissions) RETURNS bigint
     LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-select (
-(
-  SELECT count(*)
-  from (
-    select * from votes
-    where submission_id=$1.id
-    and vote_type=1
-  ) as v1
-   join (select * from users where users.is_banned=0) as u0
-    on u0.id=v1.user_id
-)-(
-  SELECT count(distinct v1.id)
-  from (
-    select * from votes
-    where submission_id=$1.id
-    and vote_type=1
-  ) as v1
-   join (select * from users where is_banned=0) as u1
-    on u1.id=v1.user_id
-   join (select * from alts) as a
-    on (a.user1=v1.user_id or a.user2=v1.user_id)
-   join (
-      select * from votes
-      where submission_id=$1.id
-      and vote_type=1
-  ) as v2
-    on ((a.user1=v2.id or a.user2=v2.id) and v2.id != v1.id)
-   join (select * from users where is_banned=0) as u2
-    on u2.id=v2.user_id
-  where v1.id is not null
-  and v2.id is not null
-))
+    AS $_$
+
+select (
+
+(
+
+  SELECT count(*)
+
+  from (
+
+    select * from votes
+
+    where submission_id=$1.id
+
+    and vote_type=1
+
+  ) as v1
+
+   join (select * from users where users.is_banned=0) as u0
+
+    on u0.id=v1.user_id
+
+)-(
+
+  SELECT count(distinct v1.id)
+
+  from (
+
+    select * from votes
+
+    where submission_id=$1.id
+
+    and vote_type=1
+
+  ) as v1
+
+   join (select * from users where is_banned=0) as u1
+
+    on u1.id=v1.user_id
+
+   join (select * from alts) as a
+
+    on (a.user1=v1.user_id or a.user2=v1.user_id)
+
+   join (
+
+      select * from votes
+
+      where submission_id=$1.id
+
+      and vote_type=1
+
+  ) as v2
+
+    on ((a.user1=v2.id or a.user2=v2.id) and v2.id != v1.id)
+
+   join (select * from users where is_banned=0) as u2
+
+    on u2.id=v2.user_id
+
+  where v1.id is not null
+
+  and v2.id is not null
+
+))
+
       $_$;
 
 

@@ -50,7 +50,6 @@ class User(Base, Stndrd, Age_times):
 	newtab = Column(Boolean, default=False)
 	newtabexternal = Column(Boolean, default=True)
 	oldreddit = Column(Boolean, default=False)
-	creation_ip = Column(String)
 	submissions = relationship(
 		"Submission",
 		lazy="dynamic",
@@ -65,7 +64,6 @@ class User(Base, Stndrd, Age_times):
 	bio = Column(String, default="")
 	bio_html = Column(String, default="")
 	badges = relationship("Badge", lazy="dynamic", backref="user")
-	real_id = Column(String)
 	notifications = relationship(
 		"Notification",
 		lazy="dynamic")
@@ -78,48 +76,22 @@ class User(Base, Stndrd, Age_times):
 	is_banned = Column(Integer, default=None)
 	unban_utc = Column(Integer, default=None)
 	ban_reason = Column(String, default="")
-	feed_nonce = Column(Integer, default=0)
 	login_nonce = Column(Integer, default=0)
-	title_id = Column(Integer, ForeignKey("titles.id"))
 	title = relationship("Title", lazy="joined")
-	has_banner = Column(Boolean, default=False)
 	reserved = Column(String(256))
-	is_nsfw = Column(Boolean, default=False)
-	profile_nonce = Column(Integer, default=0)
 	dramacoins = Column(Integer, default=0)
-	banner_nonce = Column(Integer, default=0)
-	last_siege_utc = Column(Integer, default=0)
 	mfa_secret = deferred(Column(String(16)))
-	hide_offensive = Column(Boolean, default=False)
-	hide_bot = Column(Boolean, default=False)
 	is_private = Column(Boolean, default=False)
-	read_announcement_utc = Column(Integer, default=0)
-	filter_nsfw = Column(Boolean, default=False)
 	stored_subscriber_count = Column(Integer, default=0)
 	defaultsortingcomments = Column(String, default="top")
 	defaultsorting = Column(String, default="hot")
 	defaulttime = Column(String, default="all")
-	coin_balance = Column(Integer, default=0)
-	premium_expires_utc = Column(Integer, default=0)
-	negative_balance_cents = Column(Integer, default=0)
 
 	is_nofollow = Column(Boolean, default=False)
 	custom_filter_list = Column(String(1000), default="")
 	discord_id = Column(String(64))
-	creation_region = Column(String(2))
 	ban_evade = Column(Integer, default=0)
-
-	profile_upload_ip = deferred(Column(String(255)))
-	banner_upload_ip = deferred(Column(String(255)))
-	profile_upload_region = deferred(Column(String(2)))
-	banner_upload_region = deferred(Column(String(2)))
-
-	# stuff to support name changes
-	profile_set_utc = deferred(Column(Integer, default=0))
-	banner_set_utc = deferred(Column(Integer, default=0))
 	original_username = deferred(Column(String(255)))
-	name_changed_utc = deferred(Column(Integer, default=0))
-
 	subscriptions = relationship("Subscription")
 
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id")
@@ -140,7 +112,6 @@ class User(Base, Stndrd, Age_times):
 
 	# properties defined as SQL server-side functions
 	referral_count = deferred(Column(Integer, server_default=FetchedValue()))
-	follower_count = deferred(Column(Integer, server_default=FetchedValue()))
 
 	def __init__(self, **kwargs):
 
@@ -296,11 +267,6 @@ class User(Base, Stndrd, Age_times):
 
 	def verifyPass(self, password):
 		return check_password_hash(self.passhash, password)
-
-	@property
-	def feedkey(self):
-
-		return generate_hash(f"{self.username}{self.id}{self.feed_nonce}{self.created_utc}")
 
 	@property
 	def formkey(self):
@@ -491,8 +457,6 @@ class User(Base, Stndrd, Age_times):
 	def set_profile(self, file):
 
 		self.del_profile()
-		self.profile_nonce += 1
-
 		imageurl = upload_file(name=f"profile.gif", file=file, resize=(100, 100))
 		if imageurl:
 			self.profileurl = imageurl
@@ -504,12 +468,9 @@ class User(Base, Stndrd, Age_times):
 	def set_banner(self, file):
 
 		self.del_banner()
-		self.banner_nonce += 1
-
 		imageurl = upload_file(name=f"banner.gif", file=file)
 		if imageurl:
 			self.bannerurl = imageurl
-			self.has_banner = True
 			self.banner_upload_ip = request.remote_addr
 			self.banner_set_utc = int(time.time())
 			self.banner_upload_region = request.headers.get("cf-ipcountry")
@@ -522,16 +483,13 @@ class User(Base, Stndrd, Age_times):
 
 	def del_banner(self):
 
-		self.has_banner = False
+		self.bannerurl = None
 		g.db.add(self)
 
 	@property
 	def banner_url(self):
-		if self.has_banner:
-			if self.bannerurl:
-				return self.bannerurl
-			else:
-				return f"https://s3.eu-central-1.amazonaws.com/i.drama.ga/uid/{self.base36id}/banner-{self.banner_nonce}.png"
+		if self.bannerurl:
+			return self.bannerurl
 		else:
 			return "/assets/images/default_bg.png"
 
@@ -617,7 +575,7 @@ class User(Base, Stndrd, Age_times):
 			self.unban_utc = ban_time
 
 		else:
-			if self.has_banner:
+			if self.bannerurl:
 				self.del_banner()
 			if self.profileurl:
 				self.del_profile()
@@ -637,8 +595,8 @@ class User(Base, Stndrd, Age_times):
 
 		# Takes care of all functions needed for account reinstatement.
 
-		self.is_banned = None
-		self.unban_utc = None
+		self.is_banned = 0
+		self.unban_utc = 0
 
 		g.db.add(self)
 
