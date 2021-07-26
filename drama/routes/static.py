@@ -171,7 +171,7 @@ def blocks(v):
 def banned(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
-	users = [x for x in g.db.query(User).filter(User.is_banned != 0, User.unban_utc == 0).all()]
+	users = [x for x in g.db.query(User).filter(User.is_banned is not None, User.unban_utc is None).all()]
 	return render_template("banned.html", v=v, users=users)
 
 @app.route("/formatting", methods=["GET"])

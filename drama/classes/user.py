@@ -75,8 +75,8 @@ class User(Base, Stndrd, Age_times):
 	#	primaryjoin="and_(Notification.user_id==User.id, Notification.read==False)")
 
 	referred_by = Column(Integer)
-	is_banned = Column(Integer, default=0)
-	unban_utc = Column(Integer, default=0)
+	is_banned = Column(Integer, default=None)
+	unban_utc = Column(Integer, default=None)
 	ban_reason = Column(String, default="")
 	feed_nonce = Column(Integer, default=0)
 	login_nonce = Column(Integer, default=0)
@@ -94,7 +94,6 @@ class User(Base, Stndrd, Age_times):
 	hide_bot = Column(Boolean, default=False)
 	is_private = Column(Boolean, default=False)
 	read_announcement_utc = Column(Integer, default=0)
-	unban_utc = Column(Integer, default=0)
 	filter_nsfw = Column(Boolean, default=False)
 	stored_subscriber_count = Column(Integer, default=0)
 	defaultsortingcomments = Column(String, default="top")
@@ -586,7 +585,7 @@ class User(Base, Stndrd, Age_times):
 	def json_core(self):
 
 		now = int(time.time())
-		if self.is_banned and (self.unban_utc == 0 or now < self.unban_utc):
+		if self.is_banned and (not self.unban_utc or now < self.unban_utc):
 			return {'username': self.username,
 					'permalink': self.permalink,
 					'is_banned': True,
@@ -618,7 +617,6 @@ class User(Base, Stndrd, Age_times):
 			self.unban_utc = ban_time
 
 		else:
-			self.unban_utc = 0
 			if self.has_banner:
 				self.del_banner()
 			if self.profileurl:
@@ -646,8 +644,7 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	def is_suspended(self):
-		return (self.is_banned and (self.unban_utc ==
-									0 or self.unban_utc > time.time()))
+		return (self.is_banned and (not self.unban_utc or self.unban_utc > time.time()))
 
 	@property
 	def is_blocking(self):
