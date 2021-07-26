@@ -82,31 +82,24 @@ def get_account(base36id, v=None, graceful=False):
 
 def get_post(pid, v=None, graceful=False, **kwargs):
 
-	print('aaa')
 	if isinstance(pid, str):
 		i = base36decode(pid)
 	else:
 		i = pid
-	print('bbb')
 
 	if v:
-		print('ccc')
 		vt = g.db.query(Vote).filter_by(
 			user_id=v.id, submission_id=i).subquery()
 		blocking = v.blocking.subquery()
-		print('ddd')
 
 		items = g.db.query(
 			Submission,
 			vt.c.vote_type,
 			blocking.c.id,
 		)
-		print('eee')
 
 		if v.admin_level>=4:
 			items=items.options(joinedload(Submission.oauth_app))
-		print('fff')
-		print(i)
 		items=items.filter(Submission.id == i
 		).join(
 			vt, 
@@ -118,30 +111,21 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 			isouter=True
 		)
 
-		print(items.all())
 		items=items.first()
-		print('ggg')
 
 		if not items and not graceful:
 			abort(404)
-		print('sexcuse me')
 		x = items[0]
 		x._voted = items[1] or 0
 		x._is_blocking = items[2] or 0
-		print("what")
 	else:
-		print(i)
 		items = g.db.query(
 			Submission
 		).filter(Submission.id == i).first()
-		print(items)
-		print('help')
 		if not items and not graceful:
 			abort(404)
-		print('me')
 		x=items
 
-	print('end of file')
 	return x
 
 
