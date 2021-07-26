@@ -728,7 +728,6 @@ def ban_post(post_id, v):
 
 	post.is_banned = True
 	post.is_approved = 0
-	post.approved_utc = 0
 	post.stickied = False
 	post.is_pinned = False
 
@@ -773,7 +772,6 @@ def unban_post(post_id, v):
 
 	post.is_banned = False
 	post.is_approved = v.id
-	post.approved_utc = int(time.time())
 
 	g.db.add(post)
 
@@ -839,7 +837,6 @@ def api_ban_comment(c_id, v):
 
 	comment.is_banned = True
 	comment.is_approved = 0
-	comment.approved_utc = 0
 
 	g.db.add(comment)
 	ma=ModAction(
@@ -870,7 +867,6 @@ def api_unban_comment(c_id, v):
 
 	comment.is_banned = False
 	comment.is_approved = v.id
-	comment.approved_utc = int(time.time())
 
 
 	return "", 204

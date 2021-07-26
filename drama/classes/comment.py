@@ -42,7 +42,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	distinguish_level = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
 	is_approved = Column(Integer, default=0)
-	approved_utc = Column(Integer, default=0)
 	level = Column(Integer, default=0)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
 

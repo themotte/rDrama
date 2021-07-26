@@ -2,13 +2,6 @@ from flask import *
 import time
 from .security import *
 
-
-def session_over18():
-
-	now = int(time.time())
-	try: return session.get('over_18', 0) >= now
-	except: return False
-
 def make_logged_out_formkey(t):
 
 	s = f"{t}+{session['session_id']}"

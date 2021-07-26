@@ -154,33 +154,13 @@ def error_503(e, v):
 		   }
 
 
-@app.route("/allow_nsfw_logged_in", methods=["POST"])
-@auth_required
-@validate_formkey
-def allow_nsfw_logged_in(v):
+@app.route("/allow_nsfw", methods=["POST"])
+def allow_nsfw():
 
-	if not session.get("over_18"): session["over_18"] = int(time.time()) + 3600
+	session["over_18"] = int(time.time()) + 3600
 
 	return redirect(request.form.get("redir"))
 
-
-@app.route("/allow_nsfw_logged_out", methods=["POST"])
-@auth_desired
-def allow_nsfw_logged_out(v):
-
-	if v:
-		return redirect('/')
-
-	t = int(request.form.get('time'))
-
-	if not validate_logged_out_formkey(t,
-									   request.form.get("formkey")
-									   ):
-		abort(403)
-
-	if not session.get("over_18"): session["over_18"] = int(time.time()) + 3600
-
-	return redirect(request.form.get("redir"))
 
 @app.route("/error/<error>", methods=["GET"])
 @auth_desired

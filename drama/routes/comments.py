@@ -85,13 +85,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	
 	post = get_post(pid, v=v)
 		
-	if post.over_18 and not (v and v.over_18) and not session_over18():
-		t = int(time.time())
+	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		return {'html': lambda: render_template("errors/nsfw.html",
 												v=v,
-												t=t,
-												lo_formkey=make_logged_out_formkey(
-													t),
 												),
 				'api': lambda: {'error': f'This content is not suitable for some users and situations.'}
 

@@ -60,7 +60,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	domain_obj = relationship("Domain")
 	flags = relationship("Flag", backref="submission")
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
-	approved_utc = Column(Integer, default=0)
 	over_18 = Column(Boolean, default=False)
 	author = relationship(
 		"User",
