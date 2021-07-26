@@ -82,10 +82,12 @@ def get_account(base36id, v=None, graceful=False):
 
 def get_post(pid, v=None, graceful=False, **kwargs):
 
+	print('aaa')
 	if isinstance(pid, str):
 		i = base36decode(pid)
 	else:
 		i = pid
+	print('bbb')
 
 	if v:
 		vt = g.db.query(Vote).filter_by(
