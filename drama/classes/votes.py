@@ -13,7 +13,6 @@ class Vote(Base):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	vote_type = Column(Integer)
 	submission_id = Column(Integer, ForeignKey("submissions.id"))
-	created_utc = Column(Integer, default=0)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 
 	user = relationship("User", lazy="subquery")
