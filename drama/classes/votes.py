@@ -30,22 +30,6 @@ class Vote(Base):
 	def __repr__(self):
 		return f"<Vote(id={self.id})>"
 
-	def change_to(self, x):
-		"""
-		1 - upvote
-		0 - novote
-		-1 - downvote
-		"""
-		if x in ["-1", "0", "1"]:
-			x = int(x)
-		elif x not in [-1, 0, 1]:
-			abort(400)
-
-		self.vote_type = x
-		self.created_utc = int(time())
-
-		g.db.add(self)
-
 	@property
 	def json_core(self):
 		data={
@@ -73,7 +57,6 @@ class CommentVote(Base):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	vote_type = Column(Integer)
 	comment_id = Column(Integer, ForeignKey("comments.id"))
-	created_utc = Column(Integer, default=0)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 
 	user = relationship("User", lazy="subquery")
@@ -88,22 +71,6 @@ class CommentVote(Base):
 
 	def __repr__(self):
 		return f"<CommentVote(id={self.id})>"
-
-	def change_to(self, x):
-		"""
-		1 - upvote
-		0 - novote
-		-1 - downvote
-		"""
-		if x in ["-1", "0", "1"]:
-			x = int(x)
-		elif x not in [-1, 0, 1]:
-			abort(400)
-
-		self.vote_type = x
-		self.created_utc = int(time())
-
-		g.db.add(self)
 
 	@property
 	def json_core(self):

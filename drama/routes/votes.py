@@ -62,21 +62,21 @@ def admin_vote_info_get(v):
 
 
 
-@app.route("/api/v1/vote/post/<post_id>/<x>", methods=["POST"])
-@app.route("/api/vote/post/<post_id>/<x>", methods=["POST"])
+@app.route("/api/v1/vote/post/<post_id>/<new>", methods=["POST"])
+@app.route("/api/vote/post/<post_id>/<new>", methods=["POST"])
 @is_not_banned
 @api("vote")
 @validate_formkey
-def api_vote_post(post_id, x, v):
+def api_vote_post(post_id, new, v):
 
-	if x not in ["-1", "0", "1"]: abort(400)
+	if new not in ["-1", "0", "1"]: abort(400)
 
 	# disallow bots
 	if request.headers.get("X-User-Type","") == "Bot": abort(403)
 
-	x = int(x)
+	new = int(new)
 
-	if x==-1:
+	if new==-1:
 		count=g.db.query(Vote).filter(
 			Vote.user_id.in_(
 				tuple(
@@ -95,20 +95,24 @@ def api_vote_post(post_id, x, v):
 	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
 
 	if existing:
-		if existing == 0 and x != 0:
+		if v.id == 1:
+			print(existing)
+			print(new)
+		if existing == 0 and new != 0:
+			print('sex')
 			post.author.dramacoins += 1
 			g.db.add(post.author)
-		elif existing != 0 and x == 0:
+		elif existing != 0 and new == 0:
 			post.author.dramacoins -= 1
 			g.db.add(post.author)
-		existing.change_to(x)
+		existing.vote_type = new
 		g.db.add(existing)
 	else:
-		if x != 0:
+		if new != 0:
 			post.author.dramacoins += 1
 			g.db.add(post.author)
 		vote = Vote(user_id=v.id,
-					vote_type=x,
+					vote_type=new,
 					submission_id=base36decode(post_id),
 					app_id=v.client.application.id if v.client else None
 					)
@@ -122,21 +126,21 @@ def api_vote_post(post_id, x, v):
 	g.db.add(post)
 	return "", 204
 
-@app.route("/api/v1/vote/comment/<comment_id>/<x>", methods=["POST"])
-@app.route("/api/vote/comment/<comment_id>/<x>", methods=["POST"])
+@app.route("/api/v1/vote/comment/<comment_id>/<new>", methods=["POST"])
+@app.route("/api/vote/comment/<comment_id>/<new>", methods=["POST"])
 @is_not_banned
 @api("vote")
 @validate_formkey
-def api_vote_comment(comment_id, x, v):
+def api_vote_comment(comment_id, new, v):
 
-	if x not in ["-1", "0", "1"]:
+	if new not in ["-1", "0", "1"]:
 		abort(400)
 
 	# disallow bots
 	if request.headers.get("X-User-Type","") == "Bot":
 		abort(403)
 
-	x = int(x)
+	new = int(new)
 
 	comment = get_comment(comment_id)
 
@@ -144,16 +148,16 @@ def api_vote_comment(comment_id, x, v):
 	existing = g.db.query(CommentVote).filter_by(
 		user_id=v.id, comment_id=comment.id).first()
 	if existing:
-		if existing == 0 and x != 0:
+		if existing == 0 and new != 0:
 			comment.author.dramacoins += 1
 			g.db.add(comment.author)
-		elif existing != 0 and x == 0:
+		elif existing != 0 and new == 0:
 			comment.author.dramacoins -= 1
 			g.db.add(comment.author)
-		existing.change_to(x)
+		existing.change_to(new)
 		g.db.add(existing)
 	else:
-		if x != 0:
+		if new != 0:
 			comment.author.dramacoins += 1
 			g.db.add(comment.author)
 		vote = CommentVote(user_id=v.id,
