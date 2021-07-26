@@ -130,6 +130,7 @@ def get_post(pid, v=None, graceful=False, **kwargs):
 		x._is_blocking = items[2] or 0
 		print("what")
 	else:
+		print(i)
 		items = g.db.query(
 			Submission
 		).filter(Submission.id == i).first()
