@@ -6,7 +6,7 @@ from os import remove, getcwd
 from PIL import Image as IMAGE
 
 from drama.helpers.wrappers import *
-from drama.helpers.alerts impordft *
+from drama.helpers.alerts import *
 from drama.helpers.base36 import *
 from drama.helpers.sanitize import *
 from drama.helpers.markdown import *
