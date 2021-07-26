@@ -16,262 +16,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-ALTER TABLE ONLY public.notifications DROP CONSTRAINT notifications_comment_id_fkey;
-ALTER TABLE ONLY public.flags DROP CONSTRAINT flags_post_id_fkey;
-ALTER TABLE ONLY public.commentflags DROP CONSTRAINT commentflags_comment_id_fkey;
-ALTER TABLE ONLY public.badges DROP CONSTRAINT badges_badge_id_fkey;
-DROP INDEX public.votes_type_index;
-DROP INDEX public.votes_submission_id_index;
-DROP INDEX public.vote_user_index;
-DROP INDEX public.vote_created_idx;
-DROP INDEX public.users_username_trgm_idx;
-DROP INDEX public.users_unbanutc_idx;
-DROP INDEX public.users_subs_idx;
-DROP INDEX public.users_original_username_trgm_idx;
-DROP INDEX public.users_created_utc_index;
-DROP INDEX public.userblocks_both_idx;
-DROP INDEX public.user_private_idx;
-DROP INDEX public.user_privacy_idx;
-DROP INDEX public.user_banned_idx;
-DROP INDEX public.trending_all_idx;
-DROP INDEX public.subscription_user_index;
-DROP INDEX public.subscription_board_index;
-DROP INDEX public.submissions_title_trgm_idx;
-DROP INDEX public.submissions_sticky_index;
-DROP INDEX public.submissions_score_idx;
-DROP INDEX public.submissions_over18_index;
-DROP INDEX public.submissions_offensive_index;
-DROP INDEX public.submissions_created_utc_desc_idx;
-DROP INDEX public.submissions_aux_title_idx;
-DROP INDEX public.submissions_aux_id_idx;
-DROP INDEX public.submissions_author_index;
-DROP INDEX public.submission_purge_idx;
-DROP INDEX public.submission_pinned_idx;
-DROP INDEX public.submission_original_board_id_idx;
-DROP INDEX public.submission_new_sort_idx;
-DROP INDEX public.submission_isdeleted_idx;
-DROP INDEX public.submission_isbanned_idx;
-DROP INDEX public.submission_ip_idx;
-DROP INDEX public.submission_hot_sort_idx;
-DROP INDEX public.submission_domainref_index;
-DROP INDEX public.submission_disputed_sort_idx;
-DROP INDEX public.submission_best_only_idx;
-DROP INDEX public.submission_aux_url_trgm_idx;
-DROP INDEX public.submission_aux_url_idx;
-DROP INDEX public.subimssion_binary_group_idx;
-DROP INDEX public.sub_user_index;
-DROP INDEX public.sub_active_index;
-DROP INDEX public.post_public_idx;
-DROP INDEX public.post_offensive_index;
-DROP INDEX public.post_author_index;
-DROP INDEX public.post_app_id_idx;
-DROP INDEX public.post_18_index;
-DROP INDEX public.notifs_user_read_idx;
-DROP INDEX public.notifications_user_index;
-DROP INDEX public.notifications_comment_idx;
-DROP INDEX public.notification_read_idx;
-DROP INDEX public.modaction_pid_idx;
-DROP INDEX public.modaction_id_idx;
-DROP INDEX public.modaction_cid_idx;
-DROP INDEX public.modaction_action_idx;
-DROP INDEX public.follow_user_id_index;
-DROP INDEX public.follow_target_id_index;
-DROP INDEX public.flags_post_index;
-DROP INDEX public.flag_user_idx;
-DROP INDEX public.domains_domain_trgm_idx;
-DROP INDEX public.domain_ref_idx;
-DROP INDEX public.discord_id_idx;
-DROP INDEX public.cvote_user_index;
-DROP INDEX public.cvote_created_idx;
-DROP INDEX public.commentvotes_comments_type_index;
-DROP INDEX public.commentvotes_comments_id_index;
-DROP INDEX public.commentsaux_body_idx;
-DROP INDEX public.comments_user_index;
-DROP INDEX public.comments_score_top_idx;
-DROP INDEX public.comments_score_hot_idx;
-DROP INDEX public.comments_score_disputed_idx;
-DROP INDEX public.comments_parent_id_idx;
-DROP INDEX public.comments_original_board_id_idx;
-DROP INDEX public.comments_loader_idx;
-DROP INDEX public.comments_aux_id_idx;
-DROP INDEX public.commentflag_comment_index;
-DROP INDEX public.comment_purge_idx;
-DROP INDEX public.comment_post_id_index;
-DROP INDEX public.comment_parent_index;
-DROP INDEX public.comment_ip_idx;
-DROP INDEX public.comment_body_trgm_idx;
-DROP INDEX public.comment_body_idx;
-DROP INDEX public.client_refresh_token_idx;
-DROP INDEX public.client_access_token_idx;
-DROP INDEX public.cflag_user_idx;
-DROP INDEX public.block_user_idx;
-DROP INDEX public.block_target_idx;
-DROP INDEX public.badpics_phash_index;
-DROP INDEX public.badpic_phash_trgm_idx;
-DROP INDEX public.badpic_phash_idx;
-DROP INDEX public.badlink_link_idx;
-DROP INDEX public.badges_user_index;
-DROP INDEX public.badges_badge_id_idx;
-DROP INDEX public.badgedef_qual_idx;
-DROP INDEX public.award_user_idx;
-DROP INDEX public.award_post_idx;
-DROP INDEX public.award_comment_idx;
-DROP INDEX public.alts_user2_idx;
-DROP INDEX public.alts_user1_idx;
-ALTER TABLE ONLY public.votes DROP CONSTRAINT votes_pkey;
-ALTER TABLE ONLY public.viewers DROP CONSTRAINT viewers_pkey;
-ALTER TABLE ONLY public.users DROP CONSTRAINT users_username_key;
-ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
-ALTER TABLE ONLY public.users DROP CONSTRAINT users_original_username_key;
-ALTER TABLE ONLY public.users DROP CONSTRAINT users_email_key;
-ALTER TABLE ONLY public.alts DROP CONSTRAINT userpair;
-ALTER TABLE ONLY public.userblocks DROP CONSTRAINT userblocks_pkey;
-ALTER TABLE ONLY public.useragents DROP CONSTRAINT useragents_pkey;
-ALTER TABLE ONLY public.useragents DROP CONSTRAINT useragents_kwd_key;
-ALTER TABLE ONLY public.badges DROP CONSTRAINT user_badge_constraint;
-ALTER TABLE ONLY public.oauth_apps DROP CONSTRAINT unique_secret;
-ALTER TABLE ONLY public.client_auths DROP CONSTRAINT unique_refresh;
-ALTER TABLE ONLY public.oauth_apps DROP CONSTRAINT unique_id;
-ALTER TABLE ONLY public.client_auths DROP CONSTRAINT unique_code;
-ALTER TABLE ONLY public.client_auths DROP CONSTRAINT unique_access;
-ALTER TABLE ONLY public.subscriptions DROP CONSTRAINT subscriptions_pkey;
-ALTER TABLE ONLY public.submissions DROP CONSTRAINT submissions_pkey;
-ALTER TABLE ONLY public.submissions_aux DROP CONSTRAINT submissions_aux_pkey;
-ALTER TABLE ONLY public.save_relationship DROP CONSTRAINT save_relationship_pkey;
-ALTER TABLE ONLY public.save_relationship DROP CONSTRAINT save_constraint;
-ALTER TABLE ONLY public.votes DROP CONSTRAINT onevote;
-ALTER TABLE ONLY public.commentvotes DROP CONSTRAINT onecvote;
-ALTER TABLE ONLY public.notifications DROP CONSTRAINT one_notif;
-ALTER TABLE ONLY public.users DROP CONSTRAINT one_discord_account;
-ALTER TABLE ONLY public.oauth_apps DROP CONSTRAINT oauth_apps_pkey;
-ALTER TABLE ONLY public.notifications DROP CONSTRAINT notifications_pkey;
-ALTER TABLE ONLY public.modactions DROP CONSTRAINT modactions_pkey;
-ALTER TABLE ONLY public.images DROP CONSTRAINT images_pkey;
-ALTER TABLE ONLY public.subscriptions DROP CONSTRAINT guild_membership_unique;
-ALTER TABLE ONLY public.follows DROP CONSTRAINT follows_pkey;
-ALTER TABLE ONLY public.follows DROP CONSTRAINT follow_membership_unique;
-ALTER TABLE ONLY public.flags DROP CONSTRAINT flags_pkey;
-ALTER TABLE ONLY public.domains DROP CONSTRAINT domains_pkey;
-ALTER TABLE ONLY public.domains DROP CONSTRAINT domains_domain_key;
-ALTER TABLE ONLY public.commentvotes DROP CONSTRAINT commentvotes_pkey;
-ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_pkey;
-ALTER TABLE ONLY public.comments_aux DROP CONSTRAINT comments_aux_pkey;
-ALTER TABLE ONLY public.commentflags DROP CONSTRAINT commentflags_pkey;
-ALTER TABLE ONLY public.client_auths DROP CONSTRAINT client_auths_pkey;
-ALTER TABLE ONLY public.badpics DROP CONSTRAINT badpics_pkey;
-ALTER TABLE ONLY public.badlinks DROP CONSTRAINT badlinks_pkey;
-ALTER TABLE ONLY public.badges DROP CONSTRAINT badges_pkey;
-ALTER TABLE ONLY public.badge_defs DROP CONSTRAINT badge_list_icon_key;
-ALTER TABLE ONLY public.badge_defs DROP CONSTRAINT badge_defs_pkey;
-ALTER TABLE ONLY public.award_relationships DROP CONSTRAINT award_relationships_pkey;
-ALTER TABLE ONLY public.award_relationships DROP CONSTRAINT award_post_constraint;
-ALTER TABLE ONLY public.award_relationships DROP CONSTRAINT award_constraint;
-ALTER TABLE ONLY public.award_relationships DROP CONSTRAINT award_comment_constraint;
-ALTER TABLE ONLY public.alts DROP CONSTRAINT alts_pkey;
-ALTER TABLE public.votes ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.viewers ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.userblocks ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.useragents ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.subscriptions ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.submissions_aux ALTER COLUMN key_id DROP DEFAULT;
-ALTER TABLE public.submissions ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.save_relationship ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.oauth_apps ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.notifications ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.modactions ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.images ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.follows ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.flags ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.domains ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.commentvotes ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.comments_aux ALTER COLUMN key_id DROP DEFAULT;
-ALTER TABLE public.comments ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.commentflags ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.client_auths ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.badpics ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.badlinks ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.badges ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.badge_defs ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.award_relationships ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.alts ALTER COLUMN id DROP DEFAULT;
-DROP SEQUENCE public.votes_id_seq;
-DROP TABLE public.votes;
-DROP SEQUENCE public.viewers_id_seq;
-DROP TABLE public.viewers;
-DROP SEQUENCE public.users_id_seq;
-DROP SEQUENCE public.userblocks_id_seq;
-DROP TABLE public.userblocks;
-DROP SEQUENCE public.useragents_id_seq;
-DROP TABLE public.useragents;
-DROP SEQUENCE public.subscriptions_id_seq;
-DROP TABLE public.subscriptions;
-DROP SEQUENCE public.submissions_id_seq;
-DROP SEQUENCE public.submissions_aux_key_id_seq;
-DROP TABLE public.submissions_aux;
-DROP SEQUENCE public.save_relationship_id_seq;
-DROP TABLE public.save_relationship;
-DROP SEQUENCE public.oauth_apps_id_seq;
-DROP TABLE public.oauth_apps;
-DROP SEQUENCE public.notifications_id_seq;
-DROP SEQUENCE public.modactions_id_seq;
-DROP TABLE public.modactions;
-DROP SEQUENCE public.images_id_seq;
-DROP SEQUENCE public.follows_id_seq;
-DROP TABLE public.follows;
-DROP SEQUENCE public.flags_id_seq;
-DROP TABLE public.flags;
-DROP SEQUENCE public.domains_id_seq;
-DROP TABLE public.domains;
-DROP SEQUENCE public.commentvotes_id_seq;
-DROP TABLE public.commentvotes;
-DROP SEQUENCE public.comments_id_seq;
-DROP SEQUENCE public.comments_aux_key_id_seq;
-DROP TABLE public.comments_aux;
-DROP SEQUENCE public.commentflags_id_seq;
-DROP TABLE public.commentflags;
-DROP SEQUENCE public.client_auths_id_seq;
-DROP TABLE public.client_auths;
-DROP SEQUENCE public.badpics_id_seq;
-DROP TABLE public.badpics;
-DROP SEQUENCE public.badlinks_id_seq;
-DROP TABLE public.badlinks;
-DROP SEQUENCE public.badges_id_seq;
-DROP TABLE public.badges;
-DROP SEQUENCE public.badge_list_id_seq;
-DROP TABLE public.badge_defs;
-DROP SEQUENCE public.award_relationships_id_seq;
-DROP TABLE public.award_relationships;
-DROP SEQUENCE public.alts_id_seq;
-DROP TABLE public.alts;
-DROP FUNCTION public.ups(public.submissions);
-DROP FUNCTION public.ups(public.comments);
-DROP FUNCTION public.splash(text);
-DROP TABLE public.images;
-DROP FUNCTION public.similar_count(public.comments);
-DROP FUNCTION public.score(public.submissions);
-DROP FUNCTION public.score(public.comments);
-DROP FUNCTION public.report_count(public.submissions);
-DROP FUNCTION public.referral_count(public.users);
-DROP FUNCTION public.mod_count(public.users);
-DROP FUNCTION public.is_deleted(public.notifications);
-DROP FUNCTION public.is_banned(public.notifications);
-DROP FUNCTION public.flag_count(public.submissions);
-DROP FUNCTION public.flag_count(public.comments);
-DROP FUNCTION public.downs(public.submissions);
-DROP FUNCTION public.downs(public.comments);
-DROP FUNCTION public.created_utc(public.notifications);
-DROP TABLE public.notifications;
-DROP FUNCTION public.comment_count(public.submissions);
-DROP FUNCTION public.age(public.users);
-DROP TABLE public.users;
-DROP FUNCTION public.age(public.submissions);
-DROP TABLE public.submissions;
-DROP FUNCTION public.age(public.comments);
-DROP TABLE public.comments;
-DROP EXTENSION pg_trgm;
-DROP EXTENSION pg_stat_statements;
-DROP EXTENSION fuzzystrmatch;
 --
 -- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: -
 --
@@ -317,66 +61,6 @@ COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
-
---
--- Name: comments; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.comments (
-    id integer NOT NULL,
-    author_id integer,
-    created_utc integer NOT NULL,
-    parent_submission integer,
-    is_banned boolean,
-    parent_fullname character varying(255),
-    distinguish_level integer,
-    edited_utc integer,
-    deleted_utc integer NOT NULL,
-    is_approved integer NOT NULL,
-    author_name character varying(64),
-    approved_utc integer,
-    creation_ip character varying(64) NOT NULL,
-    score_disputed double precision,
-    score_hot double precision,
-    score_top integer,
-    level integer,
-    parent_comment_id integer,
-    title_id integer,
-    over_18 boolean,
-    is_op boolean,
-    is_offensive boolean,
-    is_nsfl boolean,
-    original_board_id integer,
-    upvotes integer,
-    downvotes integer,
-    is_bot boolean DEFAULT false,
-    gm_distinguish integer DEFAULT 0 NOT NULL,
-    is_pinned boolean DEFAULT false,
-    app_id integer,
-    creation_region character(2) DEFAULT NULL::bpchar,
-    purged_utc integer DEFAULT 0,
-    sentto integer,
-    shadowbanned boolean,
-    banaward text
-);
-
-
-ALTER TABLE public.comments OWNER TO postgres;
-
---
--- Name: age(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.age(public.comments) RETURNS integer
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
-
-      $_$;
-
-
-ALTER FUNCTION public.age(public.comments) OWNER TO postgres;
 
 --
 -- Name: submissions; Type: TABLE; Schema: public; Owner: postgres
@@ -427,100 +111,6 @@ CREATE TABLE public.submissions (
 
 
 ALTER TABLE public.submissions OWNER TO postgres;
-
---
--- Name: age(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.age(public.submissions) RETURNS integer
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
-
-      $_$;
-
-
-ALTER FUNCTION public.age(public.submissions) OWNER TO postgres;
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    username character varying(255) NOT NULL,
-    email character varying(255),
-    passhash character varying(255) NOT NULL,
-    created_utc integer NOT NULL,
-    admin_level integer,
-    over_18 boolean,
-    is_activated boolean,
-    bio character varying(300),
-    bio_html character varying(1000),
-    referred_by integer,
-    is_banned integer,
-    ban_reason character varying(128),
-    login_nonce integer,
-    reserved character varying(256),
-    mfa_secret character varying(32),
-    is_private boolean,
-    unban_utc integer,
-    is_nofollow boolean DEFAULT false,
-    custom_filter_list character varying(1000) DEFAULT ''::character varying,
-    discord_id character varying(64),
-    stored_subscriber_count integer DEFAULT 0,
-    ban_evade integer DEFAULT 0,
-    original_username character varying(255),
-    customtitle text,
-    defaultsorting text,
-    defaulttime text,
-    namecolor text,
-    titlecolor text,
-    profileurl text,
-    bannerurl text,
-    hidevotedon boolean,
-    newtab boolean,
-    flairchanged boolean,
-    defaultsortingcomments text,
-    theme text,
-    song text,
-    slurreplacer boolean,
-    shadowbanned boolean,
-    newtabexternal boolean,
-    customtitleplain text,
-    themecolor text,
-    changelogsub boolean,
-    oldreddit boolean,
-    css text,
-    profilecss text,
-    dramacoins integer,
-    agendaposter boolean,
-    agendaposter_expires_utc integer DEFAULT 0,
-    resized boolean,
-    banawards integer,
-    patron boolean,
-    animatedname boolean,
-    suicide_utc integer
-);
-
-
-ALTER TABLE public.users OWNER TO postgres;
-
---
--- Name: age(public.users); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.age(public.users) RETURNS integer
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT CAST( EXTRACT( EPOCH FROM CURRENT_TIMESTAMP) AS int) - $1.created_utc
-
-      $_$;
-
-
-ALTER FUNCTION public.age(public.users) OWNER TO postgres;
 
 --
 -- Name: comment_count(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
@@ -581,6 +171,51 @@ $_$;
 
 
 ALTER FUNCTION public.created_utc(public.notifications) OWNER TO postgres;
+
+--
+-- Name: comments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.comments (
+    id integer NOT NULL,
+    author_id integer,
+    created_utc integer NOT NULL,
+    parent_submission integer,
+    is_banned boolean,
+    parent_fullname character varying(255),
+    distinguish_level integer,
+    edited_utc integer,
+    deleted_utc integer NOT NULL,
+    is_approved integer NOT NULL,
+    author_name character varying(64),
+    approved_utc integer,
+    creation_ip character varying(64) NOT NULL,
+    score_disputed double precision,
+    score_hot double precision,
+    score_top integer,
+    level integer,
+    parent_comment_id integer,
+    title_id integer,
+    over_18 boolean,
+    is_op boolean,
+    is_offensive boolean,
+    is_nsfl boolean,
+    original_board_id integer,
+    upvotes integer,
+    downvotes integer,
+    is_bot boolean DEFAULT false,
+    gm_distinguish integer DEFAULT 0 NOT NULL,
+    is_pinned boolean DEFAULT false,
+    app_id integer,
+    creation_region character(2) DEFAULT NULL::bpchar,
+    purged_utc integer DEFAULT 0,
+    sentto integer,
+    shadowbanned boolean,
+    banaward text
+);
+
+
+ALTER TABLE public.comments OWNER TO postgres;
 
 --
 -- Name: downs(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
@@ -743,95 +378,68 @@ select (
 ALTER FUNCTION public.downs(public.submissions) OWNER TO postgres;
 
 --
--- Name: flag_count(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.flag_count(public.comments) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT COUNT(*)
-
-      FROM commentflags
-
-      JOIN users ON commentflags.user_id=users.id
-
-      WHERE comment_id=$1.id
-
-      AND users.is_banned=0
-
-      $_$;
-
-
-ALTER FUNCTION public.flag_count(public.comments) OWNER TO postgres;
-
---
--- Name: flag_count(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.flag_count(public.submissions) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT COUNT(*)
-
-      FROM flags
-
-      JOIN users ON flags.user_id=users.id
-
-      WHERE post_id=$1.id
-
-      AND users.is_banned=0
-
-      $_$;
-
-
-ALTER FUNCTION public.flag_count(public.submissions) OWNER TO postgres;
-
---
--- Name: is_banned(public.notifications); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.is_banned(public.notifications) RETURNS boolean
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-select is_banned from comments
-
-where comments.id=$1.comment_id
-
-$_$;
-
-
-ALTER FUNCTION public.is_banned(public.notifications) OWNER TO postgres;
-
---
--- Name: is_deleted(public.notifications); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.is_deleted(public.notifications) RETURNS boolean
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-select is_deleted from comments
-
-where comments.id=$1.comment_id
-
-$_$;
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying(255) NOT NULL,
+    email character varying(255),
+    passhash character varying(255) NOT NULL,
+    created_utc integer NOT NULL,
+    admin_level integer,
+    over_18 boolean,
+    is_activated boolean,
+    bio character varying(300),
+    bio_html character varying(1000),
+    referred_by integer,
+    is_banned integer,
+    ban_reason character varying(128),
+    login_nonce integer,
+    reserved character varying(256),
+    mfa_secret character varying(32),
+    is_private boolean,
+    unban_utc integer,
+    is_nofollow boolean DEFAULT false,
+    custom_filter_list character varying(1000) DEFAULT ''::character varying,
+    discord_id character varying(64),
+    stored_subscriber_count integer DEFAULT 0,
+    ban_evade integer DEFAULT 0,
+    original_username character varying(255),
+    customtitle text,
+    defaultsorting text,
+    defaulttime text,
+    namecolor text,
+    titlecolor text,
+    profileurl text,
+    bannerurl text,
+    hidevotedon boolean,
+    newtab boolean,
+    flairchanged boolean,
+    defaultsortingcomments text,
+    theme text,
+    song text,
+    slurreplacer boolean,
+    shadowbanned boolean,
+    newtabexternal boolean,
+    customtitleplain text,
+    themecolor text,
+    changelogsub boolean,
+    oldreddit boolean,
+    css text,
+    profilecss text,
+    dramacoins integer,
+    agendaposter boolean,
+    agendaposter_expires_utc integer DEFAULT 0,
+    resized boolean,
+    banawards integer,
+    patron boolean,
+    animatedname boolean,
+    suicide_utc integer
+);
 
 
-ALTER FUNCTION public.is_deleted(public.notifications) OWNER TO postgres;
-
---
--- Name: mod_count(public.users); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.mod_count(public.users) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$select count(*) from mods where accepted=true and invite_rescinded=false and user_id=$1.id;$_$;
-
-
-ALTER FUNCTION public.mod_count(public.users) OWNER TO postgres;
+ALTER TABLE public.users OWNER TO postgres;
 
 --
 -- Name: referral_count(public.users); Type: FUNCTION; Schema: public; Owner: postgres
@@ -853,31 +461,6 @@ CREATE FUNCTION public.referral_count(public.users) RETURNS bigint
 
 
 ALTER FUNCTION public.referral_count(public.users) OWNER TO postgres;
-
---
--- Name: report_count(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.report_count(public.submissions) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT COUNT(*)
-
-      FROM reports
-
-      JOIN users ON reports.user_id=users.id
-
-      WHERE post_id=$1.id
-
-      AND users.is_banned=0
-
-      and reports.created_utc >= $1.edited_utc
-
-      $_$;
-
-
-ALTER FUNCTION public.report_count(public.submissions) OWNER TO postgres;
 
 --
 -- Name: score(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
@@ -908,55 +491,6 @@ CREATE FUNCTION public.score(public.submissions) RETURNS integer
 
 
 ALTER FUNCTION public.score(public.submissions) OWNER TO postgres;
-
---
--- Name: similar_count(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.similar_count(public.comments) RETURNS bigint
-    LANGUAGE sql
-    AS $_$ select count(*) from comments where author_id=$1.id and similarity(comments.body, $1.body) > 0.5 $_$;
-
-
-ALTER FUNCTION public.similar_count(public.comments) OWNER TO postgres;
-
---
--- Name: images; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.images (
-    id integer NOT NULL,
-    state character varying(8),
-    text character varying(255),
-    number integer,
-    deletehash text
-);
-
-
-ALTER TABLE public.images OWNER TO postgres;
-
---
--- Name: splash(text); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.splash(text) RETURNS SETOF public.images
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT *
-
-      FROM images
-
-      WHERE state=$1
-
-      ORDER BY random()
-
-      LIMIT 1
-
-    $_$;
-
-
-ALTER FUNCTION public.splash(text) OWNER TO postgres;
 
 --
 -- Name: ups(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
@@ -1629,6 +1163,21 @@ ALTER TABLE public.follows_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE public.follows_id_seq OWNED BY public.follows.id;
 
+
+--
+-- Name: images; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.images (
+    id integer NOT NULL,
+    state character varying(8),
+    text character varying(255),
+    number integer,
+    deletehash text
+);
+
+
+ALTER TABLE public.images OWNER TO postgres;
 
 --
 -- Name: images_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
