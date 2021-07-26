@@ -115,13 +115,23 @@ def flagged_comments(v):
 						   v=v,
 						   standalone=True)
 
-
 @app.route("/admin", methods=["GET"])
 @admin_level_required(3)
 def admin_home(v):
 	with open('./disablesignups', 'r') as f:
 		x = f.read()
 		return render_template("admin/admin_home.html", v=v, x=x)
+
+
+@app.route("/admin/disablesignups", methods=["POST"])
+@admin_level_required(6)
+@validate_formkey
+def disablesignups(v):
+	with open('./disablesignups', 'wr') as f:
+		if f.read() == "yes": f.write("no")
+		else: f.write("yes")
+
+	return "", 204
 
 
 @app.route("/admin/badge_grant", methods=["GET"])
@@ -538,17 +548,6 @@ def agendaposter(user_id, v):
 		return "", 204
 	else:
 		return redirect(user.url)
-
-@app.route("/admin/disablesignups", methods=["POST"])
-@admin_level_required(6)
-@validate_formkey
-def disablesignups(v):
-	with open('./disablesignups', 'w') as f:
-		if f.read() == "yes": f.write("no")
-		else: f.write("yes")
-
-	return "", 204
-
 
 @app.route("/shadowban/<user_id>", methods=["POST"])
 @admin_level_required(6)
