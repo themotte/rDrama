@@ -95,14 +95,10 @@ def api_vote_post(post_id, new, v):
 	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
 
 	if existing:
-		if v.id == 1:
-			print(existing)
-			print(new)
-		if existing == 0 and new != 0:
-			print('sex')
+		if existing.vote_type == 0 and new != 0:
 			post.author.dramacoins += 1
 			g.db.add(post.author)
-		elif existing != 0 and new == 0:
+		elif existing.vote_type != 0 and new == 0:
 			post.author.dramacoins -= 1
 			g.db.add(post.author)
 		existing.vote_type = new
@@ -145,13 +141,13 @@ def api_vote_comment(comment_id, new, v):
 	comment = get_comment(comment_id)
 
 	# check for existing vote
-	existing = g.db.query(CommentVote).filter_by(
-		user_id=v.id, comment_id=comment.id).first()
+	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
+
 	if existing:
-		if existing == 0 and new != 0:
+		if existing.vote_type == 0 and new != 0:
 			comment.author.dramacoins += 1
 			g.db.add(comment.author)
-		elif existing != 0 and new == 0:
+		elif existing.vote_type != 0 and new == 0:
 			comment.author.dramacoins -= 1
 			g.db.add(comment.author)
 		existing.change_to(new)
