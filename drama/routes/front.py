@@ -182,7 +182,8 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 def front_all(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
-	page = int(request.args.get("page") or 1)
+	try: page = int(request.args.get("page") or 1)
+	except: abort(400)
 
 	# prevent invalid paging
 	page = max(page, 1)
