@@ -79,15 +79,15 @@ def award_post(pid, v):
     if post.author_id == v.id:
         return jsonify({"error": "You can't award yourself."}), 403
 
-    # existing_award = g.db.query(AwardRelationship).filter(
-    #     and_(
-    #         AwardRelationship.submission_id == post.id,
-    #         AwardRelationship.user_id == v.id,
-    #         AwardRelationship.kind == kind
-    #     )
-    # ).first()
+    existing_award = g.db.query(AwardRelationship).filter(
+        and_(
+            AwardRelationship.submission_id == post.id,
+            AwardRelationship.user_id == v.id,
+            AwardRelationship.kind == kind
+        )
+    ).first()
 
-    if kind not in ALLOW_MULTIPLE:
+    if existing_award and kind not in ALLOW_MULTIPLE:
         return jsonify({"error": "You can't give that award multiple times to the same post."}), 409
 
     post_award.submission_id = post.id
@@ -141,14 +141,15 @@ def award_comment(cid, v):
     if c.author_id == v.id:
         return jsonify({"error": "You can't award yourself."}), 403
 
-    # existing_award = g.db.query(AwardRelationship).filter(
-    #     and_(
-    #         AwardRelationship.comment_id == c.id,
-    #         AwardRelationship.user_id == v.id
-    #     )
-    # ).first()
+    existing_award = g.db.query(AwardRelationship).filter(
+        and_(
+            AwardRelationship.comment_id == c.id,
+            AwardRelationship.user_id == v.id,
+            AwardRelationship.kind == kind
+        )
+    ).first()
 
-    if kind not in ALLOW_MULTIPLE:
+    if existing_award and kind not in ALLOW_MULTIPLE:
         return jsonify({"error": "You can't give that award multiple times to the same comment."}), 409
 
     comment_award.comment_id = c.id
