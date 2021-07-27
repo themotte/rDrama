@@ -494,7 +494,7 @@
         <strong style="color: #999b2e;"><i class="far fa-fw fa-flag"></i> Reported by:</strong>
         <ul style="margin-bottom: 0;">
             {% for f in p.flags %}
-            <li><a href="{{ f.user.url }}">@{{ f.user.username }}</a>: "{{f.reason}}"</li>
+            <li><a href="{{ f.user.url }}">@{{ f.user.username }}</a>: {{f.reason}}</li>
             {% endfor %}
         </ul>
     </div>
@@ -549,7 +549,7 @@
 				<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn-{{p.fullname}}">
 					<div id="emoji-reply-btn-{{p.fullname}}" onclick="loadEmojis('reply-form-body-{{p.fullname}}')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
 				</label> 
-				<label class="format btn btn-secondary m-0 ml-1 {% if v and v.dramacoins >= 0 %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{p.fullname}}">
+				<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{p.fullname}}">
 					<div id="filename-show-reply-{{p.base36id}}"><i class="far fa-image"></i></div>
 					<input id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{p.base36id}}').innerHTML='image';" hidden>
 				</label>

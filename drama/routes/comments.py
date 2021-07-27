@@ -384,20 +384,19 @@ def api_comment(v):
 				)
 	g.db.add(c)
 	g.db.flush()
-	if v.dramacoins >= 0:
-		if request.files.get("file"):
-			file=request.files["file"]
-			if not file.content_type.startswith('image/'):
-				return jsonify({"error": "That wasn't an image!"}), 400
-			
-			name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
-			url = upload_file(name, file)
-			
-			body = request.form.get("body") + f"\n![]({url})"
-			body = body.replace("\n", "\n\n")
-			with CustomRenderer(post_id=parent_id) as renderer:
-				body_md = renderer.render(mistletoe.Document(body))
-			body_html = sanitize(body_md, linkgen=True)
+	if request.files.get("file"):
+		file=request.files["file"]
+		if not file.content_type.startswith('image/'):
+			return jsonify({"error": "That wasn't an image!"}), 400
+		
+		name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
+		url = upload_file(name, file)
+		
+		body = request.form.get("body") + f"\n![]({url})"
+		body = body.replace("\n", "\n\n")
+		with CustomRenderer(post_id=parent_id) as renderer:
+			body_md = renderer.render(mistletoe.Document(body))
+		body_html = sanitize(body_md, linkgen=True)
 
 	c_aux = CommentAux(
 		id=c.id,
@@ -738,35 +737,34 @@ def edit_comment(cid, v):
 		g.db.commit()
 		return jsonify({"error": "Too much spam!"}), 403
 
-	if v.dramacoins >= 0:
-		if request.files.get("file"):
-			file=request.files["file"]
-			if not file.content_type.startswith('image/'):
-				return jsonify({"error": "That wasn't an image!"}), 400
-			
-			name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
-			url = upload_file(name, file)
+	if request.files.get("file"):
+		file=request.files["file"]
+		if not file.content_type.startswith('image/'):
+			return jsonify({"error": "That wasn't an image!"}), 400
+		
+		name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
+		url = upload_file(name, file)
 
-			body += f"\n![]({url})"
-			body = body.replace("\n", "\n\n")
-			with CustomRenderer(post_id=c.parent_submission) as renderer:
-				body_md = renderer.render(mistletoe.Document(body))
-			body_html = sanitize(body_md, linkgen=True)
+		body += f"\n![]({url})"
+		body = body.replace("\n", "\n\n")
+		with CustomRenderer(post_id=c.parent_submission) as renderer:
+			body_md = renderer.render(mistletoe.Document(body))
+		body_html = sanitize(body_md, linkgen=True)
+		
+		# #csam detection
+		# def del_function():
+			# delete_file(name)
+			# c.is_banned=True
+			# g.db.add(c)
+			# g.db.commit()
 			
-			# #csam detection
-			# def del_function():
-				# delete_file(name)
-				# c.is_banned=True
-				# g.db.add(c)
-				# g.db.commit()
-				
-			# csam_thread=threading.Thread(target=check_csam_url, 
-										 # args=(f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{name}", 
-												 # v, 
-												 # del_function
-												# )
-										# )
-			# csam_thread.start()
+		# csam_thread=threading.Thread(target=check_csam_url, 
+										# args=(f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{name}", 
+												# v, 
+												# del_function
+											# )
+									# )
+		# csam_thread.start()
 
 	c.body = body
 	c.body_html = body_html

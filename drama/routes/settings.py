@@ -324,45 +324,37 @@ def settings_log_out_others(v):
 @auth_required
 @validate_formkey
 def settings_images_profile(v):
-	if v.dramacoins >= 0:
 
-		if request.content_length > 16 * 1024 * 1024:
-			g.db.rollback()
-			abort(413)
+	if request.content_length > 16 * 1024 * 1024:
+		g.db.rollback()
+		abort(413)
 
-		v.profileurl = None
-		imageurl = upload_file(name=f"profile.gif", file=request.files["profile"], resize=(100, 100))
-		if imageurl:
-			v.profileurl = imageurl
-			g.db.add(v)
+	v.profileurl = None
+	imageurl = upload_file(name=f"profile.gif", file=request.files["profile"], resize=(100, 100))
+	if imageurl:
+		v.profileurl = imageurl
+		g.db.add(v)
 
-		return render_template("settings_profile.html",
-							   v=v, msg="Profile picture successfully updated.")
-
-	return render_template("settings_profile.html", v=v,
-						   msg="Avatars require +0 dramacoins.")
+	return render_template("settings_profile.html",
+							v=v, msg="Profile picture successfully updated.")
 
 
 @app.route("/settings/images/banner", methods=["POST"])
 @auth_required
 @validate_formkey
 def settings_images_banner(v):
-	if v.dramacoins >= 0:
-		if request.content_length > 16 * 1024 * 1024:
-			g.db.rollback()
-			abort(413)
+	if request.content_length > 16 * 1024 * 1024:
+		g.db.rollback()
+		abort(413)
 
-		v.bannerurl = None
-		imageurl = upload_file(name=f"banner.gif", file=request.files["banner"])
-		if imageurl:
-			v.bannerurl = imageurl
-			g.db.add(v)
+	v.bannerurl = None
+	imageurl = upload_file(name=f"banner.gif", file=request.files["banner"])
+	if imageurl:
+		v.bannerurl = imageurl
+		g.db.add(v)
 
-		return render_template("settings_profile.html",
-							   v=v, msg="Banner successfully updated.")
-
-	return render_template("settings_profile.html", v=v,
-						   msg="Banners require +0 dramacoins.")
+	return render_template("settings_profile.html",
+							v=v, msg="Banner successfully updated.")
 
 
 @app.route("/settings/delete/profile", methods=["POST"])

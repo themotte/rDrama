@@ -192,7 +192,7 @@
                     <strong style="color: #999b2e;"><i class="far fa-fw fa-flag"></i> Reported by:</strong>
                     <ul style="margin-bottom: 0;">
 						{% for f in c.flags %}
-						<li><a href="{{ f.user.url }}">@{{ f.user.username }}</a>: "{{f.reason}}"</li>
+						<li><a href="{{ f.user.url }}">@{{ f.user.username }}</a>: {{f.reason}}</li>
 						{% endfor %}
 					</ul>
                 </div>

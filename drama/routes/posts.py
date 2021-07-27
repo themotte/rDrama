@@ -867,10 +867,6 @@ def submit_post(v):
 	# check for embeddable video
 	domain = parsed_url.netloc
 
-	if request.files.get('file') and not v.dramacoins >= 0:
-		abort(403)
-	
-
 	new_post = Submission(
 		private=bool(request.form.get("private","")),
 		author_id=v.id,

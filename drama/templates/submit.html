@@ -322,9 +322,6 @@
 														<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
 												</div>
 
-												<div {% if not v.dramacoins >= 0 %} class="d-none"{% else %} ondrop="event.preventDefault();let input=document.getElementById('file-upload');input.files=event.dataTransfer.files;input.onchange();" ondragover="event.preventDefault();"{% endif %}>
-
-												{% if v.dramacoins >= 0 %}
 												<div id="image-upload-block">
 														<div><label class="mt-3">Image Upload</label></div>
 
@@ -335,18 +332,6 @@
 
 														<small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
 												</div>
-												{% else %}
-												<div id="image-upload-block">
-														<div><label class="mt-3">Image Upload</label></div>
-
-														<label class="btn btn-secondary m-0" for="file-upload">
-																<div id="filename-show">Select Image</div>
-																<input id="file-upload" type="file" accept="image/*" hidden disabled>
-														</label>
-
-														<small class="form-text text-muted">You can upload images directly at 1000 Dramacoins.{% if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated %} Additionally, you must have a verified email address to upload images via Tor.{% endif %}</small>
-												</div>
-												{% endif %}
 												</div>
 
 												<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
@@ -447,24 +432,30 @@
 				});
 		</script>
 
-	{% if v.dramacoins >= 0 %}
 	<script>
-	document.onpaste = function(event) {
-		f=document.getElementById('file-upload');
-		f.files = event.clipboardData.files;
-		$('#filename-show').text(f.files[0].name);
-		$('#urlblock').addClass('d-none');
+	var items = (event.clipboardData || event.originalEvent.clipboardData).items;
 
-		var fileReader = new FileReader();
-		fileReader.readAsDataURL(f.files[0]);
-		fileReader.addEventListener("load", function () {
-			$('#image-preview').attr('src', this.result);
-	});  
-		
-		$('#file-upload').attr('required', false);
+	for (var item in items)
+	{
+		if (items[item].kind === "file")
+		{
+			f=document.getElementById('file-upload');
+			f.files = event.clipboardData.files;
+			$('#filename-show').text(f.files[0].name);
+			$('#urlblock').addClass('d-none');
+					
+			var fileReader = new FileReader();
+			fileReader.readAsDataURL(f.files[0]);
+			fileReader.addEventListener("load", function () {
+				$('#image-preview').attr('src', this.result);
+			});
+					
+			$('#file-upload').attr('required', false);
+					
+			checkForRequired();
 
-		checkForRequired();
-
+			break;
+		}
 	}
 
 	$('#file-upload').on('change', function(e){
@@ -481,7 +472,6 @@
 		checkForRequired();
 	})
 	</script>
-	{% endif %}
 
 </body>
 
