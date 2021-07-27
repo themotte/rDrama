@@ -861,7 +861,8 @@ def delete_comment(cid, v):
 	c.deleted_utc = int(time.time())
 
 	g.db.add(c)
-
+	g.db.commit()
+	
 	cache.delete_memoized(User.commentlisting, v)
 
 	return {"html": lambda: ("", 204),
