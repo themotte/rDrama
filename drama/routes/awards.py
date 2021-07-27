@@ -91,7 +91,7 @@ def award_post(pid, v):
         return jsonify({"error": "You can't give that award multiple times to the same post."}), 409
 
     post_award.submission_id = post.id
-    print(f"give award to pid {post_award.submission_id} ({post.id})")
+    #print(f"give award to pid {post_award.submission_id} ({post.id})")
     g.db.add(post_award)
 
     msg = f"@{v.username} has given your [post]({post.permalink}) the {AWARDS[kind]['title']} Award!"
