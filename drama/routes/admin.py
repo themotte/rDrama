@@ -172,7 +172,7 @@ def badge_grant_post(v):
 	if user.has_badge(badge_id):
 		g.db.query(Badge).filter_by(badge_id=badge_id, user_id=user.id,).delete()
 		g.db.commit()
-		return redirect(user.permalink)
+		return redirect(user.url)
 	
 	new_badge = Badge(badge_id=badge_id,
 					  user_id=user.id,
@@ -204,7 +204,7 @@ def badge_grant_post(v):
 		elif badge_id in [24,28]: user.banawards = 3
 		g.db.add(user)
 	
-	return redirect(user.permalink)
+	return redirect(user.url)
 
 
 @app.route("/admin/users", methods=["GET"])
@@ -969,7 +969,7 @@ def admin_nuke_user(v):
 		)
 	g.db.add(ma)
 
-	return redirect(user.permalink)
+	return redirect(user.url)
 
 @app.route("/admin/unnuke_user", methods=["POST"])
 @admin_level_required(4)
@@ -999,7 +999,7 @@ def admin_nunuke_user(v):
 		)
 	g.db.add(ma)
 
-	return redirect(user.permalink)
+	return redirect(user.url)
 	
 @app.route("/api/user_stat_data", methods=['GET'])
 @admin_level_required(2)

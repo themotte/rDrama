@@ -867,7 +867,7 @@ def submit_post(v):
 	# check for embeddable video
 	domain = parsed_url.netloc
 
-	if request.files.get('file') and not v.can_submit_image:
+	if request.files.get('file') and not v.dramacoins >= 0:
 		abort(403)
 	
 

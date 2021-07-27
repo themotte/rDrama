@@ -101,14 +101,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	@lazy
 	def parent(self):
 
-		if not self.parent_submission:
-			return None
+		if not self.parent_submission: return None
 
-		if self.level == 1:
-			return self.post
+		if self.level == 1: return self.post
 
-		else:
-			return g.db.query(Comment).get(self.parent_comment_id)
+		else: return g.db.query(Comment).get(self.parent_comment_id)
 
 	@property
 	def replies(self):
@@ -136,47 +133,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		if self.post: return f"{self.post.permalink}/{self.id}/"
 		else: return f"/comment/{self.id}/"
 
-	def rendered_comment(self, v=None, render_replies=True,
-						 standalone=False, level=1, **kwargs):
-
-		kwargs["post_base36id"] = kwargs.get(
-			"post_base36id", self.post.base36id if self.post else None)
-
-		if self.is_banned or self.deleted_utc > 0:
-			if v and v.admin_level > 1:
-				return render_template("single_comment.html",
-									   v=v,
-									   c=self,
-									   render_replies=render_replies,
-									   standalone=standalone,
-									   level=level,
-									   **kwargs)
-
-			elif self.any_descendants_live:
-				return render_template("single_comment_removed.html",
-									   c=self,
-									   render_replies=render_replies,
-									   standalone=standalone,
-									   level=level,
-									   **kwargs)
-			else:
-				return ""
-
-		return render_template("single_comment.html",
-							   v=v,
-							   c=self,
-							   render_replies=render_replies,
-							   standalone=standalone,
-							   level=level,
-							   **kwargs)
-
-	@property
-	def active_flags(self):
-		if self.is_approved:
-			return 0
-		else:
-			return self.flag_count
-
 	@property
 	def json_raw(self):
 		data= {
@@ -186,7 +142,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'author_name': self.author.username,
 			'body': self.body,
 			'body_html': self.body_html,
-			'is_archived': self.is_archived,
 			'is_bot': self.is_bot,
 			'created_utc': self.created_utc,
 			'edited_utc': self.edited_utc or 0,
@@ -318,10 +273,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		self.comment_aux.ban_reason = x
 		g.db.add(self.comment_aux)
 
-	@property
-	def flag_count(self):
-		return len(self.flags)
-
 	#@property
 	#def award_count(self):
 		#return len(self.awards)
@@ -340,41 +291,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		if self.is_banned: return True
 		
 		return False
-
-	@property
-	def flagged_by(self):
-		return [x.user for x in self.flags]
-
-	@property
-	def self_download_json(self):
-
-		#This property should never be served to anyone but author and admin
-		if not self.is_banned and not self.is_banned:
-			return self.json_core
-
-		data= {
-			"author": self.author.name,
-			"body": self.body,
-			"body_html": self.body_html,
-			"is_banned": bool(self.is_banned),
-			"deleted_utc": self.deleted_utc,
-			'created_utc': self.created_utc,
-			'id': self.base36id,
-			'fullname': self.fullname,
-			'permalink': self.permalink,
-			'post_id': self.post.base36id,
-			'level': self.level
-		}
-		if self.level>=2:
-			data['parent_comment_id']= base36encode(self.parent_comment_id)
-
-		return data
-
-	@property
-	def json_admin(self):
-		data= self.json_raw
-	
-		return data
 
 	@property
 	@lazy

@@ -84,7 +84,7 @@
 
 							<div>
 
-								{% if v.can_upload_avatar %}
+								{% if v.dramacoins >= 0 %}
 
 								<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
@@ -112,7 +112,7 @@
 
 						</div>
 
-						{% if v.can_upload_avatar %}
+						{% if v.dramacoins >= 0 %}
 
 						<div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files are supported. Max file size is 16 MB.</div>
 
@@ -139,7 +139,7 @@
 
 							<div>
 
-								{% if v.can_upload_banner %}
+								{% if v.dramacoins >= 0 %}
 
 								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
@@ -168,7 +168,7 @@
 
 						</div>
 
-						{% if v.can_upload_banner %}
+						{% if v.dramacoins >= 0 %}
 
 						<div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files are supported. Max file size is 16 MB.</div>
 

@@ -116,13 +116,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def score_disputed(self):
 		return (self.upvotes+1) * (self.downvotes+1)
 
-	@property
-	def is_repost(self):
-		return bool(self.repost_id)
-
-	@property
-	def is_archived(self):
-		return false
 
 	@property
 	@lazy
@@ -146,15 +139,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 			output = '-'
 
 		return f"/post/{self.id}/{output}"
-
-	@property
-	def is_archived(self):
-
-		now = int(time.time())
-
-		cutoff = now - (60 * 60 * 24 * 180)
-
-		return self.created_utc < cutoff
 
 	def rendered_page(self, sort=None, comment=None, comment_info=None, v=None):
 
@@ -221,13 +205,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 			self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
 	@property
-	def active_flags(self):
-		if self.is_approved:
-			return 0
-		else:
-			return len(self.flags)
-
-	@property
 	#@lazy
 	def thumb_url(self):
 		
@@ -250,7 +227,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'is_bot': self.is_bot,
 				'thumb_url': self.thumb_url,
 				'domain': self.domain,
-				'is_archived': self.is_archived,
 				'url': self.url,
 				'body': self.body,
 				'body_html': self.body_html,
@@ -314,10 +290,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	def voted(self):
 		return self._voted if "_voted" in self.__dict__ else 0
-
-	@property
-	def user_title(self):
-		return self._title if "_title" in self.__dict__ else self.author.title
 
 	@property
 	def title(self):
@@ -428,14 +400,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def is_blocking(self):
 		return self.__dict__.get('_is_blocking', False)
 
-	@property
-	def flag_count(self):
-		return len(self.flags)
-
-	@property
-	def report_count(self):
-		return len(self.reports)
-
 	#@property
 	#def award_count(self):
 		#return len(self.awards)
@@ -445,51 +409,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		return f"site_embeds/{self.domain_obj.embed_template}.html"
 	
 	@property
-	def flagged_by(self):
-		return [x.user for x in self.flags]
-
-	@property
 	def is_image(self):
 		if self.url: return self.url.endswith('jpg') or self.url.endswith('png') or self.url.endswith('.gif') or self.url.endswith('jpeg') or self.url.endswith('?maxwidth=9999') or self.url.endswith('?maxwidth=8888')
 		else: return False
-
-	@property
-	def self_download_json(self):
-
-		#This property should never be served to anyone but author and admin
-		if not self.is_banned and self.deleted_utc == 0:
-			return self.json_core
-
-		data= {
-			"title":self.title,
-			"author": self.author.username,
-			"url": self.url,
-			"body": self.body,
-			"body_html": self.body_html,
-			"is_banned": bool(self.is_banned),
-			"deleted_utc": self.deleted_utc,
-			'created_utc': self.created_utc,
-			'id': self.base36id,
-			'fullname': self.fullname,
-			'comment_count': self.comment_count,
-			'permalink': self.permalink
-		}
-
-		return data
-
-	@property
-	def json_admin(self):
-
-		data=self.json_raw
-
-		return data
-
-	@property
-	def is_exiled_for(self):
-		return self.__dict__.get('_is_exiled_for', None)
-
 	
-	
+
 class SaveRelationship(Base, Stndrd):
 
 	__tablename__="save_relationship"

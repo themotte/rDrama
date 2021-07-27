@@ -48,8 +48,8 @@
 				</button>
 {% if v %}
 				<button type="button" class="col px-0 pr-2 btn btn-dead m-0" style="border-color: transparent !important;">
-						<a href="{{v.permalink}}" class="text-decoration-none" role="button">
-								<div class="text-center {% if request.path==v.permalink %}text-purple{% else %}text-muted{% endif %}">
+						<a href="{{v.url}}" class="text-decoration-none" role="button">
+								<div class="text-center {% if request.path==v.url %}text-purple{% else %}text-muted{% endif %}">
 										<i class="fas fa-user-circle text-lg d-block"></i>
 										<div class="text-small">Profile</div>
 								</div>

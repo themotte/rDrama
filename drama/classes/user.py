@@ -67,10 +67,6 @@ class User(Base, Stndrd, Age_times):
 		"Notification",
 		lazy="dynamic")
 
-	# unread_notifications_relationship=relationship(
-	#	"Notification",
-	#	primaryjoin="and_(Notification.user_id==User.id, Notification.read==False)")
-
 	referred_by = Column(Integer)
 	is_banned = Column(Integer, default=None)
 	unban_utc = Column(Integer, default=None)
@@ -125,11 +121,6 @@ class User(Base, Stndrd, Age_times):
 
 		return g.db.query(UserBlock).filter_by(
 			user_id=self.id, target_id=target.id).first()
-
-	def is_blocked_by(self, user):
-
-		return g.db.query(UserBlock).filter_by(
-			user_id=user.id, target_id=self.id).first()
 
 	def any_block_exists(self, other):
 
@@ -243,21 +234,11 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def banned_by(self):
 
-		if not self.is_banned:
-			return None
-
+		if not self.is_banned: return None
 		return g.db.query(User).filter_by(id=self.is_banned).first()
 
 	def has_badge(self, badgedef_id):
 		return self.badges.filter_by(badge_id=badgedef_id).first()
-
-	def vote_status_on_post(self, post):
-
-		return post.voted
-
-	def vote_status_on_comment(self, comment):
-
-		return comment.voted
 
 	def hash_password(self, password):
 		return generate_password_hash(
@@ -283,18 +264,6 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def url(self):
 		return f"/@{self.username}"
-
-	@property
-	def permalink(self):
-		return self.url
-
-	@property
-	def uid_permalink(self):
-		return f"/uid/{self.base36id}"
-
-	@property
-	def original_link(self):
-		return f"/@{self.original_username}"
 
 	def __repr__(self):
 		return f"<User(username={self.username})>"
@@ -399,22 +368,6 @@ class User(Base, Stndrd, Age_times):
 
 		return output
 
-	def alts_subquery(self):
-		return g.db.query(User.id).filter(
-			or_(
-				User.id.in_(
-					g.db.query(Alt.user1).filter(
-						Alt.user2 == self.id
-					).subquery()
-				),
-				User.id.in_(
-					g.db.query(Alt.user2).filter(
-						Alt.user1 == self.id
-					).subquery()
-				).subquery()
-			)
-		).subquery()
-
 	def alts_threaded(self, db):
 
 		subq = db.query(Alt).filter(
@@ -451,44 +404,11 @@ class User(Base, Stndrd, Age_times):
 		return g.db.query(Follow).filter_by(
 			target_id=self.id, user_id=user.id).first()
 
-	def set_profile(self, file):
-
-		self.del_profile()
-		imageurl = upload_file(name=f"profile.gif", file=file, resize=(100, 100))
-		if imageurl:
-			self.profileurl = imageurl
-			self.profile_upload_ip = request.remote_addr
-			self.profile_set_utc = int(time.time())
-			self.profile_upload_region = request.headers.get("cf-ipcountry")
-			g.db.add(self)
-
-	def set_banner(self, file):
-
-		self.del_banner()
-		imageurl = upload_file(name=f"banner.gif", file=file)
-		if imageurl:
-			self.bannerurl = imageurl
-			self.banner_upload_ip = request.remote_addr
-			self.banner_set_utc = int(time.time())
-			self.banner_upload_region = request.headers.get("cf-ipcountry")
-			g.db.add(self)
-
-	def del_profile(self):
-
-		self.profileurl = None
-		g.db.add(self)
-
-	def del_banner(self):
-
-		self.bannerurl = None
-		g.db.add(self)
 
 	@property
 	def banner_url(self):
-		if self.bannerurl:
-			return self.bannerurl
-		else:
-			return "/assets/images/default_bg.png"
+		if self.bannerurl: return self.bannerurl
+		else: return "/assets/images/default_bg.png"
 
 	@cache.memoize(0)
 	def defaultpicture(self):
@@ -497,27 +417,13 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	def profile_url(self):
-		if self.profileurl:
-			return self.profileurl
-		else:
-			return self.defaultpicture()
-
-	@property
-	def can_submit_image(self):
-		return self.dramacoins >= 0
-
-	@property
-	def can_upload_avatar(self):
-		return self.dramacoins >= 0
-
-	@property
-	def can_upload_banner(self):
-		return self.dramacoins >= 0
+		if self.profileurl: return self.profileurl
+		else: return self.defaultpicture()
 
 	@property
 	def json_raw(self):
 		data = {'username': self.username,
-				'permalink': self.permalink,
+				'url': self.url,
 				'is_banned': bool(self.is_banned),
 				'is_premium': self.has_premium_no_renew,
 				'created_utc': self.created_utc,
@@ -538,7 +444,7 @@ class User(Base, Stndrd, Age_times):
 		now = int(time.time())
 		if self.is_banned and (not self.unban_utc or now < self.unban_utc):
 			return {'username': self.username,
-					'permalink': self.permalink,
+					'url': self.url,
 					'is_banned': True,
 					'is_permanent_ban': not bool(self.unban_utc),
 					'ban_reason': self.ban_reason,
@@ -557,10 +463,6 @@ class User(Base, Stndrd, Age_times):
 
 		return data
 
-	@property
-	def can_use_darkmode(self):
-		return True
-
 	def ban(self, admin=None, reason=None, days=0):
 
 		if days > 0:
@@ -568,25 +470,16 @@ class User(Base, Stndrd, Age_times):
 			self.unban_utc = ban_time
 
 		else:
-			if self.bannerurl:
-				self.del_banner()
-			if self.profileurl:
-				self.del_profile()
-
+			self.bannerurl = None
+			self.profileurl = None
 			delete_role(self, "linked")
 
 		self.is_banned = admin.id if admin else 2317
-		if reason:
-			self.ban_reason = reason
+		if reason: self.ban_reason = reason
 
-		try:
-			g.db.add(self)
-		except:
-			pass
+		g.db.add(self)
 
 	def unban(self):
-
-		# Takes care of all functions needed for account reinstatement.
 
 		self.is_banned = 0
 		self.unban_utc = 0
@@ -693,24 +586,6 @@ class User(Base, Stndrd, Age_times):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
 		return l
-
-	@property
-	def json_admin(self):
-		data = self.json_raw
-
-		data['email'] = self.email
-		data['email_verified'] = self.is_activated
-
-		return data
-
-	@property
-	def can_upload_comment_image(self):
-		return self.dramacoins >= 0 and request.headers.get("cf-ipcountry") != "T1"
-
-	@property
-	def can_change_name(self):
-		return True
-# return self.name_changed_utc < int(time.time())-60*60*24*90
 
 
 class ViewerRelationship(Base):

@@ -25,7 +25,7 @@ def suicide(v, username):
 	t = int(time.time())
 	if v.admin_level == 0 and t - v.suicide_utc < 86400: return "", 204
 	user = get_user(username)
-	suicide = f"Hi there,\n\nA [concerned dramatard]({v.permalink}) reached out to us about you.\n\nWhen you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.\n\nThere are resources available in your area that are free, confidential, and available 24/7:\n\n- Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)\n- Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)\n- Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.\nIf you don't see a resource in your area above, the moderators at r/SuicideWatch keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now\n\nIf you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.\n\nIt may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.\n\nYour fellow dramatards care about you and there are people who want to help."
+	suicide = f"Hi there,\n\nA [concerned dramatard]({v.url}) reached out to us about you.\n\nWhen you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.\n\nThere are resources available in your area that are free, confidential, and available 24/7:\n\n- Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)\n- Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)\n- Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.\nIf you don't see a resource in your area above, the moderators at r/SuicideWatch keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now\n\nIf you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.\n\nIt may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.\n\nYour fellow dramatards care about you and there are people who want to help."
 	send_notification(1046, user, suicide)
 	v.suicide_utc = t
 	g.db.add(v)
@@ -183,7 +183,7 @@ def api_is_available(name, v):
 def user_id(id):
 
 	user = get_account(int(id))
-	return redirect(user.permalink)
+	return redirect(user.url)
 
 # Allow Id of user to be queryied, and then redirect the bot to the
 # actual user api endpoint.
