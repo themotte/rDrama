@@ -437,9 +437,11 @@
 		f = document.getElementById('file-upload');
 		file = event.clipboardData.files[0]
 		filename = file.name.toLowerCase()
+		console.log(filename)
 		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".gif"))
 		{
 			f.files = file;
+			$('#filename-show').text(filename);
 			$('#urlblock').addClass('d-none');
 			var fileReader = new FileReader();
 			fileReader.readAsDataURL(f.files);
