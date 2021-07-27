@@ -130,7 +130,13 @@
 				{% if c.edited_utc %}
 				<span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 				{% endif %}
-				
+
+				{% if c.awards %}
+				{% for a in c.awards[:5] %}
+				<i class="{{ a.class_list }} px-1" data-toggle="tooltip" data-placement="bottom" title="{{ a.title }} Award"></i>
+				{% endfor %}
+				{% endif %}
+
 			</div>
 
 			{% if c.is_banned and c.ban_reason %}
@@ -241,14 +247,6 @@
 
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="/votes?link=https://rdrama.net{{c.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
-					{% if v and v.id!=c.author_id and v.admin_level == 0 %}
-						{% if v.banawards > 0 %}
-							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/banaward/comment/{{c.id}}')"><i class="fas fa-user-slash text-danger"></i>Give ban award</a></li>
-						{% else %}
-							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="/banaward/comment/{{c.id}}"><i class="fas fa-user-slash text-danger"></i>Give ban award</a></li>
-						{% endif %}
-					{% endif %}
-
 					{% if v and c.id in v.saved_comment_idlist() %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/unsave_comment/{{c.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-save"></i>Unsave</a></li>
 					{% else %}
@@ -258,6 +256,11 @@
 					{% if v %}
 					<li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.base36id}}').classList.remove('d-none')"><i class="fas fa-reply"
 						aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a></li>
+
+					{% if v.id!=c.author_id %}
+					<li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/api/comment/{{c.id}}/awards')"><i class="fas fa-gift"
+						aria-hidden="true"></i><span class="d-none d-md-inline-block">Give Award</span></a></li>
+					{% endif %}
 
 					{% endif %}
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{c.permalink}}?context=99#context"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-book-open"></i>Context</a></li>
