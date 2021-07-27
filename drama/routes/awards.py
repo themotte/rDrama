@@ -82,7 +82,7 @@ def award_post(pid, v):
     post_award.submission_id = post.id
     g.db.add(post_award)
 
-    msg = f"@{v.username} has given your [post]({post.permalink}) was given the {AWARDS[kind]['title']} Award!"
+    msg = f"@{v.username} has given your [post]({post.permalink}) the {AWARDS[kind]['title']} Award!"
 
     note = request.form.get("note", "")
     if note:
@@ -142,7 +142,7 @@ def award_comment(cid, v):
     comment_award.comment_id = c.id
     g.db.add(comment_award)
 
-    msg = f"@{v.username} has given your [comment]({c.permalink}) was given the {AWARDS[kind]['title']} Award!"
+    msg = f"@{v.username} has given your [comment]({c.permalink}) the {AWARDS[kind]['title']} Award!"
 
     note = request.form.get("note", "")
     if note:
