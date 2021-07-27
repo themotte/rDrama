@@ -185,6 +185,20 @@
 {% endblock %}
 
 {% block content %}
+
+{% if p.has_award("shit") %}
+<script src="/assets/js/bug-min.js" type="text/javascript"></script>
+<script type="text/javascript">
+	new BugController({
+		imageSprite: "/assets/js/fly-sprite.png",
+		canDie: false,
+		minBugs: 80,
+		maxBugs: 100,
+		mouseOver: "multiply"
+	});
+</script>
+{% endif %}
+
 <div class="row mb-3">
 
 	<div class="col-12">
