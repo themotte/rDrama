@@ -328,13 +328,11 @@ class User(Base, Stndrd, Age_times):
 	@property
 	@lazy
 	def post_count(self):
-
 		return self.submissions.filter_by(is_banned=False, deleted_utc=0).count()
 
 	@property
 	@lazy
 	def comment_count(self):
-
 		return self.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 
 	@property
