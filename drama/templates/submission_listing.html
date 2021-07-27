@@ -63,27 +63,27 @@
 		<div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap pl-2 pl-md-0 p-0 mr-md-2">
 
 			<div class="position-relative d-none d-md-block" style="z-index: 3;">
-				{% if p.thumb_url and p.is_image %}
+				{% if not p.realurl(v) %}
+				<a href="{{p.permalink}}" {% if v and v.newtab %}target="_blank"{% endif %} rel="{% if p.author.is_private %}nofollow {% endif %}noopener">
+					<img src="/assets/images/default_thumb_text.png" class="post-img border-0" alt="text post thumbnail">
+				</a>
+
+				{% elif p.is_image %}
 				<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
 					<img src="{{p.thumb_url}}" class="post-img">
 				</a>
 
-				{% elif p.thumb_url and not p.embed_url %}
+				{% elif p.thumb_url %}
 				<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
 					<img src="{{p.thumb_url}}" class="post-img" alt="">
 				</a>
 				
-				{% elif p.embed_url %}
+				{% elif "youtu.be" in p.domain or "youtube.com" in p.domain %}
 				<a target="_blank" href="{{p.realurl(v)}}" target="_blank" rel="nofollow noopener">
-					<img src="{{p.thumb_url if p.has_thumb else '/assets/images/default_thumb_yt.png'}}" class="post-img border-0" alt="generic youtube embed thumbnail">
+					<img src="{{p.thumb_url if p.thumb_url else '/assets/images/default_thumb_yt.png'}}" class="post-img border-0" alt="generic youtube embed thumbnail">
 				</a>
 				
-				{% elif not p.realurl(v) %}
-				<a href="{{p.permalink}}" {% if v and v.newtab %}target="_blank"{% endif %} rel="{% if p.author.is_private %}nofollow {% endif %}noopener">
-					<img src="/assets/images/default_thumb_text.png" class="post-img border-0" alt="text post thumbnail">
-				</a>
-				
-				{% elif p.realurl(v) and not p.thumb_url and not p.embed_url %}
+				{% else %}
 				<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
 					<img src="/assets/images/default_thumb_link.png" class="post-img border-0" alt="generic link post thumbnail">
 				</a>

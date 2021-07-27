@@ -169,11 +169,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@lazy
 	def domain(self):
 
-		if not self.url:
-			return "text post"
+		if not self.url: return "text post"
 		domain = urlparse(self.url).netloc
-		if domain.startswith("www."):
-			domain = domain.split("www.")[1]
+		if domain.startswith("www."): domain = domain.split("www.")[1]
 		return domain.replace("old.reddit.com", "reddit.com")
 
 	def tree_comments(self, comment=None, v=None):
@@ -209,8 +207,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def thumb_url(self):
 		
 		if self.over_18: return f"/assets/images/nsfw.png"
-		elif self.thumburl: return self.thumburl
-		else: return None
+		return self.thumburl
 
 	@property
 
@@ -410,7 +407,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	
 	@property
 	def is_image(self):
-		if self.url: return self.url.lower().endswith('jpg') or self.url.lower().endswith('png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('jpeg') or self.ur.lower().endswith('?maxwidth=9999') or self.url.lower().endswith('?maxwidth=8888')
+		if self.url: return self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999') or self.url.lower().endswith('?maxwidth=8888')
 		else: return False
 	
 	@property

@@ -275,16 +275,11 @@ def sign_up_post(v):
 		return new_signup("Passwords did not match. Please try again.")
 
 	# check username/pass conditions
-	if not re.match(valid_username_regex, username):
-		#print(f"signup fail - {username } - mismatched passwords")
+	if not re.fullmatch(valid_username_regex, username):
 		return new_signup("Invalid username")
 
-	if not re.match(valid_password_regex, request.form.get("password")):
-		#print(f"signup fail - {username } - invalid password")
+	if not re.fullmatch(valid_password_regex, request.form.get("password")):
 		return new_signup("Password must be between 8 and 100 characters.")
-
-	# if not re.match(valid_email_regex, request.form.get("email")):
-	#	return new_signup("That's not a valid email.")
 
 	# Check for existing accounts
 	email = request.form.get("email")
