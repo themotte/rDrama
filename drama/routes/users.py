@@ -42,6 +42,7 @@ def user_info(v, username):
 @auth_desired
 def leaderboard(v):
 	if v and v.is_banned and not v.unban_utc:return render_template("seized.html")
+	users = g.db.query(User).options(lazyload('*'))
 	users1 = users.order_by(User.dramacoins.desc()).limit(25).all()
 	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(10).all()
 	users3 = counts()
