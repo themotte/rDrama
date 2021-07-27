@@ -433,28 +433,19 @@
 		</script>
 
 	<script>
-	var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-
-	for (var item in items)
-	{
-		if (items[item].kind === "file")
+	document.onpaste = function(event) {
+		f = document.getElementById('file-upload');
+		file = event.clipboardData.files[0]
+		filename = file.name.toLowerCase()
+		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".gif"))
 		{
-			f=document.getElementById('file-upload');
-			f.files = event.clipboardData.files;
-			$('#filename-show').text(f.files[0].name);
+			f.files = file;
 			$('#urlblock').addClass('d-none');
-					
 			var fileReader = new FileReader();
-			fileReader.readAsDataURL(f.files[0]);
-			fileReader.addEventListener("load", function () {
-				$('#image-preview').attr('src', this.result);
-			});
-					
+			fileReader.readAsDataURL(f.files);
+			fileReader.addEventListener("load", function () {$('#image-preview').attr('src', this.result);});  
 			$('#file-upload').attr('required', false);
-					
 			checkForRequired();
-
-			break;
 		}
 	}
 
