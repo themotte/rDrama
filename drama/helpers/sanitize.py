@@ -123,6 +123,7 @@ def sanitize(text, linkgen=False, flair=False):
 			netloc = urlparse(url).netloc
 
 			domain = get_domain(netloc)
+
 			if "profile-pic-20" not in tag.get("class", ""):
 				#print(tag.get('class'))
 				# set classes and wrap in link
@@ -141,13 +142,6 @@ def sanitize(text, linkgen=False, flair=False):
 				link["data-target"] = "#expandImageModal"
 
 				tag.wrap(link)
-			else:
-				# non-whitelisted images get replaced with links
-				new_tag = soup.new_tag("a")
-				new_tag.string = tag["src"]
-				new_tag["href"] = tag["src"]
-				new_tag["rel"] = "nofollow noopener"
-				tag.replace_with(new_tag)
 
 		#disguised link preventer
 		for tag in soup.find_all("a"):
