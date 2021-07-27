@@ -413,6 +413,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		if self.url: return self.url.endswith('jpg') or self.url.endswith('png') or self.url.endswith('.gif') or self.url.endswith('jpeg') or self.url.endswith('?maxwidth=9999') or self.url.endswith('?maxwidth=8888')
 		else: return False
 	
+	@property
+	@lazy
+	def active_flags(self):
+		return len(self.flags)
+
 
 class SaveRelationship(Base, Stndrd):
 

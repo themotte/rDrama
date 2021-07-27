@@ -297,6 +297,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	def is_op(self):
 		return self.author_id==self.post.author_id
 	
+	@property
+	@lazy
+	def active_flags(self):
+		return len(self.flags)
 	
 
 
