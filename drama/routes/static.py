@@ -206,21 +206,6 @@ def settings_security(v):
 						   msg=request.args.get("msg") or None
 						   )
 
-@app.route("/imagehosts", methods=["GET"])
-def info_image_hosts():
-
-	sites = g.db.query(Domain).filter_by(
-		show_thumbnail=True).order_by(
-		Domain.domain.asc()).all()
-
-	sites = [x.domain for x in sites]
-
-	text = "\n".join(sites)
-
-	resp = make_response(text)
-	resp.mimetype = "text/plain"
-	return resp
-
 @app.route("/dismiss_mobile_tip", methods=["POST"])
 def dismiss_mobile_tip():
 

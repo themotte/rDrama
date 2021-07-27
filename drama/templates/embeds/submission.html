@@ -102,7 +102,7 @@
 
 					<div class="row no-gutters mb-3 d-block d-md-none">
 						<div class="col">
-						 <a target="_blank" href="{{p.url}}">{% if p.is_image and p.domain_obj and p.domain_obj.show_thumbnail %}<img src="{{p.url}}" class="img-fluid" alt="Unable to anonymously load image">
+						 <a target="_blank" href="{{p.url}}">{% if p.is_image %}<img src="{{p.url}}" class="img-fluid" alt="Unable to anonymously load image">
 							 <div class="post-img-overlay d-block d-md-none">{{p.domain|truncate(30, True)}}<i class="fas fa-external-link-alt text-small ml-2"></i></div>
 							 {% endif %}
 						 </a>

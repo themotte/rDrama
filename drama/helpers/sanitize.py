@@ -123,26 +123,24 @@ def sanitize(text, linkgen=False, flair=False):
 			netloc = urlparse(url).netloc
 
 			domain = get_domain(netloc)
-			if not(netloc) or (domain and domain.show_thumbnail):
+			if "profile-pic-20" not in tag.get("class", ""):
+				#print(tag.get('class'))
+				# set classes and wrap in link
 
-				if "profile-pic-20" not in tag.get("class", ""):
-					#print(tag.get('class'))
-					# set classes and wrap in link
+				tag["rel"] = "nofollow"
+				tag["style"] = "max-height: 100px; max-width: 100%;"
+				tag["class"] = "in-comment-image rounded-sm my-2"
 
-					tag["rel"] = "nofollow"
-					tag["style"] = "max-height: 100px; max-width: 100%;"
-					tag["class"] = "in-comment-image rounded-sm my-2"
+				link = soup.new_tag("a")
+				link["href"] = tag["src"]
+				link["rel"] = "nofollow noopener"
+				link["target"] = "_blank"
 
-					link = soup.new_tag("a")
-					link["href"] = tag["src"]
-					link["rel"] = "nofollow noopener"
-					link["target"] = "_blank"
+				link["onclick"] = f"expandDesktopImage('{tag['src']}');"
+				link["data-toggle"] = "modal"
+				link["data-target"] = "#expandImageModal"
 
-					link["onclick"] = f"expandDesktopImage('{tag['src']}');"
-					link["data-toggle"] = "modal"
-					link["data-target"] = "#expandImageModal"
-
-					tag.wrap(link)
+				tag.wrap(link)
 			else:
 				# non-whitelisted images get replaced with links
 				new_tag = soup.new_tag("a")

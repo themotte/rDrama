@@ -410,7 +410,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	
 	@property
 	def is_image(self):
-		if self.url: return self.url.endswith('jpg') or self.url.endswith('png') or self.url.endswith('.gif') or self.url.endswith('jpeg') or self.url.endswith('?maxwidth=9999') or self.url.endswith('?maxwidth=8888')
+		if self.url: return self.url.lower().endswith('jpg') or self.url.lower().endswith('png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('jpeg') or self.ur.lower()l.endswith('?maxwidth=9999') or self.url.lower().endswith('?maxwidth=8888')
 		else: return False
 	
 	@property

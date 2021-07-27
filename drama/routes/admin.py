@@ -931,7 +931,6 @@ def admin_ban_domain(v):
 			can_submit=False,
 			can_comment=False,
 			reason=reason,
-			show_thumbnail=False,
 			embed_function=None,
 			embed_template=None
 			)
