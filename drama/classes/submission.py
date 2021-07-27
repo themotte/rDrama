@@ -287,6 +287,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 		return data
 
+	def has_award(self, kind):
+		return bool(len([x for x in self.awards if x.kind == kind]))
+
 	@property
 	def voted(self):
 		return self._voted if "_voted" in self.__dict__ else 0
