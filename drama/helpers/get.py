@@ -285,7 +285,8 @@ def get_comments(cids, v=None, load_parent=False, **kwargs):
 
 		output = [x[0] for x in query]
 		for i in range(len(output)):
-			output[i]._voted = query[i][1].vote_type if query[i][1] else 0
+			if query[i][1] != None: output[i]._voted = query[i][1].vote_type
+			else: output[i]._voted = 0
 
 
 	else:
