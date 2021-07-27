@@ -90,7 +90,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	comment_count = Column(Integer, server_default=FetchedValue())
 	score = deferred(Column(Float, server_default=FetchedValue()))
 
-	#awards = relationship("AwardRelationship", lazy="joined")
+	awards = relationship("AwardRelationship", lazy="joined")
 
 	def __init__(self, *args, **kwargs):
 
