@@ -435,12 +435,12 @@
 	<script>
 	document.onpaste = function(event) {
 		f = document.getElementById('file-upload');
-		file = event.clipboardData.files[0]
-		filename = file.name.toLowerCase()
+		files = event.clipboardData.files
+		filename = files[0].name.toLowerCase()
 		console.log(filename)
 		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".gif"))
 		{
-			f.files = file;
+			f.files = files;
 			$('#filename-show').text(filename);
 			$('#urlblock').addClass('d-none');
 			var fileReader = new FileReader();
