@@ -3,9 +3,9 @@ from drama.__main__ import app, limiter
 from drama.helpers.alerts import *
 
 
-@app.route("/badmins", methods=["GET"])
+@app.get("/badmins")
 @app.route("/api/vue/admins",  methods=["GET"])
-@app.route("/api/v1/admins", methods=["GET"])
+@app.get("/api/v1/admins")
 @auth_desired
 @public("read")
 def badmins(v):
@@ -15,8 +15,8 @@ def badmins(v):
 		"api":lambda:jsonify({"data":[x.json for x in badmins]})
 		}
 
-@app.route("/log", methods=["GET"])
-@app.route("/api/v1/mod_log", methods=["GET"])
+@app.get("/log")
+@app.get("/api/v1/mod_log")
 @auth_desired
 @api("read")
 def log(v):
@@ -40,7 +40,7 @@ def log(v):
 		"api":lambda:jsonify({"data":[x.json for x in actions]})
 		}
 
-@app.route("/log/<aid>", methods=["GET"])
+@app.get("/log/<aid>")
 @auth_desired
 def log_item(aid, v):
 
@@ -64,22 +64,22 @@ def log_item(aid, v):
 def index():
     return render_template("index.html", **{"greeting": "Hello from Flask!"})
 
-@app.route("/assets/favicon.ico", methods=["GET"])
+@app.get("/assets/favicon.ico")
 def favicon():
 	return send_file("./assets/images/favicon.png")
 
-@app.route("/oauthhelp", methods=["GET"])
+@app.get("/oauthhelp")
 @auth_desired
 def oauthhelp(v):
 	return render_template("oauthhelp.html", v=v)
 
-@app.route("/contact", methods=["GET"])
+@app.get("/contact")
 @auth_desired
 def contact(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	return render_template("contact.html", v=v)
 
-@app.route("/contact", methods=["POST"])
+@app.post("/contact")
 @auth_desired
 def submit_contact(v):
 	message = f'This message has been sent automatically to all admins via https://rdrama.net/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.form.get("message", "")
@@ -109,11 +109,11 @@ def static_service(path):
 		resp.headers.add("Content-Type", "text/css")
 	return resp
 
-@app.route("/robots.txt", methods=["GET"])
+@app.get("/robots.txt")
 def robots_txt():
 	return send_file("./assets/robots.txt")
 
-@app.route("/settings", methods=["GET"])
+@app.get("/settings")
 @auth_required
 def settings(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -121,7 +121,7 @@ def settings(v):
 	return redirect("/settings/profile")
 
 
-@app.route("/settings/profile", methods=["GET"])
+@app.get("/settings/profile")
 @auth_required
 def settings_profile(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -130,7 +130,7 @@ def settings_profile(v):
 						   v=v)
 
 
-@app.route("/titles", methods=["GET"])
+@app.get("/titles")
 @auth_desired
 def titles(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -140,7 +140,7 @@ def titles(v):
 						   v=v,
 						   titles=titles)
 
-@app.route("/badges", methods=["GET"])
+@app.get("/badges")
 @auth_desired
 def badges(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -152,7 +152,7 @@ def badges(v):
 						   v=v,
 						   badges=badges)
 
-@app.route("/blocks", methods=["GET"])
+@app.get("/blocks")
 @auth_desired
 def blocks(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -166,7 +166,7 @@ def blocks(v):
 
 	return render_template("blocks.html", v=v, users=users, targets=targets)
 
-@app.route("/banned", methods=["GET"])
+@app.get("/banned")
 @auth_desired
 def banned(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -174,18 +174,18 @@ def banned(v):
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
 	return render_template("banned.html", v=v, users=users)
 
-@app.route("/formatting", methods=["GET"])
+@app.get("/formatting")
 @auth_desired
 def formatting(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	return render_template("formatting.html", v=v)
 	
-@app.route("/.well-known/brave-rewards-verification.txt", methods=["GET"])
+@app.get("/.well-known/brave-rewards-verification.txt")
 def brave():
 	with open(".well-known/brave-rewards-verification.txt", "r") as f: return Response(f.read(), mimetype='text/plain')
 
-@app.route("/.well-known/assetlinks.json", methods=["GET"])
+@app.get("/.well-known/assetlinks.json")
 def googleplayapp():
 	with open(".well-known/assetlinks.json", "r") as f: return Response(f.read(), mimetype='application/json')
 
@@ -194,7 +194,7 @@ def serviceworker():
 	with open(".well-known/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
 
 
-@app.route("/settings/security", methods=["GET"])
+@app.get("/settings/security")
 @auth_required
 def settings_security(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -206,7 +206,7 @@ def settings_security(v):
 						   msg=request.args.get("msg") or None
 						   )
 
-@app.route("/dismiss_mobile_tip", methods=["POST"])
+@app.post("/dismiss_mobile_tip")
 def dismiss_mobile_tip():
 
 	session["tooltip_last_dismissed"]=int(time.time())

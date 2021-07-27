@@ -5,7 +5,7 @@ from flask import *
 from drama.__main__ import app
 
 
-@app.route("/votes", methods=["GET"])
+@app.get("/votes")
 @auth_desired
 def admin_vote_info_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -62,8 +62,8 @@ def admin_vote_info_get(v):
 
 
 
-@app.route("/api/v1/vote/post/<post_id>/<new>", methods=["POST"])
-@app.route("/api/vote/post/<post_id>/<new>", methods=["POST"])
+@app.post("/api/v1/vote/post/<post_id>/<new>")
+@app.post("/api/vote/post/<post_id>/<new>")
 @is_not_banned
 @api("vote")
 @validate_formkey
@@ -107,8 +107,8 @@ def api_vote_post(post_id, new, v):
 	g.db.add(post)
 	return "", 204
 
-@app.route("/api/v1/vote/comment/<comment_id>/<new>", methods=["POST"])
-@app.route("/api/vote/comment/<comment_id>/<new>", methods=["POST"])
+@app.post("/api/v1/vote/comment/<comment_id>/<new>")
+@app.post("/api/vote/comment/<comment_id>/<new>")
 @is_not_banned
 @api("vote")
 @validate_formkey

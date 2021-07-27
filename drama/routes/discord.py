@@ -12,7 +12,7 @@ DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 
 WELCOME_CHANNEL="846509313941700618"
 
-@app.route("/discord", methods=["GET"])
+@app.get("/discord")
 @auth_required
 def join_discord(v):
 	
@@ -27,7 +27,7 @@ def join_discord(v):
 
 	return redirect(f"https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri=https%3A%2F%2F{app.config['SERVER_NAME']}%2Fdiscord_redirect&response_type=code&scope=identify%20guilds.join&state={state}")
 
-@app.route("/discord_redirect", methods=["GET"])
+@app.get("/discord_redirect")
 @auth_required
 def discord_redirect(v):
 

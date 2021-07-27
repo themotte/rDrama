@@ -196,8 +196,8 @@ def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 	comments = comments[firstrange:secondrange]
 	return total, [x.id for x in comments]
 
-@app.route("/search/posts", methods=["GET"])
-@app.route("/api/v1/search", methods=["GET"])
+@app.get("/search/posts")
+@app.get("/api/v1/search")
 @app.route("/api/vue/search")
 @auth_desired
 @api("read")
@@ -242,8 +242,8 @@ def searchposts(v, search_type="posts"):
 			"api":lambda:jsonify({"data":[x.json for x in posts]})
 			}
 
-@app.route("/search/comments", methods=["GET"])
-@app.route("/api/v1/search/comments", methods=["GET"])
+@app.get("/search/comments")
+@app.get("/api/v1/search/comments")
 @app.route("/api/vue/search/comments")
 @auth_desired
 @api("read")
@@ -279,8 +279,8 @@ def searchcomments(v):
 			"api":lambda:jsonify({"data":[x.json for x in comments]})
 			}
 			
-@app.route("/search/users", methods=["GET"])
-@app.route("/api/v1/search/users", methods=["GET"])
+@app.get("/search/users")
+@app.get("/api/v1/search/users")
 @app.route("/api/vue/search/users")
 @auth_desired
 @api("read")

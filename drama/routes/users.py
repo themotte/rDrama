@@ -31,14 +31,14 @@ def suicide(v, username):
 	g.db.add(v)
 	return "", 204
 
-@app.route("/api/v1/user/<username>", methods=["GET"])
+@app.get("/api/v1/user/<username>")
 @auth_desired
 @api("read")
 def user_info(v, username):
 	user = get_user(username, v=v)
 	return jsonify(user.json)
 
-@app.route("/leaderboard", methods=["GET"])
+@app.get("/leaderboard")
 @auth_desired
 def leaderboard(v):
 	if v and v.is_banned and not v.unban_utc:return render_template("seized.html")
@@ -72,7 +72,7 @@ def get_profilecss(username):
 	resp.headers.add("Content-Type", "text/css")
 	return resp
 
-@app.route("/@<username>/reply/<id>", methods=["POST"])
+@app.post("/@<username>/reply/<id>")
 @auth_required
 def messagereply(v, username, id):
 	message = request.form.get("message", "")[:1000].strip()
@@ -97,14 +97,14 @@ def messagereply(v, username, id):
 	g.db.commit()
 	return redirect('/notifications?all=true')
 
-@app.route("/songs/<id>", methods=["GET"])
+@app.get("/songs/<id>")
 def songs(id):
 	try: id = int(id)
 	except: return '', 400
 	user = g.db.query(User).filter_by(id=id).first()
 	return send_from_directory('/songs/', f'{user.song}.mp3')
 
-@app.route("/subscribe/<post_id>", methods=["POST"])
+@app.post("/subscribe/<post_id>")
 @auth_required
 def subscribe(v, post_id):
 	new_sub = Subscription(user_id=v.id, submission_id=post_id)
@@ -112,14 +112,14 @@ def subscribe(v, post_id):
 	g.db.commit()
 	return "", 204
 	
-@app.route("/unsubscribe/<post_id>", methods=["POST"])
+@app.post("/unsubscribe/<post_id>")
 @auth_required
 def unsubscribe(v, post_id):
 	sub=g.db.query(Subscription).filter_by(user_id=v.id, submission_id=post_id).first()
 	g.db.delete(sub)
 	return "", 204
 
-@app.route("/@<username>/message", methods=["POST"])
+@app.post("/@<username>/message")
 @auth_required
 def message2(v, username):
 	user = get_user(username, v=v)
@@ -141,7 +141,7 @@ def message2(v, username):
 	)
 	return redirect('/notifications?all=true')
 
-@app.route("/2faqr/<secret>", methods=["GET"])
+@app.get("/2faqr/<secret>")
 @auth_required
 def mfa_qr(secret, v):
 	x = pyotp.TOTP(secret)
@@ -158,8 +158,8 @@ def mfa_qr(secret, v):
 	return send_file(mem, mimetype="image/png", as_attachment=False)
 
 
-@app.route("/api/is_available/<name>", methods=["GET"])
-@app.route("/api/v1/is_available/<name>", methods=["GET"])
+@app.get("/api/is_available/<name>")
+@app.get("/api/v1/is_available/<name>")
 @auth_desired
 @api("read")
 def api_is_available(name, v):
@@ -186,7 +186,7 @@ def api_is_available(name, v):
 		return jsonify({name: True})
 
 
-@app.route("/id/<id>", methods=["GET"])
+@app.get("/id/<id>")
 def user_id(id):
 
 	user = get_account(int(id))
@@ -196,7 +196,7 @@ def user_id(id):
 # actual user api endpoint.
 # So they get the data and then there will be no need to reinvent
 # the wheel.
-@app.route("/api/v1/uid/<uid>", methods=["GET"])
+@app.get("/api/v1/uid/<uid>")
 @auth_desired
 @api("read")
 def user_by_uid(uid, v=None):
@@ -204,11 +204,11 @@ def user_by_uid(uid, v=None):
 	
 	return redirect(f'/api/v1/user/{user.username}/info')
 		
-@app.route("/u/<username>", methods=["GET"])
+@app.get("/u/<username>")
 def redditor_moment_redirect(username):
 	return redirect(f"/@{username}")
 
-@app.route("/@<username>/followers", methods=["GET"])
+@app.get("/@<username>/followers")
 @auth_required
 def followers(username, v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -224,8 +224,8 @@ def visitors(v):
 	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc, reverse=True)
 	return render_template("viewers.html", v=v, viewers=viewers)
 
-@app.route("/@<username>", methods=["GET"])
-@app.route("/api/v1/user/<username>/listing", methods=["GET"])
+@app.get("/@<username>")
+@app.get("/api/v1/user/<username>/listing")
 @auth_desired
 @public("read")
 def u_username(username, v=None):
@@ -336,8 +336,8 @@ def u_username(username, v=None):
 		}
 
 
-@app.route("/@<username>/comments", methods=["GET"])
-@app.route("/api/v1/user/<username>/comments", methods=["GET"])
+@app.get("/@<username>/comments")
+@app.get("/api/v1/user/<username>/comments")
 @auth_desired
 @public("read")
 def u_username_comments(username, v=None):
@@ -415,7 +415,7 @@ def u_username_comments(username, v=None):
 			"api": lambda: jsonify({"data": [c.json for c in listing]})
 			}
 
-@app.route("/api/v1/user/<username>/info", methods=["GET"])
+@app.get("/api/v1/user/<username>/info")
 @auth_desired
 @public("read")
 def u_username_info(username, v=None):
@@ -430,7 +430,7 @@ def u_username_info(username, v=None):
 	return jsonify(user.json)
 
 
-@app.route("/api/follow/<username>", methods=["POST"])
+@app.post("/api/follow/<username>")
 @auth_required
 def follow_user(username, v):
 
@@ -455,7 +455,7 @@ def follow_user(username, v):
 	return "", 204
 
 
-@app.route("/api/unfollow/<username>", methods=["POST"])
+@app.post("/api/unfollow/<username>")
 @auth_required
 def unfollow_user(username, v):
 
@@ -490,8 +490,8 @@ def user_profile_uid(uid):
 	return redirect(x.profile_url)
 
 
-@app.route("/@<username>/saved/posts", methods=["GET"])
-@app.route("/api/v1/saved/posts", methods=["GET"])
+@app.get("/@<username>/saved/posts")
+@app.get("/api/v1/saved/posts")
 @auth_required
 @api("read")
 def saved_posts(v, username):
@@ -517,8 +517,8 @@ def saved_posts(v, username):
 			}
 
 
-@app.route("/@<username>/saved/comments", methods=["GET"])
-@app.route("/api/v1/saved/comments", methods=["GET"])
+@app.get("/@<username>/saved/comments")
+@app.get("/api/v1/saved/comments")
 @auth_required
 @api("read")
 def saved_comments(v, username):

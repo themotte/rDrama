@@ -6,7 +6,7 @@ valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 
-@app.route("/login", methods=["GET"])
+@app.get("/login")
 @no_cors
 @auth_desired
 def login_get(v):
@@ -52,7 +52,7 @@ def check_for_alts(current_id):
 
 
 @no_cors
-@app.route("/login", methods=["POST"])
+@app.post("/login")
 @limiter.limit("6/minute")
 def login_post():
 
@@ -133,14 +133,14 @@ def login_post():
 		return redirect(account.url)
 
 
-@app.route("/me", methods=["GET"])
-@app.route("/@me", methods=["GET"])
+@app.get("/me")
+@app.get("/@me")
 @auth_required
 def me(v):
 	return redirect(v.url)
 
 
-@app.route("/logout", methods=["POST"])
+@app.post("/logout")
 @auth_required
 @validate_formkey
 def logout(v):
@@ -153,7 +153,7 @@ def logout(v):
 # signing up
 
 
-@app.route("/signup", methods=["GET"])
+@app.get("/signup")
 @no_cors
 @auth_desired
 def sign_up_get(v):
@@ -210,7 +210,7 @@ def sign_up_get(v):
 # signup api
 
 
-@app.route("/signup", methods=["POST"])
+@app.post("/signup")
 @no_cors
 @auth_desired
 def sign_up_post(v):
@@ -382,7 +382,7 @@ def sign_up_post(v):
 	return redirect("/")
 
 
-@app.route("/forgot", methods=["GET"])
+@app.get("/forgot")
 def get_forgot():
 
 	return render_template("forgot_password.html",
@@ -390,7 +390,7 @@ def get_forgot():
 						   )
 
 
-@app.route("/forgot", methods=["POST"])
+@app.post("/forgot")
 def post_forgot():
 
 	username = request.form.get("username").lstrip('@')
@@ -426,7 +426,7 @@ def post_forgot():
 						   i=random_image())
 
 
-@app.route("/reset", methods=["GET"])
+@app.get("/reset")
 def get_reset():
 
 	user_id = request.args.get("id")
@@ -458,7 +458,7 @@ def get_reset():
 						   )
 
 
-@app.route("/reset", methods=["POST"])
+@app.post("/reset")
 @auth_desired
 def post_reset(v):
 	if v:
@@ -510,7 +510,7 @@ def lost_2fa(v):
 		v=v
 		)
 
-@app.route("/request_2fa_disable", methods=["POST"])
+@app.post("/request_2fa_disable")
 @limiter.limit("6/minute")
 def request_2fa_disable():
 
@@ -558,7 +558,7 @@ def request_2fa_disable():
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
-@app.route("/reset_2fa", methods=["GET"])
+@app.get("/reset_2fa")
 def reset_2fa():
 
 	now=int(time.time())

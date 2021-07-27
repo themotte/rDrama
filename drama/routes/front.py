@@ -4,13 +4,13 @@ from drama.helpers.get import *
 from drama.__main__ import app, cache
 from drama.classes.submission import Submission
 
-@app.route("/post/", methods=["GET"])
+@app.get("/post/")
 def slash_post():
 	return redirect("/")
 
 # this is a test
 
-@app.route("/notifications", methods=["GET"])
+@app.get("/notifications")
 @auth_required
 def notifications(v):
 
@@ -176,8 +176,8 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 		return posts
 	return posts
 
-@app.route("/", methods=["GET"])
-@app.route("/api/v1/listing", methods=["GET"])
+@app.get("/")
+@app.get("/api/v1/listing")
 @auth_desired
 def front_all(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -288,8 +288,8 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	posts = [x.id for x in posts]
 	return posts
 
-@app.route("/changelog", methods=["GET"])
-@app.route("/api/v1/changelog", methods=["GET"])
+@app.get("/changelog")
+@app.get("/api/v1/changelog")
 @auth_desired
 @api("read")
 def changelog(v):
@@ -330,7 +330,7 @@ def changelog(v):
 								   )
 			}
 
-@app.route("/random", methods=["GET"])
+@app.get("/random")
 @auth_desired
 def random_post(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -404,8 +404,8 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 
 	return comments[:26]
 
-@app.route("/comments", methods=["GET"])
-@app.route("/api/v1/front/comments", methods=["GET"])
+@app.get("/comments")
+@app.get("/api/v1/front/comments")
 @auth_desired
 @api("read")
 def all_comments(v):

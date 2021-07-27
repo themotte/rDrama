@@ -15,7 +15,7 @@ SCOPES = {
 }
 
 
-@app.route("/oauth/authorize", methods=["GET"])
+@app.get("/oauth/authorize")
 @auth_required
 def oauth_authorize_prompt(v):
 	'''
@@ -80,7 +80,7 @@ def oauth_authorize_prompt(v):
 						   )
 
 
-@app.route("/oauth/authorize", methods=["POST"])
+@app.post("/oauth/authorize")
 @auth_required
 @validate_formkey
 def oauth_authorize_post(v):
@@ -136,7 +136,7 @@ def oauth_authorize_post(v):
 	return redirect(f"{redirect_uri}?code={new_auth.oauth_code}&scopes={scopes_txt}&state={state}")
 
 
-@app.route("/oauth/grant", methods=["POST"])
+@app.post("/oauth/grant")
 def oauth_grant():
 	'''
 	This endpoint takes the following parameters:
@@ -221,7 +221,7 @@ def oauth_grant():
 		return jsonify({"oauth_error": f"Invalid grant_type `{request.values.get('grant_type','')}`. Expected `code` or `refresh`."}), 400
 
 
-@app.route("/api_keys", methods=["POST"])
+@app.post("/api_keys")
 @is_not_banned
 def request_api_keys(v):
 
@@ -239,7 +239,7 @@ def request_api_keys(v):
 	return redirect('/settings/apps')
 
 
-@app.route("/delete_app/<aid>", methods=["POST"])
+@app.post("/delete_app/<aid>")
 @is_not_banned
 @validate_formkey
 def delete_oauth_app(v, aid):
@@ -257,7 +257,7 @@ def delete_oauth_app(v, aid):
 	return redirect('/apps')
 
 
-@app.route("/edit_app/<aid>", methods=["POST"])
+@app.post("/edit_app/<aid>")
 @is_not_banned
 @validate_formkey
 def edit_oauth_app(v, aid):
@@ -282,7 +282,7 @@ def api_v1_identity(v):
 	return jsonify(v.json)
 
 
-@app.route("/admin/app/approve/<aid>", methods=["POST"])
+@app.post("/admin/app/approve/<aid>")
 @admin_level_required(3)
 @validate_formkey
 def admin_app_approve(v, aid):
@@ -300,7 +300,7 @@ def admin_app_approve(v, aid):
 	return jsonify({"message": f"{app.app_name} approved"})
 
 
-@app.route("/admin/app/revoke/<aid>", methods=["POST"])
+@app.post("/admin/app/revoke/<aid>")
 @admin_level_required(3)
 @validate_formkey
 def admin_app_revoke(v, aid):
@@ -318,7 +318,7 @@ def admin_app_revoke(v, aid):
 	return jsonify({"message": f"{app.app_name} revoked"})
 
 
-@app.route("/admin/app/reject/<aid>", methods=["POST"])
+@app.post("/admin/app/reject/<aid>")
 @admin_level_required(3)
 @validate_formkey
 def admin_app_reject(v, aid):
@@ -337,7 +337,7 @@ def admin_app_reject(v, aid):
 	return jsonify({"message": f"{app.app_name} rejected"})
 
 
-@app.route("/admin/app/<aid>", methods=["GET"])
+@app.get("/admin/app/<aid>")
 @admin_level_required(3)
 def admin_app_id(v, aid):
 
@@ -363,7 +363,7 @@ def admin_app_id(v, aid):
 						   next_exists=next_exists
 						   )
 
-@app.route("/admin/app/<aid>/comments", methods=["GET"])
+@app.get("/admin/app/<aid>/comments")
 @admin_level_required(3)
 def admin_app_id_comments(v, aid):
 
@@ -392,7 +392,7 @@ def admin_app_id_comments(v, aid):
 						   )
 
 
-@app.route("/admin/apps", methods=["GET"])
+@app.get("/admin/apps")
 @admin_level_required(3)
 def admin_apps_list(v):
 
@@ -405,7 +405,7 @@ def admin_apps_list(v):
 	return render_template("admin/apps.html", v=v, apps=apps)
 
 
-@app.route("/oauth/reroll/<aid>", methods=["POST"])
+@app.post("/oauth/reroll/<aid>")
 @auth_required
 def reroll_oauth_tokens(aid, v):
 
@@ -428,7 +428,7 @@ def reroll_oauth_tokens(aid, v):
 				   )
 
 
-@app.route("/oauth/rescind/<aid>", methods=["POST"])
+@app.post("/oauth/rescind/<aid>")
 @auth_required
 @validate_formkey
 def oauth_rescind_app(aid, v):
@@ -443,7 +443,7 @@ def oauth_rescind_app(aid, v):
 
 	return jsonify({"message": f"{auth.application.app_name} Revoked"})
 
-@app.route("/api/v1/release", methods=["POST"])
+@app.post("/api/v1/release")
 @auth_required
 @api()
 def oauth_release_auth(v):
@@ -462,7 +462,7 @@ def oauth_release_auth(v):
 
 	return jsonify({"message":"Authorization released"})
 
-@app.route("/api/v1/kill", methods=["POST"])
+@app.post("/api/v1/kill")
 @auth_required
 @api()
 def oauth_kill_auth(v):

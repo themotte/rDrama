@@ -15,7 +15,7 @@ valid_password_regex = re.compile("^.{8,100}$")
 
 youtubekey = environ.get("youtubekey").strip()
 
-@app.route("/settings/profile", methods=["POST"])
+@app.post("/settings/profile")
 @auth_required
 @validate_formkey
 def settings_profile_post(v):
@@ -153,7 +153,7 @@ def settings_profile_post(v):
 	else:
 		return jsonify({"error": "You didn't change anything."}), 400
 
-@app.route("/changelogsub", methods=["POST"])
+@app.post("/changelogsub")
 @auth_required
 @validate_formkey
 def changelogsub(v):
@@ -162,7 +162,7 @@ def changelogsub(v):
 	cache.delete_memoized(frontlist)
 	return "", 204
 
-@app.route("/settings/namecolor", methods=["POST"])
+@app.post("/settings/namecolor")
 @auth_required
 @validate_formkey
 def namecolor(v):
@@ -172,7 +172,7 @@ def namecolor(v):
 	g.db.add(v)
 	return redirect("/settings/profile")
 	
-@app.route("/settings/themecolor", methods=["POST"])
+@app.post("/settings/themecolor")
 @auth_required
 @validate_formkey
 def themecolor(v):
@@ -182,7 +182,7 @@ def themecolor(v):
 	g.db.add(v)
 	return redirect("/settings/profile")
 
-@app.route("/settings/titlecolor", methods=["POST"])
+@app.post("/settings/titlecolor")
 @auth_required
 @validate_formkey
 def titlecolor(v):
@@ -192,7 +192,7 @@ def titlecolor(v):
 	g.db.add(v)
 	return redirect("/settings/profile")
 
-@app.route("/settings/security", methods=["POST"])
+@app.post("/settings/security")
 @auth_required
 @validate_formkey
 def settings_security_post(v):
@@ -297,7 +297,7 @@ def settings_security_post(v):
 		return redirect("/settings/security?msg=" +
 						escape("Two-factor authentication disabled."))
 
-@app.route("/settings/log_out_all_others", methods=["POST"])
+@app.post("/settings/log_out_all_others")
 @auth_required
 @validate_formkey
 def settings_log_out_others(v):
@@ -320,7 +320,7 @@ def settings_log_out_others(v):
 						   msg="All other devices have been logged out")
 
 
-@app.route("/settings/images/profile", methods=["POST"])
+@app.post("/settings/images/profile")
 @auth_required
 @validate_formkey
 def settings_images_profile(v):
@@ -339,7 +339,7 @@ def settings_images_profile(v):
 							v=v, msg="Profile picture successfully updated.")
 
 
-@app.route("/settings/images/banner", methods=["POST"])
+@app.post("/settings/images/banner")
 @auth_required
 @validate_formkey
 def settings_images_banner(v):
@@ -357,7 +357,7 @@ def settings_images_banner(v):
 							v=v, msg="Banner successfully updated.")
 
 
-@app.route("/settings/delete/profile", methods=["POST"])
+@app.post("/settings/delete/profile")
 @auth_required
 @validate_formkey
 def settings_delete_profile(v):
@@ -367,7 +367,7 @@ def settings_delete_profile(v):
 	return render_template("settings_profile.html", v=v,
 						   msg="Profile picture successfully removed.")
 
-@app.route("/settings/delete/banner", methods=["POST"])
+@app.post("/settings/delete/banner")
 @auth_required
 @validate_formkey
 def settings_delete_banner(v):
@@ -378,7 +378,7 @@ def settings_delete_banner(v):
 						   msg="Banner successfully removed.")
 
 
-@app.route("/settings/read_announcement", methods=["POST"])
+@app.post("/settings/read_announcement")
 @auth_required
 @validate_formkey
 def update_announcement(v):
@@ -389,7 +389,7 @@ def update_announcement(v):
 	return "", 204
 
 
-@app.route("/settings/blocks", methods=["GET"])
+@app.get("/settings/blocks")
 @auth_required
 def settings_blockedpage(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -399,14 +399,14 @@ def settings_blockedpage(v):
 	return render_template("settings_blocks.html",
 						   v=v)
 
-@app.route("/settings/css", methods=["GET"])
+@app.get("/settings/css")
 @auth_required
 def settings_css_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	return render_template("settings_css.html", v=v)
 
-@app.route("/settings/css", methods=["POST"])
+@app.post("/settings/css")
 @auth_required
 def settings_css(v):
 	css = request.form.get("css").replace('\\', '')[0:50000]
@@ -418,14 +418,14 @@ def settings_css(v):
 	g.db.add(v)
 	return render_template("settings_css.html", v=v)
 
-@app.route("/settings/profilecss", methods=["GET"])
+@app.get("/settings/profilecss")
 @auth_required
 def settings_profilecss_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	if v.dramacoins < 1000: return "You must have +1000 dramacoins to set profile css."
 	return render_template("settings_profilecss.html", v=v)
 
-@app.route("/settings/profilecss", methods=["POST"])
+@app.post("/settings/profilecss")
 @auth_required
 def settings_profilecss(v):
 	if v.dramacoins < 1000: return "You must have +1000 dramacoins to set profile css."
@@ -434,7 +434,7 @@ def settings_profilecss(v):
 	g.db.add(v)
 	return render_template("settings_profilecss.html", v=v)
 
-@app.route("/settings/block", methods=["POST"])
+@app.post("/settings/block")
 @auth_required
 @validate_formkey
 def settings_block_user(v):
@@ -468,7 +468,7 @@ def settings_block_user(v):
 	return jsonify({"message": f"@{user.username} blocked."})
 
 
-@app.route("/settings/unblock", methods=["POST"])
+@app.post("/settings/unblock")
 @auth_required
 @validate_formkey
 def settings_unblock_user(v):
@@ -490,7 +490,7 @@ def settings_unblock_user(v):
 	return jsonify({"message": f"@{user.username} unblocked."})
 
 
-@app.route("/settings/apps", methods=["GET"])
+@app.get("/settings/apps")
 @auth_required
 def settings_apps(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -498,7 +498,7 @@ def settings_apps(v):
 	return render_template("settings_apps.html", v=v)
 
 
-@app.route("/settings/remove_discord", methods=["POST"])
+@app.post("/settings/remove_discord")
 @auth_required
 @validate_formkey
 def settings_remove_discord(v):
@@ -514,14 +514,14 @@ def settings_remove_discord(v):
 
 	return redirect("/settings/profile")
 
-@app.route("/settings/content", methods=["GET"])
+@app.get("/settings/content")
 @auth_required
 def settings_content_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	return render_template("settings_filters.html", v=v)
 
-@app.route("/settings/name_change", methods=["POST"])
+@app.post("/settings/name_change")
 @auth_required
 @validate_formkey
 def settings_name_change(v):
@@ -569,7 +569,7 @@ def settings_name_change(v):
 
 	return redirect("/settings/profile")
 
-@app.route("/settings/song_change", methods=["POST"])
+@app.post("/settings/song_change")
 @auth_required
 @validate_formkey
 def settings_song_change(v):
@@ -650,7 +650,7 @@ def settings_song_change(v):
 
 	return redirect("/settings/profile")
 
-@app.route("/settings/title_change", methods=["POST"])
+@app.post("/settings/title_change")
 @auth_required
 @validate_formkey
 def settings_title_change(v):
@@ -683,7 +683,7 @@ def settings_title_change(v):
 
 	return redirect("/settings/profile")
 
-@app.route("/settings/badges", methods=["POST"])
+@app.post("/settings/badges")
 @auth_required
 @validate_formkey
 def settings_badge_recheck(v):

@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 from .front import frontlist
 from drama.__main__ import app, cache
 
-@app.route("/admin/shadowbanned", methods=["GET"])
+@app.get("/admin/shadowbanned")
 @auth_required
 def shadowbanned(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -29,7 +29,7 @@ def shadowbanned(v):
 	return render_template("banned.html", v=v, users=users)
 
 
-@app.route("/admin/agendaposters", methods=["GET"])
+@app.get("/admin/agendaposters")
 @auth_required
 def agendaposters(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -38,7 +38,7 @@ def agendaposters(v):
 	return render_template("banned.html", v=v, users=users)
 
 
-@app.route("/admin/flagged/posts", methods=["GET"])
+@app.get("/admin/flagged/posts")
 @admin_level_required(3)
 def flagged_posts(v):
 
@@ -61,7 +61,7 @@ def flagged_posts(v):
 						   next_exists=next_exists, listing=listing, page=page, v=v)
 
 
-@app.route("/admin/image_posts", methods=["GET"])
+@app.get("/admin/image_posts")
 @admin_level_required(3)
 @api("read")
 def image_posts_listing(v):
@@ -89,7 +89,7 @@ def image_posts_listing(v):
 			}
 
 
-@app.route("/admin/flagged/comments", methods=["GET"])
+@app.get("/admin/flagged/comments")
 @admin_level_required(3)
 def flagged_comments(v):
 
@@ -115,7 +115,7 @@ def flagged_comments(v):
 						   v=v,
 						   standalone=True)
 
-@app.route("/admin", methods=["GET"])
+@app.get("/admin")
 @admin_level_required(3)
 def admin_home(v):
 	with open('./disablesignups', 'r') as f:
@@ -123,7 +123,7 @@ def admin_home(v):
 		return render_template("admin/admin_home.html", v=v, x=x)
 
 
-@app.route("/admin/disablesignups", methods=["POST"])
+@app.post("/admin/disablesignups")
 @admin_level_required(6)
 @validate_formkey
 def disablesignups(v):
@@ -134,7 +134,7 @@ def disablesignups(v):
 	return "", 204
 
 
-@app.route("/admin/badge_grant", methods=["GET"])
+@app.get("/admin/badge_grant")
 @admin_level_required(4)
 def badge_grant_get(v):
 
@@ -155,7 +155,7 @@ def badge_grant_get(v):
 						   )
 
 
-@app.route("/admin/badge_grant", methods=["POST"])
+@app.post("/admin/badge_grant")
 @admin_level_required(4)
 @validate_formkey
 def badge_grant_post(v):
@@ -207,7 +207,7 @@ def badge_grant_post(v):
 	return redirect(user.url)
 
 
-@app.route("/admin/users", methods=["GET"])
+@app.get("/admin/users")
 @admin_level_required(2)
 def users_list(v):
 
@@ -230,7 +230,7 @@ def users_list(v):
 						   )
 
 
-@app.route("/admin/content_stats", methods=["GET"])
+@app.get("/admin/content_stats")
 @admin_level_required(2)
 def participation_stats(v):
 
@@ -265,7 +265,7 @@ def participation_stats(v):
 
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
 
-@app.route("/admin/alt_votes", methods=["GET"])
+@app.get("/admin/alt_votes")
 @admin_level_required(4)
 def alt_votes_get(v):
 
@@ -374,7 +374,7 @@ def alt_votes_get(v):
 						   )
 
 
-@app.route("/admin/link_accounts", methods=["POST"])
+@app.post("/admin/link_accounts")
 @admin_level_required(4)
 @validate_formkey
 def admin_link_accounts(v):
@@ -394,7 +394,7 @@ def admin_link_accounts(v):
 	return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
 
 
-@app.route("/admin/removed", methods=["GET"])
+@app.get("/admin/removed")
 @admin_level_required(3)
 def admin_removed(v):
 
@@ -419,7 +419,7 @@ def admin_removed(v):
 						   )
 
 
-@app.route("/admin/appdata", methods=["GET"])
+@app.get("/admin/appdata")
 @admin_level_required(4)
 def admin_appdata(v):
 
@@ -441,7 +441,7 @@ def admin_appdata(v):
 			v=v)
 
 
-@app.route("/admin/domain/<domain_name>", methods=["GET"])
+@app.get("/admin/domain/<domain_name>")
 @admin_level_required(4)
 def admin_domain_domain(domain_name, v):
 
@@ -460,7 +460,7 @@ def admin_domain_domain(domain_name, v):
 		)
 
 
-@app.route("/admin/image_purge", methods=["POST"])
+@app.post("/admin/image_purge")
 @admin_level_required(5)
 def admin_image_purge(v):
 	
@@ -469,7 +469,7 @@ def admin_image_purge(v):
 	return redirect("/admin/image_purge")
 
 
-@app.route("/admin/image_ban", methods=["POST"])
+@app.post("/admin/image_ban")
 @admin_level_required(4)
 @validate_formkey
 def admin_image_ban(v):
@@ -507,7 +507,7 @@ def admin_image_ban(v):
 	return render_template("admin/image_ban.html", v=v, success=True)
 
 
-@app.route("/agendaposter/<user_id>", methods=["POST"])
+@app.post("/agendaposter/<user_id>")
 @admin_level_required(6)
 @validate_formkey
 def agendaposter(user_id, v):
@@ -549,7 +549,7 @@ def agendaposter(user_id, v):
 	else:
 		return redirect(user.url)
 
-@app.route("/shadowban/<user_id>", methods=["POST"])
+@app.post("/shadowban/<user_id>")
 @admin_level_required(6)
 @validate_formkey
 def shadowban(user_id, v):
@@ -571,7 +571,7 @@ def shadowban(user_id, v):
 	return "", 204
 
 
-@app.route("/unshadowban/<user_id>", methods=["POST"])
+@app.post("/unshadowban/<user_id>")
 @admin_level_required(6)
 @validate_formkey
 def unshadowban(user_id, v):
@@ -593,7 +593,7 @@ def unshadowban(user_id, v):
 	return "", 204
 
 
-@app.route("/admin/title_change/<user_id>", methods=["POST"])
+@app.post("/admin/title_change/<user_id>")
 @admin_level_required(6)
 @validate_formkey
 def admin_title_change(user_id, v):
@@ -626,7 +626,7 @@ def admin_title_change(user_id, v):
 
 	return (redirect(user.url), user)
 
-@app.route("/api/ban_user/<user_id>", methods=["POST"])
+@app.post("/api/ban_user/<user_id>")
 @admin_level_required(6)
 @validate_formkey
 def ban_user(user_id, v):
@@ -683,7 +683,7 @@ def ban_user(user_id, v):
 	return jsonify({"message": f"@{user.username} was banned"})
 
 
-@app.route("/api/unban_user/<user_id>", methods=["POST"])
+@app.post("/api/unban_user/<user_id>")
 @admin_level_required(6)
 @validate_formkey
 def unban_user(user_id, v):
@@ -713,7 +713,7 @@ def unban_user(user_id, v):
 	if request.args.get("notoast"): return (redirect(user.url), user)
 	return jsonify({"message": f"@{user.username} was unbanned"})
 
-@app.route("/api/ban_post/<post_id>", methods=["POST"])
+@app.post("/api/ban_post/<post_id>")
 @admin_level_required(3)
 @validate_formkey
 def ban_post(post_id, v):
@@ -749,7 +749,7 @@ def ban_post(post_id, v):
 	return "", 204
 
 
-@app.route("/api/unban_post/<post_id>", methods=["POST"])
+@app.post("/api/unban_post/<post_id>")
 @admin_level_required(3)
 @validate_formkey
 def unban_post(post_id, v):
@@ -777,7 +777,7 @@ def unban_post(post_id, v):
 	return "", 204
 
 
-@app.route("/api/distinguish/<post_id>", methods=["POST"])
+@app.post("/api/distinguish/<post_id>")
 @admin_level_required(1)
 @validate_formkey
 def api_distinguish_post(post_id, v):
@@ -800,7 +800,7 @@ def api_distinguish_post(post_id, v):
 	return "", 204
 
 
-@app.route("/api/sticky/<post_id>", methods=["POST"])
+@app.post("/api/sticky/<post_id>")
 @admin_level_required(3)
 def api_sticky_post(post_id, v):
 
@@ -813,7 +813,7 @@ def api_sticky_post(post_id, v):
 
 	return "", 204
 
-@app.route("/api/pin/<post_id>", methods=["POST"])
+@app.post("/api/pin/<post_id>")
 @auth_required
 def api_pin_post(post_id, v):
 
@@ -824,7 +824,7 @@ def api_pin_post(post_id, v):
 
 	return "", 204
 
-@app.route("/api/ban_comment/<c_id>", methods=["post"])
+@app.post("/api/ban_comment/<c_id>")
 @admin_level_required(1)
 def api_ban_comment(c_id, v):
 
@@ -845,7 +845,7 @@ def api_ban_comment(c_id, v):
 	return "", 204
 
 
-@app.route("/api/unban_comment/<c_id>", methods=["post"])
+@app.post("/api/unban_comment/<c_id>")
 @admin_level_required(1)
 def api_unban_comment(c_id, v):
 
@@ -869,8 +869,8 @@ def api_unban_comment(c_id, v):
 	return "", 204
 
 
-@app.route("/api/distinguish_comment/<c_id>", methods=["post"])
-@app.route("/api/v1/distinguish_comment/<c_id>", methods=["post"])
+@app.post("/api/distinguish_comment/<c_id>")
+@app.post("/api/v1/distinguish_comment/<c_id>")
 @auth_required
 @api("read")
 def admin_distinguish_comment(c_id, v):
@@ -898,14 +898,14 @@ def admin_distinguish_comment(c_id, v):
 	return jsonify({"html":html, "api":html})
 
 
-@app.route("/admin/dump_cache", methods=["GET"])
+@app.get("/admin/dump_cache")
 @admin_level_required(6)
 def admin_dump_cache(v):
 	cache.clear()
 	return jsonify({"message": "Internal cache cleared."})
 
 
-@app.route("/admin/ban_domain", methods=["POST"])
+@app.post("/admin/ban_domain")
 @admin_level_required(4)
 @validate_formkey
 def admin_ban_domain(v):
@@ -940,7 +940,7 @@ def admin_ban_domain(v):
 	return redirect(d.permalink)
 
 
-@app.route("/admin/nuke_user", methods=["POST"])
+@app.post("/admin/nuke_user")
 @admin_level_required(4)
 @validate_formkey
 def admin_nuke_user(v):
@@ -970,7 +970,7 @@ def admin_nuke_user(v):
 
 	return redirect(user.url)
 
-@app.route("/admin/unnuke_user", methods=["POST"])
+@app.post("/admin/unnuke_user")
 @admin_level_required(4)
 @validate_formkey
 def admin_nunuke_user(v):

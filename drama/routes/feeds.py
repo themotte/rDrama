@@ -7,7 +7,7 @@ from yattag import Doc
 
 from drama.__main__ import app
 
-@app.route('/rss/<sort>/<t>', methods=["GET"])
+@app.get('/rss/<sort>/<t>')
 def feeds_user(sort='hot', t='all'):
 
 	page = int(request.args.get("page", 1))

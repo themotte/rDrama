@@ -50,16 +50,16 @@ def banawardcomment(comment_id, v):
 	return jsonify({"message": "User banned successfully!"}), 204
 
 
-@app.route("/api/v1/post/<pid>/comment/<cid>", methods=["GET"])
+@app.get("/api/v1/post/<pid>/comment/<cid>")
 def comment_cid_api_redirect(cid=None, pid=None):
 	redirect(f'/api/v1/comment/<cid>')
 
-@app.route("/comment/<cid>", methods=["GET"])
-@app.route("/comment/<cid>", methods=["GET"])
-@app.route("/post_short/<pid>/<cid>", methods=["GET"])
-@app.route("/post_short/<pid>/<cid>/", methods=["GET"])
-@app.route("/api/v1/comment/<cid>", methods=["GET"])
-@app.route("/post/<pid>/<anything>/<cid>", methods=["GET"])
+@app.get("/comment/<cid>")
+@app.get("/comment/<cid>")
+@app.get("/post_short/<pid>/<cid>")
+@app.get("/post_short/<pid>/<cid>/")
+@app.get("/api/v1/comment/<cid>")
+@app.get("/post/<pid>/<anything>/<cid>")
 @app.route("/api/vue/comment/<cid>")
 @auth_desired
 @api("read")
@@ -229,8 +229,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			'api': lambda: top_comment.json
 			}
 
-@app.route("/api/comment", methods=["POST"])
-@app.route("/api/v1/comment", methods=["POST"])
+@app.post("/api/comment")
+@app.post("/api/v1/comment")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
@@ -635,7 +635,7 @@ def api_comment(v):
 
 
 
-@app.route("/edit_comment/<cid>", methods=["POST"])
+@app.post("/edit_comment/<cid>")
 @is_not_banned
 @validate_formkey
 @api("edit")
@@ -868,8 +868,8 @@ def delete_comment(cid, v):
 	return {"html": lambda: ("", 204),
 			"api": lambda: ("", 204)}
 
-@app.route("/undelete/comment/<cid>", methods=["POST"])
-@app.route("/api/v1/undelete/comment/<cid>", methods=["POST"])
+@app.post("/undelete/comment/<cid>")
+@app.post("/api/v1/undelete/comment/<cid>")
 @auth_required
 @validate_formkey
 @api("delete")
@@ -892,10 +892,10 @@ def undelete_comment(cid, v):
 	return {"html": lambda: ("", 204),
 			"api": lambda: ("", 204)}
 
-@app.route("/embed/comment/<cid>", methods=["GET"])
-@app.route("/embed/post/<pid>/comment/<cid>", methods=["GET"])
-@app.route("/api/v1/embed/comment/<cid>", methods=["GET"])
-@app.route("/api/v1/embed/post/<pid>/comment/<cid>", methods=["GET"])
+@app.get("/embed/comment/<cid>")
+@app.get("/embed/post/<pid>/comment/<cid>")
+@app.get("/api/v1/embed/comment/<cid>")
+@app.get("/api/v1/embed/post/<pid>/comment/<cid>")
 def embed_comment_cid(cid, pid=None):
 
 	comment = get_comment(int(cid))
@@ -910,7 +910,7 @@ def embed_comment_cid(cid, pid=None):
 
 	return render_template("embeds/comment.html", c=comment)
 
-@app.route("/comment_pin/<cid>", methods=["POST"])
+@app.post("/comment_pin/<cid>")
 @auth_required
 @validate_formkey
 def toggle_comment_pin(cid, v):
@@ -945,7 +945,7 @@ def toggle_comment_pin(cid, v):
 	return jsonify({"html":html})
 	
 	
-@app.route("/save_comment/<cid>", methods=["POST"])
+@app.post("/save_comment/<cid>")
 @auth_required
 @validate_formkey
 def save_comment(cid, v):
@@ -961,7 +961,7 @@ def save_comment(cid, v):
 
 	return "", 204
 
-@app.route("/unsave_comment/<cid>", methods=["POST"])
+@app.post("/unsave_comment/<cid>")
 @auth_required
 @validate_formkey
 def unsave_comment(cid, v):

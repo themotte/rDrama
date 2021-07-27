@@ -51,7 +51,7 @@ def send_verification_email(user, email=None):
 			  )
 
 
-@app.route("/api/verify_email", methods=["POST"])
+@app.post("/api/verify_email")
 @is_not_banned
 def api_verify_email(v):
 
@@ -60,7 +60,7 @@ def api_verify_email(v):
 	return "", 204
 
 
-@app.route("/activate", methods=["GET"])
+@app.get("/activate")
 @auth_desired
 def activate(v):
 

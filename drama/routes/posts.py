@@ -52,7 +52,7 @@ def postbanaward(post_id, v):
 
 	return jsonify({"message": "User banned successfully!"}), 204
 
-@app.route("/api/publish/<pid>", methods=["POST"])
+@app.post("/api/publish/<pid>")
 @is_not_banned
 @validate_formkey
 def publish(pid, v):
@@ -64,7 +64,7 @@ def publish(pid, v):
 	g.db.commit()
 	return "", 204
 
-@app.route("/submit", methods=["GET"])
+@app.get("/submit")
 @auth_required
 def submit_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -72,10 +72,10 @@ def submit_get(v):
 	return render_template("submit.html",
 						   v=v)
 
-@app.route("/post/<pid>", methods=["GET"])
-@app.route("/post/<pid>/", methods=["GET"])
-@app.route("/post/<pid>/<anything>", methods=["GET"])
-@app.route("/api/v1/post/<pid>", methods=["GET"])
+@app.get("/post/<pid>")
+@app.get("/post/<pid>/")
+@app.get("/post/<pid>/<anything>")
+@app.get("/api/v1/post/<pid>")
 @auth_desired
 @api("read")
 def post_base36id(pid, anything=None, v=None):
@@ -246,7 +246,7 @@ def post_base36id(pid, anything=None, v=None):
 		"api":lambda:jsonify(post.json)
 		}
 
-@app.route("/edit_post/<pid>", methods=["POST"])
+@app.post("/edit_post/<pid>")
 @is_not_banned
 @validate_formkey
 def edit_post(pid, v):
@@ -550,8 +550,8 @@ def archiveorg(url):
 
 
 @app.route("/submit", methods=['POST'])
-@app.route("/api/v1/submit", methods=["POST"])
-@app.route("/api/vue/submit", methods=["POST"])
+@app.post("/api/v1/submit")
+@app.post("/api/vue/submit")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
@@ -1042,8 +1042,8 @@ def submit_post(v):
 			}
 
 
-@app.route("/delete_post/<pid>", methods=["POST"])
-@app.route("/api/v1/delete_post/<pid>", methods=["POST"])
+@app.post("/delete_post/<pid>")
+@app.post("/api/v1/delete_post/<pid>")
 @auth_required
 @api("delete")
 @validate_formkey
@@ -1063,8 +1063,8 @@ def delete_post_pid(pid, v):
 
 	return "", 204
 
-@app.route("/undelete_post/<pid>", methods=["POST"])
-@app.route("/api/v1/undelete_post/<pid>", methods=["POST"])
+@app.post("/undelete_post/<pid>")
+@app.post("/api/v1/undelete_post/<pid>")
 @auth_required
 @api("delete")
 @validate_formkey
@@ -1076,7 +1076,7 @@ def undelete_post_pid(pid, v):
 	cache.delete_memoized(frontlist)
 	return "", 204
 
-@app.route("/embed/post/<pid>", methods=["GET"])
+@app.get("/embed/post/<pid>")
 def embed_post_pid(pid):
 
 	post = get_post(int(pid))
@@ -1086,8 +1086,8 @@ def embed_post_pid(pid):
 
 	return render_template("embeds/submission.html", p=post)
 
-@app.route("/api/toggle_comment_nsfw/<cid>", methods=["POST"])
-@app.route("/api/v1/toggle_comment_nsfw/<cid>", methods=["POST"])
+@app.post("/api/toggle_comment_nsfw/<cid>")
+@app.post("/api/v1/toggle_comment_nsfw/<cid>")
 @is_not_banned
 @api("update")
 @validate_formkey
@@ -1099,8 +1099,8 @@ def toggle_comment_nsfw(cid, v):
 	g.db.add(comment)
 	return "", 204
 	
-@app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
-@app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])
+@app.post("/api/toggle_post_nsfw/<pid>")
+@app.post("/api/v1/toggle_post_nsfw/<pid>")
 @is_not_banned
 @api("update")
 @validate_formkey
@@ -1124,7 +1124,7 @@ def toggle_post_nsfw(pid, v):
 
 	return "", 204
 
-@app.route("/save_post/<pid>", methods=["POST"])
+@app.post("/save_post/<pid>")
 @auth_required
 @validate_formkey
 def save_post(pid, v):
@@ -1140,7 +1140,7 @@ def save_post(pid, v):
 
 	return "", 204
 
-@app.route("/unsave_post/<pid>", methods=["POST"])
+@app.post("/unsave_post/<pid>")
 @auth_required
 @validate_formkey
 def unsave_post(pid, v):

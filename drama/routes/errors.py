@@ -154,7 +154,7 @@ def error_503(e, v):
 		   }
 
 
-@app.route("/allow_nsfw", methods=["POST"])
+@app.post("/allow_nsfw")
 def allow_nsfw():
 
 	session["over_18"] = int(time.time()) + 3600
@@ -162,7 +162,7 @@ def allow_nsfw():
 	return redirect(request.form.get("redir"))
 
 
-@app.route("/error/<error>", methods=["GET"])
+@app.get("/error/<error>")
 @auth_desired
 def error_all_preview(error, v):
 
