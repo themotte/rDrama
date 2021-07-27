@@ -9,18 +9,28 @@ from flask import g, jsonify, request
 def banaward_trigger(post=None, comment=None):
 
     author = post.author if post else comment.author
+    link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
 
-    if not author.is_suspended or author.admin_level < 1:
-        author.ban(reason="1-day ban award used", days=1)
+    if author.admin_level < 1:
+        if not author.is_suspended:
+            author.ban(reason="1-day ban award used", days=1)
 
-        link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
+            send_notification(1046, author, f"Your Drama account has been suspended for a day for {link}. It sucked and you should feel bad.")
+        elif author.unban_utc > 0:
+            author.unban_utc += 24*60*60
+            g.db.add(author)
 
-        send_notification(1046, author, f"Your Drama account has been suspended for a day for {link}. It sucked and you should feel bad.")
+            send_notification(1046, author,
+                              f"Your Drama account has been suspended for yet another day for {link}. Seriously man?")
 
 
 ACTIONS = {
     "ban": banaward_trigger
 }
+
+ALLOW_MULTIPLE = (
+    "ban",
+)
 
 
 @app.get("/api/awards")
@@ -69,17 +79,19 @@ def award_post(pid, v):
     if post.author_id == v.id:
         return jsonify({"error": "You can't award yourself."}), 403
 
-    existing_award = g.db.query(AwardRelationship).filter(
-        and_(
-            AwardRelationship.submission_id == post.id,
-            AwardRelationship.user_id == v.id
-        )
-    ).first()
+    # existing_award = g.db.query(AwardRelationship).filter(
+    #     and_(
+    #         AwardRelationship.submission_id == post.id,
+    #         AwardRelationship.user_id == v.id,
+    #         AwardRelationship.kind == kind
+    #     )
+    # ).first()
 
-    if existing_award:
-        return jsonify({"error": "You already awarded this post."}), 409
+    if kind not in ALLOW_MULTIPLE:
+        return jsonify({"error": "You can't give that award multiple times to the same post."}), 409
 
     post_award.submission_id = post.id
+    print(f"give award to pid {post_award.submission_id} ({post.id})")
     g.db.add(post_award)
 
     msg = f"@{v.username} has given your [post]({post.permalink}) the {AWARDS[kind]['title']} Award!"
@@ -129,15 +141,15 @@ def award_comment(cid, v):
     if c.author_id == v.id:
         return jsonify({"error": "You can't award yourself."}), 403
 
-    existing_award = g.db.query(AwardRelationship).filter(
-        and_(
-            AwardRelationship.comment_id == c.id,
-            AwardRelationship.user_id == v.id
-        )
-    ).first()
+    # existing_award = g.db.query(AwardRelationship).filter(
+    #     and_(
+    #         AwardRelationship.comment_id == c.id,
+    #         AwardRelationship.user_id == v.id
+    #     )
+    # ).first()
 
-    if existing_award:
-        return jsonify({"error": "You already awarded this comment."}), 409
+    if kind not in ALLOW_MULTIPLE:
+        return jsonify({"error": "You can't give that award multiple times to the same comment."}), 409
 
     comment_award.comment_id = c.id
     g.db.add(comment_award)
