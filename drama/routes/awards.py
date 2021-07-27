@@ -167,3 +167,45 @@ def award_comment(cid, v):
         ACTIONS[kind](comment=c)
 
     return "", 204
+
+@app.get("/admin/user_award")
+@auth_required
+def admin_userawards_get(v):
+
+    if v.admin_level < 6:
+        abort(403)
+
+    return render_template("admin/user_award.html", awards=list(AWARDS.values()), v=v)
+
+@app.post("/admin/user_award")
+@auth_required
+@validate_formkey
+def admin_userawards_post(v):
+
+    if v.admin_level < 6:
+        abort(403)
+
+    u = get_user(request.form.get("username", '1'), graceful=False, v=v)
+
+    awards = []
+
+    latest = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first()
+    thing = latest.id
+
+    for key, value in request.form.items():
+        if key not in AWARDS:
+            continue
+
+        if value:
+            for x in range(int(value)):
+                thing += 1
+
+                awards.append(AwardRelationship(
+                    id=thing,
+                    user_id=u.id,
+                    kind=key
+                ))
+
+    g.db.bulk_save_objects(awards)
+
+    return redirect(f'/@{u.username}')
