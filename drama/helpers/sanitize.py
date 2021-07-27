@@ -1,7 +1,7 @@
 import bleach
 from bs4 import BeautifulSoup
 from bleach.linkifier import LinkifyFilter
-from urllib.parse import ParseResult, urlunparse
+from urllib.parse import ParseResult, urlunparse, urlencode, urlparse, parse_qs
 from functools import partial
 from .get import *
 from os import path
@@ -205,6 +205,13 @@ def sanitize(text, linkgen=False, flair=False):
 
 	for i in re.finditer('(/comments/.*?)"', sanitized):
 		url = i.group(1)
-		if not "sort=" in url: sanitized = sanitized.replace(url, f"{url}?sort=controversial")
+		p = urlparse(url).query
+		p = parse_qs(p)
+
+		if 'sort' not in p:
+			p['sort'] = ['controversial']
+
+		url_noquery = url.split('?')[0]
+		sanitized = sanitized.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
 	return sanitized

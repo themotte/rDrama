@@ -717,7 +717,6 @@ CREATE TABLE public.domains (
     can_submit boolean,
     can_comment boolean,
     reason integer,
-    show_thumbnail boolean,
     embed_function character varying(64),
     embed_template character varying(32) DEFAULT NULL::character varying,
     sandbox_embed boolean DEFAULT false
@@ -870,7 +869,7 @@ CREATE TABLE public.modactions (
     target_comment_id integer,
     created_utc integer DEFAULT 0,
     kind character varying(32) DEFAULT NULL::character varying,
-    _note character varying(256) DEFAULT NULL::character varying
+    _note character varying(350) DEFAULT NULL::character varying
 );
 
 
