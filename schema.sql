@@ -717,7 +717,6 @@ CREATE TABLE public.domains (
     can_submit boolean,
     can_comment boolean,
     reason integer,
-    show_thumbnail boolean,
     embed_function character varying(64),
     embed_template character varying(32) DEFAULT NULL::character varying,
     sandbox_embed boolean DEFAULT false
