@@ -69,7 +69,7 @@ def settings_profile_post(v):
 								   v=v,
 								   error="You didn't change anything")
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif))', bio.lower(), re.MULTILINE): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif))', bio.lower(), re.MULTILINE): bio = bio.replace(i.group(1), f'![]({i.group(1)})').replace(i.group(1).upper(), f'![]({i.group(1)})')
 		bio = bio.replace("\n", "\n\n")
 		with CustomRenderer() as renderer:
 			bio_html = renderer.render(mistletoe.Document(bio))
