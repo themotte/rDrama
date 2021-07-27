@@ -843,8 +843,8 @@ def edit_comment(cid, v):
 
 	return jsonify({"html": c.body_html})
 
-@app.route("/delete/comment/<cid>", methods=["POST"])
-@app.route("/api/v1/delete/comment/<cid>", methods=["POST"])
+@app.route("/delete/comment/<cid>")
+@app.route("/api/v1/delete/comment/<cid>")
 @auth_required
 @validate_formkey
 @api("delete")
