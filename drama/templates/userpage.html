@@ -67,7 +67,7 @@
 						<div class="ml-3 w-100">
 							{% if u.is_banned %}
 								<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
-								{% if unban %} <h5 style="color:#ff66ac;">until {{unban}}</h5>{% endif %}
+								{% if unban %} <h5 style="color:#ff66ac;">{{unban}}</h5>{% endif %}
 							{% endif %}
 							
 							<div class="d-flex align-items-center mt-1 mb-2">
@@ -282,7 +282,7 @@
 			<div class="mt-n3 py-3">
 				{% if u.is_banned %}
 					<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
-					{% if unban %} <h5 style="color:#ff66ac;">until {{unban}}</h5>{% endif %}
+					{% if unban %} <h5 style="color:#ff66ac;">{{unban}}</h5>{% endif %}
 				{% endif %}
 				<a class="text-black"><h1 class="h5 d-inline-block" style="color: #{{u.namecolor}}">{{u.username}}</h1></a>
 				

@@ -278,6 +278,28 @@ class User(Base, Stndrd, Age_times):
 		return f"<User(username={self.username})>"
 
 	@property
+	def unban_string(self):
+		if self.unban_utc == 0:
+			return "permanently banned"
+
+		wait = self.unban_utc - int(time.time())
+
+		if wait < 60:
+			text = "a few moments"
+		else:
+			days = wait//(24*60*60)
+			wait -= days*24*60*60
+
+			hours = wait//(60*60)
+			wait -= hours*60*60
+
+			mins = wait//60
+
+			text = f"{days} days {hours:02d} hours {mins:02d} minutes"
+
+		return f"Unban in {text}"
+
+	@property
 	@lazy
 	def post_notifications_count(self):
 		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(

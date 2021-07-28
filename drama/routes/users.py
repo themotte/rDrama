@@ -304,9 +304,9 @@ def u_username(username, v=None):
 	listing = get_posts(ids, v=v)
 
 	if u.unban_utc:
-		unban = datetime.fromtimestamp(u.unban_utc).strftime('%c')
+		#unban = datetime.fromtimestamp(u.unban_utc).strftime('%c')
 		return {'html': lambda: render_template("userpage.html",
-												unban=unban,
+												unban=u.unban_string,
 												u=u,
 												v=v,
 												listing=listing,
