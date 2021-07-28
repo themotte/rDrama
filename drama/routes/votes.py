@@ -149,7 +149,8 @@ def api_vote_comment(comment_id, new, v):
 
 		g.db.add(vote)
 		
-	g.db.flush()
+	try: g.db.flush()
+	except: g.db.rollback()
 	comment.upvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=1).count()
 	comment.downvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=-1).count()
 	g.db.add(comment)

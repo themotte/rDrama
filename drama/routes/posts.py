@@ -1138,7 +1138,7 @@ def save_post(pid, v):
 	g.db.add(new_save)
 
 	try: g.db.flush()
-	except: abort(422)
+	except: g.db.rollback()
 
 	return "", 204
 
