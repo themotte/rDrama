@@ -175,7 +175,6 @@ def check_csam(post):
 
 		db.commit()
 
-		# nuke aws
 		delete_file(parsed_url.path.lstrip('/'))
 		db.close()
 		return
@@ -209,7 +208,6 @@ def check_csam(post):
 
 		db.commit()
 
-		# nuke aws
 		delete_file(parsed_url.path.lstrip('/'))
 
 	remove(tempname)
@@ -276,7 +274,6 @@ def check_csam_url(url, v, delete_content_function):
 
 		db.commit()
 
-		# nuke aws
 		delete_file(parsed_url.path.lstrip('/'))
 
 	remove(tempname)

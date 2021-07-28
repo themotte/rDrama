@@ -12,7 +12,7 @@ from drama.helpers.sanitize import *
 from drama.helpers.markdown import *
 from drama.helpers.security import *
 from drama.helpers.get import *
-from drama.helpers.aws import *
+from drama.helpers.imageupload import *
 from drama.classes import *
 from drama.classes.domains import reasons as REASONS
 from flask import *
@@ -465,7 +465,7 @@ def admin_domain_domain(domain_name, v):
 def admin_image_purge(v):
 	
 	url=request.form.get("url")
-	aws.delete_file(url)
+	images.delete_file(url)
 	return redirect("/admin/image_purge")
 
 

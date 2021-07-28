@@ -97,8 +97,6 @@ app.config["CACHE_REDIS_URL"] = environ.get(
 app.config["CACHE_DEFAULT_TIMEOUT"] = 60
 app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
-app.config["S3_BUCKET"]=environ.get("S3_BUCKET_NAME","i.rdrama.net").strip()
-
 app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 10))
 
 redispool=ConnectionPool(

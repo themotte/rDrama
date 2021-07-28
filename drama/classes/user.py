@@ -3,7 +3,7 @@ from secrets import token_hex
 import pyotp
 
 from drama.helpers.discord import delete_role
-from drama.helpers.aws import *
+from drama.helpers.images import *
 from .alts import Alt
 from .submission import SaveRelationship
 from .comment import Notification
