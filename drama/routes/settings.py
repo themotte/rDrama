@@ -465,6 +465,9 @@ def settings_block_user(v):
 	if not existing: send_block_notif(v.id, user.id, f"@{v.username} has blocked you!")
 
 	if request.args.get("notoast"): return "", 204
+
+	if v.admin_level == 1: return jsonify({"message": f"@{user.username} banned!"})
+
 	return jsonify({"message": f"@{user.username} blocked."})
 
 
@@ -487,6 +490,9 @@ def settings_unblock_user(v):
 	if not existing: send_unblock_notif(v.id, user.id, f"@{v.username} has unblocked you!")
 
 	if request.args.get("notoast"): return "", 204
+
+	if v.admin_level == 1: return jsonify({"message": f"@{user.username} unbanned!"})
+
 	return jsonify({"message": f"@{user.username} unblocked."})
 
 

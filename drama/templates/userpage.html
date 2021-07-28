@@ -65,9 +65,9 @@
 							<a href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
 						</div>
 						<div class="ml-3 w-100">
-							{% if u.is_banned %}
+							{% if u.is_suspended %}
 								<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
-								{% if unban %} <h5 style="color:#ff66ac;">until {{unban}}</h5>{% endif %}
+								{% if unban %} <h5 style="color:#ff66ac;">{{unban}}</h5>{% endif %}
 							{% endif %}
 							
 							<div class="d-flex align-items-center mt-1 mb-2">
@@ -77,13 +77,13 @@
 									<i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{u.original_username}}"></i>
 								</span>
 								{% endif %}
-								{% if u.admin_level > 1 %}
+								{% if u.admin_level > 1 or (u.admin_level == 1 and (not v or v.admin_level < 2)) %}
 								<span>
 									<i class="fas fa-broom text-admin align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Badmin"></i>
 								</span>
 								{% elif u.admin_level == 1 %}
 								<span>
-									<i class="fas fa-broom align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Former Admin"></i>
+									<i class="fas fa-broom align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Fake Admin"></i>
 								</span>
 								{% endif %}
 								{% if v and v.has_follower(u) %}
@@ -157,7 +157,7 @@
 						<a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
 						<a href="/views" class="btn btn-secondary">Profile views</a>
 					 {% endif %}
-					 {% if v and v.id != u.id and v.admin_level > 0 and u.admin_level == 0 %}
+					 {% if v and v.id != u.id and v.admin_level > 1 and u.admin_level <= 1 %}
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
 							<div class="w-lg-100">
@@ -280,9 +280,9 @@
 				<a href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
 			</div>
 			<div class="mt-n3 py-3">
-				{% if u.is_banned %}
+				{% if u.is_suspended %}
 					<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
-					{% if unban %} <h5 style="color:#ff66ac;">until {{unban}}</h5>{% endif %}
+					{% if unban %} <h5 style="color:#ff66ac;">{{unban}}</h5>{% endif %}
 				{% endif %}
 				<a class="text-black"><h1 class="h5 d-inline-block" style="color: #{{u.namecolor}}">{{u.username}}</h1></a>
 				
@@ -337,7 +337,7 @@
 						<input type="submit" value="Submit" class="btn btn-primary mt-3">
 					</form>
 					
-					 {% if v.admin_level > 0 and u.admin_level == 0 %}
+					 {% if v.admin_level > 1 and u.admin_level <= 1 %}
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
 
