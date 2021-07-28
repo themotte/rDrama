@@ -260,7 +260,7 @@ def participation_stats(v):
 			"comment_votes": g.db.query(CommentVote).count(),
 			"comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
 			"total_awards": g.db.query(AwardRelationship).count(),
-			"awards_given": g.db.query(AwardRelationship).filter(AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).count()
+			"awards_given": g.db.query(AwardRelationship).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
 			}
 
 
