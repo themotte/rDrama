@@ -52,6 +52,7 @@ def notifications(v):
 				listing.append(c)
 				c.replies = c.replies2
 		elif c.parent_submission and c not in listing:
+			print(c.body)
 			listing.append(c)
 		else:
 			pass
