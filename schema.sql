@@ -225,7 +225,8 @@ CREATE TABLE public.users (
     animatedname boolean,
     suicide_utc integer,
     post_count integer,
-    comment_count integer
+    comment_count integer,
+    highres text
 );
 
 
