@@ -633,7 +633,7 @@ def ban_user(user_id, v):
 	
 	user = g.db.query(User).filter_by(id=user_id).first()
 
-	if user.admin_level != 0: abort(403)
+	if user.admin_level >= v.admin_level: abort(403)
 
 	# check for number of days for suspension
 	days = int(request.form.get("days")) if request.form.get('days') else 0
@@ -642,7 +642,7 @@ def ban_user(user_id, v):
 
 	if not user: abort(400)
 
-	if user.admin_level > 0: abort(403)
+	#if user.admin_level > 0: abort(403)
 	
 	if days > 0:
 		if message:

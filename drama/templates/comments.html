@@ -336,7 +336,7 @@
 							{% endif %}
 				{% endif %}						
 
-						{% if v and c.post and (v.admin_level == 6 or v.id == c.post.author_id) %}
+						{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) %}
 						<div class="dropdown-divider"></div>
 							{% if c.level == 1 %}
 								<a class="dropdown-item text-info" id="pin-comment-{{c.base36id}}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.base36id}}" onclick="post('/comment_pin/{{c.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack fa-rotate--45 fa-fw text-info"></i>{{"Unpin" if c.is_pinned else "Pin"}}</a>
