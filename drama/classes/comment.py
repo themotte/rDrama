@@ -156,7 +156,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'upvotes': self.upvotes_fuzzed,
 			'downvotes': self.downvotes_fuzzed,
 			#'award_count': self.award_count,
-			'is_bot': self.is_bot
+			'is_bot': self.is_bot,
+			'flags': self.flags,
 			}
 
 		if self.ban_reason:

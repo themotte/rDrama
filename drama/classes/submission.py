@@ -240,7 +240,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				#'award_count': self.award_count,
 				'meta_title': self.meta_title,
 				'meta_description': self.meta_description,
-				'voted': self.voted
+				'voted': self.voted,
+				'flags': self.flags,
 				}
 		if self.ban_reason:
 			data["ban_reason"]=self.ban_reason
