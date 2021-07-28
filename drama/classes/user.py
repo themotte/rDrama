@@ -285,7 +285,7 @@ class User(Base, Stndrd, Age_times):
 		wait = self.unban_utc - int(time.time())
 
 		if wait < 60:
-			text = "a few moments"
+			text = f"{wait}s"
 		else:
 			days = wait//(24*60*60)
 			wait -= days*24*60*60
@@ -295,7 +295,7 @@ class User(Base, Stndrd, Age_times):
 
 			mins = wait//60
 
-			text = f"{days} days {hours:02d} hours {mins:02d} minutes"
+			text = f"{days}d {hours:02d}h {mins:02d}m"
 
 		return f"Unban in {text}"
 
