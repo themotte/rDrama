@@ -63,21 +63,15 @@
 		<div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap pl-2 pl-md-0 p-0 mr-md-2">
 
 			<div class="position-relative d-none d-md-block" style="z-index: 3;">
-				{% if not p.realurl(v) %}
-				<a href="{{p.permalink}}" {% if v and v.newtab %}target="_blank"{% endif %} rel="{% if p.author.is_private %}nofollow {% endif %}noopener">
-					<img src="/assets/images/default_thumb_text.png" class="post-img border-0" alt="text post thumbnail">
-				</a>
-
-				{% elif p.is_image %}
-				<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
-					<img src="{{p.thumb_url}}" class="post-img">
-				</a>
-
+				
+				{% if p.is_image %}
+					<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
 				{% else %}
-				<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
-					<img src="{{p.thumb_url}}" class="post-img" alt="">
-				</a>
+					<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
 				{% endif %}
+						<img src="{{p.thumb_url}}" class="post-img" alt="">
+					</a>
+				
 			</div>
 
 

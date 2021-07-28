@@ -205,8 +205,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	#@lazy
 	def thumb_url(self):
-
 		if self.over_18: return f"/assets/images/nsfw.png"
+		elif not p.url: return f"/assets/images/default_thumb_text.png"
 		elif self.thumburl: return self.thumburl
 		elif "youtu.be" in self.domain or "youtube.com" in self.domain: return '/assets/images/default_thumb_yt.png'
 		else: return '/assets/images/default_thumb_link.png'
