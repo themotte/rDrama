@@ -77,16 +77,6 @@
 				<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
 					<img src="{{p.thumb_url}}" class="post-img" alt="">
 				</a>
-				
-				{% elif "youtu.be" in p.domain or "youtube.com" in p.domain %}
-				<a target="_blank" href="{{p.realurl(v)}}" target="_blank" rel="nofollow noopener">
-					<img src="{{p.thumb_url if p.thumb_url else '/assets/images/default_thumb_yt.png'}}" class="post-img border-0" alt="generic youtube embed thumbnail">
-				</a>
-				
-				{% else %}
-				<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
-					<img src="/assets/images/default_thumb_link.png" class="post-img border-0" alt="generic link post thumbnail">
-				</a>
 				{% endif %}
 			</div>
 

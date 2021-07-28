@@ -205,9 +205,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	#@lazy
 	def thumb_url(self):
-		
+
 		if self.over_18: return f"/assets/images/nsfw.png"
-		return self.thumburl
+		elif self.thumburl: return self.thumburl
+		elif "youtu.be" in self.domain or "youtube.com" in self.domain: return '/assets/images/default_thumb_yt.png'
+		else: return '/assets/images/default_thumb_link.png'
 
 	@property
 
@@ -233,6 +235,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'score': self.score_fuzzed,
 				'upvotes': self.upvotes_fuzzed,
 				'downvotes': self.downvotes_fuzzed,
+				'stickied': self.stickied,
 				#'award_count': self.award_count,
 				'meta_title': self.meta_title,
 				'meta_description': self.meta_description,
