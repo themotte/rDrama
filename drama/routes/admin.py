@@ -257,10 +257,10 @@ def participation_stats(v):
 			"comments_last_24h": g.db.query(Comment).filter(Comment.created_utc > day).count(),
 			"post_votes": g.db.query(Vote).count(),
 			"post_voting_users": g.db.query(Vote.user_id).distinct().count(),
-			"post_votes_last_24h": g.db.query(Vote).filter(Vote.created_utc > day).count(),
 			"comment_votes": g.db.query(CommentVote).count(),
 			"comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
-			"comment_votes_last_24h": g.db.query(CommentVote).filter(CommentVote.created_utc > day).count()
+			"total_awards": g.db.query(AwardRelationship).count(),
+			"awards_given": g.db.query(AwardRelationship).filter(AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).count()
 			}
 
 
