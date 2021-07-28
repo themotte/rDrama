@@ -104,6 +104,12 @@ class User(Base, Stndrd, Age_times):
 		lazy="dynamic",
 		primaryjoin="User.id==SaveRelationship.user_id")
 
+	awards = relationship(
+		"AwardRelationship",
+		lazy="dynamic",
+		primaryjoin="User.id==AwardRelationship.user_id"
+	)
+
 	# properties defined as SQL server-side functions
 	referral_count = deferred(Column(Integer, server_default=FetchedValue()))
 

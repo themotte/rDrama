@@ -408,6 +408,14 @@
 			}
 		}
 
+		// award modal
+
+		function awardModal(link) {
+			var target = document.getElementById("awardTarget");
+
+			target.value = link;
+		}
+
 		// Expand Images on Desktop
 
 		function expandDesktopImage(image, link) {
@@ -1072,6 +1080,7 @@
 </div>
 
 {% if v %}
+{% include "award_modal.html" %}
 {% include "flag_post_modal.html" %}
 {% include "flag_comment_modal.html" %}
 {% include "gif_modal.html" %}
