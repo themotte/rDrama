@@ -389,6 +389,13 @@
 							><i class="fas fa-user-slash text-danger"></i>Unblock user</a></li>
 						{% endif %}
 
+						{% if not v.id==p.author_id and v.admin_level == 1 %}
+							<li id="sex-user-{{p.base36id}}" class="list-inline-item{% if p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/block?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.base36id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.base36id}}').classList.toggle('d-none');})"
+							><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
+							<li id="unsex-user-{{p.base36id}}" class="list-inline-item{% if not p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.base36id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.base36id}}').classList.toggle('d-none');})"
+							><i class="fas fa-user-slash text-danger"></i>Unban user</a></li>
+						{% endif %}
+
 						{% if v.admin_level >=3 and v.id!=p.author_id %}
 						{% if p.author.is_banned %}
 						<li class="list-inline-item"><a  href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{p.author_id}}')"
