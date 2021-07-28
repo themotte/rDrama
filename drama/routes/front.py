@@ -69,8 +69,8 @@ def notifications(v):
 						   render_replies=True,
 						   is_notification_page=True)
 
-
-def frontlist(v=None, sort="hot", page=1,t="all", filter_words='', **kwargs):
+@cache.memoize(timeout=1500)
+def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words='', **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False,stickied=False,private=False).filter(Submission.deleted_utc == 0)
 	if v and v.admin_level == 0:
@@ -169,7 +169,12 @@ def frontlist(v=None, sort="hot", page=1,t="all", filter_words='', **kwargs):
 				post.views = post.views + random.randint(7,10)
 				g.db.add(post)
 
-	return [x for x in posts if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)][:26]
+	posts = [x for x in posts if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)][:26]
+
+	if ids_only:
+		posts = [x.id for x in posts]
+		return posts
+	return posts
 
 @app.get("/")
 @app.get("/api/v1/listing")
@@ -193,7 +198,7 @@ def front_all(v):
 	sort=request.args.get("sort", defaultsorting)
 	t=request.args.get('t', defaulttime)
 
-	posts = frontlist(sort=sort,
+	ids = frontlist(sort=sort,
 					page=page,
 					t=t,
 					v=v,
@@ -203,8 +208,11 @@ def front_all(v):
 					)
 
 	# check existence of next page
-	next_exists = (len(posts) == 26)
-	posts = posts[:25]
+	next_exists = (len(ids) == 26)
+	ids = ids[0:25]
+
+	# check if ids exist
+	posts = get_posts(ids, v=v)
 
 	if request.path == "/": return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 	else: return jsonify({"data": [x.json for x in posts], "next_exists": next_exists})
@@ -303,7 +311,7 @@ def changelog(v):
 
 	# check existence of next page
 	next_exists = (len(ids) == 26)
-	ids = ids[:25]
+	ids = ids[0:25]
 
 	# check if ids exist
 	posts = get_posts(ids, v=v)
@@ -418,7 +426,7 @@ def all_comments(v):
 
 	next_exists = len(idlist) == 26
 
-	idlist = idlist[:25]
+	idlist = idlist[0:25]
 
 	return {"html": lambda: render_template("home_comments.html",
 											v=v,
