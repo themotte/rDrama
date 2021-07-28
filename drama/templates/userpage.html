@@ -65,7 +65,7 @@
 							<a href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
 						</div>
 						<div class="ml-3 w-100">
-							{% if u.is_banned %}
+							{% if u.is_suspended %}
 								<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
 								{% if unban %} <h5 style="color:#ff66ac;">{{unban}}</h5>{% endif %}
 							{% endif %}
@@ -280,7 +280,7 @@
 				<a href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
 			</div>
 			<div class="mt-n3 py-3">
-				{% if u.is_banned %}
+				{% if u.is_suspended %}
 					<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
 					{% if unban %} <h5 style="color:#ff66ac;">{{unban}}</h5>{% endif %}
 				{% endif %}
