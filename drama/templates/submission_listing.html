@@ -73,7 +73,7 @@
 					<img src="{{p.thumb_url}}" class="post-img">
 				</a>
 
-				{% elif p.thumb_url %}
+				{% else %}
 				<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
 					<img src="{{p.thumb_url}}" class="post-img" alt="">
 				</a>
