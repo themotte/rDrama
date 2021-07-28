@@ -204,7 +204,7 @@ def front_all(v):
 
 	# check existence of next page
 	next_exists = (len(posts) == 26)
-	posts = posts[0:25]
+	posts = posts[:25]
 
 	if request.path == "/": return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 	else: return jsonify({"data": [x.json for x in posts], "next_exists": next_exists})
@@ -303,7 +303,7 @@ def changelog(v):
 
 	# check existence of next page
 	next_exists = (len(ids) == 26)
-	ids = ids[0:25]
+	ids = ids[:25]
 
 	# check if ids exist
 	posts = get_posts(ids, v=v)
@@ -418,7 +418,7 @@ def all_comments(v):
 
 	next_exists = len(idlist) == 26
 
-	idlist = idlist[0:25]
+	idlist = idlist[:25]
 
 	return {"html": lambda: render_template("home_comments.html",
 											v=v,

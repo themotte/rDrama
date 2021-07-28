@@ -229,7 +229,7 @@ def request_api_keys(v):
 		app_name=request.form.get('name'),
 		redirect_uri=request.form.get('redirect_uri'),
 		author_id=v.id,
-		description=request.form.get("description")[0:256]
+		description=request.form.get("description")[:256]
 	)
 
 	g.db.add(new_app)
@@ -267,7 +267,7 @@ def edit_oauth_app(v, aid):
 
 	app.redirect_uri = request.form.get('redirect_uri')
 	app.app_name = request.form.get('name')
-	app.description = request.form.get("description")[0:256]
+	app.description = request.form.get("description")[:256]
 
 	g.db.add(app)
 
