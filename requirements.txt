@@ -17,7 +17,6 @@ MarkupSafe
 matplotlib
 mistletoe
 multidict
-newrelic
 numpy
 piexif
 Pillow
