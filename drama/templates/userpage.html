@@ -62,7 +62,7 @@
 				<div class="container-fluid">
 					<div class="d-md-flex text-center text-md-left">
 						<div>
-							<a href="{{u.profile_url}}"><img src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
+							<a href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
 						</div>
 						<div class="ml-3 w-100">
 							{% if u.is_banned %}
@@ -277,7 +277,7 @@
 	<div class="row border-bottom">
 		<div class="col">
 			<div style="margin-top: -34px;">
-				<a href="{{u.profile_url}}"><img src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
+				<a href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
 			</div>
 			<div class="mt-n3 py-3">
 				{% if u.is_banned %}

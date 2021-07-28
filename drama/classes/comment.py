@@ -149,6 +149,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'deleted_utc': self.deleted_utc,
 			'is_nsfw': self.over_18,
 			'permalink': self.permalink,
+			'is_pinned': self.is_pinned,
+			'distinguish_level': self.distinguish_level,
 			'post_id': self.post.base36id,
 			'score': self.score_fuzzed,
 			'upvotes': self.upvotes_fuzzed,

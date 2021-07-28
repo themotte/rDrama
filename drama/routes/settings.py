@@ -329,9 +329,10 @@ def settings_images_profile(v):
 		g.db.rollback()
 		abort(413)
 
-	v.profileurl = None
+	highres = upload_file(name=f"profile.gif", file=request.files["profile"])
 	imageurl = upload_file(name=f"profile.gif", file=request.files["profile"], resize=(100, 100))
 	if imageurl:
+		v.highres = highres
 		v.profileurl = imageurl
 		g.db.add(v)
 

@@ -196,6 +196,7 @@
 			{% if c.flags %}
 			<div id="flaggers-{{c.id}}" class="flaggers">
 				<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+				<pre></pre>
 				<ul style="padding-left:20px; margin-bottom: 0;">
 					{% for f in c.flags %}
 						<li><a href="{{f.user.url}}">@{{f.user.username}}</a>: {{f.reason}}</li>

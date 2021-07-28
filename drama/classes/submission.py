@@ -236,6 +236,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'upvotes': self.upvotes_fuzzed,
 				'downvotes': self.downvotes_fuzzed,
 				'stickied': self.stickied,
+				'distinguish_level': self.distinguish_level,
 				#'award_count': self.award_count,
 				'meta_title': self.meta_title,
 				'meta_description': self.meta_description,
