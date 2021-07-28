@@ -33,6 +33,8 @@ class User(Base, Stndrd, Age_times):
 	css = deferred(Column(String))
 	profilecss = deferred(Column(String))
 	passhash = deferred(Column(String))
+	post_count = Column(Integer, default=0)
+	comment_count = Column(Integer, default=0)
 	banawards = Column(Integer, default=0)
 	created_utc = Column(Integer, default=0)
 	suicide_utc = Column(Integer, default=0)
@@ -330,16 +332,6 @@ class User(Base, Stndrd, Age_times):
 		return self.notifications.join(Notification.comment).filter(Notification.read == False,
 																	Comment.is_banned == False,
 																	Comment.deleted_utc == 0).count()
-
-	@property
-	@lazy
-	def post_count(self):
-		return self.submissions.filter_by(is_banned=False, deleted_utc=0).count()
-
-	@property
-	@lazy
-	def comment_count(self):
-		return self.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 
 	@property
 	@lazy

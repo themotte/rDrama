@@ -135,6 +135,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	@property
 	def json_raw(self):
+		flags = {}
+		for f in self.flags: flags[f.user.username] = f.reason
+
 		data= {
 			'id': self.base36id,
 			'fullname': self.fullname,
@@ -157,7 +160,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'downvotes': self.downvotes_fuzzed,
 			#'award_count': self.award_count,
 			'is_bot': self.is_bot,
-			'flags': self.flags,
+			'flags': flags,
 			}
 
 		if self.ban_reason:

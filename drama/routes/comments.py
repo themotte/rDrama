@@ -60,7 +60,7 @@ def comment_cid_api_redirect(cid=None, pid=None):
 @app.get("/post_short/<pid>/<cid>/")
 @app.get("/api/v1/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
-@app.route("/api/vue/comment/<cid>")
+@app.get("/api/vue/comment/<cid>")
 @auth_desired
 @api("read")
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
@@ -625,6 +625,9 @@ def api_comment(v):
 	cache.delete_memoized(comment_idlist)
 	cache.delete_memoized(User.commentlisting, v)
 
+	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
+	g.db.add(v)
+
 	return {"html": lambda: jsonify({"html": render_template("comments.html",
 															 v=v,
 															 comments=[c],
@@ -843,8 +846,8 @@ def edit_comment(cid, v):
 
 	return jsonify({"html": c.body_html})
 
-@app.route("/delete/comment/<cid>", methods=["GET", "POST"])
-@app.route("/api/v1/delete/comment/<cid>", methods=["GET", "POST"])
+@app.post("/delete/comment/<cid>")
+@app.post("/api/v1/delete/comment/<cid>")
 @auth_required
 @validate_formkey
 @api("delete")

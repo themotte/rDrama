@@ -373,7 +373,7 @@ def edit_post(pid, v):
 
 	return redirect(p.permalink)
 
-@app.route("/submit/title", methods=['GET'])
+@app.get("/submit/title")
 @limiter.limit("6/minute")
 @is_not_banned
 def get_post_title(v):
@@ -549,7 +549,7 @@ def archiveorg(url):
 	except Exception as e: print(e)
 
 
-@app.route("/submit", methods=['POST'])
+@app.post("/submit")
 @app.post("/api/v1/submit")
 @app.post("/api/vue/submit")
 @limiter.limit("6/minute")
@@ -1037,6 +1037,8 @@ def submit_post(v):
 	g.db.commit()
 	send_message(f"https://rdrama.net{new_post.permalink}")
 	
+	v.post_count = v.submissions.filter_by(is_banned=False, deleted_utc=0).count()
+	g.db.add(v)
 	return {"html": lambda: redirect(new_post.permalink),
 			"api": lambda: jsonify(new_post.json)
 			}

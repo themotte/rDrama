@@ -214,6 +214,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 
 	def json_raw(self):
+		flags = {}
+		for f in self.flags: flags[f.user.username] = f.reason
+
 		data = {'author_name': self.author.username,
 				'permalink': self.permalink,
 				'is_banned': bool(self.is_banned),
@@ -241,8 +244,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'meta_title': self.meta_title,
 				'meta_description': self.meta_description,
 				'voted': self.voted,
-				'flags': self.flags,
+				'flags': flags,
 				}
+
 		if self.ban_reason:
 			data["ban_reason"]=self.ban_reason
 
