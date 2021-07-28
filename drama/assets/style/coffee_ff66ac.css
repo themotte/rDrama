@@ -25703,7 +25703,7 @@ div:hover .thumb-img-link-overlay {
   display: flex;
   position: relative;
   margin-top: 2rem;
-  padding-left: 17px;
+  padding-left: 15px;
 }
 
 #notifications .comment, #userpage .comment {
@@ -27352,7 +27352,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .comment-section > .comment {
-    padding-left: 17px;
+    padding-left: 15px;
   }
 
   .comment {
