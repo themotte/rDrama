@@ -5,8 +5,7 @@ from drama.helpers.filters import filter_comment_html
 from drama.helpers.markdown import *
 from drama.helpers.discord import remove_user, set_nick
 from drama.mail import *
-from .front import frontlist
-from drama.__main__ import app, cache
+=from drama.__main__ import app, cache
 import youtube_dl
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
@@ -159,7 +158,7 @@ def settings_profile_post(v):
 def changelogsub(v):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
-	cache.delete_memoized(frontlist)
+	
 	return "", 204
 
 @app.post("/settings/namecolor")
@@ -460,7 +459,7 @@ def settings_block_user(v):
 						  )
 	g.db.add(new_block)
 
-	cache.delete_memoized(frontlist)
+	
 
 	existing = g.db.query(Notification).filter_by(blocksender=v.id, user_id=user.id).first()
 	if not existing: send_block_notif(v.id, user.id, f"@{v.username} has blocked you!")
@@ -482,7 +481,7 @@ def settings_unblock_user(v):
 
 	g.db.delete(x)
 
-	cache.delete_memoized(frontlist)
+	
 
 	existing = g.db.query(Notification).filter_by(unblocksender=v.id, user_id=user.id).first()
 	if not existing: send_unblock_notif(v.id, user.id, f"@{v.username} has unblocked you!")

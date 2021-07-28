@@ -17,7 +17,6 @@ from drama.classes import *
 from drama.classes.domains import reasons as REASONS
 from flask import *
 import matplotlib.pyplot as plt
-from .front import frontlist
 from drama.__main__ import app, cache
 
 
@@ -54,7 +53,7 @@ def flagged_posts(v):
 
 	listing = [p.id for p in posts]
 	next_exists = (len(listing) == 26)
-	listing = listing[0:25]
+	listing = listing[:25]
 
 	listing = get_posts(listing, v=v)
 
@@ -75,7 +74,7 @@ def image_posts_listing(v):
 
 	posts = [x.id for x in posts]
 	next_exists = (len(posts) == 26)
-	posts = posts[0:25]
+	posts = posts[:25]
 
 	posts = get_posts(posts, v=v)
 
@@ -105,7 +104,7 @@ def flagged_comments(v):
 
 	listing = [p.id for p in posts]
 	next_exists = (len(listing) == 26)
-	listing = listing[0:25]
+	listing = listing[:25]
 
 	listing = get_comments(listing, v=v)
 
@@ -221,7 +220,7 @@ def users_list(v):
 	users = [x for x in users]
 
 	next_exists = (len(users) == 26)
-	users = users[0:25]
+	users = users[:25]
 
 	return render_template("admin/new_users.html",
 						   v=v,
@@ -408,7 +407,7 @@ def admin_removed(v):
 
 	next_exists = len(ids) == 26
 
-	ids = ids[0:25]
+	ids = ids[:25]
 
 	posts = get_posts(ids, v=v)
 
@@ -568,7 +567,7 @@ def shadowban(user_id, v):
 		target_user_id=user.id,
 	)
 	g.db.add(ma)
-	cache.delete_memoized(frontlist)
+	
 	return "", 204
 
 
@@ -590,7 +589,7 @@ def unshadowban(user_id, v):
 		target_user_id=user.id,
 	)
 	g.db.add(ma)
-	cache.delete_memoized(frontlist)
+	
 	return "", 204
 
 
@@ -739,7 +738,7 @@ def ban_post(post_id, v):
 
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	
 
 	ma=ModAction(
 		kind="ban_post",
@@ -773,7 +772,7 @@ def unban_post(post_id, v):
 
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	
 
 	return "", 204
 
@@ -810,7 +809,7 @@ def api_sticky_post(post_id, v):
 		post.stickied = not (post.stickied)
 		g.db.add(post)
 		g.db.commit()
-		cache.delete_memoized(frontlist)
+		
 
 	return "", 204
 

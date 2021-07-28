@@ -291,7 +291,7 @@ def u_username(username, v=None):
 
 	# we got 26 items just to see if a next page exists
 	next_exists = (len(ids) == 26)
-	ids = ids[0:25]
+	ids = ids[:25]
 
    # If page 1, check for sticky
 	if page == 1:
@@ -391,7 +391,7 @@ def u_username_comments(username, v=None):
 
 	# we got 26 items just to see if a next page exists
 	next_exists = (len(ids) == 26)
-	ids = ids[0:25]
+	ids = ids[:25]
 
 	listing = get_comments(ids, v=v)
 
@@ -497,7 +497,7 @@ def saved_posts(v, username):
 
 	next_exists=len(ids)==26
 
-	ids=ids[0:25]
+	ids=ids[:25]
 
 	listing = get_posts(ids, v=v)
 
@@ -524,7 +524,7 @@ def saved_comments(v, username):
 
 	next_exists=len(ids)==26
 
-	ids=ids[0:25]
+	ids=ids[:25]
 
 	listing = get_comments(ids, v=v, sort="new")
 

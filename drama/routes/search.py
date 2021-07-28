@@ -215,7 +215,7 @@ def searchposts(v, search_type="posts"):
 	total, ids = searchlisting(criteria, v=v, page=page, t=t, sort=sort)
 
 	next_exists = (len(ids) == 26)
-	ids = ids[0:25]
+	ids = ids[:25]
 
 	posts = get_posts(ids, v=v)
 
@@ -262,7 +262,7 @@ def searchcomments(v):
 	total, ids = searchcommentlisting(criteria, v=v, page=page, t=t, sort=sort)
 
 	next_exists = (len(ids) == 26)
-	ids = ids[0:25]
+	ids = ids[:25]
 
 	comments = get_comments(ids, v=v)
 
@@ -305,7 +305,7 @@ def searchusers(v, search_type="posts"):
 	
 	users=[x for x in users.offset(25 * (page-1)).limit(26)]
 	next_exists=(len(users)==26)
-	users=users[0:25]
+	users=users[:25]
 	
 	
 	
