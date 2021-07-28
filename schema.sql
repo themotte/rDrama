@@ -1466,27 +1466,11 @@ ALTER TABLE ONLY public.alts
 
 
 --
--- Name: award_relationships award_comment_constraint; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.award_relationships
-    ADD CONSTRAINT award_comment_constraint UNIQUE (user_id, comment_id);
-
-
---
 -- Name: award_relationships award_constraint; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.award_relationships
     ADD CONSTRAINT award_constraint UNIQUE (user_id, submission_id, comment_id);
-
-
---
--- Name: award_relationships award_post_constraint; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.award_relationships
-    ADD CONSTRAINT award_post_constraint UNIQUE (user_id, submission_id);
 
 
 --
