@@ -425,7 +425,6 @@ class User(Base, Stndrd, Age_times):
 		data = {'username': self.username,
 				'url': self.url,
 				'is_banned': bool(self.is_banned),
-				'is_premium': self.has_premium_no_renew,
 				'created_utc': self.created_utc,
 				'id': self.base36id,
 				'is_private': self.is_private,
