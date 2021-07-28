@@ -296,9 +296,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def has_award(self, kind):
 		return bool(len([x for x in self.awards if x.kind == kind]))
 
-	@property
-	def voted(self):
-		return self._voted if "_voted" in self.__dict__ else 0
+	def voted(self, v):
+		return v.votes.filter_by(submission_id=self.id).first().vote_type
 
 	@property
 	def title(self):
