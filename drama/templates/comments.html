@@ -313,9 +313,9 @@
 
 							{% endif %}
 							
-						{% if not v.id==c.author_id %}
-						<a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"
-						><i class="fas fa-user-slash fa-fw"></i>Block user</a>
+						{% if not v.id==c.author_id and v.admin_level == 0 %}
+							<a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"
+							><i class="fas fa-user-slash fa-fw"></i>Block user</a>
 						{% endif %}
 
 							{% if v.admin_level>=3 %}
@@ -511,10 +511,10 @@
 								<li class="list-group-item"><a class="d-block" href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code"></i>API App</a></li>
 							{% endif %}
 
-							{% if not v.id==c.author_id %}
-									<li class="list-group-item">
-										<a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"><i class="fas fa-user-slash"></i>Block user</a>
-									</li>
+							{% if not v.id==c.author_id and v.admin_level == 0 %}
+								<li class="list-group-item">
+									<a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"><i class="fas fa-user-slash"></i>Block user</a>
+								</li>
 							{% endif %}
 					{% endif %}
 						
