@@ -41,7 +41,7 @@ def notifications(v):
 		c._is_blocked = False
 		c._is_blocking = False
 		if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
-			pass
+			continue
 			while c.parent_comment:
 				parent = c.parent_comment
 				if c not in parent.replies2:
@@ -55,7 +55,7 @@ def notifications(v):
 			print(c.body)
 			listing.append(c)
 		else:
-			pass
+			continue
 			if c.parent_comment:
 				while c.level > 1:
 					c = c.parent_comment
