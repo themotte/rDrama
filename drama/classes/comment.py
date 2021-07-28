@@ -111,8 +111,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	def replies(self):
 
 		r = self.__dict__.get("replies", None)
-		if r is None:
-			r = self.child_comments
+		if not r: r = self.child_comments
 		return r
 
 	@replies.setter
@@ -220,7 +219,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	def voted(self):
 
 		x = self.__dict__.get("_voted")
-		if x is not None:
+		if x != None:
 			return x
 
 		if g.v:
