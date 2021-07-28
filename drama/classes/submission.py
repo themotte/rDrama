@@ -90,7 +90,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	comment_count = Column(Integer, server_default=FetchedValue())
 	score = deferred(Column(Float, server_default=FetchedValue()))
 
-	#awards = relationship("AwardRelationship", lazy="joined")
+	awards = relationship("AwardRelationship", lazy="joined")
 
 	def __init__(self, *args, **kwargs):
 
@@ -283,6 +283,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 			data["voted"] = self._voted
 
 		return data
+
+	def has_award(self, kind):
+		return bool(len([x for x in self.awards if x.kind == kind]))
 
 	@property
 	def voted(self):

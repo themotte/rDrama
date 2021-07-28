@@ -112,3 +112,4 @@ package-lock.json
 local.txt
 *.scssc
 .idea/*
+disablesignups
