@@ -21,24 +21,6 @@ from .front import frontlist
 from drama.__main__ import app, cache
 
 
-@app.get("/counts/posts")
-@admin_level_required(6)
-def counts_posts(v):
-	for u in g.db.query(User).all():
-		u.post_count = u.submissions.filter_by(is_banned=False, deleted_utc=0).count()
-		g.db.add(u)
-	return "sex"
-
-
-@app.get("/counts/comments")
-@admin_level_required(6)
-def counts_comments(v):
-	for u in g.db.query(User).all():
-		u.comment_count = u.comments.filter_by(is_banned=False, deleted_utc=0).count()
-		g.db.add(u)
-	return "sex"
-
-
 @app.get("/admin/shadowbanned")
 @auth_required
 def shadowbanned(v):
