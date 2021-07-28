@@ -25,6 +25,7 @@ class User(Base, Stndrd, Age_times):
 	theme = Column(String, default='dark')
 	themecolor = Column(String, default='ff66ac')
 	song = Column(String)
+	highres = Column(String)
 	profileurl = Column(String)
 	bannerurl = Column(String)
 	patron = Column(Boolean, default=False)
