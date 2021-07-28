@@ -13,7 +13,7 @@
 {% for view in viewers %}
 	<tr>
         <td style="font-weight: bold"><a style="color: #{{view.viewer.namecolor}}" href="/@{{view.viewer.username}}"><img src="/@{{view.viewer.username}}/pic/profile" class="profile-pic-20 mr-1">{{view.viewer.username}}</a></td>
-        <td style="font-weight: bold">{{ view.last_view_string }}</td>
+        <td style="font-weight: bold">{{view.last_view_string}}</td>
 	</tr>
 {% endfor %}
 </table>

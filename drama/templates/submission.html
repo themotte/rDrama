@@ -227,7 +227,7 @@
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}
 						{% if p.repost_id %}<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}
 						{% if p.flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
-						&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name">&nbsp;&nbsp;<img src="{{ p.author.profile_url }}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
+						&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name">&nbsp;&nbsp;<img src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
 						<span data-toggle="tooltip" data-placement="bottom" id="timestamp" title="">&nbsp;{{p.age_string}}</span>
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if v and v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
 						
@@ -237,7 +237,7 @@
 
 						{% if p.awards %}
 						{% for a in p.awards[:5] %}
-						<i class="{{ a.class_list }} px-1" data-toggle="tooltip" data-placement="bottom" title="{{ a.title }} Award given by @{{a.user.username}}"></i>
+						<i class="{{a.class_list}} px-1" data-toggle="tooltip" data-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
 						{% endfor %}
 						{% endif %}
 					</div>
@@ -295,7 +295,7 @@
 						<form id="post-edit-form-{{p.base36id}}" class="d-flex flex-column" action="/edit_post/{{p.base36id}}" method="post" class="input-group">
 							<input type="hidden" name="formkey" value="{{v.formkey}}">
 							<input type="hidden" name="current_page" value="{{request.path}}">
-                            <input name="title" required placeholder="title" value="{{ title }}" />
+                            <input name="title" required placeholder="title" value="{{title}}" />
 							<textarea name="body" id="post-edit-box-{{p.base36id}}" form="post-edit-form-{{p.base36id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
 							<div class="comment-format"> 
 								<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{p.base36id}}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> 
@@ -383,9 +383,9 @@
 						{% endif %}
 
 						{% if not v.id==p.author_id %}
-							<li id="block-user-{{ p.base36id }}" class="list-inline-item{% if p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/block?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
+							<li id="block-user-{{p.base36id}}" class="list-inline-item{% if p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/block?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.base36id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.base36id}}').classList.toggle('d-none');})"
 							><i class="fas fa-user-slash text-danger"></i>Block user</a></li>
-							<li id="unblock-user-{{ p.base36id }}" class="list-inline-item{% if not p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{ p.author.username }}', callback=function(){document.getElementById('block-user-{{ p.base36id }}').classList.toggle('d-none');document.getElementById('unblock-user-{{ p.base36id }}').classList.toggle('d-none');})"
+							<li id="unblock-user-{{p.base36id}}" class="list-inline-item{% if not p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.base36id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.base36id}}').classList.toggle('d-none');})"
 							><i class="fas fa-user-slash text-danger"></i>Unblock user</a></li>
 						{% endif %}
 
@@ -502,11 +502,11 @@
 </div>
 
 {% if p.flags %}
-    <div id="flaggers" class="flaggers d-none" style="margin: 7px; border: 1px solid #999b2e; padding: 10px; border-radius: 3px;">
-        <strong style="color: #999b2e;"><i class="far fa-fw fa-flag"></i> Reported by:</strong>
-        <ul style="margin-bottom: 0;">
+    <div id="flaggers" class="flaggers">
+        <strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+        <ul style="padding-left:20px; margin-bottom: 0;">
             {% for f in p.flags %}
-            <li><a href="{{ f.user.url }}">@{{ f.user.username }}</a>: {{f.reason}}</li>
+            	<li><a href="{{f.user.url}}">@{{f.user.username}}</a>: {{f.reason}}</li>
             {% endfor %}
         </ul>
     </div>

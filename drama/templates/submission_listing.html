@@ -121,7 +121,7 @@
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}
 						{% if p.repost_id %}&nbsp;<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}
 						{% if p.flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
-						&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img src="{{ p.author.profile_url }}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
+						&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.permalink}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
 						<span data-toggle="tooltip" data-placement="bottom" id="timestamp-{{p.id}}" title="">&nbsp;{{p.age_string}}</span>
 						&nbsp;
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})
@@ -131,7 +131,7 @@
 
 						{% if p.awards %}
 						{% for a in p.awards[:5] %}
-						<i class="{{ a.class_list }} px-1" data-toggle="tooltip" data-placement="bottom" title="{{ a.title }} Award given by @{{a.user.username}}"></i>
+						<i class="{{a.class_list}} px-1" data-toggle="tooltip" data-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
 						{% endfor %}
 						{% endif %}
 
@@ -152,7 +152,7 @@
 			<div class="post-actions mt-2 d-none d-md-block">
 				<ul class="list-inline text-right d-flex">
 						{% if p.realbody(v) %}
-						<li class="list-inline-item"><a href="javascript:void(0)" class="text-expand" data-id="{{ p.base36id }}"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{ p.base36id }}"></i></a></li>
+						<li class="list-inline-item"><a href="javascript:void(0)" class="text-expand" data-id="{{p.base36id}}"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.base36id}}"></i></a></li>
 						{% endif %}
 						<li class="list-inline-item"><a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}"><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
 
@@ -245,7 +245,7 @@
 </div>
 
 {% if p.realbody(v) %}
-<div class="d-none card rounded border pb-0 pt-3 my-2" id="post-text-{{ p.base36id }}">
+<div class="d-none card rounded border pb-0 pt-3 my-2" id="post-text-{{p.base36id}}">
 	{{p.realbody(v) | safe}}
 </div>
 {% endif %}
@@ -256,7 +256,7 @@
 			<li class="list-inline-item mr-auto"><a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}"{% if p.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
 
 			{% if p.realbody(v) and request.path != "/changelog"%}
-			<li class="list-inline-item"><a href="javascript:void(0)" class="text-expand" data-id="{{ p.base36id }}"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{ p.base36id }}"></i></a></li>
+			<li class="list-inline-item"><a href="javascript:void(0)" class="text-expand" data-id="{{p.base36id}}"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.base36id}}"></i></a></li>
 			{% endif %}
 
 			<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{p.permalink | full_link}}"><i class="fas fa-link"></i>Share</a></li>
@@ -313,17 +313,6 @@
 		</ul>
 	</div>
 </div>
-
-{% if p.flags %}
-    <div id="flaggers-{{p.id}}" class="flaggers d-none" style="margin: 7px; border: 1px solid #999b2e; padding: 10px; border-radius: 3px;">
-        <strong style="color: #999b2e;"><i class="far fa-fw fa-flag"></i> Reported by:</strong>
-        <ul style="padding-left:20px; margin-bottom: 0;">
-            {% for f in p.flags %}
-            <li><a href="{{ f.user.url }}">@{{ f.user.username }}</a>: {{f.reason}}</li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endif %}
 
 <!-- Post Actions Modal -->
 <div class="modal fade modal-sm-bottom d-md-none" id="actionsModal-{{p.base36id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
@@ -419,6 +408,17 @@
 </div>
 
 </div>
+
+{% if p.flags %}
+    <div id="flaggers-{{p.id}}" class="flaggers">
+        <strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+        <ul style="padding-left:20px; margin-bottom: 0;">
+            {% for f in p.flags %}
+            	<li><a href="{{f.user.url}}">@{{f.user.username}}</a>: {{f.reason}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
 
 {% else %}
 

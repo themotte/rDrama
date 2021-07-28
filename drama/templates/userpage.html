@@ -199,7 +199,7 @@
 						{% if u.agendaposter %}
 							<a class="btn btn-success" href="javascript:void(0)" onclick="post('/agendaposter/{{u.id}}?toast', function(){window.location.reload(true);})">Disable Agendaposter Theme</a>
 						{% else %}
-							<form action="/agendaposter/{{ u.id }}" method="post">
+							<form action="/agendaposter/{{u.id}}" method="post">
 								<input type="hidden" name="formkey", value="{{v.formkey}}">
 								<input type="number" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
 								<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" />
@@ -380,7 +380,7 @@
 						{% if u.agendaposter %}
 							<a class="btn btn-success" href="javascript:void(0)" onclick="post('/agendaposter/{{u.id}}?toast', function(){window.location.reload(true);})">Disable Agendaposter Theme</a>
 						{% else %}
-							<form action="/agendaposter/{{ u.id }}" method="post">
+							<form action="/agendaposter/{{u.id}}" method="post">
 								<input type="hidden" name="formkey", value="{{v.formkey}}">
 								<input type="number" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
 								<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" />
