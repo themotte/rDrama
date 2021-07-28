@@ -5,7 +5,7 @@ from drama.helpers.filters import filter_comment_html
 from drama.helpers.markdown import *
 from drama.helpers.discord import remove_user, set_nick
 from drama.mail import *
-=from drama.__main__ import app, cache
+from drama.__main__ import app, cache
 import youtube_dl
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
