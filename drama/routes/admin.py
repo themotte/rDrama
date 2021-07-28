@@ -240,7 +240,7 @@ def participation_stats(v):
 
 	data = {"valid_users": g.db.query(User).count(),
 			"private_users": g.db.query(User).filter_by(is_private=False).count(),
-			"banned_users": g.db.query(User).filter(User.is_banned > 0, User.unban_utc == None).count(),
+			"banned_users": g.db.query(User).filter(User.is_banned > 0).count(),
 			"verified_users": g.db.query(User).filter_by(is_activated=True).count(),
 			"signups_last_24h": g.db.query(User).filter(User.created_utc > day).count(),
 			"total_posts": g.db.query(Submission).count(),
@@ -256,10 +256,10 @@ def participation_stats(v):
 			"comments_last_24h": g.db.query(Comment).filter(Comment.created_utc > day).count(),
 			"post_votes": g.db.query(Vote).count(),
 			"post_voting_users": g.db.query(Vote.user_id).distinct().count(),
-			"post_votes_last_24h": g.db.query(Vote).filter(Vote.created_utc > day).count(),
 			"comment_votes": g.db.query(CommentVote).count(),
 			"comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
-			"comment_votes_last_24h": g.db.query(CommentVote).filter(CommentVote.created_utc > day).count()
+			"total_awards": g.db.query(AwardRelationship).count(),
+			"awards_given": g.db.query(AwardRelationship).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
 			}
 
 
