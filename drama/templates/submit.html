@@ -413,56 +413,50 @@
 		<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 
 		<!-- Instantiate clipboard by passing a string selector -->
-		<script type="text/javascript">
-				var clipboard = new ClipboardJS('.copy-link');
-				clipboard.on('success', function(e) {
+		<script>
+			var clipboard = new ClipboardJS('.copy-link');
+			clipboard.on('success', function(e) {
 
-						jQuery(function($) {
-								$('#toast-success').toast('show');
-						})
-						console.log(e);
-				});
-				clipboard.on('error', function(e) {
+					jQuery(function($) {
+							$('#toast-success').toast('show');
+					})
+					console.log(e);
+			});
+			clipboard.on('error', function(e) {
 
-						jQuery(function($) {
-								$('#toast-error').toast('show');
-						})
-						console.log(e);
-				});
-		</script>
+					jQuery(function($) {
+							$('#toast-error').toast('show');
+					})
+					console.log(e);
+			});
 
-	<script>
-		document.onpaste = function(event) {
-			f=document.getElementById('file-upload');
-			files = event.clipboardData.files
-			filename = files[0].name.toLowerCase()
-			if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".gif"))
-			{
-				f.files = files;
-				$('#filename-show').text(filename);
+			document.onpaste = function(event) {
+				f=document.getElementById('file-upload');
+				files = event.clipboardData.files
+				filename = files[0].name.toLowerCase()
+				if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".gif"))
+				{
+					f.files = files;
+					$('#filename-show').text(filename);
+					$('#urlblock').addClass('d-none');
+					var fileReader = new FileReader();
+					fileReader.readAsDataURL(f.files[0]);
+					fileReader.addEventListener("load", function () {$('#image-preview').attr('src', this.result);});  
+					$('#file-upload').attr('required', false);
+					checkForRequired();
+				}
+			}
+
+			$('#file-upload').on('change', function(e){
+				f=document.getElementById('file-upload');
 				$('#urlblock').addClass('d-none');
+				$('#filename-show').text($('#file-upload')[0].files[0].name);
 				var fileReader = new FileReader();
 				fileReader.readAsDataURL(f.files[0]);
 				fileReader.addEventListener("load", function () {$('#image-preview').attr('src', this.result);});  
-				$('#file-upload').attr('required', false);
 				checkForRequired();
-			}
-		}
-
-		$('#file-upload').on('change', function(e){
-			f=document.getElementById('file-upload');
-			$('#urlblock').addClass('d-none');
-			$('#filename-show').text($('#file-upload')[0].files[0].name);
-
-			var fileReader = new FileReader();
-			fileReader.readAsDataURL(f.files[0]);
-			fileReader.addEventListener("load", function () {
-				$('#image-preview').attr('src', this.result);
-		});  
-
-			checkForRequired();
-		})
-	</script>
+			})
+		</script>
 
 </body>
 
