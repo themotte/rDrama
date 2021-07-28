@@ -224,12 +224,6 @@ def sign_up_post(v):
 	if not agent:
 		abort(403)
 
-	# check tor
-	# if request.headers.get("CF-IPCountry")=="T1":
-	#	return render_template("sign_up_tor.html",
-	#		i=random_image()
-	#	)
-
 	form_timestamp = request.form.get("now", '0')
 	form_formkey = request.form.get("formkey", "none")
 
