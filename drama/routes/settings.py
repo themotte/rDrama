@@ -61,7 +61,7 @@ def settings_profile_post(v):
 		updated = True
 		v.is_nofollow = request.values.get("nofollow", None) == 'true'
 
-	if request.values.get("bio") is not None:
+	if request.values.get("bio"):
 		bio = request.values.get("bio")[0:1500]
 
 		if bio == v.bio:
@@ -96,7 +96,7 @@ def settings_profile_post(v):
 							   v=v,
 							   msg="Your bio has been updated.")
 
-	if request.values.get("filters") is not None:
+	if request.values.get("filters"):
 
 		filters=request.values.get("filters")[0:1000].strip()
 

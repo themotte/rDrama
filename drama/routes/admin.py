@@ -25,7 +25,7 @@ from drama.__main__ import app, cache
 @admin_level_required(6)
 def counts_comments(v):
 	for u in g.db.query(User).all():
-		u.comment_count = u.comments.filter(Comment.is_banned==False, Comment.deleted_utc==0, Comment.parent_submission is not None).count()
+		u.comment_count = u.comments.filter(Comment.is_banned==False, Comment.deleted_utc==0, Comment.parent_submission != None).count()
 		g.db.add(u)
 	return "sex"
 
@@ -1046,7 +1046,7 @@ def user_stat_data(v):
 
 	user_stats = {'current_users': g.db.query(User).filter_by(is_banned=0, reserved=None).count(),
 				  'banned_users': g.db.query(User).filter(User.is_banned != 0).count(),
-				  'reserved_users': g.db.query(User).filter(User.reserved is not None).count(),
+				  'reserved_users': g.db.query(User).filter(User.reserved != None).count(),
 				  'email_verified_users': g.db.query(User).filter_by(is_banned=0, is_activated=True).count(),
 				  }
 

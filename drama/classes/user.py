@@ -193,7 +193,7 @@ class User(Base, Stndrd, Age_times):
 
 	@cache.memoize(300)
 	def commentlisting(self, v=None, page=1, sort="new", t="all"):
-		comments = self.comments.options(lazyload('*')).filter(Comment.parent_submission is not None).join(Comment.post)
+		comments = self.comments.options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.post)
 
 		if (not v) or (v.id != self.id and v.admin_level == 0):
 			comments = comments.filter(Comment.deleted_utc == 0)
