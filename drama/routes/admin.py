@@ -17,7 +17,6 @@ from drama.classes import *
 from drama.classes.domains import reasons as REASONS
 from flask import *
 import matplotlib.pyplot as plt
-from .front import frontlist
 from drama.__main__ import app, cache
 
 
@@ -568,7 +567,7 @@ def shadowban(user_id, v):
 		target_user_id=user.id,
 	)
 	g.db.add(ma)
-	cache.delete_memoized(frontlist)
+	
 	return "", 204
 
 
@@ -590,7 +589,7 @@ def unshadowban(user_id, v):
 		target_user_id=user.id,
 	)
 	g.db.add(ma)
-	cache.delete_memoized(frontlist)
+	
 	return "", 204
 
 
@@ -739,7 +738,7 @@ def ban_post(post_id, v):
 
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	
 
 	ma=ModAction(
 		kind="ban_post",
@@ -773,7 +772,7 @@ def unban_post(post_id, v):
 
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	
 
 	return "", 204
 
@@ -810,7 +809,7 @@ def api_sticky_post(post_id, v):
 		post.stickied = not (post.stickied)
 		g.db.add(post)
 		g.db.commit()
-		cache.delete_memoized(frontlist)
+		
 
 	return "", 204
 

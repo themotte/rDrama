@@ -13,7 +13,6 @@ from drama.helpers.thumbs import *
 from drama.helpers.alerts import send_notification
 from drama.helpers.discord import send_message
 from drama.classes import *
-from .front import frontlist
 from flask import *
 from io import BytesIO
 from drama.__main__ import app, limiter, cache
@@ -60,7 +59,7 @@ def publish(pid, v):
 	if not post.author_id == v.id: abort(403)
 	post.private = False
 	g.db.add(post)
-	cache.delete_memoized(frontlist)
+	
 	g.db.commit()
 	return "", 204
 
@@ -941,7 +940,7 @@ def submit_post(v):
     # spin off thumbnail generation and csam detection as  new threads
 	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbs(new_post)
 
-	cache.delete_memoized(frontlist)
+	
 	cache.delete_memoized(User.userpagelisting)
 	g.db.commit()
 
@@ -1061,7 +1060,7 @@ def delete_post_pid(pid, v):
 
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	
 
 	return "", 204
 
@@ -1075,7 +1074,7 @@ def undelete_post_pid(pid, v):
 	if not post.author_id == v.id: abort(403)
 	post.deleted_utc =0
 	g.db.add(post)
-	cache.delete_memoized(frontlist)
+	
 	return "", 204
 
 @app.get("/embed/post/<pid>")
