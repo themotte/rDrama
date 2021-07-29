@@ -226,7 +226,8 @@ CREATE TABLE public.users (
     suicide_utc integer,
     post_count integer,
     comment_count integer,
-    highres text
+    highres text,
+    rent_utc integer
 );
 
 
