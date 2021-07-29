@@ -299,10 +299,12 @@
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-check fa-fw text-success"></i>Approve</a></li>
 					{% endif %}
 
-					{% if v and v.admin_level==6 and v.id != c.author_id and c.author.is_banned %}
+					{% if v and v.admin_level==6 and v.id != c.author_id %}
+					{% if c.author.is_banned %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="unexile-comment-{{c.base36id}}" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw text-danger"></i>Unban user</a></li>
 					{% else %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="exile-comment-{{c.base36id}}" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw text-danger"></i>Ban user</a></li>
+					{% endif %}
 					{% endif %}
 
 
@@ -472,7 +474,7 @@
 							</li>
 						{% endif %}
 					{% endif %}
-					{% if v and c.post and v.admin_level == 6 %}
+					{% if v and (c.post and v.admin_level == 6) %}
 						{% if c.author_id != v.id %}
 								{% if c.author.is_banned %}
 								<li class="list-group-item"><a class="d-block text-danger" id="unexile-comment2-{{c.base36id}}" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Unban user</a></li>
