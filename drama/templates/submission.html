@@ -159,9 +159,9 @@
 
 					{% if v and v.id != p.author_id and v.admin_level == 0 %}
 						<button id="block-user-button-{{p.base36id}}" class="btn btn-link btn-block btn-lg text-left text-danger{% if p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/block?username={{p.author.username}}', callback=function(){document.getElementById('block-user-button-{{p.base36id}}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{p.base36id}}').classList.toggle('d-none');})"
-						><i class="fas fa-user-slash mr-3"></i>Block user</button>
+						><i class="fas fa-eye-slash mr-3"></i>Block user</button>
 						<button id="unblock-user-button-{{p.base36id}}" class="btn btn-link btn-block btn-lg text-left text-danger{% if not p.is_blocking %} d-none{% endif %}" data-dismiss="modal" onclick="post_toast('/settings/unblock?username={{p.author.username}}', callback=function(){document.getElementById('block-user-button-{{p.base36id}}').classList.toggle('d-none');document.getElementById('unblock-user-button-{{p.base36id}}').classList.toggle('d-none');})"
-						><i class="fas fa-user-slash mr-3"></i>Unblock user</button>
+						><i class="fas fa-eye mr-3"></i>Unblock user</button>
 					{% endif %}
 					
 					{% if v and v.admin_level == 6 and v.id!=p.author_id %}
@@ -384,9 +384,9 @@
 
 						{% if not v.id==p.author_id and v.admin_level == 0 %}
 							<li id="block-user-{{p.base36id}}" class="list-inline-item{% if p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/block?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.base36id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.base36id}}').classList.toggle('d-none');})"
-							><i class="fas fa-user-slash text-danger"></i>Block user</a></li>
+							><i class="fas fa-eye-slash text-danger"></i>Block user</a></li>
 							<li id="unblock-user-{{p.base36id}}" class="list-inline-item{% if not p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.base36id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.base36id}}').classList.toggle('d-none');})"
-							><i class="fas fa-user-slash text-danger"></i>Unblock user</a></li>
+							><i class="fas fa-eye text-danger"></i>Unblock user</a></li>
 						{% endif %}
 
 						{% if not v.id==p.author_id and v.admin_level == 1 %}
