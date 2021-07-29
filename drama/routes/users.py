@@ -562,7 +562,7 @@ def saved_comments(v, username):
 
 	ids=ids[:25]
 
-	listing = get_comments(ids, v=v, sort="new")
+	listing = get_comments(ids, v=v)
 
 
 	return {'html': lambda: render_template("userpage_comments.html",
