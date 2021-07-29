@@ -54,7 +54,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	post = relationship("Submission")
 	flags = relationship("CommentFlag", backref="comment")
-	Votes = relationship(
+	votes = relationship(
 		"CommentVote",
 		lazy="dynamic",
 		primaryjoin="CommentVote.comment_id==Comment.id")
