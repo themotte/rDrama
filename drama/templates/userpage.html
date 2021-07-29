@@ -374,10 +374,12 @@
 						{% if u.is_banned %}
 							<form action="/api/unban_user/{{u.id}}/?notoast=1" method="post">
 								<input type="hidden" name="formkey", value="{{v.formkey}}">
+								<br />
 								<div class="custom-control custom-checkbox">
 									<input type="checkbox" id="alts-1-mobile" class="custom-control-input" name="alts" value="1">
 									<label class="custom-control-label" for="alts-1-mobile">Include alts</label>
 								</div>
+								<br />
 								<input type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
@@ -385,10 +387,12 @@
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
 								<input style="font-size:11px;" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
+								<br />
 								<div class="custom-control custom-checkbox">
 									<input type="checkbox" id="alts-2-mobile" class="custom-control-input" name="alts" value="1">
 									<label class="custom-control-label" for="alts-2-mobile">Include alts</label>
 								</div>
+								<br />
 								<input id="user-ban-submit2" type="submit" class="btn btn-danger" value="Ban user" disabled>
 							</form>
 						{% endif %}
