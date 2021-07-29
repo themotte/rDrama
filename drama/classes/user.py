@@ -428,12 +428,12 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return "/assets/images/default_bg.png"
+		else: return "https://rdrama.net/assets/images/default_bg.png"
 
 	@cache.memoize(0)
 	def defaultpicture(self):
 		pic = random.randint(1, 50)
-		return f"/assets/images/defaultpictures/{pic}.png"
+		return f"https://rdrama.net/assets/images/defaultpictures/{pic}.png"
 
 	@property
 	def profile_url(self):
