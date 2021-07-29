@@ -69,7 +69,7 @@
 						<div class="ml-3 w-100">
 							{% if u.is_suspended %}
 								<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
-								{% if unban %} <h5 style="color:#ff66ac;">{{unban}}</h5>{% endif %}
+								<h5 style="color:#ff66ac;">{{u.unban_string}}</h5>
 							{% endif %}
 							
 							<div class="d-flex align-items-center mt-1 mb-2">
@@ -184,7 +184,11 @@
 						<pre></pre>
 						{% if u.is_banned %}
 							<form action="/api/unban_user/{{u.id}}/?notoast=1" method="post" action="">
-								<input type="hidden" name="formkey", value="{{v.formkey}}">
+								<input type="hidden" name="formkey" value="{{v.formkey}}">
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" id="alts-1-desktop" class="custom-control-input" name="alts" value="1">
+									<label class="custom-control-label" for="alts-1-desktop">Include alts</label>
+								</div>
 								<input type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
@@ -192,6 +196,10 @@
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
 								<input style="font-size:11px;" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" id="alts-2-desktop" class="custom-control-input" name="alts" value="1">
+									<label class="custom-control-label" for="alts-2-desktop">Include alts</label>
+								</div>
 								<input id="user-ban-submit" type="submit" class="btn btn-danger" value="Ban user" disabled>
 							</form>
 						{% endif %}
@@ -284,7 +292,7 @@
 			<div class="mt-n3 py-3">
 				{% if u.is_suspended %}
 					<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
-					{% if unban %} <h5 style="color:#ff66ac;">{{unban}}</h5>{% endif %}
+					<h5 style="color:#ff66ac;">{{u.unban_string}}</h5>
 				{% endif %}
 				<a class="text-black"><h1 class="h5 d-inline-block" style="color: #{{u.namecolor}}">{{u.username}}</h1></a>
 				
@@ -366,6 +374,10 @@
 						{% if u.is_banned %}
 							<form action="/api/unban_user/{{u.id}}/?notoast=1" method="post">
 								<input type="hidden" name="formkey", value="{{v.formkey}}">
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" id="alts-1-mobile" class="custom-control-input" name="alts" value="1">
+									<label class="custom-control-label" for="alts-1-mobile">Include alts</label>
+								</div>
 								<input type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
@@ -373,6 +385,10 @@
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
 								<input style="font-size:11px;" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" id="alts-2-mobile" class="custom-control-input" name="alts" value="1">
+									<label class="custom-control-label" for="alts-2-mobile">Include alts</label>
+								</div>
 								<input id="user-ban-submit2" type="submit" class="btn btn-danger" value="Ban user" disabled>
 							</form>
 						{% endif %}

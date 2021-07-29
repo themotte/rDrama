@@ -665,14 +665,14 @@ def ban_user(user_id, v):
 
 		user.ban(admin=v, reason=reason)
 
-
-	for x in user.alts:
-		if x.admin_level > 0: break
-		x.ban(admin=v, reason=reason)
+	if request.form.get("alts", ""):
+		for x in user.alts:
+			if x.admin_level > 0: break
+			x.ban(admin=v, reason=reason)
 
 	send_notification(1046, user, text)
 	
-	if days == 0: duration = "permenant"
+	if days == 0: duration = "permanent"
 	elif days == 1: duration = "1 day"
 	else: duration = f"{days} days"
 	ma=ModAction(
@@ -701,9 +701,10 @@ def unban_user(user_id, v):
 
 	user.unban()
 
-	for x in user.alts:
-		if x.admin_level == 0:
-			x.unban()
+	if request.form.get("alts", ""):
+		for x in user.alts:
+			if x.admin_level == 0:
+				x.unban()
 
 	send_notification(1046, user,
 					  "Your Drama account has been reinstated. Please carefully review and abide by the [rules](/post/2510) to ensure that you don't get suspended again.")
