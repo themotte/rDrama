@@ -74,6 +74,7 @@ def upload_from_file(filename, resize=None):
 	i.save(img, format='GIF')
 	req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())})
 	remove(filename)
+	
 	try: 
 		resp = req.json()['data']
 		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
