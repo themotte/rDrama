@@ -422,8 +422,7 @@ class User(Base, Stndrd, Age_times):
 
 	def has_follower(self, user):
 
-		return g.db.query(Follow).filter_by(
-			target_id=self.id, user_id=user.id).first()
+		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).first()
 
 
 	@property

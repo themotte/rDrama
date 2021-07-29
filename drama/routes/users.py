@@ -431,18 +431,15 @@ def follow_user(username, v):
 
 	target = get_user(username)
 
-	if target.id==v.id:
-		return jsonify({"error": "You can't follow yourself!"}), 400
+	if target.id==v.id: return jsonify({"error": "You can't follow yourself!"}), 400
 
 	# check for existing follow
-	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first():
-		abort(409)
+	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first(): abort(409)
 
-	new_follow = Follow(user_id=v.id,
-						target_id=target.id)
-
+	new_follow = Follow(user_id=v.id, target_id=target.id)
 	g.db.add(new_follow)
-	target.stored_subscriber_count = g.db.query(Follow).filter_by(target_id=target.id)
+
+	target.stored_subscriber_count = g.db.query(Follow).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
 	existing = g.db.query(Notification).filter_by(followsender=v.id, user_id=target.id).first()
@@ -457,14 +454,12 @@ def unfollow_user(username, v):
 	target = get_user(username)
 
 	# check for existing follow
-	follow = g.db.query(Follow).filter_by(
-		user_id=v.id, target_id=target.id).first()
+	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
 
-	if not follow:
-		abort(409)
+	if not follow: abort(409)
 
 	g.db.delete(follow)
-	target.stored_subscriber_count = g.db.query(Follow).filter_by(target_id=target.id)
+	target.stored_subscriber_count = g.db.query(Follow).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
 	existing = g.db.query(Notification).filter_by(followsender=v.id, user_id=target.id).first()
