@@ -464,8 +464,14 @@ def admin_domain_domain(domain_name, v):
 @admin_level_required(5)
 def admin_image_purge(v):
 	
-	url=request.form.get("url")
-	images.delete_file(url)
+	name = request.form.get("url")
+	image = g.db.query(Image).filter(Image.text == name).first()
+	if image:
+		requests.delete(f'https://api.imgur.com/3/image/{image.deletehash}', headers = {"Authorization": f"Client-ID {imgurkey}"})
+		headers = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
+		data = {'files': [name]}
+		url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"
+		requests.post(url, headers=headers, json=data)
 	return redirect("/admin/image_purge")
 
 

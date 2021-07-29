@@ -27808,6 +27808,10 @@ img.emoji {
   border-radius: 3px;
 }
 
+.text-info {
+  color: #ff66ac;
+}
+
 * {
   border-color: #ff66ac;
 }
