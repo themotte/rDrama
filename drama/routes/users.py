@@ -222,7 +222,7 @@ def visitors(v):
 @app.get("/@<username>")
 @app.get("/api/v1/user/<username>/listing")
 @auth_desired
-@public("read")
+@api("read")
 def u_username(username, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -334,7 +334,7 @@ def u_username(username, v=None):
 @app.get("/@<username>/comments")
 @app.get("/api/v1/user/<username>/comments")
 @auth_desired
-@public("read")
+@api("read")
 def u_username_comments(username, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -412,7 +412,7 @@ def u_username_comments(username, v=None):
 
 @app.get("/api/v1/user/<username>/info")
 @auth_desired
-@public("read")
+@api("read")
 def u_username_info(username, v=None):
 
 	user=get_user(username, v=v)

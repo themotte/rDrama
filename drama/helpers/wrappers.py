@@ -305,55 +305,6 @@ def no_cors(f):
 # f should return {'api':lambda:some_func(), 'html':lambda:other_func()}
 
 
-def public(*scopes, no_ban=False):
-
-	def wrapper_maker(f):
-
-		def wrapper(*args, **kwargs):
-
-			if request.path.startswith(('/api/v1','/api/v2')):
-
-				v = kwargs.get('v')
-
-				result = f(*args, **kwargs)
-
-				if isinstance(result, dict):
-					resp = result['api']()
-				else:
-					resp = result
-
-				if not isinstance(resp, RespObj):
-					resp = make_response(resp)
-
-				resp.headers.add("Cache-Control", "private")
-				resp.headers.add(
-					"Access-Control-Allow-Origin",
-					app.config["SERVER_NAME"])
-				return resp
-
-			else:
-
-				result = f(*args, **kwargs)
-
-				if not isinstance(result, dict):
-					return result
-
-				try:
-					if request.path.startswith('/inpage/'):
-						return result['inpage']()
-					elif request.path.startswith(('/api/vue/','/test/')):
-						return result['api']()
-					else:
-						return result['html']()
-				except KeyError:
-					return result
-
-		wrapper.__name__ = f.__name__
-		return wrapper
-
-	return wrapper_maker
-
-
 def api(*scopes, no_ban=False):
 
 	def wrapper_maker(f):
@@ -363,25 +314,6 @@ def api(*scopes, no_ban=False):
 			if request.path.startswith(('/api/v1','/api/v2')):
 
 				v = kwargs.get('v')
-				client = kwargs.get('c')
-
-				if not v or not client:
-					return jsonify(
-						{"error": "401 Not Authorized. Invalid or Expired Token"}), 401
-
-				kwargs.pop('c')
-
-				# validate app associated with token
-				if client.application.is_banned:
-					return jsonify({"error": f"403 Forbidden. The application `{client.application.app_name}` is suspended."}), 403
-
-				# validate correct scopes for request
-				for scope in scopes:
-					if not client.__dict__.get(f"scope_{scope}"):
-						return jsonify({"error": f"401 Not Authorized. Scope `{scope}` is required."}), 403
-
-				if (request.method == "POST" or no_ban) and client.user.is_suspended:
-					return jsonify({"error": f"403 Forbidden. The user account is suspended."}), 403
 
 				result = f(*args, **kwargs)
 

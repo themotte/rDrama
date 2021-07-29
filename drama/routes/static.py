@@ -7,7 +7,7 @@ from drama.helpers.alerts import *
 @app.route("/api/vue/admins",  methods=["GET"])
 @app.get("/api/v1/admins")
 @auth_desired
-@public("read")
+@api("read")
 def badmins(v):
 	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.dramacoins.desc()).all()
 	return {
