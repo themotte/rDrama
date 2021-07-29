@@ -390,7 +390,7 @@ def api_comment(v):
 			return jsonify({"error": "That wasn't an image!"}), 400
 		
 		name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
-		url = upload_file(name, file)
+		url = upload_file(file)
 		
 		body = request.form.get("body") + f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
@@ -745,7 +745,7 @@ def edit_comment(cid, v):
 		if not file.content_type.startswith('image/'): return jsonify({"error": "That wasn't an image!"}), 400
 		
 		name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
-		url = upload_file(name, file)
+		url = upload_file(file)
 
 		body += f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")

@@ -328,8 +328,8 @@ def settings_images_profile(v):
 		g.db.rollback()
 		abort(413)
 
-	highres = upload_file(name=f"profile.gif", file=request.files["profile"])
-	imageurl = upload_file(name=f"profile.gif", file=request.files["profile"], resize=(100, 100))
+	highres = upload_file(request.files["profile"])
+	imageurl = upload_file(request.files["profile"], (100, 100))
 	if imageurl:
 		v.highres = highres
 		v.profileurl = imageurl
@@ -348,7 +348,7 @@ def settings_images_banner(v):
 		abort(413)
 
 	v.bannerurl = None
-	imageurl = upload_file(name=f"banner.gif", file=request.files["banner"])
+	imageurl = upload_file(request.files["banner"])
 	if imageurl:
 		v.bannerurl = imageurl
 		g.db.add(v)

@@ -529,19 +529,13 @@ def thumbs(new_post):
 		print(f'Unknown content type {x.headers.get("Content-Type")}')
 		return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
-	name = f"posts/{post.base36id}/thumb.png"
-	tempname = name.replace("/", "_")
-
-	with open(tempname, "wb") as file:
+	with open("image.gif", "wb") as file:
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = upload_from_file(name, tempname, resize=(100, 100))
+	post.thumburl = upload_from_file("image.gif", (100, 100))
 	g.db.add(post)
 	g.db.commit()
-
-	try: remove(tempname)
-	except FileNotFoundError: pass
 
 def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
@@ -929,7 +923,7 @@ def submit_post(v):
 						}
 
 		name = f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
-		new_post.url = upload_file(name, file)
+		new_post.url = upload_file(file)
 		new_post.domain_ref = 1  # id of i.ruqqus.ga domain
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)

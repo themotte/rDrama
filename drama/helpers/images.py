@@ -30,40 +30,31 @@ def crop_and_resize(img, resize):
 	return i.resize(resize, box=box)
 
 
-def upload_file(name, file, resize=None):
+def upload_file(file, resize=None):
 
 	if resize:
-		tempname = name.replace("/", "_")
-		print(type(file))
-		file.save(tempname)
-		if tempname.split('.')[-1] in ['jpg', 'jpeg']: piexif.remove(tempname)
-		i = IImage.open(tempname)
+		filename = "image.gif"
+		file.save(filename)
+		i = IImage.open(filename)
 		i = crop_and_resize(i, resize)
 		img = io.BytesIO()
-		i.save(img, format='PNG')
+		i.save(img, format='GIF')
 		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())})
-		remove(tempname)
+		remove(filename)
 		try: resp = req.json()['data']
 		except Exception as e:
-			print(e)
-			print(req)
 			print(req.text)
 			return
 
 	else:
 		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())})
-		remove(name)
 		try: resp = req.json()['data']
 		except Exception as e:
-			print(e)
-			print(req)
 			print(req.text)
 			return
 	
 	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except Exception as e:
-		print(e)
-		print(req)
 		print(req.text)
 		return
 
@@ -76,16 +67,11 @@ def upload_file(name, file, resize=None):
 	return(url)
 
 	
-def upload_from_file(name, filename, resize=None):
-
-	tempname = name.replace("/", "_")
-
-	if filename.split('.')[-1] in ['jpg', 'jpeg']: piexif.remove(tempname)
-
-	i = IImage.open(tempname)
+def upload_from_file(filename, resize=None):
+	i = IImage.open(filename)
 	if resize: i = crop_and_resize(i, resize)
 	img = io.BytesIO()
-	i.save(img, format='PNG')
+	i.save(img, format='GIF')
 	req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())})
 	remove(filename)
 	try: 
