@@ -5,7 +5,6 @@ from .mix_ins import *
 from drama.helpers.base36 import *
 from drama.helpers.lazy import lazy
 from drama.__main__ import Base
-from .votes import CommentVote
 
 class CommentAux(Base):
 
@@ -55,6 +54,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	post = relationship("Submission")
 	flags = relationship("CommentFlag", backref="comment")
+	votes = relationship("Vote", backref="comment")
+
 	author = relationship(
 		"User",
 		lazy="joined",
@@ -214,7 +215,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		return data
 
 	def voted(self, v):
-		x = g.db.query(CommentVote).filter_by(comment_id=self.id, user_id=v.id).first()
+		x = self.votes.filter_by(user_id=v.id).first()
 		if x: return x.vote_type
 		else: return 0
 
