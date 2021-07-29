@@ -266,8 +266,8 @@
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{c.permalink | full_link}}?context=99#context"><i class="fas fa-copy"></i>Copy link</a></li>
 					
 					{% if v and v.admin_level>=3 %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-comment-times fa-fw text-danger"></i>Remove</a></li>
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-comment-check fa-fw text-success"></i>Approve</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-ban fa-fw text-danger"></i>Remove</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-check fa-fw text-success"></i>Approve</a></li>
 					{% endif %}
 					<li class="list-inline-item d-none d-md-inline-block">
 						<div class="dropdown show">
@@ -322,8 +322,8 @@
 						{% endif %}
 
 						{% if v.admin_level>=3 %}
-							<a class="dropdown-item removeDropdownItem" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-comment-times fa-fw text-danger"></i>Remove</a>
-							<a class="dropdown-item removeDropdownItem" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-comment-check fa-fw text-success"></i>Approve</a>
+							<a class="dropdown-item removeDropdownItem" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-ban fa-fw text-danger"></i>Remove</a>
+							<a class="dropdown-item removeDropdownItem" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-check fa-fw text-success"></i>Approve</a>
 						{% endif %}
 						{% if v.admin_level >=4 and c.oauth_app %}
 							<a class="dropdown-item" href="{{c.oauth_app.permalink}}/comments" ><i class="fas fa-code fa-fw"></i>API App</a>
@@ -499,8 +499,8 @@
 											<li class="list-group-item"><a class="d-block" id="distinguish-{{c.base36id}}" href="javascript:void(0)" onclick="admin_comment('{{c.base36id}}')"><i class="fas fa-id-badge"></i>{{'Undistinguish' if c.distinguish_level else 'Distinguish'}}</a></li>
 							{% endif %}
 							{% if v.admin_level>=3 %}
-								<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-comment-times text-danger"></i>Remove</a></li>
-								<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-comment-check text-success"></i>Approve</a></li>
+								<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-ban text-danger"></i>Remove</a></li>
+								<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-check text-success"></i>Approve</a></li>
 							{% endif %}
 							{% if v.admin_level >=4 and c.oauth_app %}
 								<li class="list-group-item"><a class="d-block" href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code"></i>API App</a></li>
