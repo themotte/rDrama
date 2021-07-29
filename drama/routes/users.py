@@ -287,6 +287,7 @@ def u_username(username, v=None):
 			if int(time.time()) - v.rent_utc < 600: paidrent = True
 			elif request.args.get("rent") == "true" and v.dramacoins > 500:
 				v.dramacoins -= 500
+				v.rent_utc = int(time.time())
 				g.db.add(v)
 				paidrent = True
 
