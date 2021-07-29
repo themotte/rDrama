@@ -33,7 +33,7 @@ def crop_and_resize(img, resize):
 def upload_file(file, resize=None):
 
 	if resize:
-		filename = "image.gif"
+		filename = "image"
 		file.save(filename)
 		i = IImage.open(filename)
 		i = crop_and_resize(i, resize)
@@ -74,7 +74,7 @@ def upload_from_file(filename, resize=None):
 	i.save(img, format='GIF')
 	req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())})
 	remove(filename)
-	
+
 	try: 
 		resp = req.json()['data']
 		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
