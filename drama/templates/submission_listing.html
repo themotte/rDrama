@@ -62,80 +62,54 @@
 
 		<div class="card-header bg-transparent border-0 d-flex flex-row flex-nowrap pl-2 pl-md-0 p-0 mr-md-2">
 
-			<div class="position-relative d-none d-md-block" style="z-index: 3;">
+			<div style="z-index: 3;">
 				
-				{% if p.is_image %}
-					<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
-				{% else %}
-					<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
-				{% endif %}
-						<img src="{{p.thumb_url}}" class="post-img" alt="">
+				{% if not p.url %}
+					<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" rel="nofollow noopener">
+						<img src="{{p.thumb_url}}" class="post-img">
 					</a>
+				{% elif p.is_image %}
+					<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
+						<img src="{{p.thumb_url}}" class="post-img">
+					</a>
+				{% else %}
+					<a {% if v and v.newtabexternal %}target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener">
+						<img src="{{p.thumb_url}}" class="post-img">
+					</a>
+				{% endif %}
 				
 			</div>
 
+			<div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
-			<div class="d-block d-md-none" style="z-index: 3;">
-				{% if p.thumb_url and p.is_image %}
-				<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
-					<img src="{{p.thumb_url}}" class="post-img">
-				</a>
+				<div class="post-meta text-left x-scroll mb-md-2">
+					{% if p.banaward %} <i class="fas fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Given the 1-day ban award by @{{p.banaward}}"></i>&nbsp;{% endif %}
+					{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-toggle="tooltip" data-placement="bottom" title="Shadowbanned user"></i>&nbsp;{% endif %}
+					{% if p.stickied %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned post"></i>&nbsp;{% endif %}
+					{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Drama Badmin, speaking officially"></i>&nbsp;{% endif %}
+					{% if p.is_pinned and request.path.startswith('/@') %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to profile"></i>&nbsp;{% endif %}
+					{% if p.over_18 %}&nbsp;<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
+					{% if p.is_bot %} <i class="fad fa-robot text-info" data-toggle="tooltip" data-placement="bottom"	data-original-title="Bot"></i>{% endif %}
+					{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="You're blocking this user, but you can see this post because {{'it\'s an admin post' if p.distinguish_level else 'you\'re an admin'}}."></i>{% endif %}
+					{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you."></i>{% endif %}
+					{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}
+					{% if p.repost_id %}&nbsp;<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}
+					{% if p.flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
+					&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.url}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
+					<span data-toggle="tooltip" data-placement="bottom" id="timestamp-{{p.id}}" title="">&nbsp;{{p.age_string}}</span>
+					&nbsp;
+					({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})
+					
+					{% if p.edited_utc %}&nbsp;&nbsp;Edited <span data-toggle="tooltip" data-placement="bottom" id="edited_timestamp-{{p.id}}" title="">{{p.edited_string}}</span>{% endif %}
+					&nbsp;&nbsp;{{p.views}} views
 
-				{% elif p.thumb_url and not p.embed_url %}
-				<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
-					<img src="{{p.thumb_url}}" class="post-img" alt="">
-				</a>
-				
-				{% elif p.embed_url %}
-				<a target="_blank" href="{{p.realurl(v)}}" target="_blank" rel="nofollow noopener">
-					<img src="{{p.thumb_url if p.has_thumb else '/assets/images/default_thumb_yt.png'}}" class="post-img border-0" alt="generic youtube embed thumbnail">
-				</a>
-				
-				{% elif not p.realurl(v) %}
-				<a href="{{p.permalink}}" {% if v and v.newtab %}target="_blank"{% endif %} rel="{% if p.author.is_private %}nofollow {% endif %}noopener">
-					<img src="/assets/images/default_thumb_text.png" class="post-img border-0" alt="text post thumbnail">
-				</a>
-				
-				{% elif p.realurl(v) and not p.thumb_url and not p.embed_url %}
-				<a target="_blank" href="{{p.realurl(v)}}" rel="nofollow noopener" target="_blank">
-					<img src="/assets/images/default_thumb_link.png" class="post-img border-0" alt="generic link post thumbnail">
-				</a>
-				{% endif %}
-
-					</div>
+					{% if p.awards %}
+					{% for a in p.awards[:5] %}
+					<i class="{{a.class_list}} px-1" data-toggle="tooltip" data-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
+					{% endfor %}
+					{% endif %}
 
 				</div>
-
-				<div class="card-block text-left x-scroll-parent my-md-auto w-100">
-
-					<div class="post-meta text-left x-scroll mb-md-2">
-						{% if p.banaward %} <i class="fas fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Given the 1-day ban award by @{{p.banaward}}"></i>&nbsp;{% endif %}
-						{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-toggle="tooltip" data-placement="bottom" title="Shadowbanned user"></i>&nbsp;{% endif %}
-						{% if p.stickied %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned post"></i>&nbsp;{% endif %}
-						{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Drama Badmin, speaking officially"></i>&nbsp;{% endif %}
-						{% if p.is_pinned and request.path.startswith('/@') %}<i class="fas fa-thumbtack text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to profile"></i>&nbsp;{% endif %}
-						{% if p.over_18 %}&nbsp;<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-						{% if p.is_bot %} <i class="fad fa-robot text-info" data-toggle="tooltip" data-placement="bottom"	data-original-title="Bot"></i>{% endif %}
-						{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="You're blocking this user, but you can see this post because {{'it\'s an admin post' if p.distinguish_level else 'you\'re an admin'}}."></i>{% endif %}
-						{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you."></i>{% endif %}
-						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}
-						{% if p.repost_id %}&nbsp;<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}
-						{% if p.flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
-						&nbsp;<a {% if p.author.animatedname %}class="{% if p.author.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} href="{{p.author.url}}" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/>{{p.author.username}}</a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
-						<span data-toggle="tooltip" data-placement="bottom" id="timestamp-{{p.id}}" title="">&nbsp;{{p.age_string}}</span>
-						&nbsp;
-						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})
-						
-						{% if p.edited_utc %}&nbsp;&nbsp;Edited <span data-toggle="tooltip" data-placement="bottom" id="edited_timestamp-{{p.id}}" title="">{{p.edited_string}}</span>{% endif %}
-						&nbsp;&nbsp;{{p.views}} views
-
-						{% if p.awards %}
-						{% for a in p.awards[:5] %}
-						<i class="{{a.class_list}} px-1" data-toggle="tooltip" data-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
-						{% endfor %}
-						{% endif %}
-
-					</div>
 
 			<h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" class="stretched-link" {% if p.author.is_private %} rel="nofollow"{% endif %}>
 				{{p.realtitle(v) | safe}}
