@@ -121,6 +121,15 @@ def message2(v, username):
 	if user.is_blocking: return jsonify({"error": "You're blocking this user."}), 403
 	if user.is_blocked: return jsonify({"error": "This user is blocking you."}), 403
 	message = request.form.get("message", "")[:1000].strip()
+
+	# check existing
+	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
+															 Comment.deleted_utc == 0,
+															 Comment.parent_submission == None,
+															 CommentAux.body == message,
+															 ).options(contains_eager(Comment.comment_aux)).first()
+	if existing: return redirect('/notifications?all=true')
+
 	send_pm(v.id, user, message)
 	beams_client.publish_to_interests(
 		interests=[str(user.id)],
