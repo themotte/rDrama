@@ -143,12 +143,8 @@
 							<button class="btn btn-link btn-block btn-lg text-left text-warning" id="distinguish-post-{{p.base36id}}" href="javascript:void(0)" onclick="post('/api/distinguish/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-crown text-center text-muted mr-3"></i>Distinguish</button>
 							{% endif %}
 
-						
-							{% if p.is_banned %}
 							<button class="btn btn-link btn-block btn-lg text-success text-left" id="moderate-post-{{p.base36id}}" href="javascript:void(0)" onclick="post('/api/unban_post/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="far fa-check text-center text-success mr-3"></i>Approve</button>
-							{% else %}
 							<button class="btn btn-link btn-block btn-lg text-danger text-left" id="moderate-post-{{p.base36id}}" href="javascript:void(0)" onclick="post('/api/ban_post/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</button>
-							{% endif %}
 						{% endif %}
 
 						{% if v.admin_level >=4 and p.oauth_app %}
@@ -371,11 +367,8 @@
 						{% if v %}
 
 						{% if v.admin_level >=3 %}
-							{% if p.is_banned %}
-								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/unban_post/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-check"></i>Approve</a></li>
-							{% else %}
-								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/ban_post/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban"></i>Remove</a></li>
-							{% endif %}
+							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/unban_post/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-check"></i>Approve</a></li>
+							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/ban_post/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban"></i>Remove</a></li>
 						{% endif %}
 
 						{% if v.admin_level >= 4 and p.oauth_app %}

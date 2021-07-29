@@ -267,7 +267,7 @@
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{c.permalink}}?context=99#context"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-book-open"></i>Context</a></li>
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{c.permalink | full_link}}?context=99#context"><i class="fas fa-copy"></i>Copy link</a></li>
 					
-					{% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
+					{% if v and v.admin_level>=3 %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-comment-times fa-fw"></i>Remove</a></li>
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-comment-check fa-fw"></i>Approve</a></li>
 					{% endif %}
@@ -318,23 +318,19 @@
 							><i class="fas fa-eye-slash fa-fw"></i>Block user</a>
 						{% endif %}
 
-							{% if not v.id==c.author_id and v.admin_level == 1 %}
-								<a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"
-								><i class="fas fa-user-slash fa-fw"></i>Ban user</a>
-							{% endif %}
+						{% if not v.id==c.author_id and v.admin_level == 1 %}
+							<a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"
+							><i class="fas fa-user-slash fa-fw"></i>Ban user</a>
+						{% endif %}
 
-							{% if v.admin_level>=3 %}
-								{% if not c.is_banned %}
-									<a class="dropdown-item removeDropdownItem" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-comment-times fa-fw"></i>Remove</a>
-								{% endif %}
-								{% if c.is_banned or request.path.startswith('/admin/') %}
-									<a class="dropdown-item removeDropdownItem" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-comment-check fa-fw"></i>Approve</a>
-								{% endif %}
-							{% endif %}
-							{% if v.admin_level >=4 and c.oauth_app %}
-								<a class="dropdown-item" href="{{c.oauth_app.permalink}}/comments" ><i class="fas fa-code fa-fw"></i>API App</a>
-							{% endif %}
-				{% endif %}						
+						{% if v.admin_level>=3 %}
+							<a class="dropdown-item removeDropdownItem" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-comment-times fa-fw"></i>Remove</a>
+							<a class="dropdown-item removeDropdownItem" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-comment-check fa-fw"></i>Approve</a>
+						{% endif %}
+						{% if v.admin_level >=4 and c.oauth_app %}
+							<a class="dropdown-item" href="{{c.oauth_app.permalink}}/comments" ><i class="fas fa-code fa-fw"></i>API App</a>
+						{% endif %}
+					{% endif %}						
 
 						{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) %}
 						<div class="dropdown-divider"></div>
@@ -505,12 +501,8 @@
 											<li class="list-group-item"><a class="d-block" id="distinguish-{{c.base36id}}" href="javascript:void(0)" onclick="admin_comment('{{c.base36id}}')"><i class="fas fa-id-badge"></i>{{'Undistinguish' if c.distinguish_level else 'Distinguish'}}</a></li>
 							{% endif %}
 							{% if v.admin_level>=3 %}
-									{% if not c.is_banned %}
-											<li class="list-group-item"><a class="d-block" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-comment-times"></i>Remove</a></li>
-									{% endif %}
-									{% if c.is_banned or '/admin/' in request.path %}
-											<li class="list-group-item"><a class="d-block" id="moderate-{{c.base36id}}" href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-comment-check"></i>Approve</a></li>
-									{% endif %}
+								<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="removeComment('{{c.base36id}}')"><i class="fas fa-comment-times"></i>Remove</a></li>
+								<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="approveComment('{{c.base36id}}')"><i class="fas fa-comment-check"></i>Approve</a></li>
 							{% endif %}
 							{% if v.admin_level >=4 and c.oauth_app %}
 								<li class="list-group-item"><a class="d-block" href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code"></i>API App</a></li>
