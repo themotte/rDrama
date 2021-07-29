@@ -138,8 +138,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		for f in self.flags: flags[f.user.username] = f.reason
 
 		data= {
-			'id': self.base36id,
-			'fullname': self.fullname,
+			'id': self.id,
 			'level': self.level,
 			'author_name': self.author.username,
 			'body': self.body,
