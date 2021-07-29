@@ -289,7 +289,7 @@
 					{% endif %}
 
 							
-					{% if not v.id==c.author_id and v.admin_level == 0 %}
+					{% if v and not v.id==c.author_id and v.admin_level == 0 %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"><i class="fas fa-eye-slash fa-fw"></i>Block user</a></li>
 					{% endif %}
 
