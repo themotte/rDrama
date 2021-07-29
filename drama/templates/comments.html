@@ -310,7 +310,7 @@
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/api/toggle_comment_nsfw/{{c.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil fa-fw text-danger"></i>Toggle +18</a></li>
 					{% endif %}
 
-					{% if v.admin_level >=4 and c.oauth_app %}
+					{% if v and v.admin_level >=4 and c.oauth_app %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{c.oauth_app.permalink}}/comments" ><i class="fas fa-code fa-fw"></i>API App</a></li>
 					{% endif %}
 
