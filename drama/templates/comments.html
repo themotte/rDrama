@@ -444,7 +444,7 @@
 				{% endif %}
 
 					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
-					<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="post('/api/toggle_comment_nsfw/{{c.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
+					<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="post('/api/toggle_comment_nsfw/{{c.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil text-danger"></i>Toggle +18</a></li>
 					{% endif %}
 
 					{% if v %}
