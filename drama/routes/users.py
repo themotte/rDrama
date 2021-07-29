@@ -73,6 +73,14 @@ def messagereply(v, username, id):
 	message = request.form.get("message", "")[:1000].strip()
 	user = get_user(username)
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+
+	# check existing
+	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
+															Comment.sentto == user.id,
+															CommentAux.body == message,
+															).options(contains_eager(Comment.comment_aux)).first()
+	if existing: return redirect('/notifications?all=true')
+
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
 	text_html = sanitize(text_html, linkgen=True)
 	parent = get_comment(int(id), v=v)
@@ -122,12 +130,13 @@ def message2(v, username):
 	if user.is_blocked: return jsonify({"error": "This user is blocking you."}), 403
 	message = request.form.get("message", "")[:1000].strip()
 
+	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
-															 Comment.deleted_utc == 0,
-															 Comment.parent_submission == None,
-															 CommentAux.body == message,
-															 ).options(contains_eager(Comment.comment_aux)).first()
+															Comment.sentto == user.id,
+															CommentAux.body == message,
+															).options(contains_eager(Comment.comment_aux)).first()
 	if existing: return redirect('/notifications?all=true')
 
 	send_pm(v.id, user, message)

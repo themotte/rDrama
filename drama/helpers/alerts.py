@@ -37,8 +37,6 @@ def send_notification(vid, user, text):
 
 def send_pm(vid, user, text):
 
-	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
-
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
 
 	text_html = sanitize(text_html, linkgen=True)
