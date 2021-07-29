@@ -289,14 +289,14 @@
 					{% endif %}
 
 					{% if v and v.admin_level==6 and v.id != c.author_id and c.author.is_banned %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="dropdown-item text-danger" id="unexile-comment-{{c.base36id}}" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Unban user</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="unexile-comment-{{c.base36id}}" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw text-danger"></i>Unban user</a></li>
 					{% else %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="dropdown-item text-danger" id="exile-comment-{{c.base36id}}" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Ban user</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="exile-comment-{{c.base36id}}" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw text-danger"></i>Ban user</a></li>
 					{% endif %}
 
 
 					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/api/toggle_comment_nsfw/{{c.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil fa-fw"></i>Toggle +18</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/api/toggle_comment_nsfw/{{c.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil fa-fw text-danger"></i>Toggle +18</a></li>
 					{% endif %}
 
 
@@ -307,7 +307,7 @@
 
 							
 					{% if not v.id==c.author_id and v.admin_level == 0 %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"><i class="fas fa-eye-slash fa-fw"></i>Block user</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"><i class="fas fa-eye-slash fa-fw"></i>Block user</a></li>
 					{% endif %}
 
 					{% if v.admin_level >=4 and c.oauth_app %}
