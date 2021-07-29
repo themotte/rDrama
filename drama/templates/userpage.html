@@ -4,6 +4,7 @@
 	{% block stylesheets %}
 		{% if v %}
 			<link rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/style/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
 		{% endif %}
@@ -12,6 +13,7 @@
 		{% endif %}
 	{% endblock %}
 {% endif %}
+
 
 {% block pagetype %}userpage{% endblock %}
 

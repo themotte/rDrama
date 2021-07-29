@@ -76,7 +76,7 @@ def submit_get(v):
 @app.get("/post/<pid>/<anything>")
 @app.get("/api/v1/post/<pid>")
 @auth_desired
-@api("read")
+@public("read")
 def post_base36id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
