@@ -399,11 +399,24 @@ def u_username_comments(username, v=None):
 				}
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
-		return {'html': lambda: render_template("userpage_private.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": "That userpage is private"}
-				}
+		paidrent = False
+		if v and u.id == 253:
+			if int(time.time()) - v.rent_utc < 600: paidrent = True
+			elif request.args.get("rent") == "true" and v.dramacoins > 500:
+				v.dramacoins -= 500
+				v.rent_utc = int(time.time())
+				g.db.add(v)
+				u.dramacoins += 500
+				g.db.add(u)
+				send_notification(1046, u, f"@{v.username} has paid rent!")
+				paidrent = True
+
+		if not paidrent:
+			return {'html': lambda: render_template("userpage_private.html",
+													u=u,
+													v=v),
+					'api': lambda: {"error": "That userpage is private"}
+					}
 
 	if u.is_blocking and (not v or v.admin_level < 3):
 		return {'html': lambda: render_template("userpage_blocking.html",
