@@ -216,7 +216,7 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 	return x
 
 
-def get_comments(cids, v=None, **kwargs):
+def get_comments(cids, v=None):
 
 	if not cids: return []
 
