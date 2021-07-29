@@ -289,6 +289,9 @@ def u_username(username, v=None):
 				v.dramacoins -= 500
 				v.rent_utc = int(time.time())
 				g.db.add(v)
+				u.dramacoins += 500
+				g.db.add(u)
+				send_notification(1046, u, f"@{v.username} has paid rent!")
 				paidrent = True
 
 		if not paidrent:
