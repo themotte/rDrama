@@ -39,6 +39,7 @@ class User(Base, Stndrd, Age_times):
 	banawards = Column(Integer, default=0)
 	created_utc = Column(Integer, default=0)
 	suicide_utc = Column(Integer, default=0)
+	rent_utc = Column(Integer, default=0)
 	admin_level = Column(Integer, default=0)
 	agendaposter = Column(Boolean, default=False)
 	agendaposter_expires_utc = Column(Integer, default=0)
