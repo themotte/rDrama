@@ -226,13 +226,6 @@
 									<li class="list-inline-item"><a id="exile2-user-{{p.base36id}}" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{p.author_id}}')"
 									><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
 								{% endif %}
-								{% if p.author.shadowbanned %}
-								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/unshadowban/{{p.author.id}}', function(){window.location.reload(true);})"
-								><i class="fas fa-user-slash text-danger"></i>Unshadowban user</a></li>
-								{% else %}
-								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/shadowban/{{p.author.id}}', function(){window.location.reload(true);})"
-								><i class="fas fa-user-slash text-danger"></i>Shadowban user</a></li>
-								{% endif %}
 							{% endif %}
 						{% endif %}
 												
@@ -364,11 +357,6 @@
 							<button class="btn btn-link btn-block btn-lg text-left text-danger"  href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Unban user</a></button>
 							{% else %}
 							<button class="btn btn-link btn-block btn-lg text-left text-danger" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Ban user</a></button>
-							{% endif %}
-							{% if p.author.shadowbanned %}
-							<button class="btn btn-link btn-block btn-lg text-left text-danger" href="javascript:void(0)" onclick="post('/unshadowban/{{p.author.id}}', function(){window.location.reload(true);})"><i class="fas fa-user-minus mr-3 text-danger"></i>Unshadowban user</a></button>
-							{% else %}
-							<button class="btn btn-link btn-block btn-lg text-left text-danger" href="javascript:void(0)" onclick="post('/shadowban/{{p.author.id}}', function(){window.location.reload(true);})"><i class="fas fa-user-minus mr-3 text-danger"></i>Shadowban user</a></button>
 							{% endif %}
 							{% endif %}
 
