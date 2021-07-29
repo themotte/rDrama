@@ -69,12 +69,10 @@
 {% set score=c.score %}
 
 {% if v %}
-{% set voted=c.voted %}
-{% set adjust = voted %}
+{% set voted=c.voted(v) %}
 
 {% else %}
 {% set voted=-2 %}
-{% set adjust=0 %}
 
 {% endif %}
 

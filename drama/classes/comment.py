@@ -213,27 +213,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 		return data
 
-		
-	@property
-	def voted(self):
-
-		x = self.__dict__.get("_voted")
-		if x != None:
-			return x
-
-		if g.v:
-			x = g.db.query(CommentVote).filter_by(
-				comment_id=self.id,
-				user_id=g.v.id
-			).first()
-
-			if x:
-				x = x.vote_type
-			else:
-				x = 0
-		else:
-			x = 0
-		return x
+	def voted(self, v):
+		x = g.db.query(CommentVote).filter_by(comment_id=self.id, user_id=g.v.id).first()
+		if x: return x.vote_type
+		else: return 0
 
 	@property
 	def is_blocking(self):

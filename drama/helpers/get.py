@@ -179,42 +179,20 @@ def get_posts(pids, v=None):
 
 def get_comment(cid, v=None, graceful=False, **kwargs):
 
-	if isinstance(cid, str):
-		i = base36decode(cid)
-	else:
-		i = cid
+	if isinstance(cid, str): i = base36decode(cid)
+	else: i = cid
 
 	if v:
 		blocking = v.blocking.subquery()
 		blocked = v.blocked.subquery()
-		vt = g.db.query(CommentVote).filter(
-			CommentVote.user_id == v.id,
-			CommentVote.comment_id == i).subquery()
 
-		items = g.db.query(
-			Comment, 
-			vt.c.vote_type,
-		)
+		items = g.db.query(Comment)
 
-		if v.admin_level >=4:
-			items=items.options(joinedload(Comment.oauth_app))
+		if v.admin_level >=4: items=items.options(joinedload(Comment.oauth_app))
 
-		items=items.filter(
-			Comment.id == i
-		).join(
-			vt, 
-			vt.c.comment_id == Comment.id, 
-			isouter=True
-		).join(
-			Comment.post,
-			isouter=True
-		).first()
+		x=items.filter(Comment.id == i).first()
 
-		if not items and not graceful:
-			abort(404)
-
-		x = items[0]
-		x._voted = items[1] or 0
+		if not x and not graceful: abort(404)
 
 		block = g.db.query(UserBlock).filter(
 			or_(
@@ -232,75 +210,23 @@ def get_comment(cid, v=None, graceful=False, **kwargs):
 		x._is_blocked = block and block.target_id == v.id
 
 	else:
-		x = g.db.query(
-			Comment,
-		).filter(Comment.id == i).first()
-
-		if not x and not graceful:
-			abort(404)
-
+		x = g.db.query(Comment).filter(Comment.id == i).first()
+		if not x and not graceful:abort(404)
 
 	return x
 
 
-def get_comments(cids, v=None, load_parent=False, **kwargs):
+def get_comments(cids, v=None, **kwargs):
 
-	if not cids:
-		return []
+	if not cids: return []
 
 	cids=tuple(cids)
 
-	if v:
-		vt = g.db.query(CommentVote).filter(
-			CommentVote.comment_id.in_(cids), 
-			CommentVote.user_id==v.id
-			).subquery()
+	output = g.db.query(Comment)
 
-		query = g.db.query(
-			Comment, 
-			aliased(CommentVote, alias=vt),
-			)
+	if v and v.admin_level >=4: output=output.options(joinedload(Comment.oauth_app))
 
-		if v.admin_level >=4:
-			query=query.options(joinedload(Comment.oauth_app))
-
-		if load_parent:
-			query = query.options(
-				joinedload(
-					Comment.parent_comment
-					)
-				)
-
-		query = query.join(
-			vt,
-			vt.c.comment_id == Comment.id,
-			isouter=True
-			).join(
-			Comment.post,
-			isouter=True
-			).filter(
-			Comment.id.in_(cids)
-			)
-
-
-		output = [x[0] for x in query]
-		for i in range(len(output)):
-			if query[i][1] != None: 
-				try: output[i]._voted = query[i][1].vote_type
-				except:
-					print(query[i][1])
-					output[i]._voted = 0
-			else: output[i]._voted = 0
-
-
-	else:
-		query = g.db.query(
-			Comment,
-		).filter(
-			Comment.id.in_(cids)
-		).all()
-
-		output=[x for x in query]
+	output = output.options(joinedload(Comment.parent_comment)).filter(Comment.id.in_(cids)).all()
 
 	output = sorted(output, key=lambda x: cids.index(x.id))
 
