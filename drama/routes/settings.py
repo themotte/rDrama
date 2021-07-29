@@ -372,7 +372,8 @@ def settings_delete_profile(v):
 @validate_formkey
 def settings_delete_banner(v):
 
-	v.del_banner()
+	v.bannerurl = None
+	g.db.add(v)
 
 	return render_template("settings_profile.html", v=v,
 						   msg="Banner successfully removed.")
