@@ -214,7 +214,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		return data
 
 	def voted(self, v):
-		x = g.db.query(CommentVote).filter_by(comment_id=self.id, user_id=g.v.id).first()
+		x = g.db.query(CommentVote).filter_by(comment_id=self.id, user_id=v.id).first()
 		if x: return x.vote_type
 		else: return 0
 
