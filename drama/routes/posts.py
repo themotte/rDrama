@@ -76,7 +76,6 @@ def submit_get(v):
 @app.get("/post/<pid>/<anything>")
 @app.get("/api/v1/post/<pid>")
 @auth_desired
-@public("read")
 def post_base36id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
@@ -240,10 +239,8 @@ def post_base36id(pid, anything=None, v=None):
 	
 	post.tree_comments()
 
-	return {
-		"html":lambda:post.rendered_page(v=v, sort=sort),
-		"api":lambda:jsonify(post.json)
-		}
+	if "api" in request.path: return post.json
+	else: return post.rendered_page(v=v, sort=sort)
 
 @app.post("/edit_post/<pid>")
 @is_not_banned
