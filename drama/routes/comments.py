@@ -742,8 +742,7 @@ def edit_comment(cid, v):
 
 	if request.files.get("file"):
 		file=request.files["file"]
-		if not file.content_type.startswith('image/'):
-			return jsonify({"error": "That wasn't an image!"}), 400
+		if not file.content_type.startswith('image/'): return jsonify({"error": "That wasn't an image!"}), 400
 		
 		name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
 		url = upload_file(name, file)
