@@ -206,7 +206,7 @@
 
 							{% if v.admin_level >=3 %}
 								<li class="list-inline-item"><a class="text-success" id="moderate-post-{{p.base36id}}" href="javascript:void(0)" onclick="post('/api/unban_post/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-check text-success"></i>Approve</a></li>
-								<li class="list-inline-item"><a id="moderate-post-{{p.base36id}}" href="javascript:void(0)" onclick="post('/api/ban_post/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban"></i>Remove</a></li>
+								<li class="list-inline-item"><a id="moderate-post-{{p.base36id}}" href="javascript:void(0)" onclick="post('/api/ban_post/{{p.base36id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban text-danger"></i>Remove</a></li>
 							{% endif %}
 
 							{% if v.admin_level >= 4 and p.oauth_app %}
