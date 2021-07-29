@@ -54,7 +54,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	post = relationship("Submission")
 	flags = relationship("CommentFlag", backref="comment")
-	votes = relationship("CommentVote", backref="comment")
+	votes = relationship("CommentVote")
 
 	author = relationship(
 		"User",
