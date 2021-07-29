@@ -34,7 +34,7 @@ def upload_file(file, resize=None):
 	
 	if resize:
 		filename = "image.gif"
-		file.save(filename)
+		file.save(filename, format='GIF')
 		i = IImage.open(filename)
 		i = crop_and_resize(i, resize)
 		img = io.BytesIO()
