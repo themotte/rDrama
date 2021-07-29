@@ -72,7 +72,7 @@ def get_profilecss(username):
 def messagereply(v, username, id):
 	message = request.form.get("message", "")[:1000].strip()
 	user = get_user(username)
-	message = message.replace("\n", "\n\n")
+	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
 	text_html = sanitize(text_html, linkgen=True)
 	parent = get_comment(int(id), v=v)
