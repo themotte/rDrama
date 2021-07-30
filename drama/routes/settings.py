@@ -328,9 +328,9 @@ def settings_images_profile(v):
 		g.db.rollback()
 		abort(413)
 
-	highres = upload_file(request.files["profile"], (100,100))
+	imageurl = upload_file(request.files["profile"], (100,100))
 	if not highres: abort(400)
-	imageurl = upload_file()
+	highres = upload_file()
 	if not imageurl: abort(400)
 	v.highres = highres
 	v.profileurl = imageurl
