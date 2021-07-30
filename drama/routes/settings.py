@@ -330,6 +330,8 @@ def settings_images_profile(v):
 
 	imageurl = upload_file(request.files["profile"], (100,100))
 	print(imageurl)
+	highres = upload_file(request.files["profile"])
+	print(highres)
 
 	return render_template("settings_profile.html",
 							v=v, msg="Profile picture successfully updated.")

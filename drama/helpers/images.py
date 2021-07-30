@@ -48,7 +48,7 @@ def upload_file(file, resize=None):
 	else:
 		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())})
 		try: resp = req.json()['data']
-		except Exception as e:
+		except:
 			print(req.text)
 			return
 	
