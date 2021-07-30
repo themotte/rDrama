@@ -31,7 +31,7 @@ def upload_file(file=None, resize=False):
 		om.save("image.gif", save_all=True, append_images=list(frames))
 
 	try:
-		with open('D:/out.gif', 'rb') as f:
+		with open('image.gif', 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {{imgurkey}}"}, data=data)
 		resp = req.json()['data']
