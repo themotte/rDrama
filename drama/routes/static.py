@@ -40,11 +40,14 @@ def log(v):
 		"api":lambda:jsonify({"data":[x.json for x in actions]})
 		}
 
-@app.get("/log/<aid>")
+@app.get("/log/<id>")
 @auth_desired
-def log_item(aid, v):
+def log_item(id, v):
 
-	action=g.db.query(ModAction).filter_by(id=aid).first()
+	try: id = int(id)
+	except: id = int(id, 36)
+
+	action=g.db.query(ModAction).filter_by(id=id).first()
 
 	if not action:
 		abort(404)
