@@ -334,8 +334,7 @@ def settings_images_profile(v):
 	imageurl = upload_file(file, (100,100))
 	print(imageurl)
 
-	return render_template("settings_profile.html",
-							v=v, msg="Profile picture successfully updated.")
+	return render_template("settings_profile.html", v=v, msg="Profile picture successfully updated.")
 
 
 @app.post("/settings/images/banner")
