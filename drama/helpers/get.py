@@ -48,15 +48,9 @@ def get_account(id, v=None):
 
 	user = g.db.query(User).filter_by(id = id).first()
 				
-	print(id)
 	if not user:
-		try:
-			print(id)
-			id = int(str(id), 36)
-			print(id)
-		except Exception as e:
-			print(e)
-			abort(404)
+		try: id = int(str(id), 36)
+		except: abort(404)
 		user = g.db.query(User).filter_by(id = id).first()
 		if not user: abort(404)
 
