@@ -529,8 +529,8 @@ def user_profile(username):
 @app.route("/uid/<uid>/pic/profile")
 @limiter.exempt
 def user_profile_uid(uid):
-	try: uid = int(uid, 36)
-	except: uid = int(uid)
+	try: uid = int(uid)
+	except: uid = int(uid, 36)
 	x=get_account(uid)
 	return redirect(x.profile_url)
 
