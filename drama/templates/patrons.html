@@ -15,13 +15,8 @@
 		<td style="font-weight:bold;">{{users.index(user)+1}}</td>
 		<td><a {% if user.animatedname %}class="{% if user.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}"><img src="/@{{user.username}}/pic/profile" class="profile-pic-20 mr-1">{{user.username}}</a></td>
 
-		<td></td><img style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></td>
+		<td><img style="width: 32px; height: 32px" src="/assets/images/badges/patron-{{user.patron}}.png"></td>
 
-
-
-		<td style="font-weight:bold;">{% if self.has_badge() %}{{user.banawards}}{% endif %}</td>
-
-		
 		<td style="font-weight:bold;">{% if user.banawards %}{{user.banawards}}{% endif %}</td>
 	</tr>
 {% endfor %}
