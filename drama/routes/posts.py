@@ -97,7 +97,8 @@ def post_id(pid, anything=None, v=None):
 
 
 
-
+	try: pid = int(pid)
+	except: pid = int(pid, 36)
 
 	post = get_post(pid, v=v)
 
