@@ -21,7 +21,7 @@ from .front import frontlist
 
 @app.get("/admin/patrons")
 @auth_required
-def shadowbanned(v):
+def patrons(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	if not (v and v.admin_level == 6): abort(404)
 	users = [x for x in g.db.query(User).filter_by(patron = True).all()]
