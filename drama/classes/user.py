@@ -300,8 +300,9 @@ class User(Base, Stndrd, Age_times):
 	def display_awards(self):
 
 		_awards = {}
+		active_awards = [x for x in self.awards if not x.given]
 
-		for a in self.awards:
+		for a in active_awards:
 			if a.kind in _awards:
 				_awards[a.kind]['count'] += 1
 			else:
