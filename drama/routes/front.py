@@ -14,8 +14,6 @@ def slash_post():
 @auth_required
 def notifications(v):
 
-	start = time.time()
-
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	page = int(request.args.get('page', 1))
@@ -61,9 +59,6 @@ def notifications(v):
 
 			if c not in listing:
 				listing.append(c)
-
-	print(type(time.time()))
-	print(time.time() - start)
 
 	return render_template("notifications.html",
 						   v=v,
