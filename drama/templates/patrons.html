@@ -19,7 +19,7 @@
 
 		<td style="font-weight:bold;">
 			{% for a in user.display_awards %}
-			<span class="d-block mx-2">
+			<span class="d-inline-block m-2">
 				<i class="{{ a['icon'] }} {{ a['color'] }} fa-fw" data-toggle="tooltip" data-placement="bottom" title="{{ a['title'] }} Awards owned"></i>
 				{{ a['count'] }}
 			</span>
