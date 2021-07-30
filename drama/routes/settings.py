@@ -328,8 +328,6 @@ def settings_images_profile(v):
 		g.db.rollback()
 		abort(413)
 
-	highres = upload_file(request.files["profile"])
-	print(highres)
 	imageurl = upload_file(request.files["profile"], (100,100))
 	print(imageurl)
 
