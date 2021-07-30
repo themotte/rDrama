@@ -44,15 +44,13 @@ def get_user(username, v=None, graceful=False):
 
 	return user
 
-def get_account(id, v=None, graceful=False):
+def get_account(id, v=None):
 
 	user = g.db.query(User).filter(User.id == id).first()
 
 	if not user:
-		if not graceful:
-			abort(404)
-		else:
-			return None
+		user = g.db.query(User).filter(User.id == int(id, 36)).first()
+		if not user: abort(404)
 
 	if v:
 		block = g.db.query(UserBlock).filter(
