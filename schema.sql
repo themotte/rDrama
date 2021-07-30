@@ -210,7 +210,8 @@ CREATE TABLE public.users (
     comment_count integer,
     highres text,
     rent_utc integer,
-    patron integer
+    patron integer,
+    zzz boolean DEFAULT false
 );
 
 
