@@ -873,7 +873,7 @@ CREATE TABLE public.modactions (
     target_comment_id integer,
     created_utc integer DEFAULT 0,
     kind character varying(32) DEFAULT NULL::character varying,
-    _note character varying(350) DEFAULT NULL::character varying
+    _note text DEFAULT NULL::character varying
 );
 
 
