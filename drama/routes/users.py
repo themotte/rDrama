@@ -70,6 +70,10 @@ def get_profilecss(username):
 @app.post("/@<username>/reply/<id>")
 @auth_required
 def messagereply(v, username, id):
+
+	if v.zzz:
+		abort(418)
+
 	message = request.form.get("message", "")[:1000].strip()
 	user = get_user(username)
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
@@ -125,6 +129,10 @@ def unsubscribe(v, post_id):
 @limiter.limit("10/hour")
 @auth_required
 def message2(v, username):
+
+	if v.zzz:
+		abort(418)
+
 	user = get_user(username, v=v)
 	if user.is_blocking: return jsonify({"error": "You're blocking this user."}), 403
 	if user.is_blocked: return jsonify({"error": "This user is blocking you."}), 403
