@@ -32,7 +32,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
 	# this column is foreignkeyed to comment(id) but we can't do that yet as
 	# "comment" class isn't yet defined
-	parent_fullname = Column(Integer)
 	created_utc = Column(Integer, default=0)
 	edited_utc = Column(Integer, default=0)
 	is_banned = Column(Boolean, default=False)
@@ -110,6 +109,13 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		if self.level == 1: return self.post
 
 		else: return g.db.query(Comment).get(self.parent_comment_id)
+
+	@property
+	@lazy
+	def parent_fullname(self):
+		if self.parent_comment_id: return "t3_" + self.parent_comment_id
+		elif self.parent_submission: return "t2_" + self.parent_submission
+
 
 	@property
 	def replies(self):
