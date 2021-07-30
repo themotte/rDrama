@@ -114,12 +114,9 @@ def api_vote_post(post_id, new, v):
 @validate_formkey
 def api_vote_comment(comment_id, new, v):
 
-	if new not in ["-1", "0", "1"]:
-		abort(400)
+	if new not in ["-1", "0", "1"]: abort(400)
 
-	# disallow bots
-	if request.headers.get("X-User-Type","") == "Bot":
-		abort(403)
+	if request.headers.get("X-User-Type","") == "Bot": abort(403)
 
 	new = int(new)
 
