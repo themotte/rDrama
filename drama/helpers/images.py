@@ -1,6 +1,5 @@
 import requests
 from os import environ
-import piexif
 from PIL import Image as IImage
 from os import remove
 import base64
