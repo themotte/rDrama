@@ -328,9 +328,9 @@ def settings_images_profile(v):
 		g.db.rollback()
 		abort(413)
 
-	highres = upload_file(request.files["profile"])
+	highres = upload_file(request.files["profile"], (100,100))
 	print(highres)
-	imageurl = upload_from_file("image.gif", (100,100))
+	imageurl = upload_from_file("image.gif")
 	print(imageurl)
 
 	return render_template("settings_profile.html", v=v, msg="Profile picture successfully updated.")
