@@ -328,9 +328,10 @@ def settings_images_profile(v):
 		g.db.rollback()
 		abort(413)
 
-	highres = upload_file(request.files["profile"])
+	file = request.files["profile"]
+	highres = upload_file(file)
 	print(highres)
-	imageurl = upload_file(request.files["profile"], (100,100))
+	imageurl = upload_file(file, (100,100))
 	print(imageurl)
 
 	return render_template("settings_profile.html",
