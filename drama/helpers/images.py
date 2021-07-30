@@ -1,6 +1,6 @@
 import requests
 from os import environ
-from PIL import Image as IImage
+from PIL import Image as IImage, ImageSequence
 import base64
 import io
 from drama.classes.images import *
@@ -10,28 +10,27 @@ CF_ZONE = environ.get("CLOUDFLARE_ZONE").strip()
 imgurkey = environ.get("imgurkey").strip()
 
 
-def upload_file(file=None, resize=None):
+def upload_file(file=None, resize=False):
 	
 	if file: file.save("image.gif")
-	i = IImage.open("image.gif")
-
 
 	if resize:
-		org_ratio = i.width / i.height
-		new_ratio = resize[0] / resize[1]
+		i = IImage.open("image.gif")
+		frames = ImageSequence.Iterator(i)
 
-		if new_ratio > org_ratio:
-			crop_height = int(i.width / new_ratio)
-			box = (0, (i.height // 2) - (crop_height // 2),
-				i.width, (i.height // 2) + (crop_height // 2))
-		else:
-			crop_width = int(new_ratio * i.height)
-			box = ((i.width // 2) - (crop_width // 2), 0,
-				(i.width // 2) + (crop_width // 2), i.height)
+		def thumbnails(frames):
+			for frame in frames:
+				thumbnail = frame.copy()
+				thumbnail.thumbnail(100, 100, IImage.ANTIALIAS)
+				yield thumbnail
 
-		i = i.resize(resize, box=box)
+		frames = thumbnails(frames)
 
+		om = next(frames)
+		om.info = i.info
+		om.save("image.gif", save_all=True, append_images=list(frames))
 
+	i = IImage.open("image.gif")
 	img = io.BytesIO()
 	i.save(img, format='GIF')
 	req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())})
