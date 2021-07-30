@@ -188,6 +188,7 @@ def admin_userawards_post(v):
     u = get_user(request.form.get("username", '1'), graceful=False, v=v)
 
     awards = []
+    notify_awards = {}
 
     latest = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first()
     thing = latest.id
@@ -197,6 +198,10 @@ def admin_userawards_post(v):
             continue
 
         if value:
+
+            if int(value) > 0:
+                notify_awards[key] = int(value)
+
             for x in range(int(value)):
                 thing += 1
 
@@ -207,5 +212,11 @@ def admin_userawards_post(v):
                 ))
 
     g.db.bulk_save_objects(awards)
+    text = "You were given the following awards:\n\n"
+
+    for key, value in notify_awards.items():
+        text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
+
+    send_notification(1, u, text)
 
     return render_template("admin/user_award.html", awards=list(AWARDS.values()), v=v)
