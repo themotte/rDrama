@@ -78,31 +78,16 @@ CREATE TABLE public.submissions (
     deleted_utc integer NOT NULL,
     domain_ref integer,
     is_approved integer NOT NULL,
-    approved_utc integer,
     edited_utc integer,
-    mod_approved integer,
-    has_thumb boolean,
-    accepted_utc integer,
-    post_public boolean,
-    score_hot double precision,
-    score_top integer,
-    score_activity double precision,
-    score_disputed double precision,
-    is_offensive boolean,
     is_pinned boolean,
-    is_nsfl boolean,
-    repost_id integer,
-    score_best double precision,
     upvotes integer,
     downvotes integer,
     app_id integer,
-    creation_region character(2) DEFAULT NULL::bpchar,
-    purged_utc integer DEFAULT 0,
-    is_bot boolean DEFAULT false,
     thumburl text,
     private boolean,
     views integer,
-    banaward text
+    banaward text,
+    is_bot boolean
 );
 
 
@@ -259,7 +244,6 @@ CREATE TABLE public.comments (
     created_utc integer NOT NULL,
     parent_submission integer,
     is_banned boolean,
-    parent_fullname character varying(255),
     distinguish_level integer,
     edited_utc integer,
     deleted_utc integer NOT NULL,
@@ -2175,20 +2159,6 @@ CREATE INDEX post_author_index ON public.submissions USING btree (author_id);
 
 
 --
--- Name: post_offensive_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX post_offensive_index ON public.submissions USING btree (is_offensive);
-
-
---
--- Name: post_public_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX post_public_idx ON public.submissions USING btree (post_public);
-
-
---
 -- Name: sub_active_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -2224,31 +2194,10 @@ CREATE INDEX submission_aux_url_trgm_idx ON public.submissions_aux USING gin (ur
 
 
 --
--- Name: submission_best_only_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX submission_best_only_idx ON public.submissions USING btree (score_best DESC);
-
-
---
--- Name: submission_disputed_sort_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX submission_disputed_sort_idx ON public.submissions USING btree (is_banned, deleted_utc, score_disputed DESC, over_18);
-
-
---
 -- Name: submission_domainref_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX submission_domainref_index ON public.submissions USING btree (domain_ref);
-
-
---
--- Name: submission_hot_sort_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX submission_hot_sort_idx ON public.submissions USING btree (is_banned, deleted_utc, score_hot DESC, over_18);
 
 
 --
@@ -2280,13 +2229,6 @@ CREATE INDEX submission_pinned_idx ON public.submissions USING btree (is_pinned)
 
 
 --
--- Name: submission_purge_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX submission_purge_idx ON public.submissions USING btree (purged_utc);
-
-
---
 -- Name: submissions_author_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -2315,24 +2257,10 @@ CREATE INDEX submissions_created_utc_desc_idx ON public.submissions USING btree 
 
 
 --
--- Name: submissions_offensive_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX submissions_offensive_index ON public.submissions USING btree (is_offensive);
-
-
---
 -- Name: submissions_over18_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX submissions_over18_index ON public.submissions USING btree (over_18);
-
-
---
--- Name: submissions_score_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX submissions_score_idx ON public.submissions USING btree (score_top);
 
 
 --
@@ -2361,13 +2289,6 @@ CREATE INDEX subscription_board_index ON public.subscriptions USING btree (board
 --
 
 CREATE INDEX subscription_user_index ON public.subscriptions USING btree (user_id);
-
-
---
--- Name: trending_all_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX trending_all_idx ON public.submissions USING btree (is_banned, deleted_utc, stickied, post_public, score_hot DESC);
 
 
 --
