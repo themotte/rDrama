@@ -196,12 +196,12 @@ def badge_grant_post(v):
 
 	send_notification(1046, user, text)
 
-	# if badge_id in [21,22,23,24,28]:
-	# 	user.patron = int(str(badge_id)[-1])
-	# 	user.animatedname = True
+	if badge_id in [21,22,23,24,28]:
+	 	user.patron = int(str(badge_id)[-1])
+	 	user.animatedname = True
 	# 	if badge_id == 23: user.banawards = 1
 	# 	elif badge_id in [24,28]: user.banawards = 3
-	# 	g.db.add(user)
+	 	g.db.add(user)
 	
 	return redirect(user.url)
 
