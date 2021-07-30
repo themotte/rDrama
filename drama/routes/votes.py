@@ -11,7 +11,7 @@ def admin_vote_info_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	link = request.args.get("link")
-	if not link: return render_template("admin/votes.html", v=v)
+	if not link: return render_template("votes.html", v=v)
 
 	ids = re.search("://[^/]+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
 
@@ -54,7 +54,7 @@ def admin_vote_info_get(v):
 	else:
 		abort(400)
 
-	return render_template("admin/votes.html",
+	return render_template("votes.html",
 						   v=v,
 						   thing=thing,
 						   ups=ups,
