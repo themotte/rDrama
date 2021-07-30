@@ -217,6 +217,6 @@ def admin_userawards_post(v):
     for key, value in notify_awards.items():
         text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
 
-    send_notification(1, u, text)
+    send_notification(1046, u, text)
 
     return render_template("admin/user_award.html", awards=list(AWARDS.values()), v=v)
