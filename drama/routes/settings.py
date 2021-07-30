@@ -329,11 +329,15 @@ def settings_images_profile(v):
 		abort(413)
 
 	highres = upload_file(request.files["profile"], (100,100))
-	print(highres)
+	if not highres: abort(400)
 	imageurl = upload_from_file("image.gif")
-	print(imageurl)
+	if not imageurl: abort(400)
+	v.highres = highres
+	v.profileurl = imageurl
+	g.db.add(v)
 
-	return render_template("settings_profile.html", v=v, msg="Profile picture successfully updated.")
+	return render_template("settings_profile.html",
+							v=v, msg="Profile picture successfully updated.")
 
 
 @app.post("/settings/images/banner")
