@@ -327,7 +327,6 @@ def edit_post(pid, v):
 
 		c_jannied = Comment(author_id=2317,
 			parent_submission=p.id,
-			parent_fullname=p.fullname,
 			level=1,
 			over_18=False,
 			is_bot=True,
@@ -964,7 +963,6 @@ def submit_post(v):
 
 		c_jannied = Comment(author_id=2317,
 			parent_submission=new_post.id,
-			parent_fullname=new_post.fullname,
 			level=1,
 			over_18=False,
 			is_bot=True,
@@ -1000,7 +998,6 @@ def submit_post(v):
 	c = Comment(author_id=261,
 		distinguish_level=6,
 		parent_submission=new_post.id,
-		parent_fullname=new_post.fullname,
 		level=1,
 		over_18=False,
 		is_bot=True,

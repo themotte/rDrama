@@ -374,7 +374,6 @@ def api_comment(v):
 	parent_id = parent_fullname.split("_")[1]
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
-				parent_fullname=parent.fullname,
 				parent_comment_id=parent_comment_id,
 				level=level,
 				over_18=parent_post.over_18 or request.form.get("over_18","")=="true",
@@ -417,7 +416,6 @@ def api_comment(v):
 		c_jannied = Comment(author_id=2317,
 			parent_submission=parent_submission,
 			distinguish_level=6,
-			parent_fullname=c.fullname,
 			parent_comment_id=c.id,
 			level=level+1,
 			is_bot=True,
@@ -451,7 +449,6 @@ def api_comment(v):
 	if len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
 		c2 = Comment(author_id=1832,
 			parent_submission=parent_submission,
-			parent_fullname=c.fullname,
 			parent_comment_id=c.id,
 			level=level+1,
 			is_bot=True,
@@ -483,7 +480,6 @@ def api_comment(v):
 	if	random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
 		c2 = Comment(author_id=1833,
 			parent_submission=parent_submission,
-			parent_fullname=c.fullname,
 			parent_comment_id=c.id,
 			level=level+1,
 			is_bot=True,
@@ -510,7 +506,6 @@ def api_comment(v):
 
 		c3 = Comment(author_id=1833,
 			parent_submission=parent_submission,
-			parent_fullname=c2.fullname,
 			parent_comment_id=c2.id,
 			level=level+2,
 			is_bot=True,
@@ -537,7 +532,6 @@ def api_comment(v):
 		
 		c4 = Comment(author_id=1833,
 			parent_submission=parent_submission,
-			parent_fullname=c3.fullname,
 			parent_comment_id=c3.id,
 			level=level+3,
 			is_bot=True,
@@ -766,7 +760,6 @@ def edit_comment(cid, v):
 		c_jannied = Comment(author_id=2317,
 			parent_submission=c.parent_submission,
 			distinguish_level=6,
-			parent_fullname=c.fullname,
 			parent_comment_id=c.id,
 			level=c.level+1,
 			is_bot=True,

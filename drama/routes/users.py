@@ -86,7 +86,6 @@ def messagereply(v, username, id):
 	parent = get_comment(int(id), v=v)
 	new_comment = Comment(author_id=v.id,
 							parent_submission=None,
-							parent_fullname=parent.fullname,
 							parent_comment_id=id,
 							level=parent.level + 1,
 							sentto=user.id
