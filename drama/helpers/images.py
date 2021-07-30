@@ -1,7 +1,6 @@
 import requests
 from os import environ
 from PIL import Image as IImage
-import os
 import base64
 import io
 from drama.classes.images import *
