@@ -2,7 +2,6 @@ import requests
 from os import environ
 from PIL import Image as IImage, ImageSequence
 import base64
-import io
 from drama.classes.images import *
 
 CF_KEY = environ.get("CLOUDFLARE_KEY").strip()
@@ -31,9 +30,10 @@ def upload_file(file=None, resize=False):
 		om.info = i.info
 		om.save("image.gif", save_all=True, append_images=list(frames))
 
-	with open('D:/image.gif', 'rb') as f:
-		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data={'image': f})
 	try:
+		with open('D:/out.gif', 'rb') as f:
+			data={'image': base64.b64encode(f.read())} 
+			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {{imgurkey}}"}, data=data)
 		resp = req.json()['data']
 		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except:
