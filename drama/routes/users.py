@@ -122,6 +122,7 @@ def unsubscribe(v, post_id):
 	return "", 204
 
 @app.post("/@<username>/message")
+@limiter.limit("10/hour")
 @auth_required
 def message2(v, username):
 	user = get_user(username, v=v)
