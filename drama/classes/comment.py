@@ -43,7 +43,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	over_18 = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
-	banaward = Column(String)
 	is_pinned = Column(Boolean, default=False)
 	sentto=Column(Integer)
 

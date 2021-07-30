@@ -43,7 +43,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	is_banned = Column(Boolean, default=False)
 	views = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
-	banaward = Column(String)
 	distinguish_level = Column(Integer, default=0)
 	created_str = Column(String(255))
 	stickied = Column(Boolean, default=False)
