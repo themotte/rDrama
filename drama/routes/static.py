@@ -3,6 +3,13 @@ from drama.__main__ import app, limiter
 from drama.helpers.alerts import *
 
 
+@app.get("/patrons")
+@auth_desired
+def patrons(v):
+	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+	users = [x for x in g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc()).all()]
+	return render_template("patrons.html", v=v, users=users)
+
 @app.get("/badmins")
 @app.route("/api/vue/admins",  methods=["GET"])
 @app.get("/api/v1/admins")
