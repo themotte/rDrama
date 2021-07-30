@@ -36,7 +36,6 @@ class User(Base, Stndrd, Age_times):
 	passhash = deferred(Column(String))
 	post_count = Column(Integer, default=0)
 	comment_count = Column(Integer, default=0)
-	banawards = Column(Integer, default=0)
 	created_utc = Column(Integer, default=0)
 	suicide_utc = Column(Integer, default=0)
 	rent_utc = Column(Integer, default=0)

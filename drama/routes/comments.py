@@ -19,37 +19,6 @@ beams_client = PushNotifications(
 		secret_key=PUSHER_KEY,
 )
 
-@app.route("/banaward/comment/<comment_id>", methods=["POST", "GET"])
-@auth_required
-def banawardcomment(comment_id, v):
-
-	if not v.banawards > 0: return render_template("errors/banaward.html", v=v)
-
-	comment = g.db.query(Comment).filter_by(id=comment_id).first()
-	if not comment: abort(400)
-	u = comment.author
-	if u.admin_level > 0: return jsonify({"error": "You can't ban admins."}), 403
-
-	u.ban(admin=v, reason="1 day ban award", days=1)
-	send_notification(1046, u, f"Your Drama account has been suspended for 1 day for the following reason:\n\n> 1 day ban award")
-
-	ma=ModAction(
-		kind="exile_user",
-		user_id=v.id,
-		target_user_id=u.id,
-        note=f'reason: "1 day ban award", duration: 1 day'
-		)
-	g.db.add(ma)
-
-	v.banawards -= 1
-	g.db.add(v)
-
-	comment.banaward = v.username
-	g.db.add(comment)
-
-	return jsonify({"message": "User banned successfully!"}), 204
-
-
 @app.get("/api/v1/post/<pid>/comment/<cid>")
 def comment_cid_api_redirect(cid=None, pid=None):
 	redirect(f'/api/v1/comment/<cid>')
