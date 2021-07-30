@@ -120,7 +120,8 @@ def api_vote_comment(comment_id, new, v):
 
 	new = int(new)
 
-	if isinstance(comment_id, str): comment_id = int(comment_id, 36)
+	try: uid = int(comment_id)
+	except: uid = int(comment_id, 36)
 	
 	comment = get_comment(comment_id)
 
