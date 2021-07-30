@@ -66,10 +66,10 @@ def comment_cid_api_redirect(cid=None, pid=None):
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
-
-	try: cid = int(cid)
-	except Exception as e: pass
 	
+	try: cid = int(cid)
+	except: cid = int(cid, 36)
+
 	comment = get_comment(cid, v=v)
 	
 	if not comment.parent_submission and not (v and v.admin_level == 6): abort(403)
