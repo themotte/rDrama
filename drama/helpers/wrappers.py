@@ -138,13 +138,6 @@ def auth_desired(f):
 		check_ban_evade(v)
 
 		resp = make_response(f(*args, v=v, **kwargs))
-		if v:
-			resp.headers.add("Cache-Control", "private")
-			resp.headers.add(
-				"Access-Control-Allow-Origin",
-				app.config["SERVER_NAME"])
-		else:
-			resp.headers.add("Cache-Control", "public")
 		return resp
 
 	wrapper.__name__ = f.__name__
@@ -172,11 +165,6 @@ def auth_required(f):
 
 		# an ugly hack to make api work
 		resp = make_response(f(*args, v=v, **kwargs))
-
-		resp.headers.add("Cache-Control", "private")
-		resp.headers.add(
-			"Access-Control-Allow-Origin",
-			app.config["SERVER_NAME"])
 		return resp
 
 	wrapper.__name__ = f.__name__
@@ -206,10 +194,6 @@ def is_not_banned(f):
 		g.v = v
 
 		resp = make_response(f(*args, v=v, **kwargs))
-		resp.headers.add("Cache-Control", "private")
-		resp.headers.add(
-			"Access-Control-Allow-Origin",
-			app.config["SERVER_NAME"])
 		return resp
 
 	wrapper.__name__ = f.__name__
@@ -246,10 +230,6 @@ def admin_level_required(x):
 			else:
 				resp = make_response(response)
 
-			resp.headers.add("Cache-Control", "private")
-			resp.headers.add(
-				"Access-Control-Allow-Origin",
-				app.config["SERVER_NAME"])
 			return resp
 
 		wrapper.__name__ = f.__name__
@@ -325,10 +305,6 @@ def api(*scopes, no_ban=False):
 				if not isinstance(resp, RespObj):
 					resp = make_response(resp)
 
-				resp.headers.add("Cache-Control", "private")
-				resp.headers.add(
-					"Access-Control-Allow-Origin",
-					app.config["SERVER_NAME"])
 				return resp
 
 			else:

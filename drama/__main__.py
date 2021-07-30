@@ -322,8 +322,10 @@ def after_request(response):
 	response.headers.add('Access-Control-Allow-Headers',
 						 "Origin, X-Requested-With, Content-Type, Accept, x-auth"
 						 )
-	response.headers.add("Cache-Control",
-						 "maxage=600")
+	response.headers.remove("Cache-Control")
+	response.headers.add("Cache-Control", "public")
+	response.headers.add("Access-Control-Allow-Origin", app.config["SERVER_NAME"])
+
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("Referrer-Policy", "same-origin")
 	# response.headers.add("X-Content-Type-Options","nosniff")
