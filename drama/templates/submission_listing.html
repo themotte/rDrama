@@ -331,9 +331,9 @@
 						{% if v.admin_level >=3 %}
 							{% if v.id!=p.author_id %}
 							{% if p.author.is_banned %}
-							<button class="btn btn-link btn-block btn-lg text-left text-danger"  href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Unban user</a></button>
+							<button class="btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Unban user</a></button>
 							{% else %}
-							<button class="btn btn-link btn-block btn-lg text-left text-danger" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Ban user</a></button>
+							<button class="btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Ban user</a></button>
 							{% endif %}
 							{% endif %}
 
