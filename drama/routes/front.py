@@ -14,6 +14,8 @@ def slash_post():
 @auth_required
 def notifications(v):
 
+	start = time.time()
+
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	page = int(request.args.get('page', 1))
@@ -59,6 +61,9 @@ def notifications(v):
 
 			if c not in listing:
 				listing.append(c)
+
+	print(type(time.time()))
+	print(time.time() - start)
 
 	return render_template("notifications.html",
 						   v=v,
@@ -181,8 +186,6 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 @auth_desired
 def front_all(v):
 
-	start = time.time()
-
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	try: page = int(request.args.get("page") or 1)
@@ -216,9 +219,6 @@ def front_all(v):
 
 	# check if ids exist
 	posts = get_posts(ids, v=v)
-
-	print(type(time.time()))
-	print(time.time() - start)
 
 	if request.path == "/": return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 	else: return jsonify({"data": [x.json for x in posts], "next_exists": next_exists})
