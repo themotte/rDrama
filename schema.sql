@@ -212,7 +212,8 @@ CREATE TABLE public.users (
     post_count integer,
     comment_count integer,
     highres text,
-    rent_utc integer
+    rent_utc integer,
+    patrontier integer
 );
 
 
