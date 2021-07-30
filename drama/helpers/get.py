@@ -52,7 +52,7 @@ def get_account(id, v=None):
 	if not user:
 		try:
 			print(id)
-			id = int(id, 36)
+			id = int(str(id), 36)
 			print(id)
 		except Exception as e:
 			print(e)
