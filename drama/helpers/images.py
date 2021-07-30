@@ -32,9 +32,9 @@ def crop_and_resize(img, resize):
 def upload_file(file, resize=None):
 	
 	if resize:
-		filename = "image.gif"
-		file.save(filename)
-		i = IImage.open(filename)
+		if os.path.isfile("image.gif"): os.remove("image.gif")
+		file.save("image.gif")
+		i = IImage.open("image.gif")
 		os.remove("image.gif")
 		i = crop_and_resize(i, resize)
 		img = io.BytesIO()
