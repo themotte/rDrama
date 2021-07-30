@@ -1,7 +1,7 @@
 import requests
 from os import environ
 from PIL import Image as IImage
-from os import remove
+import os
 import base64
 import io
 from drama.classes.images import *
@@ -35,6 +35,7 @@ def upload_file(file, resize=None):
 		filename = "image.gif"
 		file.save(filename)
 		i = IImage.open(filename)
+		os.remove("image.gif")
 		i = crop_and_resize(i, resize)
 		img = io.BytesIO()
 		i.save(img, format='GIF')
