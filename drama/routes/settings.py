@@ -330,6 +330,7 @@ def settings_images_profile(v):
 
 	imageurl = upload_file(request.files["profile"], (100,100))
 	print(imageurl)
+	time.sleep(2)
 	highres = upload_file(request.files["profile"])
 	print(highres)
 
