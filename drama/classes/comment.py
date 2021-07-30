@@ -113,8 +113,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	@property
 	@lazy
 	def parent_fullname(self):
-		if self.parent_comment_id: return "t3_" + self.parent_comment_id
-		elif self.parent_submission: return "t2_" + self.parent_submission
+		if self.parent_comment_id: return f"t3_{self.parent_comment_id}"
+		elif self.parent_submission: return f"t2_{self.parent_submission}"
 
 
 	@property
