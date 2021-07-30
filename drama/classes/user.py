@@ -297,6 +297,21 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	@lazy
+	def display_awards(self):
+
+		_awards = {}
+
+		for a in self.awards:
+			if a.kind in _awards:
+				_awards[a.kind]['count'] += 1
+			else:
+				_awards[a.kind] = a.type
+				_awards[a.kind]['count'] = 1
+
+		return list(_awards.values())
+
+	@property
+	@lazy
 	def post_notifications_count(self):
 		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(
 			Comment.author_id == 2360).count()
