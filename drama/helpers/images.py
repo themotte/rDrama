@@ -28,7 +28,7 @@ def upload_file(file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save("image.gif", save_all=True, append_images=list(frames), loop=1)
+		om.save("image.gif", save_all=True, append_images=list(frames), loop=0)
 
 	try:
 		with open('image.gif', 'rb') as f:
