@@ -46,10 +46,12 @@ def get_user(username, v=None, graceful=False):
 
 def get_account(id, v=None):
 
-	user = g.db.query(User).filter(User.id == id).first()
+	user = g.db.query(User).filter_by(id = id).first()
 
 	if not user:
-		user = g.db.query(User).filter(User.id == int(id, 36)).first()
+		try: id = int(id, 36)
+		except: abort(404)
+		user = g.db.query(User).filter_by(id = id).first()
 		if not user: abort(404)
 
 	if v:
