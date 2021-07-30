@@ -330,7 +330,7 @@ def settings_images_profile(v):
 
 	highres = upload_file(request.files["profile"], (100,100))
 	if not highres: abort(400)
-	imageurl = upload_from_file("image.gif")
+	imageurl = upload_file()
 	if not imageurl: abort(400)
 	v.highres = highres
 	v.profileurl = imageurl

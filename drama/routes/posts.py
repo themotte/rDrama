@@ -533,7 +533,7 @@ def thumbs(new_post):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = upload_from_file("image.gif", (100, 100))
+	post.thumburl = upload_file(resize=(100, 100))
 	g.db.add(post)
 	g.db.commit()
 

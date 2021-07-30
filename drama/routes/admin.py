@@ -1146,7 +1146,7 @@ def multiple_plots(**kwargs):
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
 
-	plt.savefig("multiplot.png")
+	plt.savefig("image.gif")
 	plt.clf()
 
-	return upload_from_file("multiplot.png")
+	return upload_file()
