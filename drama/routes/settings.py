@@ -7,6 +7,7 @@ from drama.helpers.discord import remove_user, set_nick
 from drama.mail import *
 from drama.__main__ import app, cache
 import youtube_dl
+from .front import frontlist
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 valid_title_regex = re.compile("^((?!<).){3,100}$")
@@ -158,7 +159,9 @@ def settings_profile_post(v):
 def changelogsub(v):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
-	
+
+	cache.delete_memoized(frontlist)
+
 	return "", 204
 
 @app.post("/settings/namecolor")
@@ -470,6 +473,8 @@ def settings_block_user(v):
 
 	if v.admin_level == 1: return jsonify({"message": f"@{user.username} banned!"})
 
+	cache.delete_memoized(frontlist)
+
 	return jsonify({"message": f"@{user.username} blocked."})
 
 
@@ -494,6 +499,8 @@ def settings_unblock_user(v):
 	if request.args.get("notoast"): return "", 204
 
 	if v.admin_level == 1: return jsonify({"message": f"@{user.username} unbanned!"})
+
+	cache.delete_memoized(frontlist)
 
 	return jsonify({"message": f"@{user.username} unblocked."})
 

@@ -17,7 +17,7 @@ from drama.classes.domains import reasons as REASONS
 from flask import *
 import matplotlib.pyplot as plt
 from drama.__main__ import app, cache
-
+from .front import frontlist
 
 @app.get("/admin/shadowbanned")
 @auth_required
@@ -588,6 +588,8 @@ def shadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
+	cache.delete_memoized(frontlist)
+
 	return "", 204
 
 
@@ -610,6 +612,8 @@ def unshadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
+	cache.delete_memoized(frontlist)
+
 	return "", 204
 
 
@@ -730,7 +734,7 @@ def unban_user(user_id, v):
 		)
 	g.db.add(ma)
 	g.db.commit()
-	
+
 	if request.args.get("notoast"): return (redirect(user.url), user)
 	return jsonify({"message": f"@{user.username} was unbanned"})
 
@@ -767,6 +771,9 @@ def ban_post(post_id, v):
 		target_submission_id=post.id,
 		)
 	g.db.add(ma)
+
+	cache.delete_memoized(frontlist)
+
 	return "", 204
 
 
@@ -793,7 +800,7 @@ def unban_post(post_id, v):
 
 	g.db.add(post)
 
-	
+	cache.delete_memoized(frontlist)
 
 	return "", 204
 
@@ -831,6 +838,7 @@ def api_sticky_post(post_id, v):
 		g.db.add(post)
 		g.db.commit()
 		
+	cache.delete_memoized(frontlist)
 
 	return "", 204
 

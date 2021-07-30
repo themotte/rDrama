@@ -17,6 +17,7 @@ from flask import *
 from io import BytesIO
 from drama.__main__ import app, limiter, cache
 from PIL import Image as PILimage
+from .front import frontlist
 
 with open("snappy.txt", "r") as f:
 	snappyquotes = f.read().split("{[para]}")
@@ -60,7 +61,8 @@ def publish(pid, v):
 	post.private = False
 	g.db.add(post)
 	
-	g.db.commit()
+	cache.delete_memoized(frontlist)
+
 	return "", 204
 
 @app.get("/submit")
@@ -1029,6 +1031,9 @@ def submit_post(v):
 	
 	v.post_count = v.submissions.filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
+
+	cache.delete_memoized(frontlist)
+
 	return {"html": lambda: redirect(new_post.permalink),
 			"api": lambda: jsonify(new_post.json)
 			}
@@ -1051,7 +1056,7 @@ def delete_post_pid(pid, v):
 
 	g.db.add(post)
 
-	
+	cache.delete_memoized(frontlist)
 
 	return "", 204
 
@@ -1065,7 +1070,9 @@ def undelete_post_pid(pid, v):
 	if not post.author_id == v.id: abort(403)
 	post.deleted_utc =0
 	g.db.add(post)
-	
+
+	cache.delete_memoized(frontlist)
+
 	return "", 204
 
 @app.get("/embed/post/<pid>")
