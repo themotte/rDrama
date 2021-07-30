@@ -328,11 +328,10 @@ def settings_images_profile(v):
 		g.db.rollback()
 		abort(413)
 
-	imageurl = upload_file(request.files["profile"])
+	highres = upload_file(request.files["profile"])
+	print(highres)
+	imageurl = upload_file(request.files["profile"], (100,100))
 	print(imageurl)
-	if imageurl:
-		v.profileurl = imageurl
-		g.db.add(v)
 
 	return render_template("settings_profile.html",
 							v=v, msg="Profile picture successfully updated.")
