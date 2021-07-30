@@ -208,4 +208,4 @@ def admin_userawards_post(v):
 
     g.db.bulk_save_objects(awards)
 
-    return redirect(f'/@{u.username}')
+    return render_template("admin/user_award.html", awards=list(AWARDS.values()), v=v)
