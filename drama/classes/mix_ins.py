@@ -8,11 +8,6 @@ class Stndrd:
 
 	@property
 	@lazy
-	def base36id(self):
-		return base36encode(self.id)
-
-	@property
-	@lazy
 	def created_date(self):
 		return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
 
