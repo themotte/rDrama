@@ -33,7 +33,7 @@ class ModAction(Base, Stndrd, Age_times):
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
-		return f"<ModAction(id={self.base36id})>"
+		return f"<ModAction(id={self.id})>"
 
 	@property
 	def actiontype(self):
@@ -80,21 +80,21 @@ class ModAction(Base, Stndrd, Age_times):
 	@property
 	def json(self):
 		data={
-			"id":self.base36id,
+			"id":self.id,
 			"kind": self.kind,
 			"created_utc": self.created_utc,
 			"mod": self.user.username,
 		}
 
 		if self.target_user_id:
-			data["target_user_id"]=self.target_user.base36id
+			data["target_user_id"]=self.target_user.id
 			data["target_user"]=self.target_user.username
 
 		if self.target_comment_id:
-			data["target_comment_id"]=self.target_comment.base36id
+			data["target_comment_id"]=self.target_comment.id
 
 		if self.target_submission_id:
-			data["target_submission_id"]=self.target_submission.base36id
+			data["target_submission_id"]=self.target_submission.id
 
 		if self._note:
 			data["note"]=self._note
@@ -114,7 +114,7 @@ class ModAction(Base, Stndrd, Age_times):
 
 	@property
 	def permalink(self):
-		return f"/log/{self.base36id}"
+		return f"/log/{self.id}"
 	@property
 	def title_text(self):
 		return f"@{self.user.username} {self.actiontype['title'].format(self=self)}"

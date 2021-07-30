@@ -29,7 +29,7 @@ class OauthApp(Base, Stndrd):
 	@property
 	def permalink(self):
 
-		return f"/admin/app/{self.base36id}"
+		return f"/admin/app/{self.id}"
 
 	def idlist(self, page=1, **kwargs):
 

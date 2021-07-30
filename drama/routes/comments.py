@@ -237,7 +237,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 @api("create")
 def api_comment(v):
 
-	parent_submission = base36decode(request.form.get("submission"))
+	parent_submission = request.form.get("submission")
 	parent_fullname = request.form.get("parent_fullname")
 
 	# get parent item info
@@ -247,14 +247,14 @@ def api_comment(v):
 		parent = parent_post
 		parent_comment_id = None
 		level = 1
-		parent_submission = base36decode(parent_id)
+		parent_submission = parent_id
 	elif parent_fullname.startswith("t3"):
 		parent = get_comment(parent_id, v=v)
 		parent_comment_id = parent.id
 		level = parent.level + 1
 		parent_id = parent.parent_submission
 		parent_submission = parent_id
-		parent_post = get_post(base36encode(parent_id))
+		parent_post = get_post(parent_id)
 	else:
 		abort(400)
 
@@ -389,7 +389,7 @@ def api_comment(v):
 		if not file.content_type.startswith('image/'):
 			return jsonify({"error": "That wasn't an image!"}), 400
 		
-		name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
+		name = f'comment/{c.id}/{secrets.token_urlsafe(8)}'
 		url = upload_file(file)
 		
 		body = request.form.get("body") + f"\n![]({url})"
@@ -653,7 +653,7 @@ def edit_comment(cid, v):
 	body = request.form.get("body", "")[0:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
-	with CustomRenderer(post_id=c.post.base36id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+	with CustomRenderer(post_id=c.post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md, linkgen=True)
 
 	bans = filter_comment_html(body_html)
@@ -672,7 +672,7 @@ def edit_comment(cid, v):
 			reason += f" {ban.reason_text}"	
 	
 		return {'html': lambda: render_template("comment_failed.html",
-												action=f"/edit_comment/{c.base36id}",
+												action=f"/edit_comment/{c.id}",
 												badlinks=[
 													x.domain for x in bans],
 												body=body,
@@ -744,7 +744,7 @@ def edit_comment(cid, v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return jsonify({"error": "That wasn't an image!"}), 400
 		
-		name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
+		name = f'comment/{c.id}/{secrets.token_urlsafe(8)}'
 		url = upload_file(file)
 
 		body += f"\n![]({url})"
@@ -837,7 +837,7 @@ def edit_comment(cid, v):
 @api("delete")
 def delete_comment(cid, v):
 
-	c = g.db.query(Comment).filter_by(id=base36decode(cid)).first()
+	c = g.db.query(Comment).filter_by(id=cid).first()
 
 	if not c:
 		abort(404)
@@ -862,7 +862,7 @@ def delete_comment(cid, v):
 @api("delete")
 def undelete_comment(cid, v):
 
-	c = g.db.query(Comment).filter_by(id=base36decode(cid)).first()
+	c = g.db.query(Comment).filter_by(id=cid).first()
 
 	if not c:
 		abort(404)
@@ -927,7 +927,7 @@ def toggle_comment_pin(cid, v):
 				render_replies=False,
 				)
 
-	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))
+	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
 
 	return jsonify({"html":html})
 	

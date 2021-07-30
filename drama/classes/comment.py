@@ -90,7 +90,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	@property
 	@lazy
 	def fullname(self):
-		return f"t3_{self.base36id}"
+		return f"t3_{self.id}"
 
 	@property
 	@lazy
@@ -162,7 +162,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 			'permalink': self.permalink,
 			'is_pinned': self.is_pinned,
 			'distinguish_level': self.distinguish_level,
-			'post_id': self.post.base36id,
+			'post_id': self.post.id,
 			'score': self.score_fuzzed,
 			'upvotes': self.upvotes_fuzzed,
 			'downvotes': self.downvotes_fuzzed,
@@ -182,15 +182,15 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		if self.is_banned:
 			data= {'is_banned': True,
 					'ban_reason': self.ban_reason,
-					'id': self.base36id,
-					'post': self.post.base36id,
+					'id': self.id,
+					'post': self.post.id,
 					'level': self.level,
 					'parent': self.parent_fullname
 					}
 		elif self.deleted_utc > 0:
 			data= {'deleted_utc': self.deleted_utc,
-					'id': self.base36id,
-					'post': self.post.base36id,
+					'id': self.id,
+					'post': self.post.id,
 					'level': self.level,
 					'parent': self.parent_fullname
 					}
@@ -198,8 +198,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 			data=self.json_raw
 
-			if self.level>=2:
-				data['parent_comment_id']= base36encode(self.parent_comment_id),
+			if self.level>=2: data['parent_comment_id']= self.parent_comment_id,
 
 		if "replies" in self.__dict__:
 			data['replies']=[x.json_core for x in self.replies]

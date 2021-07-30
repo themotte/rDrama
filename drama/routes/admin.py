@@ -725,7 +725,7 @@ def unban_user(user_id, v):
 @validate_formkey
 def ban_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=base36decode(post_id)).first()
+	post = g.db.query(Submission).filter_by(id=post_id).first()
 
 	if not post:
 		abort(400)
@@ -761,7 +761,7 @@ def ban_post(post_id, v):
 @validate_formkey
 def unban_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=base36decode(post_id)).first()
+	post = g.db.query(Submission).filter_by(id=post_id).first()
 
 	if not post:
 		abort(400)
@@ -789,7 +789,7 @@ def unban_post(post_id, v):
 @validate_formkey
 def api_distinguish_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=base36decode(post_id)).first()
+	post = g.db.query(Submission).filter_by(id=post_id).first()
 
 	if not post:
 		abort(404)
@@ -811,7 +811,7 @@ def api_distinguish_post(post_id, v):
 @admin_level_required(3)
 def api_sticky_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=base36decode(post_id)).first()
+	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if post:
 		post.stickied = not (post.stickied)
 		g.db.add(post)
@@ -824,7 +824,7 @@ def api_sticky_post(post_id, v):
 @auth_required
 def api_pin_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=base36decode(post_id)).first()
+	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if post:
 		post.is_pinned = not (post.is_pinned)
 		g.db.add(post)
@@ -835,7 +835,7 @@ def api_pin_post(post_id, v):
 @admin_level_required(1)
 def api_ban_comment(c_id, v):
 
-	comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
+	comment = g.db.query(Comment).filter_by(id=c_id).first()
 	if not comment:
 		abort(404)
 
@@ -856,7 +856,7 @@ def api_ban_comment(c_id, v):
 @admin_level_required(1)
 def api_unban_comment(c_id, v):
 
-	comment = g.db.query(Comment).filter_by(id=base36decode(c_id)).first()
+	comment = g.db.query(Comment).filter_by(id=c_id).first()
 	if not comment:
 		abort(404)
 	g.db.add(comment)
@@ -900,7 +900,7 @@ def admin_distinguish_comment(c_id, v):
 				render_replies=False,
 				)
 
-	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))
+	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
 
 	return jsonify({"html":html, "api":html})
 

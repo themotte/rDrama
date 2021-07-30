@@ -52,12 +52,12 @@
 		<div class="d-flex">
 			{% if not thing.oauth_app.client_secret %}
 
-			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/approve/{{thing.oauth_app.base36id}}')">Approve</a>
-			<a href="javascript:void(0)" class="btn btn-secondary mr-0" onclick="post_toast('/admin/app/reject/{{thing.oauth_app.base36id}}')">Reject</a> 
+			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/approve/{{thing.oauth_app.id}}')">Approve</a>
+			<a href="javascript:void(0)" class="btn btn-secondary mr-0" onclick="post_toast('/admin/app/reject/{{thing.oauth_app.id}}')">Reject</a> 
 
 			{% else %}
 
-			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/revoke/{{thing.oauth_app.base36id}}')">Revoke</a>
+			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/revoke/{{thing.oauth_app.id}}')">Revoke</a>
 
 			{% endif %}
 		</div>

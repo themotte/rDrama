@@ -47,7 +47,7 @@
 		</div>
 		<div class="footer">
 			<div class="d-flex">
-				<a href="javascript:void(0)" class="btn btn-secondary ml-auto" onclick="post_toast('/oauth/reroll/{{app.base36id}}', callback=function(xhr){document.getElementById('edit-{{app.id}}-client-id').value=JSON.parse(xhr.response)['id'];document.getElementById('edit-{{app.id}}-client-secret').value=JSON.parse(xhr.response)['secret'];})">Reroll Tokens</a>
+				<a href="javascript:void(0)" class="btn btn-secondary ml-auto" onclick="post_toast('/oauth/reroll/{{app.id}}', callback=function(xhr){document.getElementById('edit-{{app.id}}-client-id').value=JSON.parse(xhr.response)['id'];document.getElementById('edit-{{app.id}}-client-secret').value=JSON.parse(xhr.response)['secret'];})">Reroll Tokens</a>
 				<input type="submit" class="btn btn-primary ml-2" value="Save Changes">
 			</div>
 		</div>
@@ -104,7 +104,7 @@
 
 {% for auth in v.authorizations.all() %}
 
-	<div id="auth-{{auth.base36id}}" class="settings-section rounded">
+	<div id="auth-{{auth.id}}" class="settings-section rounded">
 		<div class="d-lg-flex">
 				<div class="title w-lg-25">
 								<label for="over18">{{auth.application.app_name}}</label>
@@ -119,7 +119,7 @@
 		</div>
 		<div class="footer">
 			<div class="d-flex">
-				<a href="javascript:void(0)" class="btn btn-primary ml-auto text-white" onclick="post_toast('/oauth/rescind/{{auth.base36id}}', callback=function(xhr){document.getElementById('auth-{{auth.base36id}}').classList.add('d-none')})">Revoke</a>
+				<a href="javascript:void(0)" class="btn btn-primary ml-auto text-white" onclick="post_toast('/oauth/rescind/{{auth.id}}', callback=function(xhr){document.getElementById('auth-{{auth.id}}').classList.add('d-none')})">Revoke</a>
 			</div>
 		</div>
 	</div>

@@ -116,7 +116,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	@lazy
 	def fullname(self):
-		return f"t2_{self.base36id}"	
+		return f"t2_{self.id}"	
 		
 	@property
 	@lazy
@@ -254,14 +254,14 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 			return {'is_banned': True,
 					'deleted_utc': self.deleted_utc,
 					'ban_reason': self.ban_reason,
-					'id': self.base36id,
+					'id': self.id,
 					'title': self.title,
 					'permalink': self.permalink,
 					}
 		elif self.deleted_utc:
 			return {'is_banned': bool(self.is_banned),
 					'deleted_utc': True,
-					'id': self.base36id,
+					'id': self.id,
 					'title': self.title,
 					'permalink': self.permalink,
 					}

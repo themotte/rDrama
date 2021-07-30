@@ -13,15 +13,15 @@
 		<span class="align-top"><a href="{{c.permalink}}">{{c.post.title | safe}}</a></span>
 </div>
 
-<div id="comment-{{c.base36id}}" class="comment">
+<div id="comment-{{c.id}}" class="comment">
 
 		<span class="mr-2 d-block d-md-none"><a href="{{c.author.permalink}}"><img src="{{c.author.profile_url}}" class="profile-pic-25"></a></span>
 
-		<span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{c.base36id}}')"></span>
+		<span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{c.id}}')"></span>
 
 		<div class="comment-body">
 
-				<div id="comment-{{c.base36id}}-only">
+				<div id="comment-{{c.id}}-only">
 
 						<div class="user-info">{% if c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if c.author.title and c.author.title.is_before %}<span style="color:#{{c.author.title.color}}">{{c.author.title.text}}</span> {% endif %}<a href="{{c.author.permalink}}" class="user-name {% if c.post.author_id==c.author_id %}text-info{% endif %}">{{c.author.username}}</a>{% if c.author.title and not c.author.title.is_before %}<span style="color:#{{c.author.title.color}}">{{c.author.title.text}}</span>{% endif %}
 		{% if c.distinguish_level or c.author_id==c.post.author_id %}
@@ -39,26 +39,26 @@
 		<span class="time-edited" data-toggle="tooltip" data-placement="bottom"  title="{{c.edited_datetime}}"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 		{% endif %}
 
-				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.base36id}}')"></span>
+				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
 
 				</div>
 
-						<div id="comment-text-{{c.base36id}}" class="comment-text">
+						<div id="comment-text-{{c.id}}" class="comment-text">
 								{{c.body_html | safe}}
 						</div>
 
 			
-						<div id="comment-{{c.base36id}}-actions" class="comment-actions">
+						<div id="comment-{{c.id}}-actions" class="comment-actions">
 								<ul class="list-inline text-right text-md-left">
 
 
 
-										<li id="comment-{{c.base36id}}-up" class="list-inline-item arrow-up d-none d-md-inline-block mr-2">
+										<li id="comment-{{c.id}}-up" class="list-inline-item arrow-up d-none d-md-inline-block mr-2">
 										</li>
 
 
 										<li class="list-inline-item d-none d-md-inline-block mr-2">
-											 <span id="comment-{{c.base36id}}-score-none"class="d-none text-black">{{score}}</span>										</li>
+											 <span id="comment-{{c.id}}-score-none"class="d-none text-black">{{score}}</span>										</li>
 										<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{c.permalink | full_link}}"><i class="fas fa-link"></i><span>Copy link</span></a>
 										</li>
 										<li class="list-inline-item d-none d-md-inline-block">
@@ -77,16 +77,16 @@
 								</div>
 						</li>
 						<li class="list-inline-item d-inline-block d-md-none">
-								<a href="#" data-toggle="modal" data-target="#actionsModal-{{c.base36id}}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a>
+								<a href="#" data-toggle="modal" data-target="#actionsModal-{{c.id}}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a>
 						</li>
 
-						<li id="comment-{{c.base36id}}-up" class="list-inline-item arrow-up d-inline-block d-md-none mr-2">
+						<li id="comment-{{c.id}}-up" class="list-inline-item arrow-up d-inline-block d-md-none mr-2">
 						</li>
 						<li class="list-inline-item d-inline-block d-md-none mr-2">
-<span id="comment-{{c.base36id}}-score-none" class="d-none text-black">{{score}}</span>
+<span id="comment-{{c.id}}-score-none" class="d-none text-black">{{score}}</span>
 						</li>
 						
-						<li id="comment-{{c.base36id}}-down" class="list-inline-item arrow-down d-inline-block d-md-none">
+						<li id="comment-{{c.id}}-down" class="list-inline-item arrow-down d-inline-block d-md-none">
 						</li>
 				</ul>
 
@@ -95,7 +95,7 @@
 
 
 <!-- Comment Actions Modal -->
-<div class="modal fade d-md-none" id="actionsModal-{{c.base36id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
+<div class="modal fade d-md-none" id="actionsModal-{{c.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 				<div class="modal-header">

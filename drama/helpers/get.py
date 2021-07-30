@@ -44,11 +44,7 @@ def get_user(username, v=None, graceful=False):
 
 	return user
 
-def get_account(base36id, v=None, graceful=False):
-
-
-	if isinstance(base36id, str): id = base36decode(base36id)
-	else: id = base36id
+def get_account(id, v=None, graceful=False):
 
 	user = g.db.query(User
 						  ).filter(
@@ -80,12 +76,7 @@ def get_account(base36id, v=None, graceful=False):
 	return user
 
 
-def get_post(pid, v=None, graceful=False, **kwargs):
-
-	if isinstance(pid, str):
-		i = base36decode(pid)
-	else:
-		i = pid
+def get_post(i, v=None, graceful=False, **kwargs):
 
 	if v:
 		vt = g.db.query(Vote).filter_by(
@@ -177,10 +168,7 @@ def get_posts(pids, v=None):
 
 	return sorted(output, key=lambda x: pids.index(x.id))
 
-def get_comment(cid, v=None, graceful=False, **kwargs):
-
-	if isinstance(cid, str): i = base36decode(cid)
-	else: i = cid
+def get_comment(i, v=None, graceful=False, **kwargs):
 
 	if v:
 		blocking = v.blocking.subquery()

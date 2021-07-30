@@ -287,7 +287,7 @@ def api_v1_identity(v):
 @validate_formkey
 def admin_app_approve(v, aid):
 
-	app = g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
 	app.client_id = secrets.token_urlsafe(64)[0:64]
 	app.client_secret = secrets.token_urlsafe(128)[0:128]
@@ -305,7 +305,7 @@ def admin_app_approve(v, aid):
 @validate_formkey
 def admin_app_revoke(v, aid):
 
-	app = g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
 	app.client_id = None
 	app.client_secret = None
@@ -323,7 +323,7 @@ def admin_app_revoke(v, aid):
 @validate_formkey
 def admin_app_reject(v, aid):
 
-	app = g.db.query(OauthApp).filter_by(id=base36decode(aid)).first()
+	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
 	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
 		g.db.delete(auth)
@@ -341,7 +341,7 @@ def admin_app_reject(v, aid):
 @admin_level_required(3)
 def admin_app_id(v, aid):
 
-	aid=base36decode(aid)
+	aid=aid
 
 	oauth = g.db.query(OauthApp).options(
 		joinedload(
@@ -367,7 +367,7 @@ def admin_app_id(v, aid):
 @admin_level_required(3)
 def admin_app_id_comments(v, aid):
 
-	aid=base36decode(aid)
+	aid=aid
 
 	oauth = g.db.query(OauthApp).options(
 		joinedload(
@@ -409,7 +409,7 @@ def admin_apps_list(v):
 @auth_required
 def reroll_oauth_tokens(aid, v):
 
-	aid = base36decode(aid)
+	aid = aid
 
 	a = g.db.query(OauthApp).filter_by(id=aid).first()
 
@@ -433,7 +433,7 @@ def reroll_oauth_tokens(aid, v):
 @validate_formkey
 def oauth_rescind_app(aid, v):
 
-	aid = base36decode(aid)
+	aid = aid
 	auth = g.db.query(ClientAuth).filter_by(id=aid).first()
 
 	if auth.user_id != v.id:

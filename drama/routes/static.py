@@ -44,7 +44,7 @@ def log(v):
 @auth_desired
 def log_item(aid, v):
 
-	action=g.db.query(ModAction).filter_by(id=base36decode(aid)).first()
+	action=g.db.query(ModAction).filter_by(id=aid).first()
 
 	if not action:
 		abort(404)

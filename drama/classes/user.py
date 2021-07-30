@@ -234,12 +234,8 @@ class User(Base, Stndrd, Age_times):
 		return [x.id for x in comments[firstrange:secondrange]]
 
 	@property
-	def base36id(self):
-		return base36encode(self.id)
-
-	@property
 	def fullname(self):
-		return f"t1_{self.base36id}"
+		return f"t1_{self.id}"
 
 	@property
 	def banned_by(self):
@@ -447,7 +443,7 @@ class User(Base, Stndrd, Age_times):
 				'url': self.url,
 				'is_banned': bool(self.is_banned),
 				'created_utc': self.created_utc,
-				'id': self.base36id,
+				'id': self.id,
 				'is_private': self.is_private,
 				'profile_url': self.profile_url,
 				'banner_url': self.banner_url,
@@ -468,7 +464,7 @@ class User(Base, Stndrd, Age_times):
 					'is_banned': True,
 					'is_permanent_ban': not bool(self.unban_utc),
 					'ban_reason': self.ban_reason,
-					'id': self.base36id
+					'id': self.id
 					}
 		return self.json_raw
 

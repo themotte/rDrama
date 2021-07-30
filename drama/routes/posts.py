@@ -77,7 +77,7 @@ def submit_get(v):
 @app.get("/api/v1/post/<pid>")
 @auth_desired
 @api("read")
-def post_base36id(pid, anything=None, v=None):
+def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
@@ -405,7 +405,7 @@ def get_post_title(v):
 		return jsonify({"error": f"Could not find a title"}), 400
 
 def thumbs(new_post):
-	pid = new_post.base36id
+	pid = new_post.id
 	post = get_post(pid, graceful=True, session=g.db)
 	if not post:
 		# account for possible follower lag
@@ -921,7 +921,7 @@ def submit_post(v):
 						"api": lambda: ({"error": f"Image files only"}, 400)
 						}
 
-		name = f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
+		name = f'post/{new_post.id}/{secrets.token_urlsafe(8)}'
 		new_post.url = upload_file(file)
 		new_post.domain_ref = 1  # id of i.ruqqus.ga domain
 		g.db.add(new_post)
@@ -1087,7 +1087,7 @@ def embed_post_pid(pid):
 @validate_formkey
 def toggle_comment_nsfw(cid, v):
 
-	comment = g.db.query(Comment).filter_by(id=base36decode(cid)).first()
+	comment = g.db.query(Comment).filter_by(id=cid).first()
 	if not comment.author_id == v.id and not v.admin_level >= 3: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)

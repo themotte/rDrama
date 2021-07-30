@@ -20,25 +20,25 @@
 
 {% block adminpanel %}
 {% if v.admin_level >=3 %}
-<form action="/api/sticky/{{p.base36id}}" method="post">
+<form action="/api/sticky/{{p.id}}" method="post">
 <input type="hidden" name="formkey", value="{{v.formkey}}">
 <input type="submit" value="{% if p.stickied %}Un-sticky{% else %}Pin{% endif %}">
 </form>
 {% endif %}
 {% if v.admin_level >=3 and v.id==p.author_id %}
-<form action="/api/distinguish/{{p.base36id}}" method="post">
+<form action="/api/distinguish/{{p.id}}" method="post">
 <input type="hidden" name="formkey", value="{{v.formkey}}">
 <input type="submit" value="{% if p.distinguish_level %}Un-distinguish{% else %}Distinguish{% endif %}">
 </form>
 {% endif %}
 {% if v.admin_level >=1 and v.admin_level > p.author.admin_level %}
 {% if p.is_banned %}
-<form action="/api/unban_post/{{p.base36id}}" method="post">
+<form action="/api/unban_post/{{p.id}}" method="post">
 <input type="hidden" name="formkey", value="{{v.formkey}}">
 <input type="submit" value="Approve Post">
 </form>
 {% else %}
-<form action="/api/ban_post/{{p.base36id}}", method="post">
+<form action="/api/ban_post/{{p.id}}", method="post">
 <input type="hidden" name="formkey", value="{{v.formkey}}">
 <input type="submit" value="Remove Post">
 </form>
@@ -52,7 +52,7 @@
 
 										<div class="col-12">
 
-												<div id="post-{{p.base36id}}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+												<div id="post-{{p.id}}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 														<div class="card-block my-md-auto{% if p.is_banned %} banned{% endif %}">
 																<div class="post-meta text-left d-block d-md-none mb-1">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.is_banned %}[Removed by admins]{% else %}[Deleted by user]{% endif %}</div>
 																<h5 class="card-title post-title text-left mb-0 mb-md-1">{{p.title}}</h5>
@@ -63,12 +63,12 @@
 														<!-- Voting on "medium" devices or larger, hidden on smaller devices -->
 
 														<div id="voting" class="d-md-block my-auto mr-3 text-center">
-																<div id="post-{{p.base36id}}-up" class="arrow-up mx-auto">
+																<div id="post-{{p.id}}-up" class="arrow-up mx-auto">
 																</div>
-																<span id="post-{{p.base36id}}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
-					<span id="post-{{p.base36id}}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
-					<span id="post-{{p.base36id}}-score-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
-																<div id="post-{{p.base36id}}-down" class="arrow-down mx-auto">
+																<span id="post-{{p.id}}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
+					<span id="post-{{p.id}}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
+					<span id="post-{{p.id}}-score-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
+																<div id="post-{{p.id}}-down" class="arrow-down mx-auto">
 																</div>
 														</div>
 
@@ -130,9 +130,9 @@
 
 
 																
-				<span id="post-{{p.base36id}}-score-mobile-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
-					<span id="post-{{p.base36id}}-score-mobile-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
-					<span id="post-{{p.base36id}}-score-mobile-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
+				<span id="post-{{p.id}}-score-mobile-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
+					<span id="post-{{p.id}}-score-mobile-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
+					<span id="post-{{p.id}}-score-mobile-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
 
 
 														<span id="arrow-mobile-down" class="arrow-mobile-down ml-2 my-0">

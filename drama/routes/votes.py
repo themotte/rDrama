@@ -96,7 +96,7 @@ def api_vote_post(post_id, new, v):
 			g.db.add(post.author)
 		vote = Vote(user_id=v.id,
 					vote_type=new,
-					submission_id=base36decode(post_id),
+					submission_id=post_id,
 					app_id=v.client.application.id if v.client else None
 					)
 		g.db.add(vote)
@@ -143,7 +143,7 @@ def api_vote_comment(comment_id, new, v):
 			g.db.add(comment.author)
 		vote = CommentVote(user_id=v.id,
 						   vote_type=new,
-						   comment_id=base36decode(comment_id),
+						   comment_id=comment_id,
 						   app_id=v.client.application.id if v.client else None
 						   )
 

@@ -39,12 +39,12 @@
 		<div class="d-flex">
 			{% if not app.client_secret %}
 
-			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/approve/{{app.base36id}}')">Approve</a>
-			<a href="javascript:void(0)" class="btn btn-secondary mr-0" onclick="post_toast('/admin/app/reject/{{app.base36id}}')">Reject</a> 
+			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/approve/{{app.id}}')">Approve</a>
+			<a href="javascript:void(0)" class="btn btn-secondary mr-0" onclick="post_toast('/admin/app/reject/{{app.id}}')">Reject</a> 
 
 			{% else %}
 
-			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/revoke/{{app.base36id}}')">Revoke</a>
+			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/revoke/{{app.id}}')">Revoke</a>
 
 			{% endif %}
 		</div>

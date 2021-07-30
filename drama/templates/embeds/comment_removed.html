@@ -11,14 +11,14 @@
 		<span class="align-top"><a href="{{c.permalink}}">{{c.post.title | safe}}</a></span>
 </div>
 
-<div id="comment-{{c.base36id}}" class="comment">
+<div id="comment-{{c.id}}" class="comment">
 
 
 		<span class="comment-collapse"></span>
 
 		<div class="comment-body">
 
-				<div id="comment-{{c.base36id}}-only" class="">
+				<div id="comment-{{c.id}}-only" class="">
 
 						<div class="user-info">{% if c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
 								{% if c.is_banned %}[Removed by administrators]{% else %}[Deleted by author]{% endif %}
