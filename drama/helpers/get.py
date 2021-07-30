@@ -47,9 +47,11 @@ def get_user(username, v=None, graceful=False):
 def get_account(id, v=None):
 
 	user = g.db.query(User).filter_by(id = id).first()
-
+				
+	print(id)
 	if not user:
 		try:
+			print(id)
 			id = int(id, 36)
 			print(id)
 		except: abort(404)
