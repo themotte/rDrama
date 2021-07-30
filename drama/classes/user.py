@@ -28,7 +28,7 @@ class User(Base, Stndrd, Age_times):
 	highres = Column(String)
 	profileurl = Column(String)
 	bannerurl = Column(String)
-	patron = Column(Boolean, default=False)
+	patron = Column(Integer, default=0)
 	animatedname = Column(Boolean, default=False)
 	email = Column(String)
 	css = deferred(Column(String))
