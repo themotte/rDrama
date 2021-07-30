@@ -1,8 +1,6 @@
 from flask import *
-from time import time
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from drama.helpers.base36 import *
 from drama.__main__ import Base
 
 class Vote(Base):

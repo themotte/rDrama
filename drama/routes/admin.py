@@ -7,7 +7,6 @@ from PIL import Image as IMAGE
 
 from drama.helpers.wrappers import *
 from drama.helpers.alerts import *
-from drama.helpers.base36 import *
 from drama.helpers.sanitize import *
 from drama.helpers.markdown import *
 from drama.helpers.security import *
@@ -489,7 +488,22 @@ def admin_image_ban(v):
 	i.save(tempname)
 
 	h=imagehash.phash(IMAGE.open(tempname))
-	h=hex2bin(str(h))
+
+	value = int(str(h), 16) 
+	bindigits = [] 
+	 
+	# Seed digit: 2**0 
+	digit = (value % 2) 
+	value //= 2 
+	bindigits.append(digit) 
+	 
+	while value > 0: 
+		# Next power of 2**n 
+		digit = (value % 2) 
+		value //= 2 
+		bindigits.append(digit) 
+		 
+	h = ''.join([str(d) for d in bindigits])
 
 	#check db for existing
 	badpic = g.db.query(BadPic).filter_by(

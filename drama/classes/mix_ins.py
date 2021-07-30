@@ -1,4 +1,3 @@
-from drama.helpers.base36 import *
 from drama.helpers.lazy import lazy
 import math
 import random

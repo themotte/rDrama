@@ -530,6 +530,7 @@ def user_profile(username):
 @app.route("/uid/<uid>/pic/profile")
 @limiter.exempt
 def user_profile_uid(uid):
+	if isinstance(uid, str): uid = int(uid, 36)
 	x=get_account(uid)
 	return redirect(x.profile_url)
 

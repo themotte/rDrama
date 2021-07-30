@@ -2,7 +2,6 @@ from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 from .mix_ins import *
-from drama.helpers.base36 import *
 from drama.helpers.lazy import lazy
 from drama.__main__ import Base
 
