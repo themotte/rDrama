@@ -16,12 +16,13 @@ def upload_file(file=None, resize=False):
 
 	if resize:
 		i = IImage.open("image.gif")
+		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
 		def thumbnails(frames):
 			for frame in frames:
 				thumbnail = frame.copy()
-				thumbnail.thumbnail(100, 100, IImage.ANTIALIAS)
+				thumbnail.thumbnail(size, IImage.ANTIALIAS)
 				yield thumbnail
 
 		frames = thumbnails(frames)
