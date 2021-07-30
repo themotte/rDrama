@@ -80,9 +80,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		uselist=False,
 		primaryjoin="Submission.is_approved==User.id")
 
-	# not sure if we need this
-	reposts = relationship("Submission", lazy="joined", remote_side=[id])
-
 	# These are virtual properties handled as postgres functions server-side
 	# There is no difference to SQLAlchemy, but they cannot be written to
 
