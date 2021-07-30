@@ -86,7 +86,6 @@ CREATE TABLE public.submissions (
     thumburl text,
     private boolean,
     views integer,
-    banaward text,
     is_bot boolean
 );
 
@@ -205,15 +204,13 @@ CREATE TABLE public.users (
     agendaposter boolean,
     agendaposter_expires_utc integer DEFAULT 0,
     resized boolean,
-    banawards integer,
-    patron boolean,
     animatedname boolean,
     suicide_utc integer,
     post_count integer,
     comment_count integer,
     highres text,
     rent_utc integer,
-    patrontier integer
+    patron integer
 );
 
 
@@ -260,8 +257,7 @@ CREATE TABLE public.comments (
     is_pinned boolean DEFAULT false,
     app_id integer,
     sentto integer,
-    shadowbanned boolean,
-    banaward text
+    shadowbanned boolean
 );
 
 
