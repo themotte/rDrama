@@ -9,7 +9,7 @@ from .sanitize import *
 def send_notification(vid, user, text):
 
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
-	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	with CustomRenderer() as renderer:
 		text_html = renderer.render(mistletoe.Document(text))
 
@@ -60,10 +60,9 @@ def send_pm(vid, user, text):
 
 def send_follow_notif(vid, user, text):
 
-	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
-	with CustomRenderer() as renderer:
-		text_html = renderer.render(mistletoe.Document(text))
+	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
 	text_html = sanitize(text_html, linkgen=True)
 	
 	new_comment = Comment(author_id=1046,
@@ -87,7 +86,7 @@ def send_follow_notif(vid, user, text):
 	
 def send_unfollow_notif(vid, user, text):
 
-	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	with CustomRenderer() as renderer:
 		text_html = renderer.render(mistletoe.Document(text))
@@ -114,7 +113,7 @@ def send_unfollow_notif(vid, user, text):
 
 def send_block_notif(vid, user, text):
 
-	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	with CustomRenderer() as renderer:
 		text_html = renderer.render(mistletoe.Document(text))
@@ -141,7 +140,7 @@ def send_block_notif(vid, user, text):
 	
 def send_unblock_notif(vid, user, text):
 
-	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	with CustomRenderer() as renderer:
 		text_html = renderer.render(mistletoe.Document(text))
@@ -168,7 +167,7 @@ def send_unblock_notif(vid, user, text):
 
 def send_admin(vid, text):
 
-	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
 

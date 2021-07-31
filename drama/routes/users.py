@@ -69,7 +69,7 @@ def messagereply(v, username, id):
 
 	message = request.form.get("message", "")[:1000].strip()
 	user = get_user(username)
-	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
@@ -131,7 +131,7 @@ def message2(v, username):
 	if user.is_blocked: return {"error": "This user is blocking you."}, 403
 	message = request.form.get("message", "")[:1000].strip()
 
-	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
+	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
