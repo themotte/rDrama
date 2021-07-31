@@ -300,17 +300,17 @@ class User(Base, Stndrd, Age_times):
 	@lazy
 	def display_awards(self):
 
-		_awards = {}
+		awards = {}
 		active_awards = [x for x in self.awards if not x.given]
 
 		for a in active_awards:
-			if a.kind in _awards:
-				_awards[a.kind]['count'] += 1
+			if a.kind in awards:
+				awards[a.kind]['count'] += 1
 			else:
-				_awards[a.kind] = a.type
-				_awards[a.kind]['count'] = 1
+				awards[a.kind] = a.type
+				awards[a.kind]['count'] = 1
 
-		return list(_awards.values())
+		return sorted(list(awards.values()), key=lambda x: x.kind, reverse=True)
 
 	@property
 	@lazy

@@ -357,8 +357,7 @@ def settings_images_banner(v):
 		v.bannerurl = imageurl
 		g.db.add(v)
 
-	return render_template("settings_profile.html",
-							v=v, msg="Banner successfully updated.")
+	return render_template("settings_profile.html", v=v, msg="Banner successfully updated.")
 
 
 @app.post("/settings/delete/profile")
