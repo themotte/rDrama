@@ -352,14 +352,13 @@
 						{% endif %}
 
 						{% if v %}
-
-							{% if v.id == p.author_id or v.admin_level >= 3 %}
-								<li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
-							{% endif %}
-
 							{% if v.admin_level >=3 %}
 								<li class="list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post('/unban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-check"></i>Approve</a></li>
 								<li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/ban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban"></i>Remove</a></li>
+							{% endif %}
+
+							{% if v.id == p.author_id or v.admin_level >= 3 %}
+								<li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
 							{% endif %}
 
 							{% if v.admin_level >= 4 and p.oauth_app %}
@@ -374,10 +373,10 @@
 							{% endif %}
 
 							{% if not v.id==p.author_id and v.admin_level == 1 %}
-								<li id="sex-user-{{p.id}}" class="list-inline-item{% if p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/block?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.id}}').classList.toggle('d-none');})"
-								><i class="fas fa-user-slash"></i>Ban user</a></li>
-								<li id="unsex-user-{{p.id}}" class="list-inline-item{% if not p.is_blocking %} d-none{% endif %}"><a href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.id}}').classList.toggle('d-none');})"
-								><i class="fas fa-user-slash"></i>Unban user</a></li>
+								<li id="sex-user-{{p.id}}" class="list-inline-item{% if p.is_blocking %} d-none{% endif %}"><a class="text-danger" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.id}}').classList.toggle('d-none');})"
+								><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
+								<li id="unsex-user-{{p.id}}" class="list-inline-item{% if not p.is_blocking %} d-none{% endif %}"><a class="text-success" href="javascript:void(0)" onclick="post_toast('/settings/unblock?username={{p.author.username}}', callback=function(){document.getElementById('block-user-{{p.id}}').classList.toggle('d-none');document.getElementById('unblock-user-{{p.id}}').classList.toggle('d-none');})"
+								><i class="fas fa-user-slash text-success"></i>Unban user</a></li>
 							{% endif %}
 
 							{% if v.admin_level >=3 and v.id!=p.author_id %}

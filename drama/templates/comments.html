@@ -292,10 +292,19 @@
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')"><i class="fas fa-eye-slash fa-fw"></i>Block user</a></li>
 					{% endif %}
 
+					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-info" id="pin-comment-{{c.id}}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post('/comment_pin/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>{{'Unpin' if c.is_pinned else 'Pin'}}</a></li>
+						</li>
+					{% endif %}
+
 
 					{% if v and v.admin_level>=3 %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a></li>
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a></li>
+					{% endif %}
+
+					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
+						<li class="list-inline-item d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="post('/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil text-danger fa-fw"></i>Toggle +18</a></li>
 					{% endif %}
 
 					{% if v and v.admin_level==6 and v.id != c.author_id %}
@@ -306,18 +315,8 @@
 					{% endif %}
 					{% endif %}
 
-
-					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
-						<li class="list-inline-item d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="post('/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil text-danger fa-fw"></i>Toggle +18</a></li>
-					{% endif %}
-
 					{% if v and v.admin_level >=4 and c.oauth_app %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code fa-fw"></i>API App</a></li>
-					{% endif %}
-
-					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-info" id="pin-comment-{{c.id}}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post('/comment_pin/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>{{'Unpin' if c.is_pinned else 'Pin'}}</a></li>
-						</li>
 					{% endif %}
 
 					<li class="list-inline-item d-inline-block d-md-none"><a href="#" data-toggle="modal" data-target="#actionsModal-{{c.id}}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a></li>
