@@ -208,13 +208,13 @@ def user_id(id):
 def redditor_moment_redirect(username):
 	return redirect(f"/@{username}")
 
-@app.get("/rentoids")
-@auth_desired
-def rentoids(v):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+# @app.get("/rentoids")
+# @auth_desired
+# def rentoids(v):
+# 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
-	users = g.db.query(User).filter(User.rent_utc > 0).all()
-	return render_template("rentoids.html", v=v, users=users)
+# 	users = g.db.query(User).filter(User.rent_utc > 0).all()
+# 	return render_template("rentoids.html", v=v, users=users)
 
 @app.get("/@<username>/followers")
 @auth_required
