@@ -249,8 +249,7 @@ def api_comment(v):
 		return {"error": f"You already made that comment: {existing.permalink}"}, 409
 
 	if parent.author.any_block_exists(v) and not v.admin_level>=3:
-		return jsonify(
-			{"error": "You can't reply to users who have blocked you, or users you have blocked."}), 403
+		return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
 	# get bot status
 	is_bot = request.headers.get("X-User-Type","")=="Bot"

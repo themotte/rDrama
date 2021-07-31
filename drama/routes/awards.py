@@ -3,7 +3,7 @@ from drama.helpers.wrappers import *
 from drama.helpers.alerts import *
 from drama.helpers.get import *
 from drama.classes.award import *
-from flask import g, jsonify, request
+from flask import g, request
 
 
 def banaward_trigger(post=None, comment=None):

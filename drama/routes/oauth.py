@@ -41,8 +41,7 @@ def oauth_authorize_prompt(v):
 
 	scopes = scopes_txt.split(',')
 	if not scopes:
-		return jsonify(
-			{"oauth_error": "One or more scopes must be specified as a comma-separated list."}), 400
+		return {"oauth_error": "One or more scopes must be specified as a comma-separated list."}, 400
 
 	for scope in scopes:
 		if scope not in SCOPES:
@@ -103,8 +102,7 @@ def oauth_authorize_post(v):
 
 	scopes = scopes_txt.split(',')
 	if not scopes:
-		return jsonify(
-			{"oauth_error": "One or more scopes must be specified as a comma-separated list"}), 400
+		return {"oauth_error": "One or more scopes must be specified as a comma-separated list"}, 400
 
 	for scope in scopes:
 		if scope not in SCOPES:
@@ -149,8 +147,7 @@ def oauth_grant():
 		client_id=request.values.get("client_id"),
 		client_secret=request.values.get("client_secret")).first()
 	if not application:
-		return jsonify(
-			{"oauth_error": "Invalid `client_id` or `client_secret`"}), 401
+		return {"oauth_error": "Invalid `client_id` or `client_secret`"}, 401
 	if application.is_banned:
 		return {"oauth_error": f"Application `{application.app_name}` is suspended."}, 403
 
@@ -419,11 +416,7 @@ def reroll_oauth_tokens(aid, v):
 
 	g.db.add(a)
 
-	return jsonify({"message": "Tokens Rerolled",
-					"id": a.client_id,
-					"secret": a.client_secret
-					}
-				   )
+	return {"message": "Tokens Rerolled", "id": a.client_id, "secret": a.client_secret}
 
 
 @app.post("/oauth/rescind/<aid>")
