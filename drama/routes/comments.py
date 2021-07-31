@@ -558,7 +558,7 @@ def api_comment(v):
 
 
 @app.post("/edit_comment/<cid>")
-@is_not_banned
+@auth_desired
 def edit_comment(cid, v):
 
 	c = get_comment(cid, v=v)
