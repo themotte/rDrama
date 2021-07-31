@@ -127,8 +127,8 @@ def message2(v, username):
 		abort(418)
 
 	user = get_user(username, v=v)
-	if user.is_blocking: return jsonify({"error": "You're blocking this user."}), 403
-	if user.is_blocked: return jsonify({"error": "This user is blocking you."}), 403
+	if user.is_blocking: return {"error": "You're blocking this user."}, 403
+	if user.is_blocked: return {"error": "This user is blocking you."}, 403
 	message = request.form.get("message", "")[:1000].strip()
 
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
@@ -179,7 +179,7 @@ def api_is_available(name, v):
 	name=name.strip()
 
 	if len(name)<3 or len(name)>25:
-		return jsonify({name:False})
+		return {name:False}
 		
 	name=name.replace('_','\_')
 
@@ -193,9 +193,9 @@ def api_is_available(name, v):
 		).first()
 
 	if x:
-		return jsonify({name: False})
+		return {name: False}
 	else:
-		return jsonify({name: True})
+		return {name: True}
 
 
 @app.get("/id/<id>")
@@ -341,7 +341,7 @@ def u_username(username, v=None):
 												t=t,
 												next_exists=next_exists,
 												is_following=(v and u.has_follower(v))),
-				'api': lambda: jsonify({"data": [x.json for x in listing]})
+				'api': lambda: {"data": [x.json for x in listing]}
 				}
 
 	return {'html': lambda: render_template("userpage.html",
@@ -353,7 +353,7 @@ def u_username(username, v=None):
 										t=t,
 										next_exists=next_exists,
 										is_following=(v and u.has_follower(v))),
-		'api': lambda: jsonify({"data": [x.json for x in listing]})
+		'api': lambda: {"data": [x.json for x in listing]}
 		}
 
 
@@ -434,18 +434,8 @@ def u_username_comments(username, v=None):
 
 	is_following = (v and user.has_follower(v))
 
-	return {"html": lambda: render_template("userpage_comments.html",
-											u=user,
-											v=v,
-											listing=listing,
-											page=page,
-											sort=sort,
-											t=t,
-											next_exists=next_exists,
-											is_following=is_following,
-											standalone=True),
-			"api": lambda: jsonify({"data": [c.json for c in listing]})
-			}
+	if request.headers.get("Authorization"): return [c.json for c in listing]
+	else: return render_template("userpage_comments.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
 
 @app.get("/@<username>/info")
 @auth_desired
@@ -454,11 +444,11 @@ def u_username_info(username, v=None):
 	user=get_user(username, v=v)
 
 	if user.is_blocking:
-		return jsonify({"error": "You're blocking this user."}), 401
+		return {"error": "You're blocking this user."}, 401
 	elif user.is_blocked:
-		return jsonify({"error": "This user is blocking you."}), 403
+		return {"error": "This user is blocking you."}, 403
 
-	return jsonify(user.json)
+	return user.json
 
 
 @app.post("/follow/<username>")
@@ -467,7 +457,7 @@ def follow_user(username, v):
 
 	target = get_user(username)
 
-	if target.id==v.id: return jsonify({"error": "You can't follow yourself!"}), 400
+	if target.id==v.id: return {"error": "You can't follow yourself!"}, 400
 
 	# check for existing follow
 	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first(): abort(409)
@@ -539,7 +529,7 @@ def saved_posts(v, username):
 											page=page,
 											next_exists=next_exists,
 											),
-			'api': lambda: jsonify({"data": [x.json for x in listing]})
+			'api': lambda: {"data": [x.json for x in listing]}
 			}
 
 
@@ -565,5 +555,5 @@ def saved_comments(v, username):
 											page=page,
 											next_exists=next_exists,
 											standalone=True),
-			'api': lambda: jsonify({"data": [x.json for x in listing]})
+			'api': lambda: {"data": [x.json for x in listing]}
 			}

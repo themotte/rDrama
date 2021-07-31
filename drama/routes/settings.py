@@ -53,7 +53,7 @@ def settings_profile_post(v):
 		if v.animatedname == False:
 			users = g.db.query(User.id).options(lazyload('*')).order_by(User.dramacoins.desc()).limit(25).all()
 			users = [x[0] for x in users]
-			if v.id not in users: return jsonify({"error": "You must be in the top 25 leaderboard or be a patron to apply an animated name!"}), 403
+			if v.id not in users: return {"error": "You must be in the top 25 leaderboard or be a patron to apply an animated name!"}, 403
 		updated = True
 		v.animatedname = request.values.get("animatedname", None) == 'true'
 
@@ -87,7 +87,7 @@ def settings_profile_post(v):
 			#auto ban for digitally malicious content
 			if any([x.reason==4 for x in bans]):
 				v.ban(days=30, reason="Digitally malicious content is not allowed.")
-			return jsonify({"error": reason}), 401
+			return {"error": reason}, 401
 
 		v.bio = bio
 		v.bio_html=bio_html
@@ -148,10 +148,10 @@ def settings_profile_post(v):
 	if updated:
 		g.db.add(v)
 
-		return jsonify({"message": "Your settings have been updated."})
+		return {"message": "Your settings have been updated."}
 
 	else:
-		return jsonify({"error": "You didn't change anything."}), 400
+		return {"error": "You didn't change anything."}, 400
 
 @app.post("/changelogsub")
 @auth_required
@@ -447,16 +447,16 @@ def settings_block_user(v):
 	user = get_user(request.values.get("username"), graceful=True)
 
 	if not user:
-		return jsonify({"error": "That user doesn't exist."}), 404
+		return {"error": "That user doesn't exist."}, 404
 
 	if user.id == v.id:
-		return jsonify({"error": "You can't block yourself."}), 409
+		return {"error": "You can't block yourself."}, 409
 
 	if v.has_block(user):
-		return jsonify({"error": f"You have already blocked @{user.username}."}), 409
+		return {"error": f"You have already blocked @{user.username}."}, 409
 
 	if user.id == 1046:
-		return jsonify({"error": "You can't block @Drama."}), 409
+		return {"error": "You can't block @Drama."}, 409
 
 	new_block = UserBlock(user_id=v.id,
 						  target_id=user.id,
@@ -471,11 +471,11 @@ def settings_block_user(v):
 
 	if request.args.get("notoast"): return "", 204
 
-	if v.admin_level == 1: return jsonify({"message": f"@{user.username} banned!"})
+	if v.admin_level == 1: return {"message": f"@{user.username} banned!"}
 
 	cache.delete_memoized(frontlist)
 
-	return jsonify({"message": f"@{user.username} blocked."})
+	return {"message": f"@{user.username} blocked."}
 
 
 @app.post("/settings/unblock")
@@ -498,11 +498,11 @@ def settings_unblock_user(v):
 
 	if request.args.get("notoast"): return "", 204
 
-	if v.admin_level == 1: return jsonify({"message": f"@{user.username} unbanned!"})
+	if v.admin_level == 1: return {"message": f"@{user.username} unbanned!"}
 
 	cache.delete_memoized(frontlist)
 
-	return jsonify({"message": f"@{user.username} unblocked."})
+	return {"message": f"@{user.username} unblocked."}
 
 
 @app.get("/settings/apps")
@@ -705,4 +705,4 @@ def settings_badge_recheck(v):
 
 	v.refresh_selfset_badges()
 
-	return jsonify({"message":"Badges Refreshed"})
+	return {"message":"Badges Refreshed"}

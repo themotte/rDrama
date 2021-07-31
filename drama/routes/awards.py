@@ -43,7 +43,7 @@ def get_awards(v):
     for val in return_value:
         val['owned'] = len([x for x in user_awards if x.kind == val['kind'] and not x.given])
 
-    return jsonify(return_value)
+    return return_value
 
 
 @app.put("/post/<pid>/awards")
@@ -52,12 +52,12 @@ def get_awards(v):
 def award_post(pid, v):
 
     if v.is_suspended and v.unban_utc == 0:
-        return jsonify({"error": "forbidden"}), 403
+        return {"error": "forbidden"}, 403
 
     kind = request.form.get("kind", "")
 
     if kind not in AWARDS:
-        return jsonify({"error": "That award doesn't exist."}), 404
+        return {"error": "That award doesn't exist."}, 404
 
     post_award = g.db.query(AwardRelationship).filter(
         and_(
@@ -69,15 +69,15 @@ def award_post(pid, v):
     ).first()
 
     if not post_award:
-        return jsonify({"error": "You don't have that award."}), 404
+        return {"error": "You don't have that award."}, 404
 
     post = g.db.query(Submission).filter_by(id=pid).first()
 
     if not post or post.is_banned or post.deleted_utc > 0:
-        return jsonify({"error": "That post doesn't exist or has been deleted or removed."}), 404
+        return {"error": "That post doesn't exist or has been deleted or removed."}, 404
 
     if post.author_id == v.id:
-        return jsonify({"error": "You can't award yourself."}), 403
+        return {"error": "You can't award yourself."}, 403
 
     existing_award = g.db.query(AwardRelationship).filter(
         and_(
@@ -88,7 +88,7 @@ def award_post(pid, v):
     ).first()
 
     if existing_award and kind not in ALLOW_MULTIPLE:
-        return jsonify({"error": "You can't give that award multiple times to the same post."}), 409
+        return {"error": "You can't give that award multiple times to the same post."}, 409
 
     post_award.submission_id = post.id
     #print(f"give award to pid {post_award.submission_id} ({post.id})")
@@ -114,12 +114,12 @@ def award_post(pid, v):
 def award_comment(cid, v):
 
     if v.is_suspended and v.unban_utc == 0:
-        return jsonify({"error": "forbidden"}), 403
+        return {"error": "forbidden"}, 403
 
     kind = request.form.get("kind", "")
 
     if kind not in AWARDS:
-        return jsonify({"error": "That award doesn't exist."}), 404
+        return {"error": "That award doesn't exist."}, 404
 
     comment_award = g.db.query(AwardRelationship).filter(
         and_(
@@ -131,15 +131,15 @@ def award_comment(cid, v):
     ).first()
 
     if not comment_award:
-        return jsonify({"error": "You don't have that award."}), 404
+        return {"error": "You don't have that award."}, 404
 
     c = g.db.query(Comment).filter_by(id=cid).first()
 
     if not c or c.is_banned or c.deleted_utc > 0:
-        return jsonify({"error": "That comment doesn't exist or has been deleted or removed."}), 404
+        return {"error": "That comment doesn't exist or has been deleted or removed."}, 404
 
     if c.author_id == v.id:
-        return jsonify({"error": "You can't award yourself."}), 403
+        return {"error": "You can't award yourself."}, 403
 
     existing_award = g.db.query(AwardRelationship).filter(
         and_(
@@ -150,7 +150,7 @@ def award_comment(cid, v):
     ).first()
 
     if existing_award and kind not in ALLOW_MULTIPLE:
-        return jsonify({"error": "You can't give that award multiple times to the same comment."}), 409
+        return {"error": "You can't give that award multiple times to the same comment."}, 409
 
     comment_award.comment_id = c.id
     g.db.add(comment_award)

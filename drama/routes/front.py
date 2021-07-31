@@ -214,7 +214,7 @@ def front_all(v):
 	# check if ids exist
 	posts = get_posts(ids, v=v)
 
-	if request.headers.get("Authorization"): return jsonify({"data": [x.json for x in posts], "next_exists": next_exists})
+	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
 @cache.memoize(timeout=1500)
@@ -424,12 +424,5 @@ def all_comments(v):
 
 	idlist = idlist[0:25]
 
-	return {"html": lambda: render_template("home_comments.html",
-											v=v,
-											sort=sort,
-											t=t,
-											page=page,
-											comments=comments,
-											standalone=True,
-											next_exists=next_exists),
-			"api": lambda: jsonify({"data": [x.json for x in comments]})}
+	if request.headers.get("Authorization"): return [x.json for x in comments]
+	else: return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)

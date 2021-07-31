@@ -193,7 +193,7 @@ def admin_level_required(x):
 			v, c = get_logged_in_user()
 
 			if c:
-				return jsonify({"error": "No admin api access"}), 403
+				return {"error": "No admin api access"}, 403
 
 			if not v:
 				abort(401)

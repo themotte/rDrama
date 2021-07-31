@@ -202,17 +202,15 @@ def post_id(pid, anything=None, v=None):
 	g.db.commit()
 	if isinstance(session.get('over_18', 0), dict): session["over_18"] = 0
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
-		return {"html":lambda:render_template("errors/nsfw.html",
-							   v=v,
-							   ),
-				"api":lambda:(jsonify({"error":"Must be 18+ to view"}), 451)
-				}
+		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
+		else: return render_template("errors/nsfw.html", v=v)
+
 	
 	post.tree_comments()
 
 	return {
 		"html":lambda:post.rendered_page(v=v, sort=sort),
-		"api":lambda:jsonify(post.json)
+		"api":lambda:post.json
 		}
 
 @app.post("/edit_post/<pid>")
@@ -354,11 +352,11 @@ def get_post_title(v):
 	try:
 		x = requests.get(url, headers=headers)
 	except BaseException:
-		return jsonify({"error": "Could not reach page"}), 400
+		return {"error": "Could not reach page"}, 400
 
 
 	if not x.status_code == 200:
-		return jsonify({"error": f"Page returned {x.status_code}"}), x.status_code
+		return {"error": f"Page returned {x.status_code}"}, x.status_code
 
 
 	try:
@@ -368,9 +366,9 @@ def get_post_title(v):
 				"title": soup.find('title').string
 				}
 
-		return jsonify(data)
+		return data
 	except BaseException:
-		return jsonify({"error": f"Could not find a title"}), 400
+		return {"error": f"Could not find a title"}, 400
 
 def thumbs(new_post):
 	pid = new_post.id
@@ -539,42 +537,22 @@ def submit_post(v):
 		return redirect(repost.permalink)
 
 	if not title:
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error="Please enter a better title.",
-												 title=title,
-												 url=url,
-												 body=request.form.get(
-													 "body", ""),
-												 ), 400),
-				"api": lambda: ({"error": "Please enter a better title"}, 400)
-				}
+		if request.headers.get("Authorization"): return {"error": "Please enter a better title"}, 400
+		else: return render_template("submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.form.get("body", "")), 400
+
 
 	elif len(title) > 500:
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error="500 character limit for titles.",
-												 title=title[0:500],
-												 url=url,
-												 body=request.form.get(
-													 "body", ""),
-												 ), 400),
-				"api": lambda: ({"error": "500 character limit for titles"}, 400)
-				}
+		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
+		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[0:500], url=url, body=request.form.get("body", "")), 400
+
 
 	parsed_url = urlparse(url)
 	if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get(
 			"body") and not request.files.get("file", None):
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error="Please enter a url or some text.",
-												 title=title,
-												 url=url,
-												 body=request.form.get(
-													 "body", ""),
-												 ), 400),
-				"api": lambda: ({"error": "`url` or `body` parameter required."}, 400)
-				}
+
+		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
+		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.form.get("body", "")), 400
+
 	# sanitize title
 	title = bleach.clean(title, tags=[])
 
@@ -624,16 +602,8 @@ def submit_post(v):
 			elif domain_obj.reason==7:
 				v.ban(reason="Sexualizing minors")
 
-			return {"html": lambda: (render_template("submit.html",
-													 v=v,
-													 error="ToS Violation",
-													 title=title,
-													 url=url,
-													 body=request.form.get(
-														 "body", ""),
-													 ), 400),
-					"api": lambda: ({"error": "ToS violation"}, 400)
-					}
+			if request.headers.get("Authorization"): return {"error":"ToS violation"}, 400
+			else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.form.get("body", "")), 400
 
 		# check for embeds
 		if domain_obj.embed_function:
@@ -727,29 +697,13 @@ def submit_post(v):
 	# catch too-long body
 	if len(str(body)) > 10000:
 
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error="10000 character limit for text body.",
-												 title=title,
-												 url=url,
-												 body=request.form.get(
-													 "body", ""),
-												 ), 400),
-				"api": lambda: ({"error": "10000 character limit for text body."}, 400)
-				}
+		if request.headers.get("Authorization"): return {"error":"10000 character limit for text body."}, 400
+		else: return render_template("submit.html", v=v, error="10000 character limit for text body.", title=title, url=url, body=request.form.get("body", "")), 400
 
 	if len(url) > 2048:
 
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error="2048 character limit for URLs.",
-												 title=title,
-												 url=url,
-												 body=request.form.get(
-													 "body", ""),
-												 ), 400),
-				"api": lambda: ({"error": "2048 character limit for URLs."}, 400)
-				}
+		if request.headers.get("Authorization"): return {"error":"2048 character limit for URLs."}, 400
+		else: return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.form.get("body", "")), 400
 
 	# render text
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
@@ -771,16 +725,8 @@ def submit_post(v):
 			v.ban(days=30, reason="Digitally malicious content is not allowed.")
 			abort(403)
 			
-		return {"html": lambda: (render_template("submit.html",
-												 v=v,
-												 error=reason,
-												 title=title,
-												 url=url,
-												 body=request.form.get(
-													 "body", ""),
-												 ), 403),
-				"api": lambda: ({"error": reason}, 403)
-				}
+		if request.headers.get("Authorization"): return {"error": reason}, 403
+		else: return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.form.get("body", "")), 403
 
 	# check spam
 	soup = BeautifulSoup(body_html, features="html.parser")
@@ -810,17 +756,8 @@ def submit_post(v):
 
 				return redirect('/notifications')
 			else:
-
-				return {"html": lambda: (render_template("submit.html",
-														 v=v,
-														 error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}.",
-														 title=title,
-														 url=url,
-														 body=request.form.get(
-															 "body", ""),
-														 ), 400),
-						"api": lambda: ({"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400)
-						}
+				if request.headers.get("Authorization"): return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400
+				else: return render_template("submit.html", v=v, error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}.", title=title, url=url, body=request.form.get("body", "")), 400
 
 	# check for embeddable video
 	domain = parsed_url.netloc
@@ -876,15 +813,9 @@ def submit_post(v):
 
 		file = request.files['file']
 		if not file.content_type.startswith('image/'):
-			return {"html": lambda: (render_template("submit.html",
-														 v=v,
-														 error=f"Image files only.",
-														 title=title,
-														 body=request.form.get(
-															 "body", ""),
-														 ), 400),
-						"api": lambda: ({"error": f"Image files only"}, 400)
-						}
+			if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
+			else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.form.get("body", "")), 400
+
 
 		name = f'post/{new_post.id}/{secrets.token_urlsafe(8)}'
 		new_post.url = upload_file(file)
@@ -997,9 +928,8 @@ def submit_post(v):
 
 	cache.delete_memoized(frontlist)
 
-	return {"html": lambda: redirect(new_post.permalink),
-			"api": lambda: jsonify(new_post.json)
-			}
+	if request.headers.get("Authorization"): return new_post.json
+	else: return redirect(new_post.permalink)
 
 
 @app.post("/delete_post/<pid>")

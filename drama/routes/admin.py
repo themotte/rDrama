@@ -76,15 +76,7 @@ def image_posts_listing(v):
 
 	posts = get_posts(posts, v=v)
 
-	return {'html': lambda: render_template("admin/image_posts.html",
-											v=v,
-											listing=posts,
-											next_exists=next_exists,
-											page=page,
-											sort="new"
-											),
-			'api': lambda: [x.json for x in posts]
-			}
+	return render_template("admin/image_posts.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
 
 
 @app.get("/admin/flagged/comments")
@@ -703,7 +695,7 @@ def ban_user(user_id, v):
 
 	if request.args.get("notoast"): return (redirect(user.url), user)
 
-	return jsonify({"message": f"@{user.username} was banned"})
+	return {"message": f"@{user.username} was banned"}
 
 
 @app.post("/unban_user/<user_id>")
@@ -735,7 +727,7 @@ def unban_user(user_id, v):
 	g.db.commit()
 
 	if request.args.get("notoast"): return (redirect(user.url), user)
-	return jsonify({"message": f"@{user.username} was unbanned"})
+	return {"message": f"@{user.username} was unbanned"}
 
 @app.post("/ban_post/<post_id>")
 @admin_level_required(3)
@@ -921,14 +913,24 @@ def admin_distinguish_comment(c_id, v):
 
 	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
 
-	return jsonify({"html":html, "api":html})
+	return html
+
+@app.get("/admin/refund")
+@admin_level_required(6)
+def refund(v):
+	for u in g.db.query(User).all():
+		posts=sum([x[0]+x[1]-1 for x in g.db.query(Submission.upvotes, Submission.downvotes).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()])
+		comments=sum([x[0]+x[1]-1 for x in g.db.query(Comment.upvotes, Comment.downvotes).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()])
+		u.dramacoins = int(posts+comments)
+		g.db.add(u)
+	return "sex"
 
 
 @app.get("/admin/dump_cache")
 @admin_level_required(6)
 def admin_dump_cache(v):
 	cache.clear()
-	return jsonify({"message": "Internal cache cleared."})
+	return {"message": "Internal cache cleared."}
 
 
 @app.post("/admin/ban_domain")
@@ -1098,7 +1100,7 @@ def user_stat_data(v):
 			"comment_data": comment_stats,
 			}
 
-	return jsonify(final)
+	return final
 
 
 def create_plot(**kwargs):

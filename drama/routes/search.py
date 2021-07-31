@@ -223,21 +223,9 @@ def searchposts(v, search_type="posts"):
 		domain=None
 		domain_obj=None
 
-	return {"html":lambda:render_template("search.html",
-						   v=v,
-						   query=query,
-						   total=total,
-						   page=page,
-						   listing=posts,
-						   sort=sort,
-						   t=t,
-						   next_exists=next_exists,
-						   domain=domain,
-						   domain_obj=domain_obj,
-						   reasons=REASONS
-						   ),
-			"api":lambda:jsonify({"data":[x.json for x in posts]})
-			}
+	if request.headers.get("Authorization"): return [x.json for x in posts]
+	else: return render_template("search_comments.html", v=v, query=query, total=total, page=page, listing=posts, sort=sort, t=t, next_exists=next_exists, domain=domain, domain_obj=domain_obj, reasons=REASONS)
+
 
 @app.get("/search/comments")
 @auth_desired
@@ -260,19 +248,10 @@ def searchcomments(v):
 
 	comments = get_comments(ids, v=v)
 
-	return {"html":lambda:render_template("search_comments.html",
-						   v=v,
-						   query=query,
-						   total=total,
-						   page=page,
-						   comments=comments,
-						   sort=sort,
-						   t=t,
-						   next_exists=next_exists,
-						   ),
-			"api":lambda:jsonify({"data":[x.json for x in comments]})
-			}
-			
+	if request.headers.get("Authorization"): return [x.json for x in comments]
+	else: return render_template("search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists)
+
+
 @app.get("/search/users")
 @auth_desired
 def searchusers(v, search_type="posts"):
@@ -299,16 +278,5 @@ def searchusers(v, search_type="posts"):
 	users=users[:25]
 	
 	
-	
-	return {"html":lambda:render_template("search_users.html",
-				   v=v,
-				   query=query,
-				   total=total,
-				   page=page,
-				   users=users,
-				   sort=sort,
-				   t=t,
-				   next_exists=next_exists
-				  ),
-			"api":lambda:jsonify({"data":[x.json for x in users]})
-			}
+	if request.headers.get("Authorization"): return [x.json for x in users]
+	else: return render_template("search_users.html", v=v, query=query, total=total, page=page, users=users, sort=sort, t=t, next_exists=next_exists)

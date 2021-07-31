@@ -16,7 +16,7 @@ def badmins(v):
 	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.dramacoins.desc()).all()
 	return {
 		"html":lambda:render_template("badmins.html", v=v, badmins=badmins),
-		"api":lambda:jsonify({"data":[x.json for x in badmins]})
+		"api":lambda:{"data":[x.json for x in badmins]}
 		}
 
 @app.get("/log")
@@ -39,7 +39,7 @@ def log(v):
 			next_exists=next_exists,
 			page=page
 		),
-		"api":lambda:jsonify({"data":[x.json for x in actions]})
+		"api":lambda:{"data":[x.json for x in actions]}
 		}
 
 @app.get("/log/<id>")
