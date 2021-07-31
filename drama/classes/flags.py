@@ -11,7 +11,6 @@ class Flag(Base, Stndrd):
 	post_id = Column(Integer, ForeignKey("submissions.id"))
 	user_id = Column(Integer, ForeignKey("users.id"))
 	reason = Column(String(100))
-	created_utc = Column(Integer)
 	
 	user = relationship("User", lazy = "joined", primaryjoin = "Flag.user_id == User.id", uselist = False)
 
@@ -28,26 +27,9 @@ class CommentFlag(Base, Stndrd):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	comment_id = Column(Integer, ForeignKey("comments.id"))
 	reason = Column(String(100))
-	created_utc = Column(Integer)
 	
 	user = relationship("User", lazy = "joined", primaryjoin = "CommentFlag.user_id == User.id", uselist = False)
 
 	def __repr__(self):
 
 		return f"<CommentFlag(id={self.id})>"
-
-
-class Report(Base):
-
-	__tablename__ = "reports"
-
-	id = Column(Integer, primary_key=True)
-	post_id = Column(Integer, ForeignKey("submissions.id"))
-	user_id = Column(Integer, ForeignKey("users.id"))
-	created_utc = Column(Integer)
-	
-	user = relationship("User", lazy = "joined", primaryjoin = "Report.user_id == User.id", uselist = False)
-
-	def __repr__(self):
-
-		return f"<Report(id={self.id})>"

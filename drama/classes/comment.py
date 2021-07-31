@@ -317,9 +317,6 @@ class Notification(Base):
 	comment = relationship("Comment", lazy="joined", innerjoin=True)
 	user=relationship("User", innerjoin=True)
 
-	# Server side computed values (copied from corresponding comment)
-	created_utc = Column(Integer, server_default=FetchedValue())
-
 	def __repr__(self):
 
 		return f"<Notification(id={self.id})>"

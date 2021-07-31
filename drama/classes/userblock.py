@@ -9,7 +9,6 @@ class UserBlock(Base, Stndrd, Age_times):
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey("users.id"))
 	target_id = Column(Integer, ForeignKey("users.id"))
-	created_utc = Column(Integer)
 
 	user = relationship(
 		"User",

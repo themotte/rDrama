@@ -8,8 +8,6 @@ class Subscription(Base):
 	__tablename__ = "subscriptions"
 	id = Column(BigInteger, primary_key=True)
 	user_id = Column(BigInteger, ForeignKey("users.id"))
-	created_utc = Column(BigInteger, default=0)
-	is_active = Column(Boolean, default=True)
 	submission_id = Column(BigInteger, default=0)
 	
 	user = relationship("User", uselist=False)
@@ -29,7 +27,6 @@ class Follow(Base):
 	id = Column(BigInteger, primary_key=True)
 	user_id = Column(BigInteger, ForeignKey("users.id"))
 	target_id = Column(BigInteger, ForeignKey("users.id"))
-	created_utc = Column(BigInteger, default=0)
 
 	user = relationship(
 		"User",
