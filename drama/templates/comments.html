@@ -294,21 +294,21 @@
 
 
 					{% if v and v.admin_level>=3 %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block text-danger"><a href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban fa-fw"></i>Remove</a></li>
-						<li class="list-inline-item text-muted d-none d-md-inline-block text-success"><a href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check fa-fw"></i>Approve</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban fa-fw"></i>Remove</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check fa-fw"></i>Approve</a></li>
 					{% endif %}
 
 					{% if v and v.admin_level==6 and v.id != c.author_id %}
 					{% if c.author.is_banned %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block text-danger"><a id="unexile-comment-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw"></i>Unban user</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" id="unexile-comment-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw"></i>Unban user</a></li>
 					{% else %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block text-danger"><a id="exile-comment-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw"></i>Ban user</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" id="exile-comment-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw"></i>Ban user</a></li>
 					{% endif %}
 					{% endif %}
 
 
 					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block text-danger"><a href="javascript:void(0)" onclick="post('/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil fa-fw"></i>Toggle +18</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="post('/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil fa-fw"></i>Toggle +18</a></li>
 					{% endif %}
 
 					{% if v and v.admin_level >=4 and c.oauth_app %}
@@ -441,7 +441,7 @@
 				{% endif %}
 
 					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
-					<li class="list-group-item text-danger"><a class="d-block" href="javascript:void(0)" onclick="post('/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
+					<li class="list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="post('/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
 					{% endif %}
 
 					{% if v %}
@@ -449,8 +449,8 @@
 											<li class="list-group-item"><a class="d-block" id="distinguish-{{c.id}}" href="javascript:void(0)" onclick="admin_comment('{{c.id}}')"><i class="fas fa-id-badge"></i>{{'Undistinguish' if c.distinguish_level else 'Distinguish'}}</a></li>
 							{% endif %}
 							{% if v.admin_level>=3 %}
-								<li class="list-group-item text-danger"><a class="d-block" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban"></i>Remove</a></li>
-								<li class="list-group-item text-success"><a class="d-block" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check"></i>Approve</a></li>
+								<li class="list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban"></i>Remove</a></li>
+								<li class="list-group-item"><a class="text-success d-block" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check"></i>Approve</a></li>
 							{% endif %}
 							{% if v.admin_level >=4 and c.oauth_app %}
 								<li class="list-group-item"><a class="d-block" href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code"></i>API App</a></li>
@@ -470,9 +470,9 @@
 					{% if v and (c.post and v.admin_level == 6) %}
 						{% if c.author_id != v.id %}
 								{% if c.author.is_banned %}
-								<li class="list-group-item text-success"><a class="d-block" id="unexile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw"></i>Unban user</a></li>
+								<li class="list-group-item"><a class="text-success d-block" id="unexile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw"></i>Unban user</a></li>
 								{% else %}
-								<li class="list-group-item text-danger"><a class="d-block" id="exile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw"></i>Ban user</a></li>
+								<li class="list-group-item"><a class="text-danger d-block" id="exile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw"></i>Ban user</a></li>
 								{% endif %}
 						{% endif %}
 					{% endif %}	

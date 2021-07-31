@@ -176,13 +176,13 @@
 
 							{% if v and (v.id==p.author_id or v.admin_level>=3) %}
 
-							<li class="list-inline-item text-danger"><a href="javascript:void(0)" onclick="post('/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
+							<li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
 
 							{% endif %}
 
 							{% if v.admin_level >=3 %}
-								<li class="list-inline-item text-success"><a id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/unban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-check"></i>Approve</a></li>
-								<li class="list-inline-item text-danger"><a id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/ban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban"></i>Remove</a></li>
+								<li class="list-inline-item"><a class="text-success" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/unban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-check"></i>Approve</a></li>
+								<li class="list-inline-item"><a class="text-danger" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/ban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban"></i>Remove</a></li>
 							{% endif %}
 
 							{% if v.admin_level >= 4 and p.oauth_app %}
@@ -196,10 +196,10 @@
 
 							{% if v.admin_level >=3 and v.id!=p.author_id %}
 								{% if p.author.is_banned %}
-									<li class="list-inline-item text-danger"><a id="unexile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{p.author_id}}')"
+									<li class="list-inline-item"><a class="text-danger" id="unexile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{p.author_id}}')"
 									><i class="fas fa-user-slash"></i>Unban user</a></li>
 								{% else %}
-									<li class="list-inline-item text-danger"><a id="exile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}')"
+									<li class="list-inline-item"><a class="text-danger" id="exile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}')"
 									><i class="fas fa-user-slash"></i>Ban user</a></li>
 								{% endif %}
 							{% endif %}
