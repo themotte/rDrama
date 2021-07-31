@@ -340,7 +340,6 @@ def api_comment(v):
 		if not file.content_type.startswith('image/'):
 			return {"error": "That wasn't an image!"}, 400
 		
-		name = f'comment/{c.id}/{secrets.token_urlsafe(8)}'
 		url = upload_file(file)
 		
 		body = request.form.get("body") + f"\n![]({url})"
@@ -574,7 +573,7 @@ def api_comment(v):
 	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
-	if request.headers.get("Authorization"): return c.json
+	if request.headers.get("Authorization"): return "sex"
 	else: return render_template("comments.html", v=v, comments=[c], render_replies=False)
 
 
