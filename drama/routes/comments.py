@@ -78,26 +78,16 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	for i in range(6 - context):
 		if v:
-
-			votes = g.db.query(CommentVote).filter(
-				CommentVote.user_id == v.id).subquery()
-
 			blocking = v.blocking.subquery()
 			blocked = v.blocked.subquery()
 
 
 			comms = g.db.query(
 				Comment,
-				votes.c.vote_type,
 				blocking.c.id,
 				blocked.c.id,
-				aliased(ModAction, alias=exile)
 			).filter(
 				Comment.parent_comment_id.in_(current_ids)
-			).join(
-				votes,
-				votes.c.comment_id == Comment.id,
-				isouter=True
 			).join(
 				blocking,
 				blocking.c.target_id == Comment.author_id,
@@ -105,10 +95,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			).join(
 				blocked,
 				blocked.c.user_id == Comment.author_id,
-				isouter=True
-			).join(
-				exile,
-				exile.c.target_comment_id==Comment.id,
 				isouter=True
 			)
 
@@ -129,47 +115,35 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 				abort(422)
 
 			output = []
-			for c in comms:
+			for c in comments:
 				comment = c[0]
-				comment._voted = c[1] or 0
-				comment._is_blocking = c[2] or 0
-				comment._is_blocked = c[3] or 0
-				comment._is_exiled_for=c[4] or 0
+				comment._is_blocking = c[1] or 0
+				comment._is_blocked = c[2] or 0
 				output.append(comment)
 		else:
 
 			comms = g.db.query(
-				Comment,
-				aliased(ModAction, alias=exile)
+				Comment
 			).filter(
 				Comment.parent_comment_id.in_(current_ids)
-			).join(
-				exile,
-				exile.c.target_comment_id==Comment.id,
-				isouter=True
 			)
 
 			if sort == "top":
-				comments = comms.order_by(Comment.score.asc()).all()
+				output = comms.order_by(Comment.score.asc()).all()
 			elif sort == "bottom":
-				comments = comms.order_by(Comment.score.desc()).all()
+				output = comms.order_by(Comment.score.desc()).all()
 			elif sort == "new":
-				comments = comms.order_by(Comment.created_utc.desc()).all()
+				output = comms.order_by(Comment.created_utc.desc()).all()
 			elif sort == "old":
-				comments = comms.order_by(Comment.created_utc.asc()).all()
+				output = comms.order_by(Comment.created_utc.asc()).all()
 			elif sort == "controversial":
-				comments = sorted(comms.all(), key=lambda x: x[0].score_disputed, reverse=True)
+				output = sorted(comms.all(), key=lambda x: x[0].score_disputed, reverse=True)
 			elif sort == "random":
 				c = comms.all()
-				comments = random.sample(c, k=len(c))
+				output = random.sample(c, k=len(c))
 			else:
 				abort(422)
 
-			output = []
-			for c in comms:
-				comment=c[0]
-				comment._is_exiled_for=c[1] or 0
-				output.append(comment)
 
 		post._preloaded_comments += output
 
@@ -180,9 +154,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	post.replies=[top_comment]
 
-	return {'html': lambda: post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info),
-			'api': lambda: top_comment.json
-			}
+	if request.headers.get("Authorization"): return top_comment.json
+	else: return post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info)
+
 
 @app.post("/comment")
 @limiter.limit("6/minute")
@@ -573,7 +547,7 @@ def api_comment(v):
 	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
-	if request.headers.get("Authorization"): return "sex"
+	if request.headers.get("Authorization"): return c.json
 	else: return render_template("comments.html", v=v, comments=[c], render_replies=False)
 
 
@@ -610,16 +584,14 @@ def edit_comment(cid, v):
 		if ban.reason:
 			reason += f" {ban.reason_text}"	
 	
-		return {'html': lambda: render_template("comment_failed.html",
+		if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
+		else: return render_template("comment_failed.html",
 												action=f"/edit_comment/{c.id}",
 												badlinks=[
 													x.domain for x in bans],
 												body=body,
 												v=v
-												),
-				'api': lambda: ({'error': f'A blacklisted domain was used.'}, 400)
-				}
-
+												)
 	# check badlinks
 	soup = BeautifulSoup(body_html, features="html.parser")
 	links = [x['href'] for x in soup.find_all('a') if x.get('href')]

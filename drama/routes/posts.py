@@ -208,10 +208,9 @@ def post_id(pid, anything=None, v=None):
 	
 	post.tree_comments()
 
-	return {
-		"html":lambda:post.rendered_page(v=v, sort=sort),
-		"api":lambda:post.json
-		}
+	if request.headers.get("Authorization"): return post.json
+	else: return post.rendered_page(v=v, sort=sort)
+
 
 @app.post("/edit_post/<pid>")
 @is_not_banned
@@ -964,15 +963,6 @@ def undelete_post_pid(pid, v):
 
 	return "", 204
 
-@app.get("/embed/post/<pid>")
-def embed_post_pid(pid):
-
-	post = get_post(int(pid))
-
-	if post.is_banned:
-		abort(410)
-
-	return render_template("embeds/submission.html", p=post)
 
 @app.post("/toggle_comment_nsfw/<cid>")
 @is_not_banned

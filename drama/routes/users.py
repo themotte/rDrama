@@ -249,11 +249,11 @@ def u_username(username, v=None):
 		return redirect(request.path.replace(username, u.username))
 
 	if u.reserved:
-		return {'html': lambda: render_template("userpage_reserved.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
+		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
 				}
+		else: return render_template("userpage_reserved.html",
+												u=u,
+												v=v)
 
 	# viewers
 	if v and u.id != v.id:
@@ -275,38 +275,33 @@ def u_username(username, v=None):
 		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
 		
-		paidrent = False
-		if v and u.id == 253:
-			if int(time.time()) - v.rent_utc < 600: paidrent = True
-			elif request.args.get("rent") == "true" and v.dramacoins > 500:
-				v.dramacoins -= 500
-				v.rent_utc = int(time.time())
-				g.db.add(v)
-				u.dramacoins += 500
-				g.db.add(u)
-				send_notification(1046, u, f"@{v.username} has paid rent!")
-				paidrent = True
+		# paidrent = False
+		# if v and u.id == 253:
+		# 	if int(time.time()) - v.rent_utc < 600: paidrent = True
+		# 	elif request.args.get("rent") == "true" and v.dramacoins > 500:
+		# 		v.dramacoins -= 500
+		# 		v.rent_utc = int(time.time())
+		# 		g.db.add(v)
+		# 		u.dramacoins += 500
+		# 		g.db.add(u)
+		# 		send_notification(1046, u, f"@{v.username} has paid rent!")
+		# 		paidrent = True
 
-		if not paidrent:
-			return {'html': lambda: render_template("userpage_private.html",
-													u=u,
-													v=v),
-					'api': lambda: {"error": "That userpage is private"}
-					}
+		# if not paidrent:
+
+		if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+		else: return render_template("userpage_private.html", u=u, v=v)
+
 
 	if u.is_blocking and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_blocking.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": f"You are blocking @{u.username}."}
-				}
+		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
+		else: return render_template("userpage_blocking.html", u=u, v=v)
+
 
 	if u.is_blocked and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_blocked.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": "This person is blocking you."}
-				}
+		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
+		else: return render_template("userpage_blocked.html", u=u, v=v)
+
 
 	sort = request.args.get("sort", "new")
 	t = request.args.get("t", "all")
@@ -330,21 +325,8 @@ def u_username(username, v=None):
 	listing = get_posts(ids, v=v)
 
 	if u.unban_utc:
-		#unban = datetime.fromtimestamp(u.unban_utc).strftime('%c')
-		return {'html': lambda: render_template("userpage.html",
-												unban=u.unban_string,
-												u=u,
-												v=v,
-												listing=listing,
-												page=page,
-												sort=sort,
-												t=t,
-												next_exists=next_exists,
-												is_following=(v and u.has_follower(v))),
-				'api': lambda: {"data": [x.json for x in listing]}
-				}
-
-	return {'html': lambda: render_template("userpage.html",
+		if request.headers.get("Authorization"): return [x.json for x in listing]
+		else: return render_template("userpage.html",
 										u=u,
 										v=v,
 										listing=listing,
@@ -352,9 +334,8 @@ def u_username(username, v=None):
 										sort=sort,
 										t=t,
 										next_exists=next_exists,
-										is_following=(v and u.has_follower(v))),
-		'api': lambda: {"data": [x.json for x in listing]}
-		}
+										is_following=(v and u.has_follower(v)))
+
 
 
 @app.get("/@<username>/comments")
@@ -375,45 +356,43 @@ def u_username_comments(username, v=None):
 	u = user
 
 	if u.reserved:
-		return {'html': lambda: render_template("userpage_reserved.html",
+		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
+		else: return render_template("userpage_reserved.html",
 												u=u,
-												v=v),
-				'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
-				}
+												v=v)
+
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
-		paidrent = False
-		if v and u.id == 253:
-			if int(time.time()) - v.rent_utc < 600: paidrent = True
-			elif request.args.get("rent") == "true" and v.dramacoins > 500:
-				v.dramacoins -= 500
-				v.rent_utc = int(time.time())
-				g.db.add(v)
-				u.dramacoins += 500
-				g.db.add(u)
-				send_notification(1046, u, f"@{v.username} has paid rent!")
-				paidrent = True
+		# paidrent = False
+		# if v and u.id == 253:
+		# 	if int(time.time()) - v.rent_utc < 600: paidrent = True
+		# 	elif request.args.get("rent") == "true" and v.dramacoins > 500:
+		# 		v.dramacoins -= 500
+		# 		v.rent_utc = int(time.time())
+		# 		g.db.add(v)
+		# 		u.dramacoins += 500
+		# 		g.db.add(u)
+		# 		send_notification(1046, u, f"@{v.username} has paid rent!")
+		# 		paidrent = True
 
-		if not paidrent:
-			return {'html': lambda: render_template("userpage_private.html",
+		# if not paidrent:
+		if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+		else: return render_template("userpage_private.html",
 													u=u,
-													v=v),
-					'api': lambda: {"error": "That userpage is private"}
-					}
+													v=v)
 
 	if u.is_blocking and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_blocking.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": f"You are blocking @{u.username}."}
-				}
+		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
+		else: return render_template("userpage_blocking.html",
+													u=u,
+													v=v)
 
 	if u.is_blocked and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_blocked.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": "This person is blocking you."}
-				}
+		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
+		else: return render_template("userpage_blocked.html",
+													u=u,
+													v=v)
+
 
 	page = int(request.args.get("page", "1"))
 	sort=request.args.get("sort","new")
@@ -522,15 +501,14 @@ def saved_posts(v, username):
 
 	listing = get_posts(ids, v=v)
 
-	return {'html': lambda: render_template("userpage.html",
+	if request.headers.get("Authorization"): return [x.json for x in listing]
+	else: return render_template("userpage.html",
 											u=v,
 											v=v,
 											listing=listing,
 											page=page,
 											next_exists=next_exists,
-											),
-			'api': lambda: {"data": [x.json for x in listing]}
-			}
+											)
 
 
 @app.get("/@<username>/saved/comments")
@@ -548,12 +526,11 @@ def saved_comments(v, username):
 	listing = get_comments(ids, v=v)
 
 
-	return {'html': lambda: render_template("userpage_comments.html",
+	if request.headers.get("Authorization"): return [x.json for x in listing]
+	else: return render_template("userpage_comments.html",
 											u=v,
 											v=v,
 											listing=listing,
 											page=page,
 											next_exists=next_exists,
-											standalone=True),
-			'api': lambda: {"data": [x.json for x in listing]}
-			}
+											standalone=True)

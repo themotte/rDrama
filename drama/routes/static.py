@@ -14,10 +14,8 @@ def patrons(v):
 @auth_desired
 def badmins(v):
 	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.dramacoins.desc()).all()
-	return {
-		"html":lambda:render_template("badmins.html", v=v, badmins=badmins),
-		"api":lambda:{"data":[x.json for x in badmins]}
-		}
+	render_template("badmins.html", v=v, badmins=badmins)
+
 
 @app.get("/log")
 @auth_desired
@@ -31,16 +29,7 @@ def log(v):
 	next_exists=len(actions)==26
 	actions=actions[:25]
 
-	return {
-		"html":lambda:render_template(
-			"modlog.html",
-			v=v,
-			actions=actions,
-			next_exists=next_exists,
-			page=page
-		),
-		"api":lambda:{"data":[x.json for x in actions]}
-		}
+	return render_template("log.html", v=v, actions=actions, next_exists=next_exists, page=page)
 
 @app.get("/log/<id>")
 @auth_desired
@@ -57,7 +46,7 @@ def log_item(id, v):
 	if request.path != action.permalink:
 		return redirect(action.permalink)
 
-	return render_template("modlog.html",
+	return render_template("log.html",
 		v=v,
 		actions=[action],
 		next_exists=False,
