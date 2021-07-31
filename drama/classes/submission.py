@@ -419,7 +419,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	@lazy
 	def ordered_flags(self):
-		print(self.flags.order_by(Flag.created_utc).all())
 		return self.flags.order_by(Flag.created_utc).all()
 
 	@property

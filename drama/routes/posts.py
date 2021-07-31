@@ -50,6 +50,7 @@ def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
+)
 	if v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 	sort=request.args.get("sort", defaultsortingcomments)
@@ -72,6 +73,10 @@ def post_id(pid, anything=None, v=None):
 		except: abort(404)
 
 	post = get_post(pid, v=v)
+
+	print(post.flags)
+	print("sex")
+	print(post.flags.order_by(Flag.created_utc).all())
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
