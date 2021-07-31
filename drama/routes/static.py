@@ -14,8 +14,7 @@ def patrons(v):
 @auth_desired
 def badmins(v):
 	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.dramacoins.desc()).all()
-	render_template("badmins.html", v=v, badmins=badmins)
-
+	return render_template("badmins.html", v=v, badmins=badmins)
 
 @app.get("/log")
 @auth_desired
