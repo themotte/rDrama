@@ -310,8 +310,7 @@ class User(Base, Stndrd, Age_times):
 				awards[a.kind] = a.type
 				awards[a.kind]['count'] = 1
 
-		print(list(awards.values()))
-		return sorted(list(awards.values()), key=lambda x: x.kind, reverse=True)
+		return sorted(list(awards.values()), key=lambda x: x['kind'], reverse=True)
 
 	@property
 	@lazy
