@@ -117,8 +117,10 @@ def api_vote_comment(comment_id, new, v):
 	new = int(new)
 
 	try: comment_id = int(comment_id)
-	except: comment_id = int(comment_id, 36)
-	
+	except:
+		try: comment_id = int(comment_id, 36)
+		except: abort(404)
+
 	comment = get_comment(comment_id)
 
 	# check for existing vote

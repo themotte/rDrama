@@ -493,7 +493,9 @@ def user_profile(username):
 @limiter.exempt
 def user_profile_uid(uid):
 	try: uid = int(uid)
-	except: uid = int(uid, 36)
+	except:
+		try: uid = int(uid, 36)
+		except: abort(404)
 	x=get_account(uid)
 	return redirect(x.profile_url)
 

@@ -35,7 +35,9 @@ def log(v):
 def log_item(id, v):
 
 	try: id = int(id)
-	except: id = int(id, 36)
+	except:
+		try: id = int(id, 36)
+		except: abort(404)
 
 	action=g.db.query(ModAction).filter_by(id=id).first()
 

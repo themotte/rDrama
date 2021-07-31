@@ -27,7 +27,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	
 	try: cid = int(cid)
-	except: cid = int(cid, 36)
+	except:
+		try: cid = int(cid, 36)
+		except: abort(404)
 
 	comment = get_comment(cid, v=v)
 	
