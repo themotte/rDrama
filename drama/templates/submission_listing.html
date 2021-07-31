@@ -325,7 +325,7 @@
 
 					{% if v %}
 						{% if v.admin_level >=3 %}
-							<button class="btn btn-link btn-block btn-lg text-info text-left" id="sticky-post-{{p.id}}" href="javascript:void(0)" onclick="post('/sticky/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</button>
+							<button class="btn btn-link btn-block btn-lg text-left" id="sticky-post-{{p.id}}" href="javascript:void(0)" onclick="post('/sticky/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</button>
 							
 							{% if v==p.author %}
 							<button class="btn btn-link btn-block btn-lg text-left text-info" id="distinguish-post-{{p.id}}" href="javascript:void(0)" onclick="post('/distinguish/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-crown text-center mr-3"></i>Distinguish</button>
