@@ -11,10 +11,7 @@ def patrons(v):
 	return render_template("patrons.html", v=v, users=users)
 
 @app.get("/badmins")
-@app.route("/api/vue/admins",  methods=["GET"])
-@app.get("/api/v1/admins")
 @auth_desired
-@api("read")
 def badmins(v):
 	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.dramacoins.desc()).all()
 	return {
@@ -23,9 +20,7 @@ def badmins(v):
 		}
 
 @app.get("/log")
-@app.get("/api/v1/mod_log")
 @auth_desired
-@api("read")
 def log(v):
 
 	page=int(request.args.get("page",1))
@@ -78,10 +73,10 @@ def index():
 def favicon():
 	return send_file("./assets/images/favicon.png")
 
-@app.get("/oauthhelp")
+@app.get("/api")
 @auth_desired
-def oauthhelp(v):
-	return render_template("oauthhelp.html", v=v)
+def api(v):
+	return render_template("api.html", v=v)
 
 @app.get("/contact")
 @auth_desired

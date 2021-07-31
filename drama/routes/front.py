@@ -177,7 +177,6 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 	return posts
 
 @app.get("/")
-@app.get("/api/v1/listing")
 @auth_desired
 def front_all(v):
 
@@ -215,8 +214,8 @@ def front_all(v):
 	# check if ids exist
 	posts = get_posts(ids, v=v)
 
-	if request.path == "/": return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
-	else: return jsonify({"data": [x.json for x in posts], "next_exists": next_exists})
+	if request.headers.get("Authorization"): return jsonify({"data": [x.json for x in posts], "next_exists": next_exists})
+	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
 @cache.memoize(timeout=1500)
 def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
@@ -290,9 +289,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	return posts
 
 @app.get("/changelog")
-@app.get("/api/v1/changelog")
 @auth_desired
-@api("read")
 def changelog(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -406,9 +403,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 	return comments[:26]
 
 @app.get("/comments")
-@app.get("/api/v1/front/comments")
 @auth_desired
-@api("read")
 def all_comments(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 

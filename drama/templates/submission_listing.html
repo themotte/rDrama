@@ -134,7 +134,7 @@
 						<li class="list-inline-item"><a href="/votes?link=https://rdrama.net{{p.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
 						{% if v and v.id!=p.author_id %}
-							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/api/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>
+							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>
 						{% endif %}
 
 						<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{p.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a></li>
@@ -156,7 +156,7 @@
 						{% endif %}
 
 						{% if v and v.id==p.author_id %}
-						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/pin/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</a></li>
+						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/pin/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</a></li>
 						{% if p.deleted_utc > 0 %}
 							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/undelete_post/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-trash-alt"></i>Undelete</a></li>
 						{% else %}
@@ -166,9 +166,9 @@
 
 						
 						{% if v and v.admin_level>=3 %}
-						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/sticky/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</a></li>
+						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/sticky/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</a></li>
 						{% if v==p.author %}
-						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/distinguish/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-crown"></i>Distinguish</a></li>
+						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/distinguish/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-crown"></i>Distinguish</a></li>
 						{% endif %}
 						{% endif %}
 
@@ -176,13 +176,13 @@
 
 							{% if v and (v.id==p.author_id or v.admin_level>=3) %}
 
-							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil text-danger"></i>Toggle +18</a></li>
+							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil text-danger"></i>Toggle +18</a></li>
 
 							{% endif %}
 
 							{% if v.admin_level >=3 %}
-								<li class="list-inline-item"><a id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/api/unban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-check text-success"></i>Approve</a></li>
-								<li class="list-inline-item"><a id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/api/ban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban text-danger"></i>Remove</a></li>
+								<li class="list-inline-item"><a id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/unban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-check text-success"></i>Approve</a></li>
+								<li class="list-inline-item"><a id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/ban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban text-danger"></i>Remove</a></li>
 							{% endif %}
 
 							{% if v.admin_level >= 4 and p.oauth_app %}
@@ -196,10 +196,10 @@
 
 							{% if v.admin_level >=3 and v.id!=p.author_id %}
 								{% if p.author.is_banned %}
-									<li class="list-inline-item"><a id="unexile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{p.author_id}}')"
+									<li class="list-inline-item"><a id="unexile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{p.author_id}}')"
 									><i class="fas fa-user-slash text-danger"></i>Unban user</a></li>
 								{% else %}
-									<li class="list-inline-item"><a id="exile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{p.author_id}}')"
+									<li class="list-inline-item"><a id="exile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}')"
 									><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
 								{% endif %}
 							{% endif %}
@@ -295,7 +295,7 @@
 					<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link=https://rdrama.net{{p.permalink}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>					 
 					
 					{% if v and v.id!=p.author_id %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/api/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>
 					{% endif %}
 
 					{% if v and p.id in v.subscribed_idlist() %}
@@ -314,7 +314,7 @@
 					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.id}}','{{'@'+p.author.username}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 					{% endif %}
 					{% if v and v.id==p.author_id %}
-						<button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{p.id}}" href="javascript:void(0)" onclick="post('/api/pin/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center text-muted mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
+						<button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{p.id}}" href="javascript:void(0)" onclick="post('/pin/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center text-muted mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
 						{% if p.deleted_utc > 0 %}
 							<button class="btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post('/undelete_post/{{p.id}}', function(){window.location.reload(true);})"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
 						{% else %}
@@ -323,28 +323,28 @@
 					{% endif %}
 
 					{% if v and (v.id==p.author_id or v.admin_level>=3) %}
-					<button class="btn btn-link btn-block btn-lg text-left text-muted" onclick="post('/api/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="far fa-eye-evil text-center text-muted mr-3"></i>Toggle +18</button>
+					<button class="btn btn-link btn-block btn-lg text-left text-muted" onclick="post('/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="far fa-eye-evil text-center text-muted mr-3"></i>Toggle +18</button>
 
 					{% endif %}
 					{% if v %}
 						{% if v.admin_level >=3 %}
 							{% if v.id!=p.author_id %}
 							{% if p.author.is_banned %}
-							<button class="btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Unban user</a></button>
+							<button class="btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast('/unban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Unban user</a></button>
 							{% else %}
-							<button class="btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Ban user</a></button>
+							<button class="btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3 text-danger"></i>Ban user</a></button>
 							{% endif %}
 							{% endif %}
 
-							<button class="btn btn-link btn-block btn-lg text-info text-left" id="sticky-post-{{p.id}}" href="javascript:void(0)" onclick="post('/api/sticky/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center text-muted mr-3"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</button>
+							<button class="btn btn-link btn-block btn-lg text-info text-left" id="sticky-post-{{p.id}}" href="javascript:void(0)" onclick="post('/sticky/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center text-muted mr-3"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</button>
 							
 							{% if v==p.author %}
-							<button class="btn btn-link btn-block btn-lg text-left text-warning" id="distinguish-post-{{p.id}}" href="javascript:void(0)" onclick="post('/api/distinguish/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-crown text-center text-muted mr-3"></i>Distinguish</button>
+							<button class="btn btn-link btn-block btn-lg text-left text-warning" id="distinguish-post-{{p.id}}" href="javascript:void(0)" onclick="post('/distinguish/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-crown text-center text-muted mr-3"></i>Distinguish</button>
 							{% endif %}
 
 						
-							<button class="btn btn-link btn-block btn-lg text-success text-left" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/api/unban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="far fa-check text-center text-success mr-3"></i>Approve</button>
-							<button class="btn btn-link btn-block btn-lg text-danger text-left" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/api/ban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</button>
+							<button class="btn btn-link btn-block btn-lg text-success text-left" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/unban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="far fa-check text-center text-success mr-3"></i>Approve</button>
+							<button class="btn btn-link btn-block btn-lg text-danger text-left" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/ban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="far fa-ban text-center text-danger mr-3"></i>Remove</button>
 						{% endif %}
 
 						{% if v.admin_level >=4 and p.oauth_app %}

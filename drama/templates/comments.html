@@ -256,7 +256,7 @@
 						aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a></li>
 
 					{% if v.id!=c.author_id %}
-					<li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/api/comment/{{c.id}}/awards')"><i class="fas fa-gift"
+					<li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift"
 						aria-hidden="true"></i><span class="d-none d-md-inline-block">Give Award</span></a></li>
 					{% endif %}
 
@@ -300,15 +300,15 @@
 
 					{% if v and v.admin_level==6 and v.id != c.author_id %}
 					{% if c.author.is_banned %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="unexile-comment-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw text-danger"></i>Unban user</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="unexile-comment-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw text-danger"></i>Unban user</a></li>
 					{% else %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="exile-comment-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw text-danger"></i>Ban user</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="exile-comment-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-slash fa-fw text-danger"></i>Ban user</a></li>
 					{% endif %}
 					{% endif %}
 
 
 					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/api/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil fa-fw text-danger"></i>Toggle +18</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post('/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil fa-fw text-danger"></i>Toggle +18</a></li>
 					{% endif %}
 
 					{% if v and v.admin_level >=4 and c.oauth_app %}
@@ -343,7 +343,7 @@
 
 		<div id="reply-to-{{c.id}}" class="d-none">
 			<div id="comment-form-space-{{c.fullname}}" class="comment-write collapsed child">
-				<form id="reply-to-t3_{{c.id}}" action="/api/comment" method="post" class="input-group" enctype="multipart/form-data"> 
+				<form id="reply-to-t3_{{c.id}}" action="/comment" method="post" class="input-group" enctype="multipart/form-data"> 
 					<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 					<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
 					<input id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}"> 
@@ -437,7 +437,7 @@
 				{% endif %}
 
 					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
-					<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="post('/api/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil text-danger"></i>Toggle +18</a></li>
+					<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="post('/toggle_comment_nsfw/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil text-danger"></i>Toggle +18</a></li>
 					{% endif %}
 
 					{% if v %}
@@ -468,9 +468,9 @@
 					{% if v and (c.post and v.admin_level == 6) %}
 						{% if c.author_id != v.id %}
 								{% if c.author.is_banned %}
-								<li class="list-group-item"><a class="d-block text-danger" id="unexile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/api/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Unban user</a></li>
+								<li class="list-group-item"><a class="d-block text-danger" id="unexile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Unban user</a></li>
 								{% else %}
-								<li class="list-group-item"><a class="d-block text-danger" id="exile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/api/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Ban user</a></li>
+								<li class="list-group-item"><a class="d-block text-danger" id="exile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{c.author_id}}?toast=1')"><i class="fas fa-user-minus fa-fw text-danger"></i>Ban user</a></li>
 								{% endif %}
 						{% endif %}
 					{% endif %}	

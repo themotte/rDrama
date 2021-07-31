@@ -22,7 +22,7 @@ from .front import frontlist
 with open("snappy.txt", "r") as f:
 	snappyquotes = f.read().split("{[para]}")
 
-@app.post("/api/publish/<pid>")
+@app.post("/publish/<pid>")
 @is_not_banned
 @validate_formkey
 def publish(pid, v):
@@ -44,11 +44,8 @@ def submit_get(v):
 						   v=v)
 
 @app.get("/post/<pid>")
-@app.get("/post/<pid>/")
 @app.get("/post/<pid>/<anything>")
-@app.get("/api/v1/post/<pid>")
 @auth_desired
-@api("read")
 def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
@@ -514,12 +511,9 @@ def archiveorg(url):
 
 
 @app.post("/submit")
-@app.post("/api/v1/submit")
-@app.post("/api/vue/submit")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
-@api("create")
 def submit_post(v):
 
 
@@ -1009,9 +1003,7 @@ def submit_post(v):
 
 
 @app.post("/delete_post/<pid>")
-@app.post("/api/v1/delete_post/<pid>")
 @auth_required
-@api("delete")
 @validate_formkey
 def delete_post_pid(pid, v):
 
@@ -1030,9 +1022,7 @@ def delete_post_pid(pid, v):
 	return "", 204
 
 @app.post("/undelete_post/<pid>")
-@app.post("/api/v1/undelete_post/<pid>")
 @auth_required
-@api("delete")
 @validate_formkey
 def undelete_post_pid(pid, v):
 	post = get_post(pid)
@@ -1054,10 +1044,8 @@ def embed_post_pid(pid):
 
 	return render_template("embeds/submission.html", p=post)
 
-@app.post("/api/toggle_comment_nsfw/<cid>")
-@app.post("/api/v1/toggle_comment_nsfw/<cid>")
+@app.post("/toggle_comment_nsfw/<cid>")
 @is_not_banned
-@api("update")
 @validate_formkey
 def toggle_comment_nsfw(cid, v):
 
@@ -1067,10 +1055,8 @@ def toggle_comment_nsfw(cid, v):
 	g.db.add(comment)
 	return "", 204
 	
-@app.post("/api/toggle_post_nsfw/<pid>")
-@app.post("/api/v1/toggle_post_nsfw/<pid>")
+@app.post("/toggle_post_nsfw/<pid>")
 @is_not_banned
-@api("update")
 @validate_formkey
 def toggle_post_nsfw(pid, v):
 

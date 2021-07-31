@@ -51,7 +51,7 @@ def send_verification_email(user, email=None):
 			  )
 
 
-@app.post("/api/verify_email")
+@app.post("/verify_email")
 @is_not_banned
 def api_verify_email(v):
 
