@@ -78,10 +78,10 @@ def index():
 def favicon():
 	return send_file("./assets/images/favicon.png")
 
-@app.get("/oauthhelp")
+@app.get("/api")
 @auth_desired
-def oauthhelp(v):
-	return render_template("oauthhelp.html", v=v)
+def api(v):
+	return render_template("api.html", v=v)
 
 @app.get("/contact")
 @auth_desired
