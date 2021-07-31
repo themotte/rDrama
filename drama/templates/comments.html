@@ -316,7 +316,7 @@
 					{% endif %}
 
 					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="pin-comment-{{c.id}}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post('/comment_pin/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>{{'Unpin' if c.is_pinned else 'Pin'}}</a>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="pin-comment-{{c.id}}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post('/comment_pin/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>{{'Unpin' if c.is_pinned else 'Pin'}}</a></li>
 						</li>
 					{% endif %}
 
