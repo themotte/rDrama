@@ -549,7 +549,7 @@ def api_comment(v):
 	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 	if request.headers.get("Authorization"): return c.json
-	else: render_template("comments.html",
+	else: return render_template("comments.html",
 							v=v,
 							comments=[c],
 							render_replies=False,
