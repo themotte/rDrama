@@ -158,12 +158,10 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	else: return post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info)
 
 
-@app.post("/api/comment")
-@app.post("/api/v1/comment")
+@app.post("/comment")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
-@api("create")
 def api_comment(v):
 
 	parent_submission = request.form.get("submission")
@@ -551,14 +549,13 @@ def api_comment(v):
 	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
-	return {"html": lambda: jsonify({"html": render_template("comments.html",
-															 v=v,
-															 comments=[c],
-															 render_replies=False,
-															 )}),
-			"api": lambda: c.json
-			}
 
+	if request.headers.get("Authorization"): return c.json
+	else: return jsonify({"html": render_template("comments.html",
+													v=v,
+													comments=[c],
+													render_replies=False,
+													)})
 
 
 
@@ -748,7 +745,8 @@ def edit_comment(cid, v):
 				n = Notification(comment_id=c.id, user_id=x)
 				g.db.add(n)
 
-	return c.body_html
+	return jsonify({"html": c.body_html})
+
 
 @app.post("/delete/comment/<cid>")
 @auth_required
