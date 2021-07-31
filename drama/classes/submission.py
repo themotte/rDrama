@@ -56,7 +56,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		backref="submissions")
 	domain_ref = Column(Integer, ForeignKey("domains.id"))
 	domain_obj = relationship("Domain")
-	flags = relationship("Flag", lazy="dynamic").order_by(Flag.created_utc).all()
+	flags = relationship("Flag", lazy="dynamic")
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
 	author = relationship(
@@ -419,7 +419,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	@lazy
 	def active_flags(self):
-		return len(self.flags)
+		return self.flags.count()
+
+	@property
+	@lazy
+	def ordered_flags(self):
+		return self.flags.order_by(Flag.created_utc).all()
 
 
 class SaveRelationship(Base, Stndrd):
