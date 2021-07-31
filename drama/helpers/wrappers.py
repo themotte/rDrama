@@ -9,39 +9,7 @@ def get_logged_in_user(db=None):
 	if not db:
 		db=g.db
 
-	if request.path.startswith("/api/v1"):
-
-		token = request.headers.get("Authorization")
-		if not token:
-
-			#let admins hit api/v1 from browser
-			# x=request.session.get('user_id')
-			# nonce=request.session.get('login_nonce')
-			# if not x or not nonce:
-			#	 return None, None
-			# user=g.db.query(User).filter_by(id=x).first()
-			# if not user:
-			#	 return None, None
-			# if user.admin_level >=3 and nonce>=user.login_nonce:
-			#	 return user, None
-			return None, None
-
-		token = token.split()
-		if len(token) < 2:
-			return None, None
-
-		token = token[1]
-		if not token:
-			return None, None
-
-		client = db.query(ClientAuth).filter(
-			ClientAuth.access_token == token).first()
-			#ClientAuth.access_token_expire_utc > int(time.time()
-
-		x = (client.user, client) if client else (None, None)
-
-
-	elif "user_id" in session:
+	if "user_id" in session:
 
 		uid = session.get("user_id")
 		nonce = session.get("login_nonce", 0)
@@ -62,12 +30,28 @@ def get_logged_in_user(db=None):
 			x=(v, None)
 
 	else:
-		x=(None, None)
+		token = request.headers.get("Authorization")
+		if not token: return None, None
 
-	if x[0]:
-		x[0].client=x[1]
+		token = token.split()
+		if len(token) < 2:
+			return None, None
+
+		token = token[1]
+		if not token:
+			return None, None
+
+		client = db.query(ClientAuth).filter(
+			ClientAuth.access_token == token).first()
+			#ClientAuth.access_token_expire_utc > int(time.time()
+
+		x = (client.user, client) if client else (None, None)
+
+
+	if x[0]: x[0].client=x[1]
 
 	return x
+
 
 def check_ban_evade(v):
 
