@@ -780,7 +780,7 @@ def submit_post(v):
 	
 	if url.startswith("https://old.reddit.com/") and '/comments/' in url and '?sort=' not in url: url += "?sort=controversial" 
 
-	title_html = sanitize(title.replace('_','\_'), linkgen=True, flair=True)
+	title_html = sanitize(title, linkgen=True, flair=True)
 
 	new_post_aux = SubmissionAux(id=new_post.id,
 								 url=url,
