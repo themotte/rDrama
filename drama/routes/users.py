@@ -250,10 +250,7 @@ def u_username(username, v=None):
 
 	if u.reserved:
 		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
-				}
-		else: return render_template("userpage_reserved.html",
-												u=u,
-												v=v)
+		else: return render_template("userpage_reserved.html", u=u, v=v)
 
 	# viewers
 	if v and u.id != v.id:
