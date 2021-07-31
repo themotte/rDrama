@@ -118,38 +118,6 @@ CREATE FUNCTION public.comment_count(public.submissions) RETURNS bigint
 ALTER FUNCTION public.comment_count(public.submissions) OWNER TO postgres;
 
 --
--- Name: notifications; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.notifications (
-    id integer NOT NULL,
-    user_id integer,
-    comment_id integer,
-    read boolean NOT NULL,
-    followsender integer,
-    unfollowsender integer,
-    blocksender integer,
-    unblocksender integer
-);
-
-
-ALTER TABLE public.notifications OWNER TO postgres;
-
---
--- Name: created_utc(public.notifications); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.created_utc(public.notifications) RETURNS integer
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-select created_utc from comments
-where comments.id=$1.comment_id
-$_$;
-
-
-ALTER FUNCTION public.created_utc(public.notifications) OWNER TO postgres;
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -411,8 +379,7 @@ CREATE TABLE public.badges (
     badge_id integer,
     user_id integer,
     description character varying(256),
-    url character varying(256),
-    created_utc integer
+    url character varying(256)
 );
 
 
@@ -567,7 +534,6 @@ CREATE TABLE public.commentflags (
     id integer NOT NULL,
     user_id integer,
     comment_id integer,
-    created_utc integer NOT NULL,
     reason text
 );
 
@@ -741,7 +707,6 @@ CREATE TABLE public.flags (
     id integer NOT NULL,
     user_id integer,
     post_id integer,
-    created_utc integer NOT NULL,
     reason text
 );
 
@@ -777,8 +742,7 @@ ALTER SEQUENCE public.flags_id_seq OWNED BY public.flags.id;
 CREATE TABLE public.follows (
     id integer NOT NULL,
     user_id integer,
-    target_id integer,
-    created_utc integer
+    target_id integer
 );
 
 
@@ -882,6 +846,24 @@ ALTER TABLE public.modactions_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE public.modactions_id_seq OWNED BY public.modactions.id;
 
+
+--
+-- Name: notifications; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.notifications (
+    id integer NOT NULL,
+    user_id integer,
+    comment_id integer,
+    read boolean NOT NULL,
+    followsender integer,
+    unfollowsender integer,
+    blocksender integer,
+    unblocksender integer
+);
+
+
+ALTER TABLE public.notifications OWNER TO postgres;
 
 --
 -- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -1054,8 +1036,6 @@ CREATE TABLE public.subscriptions (
     id integer NOT NULL,
     user_id integer,
     board_id integer,
-    created_utc integer NOT NULL,
-    is_active boolean,
     submission_id integer
 );
 
@@ -1129,8 +1109,7 @@ ALTER SEQUENCE public.useragents_id_seq OWNED BY public.useragents.id;
 CREATE TABLE public.userblocks (
     id integer NOT NULL,
     user_id integer,
-    target_id integer,
-    created_utc integer
+    target_id integer
 );
 
 
@@ -2154,13 +2133,6 @@ CREATE INDEX post_app_id_idx ON public.submissions USING btree (app_id);
 --
 
 CREATE INDEX post_author_index ON public.submissions USING btree (author_id);
-
-
---
--- Name: sub_active_index; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX sub_active_index ON public.subscriptions USING btree (is_active);
 
 
 --
