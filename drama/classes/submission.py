@@ -407,8 +407,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		#return len(self.awards)
 
 	@property
-	def embed_template(self):
-		return f"site_embeds/{self.domain_obj.embed_template}.html"
+	def embed_template(self): return f"site_embeds/{self.domain_obj.embed_template}.html"
 	
 	@property
 	def is_image(self):
@@ -417,13 +416,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	@property
 	@lazy
-	def active_flags(self):
-		return self.flags.count()
+	def active_flags(self): return self.flags.count()
 
 	@property
 	@lazy
-	def ordered_flags(self):
-		return self.flags.order_by(Flag.created_utc).all()
+	def ordered_flags(self): return self.flags.order_by(Flag.id).all()
 
 
 class SaveRelationship(Base, Stndrd):

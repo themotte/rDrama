@@ -297,7 +297,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	@property
 	@lazy
-	def ordered_flags(self): return self.flags.order_by(CommentFlag.created_utc).all()
+	def ordered_flags(self): return self.flags.order_by(CommentFlag.id).all()
 
 
 
