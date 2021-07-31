@@ -424,7 +424,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	@lazy
 	def active_flags(self):
-		return len(self.flags)
+		return self.flags.count()
 
 
 class SaveRelationship(Base, Stndrd):
