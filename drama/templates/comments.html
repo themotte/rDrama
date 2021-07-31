@@ -190,13 +190,13 @@
 			</div>
 			{% endif %}
 
-			{% if c.flags %}
+			{% if c.active_flags %}
 			<div id="flaggers-{{c.id}}" class="flaggers d-none">
 				<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
 				<pre></pre>
 				<ul style="padding-left:20px; margin-bottom: 0;">
 					{% for f in c.ordered_flags %}
-						<li><a href="{{f.user.url}}">@{{f.user.username}}</a>: {{f.reason}}</li>
+						<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>: {{f.reason}}</li>
 					{% endfor %}
 				</ul>
 			</div>
