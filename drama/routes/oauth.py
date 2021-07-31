@@ -218,7 +218,7 @@ def oauth_grant():
 		return data
 
 	else:
-		return {"oauth_error": f"Invalid grant_type `{request.values.get('grant_type',''}`. Expected `code` or `refresh`."}), 400
+		return {"oauth_error": f"Invalid grant_type `{request.values.get('grant_type','')}`. Expected `code` or `refresh`."}, 400
 
 
 @app.post("/api_keys")
