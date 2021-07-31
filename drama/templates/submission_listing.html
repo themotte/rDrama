@@ -166,7 +166,7 @@
 
 						
 						{% if v and v.admin_level>=3 %}
-						<li class="list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post('/sticky/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</a></li>
+						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/sticky/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</a></li>
 						{% if v==p.author %}
 						<li class="list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post('/distinguish/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-crown"></i>Distinguish</a></li>
 						{% endif %}
