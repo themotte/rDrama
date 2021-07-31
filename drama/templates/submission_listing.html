@@ -316,7 +316,7 @@
 					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.id}}','{{'@'+p.author.username}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 					{% endif %}
 					{% if v and v.id==p.author_id %}
-						<button class="btn btn-link btn-block btn-lg text-info text-left" id="pin-post-{{p.id}}" href="javascript:void(0)" onclick="post('/pin/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center text-muted mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
+						<button class="btn btn-link btn-block btn-lg text-left" id="pin-post-{{p.id}}" href="javascript:void(0)" onclick="post('/pin/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
 						{% if p.deleted_utc > 0 %}
 							<button class="btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post('/undelete_post/{{p.id}}', function(){window.location.reload(true);})"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
 						{% else %}
@@ -326,7 +326,6 @@
 
 					{% if v and (v.id==p.author_id or v.admin_level>=3) %}
 					<button class="btn btn-link btn-block btn-lg text-left text-danger" onclick="post('/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="far fa-eye-evil text-center mr-3"></i>Toggle +18</button>
-
 					{% endif %}
 					{% if v %}
 						{% if v.admin_level >=3 %}
