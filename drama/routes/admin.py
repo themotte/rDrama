@@ -1028,7 +1028,7 @@ def admin_nunuke_user(v):
 
 	return redirect(user.url)
 	
-@app.route("/user_stat_data", methods=['GET'])
+@app.get("/user_stat_data")
 @admin_level_required(2)
 @cache.memoize(timeout=60)
 def user_stat_data(v):

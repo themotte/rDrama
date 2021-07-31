@@ -158,7 +158,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	else: return post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info)
 
 
-@app.post("/comment")
+@app.post("/api/comment")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
