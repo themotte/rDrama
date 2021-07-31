@@ -166,7 +166,7 @@ def badge_grant_post(v):
 	
 	new_badge = Badge(badge_id=badge_id,
 					  user_id=user.id,
-					  created_utc=int(time.time())
+					  #created_utc=int(time.time())
 					  )
 
 	desc = request.form.get("description")
