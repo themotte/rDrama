@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 from .mix_ins import *
 from drama.helpers.lazy import lazy
 from drama.__main__ import Base
+from .flags import *
 
 class SubmissionAux(Base):
 
@@ -415,6 +416,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		if self.url: return self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999') or self.url.lower().endswith('?maxwidth=8888')
 		else: return False
 	
+	@property
+	@lazy
+	def test(self):
+		print(self.flags.order_by(Flag.created_utc))
+
 	@property
 	@lazy
 	def active_flags(self):
