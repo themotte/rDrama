@@ -325,14 +325,6 @@
 
 					{% if v %}
 						{% if v.admin_level >=3 %}
-							{% if v.id!=p.author_id %}
-							{% if p.author.is_banned %}
-							<button class="btn btn-link btn-block btn-lg text-left text-danger" href="javascript:void(0)" onclick="post_toast('/unban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3"></i>Unban user</a></button>
-							{% else %}
-							<button class="btn btn-link btn-block btn-lg text-left text-danger" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}')"><i class="fas fa-user-minus mr-3"></i>Ban user</a></button>
-							{% endif %}
-							{% endif %}
-
 							<button class="btn btn-link btn-block btn-lg text-info text-left" id="sticky-post-{{p.id}}" href="javascript:void(0)" onclick="post('/sticky/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</button>
 							
 							{% if v==p.author %}
