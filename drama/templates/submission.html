@@ -525,7 +525,7 @@
 		</div>
 
 	<div id="comment-form-space-{{p.fullname}}" class="comment-write mb-3">
-		<form id="reply-to-{{p.fullname}}" class="input-group" action="/api/comment" method="post">
+		<form id="reply-to-{{p.fullname}}" class="input-group" action="/comment" method="post">
 			<input type="hidden" name="formkey" value="{{v.formkey}}">
 			<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
 			<input id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
