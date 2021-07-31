@@ -495,7 +495,7 @@
 			form.append('body', document.getElementById('reply-form-body-'+fullname).value);
 			form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
 			var xhr = new XMLHttpRequest();
-			xhr.open("post", "/comment");
+			xhr.open("post", "/api/comment");
 			xhr.withCredentials=true;
 			xhr.onload=function(){
 				if (xhr.status==200) {

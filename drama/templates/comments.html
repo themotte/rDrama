@@ -347,7 +347,7 @@
 
 		<div id="reply-to-{{c.id}}" class="d-none">
 			<div id="comment-form-space-{{c.fullname}}" class="comment-write collapsed child">
-				<form id="reply-to-t3_{{c.id}}" action="/comment" method="post" class="input-group" enctype="multipart/form-data"> 
+				<form id="reply-to-t3_{{c.id}}" action="/api/comment" method="post" class="input-group" enctype="multipart/form-data"> 
 					<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 					<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
 					<input id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}"> 
