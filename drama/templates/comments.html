@@ -312,9 +312,13 @@
 					{% endif %}
 
 					{% if v and v.admin_level >=4 and c.oauth_app %}
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{c.oauth_app.permalink}}/comments" ><i class="fas fa-code fa-fw"></i>API App</a></li>
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code fa-fw"></i>API App</a></li>
 					{% endif %}
 
+					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
+						<li class="list-inline-item text-muted d-none d-md-inline-block"><a id="pin-comment-{{c.id}}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post('/comment_pin/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>{{'Unpin' if c.is_pinned else 'Pin'}}</a>
+						</li>
+					{% endif %}
 
 					<li class="list-inline-item d-inline-block d-md-none"><a href="#" data-toggle="modal" data-target="#actionsModal-{{c.id}}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a></li>
 					{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
@@ -459,11 +463,9 @@
 							{% endif %}
 					{% endif %}
 						
-					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) %}
-						{% if c.level == 1 %}
-							<li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{c.id}}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post('/comment_pin/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>{{'Unpin' if c.is_pinned else 'Pin'}}</a>
-							</li>
-						{% endif %}
+					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
+						<li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{c.id}}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post('/comment_pin/{{c.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>{{'Unpin' if c.is_pinned else 'Pin'}}</a>
+						</li>
 					{% endif %}
 					{% if v and (c.post and v.admin_level == 6) %}
 						{% if c.author_id != v.id %}
