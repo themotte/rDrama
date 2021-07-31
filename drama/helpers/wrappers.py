@@ -28,7 +28,7 @@ def get_logged_in_user(db=None):
 		x = (client.user, client) if client else (None, None)
 
 
-	elif "user_id" in session:
+	else:
 
 		uid = session.get("user_id")
 		nonce = session.get("login_nonce", 0)
