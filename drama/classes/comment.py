@@ -1,9 +1,10 @@
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
-from .mix_ins import *
 from drama.helpers.lazy import lazy
 from drama.__main__ import Base
+from .mix_ins import *
+from .flags import CommentFlag
 
 class CommentAux(Base):
 
@@ -50,7 +51,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	oauth_app=relationship("OauthApp")
 
 	post = relationship("Submission")
-	flags = relationship("CommentFlag", backref="comment")
+	flags = relationship("CommentFlag", lazy="dynamic")
 	votes = relationship(
 		"CommentVote",
 		lazy="dynamic",
@@ -288,14 +289,16 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	@property
 	@lazy
-	def is_op(self):
-		return self.author_id==self.post.author_id
+	def is_op(self): return self.author_id==self.post.author_id
 	
 	@property
 	@lazy
-	def active_flags(self):
-		return len(self.flags)
-	
+	def active_flags(self): return len(self.flags)
+
+	@property
+	@lazy
+	def ordered_flags(self): return self.flags.order_by(CommentFlag.created_utc).all()
+
 
 
 class Notification(Base):

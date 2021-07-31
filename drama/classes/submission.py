@@ -3,9 +3,9 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 import re, random
 from urllib.parse import urlparse
-from .mix_ins import *
 from drama.helpers.lazy import lazy
 from drama.__main__ import Base
+from .mix_ins import *
 from .flags import *
 
 class SubmissionAux(Base):
