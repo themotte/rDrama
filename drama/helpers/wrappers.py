@@ -9,22 +9,9 @@ def get_logged_in_user(db=None):
 	if not db:
 		db=g.db
 
-	if request.path.startswith("/api/v1"):
-
+	if request.headers.get("Authorization"):
 		token = request.headers.get("Authorization")
-		if not token:
-
-			#let admins hit api/v1 from browser
-			# x=request.session.get('user_id')
-			# nonce=request.session.get('login_nonce')
-			# if not x or not nonce:
-			#	 return None, None
-			# user=g.db.query(User).filter_by(id=x).first()
-			# if not user:
-			#	 return None, None
-			# if user.admin_level >=3 and nonce>=user.login_nonce:
-			#	 return user, None
-			return None, None
+		if not token: return None, None
 
 		token = token.split()
 		if len(token) < 2:
@@ -41,14 +28,12 @@ def get_logged_in_user(db=None):
 		x = (client.user, client) if client else (None, None)
 
 
-	elif "user_id" in session:
+	else:
 
 		uid = session.get("user_id")
 		nonce = session.get("login_nonce", 0)
-		if not uid:
-			x= (None, None)
-		v = db.query(User).filter_by(
-			id=uid).first()
+		if not uid: x= (None, None)
+		v = db.query(User).filter_by(id=uid).first()
 
 		if v and v.agendaposter_expires_utc and v.agendaposter_expires_utc < g.timestamp:
 			v.agendaposter_expires_utc = 0
@@ -61,13 +46,11 @@ def get_logged_in_user(db=None):
 		else:
 			x=(v, None)
 
-	else:
-		x=(None, None)
 
-	if x[0]:
-		x[0].client=x[1]
+	if x[0]: x[0].client=x[1]
 
 	return x
+
 
 def check_ban_evade(v):
 
@@ -210,7 +193,7 @@ def admin_level_required(x):
 			v, c = get_logged_in_user()
 
 			if c:
-				return jsonify({"error": "No admin api access"}), 403
+				return {"error": "No admin api access"}, 403
 
 			if not v:
 				abort(401)
@@ -243,7 +226,7 @@ def validate_formkey(f):
 
 	def wrapper(*args, v, **kwargs):
 
-		if not request.path.startswith("/api/v1"):
+		if not request.headers.get("Authorization"):
 
 			submitted_key = request.values.get("formkey", None)
 
@@ -279,10 +262,6 @@ def no_cors(f):
 
 	wrapper.__name__ = f.__name__
 	return wrapper
-
-# wrapper for api-related things that discriminates between an api url
-# and an html url for the same content
-# f should return {'api':lambda:some_func(), 'html':lambda:other_func()}
 
 
 def api(*scopes, no_ban=False):

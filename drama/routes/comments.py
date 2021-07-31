@@ -19,25 +19,17 @@ beams_client = PushNotifications(
 		secret_key=PUSHER_KEY,
 )
 
-@app.get("/api/v1/post/<pid>/comment/<cid>")
-def comment_cid_api_redirect(cid=None, pid=None):
-	redirect(f'/api/v1/comment/<cid>')
-
 @app.get("/comment/<cid>")
-@app.get("/comment/<cid>")
-@app.get("/post_short/<pid>/<cid>")
-@app.get("/post_short/<pid>/<cid>/")
-@app.get("/api/v1/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
-@app.get("/api/vue/comment/<cid>")
 @auth_desired
-@api("read")
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	
 	try: cid = int(cid)
-	except: cid = int(cid, 36)
+	except:
+		try: cid = int(cid, 36)
+		except: abort(404)
 
 	comment = get_comment(cid, v=v)
 	
@@ -53,12 +45,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	post = get_post(pid, v=v)
 		
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
-		return {'html': lambda: render_template("errors/nsfw.html",
-												v=v,
-												),
-				'api': lambda: {'error': f'This content is not suitable for some users and situations.'}
-
-				}
+		if request.headers.get("Authorization"): return {'error': f'This content is not suitable for some users and situations.'}
+		else: render_template("errors/nsfw.html", v=v)
 
 	post._preloaded_comments = [comment]
 
@@ -92,26 +80,16 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	for i in range(6 - context):
 		if v:
-
-			votes = g.db.query(CommentVote).filter(
-				CommentVote.user_id == v.id).subquery()
-
 			blocking = v.blocking.subquery()
 			blocked = v.blocked.subquery()
 
 
 			comms = g.db.query(
 				Comment,
-				votes.c.vote_type,
 				blocking.c.id,
 				blocked.c.id,
-				aliased(ModAction, alias=exile)
 			).filter(
 				Comment.parent_comment_id.in_(current_ids)
-			).join(
-				votes,
-				votes.c.comment_id == Comment.id,
-				isouter=True
 			).join(
 				blocking,
 				blocking.c.target_id == Comment.author_id,
@@ -119,10 +97,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			).join(
 				blocked,
 				blocked.c.user_id == Comment.author_id,
-				isouter=True
-			).join(
-				exile,
-				exile.c.target_comment_id==Comment.id,
 				isouter=True
 			)
 
@@ -143,47 +117,35 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 				abort(422)
 
 			output = []
-			for c in comms:
+			for c in comments:
 				comment = c[0]
-				comment._voted = c[1] or 0
-				comment._is_blocking = c[2] or 0
-				comment._is_blocked = c[3] or 0
-				comment._is_exiled_for=c[4] or 0
+				comment._is_blocking = c[1] or 0
+				comment._is_blocked = c[2] or 0
 				output.append(comment)
 		else:
 
 			comms = g.db.query(
-				Comment,
-				aliased(ModAction, alias=exile)
+				Comment
 			).filter(
 				Comment.parent_comment_id.in_(current_ids)
-			).join(
-				exile,
-				exile.c.target_comment_id==Comment.id,
-				isouter=True
 			)
 
 			if sort == "top":
-				comments = comms.order_by(Comment.score.asc()).all()
+				output = comms.order_by(Comment.score.asc()).all()
 			elif sort == "bottom":
-				comments = comms.order_by(Comment.score.desc()).all()
+				output = comms.order_by(Comment.score.desc()).all()
 			elif sort == "new":
-				comments = comms.order_by(Comment.created_utc.desc()).all()
+				output = comms.order_by(Comment.created_utc.desc()).all()
 			elif sort == "old":
-				comments = comms.order_by(Comment.created_utc.asc()).all()
+				output = comms.order_by(Comment.created_utc.asc()).all()
 			elif sort == "controversial":
-				comments = sorted(comms.all(), key=lambda x: x[0].score_disputed, reverse=True)
+				output = sorted(comms.all(), key=lambda x: x[0].score_disputed, reverse=True)
 			elif sort == "random":
 				c = comms.all()
-				comments = random.sample(c, k=len(c))
+				output = random.sample(c, k=len(c))
 			else:
 				abort(422)
 
-			output = []
-			for c in comms:
-				comment=c[0]
-				comment._is_exiled_for=c[1] or 0
-				output.append(comment)
 
 		post._preloaded_comments += output
 
@@ -194,16 +156,14 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	post.replies=[top_comment]
 
-	return {'html': lambda: post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info),
-			'api': lambda: top_comment.json
-			}
+	if request.headers.get("Authorization"): return top_comment.json
+	else: return post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info)
 
-@app.post("/api/comment")
-@app.post("/api/v1/comment")
+
+@app.post("/comment")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
-@api("create")
 def api_comment(v):
 
 	parent_submission = request.form.get("submission")
@@ -591,20 +551,19 @@ def api_comment(v):
 	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
-	return {"html": lambda: jsonify({"html": render_template("comments.html",
-															 v=v,
-															 comments=[c],
-															 render_replies=False,
-															 )}),
-			"api": lambda: c.json
-			}
+
+	if request.headers.get("Authorization"): return c.json
+	else: return jsonify({"html": render_template("comments.html",
+													v=v,
+													comments=[c],
+													render_replies=False,
+													)})
 
 
 
 @app.post("/edit_comment/<cid>")
 @is_not_banned
 @validate_formkey
-@api("edit")
 def edit_comment(cid, v):
 
 	c = get_comment(cid, v=v)
@@ -629,21 +588,19 @@ def edit_comment(cid, v):
 		#auto ban for digitally malicious content
 		if any([x.reason==4 for x in bans]):
 			v.ban(days=30, reason="Digitally malicious content is not allowed.")
-			return jsonify({"error":"Digitally malicious content is not allowed."})
+			return {"error":"Digitally malicious content is not allowed."}
 		
 		if ban.reason:
 			reason += f" {ban.reason_text}"	
 	
-		return {'html': lambda: render_template("comment_failed.html",
+		if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
+		else: return render_template("comment_failed.html",
 												action=f"/edit_comment/{c.id}",
 												badlinks=[
 													x.domain for x in bans],
 												body=body,
 												v=v
-												),
-				'api': lambda: ({'error': f'A blacklisted domain was used.'}, 400)
-				}
-
+												)
 	# check badlinks
 	soup = BeautifulSoup(body_html, features="html.parser")
 	links = [x['href'] for x in soup.find_all('a') if x.get('href')]
@@ -663,7 +620,7 @@ def edit_comment(cid, v):
 				BadLink.link)).first()
 
 		if badlink:
-			return jsonify({"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
+			return {"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}, 403
 
 	# check spam - this should hopefully be faster
 	now = int(time.time())
@@ -701,11 +658,11 @@ def edit_comment(cid, v):
 			g.db.add(comment)
 
 		g.db.commit()
-		return jsonify({"error": "Too much spam!"}), 403
+		return {"error": "Too much spam!"}, 403
 
 	if request.files.get("file"):
 		file=request.files["file"]
-		if not file.content_type.startswith('image/'): return jsonify({"error": "That wasn't an image!"}), 400
+		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 		
 		name = f'comment/{c.id}/{secrets.token_urlsafe(8)}'
 		url = upload_file(file)
@@ -792,11 +749,10 @@ def edit_comment(cid, v):
 
 	return jsonify({"html": c.body_html})
 
+
 @app.post("/delete/comment/<cid>")
-@app.post("/api/v1/delete/comment/<cid>")
 @auth_required
 @validate_formkey
-@api("delete")
 def delete_comment(cid, v):
 
 	c = g.db.query(Comment).filter_by(id=cid).first()
@@ -814,14 +770,11 @@ def delete_comment(cid, v):
 	
 	cache.delete_memoized(User.commentlisting, v)
 
-	return {"html": lambda: ("", 204),
-			"api": lambda: ("", 204)}
+	return "", 204
 
 @app.post("/undelete/comment/<cid>")
-@app.post("/api/v1/undelete/comment/<cid>")
 @auth_required
 @validate_formkey
-@api("delete")
 def undelete_comment(cid, v):
 
 	c = g.db.query(Comment).filter_by(id=cid).first()
@@ -838,26 +791,8 @@ def undelete_comment(cid, v):
 
 	cache.delete_memoized(User.commentlisting, v)
 
-	return {"html": lambda: ("", 204),
-			"api": lambda: ("", 204)}
+	return "", 204
 
-@app.get("/embed/comment/<cid>")
-@app.get("/embed/post/<pid>/comment/<cid>")
-@app.get("/api/v1/embed/comment/<cid>")
-@app.get("/api/v1/embed/post/<pid>/comment/<cid>")
-def embed_comment_cid(cid, pid=None):
-
-	comment = get_comment(int(cid))
-
-	if not comment.parent:
-		abort(403)
-
-	if comment.is_banned or comment.deleted_utc > 0:
-		return {'html': lambda: render_template("embeds/comment_removed.html", c=comment),
-				'api': lambda: {'error': f'Comment {cid} has been removed'}
-				}
-
-	return render_template("embeds/comment.html", c=comment)
 
 @app.post("/comment_pin/<cid>")
 @auth_required
@@ -891,7 +826,7 @@ def toggle_comment_pin(cid, v):
 
 	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
 
-	return jsonify({"html":html})
+	return html
 	
 	
 @app.post("/save_comment/<cid>")

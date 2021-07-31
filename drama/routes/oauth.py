@@ -32,38 +32,37 @@ def oauth_authorize_prompt(v):
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
 
 	if not application:
-		return jsonify({"oauth_error": "Invalid `client_id`"}), 401
+		return {"oauth_error": "Invalid `client_id`"}, 401
 
 	if application.is_banned:
-		return jsonify({"oauth_error": f"Application `{application.app_name}` is suspended."}), 403
+		return {"oauth_error": f"Application `{application.app_name}` is suspended."}, 403
 
 	scopes_txt = request.args.get('scope', "")
 
 	scopes = scopes_txt.split(',')
 	if not scopes:
-		return jsonify(
-			{"oauth_error": "One or more scopes must be specified as a comma-separated list."}), 400
+		return {"oauth_error": "One or more scopes must be specified as a comma-separated list."}, 400
 
 	for scope in scopes:
 		if scope not in SCOPES:
-			return jsonify({"oauth_error": f"The provided scope `{scope}` is not valid."}), 400
+			return {"oauth_error": f"The provided scope `{scope}` is not valid."}, 400
 
 	if any(x in scopes for x in ["create", "update"]) and "identity" not in scopes:
-		return jsonify({"oauth_error": f"`identity` scope required when requesting `create` or `update` scope."}), 400
+		return {"oauth_error": f"`identity` scope required when requesting `create` or `update` scope."}, 400
 
 	redirect_uri = request.args.get("redirect_uri")
 	if not redirect_uri:
-		return jsonify({"oauth_error": f"`redirect_uri` must be provided."}), 400
+		return {"oauth_error": f"`redirect_uri` must be provided."}, 400
 
 	valid_redirect_uris = [x.strip()
 						   for x in application.redirect_uri.split(",")]
 
 	if redirect_uri not in valid_redirect_uris:
-		return jsonify({"oauth_error": "Invalid redirect_uri"}), 400
+		return {"oauth_error": "Invalid redirect_uri"}, 400
 
 	state = request.args.get("state")
 	if not state:
-		return jsonify({'oauth_error': 'state argument required'}), 400
+		return {'oauth_error': 'state argument required'}, 400
 
 	permanent = bool(request.args.get("permanent"))
 
@@ -92,29 +91,28 @@ def oauth_authorize_post(v):
 
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
 	if not application:
-		return jsonify({"oauth_error": "Invalid `client_id`"}), 401
+		return {"oauth_error": "Invalid `client_id`"}, 401
 	if application.is_banned:
-		return jsonify({"oauth_error": f"Application `{application.app_name}` is suspended."}), 403
+		return {"oauth_error": f"Application `{application.app_name}` is suspended."}, 403
 
 	valid_redirect_uris = [x.strip()
 						   for x in application.redirect_uri.split(",")]
 	if redirect_uri not in valid_redirect_uris:
-		return jsonify({"oauth_error": "Invalid redirect_uri"}), 400
+		return {"oauth_error": "Invalid redirect_uri"}, 400
 
 	scopes = scopes_txt.split(',')
 	if not scopes:
-		return jsonify(
-			{"oauth_error": "One or more scopes must be specified as a comma-separated list"}), 400
+		return {"oauth_error": "One or more scopes must be specified as a comma-separated list"}, 400
 
 	for scope in scopes:
 		if scope not in SCOPES:
-			return jsonify({"oauth_error": f"The provided scope `{scope}` is not valid."}), 400
+			return {"oauth_error": f"The provided scope `{scope}` is not valid."}, 400
 
 	if any(x in scopes for x in ["create", "update"]) and "identity" not in scopes:
-		return jsonify({"oauth_error": f"`identity` scope required when requesting `create` or `update` scope."}), 400
+		return {"oauth_error": f"`identity` scope required when requesting `create` or `update` scope."}, 400
 
 	if not state:
-		return jsonify({'oauth_error': 'state argument required'}), 400
+		return {'oauth_error': 'state argument required'}, 400
 
 	permanent = bool(int(request.values.get("permanent", 0)))
 
@@ -149,16 +147,15 @@ def oauth_grant():
 		client_id=request.values.get("client_id"),
 		client_secret=request.values.get("client_secret")).first()
 	if not application:
-		return jsonify(
-			{"oauth_error": "Invalid `client_id` or `client_secret`"}), 401
+		return {"oauth_error": "Invalid `client_id` or `client_secret`"}, 401
 	if application.is_banned:
-		return jsonify({"oauth_error": f"Application `{application.app_name}` is suspended."}), 403
+		return {"oauth_error": f"Application `{application.app_name}` is suspended."}, 403
 
 	if request.values.get("grant_type") == "code":
 
 		code = request.values.get("code")
 		if not code:
-			return jsonify({"oauth_error": "code required"}), 400
+			return {"oauth_error": "code required"}, 400
 
 		auth = g.db.query(ClientAuth).filter_by(
 			oauth_code=code,
@@ -167,7 +164,7 @@ def oauth_grant():
 		).first()
 
 		if not auth:
-			return jsonify({"oauth_error": "Invalid code"}), 401
+			return {"oauth_error": "Invalid code"}, 401
 
 		auth.oauth_code = None
 		auth.access_token = secrets.token_urlsafe(128)[0:128]
@@ -187,13 +184,13 @@ def oauth_grant():
 		if auth.refresh_token:
 			data["refresh_token"] = auth.refresh_token
 
-		return jsonify(data)
+		return data
 
 	elif request.values.get("grant_type") == "refresh":
 
 		refresh_token = request.values.get('refresh_token')
 		if not refresh_token:
-			return jsonify({"oauth_error": "refresh_token required"}), 401
+			return {"oauth_error": "refresh_token required"}, 401
 
 		auth = g.db.query(ClientAuth).filter_by(
 			refresh_token=refresh_token,
@@ -202,7 +199,7 @@ def oauth_grant():
 		).first()
 
 		if not auth:
-			return jsonify({"oauth_error": "Invalid refresh_token"}), 401
+			return {"oauth_error": "Invalid refresh_token"}, 401
 
 		auth.access_token = secrets.token_urlsafe(128)[0:128]
 		auth.access_token_expire_utc = int(time.time()) + 60 * 60
@@ -215,10 +212,10 @@ def oauth_grant():
 			"expires_at": auth.access_token_expire_utc
 		}
 
-		return jsonify(data)
+		return data
 
 	else:
-		return jsonify({"oauth_error": f"Invalid grant_type `{request.values.get('grant_type','')}`. Expected `code` or `refresh`."}), 400
+		return {"oauth_error": f"Invalid grant_type `{request.values.get('grant_type','')}`. Expected `code` or `refresh`."}, 400
 
 
 @app.post("/api_keys")
@@ -274,12 +271,10 @@ def edit_oauth_app(v, aid):
 	return redirect('/settings/apps')
 
 
-@app.route("/api/v1/identity")
+@app.route("/identity")
 @auth_required
-@api("identity")
 def api_v1_identity(v):
-
-	return jsonify(v.json)
+	return v.json
 
 
 @app.post("/admin/app/approve/<aid>")
@@ -297,7 +292,7 @@ def admin_app_approve(v, aid):
 	u = get_account(app.author_id, v=v)
 	send_notification(1046, u, f"Your application `{app.app_name}` has been approved.")
 
-	return jsonify({"message": f"{app.app_name} approved"})
+	return {"message": f"{app.app_name} approved"}
 
 
 @app.post("/admin/app/revoke/<aid>")
@@ -315,7 +310,7 @@ def admin_app_revoke(v, aid):
 	u = get_account(app.author_id, v=v)
 	send_notification(1046, u, f"Your application `{app.app_name}` has been revoked.")
 
-	return jsonify({"message": f"{app.app_name} revoked"})
+	return {"message": f"{app.app_name} revoked"}
 
 
 @app.post("/admin/app/reject/<aid>")
@@ -334,7 +329,7 @@ def admin_app_reject(v, aid):
 
 	g.db.delete(app)
 
-	return jsonify({"message": f"{app.app_name} rejected"})
+	return {"message": f"{app.app_name} rejected"}
 
 
 @app.get("/admin/app/<aid>")
@@ -421,11 +416,7 @@ def reroll_oauth_tokens(aid, v):
 
 	g.db.add(a)
 
-	return jsonify({"message": "Tokens Rerolled",
-					"id": a.client_id,
-					"secret": a.client_secret
-					}
-				   )
+	return {"message": "Tokens Rerolled", "id": a.client_id, "secret": a.client_secret}
 
 
 @app.post("/oauth/rescind/<aid>")
@@ -441,11 +432,10 @@ def oauth_rescind_app(aid, v):
 
 	g.db.delete(auth)
 
-	return jsonify({"message": f"{auth.application.app_name} Revoked"})
+	return {"message": f"{auth.application.app_name} Revoked"}
 
-@app.post("/api/v1/release")
+@app.post("/release")
 @auth_required
-@api()
 def oauth_release_auth(v):
 
 	token=request.headers.get("Authorization").split()[1]
@@ -460,11 +450,10 @@ def oauth_release_auth(v):
 	auth.access_token_expire_utc=0
 	g.db.add(auth)
 
-	return jsonify({"message":"Authorization released"})
+	return {"message":"Authorization released"}
 
-@app.post("/api/v1/kill")
+@app.post("/kill")
 @auth_required
-@api()
 def oauth_kill_auth(v):
 
 	token=request.headers.get("Authorization").split()[1]
@@ -475,4 +464,4 @@ def oauth_kill_auth(v):
 
 	g.db.delete(auth)
 
-	return jsonify({"message":"Authorization released"})
+	return {"message":"Authorization released"}

@@ -11,21 +11,13 @@ def patrons(v):
 	return render_template("patrons.html", v=v, users=users)
 
 @app.get("/badmins")
-@app.route("/api/vue/admins",  methods=["GET"])
-@app.get("/api/v1/admins")
 @auth_desired
-@api("read")
 def badmins(v):
 	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.dramacoins.desc()).all()
-	return {
-		"html":lambda:render_template("badmins.html", v=v, badmins=badmins),
-		"api":lambda:jsonify({"data":[x.json for x in badmins]})
-		}
+	return render_template("badmins.html", v=v, badmins=badmins)
 
 @app.get("/log")
-@app.get("/api/v1/mod_log")
 @auth_desired
-@api("read")
 def log(v):
 
 	page=int(request.args.get("page",1))
@@ -36,23 +28,16 @@ def log(v):
 	next_exists=len(actions)==26
 	actions=actions[:25]
 
-	return {
-		"html":lambda:render_template(
-			"modlog.html",
-			v=v,
-			actions=actions,
-			next_exists=next_exists,
-			page=page
-		),
-		"api":lambda:jsonify({"data":[x.json for x in actions]})
-		}
+	return render_template("log.html", v=v, actions=actions, next_exists=next_exists, page=page)
 
 @app.get("/log/<id>")
 @auth_desired
 def log_item(id, v):
 
 	try: id = int(id)
-	except: id = int(id, 36)
+	except:
+		try: id = int(id, 36)
+		except: abort(404)
 
 	action=g.db.query(ModAction).filter_by(id=id).first()
 
@@ -62,7 +47,7 @@ def log_item(id, v):
 	if request.path != action.permalink:
 		return redirect(action.permalink)
 
-	return render_template("modlog.html",
+	return render_template("log.html",
 		v=v,
 		actions=[action],
 		next_exists=False,
@@ -78,10 +63,10 @@ def index():
 def favicon():
 	return send_file("./assets/images/favicon.png")
 
-@app.get("/oauthhelp")
+@app.get("/api")
 @auth_desired
-def oauthhelp(v):
-	return render_template("oauthhelp.html", v=v)
+def api(v):
+	return render_template("api.html", v=v)
 
 @app.get("/contact")
 @auth_desired

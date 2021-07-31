@@ -130,7 +130,7 @@ def discord_redirect(v):
 		else: add_role(v, "norep")
 		
 	else:
-		return jsonify(x.json())
+		return x.json()
 
 	#check on if they are already there
 	#print(x.status_code)

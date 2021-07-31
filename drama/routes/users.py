@@ -31,13 +31,6 @@ def suicide(v, username):
 	g.db.add(v)
 	return "", 204
 
-@app.get("/api/v1/user/<username>")
-@auth_desired
-@api("read")
-def user_info(v, username):
-	user = get_user(username, v=v)
-	return jsonify(user.json)
-
 @app.get("/leaderboard")
 @auth_desired
 def leaderboard(v):
@@ -134,8 +127,8 @@ def message2(v, username):
 		abort(418)
 
 	user = get_user(username, v=v)
-	if user.is_blocking: return jsonify({"error": "You're blocking this user."}), 403
-	if user.is_blocked: return jsonify({"error": "This user is blocking you."}), 403
+	if user.is_blocking: return {"error": "You're blocking this user."}, 403
+	if user.is_blocked: return {"error": "This user is blocking you."}, 403
 	message = request.form.get("message", "")[:1000].strip()
 
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n")
@@ -179,16 +172,14 @@ def mfa_qr(secret, v):
 	return send_file(mem, mimetype="image/png", as_attachment=False)
 
 
-@app.get("/api/is_available/<name>")
-@app.get("/api/v1/is_available/<name>")
+@app.get("/is_available/<name>")
 @auth_desired
-@api("read")
 def api_is_available(name, v):
 
 	name=name.strip()
 
 	if len(name)<3 or len(name)>25:
-		return jsonify({name:False})
+		return {name:False}
 		
 	name=name.replace('_','\_')
 
@@ -202,9 +193,9 @@ def api_is_available(name, v):
 		).first()
 
 	if x:
-		return jsonify({name: False})
+		return {name: False}
 	else:
-		return jsonify({name: True})
+		return {name: True}
 
 
 @app.get("/id/<id>")
@@ -212,18 +203,6 @@ def user_id(id):
 
 	user = get_account(int(id))
 	return redirect(user.url)
-
-# Allow Id of user to be queryied, and then redirect the bot to the
-# actual user api endpoint.
-# So they get the data and then there will be no need to reinvent
-# the wheel.
-@app.get("/api/v1/uid/<uid>")
-@auth_desired
-@api("read")
-def user_by_uid(uid, v=None):
-	user=get_account(uid)
-	
-	return redirect(f'/api/v1/user/{user.username}/info')
 		
 @app.get("/u/<username>")
 def redditor_moment_redirect(username):
@@ -254,9 +233,7 @@ def visitors(v):
 	return render_template("viewers.html", v=v, viewers=viewers)
 
 @app.get("/@<username>")
-@app.get("/api/v1/user/<username>/listing")
 @auth_desired
-@api("read")
 def u_username(username, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -272,11 +249,8 @@ def u_username(username, v=None):
 		return redirect(request.path.replace(username, u.username))
 
 	if u.reserved:
-		return {'html': lambda: render_template("userpage_reserved.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
-				}
+		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
+		else: return render_template("userpage_reserved.html", u=u, v=v)
 
 	# viewers
 	if v and u.id != v.id:
@@ -298,38 +272,33 @@ def u_username(username, v=None):
 		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
 		
-		paidrent = False
-		if v and u.id == 253:
-			if int(time.time()) - v.rent_utc < 600: paidrent = True
-			elif request.args.get("rent") == "true" and v.dramacoins > 500:
-				v.dramacoins -= 500
-				v.rent_utc = int(time.time())
-				g.db.add(v)
-				u.dramacoins += 500
-				g.db.add(u)
-				send_notification(1046, u, f"@{v.username} has paid rent!")
-				paidrent = True
+		# paidrent = False
+		# if v and u.id == 253:
+		# 	if int(time.time()) - v.rent_utc < 600: paidrent = True
+		# 	elif request.args.get("rent") == "true" and v.dramacoins > 500:
+		# 		v.dramacoins -= 500
+		# 		v.rent_utc = int(time.time())
+		# 		g.db.add(v)
+		# 		u.dramacoins += 500
+		# 		g.db.add(u)
+		# 		send_notification(1046, u, f"@{v.username} has paid rent!")
+		# 		paidrent = True
 
-		if not paidrent:
-			return {'html': lambda: render_template("userpage_private.html",
-													u=u,
-													v=v),
-					'api': lambda: {"error": "That userpage is private"}
-					}
+		# if not paidrent:
+
+		if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+		else: return render_template("userpage_private.html", u=u, v=v)
+
 
 	if u.is_blocking and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_blocking.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": f"You are blocking @{u.username}."}
-				}
+		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
+		else: return render_template("userpage_blocking.html", u=u, v=v)
+
 
 	if u.is_blocked and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_blocked.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": "This person is blocking you."}
-				}
+		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
+		else: return render_template("userpage_blocked.html", u=u, v=v)
+
 
 	sort = request.args.get("sort", "new")
 	t = request.args.get("t", "all")
@@ -353,8 +322,8 @@ def u_username(username, v=None):
 	listing = get_posts(ids, v=v)
 
 	if u.unban_utc:
-		#unban = datetime.fromtimestamp(u.unban_utc).strftime('%c')
-		return {'html': lambda: render_template("userpage.html",
+		if request.headers.get("Authorization"): {"data": [x.json for x in listing]}
+		else: return render_template("userpage.html",
 												unban=u.unban_string,
 												u=u,
 												v=v,
@@ -363,27 +332,25 @@ def u_username(username, v=None):
 												sort=sort,
 												t=t,
 												next_exists=next_exists,
-												is_following=(v and u.has_follower(v))),
-				'api': lambda: jsonify({"data": [x.json for x in listing]})
-				}
+												is_following=(v and u.has_follower(v)))
 
-	return {'html': lambda: render_template("userpage.html",
-										u=u,
-										v=v,
-										listing=listing,
-										page=page,
-										sort=sort,
-										t=t,
-										next_exists=next_exists,
-										is_following=(v and u.has_follower(v))),
-		'api': lambda: jsonify({"data": [x.json for x in listing]})
-		}
+
+
+	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
+	else: return render_template("userpage.html",
+									u=u,
+									v=v,
+									listing=listing,
+									page=page,
+									sort=sort,
+									t=t,
+									next_exists=next_exists,
+									is_following=(v and u.has_follower(v)))
+
 
 
 @app.get("/@<username>/comments")
-@app.get("/api/v1/user/<username>/comments")
 @auth_desired
-@api("read")
 def u_username_comments(username, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -400,45 +367,43 @@ def u_username_comments(username, v=None):
 	u = user
 
 	if u.reserved:
-		return {'html': lambda: render_template("userpage_reserved.html",
+		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
+		else: return render_template("userpage_reserved.html",
 												u=u,
-												v=v),
-				'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
-				}
+												v=v)
+
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
-		paidrent = False
-		if v and u.id == 253:
-			if int(time.time()) - v.rent_utc < 600: paidrent = True
-			elif request.args.get("rent") == "true" and v.dramacoins > 500:
-				v.dramacoins -= 500
-				v.rent_utc = int(time.time())
-				g.db.add(v)
-				u.dramacoins += 500
-				g.db.add(u)
-				send_notification(1046, u, f"@{v.username} has paid rent!")
-				paidrent = True
+		# paidrent = False
+		# if v and u.id == 253:
+		# 	if int(time.time()) - v.rent_utc < 600: paidrent = True
+		# 	elif request.args.get("rent") == "true" and v.dramacoins > 500:
+		# 		v.dramacoins -= 500
+		# 		v.rent_utc = int(time.time())
+		# 		g.db.add(v)
+		# 		u.dramacoins += 500
+		# 		g.db.add(u)
+		# 		send_notification(1046, u, f"@{v.username} has paid rent!")
+		# 		paidrent = True
 
-		if not paidrent:
-			return {'html': lambda: render_template("userpage_private.html",
+		# if not paidrent:
+		if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+		else: return render_template("userpage_private.html",
 													u=u,
-													v=v),
-					'api': lambda: {"error": "That userpage is private"}
-					}
+													v=v)
 
 	if u.is_blocking and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_blocking.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": f"You are blocking @{u.username}."}
-				}
+		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
+		else: return render_template("userpage_blocking.html",
+													u=u,
+													v=v)
 
 	if u.is_blocked and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_blocked.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": "This person is blocking you."}
-				}
+		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
+		else: return render_template("userpage_blocked.html",
+													u=u,
+													v=v)
+
 
 	page = int(request.args.get("page", "1"))
 	sort=request.args.get("sort","new")
@@ -459,41 +424,30 @@ def u_username_comments(username, v=None):
 
 	is_following = (v and user.has_follower(v))
 
-	return {"html": lambda: render_template("userpage_comments.html",
-											u=user,
-											v=v,
-											listing=listing,
-											page=page,
-											sort=sort,
-											t=t,
-											next_exists=next_exists,
-											is_following=is_following,
-											standalone=True),
-			"api": lambda: jsonify({"data": [c.json for c in listing]})
-			}
+	if request.headers.get("Authorization"): return {"data": [c.json for c in listing]}
+	else: return render_template("userpage_comments.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
 
-@app.get("/api/v1/user/<username>/info")
+@app.get("/@<username>/info")
 @auth_desired
-@api("read")
 def u_username_info(username, v=None):
 
 	user=get_user(username, v=v)
 
 	if user.is_blocking:
-		return jsonify({"error": "You're blocking this user."}), 401
+		return {"error": "You're blocking this user."}, 401
 	elif user.is_blocked:
-		return jsonify({"error": "This user is blocking you."}), 403
+		return {"error": "This user is blocking you."}, 403
 
-	return jsonify(user.json)
+	return user.json
 
 
-@app.post("/api/follow/<username>")
+@app.post("/follow/<username>")
 @auth_required
 def follow_user(username, v):
 
 	target = get_user(username)
 
-	if target.id==v.id: return jsonify({"error": "You can't follow yourself!"}), 400
+	if target.id==v.id: return {"error": "You can't follow yourself!"}, 400
 
 	# check for existing follow
 	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first(): abort(409)
@@ -509,7 +463,7 @@ def follow_user(username, v):
 	return "", 204
 
 
-@app.post("/api/unfollow/<username>")
+@app.post("/unfollow/<username>")
 @auth_required
 def unfollow_user(username, v):
 
@@ -539,15 +493,15 @@ def user_profile(username):
 @limiter.exempt
 def user_profile_uid(uid):
 	try: uid = int(uid)
-	except: uid = int(uid, 36)
+	except:
+		try: uid = int(uid, 36)
+		except: abort(404)
 	x=get_account(uid)
 	return redirect(x.profile_url)
 
 
 @app.get("/@<username>/saved/posts")
-@app.get("/api/v1/saved/posts")
 @auth_required
-@api("read")
 def saved_posts(v, username):
 
 	page=int(request.args.get("page",1))
@@ -560,21 +514,18 @@ def saved_posts(v, username):
 
 	listing = get_posts(ids, v=v)
 
-	return {'html': lambda: render_template("userpage.html",
+	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
+	else: return render_template("userpage.html",
 											u=v,
 											v=v,
 											listing=listing,
 											page=page,
 											next_exists=next_exists,
-											),
-			'api': lambda: jsonify({"data": [x.json for x in listing]})
-			}
+											)
 
 
 @app.get("/@<username>/saved/comments")
-@app.get("/api/v1/saved/comments")
 @auth_required
-@api("read")
 def saved_comments(v, username):
 
 	page=int(request.args.get("page",1))
@@ -588,12 +539,11 @@ def saved_comments(v, username):
 	listing = get_comments(ids, v=v)
 
 
-	return {'html': lambda: render_template("userpage_comments.html",
+	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
+	else: return render_template("userpage_comments.html",
 											u=v,
 											v=v,
 											listing=listing,
 											page=page,
 											next_exists=next_exists,
-											standalone=True),
-			'api': lambda: jsonify({"data": [x.json for x in listing]})
-			}
+											standalone=True)

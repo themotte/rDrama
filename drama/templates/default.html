@@ -131,7 +131,7 @@
 
 		//comment modding
 		function removeComment(post_id) {
-			url="/api/ban_comment/"+post_id
+			url="/ban_comment/"+post_id
 
 			callback=function(){
 				document.getElementById("comment-"+post_id+"-only").classList.add("banned");
@@ -144,7 +144,7 @@
 		};
 
 		function approveComment(post_id) {
-			url="/api/unban_comment/"+post_id
+			url="/unban_comment/"+post_id
 
 			callback=function(){
 				document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
@@ -161,7 +161,7 @@
 
 
 			var xhr = new XMLHttpRequest();
-			xhr.open("post", "/api/distinguish_comment/"+cid);
+			xhr.open("post", "/distinguish_comment/"+cid);
 
 			var form = new FormData();
 
@@ -276,7 +276,7 @@
 				this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting comment';
 				this.disabled = true;
 				var xhr = new XMLHttpRequest();
-				xhr.open("POST", '/api/flag/comment/'+id, true);
+				xhr.open("POST", '/flag/comment/'+id, true);
 				var form = new FormData()
 				form.append("formkey", formkey());
 				form.append("reason", document.getElementById("reason-comment").value);
@@ -326,7 +326,7 @@
 				this.disabled = true;
 
 				var xhr = new XMLHttpRequest();
-				xhr.open("POST", '/api/flag/post/'+id, true);
+				xhr.open("POST", '/flag/post/'+id, true);
 				var form = new FormData()
 				form.append("formkey", formkey());
 				form.append("reason", document.getElementById("reason").value);
@@ -495,7 +495,7 @@
 			form.append('body', document.getElementById('reply-form-body-'+fullname).value);
 			form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
 			var xhr = new XMLHttpRequest();
-			xhr.open("post", "/api/comment");
+			xhr.open("post", "/comment");
 			xhr.withCredentials=true;
 			xhr.onload=function(){
 				if (xhr.status==200) {
@@ -691,7 +691,7 @@
 				}
 			}
 
-			post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+			post_toast("/vote/" + type + "/" + id + "/" + voteDirection);
 			
 		}
 
@@ -741,7 +741,7 @@
 				}
 			}
 
-			post_toast("/api/vote/" + type + "/" + id + "/" + voteDirection);
+			post_toast("/vote/" + type + "/" + id + "/" + voteDirection);
 			
 		}
 

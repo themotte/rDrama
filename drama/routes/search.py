@@ -197,10 +197,7 @@ def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 	return total, [x.id for x in comments]
 
 @app.get("/search/posts")
-@app.get("/api/v1/search")
-@app.route("/api/vue/search")
 @auth_desired
-@api("read")
 def searchposts(v, search_type="posts"):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -226,7 +223,8 @@ def searchposts(v, search_type="posts"):
 		domain=None
 		domain_obj=None
 
-	return {"html":lambda:render_template("search.html",
+	if request.headers.get("Authorization"): return {"data":[x.json for x in posts]}
+	else: return render_template("search.html",
 						   v=v,
 						   query=query,
 						   total=total,
@@ -238,15 +236,10 @@ def searchposts(v, search_type="posts"):
 						   domain=domain,
 						   domain_obj=domain_obj,
 						   reasons=REASONS
-						   ),
-			"api":lambda:jsonify({"data":[x.json for x in posts]})
-			}
+						   )
 
 @app.get("/search/comments")
-@app.get("/api/v1/search/comments")
-@app.route("/api/vue/search/comments")
 @auth_desired
-@api("read")
 def searchcomments(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -266,24 +259,12 @@ def searchcomments(v):
 
 	comments = get_comments(ids, v=v)
 
-	return {"html":lambda:render_template("search_comments.html",
-						   v=v,
-						   query=query,
-						   total=total,
-						   page=page,
-						   comments=comments,
-						   sort=sort,
-						   t=t,
-						   next_exists=next_exists,
-						   ),
-			"api":lambda:jsonify({"data":[x.json for x in comments]})
-			}
-			
+	if request.headers.get("Authorization"): return [x.json for x in comments]
+	else: return render_template("search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists)
+
+
 @app.get("/search/users")
-@app.get("/api/v1/search/users")
-@app.route("/api/vue/search/users")
 @auth_desired
-@api("read")
 def searchusers(v, search_type="posts"):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -308,16 +289,5 @@ def searchusers(v, search_type="posts"):
 	users=users[:25]
 	
 	
-	
-	return {"html":lambda:render_template("search_users.html",
-				   v=v,
-				   query=query,
-				   total=total,
-				   page=page,
-				   users=users,
-				   sort=sort,
-				   t=t,
-				   next_exists=next_exists
-				  ),
-			"api":lambda:jsonify({"data":[x.json for x in users]})
-			}
+	if request.headers.get("Authorization"): return [x.json for x in users]
+	else: return render_template("search_users.html", v=v, query=query, total=total, page=page, users=users, sort=sort, t=t, next_exists=next_exists)
