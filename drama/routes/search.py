@@ -223,7 +223,7 @@ def searchposts(v, search_type="posts"):
 		domain=None
 		domain_obj=None
 
-	if request.headers.get("Authorization"): return [x.json for x in posts]
+	if request.headers.get("Authorization"): return {"data": [x.json for x in posts]}
 	else: return render_template("search_comments.html", v=v, query=query, total=total, page=page, listing=posts, sort=sort, t=t, next_exists=next_exists, domain=domain, domain_obj=domain_obj, reasons=REASONS)
 
 
@@ -248,7 +248,7 @@ def searchcomments(v):
 
 	comments = get_comments(ids, v=v)
 
-	if request.headers.get("Authorization"): return [x.json for x in comments]
+	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
 	else: return render_template("search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists)
 
 
@@ -278,5 +278,5 @@ def searchusers(v, search_type="posts"):
 	users=users[:25]
 	
 	
-	if request.headers.get("Authorization"): return [x.json for x in users]
+	if request.headers.get("Authorization"): return {"data": [x.json for x in users]}
 	else: return render_template("search_users.html", v=v, query=query, total=total, page=page, users=users, sort=sort, t=t, next_exists=next_exists)

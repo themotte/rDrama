@@ -322,7 +322,7 @@ def u_username(username, v=None):
 	listing = get_posts(ids, v=v)
 
 	if u.unban_utc:
-		if request.headers.get("Authorization"): return [x.json for x in listing]
+		if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
 		else: return render_template("userpage.html",
 										u=u,
 										v=v,
@@ -410,7 +410,7 @@ def u_username_comments(username, v=None):
 
 	is_following = (v and user.has_follower(v))
 
-	if request.headers.get("Authorization"): return [c.json for c in listing]
+	if request.headers.get("Authorization"): return {"data": [c.json for c in listing]}
 	else: return render_template("userpage_comments.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
 
 @app.get("/@<username>/info")
@@ -498,7 +498,7 @@ def saved_posts(v, username):
 
 	listing = get_posts(ids, v=v)
 
-	if request.headers.get("Authorization"): return [x.json for x in listing]
+	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
 	else: return render_template("userpage.html",
 											u=v,
 											v=v,
@@ -523,7 +523,7 @@ def saved_comments(v, username):
 	listing = get_comments(ids, v=v)
 
 
-	if request.headers.get("Authorization"): return [x.json for x in listing]
+	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
 	else: return render_template("userpage_comments.html",
 											u=v,
 											v=v,
