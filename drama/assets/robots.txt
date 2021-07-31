@@ -1,5 +1,4 @@
 User-Agent: *
-Disallow: /api/*
 Disallow: /admin/*
 Disallow: /submit
 Disallow: /settings

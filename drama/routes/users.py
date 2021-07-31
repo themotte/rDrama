@@ -31,13 +31,6 @@ def suicide(v, username):
 	g.db.add(v)
 	return "", 204
 
-@app.get("/api/v1/user/<username>")
-@auth_desired
-@api("read")
-def user_info(v, username):
-	user = get_user(username, v=v)
-	return jsonify(user.json)
-
 @app.get("/leaderboard")
 @auth_desired
 def leaderboard(v):
@@ -179,10 +172,8 @@ def mfa_qr(secret, v):
 	return send_file(mem, mimetype="image/png", as_attachment=False)
 
 
-@app.get("/api/is_available/<name>")
-@app.get("/api/v1/is_available/<name>")
+@app.get("/is_available/<name>")
 @auth_desired
-@api("read")
 def api_is_available(name, v):
 
 	name=name.strip()
@@ -212,18 +203,6 @@ def user_id(id):
 
 	user = get_account(int(id))
 	return redirect(user.url)
-
-# Allow Id of user to be queryied, and then redirect the bot to the
-# actual user api endpoint.
-# So they get the data and then there will be no need to reinvent
-# the wheel.
-@app.get("/api/v1/uid/<uid>")
-@auth_desired
-@api("read")
-def user_by_uid(uid, v=None):
-	user=get_account(uid)
-	
-	return redirect(f'/api/v1/user/{user.username}/info')
 		
 @app.get("/u/<username>")
 def redditor_moment_redirect(username):
@@ -254,9 +233,7 @@ def visitors(v):
 	return render_template("viewers.html", v=v, viewers=viewers)
 
 @app.get("/@<username>")
-@app.get("/api/v1/user/<username>/listing")
 @auth_desired
-@api("read")
 def u_username(username, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -381,9 +358,7 @@ def u_username(username, v=None):
 
 
 @app.get("/@<username>/comments")
-@app.get("/api/v1/user/<username>/comments")
 @auth_desired
-@api("read")
 def u_username_comments(username, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -472,9 +447,8 @@ def u_username_comments(username, v=None):
 			"api": lambda: jsonify({"data": [c.json for c in listing]})
 			}
 
-@app.get("/api/v1/user/<username>/info")
+@app.get("/@<username>/info")
 @auth_desired
-@api("read")
 def u_username_info(username, v=None):
 
 	user=get_user(username, v=v)
@@ -487,7 +461,7 @@ def u_username_info(username, v=None):
 	return jsonify(user.json)
 
 
-@app.post("/api/follow/<username>")
+@app.post("/follow/<username>")
 @auth_required
 def follow_user(username, v):
 
@@ -509,7 +483,7 @@ def follow_user(username, v):
 	return "", 204
 
 
-@app.post("/api/unfollow/<username>")
+@app.post("/unfollow/<username>")
 @auth_required
 def unfollow_user(username, v):
 
@@ -545,9 +519,7 @@ def user_profile_uid(uid):
 
 
 @app.get("/@<username>/saved/posts")
-@app.get("/api/v1/saved/posts")
 @auth_required
-@api("read")
 def saved_posts(v, username):
 
 	page=int(request.args.get("page",1))
@@ -572,9 +544,7 @@ def saved_posts(v, username):
 
 
 @app.get("/@<username>/saved/comments")
-@app.get("/api/v1/saved/comments")
 @auth_required
-@api("read")
 def saved_comments(v, username):
 
 	page=int(request.args.get("page",1))

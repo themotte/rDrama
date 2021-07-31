@@ -197,10 +197,7 @@ def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 	return total, [x.id for x in comments]
 
 @app.get("/search/posts")
-@app.get("/api/v1/search")
-@app.route("/api/vue/search")
 @auth_desired
-@api("read")
 def searchposts(v, search_type="posts"):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -243,10 +240,7 @@ def searchposts(v, search_type="posts"):
 			}
 
 @app.get("/search/comments")
-@app.get("/api/v1/search/comments")
-@app.route("/api/vue/search/comments")
 @auth_desired
-@api("read")
 def searchcomments(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -280,10 +274,7 @@ def searchcomments(v):
 			}
 			
 @app.get("/search/users")
-@app.get("/api/v1/search/users")
-@app.route("/api/vue/search/users")
 @auth_desired
-@api("read")
 def searchusers(v, search_type="posts"):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 

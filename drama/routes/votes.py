@@ -62,10 +62,8 @@ def admin_vote_info_get(v):
 
 
 
-@app.post("/api/v1/vote/post/<post_id>/<new>")
-@app.post("/api/vote/post/<post_id>/<new>")
+@app.post("/vote/post/<post_id>/<new>")
 @is_not_banned
-@api("vote")
 @validate_formkey
 def api_vote_post(post_id, new, v):
 
@@ -107,10 +105,8 @@ def api_vote_post(post_id, new, v):
 	g.db.add(post)
 	return "", 204
 
-@app.post("/api/v1/vote/comment/<comment_id>/<new>")
-@app.post("/api/vote/comment/<comment_id>/<new>")
+@app.post("/vote/comment/<comment_id>/<new>")
 @is_not_banned
-@api("vote")
 @validate_formkey
 def api_vote_comment(comment_id, new, v):
 

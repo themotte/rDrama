@@ -4,7 +4,7 @@ from flask import g
 from drama.__main__ import app
 
 
-@app.post("/api/flag/post/<pid>")
+@app.post("/flag/post/<pid>")
 @auth_desired
 def api_flag_post(pid, v):
 
@@ -30,7 +30,7 @@ def api_flag_post(pid, v):
 	return "", 204
 
 
-@app.post("/api/flag/comment/<cid>")
+@app.post("/flag/comment/<cid>")
 @auth_desired
 def api_flag_comment(cid, v):
 

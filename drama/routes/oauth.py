@@ -274,11 +274,9 @@ def edit_oauth_app(v, aid):
 	return redirect('/settings/apps')
 
 
-@app.route("/api/v1/identity")
+@app.route("/identity")
 @auth_required
-@api("identity")
 def api_v1_identity(v):
-
 	return jsonify(v.json)
 
 
@@ -443,9 +441,8 @@ def oauth_rescind_app(aid, v):
 
 	return jsonify({"message": f"{auth.application.app_name} Revoked"})
 
-@app.post("/api/v1/release")
+@app.post("/release")
 @auth_required
-@api()
 def oauth_release_auth(v):
 
 	token=request.headers.get("Authorization").split()[1]
@@ -462,9 +459,8 @@ def oauth_release_auth(v):
 
 	return jsonify({"message":"Authorization released"})
 
-@app.post("/api/v1/kill")
+@app.post("/kill")
 @auth_required
-@api()
 def oauth_kill_auth(v):
 
 	token=request.headers.get("Authorization").split()[1]

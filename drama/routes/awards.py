@@ -33,7 +33,7 @@ ALLOW_MULTIPLE = (
 )
 
 
-@app.get("/api/awards")
+@app.get("/awards")
 @auth_required
 def get_awards(v):
 
@@ -46,7 +46,7 @@ def get_awards(v):
     return jsonify(return_value)
 
 
-@app.put("/api/post/<pid>/awards")
+@app.put("/post/<pid>/awards")
 @auth_required
 @validate_formkey
 def award_post(pid, v):
@@ -108,7 +108,7 @@ def award_post(pid, v):
     return "", 204
 
 
-@app.put("/api/comment/<cid>/awards")
+@app.put("/comment/<cid>/awards")
 @auth_required
 @validate_formkey
 def award_comment(cid, v):

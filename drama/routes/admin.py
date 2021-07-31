@@ -62,7 +62,6 @@ def flagged_posts(v):
 
 @app.get("/admin/image_posts")
 @admin_level_required(3)
-@api("read")
 def image_posts_listing(v):
 
 	page = int(request.args.get('page', 1))
@@ -650,7 +649,7 @@ def admin_title_change(user_id, v):
 
 	return (redirect(user.url), user)
 
-@app.post("/api/ban_user/<user_id>")
+@app.post("/ban_user/<user_id>")
 @admin_level_required(6)
 @validate_formkey
 def ban_user(user_id, v):
@@ -707,7 +706,7 @@ def ban_user(user_id, v):
 	return jsonify({"message": f"@{user.username} was banned"})
 
 
-@app.post("/api/unban_user/<user_id>")
+@app.post("/unban_user/<user_id>")
 @admin_level_required(6)
 @validate_formkey
 def unban_user(user_id, v):
@@ -738,7 +737,7 @@ def unban_user(user_id, v):
 	if request.args.get("notoast"): return (redirect(user.url), user)
 	return jsonify({"message": f"@{user.username} was unbanned"})
 
-@app.post("/api/ban_post/<post_id>")
+@app.post("/ban_post/<post_id>")
 @admin_level_required(3)
 @validate_formkey
 def ban_post(post_id, v):
@@ -777,7 +776,7 @@ def ban_post(post_id, v):
 	return "", 204
 
 
-@app.post("/api/unban_post/<post_id>")
+@app.post("/unban_post/<post_id>")
 @admin_level_required(3)
 @validate_formkey
 def unban_post(post_id, v):
@@ -805,7 +804,7 @@ def unban_post(post_id, v):
 	return "", 204
 
 
-@app.post("/api/distinguish/<post_id>")
+@app.post("/distinguish/<post_id>")
 @admin_level_required(1)
 @validate_formkey
 def api_distinguish_post(post_id, v):
@@ -828,7 +827,7 @@ def api_distinguish_post(post_id, v):
 	return "", 204
 
 
-@app.post("/api/sticky/<post_id>")
+@app.post("/sticky/<post_id>")
 @admin_level_required(3)
 def api_sticky_post(post_id, v):
 
@@ -842,7 +841,7 @@ def api_sticky_post(post_id, v):
 
 	return "", 204
 
-@app.post("/api/pin/<post_id>")
+@app.post("/pin/<post_id>")
 @auth_required
 def api_pin_post(post_id, v):
 
@@ -853,7 +852,7 @@ def api_pin_post(post_id, v):
 
 	return "", 204
 
-@app.post("/api/ban_comment/<c_id>")
+@app.post("/ban_comment/<c_id>")
 @admin_level_required(1)
 def api_ban_comment(c_id, v):
 
@@ -874,7 +873,7 @@ def api_ban_comment(c_id, v):
 	return "", 204
 
 
-@app.post("/api/unban_comment/<c_id>")
+@app.post("/unban_comment/<c_id>")
 @admin_level_required(1)
 def api_unban_comment(c_id, v):
 
@@ -898,10 +897,8 @@ def api_unban_comment(c_id, v):
 	return "", 204
 
 
-@app.post("/api/distinguish_comment/<c_id>")
-@app.post("/api/v1/distinguish_comment/<c_id>")
+@app.post("/distinguish_comment/<c_id>")
 @auth_required
-@api("read")
 def admin_distinguish_comment(c_id, v):
 	
 	if v.admin_level == 0: abort(403)
@@ -1029,7 +1026,7 @@ def admin_nunuke_user(v):
 
 	return redirect(user.url)
 	
-@app.route("/api/user_stat_data", methods=['GET'])
+@app.route("/user_stat_data", methods=['GET'])
 @admin_level_required(2)
 @cache.memoize(timeout=60)
 def user_stat_data(v):

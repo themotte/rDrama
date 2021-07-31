@@ -140,7 +140,7 @@
 			}
 		},
 		mounted() {
-			fetch('/api/awards')
+			fetch('/awards')
 				.then(response => response.json())
 				.then(json => {
 					this.awards = json;

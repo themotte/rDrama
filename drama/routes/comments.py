@@ -19,19 +19,9 @@ beams_client = PushNotifications(
 		secret_key=PUSHER_KEY,
 )
 
-@app.get("/api/v1/post/<pid>/comment/<cid>")
-def comment_cid_api_redirect(cid=None, pid=None):
-	redirect(f'/api/v1/comment/<cid>')
-
 @app.get("/comment/<cid>")
-@app.get("/comment/<cid>")
-@app.get("/post_short/<pid>/<cid>")
-@app.get("/post_short/<pid>/<cid>/")
-@app.get("/api/v1/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
-@app.get("/api/vue/comment/<cid>")
 @auth_desired
-@api("read")
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
@@ -198,12 +188,10 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			'api': lambda: top_comment.json
 			}
 
-@app.post("/api/comment")
-@app.post("/api/v1/comment")
+@app.post("/comment")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
-@api("create")
 def api_comment(v):
 
 	parent_submission = request.form.get("submission")
@@ -604,7 +592,6 @@ def api_comment(v):
 @app.post("/edit_comment/<cid>")
 @is_not_banned
 @validate_formkey
-@api("edit")
 def edit_comment(cid, v):
 
 	c = get_comment(cid, v=v)
@@ -793,10 +780,8 @@ def edit_comment(cid, v):
 	return jsonify({"html": c.body_html})
 
 @app.post("/delete/comment/<cid>")
-@app.post("/api/v1/delete/comment/<cid>")
 @auth_required
 @validate_formkey
-@api("delete")
 def delete_comment(cid, v):
 
 	c = g.db.query(Comment).filter_by(id=cid).first()
@@ -818,10 +803,8 @@ def delete_comment(cid, v):
 			"api": lambda: ("", 204)}
 
 @app.post("/undelete/comment/<cid>")
-@app.post("/api/v1/undelete/comment/<cid>")
 @auth_required
 @validate_formkey
-@api("delete")
 def undelete_comment(cid, v):
 
 	c = g.db.query(Comment).filter_by(id=cid).first()
@@ -840,24 +823,6 @@ def undelete_comment(cid, v):
 
 	return {"html": lambda: ("", 204),
 			"api": lambda: ("", 204)}
-
-@app.get("/embed/comment/<cid>")
-@app.get("/embed/post/<pid>/comment/<cid>")
-@app.get("/api/v1/embed/comment/<cid>")
-@app.get("/api/v1/embed/post/<pid>/comment/<cid>")
-def embed_comment_cid(cid, pid=None):
-
-	comment = get_comment(int(cid))
-
-	if not comment.parent:
-		abort(403)
-
-	if comment.is_banned or comment.deleted_utc > 0:
-		return {'html': lambda: render_template("embeds/comment_removed.html", c=comment),
-				'api': lambda: {'error': f'Comment {cid} has been removed'}
-				}
-
-	return render_template("embeds/comment.html", c=comment)
 
 @app.post("/comment_pin/<cid>")
 @auth_required

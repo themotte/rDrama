@@ -289,9 +289,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	return posts
 
 @app.get("/changelog")
-@app.get("/api/v1/changelog")
 @auth_desired
-@api("read")
 def changelog(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
@@ -405,9 +403,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 	return comments[:26]
 
 @app.get("/comments")
-@app.get("/api/v1/front/comments")
 @auth_desired
-@api("read")
 def all_comments(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 

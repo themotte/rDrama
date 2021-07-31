@@ -13,7 +13,6 @@ from drama.__main__ import app
 
 @app.errorhandler(400)
 @auth_desired
-@api()
 def error_400(e, v):
 	return{"html": lambda: (render_template('errors/400.html', v=v), 400),
 		   "api": lambda: (jsonify({"error": "400 Bad Request"}), 400	)
@@ -28,15 +27,12 @@ def error_401(e):
 	argval = quote(f"{path}?{qs}", safe='')
 	output = f"/login?redirect={argval}"
 
-	if request.path.startswith("/api/v1/"):
-		return jsonify({"error": "401 Not Authorized"}), 401
-	else:
-		return redirect(output)
+	if request.headers.get("Authorization"): return jsonify({"error": "401 Not Authorized"}), 401
+	else: return redirect(output)
 
 
 @app.errorhandler(403)
 @auth_desired
-@api()
 def error_403(e, v):
 	return{"html": lambda: (render_template('errors/403.html', v=v), 403),
 		   "api": lambda: (jsonify({"error": "403 Forbidden"}), 403)
@@ -45,7 +41,6 @@ def error_403(e, v):
 
 @app.errorhandler(404)
 @auth_desired
-@api()
 def error_404(e, v):
 	return{"html": lambda: (render_template('errors/404.html', v=v), 404),
 		   "api": lambda: (jsonify({"error": "404 Not Found"}), 404)
@@ -54,7 +49,6 @@ def error_404(e, v):
 
 @app.errorhandler(405)
 @auth_desired
-@api()
 def error_405(e, v):
 	return{"html": lambda: (render_template('errors/405.html', v=v), 405),
 		   "api": lambda: (jsonify({"error": "405 Method Not Allowed"}), 405)
@@ -63,7 +57,6 @@ def error_405(e, v):
 
 @app.errorhandler(409)
 @auth_desired
-@api()
 def error_409(e, v):
 	return{"html": lambda: (render_template('errors/409.html', v=v), 409),
 		   "api": lambda: (jsonify({"error": "409 Conflict"}), 409)
@@ -72,7 +65,6 @@ def error_409(e, v):
 
 @app.errorhandler(410)
 @auth_desired
-@api()
 def error_410(e, v):
 	return{"html": lambda: (render_template('errors/410.html', v=v), 410),
 		   "api": lambda: (jsonify({"error": "410 Request Payload Too Large"}), 410)
@@ -80,7 +72,6 @@ def error_410(e, v):
 
 @app.errorhandler(413)
 @auth_desired
-@api()
 def error_413(e, v):
 	return{"html": lambda: (render_template('errors/413.html', v=v), 413),
 		   "api": lambda: (jsonify({"error": "413 Image Size Too Large"}), 413)
@@ -88,7 +79,6 @@ def error_413(e, v):
 
 @app.errorhandler(418)
 @auth_desired
-@api()
 def error_418(e, v):
 	return{"html": lambda: (render_template('errors/418.html', v=v), 418),
 		   "api": lambda: (jsonify({"error": "418 I'm A Teapot"}), 418)
@@ -97,7 +87,6 @@ def error_418(e, v):
 
 @app.errorhandler(422)
 @auth_desired
-@api()
 def error_422(e, v):
 	return{"html": lambda: (render_template('errors/422.html', v=v), 422),
 		   "api": lambda: (jsonify({"error": "422 Unprocessable Entity"}), 422)
@@ -106,7 +95,6 @@ def error_422(e, v):
 
 @app.errorhandler(429)
 @auth_desired
-@api()
 def error_429(e, v):
 	return{"html": lambda: (render_template('errors/429.html', v=v), 429),
 		   "api": lambda: (jsonify({"error": "429 Too Many Requests"}), 429)
@@ -115,7 +103,6 @@ def error_429(e, v):
 
 @app.errorhandler(451)
 @auth_desired
-@api()
 def error_451(e, v):
 	return{"html": lambda: (render_template('errors/451.html', v=v), 451),
 		   "api": lambda: (jsonify({"error": "451 Unavailable For Legal Reasons"}), 451)
@@ -124,7 +111,6 @@ def error_451(e, v):
 
 @app.errorhandler(500)
 @auth_desired
-@api()
 def error_500(e, v):
 	try:
 		g.db.rollback()
@@ -138,7 +124,6 @@ def error_500(e, v):
 
 @app.errorhandler(502)
 @auth_desired
-@api()
 def error_502(e, v):
 	return{"html": lambda: (render_template('errors/502.html', v=v), 502),
 		   "api": lambda: (jsonify({"error": "502 Bad Gateway"}), 502)
@@ -147,7 +132,6 @@ def error_502(e, v):
 
 @app.errorhandler(503)
 @auth_desired
-@api()
 def error_503(e, v):
 	return{"html": lambda: (render_template('errors/503.html', v=v), 503),
 		   "api": lambda: (jsonify({"error": "503 Service Unavailable"}), 503)

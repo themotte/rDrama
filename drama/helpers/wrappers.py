@@ -226,7 +226,7 @@ def validate_formkey(f):
 
 	def wrapper(*args, v, **kwargs):
 
-		if not request.path.startswith("/api/v1"):
+		if not request.headers.get("Authorization"):
 
 			submitted_key = request.values.get("formkey", None)
 
@@ -262,52 +262,3 @@ def no_cors(f):
 
 	wrapper.__name__ = f.__name__
 	return wrapper
-
-# wrapper for api-related things that discriminates between an api url
-# and an html url for the same content
-# f should return {'api':lambda:some_func(), 'html':lambda:other_func()}
-
-
-def api(*scopes, no_ban=False):
-
-	def wrapper_maker(f):
-
-		def wrapper(*args, **kwargs):
-
-			if request.path.startswith(('/api/v1','/api/v2')):
-
-				v = kwargs.get('v')
-
-				result = f(*args, **kwargs)
-
-				if isinstance(result, dict):
-					resp = result['api']()
-				else:
-					resp = result
-
-				if not isinstance(resp, RespObj):
-					resp = make_response(resp)
-
-				return resp
-
-			else:
-
-				result = f(*args, **kwargs)
-
-				if not isinstance(result, dict):
-					return result
-
-				try:
-					if request.path.startswith('/inpage/'):
-						return result['inpage']()
-					elif request.path.startswith(('/api/vue/','/test/')):
-						return result['api']()
-					else:
-						return result['html']()
-				except KeyError:
-					return result
-
-		wrapper.__name__ = f.__name__
-		return wrapper
-
-	return wrapper_maker

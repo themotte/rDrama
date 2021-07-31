@@ -11,10 +11,7 @@ def patrons(v):
 	return render_template("patrons.html", v=v, users=users)
 
 @app.get("/badmins")
-@app.route("/api/vue/admins",  methods=["GET"])
-@app.get("/api/v1/admins")
 @auth_desired
-@api("read")
 def badmins(v):
 	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.dramacoins.desc()).all()
 	return {
@@ -23,9 +20,7 @@ def badmins(v):
 		}
 
 @app.get("/log")
-@app.get("/api/v1/mod_log")
 @auth_desired
-@api("read")
 def log(v):
 
 	page=int(request.args.get("page",1))
