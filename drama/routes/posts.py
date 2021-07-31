@@ -73,10 +73,6 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	print(post.flags)
-	print("sex")
-	print(post.flags.order_by(Flag.created_utc).all())
-
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 

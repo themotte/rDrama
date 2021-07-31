@@ -56,7 +56,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		backref="submissions")
 	domain_ref = Column(Integer, ForeignKey("domains.id"))
 	domain_obj = relationship("Domain")
-	flags = relationship("Flag", lazy="dynamic")
+	flags = relationship("Flag", lazy="dynamic").order_by(Flag.created_utc).all()
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
 	author = relationship(
@@ -415,16 +415,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def is_image(self):
 		if self.url: return self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999') or self.url.lower().endswith('?maxwidth=8888')
 		else: return False
-	
-	@property
-	@lazy
-	def ordered_flags(self):
-		return self.flags.order_by(Flag.created_utc).all()
 
 	@property
 	@lazy
 	def active_flags(self):
-		return self.flags.count()
+		return len(self.flags)
 
 
 class SaveRelationship(Base, Stndrd):
