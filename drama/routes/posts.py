@@ -803,7 +803,7 @@ def submit_post(v):
 	g.db.refresh(new_post)
 
 	# check for uploaded image
-	if request.files.get('file'):
+	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 
 		#check file size
 		if request.content_length > 16 * 1024 * 1024:
@@ -816,7 +816,6 @@ def submit_post(v):
 			else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.form.get("body", "")), 400
 
 
-		name = f'post/{new_post.id}/{secrets.token_urlsafe(8)}'
 		new_post.url = upload_file(file)
 		new_post.domain_ref = 1  # id of i.ruqqus.ga domain
 		g.db.add(new_post)

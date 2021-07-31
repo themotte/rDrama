@@ -312,7 +312,7 @@ def api_comment(v):
 				)
 	g.db.add(c)
 	g.db.flush()
-	if request.files.get("file"):
+	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'):
 			return jsonify({"error": "That wasn't an image!"}), 400
@@ -660,7 +660,7 @@ def edit_comment(cid, v):
 		g.db.commit()
 		return {"error": "Too much spam!"}, 403
 
-	if request.files.get("file"):
+	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 		

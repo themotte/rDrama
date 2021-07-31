@@ -331,6 +331,7 @@ def settings_images_profile(v):
 		g.db.rollback()
 		abort(413)
 
+	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 	imageurl = upload_file(request.files["profile"], True)
 	if not imageurl: abort(400)
 	highres = upload_file()
@@ -339,8 +340,7 @@ def settings_images_profile(v):
 	v.profileurl = imageurl
 	g.db.add(v)
 
-	return render_template("settings_profile.html",
-							v=v, msg="Profile picture successfully updated.")
+	return render_template("settings_profile.html", v=v, msg="Profile picture successfully updated.")
 
 
 @app.post("/settings/images/banner")
@@ -351,7 +351,7 @@ def settings_images_banner(v):
 		g.db.rollback()
 		abort(413)
 
-	v.bannerurl = None
+	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 	imageurl = upload_file(request.files["banner"])
 	if imageurl:
 		v.bannerurl = imageurl
