@@ -177,7 +177,6 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 	return posts
 
 @app.get("/")
-@app.get("/api/v1/listing")
 @auth_desired
 def front_all(v):
 

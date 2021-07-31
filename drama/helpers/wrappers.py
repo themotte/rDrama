@@ -32,10 +32,8 @@ def get_logged_in_user(db=None):
 
 		uid = session.get("user_id")
 		nonce = session.get("login_nonce", 0)
-		if not uid:
-			x= (None, None)
-		v = db.query(User).filter_by(
-			id=uid).first()
+		if not uid: x= (None, None)
+		v = db.query(User).filter_by(id=uid).first()
 
 		if v and v.agendaposter_expires_utc and v.agendaposter_expires_utc < g.timestamp:
 			v.agendaposter_expires_utc = 0
