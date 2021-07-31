@@ -65,7 +65,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		innerjoin=True,
 		primaryjoin="Submission.author_id==User.id")
 	is_pinned = Column(Boolean, default=False)
-	reports = relationship("Report", backref="submission")
 	is_bot = Column(Boolean, default=False)
 
 	upvotes = Column(Integer, default=1)
