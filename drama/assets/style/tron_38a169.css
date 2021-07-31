@@ -25703,7 +25703,7 @@ div:hover .thumb-img-link-overlay {
   display: flex;
   position: relative;
   margin-top: 2rem;
-  padding-left: 15px;
+  padding-left: 14px;
 }
 
 #notifications .comment, #userpage .comment {
@@ -27352,7 +27352,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .comment-section > .comment {
-    padding-left: 15px;
+    padding-left: 14px;
   }
 
   .comment {
@@ -27807,6 +27807,10 @@ img.emoji {
   border: 1px solid #38a169;
   padding: 10px;
   border-radius: 3px;
+}
+
+.text-info {
+  color: #38a169 !important;
 }
 
 #frontpage .post-title a:visited {
