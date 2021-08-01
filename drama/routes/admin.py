@@ -253,13 +253,13 @@ def participation_stats(v):
 	day = now - 86400
 
 	data = {"valid_users": g.db.query(User).count(),
-			"private_users": g.db.query(User).filter_by(is_private=False).count(),
+			"private_users": g.db.query(User).filter_by(is_private=True).count(),
 			"banned_users": g.db.query(User).filter(User.is_banned > 0).count(),
-			"verified_users": g.db.query(User).filter_by(is_activated=True).count(),
+			"verified_email_users": g.db.query(User).filter_by(is_activated=True).count(),
 			"signups_last_24h": g.db.query(User).filter(User.created_utc > day).count(),
 			"total_posts": g.db.query(Submission).count(),
 			"posting_users": g.db.query(Submission.author_id).distinct().count(),
-			"listed_posts": g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc > 0).count(),
+			"listed_posts": g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
 			"removed_posts": g.db.query(Submission).filter_by(is_banned=True).count(),
 			"deleted_posts": g.db.query(Submission).filter(Submission.deleted_utc > 0).count(),
 			"posts_last_24h": g.db.query(Submission).filter(Submission.created_utc > day).count(),
