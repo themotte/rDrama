@@ -9,12 +9,13 @@ CF_ZONE = environ.get("CLOUDFLARE_ZONE").strip()
 imgurkey = environ.get("imgurkey").strip()
 
 
-def upload_file(file=None, resize=False):
+def upload_file(file=None, resize=False, png=False):
 	
 	if file: file.save("image.gif")
 
 	if resize:
-		i = IImage.open("image.gif")
+		if png: i = IImage.open("image.png")
+		else: i = IImage.open("image.gif")
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
