@@ -12,8 +12,7 @@ def api_flag_post(pid, v):
 
 	if v:
 		existing = g.db.query(Flag).filter_by(
-			user_id=v.id, post_id=post.id).filter(
-			Flag.created_utc >= post.edited_utc).first()
+			user_id=v.id, post_id=post.id).first()
 
 		if existing:
 			return "", 409
@@ -37,8 +36,7 @@ def api_flag_comment(cid, v):
 	
 	if v:
 		existing = g.db.query(CommentFlag).filter_by(
-			user_id=v.id, comment_id=comment.id).filter(
-			CommentFlag.created_utc >= comment.edited_utc).first()
+			user_id=v.id, comment_id=comment.id).first()
 
 		if existing:
 			return "", 409
