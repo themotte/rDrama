@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from flask import *
 from urllib.parse import urlparse
-from drama.classes import Domain
+from drama.classes import BannedDomain
 
 def filter_comment_html(html_text):
 
