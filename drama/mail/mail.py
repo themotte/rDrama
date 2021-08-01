@@ -89,7 +89,7 @@ def activate(v):
 
 	if not any([b.badge_id == 2 for b in user.badges]):
 		mail_badge = Badge(user_id=user.id,
-						   badge_id=2,
+						   badge_id=2)
 		g.db.add(mail_badge)
 
 	g.db.add(user)
