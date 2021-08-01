@@ -11,21 +11,18 @@ reasons = {
 }
 
 
-class Domain(Base):
+class BannedDomain(Base):
 
 	__tablename__ = "domains"
 	id = Column(Integer, primary_key=True)
 	domain = Column(String)
-	can_submit = Column(Boolean, default=True)
 	reason = Column(Integer, default=0)
 
 	@property
-	def reason_text(self):
-		return reasons.get(self.reason)
+	def reason_text(self): return reasons.get(self.reason)
 
 	@property
-	def permalink(self):
-		return f"/admin/domain/{self.domain}"
+	def permalink(self): return f"/admin/domain/{self.domain}"
 	
 
 

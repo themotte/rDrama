@@ -30,10 +30,7 @@ def filter_comment_html(html_text):
 
 	# search db for domain rules that prohibit commenting
 	bans = [
-		x for x in g.db.query(Domain).filter_by(
-			can_submit=False).filter(
-			Domain.domain.in_(
-				list(domain_list))).all()]
+		x for x in g.db.query(Domain).filter(Domain.domain.in_(list(domain_list))).all()]
 
 	if bans:
 		return bans

@@ -6,7 +6,6 @@ import gevent
 from drama.helpers.wrappers import *
 from drama.helpers.sanitize import *
 from drama.helpers.filters import *
-from drama.helpers.embed import *
 from drama.helpers.markdown import *
 from drama.helpers.session import *
 from drama.helpers.thumbs import *
@@ -594,28 +593,38 @@ def submit_post(v):
 
 	# check ban status
 	domain_obj = get_domain(domain)
-	if domain_obj:
-		if not domain_obj.can_submit:
-		  
-			if domain_obj.reason==4:
-				v.ban(days=30, reason="Digitally malicious content")
-			elif domain_obj.reason==7:
-				v.ban(reason="Sexualizing minors")
+	if domain_obj:		  
+		if domain_obj.reason==4:
+			v.ban(days=30, reason="Digitally malicious content")
+		elif domain_obj.reason==7:
+			v.ban(reason="Sexualizing minors")
 
-			if request.headers.get("Authorization"): return {"error":"ToS violation"}, 400
-			else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.form.get("body", "")), 400
+		if request.headers.get("Authorization"): return {"error":"ToS violation"}, 400
+		else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.form.get("body", "")), 400
 
-		# check for embeds
-		if domain_obj.embed_function:
-			try:
-				embed = eval(domain_obj.embed_function)(url)
-			except BaseException:
-				embed = None
-		else:
-			embed = None
-	else:
+	if "twitter.com" in domain:
+		embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
+	
+	elif "youtu" in domain:
+		yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+		if not yt_id or len(yt_id) != 11: embed = None
+		else: 
+			params = parse_qs(urlparse(url).query)
+			t = params.get('t', params.get('start', [0]))[0]
+			if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
+			else: embed = f"https://youtube.com/embed/{yt_id}"
 
-		embed = None
+	elif "instagram.com" in domain:
+		embed = requests.get("https://graph.facebook.com/v9.0/instagram_oembed", params={"url":url,"access_token":environ.get("FACEBOOK_TOKEN","").strip(),"omitscript":'true'}, headers={"User-Agent":"Instagram embedder for Drama"}).json()["html"]
+
+	elif app.config['SERVER_NAME'] in domain:
+		matches = re.match(re.compile("^.*rdrama.net/post/+\w+/(\w+)(/\w+/(\w+))?"), url)
+		post_id = matches.group(1)
+		comment_id = matches.group(3)
+		if comment_id: embed = f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
+		else: embed = f"https://{app.config['SERVER_NAME']}/embed/post/{post_id}"
+
+	else: embed = None
 
 	# similarity check
 	now = int(time.time())

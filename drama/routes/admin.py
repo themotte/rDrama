@@ -967,27 +967,17 @@ def admin_ban_domain(v):
 
 	domain=request.form.get("domain",'').strip()
 
-	if not domain:
-		abort(400)
+	if not domain: abort(400)
 
 	reason=int(request.form.get("reason",0))
-	if not reason:
-		abort(400)
+	if not reason: abort(400)
 
 	d_query=domain.replace("_","\_")
 	d=g.db.query(Domain).filter_by(domain=d_query).first()
-	if d:
-		d.can_submit=False
-		d.reason=reason
-	else:
-		d=Domain(
-			domain=domain,
-			can_submit=False,
-			reason=reason,
-			)
+	if d: d.reason=reason
+	else: d=Domain(domain=domain, reason=reason)
 
 	g.db.add(d)
-	g.db.commit()
 	return redirect(d.permalink)
 
 

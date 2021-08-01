@@ -319,21 +319,15 @@ def after_request(response):
 		print(e)
 		abort(500)
 
-	response.headers.add('Access-Control-Allow-Headers',
-						 "Origin, X-Requested-With, Content-Type, Accept, x-auth"
-						 )
+	response.headers.add('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, x-auth")
 	response.headers.remove("Cache-Control")
 	response.headers.add("Cache-Control", "public, max-age=31536000")
 	response.headers.add("Access-Control-Allow-Origin", app.config["SERVER_NAME"])
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("Referrer-Policy", "same-origin")
-	# response.headers.add("X-Content-Type-Options","nosniff")
-	response.headers.add("Feature-Policy",
-						 "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; vibrate 'none'; fullscreen 'none'; payment 'none';")
-	if not request.path.startswith("/embed/"):
-		response.headers.add("X-Frame-Options",
-							 "deny")
+	response.headers.add("Feature-Policy", "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; vibrate 'none'; fullscreen 'none'; payment 'none';")
+	if not request.path.startswith("/embed/"): response.headers.add("X-Frame-Options", "deny")
 
 	return response
 
