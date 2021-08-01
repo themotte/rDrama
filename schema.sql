@@ -481,6 +481,19 @@ ALTER SEQUENCE public.badpics_id_seq OWNED BY public.badpics.id;
 
 
 --
+-- Name: banneddomains; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.banneddomains (
+    id integer NOT NULL,
+    domain character varying(100),
+    reason integer
+);
+
+
+ALTER TABLE public.banneddomains OWNER TO postgres;
+
+--
 -- Name: client_auths; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -660,19 +673,6 @@ ALTER SEQUENCE public.commentvotes_id_seq OWNED BY public.commentvotes.id;
 
 
 --
--- Name: domains; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.domains (
-    id integer NOT NULL,
-    domain character varying(100),
-    reason integer
-);
-
-
-ALTER TABLE public.domains OWNER TO postgres;
-
---
 -- Name: domains_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -691,7 +691,7 @@ ALTER TABLE public.domains_id_seq OWNER TO postgres;
 -- Name: domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.domains_id_seq OWNED BY public.domains.id;
+ALTER SEQUENCE public.domains_id_seq OWNED BY public.banneddomains.id;
 
 
 --
@@ -1271,6 +1271,13 @@ ALTER TABLE ONLY public.badpics ALTER COLUMN id SET DEFAULT nextval('public.badp
 
 
 --
+-- Name: banneddomains id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.banneddomains ALTER COLUMN id SET DEFAULT nextval('public.domains_id_seq'::regclass);
+
+
+--
 -- Name: client_auths id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1303,13 +1310,6 @@ ALTER TABLE ONLY public.comments_aux ALTER COLUMN key_id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.commentvotes ALTER COLUMN id SET DEFAULT nextval('public.commentvotes_id_seq'::regclass);
-
-
---
--- Name: domains id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.domains ALTER COLUMN id SET DEFAULT nextval('public.domains_id_seq'::regclass);
 
 
 --
@@ -1522,18 +1522,18 @@ ALTER TABLE ONLY public.commentvotes
 
 
 --
--- Name: domains domains_domain_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: banneddomains domains_domain_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.domains
+ALTER TABLE ONLY public.banneddomains
     ADD CONSTRAINT domains_domain_key UNIQUE (domain);
 
 
 --
--- Name: domains domains_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: banneddomains domains_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.domains
+ALTER TABLE ONLY public.banneddomains
     ADD CONSTRAINT domains_pkey PRIMARY KEY (id);
 
 
@@ -2022,7 +2022,7 @@ CREATE INDEX domain_ref_idx ON public.submissions USING btree (domain_ref);
 -- Name: domains_domain_trgm_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE INDEX domains_domain_trgm_idx ON public.domains USING gin (domain public.gin_trgm_ops);
+CREATE INDEX domains_domain_trgm_idx ON public.banneddomains USING gin (domain public.gin_trgm_ops);
 
 
 --
