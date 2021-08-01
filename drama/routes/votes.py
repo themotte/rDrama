@@ -99,7 +99,8 @@ def api_vote_post(post_id, new, v):
 					)
 		g.db.add(vote)
 	
-	g.db.flush()
+	try: g.db.flush()
+	except: g.db.rollback()
 	post.upvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=1).count()
 	post.downvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=-1).count()
 	g.db.add(post)
