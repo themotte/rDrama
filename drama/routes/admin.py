@@ -187,11 +187,38 @@ def badge_grant_post(v):
 	send_notification(1046, user, text)
 
 	if badge_id in [21,22,23,24,28]:
-	 	user.patron = int(str(badge_id)[-1])
-	 	user.animatedname = True
-	# 	if badge_id == 23: user.banawards = 1
-	# 	elif badge_id in [24,28]: user.banawards = 3
-	 	g.db.add(user)
+		user.patron = int(str(badge_id)[-1])
+		user.animatedname = True
+
+		grant_awards = {}
+
+		if badge_id == 23:
+			grant_awards["ban"] = 1
+			grant_awards["shit"] = 5
+		elif badge_id in [24, 28]:
+			grant_awards["ban"] = 3
+			grant_awards["shit"] = 10
+
+		if len(grant_awards):
+
+			_awards = []
+
+			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+
+			for name in grant_awards:
+				for count in range(grant_awards[name]):
+
+					thing += 1
+
+					_awards.append(AwardRelationship(
+						id=thing,
+						user_id=user.id,
+						kind=name
+					))
+
+			g.db.bulk_save_objects(_awards)
+
+		g.db.add(user)
 	
 	return redirect(user.url)
 
