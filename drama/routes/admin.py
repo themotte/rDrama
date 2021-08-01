@@ -462,10 +462,10 @@ def admin_appdata(v):
 def admin_domain_domain(domain_name, v):
 
 	d_query=domain_name.replace("_","\_")
-	domain=g.db.query(Domain).filter_by(domain=d_query).first()
+	domain=g.db.query(BannedDomain).filter_by(domain=d_query).first()
 
 	if not domain:
-		domain=Domain(domain=domain_name)
+		domain=BannedDomain(domain=domain_name)
 
 	return render_template(
 		"admin/manage_domain.html",
@@ -973,9 +973,9 @@ def admin_ban_domain(v):
 	if not reason: abort(400)
 
 	d_query=domain.replace("_","\_")
-	d=g.db.query(Domain).filter_by(domain=d_query).first()
+	d=g.db.query(BannedDomain).filter_by(domain=d_query).first()
 	if d: d.reason=reason
-	else: d=Domain(domain=domain, reason=reason)
+	else: d=BannedDomain(domain=domain, reason=reason)
 
 	g.db.add(d)
 	return redirect(d.permalink)
