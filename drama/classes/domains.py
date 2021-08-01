@@ -17,10 +17,7 @@ class Domain(Base):
 	id = Column(Integer, primary_key=True)
 	domain = Column(String)
 	can_submit = Column(Boolean, default=True)
-	can_comment = Column(Boolean, default=True)
 	reason = Column(Integer, default=0)
-	embed_function = Column(String(64))
-	embed_template = Column(String(32))
 
 	@property
 	def reason_text(self):

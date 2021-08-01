@@ -267,12 +267,14 @@
 
 						{{p.realbody(v) | safe}}
 
-						{% if p.embed_url and p.domain_obj and p.domain_obj.embed_template %}
-							{% if p.domain == "twitter.com" and session.get("light_mode_enabled")	%}
-								 {% include "site_embeds/twitterdark.html" %}
-							{% else %}
-									{% include p.embed_template %}
-							{% endif %}
+						{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]%}
+							{% include "site_embeds/twitterlight.html" %}
+						{% elif "twitter.com" in p.domain %}
+							{% include "site_embeds/twitter.html" %}
+						{% elif "youtu" in p.domain %}
+							{% include "site_embeds/youtube.html" %}
+						{% elif "instagram.com" in p.domain %}
+							{% include "site_embeds/instagram.html" %}
 						{% endif %}
 
 					</div>

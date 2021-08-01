@@ -407,9 +407,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		#return len(self.awards)
 
 	@property
-	def embed_template(self): return f"site_embeds/{self.domain_obj.embed_template}.html"
-	
-	@property
 	def is_image(self):
 		if self.url: return self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999') or self.url.lower().endswith('?maxwidth=8888')
 		else: return False

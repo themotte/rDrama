@@ -978,16 +978,12 @@ def admin_ban_domain(v):
 	d=g.db.query(Domain).filter_by(domain=d_query).first()
 	if d:
 		d.can_submit=False
-		d.can_comment=False
 		d.reason=reason
 	else:
 		d=Domain(
 			domain=domain,
 			can_submit=False,
-			can_comment=False,
 			reason=reason,
-			embed_function=None,
-			embed_template=None
 			)
 
 	g.db.add(d)
