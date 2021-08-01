@@ -332,10 +332,10 @@ def settings_images_profile(v):
 		abort(413)
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
-	imageurl = upload_file(request.files["profile"], True)
-	if not imageurl: abort(400)
-	highres = upload_file()
+	highres = upload_file(request.files["profile"])
 	if not highres: abort(400)
+	imageurl = upload_file(resize=True)
+	if not imageurl: abort(400)
 	v.highres = highres
 	v.profileurl = imageurl
 	g.db.add(v)
