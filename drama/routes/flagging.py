@@ -21,7 +21,6 @@ def api_flag_post(pid, v):
 		flag = Flag(post_id=post.id,
 					user_id=v.id,
 					reason=reason,
-					created_utc=int(time.time())
 					)
 					
 
@@ -48,7 +47,6 @@ def api_flag_comment(cid, v):
 		flag = CommentFlag(comment_id=comment.id,
 						   user_id=v.id,
 						   reason=reason,
-						   created_utc=int(time.time())
 						   )
 
 		g.db.add(flag)

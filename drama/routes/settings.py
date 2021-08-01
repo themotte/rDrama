@@ -459,7 +459,6 @@ def settings_block_user(v):
 
 	new_block = UserBlock(user_id=v.id,
 						  target_id=user.id,
-						  created_utc=int(time.time())
 						  )
 	g.db.add(new_block)
 

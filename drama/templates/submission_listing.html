@@ -151,9 +151,7 @@
 						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/save_post/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-save"></i>Save</a></li>
 						{% endif %}
 						
-						{% if not (v and v.id==p.author_id) %}
 						<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.id}}', '{{p.author.username}}')"><i class="fas fa-flag"></i>Report</a></li>
-						{% endif %}
 
 						{% if v and v.id==p.author_id %}
 						<li class="list-inline-item"><a class="text-muted" href="javascript:void(0)" onclick="post('/pin/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</a></li>
@@ -311,9 +309,8 @@
 						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/save_post/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-save text-center text-muted mr-3"></i>Save</a></button>
 					{% endif %}
 
-					{% if not (v and v.id==p.author_id) %}
 					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.id}}','{{'@'+p.author.username}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
-					{% endif %}
+
 					{% if v and v.id==p.author_id %}
 						<button class="btn btn-link btn-block btn-lg text-muted text-left" id="pin-post-{{p.id}}" href="javascript:void(0)" onclick="post('/pin/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
 						{% if p.deleted_utc > 0 %}

@@ -422,9 +422,7 @@
 
 					<li class="list-group-item"><a href="{{c.permalink}}?context=5#context"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-dna"></i>Context</a></li>
 
-					{% if not (v and v.id==c.author_id) %}
 					<li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')" class="d-block"><i class="fas fa-flag"></i>Report</a></li>
-					{% endif %}
 
 					{% if v and c.parent_submission and c.author_id==v.id %}
 					<li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{c.id}}')" class="d-block"><i class="fas fa-edit"></i>Edit</a></li>

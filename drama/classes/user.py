@@ -540,7 +540,6 @@ class User(Base, Stndrd, Age_times):
 				if not self.has_badge(badge.id):
 					new_badge = Badge(user_id=self.id,
 									  badge_id=badge.id,
-									  created_utc=int(time.time())
 									  )
 					g.db.add(new_badge)
 
