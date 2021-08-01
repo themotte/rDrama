@@ -54,8 +54,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		lazy="dynamic",
 		primaryjoin="Comment.parent_submission==Submission.id",
 		backref="submissions")
-	domain_ref = Column(Integer, ForeignKey("domains.id"))
-	domain_obj = relationship("Domain")
 	flags = relationship("Flag", lazy="dynamic")
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
@@ -197,7 +195,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 			self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
 	@property
-	#@lazy
+	@lazy
 	def thumb_url(self):
 		if self.over_18: return "https://rdrama.net/assets/images/nsfw.png"
 		elif not self.url: return "https://rdrama.net/assets/images/default_thumb_text.png"
