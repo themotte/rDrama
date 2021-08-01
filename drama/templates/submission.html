@@ -267,7 +267,7 @@
 
 						{{p.realbody(v) | safe}}
 
-						{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]%}
+						{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
 							{% include "site_embeds/twitterlight.html" %}
 						{% elif "twitter.com" in p.domain %}
 							{% include "site_embeds/twitter.html" %}
