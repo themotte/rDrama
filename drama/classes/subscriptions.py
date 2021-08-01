@@ -13,9 +13,6 @@ class Subscription(Base):
 	user = relationship("User", uselist=False)
 
 	def __init__(self, *args, **kwargs):
-		if "created_utc" not in kwargs:
-			kwargs["created_utc"] = int(time.time())
-
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
@@ -38,9 +35,6 @@ class Follow(Base):
 		primaryjoin="User.id==Follow.target_id")
 
 	def __init__(self, *args, **kwargs):
-		if "created_utc" not in kwargs:
-			kwargs["created_utc"] = int(time.time())
-
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
