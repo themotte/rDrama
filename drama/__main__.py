@@ -118,21 +118,20 @@ Compress(app)
 class CorsMatch(str):
 
 	def __eq__(self, other):
-		return True
-		# if isinstance(other, str):
-		# 	if other in ['https://rdrama.net', f'https://{app.config["SERVER_NAME"]}']:
-		# 		return True
+		if isinstance(other, str):
+			if other in ['https://rdrama.net', f'https://{app.config["SERVER_NAME"]}']:
+				return True
 
-		# 	elif other.endswith(".rdrama.net"):
-		# 		return True
+			elif other.endswith(".rdrama.net"):
+				return True
 
-		# elif isinstance(other, list):
-		# 	if f'https://{app.config["SERVER_NAME"]}' in other:
-		# 		return True
-		# 	elif any([x.endswith(".rdrama.net") for x in other]):
-		# 		return True
+		elif isinstance(other, list):
+			if f'https://{app.config["SERVER_NAME"]}' in other:
+				return True
+			elif any([x.endswith(".rdrama.net") for x in other]):
+				return True
 
-		# return False
+		return False
 
 
 
