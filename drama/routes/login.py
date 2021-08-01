@@ -150,8 +150,6 @@ def logout(v):
 
 	return "", 204
 
-# signing up
-
 
 @app.get("/signup")
 @no_cors
@@ -206,8 +204,6 @@ def sign_up_get(v):
 						   error=error,
 						   hcaptcha=app.config["HCAPTCHA_SITEKEY"]
 						   )
-
-# signup api
 
 
 @app.post("/signup")
@@ -329,11 +325,16 @@ def sign_up_post(v):
 			ref_user.refresh_selfset_badges()
 			g.db.add(ref_user)
 
+	users = g.db.query(User).count()
+	if users == 0: admin_level=6
+	else: admin_level=0
+
 	# make new user
 	try:
 		new_user = User(
 			username=username,
 			original_username = username,
+			admin_level = admin_level
 			password=request.form.get("password"),
 			email=email,
 			created_utc=int(time.time()),
