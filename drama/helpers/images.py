@@ -14,8 +14,7 @@ def upload_file(file=None, resize=False, png=False):
 	if file: file.save("image.gif")
 
 	if resize:
-		if png: i = IImage.open("image.png")
-		else: i = IImage.open("image.gif")
+		i = IImage.open("image.gif")
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -31,8 +30,10 @@ def upload_file(file=None, resize=False, png=False):
 		om.info = i.info
 		om.save("image.gif", save_all=True, append_images=list(frames), loop=0)
 
+	if png: filedir = "image.png"
+	else: filedir = "image.gif"
 	try:
-		with open('image.gif', 'rb') as f:
+		with open(filedir, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data=data)
 		resp = req.json()['data']
