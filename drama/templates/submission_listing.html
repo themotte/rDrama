@@ -139,10 +139,12 @@
 
 						<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{p.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a></li>
 
-						{% if v and p.id in v.subscribed_idlist() %}
-						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/unsubscribe/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-slash"></i>Unsubscribe</a></li>
-						{% elif v %}
-						<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/subscribe/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye"></i>Subscribe</a></li>
+						{% if v and not (v.admin_level == 6 and v.id == p.author_id) %}
+							{% if p.id in v.subscribed_idlist() %}
+								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/unsubscribe/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-slash"></i>Unsubscribe</a></li>
+							{% else %}
+								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/subscribe/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye"></i>Subscribe</a></li>
+							{% endif %}
 						{% endif %}
 
 						{% if v and p.id in v.saved_idlist() %}
