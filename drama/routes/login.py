@@ -334,7 +334,7 @@ def sign_up_post(v):
 		new_user = User(
 			username=username,
 			original_username = username,
-			admin_level = admin_level
+			admin_level = admin_level,
 			password=request.form.get("password"),
 			email=email,
 			created_utc=int(time.time()),
