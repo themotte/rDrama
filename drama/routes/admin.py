@@ -464,8 +464,7 @@ def admin_domain_domain(domain_name, v):
 	d_query=domain_name.replace("_","\_")
 	domain=g.db.query(BannedDomain).filter_by(domain=d_query).first()
 
-	if not domain:
-		domain=BannedDomain(domain=domain_name)
+	if not domain: domain=BannedDomain(domain=domain_name)
 
 	return render_template(
 		"admin/manage_domain.html",
