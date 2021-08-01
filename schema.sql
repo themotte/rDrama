@@ -666,12 +666,7 @@ ALTER SEQUENCE public.commentvotes_id_seq OWNED BY public.commentvotes.id;
 CREATE TABLE public.domains (
     id integer NOT NULL,
     domain character varying(100),
-    can_submit boolean,
-    can_comment boolean,
-    reason integer,
-    embed_function character varying(64),
-    embed_template character varying(32) DEFAULT NULL::character varying,
-    sandbox_embed boolean DEFAULT false
+    reason integer
 );
 
 
