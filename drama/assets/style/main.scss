@@ -109,7 +109,7 @@ $yiq-contrasted-threshold:	160 !default;
 	}
 	}
 
-@import "D:/#D/drama/assets/style/node_modules/bootstrap/scss/bootstrap.scss";
+@import "./node_modules/bootstrap/scss/bootstrap.scss";
 
 html {
 	font-size: 14px;

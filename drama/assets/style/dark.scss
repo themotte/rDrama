@@ -38,8 +38,8 @@ $code: #e83e8c;
 $gold: #ECC94B;
 $reddit: #ED4630;
 
-@import "D:/#D/drama/assets/style/node_modules/bootstrap/scss/bootstrap.scss";
-@import "D:/#D/drama/assets/style/main.scss";
+@import "./node_modules/bootstrap/scss/bootstrap.scss";
+@import "./main.scss";
 
 * {
 	border-color: $primary;
