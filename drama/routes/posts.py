@@ -773,7 +773,6 @@ def submit_post(v):
 	new_post = Submission(
 		private=bool(request.form.get("private","")),
 		author_id=v.id,
-		domain_ref=domain_obj.id if domain_obj else None,
 		over_18=bool(request.form.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("X-User-Type","").lower()=="bot"
@@ -826,7 +825,6 @@ def submit_post(v):
 
 
 		new_post.url = upload_file(file)
-		new_post.domain_ref = 1  # id of i.ruqqus.ga domain
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)
 		g.db.commit()
