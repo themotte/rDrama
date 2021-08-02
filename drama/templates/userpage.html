@@ -30,7 +30,7 @@
 <meta property="og:title" content="{{u.username}}" />
 <meta property="og:image" content="{% if u.bannerurl %}{{u.banner_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta property="og:url" content="{{u.permalink | full_link}}" />
-<meta property="og:site_name" content="/" />
+<meta property="og:site_name" content="{{request.host}}" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@drama">

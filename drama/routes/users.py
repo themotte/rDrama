@@ -1,6 +1,5 @@
 import qrcode
 import io
-from datetime import datetime
 import time
 
 from drama.classes.user import ViewerRelationship

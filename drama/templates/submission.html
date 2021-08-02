@@ -37,7 +37,7 @@
 <meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{title}} - Drama" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta property="og:url" content="{{comment_info.permalink | full_link}}" />
-<meta property="og:site_name" content="/" />
+<meta property="og:site_name" content="{{request.host}}" />
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@drama">
@@ -63,7 +63,7 @@
 <meta property="og:title" content="{{title}} - Drama" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta property="og:url" content="{{p.permalink | full_link}}" />
-<meta property="og:site_name" content="/" />
+<meta property="og:site_name" content="{{request.host}}" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@drama">
