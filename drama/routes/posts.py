@@ -403,11 +403,11 @@ def thumbs(new_post):
 		try:
 			meta_title=soup.find('title')
 			if meta_title:
-				post.submission_aux.meta_title=str(meta_title.string)[0:500]
+				post.submission_aux.meta_title=str(meta_title.string)[:500]
 
 			meta_desc = soup.find('meta', attrs={"name":"description"})
 			if meta_desc:
-				post.submission_aux.meta_description=meta_desc['content'][0:1000]
+				post.submission_aux.meta_description=meta_desc['content'][:1000]
 
 			if meta_title or meta_desc:
 				g.db.add(post.submission_aux)
@@ -542,7 +542,7 @@ def submit_post(v):
 
 	elif len(title) > 500:
 		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
-		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[0:500], url=url, body=request.form.get("body", "")), 400
+		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.form.get("body", "")), 400
 
 
 	parsed_url = urlparse(url)

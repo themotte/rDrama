@@ -209,7 +209,7 @@ def front_all(v):
 
 	# check existence of next page
 	next_exists = (len(ids) == 26)
-	ids = ids[0:25]
+	ids = ids[:25]
 
 	# check if ids exist
 	posts = get_posts(ids, v=v)
@@ -309,7 +309,7 @@ def changelog(v):
 
 	# check existence of next page
 	next_exists = (len(ids) == 26)
-	ids = ids[0:25]
+	ids = ids[:25]
 
 	# check if ids exist
 	posts = get_posts(ids, v=v)
@@ -412,7 +412,7 @@ def all_comments(v):
 
 	next_exists = len(idlist) == 26
 
-	idlist = idlist[0:25]
+	idlist = idlist[:25]
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
 	else: return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)

@@ -188,7 +188,7 @@ def api_comment(v):
 		abort(400)
 
 	#process and sanitize
-	body = request.form.get("body", "")[0:10000]
+	body = request.form.get("body", "")[:10000]
 	body = body.strip()
 
 	if not body and not request.files.get('file'): return jsonify({"error":"You need to actually write something!"}), 400
@@ -572,7 +572,7 @@ def edit_comment(cid, v):
 
 	if c.is_banned or c.deleted_utc > 0: abort(403)
 
-	body = request.form.get("body", "")[0:10000]
+	body = request.form.get("body", "")[:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	with CustomRenderer(post_id=c.post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))

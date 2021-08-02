@@ -25,7 +25,7 @@
 							<p>Change the theme for the website.</p>
 							<div class="input-group mb2">
 								<select id='theme' class="form-control" form="profile-settings" name="theme" onchange="post('/settings/profile?theme='+document.getElementById('theme').value, function(){window.location.reload(true);})">
-								 {% for entry in ["dark", "light", "coffee", "tron", "4chan"] %}
+								 {% for entry in ["dark", "light", "coffee", "tron", "4chan", "midnight"] %}
 									 <option value="{{entry}}" {% if v.theme==entry %} selected {% endif %}>
 										{{entry}}
 									</option>

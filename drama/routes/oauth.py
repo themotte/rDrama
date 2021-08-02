@@ -118,7 +118,7 @@ def oauth_authorize_post(v):
 
 	new_auth = ClientAuth(
 		oauth_client=application.id,
-		oauth_code=secrets.token_urlsafe(128)[0:128],
+		oauth_code=secrets.token_urlsafe(128)[:128],
 		user_id=v.id,
 		scope_identity="identity" in scopes,
 		scope_create="create" in scopes,
@@ -126,7 +126,7 @@ def oauth_authorize_post(v):
 		scope_update="update" in scopes,
 		scope_delete="delete" in scopes,
 		scope_vote="vote" in scopes,
-		refresh_token=secrets.token_urlsafe(128)[0:128] if permanent else None
+		refresh_token=secrets.token_urlsafe(128)[:128] if permanent else None
 	)
 
 	g.db.add(new_auth)
@@ -167,7 +167,7 @@ def oauth_grant():
 			return {"oauth_error": "Invalid code"}, 401
 
 		auth.oauth_code = None
-		auth.access_token = secrets.token_urlsafe(128)[0:128]
+		auth.access_token = secrets.token_urlsafe(128)[:128]
 		auth.access_token_expire_utc = int(time.time()) + 60 * 60
 
 		g.db.add(auth)
@@ -201,7 +201,7 @@ def oauth_grant():
 		if not auth:
 			return {"oauth_error": "Invalid refresh_token"}, 401
 
-		auth.access_token = secrets.token_urlsafe(128)[0:128]
+		auth.access_token = secrets.token_urlsafe(128)[:128]
 		auth.access_token_expire_utc = int(time.time()) + 60 * 60
 
 		g.db.add(auth)
@@ -284,8 +284,8 @@ def admin_app_approve(v, aid):
 
 	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
-	app.client_id = secrets.token_urlsafe(64)[0:64]
-	app.client_secret = secrets.token_urlsafe(128)[0:128]
+	app.client_id = secrets.token_urlsafe(64)[:64]
+	app.client_secret = secrets.token_urlsafe(128)[:128]
 
 	g.db.add(app)
 
@@ -347,7 +347,7 @@ def admin_app_id(v, aid):
 		)
 
 	next_exists=len(pids)==101
-	pids=pids[0:100]
+	pids=pids[:100]
 
 	posts=get_posts(pids, v=v)
 
@@ -373,7 +373,7 @@ def admin_app_id_comments(v, aid):
 		)
 
 	next_exists=len(cids)==101
-	cids=cids[0:100]
+	cids=cids[:100]
 
 	comments=get_comments(cids, v=v)
 
@@ -411,8 +411,8 @@ def reroll_oauth_tokens(aid, v):
 	if a.author_id != v.id:
 		abort(403)
 
-	a.client_id = secrets.token_urlsafe(64)[0:64]
-	a.client_secret = secrets.token_urlsafe(128)[0:128]
+	a.client_id = secrets.token_urlsafe(64)[:64]
+	a.client_secret = secrets.token_urlsafe(128)[:128]
 
 	g.db.add(a)
 
