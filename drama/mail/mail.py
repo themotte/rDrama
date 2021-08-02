@@ -13,7 +13,7 @@ domain = environ.get("domain").strip()
 mailgun_domain = environ.get("MAILGUN_DOMAIN").strip()
 
 def send_mail(to_address, subject, html, plaintext=None, files={},
-			  from_address=f"Drama <noreply@mail.{domain}}>"):
+			  from_address=f"Drama <noreply@mail.{domain}>"):
 
 	url = f"https://api.mailgun.net/v3/{mailgun_domain}/messages"
 
