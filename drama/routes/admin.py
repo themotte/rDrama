@@ -190,12 +190,16 @@ def badge_grant_post(v):
 
 		grant_awards = {}
 
-		if badge_id == 23:
-			grant_awards["ban"] = 1
+		if badge_id == 21:
+			grant_awards["shit"] = 1
+		elif badge_id == 22:
+			grant_awards["shit"] = 3
+		elif badge_id == 23:
 			grant_awards["shit"] = 5
+			grant_awards["ban"] = 1
 		elif badge_id in [24, 28]:
-			grant_awards["ban"] = 3
 			grant_awards["shit"] = 10
+			grant_awards["ban"] = 3
 
 		if len(grant_awards):
 
