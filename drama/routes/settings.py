@@ -71,8 +71,7 @@ def settings_profile_post(v):
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF))', bio, re.MULTILINE): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
 		bio = bio.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
-		with CustomRenderer() as renderer:
-			bio_html = renderer.render(mistletoe.Document(bio))
+		with CustomRenderer() as renderer: bio_html = renderer.render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html, linkgen=True)
 
 		# Run safety filter
