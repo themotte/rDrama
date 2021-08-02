@@ -18,6 +18,7 @@ services:
       - CLOUDFLARE_KEY=vcxvdfgfc6r554etrgd
       - TENOR_KEY=vcxvdfgfc6r554etrgd
       - MAILGUN_KEY=vcxvdfgfc6r554etrgd
+      - MAILGUN_DOMAIN=rdrama.net
       - admin_email=drama@rdrama.net
       - FORCE_HTTPS=0
       - DISCORD_SERVER_ID=vcxvdfgfc6r554etrgd

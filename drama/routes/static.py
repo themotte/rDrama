@@ -2,6 +2,7 @@ from drama.mail import *
 from drama.__main__ import app, limiter
 from drama.helpers.alerts import *
 
+domain = environ.get("domain").strip()
 
 @app.get("/patrons")
 @auth_desired
@@ -77,7 +78,7 @@ def contact(v):
 @app.post("/contact")
 @auth_desired
 def submit_contact(v):
-	message = f'This message has been sent automatically to all admins via https://rdrama.net/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.form.get("message", "")
+	message = f'This message has been sent automatically to all admins via https://{domain}/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.form.get("message", "")
 	send_admin(v.id, message)
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
 

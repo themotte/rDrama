@@ -48,7 +48,7 @@ app.config['SQLALCHEMY_READ_URIS'] = [
 ]
 
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
-app.config["SERVER_NAME"] = environ.get("domain", environ.get("SERVER_NAME", "")).strip()
+app.config["SERVER_NAME"] = environ.get("domain").strip()
 
 app.config["SHORT_DOMAIN"]=environ.get("SHORT_DOMAIN","").strip()
 app.config["SESSION_COOKIE_NAME"] = "session_drama"
@@ -114,26 +114,6 @@ app.config["TENOR_KEY"]=environ.get("TENOR_KEY",'').strip()
 Markdown(app)
 cache = Cache(app)
 Compress(app)
-
-class CorsMatch(str):
-
-	def __eq__(self, other):
-		if isinstance(other, str):
-			if other in ['https://rdrama.net', f'https://{app.config["SERVER_NAME"]}']:
-				return True
-
-			elif other.endswith(".rdrama.net"):
-				return True
-
-		elif isinstance(other, list):
-			if f'https://{app.config["SERVER_NAME"]}' in other:
-				return True
-			elif any([x.endswith(".rdrama.net") for x in other]):
-				return True
-
-		return False
-
-
 
 app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL").strip() if environ.get("REDIS_URL") else 'memory://'
 app.config["RATELIMIT_KEY_PREFIX"] = "flask_limiting_"

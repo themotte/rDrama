@@ -14,6 +14,8 @@ from .clients import *
 from drama.__main__ import Base, cache
 from drama.helpers.security import *
 
+domain = environ.get("domain").strip()
+
 class User(Base, Stndrd, Age_times):
 	__tablename__ = "users"
 	id = Column(Integer, primary_key=True)
@@ -441,12 +443,12 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return "https://rdrama.net/assets/images/default_bg.png"
+		else: return f"https://{domain}/assets/images/default_bg.png"
 
 	@cache.memoize(0)
 	def defaultpicture(self):
 		pic = random.randint(1, 50)
-		return f"https://rdrama.net/assets/images/defaultpictures/{pic}.png"
+		return f"https://{domain}/assets/images/defaultpictures/{pic}.png"
 
 	@property
 	def profile_url(self):

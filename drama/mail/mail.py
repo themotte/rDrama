@@ -9,11 +9,13 @@ from drama.helpers.wrappers import *
 from drama.classes import *
 from drama.__main__ import app
 
+domain = environ.get("domain").strip()
+mailgun_domain = environ.get("MAILGUN_DOMAIN").strip()
 
 def send_mail(to_address, subject, html, plaintext=None, files={},
-			  from_address="Drama <noreply@mail.rdrama.net>"):
+			  from_address=f"Drama <noreply@mail.{domain}}>"):
 
-	url = "https://api.mailgun.net/v3/rdrama.net/messages"
+	url = f"https://api.mailgun.net/v3/{mailgun_domain}/messages"
 
 	data = {"from": from_address,
 			"to": [to_address],

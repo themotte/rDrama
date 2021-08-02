@@ -18,8 +18,9 @@ from drama.__main__ import app, limiter, cache
 from PIL import Image as PILimage
 from .front import frontlist
 
-with open("snappy.txt", "r") as f:
-	snappyquotes = f.read().split("{[para]}")
+domain = environ.get("domain").strip()
+
+with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
 
 @app.post("/publish/<pid>")
 @is_not_banned
@@ -333,7 +334,7 @@ def edit_post(pid, v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
-	for x in notify_users: send_notification(1046, x, f"@{v.username} has mentioned you: https://rdrama.net{p.permalink}")
+	for x in notify_users: send_notification(1046, x, f"@{v.username} has mentioned you: https://{domain}{p.permalink}")
 
 	return redirect(p.permalink)
 
@@ -618,7 +619,7 @@ def submit_post(v):
 		embed = requests.get("https://graph.facebook.com/v9.0/instagram_oembed", params={"url":url,"access_token":environ.get("FACEBOOK_TOKEN","").strip(),"omitscript":'true'}, headers={"User-Agent":"Instagram embedder for Drama"}).json()["html"]
 
 	elif app.config['SERVER_NAME'] in domain:
-		matches = re.match(re.compile("^.*rdrama.net/post/+\w+/(\w+)(/\w+/(\w+))?"), url)
+		matches = re.match(re.compile(f"^.*{domain}/post/+\w+/(\w+)(/\w+/(\w+))?"), url)
 		post_id = matches.group(1)
 		comment_id = matches.group(3)
 		if comment_id: embed = f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
@@ -846,12 +847,12 @@ def submit_post(v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
-	for x in notify_users: send_notification(1046, x, f"@{v.username} has mentioned you: https://rdrama.net{new_post.permalink}")
+	for x in notify_users: send_notification(1046, x, f"@{v.username} has mentioned you: https://{domain}{new_post.permalink}")
 		
 	if not new_post.private:
 		for follow in v.followers:
 			user = get_account(follow.user_id)
-			send_notification(2360, user, f"@{v.username} has made a new post: [{title}](https://rdrama.net{new_post.permalink})")
+			send_notification(2360, user, f"@{v.username} has made a new post: [{title}](https://{domain}{new_post.permalink})")
 
 	g.db.add(new_post)
 	g.db.commit()
@@ -926,7 +927,7 @@ def submit_post(v):
 	n = Notification(comment_id=c.id, user_id=v.id)
 	g.db.add(n)
 	g.db.commit()
-	send_message(f"https://rdrama.net{new_post.permalink}")
+	send_message(f"https://{domain}{new_post.permalink}")
 	
 	v.post_count = v.submissions.filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)

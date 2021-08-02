@@ -131,7 +131,7 @@
 						{% endif %}
 						<li class="list-inline-item"><a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}"><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
 
-						<li class="list-inline-item"><a href="/votes?link=https://rdrama.net{{p.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
+						<li class="list-inline-item"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
 						{% if v and v.id!=p.author_id %}
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>
@@ -293,7 +293,7 @@
 			</div>
 			<div class="modal-body">
 				<ul class="list-group post-actions">
-					<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link=https://rdrama.net{{p.permalink}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>					 
+					<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>					 
 					
 					{% if v and v.id!=p.author_id %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>

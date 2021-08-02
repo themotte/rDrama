@@ -37,7 +37,7 @@
 <meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{title}} - Drama" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta property="og:url" content="{{comment_info.permalink | full_link}}" />
-<meta property="og:site_name" content="rdrama.net" />
+<meta property="og:site_name" content="/" />
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@drama">
@@ -63,7 +63,7 @@
 <meta property="og:title" content="{{title}} - Drama" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta property="og:url" content="{{p.permalink | full_link}}" />
-<meta property="og:site_name" content="rdrama.net" />
+<meta property="og:site_name" content="/" />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@drama">
@@ -112,7 +112,7 @@
 						{% endif %}
 					{% endif %}
 
-					 <button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link=https://rdrama.net{{p.permalink}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>
+					 <button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>
 
 					{% if v and v.id!=p.author_id %}
 					  <button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
@@ -311,7 +311,7 @@
 							<li class="list-inline-item"><a href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a></li>
 						{% endif %}
 
-						<li class="list-inline-item"><a href="/votes?link=https://rdrama.net{{p.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
+						<li class="list-inline-item"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 						
 						{% if v and v.id!=p.author_id %}
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>

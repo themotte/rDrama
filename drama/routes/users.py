@@ -12,6 +12,8 @@ from flask import *
 from drama.__main__ import app, limiter
 from pusher_push_notifications import PushNotifications
 
+domain = environ.get("domain").strip()
+
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 
 beams_client = PushNotifications(
@@ -148,7 +150,7 @@ def message2(v, username):
 				'notification': {
 					'title': f'New message from @{v.username}',
 					'body': message,
-					'deep_link': f'https://rdrama.net/notifications',
+					'deep_link': f'https://{domain}/notifications',
 				},
 			},
 		},
