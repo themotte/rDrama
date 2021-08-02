@@ -60,6 +60,11 @@ body {
 	border: 1px solid $gray-600 !important;
 }
 
+. {
+    -webkit-animation: None !important;
+    animation: None !important;
+}
+
 // * {
 // 	border-color: $primary;
 // }
