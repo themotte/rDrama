@@ -425,13 +425,13 @@ def settings_css(v):
 @auth_required
 def settings_profilecss_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
-	if v.dramacoins < 1000: return "You must have +1000 dramacoins to set profile css."
+	if v.dramacoins < 1000 and not v.patron: return "You must have +1000 dramacoins or be a patron to set profile css."
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
 @auth_required
 def settings_profilecss(v):
-	if v.dramacoins < 1000: return "You must have +1000 dramacoins to set profile css."
+	if v.dramacoins < 1000 and not v.patron: return "You must have +1000 dramacoins or be a patron to set profile css."
 	profilecss = request.form.get("profilecss").replace('\\', '')[:50000]
 	v.profilecss = profilecss
 	g.db.add(v)
