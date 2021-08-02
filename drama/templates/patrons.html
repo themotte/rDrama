@@ -13,7 +13,7 @@
 {% for user in users %}
 	<tr>
 		<td style="font-weight:bold;">{{users.index(user)+1}}</td>
-		<td><a {% if user.animatedname %}class="{% if user.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}"><img src="/@{{user.username}}/pic/profile" class="profile-pic-20 mr-1">{{user.username}}</a></td>
+		<td><a {% if user.animatedname %}class="{% if user.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}"><img src="/uid/{{user.id}}/pic/profile" class="profile-pic-20 mr-1">{{user.username}}</a></td>
 
 		<td><img style="width: 32px; height: 32px" src="/assets/images/badges/patron-{{user.patron}}.gif"></td>
 

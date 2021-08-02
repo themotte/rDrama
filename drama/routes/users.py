@@ -483,20 +483,14 @@ def unfollow_user(username, v):
 	return "", 204
 
 
-@app.route("/@<username>/pic/profile")
+@app.route("/uid/<id>/pic/profile")
 @limiter.exempt
-def user_profile(username):
-	x = get_user(username)
-	return redirect(x.profile_url)
-
-@app.route("/uid/<uid>/pic/profile")
-@limiter.exempt
-def user_profile_uid(uid):
-	try: uid = int(uid)
+def user_profile_uid(id):
+	try: id = int(id)
 	except:
-		try: uid = int(uid, 36)
+		try: id = int(id, 36)
 		except: abort(404)
-	x=get_account(uid)
+	x=get_account(id)
 	return redirect(x.profile_url)
 
 
