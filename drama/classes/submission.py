@@ -9,7 +9,7 @@ from .mix_ins import *
 from .flags import *
 from os import environ
 
-domain = environ.get("domain").strip()
+site = environ.get("domain").strip()
 
 class SubmissionAux(Base):
 
@@ -199,11 +199,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	@lazy
 	def thumb_url(self):
-		if self.over_18: return f"https://{domain}/assets/images/nsfw.png"
-		elif not self.url: return f"https://{domain}/assets/images/default_thumb_text.png"
+		if self.over_18: return f"https://{site}/assets/images/nsfw.png"
+		elif not self.url: return f"https://{site}/assets/images/default_thumb_text.png"
 		elif self.thumburl: return self.thumburl
-		elif "youtu.be" in self.domain or "youtube.com" in self.domain: return f"https://{domain}/assets/images/default_thumb_yt.png"
-		else: return f"https://{domain}/assets/images/default_thumb_link.png"
+		elif "youtu.be" in self.domain or "youtube.com" in self.domain: return f"https://{site}/assets/images/default_thumb_yt.png"
+		else: return f"https://{site}/assets/images/default_thumb_link.png"
 
 	@property
 

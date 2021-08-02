@@ -12,7 +12,7 @@ from flask import *
 from drama.__main__ import app, limiter
 from pusher_push_notifications import PushNotifications
 
-domain = environ.get("domain").strip()
+site = environ.get("domain").strip()
 
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 
@@ -150,7 +150,7 @@ def message2(v, username):
 				'notification': {
 					'title': f'New message from @{v.username}',
 					'body': message,
-					'deep_link': f'https://{domain}/notifications',
+					'deep_link': f'https://{site}/notifications',
 				},
 			},
 		},
