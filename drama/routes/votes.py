@@ -13,19 +13,10 @@ def admin_vote_info_get(v):
 	link = request.args.get("link")
 	if not link: return render_template("votes.html", v=v)
 
-	ids = re.search("://[^/]+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
 
-	try:
-		post_id = ids.group(1)
-		comment_id = ids.group(3)
-	except: abort(400)
-
-	if comment_id:
-		thing = get_comment(int(comment_id), v=v)
-
-	else:
-		thing = get_post(int(post_id), v=v)
-
+	if "t2_" in link: thing = get_post(int(link.split("t2_")[1]), v=v)
+	elif "t3_" in link: thing = get_comment(int(link.split("t3_")[1]), v=v)
+	else: abort(400)
 
 	if isinstance(thing, Submission):
 
