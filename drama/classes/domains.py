@@ -19,11 +19,7 @@ class BannedDomain(Base):
 	reason = Column(Integer, default=0)
 
 	@property
-	def reason_text(self): return reasons.get(self.reason)
-
-	@property
-	def permalink(self): return f"/admin/domain/{self.domain}"
-	
+	def reason_text(self): return reasons.get(self.reason)	
 
 
 class BadLink(Base):
@@ -35,5 +31,4 @@ class BadLink(Base):
 	autoban = Column(Boolean, default=False)
 
 	@property
-	def reason_text(self):
-		return reasons.get(self.reason)
+	def reason_text(self): return reasons.get(self.reason)

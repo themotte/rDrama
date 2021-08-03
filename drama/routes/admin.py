@@ -459,20 +459,16 @@ def admin_appdata(v):
 			v=v)
 
 
-@app.get("/admin/domain/<domain_name>")
+@app.get("/admin/banned_domains/")
 @admin_level_required(4)
-def admin_domain_domain(domain_name, v):
+def admin_domain_domain(v):
 
-	d_query=domain_name.replace("_","\_")
-	domain=g.db.query(BannedDomain).filter_by(domain=d_query).first()
-
-	if not domain: domain=BannedDomain(domain=domain_name)
+	domains = g.db.query(BannedDomain).all()
 
 	return render_template(
-		"admin/manage_domain.html",
+		"admin/banned_domains.html",
 		v=v,
-		domain_name=domain_name,
-		domain=domain,
+		domains=domains,
 		reasons=REASONS
 		)
 
@@ -967,6 +963,7 @@ def admin_dump_cache(v):
 def admin_ban_domain(v):
 
 	domain=request.form.get("domain",'').strip()
+
 	if not domain: abort(400)
 
 	reason=int(request.form.get("reason",0))

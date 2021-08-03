@@ -1,33 +1,39 @@
 {% extends "default.html" %}
 
 {% block title %}
-<title>{{"SITE_NAME" | app_config}}</title>
-<meta name="description" content="{{"SITE_NAME" | app_config}} Help">
+	<title>Banned Domains</title>
 {% endblock %}
 
 {% block content %}
 
-<pre>
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th style="font-weight:bold;">Domain</th>
+			<th style="font-weight:bold;">Ban reason</th>
+		</tr>
+	</thead>
 
-</pre>
-<input id="domainget" type="text" class="form-control" placeholder="Enter domain name" value="{{domain_name}}">
-<a class="btn btn-primary" href="javascript:void(0)" onclick="window.location.href='/admin/domain/'+document.getElementById('domainget').value">Check if domain is banned</a>
-
-<h1>{{domain_name}}</h2>
-
-<h3 class="h5 pt-2">Current ban reason</h3>
-<p>{{domain.reason_text}}</p>
-
-<h2>Actions</h2>
+	{% for domain in domains %}
+		<tr>
+			<td style="font-weight:bold;">{{domain}}</td>
+			<td>{{domain.reason_text}}</td>
+		</tr>
+	{% endfor %}
+</table>
+	
 
 <form action="/admin/ban_domain" method="post">
+
 	<input type="hidden" name="formkey" value="{{v.formkey}}">
 	<input type="hidden" name="domain" value="{{domain_name}}">
+	<input name="domain" placeholder="domain" required>
+
 	<label for="reason_select">Ban reason</label>
 	<select id="reason_select" class="form-control" name="reason" onchange="$('#ban-submit').prop('disabled', false)"> 
 		<option value="0">---Select Ban Reason---</option>
 		{% for i in reasons %}
-			<option value="{{i}}"{% if i==domain.reason %} selected{% endif %}>{{reasons[i]}}</option>
+			<option value="{{i}}"{% if i == domain.reason %} selected{% endif %}>{{reasons[i]}}</option>
 		{% endfor %}
 	</select>
 	<input id="ban-submit" type="submit" class="btn btn-primary" value="Ban {{domain_name}}" disabled>
