@@ -20,8 +20,8 @@
 
 	{% for domain in banned_domains %}
 		<tr>
-			<td style="font-weight:bold;">{{domain}}</td>
-			<td>{{domain.reason_text}}</td>
+			<td style="font-weight:bold;">{{domain.domain}}</td>
+			<td>{{domain.reason}}</td>
 		</tr>
 	{% endfor %}
 </table>

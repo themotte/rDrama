@@ -81,7 +81,7 @@ def settings_profile_post(v):
 			ban = bans[0]
 			reason = f"Remove the {ban.domain} link from your bio and try again."
 			if ban.reason:
-				reason += f" {ban.reason_text}"
+				reason += f" {ban.reason}"
 				
 			#auto ban for digitally malicious content
 			if any([x.reason==4 for x in bans]):

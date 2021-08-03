@@ -207,7 +207,7 @@ def api_comment(v):
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your comment and try again."
 		if ban.reason:
-			reason += f" {ban.reason_text}"
+			reason += f" {ban.reason}"
 			
 		#auto ban for digitally malicious content
 		if any([x.reason==4 for x in bans]):
@@ -300,7 +300,7 @@ def api_comment(v):
 				BadLink.link)).first()
 
 		if badlink:
-			return jsonify({"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
+			return jsonify({"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason}"}), 403
 	# create comment
 	parent_id = parent_fullname.split("_")[1]
 	c = Comment(author_id=v.id,
@@ -593,7 +593,7 @@ def edit_comment(cid, v):
 			return {"error":"Digitally malicious content is not allowed."}
 		
 		if ban.reason:
-			reason += f" {ban.reason_text}"	
+			reason += f" {ban.reason}"	
 	
 		if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
 		else: return render_template("comment_failed.html",
@@ -622,7 +622,7 @@ def edit_comment(cid, v):
 				BadLink.link)).first()
 
 		if badlink:
-			return {"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}, 403
+			return {"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason}"}, 403
 
 	# check spam - this should hopefully be faster
 	now = int(time.time())
