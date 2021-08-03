@@ -7,7 +7,6 @@ valid_password_regex = re.compile("^.{8,100}$")
 
 
 @app.get("/login")
-@no_cors
 @auth_desired
 def login_get(v):
 
@@ -51,7 +50,6 @@ def check_for_alts(current_id):
 # login post procedure
 
 
-@no_cors
 @app.post("/login")
 @limiter.limit("6/minute")
 def login_post():
@@ -152,7 +150,6 @@ def logout(v):
 
 
 @app.get("/signup")
-@no_cors
 @auth_desired
 def sign_up_get(v):
 	with open('./disablesignups', 'r') as f:
@@ -207,7 +204,6 @@ def sign_up_get(v):
 
 
 @app.post("/signup")
-@no_cors
 @auth_desired
 def sign_up_post(v):
 	with open('./disablesignups', 'r') as f:
