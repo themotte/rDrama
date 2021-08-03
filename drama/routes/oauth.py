@@ -10,18 +10,15 @@ from drama.__main__ import app
 def authorize_prompt(v):
 	client_id = request.args.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
-
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	if application.is_banned: return {"oauth_error": f"Application `{application.app_name}` is suspended."}, 403
-	redirect_uri = request.args.get("redirect_uri")
-	if not redirect_uri: return {"oauth_error": f"`redirect_uri` must be provided."}, 400
-	return render_template("oauth.html", v=v, application=application, redirect_uri=redirect_uri)
+	return render_template("oauth.html", v=v, application=application)
 
 
 @app.post("/authorize")
 @auth_required
 @validate_formkey
-def oauth(v):
+def authorize(v):
 
 	client_id = request.form.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
@@ -113,7 +110,7 @@ def admin_app_approve(v, aid):
 
 	g.db.add(new_auth)
 
-	send_notification(1046, v, f"Your application `{app.app_name}` has been approved. Here's your access token: `{access_token}`")
+	send_notification(1046, v, f"Your application `{app.app_name}` has been approved. Here's your access token: `{access_token}`\nPlease check the guide [here](/api) if you don't know what to do next.")
 
 	return {"message": f"{app.app_name} approved"}
 

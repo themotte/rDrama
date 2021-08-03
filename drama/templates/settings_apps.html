@@ -29,16 +29,6 @@
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
 				<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}">
-
-				{% if app.client_secret %}
-				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
-				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
-				<label for="edit-{{app.id}}-client-secret" class="mb-0 w-lg-25">Client Secret</label>
-				<a href="javascript:void(0)" id="secret-{{app.id}}-click" class="btn btn-secondary d-block" onclick="x=document.getElementById('secret-{{app.id}}-click');x.classList.add('d-none');x.classList.remove('d-block');document.getElementById('edit-{{app.id}}-client-secret').classList.remove('d-none');">Click to show</a>
-				<input class="d-none form-control copy-link" id="edit-{{app.id}}-client-secret" type="text" name="name" value="{{app.client_secret}}" data-clipboard-text="{{app.client_secret}}" role="button" readonly="readonly">
-				{% endif %}
-
-
 				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
 				<input id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}">
 				<label for="edit-{{app.id}}-desc" class="mb-0 w-lg-25">Description</label>
@@ -72,16 +62,6 @@
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
 				<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}">
-
-				{% if app.client_secret %}
-				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
-				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
-				<label for="edit-{{app.id}}-client-secret" class="mb-0 w-lg-25">Client Secret</label>
-				<a href="javascript:void(0)" id="secret-{{app.id}}-click" class="btn btn-secondary d-block" onclick="x=document.getElementById('secret-{{app.id}}-click');x.classList.add('d-none');x.classList.remove('d-block');document.getElementById('edit-{{app.id}}-client-secret').classList.remove('d-none');">Click to show</a>
-				<input class="d-none form-control copy-link" id="edit-{{app.id}}-client-secret" type="text" name="name" value="{{app.client_secret}}" data-clipboard-text="{{app.client_secret}}" role="button" readonly="readonly">
-				{% endif %}
-
-
 				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
 				<input id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}">
 				<label for="edit-{{app.id}}-desc" class="mb-0 w-lg-25">Description</label>
