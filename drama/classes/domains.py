@@ -16,6 +16,3 @@ class BadLink(Base):
 	link = Column(String(512))
 	reason = Column(String)
 	autoban = Column(Boolean, default=False)
-
-ALTER TABLE banneddomains ALTER COLUMN TYPE text;
-ALTER TABLE badlinks ALTER COLUMN TYPE text;
