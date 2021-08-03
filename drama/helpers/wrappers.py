@@ -87,15 +87,9 @@ def check_ban_evade(v):
 
 # Wrappers
 def auth_desired(f):
-	# decorator for any view that changes if user is logged in (most pages)
-
 	def wrapper(*args, **kwargs):
 
-		v, c = get_logged_in_user()
-
-		if c:
-			kwargs["c"] = c
-			
+		v = get_logged_in_user()
 		check_ban_evade(v)
 
 		resp = make_response(f(*args, v=v, **kwargs))
@@ -110,17 +104,12 @@ def auth_required(f):
 
 	def wrapper(*args, **kwargs):
 
-		v, c = get_logged_in_user()
-
-		#print(v, c)
+		v = get_logged_in_user()
 
 		if not v:
 			abort(401)
 			
 		check_ban_evade(v)
-
-		if c:
-			kwargs["c"] = c
 
 		g.v = v
 
@@ -137,9 +126,7 @@ def is_not_banned(f):
 
 	def wrapper(*args, **kwargs):
 
-		v, c = get_logged_in_user()
-
-		#print(v, c)
+		v = get_logged_in_user()
 
 		if not v:
 			abort(401)
@@ -148,9 +135,6 @@ def is_not_banned(f):
 
 		if v.is_suspended:
 			abort(403)
-
-		if c:
-			kwargs["c"] = c
 
 		g.v = v
 
@@ -168,10 +152,7 @@ def admin_level_required(x):
 
 		def wrapper(*args, **kwargs):
 
-			v, c = get_logged_in_user()
-
-			if c:
-				return {"error": "No admin api access"}, 403
+			v = get_logged_in_user()
 
 			if not v:
 				abort(401)
