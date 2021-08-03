@@ -4,26 +4,19 @@ from .alerts import send_notification
 from drama.__main__ import app
 
 
-def get_logged_in_user(db=None):
-
-	if not db:
-		db=g.db
+def get_logged_in_user():
 
 	if request.headers.get("Authorization"):
 		token = request.headers.get("Authorization")
 		if not token: return None, None
 
 		token = token.split()
-		if len(token) < 2:
-			return None, None
+		if len(token) < 2: return None, None
 
 		token = token[1]
-		if not token:
-			return None, None
+		if not token: return None, None
 
-		client = db.query(ClientAuth).filter(
-			ClientAuth.access_token == token).first()
-			#ClientAuth.access_token_expire_utc > int(time.time()
+		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).first()
 
 		x = (client.user, client) if client else (None, None)
 
@@ -238,31 +231,6 @@ def validate_formkey(f):
 
 	wrapper.__name__ = f.__name__
 	return wrapper
-
-
-def no_cors(f):
-	"""
-	Decorator prevents content being iframe'd
-	"""
-
-	def wrapper(*args, **kwargs):
-
-		origin = request.headers.get("Origin", None)
-
-		if origin and origin != "https://" + app.config["SERVER_NAME"] and app.config["FORCE_HTTPS"]==1:
-
-			return "This page may not be embedded in other webpages.", 403
-
-		resp = make_response(f(*args, **kwargs))
-		resp.headers.add("Access-Control-Allow-Origin",
-						 app.config["SERVER_NAME"]
-						 )
-
-		return resp
-
-	wrapper.__name__ = f.__name__
-	return wrapper
-
 
 def api(*scopes, no_ban=False):
 
