@@ -6,6 +6,10 @@
 
 {% block content %}
 
+<pre>
+
+</pre>
+
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
@@ -28,7 +32,6 @@
 	<input type="hidden" name="formkey" value="{{v.formkey}}">
 	<input name="domain" placeholder="Enter domain here.." required>
 
-	<label for="reason_select">Ban reason</label>
 	<select id="reason_select" class="form-control" name="reason" onchange="$('#ban-submit').prop('disabled', false)"> 
 		<option value="0">---Select Ban Reason---</option>
 		{% for i in reasons %}
