@@ -11,23 +11,34 @@ def get_logged_in_user():
 	if request.headers.get("Authorization"):
 		token = request.headers.get("Authorization")
 		if not token: return None
+
 		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).first()
-		if client: return client.user
-		else: return None
+
+		x = (client.user, client) if client else (None, None)
+
 
 	else:
-		id = session.get("user_id")
+
+		uid = session.get("user_id")
 		nonce = session.get("login_nonce", 0)
-		if not id: return None
-		v = g.db.query(User).filter_by(id=id).first()
+		if not uid: x= (None, None)
+		v = g.db.query(User).filter_by(id=uid).first()
 
 		if v and v.agendaposter_expires_utc and v.agendaposter_expires_utc < g.timestamp:
 			v.agendaposter_expires_utc = 0
 			v.agendaposter = False
+
 			g.db.add(v)
 
-		if v and (nonce < v.login_nonce): return None
-		return v
+		if v and (nonce < v.login_nonce):
+			x= (None, None)
+		else:
+			x=(v, None)
+
+
+	if x[0]: x[0].client=x[1]
+
+	return x[0]
 
 
 def check_ban_evade(v):
