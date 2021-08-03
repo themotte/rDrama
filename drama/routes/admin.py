@@ -961,10 +961,10 @@ def admin_ban_domain(v):
 	if not reason: abort(400)
 
 	d = g.db.query(BannedDomain).filter_by(domain=domain.replace("_","\_")).first()
-	if d: d.reason=reason
-	else: d = BannedDomain(domain=domain, reason=reason)
-
-	g.db.add(d)
+	if d: g.db.delete(d)
+	else:
+		d = BannedDomain(domain=domain, reason=reason)
+		g.db.add(d)
 	return redirect("/admin/banned_domains/")
 
 
