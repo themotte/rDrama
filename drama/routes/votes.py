@@ -13,10 +13,11 @@ def admin_vote_info_get(v):
 	link = request.args.get("link")
 	if not link: return render_template("votes.html", v=v)
 
-
-	if "t2_" in link: thing = get_post(int(link.split("t2_")[1]), v=v)
-	elif "t3_" in link: thing = get_comment(int(link.split("t3_")[1]), v=v)
-	else: abort(400)
+	try:
+		if "t2_" in link: thing = get_post(int(link.split("t2_")[1]), v=v)
+		elif "t3_" in link: thing = get_comment(int(link.split("t3_")[1]), v=v)
+		else: abort(400)
+	except: abort(400)
 
 	if isinstance(thing, Submission):
 
