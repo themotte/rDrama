@@ -23,7 +23,7 @@
 			<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
 			<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}" readonly=readonly>
 
-			{% if app.client_secret %}
+			{% if app.client_id %}
 			<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
 			<input id="edit-{{app.id}}-client-id" class="form-control" type="text" name="name" value="{{app.client_id}}" readonly="readonly">
 			{% endif %}
@@ -37,7 +37,7 @@
 	</div>
 	<div class="footer">
 		<div class="d-flex">
-			{% if not app.client_secret %}
+			{% if not app.client_id %}
 
 			<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/approve/{{app.id}}')">Approve</a>
 			<a href="javascript:void(0)" class="btn btn-secondary mr-0" onclick="post_toast('/admin/app/reject/{{app.id}}')">Reject</a> 

@@ -11,7 +11,6 @@ def authorize_prompt(v):
 	client_id = request.args.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
-	if application.is_banned: return {"oauth_error": f"Application `{application.app_name}` is suspended."}, 403
 	return render_template("oauth.html", v=v, application=application)
 
 
@@ -23,7 +22,6 @@ def authorize(v):
 	client_id = request.form.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
-	if application.is_banned: return {"oauth_error": f"Application `{application.app_name}` is suspended."}, 403
 	access_token = secrets.token_urlsafe(128)[:128]
 	new_auth = ClientAuth(
 		oauth_client = application.id,
@@ -97,8 +95,6 @@ def admin_app_approve(v, aid):
 	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
 	app.client_id = secrets.token_urlsafe(64)[:64]
-	app.client_secret = secrets.token_urlsafe(128)[:128]
-
 	g.db.add(app)
 
 	access_token = secrets.token_urlsafe(128)[:128]
@@ -122,15 +118,14 @@ def admin_app_revoke(v, aid):
 
 	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
-	app.client_id = None
-	app.client_secret = None
+	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
-	g.db.add(app)
+	g.db.flush()
+	send_notification(1046, app.author, f"Your application `{app.app_name}` has been revoked.")
 
-	u = get_account(app.author_id, v=v)
-	send_notification(1046, u, f"Your application `{app.app_name}` has been revoked.")
+	g.db.delete(app)
 
-	return {"message": f"{app.app_name} revoked"}
+	return {"message": f"App revoked"}
 
 
 @app.post("/admin/app/reject/<aid>")
@@ -140,16 +135,14 @@ def admin_app_reject(v, aid):
 
 	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
-	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
-		g.db.delete(auth)
+	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
 	g.db.flush()
-	u = get_account(app.author_id, v=v)
-	send_notification(1046, u, f"Your application `{app.app_name}` has been rejected.")
+	send_notification(1046, app.author, f"Your application `{app.app_name}` has been rejected.")
 
 	g.db.delete(app)
 
-	return {"message": f"{app.app_name} rejected"}
+	return {"message": f"App rejected"}
 
 
 @app.get("/admin/app/<aid>")

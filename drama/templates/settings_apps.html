@@ -17,7 +17,7 @@
 
 <h2 class="h5">Your API Applications</h2>
 
-{% for app in v.applications if app.client_secret %}
+{% for app in v.applications if app.client_id %}
 
 <form id="edit-app-{{app.id}}" action="/edit_app/{{app.id}}" method="post">
 	<div class="settings-section rounded">
@@ -50,7 +50,7 @@
 
 <h2 class="h5">API Applications Awaiting Approval</h2>
 
-{% for app in v.applications if not app.client_secret %}
+{% for app in v.applications if not app.client_id %}
 
 <form id="edit-app-{{app.id}}" action="/edit_app/{{app.id}}" method="post">
 	<div class="settings-section rounded">
@@ -92,7 +92,6 @@
 						<div class="body w-lg-100">
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<label class="mb-0 w-lg-25">Permissions</label>
-				<input class="form-control" type="text" name="name" value="{{auth.scopelist}}" readonly="readonly">
 				<label class="mb-0 w-lg-25">Description</label>
 				<textarea class="form-control" name="description" maxlength="256" readonly="readonly">{{auth.application.description}}</textarea>
 			</div>
