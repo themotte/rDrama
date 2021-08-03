@@ -949,16 +949,15 @@ def admin_banned_domains(v):
 	banned_domains = g.db.query(BannedDomain).all()
 	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
-@app.post("/admin/ban_domain")
+@app.post("/admin/toggle_ban_domain")
 @admin_level_required(4)
 @validate_formkey
-def admin_ban_domain(v):
+def admin_toggle_ban_domain(v):
 
 	domain=request.form.get("domain").strip()
 	if not domain: abort(400)
 
 	reason=request.form.get("reason", "").strip()
-	if not reason: abort(400)
 
 	d = g.db.query(BannedDomain).filter_by(domain=domain.replace("_","\_")).first()
 	if d: g.db.delete(d)
