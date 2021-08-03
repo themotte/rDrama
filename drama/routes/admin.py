@@ -606,7 +606,6 @@ def admin_title_change(user_id, v):
 	new_name=request.form.get("title").strip()
 
 	user.customtitleplain=new_name
-	new_name=new_name.replace('_','\_')
 	new_name = sanitize(new_name, linkgen=True)
 
 	user=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=user.id).first()
@@ -937,7 +936,7 @@ def admin_toggle_ban_domain(v):
 
 	reason=request.form.get("reason", "").strip()
 
-	d = g.db.query(BannedDomain).filter_by(domain=domain.replace("_","\_")).first()
+	d = g.db.query(BannedDomain).filter_by(domain=domain).first()
 	if d: g.db.delete(d)
 	else:
 		d = BannedDomain(domain=domain, reason=reason)

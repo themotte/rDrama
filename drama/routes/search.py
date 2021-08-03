@@ -275,7 +275,6 @@ def searchusers(v):
 	term=term.replace('\\','')
 	term=term.replace('_','\_')
 	
-	now=int(time.time())
 	users=g.db.query(User).filter(User.username.ilike(f'%{term}%'))
 	
 	users=users.order_by(User.username.ilike(term).desc(), User.stored_subscriber_count.desc())

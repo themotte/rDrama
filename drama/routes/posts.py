@@ -619,11 +619,13 @@ def submit_post(v):
 		embed = requests.get("https://graph.facebook.com/v9.0/instagram_oembed", params={"url":url,"access_token":environ.get("FACEBOOK_TOKEN","").strip(),"omitscript":'true'}, headers={"User-Agent":"Instagram embedder for Drama"}).json()["html"]
 
 	elif app.config['SERVER_NAME'] in domain:
-		matches = re.match(re.compile(f"^.*{domain}/post/+\w+/(\w+)(/\w+/(\w+))?"), url)
-		post_id = matches.group(1)
-		comment_id = matches.group(3)
-		if comment_id: embed = f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
-		else: embed = f"https://{app.config['SERVER_NAME']}/embed/post/{post_id}"
+		try:
+			matches = re.match(re.compile(f"^.*{domain}/post/+\w+/(\w+)(/\w+/(\w+))?"), url)
+			post_id = matches.group(1)
+			comment_id = matches.group(3)
+			if comment_id: embed = f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
+			else: embed = f"https://{app.config['SERVER_NAME']}/embed/post/{post_id}"
+		except: embed = None
 
 	else: embed = None
 
