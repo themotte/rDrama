@@ -413,7 +413,7 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 CREATE TABLE public.badlinks (
     id integer NOT NULL,
-    reason integer,
+    reason text,
     link character varying(512),
     autoban boolean
 );
@@ -487,7 +487,7 @@ ALTER SEQUENCE public.badpics_id_seq OWNED BY public.badpics.id;
 CREATE TABLE public.banneddomains (
     id integer NOT NULL,
     domain character varying(100),
-    reason integer
+    reason text
 );
 
 
