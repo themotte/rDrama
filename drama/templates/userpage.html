@@ -18,14 +18,14 @@
 {% block pagetype %}userpage{% endblock %}
 
 {% block title %}
-<title>{{u.username}}'s profile - Drama</title>
+<title>{{u.username}}'s profile - {{"SITE_NAME" | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
 {% endif %}
 <meta property="og:article:author" content="@{{u.username}}" />
-<meta property="article:section" content="{{u.username}}'s profile - Drama" />
+<meta property="article:section" content="{{u.username}}'s profile - {{"SITE_NAME" | app_config}}" />
 <meta property="article:published_time" content="{{u.created_date}}" />
-<meta property="og:description" name="description" content="{{u.dramacoins}} Dramacoins - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers - {% endif %}{% if not u.is_private %}{{u.post_count}} Posts - {{u.comment_count}} Comments - {% endif %}{{u.bio}}" />
+<meta property="og:description" name="description" content="{{u.dramacoins}} {{"SITE_NAME" | app_config}}coins - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers - {% endif %}{% if not u.is_private %}{{u.post_count}} Posts - {{u.comment_count}} Comments - {% endif %}{{u.bio}}" />
 <meta property="og:author" name="author" content="@{{u.username}}" />
 <meta property="og:title" content="{{u.username}}" />
 <meta property="og:image" content="{% if u.bannerurl %}{{u.banner_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
@@ -34,9 +34,9 @@
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@drama">
-<meta name="twitter:title" content="{{u.username}}'s profile - Drama" />
+<meta name="twitter:title" content="{{u.username}}'s profile - {{"SITE_NAME" | app_config}}" />
 <meta name="twitter:creator" content="@{{u.username}}">
-<meta name="twitter:description" content="{{u.dramacoins}} Dramacoins - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{u.post_count}} Posts - {{u.comment_count}} Comments -{% endif %} {{u.bio}}" />
+<meta name="twitter:description" content="{{u.dramacoins}} {{"SITE_NAME" | app_config}}coins - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{u.post_count}} Posts - {{u.comment_count}} Comments -{% endif %} {{u.bio}}" />
 <meta name="twitter:image" content="{% if u.bannerurl %}{{u.banner_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta name="twitter:url" content="{{u.permalink | full_link}}" />
 {% endblock %}
@@ -119,7 +119,7 @@
 				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{{u.customtitle | safe}}</p>{% endif %}
 				
 				<div class="font-weight-bolder">
-					<span>{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp; {% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
+					<span>{{u.dramacoins}}</span> {{"SITE_NAME" | app_config}}coins&nbsp;&nbsp; {% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
 				{% if u.bio_html %}
 				<pre></pre>
@@ -306,7 +306,7 @@
 				{% endif %}
 				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{{u.customtitle | safe}}</p>{% endif %}
 				<div class="font-weight-normal">
-					<span class="font-weight-bold">{{u.dramacoins}}</span> Dramacoins&nbsp;&nbsp;{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
+					<span class="font-weight-bold">{{u.dramacoins}}</span> {{"SITE_NAME" | app_config}}coins&nbsp;&nbsp;{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
 				</div>
 				{% if u.bio_html %}
 				<p class="text-muted text-break">{{u.bio_html | safe}}</p>

@@ -21,9 +21,9 @@
 	<link rel="apple-touch-icon" href="/assets/favicon.png">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<meta name="apple-mobile-web-app-title" content="Drama">
+	<meta name="apple-mobile-web-app-title" content="{{"SITE_NAME" | app_config}}">
 
-	<!-- Drama CSS -->
+	<!-- {{"SITE_NAME" | app_config}} CSS -->
 	
 	{% if v %}
 		<link rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
@@ -83,7 +83,7 @@
 					<i class="fad fa-fire fa-stack-1x text-danger"></i>
 			</span>
 			<h1 class="h5">503 Service Unavailable</h1>
-			<p class="text-muted">rDrama is unavailable.</p>
+			<p class="text-muted">r{{"SITE_NAME" | app_config}} is unavailable.</p>
 			<p class="text-muted">HI IT'S CARP AGAIN<BR>I'm like 95% sure this error means Aevann is restarting the server to apply a change. But I think that's also 520/521? What causes a 503? No one knows. Wait like a minute (maybe two) and see if it's still happening. It shouldn't. Good luck!</p>
 			<button class="btn btn-primary" onclick="window.location.reload()">
 			 	Refresh

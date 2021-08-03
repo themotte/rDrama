@@ -12,7 +12,7 @@
 	<link rel="icon" type="image/png" href="/assets/images/favicon.png">
 
 	<meta property="og:type" content="article" />
-	<meta property="og:title" content="Drama" />
+	<meta property="og:title" content="{{"SITE_NAME" | app_config}}" />
 	<meta property="og:site_name" content="{{request.host}}" />
 	<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
 	<meta property="og:url" content="{{request.path | full_link}}">
@@ -22,7 +22,7 @@
 
 	<meta name="twitter:card" content="summary_large_image"/>
 	<meta name="twitter:site" content="@drama">
-	<meta name="twitter:title" content="Drama" />
+	<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
 	<meta name="twitter:creator" content="@drama">
 	<meta name="twitter:description" content="Dude bussy lmao" />
 	<meta name="twitter:image" content="/assets/images/preview.png" />
@@ -30,7 +30,7 @@
 
 
 
-	<title>{% block pagetitle %}Drama{% endblock %}</title>
+	<title>{% block pagetitle %}{{"SITE_NAME" | app_config}}{% endblock %}</title>
 
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -38,7 +38,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-	<!-- Drama CSS -->
+	<!-- {{"SITE_NAME" | app_config}} CSS -->
 
 	{% if v %}
 	<link id="css-link" rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">

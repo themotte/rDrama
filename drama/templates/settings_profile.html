@@ -1,6 +1,6 @@
 {% extends "settings.html" %}
 
-{% block pagetitle %}Profile Settings - Drama{% endblock %}
+{% block pagetitle %}Profile Settings - {{"SITE_NAME" | app_config}}{% endblock %}
 
 {% block content %}
 {% include "emoji_modal.html" %}
@@ -210,10 +210,10 @@
 							  <input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
 							</form>
 
-							<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the Drama Discord server.</div>
+							<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{"SITE_NAME" | app_config}} Discord server.</div>
 							{% else %}
 							<a href="/discord" class="btn btn-primary">Link Discord</a>
-							<div class="text-small-extra text-muted mt-3">Link your Discord account to join the Drama Discord server.</div>
+							<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{"SITE_NAME" | app_config}} Discord server.</div>
 							{% endif %}
 
 						  </div>
@@ -225,7 +225,7 @@
 
 					<h2 class="h5" name="referral">RSS Feed</h2>
 
-					<p class="text-small text-muted">Subscribe to the Drama RSS feed.</p>
+					<p class="text-small text-muted">Subscribe to the {{"SITE_NAME" | app_config}} RSS feed.</p>
 
 					<div class="settings-section rounded">
 
@@ -245,7 +245,7 @@
 
 						<h2 class="h5" id="bio" name="bio">Your Profile</h2>
 
-						<p class="text-small text-muted">Edit how others see you on Drama.</p>
+						<p class="text-small text-muted">Edit how others see you on {{"SITE_NAME" | app_config}}.</p>
 
 						<div class="settings-section rounded mb-0">
 

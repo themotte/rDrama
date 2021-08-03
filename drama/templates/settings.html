@@ -49,9 +49,9 @@
 
 	<link rel="icon" type="image/png" href="/assets/images/favicon.png">
 
-	<title>{% block pagetitle %}Settings - Drama{% endblock %}</title>
+	<title>{% block pagetitle %}Settings - {{"SITE_NAME" | app_config}}{% endblock %}</title>
 		<meta property="og:type" content="article" />
-		<meta property="og:title" content="Drama" />
+		<meta property="og:title" content="{{"SITE_NAME" | app_config}}" />
 		<meta property="og:site_name" content="{{request.host}}" />
 		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta property="og:url" content="{{request.host}}">
@@ -61,7 +61,7 @@
 
 		<meta name="twitter:card" content="summary_large_image"/>
 		<meta name="twitter:site" content="@drama">
-		<meta name="twitter:title" content="Drama" />
+		<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
 		<meta name="twitter:creator" content="@drama">
 		<meta name="twitter:description" content="Dude bussy lmao" />
 		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
@@ -72,7 +72,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-	<!-- Drama CSS -->
+	<!-- {{"SITE_NAME" | app_config}} CSS -->
 
 	<link rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
 	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/style/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}

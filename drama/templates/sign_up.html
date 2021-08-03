@@ -69,7 +69,7 @@
 		<meta name="description" content="Sign up in under 27 seconds.">
 		<meta name="author" content="">
 		<meta property="og:type" content="article" />
-		<meta property="og:title" content="Drama" />
+		<meta property="og:title" content="{{"SITE_NAME" | app_config}}" />
 		<meta property="og:site_name" content="{{request.host}}" />
 		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta property="og:url" content="{{request.host}}">
@@ -79,13 +79,13 @@
 
 		<meta name="twitter:card" content="summary_large_image"/>
 		<meta name="twitter:site" content="@drama">
-		<meta name="twitter:title" content="Drama" />
+		<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
 		<meta name="twitter:creator" content="@drama">
 		<meta name="twitter:description" content="Sign up now! Dude bussy lmao" />
 		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta name="twitter:url" content="{{request.host}}" />
 
-		<title>{% if ref_user %}{{ref_user.username}} invites you to Drama{% else %}Sign up - Drama{% endif %}</title>
+		<title>{% if ref_user %}{{ref_user.username}} invites you to {{"SITE_NAME" | app_config}}{% else %}Sign up - {{"SITE_NAME" | app_config}}{% endif %}</title>
 
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -100,7 +100,7 @@
 		integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
 		crossorigin="anonymous"></script>
 
-		<!-- Drama CSS -->
+		<!-- {{"SITE_NAME" | app_config}} CSS -->
 		<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
 
 </head>
@@ -129,14 +129,14 @@
 								<div class="col-10 col-md-7">
 
 										<div class="mb-3">
-												<a href="/" class="text-decoration-none"><span class="h3 text-primary">Drama</span></a>
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{"SITE_NAME" | app_config}}</span></a>
 										</div>
 
 										<div id="register-form" class="">
 
 											 {% if ref_user %}
 											 <h1 class="h2">@{{ref_user.username}} has invited you!</h1>
-											 <p class="text-muted mb-md-2">Looks like someone wants you to join Drama.</p>
+											 <p class="text-muted mb-md-2">Looks like someone wants you to join {{"SITE_NAME" | app_config}}.</p>
 											 {% else %}
 											 <h1 class="h2">Create your account.</h1>
 											 <p class="text-muted mb-md-2">No email address required.</p>
@@ -223,7 +223,7 @@
 		</div>
 </div>
 
-<!-- Drama JS -->
+<!-- {{"SITE_NAME" | app_config}} JS -->
 
 <script src="/assets/js/all_js.js"></script>
 

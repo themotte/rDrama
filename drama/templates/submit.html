@@ -240,7 +240,7 @@
 		{% include "gif_modal.html" %}
 
 		{% block title %}
-		<title>Create a post - Drama</title>
+		<title>Create a post - {{"SITE_NAME" | app_config}}</title>
 		{% endblock %}
 	
 
@@ -250,7 +250,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-		<!-- Drama Board CSS -->
+		<!-- {{"SITE_NAME" | app_config}} Board CSS -->
 
 		{% block stylesheets %}
 		{% if v %}
@@ -407,7 +407,7 @@
 
 		{% endblock %}
 
-		<!-- Drama JS -->
+		<!-- {{"SITE_NAME" | app_config}} JS -->
 
 		<script src="/assets/js/all_js.js"></script>
 

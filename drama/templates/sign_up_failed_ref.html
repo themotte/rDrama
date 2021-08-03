@@ -9,7 +9,7 @@
 		<meta name="description" content="Sign up in under 27 seconds.">
 		<meta name="author" content="">
 		<meta property="og:type" content="article" />
-		<meta property="og:title" content="Drama" />
+		<meta property="og:title" content="{{"SITE_NAME" | app_config}}" />
 		<meta property="og:site_name" content="{{request.host}}" />
 		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta property="og:url" content="{{request.host}}">
@@ -19,13 +19,13 @@
 
 		<meta name="twitter:card" content="summary_large_image"/>
 		<meta name="twitter:site" content="@drama">
-		<meta name="twitter:title" content="Drama" />
+		<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
 		<meta name="twitter:creator" content="@drama">
 		<meta name="twitter:description" content="Sign up now! Dude bussy lmao" />
 		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta name="twitter:url" content="{{request.host}}" />
 
-		<title>{% if ref_user %}{{ref_user.username}} invites you to Drama{% else %}Drama: the open, free-speech social platform{% endif %}</title>
+		<title>{% if ref_user %}{{ref_user.username}} invites you to {{"SITE_NAME" | app_config}}{% else %}{{"SITE_NAME" | app_config}}: the open, free-speech social platform{% endif %}</title>
 
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -40,7 +40,7 @@
 		integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
 		crossorigin="anonymous"></script>
 
-		<!-- Drama CSS -->
+		<!-- {{"SITE_NAME" | app_config}} CSS -->
 		<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
 
 </head>
@@ -142,7 +142,7 @@
 });
 </script>
 
-<!-- Drama JS -->
+<!-- {{"SITE_NAME" | app_config}} JS -->
 
 <script src="/assets/js/all_js.js"></script>
 

@@ -5,9 +5,9 @@ services:
     build:
       context: .
     volumes:
-      - "./:/opt/Drama/service"
+      - "./:/drama/service"
     environment:
-      - PYTHONPATH="opt/Drama/service"
+      - PYTHONPATH="drama/service"
       - REDIS_URL=redis://redis
       - DATABASE_URL=postgresql://postgres@postgres:5432/postgres
       - DATABASE_CONNECTION_POOL_URL=postgresql://postgres@postgres:5432/postgres
@@ -43,7 +43,7 @@ services:
   redis:
     image: redis
     volumes:
-      - ./redis.conf:/opt/Drama/redis.conf
+      - ./redis.conf:/drama/redis.conf
     ports:
       - "6379:6379"
 

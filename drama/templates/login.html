@@ -6,11 +6,11 @@
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="Sign in to Drama">
+		<meta name="description" content="Sign in to {{"SITE_NAME" | app_config}}">
 		<meta name="author" content="">
 
 		{% block title %}
-		<title>Login -	Drama</title>
+		<title>Login -	{{"SITE_NAME" | app_config}}</title>
 		{% endblock %}
 		
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
 		integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
 		crossorigin="anonymous"></script>
 
-		<!-- Drama CSS -->
+		<!-- {{"SITE_NAME" | app_config}} CSS -->
 		<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
 
 </head>
@@ -55,7 +55,7 @@
 								<div class="col-10 col-md-7">
 
 										<div class="mb-5">
-												<a href="/" class="text-decoration-none"><span class="h3 text-primary">Drama</span></a>
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{"SITE_NAME" | app_config}}</span></a>
 										</div>
 
 										{% block content %}

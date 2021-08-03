@@ -1,22 +1,23 @@
 {% extends "default.html" %}
 
 {% block title %}
-<title>Drama - API</title>
-<meta name="description" content="Drama API Guide">
+<title>{{"SITE_NAME" | app_config}} - API</title>
+<meta name="description" content="{{"SITE_NAME" | app_config}} API Guide">
 {% endblock %}
 
 {% block content %}
+{{"SITE_NAME" | app_config}}
 <pre></pre>
 {% filter markdown %}
 # OAuth2
 
-The OAuth2 authorization flow is used to enable users to authorize third-party applications to access their Drama account without having to provide their login information to the application.
+The OAuth2 authorization flow is used to enable users to authorize third-party applications to access their {{"SITE_NAME" | app_config}} account without having to provide their login information to the application.
 
 This page explains how to obtain API application keys, how to prompt a user for authorization, and how to obtain and use access tokens. 
 
 ## Step 1: Create your Application
 
-In the [apps tab of Drama settings](/settings/apps), fill in and submit the form to request new API keys. You will need:
+In the [apps tab of {{"SITE_NAME" | app_config}} settings](/settings/apps), fill in and submit the form to request new API keys. You will need:
 
 * an application name
 * a Redirect URI, or a comma-separated list of redirect URIs. May not use HTTP unless using localhost (use HTTPS instead).
@@ -24,7 +25,7 @@ In the [apps tab of Drama settings](/settings/apps), fill in and submit the form
 
 Don't worry too much about accuracy; you will be able to change all of these later.
 
-Drama administrators will review and approve or deny your request for API keys. You'll know when your request has been approved when a client ID and secret appear in your application information.
+{{"SITE_NAME" | app_config}} administrators will review and approve or deny your request for API keys. You'll know when your request has been approved when a client ID and secret appear in your application information.
 
 DO NOT reveal your Client Secret. Anyone with your Client Secret will be able to pretend to be you. You are responsible for keeping your Client Secret a secret!
 
@@ -38,11 +39,11 @@ Send your user to `https://rdrama.net/oauth/authorize`, with the following URL p
 * `scope` - A comma-separated list of permission scopes that you are requesting. Valid scopes are: `identity`, `create`, `read`, `update`, `delete` and `vote`.
 * `permanent` - optional. Set to `true` if you are requesting indefinite access. Omit if not.
 
-If done correctly, the user will see that your application wants to access their Drama account, and be prompted to approve or deny the request.
+If done correctly, the user will see that your application wants to access their {{"SITE_NAME" | app_config}} account, and be prompted to approve or deny the request.
 
 ## Step 3: Catch the redirect
 
-The user clicks "Authorize". Drama will redirect the user's browser to GET the designated redirect URI. The following URL parameters will be included, which your server should process:
+The user clicks "Authorize". {{"SITE_NAME" | app_config}} will redirect the user's browser to GET the designated redirect URI. The following URL parameters will be included, which your server should process:
 
 * `code` - a **single-use** authorization code.
 * `state` - The state token from earlier.
@@ -89,11 +90,11 @@ If everything is good, we will respond with the following (example) JSON body:
 	}
 </pre>
 
-Store the access and refresh tokens. You should also store expiration timestamp and the scopes list, so that you pre-emptively avoid sending requests to Drama that won't be accepted.
+Store the access and refresh tokens. You should also store expiration timestamp and the scopes list, so that you pre-emptively avoid sending requests to {{"SITE_NAME" | app_config}} that won't be accepted.
 
 ## Step 5: Using the Access Token
 
-To use the access token, include the following header in subsequent API requests to Drama: `Authorization: Bearer access_token_goes_here`
+To use the access token, include the following header in subsequent API requests to {{"SITE_NAME" | app_config}}: `Authorization: Bearer access_token_goes_here`
 
 Python example, presuming that the application has obtained a valid `read` authorization:
 
@@ -101,7 +102,7 @@ Python example, presuming that the application has obtained a valid `read` autho
 	import requests
 
 	headers={"Authorization": "Bearer " + access_token,
-			 "User-Agent": "Drama Reader v1 by @carpathianflorist"}
+			 "User-Agent": "{{"SITE_NAME" | app_config}} Reader v1 by @carpathianflorist"}
 	url="/"
 
 	r=requests.get(url, headers=headers)
