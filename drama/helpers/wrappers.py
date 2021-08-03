@@ -1,3 +1,5 @@
+from random import vonmisesvariate
+from sqlalchemy.sql import visitors
 from werkzeug.wrappers.response import Response as RespObj
 from .get import *
 from .alerts import send_notification
@@ -8,35 +10,24 @@ def get_logged_in_user():
 
 	if request.headers.get("Authorization"):
 		token = request.headers.get("Authorization")
-		if not token: return None, None
-
+		if not token: return None
 		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).first()
-
-		x = (client.user, client) if client else (None, None)
-
+		if client: return client.user
+		else: return None
 
 	else:
-
-		uid = session.get("user_id")
+		id = session.get("user_id")
 		nonce = session.get("login_nonce", 0)
-		if not uid: x= (None, None)
-		v = g.db.query(User).filter_by(id=uid).first()
+		if not id: return None
+		v = g.db.query(User).filter_by(id=id).first()
 
 		if v and v.agendaposter_expires_utc and v.agendaposter_expires_utc < g.timestamp:
 			v.agendaposter_expires_utc = 0
 			v.agendaposter = False
-
 			g.db.add(v)
 
-		if v and (nonce < v.login_nonce):
-			x= (None, None)
-		else:
-			x=(v, None)
-
-
-	if x[0]: x[0].client=x[1]
-
-	return x
+		if v and (nonce < v.login_nonce): return None
+		return v
 
 
 def check_ban_evade(v):
