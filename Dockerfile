@@ -6,7 +6,7 @@ RUN apt update && apt install -y python3.8 python3-pip supervisor
 
 RUN mkdir ./service
 
-RUN pip3 install -r requirements.txt && cd ./service
+RUN pip3 install -r ./requirements.txt && cd ./service
 
 EXPOSE 80/tcp
 
