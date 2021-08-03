@@ -2,7 +2,6 @@ from drama.helpers.wrappers import *
 import re
 from sqlalchemy import *
 from flask import *
-from drama.classes.domains import reasons as REASONS
 from drama.__main__ import app, cache
 import random
 
@@ -234,8 +233,7 @@ def searchposts(v):
 						   t=t,
 						   next_exists=next_exists,
 						   domain=domain,
-						   domain_obj=domain_obj,
-						   reasons=REASONS
+						   domain_obj=domain_obj
 						   )
 
 @app.get("/search/comments")

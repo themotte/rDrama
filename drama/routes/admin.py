@@ -13,7 +13,6 @@ from drama.helpers.security import *
 from drama.helpers.get import *
 from drama.helpers.images import *
 from drama.classes import *
-from drama.classes.domains import reasons as REASONS
 from flask import *
 import matplotlib.pyplot as plt
 from drama.__main__ import app, cache
