@@ -21,16 +21,16 @@
 <h2>Actions</h2>
 
 <form action="/admin/ban_domain" method="post">
-		<input type="hidden" name="formkey" value="{{v.formkey}}">
-		<input type="hidden" name="domain" value="{{domain_name}}">
-		<label for="reason_select">Ban reason</label>
-		<select id="reason_select" class="form-control" name="reason" onchange="$('#ban-submit').prop('disabled', false)"> 
-				<option value="0">---Select Ban Reason---</option>
-				{% for i in reasons %}
-						<option value="{{i}}"{% if i==domain.reason %} selected{% endif %}>{{reasons[i]}}</option>
-				{% endfor %}
-		</select>
-		<input type="submit" class="btn btn-primary" value="Ban {{domain_name}}" disabled>
+	<input type="hidden" name="formkey" value="{{v.formkey}}">
+	<input type="hidden" name="domain" value="{{domain_name}}">
+	<label for="reason_select">Ban reason</label>
+	<select id="reason_select" class="form-control" name="reason" onchange="$('#ban-submit').prop('disabled', false)"> 
+		<option value="0">---Select Ban Reason---</option>
+		{% for i in reasons %}
+			<option value="{{i}}"{% if i==domain.reason %} selected{% endif %}>{{reasons[i]}}</option>
+		{% endfor %}
+	</select>
+	<input id="ban-submit" type="submit" class="btn btn-primary" value="Ban {{domain_name}}" disabled>
 </form>
 
 {% endblock %}

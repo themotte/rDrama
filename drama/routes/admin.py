@@ -967,7 +967,6 @@ def admin_dump_cache(v):
 def admin_ban_domain(v):
 
 	domain=request.form.get("domain",'').strip()
-
 	if not domain: abort(400)
 
 	reason=int(request.form.get("reason",0))
