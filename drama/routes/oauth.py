@@ -5,78 +5,17 @@ from drama.classes import *
 from flask import *
 from drama.__main__ import app
 
-SCOPES = {
-	'identity': 'See your username',
-	'create': 'Save posts and comments as you',
-	'read': 'View Drama as you, including private or restricted content',
-	'update': 'Edit your posts and comments',
-	'delete': 'Delete your posts and comments',
-	'vote': 'Cast votes as you',
-}
-
-
-@app.get("/oauth/authorize")
+@app.get("/authorize")
 @auth_required
-def oauth_authorize_prompt(v):
-	'''
-	This page takes the following URL parameters:
-	* client_id - Your application client ID
-	* scope - Comma-separated list of scopes. Scopes are described above
-	* redirect_uri - Your redirect link
-	* state - Your anti-csrf token
-	'''
-
+def authorize_prompt(v):
 	client_id = request.args.get("client_id")
-
-
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
 
-	if not application:
-		return {"oauth_error": "Invalid `client_id`"}, 401
-
-	if application.is_banned:
-		return {"oauth_error": f"Application `{application.app_name}` is suspended."}, 403
-
-	scopes_txt = request.args.get('scope', "")
-
-	scopes = scopes_txt.split(',')
-	if not scopes:
-		return {"oauth_error": "One or more scopes must be specified as a comma-separated list."}, 400
-
-	for scope in scopes:
-		if scope not in SCOPES:
-			return {"oauth_error": f"The provided scope `{scope}` is not valid."}, 400
-
-	if any(x in scopes for x in ["create", "update"]) and "identity" not in scopes:
-		return {"oauth_error": f"`identity` scope required when requesting `create` or `update` scope."}, 400
-
+	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
+	if application.is_banned: return {"oauth_error": f"Application `{application.app_name}` is suspended."}, 403
 	redirect_uri = request.args.get("redirect_uri")
-	if not redirect_uri:
-		return {"oauth_error": f"`redirect_uri` must be provided."}, 400
-
-	valid_redirect_uris = [x.strip()
-						   for x in application.redirect_uri.split(",")]
-
-	if redirect_uri not in valid_redirect_uris:
-		return {"oauth_error": "Invalid redirect_uri"}, 400
-
-	state = request.args.get("state")
-	if not state:
-		return {'oauth_error': 'state argument required'}, 400
-
-	permanent = bool(request.args.get("permanent"))
-
-	return render_template("oauth.html",
-						   v=v,
-						   application=application,
-						   SCOPES=SCOPES,
-						   state=state,
-						   scopes=scopes,
-						   scopes_txt=scopes_txt,
-						   redirect_uri=redirect_uri,
-						   permanent=int(permanent),
-						   i=random_image()
-						   )
+	if not redirect_uri: return {"oauth_error": f"`redirect_uri` must be provided."}, 400
+	return render_template("oauth.html", v=v, application=application, redirect_uri=redirect_uri)
 
 
 @app.post("/authorize")

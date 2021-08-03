@@ -440,23 +440,11 @@ def admin_removed(v):
 @admin_level_required(4)
 def admin_appdata(v):
 
-	url=request.args.get("link")
-
-	if url:
-
-		thing = get_from_permalink(url, v=v)
-
-		return render_template(
-			"admin/app_data.html",
-			v=v,
-			thing=thing
-			)
-
-	else:
-		return render_template(
-			"admin/app_data.html",
-			v=v)
-
+	return render_template(
+		"admin/app_data.html",
+		v=v,
+		thing=get_post(4020)
+		)
 
 @app.post("/admin/image_purge")
 @admin_level_required(5)
