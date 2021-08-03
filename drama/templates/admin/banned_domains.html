@@ -26,8 +26,7 @@
 <form action="/admin/ban_domain" method="post">
 
 	<input type="hidden" name="formkey" value="{{v.formkey}}">
-	<input type="hidden" name="domain" value="{{domain_name}}">
-	<input name="domain" placeholder="domain" required>
+	<input name="domain" placeholder="Enter domain here.." required>
 
 	<label for="reason_select">Ban reason</label>
 	<select id="reason_select" class="form-control" name="reason" onchange="$('#ban-submit').prop('disabled', false)"> 

@@ -459,20 +459,6 @@ def admin_appdata(v):
 			v=v)
 
 
-@app.get("/admin/banned_domains/")
-@admin_level_required(4)
-def admin_domain_domain(v):
-
-	domains = g.db.query(BannedDomain).all()
-
-	return render_template(
-		"admin/banned_domains.html",
-		v=v,
-		domains=domains,
-		reasons=REASONS
-		)
-
-
 @app.post("/admin/image_purge")
 @admin_level_required(5)
 def admin_image_purge(v):
@@ -957,13 +943,26 @@ def admin_dump_cache(v):
 	return {"message": "Internal cache cleared."}
 
 
+@app.get("/admin/banned_domains/")
+@admin_level_required(4)
+def admin_banned_domains(v):
+
+	domains = g.db.query(BannedDomain).all()
+
+	return render_template(
+		"admin/banned_domains.html",
+		v=v,
+		domains=domains,
+		reasons=REASONS
+		)
+
+
 @app.post("/admin/ban_domain")
 @admin_level_required(4)
 @validate_formkey
 def admin_ban_domain(v):
 
 	domain=request.form.get("domain",'').strip()
-
 	if not domain: abort(400)
 
 	reason=int(request.form.get("reason",0))
