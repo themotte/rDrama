@@ -501,17 +501,8 @@ CREATE TABLE public.client_auths (
     id integer NOT NULL,
     user_id integer,
     oauth_client integer,
-    scope_identity boolean,
-    scope_create boolean,
-    scope_read boolean,
-    scope_update boolean,
-    scope_delete boolean,
-    scope_vote boolean,
     scope_guildmaster boolean,
-    access_token character(128),
-    refresh_token character(128),
-    oauth_code character(128),
-    access_token_expire_utc integer
+    access_token character(128)
 );
 
 
@@ -889,11 +880,9 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 CREATE TABLE public.oauth_apps (
     id integer NOT NULL,
     client_id character(64),
-    client_secret character(128),
     app_name character varying(50),
     redirect_uri character varying(4096),
     author_id integer,
-    is_banned boolean,
     description character varying(256)
 );
 
@@ -1682,35 +1671,11 @@ ALTER TABLE ONLY public.client_auths
 
 
 --
--- Name: client_auths unique_code; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.client_auths
-    ADD CONSTRAINT unique_code UNIQUE (oauth_code);
-
-
---
 -- Name: oauth_apps unique_id; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.oauth_apps
     ADD CONSTRAINT unique_id UNIQUE (client_id);
-
-
---
--- Name: client_auths unique_refresh; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.client_auths
-    ADD CONSTRAINT unique_refresh UNIQUE (refresh_token);
-
-
---
--- Name: oauth_apps unique_secret; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.oauth_apps
-    ADD CONSTRAINT unique_secret UNIQUE (client_secret);
 
 
 --
@@ -1904,20 +1869,6 @@ CREATE INDEX block_user_idx ON public.userblocks USING btree (user_id);
 --
 
 CREATE INDEX cflag_user_idx ON public.commentflags USING btree (user_id);
-
-
---
--- Name: client_access_token_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX client_access_token_idx ON public.client_auths USING btree (access_token, access_token_expire_utc);
-
-
---
--- Name: client_refresh_token_idx; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX client_refresh_token_idx ON public.client_auths USING btree (refresh_token);
 
 
 --
