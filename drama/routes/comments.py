@@ -1,3 +1,6 @@
+import traceback
+import sys
+
 from drama.helpers.wrappers import *
 from drama.helpers.filters import *
 from drama.helpers.alerts import *
@@ -5,7 +8,7 @@ from drama.helpers.images import *
 from drama.helpers.session import *
 from drama.classes import *
 from drama.routes.front import comment_idlist
-from pusher_push_notifications import PushNotifications
+from pusher_push_notifications import PushNotifications, PusherAuthError
 
 from flask import *
 from drama.__main__ import app, limiter
@@ -522,18 +525,23 @@ def api_comment(v):
 			except: g.db.rollback()
 
 		if parent.author.id != v.id:
-			beams_client.publish_to_interests(
-			  interests=[str(parent.author.id)],
-			  publish_body={
-				'web': {
-				  'notification': {
-						'title': f'New reply by @{v.username}',
-						'body': c.body,
-						'deep_link': f'https://{site}{c.permalink}?context=5#context',
+			try:
+				beams_client.publish_to_interests(
+				  interests=[str(parent.author.id)],
+				  publish_body={
+					'web': {
+					  'notification': {
+							'title': f'New reply by @{v.username}',
+							'body': c.body,
+							'deep_link': f'https://{site}{c.permalink}?context=5#context',
+					  },
+					},
 				  },
-				},
-			  },
-			)
+				)
+			except PusherAuthError as e:
+				traceback.print_tb(e.__traceback__)
+				sys.stderr.flush()
+
 
 
 
