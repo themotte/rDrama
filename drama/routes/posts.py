@@ -775,7 +775,7 @@ def submit_post(v):
 		private=bool(request.form.get("private","")),
 		author_id=v.id,
 		over_18=bool(request.form.get("over_18","")),
-		app_id=v.client.application.id if v.client else None,
+		# app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("X-User-Type","").lower()=="bot"
 	)
 
