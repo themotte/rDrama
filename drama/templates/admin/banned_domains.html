@@ -18,26 +18,19 @@
 		</tr>
 	</thead>
 
-	{% for domain in domains %}
+	{% for domain in banned_domains %}
 		<tr>
 			<td style="font-weight:bold;">{{domain}}</td>
 			<td>{{domain.reason_text}}</td>
 		</tr>
 	{% endfor %}
 </table>
-	
+
 
 <form action="/admin/ban_domain" method="post">
-
 	<input type="hidden" name="formkey" value="{{v.formkey}}">
-	<input name="domain" placeholder="Enter domain here.." required>
-
-	<select id="reason_select" class="form-control" name="reason" onchange="$('#ban-submit').prop('disabled', false)"> 
-		<option value="0">---Select Ban Reason---</option>
-		{% for i in reasons %}
-			<option value="{{i}}">{{reasons[i]}}</option>
-		{% endfor %}
-	</select>
+	<input name="domain" placeholder="Enter domain here.." class="form-control" required>
+	<input name="reason" placeholder="Enter ban reason here.." class="form-control" required>
 	<input id="ban-submit" type="submit" class="btn btn-primary" value="Ban domain" disabled>
 </form>
 

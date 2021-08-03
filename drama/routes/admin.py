@@ -947,34 +947,26 @@ def admin_dump_cache(v):
 @admin_level_required(4)
 def admin_banned_domains(v):
 
-	domains = g.db.query(BannedDomain).all()
-
-	return render_template(
-		"admin/banned_domains.html",
-		v=v,
-		domains=domains,
-		reasons=REASONS
-		)
-
+	banned_domains = g.db.query(BannedDomain).all()
+	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
 @app.post("/admin/ban_domain")
 @admin_level_required(4)
 @validate_formkey
 def admin_ban_domain(v):
 
-	domain=request.form.get("domain",'').strip()
+	domain=request.form.get("domain").strip()
 	if not domain: abort(400)
 
-	reason=int(request.form.get("reason",0))
+	reason=request.form.get("reason").strip()
 	if not reason: abort(400)
 
-	d_query=domain.replace("_","\_")
-	d=g.db.query(BannedDomain).filter_by(domain=d_query).first()
-	if d: d.reason=reason
-	else: d=BannedDomain(domain=domain, reason=reason)
+	domain = g.db.query(BannedDomain).filter_by(domain=domain.replace("_","\_")).first()
+	if domain: domain.reason=reason
+	else: domain=BannedDomain(domain=domain, reason=reason)
 
-	g.db.add(d)
-	return redirect(d.permalink)
+	g.db.add(domain)
+	return redirect("/admin/banned_domains/")
 
 
 @app.post("/admin/nuke_user")
