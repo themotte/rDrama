@@ -92,12 +92,6 @@ def edit_oauth_app(v, aid):
 	return redirect('/settings/apps')
 
 
-@app.route("/identity")
-@auth_required
-def api_v1_identity(v):
-	return v.json
-
-
 @app.post("/admin/app/approve/<aid>")
 @admin_level_required(3)
 @validate_formkey
@@ -110,8 +104,16 @@ def admin_app_approve(v, aid):
 
 	g.db.add(app)
 
-	u = get_account(app.author_id, v=v)
-	send_notification(1046, u, f"Your application `{app.app_name}` has been approved.")
+	access_token = secrets.token_urlsafe(128)[:128]
+	new_auth = ClientAuth(
+		oauth_client = app.id,
+		user_id = v.id,
+		access_token=access_token
+	)
+
+	g.db.add(new_auth)
+
+	send_notification(1046, v, f"Your application `{app.app_name}` has been approved. Here's your access token: `{access_token}`")
 
 	return {"message": f"{app.app_name} approved"}
 

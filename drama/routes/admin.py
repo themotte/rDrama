@@ -436,16 +436,6 @@ def admin_removed(v):
 						   )
 
 
-@app.get("/admin/appdata")
-@admin_level_required(4)
-def admin_appdata(v):
-
-	return render_template(
-		"admin/app_data.html",
-		v=v,
-		thing=get_post(4020)
-		)
-
 @app.post("/admin/image_purge")
 @admin_level_required(5)
 def admin_image_purge(v):

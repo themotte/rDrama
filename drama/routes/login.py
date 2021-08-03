@@ -135,7 +135,8 @@ def login_post():
 @app.get("/@me")
 @auth_required
 def me(v):
-	return redirect(v.url)
+	if request.headers.get("Authorization"): v.json
+	else: redirect(v.url)
 
 
 @app.post("/logout")
@@ -366,10 +367,6 @@ def sign_up_post(v):
 
 	session["user_id"] = new_user.id
 	session["session_id"] = token_hex(16)
-
-	redir = request.form.get("redirect", None)
-
-	# #print(f"Signup event: @{new_user.username}")
 
 	return redirect("/")
 
