@@ -207,3 +207,19 @@ def admin_apps_list(v):
 	apps = g.db.query(OauthApp).all()
 
 	return render_template("admin/apps.html", v=v, apps=apps)
+
+
+@app.post("/oauth/reroll/<aid>")
+@auth_required
+def reroll_oauth_tokens(aid, v):
+
+	aid = aid
+
+	a = g.db.query(OauthApp).filter_by(id=aid).first()
+
+	if a.author_id != v.id: abort(403)
+
+	a.client_id = secrets.token_urlsafe(64)[:64]
+	g.db.add(a)
+
+	return {"message": "Client ID Rerolled", "id": a.client_id}
