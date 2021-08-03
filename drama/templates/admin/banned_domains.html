@@ -32,10 +32,10 @@
 	<select id="reason_select" class="form-control" name="reason" onchange="$('#ban-submit').prop('disabled', false)"> 
 		<option value="0">---Select Ban Reason---</option>
 		{% for i in reasons %}
-			<option value="{{i}}"{% if i == domain.reason %} selected{% endif %}>{{reasons[i]}}</option>
+			<option value="{{i}}">{{reasons[i]}}</option>
 		{% endfor %}
 	</select>
-	<input id="ban-submit" type="submit" class="btn btn-primary" value="Ban {{domain_name}}" disabled>
+	<input id="ban-submit" type="submit" class="btn btn-primary" value="Ban domain" disabled>
 </form>
 
 {% endblock %}
