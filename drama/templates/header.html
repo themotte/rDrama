@@ -26,7 +26,7 @@
 		aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon {% if v and v.notifications_count %}position-relative{% endif %}"><i class="fal fa-bars text-gray-500"></i>
 			{% if v and v.notifications_count %}
-				<span class="badge-count font-weight-bolder" style="right: -6px; font-size:18px;">{% if v.notifications_count > 9 %}9+{% else %}{{v.notifications_count}}{% endif %}</span>
+				<span class="badge-count font-weight-bolder" style="right: -6px; font-size:18px;">{{v.notifications_count}}</span>
 			{% endif %}
 		</span>
 	</button>
@@ -49,12 +49,6 @@
 
 			<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
 				<a class="nav-link position-relative" href="/notifications{% if v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder">{{v.notifications_count}}</span></a>
-			</li>
-
-			{% elif v.notifications_count > 9 %}
-
-			<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-				<a class="nav-link position-relative" href="/notifications{% if v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder" style="width: 24px;">9+</span></a>
 			</li>
 
 			{% else %}
