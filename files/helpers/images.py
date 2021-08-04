@@ -38,9 +38,7 @@ def upload_file(file=None, resize=False, png=False):
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data=data)
 		resp = req.json()['data']
 		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
-	except:
-		print(req.text)
-		return
+	except: return
 
 	new_image = Image(text=url, deletehash=resp["deletehash"])
 	g.db.add(new_image)
