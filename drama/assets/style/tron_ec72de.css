@@ -27544,11 +27544,11 @@ div.banned {
 }
 
 div.deleted {
-  background-color: #969600;
+  background-color: #969600 !important;
 }
 
 div.deleted.banned {
-  background-color: #964000;
+  background-color: #964000 !important;
 }
 
 .text-admin {
