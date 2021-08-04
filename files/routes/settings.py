@@ -52,7 +52,7 @@ def settings_profile_post(v):
 
 	if request.values.get("animatedname", v.animatedname) != v.animatedname:
 		if v.animatedname == False:
-			users = g.db.query(User.id).options(lazyload('*')).order_by(user.coins.desc()).limit(25).all()
+			users = g.db.query(User.id).options(lazyload('*')).order_by(User.coins.desc()).limit(25).all()
 			users = [x[0] for x in users]
 			if v.id not in users: return {"error": "You must be in the top 25 leaderboard or be a patron to apply an animated name!"}, 403
 		updated = True
