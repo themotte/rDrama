@@ -3842,15 +3842,15 @@ div.banned {
 }
 
 div.deleted {
-	background-color: $deleted;
+	background-color: $deleted !important;
 }
 
 div.deleted.banned {
-	background-color: $deletedandbanned
+	background-color: $deletedandbanned !important;
 }
 
 .text-admin {
-	color: $admin
+	color: $admin;
 }
 
 .in-comment-image {
