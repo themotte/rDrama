@@ -26,7 +26,7 @@ def suicide(v, username):
 	t = int(time.time())
 	if v.admin_level == 0 and t - v.suicide_utc < 86400: return "", 204
 	user = get_user(username)
-	suicide = f"Hi there,\n\nA [concerned dramatard]({v.url}) reached out to us about you.\n\nWhen you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.\n\nThere are resources available in your area that are free, confidential, and available 24/7:\n\n- Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)\n- Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)\n- Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.\nIf you don't see a resource in your area above, the moderators at r/SuicideWatch keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now\n\nIf you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.\n\nIt may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.\n\nYour fellow dramatards care about you and there are people who want to help."
+	suicide = f"Hi there,\n\nA [concerned user]({v.url}) reached out to us about you.\n\nWhen you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.\n\nThere are resources available in your area that are free, confidential, and available 24/7:\n\n- Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)\n- Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)\n- Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.\nIf you don't see a resource in your area above, the moderators at r/SuicideWatch keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now\n\nIf you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.\n\nIt may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.\n\nYour fellow users care about you and there are people who want to help."
 	send_notification(1046, user, suicide)
 	v.suicide_utc = t
 	g.db.add(v)
@@ -37,7 +37,7 @@ def suicide(v, username):
 def leaderboard(v):
 	if v and v.is_banned and not v.unban_utc:return render_template("seized.html")
 	users = g.db.query(User).options(lazyload('*'))
-	users1 = users.order_by(User.dramacoins.desc()).limit(25).all()
+	users1 = users.order_by(user.coins.desc()).limit(25).all()
 	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(10).all()
 	users3 = users.order_by(User.post_count.desc()).limit(10).all()
 	users4 = users.order_by(User.comment_count.desc()).limit(10).all()
@@ -163,7 +163,7 @@ def mfa_qr(secret, v):
 	qr = qrcode.QRCode(
 		error_correction=qrcode.constants.ERROR_CORRECT_L
 	)
-	qr.add_data(x.provisioning_uri(v.username, issuer_name="Drama"))
+	qr.add_data(x.provisioning_uri(v.username, issuer_name=app.config["SITE_NAME"]))
 	img = qr.make_image(fill_color="#000000", back_color="white")
 
 	mem = io.BytesIO()
@@ -276,11 +276,11 @@ def u_username(username, v=None):
 		# paidrent = False
 		# if v and u.id == 253:
 		# 	if int(time.time()) - v.rent_utc < 600: paidrent = True
-		# 	elif request.args.get("rent") == "true" and v.dramacoins > 500:
-		# 		v.dramacoins -= 500
+		# 	elif request.args.get("rent") == "true" and v.coins > 500:
+		# 		v.coins -= 500
 		# 		v.rent_utc = int(time.time())
 		# 		g.db.add(v)
-		# 		u.dramacoins += 500
+		# 		u.coins += 500
 		# 		g.db.add(u)
 		# 		send_notification(1046, u, f"@{v.username} has paid rent!")
 		# 		paidrent = True
@@ -378,11 +378,11 @@ def u_username_comments(username, v=None):
 		# paidrent = False
 		# if v and u.id == 253:
 		# 	if int(time.time()) - v.rent_utc < 600: paidrent = True
-		# 	elif request.args.get("rent") == "true" and v.dramacoins > 500:
-		# 		v.dramacoins -= 500
+		# 	elif request.args.get("rent") == "true" and v.coins > 500:
+		# 		v.coins -= 500
 		# 		v.rent_utc = int(time.time())
 		# 		g.db.add(v)
-		# 		u.dramacoins += 500
+		# 		u.coins += 500
 		# 		g.db.add(u)
 		# 		send_notification(1046, u, f"@{v.username} has paid rent!")
 		# 		paidrent = True

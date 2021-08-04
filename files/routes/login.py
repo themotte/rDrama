@@ -404,7 +404,7 @@ def post_forgot():
 		url = f"https://{app.config['SERVER_NAME']}/reset?id={user.id}&time={now}&token={token}"
 
 		send_mail(to_address=user.email,
-				  subject="Drama - Password Reset Request",
+				  subject="Password Reset Request",
 				  html=render_template("email/password_reset.html",
 									   action_url=url,
 									   v=user)
@@ -537,7 +537,7 @@ def request_2fa_disable():
 	action_url=f"https://{app.config['SERVER_NAME']}/reset_2fa?id={user.id}&t={valid}&token={token}"
 	
 	send_mail(to_address=user.email,
-			  subject="Drama - 2FA Removal Request",
+			  subject="2FA Removal Request",
 			  html=render_template("email/2fa_remove.html",
 								   action_url=action_url,
 								   v=user)

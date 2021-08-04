@@ -14,6 +14,7 @@ valid_title_regex = re.compile("^((?!<).){3,100}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 youtubekey = environ.get("youtubekey").strip()
+coins_name = environ.get("coins_name").strip()
 
 @app.post("/settings/profile")
 @auth_required
@@ -51,7 +52,7 @@ def settings_profile_post(v):
 
 	if request.values.get("animatedname", v.animatedname) != v.animatedname:
 		if v.animatedname == False:
-			users = g.db.query(User.id).options(lazyload('*')).order_by(User.dramacoins.desc()).limit(25).all()
+			users = g.db.query(User.id).options(lazyload('*')).order_by(user.coins.desc()).limit(25).all()
 			users = [x[0] for x in users]
 			if v.id not in users: return {"error": "You must be in the top 25 leaderboard or be a patron to apply an animated name!"}, 403
 		updated = True
@@ -425,13 +426,13 @@ def settings_css(v):
 @auth_required
 def settings_profilecss_get(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
-	if v.dramacoins < 1000 and not v.patron: return "You must have +1000 dramacoins or be a patron to set profile css."
+	if v.coins < 1000 and not v.patron: return f"You must have +1000 {coins_name} or be a patron to set profile css."
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
 @auth_required
 def settings_profilecss(v):
-	if v.dramacoins < 1000 and not v.patron: return "You must have +1000 dramacoins or be a patron to set profile css."
+	if v.coins < 1000 and not v.patron: return f"You must have +1000 {coins_name} or be a patron to set profile css."
 	profilecss = request.form.get("profilecss").replace('\\', '')[:50000]
 	v.profilecss = profilecss
 	g.db.add(v)

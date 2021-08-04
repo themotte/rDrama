@@ -10,10 +10,11 @@ from files.classes import *
 from files.__main__ import app
 
 site = environ.get("domain").strip()
+name = environ.get("SITE_NAME").strip()
 mailgun_domain = environ.get("MAILGUN_DOMAIN").strip()
 
 def send_mail(to_address, subject, html, plaintext=None, files={},
-			  from_address=f"Drama <noreply@mail.{site}>"):
+			  from_address=f"{name} <noreply@mail.{site}>"):
 
 	url = f"https://api.mailgun.net/v3/{mailgun_domain}/messages"
 
@@ -49,7 +50,7 @@ def send_verification_email(user, email=None):
 			  html=render_template("email/email_verify.html",
 								   action_url=link,
 								   v=user),
-			  subject="Validate your Drama account email."
+			  subject=f"Validate your {name} account email."
 			  )
 
 

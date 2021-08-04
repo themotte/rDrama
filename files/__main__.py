@@ -30,28 +30,15 @@ app = Flask(__name__,
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
 app.url_map.strict_slashes = False
 
-app.config["SITE_NAME"]=environ.get("SITE_NAME", "Drama").strip()
-
-app.config["SITE_COLOR"]=environ.get("SITE_COLOR", "805ad5").strip()
-
-app.config["DRAMAPATH"]=environ.get("DRAMAPATH", path.dirname(path.realpath(__file__)))
+app.config["SITE_NAME"]=environ.get("SITE_NAME").strip()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['DATABASE_URL'] = environ.get(
-	"DATABASE_CONNECTION_POOL_URL",
-	environ.get("DATABASE_URL"))
-
-app.config['SQLALCHEMY_READ_URIS'] = [
-	environ.get("DATABASE_CONNECTION_READ_01_URL"),
-	environ.get("DATABASE_CONNECTION_READ_02_URL"),
-	environ.get("DATABASE_CONNECTION_READ_03_URL")
-]
+app.config['DATABASE_URL'] = environ.get("DATABASE_CONNECTION_POOL_URL",environ.get("DATABASE_URL"))
 
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get("domain").strip()
 
-app.config["SHORT_DOMAIN"]=environ.get("SHORT_DOMAIN","").strip()
-app.config["SESSION_COOKIE_NAME"] = "session_drama"
+app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_NAME").strip().lower()
 app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
 app.config["SESSION_COOKIE_SECURE"] = bool(int(environ.get("FORCE_HTTPS", 1)))
@@ -61,7 +48,6 @@ app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
 app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1)) if ("localhost" not in app.config["SERVER_NAME"] and "127.0.0.1" not in app.config["SERVER_NAME"]) else 0
-app.config["DISABLE_SIGNUPS"]=int(environ.get("DISABLE_SIGNUPS",0))
 
 app.jinja_env.cache = {}
 
@@ -70,34 +56,26 @@ app.config["UserAgent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit
 if "localhost" in app.config["SERVER_NAME"]:
 	app.config["CACHE_TYPE"] = "null"
 else:
-	app.config["CACHE_TYPE"] = environ.get("CACHE_TYPE", 'filesystem').strip()
+	app.config["CACHE_TYPE"] = "filesystem"
 
-app.config["CACHE_DIR"] = environ.get("CACHE_DIR", "dramacache")
+app.config["CACHE_DIR"] = environ.get("CACHE_DIR", "cache")
 
 # captcha configs
 app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","").strip()
-app.config["HCAPTCHA_SECRET"] = environ.get(
-	"HCAPTCHA_SECRET","").strip()
-app.config["SIGNUP_HOURLY_LIMIT"]=int(environ.get("SIGNUP_HOURLY_LIMIT",0))
+app.config["HCAPTCHA_SECRET"] = environ.get("HCAPTCHA_SECRET","").strip()
 
 # antispam configs
-app.config["SPAM_SIMILARITY_THRESHOLD"] = float(
-	environ.get("SPAM_SIMILARITY_THRESHOLD", 0.5))
-app.config["SPAM_SIMILAR_COUNT_THRESHOLD"] = int(
-	environ.get("SPAM_SIMILAR_COUNT_THRESHOLD", 5))
-app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(
-	environ.get("SPAM_URL_SIMILARITY_THRESHOLD", 0.1))
-app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(
-	environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD", 0.5))
-app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(
-	environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 5))
+app.config["SPAM_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_SIMILARITY_THRESHOLD"))
+app.config["SPAM_SIMILAR_COUNT_THRESHOLD"] = int(environ.get("SPAM_SIMILAR_COUNT_THRESHOLD"))
+app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_URL_SIMILARITY_THRESHOLD"))
+app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD"))
+app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD"))
 
-app.config["CACHE_REDIS_URL"] = environ.get(
-	"REDIS_URL").strip().lstrip() if environ.get("REDIS_URL") else None
+app.config["CACHE_REDIS_URL"] = environ.get("REDIS_URL").strip()
 app.config["CACHE_DEFAULT_TIMEOUT"] = 60
 app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
-app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 10))
+app.config["REDIS_POOL_SIZE"] = 10
 
 redispool=ConnectionPool(
 	max_connections=app.config["REDIS_POOL_SIZE"],
@@ -105,7 +83,7 @@ redispool=ConnectionPool(
 	) if app.config["CACHE_TYPE"]=="redis" else None
 app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_TYPE"]=="redis" else {}
 
-app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", False)))
+app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
 
 app.config["TENOR_KEY"]=environ.get("TENOR_KEY",'').strip()
@@ -115,18 +93,15 @@ Markdown(app)
 cache = Cache(app)
 Compress(app)
 
-app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL").strip() if environ.get("REDIS_URL") else 'memory://'
+app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL").strip()
 app.config["RATELIMIT_KEY_PREFIX"] = "flask_limiting_"
 app.config["RATELIMIT_ENABLED"] = True
 app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
 app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
-#app.config["DISABLESIGNUPS"] = bool(int(environ.get("DISABLESIGNUPS", "0")))
 
-
-def limiter_key_func():
-	return request.remote_addr
+def limiter_key_func(): return request.remote_addr
 
 
 limiter = Limiter(
@@ -266,26 +241,6 @@ def before_request():
 		g.system="ios/webview"
 	else:
 		g.system="other/other"
-
-
-def log_event(name, link):
-
-	x = requests.get(link)
-
-	if x.status_code != 200:
-		return
-
-	text = f'> **{name}**\r> {link}'
-
-	url = environ.get("DISCORD_WEBHOOK")
-	headers = {"Content-Type": "application/json"}
-	data = {"username": "drama",
-			"content": text
-			}
-
-	x = requests.post(url, headers=headers, json=data)
-	print(x.status_code)
-
 
 @app.after_request
 def after_request(response):

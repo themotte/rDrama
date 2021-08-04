@@ -256,7 +256,7 @@ def api_comment(v):
 			threshold *= 2
 
 		if len(similar_comments) > threshold:
-			text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+			text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
 			send_notification(1046, v, text)
 
 			v.ban(reason="Spamming.",
@@ -648,7 +648,7 @@ def edit_comment(cid, v):
 		threshold *= 2
 
 	if len(similar_comments) > threshold:
-		text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+		text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
 		send_notification(1046, v, text)
 
 		v.ban(reason="Spamming.",

@@ -79,7 +79,7 @@ class User(Base, Stndrd, Age_times):
 	ban_reason = Column(String, default="")
 	login_nonce = Column(Integer, default=0)
 	reserved = Column(String(256))
-	dramacoins = Column(Integer, default=0)
+	coins = Column(Integer, default=0)
 	mfa_secret = deferred(Column(String(16)))
 	is_private = Column(Boolean, default=False)
 	stored_subscriber_count = Column(Integer, default=0)
@@ -491,7 +491,7 @@ class User(Base, Stndrd, Age_times):
 		data = self.json_core
 
 		data["badges"] = [x.json_core for x in self.badges]
-		data['dramacoins'] = int(self.dramacoins)
+		data['coins'] = int(self.coins)
 		data['post_count'] = self.post_count
 		data['comment_count'] = self.comment_count
 

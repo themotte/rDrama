@@ -15,13 +15,12 @@ def banaward_trigger(post=None, comment=None):
         if not author.is_suspended:
             author.ban(reason="1-day ban award used", days=1)
 
-            send_notification(1046, author, f"Your Drama account has been suspended for a day for {link}. It sucked and you should feel bad.")
+            send_notification(1046, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
         elif author.unban_utc > 0:
             author.unban_utc += 24*60*60
             g.db.add(author)
 
-            send_notification(1046, author,
-                              f"Your Drama account has been suspended for yet another day for {link}. Seriously man?")
+            send_notification(1046, author, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 
 
 ACTIONS = {

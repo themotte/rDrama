@@ -72,7 +72,7 @@ def a_modify(attrs, new=False):
 			attrs[(None, "rel")] = "nofollow noopener"
 
 			# Force https for all external links in comments
-			# (Drama already forces its own https)
+			# (Website already forces its own https)
 			new_url = ParseResult(scheme="https",
 								  netloc=parsed_url.netloc,
 								  path=parsed_url.path,

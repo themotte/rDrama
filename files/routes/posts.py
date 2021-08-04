@@ -266,7 +266,7 @@ def edit_post(pid, v):
 				BadLink.link)).first()
 		if badlink:
 			if badlink.autoban:
-				text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+				text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
 				send_notification(1046, v, text)
 				v.ban(days=1, reason="spam")
 
@@ -422,7 +422,6 @@ def thumbs(new_post):
 
 		#iterate through desired meta tags
 		meta_tags = [
-			"drama:thumbnail",
 			"twitter:image",
 			"og:image",
 			"thumbnail"
@@ -616,7 +615,7 @@ def submit_post(v):
 			else: embed = f"https://youtube.com/embed/{yt_id}"
 
 	elif "instagram.com" in domain:
-		embed = requests.get("https://graph.facebook.com/v9.0/instagram_oembed", params={"url":url,"access_token":environ.get("FACEBOOK_TOKEN","").strip(),"omitscript":'true'}, headers={"User-Agent":"Instagram embedder for Drama"}).json()["html"]
+		embed = requests.get("https://graph.facebook.com/v9.0/instagram_oembed", params={"url":url,"access_token":environ.get("FACEBOOK_TOKEN","").strip(),"omitscript":'true'}, headers={"User-Agent": app.config["UserAgent"]}).json()["html"]
 
 	elif app.config['SERVER_NAME'] in domain:
 		try:
@@ -681,7 +680,7 @@ def submit_post(v):
 
 	if max(len(similar_urls), len(similar_posts)) >= threshold:
 
-		text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+		text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
 		send_notification(1046, v, text)
 
 		v.ban(reason="Spamming.",
@@ -761,7 +760,7 @@ def submit_post(v):
 				BadLink.link)).first()
 		if badlink:
 			if badlink.autoban:
-				text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+				text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
 				send_notification(1046, v, text)
 				v.ban(days=1, reason="spam")
 

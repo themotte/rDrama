@@ -646,16 +646,16 @@ def ban_user(user_id, v):
 	
 	if days > 0:
 		if message:
-			text = f"Your Drama account has been suspended for {days} days for the following reason:\n\n> {message}"
+			text = f"Your account has been suspended for {days} days for the following reason:\n\n> {message}"
 		else:
-			text = f"Your Drama account has been suspended for {days} days."
+			text = f"Your account has been suspended for {days} days."
 		user.ban(admin=v, reason=reason, days=days)
 
 	else:
 		if message:
-			text = f"Your Drama account has been permanently suspended for the following reason:\n\n> {message}"
+			text = f"Your account has been permanently suspended for the following reason:\n\n> {message}"
 		else:
-			text = "Your Drama account has been permanently suspended."
+			text = "Your account has been permanently suspended."
 
 		user.ban(admin=v, reason=reason)
 
@@ -701,7 +701,7 @@ def unban_user(user_id, v):
 				x.unban()
 
 	send_notification(1046, user,
-					  "Your Drama account has been reinstated. Please carefully review and abide by the [rules](/post/2510) to ensure that you don't get suspended again.")
+					  "Your account has been reinstated. Please carefully review and abide by the [rules](/post/2510) to ensure that you don't get suspended again.")
 
 	ma=ModAction(
 		kind="unexile_user",
@@ -907,7 +907,7 @@ def refund(v):
 		if u.id == 253: continue
 		posts=sum([x[0]+x[1]-1 for x in g.db.query(Submission.upvotes, Submission.downvotes).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()])
 		comments=sum([x[0]+x[1]-1 for x in g.db.query(Comment.upvotes, Comment.downvotes).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()])
-		u.dramacoins = int(posts+comments)
+		u.coins = int(posts+comments)
 		g.db.add(u)
 	return "sex"
 

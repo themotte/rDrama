@@ -31,6 +31,14 @@ services:
       - HCAPTCHA_SECRET=vcxvdfgfc6r554etrgd
       - youtubekey=vcxvdfgfc6r554etrgd
       - PUSHER_KEY=vcxvdfgfc6r554etrgd
+      - SPAM_SIMILARITY_THRESHOLD=0.5
+      - SPAM_SIMILAR_COUNT_THRESHOLD=5
+      - SPAM_URL_SIMILARITY_THRESHOLD=0.1
+      - COMMENT_SPAM_SIMILAR_THRESHOLD=0.5
+      - COMMENT_SPAM_COUNT_THRESHOLD=5
+      - READ_ONLY=0
+      - BOT_DISABLE=0
+      - coins_name=Dramacoins
     links:
       - "redis"
       - "postgres"
