@@ -43,7 +43,7 @@ Python example:
 
 	headers={"Authorization": "access_token_goes_here", "User-Agent": "sex"}
 
-	url="https://rdrama.net/@carpathianflorist"
+	url="{{request.host_url}}@carpathianflorist"
 
 	r=requests.get(url, headers=headers)
 
@@ -93,7 +93,7 @@ DO NOT reveal your Client ID or Access Token. Anyone with these information will
 
 ## Step 2: Prompt Your User for Authorization
 
-Send your user to `https://rdrama.net/authorize/?client_id=YOUR_CLIENT_ID`
+Send your user to `{{request.host_url}}authorize/?client_id=YOUR_CLIENT_ID`
 
 If done correctly, the user will see that your application wants to access their {{"SITE_NAME" | app_config}} account, and be prompted to approve or deny the request.
 
@@ -112,7 +112,7 @@ Python example:
 
 	headers={"Authorization": "access_token_goes_here", "User-Agent": "sex"}
 
-	url="https://rdrama.net/@carpathianflorist"
+	url="{{request.host_url}}@carpathianflorist"
 
 	r=requests.get(url, headers=headers)
 

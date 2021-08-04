@@ -2,12 +2,12 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: drama
+    destination: files
 permissions:
-  - object: drama/*
+  - object: files/*
     mode: 4755
 hooks:
   AfterInstall:
     - location: scripts/install_pip
   ApplicationStart:
-    - location: scripts/start_drama
+    - location: scripts/start_files

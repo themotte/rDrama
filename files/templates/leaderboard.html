@@ -4,7 +4,7 @@
 
 {% block content %}
 <pre class="d-none d-md-inline-block"></pre>
-<h5 style="font-weight:bold;text-align: center;">Top 25 dramatards by dramacoins</h5>
+<h5 style="font-weight:bold;text-align: center;">Top 25 by {{"coins_name" | app_config}}</h5>
 <pre></pre>
 <table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
@@ -18,7 +18,7 @@
 	<tr>
 		<td style="font-weight:bold;">{{users1.index(user)+1}}</td>
 		<td><a {% if user.animatedname %}class="{% if user.patron %}patron{% else %}leaderboard{% endif %}"{% endif %} style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}"><img src="/uid/{{user.id}}/pic/profile" class="profile-pic-20 mr-1">{{user.username}}</a></td>
-		<td style="font-weight:bold; text-align:right;">{{user.dramacoins}}</td>
+		<td style="font-weight:bold; text-align:right;">{{user.coins}}</td>
 	</tr>
 {% endfor %}
 </table>
@@ -26,7 +26,7 @@
 
 
 </pre>
-<h5 style="font-weight:bold;text-align: center;">Top 10 dramatards by followers</h5>
+<h5 style="font-weight:bold;text-align: center;">Top 10 by followers</h5>
 <pre>
 
 
@@ -51,7 +51,7 @@
 
 
 </pre>
-<h5 style="font-weight:bold;text-align: center;">Top 10 dramatards by post count</h5>
+<h5 style="font-weight:bold;text-align: center;">Top 10 by post count</h5>
 <pre>
 
 
@@ -76,7 +76,7 @@
 
 
 </pre>
-<h5 style="font-weight:bold;text-align: center;">Top 10 dramatards by comment count</h5>
+<h5 style="font-weight:bold;text-align: center;">Top 10 by comment count</h5>
 <pre>
 
 

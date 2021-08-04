@@ -33,11 +33,11 @@
 				var id = document.getElementById("usernameHelpRegister");
 				var successID = document.getElementById("usernameHelpSuccess");
 
-				var dramaAPI = '/is_available/' + charCount;
+				var API = '/is_available/' + charCount;
 
 				if (charCount.length >= 3) {
 
-					$.getJSON(dramaAPI, function(result) {
+					$.getJSON(API, function(result) {
 						$.each(result, function(i, field) {
 							if (field == false) {
 								id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username already taken :(';
@@ -74,13 +74,13 @@
 		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="Sign up now! Dude bussy lmao">
-		<meta property="og:author" name="author" content="@drama" />
+		<meta property="og:author" name="author" content="{{request.host_url}}" />
 		<meta property="og:site_name" content="{{request.host}}" />
 
 		<meta name="twitter:card" content="summary_large_image"/>
-		<meta name="twitter:site" content="@drama">
+		<meta name="twitter:site" content="{{request.host_url}}">
 		<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
-		<meta name="twitter:creator" content="@drama">
+		<meta name="twitter:creator" content="{{request.host_url}}">
 		<meta name="twitter:description" content="Sign up now! Dude bussy lmao" />
 		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta name="twitter:url" content="{{request.host}}" />

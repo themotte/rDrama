@@ -14,13 +14,13 @@
 		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="Sign up now! Dude bussy lmao">
-		<meta property="og:author" name="author" content="@drama" />
+		<meta property="og:author" name="author" content="{{request.host_url}}" />
 		<meta property="og:site_name" content="{{request.host}}" />
 
 		<meta name="twitter:card" content="summary_large_image"/>
-		<meta name="twitter:site" content="@drama">
+		<meta name="twitter:site" content="{{request.host_url}}">
 		<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
-		<meta name="twitter:creator" content="@drama">
+		<meta name="twitter:creator" content="{{request.host_url}}">
 		<meta name="twitter:description" content="Sign up now! Dude bussy lmao" />
 		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta name="twitter:url" content="{{request.host}}" />
@@ -69,7 +69,7 @@
 								<div class="col-10 col-md-7">
 
 										<div class="text-center mb-5">
-												<a href="/" class="text-decoration-none"><span class="h3 text-primary">drama</span></a>
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{"SITE_NAME" | app_config}}</span></a>
 										</div>
 
 										<div id="register-form" class="">

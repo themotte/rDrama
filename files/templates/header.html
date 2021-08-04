@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-md navbar-light shadow shadow-md fixed-top" id="navbar">
 	<div class="container-fluid">
-		<div class="flex-grow-1"><a href="/" class="navbar-brand"><img src="/assets/images/drama.gif" height="20"><span class="text-small-extra text-uppercase text-gray-400"> Sigma</span></a></div>
+		<div class="flex-grow-1"><a href="/" class="navbar-brand"><img src="/assets/images/logo.gif" height="20"><span class="text-small-extra text-uppercase text-gray-400"> Sigma</span></a></div>
 		<div class="flex-grow-1 d-fl d-none d-md-block">
 			<form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search/posts/" method="get">
 				<input class="form-control w-100" type="search" placeholder="Search" aria-label="Search" name="q" value="{{request.args.get('q', '')}}">
@@ -79,7 +79,7 @@
 						<div><img src="{{v.profile_url}}" class="profile-pic-35"></div>
 						<div class="text-left pl-2">
 							<div style="color: #{{v.namecolor}}" class="text-small font-weight-bold {% if v.animatedname %}{% if v.patron %}patron{% else %}leaderboard{% endif %}{% endif %}">{{v.username}}</div>
-							<div class="text-small-extra text-purple"><i class="fad fa-diamond mr-1"></i>{{v.dramacoins}} {{"SITE_NAME" | app_config}}coins</div>
+							<div class="text-small-extra text-purple"><i class="fad fa-diamond mr-1"></i>{{v.coins}} {{"SITE_NAME" | app_config}}coins</div>
 						</div>
 					</div>
 				</a>

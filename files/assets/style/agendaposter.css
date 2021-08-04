@@ -18,10 +18,6 @@ html {
 .nav-item .text-small-extra.text-purple i {
     font-size: 11px !important
 }
-.nav-item .text-small-extra.text-purple::after {
-    content: "-9999 Dramacoins";
-    font-size: 11px !important
-}
 
 /*h1, h2, h3, h4, h5, h6, p, span, label {
  background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);

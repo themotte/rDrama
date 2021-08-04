@@ -40,7 +40,7 @@
 <meta property="og:site_name" content="{{request.host}}" />
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@drama">
+<meta name="twitter:site" content="{{request.host_url}}">
 <meta name="twitter:title" content="{{'@'+comment_info.author.username}} comments on {{title}} - {{"SITE_NAME" | app_config}}" />
 <meta name="twitter:creator" content="{{'@'+comment_info.author.username}}">
 <meta name="twitter:description" content="{{comment_info.body}}" />
@@ -66,7 +66,7 @@
 <meta property="og:site_name" content="{{request.host}}" />
 
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:site" content="@drama">
+<meta name="twitter:site" content="{{request.host_url}}">
 <meta name="twitter:title" content="{{title}} - {{"SITE_NAME" | app_config}}" />
 <meta name="twitter:creator" content="{{'@'+p.author.username}}">
 <meta name="twitter:description" content="{{p.body}}" />
@@ -566,7 +566,7 @@
 	<div class="card border-0 bg-light mt-4">
 		<div class="card-body">
 			<h5 class="card-title">Jump in the discussion.</h5>
-			<p class="card-text">Become a dramatard, no email address required.</p>
+			<p class="card-text">No email address required.</p>
 			<div>
 				<a href="/signup?redirect={{request.path | urlencode}}" class="btn btn-primary">Sign up</a>
 				<a href="/login?redirect={{request.path | urlencode}}" class="btn btn-link text-muted">Sign in</a>

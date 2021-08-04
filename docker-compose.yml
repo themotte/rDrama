@@ -1,13 +1,13 @@
 version: '2.3'
 
 services:
-  drama:
+  files:
     build:
       context: .
     volumes:
-      - "./:/drama/service"
+      - "./:/service"
     environment:
-      - PYTHONPATH="drama/service"
+      - PYTHONPATH="/service"
       - REDIS_URL=redis://redis
       - DATABASE_URL=postgresql://postgres@postgres:5432/postgres
       - DATABASE_CONNECTION_POOL_URL=postgresql://postgres@postgres:5432/postgres
@@ -19,7 +19,6 @@ services:
       - TENOR_KEY=vcxvdfgfc6r554etrgd
       - MAILGUN_KEY=vcxvdfgfc6r554etrgd
       - MAILGUN_DOMAIN=rdrama.net
-      - admin_email=drama@rdrama.net
       - FORCE_HTTPS=0
       - DISCORD_SERVER_ID=vcxvdfgfc6r554etrgd
       - DISCORD_CLIENT_ID=vcxvdfgfc6r554etrgd
@@ -27,7 +26,7 @@ services:
       - DISCORD_BOT_TOKEN=vcxvdfgfc6r554etrgd
       - imgurkey=vcxvdfgfc6r554etrgd
       - FACEBOOK_TOKEN=vcxvdfgfc6r554etrgd
-        #- HCAPTCHA_SITEKEY=vcxvdfgfc6r554etrgd
+     #- HCAPTCHA_SITEKEY=vcxvdfgfc6r554etrgd
       - HCAPTCHA_SECRET=vcxvdfgfc6r554etrgd
       - youtubekey=vcxvdfgfc6r554etrgd
       - PUSHER_KEY=vcxvdfgfc6r554etrgd
