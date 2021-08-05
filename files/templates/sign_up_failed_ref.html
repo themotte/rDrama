@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Sign up in under 27 seconds.">
+		<meta name="author" content="">
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="{{"SITE_NAME" | app_config}}" />
+		<meta property="og:site_name" content="{{request.host}}" />
+		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
+		<meta property="og:url" content="{{request.host}}">
+		<meta property="og:description" name="description" content="Sign up now! Dude bussy lmao">
+		<meta property="og:author" name="author" content="{{request.host_url}}" />
+		<meta property="og:site_name" content="{{request.host}}" />
+
+		<meta name="twitter:card" content="summary_large_image"/>
+		<meta name="twitter:site" content="{{request.host_url}}">
+		<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
+		<meta name="twitter:creator" content="{{request.host_url}}">
+		<meta name="twitter:description" content="Sign up now! Dude bussy lmao" />
+		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
+		<meta name="twitter:url" content="{{request.host}}" />
+
+		<title>{% if ref_user %}{{ref_user.username}} invites you to {{"SITE_NAME" | app_config}}{% else %}{{"SITE_NAME" | app_config}}{% endif %}</title>
+
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+		<!-- Font Awesome -->
+		<link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+		<script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js"
+		integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
+		crossorigin="anonymous"></script>
+
+		<!-- {{"SITE_NAME" | app_config}} CSS -->
+		<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
+
+</head>
+
+<body id="login">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
+				<div class="container-fluid">
+						<button class="navbar-toggler d-none" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+						aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+				</button>
+		</div>
+</nav>
+
+<!-- Page Content -->
+
+<div class="container-fluid position-absolute h-100 p-0">
+		<div class="row no-gutters h-100">
+
+				<div class="col-12 col-md-6 my-auto p-3">
+
+						<div class="row justify-content-center">
+
+								<div class="col-10 col-md-7">
+
+										<div class="text-center mb-5">
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{"SITE_NAME" | app_config}}</span></a>
+										</div>
+
+										<div id="register-form" class="">
+												<h1 class="h4 font-weight-normal text-center">Whoops! You can't refer yourself!</h1>
+												<p class="text-center text-muted mb-md-5">Send this link to a friend instead :)</p>
+												<label>Referral code</label>
+												<input type="text" class="form-control copy-link" readonly value="/signup?ref={{request.args.get('ref')}}" data-clipboard-text="/signup?ref={{request.args.get('ref')}}">
+
+												<div class="text-center mt-5 mb-3">
+														Already have an account? <a href="/login" class="font-weight-bold text-small toggle-login">Log in.</a>
+														</div>
+												</div>
+
+										</div>
+
+								</div>
+
+						</div>
+
+						<div class="col-12 col-md-6 d-none d-md-block">
+
+								<div class="splash-wrapper">
+
+										<div class="splash-overlay"></div>
+
+										<img class="splash-img" src="{{i.path}}"></img>
+								</div>
+
+						</div>
+
+				</div>
+		</div>
+
+		<!-- Clipboard Toast -->
+
+		<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+			<div class="toast-body text-center">
+				<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
+		</div>
+</div>
+
+<div class="toast clipboard" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body text-center">
+		<i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy link
+</div>
+</div>
+
+{% include "bootstrap.html" %}
+
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+	var clipboard = new ClipboardJS('.copy-link');
+	clipboard.on('success', function(e) {
+
+		jQuery(function($) {
+			$('#toast-success').toast('show');
+	})
+		console.log(e);
+});
+	clipboard.on('error', function(e) {
+
+		jQuery(function($) {
+			$('#toast-error').toast('show');
+	})
+		console.log(e);
+});
+</script>
+
+<!-- {{"SITE_NAME" | app_config}} JS -->
+
+<script src="/assets/js/all_js.js"></script>
+
+</body>
+
+</html>

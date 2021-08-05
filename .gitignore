@@ -1,5 +1,6 @@
+image.png
 image.gif
-dramacache/
+cache/
 __pycache__/
 *.py[cod]
 *$py.class

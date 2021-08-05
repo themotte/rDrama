@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	{% include "bootstrap.html" %}
+	
+	<script>
+		//email change
+
+		// Show confirm password field when user clicks email box
+
+		$('#new_email').on('input', function () {
+
+			var id = document.getElementById("email-password");
+			var id2 = document.getElementById("email-password-label");
+			var id3 = document.getElementById("emailpasswordRequired");
+
+			id.classList.remove("d-none");
+			id2.classList.remove("d-none");
+			id3.classList.remove("d-none");
+
+		});
+	
+		// 2FA toggle modal
+
+		$('#2faModal').on('hidden.bs.modal', function () {
+
+			var box = document.getElementById("2faToggle");
+			
+			box.checked = !box.checked;
+
+		});
+
+	
+		//Email verification text
+
+		function emailVerifyText() {
+
+			document.getElementById("email-verify-text").innerHTML = "Verification email sent! Please check your inbox.";
+
+		}
+	</script>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+
+	<title>{% block pagetitle %}Settings - {{"SITE_NAME" | app_config}}{% endblock %}</title>
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="{{"SITE_NAME" | app_config}}" />
+		<meta property="og:site_name" content="{{request.host}}" />
+		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
+		<meta property="og:url" content="{{request.host}}">
+		<meta property="og:description" name="description" content="Dude bussy lmao">
+		<meta property="og:author" name="author" content="@{{request.host_url}}" />
+		<meta property="og:site_name" content="{{request.host}}" />
+
+		<meta name="twitter:card" content="summary_large_image"/>
+		<meta name="twitter:site" content="@{{request.host_url}}">
+		<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
+		<meta name="twitter:creator" content="@{{request.host_url}}">
+		<meta name="twitter:description" content="Dude bussy lmao" />
+		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
+		<meta name="twitter:url" content="{{request.host}}" />
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<!-- {{"SITE_NAME" | app_config}} CSS -->
+
+	<link rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/style/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+
+	<!-- Font Awesome -->
+	<link href="/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
+
+	<script>
+		function formkey() {
+			return '{{v.formkey}}';
+		}
+	</script>
+</head>
+
+<body id="settings">
+
+	{% include "header.html" %}
+	<!-- Page Content -->
+	<div class="container">
+
+		<div class="row justify-content-around">
+
+	<div class="col h-100">
+
+		{% if error %}
+		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-exclamation-circle my-auto"></i>
+			<span>
+				{{error}}
+			</span>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
+		{% if msg %}
+		<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+			<span>
+				{{msg}}
+			</span>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
+
+		<div class="mt-3">
+
+			<h1 class="d-none d-md-block">Settings</h1>
+
+			<h2 class="h3 d-md-none">Settings</h2>
+
+		</div>
+
+		<!-- Settings tabs -->
+
+		<!-- Desktop -->
+
+		<div class="flex-row bg-white box-shadow-bottom sticky d-none d-sm-flex mt-3 mb-3 mb-sm-5">
+
+			<ul class="nav settings-nav">
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/profile' %} active{% endif %}" href="/settings/profile">Profile</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/content' %} active{% endif %}" href="/settings/content">Content</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/css' %} active{% endif %}" href="/settings/css">Custom CSS</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/profilecss' %} active{% endif %}" href="/settings/profilecss">Profile CSS</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/security' %} active{% endif %}" href="/settings/security">Security</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/blocks' %} active{% endif %}" href="/settings/blocks">Block users</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/apps' %} active{% endif %}" href="/settings/apps">Apps</a>
+				</li>
+			</ul>
+
+		</div>
+
+		<!-- Mobile -->
+
+		<div class="flex-row bg-white box-shadow-bottom sticky justify-content-center d-flex d-sm-none mt-3 mb-3 mb-sm-5">
+
+			<ul class="nav settings-nav">
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/profile' %} active{% endif %} px-25 " href="/settings/profile"><i class="fas fa-cog text-lg mr-0"></i></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/content' %} active{% endif %} px-25 " href="/settings/content"><i class="fas fa-filter text-lg mr-0"></i></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/css' %} active{% endif %} px-25 " href="/settings/css"><i class="fas fa-palette text-lg mr-0"></i></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/profilecss' %} active{% endif %} px-25 " href="/settings/profilecss"><i class="fas fa-palette text-lg mr-0"></i></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/security' %} active{% endif %} px-25 " href="/settings/security"><i class="fas fa-lock-alt text-lg mr-0"></i></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/blocks' %} active{% endif %} px-25 " href="/settings/blocks"><i class="fas fa-user-minus text-lg mr-0"></i></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if request.path=='/settings/apps' %} active{% endif %} px-25 " href="/settings/apps"><i class="fas fa-code text-lg mr-0"></i></a>
+				</li>
+			</ul>
+
+		</div>
+
+	 {% block content %}
+	 {% endblock %}
+	 
+	</div>
+</div>
+
+ </div>
+
+ {% if v %}
+ {% include "2fa_modal.html" %}
+ {% endif %}
+
+ <!-- Clipboard Toast -->
+
+{% block clipboard %}
+<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body text-center">
+		<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
+	</div>
+</div>
+
+<div class="toast clipboard" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body text-center">
+		<i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy link
+	</div>
+</div>
+{% endblock %}
+
+
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+	var clipboard = new ClipboardJS('.copy-link');
+	clipboard.on('success', function(e) {
+
+		jQuery(function($) {
+			$('#toast-success').toast('show');
+		})
+		console.log(e);
+	});
+	clipboard.on('error', function(e) {
+
+		jQuery(function($) {
+			$('#toast-error').toast('show');
+		})
+		console.log(e);
+	});
+</script>
+
+<!--Post toasts -->
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body bg-success text-center text-white">
+		<i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text"></span>
+	</div>
+</div>
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body bg-danger text-center text-white">
+		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text"></span>
+	</div>
+</div>
+
+<script src="/assets/js/all_js.js"></script>
+
+{% block onload %}{% endblock %}
+
+</body>
+
+</html>

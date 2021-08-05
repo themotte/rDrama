@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		{% include "bootstrap.html" %}
+		<script>
+		
+			//Signup js
+			// Display username and password requirements on input
+
+			$('#password-register').on('input', function () {
+
+				var charCount = document.getElementById("password-register").value;
+				var id = document.getElementById("passwordHelpRegister");
+				var successID = document.getElementById("passwordHelpSuccess");
+
+				if (charCount.length >= 8) {
+					id.classList.add("d-none");
+					successID.classList.remove("d-none");
+				}
+				else {
+					id.classList.remove("d-none");
+					successID.classList.add("d-none");
+				};
+
+			});
+		
+			// Check username length, special chars
+
+			$('#username-register').on('input', function () {
+
+				var charCount = document.getElementById("username-register").value;
+				var id = document.getElementById("usernameHelpRegister");
+				var successID = document.getElementById("usernameHelpSuccess");
+
+				var API = '/is_available/' + charCount;
+
+				if (charCount.length >= 3) {
+
+					$.getJSON(API, function(result) {
+						$.each(result, function(i, field) {
+							if (field == false) {
+								id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username already taken :(';
+							}
+						});
+					});
+
+				}
+
+				if (!/[^a-zA-Z0-9_\-$]/.test(charCount)) {
+					// Change alert text
+					id.innerHTML = '<span class="form-text font-weight-bold text-success mt-1">Username is a-okay!';
+
+					if (charCount.length < 3) {
+						id.innerHTML = '<span class="form-text font-weight-bold text-muted mt-1">Username must be at least 3 characters long.';
+					}
+					else if (charCount.length > 25) {
+						id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username must be 25 characters or less.';
+					}
+				}
+				else {
+					id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">No special characters or spaces allowed.</span>';
+				};
+
+			});
+		</script>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Sign up in under 27 seconds.">
+		<meta name="author" content="">
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="{{"SITE_NAME" | app_config}}" />
+		<meta property="og:site_name" content="{{request.host}}" />
+		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
+		<meta property="og:url" content="{{request.host}}">
+		<meta property="og:description" name="description" content="Sign up now! Dude bussy lmao">
+		<meta property="og:author" name="author" content="{{request.host_url}}" />
+		<meta property="og:site_name" content="{{request.host}}" />
+
+		<meta name="twitter:card" content="summary_large_image"/>
+		<meta name="twitter:site" content="{{request.host_url}}">
+		<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
+		<meta name="twitter:creator" content="{{request.host_url}}">
+		<meta name="twitter:description" content="Sign up now! Dude bussy lmao" />
+		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
+		<meta name="twitter:url" content="{{request.host}}" />
+
+		<title>{% if ref_user %}{{ref_user.username}} invites you to {{"SITE_NAME" | app_config}}{% else %}Sign up - {{"SITE_NAME" | app_config}}{% endif %}</title>
+
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+		<!-- Font Awesome -->
+		<link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+		<script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js"
+		integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
+		crossorigin="anonymous"></script>
+
+		<!-- {{"SITE_NAME" | app_config}} CSS -->
+		<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
+
+</head>
+
+<body id="login">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
+				<div class="container-fluid">
+						<button class="navbar-toggler d-none" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+						aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+				</button>
+		</div>
+</nav>
+
+<!-- Page Content -->
+
+<div class="container-fluid position-absolute h-100 p-0 overflow-auto">
+		<div class="row no-gutters h-100">
+
+				<div class="col-12 col-md-6 my-auto p-3">
+
+						<div class="row justify-content-center">
+
+								<div class="col-10 col-md-7">
+
+										<div class="mb-3">
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{"SITE_NAME" | app_config}}</span></a>
+										</div>
+
+										<div id="register-form" class="">
+
+											 {% if ref_user %}
+											 <h1 class="h2">@{{ref_user.username}} has invited you!</h1>
+											 <p class="text-muted mb-md-2">Looks like someone wants you to join {{"SITE_NAME" | app_config}}.</p>
+											 {% else %}
+											 <h1 class="h2">Create your account.</h1>
+											 <p class="text-muted mb-md-2">No email address required.</p>
+											 {% endif %}
+
+											 <form action="/signup" method="post" class="mt-md-3" id="signup">
+
+														{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
+
+														<input type="hidden" name="formkey" value="{{formkey}}">
+														<input type="hidden" name="now" value="{{now}}">
+
+														{% if redirect %}<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
+														{% if ref_user %}
+														<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
+
+														<label for="username-register" class="mt-3">Username</label>
+
+														<input class="form-control" id="username-register"
+														aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" required="">
+														<small id="usernameHelpRegister"></small>
+
+														<label for="email-register" class="mt-3">Email Address</label>
+
+														<small class="d-inline-block text-muted ml-1">(optional)</small>
+
+														<input class="form-control" id="email-register"
+														aria-describedby="emailHelpRegister" type="text" name="email">
+
+														<label for="password-register" class="mt-3">Password</label>
+
+														<input class="form-control" id="password-register"
+														aria-describedby="passwordHelpReigster" type="password" name="password" required="">
+														<small id="passwordHelpRegister" class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8
+																characters
+														required.</small>
+														<small id="passwordHelpSuccess" class="form-text font-weight-bold text-success d-none mt-1">Your password meets the requirements.
+														</small>
+
+														<label for="password_confirm" class="mt-3">Confirm Password</label>
+
+														<input class="form-control" id="password_confirm"
+														aria-describedby="passwordConfirmHelp" type="password" name="password_confirm"
+														required="">
+
+														<div class="custom-control custom-checkbox mt-4">
+																<input type="checkbox" class="custom-control-input" id="termsCheck" required>
+																<label class="custom-control-label terms" for="termsCheck">I accept the <a
+																		href="/post/1xq/posting-guidelines-policies-legal-shit" target="_blank">terms and conditions</a></label>
+														</div>
+
+														{% if hcaptcha %}
+																<div class="h-captcha" data-sitekey="{{hcaptcha}}"></div>
+																<script src="https://hcaptcha.com/1/api.js" async defer></script>
+														{% endif %}
+
+														<button class="btn btn-primary login w-100 mt-3" id="register_button">Register</button>
+
+														<div class="text-center text-muted text-small mt-2 mb-0">
+																		Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login">Log in</a>
+														</div>
+
+												</form>
+
+										</div>
+
+								</div>
+
+						</div>
+
+				</div>
+
+				<div class="col-12 col-md-6 d-none d-md-block">
+
+						<div class="splash-wrapper">
+
+								<div class="splash-overlay"></div>
+
+								<img class="splash-img" src="{{i.path}}"></img>
+						</div>
+
+				</div>
+
+		</div>
+</div>
+
+<!-- {{"SITE_NAME" | app_config}} JS -->
+
+<script src="/assets/js/all_js.js"></script>
+
+</body>
+
+</html>

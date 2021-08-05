@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="thumbnail" content="/assets/images/preview.png">
+	<link rel="icon" type="image/png" href="/assets/images/favicon.png">
+
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="{{"SITE_NAME" | app_config}}" />
+	<meta property="og:site_name" content="{{request.host}}" />
+	<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
+	<meta property="og:url" content="{{request.path | full_link}}">
+	<meta property="og:description" name="description" content="Dude bussy lmao">
+	<meta property="og:author" name="author" content="{{request.host_url}}" />
+	<meta property="og:site_name" content="{{request.host}}" />
+
+	<meta name="twitter:card" content="summary_large_image"/>
+	<meta name="twitter:site" content="{{request.host_url}}">
+	<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
+	<meta name="twitter:creator" content="{{request.host_url}}">
+	<meta name="twitter:description" content="Dude bussy lmao" />
+	<meta name="twitter:image" content="/assets/images/preview.png" />
+	<meta name="twitter:url" content="{{request.path | full_link}}" />
+
+
+
+	<title>{% block pagetitle %}{{"SITE_NAME" | app_config}}{% endblock %}</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<!-- {{"SITE_NAME" | app_config}} CSS -->
+
+	{% if v %}
+	<link id="css-link" rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
+	{% else %}
+	<link id="css-link" rel="stylesheet" href="/assets/style/dark_ff66ac.css">
+	{% endif %}
+
+	<!-- Font Awesome -->
+	<link href="/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
+
+	<script>
+		function formkey() {
+			return '{{v.formkey}}';
+		}
+	</script>
+
+</head>
+
+<body id="settings-guild">
+
+	{% include "header.html" %}
+
+	<!-- sub-header container -->
+
+	{% block subHeader %}
+	<div class="container-fluid bg-light">
+		<div class="row py-3">
+			<div class="col">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<span class="post-meta-guild font-weight-bold">
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+
+	<!-- tabs container -->
+	{% block subNav %}
+
+{% if True %}
+	{% set mod = (v.admin_level==6) %}
+	<!-- Desktop -->
+	<div class="container-fluid bg-white sticky d-none d-md-block">
+		<div class="row box-shadow-bottom">
+			<div class="col">
+				<div class="container">
+					<div class="row box-shadow-bottom bg-white">
+						<div class="col">
+							<div class="d-flex flex-row-reverse justify-content-end">
+								<ul class="nav settings-nav" style="margin-left: -15px;">
+									<li class="nav-item">
+										<a class="nav-link{% if request.path.endswith('/leaderboard') %} active{% endif %}" href="/leaderboard"><i class="fas fa-trophy"></i>Leaderboard</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link{% if request.path.endswith('/badmins') %} active{% endif %}" href="/badmins"><i class="fas fa-crown"></i>Badmins</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link{% if request.path.endswith('/log') %} active{% endif %}" href="/log"><i class="fas fa-scroll-old"></i>Moderation Log</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link{% if request.path.endswith('/banned') %} active{% endif %}" href="/banned"><i class="fas fa-user-slash"></i>Permabanned Users</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/blocks"><i class="fas fa-user-slash"></i>Blocks</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="/changelog"><i class="fas fa-clipboard"></i>Changelog</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Mobile -->
+	<div class="container-fluid bg-white sticky d-block d-md-none">
+		<div class="row box-shadow-bottom">
+			<div class="col">
+				<div class="d-flex flex-row-reverse justify-content-center">
+					<ul class="nav settings-nav">
+						<li class="nav-item">
+							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/leaderboard') %} active{% endif %}" href="/leaderboard"><i class="fas fa-trophy text-lg mr-0"></i></a>
+						</li>
+						<li class="nav-item">
+							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/badmins') %} active{% endif %}" href="/badmins"><i class="fas fa-crown text-lg mr-0"></i></a>
+						</li>
+						<li class="nav-item">
+							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/log') %} active{% endif %}" href="/log"><i class="fas fa-scroll-old text-lg mr-0"></i></a>
+						</li>
+						<li class="nav-item">
+							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/banned') %} active{% endif %}" href="/banned"><i class="fas fa-user-slash text-lg mr-0"></i></a>
+						</li>
+						<li class="nav-item">
+							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/blocks"><i class="fas fa-eye-slash text-lg mr-0"></i></a>
+						</li>
+						<li class="nav-item">
+							<a style="padding: 0.75rem 1rem;" class="nav-link{% if request.path.endswith('/changelog') %} active{% endif %}" href="/changelog"><i class="fas fa-clipboard text-lg mr-0"></i></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+	{% endblock %}
+
+	<!-- Settings content -->
+	<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} mt-3 {% if request.path == '/leaderboard' %}px-0{% endif %}">
+
+	 {% block content %}
+	 {% endblock %}
+
+ </div>
+
+ <!-- Clipboard Toast -->
+
+ <div class="toast clipboard" id="toast-clipboard-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body text-center">
+		<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
+	</div>
+</div>
+
+<div class="toast clipboard" id="toast-clipboard-error" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body text-center">
+		<i class="fas fa-exclamation-circle mr-2"></i>Unable to copy link
+	</div>
+</div>
+
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body bg-success text-center text-white">
+		<i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text"></span>
+	</div>
+</div>
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+	<div class="toast-body bg-danger text-center text-white">
+		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text"></span>
+	</div>
+</div>
+
+{% block mobilenavbar %}
+{% include "mobile_navigation_bar.html" %}
+{% endblock %}
+
+{% block invitationModal %}
+{% endblock %}
+
+{% block exileModal %}
+{% endblock %}
+
+{% block approveModal %}
+{% endblock %}
+
+{% block errorToasts %}
+{% endblock %}
+
+{% include "bootstrap.html" %}
+
+<!-- ClipboardJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<!-- Instantiate clipboard by passing a string selector -->
+<script type="text/javascript">
+	var clipboard = new ClipboardJS('.copy-link');
+	clipboard.on('success', function(e) {
+
+		jQuery(function($) {
+			$('#toast-clipboard-success').toast('show');
+		})
+		console.log(e);
+	});
+	clipboard.on('error', function(e) {
+
+		jQuery(function($) {
+			$('#toast-clipboard-error').toast('show');
+		})
+		console.log(e);
+	});
+</script>
+
+<script src="/assets/js/all_js.js"></script>
+
+	{% block scripts %}
+	{% endblock %}
+
+</body>
+
+</html>

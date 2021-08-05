@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Sign in to {{"SITE_NAME" | app_config}}">
+		<meta name="author" content="">
+
+		<title>2-Step Login - {{"SITE_NAME" | app_config}}</title>
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+		<!-- Font Awesome -->
+		<link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+		<script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js"
+		integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
+		crossorigin="anonymous"></script>
+
+		<!-- {{"SITE_NAME" | app_config}} CSS -->
+		<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
+
+</head>
+
+<body id="login">
+
+		<!-- Navigation -->
+
+		<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
+				<div class="container-fluid">
+						<button class="navbar-toggler d-none" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+						aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+				</button>
+		</div>
+</nav>
+
+<!-- Page Content -->
+
+<div class="container-fluid position-absolute h-100 p-0 overflow-auto">
+		<div class="row no-gutters h-100">
+
+				<div class="col-12 col-md-6 my-auto p-3">
+
+						<div class="row justify-content-center">
+
+								<div class="col-10 col-md-7">
+
+										<div class="mb-5">
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{"SITE_NAME" | app_config}}</span></a>
+										</div>
+
+										<div id="login-form" class="">
+
+												<h1 class="h2">Two-step login</h1>
+
+												<p class="text-muted mb-md-5">To login, please enter the 6-digit verification code generated in your authenticator app.</p>
+
+												{% if failed %}
+												<div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
+													<i class="fas fa-exclamation-circle my-auto"></i>
+													<div>
+															Invalid verification code. Please try again.
+													</div>
+													<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+												</button>
+										</div>
+										{% endif %}
+
+										<form action="/login" method="post" class="mt-md-3" id="login">
+
+												<input type="hidden" name="username" value="{{v.username}}">
+												<input type="hidden" name="redirect" value="{{redirect}}">
+
+												<input type="hidden" name="time" value="{{time}}">
+												<input type="hidden" name="hash" value="{{hash}}">
+
+												<label for="2fa_token" class="mt-3">Your verification code</label>
+
+												<input class="form-control" id="2fa_token" name="2fa_token" type="text" placeholder="6-digit code">
+												
+												<small><a href="/lost_2fa">Lost your 2FA device?</a></small>
+
+												<button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
+
+										</form>
+
+
+								</div>
+
+						</div>
+
+				</div>
+
+		</div>
+
+		<div class="col-12 col-md-6 d-none d-md-block">
+
+				<div class="splash-wrapper">
+
+						<div class="splash-overlay"></div>
+
+						<img class="splash-img" src="{{i.path}}"></img>
+				</div>
+
+		</div>
+
+</div>
+</div>
+
+</body>
+
+</html>
