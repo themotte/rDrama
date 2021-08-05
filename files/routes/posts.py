@@ -603,8 +603,9 @@ def submit_post(v):
 		else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.form.get("body", "")), 400
 
 	if "twitter.com" in domain:
-		embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
-	
+		try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
+		except: pass
+
 	elif "youtu" in domain:
 		yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
 		if not yt_id or len(yt_id) != 11: embed = None
