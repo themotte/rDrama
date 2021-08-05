@@ -135,8 +135,8 @@ def login_post():
 @app.get("/@me")
 @auth_required
 def me(v):
-	if request.headers.get("Authorization"): v.json
-	else: redirect(v.url)
+	if request.headers.get("Authorization"): return v.json
+	else: return redirect(v.url)
 
 
 @app.post("/logout")
