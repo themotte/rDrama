@@ -604,7 +604,7 @@ def submit_post(v):
 
 	if "twitter.com" in domain:
 		try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
-		except: pass
+		except: embed = None
 
 	elif "youtu" in domain:
 		yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
