@@ -31,7 +31,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
 app.url_map.strict_slashes = False
 
 app.config["SITE_NAME"]=environ.get("SITE_NAME").strip()
-app.config["coins_name"]=environ.get("COINS_NAME").strip()
+app.config["COINS_NAME"]=environ.get("COINS_NAME").strip()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get("DATABASE_CONNECTION_POOL_URL",environ.get("DATABASE_URL"))
 

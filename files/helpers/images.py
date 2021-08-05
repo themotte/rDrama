@@ -6,7 +6,7 @@ from files.classes.images import *
 
 CF_KEY = environ.get("CLOUDFLARE_KEY").strip()
 CF_ZONE = environ.get("CLOUDFLARE_ZONE").strip()
-imgurkey = environ.get("IMGUR_KEY").strip()
+IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 
 def upload_file(file=None, resize=False, png=False):
@@ -35,7 +35,7 @@ def upload_file(file=None, resize=False, png=False):
 	try:
 		with open(filedir, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
-			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data=data)
+			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
 		resp = req.json()['data']
 		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except: return
