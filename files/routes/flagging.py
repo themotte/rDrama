@@ -11,11 +11,10 @@ def api_flag_post(pid, v):
 	post = get_post(pid)
 
 	if v:
-		existing = g.db.query(Flag).filter_by(
-			user_id=v.id, post_id=post.id).first()
+		existing = g.db.query(Flag).filter_by(user_id=v.id, post_id=post.id).first()
 
 		if existing: return "", 409
-		reason = sanitize(request.form.get("reason", "")[:100].strip(), flair=True)
+		reason = sanitize(request.form.get("reason", "").strip()[:100], flair=True)
 
 		flag = Flag(post_id=post.id,
 					user_id=v.id,
