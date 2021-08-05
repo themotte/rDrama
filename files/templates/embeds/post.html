@@ -2,7 +2,7 @@
 
 {% block title %}
 <title>{{ p.title | safe}}</title>
-<meta name="description" content="posted {{ p.age_string }} by @{{ p.author.username }} in +{{ p.board.name }}">
+<meta name="description" content="posted {{ p.age_string }} by @{{ p.author.username }}">
 {% endblock %}
 
 {% block pagetype %}thread{% endblock %}
