@@ -507,6 +507,22 @@ def archiveorg(url):
 	except Exception as e: print(e)
 
 
+@app.route("/embed/post/<pid>", methods=["GET"])
+def embed_post_pid(pid):
+
+    post = get_post(pid)
+
+    return render_template("embeds/post.html", p=post)
+
+
+@app.route("/embed/comment/<cid>", methods=["GET"])
+def embed_comment_cid(cid, pid=None):
+
+    comment = get_comment(cid)
+
+    return render_template("embeds/comment.html", c=comment)
+
+
 @app.post("/submit")
 @limiter.limit("6/minute")
 @is_not_banned
@@ -789,7 +805,7 @@ def submit_post(v):
 			
 	url = url.replace("https://mobile.twitter.com", "https://twitter.com")
 	
-	if url.startswith("https://old.reddit.com/") and '/comments/' in url and '?sort=' not in url: url += "?sort=controversial" 
+	# if url.startswith("https://old.reddit.com/") and '/comments/' in url and '?' not in url: url += "?sort=controversial" 
 
 	title_html = sanitize(title, linkgen=True, flair=True)
 

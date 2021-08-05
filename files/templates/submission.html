@@ -267,13 +267,13 @@
 						{{p.realbody(v) | safe}}
 
 						{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
-							{% include "site_embeds/twitterlight.html" %}
+							{% include "embeds/twitterlight.html" %}
 						{% elif "twitter.com" in p.domain %}
-							{% include "site_embeds/twitter.html" %}
+							{% include "embeds/twitter.html" %}
 						{% elif "youtu" in p.domain %}
-							{% include "site_embeds/youtube.html" %}
+							{% include "embeds/youtube.html" %}
 						{% elif "instagram.com" in p.domain %}
-							{% include "site_embeds/instagram.html" %}
+							{% include "embeds/instagram.html" %}
 						{% endif %}
 
 					</div>
