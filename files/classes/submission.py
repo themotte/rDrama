@@ -9,7 +9,7 @@ from .mix_ins import *
 from .flags import *
 from os import environ
 
-site = environ.get("domain").strip()
+site = environ.get("DOMAIN").strip()
 
 class SubmissionAux(Base):
 

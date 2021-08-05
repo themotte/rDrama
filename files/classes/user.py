@@ -14,7 +14,7 @@ from .clients import *
 from files.__main__ import Base, cache
 from files.helpers.security import *
 
-site = environ.get("domain").strip()
+site = environ.get("DOMAIN").strip()
 
 class User(Base, Stndrd, Age_times):
 	__tablename__ = "users"

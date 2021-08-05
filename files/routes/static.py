@@ -2,7 +2,7 @@ from files.mail import *
 from files.__main__ import app, limiter
 from files.helpers.alerts import *
 
-site = environ.get("domain").strip()
+site = environ.get("DOMAIN").strip()
 
 @app.get("/patrons")
 @auth_desired

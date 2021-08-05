@@ -9,7 +9,7 @@ from files.helpers.wrappers import *
 from files.classes import *
 from files.__main__ import app
 
-site = environ.get("domain").strip()
+site = environ.get("DOMAIN").strip()
 name = environ.get("SITE_NAME").strip()
 mailgun_domain = environ.get("MAILGUN_DOMAIN").strip()
 

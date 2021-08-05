@@ -18,7 +18,7 @@ from files.__main__ import app, limiter, cache
 from PIL import Image as PILimage
 from .front import frontlist
 
-site = environ.get("domain").strip()
+site = environ.get("DOMAIN").strip()
 
 with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
 

@@ -6,7 +6,7 @@ from files.classes.images import *
 
 CF_KEY = environ.get("CLOUDFLARE_KEY").strip()
 CF_ZONE = environ.get("CLOUDFLARE_ZONE").strip()
-imgurkey = environ.get("imgurkey").strip()
+imgurkey = environ.get("IMGUR_KEY").strip()
 
 
 def upload_file(file=None, resize=False, png=False):

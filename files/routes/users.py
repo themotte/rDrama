@@ -11,7 +11,7 @@ from flask import *
 from files.__main__ import app, limiter
 from pusher_push_notifications import PushNotifications
 
-site = environ.get("domain").strip()
+site = environ.get("DOMAIN").strip()
 
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 

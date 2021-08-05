@@ -6,7 +6,7 @@ from functools import partial
 from .get import *
 from os import path
 
-site = environ.get("domain").strip()
+site = environ.get("DOMAIN").strip()
 
 _allowed_tags = tags = ['b',
 						'blockquote',
