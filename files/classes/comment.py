@@ -71,10 +71,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	awards = relationship("AwardRelationship", lazy="joined")
 
-	# These are virtual properties handled as postgres functions server-side
-	# There is no difference to SQLAlchemy, but they cannot be written to
-	score = deferred(Column(Integer, server_default=FetchedValue()))
-
 	def __init__(self, *args, **kwargs):
 
 		if "created_utc" not in kwargs:

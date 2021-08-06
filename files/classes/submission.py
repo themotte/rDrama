@@ -76,12 +76,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		uselist=False,
 		primaryjoin="Submission.is_approved==User.id")
 
-	# These are virtual properties handled as postgres functions server-side
-	# There is no difference to SQLAlchemy, but they cannot be written to
-
-	comment_count = Column(Integer, server_default=FetchedValue())
-	score = deferred(Column(Float, server_default=FetchedValue()))
-
 	awards = relationship("AwardRelationship", lazy="joined")
 
 	def __init__(self, *args, **kwargs):

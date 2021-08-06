@@ -73,7 +73,6 @@ class User(Base, Stndrd, Age_times):
 		"Notification",
 		lazy="dynamic")
 
-	referred_by = Column(Integer)
 	is_banned = Column(Integer, default=None)
 	unban_utc = Column(Integer, default=None)
 	ban_reason = Column(String, default="")
