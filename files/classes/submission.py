@@ -54,7 +54,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		lazy="joined",
 		primaryjoin="Comment.parent_submission==Submission.id",
 		)
-	flags = relationship("Flag", lazy="joined")
+	flags = relationship("Flag", lazy="dynamic")
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
 	author = relationship(
@@ -415,7 +415,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	@property
 	@lazy
-	def active_flags(self): return len(self.flags)
+	def active_flags(self): return self.flags.count()
 
 	@property
 	@lazy

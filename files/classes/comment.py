@@ -51,10 +51,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	oauth_app=relationship("OauthApp")
 
 	post = relationship("Submission")
-	flags = relationship("CommentFlag", lazy="joined")
+	flags = relationship("CommentFlag", lazy="dynamic")
 	votes = relationship(
 		"CommentVote",
-		lazy="joined",
+		lazy="dynamic",
 		primaryjoin="CommentVote.comment_id==Comment.id")
 
 	author = relationship(
