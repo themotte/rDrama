@@ -1,3 +1,6 @@
+import traceback
+import sys
+
 from files.helpers.wrappers import *
 from files.helpers.filters import *
 from files.helpers.alerts import *
@@ -5,7 +8,7 @@ from files.helpers.images import *
 from files.helpers.session import *
 from files.classes import *
 from files.routes.front import comment_idlist
-from pusher_push_notifications import PushNotifications
+from pusher_push_notifications import PushNotifications, PusherAuthError
 
 from flask import *
 from files.__main__ import app, limiter
@@ -530,18 +533,23 @@ def api_comment(v):
 			except: g.db.rollback()
 
 		if parent.author.id != v.id:
-			beams_client.publish_to_interests(
-			  interests=[str(parent.author.id)],
-			  publish_body={
-				'web': {
-				  'notification': {
-						'title': f'New reply by @{v.username}',
-						'body': c.body,
-						'deep_link': f'https://{site}{c.permalink}?context=5#context',
+			try:
+				beams_client.publish_to_interests(
+				  interests=[str(parent.author.id)],
+				  publish_body={
+					'web': {
+					  'notification': {
+							'title': f'New reply by @{v.username}',
+							'body': c.body,
+							'deep_link': f'https://{site}{c.permalink}?context=5#context',
+					  },
+					},
 				  },
-				},
-			  },
-			)
+				)
+			except PusherAuthError as e:
+				sys.stderr.write(traceback.format_exc())
+				sys.stderr.flush()
+
 
 
 

@@ -1,6 +1,8 @@
 import qrcode
 import io
 import time
+import traceback
+import sys
 
 from files.classes.user import ViewerRelationship
 from files.helpers.alerts import *
@@ -9,7 +11,7 @@ from files.helpers.markdown import *
 from files.mail import *
 from flask import *
 from files.__main__ import app, limiter
-from pusher_push_notifications import PushNotifications
+from pusher_push_notifications import PushNotifications, PusherAuthError
 
 site = environ.get("DOMAIN").strip()
 
@@ -142,18 +144,24 @@ def message2(v, username):
 	if existing: return redirect('/notifications?all=true')
 
 	send_pm(v.id, user, message)
-	beams_client.publish_to_interests(
-		interests=[str(user.id)],
-		publish_body={
-			'web': {
-				'notification': {
-					'title': f'New message from @{v.username}',
-					'body': message,
-					'deep_link': f'https://{site}/notifications',
+	
+	try:
+		beams_client.publish_to_interests(
+			interests=[str(user.id)],
+			publish_body={
+				'web': {
+					'notification': {
+						'title': f'New message from @{v.username}',
+						'body': message,
+						'deep_link': f'https://{site}/notifications',
+					},
 				},
 			},
-		},
-	)
+		)
+	except PusherAuthError as e:
+		sys.stderr.write(traceback.format_exc())
+		sys.stderr.flush()
+
 	return redirect('/notifications?all=true')
 
 @app.get("/2faqr/<secret>")
