@@ -86,7 +86,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			blocked = v.blocked.subquery()
 
 
-			comms = g.db.query(
+			comments = g.db.query(
 				Comment,
 				blocking.c.id,
 				blocked.c.id,
@@ -107,13 +107,13 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			elif sort == "bottom":
 				comments = sorted(comments.all(), key=lambda x: x.score)
 			elif sort == "new":
-				comments = comms.order_by(Comment.created_utc.desc()).all()
+				comments = comments.order_by(Comment.created_utc.desc()).all()
 			elif sort == "old":
-				comments = comms.order_by(Comment.created_utc.asc()).all()
+				comments = comments.order_by(Comment.created_utc.asc()).all()
 			elif sort == "controversial":
-				comments = sorted(comms.all(), key=lambda x: x.score_disputed, reverse=True)
+				comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
 			elif sort == "random":
-				c = comms.all()
+				c = comments.all()
 				comments = random.sample(c, k=len(c))
 			else:
 				abort(422)
@@ -126,24 +126,24 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 				output.append(comment)
 		else:
 
-			comms = g.db.query(
+			comments = g.db.query(
 				Comment
 			).filter(
 				Comment.parent_comment_id.in_(current_ids)
 			)
 
 			if sort == "top":
-				output = sorted(comms.all(), key=lambda x: x.score, reverse=True)
+				output = sorted(comments.all(), key=lambda x: x.score, reverse=True)
 			elif sort == "bottom":
-				output = sorted(comms.all(), key=lambda x: x.score)
+				output = sorted(comments.all(), key=lambda x: x.score)
 			elif sort == "new":
-				output = comms.order_by(Comment.created_utc.desc()).all()
+				output = comments.order_by(Comment.created_utc.desc()).all()
 			elif sort == "old":
-				output = comms.order_by(Comment.created_utc.asc()).all()
+				output = comments.order_by(Comment.created_utc.asc()).all()
 			elif sort == "controversial":
-				output = sorted(comms.all(), key=lambda x: x.score_disputed, reverse=True)
+				output = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
 			elif sort == "random":
-				c = comms.all()
+				c = comments.all()
 				output = random.sample(c, k=len(c))
 			else:
 				abort(422)
