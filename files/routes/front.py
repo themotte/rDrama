@@ -130,10 +130,9 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 		posts = sorted(posts.all(), key=lambda x: x.score, reverse=True)
 		print(time.time() - time1)
 	elif sort == "bottom":
-		posts = sorted(posts.all(), key=lambda x: x.score)
-		# time1 = time.time()
-		# posts = posts.order_by(Submission.sexscore.desc()).all()
-		# print(time.time() - time1)
+		time1 = time.time()
+		posts = posts.order_by(Submission.sexscore.desc()).all()
+		print(time.time() - time1)
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc()).all()
 	elif sort == "random":
