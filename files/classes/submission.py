@@ -77,6 +77,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		primaryjoin="Submission.is_approved==User.id")
 
 	awards = relationship("AwardRelationship", lazy="joined")
+	# scoresex = deferred(Column(Float, server_default=FetchedValue()))
 
 	def __init__(self, *args, **kwargs):
 
