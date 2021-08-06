@@ -78,7 +78,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	current_ids = [comment.id]
 
-	for i in range(6 - context):
+	for i in range(200 - context):
 		if v:
 			votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
@@ -111,6 +111,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 				isouter=True
 			)
 
+			if comments.count() == 0: break
+
 			if sort == "top":
 				comments = sorted(comments.all(), key=lambda x: x[0].score, reverse=True)
 			elif sort == "bottom":
@@ -142,6 +144,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			).filter(
 				Comment.parent_comment_id.in_(current_ids)
 			)
+
+			if comments.count() == 0: break
 
 			if sort == "top":
 				output = sorted(comments.all(), key=lambda x: x.score, reverse=True)
