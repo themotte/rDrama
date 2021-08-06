@@ -135,7 +135,7 @@ class User(Base, Stndrd, Age_times):
 	@property
 	@lazy
 	def referral_count(self):
-		return self.referrals.count()
+		return len(self.referrals)
 
 	def has_block(self, target):
 
@@ -196,7 +196,7 @@ class User(Base, Stndrd, Age_times):
 		elif sort == "bottom":
 			submissions = sorted(submissions.all(), key=lambda x: x.score)
 		elif sort == "comments":
-			submissions = submissions.order_by(Submission.comment_count.desc()).all()
+			submissions = sorted(submissions.all(), key=lambda x: x.comment_count, reverse=True)
 
 		firstrange = 25 * (page - 1)
 		secondrange = firstrange + 26

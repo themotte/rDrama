@@ -130,7 +130,7 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 	elif sort == "bottom":
 		posts = sorted(posts.all(), key=lambda x: x.score)
 	elif sort == "comments":
-		posts = posts.order_by(Submission.comment_count.desc()).all()
+		posts = sorted(posts.all(), key=lambda x: x.comment_count, reverse=True)
 	elif sort == "random":
 		posts = posts.all()
 		posts = random.sample(posts, k=len(posts))
@@ -274,7 +274,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	elif sort == "bottom":
 		posts = sorted(posts.all(), key=lambda x: x.score)
 	elif sort == "comments":
-		posts = posts.order_by(Submission.comment_count.desc()).all()
+		posts = sorted(posts.all(), key=lambda x: x.comment_count, reverse=True)
 	elif sort == "random":
 		posts = posts.all()
 		posts = random.sample(posts, k=len(posts))
