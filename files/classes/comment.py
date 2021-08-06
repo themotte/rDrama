@@ -51,10 +51,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	oauth_app=relationship("OauthApp")
 
 	post = relationship("Submission")
-	flags = relationship("CommentFlag", lazy="dynamic")
+	flags = relationship("CommentFlag", lazy="joined")
 	votes = relationship(
 		"CommentVote",
-		lazy="dynamic",
+		lazy="joined",
 		primaryjoin="CommentVote.comment_id==Comment.id")
 
 	author = relationship(
@@ -222,10 +222,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 		return data
 
-	def voted(self, v):
-		x = self.votes.filter_by(user_id=v.id).first()
-		if x: return x.vote_type
-		else: return 0
+	@property
+	def voted(self):
+		return self.__dict__.get("_voted")
 
 	@property
 	def is_blocking(self):

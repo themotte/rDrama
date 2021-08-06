@@ -53,8 +53,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		"Comment",
 		lazy="joined",
 		primaryjoin="Comment.parent_submission==Submission.id",
-		backref="submissions")
-	flags = relationship("Flag", lazy="dynamic")
+		)
+	flags = relationship("Flag", lazy="joined")
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
 	author = relationship(

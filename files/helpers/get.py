@@ -168,37 +168,34 @@ def get_posts(pids, v=None):
 def get_comment(i, v=None, graceful=False, **kwargs):
 
 	if v:
-		blocking = v.blocking.subquery()
-		blocked = v.blocked.subquery()
 
 		items = g.db.query(Comment)
 
-		if v.admin_level >=4: items=items.options(joinedload(Comment.oauth_app))
+		comment=items.filter(Comment.id == i).first()
 
-		x=items.filter(Comment.id == i).first()
-
-		if not x and not graceful: abort(404)
+		if not comment and not graceful: abort(404)
 
 		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
-					UserBlock.target_id == x.author_id
+					UserBlock.target_id == comment.author_id
 				),
-				and_(UserBlock.user_id == x.author_id,
+				and_(UserBlock.user_id == comment.author_id,
 					 UserBlock.target_id == v.id
 					 )
 			)
 		).first()
 
-		x._is_blocking = block and block.user_id == v.id
-		x._is_blocked = block and block.target_id == v.id
+		comment._is_blocking = block and block.user_id == v.id
+		comment._is_blocked = block and block.target_id == v.id
+		comment._voted = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=Comment.id).first().vote_type
 
 	else:
-		x = g.db.query(Comment).filter(Comment.id == i).first()
-		if not x and not graceful:abort(404)
+		comment = g.db.query(Comment).filter(Comment.id == i).first()
+		if not comment and not graceful:abort(404)
 
-	return x
+	return comment
 
 
 def get_comments(cids, v=None):
@@ -207,15 +204,47 @@ def get_comments(cids, v=None):
 
 	cids=tuple(cids)
 
-	output = g.db.query(Comment)
+	if v:
+		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
-	if v and v.admin_level >=4: output=output.options(joinedload(Comment.oauth_app))
+		blocking = v.blocking.subquery()
 
-	output = output.options(joinedload(Comment.parent_comment)).filter(Comment.id.in_(cids)).all()
+		blocked = v.blocked.subquery()
 
-	output = sorted(output, key=lambda x: cids.index(x.id))
+		comments = g.db.query(
+			Comment,
+			votes.c.vote_type,
+			blocking.c.id,
+			blocked.c.id,
+		).filter(Comment.id.in_(cids))
+ 
+		comments = comments.join(
+			votes,
+			votes.c.comment_id == Comment.id,
+			isouter=True
+		).join(
+			blocking,
+			blocking.c.target_id == Comment.author_id,
+			isouter=True
+		).join(
+			blocked,
+			blocked.c.user_id == Comment.author_id,
+			isouter=True
+		).all()
 
-	return output
+		output = []
+		for c in comments:
+			comment = c[0]
+			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
+			comment._voted = c[1] or 0
+			comment._is_blocking = c[2] or 0
+			comment._is_blocked = c[3] or 0
+			output.append(comment)
+
+	else:
+		output = g.db.query(Comment).filter(Comment.id.in_(cids)).all()
+
+	return sorted(output, key=lambda x: cids.index(x.id))
 
 
 def get_domain(s):

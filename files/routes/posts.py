@@ -80,16 +80,16 @@ def post_id(pid, anything=None, v=None):
 
 		blocked = v.blocked.subquery()
 
-		comms = g.db.query(
+		comments = g.db.query(
 			Comment,
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
 		)
 		if v.admin_level >=4:
-			comms=comms.options(joinedload(Comment.oauth_app))
+			comments=comments.options(joinedload(Comment.oauth_app))
  
-		comms=comms.filter(
+		comments=comments.filter(
 			Comment.parent_submission == post.id
 		).join(
 			votes,
@@ -106,17 +106,17 @@ def post_id(pid, anything=None, v=None):
 		)
 
 		if sort == "top":
-			comments = sorted(comms.all(), key=lambda x: x[0].score, reverse=True)
+			comments = sorted(comments.all(), key=lambda x: x[0].score, reverse=True)
 		elif sort == "bottom":
-			comments = sorted(comms.all(), key=lambda x: x[0].score)
+			comments = sorted(comments.all(), key=lambda x: x[0].score)
 		elif sort == "new":
-			comments = comms.order_by(Comment.created_utc.desc()).all()
+			comments = comments.order_by(Comment.created_utc.desc()).all()
 		elif sort == "old":
-			comments = comms.order_by(Comment.created_utc.asc()).all()
+			comments = comments.order_by(Comment.created_utc.asc()).all()
 		elif sort == "controversial":
-			comments = sorted(comms.all(), key=lambda x: x[0].score_disputed, reverse=True)
+			comments = sorted(comments.all(), key=lambda x: x[0].score_disputed, reverse=True)
 		elif sort == "random":
-			c = comms.all()
+			c = comments.all()
 			comments = random.sample(c, k=len(c))
 		else:
 			abort(422)
@@ -133,24 +133,24 @@ def post_id(pid, anything=None, v=None):
 		post._preloaded_comments = output
 
 	else:
-		comms = g.db.query(
+		comments = g.db.query(
 			Comment
 		).filter(
 			Comment.parent_submission == post.id
 		)
 
 		if sort == "top":
-			comments = sorted(comms.all(), key=lambda x: x.score, reverse=True)
+			comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
 		elif sort == "bottom":
-			comments = sorted(comms.all(), key=lambda x: x.score)
+			comments = sorted(comments.all(), key=lambda x: x.score)
 		elif sort == "new":
-			comments = comms.order_by(Comment.created_utc.desc()).all()
+			comments = comments.order_by(Comment.created_utc.desc()).all()
 		elif sort == "old":
-			comments = comms.order_by(Comment.created_utc.asc()).all()
+			comments = comments.order_by(Comment.created_utc.asc()).all()
 		elif sort == "controversial":
-			comments = sorted(comms.all(), key=lambda x: x.score_disputed, reverse=True)
+			comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
 		elif sort == "random":
-			c = comms.all()
+			c = comments.all()
 			comments = random.sample(c, k=len(c))
 		else:
 			abort(422)
@@ -399,23 +399,6 @@ def thumbs(new_post):
 		#parse html, find image, load image
 		soup=BeautifulSoup(x.content, 'html.parser')
 		#parse html
-
-		#first, set metadata
-		try:
-			meta_title=soup.find('title')
-			if meta_title:
-				post.submission_aux.meta_title=str(meta_title.string)[:500]
-
-			meta_desc = soup.find('meta', attrs={"name":"description"})
-			if meta_desc:
-				post.submission_aux.meta_description=meta_desc['content'][:1000]
-
-			if meta_title or meta_desc:
-				g.db.add(post.submission_aux)
-				g.db.commit()
-
-		except Exception as e:
-			pass
 
 		#create list of urls to check
 		thumb_candidate_urls=[]
