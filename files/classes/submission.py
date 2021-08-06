@@ -24,8 +24,6 @@ class SubmissionAux(Base):
 	body_html = Column(String(20000), default="")
 	ban_reason = Column(String(128), default="")
 	embed_url = Column(String(256), default="")
-	meta_title=Column(String(512), default="")
-	meta_description=Column(String(1024), default="")
 
 
 class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
