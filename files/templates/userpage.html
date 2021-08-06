@@ -29,7 +29,7 @@
 <meta property="og:author" name="author" content="@{{u.username}}" />
 <meta property="og:title" content="{{u.username}}" />
 <meta property="og:image" content="{% if u.bannerurl %}{{u.banner_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
-<meta property="og:url" content="{{u.permalink | full_link}}" />
+<meta property="og:url" content="{{u.url | full_link}}" />
 <meta property="og:site_name" content="{{request.host}}" />
 
 <meta name="twitter:card" content="summary_large_image"/>
@@ -38,7 +38,7 @@
 <meta name="twitter:creator" content="@{{u.username}}">
 <meta name="twitter:description" content="{{u.coins}} {{"SITE_NAME" | app_config}}coins - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{u.post_count}} Posts - {{u.comment_count}} Comments -{% endif %} {{u.bio}}" />
 <meta name="twitter:image" content="{% if u.bannerurl %}{{u.banner_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
-<meta name="twitter:url" content="{{u.permalink | full_link}}" />
+<meta name="twitter:url" content="{{u.url | full_link}}" />
 {% endblock %}
 
 {% block desktopUserBanner %}

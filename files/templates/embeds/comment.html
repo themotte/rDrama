@@ -15,7 +15,7 @@
 
 <div id="comment-{{ c.base36id }}" class="comment rounded">
 
-    <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
+    <span class="mr-2 d-block d-md-none"><a href="{{ c.author.url }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
 
     <span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
@@ -23,7 +23,7 @@
 
         <div id="comment-{{ c.base36id }}-only">
 
-            <div class="user-info">{% if c.over_18 %}<span class="badge badge-danger">nsfw</span> {% endif %}{% if c.author.title and c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span> {% endif %}<a href="{{ c.author.permalink }}" class="user-name {% if c.post.author_id==c.author_id %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.author.title and not c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span>{% endif %}
+            <div class="user-info">{% if c.over_18 %}<span class="badge badge-danger">nsfw</span> {% endif %}{% if c.author.title and c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span> {% endif %}<a href="{{ c.author.url }}" class="user-name {% if c.post.author_id==c.author_id %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.author.title and not c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span>{% endif %}
 		{% if c.distinguish_level or c.author_id==c.post.author_id %}
 		<span> </span>
 			{% if c.distinguish_level %}
