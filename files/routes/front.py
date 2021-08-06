@@ -126,9 +126,9 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 	elif sort == "controversial":
 		posts = sorted(posts.all(), key=lambda x: x.score_disputed, reverse=True)
 	elif sort == "top":
-		posts = posts.order_by(Submission.score.desc()).all()
+		posts = sorted(posts.all(), key=lambda x: x.score, reverse=True)
 	elif sort == "bottom":
-		posts = posts.order_by(Submission.score.asc()).all()
+		posts = sorted(posts.all(), key=lambda x: x.score)
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc()).all()
 	elif sort == "random":
@@ -270,9 +270,9 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	elif sort == "controversial":
 		posts = sorted(posts.all(), key=lambda x: x.score_disputed, reverse=True)
 	elif sort == "top":
-		posts = posts.order_by(Submission.score.desc()).all()
+		posts = sorted(posts.all(), key=lambda x: x.score, reverse=True)
 	elif sort == "bottom":
-		posts = posts.order_by(Submission.score.asc()).all()
+		posts = sorted(posts.all(), key=lambda x: x.score)
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc()).all()
 	elif sort == "random":
@@ -380,9 +380,9 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 	elif sort == "controversial":
 		comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
 	elif sort == "top":
-		comments = comments.order_by(Comment.score.desc()).all()
+		comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
 	elif sort == "bottom":
-		comments = comments.order_by(Comment.score.asc()).all()
+		comments = sorted(comments.all(), key=lambda x: x.score)
 
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+100

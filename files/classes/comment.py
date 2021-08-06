@@ -88,6 +88,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	@property
 	@lazy
+	def score(self):
+		return self.upvotes - self.downvotes
+
+	@property
+	@lazy
 	def fullname(self):
 		return f"t3_{self.id}"
 

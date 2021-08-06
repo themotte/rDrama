@@ -103,9 +103,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			)
 
 			if sort == "top":
-				comments = comms.order_by(Comment.score.desc()).all()
+				comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
 			elif sort == "bottom":
-				comments = comms.order_by(Comment.score.asc()).all()
+				comments = sorted(comments.all(), key=lambda x: x.score)
 			elif sort == "new":
 				comments = comms.order_by(Comment.created_utc.desc()).all()
 			elif sort == "old":
@@ -133,9 +133,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			)
 
 			if sort == "top":
-				output = comms.order_by(Comment.score.asc()).all()
+				output = sorted(comms.all(), key=lambda x: x.score, reverse=True)
 			elif sort == "bottom":
-				output = comms.order_by(Comment.score.desc()).all()
+				output = sorted(comms.all(), key=lambda x: x.score)
 			elif sort == "new":
 				output = comms.order_by(Comment.created_utc.desc()).all()
 			elif sort == "old":

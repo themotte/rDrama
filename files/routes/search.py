@@ -124,9 +124,9 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 	elif sort == "controversial":
 		posts = sorted(posts.all(), key=lambda x: x.score_disputed, reverse=True)
 	elif sort == "top":
-		posts = posts.order_by(Submission.score.desc()).all()
+		posts = sorted(posts.all(), key=lambda x: x.score, reverse=True)
 	elif sort == "bottom":
-		posts = posts.order_by(Submission.score.asc()).all()
+		posts = sorted(posts.all(), key=lambda x: x.score)
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc()).all()
 	elif sort == "random":
@@ -185,9 +185,9 @@ def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 	elif sort == "controversial":
 		comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
 	elif sort == "top":
-		comments = comments.order_by(Comment.score.desc()).all()
+		comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
 	elif sort == "bottom":
-		comments = comments.order_by(Comment.score.asc()).all()
+		comments = sorted(comments.all(), key=lambda x: x.score)
 
 	total = len(list(comments))
 	firstrange = 25 * (page - 1)

@@ -99,7 +99,17 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	def __repr__(self):
 		return f"<Submission(id={self.id})>"
-		
+
+	@property
+	@lazy
+	def comment_count(self):
+		return len(self.comments)
+
+	@property
+	@lazy
+	def score(self):
+		return self.upvotes - self.downvotes
+
 	@property
 	@lazy
 	def hotscore(self):

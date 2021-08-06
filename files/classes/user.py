@@ -116,8 +116,12 @@ class User(Base, Stndrd, Age_times):
 		primaryjoin="User.id==AwardRelationship.user_id"
 	)
 
-	# properties defined as SQL server-side functions
-	referral_count = deferred(Column(Integer, server_default=FetchedValue()))
+	referred_by = Column(Integer, ForeignKey("users.id"))
+
+	referrals = relationship(
+		"User",
+		lazy="joined"
+	)
 
 	def __init__(self, **kwargs):
 
@@ -128,6 +132,11 @@ class User(Base, Stndrd, Age_times):
 		kwargs["created_utc"] = int(time.time())
 
 		super().__init__(**kwargs)
+
+	@property
+	@lazy
+	def referral_count(self):
+		return self.referrals.count()
 
 	def has_block(self, target):
 
@@ -184,9 +193,9 @@ class User(Base, Stndrd, Age_times):
 		elif sort == "controversial":
 			submissions = sorted(submissions.all(), key=lambda x: x.score_disputed, reverse=True)
 		elif sort == "top":
-			submissions = submissions.order_by(Submission.score.desc()).all()
+			submissions = sorted(submissions.all(), key=lambda x: x.score, reverse=True)
 		elif sort == "bottom":
-			submissions = submissions.order_by(Submission.score.asc()).all()
+			submissions = sorted(submissions.all(), key=lambda x: x.score)
 		elif sort == "comments":
 			submissions = submissions.order_by(Submission.comment_count.desc()).all()
 
@@ -227,9 +236,9 @@ class User(Base, Stndrd, Age_times):
 		elif sort == "controversial":
 			comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
 		elif sort == "top":
-			comments = comments.order_by(Comment.score.desc()).all()
+			comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
 		elif sort == "bottom":
-			comments = comments.order_by(Comment.score.asc()).all()
+			comments = sorted(comments.all(), key=lambda x: x.score)
 
 		firstrange = 25 * (page - 1)
 		secondrange = firstrange + 26
