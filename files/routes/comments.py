@@ -75,11 +75,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	current_ids = [comment.id]
 
-	exile=g.db.query(ModAction
-		).filter_by(
-		kind="exile_user"
-		).distinct(ModAction.target_comment_id).subquery()
-
 	for i in range(6 - context):
 		if v:
 			blocking = v.blocking.subquery()
@@ -103,15 +98,15 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			)
 
 			if sort == "top":
-				comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
+				comments = sorted(comments.all(), key=lambda x: x[0].score, reverse=True)
 			elif sort == "bottom":
-				comments = sorted(comments.all(), key=lambda x: x.score)
+				comments = sorted(comments.all(), key=lambda x: x[0].score)
 			elif sort == "new":
 				comments = comments.order_by(Comment.created_utc.desc()).all()
 			elif sort == "old":
 				comments = comments.order_by(Comment.created_utc.asc()).all()
 			elif sort == "controversial":
-				comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
+				comments = sorted(comments.all(), key=lambda x: x[0].score_disputed, reverse=True)
 			elif sort == "random":
 				c = comments.all()
 				comments = random.sample(c, k=len(c))
