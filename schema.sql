@@ -63,202 +63,6 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: submissions; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.submissions (
-    id integer NOT NULL,
-    author_id integer,
-    created_utc integer NOT NULL,
-    is_banned boolean,
-    over_18 boolean,
-    distinguish_level integer,
-    created_str character varying(255),
-    stickied boolean,
-    deleted_utc integer NOT NULL,
-    domain_ref integer,
-    is_approved integer NOT NULL,
-    edited_utc integer,
-    is_pinned boolean,
-    upvotes integer,
-    downvotes integer,
-    app_id integer,
-    thumburl text,
-    private boolean,
-    views integer,
-    is_bot boolean
-);
-
-
-ALTER TABLE public.submissions OWNER TO postgres;
-
---
--- Name: comment_count(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.comment_count(public.submissions) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-
-      SELECT COUNT(*)
-
-      FROM comments
-
-      WHERE is_banned=false
-
-        AND deleted_utc=0
-
-        AND parent_submission = $1.id
-
-        AND shadowbanned = false
-
-      $_$;
-
-
-ALTER FUNCTION public.comment_count(public.submissions) OWNER TO postgres;
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    username character varying(255) NOT NULL,
-    email character varying(255),
-    passhash character varying(255) NOT NULL,
-    created_utc integer NOT NULL,
-    admin_level integer,
-    over_18 boolean,
-    is_activated boolean,
-    bio character varying(1500),
-    bio_html character varying(10000),
-    referred_by integer,
-    is_banned integer,
-    ban_reason character varying(128),
-    login_nonce integer,
-    reserved character varying(256),
-    mfa_secret character varying(32),
-    is_private boolean,
-    unban_utc integer,
-    is_nofollow boolean DEFAULT false,
-    custom_filter_list character varying(1000) DEFAULT ''::character varying,
-    discord_id character varying(64),
-    stored_subscriber_count integer DEFAULT 0,
-    ban_evade integer DEFAULT 0,
-    original_username character varying(255),
-    customtitle text,
-    defaultsorting text,
-    defaulttime text,
-    namecolor text,
-    titlecolor text,
-    profileurl text,
-    bannerurl text,
-    hidevotedon boolean,
-    newtab boolean,
-    flairchanged boolean,
-    defaultsortingcomments text,
-    theme text,
-    song text,
-    slurreplacer boolean,
-    shadowbanned boolean,
-    newtabexternal boolean,
-    customtitleplain text,
-    themecolor text,
-    changelogsub boolean,
-    oldreddit boolean,
-    css text,
-    profilecss text,
-    coins integer,
-    agendaposter boolean,
-    agendaposter_expires_utc integer DEFAULT 0,
-    resized boolean,
-    animatedname boolean,
-    suicide_utc integer,
-    post_count integer,
-    comment_count integer,
-    highres text,
-    rent_utc integer,
-    patron integer,
-    zzz boolean DEFAULT false
-);
-
-
-ALTER TABLE public.users OWNER TO postgres;
-
---
--- Name: referral_count(public.users); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.referral_count(public.users) RETURNS bigint
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-        SELECT COUNT(*)
-        FROM USERS
-        WHERE users.is_banned=0
-        AND users.referred_by=$1.id
-    $_$;
-
-
-ALTER FUNCTION public.referral_count(public.users) OWNER TO postgres;
-
---
--- Name: comments; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.comments (
-    id integer NOT NULL,
-    author_id integer,
-    created_utc integer NOT NULL,
-    parent_submission integer,
-    is_banned boolean,
-    distinguish_level integer,
-    edited_utc integer,
-    deleted_utc integer NOT NULL,
-    is_approved integer NOT NULL,
-    author_name character varying(64),
-    approved_utc integer,
-    level integer,
-    parent_comment_id integer,
-    over_18 boolean,
-    upvotes integer,
-    downvotes integer,
-    is_bot boolean DEFAULT false,
-    is_pinned boolean DEFAULT false,
-    app_id integer,
-    sentto integer,
-    shadowbanned boolean
-);
-
-
-ALTER TABLE public.comments OWNER TO postgres;
-
---
--- Name: score(public.comments); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.score(public.comments) RETURNS integer
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT ($1.upvotes - $1.downvotes)
-      $_$;
-
-
-ALTER FUNCTION public.score(public.comments) OWNER TO postgres;
-
---
--- Name: score(public.submissions); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION public.score(public.submissions) RETURNS integer
-    LANGUAGE sql IMMUTABLE STRICT
-    AS $_$
-      SELECT ($1.upvotes - $1.downvotes)
-      $_$;
-
-
-ALTER FUNCTION public.score(public.submissions) OWNER TO postgres;
-
---
 -- Name: alts; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -565,6 +369,37 @@ ALTER TABLE public.commentflags_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE public.commentflags_id_seq OWNED BY public.commentflags.id;
 
+
+--
+-- Name: comments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.comments (
+    id integer NOT NULL,
+    author_id integer,
+    created_utc integer NOT NULL,
+    parent_submission integer,
+    is_banned boolean,
+    distinguish_level integer,
+    edited_utc integer,
+    deleted_utc integer NOT NULL,
+    is_approved integer NOT NULL,
+    author_name character varying(64),
+    approved_utc integer,
+    level integer,
+    parent_comment_id integer,
+    over_18 boolean,
+    upvotes integer,
+    downvotes integer,
+    is_bot boolean DEFAULT false,
+    is_pinned boolean DEFAULT false,
+    app_id integer,
+    sentto integer,
+    shadowbanned boolean
+);
+
+
+ALTER TABLE public.comments OWNER TO postgres;
 
 --
 -- Name: comments_aux; Type: TABLE; Schema: public; Owner: postgres
@@ -948,6 +783,36 @@ ALTER SEQUENCE public.save_relationship_id_seq OWNED BY public.save_relationship
 
 
 --
+-- Name: submissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.submissions (
+    id integer NOT NULL,
+    author_id integer,
+    created_utc integer NOT NULL,
+    is_banned boolean,
+    over_18 boolean,
+    distinguish_level integer,
+    created_str character varying(255),
+    stickied boolean,
+    deleted_utc integer NOT NULL,
+    domain_ref integer,
+    is_approved integer NOT NULL,
+    edited_utc integer,
+    is_pinned boolean,
+    upvotes integer,
+    downvotes integer,
+    app_id integer,
+    thumburl text,
+    private boolean,
+    views integer,
+    is_bot boolean
+);
+
+
+ALTER TABLE public.submissions OWNER TO postgres;
+
+--
 -- Name: submissions_aux; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -960,8 +825,6 @@ CREATE TABLE public.submissions_aux (
     embed_url character varying(10000),
     ban_reason character varying(128),
     key_id integer NOT NULL,
-    meta_title character varying(512),
-    meta_description character varying(1024),
     title_html text
 );
 
@@ -1120,6 +983,74 @@ ALTER TABLE public.userblocks_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE public.userblocks_id_seq OWNED BY public.userblocks.id;
 
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying(255) NOT NULL,
+    email character varying(255),
+    passhash character varying(255) NOT NULL,
+    created_utc integer NOT NULL,
+    admin_level integer,
+    over_18 boolean,
+    is_activated boolean,
+    bio character varying(1500),
+    bio_html character varying(10000),
+    referred_by integer,
+    is_banned integer,
+    ban_reason character varying(128),
+    login_nonce integer,
+    reserved character varying(256),
+    mfa_secret character varying(32),
+    is_private boolean,
+    unban_utc integer,
+    is_nofollow boolean DEFAULT false,
+    custom_filter_list character varying(1000) DEFAULT ''::character varying,
+    discord_id character varying(64),
+    stored_subscriber_count integer DEFAULT 0,
+    ban_evade integer DEFAULT 0,
+    original_username character varying(255),
+    customtitle text,
+    defaultsorting text,
+    defaulttime text,
+    namecolor text,
+    titlecolor text,
+    profileurl text,
+    bannerurl text,
+    hidevotedon boolean,
+    newtab boolean,
+    flairchanged boolean,
+    defaultsortingcomments text,
+    theme text,
+    song text,
+    slurreplacer boolean,
+    shadowbanned boolean,
+    newtabexternal boolean,
+    customtitleplain text,
+    themecolor text,
+    changelogsub boolean,
+    oldreddit boolean,
+    css text,
+    profilecss text,
+    coins integer,
+    agendaposter boolean,
+    agendaposter_expires_utc integer DEFAULT 0,
+    resized boolean,
+    animatedname boolean,
+    suicide_utc integer,
+    post_count integer,
+    comment_count integer,
+    highres text,
+    rent_utc integer,
+    patron integer,
+    zzz boolean DEFAULT false
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
