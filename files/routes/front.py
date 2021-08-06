@@ -69,7 +69,7 @@ def notifications(v):
 						   render_replies=True,
 						   is_notification_page=True)
 
-@cache.memoize(timeout=1500)
+# @cache.memoize(timeout=1500)
 def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words='', **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False,stickied=False,private=False).filter(Submission.deleted_utc == 0)
