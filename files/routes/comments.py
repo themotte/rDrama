@@ -77,16 +77,27 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	for i in range(6 - context):
 		if v:
-			blocking = v.blocking.subquery()
-			blocked = v.blocked.subquery()
+			votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
+			blocking = v.blocking.subquery()
+
+			blocked = v.blocked.subquery()
 
 			comments = g.db.query(
 				Comment,
+				votes.c.vote_type,
 				blocking.c.id,
 				blocked.c.id,
-			).filter(
+			)
+			if v.admin_level >=4:
+				comments=comments.options(joinedload(Comment.oauth_app))
+	
+			comments=comments.filter(
 				Comment.parent_comment_id.in_(current_ids)
+			).join(
+				votes,
+				votes.c.comment_id == Comment.id,
+				isouter=True
 			).join(
 				blocking,
 				blocking.c.target_id == Comment.author_id,
@@ -116,8 +127,10 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			output = []
 			for c in comments:
 				comment = c[0]
-				comment._is_blocking = c[1] or 0
-				comment._is_blocked = c[2] or 0
+				if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
+				comment._voted = c[1] or 0
+				comment._is_blocking = c[2] or 0
+				comment._is_blocked = c[3] or 0
 				output.append(comment)
 		else:
 
