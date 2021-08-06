@@ -415,7 +415,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	@property
 	@lazy
-	def active_flags(self): return self.flags.count()
+	def active_flags(self): return len(self.flags)
 
 	@property
 	@lazy

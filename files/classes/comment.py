@@ -293,7 +293,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	
 	@property
 	@lazy
-	def active_flags(self): return self.flags.count()
+	def active_flags(self): return len(self.flags)
 
 	@property
 	@lazy
