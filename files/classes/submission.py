@@ -49,9 +49,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	stickied = Column(Boolean, default=False)
 	is_pinned = Column(Boolean, default=False)
 	private = Column(Boolean, default=False)
-	_comments = relationship(
+	comments = relationship(
 		"Comment",
-		lazy="dynamic",
+		lazy="joined",
 		primaryjoin="Comment.parent_submission==Submission.id",
 		backref="submissions")
 	flags = relationship("Flag", lazy="dynamic")
@@ -77,6 +77,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		primaryjoin="Submission.is_approved==User.id")
 
 	awards = relationship("AwardRelationship", lazy="joined")
+    scoresex = deferred(Column(Float, server_default=FetchedValue()))
 
 	def __init__(self, *args, **kwargs):
 
