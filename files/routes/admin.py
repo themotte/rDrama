@@ -1083,10 +1083,10 @@ def create_plot(**kwargs):
 		return abort(400)
 
 	# create multiple charts
-	daily_signups = [d["signups"] for d in kwargs["sign_ups"]['daily_signups']][::-1]
-	post_stats = [d["posts"] for d in kwargs["posts"]['post_stats']][::-1]
-	comment_stats = [d["comments"] for d in kwargs["comments"]['comment_stats']][::-1]
-	daily_times = [d["date"] for d in kwargs["sign_ups"]['daily_signups']]
+	daily_signups = [d["signups"] for d in kwargs["sign_ups"]['daily_signups']][1:][::-1]
+	post_stats = [d["posts"] for d in kwargs["posts"]['post_stats']][1:][::-1]
+	comment_stats = [d["comments"] for d in kwargs["comments"]['comment_stats']][1:][::-1]
+	daily_times = [d["date"] for d in kwargs["sign_ups"]['daily_signups']][1:][::-1]
 
 	multi_plots = multiple_plots(sign_ups=daily_signups,
 								 posts=post_stats,
@@ -1106,16 +1106,16 @@ def multiple_plots(**kwargs):
 	signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
 
 	signup_chart.plot(
-		kwargs['daily_times'][1:][::-1],
-		kwargs['sign_ups'][:-1],
+		kwargs['daily_times'],
+		kwargs['sign_ups'],
 		color='red')
 	posts_chart.plot(
-		kwargs['daily_times'][1:][::-1],
-		kwargs['posts'][:-1],
+		kwargs['daily_times'],
+		kwargs['posts'],
 		color='green')
 	comments_chart.plot(
-		kwargs['daily_times'][1:][::-1],
-		kwargs['comments'][:-1],
+		kwargs['daily_times'],
+		kwargs['comments'],
 		color='gold')
 
 	signup_chart.set_ylabel("Signups")
