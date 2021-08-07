@@ -61,7 +61,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	comment_info = comment
 	while context > 0 and comment.level > 1:
 
-		parent = get_comment(c.parent_comment_id, v=v)
+		parent = get_comment(comment.parent_comment_id, v=v)
 
 		post.preloaded_comments += [parent]
 
