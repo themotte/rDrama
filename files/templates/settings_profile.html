@@ -315,24 +315,6 @@
 								</div>
 							
 							</div>							
-							
-
-							<div class="body d-lg-flex border-bottom">
-
-								<label for="bio" class="text-black w-lg-25">Animated Username</label>
-
-								<div class="w-lg-100">
-
-									<div class="custom-control custom-switch">
-										<input type="checkbox" class="custom-control-input" id="animatedname" name="animatedname"{% if v.animatedname%} checked{% endif %} onchange="post_toast('/settings/profile?animatedname='+document.getElementById('animatedname').checked)">
-										<label class="custom-control-label" for="animatedname"></label>
-									</div>
-
-									<span class="text-small-extra text-muted">Enable animated username (only available to users in the {{"COINS_NAME" | app_config}} leaderboard and patrons)</span>
-								</div>
-
-							</div>
-
 
 							{% if not v.flairchanged %}
 							<div class="body d-lg-flex border-bottom">
