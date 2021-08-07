@@ -292,10 +292,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		return bool(len([x for x in self.awards if x.kind == kind]))
 
 	@property
-	def voted(self):
-		return self.voted if "voted" in self.__dict__ else 0
-
-	@property
 	def title(self):
 		return self.submission_aux.title
 
