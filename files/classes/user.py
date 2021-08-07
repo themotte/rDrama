@@ -73,8 +73,8 @@ class User(Base, Stndrd, Age_times):
 		"Notification",
 		lazy="dynamic")
 
-	is_banned = Column(Integer, default=None)
-	unban_utc = Column(Integer, default=None)
+	is_banned = Column(Integer, default=0)
+	unban_utc = Column(Integer, default=0)
 	ban_reason = Column(String, default="")
 	login_nonce = Column(Integer, default=0)
 	reserved = Column(String(256))

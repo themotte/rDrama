@@ -1004,7 +1004,7 @@ def admin_nunuke_user(v):
 
 	return redirect(user.url)
 	
-@app.get("/user_stat_data")
+@app.get("/admin/user_stat_data")
 @admin_level_required(2)
 @cache.memoize(timeout=60)
 def user_stat_data(v):
@@ -1032,9 +1032,7 @@ def user_stat_data(v):
 	daily_signups = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
 					  "day_start":day_cutoffs[i + 1],
 					  "signups": g.db.query(User).filter(User.created_utc < day_cutoffs[i],
-														 User.created_utc > day_cutoffs[i + 1],
-														 User.is_banned == 0
-														 ).count()
+														 User.created_utc > day_cutoffs[i + 1]														 ).count()
 					  } for i in range(len(day_cutoffs) - 1)
 					 ]
 
