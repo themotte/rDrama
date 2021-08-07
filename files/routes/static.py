@@ -4,6 +4,41 @@ from files.helpers.alerts import *
 
 site = environ.get("DOMAIN").strip()
 
+@app.get("/stats")
+@auth_desired
+def participation_stats(v):
+
+	now = int(time.time())
+
+	day = now - 86400
+
+	data = {"valid_users": g.db.query(User).count(),
+			"private_users": g.db.query(User).filter_by(is_private=True).count(),
+			"banned_users": g.db.query(User).filter(User.is_banned > 0).count(),
+			"verified_email_users": g.db.query(User).filter_by(is_activated=True).count(),
+			"signups_last_24h": g.db.query(User).filter(User.created_utc > day).count(),
+			"total_posts": g.db.query(Submission).count(),
+			"posting_users": g.db.query(Submission.author_id).distinct().count(),
+			"listed_posts": g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
+			"removed_posts": g.db.query(Submission).filter_by(is_banned=True).count(),
+			"deleted_posts": g.db.query(Submission).filter(Submission.deleted_utc > 0).count(),
+			"posts_last_24h": g.db.query(Submission).filter(Submission.created_utc > day).count(),
+			"total_comments": g.db.query(Comment).count(),
+			"commenting_users": g.db.query(Comment.author_id).distinct().count(),
+			"removed_comments": g.db.query(Comment).filter_by(is_banned=True).count(),
+			"deleted_comments": g.db.query(Comment).filter(Comment.deleted_utc>0).count(),
+			"comments_last_24h": g.db.query(Comment).filter(Comment.created_utc > day).count(),
+			"post_votes": g.db.query(Vote).count(),
+			"post_voting_users": g.db.query(Vote.user_id).distinct().count(),
+			"comment_votes": g.db.query(CommentVote).count(),
+			"comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
+			"total_awards": g.db.query(AwardRelationship).count(),
+			"awards_given": g.db.query(AwardRelationship).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
+			}
+
+
+	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
+
 @app.get("/patrons")
 @auth_desired
 def patrons(v):
