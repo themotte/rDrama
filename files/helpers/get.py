@@ -199,7 +199,7 @@ def get_comment(i, v=None, graceful=False, **kwargs):
 	return comment
 
 
-def get_comments(cids, v=None):
+def get_comments(cids, v=None, load_parent=False):
 
 	if not cids: return []
 
@@ -244,6 +244,10 @@ def get_comments(cids, v=None):
 
 	else:
 		output = g.db.query(Comment).filter(Comment.id.in_(cids)).all()
+
+	if load_parent:
+		parents = [x.parent_comment_id for x in output if x.parent_comment_id]
+		parents = get_comments(parents, v=v)
 
 	return sorted(output, key=lambda x: cids.index(x.id))
 

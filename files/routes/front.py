@@ -34,7 +34,7 @@ def notifications(v):
 		cids = v.notification_commentlisting(page=page, all_=all_)
 		next_exists = (len(cids) == 26)
 		cids = cids[:25]
-		comments = get_comments(cids, v=v)
+		comments = get_comments(cids, v=v, load_parent=True)
 
 	listing = []
 	for c in comments:

@@ -55,17 +55,6 @@ class User(Base, Stndrd, Age_times):
 	newtabexternal = Column(Boolean, default=True)
 	zzz = Column(Boolean, default=False)
 	oldreddit = Column(Boolean, default=False)
-	submissions = relationship(
-		"Submission",
-		lazy="dynamic",
-		primaryjoin="Submission.author_id==User.id",
-		)
-	comments = relationship(
-		"Comment",
-		lazy="dynamic",
-		primaryjoin="Comment.author_id==User.id")
-	votes = relationship("Vote", lazy="dynamic")
-	commentvotes = relationship("CommentVote", lazy="dynamic")
 	bio = Column(String, default="")
 	bio_html = Column(String, default="")
 	badges = relationship("Badge", lazy="dynamic")
@@ -103,11 +92,6 @@ class User(Base, Stndrd, Age_times):
 
 	_applications = relationship("OauthApp", lazy="dynamic")
 	authorizations = relationship("ClientAuth", lazy="dynamic")
-
-	saved_posts = relationship(
-		"SaveRelationship",
-		lazy="dynamic",
-		primaryjoin="User.id==SaveRelationship.user_id")
 
 	awards = relationship(
 		"AwardRelationship",
