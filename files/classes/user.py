@@ -55,6 +55,10 @@ class User(Base, Stndrd, Age_times):
 	newtabexternal = Column(Boolean, default=True)
 	zzz = Column(Boolean, default=False)
 	oldreddit = Column(Boolean, default=False)
+	comments = relationship(
+		"Comment",
+		lazy="dynamic",
+		primaryjoin="Comment.author_id==User.id")
 	bio = Column(String, default="")
 	bio_html = Column(String, default="")
 	badges = relationship("Badge", lazy="dynamic")
