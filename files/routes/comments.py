@@ -58,7 +58,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	# context improver
 	try: context = int(request.args.get("context", 0))
 	except: context = 0
-	while context > 0 and c.level > 1:
+	while context > 0 and comment.level > 1:
 
 		parent = get_comment(c.parent_comment_id, v=v)
 
