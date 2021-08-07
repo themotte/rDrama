@@ -58,8 +58,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	# context improver
 	try: context = int(request.args.get("context", 0))
 	except: context = 0
-	comment_info = comment
-	c = comment
 	while context > 0 and c.level > 1:
 
 		parent = get_comment(c.parent_comment_id, v=v)
@@ -68,7 +66,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 		c = parent
 		context -= 1
-	top_comment = c
 
 	if v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
@@ -171,10 +168,10 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	post.tree_comments()
 
-	post.replies=[top_comment]
+	post.replies=[comment]
 
-	if request.headers.get("Authorization"): return top_comment.json
-	else: return post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info)
+	if request.headers.get("Authorization"): return comment.json
+	else: return post.rendered_page(v=v, sort=sort, comment=comment, comment_info=comment)
 
 
 @app.post("/comment")
