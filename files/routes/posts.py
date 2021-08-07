@@ -125,7 +125,7 @@ def post_id(pid, anything=None, v=None):
 		for c in comments:
 			comment = c[0]
 			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
-			comment._voted = c[1] or 0
+			comment.voted = c[1] or 0
 			comment._is_blocking = c[2] or 0
 			comment._is_blocked = c[3] or 0
 			output.append(comment)
