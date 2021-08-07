@@ -1106,15 +1106,15 @@ def multiple_plots(**kwargs):
 	signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
 
 	signup_chart.plot(
-		kwargs['daily_times'][::-1],
+		kwargs['daily_times'][1:][::-1],
 		kwargs['sign_ups'],
 		color='red')
 	posts_chart.plot(
-		kwargs['daily_times'][::-1],
+		kwargs['daily_times'][1:][::-1],
 		kwargs['posts'],
 		color='green')
 	comments_chart.plot(
-		kwargs['daily_times'][::-1],
+		kwargs['daily_times'][1:][::-1],
 		kwargs['comments'],
 		color='gold')
 
