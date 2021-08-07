@@ -238,7 +238,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				#'award_count': self.award_count,
 				'meta_title': self.meta_title,
 				'meta_description': self.meta_description,
-				'voted': self.voted,
+				'voted': self._voted,
 				'flags': flags,
 				}
 
@@ -284,7 +284,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 			data["replies"]=[x.json_core for x in self.replies]
 
 		if "voted" in self.__dict__:
-			data["voted"] = self.voted
+			data["voted"] = self._voted
 
 		return data
 
@@ -293,7 +293,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	@property
 	def voted(self):
-		return self.voted if "voted" in self.__dict__ else 0
+		return self._voted if "voted" in self.__dict__ else 0
 
 	@property
 	def title(self):

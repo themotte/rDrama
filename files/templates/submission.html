@@ -15,7 +15,7 @@
 {% set score=ups-downs %}
 
 {% if v %}
-{% set voted=p.voted if p.voted else 0 %}
+{% set voted=p._voted if p._voted else 0 %}
 {% else %}
 {% set voted=-2 %}
 {% endif %}

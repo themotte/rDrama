@@ -144,7 +144,7 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 	secondrange = firstrange+1000
 	posts = posts[firstrange:secondrange]
 
-	if v and v.hidevotedon: posts = [x for x in posts if x.voted == 0]
+	if v and v.hidevotedon: posts = [x for x in posts if x._voted == 0]
 
 	if page == 1: posts = g.db.query(Submission).filter_by(stickied=True).all() + posts
 
