@@ -130,8 +130,7 @@ def error_503(e, v):
 def allow_nsfw():
 
 	session["over_18"] = int(time.time()) + 3600
-
-	return redirect(request.form.get("redir"))
+	return redirect(request.form.get("redir", "/"))
 
 
 @app.get("/error/<error>")
