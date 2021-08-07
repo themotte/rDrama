@@ -1107,15 +1107,15 @@ def multiple_plots(**kwargs):
 
 	signup_chart.plot(
 		kwargs['daily_times'][1:][::-1],
-		kwargs['sign_ups'],
+		kwargs['sign_ups'][1:],
 		color='red')
 	posts_chart.plot(
 		kwargs['daily_times'][1:][::-1],
-		kwargs['posts'],
+		kwargs['posts'][1:],
 		color='green')
 	comments_chart.plot(
 		kwargs['daily_times'][1:][::-1],
-		kwargs['comments'],
+		kwargs['comments'][1:],
 		color='gold')
 
 	signup_chart.set_ylabel("Signups")
