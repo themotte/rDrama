@@ -44,14 +44,14 @@
 			{% if level<6 %}
 				<div id="replies-of-{{c.id}}" class="">
 					{% set standalone=False %}
-					{% for reply in c.children(v) %}
+					{% for reply in c.replies %}
 						{{single_comment(reply, level=level+1)}}
 					{% endfor %}
 				</div>
-			{% elif c.children(v) %}
+			{% elif c.replies %}
 				<div id="replies-of-{{c.id}}" class="d-none d-md-block">
 					{% set standalone=False %}
-					{% for reply in c.children(v) %}
+					{% for reply in c.replies %}
 						{{single_comment(reply, level=level+1)}}
 					{% endfor %}
 				</div>
@@ -376,13 +376,13 @@
 		{% if render_replies %} 
 			{% if level<6 %}
 				<div id="replies-of-{{c.id}}">
-					{% for reply in c.children(v) %}
+					{% for reply in c.replies %}
 						{{single_comment(reply, level=level+1)}}
 					{% endfor %}
 				</div>
-			{% elif c.children(v) %}
+			{% elif c.replies %}
 				<div id="replies-of-{{c.id}}" class="d-none d-md-block">
-					{% for reply in c.children(v) %}
+					{% for reply in c.replies %}
 						{{single_comment(reply, level=level+1)}}
 					{% endfor %}
 				</div>

@@ -92,9 +92,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	def score_disputed(self):
 		return (self.upvotes+1) * (self.downvotes+1)
 
-	def children(self, v):
-		return sorted([x for x in self.child_comments if not x.author.shadowbanned or (v and v.id == x.author_id)], key=lambda x: x.score, reverse=True)
-
 	@property
 	@lazy
 	def parent(self):
@@ -116,7 +113,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	def replies(self):
 
 		r = self.__dict__.get("replies", None)
-		if not r: r = self.child_comments
+		if not r: r = sorted([x for x in self.child_comments], key=lambda x: x.score, reverse=True)
 		return r
 
 	@replies.setter
