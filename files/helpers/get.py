@@ -248,6 +248,8 @@ def get_comments(cids, v=None, load_parent=False):
 	if load_parent:
 		parents = [x.parent_comment_id for x in output if x.parent_comment_id]
 		parents = get_comments(parents, v=v)
+		parents={x.id: x for x in parents}
+		for c in output: c._parent_comment=parents.get(c.parent_comment_id)
 
 	return sorted(output, key=lambda x: cids.index(x.id))
 
