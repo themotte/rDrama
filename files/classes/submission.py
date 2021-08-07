@@ -149,7 +149,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		# load and tree comments
 		# calling this function with a comment object will do a comment
 		# permalink thing
-		if "replies" not in self.__dict__ and "_preloaded_comments" in self.__dict__:
+		if "replies" not in self.__dict__ and "preloaded_comments" in self.__dict__:
 			self.tree_comments(comment=comment)
 
 		return render_template(template,
@@ -172,7 +172,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	def tree_comments(self, comment=None, v=None):
 
-		comments = self.__dict__.get('_preloaded_comments',[])
+		comments = self.__dict__.get('preloaded_comments',[])
 		if not comments:
 			return
 
@@ -283,8 +283,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		if "replies" in self.__dict__:
 			data["replies"]=[x.json_core for x in self.replies]
 
-		if "_voted" in self.__dict__:
-			data["voted"] = self._voted
+		if "voted" in self.__dict__:
+			data["voted"] = self.voted
 
 		return data
 
@@ -293,7 +293,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	@property
 	def voted(self):
-		return self._voted if "_voted" in self.__dict__ else 0
+		return self.voted if "voted" in self.__dict__ else 0
 
 	@property
 	def title(self):

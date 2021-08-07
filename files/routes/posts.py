@@ -125,12 +125,12 @@ def post_id(pid, anything=None, v=None):
 		for c in comments:
 			comment = c[0]
 			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
-			comment._voted = c[1] or 0
+			comment.voted = c[1] or 0
 			comment._is_blocking = c[2] or 0
 			comment._is_blocked = c[3] or 0
 			output.append(comment)
 
-		post._preloaded_comments = output
+		post.preloaded_comments = output
 
 	else:
 		comments = g.db.query(
@@ -169,7 +169,7 @@ def post_id(pid, anything=None, v=None):
 					comment.downvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=-1).count()
 					g.db.add(comment)
 
-		post._preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
+		post.preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
 
 
 

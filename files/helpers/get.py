@@ -104,7 +104,7 @@ def get_post(i, v=None, graceful=False, **kwargs):
 		if not items and not graceful:
 			abort(404)
 		x = items[0]
-		x._voted = items[1] or 0
+		x.voted = items[1] or 0
 		x._is_blocking = items[2] or 0
 	else:
 		items = g.db.query(
@@ -154,7 +154,7 @@ def get_posts(pids, v=None):
 
 		output = [p[0] for p in query]
 		for i in range(len(output)):
-			output[i]._voted = query[i][1] or 0
+			output[i].voted = query[i][1] or 0
 			output[i]._is_blocking = query[i][2] or 0
 			output[i]._is_blocked = query[i][3] or 0
 	else:
@@ -190,7 +190,7 @@ def get_comment(i, v=None, graceful=False, **kwargs):
 		vt = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=Comment.id).first()
 		comment._is_blocking = block and block.user_id == v.id
 		comment._is_blocked = block and block.target_id == v.id
-		comment._voted = vt.vote_type if vt else 0
+		comment.voted = vt.vote_type if vt else 0
 
 	else:
 		comment = g.db.query(Comment).filter(Comment.id == i).first()
@@ -237,7 +237,7 @@ def get_comments(cids, v=None, load_parent=False):
 		for c in comments:
 			comment = c[0]
 			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
-			comment._voted = c[1] or 0
+			comment.voted = c[1] or 0
 			comment._is_blocking = c[2] or 0
 			comment._is_blocked = c[3] or 0
 			output.append(comment)

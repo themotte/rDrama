@@ -53,7 +53,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		if request.headers.get("Authorization"): return {'error': f'This content is not suitable for some users and situations.'}
 		else: render_template("errors/nsfw.html", v=v)
 
-	post._preloaded_comments = [comment]
+	post.preloaded_comments = [comment]
 
 	# context improver
 	try: context = int(request.args.get("context", 0))
@@ -64,7 +64,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 		parent = get_comment(c.parent_comment_id, v=v)
 
-		post._preloaded_comments += [parent]
+		post.preloaded_comments += [parent]
 
 		c = parent
 		context -= 1
@@ -133,7 +133,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			for c in comments:
 				comment = c[0]
 				if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
-				comment._voted = c[1] or 0
+				comment.voted = c[1] or 0
 				comment._is_blocking = c[2] or 0
 				comment._is_blocked = c[3] or 0
 				output.append(comment)
@@ -164,7 +164,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 				abort(422)
 
 
-		post._preloaded_comments += output
+		post.preloaded_comments += output
 
 		current_ids = [x.id for x in output]
 

@@ -215,10 +215,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		return data
 
 	@property
-	def voted(self):
-		return self.__dict__.get("_voted")
-
-	@property
 	def is_blocking(self):
 		return self.__dict__.get('_is_blocking', 0)
 
