@@ -187,10 +187,8 @@ def get_comment(i, v=None, graceful=False, **kwargs):
 			)
 		).first()
 
-		print(f"v.id = {v.id}")
-		vts = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=Comment.id)
-		print(f"vts = {vts}")
-		vt = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=Comment.id).first()
+		vts = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id)
+		vt = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
 		comment._is_blocking = block and block.user_id == v.id
 		comment._is_blocked = block and block.target_id == v.id
 		comment.voted = vt.vote_type if vt else 0
