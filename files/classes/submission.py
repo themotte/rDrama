@@ -236,7 +236,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'stickied': self.stickied,
 				'distinguish_level': self.distinguish_level,
 				#'award_count': self.award_count,
-				'voted': self.voted,
+				'voted': self.voted if hasattr(self, 'voted') else 0,
 				'flags': flags,
 				}
 
