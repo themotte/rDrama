@@ -258,7 +258,7 @@ def after_request(response):
 	"Origin, X-Requested-With, Content-Type, Accept, x-auth"
 	)
 	response.headers.add("Cache-Control",
-	"maxage=600")
+	"public, maxage=600")
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("Referrer-Policy", "same-origin")
 	response.headers.add("Feature-Policy",
