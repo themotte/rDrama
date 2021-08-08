@@ -124,8 +124,6 @@ def sanitize(text, linkgen=False, flair=False):
 			if not url: continue
 			netloc = urlparse(url).netloc
 
-			domain = get_domain(netloc)
-
 			if "profile-pic-20" not in tag.get("class", ""):
 				#print(tag.get('class'))
 				# set classes and wrap in link

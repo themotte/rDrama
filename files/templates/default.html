@@ -362,21 +362,6 @@
 
 		});
 	
-
-
-
-		$('.expandable-image').click( function(event) {
-
-			if (event.which != 1) {
-				return
-			}
-			event.preventDefault();
-
-			var url= $(this).data('url');
-
-			expandDesktopImage(url,url);
-		})
-	
 		$('.text-expand').click(function(event){
 		  if (event.which != 1) {
 			return
@@ -468,6 +453,18 @@
 
 		// Expand Images on Desktop
 
+		$('.expandable-image').click( function(event) {
+
+			if (event.which != 1) {
+				return
+			}
+			event.preventDefault();
+
+			var url= $(this).data('url');
+
+			expandDesktopImage(url,url);
+			})
+
 		function expandDesktopImage(image, link) {
 
 		// Link text
@@ -483,6 +480,38 @@
 
 			linkText.textContent = 'View original';
 			};
+
+
+		// Expand Videos on Desktop
+
+		$('.expandable-video').click( function(event) {
+
+			if (event.which != 1) {
+				return
+			}
+			event.preventDefault();
+
+			var url= $(this).data('url');
+
+			expandDesktopVideo(url,url);
+		})
+
+		function expandDesktopVideo(video, link) {
+
+			// Link text
+
+			var linkText = document.getElementById("desktop-expanded-video-link");
+			var imgLink = document.getElementById("desktop-expanded-video-wrap-link");
+
+			var inlineVideo = document.getElementById("desktop-expanded-video");
+
+			inlineVideo.src = Video.replace("100w.gif", "giphy.gif");
+			linkText.href = Video;
+			imgLink.href=Video;
+
+			linkText.textContent = 'View original';
+		};
+
 
 		post_comment=function(fullname){
 
@@ -1096,6 +1125,7 @@
 {% endif %}
 
 {% include "expanded_image_modal.html" %}
+{% include "expanded_video_modal.html" %}
 
 <script src="/assets/js/all_js.js"></script>
 

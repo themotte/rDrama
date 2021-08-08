@@ -13,7 +13,7 @@ class Image(Base):
 	
 	@property
 	def path(self):
-		return f"/assets/images/platy.jpg"
+		return f"/assets/images/cover.png"
 
 
 

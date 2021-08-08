@@ -72,6 +72,10 @@
 					<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
 						<img src="{{p.thumb_url}}" class="post-img">
 					</a>
+				{% elif "streamable.com" in p.url %}
+					<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-video" data-toggle="modal" data-target="#expandVideoModal" data-url="{{p.realurl(v)}}">
+						<img src="{{p.thumb_url}}" class="post-img">
+					</a>
 				{% else %}
 					<a {% if v and v.newtabexternal %}target="_blank"{% endif %} href="{{p.realurl(v)}}" rel="nofollow noopener">
 						<img src="{{p.thumb_url}}" class="post-img">
