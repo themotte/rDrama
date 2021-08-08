@@ -257,6 +257,7 @@ def after_request(response):
 	response.headers.add('Access-Control-Allow-Headers',
 	"Origin, X-Requested-With, Content-Type, Accept, x-auth"
 	)
+	response.headers.remove("Cache-Control")
 	response.headers.add("Cache-Control",
 	"public, maxage=600")
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
