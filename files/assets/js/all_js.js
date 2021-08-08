@@ -261,10 +261,18 @@ function post(url, callback, errortext) {
 	xhr.send(form);
 };
 
-function post_toast(url, callback) {
+function post_toast(url, callback, data) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	var form = new FormData()
+
+	if(typeof data === 'object' && data !== null) {
+		for(let k of Object.keys(data)) {
+				form.append(k, data[k]);
+		}
+	}
+
+
 	form.append("formkey", formkey());
 	xhr.withCredentials=true;
 
@@ -280,13 +288,20 @@ function post_toast(url, callback) {
 			} else if (xhr.status >= 300 && xhr.status < 400) {
 				window.location.href = JSON.parse(xhr.response)["redirect"]
 			} else {
-				data=JSON.parse(xhr.response);
-				
-				$('#toast-post-error').toast('dispose');
-				$('#toast-post-error').toast('show');
-				document.getElementById('toast-post-error-text').innerText = data["error"];
-				return false
-				
+				try {
+					data=JSON.parse(xhr.response);
+
+					$('#toast-post-error').toast('dispose');
+					$('#toast-post-error').toast('show');
+					document.getElementById('toast-post-error-text').innerText = data["error"];
+					return false
+				} catch(e) {
+					$('#toast-post-success').toast('dispose');
+					$('#toast-post-error').toast('dispose');
+					$('#toast-post-error').toast('show');
+					document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
+					return false
+				}
 			}
 		};
 
