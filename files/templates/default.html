@@ -453,7 +453,7 @@
 
 		// Expand Images on Desktop
 
-		function expandDesktopImage(image, link) {
+		function expandDesktopImage(image) {
 
 		// Link text
 
@@ -470,7 +470,7 @@
 			};
 
 
-		function expandDesktopVideo(video, link) {
+		function expandDesktopVideo(video) {
 
 			// Link text
 
@@ -479,9 +479,9 @@
 
 			var inlineVideo = document.getElementById("desktop-expanded-video");
 
-			inlineVideo.src = Video + "?controls=0";
-			linkText.href = Video;
-			imgLink.href=Video;
+			inlineVideo.src = video + "?controls=0";
+			linkText.href = video;
+			imgLink.href = video;
 
 			linkText.textContent = 'View original';
 		};
