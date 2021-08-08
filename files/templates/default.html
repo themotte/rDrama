@@ -453,18 +453,6 @@
 
 		// Expand Images on Desktop
 
-		$('.expandable-image').click( function(event) {
-
-			if (event.which != 1) {
-				return
-			}
-			event.preventDefault();
-
-			var url= $(this).data('url');
-
-			expandDesktopImage(url,url);
-			})
-
 		function expandDesktopImage(image, link) {
 
 		// Link text
@@ -482,20 +470,6 @@
 			};
 
 
-		// Expand Videos on Desktop
-
-		$('.expandable-video').click( function(event) {
-
-			if (event.which != 1) {
-				return
-			}
-			event.preventDefault();
-
-			var url= $(this).data('url');
-
-			expandDesktopVideo(url,url);
-		})
-
 		function expandDesktopVideo(video, link) {
 
 			// Link text
@@ -505,7 +479,7 @@
 
 			var inlineVideo = document.getElementById("desktop-expanded-video");
 
-			inlineVideo.src = Video.replace("100w.gif", "giphy.gif");
+			inlineVideo.src = Video + "?controls=0";
 			linkText.href = Video;
 			imgLink.href=Video;
 

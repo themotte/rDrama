@@ -65,21 +65,23 @@
 			<div style="z-index: 3;">
 				
 				{% if not p.url %}
-					<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" rel="nofollow noopener">
-						<img src="{{p.thumb_url}}" class="post-img">
-					</a>
+				<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" rel="nofollow noopener">
+					<img src="{{p.thumb_url}}" class="post-img">
+				</a>
 				{% elif p.is_image %}
-					<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
-						<img src="{{p.thumb_url}}" class="post-img">
-					</a>
+				<div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap pl-3 p-0">
+					<a href="{{p.realurl(v)}}" style="height: fit-content;" {% if v and v.newtabexternal %}target="_blank"{% endif %} rel="nofollow" data-toggle="modal" data-target="#expandImageModal" onclick="expandDesktopImage('{{p.realurl(v)}}','{{p.realurl(v)}}')"><img src="{{p.thumb_url}}" class="post-img d-none d-md-block" alt="Unable to load image"></a>
+
+				</div>
 				{% elif "streamable.com" in p.url %}
-					<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-video" data-toggle="modal" data-target="#expandVideoModal" data-url="{{p.realurl(v)}}">
-						<img src="{{p.thumb_url}}" class="post-img">
-					</a>
+				<div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap pl-3 p-0">
+					<a href="{{p.realurl(v)}}" style="height: fit-content;" {% if v and v.newtabexternal %}target="_blank"{% endif %} rel="nofollow" data-toggle="modal" data-target="#expandVideoModal" onclick="expandDesktopVideo('{{p.realurl(v)}}','{{p.realurl(v)}}')"><img src="{{p.thumb_url}}" class="post-img d-none d-md-block" alt="Unable to load video"></a>
+
+				</div>
 				{% else %}
-					<a {% if v and v.newtabexternal %}target="_blank"{% endif %} href="{{p.realurl(v)}}" rel="nofollow noopener">
-						<img src="{{p.thumb_url}}" class="post-img">
-					</a>
+				<a {% if v and v.newtabexternal %}target="_blank"{% endif %} href="{{p.realurl(v)}}" rel="nofollow noopener">
+					<img src="{{p.thumb_url}}" class="post-img">
+				</a>
 				{% endif %}
 				
 			</div>
