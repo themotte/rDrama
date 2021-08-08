@@ -236,8 +236,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				'stickied': self.stickied,
 				'distinguish_level': self.distinguish_level,
 				#'award_count': self.award_count,
-				'meta_title': self.meta_title,
-				'meta_description': self.meta_description,
 				'voted': self.voted,
 				'flags': flags,
 				}
@@ -372,24 +370,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@embed_url.setter
 	def embed_url(self, x):
 		self.submission_aux.embed_url = x
-		g.db.add(self.submission_aux)
-
-	@property
-	def meta_title(self):
-		return self.submission_aux.meta_title
-
-	@meta_title.setter
-	def meta_title(self, x):
-		self.submission_aux.meta_title=x
-		g.db.add(self.submission_aux)
-
-	@property
-	def meta_description(self):
-		return self.submission_aux.meta_description
-
-	@meta_description.setter
-	def meta_description(self, x):
-		self.submission_aux.meta_description=x
 		g.db.add(self.submission_aux)
 	
 	@property
