@@ -34,6 +34,42 @@ def suicide(v, username):
 	g.db.add(v)
 	return "", 204
 
+@app.get("/@<username>/coins")
+@auth_required
+def get_coins(v, username):
+	user = get_user(username)
+	if user is not None: return {"coins": user.coins}, 200
+	else: return {"error": "invalid_user"}, 404
+
+@app.post("/@<username>/transfer_coins")
+@auth_required
+@validate_formkey
+def transfer_coins(v, username):
+	receiver = get_user(username)
+
+	if receiver is None: return {"error": "That user doesn't exist."}, 404
+
+	if receiver.id != v.id:
+		amount = request.form.get("amount", "")
+		amount = int(amount) if amount.isdigit() else None
+
+		if amount is None or amount <= 0: return {"error": f"Invalid amount of {app.config['SITE_NAME']}coins."}, 400
+		if v.coins < amount: return {"error": f"You don't have enough {app.config['SITE_NAME']}coins"}, 400
+		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['SITE_NAME']}coins."}, 400
+
+		v.coins -= amount
+		receiver.coins += amount
+		g.db.add(receiver)
+		g.db.add(v)
+
+		g.db.commit()
+
+		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['SITE_NAME']}coins!"
+		send_notification(v.id, receiver, transfer_message)
+		return {"message": f"{amount} {app.config['SITE_NAME']}coins transferred!"}, 200
+
+	return "", 204
+
 @app.get("/leaderboard")
 @auth_desired
 def leaderboard(v):

@@ -54,6 +54,38 @@
 			if (audio.paused) audio.play(); 
 		}, {once : true});
 	}
+
+	function transferCoins() {
+		let t = event.target;
+		t.disabled = true;
+
+		post_toast("/@{{ u.username }}/transfer_coins",
+			xhr => {
+				if(xhr.status == 200) {
+					fetch("/@{{ u.username }}/coins")
+						.then(r => r.json())
+						.then(m => document.getElementById("profile-coins-amount").innerText = m["coins"])
+
+					fetch("/@{{ v.username }}/coins")
+						.then(r => r.json())
+						.then(m => document.getElementById("user-coins-amount").innerText = m["coins"])
+				}
+			},
+			{"amount": document.getElementById("coins-transfer-amount").value}
+		);
+
+		setTimeout(_ => t.disabled = false, 2000);
+	}
+
+	function toggleElement(group, id) {
+		for(let el of document.getElementsByClassName(group)) {
+			if(el.id != id) {
+				el.classList.add('d-none');
+			}
+		}
+
+		document.getElementById(id).classList.toggle('d-none');
+	}
 </script>
 <textarea id="userid" style="display: none;">{% if u.song %}{{u.id}}{% else %}nosong{% endif %}</textarea>
 <div class="row d-none d-md-block">
@@ -119,7 +151,8 @@
 				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{{u.customtitle | safe}}</p>{% endif %}
 				
 				<div class="font-weight-bolder">
-					<span>{{u.coins}}</span> {{"SITE_NAME" | app_config}}coins&nbsp;&nbsp; {% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
+					<span id="profile-coins-amount">{{u.coins}}</span> {{"SITE_NAME" | app_config}}coins&nbsp;&nbsp; {% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
+
 				</div>
 				{% if u.bio_html %}
 				<pre></pre>
@@ -136,9 +169,11 @@
 						<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unfollow</a>
 						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/follow/{{u.username}}', callback=function(){document.getElementById('button-sub').classList.toggle('d-none');document.getElementById('button-unsub').classList.toggle('d-none');})">Follow</a>						
 						
-						<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('message').classList.toggle('d-none')">Message</a>
+						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'message')">Message</a>
+
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="post('/@{{u.username}}/suicide', function(){window.location.reload(true);})">Get them help</a>
-						<form class="d-none" id="message" action="/@{{u.username}}/message" method="post">
+						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'coin-transfer')">Gift {{"SITE_NAME" | app_config}}coins</a>
+						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message" method="post">
 							<pre></pre>
 							<textarea id="input-message" form="message" name="message" rows="3" class="form-control" required></textarea>
 							<pre></pre>
@@ -154,6 +189,11 @@
 							&nbsp;
 							<input type="submit" value="Submit" class="btn btn-primary mt-3">
 						</form>
+
+						<div class="d-none mt-3 profile-toggleable" id="coin-transfer">
+							<input id="coins-transfer-amount" class="form-control" name="amount" type="number">
+							<button class="btn btn-primary mt-3" onclick="transferCoins()">Gift</button>
+						</div>
 
 					 {% elif v and v.id == u.id %}
 						<a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
