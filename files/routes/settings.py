@@ -374,7 +374,7 @@ def settings_delete_profile(v):
 @auth_required
 @validate_formkey
 def settings_delete_banner(v):
-	
+
 	v.bannerurl = None
 	g.db.add(v)
 
