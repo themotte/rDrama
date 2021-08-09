@@ -107,7 +107,7 @@ def admin_app_approve(v, aid):
 
 	g.db.add(new_auth)
 
-	send_notification(1046, user.id, f"Your application `{app.app_name}` has been approved. Here's your access token: `{access_token}`\nPlease check the guide [here](/api) if you don't know what to do next.")
+	send_notification(1046, user, f"Your application `{app.app_name}` has been approved. Here's your access token: `{access_token}`\nPlease check the guide [here](/api) if you don't know what to do next.")
 
 	return {"message": f"{app.app_name} approved"}
 
