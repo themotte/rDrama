@@ -93,6 +93,7 @@ def edit_oauth_app(v, aid):
 def admin_app_approve(v, aid):
 
 	app = g.db.query(OauthApp).filter_by(id=aid).first()
+	user = app.author
 
 	app.client_id = secrets.token_urlsafe(64)[:64]
 	g.db.add(app)
@@ -100,13 +101,13 @@ def admin_app_approve(v, aid):
 	access_token = secrets.token_urlsafe(128)[:128]
 	new_auth = ClientAuth(
 		oauth_client = app.id,
-		user_id = v.id,
+		user_id = user.id,
 		access_token=access_token
 	)
 
 	g.db.add(new_auth)
 
-	send_notification(1046, v, f"Your application `{app.app_name}` has been approved. Here's your access token: `{access_token}`\nPlease check the guide [here](/api) if you don't know what to do next.")
+	send_notification(1046, user.id, f"Your application `{app.app_name}` has been approved. Here's your access token: `{access_token}`\nPlease check the guide [here](/api) if you don't know what to do next.")
 
 	return {"message": f"{app.app_name} approved"}
 
