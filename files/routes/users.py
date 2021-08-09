@@ -53,9 +53,9 @@ def transfer_coins(v, username):
 		amount = request.form.get("amount", "")
 		amount = int(amount) if amount.isdigit() else None
 
-		if amount is None or amount <= 0: return {"error": f"Invalid amount of {app.config['SITE_NAME']}coins."}, 400
-		if v.coins < amount: return {"error": f"You don't have enough {app.config['SITE_NAME']}coins"}, 400
-		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['SITE_NAME']}coins."}, 400
+		if amount is None or amount <= 0: return {"error": f"Invalid amount of {app.config['COINS_NAME']}."}, 400
+		if v.coins < amount: return {"error": f"You don't have enough {app.config['COINS_NAME']}"}, 400
+		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['COINS_NAME']}."}, 400
 
 		v.coins -= amount
 		receiver.coins += amount
@@ -64,9 +64,9 @@ def transfer_coins(v, username):
 
 		g.db.commit()
 
-		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['SITE_NAME']}coins!"
+		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
 		send_notification(v.id, receiver, transfer_message)
-		return {"message": f"{amount} {app.config['SITE_NAME']}coins transferred!"}, 200
+		return {"message": f"{amount} {app.config['COINS_NAME']} transferred!"}, 200
 
 	return "", 204
 
