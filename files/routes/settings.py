@@ -364,7 +364,7 @@ def settings_images_banner(v):
 @auth_required
 @validate_formkey
 def settings_delete_profile(v):
-
+	v.highres = None
 	v.profileurl = None
 	g.db.add(v)
 	return render_template("settings_profile.html", v=v,
@@ -374,7 +374,7 @@ def settings_delete_profile(v):
 @auth_required
 @validate_formkey
 def settings_delete_banner(v):
-	v.highres = None
+	
 	v.bannerurl = None
 	g.db.add(v)
 
