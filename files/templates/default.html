@@ -362,6 +362,21 @@
 
 		});
 	
+
+
+
+		$('.expandable-image').click( function(event) {
+
+			if (event.which != 1) {
+				return
+			}
+			event.preventDefault();
+
+			var url= $(this).data('url');
+
+			expandDesktopImage(url,url);
+		})
+	
 		$('.text-expand').click(function(event){
 		  if (event.which != 1) {
 			return
@@ -453,7 +468,7 @@
 
 		// Expand Images on Desktop
 
-		function expandDesktopImage(image) {
+		function expandDesktopImage(image, link) {
 
 		// Link text
 
@@ -468,24 +483,6 @@
 
 			linkText.textContent = 'View original';
 			};
-
-
-		function expandDesktopVideo(video) {
-
-			// Link text
-
-			var linkText = document.getElementById("desktop-expanded-video-link");
-			var imgLink = document.getElementById("desktop-expanded-video-wrap-link");
-
-			var inlineVideo = document.getElementById("desktop-expanded-video");
-
-			inlineVideo.src = video + "?controls=0";
-			linkText.href = video;
-			imgLink.href = video;
-
-			linkText.textContent = 'View original';
-		};
-
 
 		post_comment=function(fullname){
 
@@ -1099,7 +1096,6 @@
 {% endif %}
 
 {% include "expanded_image_modal.html" %}
-{% include "expanded_video_modal.html" %}
 
 <script src="/assets/js/all_js.js"></script>
 
