@@ -55,7 +55,7 @@
 		}, {once : true});
 	}
 
-	function transferCoins() {
+	function transferCoins(mobile=false) {
 		let t = event.target;
 		t.disabled = true;
 
@@ -64,14 +64,17 @@
 				if(xhr.status == 200) {
 					fetch("/@{{ u.username }}/coins")
 						.then(r => r.json())
-						.then(m => document.getElementById("profile-coins-amount").innerText = m["coins"])
+						.then(m => {
+							document.getElementById("profile-coins-amount").innerText = m["coins"];
+							document.getElementById("profile-coins-amount-mobile").innerText = m["coins"];
+						})
 
 					fetch("/@{{ v.username }}/coins")
 						.then(r => r.json())
-						.then(m => document.getElementById("user-coins-amount").innerText = m["coins"])
+						.then(m => document.getElementById(`user-coins-amount`).innerText = m["coins"])
 				}
 			},
-			{"amount": document.getElementById("coins-transfer-amount").value}
+			{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value}
 		);
 
 		setTimeout(_ => t.disabled = false, 2000);
@@ -355,7 +358,7 @@
 				{% endif %}
 				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{{u.customtitle | safe}}</p>{% endif %}
 				<div class="font-weight-normal">
-					<span class="font-weight-bold">{{u.coins}}</span> {{"COINS_NAME" | app_config}}&nbsp;&nbsp;{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
+					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span> {{"COINS_NAME" | app_config}}&nbsp;&nbsp;{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
 				</div>
 				{% if u.bio_html %}
 				<p class="text-muted text-break">{{u.bio_html | safe}}</p>
@@ -377,9 +380,11 @@
 					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub2').classList.toggle('d-none');document.getElementById('button-sub2').classList.toggle('d-none');})">Unfollow</a>
 					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/follow/{{u.username}}', callback=function(){document.getElementById('button-sub2').classList.toggle('d-none');document.getElementById('button-unsub2').classList.toggle('d-none');})">Follow</a>						
 					
-					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('message-mobile').classList.toggle('d-none')">Message</a>
+					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">Message</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="post('/@{{u.username}}/suicide', function(){window.location.reload(true);})">Get them help</a>
-					<form class="d-none" id='message-mobile' action="/@{{u.username}}/message" method="post">
+					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'coin-transfer-mobile')">Gift {{"COINS_NAME" | app_config}}</a>
+
+					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message" method="post">
 						<pre></pre>
 						<textarea id="input-message-mobile" form="message-mobile" name="message" rows="3" class="form-control" required></textarea>
 						<pre></pre>
@@ -395,6 +400,11 @@
 						&nbsp;
 						<input type="submit" value="Submit" class="btn btn-primary mt-3">
 					</form>
+
+					<div class="d-none mt-3 profile-toggleable-mobile" id="coin-transfer-mobile">
+						<input id="coins-transfer-amount-mobile" class="form-control" name="amount" type="number">
+						<button class="btn btn-primary mt-3" onclick="transferCoins(true)">Gift</button>
+					</div>
 					
 					 {% if v.admin_level > 1 and u.admin_level <= 1 %}
 						<br><br>
