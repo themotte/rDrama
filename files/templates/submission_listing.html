@@ -73,7 +73,7 @@
 						<img src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% else %}
-					<a {% if v and v.newtabexternal %}target="_blank"{% endif %} href="{{p.realurl(v)}}" rel="nofollow noopener">
+					<a {% if v and v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}" rel="nofollow noopener">
 						<img src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% endif %}

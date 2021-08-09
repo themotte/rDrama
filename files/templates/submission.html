@@ -197,7 +197,7 @@
 
 				{% if p.thumb_url and not p.embed_url %}
 				<div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap pl-3 p-0">
-					<a href="{{p.realurl(v)}}" style="height: fit-content;" {% if v and v.newtabexternal %}target="_blank"{% endif %} rel="nofollow"{% if p.is_image %} data-toggle="modal" data-target="#expandImageModal" onclick="expandDesktopImage('{{p.realurl(v)}}','{{p.realurl(v)}}')"{% endif %}><img src="{{p.thumb_url}}" class="post-img d-none d-md-block" alt="Unable to load image"></a>
+					<a rel="noopener noreferrer" href="{{p.realurl(v)}}" style="height: fit-content;" {% if v and v.newtabexternal %}target="_blank"{% endif %} rel="nofollow"{% if p.is_image %} data-toggle="modal" data-target="#expandImageModal" onclick="expandDesktopImage('{{p.realurl(v)}}','{{p.realurl(v)}}')"{% endif %}><img src="{{p.thumb_url}}" class="post-img d-none d-md-block" alt="Unable to load image"></a>
 
 				</div>
 				{% endif %}
@@ -229,7 +229,7 @@
 					</div>
 					
 					{% if p.realurl(v) %}
-						<h1 id="post-title" class="card-title post-title text-left mb-md-3"><a {% if v and v.newtabexternal %}target="_blank"{% endif %} href="{{p.realurl(v)}}" rel="nofollow noopener">{{p.realtitle(v) | safe}}</a></h1>					
+						<h1 id="post-title" class="card-title post-title text-left mb-md-3"><a {% if v and v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}" rel="nofollow noopener">{{p.realtitle(v) | safe}}</a></h1>					
 					{% else %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3">{{p.realtitle(v) | safe}}</h1>
 					{% endif %}
@@ -255,7 +255,7 @@
 								<pre></pre>
 
 							{% elif not p.embed_url and not p.is_image %}
-							<a href="{{p.realurl(v)}}" {% if v and v.newtabexternal %}target="_blank"{% endif %}>
+							<a rel="noopener noreferrer" href="{{p.realurl(v)}}" {% if v and v.newtabexternal %}target="_blank"{% endif %}>
 								<div class="d-flex d-md-none justify-content-between align-items-center border rounded p-2{% if p.realbody(v) %} mb-3{% endif %}">
 									<span>{{p.domain|truncate(30, True)}}</span>
 									<i class="fas fa-external-link-alt text-small"></i>
