@@ -254,8 +254,7 @@
 								<label for="bio" class="text-black w-lg-25">Username</label>
 
 								<div class="w-lg-100">
-									<p>Your original username will always stay reserved for you: <code><span {% if v.original.patron %}class="patron" style="background-color:#{{v.original.namecolor}};"{% endif %}>{{v.original.username}}</span></code></p>
-
+									<p>Your original username will always stay reserved for you: <code>{{v.original_username}}</code></p>
 
 									<form action="/settings/name_change" method="post">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
