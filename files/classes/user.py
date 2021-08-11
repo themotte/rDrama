@@ -22,6 +22,7 @@ class User(Base, Stndrd, Age_times):
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
 	namecolor = Column(String, default='ff66ac')
+	background = Column(String)
 	customtitle = Column(String)
 	customtitleplain = Column(String)
 	titlecolor = Column(String, default='ff66ac')

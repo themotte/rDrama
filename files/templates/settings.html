@@ -87,7 +87,7 @@
 	</script>
 </head>
 
-<body id="settings">
+<body id="settings" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/custombackgrounds/{{ v.background }}){% endif %} no-repeat center center fixed">
 
 	{% include "header.html" %}
 	<!-- Page Content -->
