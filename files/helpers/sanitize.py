@@ -214,4 +214,7 @@ def sanitize(text, linkgen=False, flair=False):
 		url_noquery = url.split('?')[0]
 		sanitized = sanitized.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
+	for i in re.finditer('<p>(https.*)</p>', sanitized):
+		sanitized = sanitized.replace(i.group(), f"<a href={i.group(1)}>{i.group(1)}</p>")
+
 	return sanitized
