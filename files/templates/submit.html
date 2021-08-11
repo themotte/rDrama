@@ -286,7 +286,7 @@
 
 </head>
 
-<body id="submit">
+<body id="submit" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/custombackgrounds/{{ v.background }}){% endif %} no-repeat center center fixed">
 
 		<!-- Navigation -->
 		{% include "header.html" %}

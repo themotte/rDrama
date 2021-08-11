@@ -22,6 +22,10 @@ COINS_NAME = environ.get("COINS_NAME").strip()
 def settings_profile_post(v):
 	updated = False
 
+	if request.values.get("background", v.background) != v.background:
+		updated = True
+		v.background= request.values.get("background", None)
+
 	if request.values.get("slurreplacer", v.slurreplacer) != v.slurreplacer:
 		updated = True
 		v.slurreplacer = request.values.get("slurreplacer", None) == 'true'
