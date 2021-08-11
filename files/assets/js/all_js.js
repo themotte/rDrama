@@ -277,37 +277,36 @@ function post_toast(url, callback, data) {
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
-		if (xhr.status==204) {}
-			else if (xhr.status >= 200 && xhr.status < 300) {
+		if (xhr.status >= 200 && xhr.status < 300) {
+			$('#toast-post-success').toast('dispose');
+			$('#toast-post-success').toast('show');
+			document.getElementById('toast-post-success-text').innerText = "Action successful!";
+			callback(xhr)
+			return true
+
+		} else if (xhr.status >= 300 && xhr.status < 400) {
+			window.location.href = JSON.parse(xhr.response)["redirect"]
+		} else {
+			try {
+				data=JSON.parse(xhr.response);
+
+				$('#toast-post-error').toast('dispose');
+				$('#toast-post-error').toast('show');
+				document.getElementById('toast-post-error-text').innerText = data["error"];
+				return false
+			} catch(e) {
 				$('#toast-post-success').toast('dispose');
-				$('#toast-post-success').toast('show');
-				document.getElementById('toast-post-success-text').innerText = "Action successful!";
-				callback(xhr)
-				return true
-
-			} else if (xhr.status >= 300 && xhr.status < 400) {
-				window.location.href = JSON.parse(xhr.response)["redirect"]
-			} else {
-				try {
-					data=JSON.parse(xhr.response);
-
-					$('#toast-post-error').toast('dispose');
-					$('#toast-post-error').toast('show');
-					document.getElementById('toast-post-error-text').innerText = data["error"];
-					return false
-				} catch(e) {
-					$('#toast-post-success').toast('dispose');
-					$('#toast-post-error').toast('dispose');
-					$('#toast-post-error').toast('show');
-					document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
-					return false
-				}
+				$('#toast-post-error').toast('dispose');
+				$('#toast-post-error').toast('show');
+				document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
+				return false
 			}
-		};
+		}
+	};
 
-		xhr.send(form);
+	xhr.send(form);
 
-	}
+}
 
 
 // Search Icon
