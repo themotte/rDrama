@@ -108,30 +108,12 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			isouter=True
 		)
 
-		if sort == "top":
-			comments = sorted(comments.all(), key=lambda x: x[0].score, reverse=True)
-		elif sort == "bottom":
-			comments = sorted(comments.all(), key=lambda x: x[0].score)
-		elif sort == "new":
-			comments = comments.order_by(Comment.created_utc.desc()).all()
-		elif sort == "old":
-			comments = comments.order_by(Comment.created_utc.asc()).all()
-		elif sort == "controversial":
-			comments = sorted(comments.all(), key=lambda x: x[0].score_disputed, reverse=True)
-		elif sort == "random":
-			c = comments.all()
-			comments = random.sample(c, k=len(c))
-		else:
-			abort(422)
-
-		output = []
 		for c in comments:
 			comment = c[0]
 			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
 			comment.voted = c[1] or 0
 			comment._is_blocking = c[2] or 0
 			comment._is_blocked = c[3] or 0
-			output.append(comment)
 
 	if request.headers.get("Authorization"): return top_comment.json
 	else: return post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info)
