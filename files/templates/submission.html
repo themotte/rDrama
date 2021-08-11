@@ -237,12 +237,7 @@
 					<div id="post-body" class="post-body mt-3">
 						{% if p.realurl(v) %}
 							{% if "streamable.com/" in p.realurl(v) %}
-								{% if "streamable.com/e/" in p.realurl(v) %}
-									{% set streamurl=p.realurl(v) %}
-								{% else %}
-									{% set streamurl=p.realurl(v).replace("streamable.com/", "streamable.com/e/") %}
-								{% endif %}
-								<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;"><iframe src="{{streamurl}}" frameborder="0" width="100%" height="100%" allowfullscreen="" style="width: 100%; height: 100%; position: absolute;"></iframe></div>
+								<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;"><iframe src="{{p.realurl(v)}}" frameborder="0" width="100%" height="100%" allowfullscreen="" style="width: 100%; height: 100%; position: absolute;"></iframe></div>
 								<pre></pre>
 								
 							{% elif "spotify.com/" in p.realurl(v) %}
@@ -489,7 +484,7 @@
 		<pre></pre>
         <ul style="padding-left:20px; margin-bottom: 0;">
             {% for f in p.ordered_flags %}
-            	<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason}}{% endif %}</li>
+            	<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
             {% endfor %}
         </ul>
     </div>

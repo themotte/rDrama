@@ -286,15 +286,15 @@
 						{% if u.is_private %}
 							<p>User has private mode enabled.</p>
 						{% endif %}
-						{% if u.is_suspended %}
-							<p>Banned by: <a href="{{u.banned_by.permalink}}">@{{u.banned_by.username}}</a></p>
-						{% endif %}
 						<p>Alts:</p>
 						<ul>
 							{% for account in u.alts %}
 								<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
 							{% endfor %}
 						</ul>
+					{% endif %}
+					{% if u.is_suspended %}
+						<p>Banned by: <a href="{{u.banned_by.permalink}}">@{{u.banned_by.username}}</a></p>
 					{% endif %}
 				 </div>
 
@@ -406,7 +406,7 @@
 						<button class="btn btn-primary mt-3" onclick="transferCoins(true)">Gift</button>
 					</div>
 					
-					 {% if v.admin_level > 1 and u.admin_level <= 1 %}
+					{% if v.admin_level > 1 and u.admin_level <= 1 %}
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
 
@@ -493,9 +493,6 @@
 						{% if u.is_private %}
 							<p>User has private mode enabled.</p>
 						{% endif %}
-						{% if u.is_suspended %}
-							<p>Banned by: <a href="{{u.banned_by.permalink}}">@{{u.banned_by.username}}</a></p>
-						{% endif %}
 						<p>Alts:</p>
 						<ul>
 							{% for account in u.alts %}
@@ -503,7 +500,10 @@
 							{% endfor %}
 						</ul>
 					{% endif %}
+				{% if u.is_suspended %}
+					<p>Banned by: <a href="{{u.banned_by.permalink}}">@{{u.banned_by.username}}</a></p>
 				{% endif %}
+			{% endif %}
 				
 
 				

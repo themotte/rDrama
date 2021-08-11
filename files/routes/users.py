@@ -11,7 +11,7 @@ from files.helpers.markdown import *
 from files.mail import *
 from flask import *
 from files.__main__ import app, limiter
-from pusher_push_notifications import PushNotifications, PusherAuthError
+from pusher_push_notifications import PushNotifications
 
 site = environ.get("DOMAIN").strip()
 
@@ -194,9 +194,8 @@ def message2(v, username):
 				},
 			},
 		)
-	except PusherAuthError as e:
-		sys.stderr.write(traceback.format_exc())
-		sys.stderr.flush()
+	except Exception as e:
+		print(e)
 
 	return redirect('/notifications?all=true')
 

@@ -8,7 +8,7 @@ from files.helpers.images import *
 from files.helpers.session import *
 from files.classes import *
 from files.routes.front import comment_idlist
-from pusher_push_notifications import PushNotifications, PusherAuthError
+from pusher_push_notifications import PushNotifications
 
 from flask import *
 from files.__main__ import app, limiter
@@ -550,11 +550,8 @@ def api_comment(v):
 					},
 				  },
 				)
-			except PusherAuthError as e:
-				sys.stderr.write(traceback.format_exc())
-				sys.stderr.flush()
-
-
+			except Exception as e:
+				print(e)				
 
 
 

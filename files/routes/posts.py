@@ -787,7 +787,8 @@ def submit_post(v):
 		url = url.replace(rd, "https://old.reddit.com/")
 			
 	url = url.replace("https://mobile.twitter.com", "https://twitter.com")
-	
+	if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
+		url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 	# if url.startswith("https://old.reddit.com/") and '/comments/' in url and '?' not in url: url += "?sort=controversial" 
 
 	title_html = sanitize(title, linkgen=True, flair=True)
