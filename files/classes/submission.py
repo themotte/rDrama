@@ -42,6 +42,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	created_utc = Column(BigInteger, default=0)
 	thumburl = Column(String)
 	is_banned = Column(Boolean, default=False)
+	bannedforit = Column(Boolean)
 	views = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
 	distinguish_level = Column(Integer, default=0)

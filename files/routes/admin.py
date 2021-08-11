@@ -634,7 +634,18 @@ def ban_user(user_id, v):
 		)
 	g.db.add(ma)
 
-	if 'reason' in request.args: return {"message": f"@{user.username} was banned!"}
+	if 'reason' in request.args:
+		if reason.startswith("/post/"):
+			post = reason.split("/post/")[1].split("/")[0]
+			post = get_post(post)
+			post.bannedfor = True
+			g.db.add(post)
+		elif reason.startswith("/comment/"):
+			comment = reason.split("/post/")[1].split("/")[0]
+			comment = get_comment(comment)
+			comment.bannedfor = True
+			g.db.add(comment)
+		return {"message": f"@{user.username} was banned!"}
 	else: return redirect(user.url)
 
 

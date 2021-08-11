@@ -207,6 +207,10 @@
 				<div class="{% if p.deleted_utc > 0 %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
+						{% if p.bannedforit %}
+							<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="User was banned for this comment by @{{p.author.banned_by.username}}"></i></a>
+						{% endif %}	
+
 						{% if p.awards %}
 							{% for a in p.awards[:5] %}
 								<i class="{{a.class_list}} px-1" data-toggle="tooltip" data-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
