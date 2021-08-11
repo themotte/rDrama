@@ -1026,6 +1026,6 @@ def unsave_post(pid, v):
 
 	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
 
-	g.db.delete(save)
+	if save: g.db.delete(save)
 	
 	return "", 204

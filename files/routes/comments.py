@@ -808,6 +808,6 @@ def unsave_comment(cid, v):
 
 	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=comment.id, type=2).first()
 
-	g.db.delete(save)
+	if save: g.db.delete(save)
 
 	return "", 204
