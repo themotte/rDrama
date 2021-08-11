@@ -109,7 +109,7 @@
 
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc	%} deleted{% endif %}">
 
-			<div class="user-info">
+			<div class="user-info x-scroll">
 				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
 				{% if c.awards %}
 					{% for a in c.awards[:5] %}
