@@ -1046,7 +1046,8 @@ CREATE TABLE public.users (
     rent_utc integer,
     patron integer,
     zzz boolean DEFAULT false,
-    controversial boolean
+    controversial boolean,
+    background text
 );
 
 
