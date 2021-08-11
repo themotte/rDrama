@@ -7,6 +7,7 @@ from files.helpers.images import *
 from .alts import Alt
 from .submission import SaveRelationship
 from .comment import Notification
+from .award import AwardRelationship
 from .subscriptions import *
 from .userblock import *
 from .badges import *
@@ -306,6 +307,29 @@ class User(Base, Stndrd, Age_times):
 		active_awards = [x for x in self.awards if not x.given]
 
 		for a in active_awards:
+			if a.kind in awards:
+				awards[a.kind]['count'] += 1
+			else:
+				awards[a.kind] = a.type
+				awards[a.kind]['count'] = 1
+
+		return sorted(list(awards.values()), key=lambda x: x['kind'], reverse=True)
+
+	@property
+	@lazy
+	def received_awards(self):
+
+		awards = {}
+
+		posts_idlist = g.db.query(Submission.id).filter_by(author_id=self.id).subquery()
+		comments_idlist = g.db.query(Comment.id).filter_by(author_id=self.id).subquery()
+
+		post_awards = g.db.query(AwardRelationship).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
+		comment_awards = g.db.query(AwardRelationship).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
+
+		total_awards = post_awards + comment_awards
+
+		for a in total_awards:
 			if a.kind in awards:
 				awards[a.kind]['count'] += 1
 			else:

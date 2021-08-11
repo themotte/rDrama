@@ -11,7 +11,7 @@ from files.__main__ import app
 
 site = environ.get("DOMAIN").strip()
 name = environ.get("SITE_NAME").strip()
-mailgun_domain = environ.get("MAILGUN_DOMAIN").strip()
+mailgun_domain = environ.get("MAILGUN_DOMAIN", "").strip()
 
 def send_mail(to_address, subject, html, plaintext=None, files={},
 			  from_address=f"{name} <noreply@mail.{site}>"):
