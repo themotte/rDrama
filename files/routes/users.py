@@ -490,7 +490,7 @@ def follow_user(username, v):
 	if target.id==v.id: return {"error": "You can't follow yourself!"}, 400
 
 	# check for existing follow
-	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first(): abort(409)
+	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first(): return "", 204
 
 	new_follow = Follow(user_id=v.id, target_id=target.id)
 	g.db.add(new_follow)
@@ -512,7 +512,7 @@ def unfollow_user(username, v):
 	# check for existing follow
 	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
 
-	if not follow: abort(409)
+	if not follow: return "", 204
 
 	g.db.delete(follow)
 	target.stored_subscriber_count = g.db.query(Follow).filter_by(target_id=target.id).count()
