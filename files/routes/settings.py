@@ -13,7 +13,7 @@ valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 valid_title_regex = re.compile("^((?!<).){3,100}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
-YOUTUBE_KEY = environ.get("YOUTUBE_KEY").strip()
+YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
 
 @app.post("/settings/profile")
