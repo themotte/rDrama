@@ -286,8 +286,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 		return data
 
-	def has_award(self, kind):
-		return bool(len([x for x in self.awards if x.kind == kind]))
+	def award_count(self, kind) -> int:
+		return len([x for x in self.awards if x.kind == kind])
 
 	@property
 	def title(self):
