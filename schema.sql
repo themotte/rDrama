@@ -1039,6 +1039,7 @@ CREATE TABLE public.users (
     agendaposter boolean,
     agendaposter_expires_utc integer DEFAULT 0,
     resized boolean,
+    animatedname boolean,
     suicide_utc integer,
     post_count integer,
     comment_count integer,
