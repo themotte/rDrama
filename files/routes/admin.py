@@ -641,7 +641,7 @@ def ban_user(user_id, v):
 			post.bannedfor = True
 			g.db.add(post)
 		elif reason.startswith("/comment/"):
-			comment = reason.split("/post/")[1].split("/")[0]
+			comment = reason.split("/comment/")[1].split("/")[0]
 			comment = get_comment(comment)
 			comment.bannedfor = True
 			g.db.add(comment)
