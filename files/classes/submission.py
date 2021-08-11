@@ -310,9 +310,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def realurl(self, v):
 		if v and v.agendaposter and random.randint(1, 10) < 4:
 			return 'https://secure.actblue.com/donate/ms_blm_homepage_2019'
-		elif self.url:
-			if v and not v.oldreddit: return self.url.replace("old.reddit.com", "reddit.com")
-			if self.url: return self.url
+		elif self.url.startswith("https://old.reddit.com/"):
+			url = self.url
+			if v and not v.oldreddit: url = self.url.replace("old.reddit.com", "reddit.com")
+			if v and v.controversial and '/comments/' in url:
+				if "?" in url: url += "&sort=controversial" 
+				else: url += "/?sort=controversial"
 		return ""
  
 	@property

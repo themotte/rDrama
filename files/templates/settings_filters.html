@@ -144,6 +144,25 @@
 					</div>
 
 				</div>
+
+				<div class="d-lg-flex border-bottom">
+
+					<div class="title w-lg-25">
+						<label for="controversial">Sort by Controversial</label>
+					</div>
+
+					<div class="body w-lg-100">
+
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="post_toast('/settings/profile?controversial='+document.getElementById('controversial').checked);">
+							<label class="custom-control-label" for="controversial"></label>
+						</div>
+
+						<span class="text-small-extra text-muted">Enable if you would like to automatically sort reddit.com links by controversial.</span>
+
+					</div>
+
+				</div>
 				
 			</div>
 
