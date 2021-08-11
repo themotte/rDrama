@@ -32,7 +32,6 @@ class User(Base, Stndrd, Age_times):
 	profileurl = Column(String)
 	bannerurl = Column(String)
 	patron = Column(Integer, default=0)
-	animatedname = Column(Boolean, default=False)
 	email = Column(String)
 	css = deferred(Column(String))
 	profilecss = deferred(Column(String))

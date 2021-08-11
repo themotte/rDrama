@@ -50,14 +50,6 @@ def settings_profile_post(v):
 		updated = True
 		v.is_private = request.values.get("private", None) == 'true'
 
-	if request.values.get("animatedname", v.animatedname) != v.animatedname:
-		if v.animatedname == False:
-			users = g.db.query(User.id).options(lazyload('*')).order_by(User.coins.desc()).limit(25).all()
-			users = [x[0] for x in users]
-			if v.id not in users: return {"error": "You must be in the top 25 leaderboard or be a patron to apply an animated name!"}, 403
-		updated = True
-		v.animatedname = request.values.get("animatedname", None) == 'true'
-
 	if request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
 		updated = True
 		v.is_nofollow = request.values.get("nofollow", None) == 'true'

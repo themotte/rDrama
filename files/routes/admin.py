@@ -182,7 +182,6 @@ def badge_grant_post(v):
 
 	if badge_id in [21,22,23,24,28]:
 		user.patron = int(str(badge_id)[-1])
-		user.animatedname = True
 
 		grant_awards = {}
 
