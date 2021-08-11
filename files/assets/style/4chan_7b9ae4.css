@@ -27795,4 +27795,8 @@ a {
   color: #7b9ae4;
 }
 
+blockquote p {
+  color: green !important;
+}
+
 /*# sourceMappingURL=4chan_7b9ae4.css.map */
