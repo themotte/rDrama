@@ -298,7 +298,7 @@
 						{% if u.is_private %}
 							<p>User has private mode enabled.</p>
 						{% endif %}
-						<p>Alts:</p>
+						<span>Alts:</span>
 						<ul>
 							{% for account in u.alts %}
 								<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
@@ -306,7 +306,7 @@
 						</ul>
 					{% endif %}
 					{% if u.is_suspended %}
-						<p>Banned by: <a href="{{u.banned_by.permalink}}">@{{u.banned_by.username}}</a></p>
+						<p>Banned by: <a href="{{u.banned_by.url}}">@{{u.banned_by.username}}</a></p>
 					{% endif %}
 				 </div>
 
@@ -518,7 +518,7 @@
 						{% if u.is_private %}
 							<p>User has private mode enabled.</p>
 						{% endif %}
-						<p>Alts:</p>
+						<span>Alts:</span>
 						<ul>
 							{% for account in u.alts %}
 							<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
@@ -526,7 +526,7 @@
 						</ul>
 					{% endif %}
 				{% if u.is_suspended %}
-					<p>Banned by: <a href="{{u.banned_by.permalink}}">@{{u.banned_by.username}}</a></p>
+					<p>Banned by: <a href="{{u.banned_by.url}}">@{{u.banned_by.username}}</a></p>
 				{% endif %}
 			{% endif %}
 				
