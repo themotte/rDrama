@@ -204,7 +204,7 @@
 
 				<div class="{% if p.deleted_utc > 0 %}deleted {% endif %}card-block w-100 my-md-auto">
 
-					<div class="post-meta text-left x-scroll mb-2">
+					<div class="post-meta text-left mb-2">
 						{% if p.awards %}
 							{% for a in p.awards[:5] %}
 								<i class="{{a.class_list}} px-1" data-toggle="tooltip" data-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
