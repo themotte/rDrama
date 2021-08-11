@@ -502,7 +502,7 @@ def api_comment(v):
 	c=get_comment(c.id, v=v)
 
 	cache.delete_memoized(comment_idlist)
-	cache.delete_memoized(User.commentlisting, v=v)
+	cache.delete_memoized(User.commentlisting, v)
 
 	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
@@ -721,7 +721,7 @@ def delete_comment(cid, v):
 	g.db.add(c)
 	
 	cache.delete_memoized(comment_idlist)
-	cache.delete_memoized(User.commentlisting, v=v)
+	cache.delete_memoized(User.commentlisting, v)
 
 	return "", 204
 
@@ -743,7 +743,7 @@ def undelete_comment(cid, v):
 	g.db.add(c)
 
 	cache.delete_memoized(comment_idlist)
-	cache.delete_memoized(User.commentlisting, v=v)
+	cache.delete_memoized(User.commentlisting, v)
 
 	return "", 204
 

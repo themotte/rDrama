@@ -160,7 +160,7 @@ def changelogsub(v):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
 
-	cache.delete_memoized(frontlist, v=v)
+	cache.delete_memoized(frontlist, v)
 
 	return "", 204
 
@@ -469,7 +469,7 @@ def settings_block_user(v):
 
 	if v.admin_level == 1: return {"message": f"@{user.username} banned!"}
 
-	cache.delete_memoized(frontlist, v=v)
+	cache.delete_memoized(frontlist, v)
 
 	return {"message": f"@{user.username} blocked."}
 
@@ -494,7 +494,7 @@ def settings_unblock_user(v):
 
 	if v.admin_level == 1: return {"message": f"@{user.username} unbanned!"}
 
-	cache.delete_memoized(frontlist, v=v)
+	cache.delete_memoized(frontlist, v)
 
 	return {"message": f"@{user.username} unblocked."}
 
