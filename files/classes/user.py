@@ -153,7 +153,7 @@ class User(Base, Stndrd, Age_times):
 	def strid(self):
 		return str(self.id)
 
-	@cache.memoize(300)
+	@cache.memoize()
 	def userpagelisting(self, v=None, page=1, sort="new", t="all"):
 
 		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
@@ -195,7 +195,7 @@ class User(Base, Stndrd, Age_times):
 		listing = [x.id for x in submissions[firstrange:secondrange]]
 		return listing
 
-	@cache.memoize(300)
+	@cache.memoize()
 	def commentlisting(self, v=None, page=1, sort="new", t="all"):
 		comments = self.comments.options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.post)
 
@@ -445,7 +445,7 @@ class User(Base, Stndrd, Age_times):
 		if self.bannerurl: return self.bannerurl
 		else: return f"https://{site}/assets/images/default_bg.png"
 
-	@cache.memoize(0)
+	@cache.memoize()
 	def defaultpicture(self):
 		pic = random.randint(1, 50)
 		return f"https://{site}/assets/images/defaultpictures/{pic}.png"

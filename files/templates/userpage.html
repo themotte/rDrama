@@ -169,12 +169,12 @@
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
 					 {% if v and v.id != u.id %}
-						<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unfollow</a>
-						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/follow/{{u.username}}', callback=function(){document.getElementById('button-sub').classList.toggle('d-none');document.getElementById('button-unsub').classList.toggle('d-none');})">Follow</a>						
+						<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unfollow</a>
+						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/follow/{{u.username}}', callback=function(){document.getElementById('button-sub').classList.toggle('d-none');document.getElementById('button-unsub').classList.toggle('d-none');})">Follow</a>						
 						
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'message')">Message</a>
 
-						<a class="btn btn-primary" href="javascript:void(0)" onclick="post('/@{{u.username}}/suicide', function(){window.location.reload(true);})">Get them help</a>
+						<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'coin-transfer')">Gift {{"COINS_NAME" | app_config}}</a>
 						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message" method="post">
 							<pre></pre>
@@ -226,7 +226,7 @@
 						</div>
 						<pre></pre>
 						{% if u.is_banned %}
-							<form action="/unban_user/{{u.id}}/?notoast=1" method="post" action="">
+							<form action="/unban_user/{{u.id}}/" method="post" action="">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<div class="custom-control custom-checkbox">
 									<input type="checkbox" id="alts-1-desktop" class="custom-control-input" name="alts" value="1">
@@ -235,7 +235,7 @@
 								<input type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
-							<form action="/ban_user/{{u.id}}?notoast=1" method="post" action="">
+							<form action="/ban_user/{{u.id}}" method="post" action="">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
 								<input style="font-size:11px;" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
@@ -250,7 +250,7 @@
 						<pre></pre>
 
 						{% if u.agendaposter %}
-							<a class="btn btn-success" href="javascript:void(0)" onclick="post('/agendaposter/{{u.id}}?toast', function(){window.location.reload(true);})">Disable Agendaposter Theme</a>
+							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/agendaposter/{{u.id}}?toast')">Disable Agendaposter Theme</a>
 						{% else %}
 							<form action="/agendaposter/{{u.id}}" method="post">
 								<input type="hidden" name="formkey", value="{{v.formkey}}">
@@ -262,9 +262,9 @@
 						<pre></pre>
 
 						{% if u.shadowbanned %} 
-							<a class="btn btn-success" href="javascript:void(0)" onclick="post('/unshadowban/{{u.id}}', function(){window.location.reload(true);})">Unshadowban</a>
+							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/unshadowban/{{u.id}}')">Unshadowban</a>
 						{% else %}
-							<a class="btn btn-danger" href="javascript:void(0)" onclick="post('/shadowban/{{u.id}}', function(){window.location.reload(true);})">Shadowban</a>
+							<a class="btn btn-danger" href="javascript:void(0)" onclick="post_toast('/shadowban/{{u.id}}')">Shadowban</a>
 						{% endif %}
 
 						<pre></pre>
@@ -377,11 +377,11 @@
 					 <a href="/views" class="btn btn-secondary btn-sm">Profile views</a>
 				{% endif %}
 				{% if v and v.id != u.id %}
-					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub2').classList.toggle('d-none');document.getElementById('button-sub2').classList.toggle('d-none');})">Unfollow</a>
-					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post('/follow/{{u.username}}', callback=function(){document.getElementById('button-sub2').classList.toggle('d-none');document.getElementById('button-unsub2').classList.toggle('d-none');})">Follow</a>						
+					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub2').classList.toggle('d-none');document.getElementById('button-sub2').classList.toggle('d-none');})">Unfollow</a>
+					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/follow/{{u.username}}', callback=function(){document.getElementById('button-sub2').classList.toggle('d-none');document.getElementById('button-unsub2').classList.toggle('d-none');})">Follow</a>						
 					
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">Message</a>
-					<a class="btn btn-primary" href="javascript:void(0)" onclick="post('/@{{u.username}}/suicide', function(){window.location.reload(true);})">Get them help</a>
+					<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'coin-transfer-mobile')">Gift {{"COINS_NAME" | app_config}}</a>
 
 					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message" method="post">
@@ -431,7 +431,7 @@
 						</div>
 						<pre></pre>
 						{% if u.is_banned %}
-							<form action="/unban_user/{{u.id}}/?notoast=1" method="post">
+							<form action="/unban_user/{{u.id}}" method="post">
 								<input type="hidden" name="formkey", value="{{v.formkey}}">
 								<br />
 								<div class="custom-control custom-checkbox">
@@ -442,7 +442,7 @@
 								<input type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
-							<form action="/ban_user/{{u.id}}/?notoast=1" method="post">
+							<form action="/ban_user/{{u.id}}/" method="post">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
 								<input style="font-size:11px;" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
@@ -459,7 +459,7 @@
 						<pre></pre>
 
 						{% if u.agendaposter %}
-							<a class="btn btn-success" href="javascript:void(0)" onclick="post('/agendaposter/{{u.id}}?toast', function(){window.location.reload(true);})">Disable Agendaposter Theme</a>
+							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/agendaposter/{{u.id}}?toast')">Disable Agendaposter Theme</a>
 						{% else %}
 							<form action="/agendaposter/{{u.id}}" method="post">
 								<input type="hidden" name="formkey", value="{{v.formkey}}">
@@ -471,9 +471,9 @@
 						<pre></pre>
 
 						{% if u.shadowbanned %} 
-							<a class="btn btn-success" href="javascript:void(0)" onclick="post('/unshadowban/{{u.id}}', function(){window.location.reload(true);})">Unshadowban</a>
+							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/unshadowban/{{u.id}}')">Unshadowban</a>
 						{% else %}
-							<a class="btn btn-danger" href="javascript:void(0)" onclick="post('/shadowban/{{u.id}}', function(){window.location.reload(true);})">Shadowban</a>
+							<a class="btn btn-danger" href="javascript:void(0)" onclick="post_toast('/shadowban/{{u.id}}')">Shadowban</a>
 						{% endif %}
 						
 						<pre></pre>

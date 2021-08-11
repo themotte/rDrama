@@ -16,7 +16,7 @@ from flask import *
 from io import BytesIO
 from files.__main__ import app, limiter, cache
 from PIL import Image as PILimage
-from .front import frontlist
+from .front import frontlist, changeloglist
 
 site = environ.get("DOMAIN").strip()
 
@@ -201,7 +201,6 @@ def post_id(pid, anything=None, v=None):
 
 	post.views += 1
 	g.db.add(post)
-	g.db.commit()
 	if isinstance(session.get('over_18', 0), dict): session["over_18"] = 0
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
@@ -483,7 +482,6 @@ def thumbs(new_post):
 
 	post.thumburl = upload_file(resize=True)
 	g.db.add(post)
-	g.db.commit()
 
 def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
@@ -702,7 +700,6 @@ def submit_post(v):
 					note="spam"
 					)
 			g.db.add(ma)
-		g.db.commit()
 		return redirect("/notifications")
 
 	# catch too-long body
@@ -830,16 +827,11 @@ def submit_post(v):
 		new_post.url = upload_file(file)
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)
-		g.db.commit()
 	
-	g.db.commit()
+	g.db.flush()
 
     # spin off thumbnail generation and csam detection as  new threads
 	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbs(new_post)
-
-	
-	cache.delete_memoized(User.userpagelisting)
-	g.db.commit()
 
 	notify_users = set()
 	
@@ -857,7 +849,7 @@ def submit_post(v):
 			send_notification(2360, user, f"@{v.username} has made a new post: [{title}](https://{site}{new_post.permalink})")
 
 	g.db.add(new_post)
-	g.db.commit()
+	g.db.flush()
 
 	if v.agendaposter and "trans lives matter" not in new_post_aux.body_html.lower():
 
@@ -928,13 +920,15 @@ def submit_post(v):
 	g.db.flush()
 	n = Notification(comment_id=c.id, user_id=v.id)
 	g.db.add(n)
-	g.db.commit()
+	g.db.flush()
 	send_message(f"https://{site}{new_post.permalink}")
 	
 	v.post_count = v.submissions.filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
+	cache.delete_memoized(User.userpagelisting, v=v)
 	cache.delete_memoized(frontlist)
+	if "[changelog]" in new_post.title: cache.delete_memoized(changeloglist)
 
 	if request.headers.get("Authorization"): return new_post.json
 	else: return redirect(new_post.permalink)

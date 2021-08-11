@@ -150,7 +150,7 @@ def api_comment(v):
 	body = request.form.get("body", "")[:10000]
 	body = body.strip()
 
-	if not body and not request.files.get('file'): return jsonify({"error":"You need to actually write something!"}), 400
+	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -171,7 +171,7 @@ def api_comment(v):
 			v.ban(days=30, reason="Digitally malicious content")
 		if any([x.reason==7 for x in bans]):
 			v.ban( reason="Sexualizing minors")
-		return jsonify({"error": reason}), 401
+		return {"error": reason}, 401
 
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
@@ -181,11 +181,10 @@ def api_comment(v):
 															 CommentAux.body == body
 															 ).options(contains_eager(Comment.comment_aux)).first()
 	if existing:
-		return jsonify({"error": f"You already made that comment: {existing.permalink}"}), 409
+		return {"error": f"You already made that comment: {existing.permalink}"}, 409
 
 	if parent.author.any_block_exists(v) and not v.admin_level>=3:
-		return jsonify(
-			{"error": "You can't reply to users who have blocked you, or users you have blocked."}), 403
+		return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
 	# get bot status
 	is_bot = request.headers.get("X-User-Type","")=="Bot"
@@ -235,8 +234,7 @@ def api_comment(v):
 					)
 				g.db.add(ma)
 
-			g.db.commit()
-			return jsonify({"error": "Too much spam!"}), 403
+			return {"error": "Too much spam!"}, 403
 
 	# check badlinks
 	soup = BeautifulSoup(body_html, features="html.parser")
@@ -256,8 +254,7 @@ def api_comment(v):
 			literal(check_url).contains(
 				BadLink.link)).first()
 
-		if badlink:
-			return jsonify({"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason}"}), 403
+		if badlink: return {"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason}"}, 403
 	# create comment
 	parent_id = parent_fullname.split("_")[1]
 	c = Comment(author_id=v.id,
@@ -273,10 +270,8 @@ def api_comment(v):
 	g.db.flush()
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
-		if not file.content_type.startswith('image/'):
-			return jsonify({"error": "That wasn't an image!"}), 400
+		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 		
-		name = f'comment/{c.id}/{secrets.token_urlsafe(8)}'
 		url = upload_file(file)
 		
 		body = request.form.get("body") + f"\n![]({url})"
@@ -507,7 +502,7 @@ def api_comment(v):
 	c=get_comment(c.id, v=v)
 
 	cache.delete_memoized(comment_idlist)
-	cache.delete_memoized(User.commentlisting, v)
+	cache.delete_memoized(User.commentlisting, v=v)
 
 	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
@@ -618,7 +613,6 @@ def edit_comment(cid, v):
 			comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
 			g.db.add(comment)
 
-		g.db.commit()
 		return {"error": "Too much spam!"}, 403
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
@@ -680,9 +674,7 @@ def edit_comment(cid, v):
 
 	g.db.add(c)
 
-	g.db.commit()
-
-	path = request.form.get("current_page", "/")
+	g.db.flush()
 	
 	# queue up notifications for username mentions
 	notify_users = set()
@@ -727,9 +719,9 @@ def delete_comment(cid, v):
 	c.deleted_utc = int(time.time())
 
 	g.db.add(c)
-	g.db.commit()
 	
-	cache.delete_memoized(User.commentlisting, v)
+	cache.delete_memoized(comment_idlist)
+	cache.delete_memoized(User.commentlisting, v=v)
 
 	return "", 204
 
@@ -750,7 +742,8 @@ def undelete_comment(cid, v):
 
 	g.db.add(c)
 
-	cache.delete_memoized(User.commentlisting, v)
+	cache.delete_memoized(comment_idlist)
+	cache.delete_memoized(User.commentlisting, v=v)
 
 	return "", 204
 
@@ -768,7 +761,7 @@ def toggle_comment_pin(cid, v):
 	comment.is_pinned = not comment.is_pinned
 
 	g.db.add(comment)
-	g.db.commit()
+	g.db.flush()
 
 	if v.admin_level == 6:
 		ma=ModAction(

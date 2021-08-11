@@ -62,8 +62,6 @@ def transfer_coins(v, username):
 		g.db.add(receiver)
 		g.db.add(v)
 
-		g.db.commit()
-
 		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
 		send_notification(v.id, receiver, transfer_message)
 		return {"message": f"{amount} {app.config['COINS_NAME']} transferred!"}, 200
@@ -132,7 +130,6 @@ def messagereply(v, username, id):
 	g.db.add(new_aux)
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
-	g.db.commit()
 	return redirect('/notifications?all=true')
 
 @app.get("/songs/<id>")
@@ -147,7 +144,6 @@ def songs(id):
 def subscribe(v, post_id):
 	new_sub = Subscription(user_id=v.id, submission_id=post_id)
 	g.db.add(new_sub)
-	g.db.commit()
 	return "", 204
 	
 @app.post("/unsubscribe/<post_id>")

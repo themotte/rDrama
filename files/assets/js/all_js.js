@@ -281,7 +281,7 @@ function post_toast(url, callback, data) {
 			else if (xhr.status >= 200 && xhr.status < 300) {
 				$('#toast-post-success').toast('dispose');
 				$('#toast-post-success').toast('show');
-				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+				document.getElementById('toast-post-success-text').innerText = "Action successful!";
 				callback(xhr)
 				return true
 

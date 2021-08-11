@@ -158,7 +158,6 @@ def badge_grant_post(v):
 
 	if user.has_badge(badge_id):
 		g.db.query(Badge).filter_by(badge_id=badge_id, user_id=user.id,).delete()
-		g.db.commit()
 		return redirect(user.url)
 	
 	new_badge = Badge(badge_id=badge_id,
@@ -172,8 +171,6 @@ def badge_grant_post(v):
 	if url: new_badge.url = url
 
 	g.db.add(new_badge)
-
-	g.db.commit()
 
 	text = f"""
 	@{v.username} has given you the following profile badge:
@@ -370,7 +367,6 @@ def admin_link_accounts(v):
 		)
 
 	g.db.add(new_alt)
-	g.db.commit()
 
 	return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
 
@@ -463,7 +459,6 @@ def admin_image_ban(v):
 		)
 
 	g.db.add(new_bp)
-	g.db.commit()
 
 	return render_template("admin/image_ban.html", v=v, success=True)
 
@@ -505,10 +500,9 @@ def agendaposter(user_id, v):
 	)
 	g.db.add(ma)
 
-	if 'toast' in request.args:
-		return "", 204
-	else:
-		return redirect(user.url)
+	user.refresh_selfset_badges()
+
+	return "", 204
 
 @app.post("/shadowban/<user_id>")
 @admin_level_required(6)
@@ -601,8 +595,8 @@ def ban_user(user_id, v):
 
 	# check for number of days for suspension
 	days = int(request.form.get("days")) if request.form.get('days') else 0
-	reason = request.form.get("reason", "")
-	message = request.form.get("reason", "")
+	reason = request.values.get("reason", "")
+	message = request.values.get("reason", "")
 
 	if not user: abort(400)
 
@@ -640,11 +634,9 @@ def ban_user(user_id, v):
         note=f'reason: "{reason}", duration: {duration}'
 		)
 	g.db.add(ma)
-	g.db.commit()
 
-	if request.args.get("notoast"): return (redirect(user.url), user)
-
-	return {"message": f"@{user.username} was banned"}
+	if 'reason' in request.args: return {"message": f"@{user.username} was banned!"}
+	else: return redirect(user.url)
 
 
 @app.post("/unban_user/<user_id>")
@@ -673,10 +665,11 @@ def unban_user(user_id, v):
 		target_user_id=user.id,
 		)
 	g.db.add(ma)
-	g.db.commit()
 
-	if request.args.get("notoast"): return (redirect(user.url), user)
-	return {"message": f"@{user.username} was unbanned"}
+	if 'reason' in request.args:
+		return {"message": f"@{user.username} was unbanned!"}
+	else:
+		return redirect(user.url)
 
 @app.post("/ban_post/<post_id>")
 @admin_level_required(3)
@@ -776,7 +769,6 @@ def api_sticky_post(post_id, v):
 	if post:
 		post.stickied = not (post.stickied)
 		g.db.add(post)
-		g.db.commit()
 		
 	cache.delete_memoized(frontlist)
 
@@ -852,7 +844,6 @@ def admin_distinguish_comment(c_id, v):
 	comment.distinguish_level = 0 if comment.distinguish_level else v.admin_level
 
 	g.db.add(comment)
-	g.db.commit()
 	html=render_template(
 				"comments.html",
 				v=v,
@@ -863,18 +854,6 @@ def admin_distinguish_comment(c_id, v):
 	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
 
 	return html
-
-@app.get("/admin/refund")
-@admin_level_required(6)
-def refund(v):
-	for u in g.db.query(User).all():
-		if u.id == 253: continue
-		posts=sum([x[0]+x[1]-1 for x in g.db.query(Submission.upvotes, Submission.downvotes).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()])
-		comments=sum([x[0]+x[1]-1 for x in g.db.query(Comment.upvotes, Comment.downvotes).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()])
-		u.coins = int(posts+comments)
-		g.db.add(u)
-	return "sex"
-
 
 @app.get("/admin/dump_cache")
 @admin_level_required(6)
@@ -970,7 +949,6 @@ def admin_nunuke_user(v):
 	
 @app.get("/admin/user_stat_data")
 @admin_level_required(2)
-@cache.memoize(timeout=60)
 def user_stat_data(v):
 
 	days = int(request.args.get("days", 25))

@@ -160,7 +160,7 @@ def changelogsub(v):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
 
-	cache.delete_memoized(frontlist)
+	cache.delete_memoized(frontlist, v=v)
 
 	return "", 204
 
@@ -467,11 +467,9 @@ def settings_block_user(v):
 	existing = g.db.query(Notification).filter_by(blocksender=v.id, user_id=user.id).first()
 	if not existing: send_block_notif(v.id, user.id, f"@{v.username} has blocked you!")
 
-	if request.args.get("notoast"): return "", 204
-
 	if v.admin_level == 1: return {"message": f"@{user.username} banned!"}
 
-	cache.delete_memoized(frontlist)
+	cache.delete_memoized(frontlist, v=v)
 
 	return {"message": f"@{user.username} blocked."}
 
@@ -494,11 +492,9 @@ def settings_unblock_user(v):
 	existing = g.db.query(Notification).filter_by(unblocksender=v.id, user_id=user.id).first()
 	if not existing: send_unblock_notif(v.id, user.id, f"@{v.username} has unblocked you!")
 
-	if request.args.get("notoast"): return "", 204
-
 	if v.admin_level == 1: return {"message": f"@{user.username} unbanned!"}
 
-	cache.delete_memoized(frontlist)
+	cache.delete_memoized(frontlist, v=v)
 
 	return {"message": f"@{user.username} unblocked."}
 
@@ -523,7 +519,6 @@ def settings_remove_discord(v):
 
 	v.discord_id=None
 	g.db.add(v)
-	g.db.commit()
 
 	return redirect("/settings/profile")
 
@@ -578,7 +573,6 @@ def settings_name_change(v):
 	set_nick(v, new_name)
 
 	g.db.add(v)
-	g.db.commit()
 
 	return redirect("/settings/profile")
 
@@ -610,7 +604,6 @@ def settings_song_change(v):
 	if path.isfile(f'/songs/{id}.mp3'): 
 		v.song=id
 		g.db.add(v)
-		g.db.commit()
 		return redirect("/settings/profile")
 		
 	
@@ -691,8 +684,6 @@ def settings_title_change(v):
 	v.customtitle = new_name
 
 	g.db.add(v)
-	g.db.commit()
-
 	return redirect("/settings/profile")
 
 @app.post("/settings/badges")

@@ -346,7 +346,7 @@ def sign_up_post(v):
 		return new_signup("Please enter a valid email")
 
 	g.db.add(new_user)
-	g.db.commit()
+	g.db.flush()
 
 	# give a beta badge
 	beta_badge = Badge(user_id=new_user.id,
@@ -570,7 +570,6 @@ def reset_2fa():
 	user.mfa_secret=None
 
 	g.db.add(user)
-	g.db.commit()
 
 	return render_template("message_success.html",
 						   title="Two-factor authentication removed.",

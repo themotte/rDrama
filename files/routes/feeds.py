@@ -12,7 +12,7 @@ def feeds_user(sort='hot', t='all'):
 
 	page = int(request.args.get("page", 1))
 
-	posts = frontlist(
+	posts, next_exists = frontlist(
 		sort=sort,
 		page=page,
 		t=t,

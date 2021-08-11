@@ -32,7 +32,6 @@ def send_notification(vid, user, text):
 	notif = Notification(comment_id=new_comment.id,
 						 user_id=user.id)
 	g.db.add(notif)
-	g.db.commit()
 
 
 def send_pm(vid, user, text):
@@ -55,7 +54,6 @@ def send_pm(vid, user, text):
 
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
-	g.db.commit()
 
 
 def send_follow_notif(vid, user, text):
@@ -82,7 +80,6 @@ def send_follow_notif(vid, user, text):
 						 user_id=user,
 						 followsender=vid)
 	g.db.add(notif)
-	g.db.commit()
 	
 def send_unfollow_notif(vid, user, text):
 
@@ -109,7 +106,6 @@ def send_unfollow_notif(vid, user, text):
 						 user_id=user,
 						 unfollowsender=vid)
 	g.db.add(notif)
-	g.db.commit()
 
 def send_block_notif(vid, user, text):
 
@@ -136,7 +132,6 @@ def send_block_notif(vid, user, text):
 						 user_id=user,
 						 blocksender=vid)
 	g.db.add(notif)
-	g.db.commit()
 	
 def send_unblock_notif(vid, user, text):
 
@@ -163,7 +158,6 @@ def send_unblock_notif(vid, user, text):
 						 user_id=user,
 						 unblocksender=vid)
 	g.db.add(notif)
-	g.db.commit()
 
 def send_admin(vid, text):
 
@@ -187,4 +181,3 @@ def send_admin(vid, text):
 	for admin in admins:
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 		g.db.add(notif)
-	g.db.commit()

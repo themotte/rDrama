@@ -63,8 +63,6 @@ def delete_oauth_app(v, aid):
 	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
 		g.db.delete(auth)
 
-	g.db.commit()
-
 	g.db.delete(app)
 
 	return redirect('/apps')

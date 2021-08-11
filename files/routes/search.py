@@ -30,7 +30,6 @@ def searchparse(text):
 	return criteria
 
 
-@cache.memoize(300)
 def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
 	posts = g.db.query(Submission).options(
@@ -144,7 +143,6 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 	return total, [x.id for x in posts]
 
 
-@cache.memoize(300)
 def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 
 	comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.comment_aux)

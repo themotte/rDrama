@@ -66,7 +66,7 @@ def check_ban_evade(v):
 				)
 			g.db.add(ma)
 
-		g.db.commit()
+		g.db.flush()
 
 		for comment in g.db.query(Comment).filter_by(author_id=v.id).all():
 			if comment.is_banned:
@@ -84,14 +84,14 @@ def check_ban_evade(v):
 				)
 			g.db.add(ma)
 
-		g.db.commit()
+		g.db.flush()
 		try: abort(403)
 		except Exception as e: print(e)
 
 	else:
 		v.ban_evade +=1
 		g.db.add(v)
-		g.db.commit()
+		g.db.flush()
 
 
 

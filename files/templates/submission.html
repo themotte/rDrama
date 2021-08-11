@@ -98,15 +98,15 @@
 					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.id}}','{{'@'+p.author.username}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 					{% if v and v.id==p.author_id %}
 						{% if p.private %}
-						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/publish/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</a></button>
+						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/publish/{{p.id}}')"><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</a></button>
 						{% endif %}
 
 						<button class="btn btn-link btn-block btn-lg text-left text-muted" data-dismiss="modal" onclick="togglePostEdit('{{p.id}}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
 
-						<button class="btn btn-link btn-block btn-lg text-muted text-left" id="pin-post-{{p.id}}" href="javascript:void(0)" onclick="post('/pin/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
+						<button class="btn btn-link btn-block btn-lg text-muted text-left" id="pin-post-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/pin/{{p.id}}')"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
 
 						{% if p.deleted_utc > 0 %}
-							<button class="btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post('/undelete_post/{{p.id}}', function(){window.location.reload(true);})"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
+							<button class="btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast('/undelete_post/{{p.id}}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
 						{% else %}
 							<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
 						{% endif %}
@@ -119,26 +119,26 @@
 					{% endif %}
 
 					{% if v and p.id in v.subscribed_idlist() %}
-						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/unsubscribe/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-slash text-center text-muted mr-3"></i>Unsubscribe</a></button>
+						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/unsubscribe/{{p.id}}')"><i class="fas fa-eye-slash text-center text-muted mr-3"></i>Unsubscribe</a></button>
 					{% elif v %}
-						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/subscribe/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye text-center text-muted mr-3"></i>Subscribe</a></button>
+						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/subscribe/{{p.id}}')"><i class="fas fa-eye text-center text-muted mr-3"></i>Subscribe</a></button>
 					{% endif %}
 
 					{% if v and p.id in v.saved_idlist() %}
-						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/unsave_post/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</a></button>
+						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/unsave_post/{{p.id}}')"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</a></button>
 					{% elif v %}
-						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/save_post/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-save text-center text-muted mr-3"></i>Save</a></button>
+						<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/save_post/{{p.id}}')"><i class="fas fa-save text-center text-muted mr-3"></i>Save</a></button>
 					{% endif %}
 
 					{% if v %}
 						{% if v.admin_level >=3 %}
-							<button class="btn btn-link btn-block btn-lg text-left" id="sticky-post-{{p.id}}" href="javascript:void(0)" onclick="post('/sticky/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</button>
+							<button class="btn btn-link btn-block btn-lg text-left" id="sticky-post-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/sticky/{{p.id}}')"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</button>
 							{% if v==p.author %}
-							<button class="btn btn-link btn-block btn-lg text-left" id="distinguish-post-{{p.id}}" href="javascript:void(0)" onclick="post('/distinguish/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-crown text-center mr-3"></i>Distinguish</button>
+							<button class="btn btn-link btn-block btn-lg text-left" id="distinguish-post-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/distinguish/{{p.id}}')"><i class="fas fa-crown text-center mr-3"></i>Distinguish</button>
 							{% endif %}
 
-							<button class="btn btn-link btn-block btn-lg text-success text-left" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/unban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="far fa-check text-center mr-3"></i>Approve</button>
-							<button class="btn btn-link btn-block btn-lg text-danger text-left" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post('/ban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="far fa-ban text-center mr-3"></i>Remove</button>
+							<button class="btn btn-link btn-block btn-lg text-success text-left" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/unban_post/{{p.id}}')"><i class="far fa-check text-center mr-3"></i>Approve</button>
+							<button class="btn btn-link btn-block btn-lg text-danger text-left" id="moderate-post-{{p.id}}" href="javascript:void(0)" onclick="post_toast('/ban_post/{{p.id}}')"><i class="far fa-ban text-center mr-3"></i>Remove</button>
 						{% endif %}
 
 						{% if v.admin_level >=4 and p.oauth_app %}
@@ -155,14 +155,14 @@
 					{% endif %}
 
 					{% if v and (v.id==p.author_id or v.admin_level>=3) %}
-						<button class="btn btn-link btn-block btn-lg text-left text-danger" onclick="post('/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="far fa-eye-evil text-center text-danger mr-3"></i>Toggle +18</button>
+						<button class="btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast('/toggle_post_nsfw/{{p.id}}')"><i class="far fa-eye-evil text-center text-danger mr-3"></i>Toggle +18</button>
 					{% endif %}
 
 					{% if v and v.admin_level == 6 and v.id!=p.author_id %}
 						{% if p.author.is_banned %}
 							<button class="btn btn-link btn-block btn-lg text-success text-left" href="javascript:void(0)" onclick="post_toast('/unban_user/{{p.author_id}}?toast=1')"><i class="fas fa-user-minus mr-3"></i>Unban user</a></button>
 						{% else %}
-							<button class="btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}?toast=1')"><i class="fas fa-user-minus mr-3"></i>Ban user</a></button>
+							<button class="btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}/?reason={{p.permalink}}')"><i class="fas fa-user-minus mr-3"></i>Ban user</a></button>
 						{% endif %}
 					{% endif %}
 
@@ -300,7 +300,7 @@
 
 						{% if v and v.id==p.author_id %}
 							{% if p.private %}
-								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/publish/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-globe"></i>Publish</a></li>
+								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/publish/{{p.id}}')"><i class="fas fa-globe"></i>Publish</a></li>
 							{% endif %}
 							<li class="list-inline-item"><a href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a></li>
 						{% endif %}
@@ -315,44 +315,44 @@
 
 						{% if v and not (v.admin_level == 6 and v.id == p.author_id) %}
 							{% if p.id in v.subscribed_idlist() %}
-								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/unsubscribe/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-slash"></i>Unsubscribe</a></li>
+								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/unsubscribe/{{p.id}}')"><i class="fas fa-eye-slash"></i>Unsubscribe</a></li>
 							{% else %}
-								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/subscribe/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye"></i>Subscribe</a></li>
+								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/subscribe/{{p.id}}')"><i class="fas fa-eye"></i>Subscribe</a></li>
 							{% endif %}
 						{% endif %}
 
 						{% if v and p.id in v.saved_idlist() %}
-							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/unsave_post/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-save"></i>Unsave</a></li>
+							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/unsave_post/{{p.id}}')"><i class="fas fa-save"></i>Unsave</a></li>
 						{% elif v %}
-							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/save_post/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-save"></i>Save</a></li>
+							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/save_post/{{p.id}}')"><i class="fas fa-save"></i>Save</a></li>
 						{% endif %}
 
 						<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.id}}', '{{p.author.username}}')"><i class="fas fa-flag"></i>Report</a></li>
 
 						{% if v and v.id==p.author_id %}
-							<li class="list-inline-item"><a class="text-muted" href="javascript:void(0)" onclick="post('/pin/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</a></li>
+							<li class="list-inline-item"><a class="text-muted" href="javascript:void(0)" onclick="post_toast('/pin/{{p.id}}')"><i class="fas fa-thumbtack"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</a></li>
 							{% if p.deleted_utc > 0 %}
-								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/undelete_post/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-trash-alt"></i>Undelete</a></li>
+								<li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/undelete_post/{{p.id}}')"><i class="fas fa-trash-alt"></i>Undelete</a></li>
 							{% else %}
 								<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
 							{% endif %}
 						{% endif %}
 						
 						{% if v and v.admin_level>=3 %}
-							<li class="list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post('/sticky/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-thumbtack"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</a></li>
+							<li class="list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast('/sticky/{{p.id}}')"><i class="fas fa-thumbtack"></i>{% if p.stickied %}Unpin{% else %}Pin{% endif %}</a></li>
 							{% if v==p.author %}
-								<li class="list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post('/distinguish/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-crown"></i>Distinguish</a></li>
+								<li class="list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast('/distinguish/{{p.id}}')"><i class="fas fa-crown"></i>Distinguish</a></li>
 							{% endif %}
 						{% endif %}
 
 						{% if v %}
 							{% if v.admin_level >=3 %}
-								<li class="list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post('/unban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-check"></i>Approve</a></li>
-								<li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/ban_post/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-ban"></i>Remove</a></li>
+								<li class="list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post_toast('/unban_post/{{p.id}}')"><i class="fas fa-check"></i>Approve</a></li>
+								<li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast('/ban_post/{{p.id}}')"><i class="fas fa-ban"></i>Remove</a></li>
 							{% endif %}
 
 							{% if v.id == p.author_id or v.admin_level >= 3 %}
-								<li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post('/toggle_post_nsfw/{{p.id}}', function(){window.location.reload(true);})"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
+								<li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast('/toggle_post_nsfw/{{p.id}}')"><i class="fas fa-eye-evil"></i>Toggle +18</a></li>
 							{% endif %}
 
 							{% if v.admin_level >= 4 and p.oauth_app %}
@@ -378,7 +378,7 @@
 									<li class="list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post_toast('/unban_user/{{p.author_id}}')"
 									><i class="fas fa-user-slash text-success"></i>Unban user</a></li>
 								{% else %}
-									<li class="list-inline-item "><a class="text-danger" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}')"
+									<li class="list-inline-item "><a class="text-danger" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}/?reason={{p.permalink}}')"
 									><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
 								{% endif %}
 							{% endif %}
