@@ -38,7 +38,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	comment = get_comment(cid, v=v)
 	
-	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) : abort(403)
+	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level == 6 and comment.sentto == 0) : abort(403)
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
