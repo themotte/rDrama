@@ -255,7 +255,7 @@ def after_request(response):
 		abort(500)
 
 	response.headers.remove("Cache-Control")
-	response.headers.add("Cache-Control", "public, maxage=600")
+	response.headers.add("Cache-Control", "public, max-age=600")
 
 	return response
 
