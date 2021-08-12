@@ -113,7 +113,7 @@ def messagereply(v, username, id):
 															Comment.sentto == user.id,
 															CommentAux.body == message,
 															).options(contains_eager(Comment.comment_aux)).first()
-	if existing: return redirect('/notifications?all=true')
+	if existing: return redirect('/notifications?messages=true')
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
 	text_html = sanitize(text_html, linkgen=True)
@@ -130,7 +130,7 @@ def messagereply(v, username, id):
 	g.db.add(new_aux)
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
-	return redirect('/notifications?all=true')
+	return redirect('/notifications?messages=true')
 
 @app.get("/songs/<id>")
 def songs(id):
@@ -173,7 +173,7 @@ def message2(v, username):
 															Comment.sentto == user.id,
 															CommentAux.body == message,
 															).options(contains_eager(Comment.comment_aux)).first()
-	if existing: return redirect('/notifications?all=true')
+	if existing: return redirect('/notifications?messages=true')
 
 	send_pm(v.id, user, message)
 	
@@ -193,7 +193,7 @@ def message2(v, username):
 	except Exception as e:
 		print(e)
 
-	return redirect('/notifications?all=true')
+	return redirect('/notifications?messages=true')
 
 @app.get("/2faqr/<secret>")
 @auth_required
