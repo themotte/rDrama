@@ -215,9 +215,11 @@ def before_request():
 	g.timestamp = int(time.time())
 
 	#do not access session for static files
-	if request.path.startswith("/assets"): return
+	if not request.path.startswith("/assets"):
+		session.permanent = True
 
-	session.permanent = True
+		if not session.get("session_id"):
+			session["session_id"] = secrets.token_hex(16)
 
 	ua_banned, response_tuple = get_useragent_ban_response(
 		request.headers.get("User-Agent", "NoAgent"))
@@ -228,9 +230,6 @@ def before_request():
 			"http://") and "localhost" not in app.config["SERVER_NAME"]:
 		url = request.url.replace("http://", "https://", 1)
 		return redirect(url, code=301)
-
-	if not session.get("session_id"):
-		session["session_id"] = secrets.token_hex(16)
 
 	ua=request.headers.get("User-Agent","")
 	if "CriOS/" in ua:
@@ -257,6 +256,12 @@ def after_request(response):
 		g.db.close()
 		print(e)
 		abort(500)
+
+	response.headers.add("Strict-Transport-Security", "max-age=31536000")
+	response.headers.add("Referrer-Policy", "same-origin")
+
+	response.headers.add("Feature-Policy", "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; vibrate 'none'; fullscreen 'none'; payment 'none';")
+	if not request.path.startswith("/embed/"): response.headers.add("X-Frame-Options", "deny")
 
 	return response
 
