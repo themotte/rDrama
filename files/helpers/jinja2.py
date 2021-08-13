@@ -15,6 +15,8 @@ def app_config(x):
 @app.template_filter("post_embed")
 def crosspost_embed(id):
 
+	id = int(id)
+	
     p = get_post(id, graceful=True)
 
     return render_template(
