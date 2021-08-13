@@ -298,6 +298,18 @@
 							</div>
 							{% endif %}
 
+							{% if p.embed_url and "http" not in p.embed_url %}
+							<div id="crosspost-embed">
+							  <div class="row no-gutters">
+								<div id="frontpage" class="col-12 pt-0">
+								  <div class="posts" id="posts">
+									{{ p.embed_url | post_embed | safe }}
+								  </div>
+								</div>
+							  </div>
+							</div>
+							{% endif %}
+				  
 							<div class="d-none d-md-flex justify-content-between align-items-center mt-2">
 								<div class="post-actions mt-2">
 				<ul class="list-inline text-right d-flex">

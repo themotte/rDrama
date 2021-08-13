@@ -495,29 +495,6 @@ def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
 	except Exception as e: print(e)
 
-
-@app.route("/embed/post/<pid>", methods=["GET"])
-def embed_post_pid(pid):
-
-	try: pid = int(pid)
-	except: abort(400)
-
-	post = get_post(pid)
-
-	return render_template("embeds/post.html", p=post)
-
-
-@app.route("/embed/comment/<cid>", methods=["GET"])
-def embed_comment_cid(cid, pid=None):
-
-	try: cid = int(cid)
-	except: abort(400)
-
-	comment = get_comment(cid)
-
-	return render_template("embeds/comment.html", c=comment)
-
-
 @app.post("/submit")
 @limiter.limit("6/minute")
 @is_not_banned
@@ -629,15 +606,10 @@ def submit_post(v):
 	elif "instagram.com" in domain:
 		embed = requests.get("https://graph.facebook.com/v9.0/instagram_oembed", params={"url":url,"access_token":environ.get("FACEBOOK_TOKEN","").strip(),"omitscript":'true'}, headers={"User-Agent": app.config["UserAgent"]}).json()["html"]
 
-	elif app.config['SERVER_NAME'] in domain:
-		try:
-			if "/?context=" in url:
-				id = url.split("/?context=")[0].split("/")[1]
-				embed = f"https://{app.config['SERVER_NAME']}/embed/comment/{id}"
-			elif "/post/" in url:
-				id = url.split("/post/")[1].split("/")[0]
-				embed = f"https://{app.config['SERVER_NAME']}/embed/post/{id}"
-		except: embed = None
+	elif app.config['SERVER_NAME'] in domain and "/post/" in url:
+		id = url.split("/post/")[1]
+		if "/" in id: id = id.split("/")[0]
+		embed = id
 
 	else: embed = None
 

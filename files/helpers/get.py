@@ -1,9 +1,6 @@
 from files.classes import *
 from flask import g
-from sqlalchemy.orm import joinedload, aliased
-
-import re
-
+from sqlalchemy.orm import joinedload
 
 def get_user(username, v=None, graceful=False):
 
