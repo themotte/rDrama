@@ -13,9 +13,10 @@ def app_config(x):
 	return app.config.get(x)
 
 @app.template_filter("post_embed")
-def crosspost_embed(id):
+def post_embed(id):
 
-	id = int(id)
+	try: id = int(id)
+	except: return None
 	
 	p = get_post(id, graceful=True)
 	

@@ -9,7 +9,12 @@
 	{% endif %}
 </script>
 
+{% if v %}
+{% set title=p.realtitle(v) %}
+{% else %}
 {% set title=p.title %}
+{% endif %}
+
 {% set ups=p.upvotes_fuzzed %}
 {% set downs=p.downvotes_fuzzed %}
 {% set score=ups-downs %}
@@ -58,7 +63,7 @@
 <meta property="og:article:author" content="{{'@'+p.author.username}}" />
 <meta property="article:published_time" content="{{p.created_iso}}" />
 {% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}" />{% endif %}
-<meta property="og:description" name="description" content="{{p.body}}" />
+<meta property="og:description" name="description" content="{{p.realbody(V)}}" />
 <meta property="og:author" name="author" content="{{'@'+p.author.username}}" />
 <meta property="og:title" content="{{title}} - {{"SITE_NAME" | app_config}}" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
@@ -69,7 +74,7 @@
 <meta name="twitter:site" content="{{request.host_url}}">
 <meta name="twitter:title" content="{{title}} - {{"SITE_NAME" | app_config}}" />
 <meta name="twitter:creator" content="{{'@'+p.author.username}}">
-<meta name="twitter:description" content="{{p.body}}" />
+<meta name="twitter:description" content="{{p.realbody(v)}}" />
 <meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'/assets/images/preview.png' | full_link}}{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
 

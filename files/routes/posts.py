@@ -54,7 +54,7 @@ def post_id(pid, anything=None, v=None):
 
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/post/{pid}")
 
-	if v and "logged_out" in request.full_path: return redirect(f"/post/{pid}")
+	if v and "logged_out" in request.full_path: v = None
 
 	try: pid = int(pid)
 	except Exception as e: pass
