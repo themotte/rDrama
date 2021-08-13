@@ -14,3 +14,4 @@ from .users import *
 from .votes import *
 from .feeds import *
 from .awards import *
+from .giphy import *
