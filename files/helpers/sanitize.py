@@ -178,11 +178,12 @@ def sanitize(text, linkgen=False, flair=False):
 	end = '&lt;/s&gt;' 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	if flair: emojisize = 20
-	else: emojisize = 30
 	for i in re.finditer('<p>:(.{1,30}?):</p>', sanitized):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
 			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=60 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
+
+	if flair: emojisize = 20
+	else: emojisize = 30
 	for i in re.finditer(':(.{1,30}?):', sanitized):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
 			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height={emojisize} src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
