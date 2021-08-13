@@ -183,10 +183,13 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 	return posts, next_exists
 
 @app.get("/")
+@app.get("/logged_out")
 @auth_desired
 def front_all(v):
 
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
+	if not v and request.path == "/": return redirect("/logged_out")
 
 	try: page = int(request.args.get("page") or 1)
 	except: abort(400)

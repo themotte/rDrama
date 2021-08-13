@@ -491,17 +491,23 @@ def archiveorg(url):
 @app.route("/embed/post/<pid>", methods=["GET"])
 def embed_post_pid(pid):
 
-    post = get_post(pid)
+	try: pid = int(pid)
+	except: abort(400)
 
-    return render_template("embeds/post.html", p=post)
+	post = get_post(pid)
+
+	return render_template("embeds/post.html", p=post)
 
 
 @app.route("/embed/comment/<cid>", methods=["GET"])
 def embed_comment_cid(cid, pid=None):
 
-    comment = get_comment(cid)
+	try: cid = int(cid)
+	except: abort(400)
 
-    return render_template("embeds/comment.html", c=comment)
+	comment = get_comment(cid)
+
+	return render_template("embeds/comment.html", c=comment)
 
 
 @app.post("/submit")
@@ -830,7 +836,7 @@ def submit_post(v):
 	
 	g.db.flush()
 
-    # spin off thumbnail generation and csam detection as  new threads
+	# spin off thumbnail generation and csam detection as  new threads
 	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbs(new_post)
 
 	notify_users = set()
