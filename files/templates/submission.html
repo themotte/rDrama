@@ -308,7 +308,7 @@
 							  <div class="row no-gutters">
 								<div id="frontpage" class="col-12 pt-0">
 								  <div class="posts" id="posts">
-									{{ p.embed_url | post_embed | safe }}
+									{{ p.embed_url | post_embed(v) | safe }}
 								  </div>
 								</div>
 							  </div>

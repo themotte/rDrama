@@ -13,12 +13,11 @@ def app_config(x):
 	return app.config.get(x)
 
 @app.template_filter("post_embed")
-def post_embed(id):
+def post_embed(id, v):
 
 	try: id = int(id)
 	except: return None
 	
 	p = get_post(id, graceful=True)
 	
-	if hasattr(g, 'v') and g.v: return render_template("submission_listing.html", listing=[p], v=g.v)
-	else: return render_template("submission_listing.html", listing=[p], postembed=True)
+	return render_template("submission_listing.html", listing=[p], v=v)
