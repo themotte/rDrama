@@ -191,6 +191,8 @@ def front_all(v):
 
 	if not v and request.path == "/": return redirect("/logged_out")
 
+	if v and "logged_out" in request.path: return redirect("/")
+
 	try: page = int(request.args.get("page") or 1)
 	except: abort(400)
 
