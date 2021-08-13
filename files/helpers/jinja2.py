@@ -17,9 +17,9 @@ def crosspost_embed(id):
 
 	id = int(id)
 	
-    p = get_post(id, graceful=True)
+	p = get_post(id, graceful=True)
 
-    return render_template(
-        "submission_listing.html",
-        listing=[p]
-        )
+	return render_template(
+		"submission_listing.html",
+		listing=[p]
+		)
