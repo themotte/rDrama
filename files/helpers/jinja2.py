@@ -19,4 +19,4 @@ def crosspost_embed(id):
 	
 	p = get_post(id, graceful=True)
 	
-	return render_template("submission_listing.html", listing=[p])
+	return render_template("submission_listing.html", listing=[p], postembed=True)
