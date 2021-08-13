@@ -281,6 +281,8 @@ def u_username(username, v=None):
 
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}")
 
+	if v and "logged_out" in request.path: return redirect(f"/@{username}")
+
 	# username is unique so at most this returns one result. Otherwise 404
 
 	# case insensitive search
@@ -399,6 +401,8 @@ def u_username_comments(username, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}/comments")
+
+	if v and "logged_out" in request.path: return redirect(f"/@{username}/comments")
 
 	# username is unique so at most this returns one result. Otherwise 404
 
