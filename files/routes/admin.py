@@ -188,17 +188,17 @@ def badge_grant_post(v):
 		grant_awards = {}
 
 		if badge_id == 21:
-			add_role(user, "paypig")
+			if user.discord_id: add_role(user, "paypig")
 			grant_awards["shit"] = 1
 		elif badge_id == 22:
-			add_role(user, "renthog")
+			if user.discord_id: add_role(user, "renthog")
 			grant_awards["shit"] = 3
 		elif badge_id == 23:
-			add_role(user, "landchad")
+			if user.discord_id: add_role(user, "landchad")
 			grant_awards["shit"] = 5
 			grant_awards["ban"] = 1
 		elif badge_id in [24, 28]:
-			add_role(user, "turboautist")
+			if user.discord_id: add_role(user, "turboautist")
 			grant_awards["shit"] = 10
 			grant_awards["ban"] = 3
 
