@@ -16,7 +16,7 @@ services:
       - SITE_NAME=Drama
       - CLOUDFLARE_ZONE=vcxvdfgfc6r554etrgd
       - CLOUDFLARE_KEY=vcxvdfgfc6r554etrgd
-      - TENOR_KEY=vcxvdfgfc6r554etrgd
+      - GIPHY_KEY=vcxvdfgfc6r554etrgd
       - MAILGUN_KEY=vcxvdfgfc6r554etrgd
       - MAILGUN_DOMAIN=rdrama.net
       - FORCE_HTTPS=0

@@ -87,8 +87,6 @@ app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_T
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
 
-app.config["TENOR_KEY"]=environ.get("TENOR_KEY",'').strip()
-
 
 Markdown(app)
 cache = Cache(app)
