@@ -37,6 +37,7 @@ app.config['DATABASE_URL'] = environ.get("DATABASE_CONNECTION_POOL_URL",environ.
 
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get("DOMAIN").strip()
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 60*10
 
 app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_NAME").strip().lower()
 app.config["VERSION"] = "1.0.0"
@@ -213,6 +214,9 @@ def before_request():
 
 	g.timestamp = int(time.time())
 
+	#do not access session for static files
+	if request.path.startswith("/assets"): return
+
 	session.permanent = True
 
 	ua_banned, response_tuple = get_useragent_ban_response(
@@ -253,9 +257,6 @@ def after_request(response):
 		g.db.close()
 		print(e)
 		abort(500)
-
-	response.headers.remove("Cache-Control")
-	response.headers.add("Cache-Control", "public, max-age=600")
 
 	return response
 
