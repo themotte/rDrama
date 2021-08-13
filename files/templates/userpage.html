@@ -59,17 +59,17 @@
 		let t = event.target;
 		t.disabled = true;
 
-		post_toast("/@{{ u.username }}/transfer_coins",
+		post_toast("/@{{u.username}}/transfer_coins",
 			xhr => {
 				if(xhr.status == 200) {
-					fetch("/@{{ u.username }}/coins")
+					fetch("/@{{u.username}}/coins")
 						.then(r => r.json())
 						.then(m => {
 							document.getElementById("profile-coins-amount").innerText = m["coins"];
 							document.getElementById("profile-coins-amount-mobile").innerText = m["coins"];
 						})
 
-					fetch("/@{{ v.username }}/coins")
+					fetch("/@{{v.username}}/coins")
 						.then(r => r.json())
 						.then(m => document.getElementById(`user-coins-amount`).innerText = m["coins"])
 				}
@@ -171,8 +171,8 @@
 					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
 					{% for a in u.received_awards %}
 					<span class="d-inline-block mx-1">
-						<i class="{{ a['icon'] }} {{ a['color'] }} fa-fw" data-toggle="tooltip" data-placement="bottom" title="{{ a['title'] }} Awards received"></i>
-						x{{ a['count'] }}
+						<i class="{{a['icon']}} {{a['color']}} fa-fw" data-toggle="tooltip" data-placement="bottom" title="{{a['title']}} Awards received"></i>
+						x{{a['count']}}
 					</span>
 					{% endfor %}
 				</div>
@@ -381,8 +381,8 @@
 					<p class="text-uppercase my-0" style="font-weight: bold; font-size: 12px;">Awards received</p>
 					{% for a in u.received_awards %}
 					<span class="d-inline-block mx-1">
-						<i class="{{ a['icon'] }} {{ a['color'] }} fa-fw" data-toggle="tooltip" data-placement="bottom" title="{{ a['title'] }} Awards received"></i>
-						x{{ a['count'] }}
+						<i class="{{a['icon']}} {{a['color']}} fa-fw" data-toggle="tooltip" data-placement="bottom" title="{{a['title']}} Awards received"></i>
+						x{{a['count']}}
 					</span>
 					{% endfor %}
 				</div>

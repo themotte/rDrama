@@ -68,7 +68,7 @@
 				<div class="d-flex">
 				
 				  <form action="/settings/themecolor" id="color-code-form" method="post">
-					 <input type="hidden" name="formkey" value="{{ v.formkey }}">
+					 <input type="hidden" name="formkey" value="{{v.formkey}}">
   
 					 <input class="form-control" type="text" name="themecolor" id="color-code" value="{% if v.themecolor %}{{v.themecolor}}{% endif %}">
 					 <label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
@@ -419,7 +419,7 @@
 								<div class="d-flex">
 								
 								  <form action="/settings/namecolor" id="color-code-form" method="post">
-									 <input type="hidden" name="formkey" value="{{ v.formkey }}">
+									 <input type="hidden" name="formkey" value="{{v.formkey}}">
 				  
 									 <input class="form-control" type="text" name="color" id="color-code" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
 									 <label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
@@ -482,7 +482,7 @@
 							<div class="d-flex">
 							
 							  <form action="/settings/titlecolor" id="color-code-form" method="post">
-								 <input type="hidden" name="formkey" value="{{ v.formkey }}">
+								 <input type="hidden" name="formkey" value="{{v.formkey}}">
 			  
 								 <input class="form-control" type="text" name="titlecolor" id="color-code" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
 								 <label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>

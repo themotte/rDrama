@@ -56,7 +56,7 @@
 					{% endfor %}
 				</div>
 				<div id="morecomment-{{c.id}}" class="d-block d-md-none mt-2 more-comments text-small">
-					<a href="{{c.permalink}}"{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+					<a {% if v %}href="{{c.permalink}}"{% else %}href="/logged_out{{c.permalink}}"{% endif %}{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 				</div>
 			{% endif %}
 	{% endif %}
@@ -264,7 +264,7 @@
 					{% endif %}
 
 					{% endif %}
-					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{c.permalink}}?context=99#context"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-book-open"></i>Context</a></li>
+					<li class="list-inline-item text-muted d-none d-md-inline-block"><a {% if v %}href="{{c.permalink}}?context=99#context"{% else %}href="/logged_out{{c.permalink}}?context=99#context"{% endif %}{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-book-open"></i>Context</a></li>
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{c.permalink | full_link}}?context=99#context"><i class="fas fa-copy"></i>Copy link</a></li>
 					
 					{% if v %}
@@ -392,7 +392,7 @@
 					{% endfor %}
 				</div>
 				<div id="morecomment-{{c.id}}" class="d-block d-md-none mt-2 more-comments text-small">
-					<a href="{{c.permalink}}"{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+					<a {% if v %}href="{{c.permalink}}"{% else %}href="/logged_out{{c.permalink}}"{% endif %}{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 				</div>
 			{% endif %}
 		{% endif %}
@@ -423,7 +423,7 @@
 
 					<li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{c.permalink | full_link}}?context=5#context"><i class="fas fa-copy"></i><span>Copy link</span></a></li>
 
-					<li class="list-group-item"><a href="{{c.permalink}}?context=5#context"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-dna"></i>Context</a></li>
+					<li class="list-group-item"><a {% if v %} href="{{c.permalink}}?context=5#context" {% else %} href="/logged_out{{c.permalink}}?context=5#context" {% endif %}{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-dna"></i>Context</a></li>
 
 					<li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')" class="d-block"><i class="fas fa-flag"></i>Report</a></li>
 

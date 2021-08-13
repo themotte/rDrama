@@ -20,8 +20,8 @@
 		<td style="font-weight:bold;">
 			{% for a in user.display_awards %}
 			<span class="d-inline-block mx-2 my-1">
-				<i class="{{ a['icon'] }} {{ a['color'] }} fa-fw" data-toggle="tooltip" data-placement="bottom" title="{{ a['title'] }} Awards owned"></i>
-				{{ a['count'] }}
+				<i class="{{a['icon']}} {{a['color']}} fa-fw" data-toggle="tooltip" data-placement="bottom" title="{{a['title']}} Awards owned"></i>
+				{{a['count']}}
 			</span>
 			{% endfor %}
 		</td>
