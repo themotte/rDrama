@@ -37,7 +37,7 @@ app.config['DATABASE_URL'] = environ.get("DATABASE_CONNECTION_POOL_URL",environ.
 
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get("DOMAIN").strip()
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 60*10
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000
 
 app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_NAME").strip().lower()
 app.config["VERSION"] = "1.0.0"
@@ -86,8 +86,6 @@ app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_T
 
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
-
-app.config["TENOR_KEY"]=environ.get("TENOR_KEY",'').strip()
 
 
 Markdown(app)
@@ -261,7 +259,7 @@ def after_request(response):
 	response.headers.add("Referrer-Policy", "same-origin")
 
 	response.headers.add("Feature-Policy", "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; vibrate 'none'; fullscreen 'none'; payment 'none';")
-	if not request.path.startswith("/embed/"): response.headers.add("X-Frame-Options", "deny")
+	response.headers.add("X-Frame-Options", "deny")
 
 	return response
 

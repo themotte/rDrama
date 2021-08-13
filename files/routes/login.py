@@ -125,10 +125,7 @@ def login_post():
 	# check for previous page
 
 	redir = request.form.get("redirect", "/")
-	if redir:
-		return redirect(redir)
-	else:
-		return redirect(account.url)
+	return redirect(redir.replace("/logged_out", ""))
 
 
 @app.get("/me")
