@@ -19,4 +19,5 @@ def crosspost_embed(id):
 	
 	p = get_post(id, graceful=True)
 	
-	return render_template("submission_listing.html", listing=[p], postembed=True)
+	if hasattr(g, 'v') and g.v: return render_template("submission_listing.html", listing=[p], v=g.v)
+	else: return render_template("submission_listing.html", listing=[p], postembed=True)

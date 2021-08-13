@@ -27,6 +27,7 @@ beams_client = PushNotifications(
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
 @app.get("/logged_out/comment/<cid>")
+@app.get("/logged_out/post/<pid>/<anything>/<cid>")
 @auth_desired
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 

@@ -46,6 +46,7 @@ def submit_get(v):
 @app.get("/post/<pid>")
 @app.get("/post/<pid>/<anything>")
 @app.get("/logged_out/post/<pid>")
+@app.get("/logged_out/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None):
 
