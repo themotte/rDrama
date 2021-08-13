@@ -17,6 +17,7 @@ from flask import *
 import matplotlib.pyplot as plt
 from files.__main__ import app, cache
 from .front import frontlist
+from files.helpers.discord import add_role
 
 @app.get("/admin/shadowbanned")
 @auth_required
@@ -187,13 +188,17 @@ def badge_grant_post(v):
 		grant_awards = {}
 
 		if badge_id == 21:
+			add_role(user, "paypig")
 			grant_awards["shit"] = 1
 		elif badge_id == 22:
+			add_role(user, "renthog")
 			grant_awards["shit"] = 3
 		elif badge_id == 23:
+			add_role(user, "landchad")
 			grant_awards["shit"] = 5
 			grant_awards["ban"] = 1
 		elif badge_id in [24, 28]:
+			add_role(user, "turboautist")
 			grant_awards["shit"] = 10
 			grant_awards["ban"] = 3
 
