@@ -272,10 +272,14 @@ def visitors(v):
 	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc, reverse=True)
 	return render_template("viewers.html", v=v, viewers=viewers)
 
+
 @app.get("/@<username>")
+@app.get("/logged_out/@<username>")
 @auth_desired
 def u_username(username, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
+	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}")
 
 	# username is unique so at most this returns one result. Otherwise 404
 
@@ -388,11 +392,13 @@ def u_username(username, v=None):
 									is_following=(v and u.has_follower(v)))
 
 
-
 @app.get("/@<username>/comments")
+@app.get("/logged_out/@<username>/comments")
 @auth_desired
 def u_username_comments(username, v=None):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
+	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}/comments")
 
 	# username is unique so at most this returns one result. Otherwise 404
 
