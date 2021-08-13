@@ -40,7 +40,7 @@ document.body.addEventListener('keydown', function(event) {
 		const emojis = [
 		{
 			type:'marsey',
-			emojis: ['marseyasian','marseyblm','marseyburger','marseydildo','marseyfacepalm','marseygrilling','marseyjanny','marseymermaid','marseyrentfree','marseyretard','marseysadcat','marseysick','marseysmug','marseytrain', 'marseysipping', 'marseyjamming','marseyangel','marseyblowkiss','marseycry','marseydead','marseyexcited','marseygift','marseyinabox','marseylaugh','marseylove','marseymad','marseyparty','marseyrain','marseyreading','marseyready','marseysad','marseyscarf','marseyshook','marseysleep','marseythumbsup','marseywave', 'marsey69', 'marseycomrade', 'marseyira', 'marseyisis', 'marseymerchant', 'marseynut', 'marseyreich', 'marseyglam', 'marseycowboy', 'marseypat', 'marseypanties', 'marseybingus', 'marseydepressed', 'marseygift']
+			emojis: ['marseydeux','marseyunabomber','marseyyeezus','marseyasian','marseyblm','marseyburger','marseydildo','marseyfacepalm','marseygrilling','marseyjanny','marseymermaid','marseyrentfree','marseyretard','marseysadcat','marseysick','marseysmug','marseytrain', 'marseysipping', 'marseyjamming','marseyangel','marseyblowkiss','marseycry','marseydead','marseyexcited','marseygift','marseyinabox','marseylaugh','marseylove','marseymad','marseyparty','marseyrain','marseyreading','marseyready','marseysad','marseyscarf','marseyshook','marseysleep','marseythumbsup','marseywave', 'marsey69', 'marseycomrade', 'marseyira', 'marseyisis', 'marseymerchant', 'marseynut', 'marseyreich', 'marseyglam', 'marseycowboy', 'marseypat', 'marseypanties', 'marseybingus', 'marseydepressed', 'marseygift']
 		},
 		{
 			type:'platy',
