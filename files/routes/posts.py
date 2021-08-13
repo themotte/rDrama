@@ -617,11 +617,12 @@ def submit_post(v):
 
 	elif app.config['SERVER_NAME'] in domain:
 		try:
-			matches = re.match(re.compile(f"^.*{domain}/post/+\w+/(\w+)(/\w+/(\w+))?"), url)
-			post_id = matches.group(1)
-			comment_id = matches.group(3)
-			if comment_id: embed = f"https://{app.config['SERVER_NAME']}/embed/comment/{comment_id}"
-			else: embed = f"https://{app.config['SERVER_NAME']}/embed/post/{post_id}"
+			if "/?context=" in url:
+				id = url.split("/?context=")[0].split("/")[1]
+				embed = f"https://{app.config['SERVER_NAME']}/embed/comment/{id}"
+			elif "/post/" in url:
+				id = url.split("/post/")[1].split("/")[0]
+				embed = f"https://{app.config['SERVER_NAME']}/embed/post/{id}"
 		except: embed = None
 
 	else: embed = None
