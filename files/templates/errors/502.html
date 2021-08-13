@@ -37,7 +37,7 @@
 	
 	<nav class="navbar navbar-expand-md navbar-light shadow shadow-md fixed-top" id="navbar">
 	<div class="container-fluid">
-	<div class="flex-grow-1"><a href="/" class="navbar-brand"><img src="/assets/images/logo.png" height="20"><span class="text-small-extra text-uppercase text-gray-400"> Sigma</span></a></div>
+	<div class="flex-grow-1"><a {% if v %}href="/"{% else %}href="/logged_out"{% endif %} class="navbar-brand"><img src="/assets/images/logo.png" height="20"><span class="text-small-extra text-uppercase text-gray-400"> Sigma</span></a></div>
 	
 	
 	
