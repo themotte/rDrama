@@ -180,6 +180,9 @@ def sanitize(text, linkgen=False, flair=False):
 	
 	if flair: emojisize = 20
 	else: emojisize = 30
+	for i in re.finditer(':(.{1,30}?):</p>', sanitized):
+		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
+			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height={emojisize} src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
 	for i in re.finditer(':(.{1,30}?):', sanitized):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
 			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height={emojisize} src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
