@@ -281,7 +281,7 @@ def u_username(username, v=None):
 
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}")
 
-	if v and "logged_out" in request.path: return redirect(f"/@{username}")
+	if v and "logged_out" in request.full_path: return redirect(f"/@{username}")
 
 	# username is unique so at most this returns one result. Otherwise 404
 
@@ -402,7 +402,7 @@ def u_username_comments(username, v=None):
 
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}/comments")
 
-	if v and "logged_out" in request.path: return redirect(f"/@{username}/comments")
+	if v and "logged_out" in request.full_path: return redirect(f"/@{username}/comments")
 
 	# username is unique so at most this returns one result. Otherwise 404
 

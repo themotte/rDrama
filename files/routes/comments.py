@@ -34,7 +34,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/comment/{cid}")
 
-	if v and "logged_out" in request.path: return redirect(f"/comment/{cid}")
+	if v and "logged_out" in request.full_path: return redirect(f"/comment/{cid}")
 
 	try: cid = int(cid)
 	except:
