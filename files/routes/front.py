@@ -73,9 +73,27 @@ def notifications(v):
 						   is_notification_page=True)
 
 @cache.memoize()
-def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words='', **kwargs):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
 
-	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False,stickied=False,private=False).filter(Submission.deleted_utc == 0)
+	posts = g.db.query(Submission).options(lazyload('*'))
+
+	if t != 'all':
+		cutoff = 0
+		now = int(time.time())
+		if t == 'hour':
+			cutoff = now - 3600
+		elif t == 'day':
+			cutoff = now - 86400
+		elif t == 'week':
+			cutoff = now - 604800
+		elif t == 'month':
+			cutoff = now - 2592000
+		elif t == 'year':
+			cutoff = now - 31536000
+		posts = posts.filter(Submission.created_utc >= cutoff)
+
+	posts = posts.filter_by(is_banned=False,stickied=False,private=False).filter(Submission.deleted_utc == 0)
+
 	if v and v.admin_level == 0:
 		blocking = g.db.query(
 			UserBlock.target_id).filter_by(
@@ -95,21 +113,6 @@ def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words=''
 	if v and filter_words:
 		for word in filter_words:
 			posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
-
-	if t != 'all':
-		cutoff = 0
-		now = int(time.time())
-		if t == 'hour':
-			cutoff = now - 3600
-		elif t == 'day':
-			cutoff = now - 86400
-		elif t == 'week':
-			cutoff = now - 604800
-		elif t == 'month':
-			cutoff = now - 2592000
-		elif t == 'year':
-			cutoff = now - 31536000
-		posts = posts.filter(Submission.created_utc >= cutoff)
 
 	gt = kwargs.get("gt")
 	lt = kwargs.get("lt")

@@ -43,21 +43,16 @@ def flagged_posts(v):
 
 	page = max(1, int(request.args.get("page", 1)))
 
-	posts = g.db.query(Submission).filter_by(
-		is_approved=0,
-		is_banned=False
-	).join(Submission.flags
-		   ).options(contains_eager(Submission.flags)
-					 ).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
+	posts = g.db.query(Submission).filter_by(is_approved=0, is_banned=False).order_by(Submission.id.desc())
+	posts = [p for p in posts if p.active_flags > 0]
 
-	listing = [p.id for p in posts]
-	next_exists = (len(listing) == 26)
-	listing = listing[:25]
-
-	listing = get_posts(listing, v=v)
+	firstrange = 25 * (page - 1)
+	secondrange = firstrange+26
+	posts = posts[firstrange:secondrange]
+	next_exists = (len(posts) == 26)
 
 	return render_template("admin/flagged_posts.html",
-						   next_exists=next_exists, listing=listing, page=page, v=v)
+						   next_exists=next_exists, listing=posts[:25], page=page, v=v)
 
 
 @app.get("/admin/image_posts")
@@ -80,20 +75,19 @@ def image_posts_listing(v):
 @app.get("/admin/flagged/comments")
 @admin_level_required(3)
 def flagged_comments(v):
-
 	page = max(1, int(request.args.get("page", 1)))
 
-	posts = g.db.query(Comment).filter_by(is_approved=0, is_banned=False).join(Comment.flags).options(contains_eager(Comment.flags)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	posts = g.db.query(Comment).filter_by(is_approved=0, is_banned=False).order_by(Comment.id.desc())
+	posts = [p for p in posts if p.active_flags > 0]
 
-	listing = [p.id for p in posts]
-	next_exists = (len(listing) == 26)
-	listing = listing[:25]
-
-	listing = get_comments(listing, v=v)
+	firstrange = 25 * (page - 1)
+	secondrange = firstrange+26
+	posts = posts[firstrange:secondrange]
+	next_exists = (len(posts) == 26)
 
 	return render_template("admin/flagged_comments.html",
 						   next_exists=next_exists,
-						   listing=listing,
+						   listing=posts,
 						   page=page,
 						   v=v,
 						   standalone=True)
