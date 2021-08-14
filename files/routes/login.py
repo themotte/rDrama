@@ -56,6 +56,7 @@ def login_post():
 
 	username = request.form.get("username")
 
+	if not username: abort(400)
 	if "@" in username:
 		account = g.db.query(User).filter(
 			User.email.ilike(username)).first()

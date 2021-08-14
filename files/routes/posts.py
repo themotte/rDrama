@@ -605,7 +605,8 @@ def submit_post(v):
 			else: embed = f"https://youtube.com/embed/{yt_id}"
 
 	elif "instagram.com" in domain:
-		embed = requests.get("https://graph.facebook.com/v9.0/instagram_oembed", params={"url":url,"access_token":environ.get("FACEBOOK_TOKEN","").strip(),"omitscript":'true'}, headers={"User-Agent": app.config["UserAgent"]}).json()["html"]
+		try: embed = requests.get("https://graph.facebook.com/v9.0/instagram_oembed", params={"url":url,"access_token":environ.get("FACEBOOK_TOKEN","").strip(),"omitscript":'true'}, headers={"User-Agent": app.config["UserAgent"]}).json()["html"]
+		except: embed = None
 
 	elif app.config['SERVER_NAME'] in domain and "/post/" in url:
 		id = url.split("/post/")[1]

@@ -15,7 +15,6 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
-import requests
 import redis
 import gevent
 
@@ -123,10 +122,6 @@ def retry(f):
 	def wrapper(self, *args, **kwargs):
 		try:
 			return f(self, *args, **kwargs)
-		except OperationalError as e:
-			#self.session.rollback()
-			#raise(DatabaseOverload)
-			print("sex")
 		except:
 			self.session.rollback()
 			return f(self, *args, **kwargs)
