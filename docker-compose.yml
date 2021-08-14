@@ -25,7 +25,6 @@ services:
       - DISCORD_CLIENT_SECRET=vcxvdfgfc6r554etrgd
       - DISCORD_BOT_TOKEN=vcxvdfgfc6r554etrgd
       - IMGUR_KEY=vcxvdfgfc6r554etrgd
-      - FACEBOOK_TOKEN=vcxvdfgfc6r554etrgd
      #- HCAPTCHA_SITEKEY=vcxvdfgfc6r554etrgd
       - HCAPTCHA_SECRET=vcxvdfgfc6r554etrgd
       - YOUTUBE_KEY=vcxvdfgfc6r554etrgd

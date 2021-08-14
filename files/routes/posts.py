@@ -604,11 +604,6 @@ def submit_post(v):
 			if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
 			else: embed = f"https://youtube.com/embed/{yt_id}"
 
-	elif "instagram.com" in domain:
-		pembed = requests.get("https://graph.facebook.com/v9.0/instagram_oembed", params={"url":url,"access_token":environ.get("FACEBOOK_TOKEN","").strip(),"omitscript":'true'}, headers={"User-Agent": app.config["UserAgent"]}).json()
-		try: embed = pembed["html"]
-		except: print(pembed)
-
 	elif app.config['SERVER_NAME'] in domain and "/post/" in url:
 		id = url.split("/post/")[1]
 		if "/" in id: id = id.split("/")[0]
