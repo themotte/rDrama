@@ -61,7 +61,7 @@ def image_posts_listing(v):
 
 	page = int(request.args.get('page', 1))
 
-	posts = g.db.query(Submission).order_by(Submission.id.desc())
+	posts = g.db.query(Submission).options(lazyload('*')).order_by(Submission.id.desc())
 
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+26
@@ -77,17 +77,17 @@ def image_posts_listing(v):
 def flagged_comments(v):
 	page = max(1, int(request.args.get("page", 1)))
 
-	posts = g.db.query(Comment).filter_by(is_approved=0, is_banned=False).order_by(Comment.id.desc())
-	posts = [p for p in posts if p.active_flags > 0]
+	comments = g.db.query(Comment).options(lazyload('*')).filter_by(is_approved=0, is_banned=False).order_by(Comment.id.desc())
+	comments = [c for c in comments if c.active_flags > 0]
 
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+26
-	posts = posts[firstrange:secondrange]
-	next_exists = (len(posts) == 26)
+	comments = comments[firstrange:secondrange]
+	next_exists = (len(comments) == 26)
 
 	return render_template("admin/flagged_comments.html",
 						   next_exists=next_exists,
-						   listing=posts,
+						   listing=comments,
 						   page=page,
 						   v=v,
 						   standalone=True)
