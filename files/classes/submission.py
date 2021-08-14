@@ -314,7 +314,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		elif v and self.url and self.url.startswith("https://old.reddit.com/"):
 			url = self.url
 			if not v.oldreddit: url = self.url.replace("old.reddit.com", "reddit.com")
-			if v.controversial and '/comments/' in url:
+			if v.controversial and '/comments/' in url and "sort=" not in url:
 				if "?" in url: url += "&sort=controversial" 
 				else: url += "?sort=controversial"
 			return url
