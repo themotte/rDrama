@@ -27102,7 +27102,6 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   .container {
     overflow: hidden;
     max-width: none;
-    background-color: #F0E0D6 !important;
   }
 
   body, #settings, #notifications, #submit {
@@ -27719,6 +27718,10 @@ img.emoji {
   padding: 2px 5px 3px 5px !important;
   border-radius: 5px !important;
   color: white !important;
+}
+
+.container {
+  background-color: #F0E0D6 !important;
 }
 
 blockquote {
