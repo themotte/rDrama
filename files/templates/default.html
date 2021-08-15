@@ -1051,7 +1051,7 @@
 {% block postNav %}
 {% endblock %}
 
-<div class="container {% if 'notifications' in request.path %} ntr {%endif %}">
+<div class="container {% if request.path in ['notifications', 'leaderboard'] %} ntr {%endif %}">
 	<div class="row justify-content-around" id="main-content-row">
 
 		<div class="col h-100 {% block customPadding %}{% if not '/message' in request.path %}custom-gutters{% endif %}{% endblock %}" id="main-content-col">
