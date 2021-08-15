@@ -50,7 +50,7 @@ def api_flag_comment(cid, v):
 			if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
 				reason = reason.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
 
-		flag = CommentFlag(post_id=post.id,
+		flag = CommentFlag(comment_id=comment.id,
 					user_id=v.id,
 					reason=reason,
 					)
