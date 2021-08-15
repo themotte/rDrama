@@ -25,25 +25,30 @@
 							<p>Change the theme for the website.</p>
 							<div class="input-group mb2">
 								<select id='theme' class="form-control" form="profile-settings" name="theme" onchange="post('/settings/profile?theme='+document.getElementById('theme').value, function(){window.location.reload(true);})">
-								 {% for entry in ["dark", "light", "coffee", "tron", "4chan", "midnight"] %}
-									 <option value="{{entry}}" {% if v.theme==entry %} selected {% endif %}>
+								{% if v.background %}
+									{% set entries = ["transparent", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
+								{% else %}
+									{% set entries = ["dark", "light", "coffee", "tron", "4chan", "midnight"] %}
+								{% endif %}
+								{% for entry in entries %}
+									<option value="{{entry}}" {% if v.theme==entry %} selected {% endif %}>
 										{{entry}}
 									</option>
-								 {% endfor %}
-							 </select>
+								{% endfor %}
+							</select>
 							</div>
 
 						</div>
 
-				 </div>
-				 
+				</div>
+				
 				<div class="body d-lg-flex border-bottom">
 
 				<label for="bio" class="text-black w-lg-25">Theme Color</label>
 
 				<div class="d-flex">
 
-					 <form action="/settings/themecolor" id="themecolor-form" method="post" class="color-picker" style="line-height: 0">
+					<form action="/settings/themecolor" id="themecolor-form" method="post" class="color-picker" style="line-height: 0">
 							<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 							{% for themecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
@@ -64,16 +69,16 @@
 				</div>
 
 				<!-- <p class="text-small mb-2">Or type a color code:</p>
-              
+			
 				<div class="d-flex">
 				
-				  <form action="/settings/themecolor" id="color-code-form" method="post">
-					 <input type="hidden" name="formkey" value="{{v.formkey}}">
+				<form action="/settings/themecolor" id="color-code-form" method="post">
+					<input type="hidden" name="formkey" value="{{v.formkey}}">
   
-					 <input class="form-control" type="text" name="themecolor" id="color-code" value="{% if v.themecolor %}{{v.themecolor}}{% endif %}">
-					 <label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-				  </form>
-				  
+					<input class="form-control" type="text" name="themecolor" id="color-code" value="{% if v.themecolor %}{{v.themecolor}}{% endif %}">
+					<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
+				</form>
+				
 				</div> -->
 
 			</div>
@@ -291,24 +296,24 @@
 					</div>
 
 
-					  <h2 class="h5" name="referral">Linked Accounts</h2>
+					<h2 class="h5" name="referral">Linked Accounts</h2>
 
-					  <p class="text-small text-muted">Manage your connections to other services.</p>
+					<p class="text-small text-muted">Manage your connections to other services.</p>
 
-					  <div class="settings-section rounded">
+					<div class="settings-section rounded">
 
 						<div class="d-lg-flex">
 
-						  <div class="title w-lg-25">
+						<div class="title w-lg-25">
 							<label>Discord</label>
-						  </div>
+						</div>
 
-						  <div class="body w-lg-100">
+						<div class="body w-lg-100">
 
 							{% if v.discord_id %}
 							<form action="/settings/remove_discord" method="post">
-							  <input type="hidden" name="formkey" value="{{v.formkey}}">
-							  <input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
+							<input type="hidden" name="formkey" value="{{v.formkey}}">
+							<input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
 							</form>
 
 							<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{"SITE_NAME" | app_config}} Discord server.</div>
@@ -317,11 +322,11 @@
 							<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{"SITE_NAME" | app_config}} Discord server.</div>
 							{% endif %}
 
-						  </div>
+						</div>
 
 						</div>
 
-					  </div>
+					</div>
 
 
 					<h2 class="h5" name="referral">RSS Feed</h2>
@@ -415,16 +420,16 @@
 								</div>
 
 								<p class="text-small mb-2">Or type a color code:</p>
-              
+			
 								<div class="d-flex">
 								
-								  <form action="/settings/namecolor" id="color-code-form" method="post">
-									 <input type="hidden" name="formkey" value="{{v.formkey}}">
-				  
-									 <input class="form-control" type="text" name="color" id="color-code" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
-									 <label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-								  </form>
-								  
+								<form action="/settings/namecolor" id="color-code-form" method="post">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
+				
+									<input class="form-control" type="text" name="color" id="color-code" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
+									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
+								</form>
+								
 								</div>
 							
 							</div>							
@@ -453,11 +458,11 @@
 
 							<div class="body d-lg-flex border-bottom">
 
-							 <label for="bio" class="text-black w-lg-25">Flair Color</label>
+							<label for="bio" class="text-black w-lg-25">Flair Color</label>
 
 							<div class="d-flex">
 
-								 <form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
+								<form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 										{% for titlecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
@@ -478,16 +483,16 @@
 							</div>
 
 							<p class="text-small mb-2">Or type a color code:</p>
-              
+			
 							<div class="d-flex">
 							
-							  <form action="/settings/titlecolor" id="color-code-form" method="post">
-								 <input type="hidden" name="formkey" value="{{v.formkey}}">
-			  
-								 <input class="form-control" type="text" name="titlecolor" id="color-code" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
-								 <label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-							  </form>
-							  
+							<form action="/settings/titlecolor" id="color-code-form" method="post">
+								<input type="hidden" name="formkey" value="{{v.formkey}}">
+			
+								<input class="form-control" type="text" name="titlecolor" id="color-code" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
+								<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
+							</form>
+							
 							</div>
 
 							</div>
@@ -540,11 +545,11 @@
 										<a class="btn btn-primary ml-auto" id="badgeUpdate" href="javascript:void(0)" onclick="post_toast('/settings/badges')">Refresh badges</a>
 									</div>
 
-							 </div>
+							</div>
 
-						 </div>
+						</div>
 
-						 <div class="d-lg-flex border-bottom">
+						<div class="d-lg-flex border-bottom">
 
 							<div class="title w-lg-25">
 								<label for="privateswitch">Private Mode</label>
@@ -562,7 +567,7 @@
 							</div>
 
 						</div>
-						 <div class="d-lg-flex border-bottom">
+						<div class="d-lg-flex border-bottom">
 
 							<div class="title w-lg-25">
 								<label for="nofollowswitch">Disable Subscriptions</label>

@@ -134,15 +134,15 @@
 
 										<div id="register-form" class="">
 
-											 {% if ref_user %}
-											 <h1 class="h2">@{{ref_user.username}} has invited you!</h1>
-											 <p class="text-muted mb-md-2">Looks like someone wants you to join {{"SITE_NAME" | app_config}}.</p>
-											 {% else %}
-											 <h1 class="h2">Create your account.</h1>
-											 <p class="text-muted mb-md-2">No email address required.</p>
-											 {% endif %}
+											{% if ref_user %}
+											<h1 class="h2">@{{ref_user.username}} has invited you!</h1>
+											<p class="text-muted mb-md-2">Looks like someone wants you to join {{"SITE_NAME" | app_config}}.</p>
+											{% else %}
+											<h1 class="h2">Create your account.</h1>
+											<p class="text-muted mb-md-2">No email address required.</p>
+											{% endif %}
 
-											 <form action="/signup" method="post" class="mt-md-3" id="signup">
+											<form action="/signup" method="post" class="mt-md-3" id="signup">
 
 														{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
 

@@ -114,20 +114,20 @@
 			</li>
 			{% else %}
 			<li class="nav-item d-flex align-items-center justify-content-center mx-1">
-			 <a class="btn btn-outline-purple" href="/contact">Contact us</a>
-		 </li>
+			<a class="btn btn-outline-purple" href="/contact">Contact us</a>
+		</li>
 			<li class="nav-item d-flex align-items-center justify-content-center mx-1">
-			 <a class="btn btn-outline-purple" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
-		 </li>
-		 <li class="nav-item d-flex align-items-center justify-content-center mx-1">
-			 <a class="btn btn-outline-purple" href="/signup?redirect={{request.path | urlencode}}">Sign up</a>
-		 </li>
-		 {% endif %}
-	 </ul>
+			<a class="btn btn-outline-purple" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
+		</li>
+		<li class="nav-item d-flex align-items-center justify-content-center mx-1">
+			<a class="btn btn-outline-purple" href="/signup?redirect={{request.path | urlencode}}">Sign up</a>
+		</li>
+		{% endif %}
+	</ul>
 
-	 <!-- Mobile Nav Menu -->
-	 <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
-		 <li class="nav-item pb-3">
+	<!-- Mobile Nav Menu -->
+	<ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
+		<li class="nav-item pb-3">
 			<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search/posts/" method="get">
 				<input class="form-control form-control-sm w-100" type="search" placeholder="Search" aria-label="Search" name="q">
 				<span class="input-group-append">

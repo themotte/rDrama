@@ -312,10 +312,10 @@
 						{% endif %}
 					{% endif %}
 
-					 <button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>
+					<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>
 
 					{% if v and v.id!=p.author_id %}
-					  <button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
+					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
 					{% endif %}
 
 					{% if v and p.id in v.subscribed_idlist() %}
@@ -375,33 +375,33 @@
 </div>
 
 {% if p.active_flags %}
-    <div id="flaggers-{{p.id}}" class="flaggers d-none">
-        <strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+	<div id="flaggers-{{p.id}}" class="flaggers d-none">
+		<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
 		<pre></pre>
-        <ul style="padding-left:20px; margin-bottom: 0;">
-            {% for f in p.ordered_flags %}
-            	<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
-            {% endfor %}
-        </ul>
-    </div>
+		<ul style="padding-left:20px; margin-bottom: 0;">
+			{% for f in p.ordered_flags %}
+				<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
+			{% endfor %}
+		</ul>
+	</div>
 {% endif %}
 
 {% else %}
 
 {% if request.path.endswith('/admin/queue') %}
 
-<div class="row no-gutters">	 
+<div class="row no-gutters">	
 	<div class="col">			
 		<div class="text-center py-7">
 			<div class="h4 p-2">This queue is empty. (That's a good thing.)</div>
-		</div>			 
+		</div>			
 	</div>	
 </div>
 
 
 {% elif u %}
 {% if v and v.id == u.id %}
-<div class="row no-gutters">	 
+<div class="row no-gutters">	
 	<div class="col">			
 		<div class="text-center px-3 my-3">
 			<span class="fa-stack fa-2x text-muted mb-4">
@@ -417,7 +417,7 @@
 
 
 {% else %}
-<div class="row no-gutters">	 
+<div class="row no-gutters">	
 	<div class="col">			
 		<div class="text-center px-3 my-3">
 			<span class="fa-stack fa-2x text-muted mb-4">
@@ -435,7 +435,7 @@
 {% endif %}
 
 {% else %}
-<div class="row no-gutters">	 
+<div class="row no-gutters">	
 	<div class="col">			
 		<div class="text-center px-3 my-3">
 			<span class="fa-stack fa-2x text-muted mb-4">

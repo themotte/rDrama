@@ -155,8 +155,8 @@
 	<!-- Settings content -->
 	<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} mt-3 {% if request.path in ['/leaderboard', '/patrons'] %}px-0{% endif %}">
 
-	 {% block content %}
-	 {% endblock %}
+	{% block content %}
+	{% endblock %}
 
  </div>
 

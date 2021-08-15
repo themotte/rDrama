@@ -112,10 +112,10 @@
 						{% endif %}
 					{% endif %}
 
-					 <button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>
+					<button class="btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>
 
 					{% if v and v.id!=p.author_id %}
-					  <button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
+					<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
 					{% endif %}
 
 					{% if v and p.id in v.subscribed_idlist() %}
@@ -282,7 +282,7 @@
 						<form id="post-edit-form-{{p.id}}" class="d-flex flex-column" action="/edit_post/{{p.id}}" method="post" class="input-group">
 							<input type="hidden" name="formkey" value="{{v.formkey}}">
 							<input type="hidden" name="current_page" value="{{request.path}}">
-                            <input name="title" required placeholder="title" value="{{p.title}}" />
+							<input name="title" required placeholder="title" value="{{p.title}}" />
 							<textarea name="body" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
 							<div class="comment-format"> 
 								<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{p.id}}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> 
@@ -298,16 +298,16 @@
 
 							{% if p.embed_url and "http" not in p.embed_url %}
 							<div id="crosspost-embed">
-							  <div class="row no-gutters">
+							<div class="row no-gutters">
 								<div id="frontpage" class="col-12 pt-0">
-								  <div class="posts" id="posts">
+								<div class="posts" id="posts">
 									{{ p.embed_url | post_embed(v) | safe }}
-								  </div>
 								</div>
-							  </div>
+								</div>
+							</div>
 							</div>
 							{% endif %}
-				  
+				
 							<div class="d-none d-md-flex justify-content-between align-items-center mt-2">
 								<div class="post-actions mt-2">
 				<ul class="list-inline text-right d-flex">
@@ -441,12 +441,12 @@
 
 		<div class="row no-gutters d-block d-md-none">
 			<div class="col">
-			 <a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}">{% if p.is_image %}<img src="{{p.realurl(v)}}" class="img-fluid" alt="Unable to anonymously load image">
-				 <div class="post-img-overlay d-block d-md-none">{{p.domain}}<i class="fas fa-external-link-alt text-small ml-2"></i></div>
-				 {% endif %}
-			 </a>
-		 </div>
-	 </div>
+			<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}">{% if p.is_image %}<img src="{{p.realurl(v)}}" class="img-fluid" alt="Unable to anonymously load image">
+				<div class="post-img-overlay d-block d-md-none">{{p.domain}}<i class="fas fa-external-link-alt text-small ml-2"></i></div>
+				{% endif %}
+			</a>
+		</div>
+	</div>
 
  </div>
 
@@ -495,15 +495,15 @@
 </div>
 
 {% if p.active_flags %}
-    <div id="flaggers" class="flaggers d-none">
-        <strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+	<div id="flaggers" class="flaggers d-none">
+		<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
 		<pre></pre>
-        <ul style="padding-left:20px; margin-bottom: 0;">
-            {% for f in p.ordered_flags %}
-            	<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
-            {% endfor %}
-        </ul>
-    </div>
+		<ul style="padding-left:20px; margin-bottom: 0;">
+			{% for f in p.ordered_flags %}
+				<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
+			{% endfor %}
+		</ul>
+	</div>
 {% endif %}
 
 <div class="row border-md-0 comment-section pb-3">
@@ -589,9 +589,9 @@
 
 	{% if p.replies %}
 	<div class="comment-section">
-	 {% with comments=p.replies %}
-	 {% include "comments.html" %}
-	 {% endwith %}
+	{% with comments=p.replies %}
+	{% include "comments.html" %}
+	{% endwith %}
  </div>
  {% elif not p.replies and p.deleted_utc == 0 %}
  <div class="comment-section text-center py-7">

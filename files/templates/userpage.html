@@ -127,8 +127,8 @@
 									<span class="text-primary badge badge-secondary text-small align-middle ml-2">Follows you</span>
 								{% endif %}
 								<div class="profile-actions align-middle d-none ml-2">
-								 {% if v and v.id != u.id %}
-								 <div class="dropdown show d-none">
+								{% if v and v.id != u.id %}
+								<div class="dropdown show d-none">
 									<a href="#" role="button" data-toggle="dropdown"
 									aria-haspopup="true" aria-expanded="false">
 									<i class="far fa-ellipsis-h text-lg align-middle text-gray-600"></i>
@@ -180,7 +180,7 @@
 
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
-					 {% if v and v.id != u.id %}
+					{% if v and v.id != u.id %}
 						<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub').classList.toggle('d-none');document.getElementById('button-sub').classList.toggle('d-none');})">Unfollow</a>
 						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/follow/{{u.username}}', callback=function(){document.getElementById('button-sub').classList.toggle('d-none');document.getElementById('button-unsub').classList.toggle('d-none');})">Follow</a>						
 						
@@ -210,11 +210,11 @@
 							<button class="btn btn-primary mt-3" onclick="transferCoins()">Gift</button>
 						</div>
 
-					 {% elif v and v.id == u.id %}
+					{% elif v and v.id == u.id %}
 						<a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
 						<a href="/views" class="btn btn-secondary">Profile views</a>
-					 {% endif %}
-					 {% if v and v.id != u.id and v.admin_level > 1 and u.admin_level <= 1 %}
+					{% endif %}
+					{% if v and v.id != u.id and v.admin_level > 1 and u.admin_level <= 1 %}
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
 							<div class="w-lg-100">
@@ -308,7 +308,7 @@
 					{% if u.is_suspended %}
 						<p>Banned by: <a href="{{u.banned_by.url}}">@{{u.banned_by.username}}</a></p>
 					{% endif %}
-				 </div>
+				</div>
 
 					<div>
 						{% for b in u.badges %}
@@ -320,10 +320,10 @@
 						{% endfor %}
 					</div>
 
-			 </div>
+			</div>
 
-		 </div>
-	 </div>
+		</div>
+	</div>
  </div>
 </div>
 </div>
@@ -398,8 +398,8 @@
 					{% endfor %}
 				</div>
 				{% if v and v.id == u.id %}
-					 <a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
-					 <a href="/views" class="btn btn-secondary btn-sm">Profile views</a>
+					<a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
+					<a href="/views" class="btn btn-secondary btn-sm">Profile views</a>
 				{% endif %}
 				{% if v and v.id != u.id %}
 					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub2').classList.toggle('d-none');document.getElementById('button-sub2').classList.toggle('d-none');})">Unfollow</a>
