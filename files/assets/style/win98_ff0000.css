@@ -27729,6 +27729,10 @@ img.emoji {
   background-color: #c0c0c0 !important;
 }
 
+.col-12 .card {
+  padding: 10px 20px !important;
+}
+
 * {
   box-shadow: none !important;
   transition: none !important;
@@ -27792,10 +27796,6 @@ img.emoji {
 blockquote {
   background-color: #e0e0e0 !important;
   border-bottom: 2px solid #000000;
-}
-
-.col-12 .card {
-  padding: 10px 20px !important;
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control, #guild .pseudo-submit-form.card .card-body .form-control {

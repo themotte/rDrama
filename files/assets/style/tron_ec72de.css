@@ -27730,6 +27730,10 @@ img.emoji {
   background-color: #00001f !important;
 }
 
+.col-12 .card {
+  padding: 10px 20px !important;
+}
+
 #frontpage .post-title a:visited {
   color: #f0f0f0;
 }
