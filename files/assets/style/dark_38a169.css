@@ -27725,6 +27725,10 @@ img.emoji {
   border-radius: 10px !important;
 }
 
+.btn {
+  background-color: #000000 !important;
+}
+
 * {
   border-color: #38a169;
 }

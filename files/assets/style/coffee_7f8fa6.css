@@ -27726,6 +27726,10 @@ img.emoji {
   border-radius: 10px !important;
 }
 
+.btn {
+  background-color: #DDD2C4 !important;
+}
+
 * {
   font-family: "Lato";
 }

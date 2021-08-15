@@ -27726,6 +27726,10 @@ img.emoji {
   border-radius: 10px !important;
 }
 
+.btn {
+  background-color: #00001f !important;
+}
+
 #frontpage .post-title a:visited {
   color: #f0f0f0;
 }

@@ -27725,6 +27725,10 @@ img.emoji {
   border-radius: 10px !important;
 }
 
+.btn {
+  background-color: #F0E0D6 !important;
+}
+
 blockquote {
   background-color: #c0c0c0;
 }

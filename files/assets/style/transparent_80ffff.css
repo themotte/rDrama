@@ -27725,6 +27725,10 @@ img.emoji {
   border-radius: 10px !important;
 }
 
+.btn {
+  background-color: #000000 !important;
+}
+
 * {
   border-color: #80ffff;
 }
@@ -27775,10 +27779,6 @@ pre {
 .container {
   background: rgba(28, 34, 41, 0.85) !important;
   border-radius: 10px !important;
-}
-
-.transparent {
-  background: None !important;
 }
 
 /*# sourceMappingURL=transparent_80ffff.css.map */
