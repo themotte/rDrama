@@ -27729,10 +27729,6 @@ img.emoji {
   background-color: #c0c0c0 !important;
 }
 
-.col-12 .card {
-  padding: 20px !important;
-}
-
 * {
   box-shadow: none !important;
   transition: none !important;
@@ -27833,6 +27829,10 @@ blockquote {
 
 .black {
   color: black !important;
+}
+
+.col-12 .card {
+  padding: 20px !important;
 }
 
 /*# sourceMappingURL=win98_62ca56.css.map */
