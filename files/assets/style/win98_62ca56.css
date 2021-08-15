@@ -27790,10 +27790,6 @@ blockquote {
   border-bottom: 2px solid #000000;
 }
 
-.container {
-  background: None !important;
-}
-
 .col-12 .card {
   padding: 10px 20px !important;
 }
@@ -27819,16 +27815,16 @@ blockquote {
   color: black !important;
 }
 
-.ntr {
-  background: #c0c0c0 !important;
-}
-
 .arrow-down::before {
   color: #404040 !important;
 }
 
 .table {
   color: black !important;
+}
+
+.transparent {
+  background: None !important;
 }
 
 /*# sourceMappingURL=win98_62ca56.css.map */
