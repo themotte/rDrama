@@ -41,11 +41,65 @@ $reddit: #ED4630;
 @import "./node_modules/bootstrap/scss/bootstrap.scss";
 @import "./main.scss";
 
-
 * {
+	box-shadow: none !important;
+	transition: none !important;
+	border-radius: 0 !important;
+	font-family: sans-serif;
+	font-size: 12px !important;
+}
+
+.card, #mobile-bottom-navigation-bar {
+	transform: none !important;
 	background-color: $gray-500 !important;
 }
 
 .pseudo-submit-form .card-header, .card-blank .card-header, .navbar-light, .nav, .flex-row.bg-gray-200.sticky.justify-content-center.d-flex.d-sm-none.mt-3.mb-3.mb-sm-5.rounded {
 	background: #000091!important;
+	color: $white !important;
+}
+.navbar-light > *, .navbar-brand, .nav-link{
+	color: $white !important;
+}
+
+.nav-link, .btn, .btn-secondary, .col.px-0.pl-2.btn.btn-dead.my-0.mx-2 {
+	border: 2px outset $gray-500 !important;
+	border-bottom: 2px solid #a7a5a1 !important;
+	border-right: 2px solid #a7a5a1 !important;
+	background: $gray-500 !important;
+	color: #000 !important;
+}
+
+.nav-link:focus, .btn:focus, .btn-secondary:focus, .col.px-0.pl-2.btn.btn-dead.my-0.mx-2,
+.nav-link:active, .btn:active, .btn-secondary:active,{
+	border: 2px inset $gray-500 !important;
+}
+.card, .card-blank, .comment-section.post-top, .dropdown-menu {
+	border: 2px outset $gray-500 !important;
+	border-bottom: 2px solid #a7a5a1 !important;
+	border-right: 2px solid #a7a5a1 !important;
+}
+
+.dropdown-menu, .btn:hover {
+	background: $gray-500 !important;
+	color: #000 !important;
+}
+
+.form-control {
+	border: 2px inset #717171 !important;
+	border-bottom: 2px solid #a7a5a1 !important;
+	border-right: 2px solid #a7a5a1 !important;
+}
+
+.post-title, .user-name, .text-small-extra.text-muted, #actual-comments > .text-muted, .text-left.pl-2 {
+	color: $black !important;
+}
+
+.arrow-up::before {
+	color: $muted;
+}
+
+blockquote {
+	background-color: $white !important;
+	border-bottom: 2px solid $black;
 }
