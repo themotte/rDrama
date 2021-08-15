@@ -55,7 +55,7 @@ $reddit: #ED4630;
 }
 
 .pseudo-submit-form .card-header, .card-blank .card-header, .navbar-light, .nav, .flex-row.bg-gray-200.sticky.justify-content-center.d-flex.d-sm-none.mt-3.mb-3.mb-sm-5.rounded {
-	background-image: linear-gradient(90deg, #47a3ff, #0884ce) !important;
+	background: #000091!important;
 	color: $white !important;
 }
 .navbar-light > *, .navbar-brand, .nav-link{
@@ -107,5 +107,3 @@ blockquote {
 .container {
 	background: $gray-500 !important;
 }
-
-00007b
