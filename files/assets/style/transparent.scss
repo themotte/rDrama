@@ -84,7 +84,7 @@ pre {
     color: #CFCFCF;
 }
 
-* {
+:not(.dropdown-menu) {
 	background: transparent !important;
 }
 

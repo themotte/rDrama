@@ -1,6 +1,6 @@
 beautifulsoup4
 bleach
-Flask==2.0.0
+Flask
 Flask-Caching
 Flask-Compress
 Flask-Limiter==1.1.0
