@@ -136,3 +136,7 @@ blockquote {
 .ntr {
 	background: $white !important;
 }
+
+.arrow-down::before {
+	color: $muted !important;
+}
