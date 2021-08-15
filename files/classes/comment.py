@@ -1,3 +1,5 @@
+import re
+from urllib.parse import urlencode, urlparse, parse_qs
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
@@ -246,6 +248,18 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		body = self.comment_aux.body_html
 		if not v or v.slurreplacer: body = body.replace(" nigger"," 🏀").replace(" Nigger"," 🏀").replace(" NIGGER"," 🏀").replace(" pedo"," libertarian").replace(" Pedo"," Libertarian ").replace(" PEDO"," LIBERTARIAN ").replace(" tranny"," 🚄").replace(" Tranny"," 🚄").replace(" TRANNY"," 🚄").replace("  fag","  cute twink").replace("  Fag","  Cute twink").replace("  FAG","  CUTE TWINK").replace(" faggot"," cute twink").replace(" Faggot"," Cute twink").replace(" FAGGOT"," CUTE TWINK").replace(" trump"," DDR").replace(" Trump"," DDR").replace(" TRUMP"," DDR").replace(" biden"," DDD").replace(" Biden"," DDD").replace(" BIDEN"," DDD").replace(" steve akins"," penny verity oaken").replace(" Steve Akins"," Penny Verity Oaken").replace(" STEVE AKINS"," PENNY VERITY OAKEN").replace(" RETARD"," RSLUR").replace(" rapist"," male feminist").replace(" Rapist"," Male feminist").replace(" RAPIST"," MALE FEMINIST").replace(" RETARD"," RSLUR").replace(" rapist"," male feminist").replace(" Rapist"," Male feminist").replace(" RAPIST"," MALE FEMINIST").replace(" RETARD"," RSLUR").replace(" rapist"," male feminist").replace(" Rapist"," Male feminist").replace(" RAPIST"," MALE FEMINIST").replace(" kill yourself"," keep yourself safe").replace(" KILL YOURSELF"," KEEP YOURSELF SAFE").replace(" trannie"," 🚄").replace(" Trannie"," 🚄").replace(" TRANNIE"," 🚄").replace(" troon"," 🚄").replace(" Troon"," 🚄").replace(" TROON"," 🚄")
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+
+		if v.controversial:
+			for i in re.finditer('(/comments/.*?)"', body):
+				url = i.group(1)
+				p = urlparse(url).query
+				p = parse_qs(p)
+
+				if 'sort' not in p:
+					p['sort'] = ['controversial']
+
+				url_noquery = url.split('?')[0]
+				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
 		return body
 
