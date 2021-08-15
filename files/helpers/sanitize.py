@@ -1,7 +1,7 @@
 import bleach
 from bs4 import BeautifulSoup
 from bleach.linkifier import LinkifyFilter
-from urllib.parse import ParseResult, urlunparse, urlencode, urlparse, parse_qs
+from urllib.parse import ParseResult, urlunparse, urlparse
 from functools import partial
 from .get import *
 from os import path
@@ -203,17 +203,6 @@ def sanitize(text, linkgen=False):
 
 	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")
-
-	for i in re.finditer('(/comments/.*?)"', sanitized):
-		url = i.group(1)
-		p = urlparse(url).query
-		p = parse_qs(p)
-
-		if 'sort' not in p:
-			p['sort'] = ['controversial']
-
-		url_noquery = url.split('?')[0]
-		sanitized = sanitized.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
 	for i in re.finditer('<p>(https://.*)</p>', sanitized):
 		sanitized = sanitized.replace(i.group(1), f"<a href={i.group(1)} target='_blank'>{i.group(1)}</p>")
