@@ -27790,8 +27790,8 @@ blockquote {
   border-bottom: 2px solid #000000;
 }
 
-.col {
-  background-color: #00000000 !important;
+.container {
+  background: None !important;
 }
 
 /*# sourceMappingURL=win98_62ca56.css.map */
