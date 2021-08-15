@@ -288,7 +288,12 @@ def edit_post(pid, v):
 	p.body_html = body_html
 	title = request.form.get("title")
 	p.title = title
-	p.title_html = sanitize(title, flair=True)
+
+	for i in re.finditer(':(.{1,30}?):', title):
+		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
+			title = title.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=30 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
+
+	p.title_html = title
 
 	if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
 	g.db.add(p)
@@ -772,7 +777,12 @@ def submit_post(v):
 	if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
 		url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
-	title_html = sanitize(title, linkgen=True, flair=True)
+
+	for i in re.finditer(':(.{1,30}?):', title):
+		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
+			title = title.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
+
+	title_html = title
 
 	new_post_aux = SubmissionAux(id=new_post.id,
 								 url=url,

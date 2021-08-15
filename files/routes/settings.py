@@ -10,7 +10,6 @@ import youtube_dl
 from .front import frontlist
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
-valid_title_regex = re.compile("^((?!<).){3,100}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
@@ -667,13 +666,7 @@ def settings_title_change(v):
 
 	if v.flairchanged: abort(403)
 	
-	new_name=request.form.get("title").strip()
-
-	#verify acceptability
-	if not re.match(valid_title_regex, new_name):
-		return render_template("settings_profile.html",
-						   v=v,
-						   error=f"This isn't a valid flair.")
+	new_name=request.form.get("title").strip()[:100]
 
 	#make sure name is different
 	if new_name==v.customtitle:
@@ -682,9 +675,11 @@ def settings_title_change(v):
 						   error="You didn't change anything")
 
 	v.customtitleplain = new_name
-	new_name = sanitize(new_name, flair=True)
 
-	v = g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
+	for i in re.finditer(':(.{1,30}?):', new_name):
+		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
+			new_name = new_name.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
+
 	v.customtitle = new_name
 
 	g.db.add(v)
