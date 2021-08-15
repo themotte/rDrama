@@ -3377,6 +3377,7 @@ html {
 .container {
 	overflow: hidden;
 	max-width: none;
+	background-color: $gray-700 !important;
 }
 
 body, #settings, #notifications, #submit {
