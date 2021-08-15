@@ -13170,13 +13170,13 @@ fieldset:disabled a.btn {
 }
 .btn-upvote:hover {
   color: #c0c0c0;
-  background-color: #ff4097;
-  border-color: #ff3390;
+  background-color: #ff66ac;
+  border-color: #ff66ac;
 }
 .btn-upvote:focus, .btn-upvote.focus {
   color: #c0c0c0;
-  background-color: #ff4097;
-  border-color: #ff3390;
+  background-color: #ff66ac;
+  border-color: #ff66ac;
   box-shadow: 0 0 0 0.2rem rgba(217, 87, 146, 0.5);
 }
 .btn-upvote.disabled, .btn-upvote:disabled {
@@ -13186,7 +13186,7 @@ fieldset:disabled a.btn {
 }
 .btn-upvote:not(:disabled):not(.disabled):active, .btn-upvote:not(:disabled):not(.disabled).active, .show > .btn-upvote.dropdown-toggle {
   color: #c0c0c0;
-  background-color: #ff3390;
+  background-color: #ff66ac;
   border-color: #ff2689;
 }
 .btn-upvote:not(:disabled):not(.disabled):active:focus, .btn-upvote:not(:disabled):not(.disabled).active:focus, .show > .btn-upvote.dropdown-toggle:focus {
@@ -13200,13 +13200,13 @@ fieldset:disabled a.btn {
 }
 .btn-purple:hover {
   color: #c0c0c0;
-  background-color: #ff4097;
-  border-color: #ff3390;
+  background-color: #ff66ac;
+  border-color: #ff66ac;
 }
 .btn-purple:focus, .btn-purple.focus {
   color: #c0c0c0;
-  background-color: #ff4097;
-  border-color: #ff3390;
+  background-color: #ff66ac;
+  border-color: #ff66ac;
   box-shadow: 0 0 0 0.2rem rgba(217, 87, 146, 0.5);
 }
 .btn-purple.disabled, .btn-purple:disabled {
@@ -13216,7 +13216,7 @@ fieldset:disabled a.btn {
 }
 .btn-purple:not(:disabled):not(.disabled):active, .btn-purple:not(:disabled):not(.disabled).active, .show > .btn-purple.dropdown-toggle {
   color: #c0c0c0;
-  background-color: #ff3390;
+  background-color: #ff66ac;
   border-color: #ff2689;
 }
 .btn-purple:not(:disabled):not(.disabled):active:focus, .btn-purple:not(:disabled):not(.disabled).active:focus, .show > .btn-purple.dropdown-toggle:focus {
@@ -13260,13 +13260,13 @@ fieldset:disabled a.btn {
 }
 .btn-admin:hover {
   color: #c0c0c0;
-  background-color: #ff4097;
-  border-color: #ff3390;
+  background-color: #ff66ac;
+  border-color: #ff66ac;
 }
 .btn-admin:focus, .btn-admin.focus {
   color: #c0c0c0;
-  background-color: #ff4097;
-  border-color: #ff3390;
+  background-color: #ff66ac;
+  border-color: #ff66ac;
   box-shadow: 0 0 0 0.2rem rgba(217, 87, 146, 0.5);
 }
 .btn-admin.disabled, .btn-admin:disabled {
@@ -13276,7 +13276,7 @@ fieldset:disabled a.btn {
 }
 .btn-admin:not(:disabled):not(.disabled):active, .btn-admin:not(:disabled):not(.disabled).active, .show > .btn-admin.dropdown-toggle {
   color: #c0c0c0;
-  background-color: #ff3390;
+  background-color: #ff66ac;
   border-color: #ff2689;
 }
 .btn-admin:not(:disabled):not(.disabled):active:focus, .btn-admin:not(:disabled):not(.disabled).active:focus, .show > .btn-admin.dropdown-toggle:focus {
@@ -16221,7 +16221,7 @@ a.badge-downvote:focus, a.badge-downvote.focus {
 }
 a.badge-upvote:hover, a.badge-upvote:focus {
   color: #000000;
-  background-color: #ff3390;
+  background-color: #ff66ac;
 }
 a.badge-upvote:focus, a.badge-upvote.focus {
   outline: 0;
@@ -16234,7 +16234,7 @@ a.badge-upvote:focus, a.badge-upvote.focus {
 }
 a.badge-purple:hover, a.badge-purple:focus {
   color: #000000;
-  background-color: #ff3390;
+  background-color: #ff66ac;
 }
 a.badge-purple:focus, a.badge-purple.focus {
   outline: 0;
@@ -16260,7 +16260,7 @@ a.badge-gold:focus, a.badge-gold.focus {
 }
 a.badge-admin:hover, a.badge-admin:focus {
   color: #000000;
-  background-color: #ff3390;
+  background-color: #ff66ac;
 }
 a.badge-admin:focus, a.badge-admin.focus {
   outline: 0;
@@ -18281,7 +18281,7 @@ button.bg-downvote:focus {
 a.bg-upvote:hover, a.bg-upvote:focus,
 button.bg-upvote:hover,
 button.bg-upvote:focus {
-  background-color: #ff3390 !important;
+  background-color: #ff66ac !important;
 }
 
 .bg-purple {
@@ -18291,7 +18291,7 @@ button.bg-upvote:focus {
 a.bg-purple:hover, a.bg-purple:focus,
 button.bg-purple:hover,
 button.bg-purple:focus {
-  background-color: #ff3390 !important;
+  background-color: #ff66ac !important;
 }
 
 .bg-gold {
@@ -18311,7 +18311,7 @@ button.bg-gold:focus {
 a.bg-admin:hover, a.bg-admin:focus,
 button.bg-admin:hover,
 button.bg-admin:focus {
-  background-color: #ff3390 !important;
+  background-color: #ff66ac !important;
 }
 
 .bg-gray {
@@ -23304,7 +23304,7 @@ a.text-downvote:hover, a.text-downvote:focus {
 }
 
 a.text-upvote:hover, a.text-upvote:focus {
-  color: #ff1a83 !important;
+  color: #ff66ac !important;
 }
 
 .text-purple {
@@ -23312,7 +23312,7 @@ a.text-upvote:hover, a.text-upvote:focus {
 }
 
 a.text-purple:hover, a.text-purple:focus {
-  color: #ff1a83 !important;
+  color: #ff66ac !important;
 }
 
 .text-gold {
@@ -23328,7 +23328,7 @@ a.text-gold:hover, a.text-gold:focus {
 }
 
 a.text-admin:hover, a.text-admin:focus {
-  color: #ff1a83 !important;
+  color: #ff66ac !important;
 }
 
 .text-gray {
@@ -27816,6 +27816,7 @@ blockquote {
 
 .form-control, .form-control:disabled, .form-control[readonly] {
   background: white !important;
+  color: black !important;
 }
 
 /*# sourceMappingURL=win98_ff66ac.css.map */

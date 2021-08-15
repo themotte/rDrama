@@ -27814,4 +27814,9 @@ blockquote {
   background-color: #c0c0c0 !important;
 }
 
+.form-control, .form-control:disabled, .form-control[readonly] {
+  background: white !important;
+  color: black !important;
+}
+
 /*# sourceMappingURL=win98_38a169.css.map */
