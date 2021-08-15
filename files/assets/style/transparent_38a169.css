@@ -27768,8 +27768,8 @@ pre {
   color: #CFCFCF;
 }
 
-* {
-  background: transparent !important;
+:not(.dropdown-menu) {
+  background: transparent;
 }
 
 .container {
