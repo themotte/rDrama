@@ -27723,6 +27723,7 @@ img.emoji {
 
 .container {
   background-color: #00001f !important;
+  border-radius: 10px !important;
 }
 
 #frontpage .post-title a:visited {

@@ -27723,6 +27723,7 @@ img.emoji {
 
 .container {
   background-color: #DDD2C4 !important;
+  border-radius: 10px !important;
 }
 
 * {
