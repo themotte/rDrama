@@ -27720,7 +27720,7 @@ img.emoji {
   color: white !important;
 }
 
-.container {
+.container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
   background-color: #F0E0D6 !important;
   border-radius: 10px !important;
 }
@@ -27730,7 +27730,7 @@ img.emoji {
 }
 
 .col-12 .card {
-  padding: 10px 20px !important;
+  padding: 20px !important;
 }
 
 blockquote {
