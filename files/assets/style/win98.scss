@@ -1,0 +1,105 @@
+// Colors
+
+$primary: #000000;
+$dark: #2B353D;
+$secondary: #000000;
+$danger: #E53E3E;
+$white: #ffffff;
+$black: #000000;
+$light: #000000;
+$success: #38A169;
+$muted: #404040;
+$info: #168EEA;
+
+$purple: #47a3ff;
+$red: #E53E3E;
+$gray: #2B353D;
+$green: #38A169;
+
+$gray-100: #394552;
+$gray-200: #c0c0c0;
+$gray-300: #ffffff;
+$gray-400: #242C33;
+$gray-500: #c0c0c0;
+$gray-600: #ffffff;
+$gray-700: #ffffff;
+$gray-800: #07090A;
+$gray-900: #000000;
+
+$upvote: #47a3ff;
+$downvote: #38B2AC;
+$admin: #47a3ff;
+$banned: #960000;
+$deleted: #969600;
+$deletedandbanned: #964000;
+$mod: #07c20c;
+$code: #e83e8c;
+
+$gold: #ECC94B;
+$reddit: #ED4630;
+
+@import "./node_modules/bootstrap/scss/bootstrap.scss";
+@import "./main.scss";
+
+* {
+	box-shadow: none !important;
+	transition: none !important;
+	border-radius: 0 !important;
+	font-family: sans-serif;
+	font-size: 12px !important;
+}
+
+.card, #mobile-bottom-navigation-bar {
+	transform: none !important;
+	background-color: $gray-500 !important;
+}
+
+.pseudo-submit-form .card-header, .card-blank .card-header, .navbar-light, .nav, .flex-row.bg-gray-200.sticky.justify-content-center.d-flex.d-sm-none.mt-3.mb-3.mb-sm-5.rounded {
+	background-image: linear-gradient(90deg, #47a3ff, #0884ce) !important;
+	color: $white !important;
+}
+.navbar-light > *, .navbar-brand, .nav-link{
+	color: $white !important;
+}
+
+.nav-link, .btn, .btn-secondary, .col.px-0.pl-2.btn.btn-dead.my-0.mx-2 {
+	border: 2px outset white !important;
+	border-bottom: 2px solid #a7a5a1 !important;
+	border-right: 2px solid #a7a5a1 !important;
+	background: $gray-500 !important;
+	color: #000 !important;
+}
+
+.nav-link:focus, .btn:focus, .btn-secondary:focus, .col.px-0.pl-2.btn.btn-dead.my-0.mx-2,
+.nav-link:active, .btn:active, .btn-secondary:active,{
+	border: 2px inset white !important;
+}
+.card, .card-blank, .comment-section.post-top, .dropdown-menu {
+	border: 2px outset white !important;
+	border-bottom: 2px solid #a7a5a1 !important;
+	border-right: 2px solid #a7a5a1 !important;
+}
+
+.dropdown-menu, .btn:hover {
+	background: $gray-500 !important;
+	color: #000 !important;
+}
+
+.form-control {
+	border: 2px inset #717171 !important;
+	border-bottom: 2px solid #a7a5a1 !important;
+	border-right: 2px solid #a7a5a1 !important;
+}
+
+.post-title, .user-name, .text-small-extra.text-muted, #actual-comments > .text-muted, .text-left.pl-2 {
+	color: $black !important;
+}
+
+.arrow-up::before {
+	color: $muted;
+}
+
+blockquote {
+	background-color: white !important;
+	border-bottom: 2px solid $black;
+}
