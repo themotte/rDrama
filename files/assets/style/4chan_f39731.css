@@ -27804,4 +27804,8 @@ blockquote p {
   color: green !important;
 }
 
+.transparent {
+  background: None !important;
+}
+
 /*# sourceMappingURL=4chan_f39731.css.map */

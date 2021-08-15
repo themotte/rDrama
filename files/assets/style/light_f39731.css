@@ -17249,4 +17249,8 @@ img.emoji {
   border: 2px solid #EDF2F7;
 }
 
+.transparent {
+  background: None !important;
+}
+
 /*# sourceMappingURL=light_f39731.css.map */

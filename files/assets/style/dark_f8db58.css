@@ -27768,4 +27768,8 @@ pre {
   color: #CFCFCF;
 }
 
+.transparent {
+  background: None !important;
+}
+
 /*# sourceMappingURL=dark_f8db58.css.map */

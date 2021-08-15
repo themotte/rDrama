@@ -27750,4 +27750,8 @@ blockquote {
   background-color: #bda78e !important;
 }
 
+.transparent {
+  background: None !important;
+}
+
 /*# sourceMappingURL=coffee_f8db58.css.map */

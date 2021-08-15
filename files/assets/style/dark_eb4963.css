@@ -27768,4 +27768,8 @@ pre {
   color: #CFCFCF;
 }
 
+.transparent {
+  background: None !important;
+}
+
 /*# sourceMappingURL=dark_eb4963.css.map */

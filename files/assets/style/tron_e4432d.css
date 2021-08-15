@@ -27770,4 +27770,8 @@ img.emoji {
   color: #00001f;
 }
 
+.transparent {
+  background: None !important;
+}
+
 /*# sourceMappingURL=tron_e4432d.css.map */
