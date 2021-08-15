@@ -11,7 +11,7 @@ $success: #38A169;
 $muted: #404040;
 $info: #168EEA;
 
-$purple: #47a3ff;
+$purple: #ff66ac;
 $red: #E53E3E;
 $gray: #2B353D;
 $green: #38A169;
@@ -26,9 +26,9 @@ $gray-700: #c0c0c0;
 $gray-800: #07090A;
 $gray-900: #000000;
 
-$upvote: #47a3ff;
+$upvote: #ff66ac;
 $downvote: #38B2AC;
-$admin: #47a3ff;
+$admin: #ff66ac;
 $banned: #960000;
 $deleted: #969600;
 $deletedandbanned: #964000;
@@ -117,5 +117,9 @@ blockquote {
 }
 
 .navbar-light .navbar-nav .nav-link .fa, .navbar-light .navbar-nav .nav-link .fas, .navbar-light .navbar-nav .nav-link .far, .navbar-light .navbar-nav .nav-link .fab {
+	color: #000 !important
+}
+
+.stretched-link {
 	color: #000 !important
 }
