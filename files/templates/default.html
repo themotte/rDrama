@@ -1034,7 +1034,7 @@
 
  </head>
 
- <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="overflow-x: hidden; {% if v and v.background %} background-size: cover!important; background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important{% endif %}">
+ <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important;{% endif %}">
 
 <a href="https://secure.transequality.org/site/Donation2?df_id=1480"><img src="/assets/images/{% if v %}banner.png{% else %}cached.jpg{% endif %}" width="100%"></a>
 
