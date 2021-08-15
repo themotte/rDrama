@@ -27722,7 +27722,7 @@ img.emoji {
 
 .container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
   background-color: #21262d !important;
-  border-radius: 10px !important;
+  border-radius: 5px !important;
 }
 
 .btn {
