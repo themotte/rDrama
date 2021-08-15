@@ -105,7 +105,6 @@ blockquote {
 }
 
 .container {
-	background: None !important;
 }
 
 .col-12 .card {
@@ -133,14 +132,14 @@ blockquote {
 	color: black !important
 }
 
-.ntr {
-	background: $white !important;
-}
-
 .arrow-down::before {
 	color: $muted !important;
 }
 
 .table {
 	color: black !important;
+}
+
+.transparent {
+	background: None !important;
 }
