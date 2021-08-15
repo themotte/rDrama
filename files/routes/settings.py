@@ -15,6 +15,13 @@ valid_password_regex = re.compile("^.{8,100}$")
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
 
+@app.post("/settings/removebackground")
+@auth_required
+def removebackground(v):
+	v.background = None
+	g.db.add(v)
+	return "", 204
+
 @app.post("/settings/profile")
 @auth_required
 @validate_formkey

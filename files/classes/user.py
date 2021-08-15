@@ -65,8 +65,8 @@ class User(Base, Stndrd, Age_times):
 		"Comment",
 		lazy="dynamic",
 		primaryjoin="Comment.author_id==User.id")
-	bio = Column(String, default="")
-	bio_html = Column(String, default="")
+	bio = Column(String)
+	bio_html = Column(String)
 	badges = relationship("Badge", lazy="dynamic")
 	notifications = relationship(
 		"Notification",
@@ -74,7 +74,7 @@ class User(Base, Stndrd, Age_times):
 
 	is_banned = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
-	ban_reason = Column(String, default="")
+	ban_reason = Column(String)
 	login_nonce = Column(Integer, default=0)
 	reserved = Column(String(256))
 	coins = Column(Integer, default=0)
@@ -86,7 +86,7 @@ class User(Base, Stndrd, Age_times):
 	defaulttime = Column(String, default="all")
 
 	is_nofollow = Column(Boolean, default=False)
-	custom_filter_list = Column(String(1000), default="")
+	custom_filter_list = Column(String(1000))
 	discord_id = Column(String(64))
 	ban_evade = Column(Integer, default=0)
 	original_username = deferred(Column(String(255)))

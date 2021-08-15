@@ -20,10 +20,10 @@ class SubmissionAux(Base):
 	title = Column(String(500))
 	title_html = Column(String(500))
 	url = Column(String(500))
-	body = Column(String(10000), default="")
-	body_html = Column(String(20000), default="")
-	ban_reason = Column(String(128), default="")
-	embed_url = Column(String(256), default="")
+	body = Column(String(10000))
+	body_html = Column(String(20000))
+	ban_reason = Column(String(128))
+	embed_url = Column(String(256))
 
 
 class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
