@@ -27823,4 +27823,8 @@ blockquote {
   background: #c0c0c0 !important;
 }
 
+.arrow-down::before {
+  color: #404040 !important;
+}
+
 /*# sourceMappingURL=win98_80ffff.css.map */
