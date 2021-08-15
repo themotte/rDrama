@@ -27720,8 +27720,12 @@ img.emoji {
   color: white !important;
 }
 
+* {
+  background: transparent !important;
+}
+
 .container {
-  background-color: rgba(28, 34, 41, 0.5) !important;
+  background: rgba(28, 34, 41, 0.5) !important;
   border-radius: 10px !important;
 }
 
