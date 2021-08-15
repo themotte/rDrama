@@ -27799,7 +27799,11 @@ blockquote {
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control, #guild .pseudo-submit-form.card .card-body .form-control {
-  background-color: white;
+  background-color: white !important;
+}
+
+.navbar-light .navbar-nav .nav-link .fa, .navbar-light .navbar-nav .nav-link .fas, .navbar-light .navbar-nav .nav-link .far, .navbar-light .navbar-nav .nav-link .fab {
+  color: #000 !important;
 }
 
 /*# sourceMappingURL=win98_ec72de.css.map */
