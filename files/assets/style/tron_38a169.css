@@ -27103,6 +27103,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   .container {
     overflow: hidden;
     max-width: none;
+    background-color: #00001f !important;
   }
 
   body, #settings, #notifications, #submit {
