@@ -13,18 +13,18 @@
 				</span>
 			</form>
 		</div>
-		<a class="mobile-nav-icon d-block d-md-none" href="/random"><i class="fas fa-random align-middle text-gray-500"></i></a>
+		<a class="mobile-nav-icon d-block d-md-none" href="/random"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
 		{% if v and v.admin_level > 0 %}
-		<a class="mobile-nav-icon d-block d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500"></i></a>
+		<a class="mobile-nav-icon d-block d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
 		{% endif %}
 		{% if v %}
-		<a class="mobile-nav-icon d-block d-md-none" href="/submit"><i class="fas fa-feather-alt align-middle text-gray-500"></i></a>
+		<a class="mobile-nav-icon d-block d-md-none" href="/submit"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
 		{% else %}
-		<a class="mobile-nav-icon d-block d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500"></i></a>
+		<a class="mobile-nav-icon d-block d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
 		{% endif %}
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
 		aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon {% if v and v.notifications_count %}position-relative{% endif %}"><i class="fal fa-bars text-gray-500"></i>
+		<span class="navbar-toggler-icon {% if v and v.notifications_count %}position-relative{% endif %}"><i class="fal fa-bars text-gray-500 black"></i>
 			{% if v and v.notifications_count %}
 				<span class="badge-count font-weight-bolder" style="right: -6px; font-size:18px;">{{v.notifications_count}}</span>
 			{% endif %}
