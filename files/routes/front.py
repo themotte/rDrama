@@ -190,6 +190,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 @auth_desired
 def front_all(v):
 
+	return "sry upgrading server to handle the large traffic increase\n\nin the meantime, u can go outside or something idk"
+
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
 	if not v and request.path == "/": return redirect("/logged_out")
