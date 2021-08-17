@@ -286,13 +286,9 @@ def edit_post(pid, v):
 
 	p.body = body
 	p.body_html = body_html
-	title = request.form.get("title")
+	title = filter_title(request.form.get("title"))
+
 	p.title = title
-
-	for i in re.finditer(':(.{1,30}?):', title):
-		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
-			title = title.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=30 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
-
 	p.title_html = title
 
 	if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
@@ -501,19 +497,28 @@ def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
 	except Exception as e: print(e)
 
+def filter_title(title):
+	title = title.strip()
+	title = title.replace("\n", "")
+	title = title.replace("\r", "")
+	title = title.replace("\t", "")
+
+	# sanitize title
+	title = bleach.clean(title, tags=[])
+
+	for i in re.finditer(':(.{1,30}?):', title):
+		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
+			title = title.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
+
+	return title
+
 @app.post("/submit")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
 def submit_post(v):
 
-
-	title = request.form.get("title", "").strip()
-
-	title = title.strip()
-	title = title.replace("\n", "")
-	title = title.replace("\r", "")
-	title = title.replace("\t", "")
+	title = filter_title(request.form.get("title", ""))
 
 	url = request.form.get("url", "")
 	
@@ -546,8 +551,6 @@ def submit_post(v):
 		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
 		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.form.get("body", "")), 400
 
-	# sanitize title
-	title = bleach.clean(title, tags=[])
 
 	# Force https for submitted urls
 
@@ -777,10 +780,6 @@ def submit_post(v):
 	if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
 		url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
-
-	for i in re.finditer(':(.{1,30}?):', title):
-		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
-			title = title.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
 
 	title_html = title
 
