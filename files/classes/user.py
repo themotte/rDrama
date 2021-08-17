@@ -83,7 +83,7 @@ class User(Base, Stndrd, Age_times):
 	stored_subscriber_count = Column(Integer, default=0)
 	defaultsortingcomments = Column(String, default="top")
 	defaultsorting = Column(String, default="hot")
-	defaulttime = Column(String, default="all")
+	defaulttime = Column(String, default="day")
 
 	is_nofollow = Column(Boolean, default=False)
 	custom_filter_list = Column(String(1000))
