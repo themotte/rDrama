@@ -23745,11 +23745,11 @@ ol > li::before {
 }
 
 [data-toggle=collapse] .fa:before {
-  content: "";
+  content: "\f139";
 }
 
 [data-toggle=collapse].collapsed .fa:before {
-  content: "";
+  content: "\f13a";
 }
 
 .btn {
@@ -24381,7 +24381,7 @@ th {
   color: #c0c0c0;
   font-family: "Font Awesome 5 Pro";
   font-weight: 900;
-  content: "";
+  content: "\f357";
 }
 
 .arrow-up:hover::before {
@@ -24399,7 +24399,7 @@ th {
   color: #c0c0c0;
   font-family: "Font Awesome 5 Pro";
   font-weight: 900;
-  content: "";
+  content: "\f354";
 }
 
 .arrow-down:hover::before {
@@ -24674,7 +24674,7 @@ a:hover .link-arrow {
   color: #404040;
   font-family: "Font Awesome 5 Pro";
   font-weight: 900;
-  content: "";
+  content: "\f348";
 }
 
 .sidebar-left.sidebar-collapsed .collapsed-toggle::before {
@@ -24683,7 +24683,7 @@ a:hover .link-arrow {
   color: #000000;
   font-family: "Font Awesome 5 Pro";
   font-weight: 900;
-  content: "";
+  content: "\f347";
 }
 
 @media (max-width: 1199.98px) {
@@ -25952,7 +25952,7 @@ ul.comment-section {
 }
 
 .comment.collapsed .comment-collapse::before {
-  content: "";
+  content: "\f055";
   font-family: "Font Awesome 5 Pro";
   font-weight: 900;
   border-left: none;
@@ -27367,7 +27367,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .comment .comment-collapse::before {
-    content: "";
+    content: "\f056";
     position: static;
     font-size: 10px;
     font-weight: 900;
