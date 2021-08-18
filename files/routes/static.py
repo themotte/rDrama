@@ -46,11 +46,11 @@ def patrons(v):
 	users = [x for x in g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc()).all()]
 	return render_template("patrons.html", v=v, users=users)
 
-@app.get("/badmins")
+@app.get("/admins")
 @auth_desired
-def badmins(v):
-	badmins = g.db.query(User).filter_by(admin_level=6).order_by(User.coins.desc()).all()
-	return render_template("badmins.html", v=v, badmins=badmins)
+def admins(v):
+	admins = g.db.query(User).filter_by(admin_level=6).order_by(User.coins.desc()).all()
+	return render_template("admins.html", v=v, admins=admins)
 
 @app.get("/log")
 @auth_desired

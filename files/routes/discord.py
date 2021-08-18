@@ -120,6 +120,8 @@ def discord_redirect(v):
 		
 		time.sleep(0.1)
 		
+		if v.patron: add_role(v, str(v.patron))
+
 		add_role(v, "feedback")
 
 		time.sleep(0.1)
