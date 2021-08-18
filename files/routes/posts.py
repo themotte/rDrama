@@ -31,7 +31,7 @@ def publish(pid, v):
 	post.private = False
 	g.db.add(post)
 	
-	#cache.delete_memoized(frontlist)
+	cache.delete_memoized(frontlist)
 
 	return "", 204
 
@@ -920,7 +920,7 @@ def submit_post(v):
 	g.db.add(v)
 
 	cache.delete_memoized(User.userpagelisting, v)
-	#cache.delete_memoized(frontlist)
+	cache.delete_memoized(frontlist)
 	if "[changelog]" in new_post.title: cache.delete_memoized(changeloglist)
 
 	if request.headers.get("Authorization"): return new_post.json
@@ -942,7 +942,7 @@ def delete_post_pid(pid, v):
 
 	g.db.add(post)
 
-	#cache.delete_memoized(frontlist)
+	cache.delete_memoized(frontlist)
 
 	return "", 204
 
@@ -955,7 +955,7 @@ def undelete_post_pid(pid, v):
 	post.deleted_utc =0
 	g.db.add(post)
 
-	#cache.delete_memoized(frontlist)
+	cache.delete_memoized(frontlist)
 
 	return "", 204
 
