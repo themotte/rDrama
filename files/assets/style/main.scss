@@ -974,7 +974,7 @@ th {
 
 .arrow-up::before {
 	cursor: pointer;
-	font-size: $font-size-base;
+	font-size: 1.5rem;
 	color: $gray-200;
 	font-family: "Font Awesome 5 Pro";
 	font-weight: 900;
@@ -993,7 +993,7 @@ th {
 
 .arrow-down::before {
 	cursor: pointer;
-	font-size: $font-size-base;
+	font-size: 1.5rem;
 	color: $gray-200;
 	font-family: "Font Awesome 5 Pro";
 	font-weight: 900;
@@ -3606,7 +3606,7 @@ body, #settings, #notifications, #submit {
 }
 
 .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
-	font-size: $font-size-lg;
+	font-size: 1.5rem;
 	color: $gray-200;
 	opacity: 1;
 }
