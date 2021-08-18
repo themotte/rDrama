@@ -525,7 +525,7 @@ def shadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
-	cache.delete_memoized(frontlist)
+	#cache.delete_memoized(frontlist)
 
 	return "", 204
 
@@ -549,7 +549,7 @@ def unshadowban(user_id, v):
 	)
 	g.db.add(ma)
 	
-	cache.delete_memoized(frontlist)
+	#cache.delete_memoized(frontlist)
 
 	return "", 204
 
@@ -718,7 +718,7 @@ def ban_post(post_id, v):
 		)
 	g.db.add(ma)
 
-	cache.delete_memoized(frontlist)
+	#cache.delete_memoized(frontlist)
 
 	return "", 204
 
@@ -746,7 +746,7 @@ def unban_post(post_id, v):
 
 	g.db.add(post)
 
-	cache.delete_memoized(frontlist)
+	#cache.delete_memoized(frontlist)
 
 	return "", 204
 
@@ -783,7 +783,7 @@ def api_sticky_post(post_id, v):
 		post.stickied = not (post.stickied)
 		g.db.add(post)
 		
-	cache.delete_memoized(frontlist)
+	#cache.delete_memoized(frontlist)
 
 	return "", 204
 
