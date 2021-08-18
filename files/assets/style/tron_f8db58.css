@@ -24378,7 +24378,7 @@ th {
 
 .arrow-up::before {
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: #f8db58;
   font-family: "Font Awesome 5 Pro";
   font-weight: 900;
@@ -24396,7 +24396,7 @@ th {
 
 .arrow-down::before {
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: #f8db58;
   font-family: "Font Awesome 5 Pro";
   font-weight: 900;
@@ -27322,7 +27322,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: #f8db58;
     opacity: 1;
   }
