@@ -123,7 +123,7 @@ def disablesignups(v):
 @admin_level_required(4)
 def badge_grant_get(v):
 
-	badge_types = g.db.query(BadgeDef).filter_by(kind=3).order_by(BadgeDef.rank).all()
+	badge_types = g.db.query(BadgeDef).filter_by(kind=3).all()
 
 	errors = {"already_owned": "That user already has that badge.",
 			  "no_user": "That user doesn't exist."
