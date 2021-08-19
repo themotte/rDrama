@@ -257,9 +257,3 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 
 	return response
-
-
-@app.route("/<path:path>", subdomain="www")
-def www_redirect(path):
-
-	return redirect(f"https://{app.config['SERVER_NAME']}/{path}")
