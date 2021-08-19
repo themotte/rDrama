@@ -687,7 +687,8 @@ def settings_title_change(v):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
 			new_name = new_name.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
 
-	v.customtitle = bleach.clean(new_name, tags=[])
+	#v.customtitle = bleach.clean(new_name, tags=[])
+	v.customtitle = new_name
 
 	g.db.add(v)
 	return redirect("/settings/profile")
