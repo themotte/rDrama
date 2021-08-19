@@ -8,6 +8,8 @@ from files.mail import *
 from files.__main__ import app, cache
 import youtube_dl
 from .front import frontlist
+import os
+from .posts import filter_title
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
@@ -683,11 +685,7 @@ def settings_title_change(v):
 
 	v.customtitleplain = new_name
 
-	for i in re.finditer(':(.{1,30}?):', new_name):
-		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
-			new_name = new_name.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif">')
-
-	v.customtitle = bleach.clean(new_name, tags=[])
+	v.customtitle = filter_title(new_name)
 
 	g.db.add(v)
 	return redirect("/settings/profile")
