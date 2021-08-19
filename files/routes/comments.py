@@ -233,7 +233,7 @@ def api_comment(v):
 				comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
 				g.db.add(comment)
 				ma=ModAction(
-					user_id=2317,
+					user_id=2360,
 					target_comment_id=comment.id,
 					kind="ban_comment",
 					note="spam"
@@ -302,7 +302,7 @@ def api_comment(v):
 
 		g.db.add(c)
 
-		c_jannied = Comment(author_id=2317,
+		c_jannied = Comment(author_id=2360,
 			parent_submission=parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,
@@ -335,7 +335,7 @@ def api_comment(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
+	if "rdrama" in request.host and len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
 		c2 = Comment(author_id=1832,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
@@ -366,7 +366,7 @@ def api_comment(v):
 
 
 
-	if	random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
+	if "rdrama" in request.host and random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
 		c2 = Comment(author_id=1833,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
@@ -644,7 +644,7 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 
-		c_jannied = Comment(author_id=2317,
+		c_jannied = Comment(author_id=2360,
 			parent_submission=c.parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,

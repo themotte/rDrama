@@ -352,11 +352,10 @@ def sign_up_post(v):
 	check_for_alts(new_user.id)
 
 	# send welcome/verify email
-	if email:
-		send_verification_email(new_user)
+	if email: send_verification_email(new_user)
 
 	# send welcome message
-	send_notification(1046, new_user, "Dude bussy lmao")
+	if "rdrama" in request.host: send_notification(1046, new_user, "Dude bussy lmao")
 
 	session["user_id"] = new_user.id
 	session["session_id"] = token_hex(16)

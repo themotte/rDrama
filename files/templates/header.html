@@ -112,7 +112,7 @@
 						</div>
 						<hr class="my-2">
 						<div class="px-2">
-							<a class="dropdown-item" href="javascript:void(0)", onclick="post_toast('/logout')"><i class="fas fa-sign-out fa-fw text-left mr-3"></i>Log out</a>
+							<a class="dropdown-item" href="javascript:void(0)", onclick="post('/logout', callback=function(){window.location.reload(true)})"><i class="fas fa-sign-out fa-fw text-left mr-3"></i>Log out</a>
 						</div>
 					</div>
 				</div>

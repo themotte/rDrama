@@ -302,7 +302,7 @@ def edit_post(pid, v):
 
 		g.db.add(p)
 
-		c_jannied = Comment(author_id=2317,
+		c_jannied = Comment(author_id=2360,
 			parent_submission=p.id,
 			level=1,
 			over_18=False,
@@ -689,7 +689,7 @@ def submit_post(v):
 			post.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
 			g.db.add(post)
 			ma=ModAction(
-					user_id=2317,
+					user_id=2360,
 					target_submission_id=post.id,
 					kind="ban_post",
 					note="spam"
@@ -851,7 +851,7 @@ def submit_post(v):
 
 		g.db.add(new_post)
 
-		c_jannied = Comment(author_id=2317,
+		c_jannied = Comment(author_id=2360,
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
@@ -897,10 +897,13 @@ def submit_post(v):
 	g.db.add(c)
 	g.db.flush()
 
-	if v.id == 995: body = "fuck off carp"
-	else: body = random.choice(snappyquotes)
+	if "rdrama" in request.host:
+		if v.id == 995: body = "fuck off carp"
+		else: body = random.choice(snappyquotes)
+		body += "\n\n---\n\n"
+	else: body = ""
 	if new_post.url:
-		body += f"\n\n---\n\nSnapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={urllib.parse.quote(new_post.url)}&run=1) (click to archive)"
+		body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={urllib.parse.quote(new_post.url)}&run=1) (click to archive)"
 		gevent.spawn(archiveorg, new_post.url)
 	with CustomRenderer(post_id=new_post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md, linkgen=True)

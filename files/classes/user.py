@@ -535,7 +535,7 @@ class User(Base, Stndrd, Age_times):
 			self.profileurl = None
 			delete_role(self, "linked")
 
-		self.is_banned = admin.id if admin else 2317
+		self.is_banned = admin.id if admin else 2360
 		if reason: self.ban_reason = reason
 
 		g.db.add(self)
