@@ -4,7 +4,6 @@ from files.__main__ import Base
 from os import environ
 
 site = environ.get("DOMAIN").strip()
-site_name = environ.get("SITE_NAME").strip()
 
 class Image(Base):
 	__tablename__ = "images"
@@ -13,11 +12,6 @@ class Image(Base):
 	number = Column(Integer)
 	text = Column(String(64))
 	deletehash = Column(String(64))
-	
-
-	@property
-	def path(self): return f"/assets/images/{site_name}/cover.png"
-
 
 
 def random_image():
