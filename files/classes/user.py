@@ -34,6 +34,7 @@ class User(Base, Stndrd, Age_times):
 	profileurl = Column(String)
 	bannerurl = Column(String)
 	patron = Column(Integer, default=0)
+	verified = Column(Boolean)
 	email = Column(String)
 	css = deferred(Column(String))
 	profilecss = deferred(Column(String))
