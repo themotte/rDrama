@@ -473,8 +473,8 @@ class User(Base, Stndrd, Age_times):
 
 	@cache.memoize()
 	def defaultpicture(self):
-		pic = random.randint(1, 50)
-		return f"https://{site}/assets/images/defaultpictures/{pic}.png"
+		pic = random.randint(1, 130)
+		return f"https://{site}/assets/images/defaultpictures/{pic}.gif"
 
 	@property
 	def profile_url(self):
