@@ -5,7 +5,7 @@ from os import environ, path
 import secrets
 from flask import *
 from flask_caching import Cache
-import flask_limiter
+from flask_limiter import Limiter
 from flask_compress import Compress
 
 
@@ -102,9 +102,12 @@ app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
 
-limiter = flask_limiter.Limiter(
+def limiter_key_func(): return request.remote_addr
+
+
+limiter = Limiter(
 	app,
-	key_func=flask_limiter.util.get_ipaddr(),
+	key_func=limiter_key_func,
 	default_limits=["100/minute"],
 	headers_enabled=True,
 	strategy="fixed-window"
