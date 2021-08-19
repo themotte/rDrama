@@ -27,7 +27,7 @@
 		<link rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
 		{% if v.agendaposter %}<link rel="stylesheet" href="/assets/style/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 	{% else %}
-		<link rel="stylesheet" href="{{'DEFAULT_THEME' | app_config}}">
+		<link rel="stylesheet" href="/assets/style/{{'DEFAULT_THEME' | app_config}}.css">
 	{% endif %}
 	
 	<link href="/assets/style/fa.css" rel="stylesheet"> 

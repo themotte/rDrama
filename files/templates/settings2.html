@@ -43,7 +43,7 @@
 	{% if v %}
 	<link id="css-link" rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
 	{% else %}
-	<link id="css-link" rel="stylesheet" href="{{'DEFAULT_THEME' | app_config}}">
+	<link id="css-link" rel="stylesheet" href="/assets/style/{{'DEFAULT_THEME' | app_config}}.css">
 	{% endif %}
 
 	<!-- Font Awesome -->
