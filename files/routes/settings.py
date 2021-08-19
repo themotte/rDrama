@@ -685,7 +685,7 @@ def settings_title_change(v):
 
 	for i in re.finditer(':(.{1,30}?):', new_name):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
-			new_name = new_name.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
+			new_name = new_name.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"')
 
 	v.customtitle = bleach.clean(new_name, tags=[])
 
