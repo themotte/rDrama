@@ -504,7 +504,7 @@ def agendaposter(user_id, v):
 
 	user.refresh_selfset_badges()
 
-	return "", 204
+	return (redirect(user.url), user)
 
 @app.post("/shadowban/<user_id>")
 @admin_level_required(6)
