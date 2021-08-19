@@ -3,6 +3,7 @@ from os import environ
 from PIL import Image as IImage, ImageSequence
 import base64
 from files.classes.images import *
+from flask import g
 
 CF_KEY = environ.get("CLOUDFLARE_KEY", "").strip()
 CF_ZONE = environ.get("CLOUDFLARE_ZONE", "").strip()
