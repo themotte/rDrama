@@ -23651,12 +23651,12 @@ body.using-mouse :focus {
 }
 
 #thread .custom-gutters {
-  padding: 0 15px;
+  padding: 0 10px;
 }
 
 .custom-gutters {
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .sticky {
@@ -24352,8 +24352,8 @@ th {
 }
 
 #thread .voting {
-  min-width: 15px;
-  margin-right: 15px;
+  min-width: 10px;
+  margin-right: 10px;
   overflow-wrap: normal;
 }
 
@@ -24523,8 +24523,8 @@ a:hover .link-arrow {
 }
 
 #frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body, #guild .pseudo-submit-form.card .card-body {
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control, #guild .pseudo-submit-form.card .card-body .form-control {
@@ -25702,7 +25702,7 @@ div:hover .thumb-img-link-overlay {
   display: flex;
   position: relative;
   margin-top: 2rem;
-  padding-left: 13px;
+  padding-left: 12px;
 }
 
 #notifications .comment, #userpage .comment {
@@ -27237,7 +27237,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   */
   .jumbotron-guild {
-    height: 115px;
+    height: 110px;
   }
 
   #thread .card {
@@ -27351,7 +27351,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .comment-section > .comment {
-    padding-left: 13px;
+    padding-left: 12px;
   }
 
   .comment {
@@ -27359,7 +27359,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .comment .comment-collapse {
-    padding-right: 15px;
+    padding-right: 10px;
   }
 
   .comment.collapsed .user-info {
