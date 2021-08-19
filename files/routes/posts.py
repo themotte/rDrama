@@ -520,9 +520,11 @@ def filter_title(title):
 def submit_post(v):
 
 	title = request.form.get("title", "")
-
 	url = request.form.get("url", "")
-	
+
+	if "<" in title:
+		render_template("submit.html", v=v, error="Titles can't contain <", title=title[:500], url=url, body=request.form.get("body", "")), 400
+
 	if url:
 		repost = g.db.query(Submission).join(Submission.submission_aux).filter(
 			SubmissionAux.url.ilike(url),
@@ -543,9 +545,6 @@ def submit_post(v):
 	elif len(title) > 500:
 		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.form.get("body", "")), 400
-
-	elif "<" in title:
-		render_template("submit.html", v=v, error="Titles can't contain <", title=title[:500], url=url, body=request.form.get("body", "")), 400
 
 	parsed_url = urlparse(url)
 	if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get(
