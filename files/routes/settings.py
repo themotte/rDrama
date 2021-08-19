@@ -677,11 +677,6 @@ def settings_title_change(v):
 	
 	new_name=request.form.get("title").strip()[:100]
 
-	if "<" in new_name:
-		return render_template("settings_profile.html",
-						   v=v,
-						   error=f"Flairs can't contain <")
-
 	#make sure name is different
 	if new_name==v.customtitle:
 		return render_template("settings_profile.html",

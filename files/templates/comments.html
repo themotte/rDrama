@@ -82,15 +82,15 @@
 	<span class="align-top">
 	{% if c.parent_submission %}
 		{% if c.author_id==v.id and c.child_comments and is_notification_page%}
-			<span class="font-weight-bold">Comment {{'Replies' if (c.child_comments | length)>1 else 'Reply'}}: <a href="{{c.post.permalink}}">{{c.post.title | safe}}</a></span>
+			<span class="font-weight-bold">Comment {{'Replies' if (c.child_comments | length)>1 else 'Reply'}}: <a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% elif c.post.author_id==v.id and c.level == 1 and is_notification_page%}
-			<span class="font-weight-bold">Post Reply: <a href="{{c.post.permalink}}">{{c.post.title | safe}}</a></span>
+			<span class="font-weight-bold">Post Reply: <a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% elif is_notification_page and c.parent_submission in v.subscribed_idlist() %}
-			<span class="font-weight-bold">Subscribed Thread: <a href="{{c.post.permalink}}">{{c.post.title | safe}}</a></span>
+			<span class="font-weight-bold">Subscribed Thread: <a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% elif is_notification_page %}
-			<span class="font-weight-bold">Username Mention: <a href="{{c.post.permalink}}">{{c.post.title | safe}}</a></span>
+			<span class="font-weight-bold">Username Mention: <a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% else %}
-			<span class="font-weight-bold"><a href="{{c.post.permalink}}">{{c.post.title | safe}}</a></span>
+			<span class="font-weight-bold"><a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% endif %}
 	{% elif c.author_id==1046 or c.author_id==2360 %}
 	<span class="font-weight-bold">{{'SITE_NAME' | app_config}} Notification</span>

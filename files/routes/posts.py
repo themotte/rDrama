@@ -228,7 +228,6 @@ def post_id(pid, anything=None, v=None):
 def edit_post(pid, v):
 
 	title = request.form.get("title")
-	if "<" in title: return {"error": f"Titles can't contain <"}
 
 	p = get_post(pid)
 
@@ -521,9 +520,6 @@ def submit_post(v):
 
 	title = request.form.get("title", "")
 	url = request.form.get("url", "")
-
-	if "<" in title:
-		return render_template("submit.html", v=v, error="Titles can't contain <", title=title[:500], url=url, body=request.form.get("body", "")), 400
 
 	if url:
 		repost = g.db.query(Submission).join(Submission.submission_aux).filter(
