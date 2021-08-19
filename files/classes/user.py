@@ -16,7 +16,7 @@ from files.__main__ import Base, cache
 from files.helpers.security import *
 
 site = environ.get("DOMAIN").strip()
-defaulttheme = environ.get("DEFAULT_COLOR").strip()
+defaulttheme = environ.get("DEFAULT_THEME").strip()
 defaultcolor = environ.get("DEFAULT_COLOR").strip()
 class User(Base, Stndrd, Age_times):
 	__tablename__ = "users"
