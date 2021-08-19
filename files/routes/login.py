@@ -16,7 +16,6 @@ def login_get(v):
 
 	return render_template("login.html",
 						   failed=False,
-						   i=random_image(),
 						   redirect=redir)
 
 
@@ -65,7 +64,7 @@ def login_post():
 
 	if not account:
 		time.sleep(random.uniform(0, 2))
-		return render_template("login.html", failed=True, i=random_image())
+		return render_template("login.html", failed=True)
 
 	# test password
 
@@ -73,7 +72,7 @@ def login_post():
 
 		if not account.verifyPass(request.form.get("password")):
 			time.sleep(random.uniform(0, 2))
-			return render_template("login.html", failed=True, i=random_image())
+			return render_template("login.html", failed=True)
 
 		if account.mfa_secret:
 			now = int(time.time())
@@ -82,7 +81,6 @@ def login_post():
 								   v=account,
 								   time=now,
 								   hash=hash,
-								   i=random_image(),
 								   redirect=request.form.get("redirect", "/")
 								   )
 	elif request.form.get("2fa_token", "x"):
@@ -104,7 +102,6 @@ def login_post():
 								   time=now,
 								   hash=hash,
 								   failed=True,
-								   i=random_image()
 								   )
 
 	else:
@@ -170,8 +167,7 @@ def sign_up_get(v):
 		ref_user = None
 
 	if ref_user and (ref_user.id in session.get("history", [])):
-		return render_template("sign_up_failed_ref.html",
-							   i=random_image())
+		return render_template("sign_up_failed_ref.html")
 
 	# Make a unique form key valid for one account creation
 	now = int(time.time())
@@ -194,7 +190,6 @@ def sign_up_get(v):
 	return render_template("sign_up.html",
 						   formkey=formkey,
 						   now=now,
-						   i=random_image(),
 						   redirect=redir,
 						   ref_user=ref_user,
 						   error=error,
@@ -373,7 +368,6 @@ def sign_up_post(v):
 def get_forgot():
 
 	return render_template("forgot_password.html",
-						   i=random_image()
 						   )
 
 
@@ -409,8 +403,7 @@ def post_forgot():
 				  )
 
 	return render_template("forgot_password.html",
-						   msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process.",
-						   i=random_image())
+						   msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process.")
 
 
 @app.get("/reset")
@@ -441,7 +434,6 @@ def get_reset():
 						   v=user,
 						   token=reset_token,
 						   time=timestamp,
-						   i=random_image()
 						   )
 
 
@@ -477,7 +469,6 @@ def post_reset(v):
 							   v=user,
 							   token=token,
 							   time=timestamp,
-							   i=random_image(),
 							   error="Passwords didn't match.")
 
 	user.passhash = hash_password(password)
@@ -493,7 +484,6 @@ def lost_2fa(v):
 
 	return render_template(
 		"lost_2fa.html",
-		i=random_image(),
 		v=v
 		)
 

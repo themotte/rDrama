@@ -1,9 +1,5 @@
 from sqlalchemy import *
-from flask import g
 from files.__main__ import Base
-from os import environ
-
-site = environ.get("DOMAIN").strip()
 
 class Image(Base):
 	__tablename__ = "images"
@@ -12,12 +8,6 @@ class Image(Base):
 	number = Column(Integer)
 	text = Column(String(64))
 	deletehash = Column(String(64))
-
-
-def random_image():
-	n=g.db.query(Image).count()
-	return g.db.query(Image).order_by(Image.id.asc()).first()
-
 
 
 class BadPic(Base):
