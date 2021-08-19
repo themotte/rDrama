@@ -3,6 +3,7 @@ from files.__main__ import app, limiter
 from files.helpers.alerts import *
 
 site = environ.get("DOMAIN").strip()
+site_name = environ.get("SITE_NAME").strip()
 
 @app.get("/stats")
 @auth_desired
@@ -97,7 +98,7 @@ def index():
 
 @app.get("/assets/favicon.ico")
 def favicon():
-	return send_file(f"./assets/images/{site}/favicon.png")
+	return send_file(f"./assets/images/{site_name}/favicon.png")
 
 @app.get("/api")
 @auth_desired

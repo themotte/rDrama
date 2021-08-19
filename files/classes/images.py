@@ -4,6 +4,7 @@ from files.__main__ import Base
 from os import environ
 
 site = environ.get("DOMAIN").strip()
+site_name = environ.get("SITE_NAME").strip()
 
 class Image(Base):
 	__tablename__ = "images"
@@ -15,7 +16,7 @@ class Image(Base):
 	
 
 	@property
-	def path(self): return f"/assets/images/{site}/cover.png"
+	def path(self): return f"/assets/images/{site_name}/cover.png"
 
 
 

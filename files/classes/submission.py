@@ -10,6 +10,7 @@ from .flags import *
 from os import environ
 
 site = environ.get("DOMAIN").strip()
+site_name = environ.get("SITE_NAME").strip()
 
 class SubmissionAux(Base):
 
@@ -203,7 +204,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@lazy
 	def thumb_url(self):
 		if self.over_18: return f"https://{site}/assets/images/nsfw.png"
-		elif not self.url: return f"https://{site}/assets/images/{site}/default_thumb_text.png"
+		elif not self.url: return f"https://{site}/assets/images/{site_name}/default_thumb_text.png"
 		elif self.thumburl: return self.thumburl
 		elif "youtu.be" in self.domain or "youtube.com" in self.domain: return f"https://{site}/assets/images/default_thumb_yt.png"
 		else: return f"https://{site}/assets/images/default_thumb_link.png"
