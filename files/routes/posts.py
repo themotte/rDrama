@@ -523,7 +523,7 @@ def submit_post(v):
 	url = request.form.get("url", "")
 
 	if "<" in title:
-		render_template("submit.html", v=v, error="Titles can't contain <", title=title[:500], url=url, body=request.form.get("body", "")), 400
+		return render_template("submit.html", v=v, error="Titles can't contain <", title=title[:500], url=url, body=request.form.get("body", "")), 400
 
 	if url:
 		repost = g.db.query(Submission).join(Submission.submission_aux).filter(
