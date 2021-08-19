@@ -17,6 +17,7 @@ def api_flag_post(pid, v):
 		if existing: return "", 409
 
 		reason = request.form.get("reason", "").strip()[:100]
+		if "<" in reason: return {"error": f"Reasons can't contain <"}
 
 		for i in re.finditer(':(.{1,30}?):', reason):
 			if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
@@ -45,6 +46,7 @@ def api_flag_comment(cid, v):
 
 		if existing: return "", 409
 		reason = request.form.get("reason", "").strip()[:100]
+		if "<" in reason: return {"error": f"Reasons can't contain <"}
 
 		for i in re.finditer(':(.{1,30}?):', reason):
 			if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
