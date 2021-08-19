@@ -37,6 +37,8 @@ services:
       - READ_ONLY=0
       - BOT_DISABLE=0
       - COINS_NAME=Dramacoins
+      - DEFAULT_THEME=dark
+      - DEFAULT_COLOR=ff66ac
     links:
       - "redis"
       - "postgres"

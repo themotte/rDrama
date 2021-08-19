@@ -36,7 +36,7 @@ app.config['DATABASE_URL'] = environ.get("DATABASE_CONNECTION_POOL_URL",environ.
 
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get("DOMAIN").strip()
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400
 
 app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_NAME").strip().lower()
 app.config["VERSION"] = "1.0.0"
@@ -46,6 +46,8 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
+
+app.config["DEFAULT_THEME"] = environ.get("defaulttheme").strip() + "_" + environ.get("defaultcolor").strip()
 
 app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1)) if ("localhost" not in app.config["SERVER_NAME"] and "127.0.0.1" not in app.config["SERVER_NAME"]) else 0
 

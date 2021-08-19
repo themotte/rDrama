@@ -71,6 +71,8 @@ def api_vote_post(post_id, new, v):
 	# check for existing vote
 	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
 
+	if existing.vote_type == new: return "", 204
+
 	if existing:
 		if existing.vote_type == 0 and new != 0:
 			post.author.coins += 1
@@ -119,6 +121,8 @@ def api_vote_comment(comment_id, new, v):
 	# check for existing vote
 	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
 
+	if existing.vote_type == new: return "", 204
+
 	if existing:
 		if existing.vote_type == 0 and new != 0:
 			comment.author.coins += 1
@@ -145,4 +149,4 @@ def api_vote_comment(comment_id, new, v):
 	comment.upvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=1).count()
 	comment.downvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=-1).count()
 	g.db.add(comment)
-	return make_response(""), 204
+	return "", 204

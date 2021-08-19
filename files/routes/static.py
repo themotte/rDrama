@@ -97,7 +97,7 @@ def index():
 
 @app.get("/assets/favicon.ico")
 def favicon():
-	return send_file("./assets/images/favicon.png")
+	return send_file(f"./assets/images/{site}/favicon.png")
 
 @app.get("/api")
 @auth_desired

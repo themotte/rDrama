@@ -1,7 +1,9 @@
 from sqlalchemy import *
 from flask import g
 from files.__main__ import Base
+from os import environ
 
+site = environ.get("DOMAIN").strip()
 
 class Image(Base):
 	__tablename__ = "images"
@@ -11,9 +13,9 @@ class Image(Base):
 	text = Column(String(64))
 	deletehash = Column(String(64))
 	
+
 	@property
-	def path(self):
-		return f"/assets/images/cover.png"
+	def path(self): return f"/assets/images/{site}/cover.png"
 
 
 

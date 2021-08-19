@@ -6,11 +6,11 @@
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="Sign in to {{"SITE_NAME" | app_config}}">
+		<meta name="description" content="Sign in to {{'SITE_NAME' | app_config}}">
 		<meta name="author" content="">
 
 		{% block title %}
-		<title>Login -	{{"SITE_NAME" | app_config}}</title>
+		<title>Login -	{{'SITE_NAME' | app_config}}</title>
 		{% endblock %}
 		
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
@@ -26,8 +26,8 @@
 		integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
 		crossorigin="anonymous"></script>
 
-		<!-- {{"SITE_NAME" | app_config}} CSS -->
-		<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
+		<!-- {{'SITE_NAME' | app_config}} CSS -->
+		<link rel="stylesheet" href="{{'DEFAULT_THEME' | app_config}}">
 
 </head>
 
@@ -55,7 +55,7 @@
 								<div class="col-10 col-md-7">
 
 										<div class="mb-5">
-												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{"SITE_NAME" | app_config}}</span></a>
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{'SITE_NAME' | app_config}}</span></a>
 										</div>
 
 										{% block content %}

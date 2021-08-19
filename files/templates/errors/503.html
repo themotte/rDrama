@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<meta name="author" content="">
-	<link rel="icon" type="image/png" href="/assets/favicon.png">
+	<link rel="icon" type="image/png" href="/assets/{{'SITE_NAME' | app_config}}/favicon.png">
 
 	
 <title>503 Service Unavailable</title>
@@ -18,18 +18,18 @@
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 	<!-- iOS webapp -->
-	<link rel="apple-touch-icon" href="/assets/favicon.png">
+	<link rel="apple-touch-icon" href="/assets/{{'SITE_NAME' | app_config}}/favicon.png">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<meta name="apple-mobile-web-app-title" content="{{"SITE_NAME" | app_config}}">
+	<meta name="apple-mobile-web-app-title" content="{{'SITE_NAME' | app_config}}">
 
-	<!-- {{"SITE_NAME" | app_config}} CSS -->
+	<!-- {{'SITE_NAME' | app_config}} CSS -->
 	
 	{% if v %}
 		<link rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
 		{% if v.agendaposter %}<link rel="stylesheet" href="/assets/style/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 	{% else %}
-		<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
+		<link rel="stylesheet" href="{{'DEFAULT_THEME' | app_config}}">
 	{% endif %}
 
 	<!-- Font Awesome -->
@@ -44,7 +44,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow shadow-md fixed-top" id="navbar">
 	<div class="container">
-		<div class="flex-grow-1"><span class="text-primary navbar-brand">{{"SITE_NAME" | app_config}}</span></div>
+		<div class="flex-grow-1"><span class="text-primary navbar-brand">{{'SITE_NAME' | app_config}}</span></div>
 
 	
 		
@@ -73,7 +73,7 @@
 				<pre></pre>
 				</span>
 			<h1 class="h5">503 Service Unavailable</h1>
-			<p class="text-muted">r{{"SITE_NAME" | app_config}} is unavailable.</p>
+			<p class="text-muted">r{{'SITE_NAME' | app_config}} is unavailable.</p>
 			<p class="text-muted">HI IT'S CARP AGAIN<BR>I'm like 95% sure this error means Aevann is restarting the server to apply a change. But I think that's also 520/521? What causes a 503? No one knows. Wait like a minute (maybe two) and see if it's still happening. It shouldn't. Good luck!</p>
 			<button class="btn btn-primary" onclick="window.location.reload()">
 				Refresh

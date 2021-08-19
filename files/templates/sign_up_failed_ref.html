@@ -9,9 +9,9 @@
 		<meta name="description" content="Sign up in under 27 seconds.">
 		<meta name="author" content="">
 		<meta property="og:type" content="article" />
-		<meta property="og:title" content="{{"SITE_NAME" | app_config}}" />
+		<meta property="og:title" content="{{'SITE_NAME' | app_config}}" />
 		<meta property="og:site_name" content="{{request.host}}" />
-		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
+		<meta property="og:image" content="{{'/assets/images/{{'SITE_NAME' | app_config}}/preview.png' | full_link}}" />
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="Sign up now! Dude bussy lmao">
 		<meta property="og:author" name="author" content="{{request.host_url}}" />
@@ -19,13 +19,13 @@
 
 		<meta name="twitter:card" content="summary_large_image"/>
 		<meta name="twitter:site" content="{{request.host_url}}">
-		<meta name="twitter:title" content="{{"SITE_NAME" | app_config}}" />
+		<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" />
 		<meta name="twitter:creator" content="{{request.host_url}}">
 		<meta name="twitter:description" content="Sign up now! Dude bussy lmao" />
-		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
+		<meta name="twitter:image" content="{{'/assets/images/{{'SITE_NAME' | app_config}}/preview.png' | full_link}}" />
 		<meta name="twitter:url" content="{{request.host}}" />
 
-		<title>{% if ref_user %}{{ref_user.username}} invites you to {{"SITE_NAME" | app_config}}{% else %}{{"SITE_NAME" | app_config}}{% endif %}</title>
+		<title>{% if ref_user %}{{ref_user.username}} invites you to {{'SITE_NAME' | app_config}}{% else %}{{'SITE_NAME' | app_config}}{% endif %}</title>
 
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -40,8 +40,8 @@
 		integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
 		crossorigin="anonymous"></script>
 
-		<!-- {{"SITE_NAME" | app_config}} CSS -->
-		<link rel="stylesheet" href="/assets/style/dark_ff66ac.css">
+		<!-- {{'SITE_NAME' | app_config}} CSS -->
+		<link rel="stylesheet" href="{{'DEFAULT_THEME' | app_config}}">
 
 </head>
 
@@ -69,7 +69,7 @@
 								<div class="col-10 col-md-7">
 
 										<div class="text-center mb-5">
-												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{"SITE_NAME" | app_config}}</span></a>
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{'SITE_NAME' | app_config}}</span></a>
 										</div>
 
 										<div id="register-form" class="">
@@ -142,7 +142,7 @@
 });
 </script>
 
-<!-- {{"SITE_NAME" | app_config}} JS -->
+<!-- {{'SITE_NAME' | app_config}} JS -->
 
 <script src="/assets/js/all_js.js"></script>
 

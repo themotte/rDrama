@@ -16,18 +16,19 @@ from files.__main__ import Base, cache
 from files.helpers.security import *
 
 site = environ.get("DOMAIN").strip()
-
+defaulttheme = environ.get("DEFAULT_COLOR").strip()
+defaultcolor = environ.get("DEFAULT_COLOR").strip()
 class User(Base, Stndrd, Age_times):
 	__tablename__ = "users"
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
-	namecolor = Column(String, default='ff66ac')
+	namecolor = Column(String, default=defaultcolor)
 	background = Column(String)
 	customtitle = Column(String)
 	customtitleplain = Column(String)
-	titlecolor = Column(String, default='ff66ac')
-	theme = Column(String, default='dark')
-	themecolor = Column(String, default='ff66ac')
+	titlecolor = Column(String, default=defaultcolor)
+	theme = Column(String, default=defaulttheme)
+	themecolor = Column(String, default=defaultcolor)
 	song = Column(String)
 	highres = Column(String)
 	profileurl = Column(String)
