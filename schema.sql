@@ -145,7 +145,6 @@ CREATE TABLE public.badge_defs (
     description character varying(256),
     icon character varying(64),
     kind integer,
-    rank integer,
     qualification_expr character varying(128)
 );
 
@@ -1049,7 +1048,8 @@ CREATE TABLE public.users (
     patron integer,
     zzz boolean DEFAULT false,
     controversial boolean,
-    background text
+    background text,
+    verified boolean
 );
 
 
