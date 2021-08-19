@@ -286,10 +286,9 @@ def edit_post(pid, v):
 
 	p.body = body
 	p.body_html = body_html
-	title = filter_title(request.form.get("title"))
-
+	title = request.form.get("title")
 	p.title = title
-	p.title_html = title
+	p.title_html = filter_title(title)
 
 	if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
 	g.db.add(p)
@@ -518,7 +517,7 @@ def filter_title(title):
 @validate_formkey
 def submit_post(v):
 
-	title = filter_title(request.form.get("title", ""))
+	title = request.form.get("title", "")
 
 	url = request.form.get("url", "")
 	
@@ -781,15 +780,13 @@ def submit_post(v):
 		url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
 
-	title_html = title
-
 	new_post_aux = SubmissionAux(id=new_post.id,
 								 url=url,
 								 body=body,
 								 body_html=body_html,
 								 embed_url=embed,
 								 title=title,
-								 title_html=title_html
+								 title_html=filter_title(title)
 								 )
 	g.db.add(new_post_aux)
 	g.db.flush()
