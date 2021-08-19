@@ -227,6 +227,9 @@ def post_id(pid, anything=None, v=None):
 @validate_formkey
 def edit_post(pid, v):
 
+	title = request.form.get("title")
+	if "<" in title: return {"error": f"Titles can't contain <"}
+
 	p = get_post(pid)
 
 	if not p.author_id == v.id:
@@ -286,7 +289,6 @@ def edit_post(pid, v):
 
 	p.body = body
 	p.body_html = body_html
-	title = request.form.get("title")
 	p.title = title
 	p.title_html = filter_title(title)
 
@@ -542,6 +544,8 @@ def submit_post(v):
 		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.form.get("body", "")), 400
 
+	elif "<" in title:
+		render_template("submit.html", v=v, error="Titles can't contain <", title=title[:500], url=url, body=request.form.get("body", "")), 400
 
 	parsed_url = urlparse(url)
 	if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get(
