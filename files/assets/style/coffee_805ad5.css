@@ -27730,6 +27730,10 @@ img.emoji {
   background-color: #DDD2C4 !important;
 }
 
+.nobackground {
+  background: None !important;
+}
+
 * {
   font-family: "Lato";
 }

@@ -27730,6 +27730,10 @@ img.emoji {
   background-color: #00001f !important;
 }
 
+.nobackground {
+  background: None !important;
+}
+
 #frontpage .post-title a:visited {
   color: #f0f0f0;
 }

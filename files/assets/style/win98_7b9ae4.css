@@ -27729,6 +27729,10 @@ img.emoji {
   background-color: #c0c0c0 !important;
 }
 
+.nobackground {
+  background: None !important;
+}
+
 * {
   box-shadow: none !important;
   transition: none !important;
