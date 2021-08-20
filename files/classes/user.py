@@ -470,7 +470,7 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"https://{site}/assets/images/default_bg.png"
+		else: return f"https://{site}/assets/images/default_bg.gif"
 
 	@cache.memoize()
 	def defaultpicture(self):
@@ -480,7 +480,8 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def profile_url(self):
 		if self.profileurl: return self.profileurl
-		else: return self.defaultpicture()
+		elif "rdrama" in site: return self.defaultpicture()
+		else: return f"https://{site}/assets/images/default-profile-pic.gif"
 
 	@property
 	def json_raw(self):

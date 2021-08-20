@@ -35,7 +35,7 @@
 <meta property="og:description" name="description" content="{{comment_info.body}}" />
 <meta property="og:author" name="author" content="{{'@'+comment_info.author.username}}" />
 <meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.title}} - {{'SITE_NAME' | app_config}}" />
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.png{% endif %}" />
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
 <meta property="og:url" content="{{comment_info.permalink | full_link}}" />
 <meta property="og:site_name" content="{{request.host}}" />
 
@@ -44,7 +44,7 @@
 <meta name="twitter:title" content="{{'@'+comment_info.author.username}} comments on {{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta name="twitter:creator" content="{{'@'+comment_info.author.username}}">
 <meta name="twitter:description" content="{{comment_info.body}}" />
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.png{% endif %}" />
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
 
 {% if linked_comment.author.is_private %}
@@ -61,7 +61,7 @@
 <meta property="og:description" name="description" content="{{p.realbody(V)}}" />
 <meta property="og:author" name="author" content="{{'@'+p.author.username}}" />
 <meta property="og:title" content="{{p.title}} - {{'SITE_NAME' | app_config}}" />
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.png{% endif %}" />
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
 <meta property="og:url" content="{{p.permalink | full_link}}" />
 <meta property="og:site_name" content="{{request.host}}" />
 
@@ -70,7 +70,7 @@
 <meta name="twitter:title" content="{{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta name="twitter:creator" content="{{'@'+p.author.username}}">
 <meta name="twitter:description" content="{{p.realbody(v)}}" />
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.png{% endif %}" />
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
 
 {% if p.author.is_private %}
@@ -181,7 +181,7 @@
 {% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") <= 5 else 100 %}
 <script type="text/javascript">
 	new BugController({
-		imageSprite: "/assets/images/fly-sprite.png",
+		imageSprite: "/assets/images/fly-sprite.gif",
 		canDie: false,
 		minBugs: {{minbugs}},
 		maxBugs: {{maxbugs}},

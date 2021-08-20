@@ -28,7 +28,7 @@
 <meta property="og:description" name="description" content="{{u.coins}} {{"COINS_NAME" | app_config}} - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers - {% endif %}{% if not u.is_private %}{{u.post_count}} Posts - {{u.comment_count}} Comments - {% endif %}{{u.bio}}" />
 <meta property="og:author" name="author" content="@{{u.username}}" />
 <meta property="og:title" content="{{u.username}}" />
-<meta property="og:image" content="{% if u.bannerurl %}{{u.banner_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.png{% endif %}" />
+<meta property="og:image" content="{% if u.bannerurl %}{{u.banner_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
 <meta property="og:url" content="{{u.url | full_link}}" />
 <meta property="og:site_name" content="{{request.host}}" />
 
@@ -37,7 +37,7 @@
 <meta name="twitter:title" content="{{u.username}}'s profile - {{'SITE_NAME' | app_config}}" />
 <meta name="twitter:creator" content="@{{u.username}}">
 <meta name="twitter:description" content="{{u.coins}} {{"COINS_NAME" | app_config}} - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{u.post_count}} Posts - {{u.comment_count}} Comments -{% endif %} {{u.bio}}" />
-<meta name="twitter:image" content="{% if u.bannerurl %}{{u.banner_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.png{% endif %}" />
+<meta name="twitter:image" content="{% if u.bannerurl %}{{u.banner_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
 <meta name="twitter:url" content="{{u.url | full_link}}" />
 {% endblock %}
 
