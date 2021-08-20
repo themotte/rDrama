@@ -173,12 +173,8 @@ def titles(v):
 def badges(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 
-	badges = [
-		x for x in g.db.query(BadgeDef).order_by(
-			text("rank asc, id asc")).all()]
-	return render_template("badges.html",
-						   v=v,
-						   badges=badges)
+	badges = g.db.query(BadgeDef).all()
+	return render_template("badges.html", v=v, badges=badges)
 
 @app.get("/blocks")
 @auth_desired
