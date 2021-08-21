@@ -474,7 +474,7 @@ class User(Base, Stndrd, Age_times):
 
 	@cache.memoize()
 	def defaultpicture(self):
-		pic = random.randint(1, 130)
+		pic = random.randint(1, 150)
 		return f"https://{site}/assets/images/defaultpictures/{pic}.gif"
 
 	@property
