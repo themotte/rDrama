@@ -225,9 +225,9 @@
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}
 						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
-						&nbsp;
 						{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Verified"></i>
-						&nbsp;{% endif %}		
+						{% endif %}
+						&nbsp;	
 						<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} style="color: #{{p.author.namecolor}};  font-weight: bold;" class="user-name"><img src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if p.author.patron %}class="patron" style="background-color:#{{p.author.namecolor}};"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{{p.author.customtitle | safe}}</bdi>{% endif %}
 						<span data-toggle="tooltip" data-placement="bottom" id="timestamp" title="">&nbsp;{{p.age_string}}</span>
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
