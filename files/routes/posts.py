@@ -240,7 +240,7 @@ def edit_post(pid, v):
 	body = request.form.get("body", "")
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	with CustomRenderer() as renderer: body_md = renderer.render(mistletoe.Document(body))
-	body_html = sanitize(body_md, linkgen=True)
+	body_html = sanitize(body_md)
 
 	# Run safety filter
 	bans = filter_comment_html(body_html)
@@ -708,7 +708,7 @@ def submit_post(v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	with CustomRenderer() as renderer:
 		body_md = renderer.render(mistletoe.Document(body))
-	body_html = sanitize(body_md, linkgen=True)
+	body_html = sanitize(body_md)
 
 	# Run safety filter
 	bans = filter_comment_html(body_html)
@@ -902,7 +902,7 @@ def submit_post(v):
 		body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={urllib.parse.quote(new_post.url)}&run=1) (click to archive)"
 		gevent.spawn(archiveorg, new_post.url)
 	with CustomRenderer(post_id=new_post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))
-	body_html = sanitize(body_md, linkgen=True)
+	body_html = sanitize(body_md)
 	c_aux = CommentAux(
 		id=c.id,
 		body_html=body_html,

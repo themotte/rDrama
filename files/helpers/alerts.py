@@ -13,7 +13,7 @@ def send_notification(vid, user, text):
 	with CustomRenderer() as renderer:
 		text_html = renderer.render(mistletoe.Document(text))
 
-	text_html = sanitize(text_html, linkgen=True)
+	text_html = sanitize(text_html)
 	
 	new_comment = Comment(author_id=vid,
 						  parent_submission=None,
@@ -38,7 +38,7 @@ def send_pm(vid, user, text):
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
 
-	text_html = sanitize(text_html, linkgen=True)
+	text_html = sanitize(text_html)
 
 	new_comment = Comment(author_id=vid,
 						  parent_submission=None,
@@ -61,7 +61,7 @@ def send_follow_notif(vid, user, text):
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
-	text_html = sanitize(text_html, linkgen=True)
+	text_html = sanitize(text_html)
 	
 	new_comment = Comment(author_id=1046,
 						  parent_submission=None,
@@ -87,7 +87,7 @@ def send_unfollow_notif(vid, user, text):
 
 	with CustomRenderer() as renderer:
 		text_html = renderer.render(mistletoe.Document(text))
-	text_html = sanitize(text_html, linkgen=True)
+	text_html = sanitize(text_html)
 	
 	new_comment = Comment(author_id=1046,
 						  parent_submission=None,
@@ -113,7 +113,7 @@ def send_block_notif(vid, user, text):
 
 	with CustomRenderer() as renderer:
 		text_html = renderer.render(mistletoe.Document(text))
-	text_html = sanitize(text_html, linkgen=True)
+	text_html = sanitize(text_html)
 	
 	new_comment = Comment(author_id=1046,
 						  parent_submission=None,
@@ -139,7 +139,7 @@ def send_unblock_notif(vid, user, text):
 
 	with CustomRenderer() as renderer:
 		text_html = renderer.render(mistletoe.Document(text))
-	text_html = sanitize(text_html, linkgen=True)
+	text_html = sanitize(text_html)
 	
 	new_comment = Comment(author_id=1046,
 						  parent_submission=None,
@@ -165,7 +165,7 @@ def send_admin(vid, text):
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
 
-	text_html = sanitize(text_html, linkgen=True)
+	text_html = sanitize(text_html)
 
 	new_comment = Comment(author_id=vid,
 						  parent_submission=None,

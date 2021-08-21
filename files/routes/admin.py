@@ -566,7 +566,7 @@ def admin_title_change(user_id, v):
 	new_name=request.form.get("title").strip()
 
 	user.customtitleplain=new_name
-	new_name = sanitize(new_name, linkgen=True)
+	new_name = sanitize(new_name)
 
 	user=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=user.id).first()
 	user.customtitle=new_name
@@ -703,7 +703,7 @@ def ban_post(post_id, v):
 	ban_reason = ban_reason.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	with CustomRenderer() as renderer:
 		ban_reason = renderer.render(mistletoe.Document(ban_reason))
-	ban_reason = sanitize(ban_reason, linkgen=True)
+	ban_reason = sanitize(ban_reason)
 
 	post.ban_reason = ban_reason
 

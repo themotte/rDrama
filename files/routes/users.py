@@ -116,7 +116,7 @@ def messagereply(v, username, id):
 	if existing: return redirect('/notifications?messages=true')
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
-	text_html = sanitize(text_html, linkgen=True)
+	text_html = sanitize(text_html)
 	parent = get_comment(int(id), v=v)
 	new_comment = Comment(author_id=v.id,
 							parent_submission=None,
