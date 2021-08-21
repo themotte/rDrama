@@ -59,8 +59,7 @@ _allowed_styles =[
 
 # filter to make all links show domain on hover
 
-
-def a_modify(attrs, new=False):
+def a_modify(attrs):
 
 	raw_url=attrs.get((None, "href"), None)
 	if raw_url:
@@ -85,16 +84,14 @@ def a_modify(attrs, new=False):
 	return attrs
 
 
+def sanitize(sanitized):
 
+	sanitized = sanitized.replace("\ufeff", "").replace("m.youtube.com", "youtube.com")
 
+	for i in re.finditer('https://i.imgur.com/(.*?)\.(jpg|png|jpeg|)', sanitized):
+		sanitized = sanitized.replace(i.group(1), i.group(1) + "_d." + i.group(2))
 
-
-_clean_wo_links = bleach.Cleaner(tags=_allowed_tags,
-								 attributes=_allowed_attributes,
-								 protocols=_allowed_protocols,
-								 )
-
-_clean_w_links = bleach.Cleaner(tags=_allowed_tags,
+	sanitized = bleach.Cleaner(tags=_allowed_tags,
 								attributes=_allowed_attributes,
 								protocols=_allowed_protocols,
 								styles=_allowed_styles,
@@ -104,74 +101,64 @@ _clean_w_links = bleach.Cleaner(tags=_allowed_tags,
 												 callbacks=[a_modify]
 												 )
 										 ]
-								)
+								).clean(sanitized)
+
+	#soupify
+	soup = BeautifulSoup(sanitized, features="html.parser")
+
+	#img elements - embed
+	for tag in soup.find_all("img"):
+
+		url = tag.get("src", "")
+		if not url: continue
+
+		if "profile-pic-20" not in tag.get("class", ""):
+			#print(tag.get('class'))
+			# set classes and wrap in link
+
+			tag["rel"] = "nofollow"
+			tag["style"] = "max-height: 100px; max-width: 100%;"
+			tag["class"] = "in-comment-image rounded-sm my-2"
+
+			link = soup.new_tag("a")
+			link["href"] = tag["src"]
+			link["rel"] = "nofollow noopener"
+			link["target"] = "_blank"
+
+			link["onclick"] = f"expandDesktopImage('{tag['src']}');"
+			link["data-toggle"] = "modal"
+			link["data-target"] = "#expandImageModal"
+
+			tag.wrap(link)
+
+	#disguised link preventer
+	for tag in soup.find_all("a"):
+
+		if re.match("https?://\S+", str(tag.string)):
+			try:
+				tag.string = tag["href"]
+			except:
+				tag.string = ""
+
+	#clean up tags in code
+	for tag in soup.find_all("code"):
+		tag.contents=[x.string for x in tag.contents if x.string]
+
+	#whatever else happens with images, there are only two sets of classes allowed
+	for tag in soup.find_all("img"):
+		if 'profile-pic-20' not in tag.attrs.get("class",""):
+			tag.attrs['class']="in-comment-image rounded-sm my-2"
+
+	#table format
+	for tag in soup.find_all("table"):
+		tag.attrs['class']="table table-striped"
+
+	for tag in soup.find_all("thead"):
+		tag.attrs['class']="bg-primary text-white"
 
 
-def sanitize(text, linkgen=False):
+	sanitized = str(soup)
 
-	text = text.replace("\ufeff", "").replace("m.youtube.com", "youtube.com")
-	
-	if linkgen:
-		sanitized = _clean_w_links.clean(text)
-
-		#soupify
-		soup = BeautifulSoup(sanitized, features="html.parser")
-
-		#img elements - embed
-		for tag in soup.find_all("img"):
-
-			url = tag.get("src", "")
-			if not url: continue
-
-			if "profile-pic-20" not in tag.get("class", ""):
-				#print(tag.get('class'))
-				# set classes and wrap in link
-
-				tag["rel"] = "nofollow"
-				tag["style"] = "max-height: 100px; max-width: 100%;"
-				tag["class"] = "in-comment-image rounded-sm my-2"
-
-				link = soup.new_tag("a")
-				link["href"] = tag["src"]
-				link["rel"] = "nofollow noopener"
-				link["target"] = "_blank"
-
-				link["onclick"] = f"expandDesktopImage('{tag['src']}');"
-				link["data-toggle"] = "modal"
-				link["data-target"] = "#expandImageModal"
-
-				tag.wrap(link)
-
-		#disguised link preventer
-		for tag in soup.find_all("a"):
-
-			if re.match("https?://\S+", str(tag.string)):
-				try:
-					tag.string = tag["href"]
-				except:
-					tag.string = ""
-
-		#clean up tags in code
-		for tag in soup.find_all("code"):
-			tag.contents=[x.string for x in tag.contents if x.string]
-
-		#whatever else happens with images, there are only two sets of classes allowed
-		for tag in soup.find_all("img"):
-			if 'profile-pic-20' not in tag.attrs.get("class",""):
-				tag.attrs['class']="in-comment-image rounded-sm my-2"
-
-		#table format
-		for tag in soup.find_all("table"):
-			tag.attrs['class']="table table-striped"
-
-		for tag in soup.find_all("thead"):
-			tag.attrs['class']="bg-primary text-white"
-
-
-		sanitized = str(soup)
-
-	else:
-		sanitized = _clean_wo_links.clean(text)
 	
 	start = '&lt;s&gt;'
 	end = '&lt;/s&gt;' 
