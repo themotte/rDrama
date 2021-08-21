@@ -114,15 +114,13 @@
 									<i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{u.original_username}}"></i>
 								</span>
 								{% endif %}
+								{% if u.verified %}
+									<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Verified"></i>
+								{% endif %}
 								{% if u.admin_level > 1 or (u.admin_level == 1 and (not v or v.admin_level < 2)) %}
-								<span>
 									<i class="fas fa-broom text-admin align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>
-									{% if u.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Verified"></i>{% endif %}
-								</span>
 								{% elif u.admin_level == 1 %}
-								<span>
 									<i class="fas fa-broom align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Fake Admin"></i>
-								</span>
 								{% endif %}
 								{% if v and v.has_follower(u) %}
 									<span class="text-primary badge badge-secondary text-small align-middle ml-2">Follows you</span>
@@ -357,15 +355,13 @@
 						<i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{u.original_username}}"></i>
 					</span>
 				{% endif %}
+				{% if u.verified %}
+					<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Verified"></i>
+				{% endif %}
 				{% if u.admin_level > 1 or (u.admin_level == 1 and (not v or v.admin_level < 2)) %}
-				<span>
 					<i class="fas fa-broom text-admin align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>
-					{% if u.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Verified"></i>{% endif %}
-				</span>
 				{% elif u.admin_level == 1 %}
-				<span>
 					<i class="fas fa-broom align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Fake Admin"></i>
-				</span>
 				{% endif %}
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
