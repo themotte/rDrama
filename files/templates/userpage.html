@@ -238,7 +238,7 @@
 
 						</div>
 						<pre></pre>
-						{% if u.is_banned %}
+						{% if u.is_suspended %}
 							<form action="/unban_user/{{u.id}}/" method="post" action="">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<div class="custom-control custom-checkbox">
@@ -457,7 +457,7 @@
 
 						</div>
 						<pre></pre>
-						{% if u.is_banned %}
+						{% if u.is_suspended %}
 							<form action="/unban_user/{{u.id}}" method="post">
 								<input type="hidden" name="formkey", value="{{v.formkey}}">
 								<br />
