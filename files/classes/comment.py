@@ -4,6 +4,7 @@ from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 from files.helpers.lazy import lazy
+from files.helpers.const import SLURS
 from files.__main__ import Base
 from .mix_ins import *
 from .flags import CommentFlag
@@ -246,7 +247,10 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	def realbody(self, v):
 		body = self.comment_aux.body_html
-		if not v or v.slurreplacer: body = body.replace(" nigger"," 🏀").replace(" Nigger"," 🏀").replace(" NIGGER"," 🏀").replace(" pedo"," libertarian").replace(" Pedo"," Libertarian ").replace(" PEDO"," LIBERTARIAN ").replace(" tranny"," 🚄").replace(" Tranny"," 🚄").replace(" TRANNY"," 🚄").replace("  fag","  cute twink").replace("  Fag","  Cute twink").replace("  FAG","  CUTE TWINK").replace(" faggot"," cute twink").replace(" Faggot"," Cute twink").replace(" FAGGOT"," CUTE TWINK").replace(" steve akins"," penny verity oaken").replace(" Steve Akins"," Penny Verity Oaken").replace(" STEVE AKINS"," PENNY VERITY OAKEN").replace(" RETARD"," RSLUR").replace(" rapist"," male feminist").replace(" Rapist"," Male feminist").replace(" RAPIST"," MALE FEMINIST").replace(" RETARD"," RSLUR").replace(" rapist"," male feminist").replace(" Rapist"," Male feminist").replace(" RAPIST"," MALE FEMINIST").replace(" RETARD"," RSLUR").replace(" rapist"," male feminist").replace(" Rapist"," Male feminist").replace(" RAPIST"," MALE FEMINIST").replace(" kill yourself"," keep yourself safe").replace(" KILL YOURSELF"," KEEP YOURSELF SAFE").replace(" trannie"," 🚄").replace(" Trannie"," 🚄").replace(" TRANNIE"," 🚄").replace(" troon"," 🚄").replace(" Troon"," 🚄").replace(" TROON"," 🚄")
+
+		if not v or v.slurreplacer: 
+			for s,r in SLURS.items(): body = body.replace(s, r) 
+
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
 		if v and v.controversial:

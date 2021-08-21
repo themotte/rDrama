@@ -11,6 +11,7 @@ from files.helpers.session import *
 from files.helpers.thumbs import *
 from files.helpers.alerts import send_notification
 from files.helpers.discord import send_message
+from files.helpers.const import *
 from files.classes import *
 from flask import *
 from io import BytesIO
@@ -277,7 +278,7 @@ def edit_post(pid, v):
 		if badlink:
 			if badlink.autoban:
 				text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-				send_notification(1046, v, text)
+				send_notification(NOTIFICATIONS_ACCOUNT, v, text)
 				v.ban(days=1, reason="spam")
 
 				return redirect('/notifications')
@@ -301,7 +302,7 @@ def edit_post(pid, v):
 
 		g.db.add(p)
 
-		c_jannied = Comment(author_id=2360,
+		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
 			parent_submission=p.id,
 			level=1,
 			over_18=False,
@@ -314,12 +315,7 @@ def edit_post(pid, v):
 		g.db.add(c_jannied)
 		g.db.flush()
 
-		body = f"""Hi @{v.username},\n\nYour post has been automatically removed because you forgot
-				to include `trans lives matter`.\n\nDon't worry, we're here to help! We 
-				won't let you post or comment anything that doesn't express your love and acceptance towards 
-				the trans community. Feel free to resubmit your post with `trans lives matter` 
-				included. \n\n*This is an automated message; if you need help,
-				you can message us [here](/contact).*"""
+		body = AGENDAPOSTER_MSG.format(username=v.username)
 
 		with CustomRenderer(post_id=p.id) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))
@@ -343,7 +339,7 @@ def edit_post(pid, v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
-	for x in notify_users: send_notification(1046, x, f"@{v.username} has mentioned you: https://{site}{p.permalink}")
+	for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: https://{site}{p.permalink}")
 
 	return redirect(p.permalink)
 
@@ -670,7 +666,7 @@ def submit_post(v):
 	if max(len(similar_urls), len(similar_posts)) >= threshold:
 
 		text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-		send_notification(1046, v, text)
+		send_notification(NOTIFICATIONS_ACCOUNT, v, text)
 
 		v.ban(reason="Spamming.",
 			  days=1)
@@ -685,7 +681,7 @@ def submit_post(v):
 			post.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
 			g.db.add(post)
 			ma=ModAction(
-					user_id=2360,
+					user_id=AUTOJANNY_ACCOUNT,
 					target_submission_id=post.id,
 					kind="ban_post",
 					note="spam"
@@ -749,7 +745,7 @@ def submit_post(v):
 		if badlink:
 			if badlink.autoban:
 				text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-				send_notification(1046, v, text)
+				send_notification(NOTIFICATIONS_ACCOUNT, v, text)
 				v.ban(days=1, reason="spam")
 
 				return redirect('/notifications')
@@ -830,12 +826,12 @@ def submit_post(v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
-	for x in notify_users: send_notification(1046, x, f"@{v.username} has mentioned you: https://{site}{new_post.permalink}")
+	for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: https://{site}{new_post.permalink}")
 		
 	if not new_post.private:
 		for follow in v.followers:
 			user = get_account(follow.user_id)
-			send_notification(2360, user, f"@{v.username} has made a new post: [{title}](https://{site}{new_post.permalink})")
+			send_notification(AUTOJANNY_ACCOUNT, user, f"@{v.username} has made a new post: [{title}](https://{site}{new_post.permalink})")
 
 	g.db.add(new_post)
 	g.db.flush()
@@ -847,7 +843,7 @@ def submit_post(v):
 
 		g.db.add(new_post)
 
-		c_jannied = Comment(author_id=2360,
+		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
@@ -860,12 +856,7 @@ def submit_post(v):
 		g.db.add(c_jannied)
 		g.db.flush()
 
-		body = f"""Hi @{v.username},\n\nYour post has been automatically removed because you forgot
-				to include `trans lives matter`.\n\nDon't worry, we're here to help! We 
-				won't let you post or comment anything that doesn't express your love and acceptance towards 
-				the trans community. Feel free to resubmit your post with `trans lives matter` 
-				included. \n\n*This is an automated message; if you need help,
-				you can message us [here](/contact).*"""
+		body = AGENDAPOSTER_MSG.format(username=v.username)
 
 		with CustomRenderer(post_id=new_post.id) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))

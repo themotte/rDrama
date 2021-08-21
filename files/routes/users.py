@@ -8,6 +8,7 @@ from files.classes.user import ViewerRelationship
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
 from files.helpers.markdown import *
+from files.helpers.const import *
 from files.mail import *
 from flask import *
 from files.__main__ import app, limiter
@@ -15,10 +16,8 @@ from pusher_push_notifications import PushNotifications
 
 site = environ.get("DOMAIN").strip()
 
-PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
-
 beams_client = PushNotifications(
-		instance_id='02ddcc80-b8db-42be-9022-44c546b4dce6',
+		instance_id=PUSHER_INSTANCE_ID,
 		secret_key=PUSHER_KEY,
 )
 
@@ -29,7 +28,7 @@ def suicide(v, username):
 	if v.admin_level == 0 and t - v.suicide_utc < 86400: return "", 204
 	user = get_user(username)
 	suicide = f"Hi there,\n\nA [concerned user]({v.url}) reached out to us about you.\n\nWhen you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.\n\nThere are resources available in your area that are free, confidential, and available 24/7:\n\n- Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)\n- Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)\n- Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.\nIf you don't see a resource in your area above, the moderators at r/SuicideWatch keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now\n\nIf you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.\n\nIt may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.\n\nYour fellow users care about you and there are people who want to help."
-	send_notification(1046, user, suicide)
+	send_notification(NOTIFICATIONS_ACCOUNT, user, suicide)
 	v.suicide_utc = t
 	g.db.add(v)
 	return "", 204
@@ -327,7 +326,7 @@ def u_username(username, v=None):
 		# 		g.db.add(v)
 		# 		u.coins += 500
 		# 		g.db.add(u)
-		# 		send_notification(1046, u, f"@{v.username} has paid rent!")
+		# 		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has paid rent!")
 		# 		paidrent = True
 
 		# if not paidrent:
@@ -433,7 +432,7 @@ def u_username_comments(username, v=None):
 		# 		g.db.add(v)
 		# 		u.coins += 500
 		# 		g.db.add(u)
-		# 		send_notification(1046, u, f"@{v.username} has paid rent!")
+		# 		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has paid rent!")
 		# 		paidrent = True
 
 		# if not paidrent:
