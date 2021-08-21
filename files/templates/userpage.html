@@ -115,6 +115,7 @@
 								</span>
 								{% endif %}
 								{% if u.verified %}
+									&nbsp;
 									<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Verified"></i>
 								{% endif %}
 								{% if u.admin_level > 1 or (u.admin_level == 1 and (not v or v.admin_level < 2)) %}
