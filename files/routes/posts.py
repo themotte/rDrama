@@ -610,7 +610,7 @@ def submit_post(v):
 			if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
 			else: embed = f"https://youtube.com/embed/{yt_id}"
 
-	elif app.config['SERVER_NAME'] in domain and "/post/" in url:
+	elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 		id = url.split("/post/")[1]
 		if "/" in id: id = id.split("/")[0]
 		embed = id
