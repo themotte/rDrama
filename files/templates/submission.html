@@ -234,6 +234,18 @@
 						&nbsp;&nbsp;{{p.views}} views
 					</div>
 					
+					{% if p.active_flags %}
+					<div id="flaggers" class="flaggers d-none">
+						<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+						<pre></pre>
+						<ul style="padding-left:20px; margin-bottom: 0;">
+							{% for f in p.ordered_flags %}
+								<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					{% endif %}
+				
 					{% if p.realurl(v) %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3"><a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}" rel="nofollow noopener">{{title | safe}}</a></h1>					
 					{% else %}
@@ -493,18 +505,6 @@
 	</div>
 
 </div>
-
-{% if p.active_flags %}
-	<div id="flaggers" class="flaggers d-none">
-		<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
-		<pre></pre>
-		<ul style="padding-left:20px; margin-bottom: 0;">
-			{% for f in p.ordered_flags %}
-				<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
-			{% endfor %}
-		</ul>
-	</div>
-{% endif %}
 
 <div class="row border-md-0 comment-section pb-3">
 	<div class="col border-top">

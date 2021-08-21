@@ -138,6 +138,18 @@
 				<span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 				{% endif %}
 			</div>
+			
+			{% if c.active_flags %}
+			<div id="flaggers-{{c.id}}" class="flaggers d-none">
+				<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+				<pre></pre>
+				<ul style="padding-left:20px; margin-bottom: 0;">
+					{% for f in c.ordered_flags %}
+						<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
 
 			{% if c.is_banned and c.ban_reason %}
 			<div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">Reason: {{c.ban_reason}}</div>
@@ -190,18 +202,6 @@
 					<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="d-block d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 					<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="d-block d-md-none btn btn-primary ml-2" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
 				</form>
-			</div>
-			{% endif %}
-
-			{% if c.active_flags %}
-			<div id="flaggers-{{c.id}}" class="flaggers d-none">
-				<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
-				<pre></pre>
-				<ul style="padding-left:20px; margin-bottom: 0;">
-					{% for f in c.ordered_flags %}
-						<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
-					{% endfor %}
-				</ul>
 			</div>
 			{% endif %}
 		
