@@ -88,8 +88,8 @@ def sanitize(sanitized):
 
 	sanitized = sanitized.replace("\ufeff", "").replace("m.youtube.com", "youtube.com")
 
-	for i in re.finditer('https://i.imgur.com/(.*?)\.(jpg|png|jpeg|)', sanitized):
-		sanitized = sanitized.replace(i.group(1), i.group(1) + "_d." + i.group(2))
+	for i in re.finditer('https://i.imgur.com/((.*?)\.(jpg|png|jpeg))', sanitized):
+		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d." + i.group(3) + "?maxwidth=9999")
 
 	sanitized = bleach.Cleaner(tags=_allowed_tags,
 								attributes=_allowed_attributes,
