@@ -158,7 +158,7 @@ def api_comment(v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
-	body_html = sanitize(body_md, linkgen=True)
+	body_html = sanitize(body_md)
 
 	# Run safety filter
 	bans = filter_comment_html(body_html)
@@ -281,7 +281,7 @@ def api_comment(v):
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		with CustomRenderer(post_id=parent_id) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))
-		body_html = sanitize(body_md, linkgen=True)
+		body_html = sanitize(body_md)
 
 	c_aux = CommentAux(
 		id=c.id,
@@ -341,7 +341,7 @@ def api_comment(v):
 		body = random.choice(LONGPOST_REPLIES)
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md, linkgen=True)
+		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c2.id,
 			body_html=body_html2,
@@ -371,7 +371,7 @@ def api_comment(v):
 	
 		body = "zoz"
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md, linkgen=True)
+		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c2.id,
 			body_html=body_html2,
@@ -397,7 +397,7 @@ def api_comment(v):
 	
 		body = "zle"
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md, linkgen=True)
+		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c3.id,
 			body_html=body_html2,
@@ -423,7 +423,7 @@ def api_comment(v):
 	
 		body = "zozzle"
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md, linkgen=True)
+		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c4.id,
 			body_html=body_html2,
@@ -530,7 +530,7 @@ def edit_comment(cid, v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	with CustomRenderer(post_id=c.post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))
-	body_html = sanitize(body_md, linkgen=True)
+	body_html = sanitize(body_md)
 
 	bans = filter_comment_html(body_html)
 
@@ -624,7 +624,7 @@ def edit_comment(cid, v):
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		with CustomRenderer(post_id=c.parent_submission) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))
-		body_html = sanitize(body_md, linkgen=True)
+		body_html = sanitize(body_md)
 
 	c.body = body
 	c.body_html = body_html

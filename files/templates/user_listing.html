@@ -21,8 +21,8 @@
 					{% endif %}
 				</div>
 
-				{% if not hide_bios %}
-				<div class="card-text">{{u.bio_html | safe}}</div>
+				{% if not hide_bios and u.bio_html %}
+					<div class="card-text">{{u.bio_html | safe}}</div>
 				{% endif %}
 			</div>
 		</div>
