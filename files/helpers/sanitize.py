@@ -192,7 +192,7 @@ def sanitize(sanitized):
 		htmlsource = f'<iframe src="{url}" width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>'
 		sanitized = sanitized.replace(replacing, htmlsource)
 
-	sanitized = sanitized.replace("https://mobile.twitter.com", "https://twitter.com")
+	sanitized = sanitized.replace("https://mobile.", "https://").replace("https://m.", "https://")
 
 	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")
