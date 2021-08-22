@@ -4,6 +4,7 @@ from files.classes import *
 from flask import g
 from .markdown import *
 from .sanitize import *
+from .const import *
 
 
 def send_notification(vid, user, text):
@@ -63,7 +64,7 @@ def send_follow_notif(vid, user, text):
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=1046,
+	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
 						  parent_submission=None,
 						  distinguish_level=6,
 						  )
@@ -89,7 +90,7 @@ def send_unfollow_notif(vid, user, text):
 		text_html = renderer.render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=1046,
+	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
 						  parent_submission=None,
 						  distinguish_level=6,
 						  )
@@ -115,7 +116,7 @@ def send_block_notif(vid, user, text):
 		text_html = renderer.render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=1046,
+	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
 						  parent_submission=None,
 						  distinguish_level=6,
 						  )
@@ -141,7 +142,7 @@ def send_unblock_notif(vid, user, text):
 		text_html = renderer.render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=1046,
+	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
 						  parent_submission=None,
 						  distinguish_level=6,
 						  )

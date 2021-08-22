@@ -4,6 +4,7 @@ import pyotp
 
 from files.helpers.discord import delete_role
 from files.helpers.images import *
+from files.helpers.const import *
 from .alts import Alt
 from .submission import SaveRelationship
 from .comment import Notification
@@ -345,11 +346,11 @@ class User(Base, Stndrd, Age_times):
 	@lazy
 	def post_notifications_count(self):
 		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(
-			Comment.author_id == 2360).count()
+			Comment.author_id == AUTOJANNY_ACCOUNT).count()
 
 	def notification_subscriptions(self, page=1, all_=False):
 
-		notifications = self.notifications.join(Notification.comment).filter(Comment.author_id == 2360)
+		notifications = self.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT)
 
 		notifications = notifications.options(
 			contains_eager(Notification.comment)
@@ -370,7 +371,7 @@ class User(Base, Stndrd, Age_times):
 		notifications = self.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
-			Comment.author_id != 2360,
+			Comment.author_id != AUTOJANNY_ACCOUNT,
 		)
 
 		if not all_:
@@ -536,7 +537,7 @@ class User(Base, Stndrd, Age_times):
 			self.profileurl = None
 			delete_role(self, "linked")
 
-		self.is_banned = admin.id if admin else 2360
+		self.is_banned = admin.id if admin else AUTOJANNY_ACCOUNT
 		if reason: self.ban_reason = reason
 
 		g.db.add(self)

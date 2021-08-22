@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
 from files.mail import *
 from files.__main__ import app, limiter
+from files.helpers.const import *
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
@@ -315,8 +316,9 @@ def sign_up_post(v):
 			ref_user.refresh_selfset_badges()
 			g.db.add(ref_user)
 
-	users = g.db.query(User).count()
-	if users == 0: admin_level=6
+	id_1 = g.db.query(User).filter_by(id=1).count()
+	users_count = g.db.query(User).count() #paranoid
+	if id_1 == 0 and users_count < 6: admin_level=6
 	else: admin_level=0
 
 	# make new user
@@ -355,7 +357,7 @@ def sign_up_post(v):
 	if email: send_verification_email(new_user)
 
 	# send welcome message
-	if "rdrama" in request.host: send_notification(1046, new_user, "Dude bussy lmao")
+	if "rdrama" in request.host: send_notification(NOTIFICATIONS_ACCOUNT, new_user, "Dude bussy lmao")
 
 	session["user_id"] = new_user.id
 	session["session_id"] = token_hex(16)

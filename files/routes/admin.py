@@ -12,6 +12,7 @@ from files.helpers.markdown import *
 from files.helpers.security import *
 from files.helpers.get import *
 from files.helpers.images import *
+from files.helpers.const import *
 from files.classes import *
 from flask import *
 import matplotlib.pyplot as plt
@@ -177,7 +178,7 @@ def badge_grant_post(v):
 	\n\n{new_badge.name}
 	"""
 
-	send_notification(1046, user, text)
+	send_notification(NOTIFICATIONS_ACCOUNT, user, text)
 
 	if badge_id in [21,22,23,24,28]:
 		user.patron = int(str(badge_id)[-1])
@@ -624,7 +625,7 @@ def ban_user(user_id, v):
 			if x.admin_level > 0: break
 			x.ban(admin=v, reason=reason)
 
-	send_notification(1046, user, text)
+	send_notification(NOTIFICATIONS_ACCOUNT, user, text)
 	
 	if days == 0: duration = "permanent"
 	elif days == 1: duration = "1 day"
@@ -669,7 +670,7 @@ def unban_user(user_id, v):
 			if x.admin_level == 0:
 				x.unban()
 
-	send_notification(1046, user,
+	send_notification(NOTIFICATIONS_ACCOUNT, user,
 					  "Your account has been reinstated. Please carefully review and abide by the [rules](/post/2510) to ensure that you don't get suspended again.")
 
 	ma=ModAction(

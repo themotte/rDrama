@@ -1,5 +1,6 @@
 from files.__main__ import app
 from .get import *
+from files.helpers import const
 
 
 @app.template_filter("full_link")
@@ -20,3 +21,9 @@ def post_embed(id, v):
 	p = get_post(id, graceful=True)
 	
 	return render_template("submission_listing.html", listing=[p], v=v)
+
+@app.context_processor
+def inject_constants():
+	constants = [c for c in dir(const) if not c.startswith("_")]
+	return {c:getattr(const, c) for c in constants}
+

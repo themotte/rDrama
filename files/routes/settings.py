@@ -4,6 +4,7 @@ from files.helpers.sanitize import *
 from files.helpers.filters import filter_comment_html
 from files.helpers.markdown import *
 from files.helpers.discord import remove_user, set_nick
+from files.helpers.const import *
 from files.mail import *
 from files.__main__ import app, cache
 import youtube_dl
@@ -466,7 +467,7 @@ def settings_block_user(v):
 	if v.has_block(user):
 		return {"error": f"You have already blocked @{user.username}."}, 409
 
-	if user.id == 1046:
+	if user.id == NOTIFICATIONS_ACCOUNT:
 		return {"error": "You can't block @files."}, 409
 
 	new_block = UserBlock(user_id=v.id,
