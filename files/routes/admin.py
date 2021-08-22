@@ -111,6 +111,7 @@ def admin_home(v):
 @app.post("/admin/monthly")
 @admin_level_required(6)
 def monthly(v):
+	_awards = []
 	for u in g.db.query(User).filter(User.patron > 0).all():
 		grant_awards = {}
 
@@ -126,8 +127,6 @@ def monthly(v):
 			grant_awards["ban"] = 3
 
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
-
-		_awards = []
 
 		for name in grant_awards:
 			for count in range(grant_awards[name]):
