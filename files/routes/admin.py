@@ -111,8 +111,9 @@ def admin_home(v):
 @app.post("/admin/monthly")
 @admin_level_required(6)
 def monthly(v):
-	grant_awards = {}
 	for u in g.db.query(User).filter(User.patron > 0).all():
+		grant_awards = {}
+
 		if u.patron == 1:
 			grant_awards["shit"] = 1
 		elif u.patron == 2:
@@ -124,20 +125,20 @@ def monthly(v):
 			grant_awards["shit"] = 10
 			grant_awards["ban"] = 3
 
-	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
-	_awards = []
+		_awards = []
 
-	for name in grant_awards:
-		for count in range(grant_awards[name]):
+		for name in grant_awards:
+			for count in range(grant_awards[name]):
 
-			thing += 1
+				thing += 1
 
-			_awards.append(AwardRelationship(
-				id=thing,
-				user_id=v.id,
-				kind=name
-			))
+				_awards.append(AwardRelationship(
+					id=thing,
+					user_id=u.id,
+					kind=name
+				))
 
 	g.db.bulk_save_objects(_awards)
 
