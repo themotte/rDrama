@@ -145,7 +145,7 @@ def monthly(v):
 		for key, value in grant_awards.items():
 			text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
 
-		send_notification(NOTIFICATIONS_ACCOUNT, user, text)
+		send_notification(NOTIFICATIONS_ACCOUNT, u, text)
 
 	g.db.bulk_save_objects(_awards)
 
