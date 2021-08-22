@@ -205,7 +205,7 @@ def themecolor(v):
 	g.db.add(v)
 	return redirect("/settings/profile")
 
-@app.get("/settings/gumroad")
+@app.post("/settings/gumroad")
 @auth_required
 @validate_formkey
 def gumroad(v):
@@ -221,16 +221,13 @@ def gumroad(v):
 	response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
 
 	if len(response) == 0:
-		return render_template("settings_profile.html",
-								v=v,
-								error="Email not found")
+		return jsonify({"error": "Email not found"})
 
 	response = response[0]
 	tier = tiers[response["variants_and_quantity"]]
 	if v.patron == tier:
-		return render_template("settings_profile.html",
-								v=v,
-								error="Patron status already verified")
+		return jsonify({"error": "Patron rewards already claimed"})
+
 	v.patron = tier
 
 	grant_awards = {}
@@ -267,9 +264,7 @@ def gumroad(v):
 	g.db.bulk_save_objects(_awards)
 
 	g.db.add(v)
-	return render_template("settings_profile.html",
-							v=v,
-							msg="Patron status verified!")
+	return jsonify({"message": "Patron rewards claimed"})
 
 @app.post("/settings/titlecolor")
 @auth_required

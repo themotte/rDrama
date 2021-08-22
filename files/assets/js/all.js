@@ -327,7 +327,11 @@ function post_toast(url, callback, data) {
 		if (xhr.status >= 200 && xhr.status < 300) {
 			$('#toast-post-success').toast('dispose');
 			$('#toast-post-success').toast('show');
-			document.getElementById('toast-post-success-text').innerText = "Action successful!";
+			try {
+				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+			} catch(e) {
+				document.getElementById('toast-post-success-text').innerText = "Action successful!";
+			}
 			callback(xhr)
 			return true
 
