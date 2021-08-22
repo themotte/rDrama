@@ -52,6 +52,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	stickied = Column(Boolean, default=False)
 	is_pinned = Column(Boolean, default=False)
 	private = Column(Boolean, default=False)
+	comment_count = Column(Integer, default=0)
 	comments = relationship(
 		"Comment",
 		lazy="joined",
@@ -94,11 +95,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	def __repr__(self):
 		return f"<Submission(id={self.id})>"
-
-	@property
-	@lazy
-	def comment_count(self):
-		return len(self.comments)
 
 	@property
 	@lazy

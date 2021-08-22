@@ -269,8 +269,10 @@ def api_comment(v):
 				app_id=v.client.application.id if v.client else None,
 				shadowbanned=v.shadowbanned
 				)
+
 	g.db.add(c)
 	g.db.flush()
+
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
@@ -505,6 +507,9 @@ def api_comment(v):
 	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
+	parent_post.comment_count = g.db.query(Comment).filter_by(parent_submission=parent_post.id).count()
+	g.db.add(parent_post)
+	g.db.flush()
 
 	if request.headers.get("Authorization"): return c.json
 	else: return jsonify({"html": render_template("comments.html",
