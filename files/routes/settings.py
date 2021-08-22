@@ -205,7 +205,7 @@ def themecolor(v):
 	g.db.add(v)
 	return redirect("/settings/profile")
 
-@app.post("/settings/gumroad")
+@app.get("/settings/gumroad")
 @auth_required
 @validate_formkey
 def gumroad(v):
