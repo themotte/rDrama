@@ -14,7 +14,7 @@ def banaward_trigger(post=None, comment=None):
 
     if author.admin_level < 1:
         if not author.is_suspended:
-            author.ban(reason="1-day ban award used", days=1)
+            author.ban(reason="one-day ban award used", days=1)
 
             send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
         elif author.unban_utc > 0:
