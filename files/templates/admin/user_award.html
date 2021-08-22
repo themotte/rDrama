@@ -63,4 +63,9 @@
 <input class="btn btn-primary mt-3" type="submit" value="Grant Awards">
 
 </form>
+
+<pre></pre>
+{% if v.id in [1,28,995]}
+	<div><a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/admin/monthly')">Grant Monthly Awards</a></div>
+{% endif %}
 {% endblock %}

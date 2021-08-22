@@ -40,7 +40,7 @@ def participation_stats(v):
 
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
 
-@app.get("/patrons")
+@app.get("/paypigs")
 @auth_desired
 def patrons(v):
 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
