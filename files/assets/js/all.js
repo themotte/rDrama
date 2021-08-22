@@ -332,6 +332,7 @@ function post_toast(url, callback, data) {
 			} catch(e) {
 				document.getElementById('toast-post-success-text').innerText = "Action successful!";
 			}
+			// callback(xhr)
 			return true
 
 		} else if (xhr.status >= 300 && xhr.status < 400) {
