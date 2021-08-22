@@ -884,9 +884,6 @@ def submit_post(v):
 	g.db.add(c)
 	g.db.flush()
 
-	new_post.comment_count = g.db.query(Comment).filter_by(parent_submission=new_post.id).count()
-	g.db.add(new_post)
-
 	if "rdrama" in request.host:
 		if v.id == 995: body = "fuck off carp"
 		else: body = random.choice(snappyquotes)

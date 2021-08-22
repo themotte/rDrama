@@ -193,7 +193,7 @@ class User(Base, Stndrd, Age_times):
 		elif sort == "bottom":
 			submissions = sorted(submissions.all(), key=lambda x: x.score)
 		elif sort == "comments":
-			submissions = sorted(submissions.all(), key=lambda x: x.comment_count, reverse=True)
+			submissions = submissions.order_by(Submission.comment_count.desc()).all()
 
 		firstrange = 25 * (page - 1)
 		secondrange = firstrange + 26
