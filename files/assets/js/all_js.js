@@ -101,7 +101,7 @@ document.body.addEventListener('keydown', function(event) {
 		 	}
 		 	search_container.innerHTML = str
 		}
-		search_bar.oninput = function(){loadEmojis(form, true);};
+		search_bar.oninput = function(){loadEmojis(form);};
 	}
 
 
