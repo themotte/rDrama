@@ -20,6 +20,15 @@ from files.__main__ import app, cache
 from .front import frontlist
 from files.helpers.discord import add_role
 
+@app.get("/admin/comment_count")
+@admin_level_required(3)
+def comment_count(v):
+	for p in g.db.query(Submission).options(lazyload('*')).all():
+		p.comment_count = len(p.comments)
+		g.db.add(p)
+	return "sex"
+
+
 @app.get("/admin/shadowbanned")
 @auth_required
 def shadowbanned(v):
