@@ -16,7 +16,7 @@ from files.helpers.const import *
 from files.classes import *
 from flask import *
 import matplotlib.pyplot as plt
-from files.__main__ import app, cache
+from files.__main__ import app, cache, limiter
 from .front import frontlist
 from files.helpers.discord import add_role
 
