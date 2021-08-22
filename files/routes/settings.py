@@ -209,10 +209,8 @@ def themecolor(v):
 @auth_required
 @validate_formkey
 def gumroad(v):
-	#if not (v.email and v.is_activated):
-		#return render_template("settings_profile.html",
-								#v=v,
-								#error="You must have to a verified email to verify patron status")
+	if not (v.email and v.is_activated):
+		return {"error": "You must have to a verified email to verify patron status"}, 400
 
 	data = {
 		'access_token': GUMROAD_TOKEN,
@@ -221,12 +219,12 @@ def gumroad(v):
 	response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
 
 	if len(response) == 0:
-		return jsonify({"error": "Email not found"}), 404
+		return {"error": "Email not found"}, 404
 
 	response = response[0]
 	tier = tiers[response["variants_and_quantity"]]
 	if v.patron == tier:
-		return jsonify({"error": "Patron awards already claimed"}), 400
+		return {"error": "Patron awards already claimed"}, 400
 
 	v.patron = tier
 
@@ -269,7 +267,7 @@ def gumroad(v):
 	g.db.add(new_badge)
 
 	g.db.add(v)
-	return jsonify({"message": "Patron awards claimed"})
+	return {"message": "Patron awards claimed"}
 
 @app.post("/settings/titlecolor")
 @auth_required
