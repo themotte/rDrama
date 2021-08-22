@@ -11,12 +11,21 @@ import youtube_dl
 from .front import frontlist
 import os
 from .posts import filter_title
+from files.helpers.discord import add_role
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
+GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN").strip()
+
+tiers={
+	"(Paypig)": 1,
+	"(Renthog)": 2,
+	"(Landchad)": 3,
+	"(Terminally online turboautist)": 4
+	}
 
 @app.post("/settings/removebackground")
 @auth_required
@@ -195,6 +204,72 @@ def themecolor(v):
 	v.themecolor = themecolor
 	g.db.add(v)
 	return redirect("/settings/profile")
+
+@app.post("/settings/gumroad")
+@auth_required
+@validate_formkey
+def gumroad(v):
+	if not (v.email and v.is_activated):
+		return render_template("settings_profile.html",
+								v=v,
+								error="You must have to a verified email to verify patron status")
+
+	data = {
+		'access_token': GUMROAD_TOKEN,
+		'email': v.email
+	}
+	response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
+
+	if len(response) == 0:
+		return render_template("settings_profile.html",
+								v=v,
+								error="Email not found")
+
+	response = response[0]
+	tier = tiers[response["variants_and_quantity"]]
+	if v.patron == tier:
+		return render_template("settings_profile.html",
+								v=v,
+								error="Patron status already verified")
+	v.patron = tier
+
+	grant_awards = {}
+	if tier == 1:
+		if v.discord_id: add_role(v, "paypig")
+		grant_awards["shit"] = 1
+	elif tier == 2:
+		if v.discord_id: add_role(v, "renthog")
+		grant_awards["shit"] = 3
+	elif tier == 3:
+		if v.discord_id: add_role(v, "landchad")
+		grant_awards["shit"] = 5
+		grant_awards["ban"] = 1
+	elif tier == 4:
+		if v.discord_id: add_role(v, "turboautist")
+		grant_awards["shit"] = 10
+		grant_awards["ban"] = 3
+
+	_awards = []
+
+	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+
+	for name in grant_awards:
+		for count in range(grant_awards[name]):
+
+			thing += 1
+
+			_awards.append(AwardRelationship(
+				id=thing,
+				user_id=user.id,
+				kind=name
+			))
+
+	g.db.bulk_save_objects(_awards)
+
+	g.db.add(v)
+	return render_template("settings_profile.html",
+							v=v,
+							msg="Patron status verified!")
 
 @app.post("/settings/titlecolor")
 @auth_required
