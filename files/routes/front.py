@@ -283,7 +283,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	elif sort == "bottom":
 		posts = sorted(posts.all(), key=lambda x: x.score)
 	elif sort == "comments":
-		posts = sorted(posts.all(), key=lambda x: x.comment_count, reverse=True)
+		posts = posts.order_by(Submission.comment_count.desc()).all()
 	elif sort == "random":
 		posts = posts.all()
 		posts = random.sample(posts, k=len(posts))
