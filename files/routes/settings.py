@@ -18,7 +18,7 @@ valid_password_regex = re.compile("^.{8,100}$")
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
-GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN").strip()
+GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 tiers={
 	"(Paypig)": 1,
