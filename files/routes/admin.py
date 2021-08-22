@@ -109,6 +109,7 @@ def admin_home(v):
 		return render_template("admin/admin_home.html", v=v, x=x)
 
 @app.post("/admin/monthly")
+@limiter.limit("1/week")
 @admin_level_required(6)
 def monthly(v):
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
