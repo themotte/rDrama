@@ -221,12 +221,12 @@ def gumroad(v):
 	response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
 
 	if len(response) == 0:
-		return jsonify({"error": "Email not found"})
+		return jsonify({"error": "Email not found"}), 404
 
 	response = response[0]
 	tier = tiers[response["variants_and_quantity"]]
 	if v.patron == tier:
-		return jsonify({"error": "Patron rewards already claimed"})
+		return jsonify({"error": "Patron rewards already claimed"}), 400
 
 	v.patron = tier
 
