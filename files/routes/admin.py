@@ -140,7 +140,15 @@ def monthly(v):
 					kind=name
 				))
 
+		text = "You were given the following awards:\n\n"
+
+		for key, value in grant_awards.items():
+			text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
+
+		send_notification(NOTIFICATIONS_ACCOUNT, user, text)
+
 	g.db.bulk_save_objects(_awards)
+
 
 	return {"message": "Monthly awards granted"}
 
@@ -254,6 +262,14 @@ def badge_grant_post(v):
 					))
 
 			g.db.bulk_save_objects(_awards)
+
+			text = "You were given the following awards:\n\n"
+
+			for key, value in grant_awards.items():
+				text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
+
+			send_notification(NOTIFICATIONS_ACCOUNT, user, text)
+
 
 		g.db.add(user)
 	
