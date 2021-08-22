@@ -232,17 +232,17 @@ def gumroad(v):
 
 	grant_awards = {}
 	if tier == 1:
-		if v.discord_id: add_role(v, "paypig")
+		if v.discord_id: add_role(v, "1")
 		grant_awards["shit"] = 1
 	elif tier == 2:
-		if v.discord_id: add_role(v, "renthog")
+		if v.discord_id: add_role(v, "2")
 		grant_awards["shit"] = 3
 	elif tier == 3:
-		if v.discord_id: add_role(v, "landchad")
+		if v.discord_id: add_role(v, "3")
 		grant_awards["shit"] = 5
 		grant_awards["ban"] = 1
 	elif tier == 4:
-		if v.discord_id: add_role(v, "turboautist")
+		if v.discord_id: add_role(v, "4")
 		grant_awards["shit"] = 10
 		grant_awards["ban"] = 3
 
