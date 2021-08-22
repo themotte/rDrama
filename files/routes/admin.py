@@ -108,7 +108,7 @@ def admin_home(v):
 		x = f.read()
 		return render_template("admin/admin_home.html", v=v, x=x)
 
-@app.get("/admin/monthly")
+@app.post("/admin/monthly")
 @admin_level_required(6)
 def monthly(v):
 	grant_awards = {}
