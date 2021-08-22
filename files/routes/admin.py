@@ -108,6 +108,41 @@ def admin_home(v):
 		x = f.read()
 		return render_template("admin/admin_home.html", v=v, x=x)
 
+@app.get("/admin/monthly")
+@admin_level_required(6)
+def monthly(v):
+	grant_awards = {}
+	for u in g.db.query(User).filter(User.patron > 0).all():
+		if u.patron == 1:
+			grant_awards["shit"] = 1
+		elif u.patron == 2:
+			grant_awards["shit"] = 3
+		elif u.patron == 3:
+			grant_awards["shit"] = 5
+			grant_awards["ban"] = 1
+		elif u.patron == 4:
+			grant_awards["shit"] = 10
+			grant_awards["ban"] = 3
+
+	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+
+	_awards = []
+
+	for name in grant_awards:
+		for count in range(grant_awards[name]):
+
+			thing += 1
+
+			_awards.append(AwardRelationship(
+				id=thing,
+				user_id=v.id,
+				kind=name
+			))
+
+	g.db.bulk_save_objects(_awards)
+
+	return {"message": "Monthly awards granted"}
+
 
 @app.post("/admin/disablesignups")
 @admin_level_required(6)
