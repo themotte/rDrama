@@ -209,10 +209,10 @@ def themecolor(v):
 @auth_required
 @validate_formkey
 def gumroad(v):
-	if not (v.email and v.is_activated):
-		return render_template("settings_profile.html",
-								v=v,
-								error="You must have to a verified email to verify patron status")
+	#if not (v.email and v.is_activated):
+		#return render_template("settings_profile.html",
+								#v=v,
+								#error="You must have to a verified email to verify patron status")
 
 	data = {
 		'access_token': GUMROAD_TOKEN,
