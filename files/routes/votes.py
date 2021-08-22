@@ -55,7 +55,7 @@ def admin_vote_info_get(v):
 
 
 @app.post("/vote/post/<post_id>/<new>")
-@is_not_banned
+@auth_required
 @validate_formkey
 def api_vote_post(post_id, new, v):
 
@@ -101,7 +101,7 @@ def api_vote_post(post_id, new, v):
 	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
-@is_not_banned
+@auth_required
 @validate_formkey
 def api_vote_comment(comment_id, new, v):
 

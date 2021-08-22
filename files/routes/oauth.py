@@ -54,7 +54,7 @@ def request_api_keys(v):
 
 
 @app.post("/delete_app/<aid>")
-@is_not_banned
+@auth_required
 @validate_formkey
 def delete_oauth_app(v, aid):
 

@@ -521,7 +521,7 @@ def api_comment(v):
 
 
 @app.post("/edit_comment/<cid>")
-@is_not_banned
+@auth_required
 @validate_formkey
 def edit_comment(cid, v):
 

@@ -24,7 +24,7 @@ site = environ.get("DOMAIN").strip()
 with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
 
 @app.post("/publish/<pid>")
-@is_not_banned
+@auth_required
 @validate_formkey
 def publish(pid, v):
 	post = get_post(pid)
@@ -224,7 +224,7 @@ def post_id(pid, anything=None, v=None):
 
 
 @app.post("/edit_post/<pid>")
-@is_not_banned
+@auth_required
 @validate_formkey
 def edit_post(pid, v):
 
@@ -345,7 +345,7 @@ def edit_post(pid, v):
 
 @app.get("/submit/title")
 @limiter.limit("6/minute")
-@is_not_banned
+@auth_required
 def get_post_title(v):
 
 	url = request.args.get("url", None)
@@ -955,7 +955,7 @@ def undelete_post_pid(pid, v):
 
 
 @app.post("/toggle_comment_nsfw/<cid>")
-@is_not_banned
+@auth_required
 @validate_formkey
 def toggle_comment_nsfw(cid, v):
 
@@ -966,7 +966,7 @@ def toggle_comment_nsfw(cid, v):
 	return "", 204
 	
 @app.post("/toggle_post_nsfw/<pid>")
-@is_not_banned
+@auth_required
 @validate_formkey
 def toggle_post_nsfw(pid, v):
 
