@@ -257,7 +257,7 @@ def gumroad(v):
 
 			_awards.append(AwardRelationship(
 				id=thing,
-				user_id=user.id,
+				user_id=v.id,
 				kind=name
 			))
 
