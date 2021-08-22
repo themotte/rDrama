@@ -175,6 +175,8 @@
 
 {% block content %}
 
+<h3>{{ p.award_count("shit") }} | {{ p.award_count("gold") }}</h3>
+
 {% if p.award_count("shit") %}
 <script src="/assets/js/bug-min.js" type="text/javascript"></script>
 {% set minbugs = 10*p.award_count("shit") if p.award_count("shit") <= 5 else 50 %}
