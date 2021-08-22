@@ -5,7 +5,7 @@ from os import environ
 
 site_name = environ.get("SITE_NAME").strip()
 
-if site_name = "Drama":
+if site_name == "Drama":
 	AWARDS = {
 		"ban": {
 			"kind": "ban",
