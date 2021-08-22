@@ -226,7 +226,7 @@ def gumroad(v):
 	response = response[0]
 	tier = tiers[response["variants_and_quantity"]]
 	if v.patron == tier:
-		return jsonify({"error": "Patron rewards already claimed"}), 400
+		return jsonify({"error": "Patron awards already claimed"}), 400
 
 	v.patron = tier
 
@@ -269,7 +269,7 @@ def gumroad(v):
 	g.db.add(new_badge)
 
 	g.db.add(v)
-	return jsonify({"message": "Patron rewards claimed"})
+	return jsonify({"message": "Patron awards claimed"})
 
 @app.post("/settings/titlecolor")
 @auth_required
