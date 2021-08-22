@@ -68,19 +68,42 @@ document.body.addEventListener('keydown', function(event) {
 		}
 		]
 
-		for (i=0; i < emojis.length; i++) {
+		let search_bar = document.getElementById("emoji_search");
+		let search_container = document.getElementById('emoji-tab-search')
 
-			let container = document.getElementById(`EMOJIS_${emojis[i].type}`)
-			let str = ''
-			let arr = emojis[i].emojis
+		if(search_bar.value == ""){
+			for (i=0; i < emojis.length; i++) {
 
-			for (j=0; j < arr.length; j++) { 
-				str += `<button class="btn m-1 px-0 nobackground" onclick="getEmoji(\'${arr[j]}\', \'${form}\')" style="width:40px; overflow: hidden; border: none;" data-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img width=40 src="/assets/images/emojis/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
+				let container = document.getElementById(`EMOJIS_${emojis[i].type}`)
+				let str = ''
+				let arr = emojis[i].emojis
+
+				for (j=0; j < arr.length; j++) {
+					if(arr[j].match(search_bar.value)){
+						str += `<button class="btn m-1 px-0" onclick="getEmoji(\'${arr[j]}\', \'${form}\')" style="width:40px; overflow: hidden; border: none;" data-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img width=30 src="/assets/images/emojis/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
+					}
+				}
+
+				container.innerHTML = str
+				search_container.innerHTML = ""
 			}
-
-			container.innerHTML = str
+		}else{
+		 	let str = ''
+		 	for (i=0; i < emojis.length; i++) {
+		 		let arr = emojis[i].emojis
+				let container = document.getElementById(`EMOJIS_${emojis[i].type}`)
+		 		for (j=0; j < arr.length; j++) {
+		 			if(arr[j].match(search_bar.value)){
+		 			str += `<button class="btn m-1 px-0" onclick="getEmoji(\'${arr[j]}\', \'${form}\')" style="width:40px; overflow: hidden; border: none;" data-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img width=30 src="/assets/images/emojis/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
+		 			}
+		 		}
+				container.innerHTML = ""
+		 	}
+		 	search_container.innerHTML = str
 		}
+		search_bar.oninput = function(){loadEmojis(form, true);};
 	}
+
 
 
 	function getGif(searchTerm) {
