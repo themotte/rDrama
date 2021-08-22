@@ -240,15 +240,8 @@ def settings_security_post(v):
 							escape("Invalid password."))
 
 		new_email = request.form.get("new_email","").strip()
-		#counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
-		if new_email.endswith("@gmail.com"):
-			gmail_username=new_email.split('@')[0]
-			gmail_username=gmail_username.split("+")[0]
-			gmail_username=gmail_username.replace('.','')
-			new_email=f"{gmail_username}@gmail.com"
 		if new_email == v.email:
-			return redirect("/settings/security?error=" +
-							escape("That email is already yours!"))
+			return redirect("/settings/security?error=That email is already yours!")
 
 		# check to see if email is in use
 		existing = g.db.query(User).filter(User.id != v.id,

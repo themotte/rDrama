@@ -267,14 +267,6 @@ def sign_up_post(v):
 	email = email.strip()
 	if not email: email = None
 
-	#counteract gmail username+2 and extra period tricks - convert submitted email to actual inbox
-	if email and email.endswith("@gmail.com"):
-		email=email.split('@')[0]
-		email=email.split('+')[0]
-		email=email.replace('.','')
-		email=f"{email}@gmail.com"
-
-
 	existing_account = get_user(username, graceful=True)
 	if existing_account and existing_account.reserved:
 		return redirect(existing_account.permalink)
@@ -380,15 +372,18 @@ def post_forgot():
 
 	email=email.replace("_","\_")
 
-	if email.endswith("@gmail.com"):
+	user = g.db.query(User).filter(
+		User.username.ilike(username),
+		User.email.ilike(email)).first()
+
+	if not user and email.endswith("@gmail.com"):
 		email=email.split('@')[0]
 		email=email.split('+')[0]
 		email=email.replace('.','')
 		email=f"{email}@gmail.com"
-
-	user = g.db.query(User).filter(
-		User.username.ilike(username),
-		User.email.ilike(email)).first()
+		user = g.db.query(User).filter(
+			User.username.ilike(username),
+			User.email.ilike(email)).first()
 
 	if user:
 		# generate url
@@ -501,16 +496,15 @@ def request_2fa_disable():
 
 
 	email=request.form.get("email")
-	if email and email.endswith("@gmail.com"):
+	if email != user.email and email.endswith("@gmail.com"):
 		email=email.split('@')[0]
 		email=email.split('+')[0]
 		email=email.replace('.','')
 		email=f"{email}@gmail.com"
-
-	if email != user.email:
-		return render_template("message.html",
-						   title="Removal request received",
-						   message="If username, password, and email match, we will send you an email.")
+		if email != user.email:
+			return render_template("message.html",
+							title="Removal request received",
+							message="If username, password, and email match, we will send you an email.")
 
 
 	password =request.form.get("password")
