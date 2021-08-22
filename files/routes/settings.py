@@ -263,6 +263,11 @@ def gumroad(v):
 
 	g.db.bulk_save_objects(_awards)
 
+	new_badge = Badge(badge_id=20+tier,
+					  user_id=v.id,
+					  )
+	g.db.add(new_badge)
+
 	g.db.add(v)
 	return jsonify({"message": "Patron rewards claimed"})
 
