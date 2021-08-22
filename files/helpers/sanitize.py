@@ -172,21 +172,25 @@ def sanitize(sanitized):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
 			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=30 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
 
-	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/embed/").replace("https://music.youtube.com/watch?v=", "https://youtube.com/embed/").replace("/watch?v=", "/embed/").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/embed/")
-	
-	for i in re.finditer('<a href="(https://(streamable|youtube).com/(e|embed)/.*?)"', sanitized):
+	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.", "https://").replace("https://m.", "https://")
+
+	for i in re.finditer('" target="_blank">(https://youtube.com/watch\?v\=.*?)</a>', sanitized):
+		url = i.group(1)
+		replacing = f'<a href="{url}" target="_blank">{url}</a>'
+		htmlsource = f'<div style="padding-top:5px; padding-bottom: 10px;"><iframe frameborder="0" src="{url}?controls=0"></iframe></div>'
+		sanitized = sanitized.replace(replacing, htmlsource.replace("watch?v=", "embed/"))
+
+	for i in re.finditer('<a href="(https://streamable.com/e/.*?)"', sanitized):
 		url = i.group(1)
 		replacing = f'<a href="{url}" target="_blank">{url}</a>'
 		htmlsource = f'<div style="padding-top:5px; padding-bottom: 10px;"><iframe frameborder="0" src="{url}?controls=0"></iframe></div>'
 		sanitized = sanitized.replace(replacing, htmlsource)
-		
+
 	for i in re.finditer('<a href="(https://open.spotify.com/embed/.*?)"', sanitized):
 		url = i.group(1)
 		replacing = f'<a href="{url}" target="_blank">{url}</a>'
 		htmlsource = f'<iframe src="{url}" width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>'
 		sanitized = sanitized.replace(replacing, htmlsource)
-
-	sanitized = sanitized.replace("https://mobile.twitter.com", "https://twitter.com")
 
 	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")

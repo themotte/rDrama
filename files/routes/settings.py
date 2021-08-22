@@ -24,7 +24,11 @@ tiers={
 	"(Paypig)": 1,
 	"(Renthog)": 2,
 	"(Landchad)": 3,
-	"(Terminally online turboautist)": 4
+	"(Terminally online turboautist)": 4,
+	"(Ape)": 1,
+	"(Monke)": 2,
+	"(Gigachad)": 3,
+	"(Ascended Griller)": 4
 	}
 
 @app.post("/settings/removebackground")
