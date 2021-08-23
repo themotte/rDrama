@@ -30,7 +30,8 @@ ACTIONS = {
 
 ALLOW_MULTIPLE = (
     "ban",
-    "shit"
+    "shit",
+    "gold"
 )
 
 
