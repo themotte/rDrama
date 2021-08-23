@@ -190,8 +190,9 @@
 </script>
 {% endif %}
 
-{% if p.award_count("gold") %}
 <script src="/assets/js/sparkle.min.js" type="text/javascript"></script>
+
+{% if p.award_count("gold") %}
 <script>
 	document.getElementById("post-root").sparkle({
 		count: 20,
