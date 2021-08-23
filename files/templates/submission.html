@@ -195,7 +195,7 @@
 {% if p.award_count("gold") %}
 {% set sparkles = 10*p.award_count("gold") if p.award_count("gold") <= 5 else 50 %}
 <script>
-	document.querySelector("#post-body").sparkle({
+	document.querySelector("#post-text").sparkle({
 		count: {{ sparkles }},
 		minAge: 500,
 		maxAge: 1000,
@@ -306,7 +306,9 @@
 							{% endif %}
 						{% endif %}
 
-						{{p.realbody(v) | safe}}
+						<div id="post-text">
+							{{p.realbody(v) | safe}}
+						</div>
 
 						{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
 							{% include "embeds/twitterlight.html" %}
