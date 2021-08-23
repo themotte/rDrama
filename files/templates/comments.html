@@ -18,9 +18,9 @@
 {% if c.award_count("gold") and not c.is_banned and not c.is_deleted %}
 <script>
 	document.getElementById("comment-{{c.id}}-only").sparkle({
-		count: 20,
-		minAge: 150,
-		maxAge: 300,
+		count: 10,
+		minAge: 500,
+		maxAge: 1000,
 		starsource: `
 		<svg
 		  width="100%"
