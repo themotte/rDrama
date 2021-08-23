@@ -39,7 +39,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	edited_utc = Column(Integer, default=0)
 	is_banned = Column(Boolean, default=False)
 	bannedfor = Column(Boolean)
-	shadowbanned = Column(Boolean, default=False)
 	distinguish_level = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
 	is_approved = Column(Integer, default=0)
