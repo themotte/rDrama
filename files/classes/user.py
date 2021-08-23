@@ -423,14 +423,12 @@ class User(Base, Stndrd, Age_times):
 			User.id != self.id
 		).order_by(User.username.asc()).all()
 
+		data = [x for x in data]
 		output = []
 		for x in data:
 			user = x[0]
 			user._is_manual = x[1].is_manual
 			output.append(user)
-
-		for alt in output:
-			output += alt.alts
 
 		return output
 
