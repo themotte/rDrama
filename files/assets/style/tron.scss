@@ -90,3 +90,7 @@ $reddit: #ED4630;
 .transparent {
 	background: None !important;
 }
+
+.btn-danger.disabled, .btn-danger:disabled {
+	color: $primary !important;
+}
