@@ -27115,7 +27115,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .custom-gutters {
-    padding-left: 8px;
+    padding-left: 0;
     padding-right: 0;
   }
 
