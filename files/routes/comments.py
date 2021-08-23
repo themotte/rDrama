@@ -266,8 +266,7 @@ def api_comment(v):
 				level=level,
 				over_18=parent_post.over_18 or request.form.get("over_18","")=="true",
 				is_bot=is_bot,
-				app_id=v.client.application.id if v.client else None,
-				shadowbanned=v.shadowbanned
+				app_id=v.client.application.id if v.client else None
 				)
 
 	g.db.add(c)
