@@ -195,7 +195,7 @@
 {% if p.award_count("gold") %}
 {% set sparkles = 10*p.award_count("gold") if p.award_count("gold") <= 5 else 50 %}
 <script>
-	document.querySelector("#post-text").sparkle({
+	document.querySelector("body").sparkle({
 		count: {{ sparkles }},
 		minAge: 500,
 		maxAge: 1000,
