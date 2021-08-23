@@ -228,7 +228,7 @@
 
 	<div id="post-root" class="col-12">
 
-		<div id="post-{{p.id}}" class="card border-0 mt-3{% if p.is_suspended %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+		<div id="post-{{p.id}}" class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 			<div class="{% if p.deleted_utc > 0 %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
 
 				{% if p.thumb_url and not p.embed_url %}
@@ -472,7 +472,7 @@
 					<div id="voting" class="voting d-none d-md-block mb-auto">
 						<div id="post-{{p.id}}-up" tabindex="0" class="arrow-up mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
 						</div>
-						<span id="post-{{p.id}}-score-none" class="score text-muted"{% if not p.is_suspended %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+						<span id="post-{{p.id}}-score-none" class="score text-muted"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 						<div id="post-{{p.id}}-down" tabindex="0" class="arrow-down mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
 						</div>
 					</div>
@@ -606,7 +606,7 @@
 		</form>
 	</div>
 
-	{% if not v and not p.is_suspended %}
+	{% if not v and not p.is_banned %}
 	<div class="comment-write mb-3">
 		<textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
 	</div>

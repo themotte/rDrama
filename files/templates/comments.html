@@ -33,7 +33,7 @@
 						<div class="user-info">
 						<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>			
 						{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
-								[{% if c.is_suspended %}Removed by admins{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% elif c.is_blocked %}This user has blocked you{% endif %}]
+								[{% if c.is_banned %}Removed by admins{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% elif c.is_blocked %}This user has blocked you{% endif %}]
 						</div>
 
 
@@ -111,7 +111,7 @@
 	
 	<div class="comment-body">
 
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_suspended %} banned{% endif %}{% if c.deleted_utc	%} deleted{% endif %}">
+		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc	%} deleted{% endif %}">
 
 			<div class="user-info">
 				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
