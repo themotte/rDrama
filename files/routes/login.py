@@ -52,7 +52,31 @@ def check_for_alts(current_id):
 				new_alt = Alt(user1=a.user1, user2=past_id)
 				g.db.add(new_alt)
 				g.db.flush()
-				new_alt = Alt(user1=a.user1, user2=current_id)
+			except Exception as e:
+				g.db.rollback()
+				print(e)
+				continue
+		for a in otheralts:
+			try:
+				new_alt = Alt(user1=a.user1, user2=past_id)
+				g.db.add(new_alt)
+				g.db.flush()
+			except Exception as e:
+				g.db.rollback()
+				print(e)
+				continue
+		for a in otheralts:
+			try:
+				new_alt = Alt(user1=a.user2, user2=past_id)
+				g.db.add(new_alt)
+				g.db.flush()
+			except Exception as e:
+				g.db.rollback()
+				print(e)
+				continue
+		for a in otheralts:
+			try:
+				new_alt = Alt(user1=a.user2, user2=past_id)
 				g.db.add(new_alt)
 				g.db.flush()
 			except Exception as e:
