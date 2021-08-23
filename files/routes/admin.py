@@ -116,15 +116,19 @@ def monthly(v):
 		grant_awards = {}
 
 		if u.patron == 1:
-			grant_awards["shit"] = 1
+			#grant_awards["shit"] = 1
+			grant_awards["gold"] = 1
 		elif u.patron == 2:
-			grant_awards["shit"] = 3
+			#grant_awards["shit"] = 3
+			grant_awards["gold"] = 3
 		elif u.patron == 3:
-			grant_awards["shit"] = 5
-			grant_awards["ban"] = 1
+			#grant_awards["shit"] = 5
+			grant_awards["gold"] = 5
+			#grant_awards["ban"] = 1
 		elif u.patron == 4:
-			grant_awards["shit"] = 10
-			grant_awards["ban"] = 3
+			#grant_awards["shit"] = 10
+			grant_awards["gold"] = 10
+			#grant_awards["ban"] = 3
 
 
 		for name in grant_awards:
@@ -230,16 +234,20 @@ def badge_grant_post(v):
 		if badge_id == 21:
 			if user.discord_id: add_role(user, "paypig")
 			grant_awards["shit"] = 1
+			grant_awards["gold"] = 1
 		elif badge_id == 22:
 			if user.discord_id: add_role(user, "renthog")
 			grant_awards["shit"] = 3
+			grant_awards["gold"] = 3
 		elif badge_id == 23:
 			if user.discord_id: add_role(user, "landchad")
 			grant_awards["shit"] = 5
+			grant_awards["gold"] = 5
 			grant_awards["ban"] = 1
 		elif badge_id in [24, 28]:
 			if user.discord_id: add_role(user, "turboautist")
 			grant_awards["shit"] = 10
+			grant_awards["gold"] = 10
 			grant_awards["ban"] = 3
 
 		if len(grant_awards):
