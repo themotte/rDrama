@@ -193,9 +193,10 @@
 <script src="/assets/js/sparkle.min.js" type="text/javascript"></script>
 
 {% if p.award_count("gold") %}
+{% set sparkles = 10*p.award_count("gold") if p.award_count("gold") <= 5 else 50 %}
 <script>
 	document.querySelector("body").sparkle({
-		count: 15,
+		count: {{ sparkles }},
 		minAge: 500,
 		maxAge: 1000,
 		starsource: `
