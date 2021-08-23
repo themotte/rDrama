@@ -40,10 +40,20 @@ def check_for_alts(current_id):
 		if not check1 and not check2:
 
 			try:
-				new_alt = Alt(user1=past_id,
-							  user2=current_id)
+				new_alt = Alt(user1=past_id, user2=current_id)
 				g.db.add(new_alt)
-
+				otheralts = g.db.query(Alt).filter(or_(Alt.user1 == past_id, Alt.user2 == past_id, Alt.user1 == current_id, Alt.user2 == current_id)).all()
+				for a in otheralts:
+					try:
+						new_alt = Alt(user1=a.user1, user2=past_id)
+						g.db.add(new_alt)
+						g.db.flush()
+						new_alt = Alt(user1=a.user1, user2=current_id)
+						g.db.add(new_alt)
+						g.db.flush()
+					except:
+						g.db.rollback()
+						continue
 			except BaseException:
 				pass
 
