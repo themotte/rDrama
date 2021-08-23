@@ -199,6 +199,7 @@
 		count: {{ sparkles }},
 		minAge: 500,
 		maxAge: 1000,
+		position: "afterend",
 		starsource: `
 		<svg
 		  width="100%"
@@ -306,7 +307,7 @@
 							{% endif %}
 						{% endif %}
 
-						<div id="post-text">
+						<div id="post-text" style="z-index: 50">
 							{{p.realbody(v) | safe}}
 						</div>
 
