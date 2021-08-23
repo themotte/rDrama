@@ -115,9 +115,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	@property
 	def replies(self):
-
 		r = self.__dict__.get("replies", None)
-		if not r and r != []: r = sorted([x for x in self.child_comments], key=lambda x: x.score, reverse=True)
+		if not r and r != []: r = sorted([x for x in self.child_comments if not x.shadowbanned], key=lambda x: x.score, reverse=True)
 		return r
 
 	@replies.setter
