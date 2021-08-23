@@ -15,8 +15,6 @@
 
 {% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking or c.is_blocked) and not (v and v.admin_level>0) and not (v and v.id==c.author_id) %}
 
-
-
 <div id="comment-{{c.id}}" class="comment">
 
 
