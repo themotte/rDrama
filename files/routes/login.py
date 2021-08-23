@@ -46,7 +46,6 @@ def check_for_alts(current_id):
 				pass
 
 		otheralts = g.db.query(Alt).filter(or_(Alt.user1 == past_id, Alt.user2 == past_id, Alt.user1 == current_id, Alt.user2 == current_id)).all()
-		print(otheralts)
 		for a in otheralts:
 			try:
 				new_alt = Alt(user1=a.user1, user2=past_id)
@@ -54,7 +53,6 @@ def check_for_alts(current_id):
 				g.db.flush()
 			except Exception as e:
 				g.db.rollback()
-				print(e)
 				continue
 		for a in otheralts:
 			try:
@@ -63,7 +61,6 @@ def check_for_alts(current_id):
 				g.db.flush()
 			except Exception as e:
 				g.db.rollback()
-				print(e)
 				continue
 		for a in otheralts:
 			try:
@@ -72,7 +69,6 @@ def check_for_alts(current_id):
 				g.db.flush()
 			except Exception as e:
 				g.db.rollback()
-				print(e)
 				continue
 		for a in otheralts:
 			try:
@@ -81,7 +77,6 @@ def check_for_alts(current_id):
 				g.db.flush()
 			except Exception as e:
 				g.db.rollback()
-				print(e)
 				continue
 
 # login post procedure
