@@ -423,7 +423,8 @@ class User(Base, Stndrd, Age_times):
 			User.id != self.id
 		).order_by(User.username.asc()).all()
 
-		data = [x for x in data]
+		for alt in data:
+			data += alt.data
 		output = []
 		for x in data:
 			user = x[0]
