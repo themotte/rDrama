@@ -107,7 +107,7 @@
 							<a class="dropdown-item" href="https://github.com/Aevann1/{{'SITE_NAME' | app_config}}"><i class="fab fa-github fa-fw text-left mr-3"></i>Source code</a>
 							<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw text-left mr-3"></i>Discord</a>
 							<a class="dropdown-item" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw text-left mr-3"></i>Donate</a>
-							<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw text-left mr-3"></i>Subreddit Archives</a>
+							{% if 'rdrama' in request.host %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw text-left mr-3"></i>Subreddit Archives</a>{% endif %}
 							<a class="dropdown-item" href="/contact"><i class="fas fa-file-signature fa-fw text-left mr-3"></i>Contact us</a>
 						</div>
 						<hr class="my-2">
@@ -162,7 +162,7 @@
 		<li class="nav-item"><a class="nav-link" href="https://github.com/Aevann1/{{'SITE_NAME' | app_config}}"><i class="fab fa-github fa-fw mr-3"></i>Source code</a></li>
 		<li class="nav-item"><a class="nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a></li>
 		<li class="nav-item"><a class="nav-link" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a></li>
-		<li class="nav-item"><a class="nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Subreddit Archives</a></li>
+		{% if 'rdrama' in request.host %}<li class="nav-item"><a class="nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Subreddit Archives</a></li>{% endif %}
 		<li class="nav-item"><a class="nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a></li>
 
 		<li class="nav-item border-top border-bottom mt-2 pt-2">
