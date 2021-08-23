@@ -138,7 +138,7 @@ def static_service(path):
 		resp.headers.add("Content-Type", "text/css")
 		resp.headers.remove("Cache-Control")
 		resp.headers.add("Cache-Control", "public, max-age=86400")
-	elif request.path.endswith('.gif') or request.path.endswith('.png') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
+	elif request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
 		resp.headers.add("Cache-Control", "public, max-age=31556952")
 
