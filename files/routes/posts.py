@@ -39,7 +39,7 @@ def publish(pid, v):
 @app.get("/submit")
 @auth_required
 def submit_get(v):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
 		
 	return render_template("submit.html",
 						   v=v)
@@ -51,7 +51,7 @@ def submit_get(v):
 @auth_desired
 def post_id(pid, anything=None, v=None):
 
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
 
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/post/{pid}")
 

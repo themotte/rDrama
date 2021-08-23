@@ -382,7 +382,7 @@
 		<pre></pre>
 		<ul style="padding-left:20px; margin-bottom: 0;">
 			{% for f in p.ordered_flags %}
-				<li><a style="font-weight:bold" href="{{f.user.url}}">@{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
+				<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
 			{% endfor %}
 		</ul>
 	</div>

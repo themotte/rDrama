@@ -250,7 +250,7 @@ def redditor_moment_redirect(username):
 # @app.get("/rentoids")
 # @auth_desired
 # def rentoids(v):
-# 	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+# 
 
 # 	users = g.db.query(User).filter(User.rent_utc > 0).all()
 # 	return render_template("rentoids.html", v=v, users=users)
@@ -258,7 +258,7 @@ def redditor_moment_redirect(username):
 @app.get("/@<username>/followers")
 @auth_required
 def followers(username, v):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
 
 	u = get_user(username, v=v)
 	users = [x.user for x in u.followers]
@@ -276,7 +276,7 @@ def visitors(v):
 @app.get("/logged_out/@<username>")
 @auth_desired
 def u_username(username, v=None):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
 
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}")
 
@@ -397,7 +397,7 @@ def u_username(username, v=None):
 @app.get("/logged_out/@<username>/comments")
 @auth_desired
 def u_username_comments(username, v=None):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
 
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}/comments")
 

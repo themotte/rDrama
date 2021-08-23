@@ -23,7 +23,6 @@ from files.helpers.discord import add_role
 @app.get("/admin/shadowbanned")
 @auth_required
 def shadowbanned(v):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	if not (v and v.admin_level == 6): abort(404)
 	users = [x for x in g.db.query(User).filter_by(shadowbanned = True).all()]
 	return render_template("banned.html", v=v, users=users)
@@ -32,7 +31,6 @@ def shadowbanned(v):
 @app.get("/admin/agendaposters")
 @auth_required
 def agendaposters(v):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
 	if not (v and v.admin_level == 6): abort(404)
 	users = [x for x in g.db.query(User).filter_by(agendaposter = True).all()]
 	return render_template("banned.html", v=v, users=users)

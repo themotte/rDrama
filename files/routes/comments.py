@@ -28,7 +28,7 @@ beams_client = PushNotifications(
 @auth_desired
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
 	
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/comment/{cid}")
 

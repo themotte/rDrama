@@ -8,7 +8,7 @@ from files.__main__ import app
 @app.get("/votes")
 @auth_desired
 def admin_vote_info_get(v):
-	if v and v.is_banned and not v.unban_utc: return render_template("seized.html")
+
 
 	link = request.args.get("link")
 	if not link: return render_template("votes.html", v=v)
