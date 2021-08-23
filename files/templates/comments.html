@@ -15,7 +15,7 @@
 
 {% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking or c.is_blocked) and not (v and v.admin_level>0) and not (v and v.id==c.author_id) %}
 
-{% if c.award_count("gold") %}
+
 <script>
 	document.getElementById("comment-{{c.id}}-only").sparkle({
 		count: 10,
@@ -38,7 +38,6 @@
 		  </svg>`,
 	});
 </script>
-{% endif %}
 
 <div id="comment-{{c.id}}" class="comment">
 
