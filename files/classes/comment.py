@@ -172,6 +172,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 		return data
 
+	def award_count(self, kind) -> int:
+		return len([x for x in self.awards if x.kind == kind])
 
 	@property
 	def json_core(self):
