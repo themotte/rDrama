@@ -58,7 +58,7 @@ def check_for_alts(current_id):
 				continue
 		for a in otheralts:
 			try:
-				new_alt = Alt(user1=a.user1, user2=past_id)
+				new_alt = Alt(user1=a.user1, user2=current_id)
 				g.db.add(new_alt)
 				g.db.flush()
 			except Exception as e:
@@ -76,7 +76,7 @@ def check_for_alts(current_id):
 				continue
 		for a in otheralts:
 			try:
-				new_alt = Alt(user1=a.user2, user2=past_id)
+				new_alt = Alt(user1=a.user2, user2=current_id)
 				g.db.add(new_alt)
 				g.db.flush()
 			except Exception as e:
