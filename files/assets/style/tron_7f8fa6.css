@@ -27786,4 +27786,8 @@ img.emoji {
   background: None !important;
 }
 
+.btn-danger.disabled, .btn-danger:disabled {
+  color: #7f8fa6 !important;
+}
+
 /*# sourceMappingURL=tron_7f8fa6.css.map */
