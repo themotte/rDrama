@@ -195,12 +195,12 @@
 {% if p.award_count("gold") %}
 {% set sparkles = 10*p.award_count("gold") if p.award_count("gold") <= 5 else 50 %}
 <style>
-	#post-root {
+	#post-body {
 		z-index: 50;
 	}
 </style>
 <script>
-	document.querySelector("#post-root").sparkle({
+	document.querySelector("#post-body").sparkle({
 		count: {{ sparkles }},
 		minAge: 500,
 		maxAge: 1000,
