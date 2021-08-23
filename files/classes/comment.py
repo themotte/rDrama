@@ -111,7 +111,6 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		if self.parent_comment_id: return f"t3_{self.parent_comment_id}"
 		elif self.parent_submission: return f"t2_{self.parent_submission}"
 
-
 	@property
 	@lazy
 	def replies(self):
@@ -130,6 +129,13 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	@replies2.setter
 	def replies2(self, value):
 		self.__dict__["replies2"] = value
+
+	@property
+	@lazy
+	def replies3(self):
+		r = self.__dict__.get("replies", None)
+		if not r and r != []:  r = sorted([x for x in self.child_comments], key=lambda x: x.score, reverse=True)
+		return r
 
 	@property
 	@lazy

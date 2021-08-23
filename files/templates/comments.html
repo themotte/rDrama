@@ -11,6 +11,12 @@
 {% set score=ups-downs %}
 {% include "emoji_modal.html" %}
 
+{% if v and v.shadowbanned %}
+	{% set replies=c.replies3 %}
+{% else %}
+	{% set replies=c.replies %}
+{% endif %}
+
 <!--conditions under which a comment might be hidden-->
 
 {% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking or c.is_blocked) and not (v and v.admin_level>0) and not (v and v.id==c.author_id) %}
@@ -42,14 +48,14 @@
 			{% if level<6 %}
 				<div id="replies-of-{{c.id}}" class="">
 					{% set standalone=False %}
-					{% for reply in c.replies %}
+					{% for reply in replies %}
 						{{single_comment(reply, level=level+1)}}
 					{% endfor %}
 				</div>
-			{% elif c.replies %}
+			{% elif replies %}
 				<div id="replies-of-{{c.id}}" class="d-none d-md-block">
 					{% set standalone=False %}
-					{% for reply in c.replies %}
+					{% for reply in replies %}
 						{{single_comment(reply, level=level+1)}}
 					{% endfor %}
 				</div>
@@ -382,13 +388,13 @@
 		{% if render_replies %} 
 			{% if level<6 %}
 				<div id="replies-of-{{c.id}}">
-					{% for reply in c.replies %}
+					{% for reply in replies %}
 						{{single_comment(reply, level=level+1)}}
 					{% endfor %}
 				</div>
-			{% elif c.replies %}
+			{% elif replies %}
 				<div id="replies-of-{{c.id}}" class="d-none d-md-block">
-					{% for reply in c.replies %}
+					{% for reply in replies %}
 						{{single_comment(reply, level=level+1)}}
 					{% endfor %}
 				</div>
