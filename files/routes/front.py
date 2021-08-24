@@ -244,7 +244,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 		)
 
 	posts=posts.join(Submission.submission_aux).join(Submission.author)
-	posts=posts.filter(SubmissionAux.title.ilike(f'%[changelog]%', User.admin_level == 6))
+	posts=posts.filter(SubmissionAux.title.ilike(f'%changelog%', User.admin_level == 6))
 
 	if t != 'all':
 		cutoff = 0

@@ -911,7 +911,7 @@ def submit_post(v):
 
 	cache.delete_memoized(User.userpagelisting, v)
 	cache.delete_memoized(frontlist)
-	if "[changelog]" in new_post.title:
+	if "[changelog]" in new_post.title or "(changelog)" in new_post.title:
 		send_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
