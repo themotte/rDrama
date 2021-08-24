@@ -143,7 +143,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	else:
 		abort(400)
 
-	firstrange = 25 * (page - 1)
+	firstrange = 50 * (page - 1)
 	secondrange = firstrange+1000
 	posts = posts[firstrange:secondrange]
 
@@ -175,11 +175,11 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 				post.views = post.views + random.randint(7,10)
 				g.db.add(post)
 
-	posts = [x for x in posts if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)][:26]
+	posts = [x for x in posts if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)][:51]
 
-	next_exists = (len(posts) == 26)
+	next_exists = (len(posts) == 51)
 
-	posts = posts[:25]
+	posts = posts[:50]
 
 	if ids_only: posts = [x.id for x in posts]
 
@@ -290,8 +290,8 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	else:
 		abort(400)
 
-	firstrange = 25 * (page - 1)
-	secondrange = firstrange+26
+	firstrange = 50 * (page - 1)
+	secondrange = firstrange+51
 	posts = posts[firstrange:secondrange]
 
 	posts = [x.id for x in posts]
@@ -317,8 +317,8 @@ def changelog(v):
 					)
 
 	# check existence of next page
-	next_exists = (len(ids) == 26)
-	ids = ids[:25]
+	next_exists = (len(ids) == 51)
+	ids = ids[:50]
 
 	# check if ids exist
 	posts = get_posts(ids, v=v)
