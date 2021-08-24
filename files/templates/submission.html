@@ -312,11 +312,9 @@
 							{% endif %}
 						{% endif %}
 						
-						{% if len(p.realbody(v)) > 0 %}
-							<div id="post-text" style="z-index: 50">
-								{{p.realbody(v) | safe}}
-							</div>
-						{% endif %}
+						<div id="post-text" style="z-index: 50">
+							{{p.realbody(v) | safe}}
+						</div>
 
 						{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
 							{% include "embeds/twitterlight.html" %}
