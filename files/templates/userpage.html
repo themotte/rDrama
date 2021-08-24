@@ -293,9 +293,9 @@
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
 					{% endif %}
+					<pre></pre>
+					<p>User ID: {{u.id}}</p>
 					{% if v and v.admin_level >=4 %}
-						<pre></pre>
-						<p>User ID: {{u.id}}</p>
 						{% if u.is_private %}
 							<p>User has private mode enabled.</p>
 						{% endif %}
@@ -515,8 +515,10 @@
 							<input type="hidden" name="user" value="{{u.username}}">
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
+						{% endif %}
 						<pre></pre>
 						<p>User ID: {{u.id}}</p>
+						{% if v.admin_level > 1 and u.admin_level <= 1 %}
 						{% if u.is_private %}
 							<p>User has private mode enabled.</p>
 						{% endif %}
