@@ -312,7 +312,7 @@
 							{% endif %}
 						{% endif %}
 						
-						{% if p.realbody(v) %}
+						{% if p.realbody(v) != None %}
 							<div id="post-text" style="z-index: 50">
 								{{p.realbody(v) | safe}}
 							</div>
