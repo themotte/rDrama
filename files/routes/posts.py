@@ -51,8 +51,6 @@ def submit_get(v):
 @auth_desired
 def post_id(pid, anything=None, v=None):
 
-
-
 	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/post/{pid}")
 
 	if v and "logged_out" in request.full_path: v = None
@@ -82,6 +80,8 @@ def post_id(pid, anything=None, v=None):
 		except: abort(404)
 
 	post = get_post(pid, v=v)
+
+	if v and v.id == 1: print(post.realbody(v))
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
