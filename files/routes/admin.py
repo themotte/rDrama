@@ -116,19 +116,19 @@ def monthly(v):
 		grant_awards = {}
 
 		if u.patron == 1:
-			#grant_awards["shit"] = 1
+			grant_awards["shit"] = 1
 			grant_awards["gold"] = 1
 		elif u.patron == 2:
-			#grant_awards["shit"] = 3
+			grant_awards["shit"] = 3
 			grant_awards["gold"] = 3
 		elif u.patron == 3:
-			#grant_awards["shit"] = 5
+			grant_awards["shit"] = 5
 			grant_awards["gold"] = 5
-			#grant_awards["ban"] = 1
+			grant_awards["ban"] = 1
 		elif u.patron == 4:
-			#grant_awards["shit"] = 10
+			grant_awards["shit"] = 10
 			grant_awards["gold"] = 10
-			#grant_awards["ban"] = 3
+			grant_awards["ban"] = 3
 
 
 		for name in grant_awards:
