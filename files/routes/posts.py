@@ -81,8 +81,6 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if v and v.id == 1: print(post.realbody(v))
-
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
