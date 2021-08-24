@@ -39,7 +39,7 @@ services:
       - COINS_NAME=Dramacoins
       - DEFAULT_THEME=dark
       - DEFAULT_COLOR=ff66ac
-      - SLOGAN=Dude bussy lmao 
+      - SLOGAN=Dude bussy lmao
     links:
       - "redis"
       - "postgres"
