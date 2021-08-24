@@ -195,12 +195,12 @@
 {% if p.award_count("gold") %}
 {% set sparkles = 10*p.award_count("gold") if p.award_count("gold") <= 5 else 50 %}
 <style>
-	#post-body {
+	#post-content {
 		z-index: 50;
 	}
 </style>
 <script>
-	document.querySelector("#post-body").sparkle({
+	document.querySelector("#post-content").sparkle({
 		count: {{ sparkles }},
 		minAge: 500,
 		maxAge: 1000,
@@ -238,7 +238,7 @@
 				</div>
 				{% endif %}
 
-				<div class="{% if p.deleted_utc > 0 %}deleted {% endif %}card-block w-100 my-md-auto">
+				<div id="post-content" class="{% if p.deleted_utc > 0 %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
 						{% if p.bannedfor %}
