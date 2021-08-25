@@ -507,7 +507,7 @@
 
 				<li class="list-inline-item mr-auto"><a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
 
-				<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{p.permalink | full_link}}"><i class="fas fa-link"></i>Share</a></li>
+				<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="http://drama2.github.io/?p={{p.id}}"><i class="fas fa-link"></i>Share</a></li>
 				{% if v %}
 				<li class="list-inline-item">
 					<a href="#" data-toggle="modal" data-target="#actionsModal">
