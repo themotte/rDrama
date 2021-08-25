@@ -294,6 +294,8 @@ def api_comment(v):
 	g.db.flush()
 
 	print(c_aux)
+	print(c_aux.body_html)
+	print(c.comment_aux)
 
 	if v.agendaposter and "trans lives matter" not in c_aux.body_html.lower():
 
