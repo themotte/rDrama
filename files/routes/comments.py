@@ -465,7 +465,7 @@ def api_comment(v):
 					continue
 				if user.id != v.id:
 					notify_users.add(user.id)
-
+		if v.id == 1: print(notify_users)
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
 			g.db.add(n)
