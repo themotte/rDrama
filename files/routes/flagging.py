@@ -60,3 +60,24 @@ def api_flag_comment(cid, v):
 		g.db.add(flag)
 
 	return "", 204
+
+
+@app.post('/del_report/<report_fn>')
+@auth_required
+@validate_formkey
+def remove_report(report_fn, v):
+
+	if v.admin_level < 6:
+		return {"error": "go outside"}, 403
+
+	if report_fn.startswith('c'):
+		report = g.db.query(CommentFlag).filter_by(id=int(report_fn.lstrip('c'))).first()
+	elif report_fn.startswith('p'):
+		report = g.db.query(Flag).filter_by(id=int(report_fn.lstrip('p'))).first()
+	else:
+		return {"error": "Invalid report ID"}, 400
+
+	_response = f"Removed @{report.user.username}'s report"
+	g.db.delete(report)
+
+	return {"message": _response}, 200
