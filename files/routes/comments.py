@@ -469,8 +469,7 @@ def api_comment(v):
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
 			g.db.add(n)
-			try: g.db.flush()
-			except: g.db.rollback()
+			g.db.flush()
 
 		if parent.author.id != v.id:
 			try:
