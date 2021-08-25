@@ -293,11 +293,6 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
-	if v.id == 1:
-		print(c_aux)
-		print(c_aux.body_html)
-		print(c.comment_aux)
-
 	if v.agendaposter and "trans lives matter" not in c_aux.body_html.lower():
 
 		c.is_banned = True
