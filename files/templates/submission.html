@@ -275,7 +275,7 @@
 						<pre></pre>
 						<ul style="padding-left:20px; margin-bottom: 0;">
 							{% for f in p.ordered_flags %}
-								<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li>
+								<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %}</li> {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="request_toast('DELETE', '/report/p{{ f.id }}')">[remove]</a>{% endif %}
 							{% endfor %}
 						</ul>
 					</div>
