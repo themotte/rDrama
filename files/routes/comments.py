@@ -134,9 +134,7 @@ def api_comment(v):
 	# get parent item info
 	parent_id = parent_fullname.split("_")[1]
 	if parent_fullname.startswith("t2"):
-		print("sex")
 		parent_post = get_post(parent_id, v=v)
-		print('fuck')
 		parent = parent_post
 		parent_comment_id = None
 		level = 1
@@ -500,7 +498,6 @@ def api_comment(v):
 						 )
 
 	g.db.add(vote)
-	c=get_comment(c.id, v=v)
 
 	cache.delete_memoized(comment_idlist)
 	cache.delete_memoized(User.commentlisting, v)
