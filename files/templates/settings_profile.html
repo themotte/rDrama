@@ -12,6 +12,34 @@
 
 		<div class="settings">
 
+			<h2 class="h5" name="referral">Quadrant</h2>
+
+			{% if "pcm" in request.host %}
+			<div class="settings-section rounded">
+
+					<div class="d-lg-flex border-bottom">
+						<div class="title w-lg-25">
+							<label for="quadrant">Quadrant</label>
+						</div>
+
+						<div class="body w-lg-100">
+							<p>Change your quadrant.</p>
+							<div class="input-group mb2">
+								<select id='quadrant' class="form-control" form="profile-settings" name="quadrant" onchange="post('/settings/profile?quadrant='+document.getElementById('quadrant').value, function(){window.location.reload(true);})">
+								{% for entry in ["Centrist", "AuthRight", "AuthLeft", "LibLeft", "LibRight", "AuthCenter", "Left", "LibCenter", "Right", "LibRight"] %}
+									<option value="{{entry}}">
+										{{entry}}
+									</option>
+								{% endfor %}
+							</select>
+							</div>
+
+						</div>
+
+				</div>
+			</div>
+			{% endif %}
+
 			<h2 class="h5" name="referral">Theme</h2>
 
 			<div class="settings-section rounded">
