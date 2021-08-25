@@ -376,7 +376,7 @@
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>
 						{% endif %}
 
-						<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{p.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a></li>
+						<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="http://drama2.github.io/?p={{p.id}}"><i class="fas fa-copy"></i>Copy link</a></li>
 
 						{% if v and not (v.admin_level == 6 and v.id == p.author_id) %}
 							{% if p.id in v.subscribed_idlist() %}
