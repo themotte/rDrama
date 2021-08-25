@@ -62,7 +62,7 @@ def api_flag_comment(cid, v):
 	return "", 204
 
 
-@app.delete('/report/<report_fn>')
+@app.post('/del_report/<report_fn>')
 @auth_required
 @validate_formkey
 def remove_report(report_fn, v):
