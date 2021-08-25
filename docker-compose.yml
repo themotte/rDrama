@@ -40,6 +40,8 @@ services:
       - DEFAULT_THEME=dark
       - DEFAULT_COLOR=ff66ac
       - SLOGAN=Dude bussy lmao
+      - GUMROAD_TOKEN=3435tdfsdudebussylmaoxxt43
+      - GUMROAD_LINK=https://rdrama.gumroad.com/l/tfcvri
     links:
       - "redis"
       - "postgres"
