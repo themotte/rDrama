@@ -293,6 +293,8 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
+	print(c_aux)
+
 	if v.agendaposter and "trans lives matter" not in c_aux.body_html.lower():
 
 		c.is_banned = True
@@ -507,7 +509,7 @@ def api_comment(v):
 
 	parent_post.comment_count = g.db.query(Comment).filter_by(parent_submission=parent_post.id).count()
 	g.db.add(parent_post)
-	g.db.flush()
+	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
 	else: return jsonify({"html": render_template("comments.html",
