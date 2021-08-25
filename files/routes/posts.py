@@ -557,7 +557,8 @@ def submit_post(v):
 	else:
 		url = ""
 
-	if "i.imgur.com" in url: url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
+	if "i.imgur.com" in url: url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
+	if "_d." in url: url += "?maxwidth=9999"
 	
 	body = request.form.get("body", "")
 	# check for duplicate

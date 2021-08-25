@@ -156,9 +156,6 @@ def unsubscribe(v, post_id):
 @auth_required
 def message2(v, username):
 
-	if v.zzz:
-		abort(418)
-
 	user = get_user(username, v=v)
 	if user.is_blocking: return {"error": "You're blocking this user."}, 403
 	if user.is_blocked: return {"error": "This user is blocking you."}, 403
@@ -191,7 +188,7 @@ def message2(v, username):
 	except Exception as e:
 		print(e)
 
-	return redirect('/notifications?messages=true')
+	return redirect(request.referrer)
 
 @app.get("/2faqr/<secret>")
 @auth_required
