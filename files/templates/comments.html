@@ -169,7 +169,7 @@
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.toggle('d-none')">Reply</a>
 					<pre></pre>
 					<form class="d-none" id="reply-to-{{c.id}}" action="/@{{c.author.username}}/reply/{{c.id}}" method="post">
-						<textarea id="input-message-{{c.id}}" form="reply-to-{{c.id}}" name="message" rows="3" class="form-control" required></textarea>
+						<textarea id="input-message-{{c.id}}" form="reply-to-{{c.id}}" maxlength="1000" name="message" rows="3" class="form-control" required></textarea>
 						<pre></pre>
 						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message-{{c.id}}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></pre>
 						&nbsp;

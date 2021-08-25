@@ -99,9 +99,6 @@ def get_profilecss(username):
 @auth_required
 def messagereply(v, username, id):
 
-	#if v.zzz:
-	#	abort(418)
-
 	message = request.form.get("message", "")[:1000].strip()
 	user = get_user(username)
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
