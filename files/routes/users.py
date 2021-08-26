@@ -126,7 +126,7 @@ def messagereply(v, username, id):
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 	
-	if request.referrer == f'https://{site}/notifications': return redirect("/notifications?all=true")
+	if request.referrer.endswith('/notifications'): return redirect("/notifications?all=true")
 	else: return redirect(request.referrer)
 
 @app.get("/songs/<id>")
