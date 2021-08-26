@@ -126,7 +126,7 @@ def messagereply(v, username, id):
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 	
-	if v.id == 753: print(request.referrer)
+	print(request.referrer)
 	if request.referrer == '/notifications': return redirect("/notifications?all=true")
 	else: return redirect(request.referrer)
 
