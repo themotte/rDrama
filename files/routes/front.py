@@ -229,7 +229,7 @@ def front_all(v):
 @cache.memoize()
 def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 
-	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False,stickied=False,private=False,).filter(Submission.deleted_utc == 0)
+	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
 	if v and v.admin_level == 0:
 		blocking = g.db.query(
