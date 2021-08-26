@@ -516,6 +516,16 @@ def submit_post(v):
 	url = request.form.get("url", "")
 
 	if url:
+		for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
+			url = url.replace(rd, "https://old.reddit.com/")
+				
+		url = url.replace("https://mobile.twitter.com", "https://twitter.com")
+		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
+			url = url.replace("https://streamable.com/", "https://streamable.com/e/")
+
+		if "i.imgur.com" in url: url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
+		if "_d." in url: url += "?maxwidth=9999"
+
 		repost = g.db.query(Submission).join(Submission.submission_aux).filter(
 			SubmissionAux.url.ilike(url),
 			Submission.deleted_utc == 0,
@@ -556,9 +566,6 @@ def submit_post(v):
 		url = urlunparse(new_url)
 	else:
 		url = ""
-
-	if "i.imgur.com" in url: url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
-	if "_d." in url: url += "?maxwidth=9999"
 	
 	body = request.form.get("body", "")
 	# check for duplicate
@@ -766,13 +773,6 @@ def submit_post(v):
 	g.db.add(new_post)
 	g.db.flush()
 	
-	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
-		url = url.replace(rd, "https://old.reddit.com/")
-			
-	url = url.replace("https://mobile.twitter.com", "https://twitter.com")
-	if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
-		url = url.replace("https://streamable.com/", "https://streamable.com/e/")
-
 
 	new_post_aux = SubmissionAux(id=new_post.id,
 								 url=url,
