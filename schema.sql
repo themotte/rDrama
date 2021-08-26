@@ -1046,7 +1046,6 @@ CREATE TABLE public.users (
     highres text,
     rent_utc integer,
     patron integer,
-    zzz boolean DEFAULT false,
     controversial boolean,
     background text,
     verified boolean
