@@ -1929,6 +1929,10 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	background-color:rgba(30,30,30,0.9);
 }
 
+.modal-backdrop {
+	background-color: transparent;
+}
+
 .modal-header {
 	border-bottom: none;
 	background-color: $gray-400;
