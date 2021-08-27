@@ -4,6 +4,8 @@ from files.helpers.get import *
 from files.__main__ import app, cache
 from files.classes.submission import Submission
 
+defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "day").strip()
+
 @app.get("/post/")
 def slash_post():
 	return redirect("/")
@@ -207,7 +209,7 @@ def front_all(v):
 		defaulttime = v.defaulttime
 	else:
 		defaultsorting = "hot"
-		defaulttime = "day"
+		defaulttime = defaulttimefilter
 
 	sort=request.args.get("sort", defaultsorting)
 	t=request.args.get('t', defaulttime)
@@ -409,7 +411,7 @@ def all_comments(v):
 	page = int(request.args.get("page", 1))
 
 	sort=request.args.get("sort", "new")
-	t=request.args.get("t", "day")
+	t=request.args.get("t", defaulttimefilter)
 
 	idlist = comment_idlist(v=v,
 							page=page,

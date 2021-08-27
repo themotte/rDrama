@@ -19,6 +19,8 @@ from files.helpers.security import *
 site = environ.get("DOMAIN").strip()
 defaulttheme = environ.get("DEFAULT_THEME", "light").strip()
 defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
+defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "day").strip()
+
 class User(Base, Stndrd, Age_times):
 	__tablename__ = "users"
 	id = Column(Integer, primary_key=True)
@@ -86,7 +88,7 @@ class User(Base, Stndrd, Age_times):
 	stored_subscriber_count = Column(Integer, default=0)
 	defaultsortingcomments = Column(String, default="top")
 	defaultsorting = Column(String, default="hot")
-	defaulttime = Column(String, default="day")
+	defaulttime = Column(String, default=defaulttimefilter)
 
 	is_nofollow = Column(Boolean, default=False)
 	custom_filter_list = Column(String(1000))
