@@ -11,7 +11,7 @@ valid_password_regex = re.compile("^.{8,100}$")
 @auth_desired
 def login_get(v):
 
-	redir = request.args.get("redirect", "/")
+	redir = request.args.get("redirect", "/").replace("/logged_out", "")
 	if v:
 		return redirect(redir)
 
@@ -155,8 +155,8 @@ def login_post():
 
 	# check for previous page
 
-	redir = request.form.get("redirect", "/")
-	return redirect(redir.replace("/logged_out", ""))
+	redir = request.form.get("redirect", "/").replace("/logged_out", "")
+	return redirect(redir)
 
 
 @app.get("/me")
@@ -216,7 +216,7 @@ def sign_up_get(v):
 					   digestmod='md5'
 					   ).hexdigest()
 
-	redir = request.args.get("redirect", None)
+	redir = request.args.get("redirect", "/").replace("/logged_out", "")
 
 	error = request.args.get("error", None)
 
