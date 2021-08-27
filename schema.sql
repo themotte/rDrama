@@ -1048,7 +1048,7 @@ CREATE TABLE public.users (
     patron integer,
     controversial boolean,
     background text,
-    verified boolean
+    verified text
 );
 
 
