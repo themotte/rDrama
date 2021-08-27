@@ -101,7 +101,7 @@ def flagged_comments(v):
 
 @app.get("/admin/test")
 @limiter.limit("1/day")
-def admin_test(v):
+def admin_test():
 	return "fug"
 
 @app.get("/admin")
