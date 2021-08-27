@@ -850,8 +850,15 @@ def api_sticky_post(post_id, v):
 	if post:
 		post.stickied = not (post.stickied)
 		g.db.add(post)
-		
-	cache.delete_memoized(frontlist)
+
+		ma=ModAction(
+			kind="pin_post" if post.is_pinned else "unpin_post",
+			user_id=v.id,
+			target_post_id=post.id
+		)
+		g.db.add(ma)
+
+		cache.delete_memoized(frontlist)
 
 	return "", 204
 
