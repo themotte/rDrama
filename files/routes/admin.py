@@ -852,7 +852,7 @@ def api_sticky_post(post_id, v):
 		g.db.add(post)
 
 		ma=ModAction(
-			kind="unpin_post" if post.stickied else "pin_post",
+			kind="pin_post" if post.stickied else "unpin_post",
 			user_id=v.id,
 			target_submission_id=post.id
 		)
