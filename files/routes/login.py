@@ -191,7 +191,6 @@ def sign_up_get(v):
 		abort(403)
 
 	# check for referral in link
-	ref_id = None
 	ref = request.args.get("ref", None)
 	if ref:
 		ref_user = g.db.query(User).filter(User.username.ilike(ref)).first()
@@ -204,9 +203,7 @@ def sign_up_get(v):
 
 	# Make a unique form key valid for one account creation
 	now = int(time.time())
-	token = token_hex(16)
-	session["signup_token"] = token
-	ip = request.remote_addr
+	session["signup_token"] = token_hex(16)
 
 	formkey_hashstr = str(now) + token + agent
 
