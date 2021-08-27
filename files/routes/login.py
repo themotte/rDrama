@@ -203,7 +203,8 @@ def sign_up_get(v):
 
 	# Make a unique form key valid for one account creation
 	now = int(time.time())
-	session["signup_token"] = token_hex(16)
+	token = token_hex(16)
+	session["signup_token"] = token
 
 	formkey_hashstr = str(now) + token + agent
 
