@@ -144,12 +144,10 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		abort(400)
 
 	firstrange = 50 * (page - 1)
-	secondrange = firstrange+1000
+	secondrange = firstrange+200
 	posts = posts[firstrange:secondrange]
 
 	if v and v.hidevotedon: posts = [x for x in posts if not (hasattr(x, 'voted') and x.voted != 0)]
-
-	if page == 1: posts = g.db.query(Submission).filter_by(stickied=True).all() + posts
 
 	words = ['captainmeta4', ' cm4 ', 'dissident001', 'ladine']
 
@@ -180,6 +178,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	next_exists = (len(posts) == 51)
 
 	posts = posts[:50]
+
+	if page == 1: posts = g.db.query(Submission).filter_by(stickied=True).all() + posts
 
 	if ids_only: posts = [x.id for x in posts]
 
