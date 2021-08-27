@@ -27749,14 +27749,6 @@ body {
   background-color: #161b22 !important;
 }
 
-.form-control {
-  border-color: #21262d !important;
-}
-
-#frontpage .posts .card, #userpage .posts .card, #search .posts .card, #guild .posts .card, #settings-guild .posts .card {
-  border-color: #21262d !important;
-}
-
 .transparent {
   background: None !important;
 }
