@@ -99,11 +99,6 @@ def flagged_comments(v):
 						   v=v,
 						   standalone=True)
 
-@app.get("/admin/test")
-@limiter.limit("1/day")
-def admin_test():
-	return "fug"
-
 @app.get("/admin")
 @admin_level_required(3)
 def admin_home(v):
