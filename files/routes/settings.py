@@ -172,7 +172,10 @@ def settings_profile_post(v):
 	if quadrant and "pcm" in request.host.lower():
 		v.quadrant = quadrant
 		v.customtitle = quadrant
-		if quadrant=="LibLeft":
+		if quadrant=="Centrist":
+			v.namecolor = "7f8fa6"
+			v.titlecolor = "7f8fa6"
+		elif quadrant=="LibLeft":
 			v.namecolor = "62ca56"
 			v.titlecolor = "62ca56"
 		elif quadrant=="LibRight":
