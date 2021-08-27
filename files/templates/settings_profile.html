@@ -28,7 +28,7 @@
 							<div class="input-group mb2">
 								<select id='quadrant' class="form-control" form="profile-settings" name="quadrant" onchange="post('/settings/profile?quadrant='+document.getElementById('quadrant').value, function(){window.location.reload(true);})">
 								{% for entry in ["Centrist", "AuthRight", "AuthLeft", "LibLeft", "LibRight", "AuthCenter", "Left", "LibCenter", "Right", "LibRight"] %}
-									<option value="{{entry}}">
+									<option value="{{entry}}" {% if v.quadrant==entry %} selected {% endif %}>
 										{{entry}}
 									</option>
 								{% endfor %}
