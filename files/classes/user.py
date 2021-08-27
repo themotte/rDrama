@@ -27,6 +27,7 @@ class User(Base, Stndrd, Age_times):
 	background = Column(String)
 	customtitle = Column(String)
 	customtitleplain = Column(String)
+	quadrant = Column(String)
 	titlecolor = Column(String, default=defaultcolor)
 	theme = Column(String, default=defaulttheme)
 	themecolor = Column(String, default=defaultcolor)
