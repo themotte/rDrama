@@ -160,7 +160,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 					posts.remove(post)
 					break
 
-	if random.random() < 0.02:
+	if random.random() < 0.004:
 		for post in posts:
 			if post.author and post.author.shadowbanned:
 				rand = random.randint(500,1400)

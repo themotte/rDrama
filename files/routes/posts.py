@@ -163,7 +163,7 @@ def post_id(pid, anything=None, v=None):
 		else:
 			abort(422)
 
-		if random.random() < 0.1:
+		if random.random() < 0.02:
 			for comment in comments:
 				if comment.author and comment.author.shadowbanned:
 					rand = random.randint(500,1400)
