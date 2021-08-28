@@ -1,6 +1,8 @@
 from files.mail import *
 from files.__main__ import app, limiter
 from files.helpers.alerts import *
+from files.classes.award import AWARDS
+from sqlalchemy import func
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
@@ -43,9 +45,25 @@ def participation_stats(v):
 @app.get("/paypigs")
 @auth_desired
 def patrons(v):
+	query = g.db.query(
+			User.id, User.username, User.patron, User.namecolor,
+			AwardRelationship.kind.label('last_award_kind'), func.count(AwardRelationship.id).label('last_award_count')
+		).filter(AwardRelationship.submission_id==None, AwardRelationship.comment_id==None) \
+		.group_by(User.username, User.patron, User.id, User.namecolor, AwardRelationship.kind) \
+		.order_by(User.patron.desc(), AwardRelationship.kind.asc()) \
+		.join(User).all()
 
-	users = g.db.query(User).options(lazyload('*')).filter(User.patron > 0).order_by(User.patron.desc()).all()
-	return render_template("patrons.html", v=v, users=users)
+	result = {}
+	for row in (r._asdict() for r in query):
+		user_id = row['id']
+		if user_id not in result:
+			result[user_id] = row
+			result[user_id]['awards'] = {}
+
+		result[user_id]['awards'][row['last_award_kind']] = (AWARDS[row['last_award_kind']],
+			row['last_award_count'])
+
+	return render_template("patrons.html", v=v, result=result)
 
 @app.get("/admins")
 @auth_desired
