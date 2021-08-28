@@ -27707,6 +27707,7 @@ img.emoji {
   border: 1px solid #38a169;
   padding: 10px;
   border-radius: 3px;
+  background-color: #21262d !important;
 }
 
 .text-info {
