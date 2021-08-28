@@ -126,8 +126,9 @@ def messagereply(v, username, id):
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 	
-	if request.referrer.endswith('/notifications'): return redirect("/notifications?all=true")
+	if not request.referrer or request.referrer.endswith('/notifications'): return redirect("/notifications?all=true")
 	else: return redirect(request.referrer)
+	
 
 @app.get("/songs/<id>")
 def songs(id):
@@ -187,7 +188,7 @@ def message2(v, username):
 	except Exception as e:
 		print(e)
 
-	return redirect(request.referrer)
+	return redirect(f"/@{username}")
 
 @app.get("/2faqr/<secret>")
 @auth_required
