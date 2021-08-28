@@ -188,8 +188,7 @@ def message2(v, username):
 	except Exception as e:
 		print(e)
 
-	if request.referrer: return redirect(request.referrer)
-	else: return redirect(f"/@{username}")
+	return redirect(f"/@{username}")
 
 @app.get("/2faqr/<secret>")
 @auth_required
