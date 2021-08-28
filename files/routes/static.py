@@ -45,14 +45,12 @@ def participation_stats(v):
 @app.get("/paypigs")
 @auth_desired
 def patrons(v):
-	import time
-	s = time.time()
 	query = g.db.query(
 			User.id, User.username, User.patron, User.namecolor,
 			AwardRelationship.kind.label('last_award_kind'), func.count(AwardRelationship.id).label('last_award_count')
-		).filter(AwardRelationship.submission_id==None, AwardRelationship.comment_id==None) \
+		).filter(AwardRelationship.submission_id==None, AwardRelationship.comment_id==None, User.patron > 0) \
 		.group_by(User.username, User.patron, User.id, User.namecolor, AwardRelationship.kind) \
-		.order_by(User.patron.desc(), AwardRelationship.kind.asc()) \
+		.order_by(User.patron.desc(), AwardRelationship.kind.desc()) \
 		.join(User).all()
 
 	result = {}
@@ -66,9 +64,7 @@ def patrons(v):
 		if kind in AWARDS.keys():
 			result[user_id]['awards'][kind] = (AWARDS[kind], row['last_award_count'])
 
-	r = render_template("patrons.html", v=v, result=result)
-	print((time.time()-s)*1000, flush=True)
-	return r
+	return render_template("patrons.html", v=v, result=result)
 
 @app.get("/admins")
 @auth_desired
