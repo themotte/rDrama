@@ -160,9 +160,9 @@
 
 					{% if v and v.admin_level == 6 and v.id!=p.author_id %}
 						{% if p.author.is_suspended %}
-							<button class="nobackground btn btn-link btn-block btn-lg text-success text-left" href="javascript:void(0)" onclick="post_toast('/unban_user/{{p.author_id}}?toast=1')"><i class="fas fa-user-minus mr-3"></i>Unban user</a></button>
+							<button class="nobackground btn btn-link btn-block btn-lg text-success text-left" href="javascript:void(0)" onclick="post('/unban_user/{{p.author_id}}', function(){window.location.reload(true);})"><i class="fas fa-user-minus mr-3"></i>Unban user</a></button>
 						{% else %}
-							<button class="nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}?toast=1')"><i class="fas fa-user-minus mr-3"></i>Ban user</a></button>
+							<button class="nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post('/ban_user/{{p.author_id}}', function(){window.location.reload(true);})"><i class="fas fa-user-minus mr-3"></i>Ban user</a></button>
 						{% endif %}
 					{% endif %}
 
