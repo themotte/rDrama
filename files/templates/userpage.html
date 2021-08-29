@@ -215,7 +215,7 @@
 						<a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
 						<a href="/views" class="btn btn-secondary">Profile views</a>
 					{% endif %}
-					{% if v and v.id != u.id and v.admin_level > 1 and u.admin_level <= 1 %}
+					{% if v and v.id != u.id and v.admin_level > 1 %}
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
 							<div class="w-lg-100">
@@ -433,7 +433,7 @@
 						<button class="btn btn-primary mt-3" onclick="transferCoins(true)">Gift</button>
 					</div>
 					
-					{% if v.admin_level > 1 and u.admin_level <= 1 %}
+					{% if v.admin_level > 1 %}
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
 
@@ -518,7 +518,7 @@
 						{% endif %}
 						<pre></pre>
 						<p>User ID: {{u.id}}</p>
-						{% if v.admin_level > 1 and u.admin_level <= 1 %}
+						{% if v.admin_level > 1 %}
 						{% if u.is_private %}
 							<p>User has private mode enabled.</p>
 						{% endif %}
