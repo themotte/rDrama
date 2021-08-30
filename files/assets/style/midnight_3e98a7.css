@@ -27742,20 +27742,12 @@ img.emoji {
   padding: 0.5rem 0.8rem 0.3rem 0.7rem;
 }
 
-body {
+body, .navbar-light, .navbar-dark, .card {
   background-color: #21262d !important;
 }
 
-.navbar-light, .navbar-dark {
-  background-color: #161b22 !important;
-}
-
-.transparent {
+.transparent, #login {
   background: None !important;
-}
-
-#login {
-  background: None;
 }
 
 /*# sourceMappingURL=midnight_3e98a7.css.map */
