@@ -108,7 +108,7 @@ def messagereply(v, username, id):
 															Comment.sentto == user.id,
 															CommentAux.body == message,
 															).options(contains_eager(Comment.comment_aux)).first()
-	if existing: return redirect('/notifications?messages=true#comment-{existing.id}')
+	if existing: return redirect(f'/notifications?messages=true#comment-{existing.id}')
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
 	text_html = sanitize(text_html)
