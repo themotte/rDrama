@@ -18,7 +18,8 @@ def notifications(v):
 
 
 
-	page = int(request.args.get('page', 1))
+	try: page = int(request.args.get('page', 1))
+	except: page = 1
 	all_ = request.args.get('all', False)
 	messages = request.args.get('messages', False)
 	posts = request.args.get('posts', False)

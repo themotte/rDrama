@@ -40,7 +40,8 @@ def agendaposters(v):
 @admin_level_required(3)
 def image_posts_listing(v):
 
-	page = int(request.args.get('page', 1))
+	try: page = int(request.args.get('page', 1))
+	except: page = 1
 
 	posts = g.db.query(Submission).order_by(Submission.id.desc())
 
