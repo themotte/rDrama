@@ -131,8 +131,8 @@ def monthly(v):
 			grant_awards["gold"] = 10
 			grant_awards["ban"] = 3
 		elif u.patron == 5:
-		 	grant_awards["shit"] = 10
-		 	grant_awards["gold"] = 10
+		 	grant_awards["shit"] = 20
+		 	grant_awards["gold"] = 20
 		 	grant_awards["ban"] = 6
 
 
@@ -256,8 +256,8 @@ def badge_grant_post(v):
 			grant_awards["ban"] = 3
 		elif badge_id == 25:
 		 	if user.discord_id: add_role(user, "5")
-		 	grant_awards["shit"] = 10
-		 	grant_awards["gold"] = 10
+		 	grant_awards["shit"] = 20
+		 	grant_awards["gold"] = 20
 		 	grant_awards["ban"] = 6
 
 		if len(grant_awards):
