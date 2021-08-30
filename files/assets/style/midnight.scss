@@ -43,7 +43,7 @@ $reddit: #ED4630;
 @import "./node_modules/bootstrap/scss/bootstrap.scss";
 @import "./main.scss";
 
-body, .navbar-light, .navbar-dark, .card {
+body, .navbar-light, .navbar-dark, .card, .modal-content {
 	background-color: $bg-dark !important;
 }
 
