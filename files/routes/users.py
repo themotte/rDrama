@@ -523,7 +523,7 @@ def unfollow_user(username, v):
 	target.stored_subscriber_count = g.db.query(Follow).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
-	existing = g.db.query(Notification).filter_by(followsender=v.id, user_id=target.id).first()
+	existing = g.db.query(Notification).filter_by(unfollowsender=v.id, user_id=target.id).first()
 	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has unfollowed you!")
 	return "", 204
 
