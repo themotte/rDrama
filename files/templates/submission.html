@@ -98,7 +98,7 @@
 					<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#reportPostModal" onclick="report_postModal('{{p.id}}','{{'@'+p.author.username}}')" class="d-block"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 					{% if v and v.id==p.author_id %}
 						{% if p.private %}
-						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/publish/{{p.id}}')" data-dismiss="modal"><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</a></button>
+						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/publish/{{p.id}}')" data-dismiss="modal"><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</a></button>
 						{% endif %}
 
 						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-dismiss="modal" onclick="togglePostEdit('{{p.id}}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
@@ -106,7 +106,7 @@
 						<button class="nobackground btn btn-link btn-block btn-lg text-muted text-left" id="pin-post-{{p.id}}" href="javascript:void(0)" onclick="post('/pin/{{p.id}}',callback=function(){window.location.reload(true);})"><i class="fas fa-thumbtack text-center mr-3"></i>{% if p.is_pinned %}Unpin from your profile{% else %}Pin to your profile{% endif %}</button>
 
 						{% if p.deleted_utc > 0 %}
-							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post('/undelete_post/{{p.id}}')" data-dismiss="modal"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
+							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast('/undelete_post/{{p.id}}')" data-dismiss="modal"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
 						{% else %}
 							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
 						{% endif %}
@@ -119,15 +119,15 @@
 					{% endif %}
 
 					{% if v and p.id in v.subscribed_idlist() %}
-						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/unsubscribe/{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye-slash text-center text-muted mr-3"></i>Unsubscribe</a></button>
+						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/unsubscribe/{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye-slash text-center text-muted mr-3"></i>Unsubscribe</a></button>
 					{% elif v %}
-						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/subscribe/{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye text-center text-muted mr-3"></i>Subscribe</a></button>
+						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/subscribe/{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye text-center text-muted mr-3"></i>Subscribe</a></button>
 					{% endif %}
 
 					{% if v and p.id in v.saved_idlist() %}
-						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/unsave_post/{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</a></button>
+						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/unsave_post/{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</a></button>
 					{% elif v %}
-						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post('/save_post/{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Save</a></button>
+						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast('/save_post/{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Save</a></button>
 					{% endif %}
 
 					{% if v %}
@@ -155,14 +155,14 @@
 					{% endif %}
 
 					{% if v and (v.id==p.author_id or v.admin_level>=3) %}
-						<button class="nobackground btn btn-link btn-block btn-lg text-left text-danger" onclick="post('/toggle_post_nsfw/{{p.id}}')" data-dismiss="modal"><i class="far fa-eye-evil text-center text-danger mr-3"></i>Toggle +18</button>
+						<button class="nobackground btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast('/toggle_post_nsfw/{{p.id}}')" data-dismiss="modal"><i class="far fa-eye-evil text-center text-danger mr-3"></i>Toggle +18</button>
 					{% endif %}
 
 					{% if v and v.admin_level == 6 and v.id!=p.author_id %}
 						{% if p.author.is_suspended %}
-							<button class="nobackground btn btn-link btn-block btn-lg text-success text-left" href="javascript:void(0)" onclick="post('/unban_user/{{p.author_id}}')" data-dismiss="modal"><i class="fas fa-user-minus mr-3"></i>Unban user</a></button>
+							<button class="nobackground btn btn-link btn-block btn-lg text-success text-left" href="javascript:void(0)" onclick="post_toast('/unban_user/{{p.author_id}}')" data-dismiss="modal"><i class="fas fa-user-minus mr-3"></i>Unban user</a></button>
 						{% else %}
-							<button class="nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post('/ban_user/{{p.author_id}}')" data-dismiss="modal"><i class="fas fa-user-minus mr-3"></i>Ban user</a></button>
+							<button class="nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast('/ban_user/{{p.author_id}}')" data-dismiss="modal"><i class="fas fa-user-minus mr-3"></i>Ban user</a></button>
 						{% endif %}
 					{% endif %}
 
