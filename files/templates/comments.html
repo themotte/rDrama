@@ -272,7 +272,7 @@
 
 					{% endif %}
 					<li class="list-inline-item text-muted d-none d-md-inline-block"><a {% if v %}href="{{c.permalink}}?context=5#context"{% else %}href="/logged_out{{c.permalink}}?context=5#context"{% endif %}{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-book-open"></i>Context</a></li>
-					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{% if 'rdrama' in request.host %}http://drama2.github.io/?c={{c.id}}{% else %}{{c.permalink | full_link}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a></li>
+					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{% if 'rdrama' in request.host %}https://ourdrama.fun{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a></li>
 					
 					{% if v %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)"><i class="fas fa-flag fa-fw"></i>Report</a></li>
