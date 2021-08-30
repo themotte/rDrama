@@ -43,18 +43,10 @@ $reddit: #ED4630;
 @import "./node_modules/bootstrap/scss/bootstrap.scss";
 @import "./main.scss";
 
-body {
+body, .navbar-light, .navbar-dark, .card {
 	background-color: $bg-dark !important;
 }
 
-.navbar-light, .navbar-dark {
-	background-color: $gray-800 !important;
-}
-
-.transparent {
+.transparent, #login {
 	background: None !important;
-}
-
-#login {
-	background: None;
 }
