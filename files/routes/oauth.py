@@ -117,13 +117,13 @@ def admin_app_approve(v, aid):
 def admin_app_revoke(v, aid):
 
 	app = g.db.query(OauthApp).filter_by(id=aid).first()
+	if app.id:
+		for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
-	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
+		g.db.flush()
+		send_notification(NOTIFICATIONS_ACCOUNT, app.author, f"Your application `{app.app_name}` has been revoked.")
 
-	g.db.flush()
-	send_notification(NOTIFICATIONS_ACCOUNT, app.author, f"Your application `{app.app_name}` has been revoked.")
-
-	g.db.delete(app)
+		g.db.delete(app)
 
 	return {"message": f"App revoked"}
 
