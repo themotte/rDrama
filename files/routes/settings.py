@@ -285,11 +285,11 @@ def gumroad(v):
 		grant_awards["shit"] = 10
 		grant_awards["gold"] = 10
 		grant_awards["ban"] = 3
-	# elif tier == 5:
-	# 	if v.discord_id: add_role(v, "5")
-	# 	grant_awards["shit"] = 10
-	# 	grant_awards["gold"] = 10
-	# 	grant_awards["ban"] = 6
+	elif tier == 5:
+		if v.discord_id: add_role(v, "5")
+		grant_awards["shit"] = 10
+		grant_awards["gold"] = 10
+		grant_awards["ban"] = 6
 
 	_awards = []
 

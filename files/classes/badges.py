@@ -2,7 +2,9 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
 from files.__main__ import Base, app
+from os import environ
 
+site_name = environ.get("SITE_NAME").strip()
 
 class BadgeDef(Base):
 
@@ -22,11 +24,11 @@ class BadgeDef(Base):
 	@property
 	def path(self):
 
-		return f"/assets/images/badges/{self.icon}"
+		return f"/assets/images/{site_name}/badges/{self.icon}"
 
 	@property
 	def json_core(self):
-		data={
+		return {
 			"name": self.name,
 			"description": self.description,
 			"icon": self.icon
