@@ -108,7 +108,7 @@ def messagereply(v, username, id):
 															Comment.sentto == user.id,
 															CommentAux.body == message,
 															).options(contains_eager(Comment.comment_aux)).first()
-	if existing: return redirect('/notifications?messages=true')
+	if existing: return redirect('/notifications?messages=true#comment-{existing.id}')
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
 	text_html = sanitize(text_html)
@@ -126,8 +126,8 @@ def messagereply(v, username, id):
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 	
-	if not request.referrer or request.referrer.endswith('/notifications'): return redirect(f"/notifications?all=true#comment-{new_comment.id}")
-	else: return redirect(f"{request.referrer}#comment-{new_comment.id}")
+	if not request.referrer or request.referrer.endswith('/notifications'): return redirect(f"/notifications?all=true#comment-{id}")
+	else: return redirect(f"{request.referrer}#comment-{id}")
 	
 
 @app.get("/songs/<id>")
