@@ -160,7 +160,7 @@ class User(Base, Stndrd, Age_times):
 	def strid(self):
 		return str(self.id)
 
-	@cache.memoize()
+	@cache.memoize(timeout=86400)
 	def userpagelisting(self, v=None, page=1, sort="new", t="all"):
 
 		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
@@ -202,7 +202,7 @@ class User(Base, Stndrd, Age_times):
 		listing = [x.id for x in submissions[firstrange:secondrange]]
 		return listing
 
-	@cache.memoize()
+	@cache.memoize(timeout=86400)
 	def commentlisting(self, v=None, page=1, sort="new", t="all"):
 		comments = self.comments.options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.post)
 
@@ -350,7 +350,7 @@ class User(Base, Stndrd, Age_times):
 		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(
 			Comment.author_id == AUTOJANNY_ACCOUNT).count()
 
-	@cache.memoize()
+	@cache.memoize(timeout=86400)
 	def notification_messages(self, page=1):
 
 		if self.admin_level == 6: comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id, Comment.sentto==0)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(100).all()
@@ -488,7 +488,7 @@ class User(Base, Stndrd, Age_times):
 		if self.bannerurl: return self.bannerurl
 		else: return f"https://{site}/assets/images/default_bg.gif"
 
-	@cache.memoize()
+	@cache.memoize(timeout=86400)
 	def defaultpicture(self):
 		pic = random.randint(1, 150)
 		return f"https://{site}/assets/images/defaultpictures/{pic}.gif"
