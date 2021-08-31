@@ -38,10 +38,10 @@ def pay_rent(v):
 @app.post("/steal")
 @auth_required
 def steal(v):
-	if int(time.time()) - v.created_utc > 604800:
+	if int(time.time()) - v.created_utc < 604800:
 		return "You must have an account older than 1 week in order to stealing."
-	if v.coins > 200:
-		return "You must have more than 200 coins in order to attempt stealing."
+	if v.coins < 100:
+		return "You must have more than 100 coins in order to attempt stealing."
 	if random.randint(1, 10) < 8:
 		v.coins += 2000
 		v.steal_utc = int(time.time())
