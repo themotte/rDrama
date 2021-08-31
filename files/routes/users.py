@@ -204,7 +204,7 @@ def messagereply(v):
 
 	return jsonify({"html": render_template("comments.html",
 														v=v,
-														comments=[c],
+														comments=[new_comment],
 														render_replies=False,
 														)})
 
