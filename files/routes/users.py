@@ -39,25 +39,32 @@ def pay_rent(v):
 @is_not_banned
 def steal(v):
 	if int(time.time()) - v.created_utc < 604800:
-		return "You must have an account older than 1 week in order to stealing."
-	if v.coins < 100:
+		return "You must have an account older than 1 week in order to attempt stealing."
+	if v.coins < 5000:
 		return "You must have more than 100 coins in order to attempt stealing."
-	if random.randint(1, 10) < 8:
-		v.coins += 2000
+	u = get_account(253)
+	if random.randint(1, 10) < 5:
+		v.coins += 1000
 		v.steal_utc = int(time.time())
 		g.db.add(v)
-		u = get_account(253)
-		u.coins -= 2000
+		u.coins -= 1000
 		g.db.add(u)
-		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has stolen 2000 dramacoins from you!")
-		send_notification(NOTIFICATIONS_ACCOUNT, v, f"You have successfully stolen 2000 dramacoins!")
+		send_notification(NOTIFICATIONS_ACCOUNT, u, f"Some [grubby little rentoid](/@{v.username}) has absconded with 1000 of your hard-earned dramacoins to fuel his Funko Pop addiction. Stop being so trusting.")
+		send_notification(NOTIFICATIONS_ACCOUNT, v, f"You have successfully shorted your heroic landlord 1000 dramacoins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
 	else:
-		v.fail_utc = int(time.time())
-		v.ban(days=1, reason="Failed thief")
+		if random.random() < 0.15:
+			send_notification(NOTIFICATIONS_ACCOUNT, u, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you sold his Nintendo Switch for 500 dramacoins and called the cops. He was sentenced to one (1) day in renthog prison.")
+			send_notification(NOTIFICATIONS_ACCOUNT, v, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. The police take you away and laugh as you impotently stutter A-ACAB :sob:  You are fined 500 dramacoins and sentenced to one (1) day in renthog prison.")
+			v.ban(days=1, reason="Jailed thief")
+			v.fail_utc = int(time.time())
+		else:
+			send_notification(NOTIFICATIONS_ACCOUNT, u, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you showed mercy in exchange for a 500 dramacoin tip. This time.")
+			send_notification(NOTIFICATIONS_ACCOUNT, v, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. You were able to convince him to spare your life with a 500 dramacoin tip. This time.")
+			v.fail2_utc = int(time.time())
+		v.coins -= 500
 		g.db.add(v)
-		u = get_account(253)
-		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has failed to steal coins from you and has been jailed by the authorities for 1 day")
-		send_notification(NOTIFICATIONS_ACCOUNT, v, f"The authorities have caught you, you have been banned for 1 day")
+		u.coins += 500
+		g.db.add(u)
 	return "", 204
 
 
@@ -73,7 +80,8 @@ def rentoids(v):
 def thiefs(v):
 	successful = g.db.query(User).filter(User.steal_utc > 0).all()
 	failed = g.db.query(User).filter(User.fail_utc > 0).all()
-	return render_template("thiefs.html", v=v, successful=successful, failed=failed)
+	failed2 = g.db.query(User).filter(User.fail2_utc > 0).all()
+	return render_template("thiefs.html", v=v, successful=successful, failed=failed, failed2=failed2)
 
 
 @app.post("/@<username>/suicide")
@@ -97,7 +105,7 @@ def get_coins(v, username):
 	else: return {"error": "invalid_user"}, 404
 
 @app.post("/@<username>/transfer_coins")
-@auth_required
+@is_not_banned
 @validate_formkey
 def transfer_coins(v, username):
 	receiver = get_user(username)
