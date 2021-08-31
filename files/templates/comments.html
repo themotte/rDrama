@@ -171,7 +171,7 @@
 					
 					<div id="reply-m-{{c.id}}" class="d-none">
 						<div id="comment-form-space-{{c.fullname}}" class="comment-write collapsed child">		
-							<form class="d-none" id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
+							<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
 								<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 								<textarea name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3"></textarea> 
 								<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
