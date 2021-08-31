@@ -519,20 +519,20 @@
 
 		}
 
-		post_reply=function(id, fullname){
+		post_reply=function(id){
 
 			var form = new FormData();
 
 			form.append('formkey', formkey());
 			form.append('parent_id', id);
-			form.append('body', document.getElementById('reply-form-body-'+fullname).value);
-			form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
+			form.append('body', document.getElementById('reply-form-body-'+id).value);
+			form.append('file', document.getElementById('file-upload-reply-'+id).files[0]);
 			var xhr = new XMLHttpRequest();
 			xhr.open("post", "/reply");
 			xhr.withCredentials=true;
 			xhr.onload=function(){
 				if (xhr.status==200) {
-					commentForm=document.getElementById('comment-form-space-'+fullname);
+					commentForm=document.getElementById('comment-form-space-'+id);
 					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
 					$('#toast-comment-success').toast('dispose');
 					$('#toast-comment-error').toast('dispose');
@@ -548,7 +548,7 @@
 			}
 			xhr.send(form)
 
-			document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
+			document.getElementById('save-reply-to-'+id).classList.add('disabled');
 
 			}
 
