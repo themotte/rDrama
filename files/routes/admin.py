@@ -289,7 +289,7 @@ def badge_grant_post(v):
 
 		g.db.add(user)
 	
-	return redirect(user.url)
+	return redirect("/admin/badge_grant")
 
 
 @app.get("/admin/users")
