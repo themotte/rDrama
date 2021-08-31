@@ -350,6 +350,7 @@ class User(Base, Stndrd, Age_times):
 		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(
 			Comment.author_id == AUTOJANNY_ACCOUNT).count()
 
+	@lazy
 	def notification_subscriptions(self, page=1, all_=False):
 
 		notifications = self.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT)
@@ -368,6 +369,7 @@ class User(Base, Stndrd, Age_times):
 
 		return output
 
+	@lazy
 	def notification_commentlisting(self, page=1, all_=False):
 
 		notifications = self.notifications.join(Notification.comment).filter(
