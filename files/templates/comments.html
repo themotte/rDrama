@@ -166,10 +166,10 @@
 				{{c.realbody(v) | safe}}
 
 				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ACCOUNT and c.author_id!=AUTOJANNY_ACCOUNT and c.author_id!=v.id %}
-					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.toggle('d-none')">Reply</a>
+					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-to-message-{{c.id}}').classList.toggle('d-none')">Reply</a>
 					<pre></pre>
 	
-					<form class="d-none" id="reply-to-{{c.id}}" action="/@{{c.author.username}}/reply/{{c.id}}" method="post"  class="input-group" enctype="multipart/form-data">
+					<form class="d-none" id="reply-to-message-{{c.id}}" action="/@{{c.author.username}}/reply/{{c.id}}" method="post"  class="input-group" enctype="multipart/form-data">
 						<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
 						<textarea name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.fullname}}" aria-label="With textarea" rows="3"></textarea> 
@@ -186,11 +186,11 @@
 								<div id="filename-show-reply-{{c.id}}"><i class="far fa-image"></i></div>
 								<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.id}}').innerHTML='image';" hidden>
 							</label>
-							<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-							<a id="save-reply-to-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-white ml-2" onclick="post_reply('{{c.fullname}}');" href="javascript:void(0)">Reply</a> 
+							<a href="javascript:void(0)" onclick="document.getElementById('reply-to-message-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
+							<a id="save-reply-to-message-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-white ml-2" onclick="post_reply('{{c.fullname}}');" href="javascript:void(0)">Reply</a> 
 						</div>
-						<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-block d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-						<a id="save-reply-to-{{c.fullname}}" class="d-block d-md-none btn btn-primary text-white ml-2" onclick="post_reply('{{c.fullname}}');" href="javascript:void(0)">Reply</a> 
+						<a href="javascript:void(0)" onclick="document.getElementById('reply-to-message-{{c.id}}').classList.add('d-none')" class="d-block d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
+						<a id="save-reply-to-message-{{c.fullname}}" class="d-block d-md-none btn btn-primary text-white ml-2" onclick="post_reply('{{c.fullname}}');" href="javascript:void(0)">Reply</a> 
 					</form>
 				{% endif %}
 			</div>
