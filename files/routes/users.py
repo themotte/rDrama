@@ -375,7 +375,7 @@ def u_username(username, v=None):
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
 		
 		if v and u.id == 253:
-		 	if int(time.time()) - v.rent_utc > 600:
+			if int(time.time()) - v.rent_utc > 600:
 				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
 				else: return render_template("userpage_private.html", u=u, v=v)
 		else:
@@ -472,7 +472,7 @@ def u_username_comments(username, v=None):
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
 		if v and u.id == 253:
-		 	if int(time.time()) - v.rent_utc > 600:
+			if int(time.time()) - v.rent_utc > 600:
 				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
 				else: return render_template("userpage_private.html", u=u, v=v)
 		else:
