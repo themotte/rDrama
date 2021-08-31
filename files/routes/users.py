@@ -171,7 +171,6 @@ def messagereply(v):
 
 	message = request.form.get("body", "")[:1000].strip()
 	user = request.form.get("sentto")
-	id = request.form.get("parent_id")
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	# check existing
@@ -185,6 +184,8 @@ def messagereply(v):
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
 	text_html = sanitize(text_html)
+	id = request.form.get("parent_id")
+	print(id)
 	parent = get_comment(int(id), v=v)
 	new_comment = Comment(author_id=v.id,
 							parent_submission=None,
