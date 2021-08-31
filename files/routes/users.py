@@ -137,7 +137,14 @@ def songs(id):
 	try: id = int(id)
 	except: return '', 400
 	user = g.db.query(User).filter_by(id=id).first()
-	return send_from_directory('/songs/', f'{user.song}.mp3')
+	return redirect(f"/song/{user.song}.mp3")
+
+@app.get("/song/<song>")
+def songs(song):
+	resp = make_response(send_from_directory('/songs/', song))
+	resp.headers.remove("Cache-Control")
+	resp.headers.add("Cache-Control", "public, max-age=2628000")
+	return resp
 
 @app.post("/subscribe/<post_id>")
 @auth_required
