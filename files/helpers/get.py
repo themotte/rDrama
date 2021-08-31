@@ -165,9 +165,7 @@ def get_comment(i, v=None, graceful=False, **kwargs):
 
 		comment=g.db.query(Comment).filter(Comment.id == i).first()
 
-		print("sex")
 		if not comment and not graceful: abort(404)
-		print("fuck")
 
 		block = g.db.query(UserBlock).filter(
 			or_(
