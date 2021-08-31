@@ -169,7 +169,7 @@ def message2(v, username):
 @auth_required
 def messagereply(v):
 
-	message = request.form.get("message")[:1000].strip()
+	message = request.form.get("body", "")[:1000].strip()
 	user = request.form.get("sentto")
 	id = request.form.get("parent_id")
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
