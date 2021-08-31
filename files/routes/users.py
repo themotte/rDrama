@@ -170,9 +170,8 @@ def message2(v, username):
 def messagereply(v):
 
 	message = request.form.get("body", "")[:1000].strip()
-	id = request.form.get("parent_id")
-	print(id)
-	parent = get_comment(int(id), v=v)
+	id = int(request.form.get("parent_id"))
+	parent = get_comment(id, v=v)
 	user = parent.author
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
