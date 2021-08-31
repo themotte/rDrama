@@ -42,7 +42,7 @@ _allowed_tags = tags = ['b',
 						'span',
 						]
 
-noimages = tags = ['b',
+no_images = ['b',
 						'blockquote',
 						'br',
 						'code',
@@ -125,7 +125,7 @@ def sanitize(sanitized, noimages=False):
 		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d." + i.group(3) + "?maxwidth=9999")
 
 	if noimages:
-		sanitized = bleach.Cleaner(tags=noimages,
+		sanitized = bleach.Cleaner(tags=no_images,
 									attributes=_allowed_attributes,
 									protocols=_allowed_protocols,
 									styles=_allowed_styles,
