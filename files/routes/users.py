@@ -66,7 +66,7 @@ def rentoids(v):
 
 @app.get("/thiefs")
 @auth_desired
-def rentoids(v):
+def thiefs(v):
 	successful = g.db.query(User).filter(User.steal_utc > 0).all()
 	failed = g.db.query(User).filter(User.fail_utc > 0).all()
 	return render_template("thiefs.html", v=v, successful=successful, failed=failed)

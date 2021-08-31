@@ -48,6 +48,8 @@ class User(Base, Stndrd, Age_times):
 	created_utc = Column(Integer, default=0)
 	suicide_utc = Column(Integer, default=0)
 	rent_utc = Column(Integer, default=0)
+	steal_utc = Column(Integer, default=0)
+	fail_utc = Column(Integer, default=0)
 	admin_level = Column(Integer, default=0)
 	agendaposter = Column(Boolean, default=False)
 	agendaposter_expires_utc = Column(Integer, default=0)
