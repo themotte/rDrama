@@ -36,7 +36,7 @@ def pay_rent(v):
 
 
 @app.post("/steal")
-@auth_required
+@is_not_banned
 def steal(v):
 	if int(time.time()) - v.created_utc < 604800:
 		return "You must have an account older than 1 week in order to stealing."
@@ -56,7 +56,8 @@ def steal(v):
 		v.ban(days=1, reason="Failed thief")
 		g.db.add(v)
 		u = get_account(253)
-		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has failed to steal coins from you and has been banned for 1 day!")
+		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has failed to steal coins from you and has been jailed by the authorities for 1 day")
+		send_notification(NOTIFICATIONS_ACCOUNT, v, f"The authorities have caught you, you have been banned for 1 day")
 	return "", 204
 
 
