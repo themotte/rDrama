@@ -182,3 +182,4 @@ def send_admin(vid, text):
 	for admin in admins:
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 		g.db.add(notif)
+		cache.delete_memoized(User.notification_messages, admin)

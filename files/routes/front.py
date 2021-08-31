@@ -21,23 +21,18 @@ def notifications(v):
 	messages = request.args.get('messages', False)
 	posts = request.args.get('posts', False)
 	if messages:
-		if v.admin_level == 6: comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id, Comment.sentto==0)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(200).all()
-		else: comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(200).all()
-		comments = [c for c in comments if c.child_comments == []]
+		cids = v.notification_messages(page=page)
 
-		firstrange = 25 * (page - 1)
-		secondrange = firstrange + 26
-		comments = comments[firstrange:secondrange]
 
 		next_exists = (len(comments) == 26)
 		comments = comments[:25]
 	elif posts:
-		cids = v.notification_subscriptions(page=page, all_=all_)
+		cids = v.notification_subscriptions(page=page)
 		next_exists = (len(cids) == 26)
 		cids = cids[:25]
 		comments = get_comments(cids, v=v)
 	else:
-		cids = v.notification_commentlisting(page=page, all_=all_)
+		cids = v.notification_commentlisting(page=page)
 		next_exists = (len(cids) == 26)
 		cids = cids[:25]
 		comments = get_comments(cids, v=v, load_parent=True)

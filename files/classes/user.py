@@ -350,7 +350,19 @@ class User(Base, Stndrd, Age_times):
 		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(
 			Comment.author_id == AUTOJANNY_ACCOUNT).count()
 
-	def notification_subscriptions(self, page=1, all_=False):
+	@cache.memoize()
+	def notification_messages(self, page=1):
+
+		if self.admin_level == 6: comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id, Comment.sentto==0)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(200).all()
+		else: comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(200).all()
+		comments = [c for c in comments if c.child_comments == []]
+
+		firstrange = 25 * (page - 1)
+		secondrange = firstrange + 26
+		comments = comments[firstrange:secondrange]
+
+
+	def notification_subscriptions(self, page=1):
 
 		notifications = self.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT)
 
@@ -368,7 +380,7 @@ class User(Base, Stndrd, Age_times):
 
 		return output
 
-	def notification_commentlisting(self, page=1, all_=False):
+	def notification_commentlisting(self, page=1):
 
 		notifications = self.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,

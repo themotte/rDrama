@@ -95,43 +95,6 @@ def get_profilecss(username):
 	resp.headers.add("Content-Type", "text/css")
 	return resp
 
-@app.post("/@<username>/reply/<id>")
-@auth_required
-def messagereply(v, username, id):
-
-	message = request.form.get("message", "")[:1000].strip()
-	user = get_user(username)
-	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
-
-	# check existing
-	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
-															Comment.sentto == user.id,
-															CommentAux.body == message,
-															).options(contains_eager(Comment.comment_aux)).first()
-	if existing:
-		if existing.parent_comment_id: return redirect(f'/notifications?messages=true#comment-{existing.parent_comment_id}')
-		else: return redirect(f'/notifications?messages=true#comment-{existing.id}')
-
-	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
-	text_html = sanitize(text_html)
-	parent = get_comment(int(id), v=v)
-	new_comment = Comment(author_id=v.id,
-							parent_submission=None,
-							parent_comment_id=id,
-							level=parent.level + 1,
-							sentto=user.id
-							)
-	g.db.add(new_comment)
-	g.db.flush()
-	new_aux = CommentAux(id=new_comment.id, body=message, body_html=text_html)
-	g.db.add(new_aux)
-	notif = Notification(comment_id=new_comment.id, user_id=user.id)
-	g.db.add(notif)
-	
-	if not request.referrer or request.referrer.endswith('/notifications'): return redirect(f"/notifications?all=true#comment-{id}")
-	else: return redirect(f"{request.referrer}#comment-{id}")
-	
-
 @app.get("/songs/<id>")
 def songs(id):
 	try: id = int(id)
@@ -181,6 +144,8 @@ def message2(v, username):
 
 	send_pm(v.id, user, message)
 	
+	cache.delete_memoized(User.notification_messages, user)
+
 	try:
 		beams_client.publish_to_interests(
 			interests=[str(user.id)],
@@ -198,6 +163,46 @@ def message2(v, username):
 		print(e)
 
 	return redirect(f"/@{username}")
+
+
+@app.post("/@<username>/reply/<id>")
+@auth_required
+def messagereply(v, username, id):
+
+	message = request.form.get("message", "")[:1000].strip()
+	user = get_user(username)
+	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+
+	# check existing
+	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
+															Comment.sentto == user.id,
+															CommentAux.body == message,
+															).options(contains_eager(Comment.comment_aux)).first()
+	if existing:
+		if existing.parent_comment_id: return redirect(f'/notifications?messages=true#comment-{existing.parent_comment_id}')
+		else: return redirect(f'/notifications?messages=true#comment-{existing.id}')
+
+	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
+	text_html = sanitize(text_html)
+	parent = get_comment(int(id), v=v)
+	new_comment = Comment(author_id=v.id,
+							parent_submission=None,
+							parent_comment_id=id,
+							level=parent.level + 1,
+							sentto=user.id
+							)
+	g.db.add(new_comment)
+	g.db.flush()
+	new_aux = CommentAux(id=new_comment.id, body=message, body_html=text_html)
+	g.db.add(new_aux)
+	notif = Notification(comment_id=new_comment.id, user_id=user.id)
+	g.db.add(notif)
+
+	cache.delete_memoized(User.notification_messages, user)
+
+	if not request.referrer or request.referrer.endswith('/notifications'): return redirect(f"/notifications?all=true#comment-{id}")
+	else: return redirect(f"{request.referrer}#comment-{id}")
+
 
 @app.get("/2faqr/<secret>")
 @auth_required
