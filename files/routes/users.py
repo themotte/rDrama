@@ -381,10 +381,10 @@ def u_username(username, v=None):
 		if v and u.id == 253:
 			if int(time.time()) - v.rent_utc > 600:
 				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-				else: return render_template("userpage_private.html", u=u, v=v)
+				else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 		else:
 			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-			else: return render_template("userpage_private.html", u=u, v=v)
+			else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 
 	if u.is_blocking and (not v or v.admin_level < 3):
@@ -478,10 +478,10 @@ def u_username_comments(username, v=None):
 		if v and u.id == 253:
 			if int(time.time()) - v.rent_utc > 600:
 				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-				else: return render_template("userpage_private.html", u=u, v=v)
+				else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 		else:
 			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-			else: return render_template("userpage_private.html", u=u, v=v)
+			else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	if u.is_blocking and (not v or v.admin_level < 3):
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
