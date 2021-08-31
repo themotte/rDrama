@@ -165,7 +165,7 @@ def message2(v, username):
 	return redirect(f"/@{username}")
 
 
-@app.post("/reply/<id>")
+@app.post("/reply")
 @auth_required
 def messagereply(v, username, id):
 
@@ -183,7 +183,6 @@ def messagereply(v, username, id):
 		if existing.parent_comment_id: return redirect(f'/notifications?messages=true#comment-{existing.parent_comment_id}')
 		else: return redirect(f'/notifications?messages=true#comment-{existing.id}')
 
-	print("hi")
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
 	text_html = sanitize(text_html)
 	parent = get_comment(int(id), v=v)
