@@ -42,6 +42,39 @@ _allowed_tags = tags = ['b',
 						'span',
 						]
 
+noimages = ['b',
+						'blockquote',
+						'br',
+						'code',
+						'del',
+						'em',
+						'h1',
+						'h2',
+						'h3',
+						'h4',
+						'h5',
+						'h6',
+						'hr',
+						'i',
+						'li',
+						'ol',
+						'p',
+						'pre',
+						'strong',
+						'sub',
+						'sup',
+						'table',
+						'tbody',
+						'th',
+						'thead',
+						'td',
+						'tr',
+						'ul',
+						'marquee',
+						'a',
+						'span',
+						]
+
 _allowed_attributes = {
 	'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-original-name']
 	}
@@ -84,24 +117,37 @@ def a_modify(attrs, whatever):
 	return attrs
 
 
-def sanitize(sanitized):
+def sanitize(sanitized, noimages=False):
 
 	sanitized = sanitized.replace("\ufeff", "").replace("m.youtube.com", "youtube.com")
 
 	for i in re.finditer('https://i.imgur.com/(([^_]*?)\.(jpg|png|jpeg))', sanitized):
 		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d." + i.group(3) + "?maxwidth=9999")
 
-	sanitized = bleach.Cleaner(tags=_allowed_tags,
-								attributes=_allowed_attributes,
-								protocols=_allowed_protocols,
-								styles=_allowed_styles,
-								filters=[partial(LinkifyFilter,
-												 skip_tags=["pre"],
-												 parse_email=False,
-												 callbacks=[a_modify]
-												 )
-										 ]
-								).clean(sanitized)
+	if noimages:
+		sanitized = bleach.Cleaner(tags=noimages,
+									attributes=_allowed_attributes,
+									protocols=_allowed_protocols,
+									styles=_allowed_styles,
+									filters=[partial(LinkifyFilter,
+													skip_tags=["pre"],
+													parse_email=False,
+													callbacks=[a_modify]
+													)
+											]
+									).clean(sanitized)
+	else:
+		sanitized = bleach.Cleaner(tags=_allowed_tags,
+							attributes=_allowed_attributes,
+							protocols=_allowed_protocols,
+							styles=_allowed_styles,
+							filters=[partial(LinkifyFilter,
+											skip_tags=["pre"],
+											parse_email=False,
+											callbacks=[a_modify]
+											)
+									]
+							).clean(sanitized)
 
 	#soupify
 	soup = BeautifulSoup(sanitized, features="html.parser")

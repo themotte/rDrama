@@ -39,7 +39,7 @@ def send_pm(vid, user, text):
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
 
-	text_html = sanitize(text_html)
+	text_html = sanitize(text_html, True)
 
 	new_comment = Comment(author_id=vid,
 						  parent_submission=None,
@@ -166,7 +166,7 @@ def send_admin(vid, text):
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
 
-	text_html = sanitize(text_html)
+	text_html = sanitize(text_html, True)
 
 	new_comment = Comment(author_id=vid,
 						  parent_submission=None,
