@@ -29,7 +29,8 @@ def upload_file(file=None, resize=False, png=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save("image.gif", save_all=True, append_images=list(frames), loop=0)
+		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0)
+		except: return(None)
 
 	if png: filedir = "image.png"
 	else: filedir = "image.gif"
