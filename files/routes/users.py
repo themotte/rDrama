@@ -170,12 +170,15 @@ def message2(v, username):
 def messagereply(v):
 
 	message = request.form.get("body", "")[:1000].strip()
-	user = request.form.get("sentto")
+	id = request.form.get("parent_id")
+	print(id)
+	parent = get_comment(int(id), v=v)
+	user = parent.author
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
-															Comment.sentto == user,
+															Comment.sentto == user.id,
 															CommentAux.body == message,
 															).options(contains_eager(Comment.comment_aux)).first()
 	if existing:
@@ -184,9 +187,6 @@ def messagereply(v):
 
 	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(message))
 	text_html = sanitize(text_html)
-	id = request.form.get("parent_id")
-	print(id)
-	parent = get_comment(int(id), v=v)
 	new_comment = Comment(author_id=v.id,
 							parent_submission=None,
 							parent_comment_id=id,
@@ -200,7 +200,7 @@ def messagereply(v):
 	notif = Notification(comment_id=new_comment.id, user_id=user)
 	g.db.add(notif)
 
-	cache.delete_memoized(User.notification_messages, get_account(user))
+	cache.delete_memoized(User.notification_messages, user)
 
 	return jsonify({"html": render_template("comments.html",
 														v=v,
