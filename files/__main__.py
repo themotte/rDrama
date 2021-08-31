@@ -171,7 +171,7 @@ import files.classes
 from files.routes import *
 import files.helpers.jinja2
 
-@cache.memoize(UA_BAN_CACHE_TTL)
+@cache.memoize(timeout=UA_BAN_CACHE_TTL)
 def get_useragent_ban_response(user_agent_str):
 	"""
 	Given a user agent string, returns a tuple in the form of:
