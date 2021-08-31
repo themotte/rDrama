@@ -286,8 +286,8 @@ def api_comment(v):
 
 	c_aux = CommentAux(
 		id=c.id,
-		body_html=body_html,
-		body=body
+		body_html=body_html[:20000],
+		body=body[:10000]
 	)
 
 	g.db.add(c_aux)
@@ -627,8 +627,8 @@ def edit_comment(cid, v):
 			body_md = renderer.render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
-	c.body = body
-	c.body_html = body_html
+	c.body = body[:10000]
+	c.body_html = body_html[:20000]
 
 	if v.agendaposter and "trans lives matter" not in c.body_html.lower():
 
@@ -656,8 +656,8 @@ def edit_comment(cid, v):
 		body_jannied_html = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c_jannied.id,
-			body_html=body_jannied_html,
-			body=body
+			body_html=body_jannied_html[:20000],
+			body=body[:10000]
 		)
 		g.db.add(c_aux)
 		g.db.flush()
