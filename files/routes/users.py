@@ -200,9 +200,11 @@ def messagereply(v, username, id):
 
 	cache.delete_memoized(User.notification_messages, user)
 
-	if not request.referrer or request.referrer.endswith('/notifications'): return redirect(f"/notifications?all=true#comment-{id}")
-	else: return redirect(f"{request.referrer}#comment-{id}")
-
+	return jsonify({"html": render_template("comments.html",
+														v=v,
+														comments=[c],
+														render_replies=False,
+														)})
 
 @app.get("/2faqr/<secret>")
 @auth_required
