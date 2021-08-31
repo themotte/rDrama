@@ -167,7 +167,7 @@ def message2(v, username):
 
 @app.post("/reply")
 @auth_required
-def messagereply(v, username, id):
+def messagereply(v):
 
 	message = request.form.get("message")[:1000].strip()
 	user = request.form.get("sentto")
