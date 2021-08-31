@@ -42,7 +42,7 @@ _allowed_tags = tags = ['b',
 						'span',
 						]
 
-noimages = ['b',
+noimages = tags = ['b',
 						'blockquote',
 						'br',
 						'code',
