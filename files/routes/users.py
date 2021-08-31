@@ -196,7 +196,7 @@ def messagereply(v):
 	g.db.flush()
 	new_aux = CommentAux(id=new_comment.id, body=message, body_html=text_html)
 	g.db.add(new_aux)
-	notif = Notification(comment_id=new_comment.id, user_id=user)
+	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 	g.db.commit()
 	cache.delete_memoized(User.notification_messages, user)
