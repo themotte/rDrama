@@ -24,8 +24,9 @@ def notifications(v):
 	messages = request.args.get('messages', False)
 	posts = request.args.get('posts', False)
 	if messages:
-		if v.admin_level == 6: comments = g.db.query(Comment).filter(Comment.child_comments is None).all()
-		else: comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()
+		if v.admin_level == 6: comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id, Comment.sentto==0)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(200).all()
+		else: comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(200).all()
+		comments = [c for c in comments if c.child_comments == []][:26]
 		next_exists = (len(comments) == 26)
 		comments = comments[:25]
 	elif posts:
