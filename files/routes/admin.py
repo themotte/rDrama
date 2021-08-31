@@ -126,11 +126,11 @@ def monthly(v):
 			grant_awards["shit"] = 5
 			grant_awards["gold"] = 5
 			grant_awards["ban"] = 1
-		elif u.patron == 4 or u.patron == 8:
+		elif u.patron == 4:
 			grant_awards["shit"] = 10
 			grant_awards["gold"] = 10
 			grant_awards["ban"] = 3
-		elif u.patron == 5:
+		elif u.patron == 5 or u.patron == 8:
 		 	grant_awards["shit"] = 20
 		 	grant_awards["gold"] = 20
 		 	grant_awards["ban"] = 6

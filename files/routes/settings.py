@@ -26,10 +26,11 @@ tiers={
 	"(Landchad)": 3,
 	"(Terminally online turboautist)": 4,
 	"(Footpig)": 5,
-	"(Ape)": 1,
-	"(Monke)": 2,
+	"(Chad)": 1,
+	"(Megachad)": 2,
 	"(Gigachad)": 3,
-	"(Ascended Griller)": 4
+	"(Terachad)": 4,
+	"(Petachad)": 5
 	}
 
 @app.post("/settings/removebackground")
@@ -285,12 +286,12 @@ def gumroad(v):
 		grant_awards["shit"] = 5
 		grant_awards["gold"] = 5
 		grant_awards["ban"] = 1
-	elif tier == 4 or tier == 8:
+	elif tier == 4:
 		if v.discord_id: add_role(v, "4")
 		grant_awards["shit"] = 10
 		grant_awards["gold"] = 10
 		grant_awards["ban"] = 3
-	elif tier == 5:
+	elif tier == 5 or tier == 8:
 		if v.discord_id: add_role(v, "5")
 		grant_awards["shit"] = 20
 		grant_awards["gold"] = 20
