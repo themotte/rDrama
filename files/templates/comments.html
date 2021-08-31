@@ -171,7 +171,6 @@
 	
 					<form class="d-none" id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
 						<input type="hidden" name="formkey" value="{{v.formkey}}"> 
-						<input type="hidden" name="parent_id" value="{{c.id}}">
 						<input type="hidden" name="sentto" value="{{c.author.username}}"> 
 						<textarea name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.fullname}}" aria-label="With textarea" rows="3"></textarea> 
 						<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
