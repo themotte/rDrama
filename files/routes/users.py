@@ -170,13 +170,13 @@ def message2(v, username):
 def messagereply(v):
 
 	message = request.form.get("body", "")[:1000].strip()
-	user = request.form.get("sentto")
+	user = get_user(request.form.get("sentto"))
 	id = request.form.get("parent_id")
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
-															Comment.sentto == user.id,
+															Comment.sentto == user,
 															CommentAux.body == message,
 															).options(contains_eager(Comment.comment_aux)).first()
 	if existing:
@@ -196,10 +196,10 @@ def messagereply(v):
 	g.db.flush()
 	new_aux = CommentAux(id=new_comment.id, body=message, body_html=text_html)
 	g.db.add(new_aux)
-	notif = Notification(comment_id=new_comment.id, user_id=user.id)
+	notif = Notification(comment_id=new_comment.id, user_id=user)
 	g.db.add(notif)
 
-	cache.delete_memoized(User.notification_messages, user)
+	cache.delete_memoized(User.notification_messages, get_user(user))
 
 	return jsonify({"html": render_template("comments.html",
 														v=v,
