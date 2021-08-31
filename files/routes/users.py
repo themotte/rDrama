@@ -50,6 +50,7 @@ def steal(v):
 		u.coins -= 2000
 		g.db.add(u)
 		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has stolen 2000 dramacoins from you!")
+		send_notification(NOTIFICATIONS_ACCOUNT, v, f"You have successfully stolen 2000 dramacoins!")
 	else:
 		v.fail_utc = int(time.time())
 		v.ban(days=1, reason="Failed thief")
