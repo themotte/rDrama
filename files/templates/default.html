@@ -519,12 +519,12 @@
 
 		}
 
-		post_reply=function(fullname){
+		post_reply=function(id){
 
 			var form = new FormData();
 
 			form.append('formkey', formkey());
-			form.append('parent_fullname', fullname);
+			form.append('parent_id', id);
 			form.append('body', document.getElementById('reply-form-body-'+fullname).value);
 			form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
 			var xhr = new XMLHttpRequest();
