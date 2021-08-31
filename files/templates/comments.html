@@ -183,10 +183,6 @@
 										<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"></i>
 									</label>
 									&nbsp;
-									<label class="btn btn-secondary format d-inline-block m-0" for="file-upload-reply-{{c.id}}">
-										<div id="filename-show-reply-{{c.id}}"><i class="far fa-image"></i></div>
-										<input id="file-upload-reply-{{c.id}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.id}}').innerHTML='image';" hidden>
-									</label>
 									<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 									<a id="save-reply-to-{{c.id}}" class="d-none d-md-block btn btn-primary text-white ml-2" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
 								</div>

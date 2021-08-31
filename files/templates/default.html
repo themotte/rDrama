@@ -526,7 +526,6 @@
 			form.append('formkey', formkey());
 			form.append('parent_id', id);
 			form.append('body', document.getElementById('reply-form-body-'+id).value);
-			form.append('file', document.getElementById('file-upload-reply-'+id).files[0]);
 			var xhr = new XMLHttpRequest();
 			xhr.open("post", "/reply");
 			xhr.withCredentials=true;
