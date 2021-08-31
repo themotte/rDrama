@@ -29,6 +29,17 @@ def make_admin(v, username):
 	g.db.add(user)
 	return "", 204
 
+
+@app.post("/@<username>/remove_admin")
+@admin_level_required(6)
+def remove_admin(v, username):
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 0
+	g.db.add(user)
+	return "", 204
+
+
 @app.get("/admin/shadowbanned")
 @auth_required
 def shadowbanned(v):
