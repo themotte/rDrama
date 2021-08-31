@@ -21,6 +21,57 @@ beams_client = PushNotifications(
 		secret_key=PUSHER_KEY,
 )
 
+
+@app.post("/pay_rent")
+@auth_required
+def pay_rent(v):
+	v.coins -= 500
+	v.rent_utc = int(time.time())
+	g.db.add(v)
+	u = get_account(253)
+	u.coins += 500
+	g.db.add(u)
+	send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has paid rent!")
+	return "", 204
+
+
+@app.post("/steal")
+@auth_required
+def steal(v):
+	if int(time.time()) - v.created_utc > 604800:
+		return "You must have an account older than 1 week in order to steal."
+	if v.coins > 200:
+		return "You must have more than 200 coins in order to steal."
+	if random.randint(1, 10) < 8:
+		v.coins += 2000
+		v.steal_utc = int(time.time())
+		g.db.add(v)
+		u = get_account(253)
+		u.coins -= 2000
+		g.db.add(u)
+		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has stolen 2000 dramacoins from you!")
+	else:
+		v.fail_utc = int(time.time())
+		g.db.add(v)
+		u = get_account(253)
+		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has failed to steal coins from you and has been banned for 1 day!")
+
+
+@app.get("/rentoids")
+@auth_desired
+def rentoids(v):
+	users = g.db.query(User).filter(User.rent_utc > 0).all()
+	return render_template("rentoids.html", v=v, users=users)
+
+
+@app.get("/thiefs")
+@auth_desired
+def rentoids(v):
+	successful = g.db.query(User).filter(User.steal_utc > 0).all()
+	failed = g.db.query(User).filter(User.fail_utc > 0).all()
+	return render_template("thiefs.html", v=v, successful=successful, failed=failed)
+
+
 @app.post("/@<username>/suicide")
 @auth_required
 def suicide(v, username):
@@ -32,6 +83,7 @@ def suicide(v, username):
 	v.suicide_utc = t
 	g.db.add(v)
 	return "", 204
+
 
 @app.get("/@<username>/coins")
 @auth_required
@@ -260,14 +312,6 @@ def user_id(id):
 def redditor_moment_redirect(username):
 	return redirect(f"/@{username}")
 
-# @app.get("/rentoids")
-# @auth_desired
-# def rentoids(v):
-# 
-
-# 	users = g.db.query(User).filter(User.rent_utc > 0).all()
-# 	return render_template("rentoids.html", v=v, users=users)
-
 @app.get("/@<username>/followers")
 @auth_required
 def followers(username, v):
@@ -330,22 +374,13 @@ def u_username(username, v=None):
 		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
 		
-		# paidrent = False
-		# if v and u.id == 253:
-		# 	if int(time.time()) - v.rent_utc < 600: paidrent = True
-		# 	elif request.args.get("rent") == "true" and v.coins > 500:
-		# 		v.coins -= 500
-		# 		v.rent_utc = int(time.time())
-		# 		g.db.add(v)
-		# 		u.coins += 500
-		# 		g.db.add(u)
-		# 		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has paid rent!")
-		# 		paidrent = True
-
-		# if not paidrent:
-
-		if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-		else: return render_template("userpage_private.html", u=u, v=v)
+		if v and u.id == 253:
+		 	if int(time.time()) - v.rent_utc > 600:
+				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+				else: return render_template("userpage_private.html", u=u, v=v)
+		else:
+			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+			else: return render_template("userpage_private.html", u=u, v=v)
 
 
 	if u.is_blocking and (not v or v.admin_level < 3):
@@ -436,23 +471,13 @@ def u_username_comments(username, v=None):
 
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
-		# paidrent = False
-		# if v and u.id == 253:
-		# 	if int(time.time()) - v.rent_utc < 600: paidrent = True
-		# 	elif request.args.get("rent") == "true" and v.coins > 500:
-		# 		v.coins -= 500
-		# 		v.rent_utc = int(time.time())
-		# 		g.db.add(v)
-		# 		u.coins += 500
-		# 		g.db.add(u)
-		# 		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has paid rent!")
-		# 		paidrent = True
-
-		# if not paidrent:
-		if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-		else: return render_template("userpage_private.html",
-													u=u,
-													v=v)
+		if v and u.id == 253:
+		 	if int(time.time()) - v.rent_utc > 600:
+				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+				else: return render_template("userpage_private.html", u=u, v=v)
+		else:
+			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+			else: return render_template("userpage_private.html", u=u, v=v)
 
 	if u.is_blocking and (not v or v.admin_level < 3):
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
