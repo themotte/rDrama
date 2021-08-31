@@ -27,7 +27,7 @@ def notifications(v):
 
 		firstrange = 25 * (page - 1)
 		secondrange = firstrange + 26
-		comments = comments[firstrange:secondrange]]
+		comments = comments[firstrange:secondrange]
 
 		next_exists = (len(comments) == 26)
 		comments = comments[:25]
