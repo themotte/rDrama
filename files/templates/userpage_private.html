@@ -14,7 +14,7 @@
 			<!-- {% if u.id == 253 and 'rdrama' in request.host %}
 				<a class="btn btn-primary" href="javascript:void(0)", onclick="post('/pay_rent', callback=function(){window.location.reload(true)})">Pay rent to view profile (500 coins)</a>
 				<pre></pre>
-				{% if v.coins > 100 and time - v.created_utc > 604800 and not v.is_suspended %}
+				{% if v and v.coins > 100 and time - v.created_utc > 604800 and not v.is_suspended %}
 					<a class="btn btn-primary" href="javascript:void(0)", onclick="post('/steal', callback=function(){window.location.reload(true)})">Attempt to steal coins</a>
 					<div class="text-small-extra text-muted mt-1">30% chance of being banned for 1 day, 70% chance of stealing 2000 coins</div>
 				{% endif %}
