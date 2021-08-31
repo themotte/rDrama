@@ -20,6 +20,15 @@ from files.__main__ import app, cache, limiter
 from .front import frontlist
 from files.helpers.discord import add_role
 
+@app.post("/@<username>/make_admin")
+@admin_level_required(6)
+def make_admin(v, username):
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 6
+	g.db.add(user)
+	return "", 204
+
 @app.get("/admin/shadowbanned")
 @auth_required
 def shadowbanned(v):
