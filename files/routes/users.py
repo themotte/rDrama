@@ -140,7 +140,7 @@ def songs(id):
 	return redirect(f"/song/{user.song}.mp3")
 
 @app.get("/song/<song>")
-def songs(song):
+def song(song):
 	resp = make_response(send_from_directory('/songs/', song))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")
