@@ -359,7 +359,7 @@ class User(Base, Stndrd, Age_times):
 
 		firstrange = 25 * (page - 1)
 		secondrange = firstrange + 26
-		comments = comments[firstrange:secondrange]
+		return comments[firstrange:secondrange]
 
 
 	def notification_subscriptions(self, page=1):
