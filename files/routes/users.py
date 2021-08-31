@@ -39,9 +39,9 @@ def pay_rent(v):
 @auth_required
 def steal(v):
 	if int(time.time()) - v.created_utc > 604800:
-		return "You must have an account older than 1 week in order to steal."
+		return "You must have an account older than 1 week in order to stealing."
 	if v.coins > 200:
-		return "You must have more than 200 coins in order to steal."
+		return "You must have more than 200 coins in order to attempt stealing."
 	if random.randint(1, 10) < 8:
 		v.coins += 2000
 		v.steal_utc = int(time.time())
@@ -52,9 +52,11 @@ def steal(v):
 		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has stolen 2000 dramacoins from you!")
 	else:
 		v.fail_utc = int(time.time())
+		v.ban(days=1, reason="Failed thief")
 		g.db.add(v)
 		u = get_account(253)
 		send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has failed to steal coins from you and has been banned for 1 day!")
+	return "", 204
 
 
 @app.get("/rentoids")
