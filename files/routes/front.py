@@ -15,16 +15,20 @@ def slash_post():
 @app.get("/notifications")
 @auth_required
 def notifications(v):
-
-
-
 	try: page = int(request.args.get('page', 1))
 	except: page = 1
 	all_ = request.args.get('all', False)
 	messages = request.args.get('messages', False)
 	posts = request.args.get('posts', False)
 	if messages:
-		if v.admin_level == 6: comments = g.db.query(Comment).filter_by(child_comments = []).all()
+		if v.admin_level == 6: comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id, Comment.sentto==0)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(200).all()
+		else: comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(200).all()
+		comments = [c for c in comments if c.child_comments == []]
+
+		firstrange = 25 * (page - 1)
+		secondrange = firstrange + 26
+		comments = comments[firstrange:secondrange]]
+
 		next_exists = (len(comments) == 26)
 		comments = comments[:25]
 	elif posts:
