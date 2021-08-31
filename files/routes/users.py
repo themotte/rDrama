@@ -44,13 +44,13 @@ def steal(v):
 		return "You must have more than 100 coins in order to attempt stealing."
 	u = get_account(253)
 	if random.randint(1, 10) < 5:
-		v.coins += 1000
+		v.coins += 700
 		v.steal_utc = int(time.time())
 		g.db.add(v)
-		u.coins -= 1000
+		u.coins -= 700
 		g.db.add(u)
-		send_notification(NOTIFICATIONS_ACCOUNT, u, f"Some [grubby little rentoid](/@{v.username}) has absconded with 1000 of your hard-earned dramacoins to fuel his Funko Pop addiction. Stop being so trusting.")
-		send_notification(NOTIFICATIONS_ACCOUNT, v, f"You have successfully shorted your heroic landlord 1000 dramacoins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
+		send_notification(NOTIFICATIONS_ACCOUNT, u, f"Some [grubby little rentoid](/@{v.username}) has absconded with 700 of your hard-earned dramacoins to fuel his Funko Pop addiction. Stop being so trusting.")
+		send_notification(NOTIFICATIONS_ACCOUNT, v, f"You have successfully shorted your heroic landlord 700 dramacoins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
 	else:
 		if random.random() < 0.15:
 			send_notification(NOTIFICATIONS_ACCOUNT, u, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you sold his Nintendo Switch for 500 dramacoins and called the cops. He was sentenced to one (1) day in renthog prison.")
