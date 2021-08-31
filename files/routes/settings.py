@@ -97,12 +97,13 @@ def settings_profile_post(v):
 		bio = bio.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		with CustomRenderer() as renderer: bio_html = renderer.render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html)
+		# Run safety filter
+		bans = filter_comment_html(bio_html)
+
 		if len(bio_html) > 10000:
 			return render_template("settings_profile.html",
 								   v=v,
 								   error="Your bio is too long")
-		# Run safety filter
-		bans = filter_comment_html(bio_html)
 
 		if bans:
 			ban = bans[0]
@@ -115,8 +116,8 @@ def settings_profile_post(v):
 				v.ban(days=30, reason="Digitally malicious content is not allowed.")
 			return {"error": reason}, 401
 
-		v.bio = bio
-		v.bio_html=bio_html
+		v.bio = bio[:1500]
+		v.bio_html=bio_html[:10000]
 		g.db.add(v)
 		return render_template("settings_profile.html",
 							   v=v,
