@@ -355,7 +355,8 @@ class User(Base, Stndrd, Age_times):
 
 		if self.admin_level == 6: comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id, Comment.sentto==0)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(200).all()
 		else: comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(200).all()
-		comments = [c for c in comments if c.child_comments == []]
+
+		comments = [c.id for c in comments if c.child_comments == []]
 
 		firstrange = 25 * (page - 1)
 		secondrange = firstrange + 26

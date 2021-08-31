@@ -23,7 +23,8 @@ def notifications(v):
 	if messages:
 		cids = v.notification_messages(page=page)
 		next_exists = (len(cids) == 26)
-		comments = cids[:25]
+		cid = cids[:25]
+		comments = get_comments(cids, v=v)
 	elif posts:
 		cids = v.notification_subscriptions(page=page)
 		next_exists = (len(cids) == 26)
