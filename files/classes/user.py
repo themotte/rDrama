@@ -355,7 +355,7 @@ class User(Base, Stndrd, Age_times):
 
 	def notification_modmail(self, page=1):
 
-		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id, Comment.sentto==0)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(100).all()
+		comments = g.db.query(Comment).filter(Comment.sentto==0).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(100).all()
 
 		comments = [c.id for c in comments if c.child_comments == []]
 
