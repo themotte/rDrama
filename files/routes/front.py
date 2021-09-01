@@ -51,15 +51,17 @@ def notifications(v):
 			Comment.author_id != AUTOJANNY_ACCOUNT,
 		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26)
 
-		comments = []
+		cids = [x.comment_id for x in notifications]
+		next_exists = (len(cids) == 26)
+		cids = cids[:25]
+		comments = get_comments(cids, v=v)
+
+		i = 0
 		for x in notifications:
-			c = x.comment
-			if not x.read: c.unread = True
+			if not x.read: comments[i].unread = True
 			x.read = True
 			g.db.add(x)
-			comments.append(c)
-		next_exists = (len(comments) == 26)
-		comments = comments[:25]
+			i += 1
 
 	listing = []
 	for c in comments:
