@@ -41,7 +41,7 @@ def steal(v):
 	if int(time.time()) - v.created_utc < 604800:
 		return "You must have an account older than 1 week in order to attempt stealing."
 	if v.coins < 5000:
-		return "You must have more than 100 coins in order to attempt stealing."
+		return "You must have more than 5000 coins in order to attempt stealing."
 	u = get_account(253)
 	if random.randint(1, 10) < 5:
 		v.coins += 700
