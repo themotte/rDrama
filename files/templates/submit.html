@@ -4,6 +4,8 @@
 
 		{% include "bootstrap.html" %}
 
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+		<script src="https://cdn.jsdelivr.net/remarkable/1.7.1/remarkable.min.js"></script>	
 		<script>
 		
 			$(document).ready(function() {
@@ -286,7 +288,7 @@
 
 </head>
 
-<body id="submit" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
+<body id="submit" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}display: block;">
 
 		<!-- Navigation -->
 		{% include "header.html" %}
@@ -295,13 +297,14 @@
 
 		<!-- Page Content -->
 
+		<div id="submitapp" class="submit-grid-view">
 		<form id="submitform" action="/submit" method="post" enctype="multipart/form-data">
 
 				<div class="container">
 
-						<div class="row justify-content-center mb-4 pb-7">
+						<div class="row justify-content-center mb-5">
 
-								<div class="col col-md-6 p-3 py-md-0">
+								<div class="col p-3 py-md-0">
 
 										<h1 class="d-none d-md-block">Create a post</h1>
 
@@ -314,7 +317,7 @@
 												<label for="title">Post Title</label>
 
 
-												<input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
+												<input v-model="post_title" class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
 
 												<div id="urlblock">
 														<label for="URL" class="mt-3">URL</label>
@@ -340,7 +343,7 @@
 
 												<div class="input-group">
 
-														<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required>{{text}}</textarea>
+														<textarea v-model="post_body" form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required>{{text}}</textarea>
 
 														<span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
 
@@ -370,6 +373,10 @@
 													<div id="emoji-reply-btn" onclick="loadEmojis('post-text')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
 												</label>
 												
+												<div class="btn btn-secondary" @click="togglePreview()" style="float: right;">
+													[[ show_preview ? 'Hide preview' : 'Show preview' ]]
+												</div>						
+											
 												<pre></pre>
 												<div class="form-text text-small"><a href="/formatting" target="_blank">Formatting help</a></div>
 												<pre></pre>
@@ -405,8 +412,56 @@
 
 		</form>
 
+		<div v-show="show_preview" class="card-blank" id="submit-page" style="height:max-content; min-height: 25rem; transition: 15s;">
+			<div class="m-3" style="min-height: 20px">
+				<h1 class="post-title" id="preview-tag-label">[[ post_title ]]</h1>
+			</div>
+			<hr>
+			<div class="m-3">
+				<div id="post-body-markdown" v-html="post_body_markdown" style="max-height: 500px; overflow-y: scroll;"></div>
+			</div>
+		</div>
+
 		{% endblock %}
 
+		<style>
+			@media(min-width: 768px){
+					.submit-grid-view{
+					display: grid; 
+					grid-template-columns: 1fr 3fr 3fr 1fr;  
+					grid-column-gap: 1rem;
+					}
+				}
+			#post-body-markdown img{
+				max-height: 100px !important;
+				max-width: 100px !important;
+				border-radius: 0.35rem;
+				margin: 0.5rem 0;
+			}
+		</style>
+		<script>
+			var md = new Remarkable();
+			new Vue({
+				el: "#submitapp",
+				delimiters: ['[[', ']]'],
+				data: {
+					post_title: "",
+					post_body: "",
+					show_preview: false,
+				},
+				computed: {
+					post_body_markdown: function(){
+						return md.render(this.post_body)
+					}
+				},
+				methods: {
+					togglePreview() {
+						this.show_preview = !this.show_preview
+					}
+				}
+			})
+		</script> 
+	
 		<!-- {{'SITE_NAME' | app_config}} JS -->
 
 		<script src="/assets/js/general4.js"></script>
