@@ -17,10 +17,15 @@ def slash_post():
 def notifications(v):
 	try: page = int(request.args.get('page', 1))
 	except: page = 1
-	all_ = request.args.get('all', False)
 	messages = request.args.get('messages', False)
+	modmail = request.args.get('modmail', False)
 	posts = request.args.get('posts', False)
-	if messages:
+	if modmail and v.admin_level == 6:
+		cids = v.notification_modmail(page=page)
+		next_exists = (len(cids) == 26)
+		cids = cids[:25]
+		comments = get_comments(cids, v=v)
+	elif messages:
 		cids = v.notification_messages(page=page)
 		next_exists = (len(cids) == 26)
 		cids = cids[:25]
