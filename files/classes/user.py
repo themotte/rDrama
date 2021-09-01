@@ -169,8 +169,7 @@ class User(Base, Stndrd, Age_times):
 		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
 
 		if not (v and (v.admin_level >= 3 or v.id == self.id)):
-			submissions = submissions.filter_by(deleted_utc=0)
-			submissions = submissions.filter_by(is_banned=False)
+			submissions = submissions.filter_by(deleted_utc=0, is_banned=False, private=False)
 
 		now = int(time.time())
 		if t == 'hour':
