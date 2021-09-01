@@ -293,6 +293,40 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
+	if "ivermectin" in c_aux.body_html.lower():
+
+		c.is_banned = True
+		c.ban_reason = "ToS Violation"
+
+		g.db.add(c)
+
+		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			parent_submission=parent_submission,
+			distinguish_level=6,
+			parent_comment_id=c.id,
+			level=level+1,
+			is_bot=True,
+			)
+
+		g.db.add(c_jannied)
+		g.db.flush()
+
+		body = VAXX_MSG.format(username=v.username)
+
+		with CustomRenderer(post_id=parent_id) as renderer:
+			body_md = renderer.render(mistletoe.Document(body))
+
+		body_jannied_html = sanitize(body_md)
+		c_aux = CommentAux(
+			id=c_jannied.id,
+			body_html=body_jannied_html,
+			body=body
+		)
+		g.db.add(c_aux)
+		g.db.flush()
+		n = Notification(comment_id=c_jannied.id, user_id=v.id)
+		g.db.add(n)
+
 	if v.agendaposter and "trans lives matter" not in c_aux.body_html.lower():
 
 		c.is_banned = True
@@ -313,7 +347,6 @@ def api_comment(v):
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
-		#body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		with CustomRenderer(post_id=parent_id) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))
 
@@ -629,6 +662,41 @@ def edit_comment(cid, v):
 
 	c.body = body[:10000]
 	c.body_html = body_html[:20000]
+
+	if "ivermectin" in c.body_html.lower():
+
+		c.is_banned = True
+		c.ban_reason = "ToS Violation"
+
+		g.db.add(c)
+
+		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			parent_submission=c.parent_submission,
+			distinguish_level=6,
+			parent_comment_id=c.id,
+			level=c.level+1,
+			is_bot=True,
+			)
+
+		g.db.add(c_jannied)
+		g.db.flush()
+
+		body = VAXX_MSG.format(username=v.username)
+
+		with CustomRenderer(post_id=c.parent_submission) as renderer:
+			body_md = renderer.render(mistletoe.Document(body))
+
+		body_jannied_html = sanitize(body_md)
+		c_aux = CommentAux(
+			id=c_jannied.id,
+			body_html=body_jannied_html[:20000],
+			body=body[:10000]
+		)
+		g.db.add(c_aux)
+		g.db.flush()
+		n = Notification(comment_id=c_jannied.id, user_id=v.id)
+		g.db.add(n)
+
 
 	if v.agendaposter and "trans lives matter" not in c.body_html.lower():
 

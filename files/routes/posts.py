@@ -310,7 +310,7 @@ def edit_post(pid, v):
 		g.db.add(c_jannied)
 		g.db.flush()
 
-		body = AGENDAPOSTER_MSG.format(username=v.username)
+		body = VAXX_MSG.format(username=v.username)
 
 		with CustomRenderer(post_id=p.id) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))
@@ -869,6 +869,44 @@ def submit_post(v):
 
 	g.db.add(new_post)
 	g.db.flush()
+
+
+	if "ivermectin" in new_post_aux.body_html.lower():
+
+		new_post.is_banned = True
+		new_post.ban_reason = "ToS Violation"
+
+		g.db.add(new_post)
+
+		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			parent_submission=new_post.id,
+			level=1,
+			over_18=False,
+			is_bot=True,
+			app_id=None,
+			is_pinned=True,
+			distinguish_level=6
+		)
+
+		g.db.add(c_jannied)
+		g.db.flush()
+
+		body = VAXX_MSG.format(username=v.username)
+
+		with CustomRenderer(post_id=new_post.id) as renderer:
+			body_md = renderer.render(mistletoe.Document(body))
+
+		body_jannied_html = sanitize(body_md)
+		c_aux = CommentAux(
+			id=c_jannied.id,
+			body_html=body_jannied_html,
+			body=body
+		)
+		g.db.add(c_aux)
+		g.db.flush()
+		n = Notification(comment_id=c_jannied.id, user_id=v.id)
+		g.db.add(n)
+
 
 	if v.agendaposter and "trans lives matter" not in new_post_aux.body_html.lower():
 
