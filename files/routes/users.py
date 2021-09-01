@@ -146,7 +146,7 @@ def leaderboard(v):
 @auth_desired
 def award_leaderboard(v):
 	users = g.db.query(User).options(lazyload('*')).all()
-	users = sorted(users, key=lambda x: x.received_awards_num, reverse=True)
+	users = sorted(users, key=lambda x: x.received_awards_num, reverse=True)[:10]
 	return render_template("award_leaderboard.html", v=v, users=users)
 
 @app.get("/@<username>/css")
