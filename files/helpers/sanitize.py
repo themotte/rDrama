@@ -244,4 +244,7 @@ def sanitize(sanitized, noimages=False):
 	for i in re.finditer('[^">](https:\/\/[^ ]*)', sanitized):
 		sanitized = sanitized.replace(i.group(1), f"<a href={i.group(1)} {i.group(1)}</a>")
 
+	for i in re.finditer('<p>(https:\/\/[^ ]*)', sanitized):
+		sanitized = sanitized.replace(i.group(1), f"<a href={i.group(1)} {i.group(1)}</a>")
+
 	return sanitized
