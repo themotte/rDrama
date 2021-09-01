@@ -349,6 +349,18 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	@lazy
+	def received_awards_num(self):
+
+		posts_idlist = g.db.query(Submission.id).filter_by(author_id=self.id).subquery()
+		comments_idlist = g.db.query(Comment.id).filter_by(author_id=self.id).subquery()
+
+		post_awards = g.db.query(AwardRelationship).filter(AwardRelationship.submission_id.in_(posts_idlist)).count()
+		comment_awards = g.db.query(AwardRelationship).filter(AwardRelationship.comment_id.in_(comments_idlist)).count()
+
+		return post_awards + comment_awards
+
+	@property
+	@lazy
 	def post_notifications_count(self):
 		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(
 			Comment.author_id == AUTOJANNY_ACCOUNT).count()
