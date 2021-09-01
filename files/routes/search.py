@@ -40,7 +40,7 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 				Submission.author
 			)
 	
-	if not (v and v.admin_level == 6): posts = posts.filter_by(private=false)
+	if not (v and v.admin_level == 6): posts = posts.filter(Submission.private == false)
 	
 	if 'q' in criteria:
 		words=criteria['q'].split()
