@@ -179,17 +179,6 @@ def settings_profile(v):
 	return render_template("settings_profile.html",
 						   v=v)
 
-
-@app.get("/titles")
-@auth_desired
-def titles(v):
-
-
-	titles = [x for x in g.db.query(Title).order_by(text("id asc")).all()]
-	return render_template("/titles.html",
-						   v=v,
-						   titles=titles)
-
 @app.get("/badges")
 @auth_desired
 def badges(v):
