@@ -54,7 +54,7 @@ def notifications(v):
 		cids = [x.comment_id for x in notifications]
 		next_exists = (len(cids) == 26)
 		cids = cids[:25]
-		comments = get_comments(cids, v=v)
+		comments = get_comments(cids, v=v, load_parent=True))
 
 		i = 0
 		for x in notifications:
