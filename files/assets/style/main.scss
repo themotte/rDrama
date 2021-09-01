@@ -3978,8 +3978,8 @@ img.emoji {
 }
 
 #context, .context {
-    padding: 10px;
-    border: 2px solid $primary;
+    padding: 10px !important;
+    border: 2px solid $primary !important;
 }
 
 .btn-lg {
