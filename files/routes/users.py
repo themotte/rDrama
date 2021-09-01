@@ -142,12 +142,19 @@ def leaderboard(v):
 	users4 = users.order_by(User.comment_count.desc()).limit(10).all()
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4)
 
+
 @app.get("/award_leaderboard")
 @auth_desired
 def award_leaderboard(v):
+	return render_template("award_leaderboard.html", v=v, users=a_leaderboard())
+
+
+@cache.memoize(timeout=86400)
+def a_leaderboard():
 	users = g.db.query(User).options(lazyload('*')).all()
 	users = sorted(users, key=lambda x: x.received_awards_num, reverse=True)[:10]
-	return render_template("award_leaderboard.html", v=v, users=users)
+	return users
+
 
 @app.get("/@<username>/css")
 def get_css(username):
