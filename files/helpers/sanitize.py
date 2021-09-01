@@ -242,8 +242,6 @@ def sanitize(sanitized, noimages=False):
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")
 	
 	sanitized = re.sub('([^">])(https:\/\/[^ <>]*)', r'\1<a href="\2">\2</a>', sanitized)
-
-	# for i in re.finditer('<p>(https:\/\/[^ <>]*)', sanitized):
-	# 	sanitized = sanitized.replace(i.group(1), f'<a href="{i.group(1)}">{i.group(1)}</a>')
+	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'\1<a href="\2">\2</a>', sanitized)
 
 	return sanitized
