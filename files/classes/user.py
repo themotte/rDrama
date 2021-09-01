@@ -353,11 +353,19 @@ class User(Base, Stndrd, Age_times):
 		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(
 			Comment.author_id == AUTOJANNY_ACCOUNT).count()
 
+	def notification_modmail(self, page=1):
+
+		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id, Comment.sentto==0)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(100).all()
+
+		comments = [c.id for c in comments if c.child_comments == []]
+
+		firstrange = 25 * (page - 1)
+		secondrange = firstrange + 26
+		return comments[firstrange:secondrange]
+
 	@cache.memoize(timeout=86400)
 	def notification_messages(self, page=1):
-
-		if self.admin_level == 6: comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id, Comment.sentto==0)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(100).all()
-		else: comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(100).all()
+		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id)).filter(Comment.parent_submission == None).order_by(Comment.created_utc.desc()).limit(100).all()
 
 		comments = [c.id for c in comments if c.child_comments == []]
 
