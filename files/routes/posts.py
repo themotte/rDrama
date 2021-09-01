@@ -290,6 +290,43 @@ def edit_post(pid, v):
 	if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
 	g.db.add(p)
 
+	if "ivermectin" in body_html.lower():
+
+		p.is_banned = True
+		p.ban_reason = "ToS Violation"
+
+		g.db.add(p)
+
+		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			parent_submission=p.id,
+			level=1,
+			over_18=False,
+			is_bot=True,
+			app_id=None,
+			is_pinned=True,
+			distinguish_level=6
+			)
+
+		g.db.add(c_jannied)
+		g.db.flush()
+
+		body = AGENDAPOSTER_MSG.format(username=v.username)
+
+		with CustomRenderer(post_id=p.id) as renderer:
+			body_md = renderer.render(mistletoe.Document(body))
+
+		body_jannied_html = sanitize(body_md)
+		c_aux = CommentAux(
+			id=c_jannied.id,
+			body_html=body_jannied_html,
+			body=body
+		)
+		g.db.add(c_aux)
+		g.db.flush()
+		n = Notification(comment_id=c_jannied.id, user_id=v.id)
+		g.db.add(n)
+
+
 	if v.agendaposter and "trans lives matter" not in body_html.lower():
 
 		p.is_banned = True
