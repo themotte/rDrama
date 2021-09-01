@@ -146,8 +146,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	secondrange = firstrange+200
 	posts = posts[firstrange:secondrange]
 
-	if v and v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
-
 	words = ['captainmeta4', ' cm4 ', 'dissident001', 'ladine']
 
 	for post in posts:
@@ -221,6 +219,8 @@ def front_all(v):
 					)
 
 	posts = get_posts(ids, v=v)
+
+	if v and v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
