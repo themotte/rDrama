@@ -365,50 +365,6 @@ class User(Base, Stndrd, Age_times):
 		secondrange = firstrange + 26
 		return comments[firstrange:secondrange]
 
-
-	def notification_subscriptions(self, page=1):
-
-		notifications = self.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT)
-
-		notifications = notifications.options(
-			contains_eager(Notification.comment)
-		)
-
-		notifications = notifications.order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26)
-
-		output = []
-		for x in notifications:
-			x.read = True
-			g.db.add(x)
-			output.append(x.comment_id)
-
-		return output
-
-	def notification_commentlisting(self, page=1):
-
-		notifications = self.notifications.join(Notification.comment).filter(
-			Comment.is_banned == False,
-			Comment.deleted_utc == 0,
-			Comment.author_id != AUTOJANNY_ACCOUNT,
-		)
-
-		if not all_:
-			notifications = notifications.filter(Notification.read == False)
-
-		notifications = notifications.options(
-			contains_eager(Notification.comment)
-		)
-
-		notifications = notifications.order_by(
-			Notification.id.desc()).offset(25 * (page - 1)).limit(26)
-
-		output = []
-		for x in notifications:
-			x.read = True
-			g.db.add(x)
-			output.append(x.comment_id)
-		return output
-
 	@property
 	@lazy
 	def notifications_count(self):
