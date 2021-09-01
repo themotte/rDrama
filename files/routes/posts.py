@@ -520,8 +520,9 @@ def submit_post(v):
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
 			url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
-		if "i.imgur.com" in url: url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
-		if "_d." in url: url += "?maxwidth=9999"
+		if "i.imgur.com" in url and "_d" not in url:
+			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
+			if "_d." in url: url += "?maxwidth=9999"
 
 		repost = g.db.query(Submission).join(Submission.submission_aux).filter(
 			SubmissionAux.url.ilike(url),
