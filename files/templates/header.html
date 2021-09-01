@@ -158,7 +158,7 @@
 			<a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>My account</a>
 		</li>
 		<li class="nav-item"><a class="nav-link" href="/assets/{{'SITE_NAME' | app_config}}App.apk"><i class="fab fa-android fa-fw mr-3"></i>Android app</a></li>
-		<li class="nav-item"><a class="nav-link" href="/post/1xq/posting-guidelines-policies-legal-shit"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
+		{% if 'rdrama' in request.host %}<li class="nav-item"><a class="nav-link" href="/post/1xq/posting-guidelines-policies-legal-shit"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>{% endif %}
 		<li class="nav-item"><a class="nav-link" href="https://github.com/Aevann1/{{'SITE_NAME' | app_config}}"><i class="fab fa-github fa-fw mr-3"></i>Source code</a></li>
 		<li class="nav-item"><a class="nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a></li>
 		<li class="nav-item"><a class="nav-link" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a></li>
