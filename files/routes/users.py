@@ -25,6 +25,7 @@ beams_client = PushNotifications(
 @app.post("/pay_rent")
 @auth_required
 def pay_rent(v):
+	if v.coins < 500: return "You must have more than 500 coins."
 	v.coins -= 500
 	v.rent_utc = int(time.time())
 	g.db.add(v)
