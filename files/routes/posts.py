@@ -886,7 +886,12 @@ def submit_post(v):
 		g.db.add(new_post)
 
 		if "rdrama" in request.host:
-			if v.id == 995: body = "fuck off carp"
+			if v.id == 995:
+				if random.random() < 0.02: body = "i love you carp"
+				else: body = "fuck off carp"
+			elif v.id == 3833:
+				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
+				else: body = "wow, a good lawlzpost for once!"
 			else: body = random.choice(snappyquotes)
 			body += "\n\n---\n\n"
 		else: body = ""
