@@ -49,7 +49,7 @@ def notifications(v):
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ACCOUNT,
-		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26)
+		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 		next_exists = (len(notifications) == 26)
 		notifications = notifications[:25]
