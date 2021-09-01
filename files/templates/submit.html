@@ -396,8 +396,6 @@
 
 						</div>
 
-				</div>
-
 				<div class="container">
 						<div class="row fixed-bottom bg-white border-top p-3" id="" style="z-index: 100; bottom: 0px; transition: bottom 220ms cubic-bezier(0, 0, 0.2, 1) 0s;">
 								<div class="col">
@@ -410,19 +408,20 @@
 						</div>
 				</div>
 
-		</form>
+			</form>
 
-		<div v-show="show_preview" class="card-blank" id="submit-page" style="height:max-content; min-height: 25rem; transition: 15s;">
-			<h1 class="m-3">Markdown Preview</h1>
-			<div class="m-3" style="min-height: 20px">
-				<h1 class="post-title" id="preview-tag-label">[[ post_title ]]</h1>
+			<div v-show="show_preview" class="card-blank" id="submit-page" style="height:max-content; min-height: 25rem; transition: 15s;">
+				<h1 class="m-3">Markdown Preview</h1>
+				<div class="m-3" style="min-height: 20px">
+					<h1 class="post-title" id="preview-tag-label">[[ post_title ]]</h1>
+				</div>
+				<hr>
+				<div class="m-3">
+					<div id="post-body-markdown" v-html="post_body_markdown" style="max-height: 500px; overflow-y: scroll;"></div>
+				</div>
 			</div>
-			<hr>
-			<div class="m-3">
-				<div id="post-body-markdown" v-html="post_body_markdown" style="max-height: 500px; overflow-y: scroll;"></div>
-			</div>
+
 		</div>
-
 		{% endblock %}
 
 		<style>
