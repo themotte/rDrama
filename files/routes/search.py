@@ -38,7 +38,7 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 				Submission.submission_aux,
 			).join(
 				Submission.author
-			)
+			).filter_by(private=false)
 	
 	if 'q' in criteria:
 		words=criteria['q'].split()
