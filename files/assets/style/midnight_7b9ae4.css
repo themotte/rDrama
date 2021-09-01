@@ -27675,7 +27675,7 @@ img.emoji {
   color: #000000;
 }
 
-#context {
+#context, .context {
   padding: 10px;
   border: 2px solid #7b9ae4;
 }
