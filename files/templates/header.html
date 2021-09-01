@@ -53,7 +53,7 @@
 			{% if v.notifications_count %}
 
 			<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-				<a class="nav-link position-relative" href="/notifications{% if v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder">{{v.notifications_count}}</span></a>
+				<a class="nav-link position-relative" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder">{{v.notifications_count}}</span></a>
 			</li>
 
 			{% else %}
@@ -147,7 +147,7 @@
 			<a class="nav-link" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{v.username}}</a>
 		</li>
 		<li class="nav-item">			
-			<a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}">
+			<a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}">
 				<i class="fas fa-envelope fa-fw mr-3"></i>Inbox
 				{% if v.notifications_count %}
 				<i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;"></i>
