@@ -27676,8 +27676,8 @@ img.emoji {
 }
 
 #context, .context {
-  padding: 10px;
-  border: 2px solid #ec72de;
+  padding: 10px !important;
+  border: 2px solid #ec72de !important;
 }
 
 .btn-lg, .btn-group-lg > .btn {
