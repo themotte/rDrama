@@ -21,10 +21,12 @@ def notifications(v):
 	modmail = request.args.get('modmail', False)
 	posts = request.args.get('posts', False)
 	if modmail and v.admin_level == 6:
-		cids = v.notification_modmail(page=page)
-		next_exists = (len(cids) == 26)
-		cids = cids[:25]
-		comments = get_comments(cids, v=v)
+		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).all()
+		firstrange = 25 * (page - 1)
+		secondrange = firstrange + 26
+		comments = comments[firstrange:secondrange]
+		next_exists = (len(comments) == 26)
+		comments = comments[:25]
 	elif messages:
 		cids = v.notification_messages(page=page)
 		next_exists = (len(cids) == 26)
