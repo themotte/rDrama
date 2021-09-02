@@ -166,9 +166,11 @@ def post_id(pid, anything=None, v=None):
 		if random.random() < 0.02:
 			for comment in comments:
 				if comment.author and comment.author.shadowbanned:
+					rand = random.randint(5,20)
+					if comment.score > rand: continue
 					rand = random.randint(500,1400)
 					vote = CommentVote(user_id=rand,
-						vote_type=random.choice([-1, 1]),
+						vote_type=random.choice([-1, 1, 1, 1, 1]),
 						comment_id=comment.id)
 					g.db.add(vote)
 					try: g.db.flush()
