@@ -93,7 +93,7 @@ document.body.addEventListener('keydown', function(event) {
 		 		let arr = emojis[i].emojis
 				let container = document.getElementById(`EMOJIS_${emojis[i].type}`)
 		 		for (j=0; j < arr.length; j++) {
-		 			if(arr[j].match(search_bar.value)){
+		 			if(arr[j].match(search_bar.value.toLowerCase())){
 		 			str += `<button class="btn m-1 px-0" onclick="getEmoji(\'${arr[j]}\', \'${form}\')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img width=50 src="/assets/images/emojis/${arr[j]}.gif" alt="${arr[j]}-emoji"/></button>`;
 		 			}
 		 		}
