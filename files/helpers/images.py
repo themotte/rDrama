@@ -38,6 +38,7 @@ def upload_file(file=None, resize=False, png=False):
 		with open(filedir, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
+		print(req.json())
 		resp = req.json()['data']
 		url = resp['link']
 		if not "_d." in url:
