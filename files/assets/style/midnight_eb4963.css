@@ -27746,7 +27746,7 @@ textarea {
   resize: both !important;
 }
 
-body, .navbar-light, .navbar-dark, .card, .modal-content {
+body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textarea {
   background-color: #21262d !important;
 }
 
