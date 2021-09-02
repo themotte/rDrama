@@ -231,10 +231,9 @@
 		<div id="post-{{p.id}}" class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 			<div class="{% if p.deleted_utc > 0 %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
 
-				{% if p.thumb_url and not p.embed_url %}
+				{% if not p.is_image and p.thumb_url and not p.embed_url %}
 				<div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap pl-3 p-0">
-					<a rel="noopener noreferrer" href="{{p.realurl(v)}}" style="height: fit-content;" {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow"{% if p.is_image %} data-toggle="modal" data-target="#expandImageModal" onclick="expandDesktopImage('{{p.realurl(v)}}','{{p.realurl(v)}}')"{% endif %}><img src="{{p.thumb_url}}" class="post-img d-none d-md-block" alt="Unable to load image"></a>
-
+					<a rel="noopener noreferrer" href="{{p.realurl(v)}}" style="height: fit-content;" {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow"><img src="{{p.thumb_url}}" class="post-img d-none d-md-block"></a>
 				</div>
 				{% endif %}
 
@@ -313,6 +312,14 @@
 						{% endif %}
 						
 						<div id="post-text" style="z-index: 50">
+							{% if p.is_image %}
+								<div class="row no-gutters d-block d-md-block">
+									<div class="col">
+										<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}">{% if p.is_image %}<img src="{{p.realurl(v)}}" class="img-fluid" alt="Unable to load image"></a>
+									</div>
+								</div>
+								<pre></pre>
+							{% endif %}
 							{{p.realbody(v) | safe}}
 						</div>
 
@@ -487,15 +494,6 @@
 			</div>
 
 		</div>
-
-		<div class="row no-gutters d-block d-md-none">
-			<div class="col">
-			<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}">{% if p.is_image %}<img src="{{p.realurl(v)}}" class="img-fluid" alt="Unable to anonymously load image">
-				<div class="post-img-overlay d-block d-md-none">{{p.domain}}<i class="fas fa-external-link-alt text-small ml-2"></i></div>
-				{% endif %}
-			</a>
-		</div>
-	</div>
 
  </div>
 
