@@ -364,7 +364,7 @@ def random_post(v):
 	total = x.count()
 	n = random.randint(0, total - 1)
 
-	post = x.order_by(Submission.id.asc()).offset(n).limit(1).first()
+	post = x.offset(n).limit(1).first()
 	return redirect(post.permalink)
 
 @cache.memoize(timeout=86400)
