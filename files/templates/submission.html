@@ -175,8 +175,6 @@
 
 {% block content %}
 
-<img style="display: None !important;" src="https://upload.wikimedia.org/wikipedia/commons/c/cc/ESC_large_ISS022_ISS022-E-11387-edit_01.JPG">
-
 {% if p.award_count("shit") %}
 <script src="/assets/js/bug-min.js" type="text/javascript"></script>
 {% set minbugs = 10*p.award_count("shit") if p.award_count("shit") <= 5 else 50 %}
