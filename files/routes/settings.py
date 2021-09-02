@@ -117,8 +117,10 @@ def settings_profile_post(v):
 				v.ban(days=30, reason="Digitally malicious content is not allowed.")
 			return {"error": reason}, 401
 
+		if len(bio_html) > 10000: abort(400)
+
 		v.bio = bio[:1500]
-		v.bio_html=bio_html[:10000]
+		v.bio_html=bio_html
 		g.db.add(v)
 		return render_template("settings_profile.html",
 							   v=v,
