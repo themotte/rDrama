@@ -38,13 +38,14 @@ def upload_file(file=None, resize=False, png=False):
 		with open(filedir, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
-		print(req.json())
 		resp = req.json()['data']
 		url = resp['link']
 		if not "_d." in url:
 			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
 			if "_d." in url: url += "?maxwidth=9999"
-	except: return
+	except:
+		print(req.json())
+		return
 
 	new_image = Image(text=url, deletehash=resp["deletehash"])
 	g.db.add(new_image)
