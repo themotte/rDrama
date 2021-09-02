@@ -464,10 +464,17 @@ def settings_images_profile(v):
 		abort(413)
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
-	highres = upload_file(request.files["profile"])
+
+	if 'pcm' in request.host: highres = upload_ibb(request.files["profile"])
+	else: highres = upload_imgur(request.files["profile"])
+
 	if not highres: abort(400)
-	imageurl = upload_file(resize=True)
+
+	if 'pcm' in request.host: imageurl = upload_ibb(resize=True)
+	else: imageurl = upload_imgur(resize=True)
+
 	if not imageurl: abort(400)
+
 	v.highres = highres
 	v.profileurl = imageurl
 	g.db.add(v)
@@ -484,7 +491,10 @@ def settings_images_banner(v):
 		abort(413)
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
-	imageurl = upload_file(request.files["banner"])
+
+	if 'pcm' in request.host: imageurl = upload_ibb(request.files["banner"])
+	else: imageurl = upload_imgur(request.files["banner"])
+
 	if imageurl:
 		v.bannerurl = imageurl
 		g.db.add(v)

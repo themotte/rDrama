@@ -1189,4 +1189,4 @@ def multiple_plots(**kwargs):
 	plt.savefig("image.png")
 	plt.clf()
 
-	return upload_file(png=True)
+	return upload_imgur(png=True)

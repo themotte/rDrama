@@ -518,7 +518,9 @@ def thumbs(new_post):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = upload_file(resize=True)
+	if 'pcm' in request.host: post.thumburl = upload_ibb(resize=True)
+	else: post.thumburl = upload_imgur(resize=True)
+
 	g.db.add(post)
 
 def archiveorg(url):
@@ -843,7 +845,9 @@ def submit_post(v):
 			else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.form.get("body", "")), 400
 
 
-		new_post.url = upload_file(file)
+		if 'pcm' in request.host: new_post.url = upload_ibb(file)
+		else: new_post.url = upload_imgur(file)
+
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)
 	

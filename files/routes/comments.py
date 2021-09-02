@@ -276,7 +276,8 @@ def api_comment(v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 		
-		url = upload_file(file)
+		if 'pcm' in request.host: url = upload_ibb(file)
+		else: url = upload_imgur(file)
 		
 		body = request.form.get("body") + f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -651,8 +652,8 @@ def edit_comment(cid, v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 		
-		name = f'comment/{c.id}/{secrets.token_urlsafe(8)}'
-		url = upload_file(file)
+		if 'pcm' in request.host: url = upload_ibb(file)
+		else: url = upload_imgur(file)
 
 		body += f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
