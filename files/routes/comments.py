@@ -293,7 +293,7 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
-	if "ivermectin" in c_aux.body_html.lower():
+	if "rdrama" in request.host and "ivermectin" in c_aux.body_html.lower():
 
 		c.is_banned = True
 		c.ban_reason = "ToS Violation"
@@ -311,16 +311,16 @@ def api_comment(v):
 		g.db.add(c_jannied)
 		g.db.flush()
 
-		body = VAXX_MSG.format(username=v.username)
+		body2 = VAXX_MSG.format(username=v.username)
 
 		with CustomRenderer(post_id=parent_id) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
+			body_md = renderer.render(mistletoe.Document(body2))
 
 		body_jannied_html = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c_jannied.id,
 			body_html=body_jannied_html,
-			body=body
+			body=body2
 		)
 		g.db.add(c_aux)
 		g.db.flush()
@@ -663,7 +663,7 @@ def edit_comment(cid, v):
 	c.body = body[:10000]
 	c.body_html = body_html[:20000]
 
-	if "ivermectin" in c.body_html.lower():
+	if "rdrama" in request.host and "ivermectin" in c.body_html.lower():
 
 		c.is_banned = True
 		c.ban_reason = "ToS Violation"

@@ -290,7 +290,7 @@ def edit_post(pid, v):
 	if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
 	g.db.add(p)
 
-	if "ivermectin" in body_html.lower():
+	if "rdrama" in request.host and "ivermectin" in body_html.lower():
 
 		p.is_banned = True
 		p.ban_reason = "ToS Violation"
@@ -871,7 +871,7 @@ def submit_post(v):
 	g.db.flush()
 
 
-	if "ivermectin" in new_post_aux.body_html.lower():
+	if "rdrama" in request.host and "ivermectin" in new_post_aux.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "ToS Violation"
