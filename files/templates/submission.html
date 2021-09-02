@@ -324,14 +324,15 @@
 							{{p.realbody(v) | safe}}
 						</div>
 
-						{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
-							{% include "embeds/twitterlight.html" %}
-						{% elif "twitter.com" in p.domain and "/search?q=" not in p.url and "/i/events/" not in p.url %}
-							{% include "embeds/twitter.html" %}
-						{% elif "youtu" in p.domain %}
-							{% include "embeds/youtube.html" %}
+						{% if p.embed_url %}
+							{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
+								{% include "embeds/twitterlight.html" %}
+							{% elif "twitter.com" in p.domain %}
+								{% include "embeds/twitter.html" %}
+							{% elif "youtu" in p.domain %}
+								{% include "embeds/youtube.html" %}
+							{% endif %}
 						{% endif %}
-
 					</div>
 
 					{% if v and v.id==p.author_id and not v.is_suspended %}
