@@ -234,7 +234,6 @@
 				{% if not p.is_image and p.thumb_url and not p.embed_url %}
 				<div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap pl-3 p-0">
 					<a rel="noopener noreferrer" href="{{p.realurl(v)}}" style="height: fit-content;" {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow"><img src="{{p.thumb_url}}" class="post-img d-none d-md-block" alt="Unable to load image"></a>
-
 				</div>
 				{% endif %}
 
@@ -316,7 +315,10 @@
 							{% if p.is_image %}
 								<div class="row no-gutters">
 									<div class="col">
-										<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}"><img src="{{p.realurl(v)}}" class="img-fluid" alt="Unable to anonymously load image"></a>
+										<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}">
+											<img src="{{p.realurl(v)}}" class="d-none d-md-block img-fluid" style="max-width:50%;" alt="Unable to load image">
+											<img src="{{p.realurl(v)}}" class="d-block d-md-none img-fluid" style="max-width:100%;" alt="Unable to load image">
+										</a>
 									</div>
 								</div>
 								<pre></pre>
