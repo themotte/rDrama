@@ -101,7 +101,7 @@ def a_modify(attrs, whatever):
 		domain = parsed_url.netloc
 		attrs[(None, "target")] = "_blank"
 		if domain and not domain.endswith(domain):
-			attrs[(None, "rel")] = "nofollow noopener"
+			attrs[(None, "rel")] = "nofollow noopener noreferrer"
 
 			# Force https for all external links in comments
 			# (Website already forces its own https)
@@ -162,13 +162,13 @@ def sanitize(sanitized, noimages=False):
 			#print(tag.get('class'))
 			# set classes and wrap in link
 
-			tag["rel"] = "nofollow"
+			tag["rel"] = "nofollow noopener noreferrer"
 			tag["style"] = "max-height: 100px; max-width: 100%;"
 			tag["class"] = "in-comment-image rounded-sm my-2"
 
 			link = soup.new_tag("a")
 			link["href"] = tag["src"]
-			link["rel"] = "nofollow noopener"
+			link["rel"] = "nofollow noopener noreferrer"
 			link["target"] = "_blank"
 
 			link["onclick"] = f"expandDesktopImage('{tag['src']}');"
@@ -241,7 +241,7 @@ def sanitize(sanitized, noimages=False):
 	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")
 	
-	sanitized = re.sub(' (https:\/\/[^ <>]*)', r' <a target="_blank" href="\1">\1</a>', sanitized)
-	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank" href="\1">\1</a>', sanitized)
+	sanitized = re.sub(' (https:\/\/[^ <>]*)', r' <a target="_blank"  rel="nofollow noopener noreferrer" href="\1">\1</a>', sanitized)
+	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank"  rel="nofollow noopener noreferrer" href="\1">\1</a>', sanitized)
 
 	return sanitized

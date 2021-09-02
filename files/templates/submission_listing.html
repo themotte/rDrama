@@ -66,15 +66,15 @@
 			<div style="z-index: 3;">
 				
 				{% if not p.url %}
-					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} rel="nofollow noopener">
+					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
 						<img src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif p.is_image %}
-					<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
+					<a href="javascript:void(0)" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
 						<img src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% else %}
-					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="noopener noreferrer" href="{{p.realurl(v)}}" rel="nofollow noopener">
+					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 						<img src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% endif %}
@@ -117,14 +117,14 @@
 				&nbsp;&nbsp;{{p.views}} views
 			</div>
 
-			<h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="stretched-link" {% if p.author.is_private %} rel="nofollow"{% endif %}>
+			<h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="stretched-link">
 				{{p.realtitle(v) | safe}}
 			</a></h5>
 
 			{% if p.thumb_url %}
 			<div class="row post-img-lg mb-3">
 				<div class="col px-0">
-					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} rel="{% if p.author.is_private %}nofollow {% endif %} noopener"><img src="{{p.thumb_url}}" class="img-fluid" alt="post image"></a>
+					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}><img src="{{p.thumb_url}}" class="img-fluid" alt="post image"></a>
 				</div>
 			</div>
 			{% endif %}
@@ -225,7 +225,7 @@
 <div class="card-footer d-block d-md-none mt-2">
 	<div class="post-actions">
 		<ul class="list-inline text-right d-flex">
-			<li class="list-inline-item mr-auto"><a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}{% if p.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
+			<li class="list-inline-item mr-auto"><a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
 
 			{% if p.realbody(v) and request.path != "/changelog"%}
 			<li class="list-inline-item"><a href="javascript:void(0)" class="text-expand" data-id="{{p.id}}"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a></li>

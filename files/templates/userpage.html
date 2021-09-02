@@ -99,7 +99,7 @@
 				<div class="container-fluid nobackground">
 					<div class="d-md-flex text-center text-md-left">
 						<div>
-							<a href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
+							<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
 						</div>
 						<div class="ml-3 w-100">
 							{% if u.is_suspended %}
@@ -323,7 +323,7 @@
 					<div>
 						{% for b in u.badges %}
 							{% if b.url %}
-								<a href="{{b.url}}"><img style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
+								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
 							{% else %}
 								<img style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
 							{% endif %}
@@ -352,7 +352,7 @@
 	<div class="row border-bottom">
 		<div class="col">
 			<div style="margin-top: -34px;">
-				<a href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
+				<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
 			</div>
 			<div class="mt-n3 py-3">
 				{% if u.is_suspended %}
@@ -402,7 +402,7 @@
 				<div class="mb-3">
 					{% for b in u.badges %}
 						{% if b.url %}
-							<a href="{{b.url}}"><img style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
+							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
 						{% else %}
 							<img style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
 						{% endif %}
