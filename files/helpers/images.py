@@ -44,7 +44,7 @@ def upload_file(file=None, resize=False, png=False):
 			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
 			if "_d." in url: url += "?maxwidth=9999"
 	except:
-		print(req.json())
+		if req: print(req.json())
 		return
 
 	new_image = Image(text=url, deletehash=resp["deletehash"])
