@@ -49,3 +49,5 @@ INSERT INTO public.users (
             0, 'longpostbot', '', 'hot', 'day', '62ca56', 'e4432d', '', '',
             '', '30409f', false, false, '', '', 0, false, 0, 
             0, 0, '', true);
+
+insert into public.award_relationships(id,user_id,kind) values(1,1,'shit');
