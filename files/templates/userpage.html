@@ -158,7 +158,7 @@
 					<span id="profile-coins-amount">{{u.coins}}</span> {{"COINS_NAME" | app_config}}&nbsp;&nbsp; {% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
 
 				</div>
-				{% if "pcm" in request.host %}<p class="text-muted">Based Count: {{u.basecount}}</p>{% endif %}
+				{% if "pcm" in request.host %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
 				{% if u.bio_html %}
 				<pre></pre>
 				<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
