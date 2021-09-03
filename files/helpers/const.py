@@ -56,6 +56,7 @@ Thank you."""
 
 BASED_MSG = """@{username}'s Based Count has increased by 1. Their Based Count is now {basedcount}."""
 
+BASEDBOT_ACCOUNT = 800
 NOTIFICATIONS_ACCOUNT = 1046
 AUTOJANNY_ACCOUNT = 2360
 LONGPOSTBOT_ACCOUNT = 1832

@@ -296,7 +296,7 @@ def api_comment(v):
 	g.db.flush()
 
 	if c.parent_comment and c_aux.body.lower().startswith("based"):
-		c_based = Comment(author_id=1,
+		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,
