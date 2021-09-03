@@ -307,8 +307,8 @@ def api_comment(v):
 		g.db.add(c_based)
 		g.db.flush()
 
-		if c.level == 0: basedguy = get_account(c.parent_comment.author_id)
-		else: basedguy = get_account(c.parent_submission.author_id)
+		if c.level == 0: basedguy = get_account(c.parent_submission.author_id)
+		else: basedguy = get_account(c.parent_comment.author_id)
 		basedguy.basedcount += 1
 		g.db.add(basedguy)
 		g.db.flush()
