@@ -451,16 +451,29 @@
 				data: {
 					post_title: "",
 					post_body: "",
+					post_tag: "",
 					show_preview: false,
 				},
 				computed: {
 					post_body_markdown: function(){
-						return md.render(this.post_body)
+						markdown = md.render(this.post_body)
+						emojis = Array.from(markdown.matchAll(/:(.{1,30}?):/gi))
+						if(emojis != null){
+							for(i = 0; i < emojis.length; i++){
+								markdown = markdown.replace(emojis[i][0], "<img height=30 src='/assets/images/emojis/" + emojis[i][1] + ".gif'>")
+							}
+						}
+						return markdown
 					}
 				},
 				methods: {
 					togglePreview() {
 						this.show_preview = !this.show_preview
+					},
+					toggleOn(){
+						if(this.post_body.length < 5){
+							this.show_preview = true
+						}
 					}
 				}
 			})
