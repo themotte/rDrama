@@ -657,7 +657,6 @@ def edit_comment(cid, v):
 		else: url = upload_imgur(file)
 
 		body += f"\n![]({url})"
-		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		with CustomRenderer(post_id=c.parent_submission) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
