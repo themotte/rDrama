@@ -73,7 +73,7 @@
 				
 				<div class="body d-lg-flex border-bottom">
 
-				<label for="bio" class="text-black w-lg-25">Theme Color</label>
+				<label class="text-black w-lg-25">Theme Color</label>
 
 				<div class="d-flex">
 
@@ -391,7 +391,7 @@
 
 							<div class="body d-lg-flex border-bottom">
 
-								<label for="bio" class="text-black w-lg-25">Username</label>
+								<label class="text-black w-lg-25">Username</label>
 
 								<div class="w-lg-100">
 									<p>Your original username will always stay reserved for you: <code>{{v.original_username}}</code></p>
@@ -410,7 +410,7 @@
 							
 							<div class="body d-lg-flex border-bottom">
 
-								<label for="bio" class="text-black w-lg-25">Profile Anthem</label>
+								<label class="text-black w-lg-25">Profile Anthem</label>
 
 								<div class="w-lg-100">
 									<p>Must be a youtube video link.</p>
@@ -429,7 +429,7 @@
 							
 							<div class="body d-lg-flex border-bottom">
 
-								<label for="bio" class="text-black w-lg-25">Name Color</label>
+								<label class="text-black w-lg-25">Name Color</label>
 
 								<div class="d-flex">
 
@@ -471,7 +471,7 @@
 							{% if not v.flairchanged %}
 							<div class="body d-lg-flex border-bottom">
 
-								<label for="bio" class="text-black w-lg-25">Flair</label>
+								<label class="text-black w-lg-25">Flair</label>
 
 								<div class="w-lg-100">
 
@@ -492,7 +492,7 @@
 
 							<div class="body d-lg-flex border-bottom">
 
-							<label for="bio" class="text-black w-lg-25">Flair Color</label>
+							<label class="text-black w-lg-25">Flair Color</label>
 
 							<div class="d-flex">
 
@@ -533,10 +533,9 @@
 
 							<div class="body d-lg-flex border-bottom">
 
-								<label for="bio" class="text-black w-lg-25">Bio</label>
+								<label class="text-black w-lg-25">Bio</label>
 
 								<div class="w-lg-100">
-
 
 									<form id="profile-bio" action="/settings/profile" method="post">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">

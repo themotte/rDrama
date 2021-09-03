@@ -198,6 +198,14 @@
 							{% endif %}
 						{% endif %}
 
+						{% if 'rdrama' in request.host and v.id in [28,995] %} 
+							{% if u.admin_level == 0 %}
+								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
+							{% else %}
+								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
+							{% endif %}
+						{% endif %}
+
 						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message" method="post">
 							<pre></pre>
 							<textarea id="input-message" form="message" name="message" rows="3" maxlength="1000" class="form-control" required></textarea>
