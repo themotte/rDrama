@@ -216,7 +216,7 @@
 	</div>
 </div>
 
-{% if "pcm" in request.host and p.is_image %}
+{% if p.is_image %}
 <div style="text-align: center" class="mt-3">
 	<a target="_blank" rel="nofollow noopener noreferrer" href="{{p.url}}">
 		<img loading="lazy" src="{{p.url}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
