@@ -296,7 +296,7 @@ def api_comment(v):
 	g.db.flush()
 
 	if "pcm" in request.host and c_aux.body.lower().startswith("based"):
-		pill = re.match("based and (.*?)(-| )pilled", body, re.IGNORECASE)
+		pill = re.match("based and (.{1,20}?)(-| )pilled", body, re.IGNORECASE)
 
 		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
 			parent_submission=parent_submission,
