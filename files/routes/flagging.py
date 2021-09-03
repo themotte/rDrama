@@ -77,7 +77,6 @@ def remove_report(report_fn, v):
 	else:
 		return {"error": "Invalid report ID"}, 400
 
-	_response = f"Removed @{report.user.username}'s report"
 	g.db.delete(report)
 
-	return {"message": _response}, 200
+	return {"message": "Removed report"}

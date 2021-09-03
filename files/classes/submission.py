@@ -130,8 +130,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 		output = '-'.join(output)
 
-		if not output:
-			output = '-'
+		if not output: output = '-'
 
 		return f"/post/{self.id}/{output}"
 

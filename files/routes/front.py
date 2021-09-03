@@ -367,7 +367,7 @@ def random_post(v):
 	n = random.randint(0, total - 1)
 
 	post = x.offset(n).limit(1).first()
-	return redirect(post.permalink)
+	return redirect(f"/post/{post.id}")
 
 @cache.memoize(timeout=86400)
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
