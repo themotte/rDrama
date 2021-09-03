@@ -296,6 +296,8 @@ def api_comment(v):
 	g.db.flush()
 
 	if "pcm" in request.host and c_aux.body.lower().startswith("based"):
+		pill = re.match("based and (.*?)(-| )pilled", body, re.IGNORECASE)
+
 		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			distinguish_level=6,
@@ -310,10 +312,11 @@ def api_comment(v):
 		if level == 1: basedguy = get_account(c.post.author_id)
 		else: basedguy = get_account(c.parent_comment.author_id)
 		basedguy.basedcount += 1
+		if pill: basedguy.pills += f"{pill}, "
 		g.db.add(basedguy)
 		g.db.flush()
 
-		body2 = BASED_MSG.format(username=basedguy.username, basedcount=basedguy.basedcount)
+		body2 = BASED_MSG.format(username=basedguy.username, basedcount=basedguy.basedcount, pills=basedguy.pills)
 
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body2))
 

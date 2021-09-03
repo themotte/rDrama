@@ -34,6 +34,7 @@ class User(Base, Stndrd, Age_times):
 	if "pcm" in site:
 		quadrant = Column(String)
 		basedcount = Column(Integer, default=0)
+		pills = customtitle = Column(String, default="")
 
 	titlecolor = Column(String, default=defaultcolor)
 	theme = Column(String, default=defaulttheme)
