@@ -31,7 +31,7 @@ class User(Base, Stndrd, Age_times):
 	customtitle = Column(String)
 	customtitleplain = Column(String)
 
-	if "dev.rdrama" in site:
+	if "pcm" in site:
 		quadrant = Column(String)
 		basedcount = Column(Integer, default=0)
 
