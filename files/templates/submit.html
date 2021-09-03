@@ -317,7 +317,7 @@
 												<label for="title">Post Title</label>
 
 
-												<input v-model="post_title" class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
+												<input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
 
 												<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn-2">
 													<div id="emoji-reply-btn-2" onclick="loadEmojis('post-title')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
@@ -420,9 +420,6 @@
 
 			<div v-show="show_preview" class="card-blank" id="submit-page" style="height:max-content; min-height: 25rem; transition: 15s;">
 				<h1 class="m-3">Markdown Preview</h1>
-				<div class="m-3" style="min-height: 20px">
-					<h1 class="post-title" id="preview-tag-label">[[ post_title ]]</h1>
-				</div>
 				<hr>
 				<div class="m-3">
 					<div id="post-body-markdown" v-html="post_body_markdown" style="max-height: 500px; overflow-y: scroll;"></div>
@@ -453,7 +450,6 @@
 				el: "#submitapp",
 				delimiters: ['[[', ']]'],
 				data: {
-					post_title: "",
 					post_body: "",
 					post_tag: "",
 					show_preview: false,
