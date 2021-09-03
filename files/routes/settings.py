@@ -94,7 +94,8 @@ def settings_profile_post(v):
 
 		# check for uploaded image
 		if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
-
+			
+			print("sex")
 			#check file size
 			if request.content_length > 16 * 1024 * 1024:
 				g.db.rollback()
