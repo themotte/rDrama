@@ -58,6 +58,10 @@ def settings_profile_post(v):
 		updated = True
 		v.hidevotedon = request.values.get("hidevotedon", None) == 'true'
 
+	if request.values.get("cardview", v.cardview) != v.cardview:
+		updated = True
+		v.cardview = request.values.get("cardview", None) == 'true'
+
 	if request.values.get("newtab", v.newtab) != v.newtab:
 		updated = True
 		v.newtab = request.values.get("newtab", None) == 'true'

@@ -46,6 +46,25 @@
 			<div class="settings-section rounded">
 
 					<div class="d-lg-flex border-bottom">
+
+						<div class="title w-lg-25">
+							<label for="cardview">Card View</label>
+						</div>
+
+						<div class="body w-lg-100">
+
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="cardview" name="cardview"{% if v.cardview %} checked{% endif %} onchange="post_toast('/settings/profile?cardview='+document.getElementById('cardview').checked);">
+								<label class="custom-control-label" for="cardview"></label>
+							</div>
+
+							<span class="text-small-extra text-muted">Enable if you would like to display images in full size in the frontpage.</span>
+
+						</div>
+
+					</div>
+
+					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
 							<label for="theme">Website Theme</label>
 						</div>
