@@ -23,23 +23,23 @@
 	<div class="settings-section rounded">
 		<div class="d-lg-flex">
 				<div class="title w-lg-25">
-								<label for="over18">{{app.app_name}}</label>
+								<label>{{app.app_name}}</label>
 						</div>
 						<div class="body w-lg-100">
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
-				<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
+				<label class="mb-0 w-lg-25">App Name</label>
 				<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}">
 				
 				
 				{% if app.client_id %}
-				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
+				<label class="mb-0 w-lg-25">Client ID</label>
 				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
 				{% endif %}
 				
 				
-				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
+				<label class="mb-0 w-lg-25">Redirect URI</label>
 				<input id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}">
-				<label for="edit-{{app.id}}-desc" class="mb-0 w-lg-25">Description</label>
+				<label class="mb-0 w-lg-25">Description</label>
 				<textarea form="edit-app-{{app.id}}" class="form-control" name="description" id="edit-{{app.id}}-desc" maxlength="256">{{app.description}}</textarea>
 			</div>
 		</div>
@@ -64,21 +64,21 @@
 	<div class="settings-section rounded">
 		<div class="d-lg-flex">
 				<div class="title w-lg-25">
-								<label for="over18">{{app.app_name}}</label>
+								<label>{{app.app_name}}</label>
 						</div>
 						<div class="body w-lg-100">
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
-				<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
+				<label class="mb-0 w-lg-25">App Name</label>
 				<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}">
 
 				{% if app.client_id %}
-				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
+				<label class="mb-0 w-lg-25">Client ID</label>
 				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
 				{% endif %}
 
-				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
+				<label class="mb-0 w-lg-25">Redirect URI</label>
 				<input id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}">
-				<label for="edit-{{app.id}}-desc" class="mb-0 w-lg-25">Description</label>
+				<label class="mb-0 w-lg-25">Description</label>
 				<textarea form="edit-app-{{app.id}}" class="form-control" name="description" id="edit-{{app.id}}-desc" maxlength="256">{{app.description}}</textarea>
 			</div>
 		</div>
@@ -101,7 +101,7 @@
 	<div id="auth-{{auth.id}}" class="settings-section rounded">
 		<div class="d-lg-flex">
 				<div class="title w-lg-25">
-								<label for="over18">{{auth.application.app_name}}</label>
+								<label>{{auth.application.app_name}}</label>
 						</div>
 						<div class="body w-lg-100">
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
@@ -126,13 +126,13 @@
 		<div class="d-lg-flex">
 			<div class="body w-lg-100">
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
-				<label for="form-username">Username</label>
+				<label>Username</label>
 				<input type="text" id="form-username" class="form-control" name="username" value="{{v.username}}" readonly>
-				<label for="form-appname">Application Name</label>
+				<label>Application Name</label>
 				<input type="text" id="form-appname" class="form-control" name="name" required>
-				<label for="form-redirect">Redirect URI</label>
+				<label>Redirect URI</label>
 				<input type="text" id="form-redirect" class="form-control" name="redirect_uri" placeholder="Custom URI scheme can be used. Separate multiple options with comma." required>
-				<label for="form-username">Description</label>
+				<label>Description</label>
 				<textarea form="api-key-request-form" id="form-desc" class="form-control" name="description" maxlength="256" required></textarea>
 			</div>
 		</div>

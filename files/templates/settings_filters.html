@@ -17,7 +17,7 @@
 
 					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
-							<label for="defaultsortingcomments">Default Sorting for Comments</label>
+							<label>Default Sorting for Comments</label>
 						</div>
 
 						<div class="body w-lg-100">
@@ -36,7 +36,7 @@
 
 					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
-							<label for="defaultsorting">Default Sorting for Posts</label>
+							<label>Default Sorting for Posts</label>
 						</div>
 
 						<div class="body w-lg-100">
@@ -55,7 +55,7 @@
 
 					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
-							<label for="defaulttime">Default Time Filter for Posts</label>
+							<label>Default Time Filter for Posts</label>
 						</div>
 
 						<div class="body w-lg-100">
@@ -81,14 +81,14 @@
 				<div class="d-lg-flex border-bottom">
 
 					<div class="title w-lg-25">
-						<label for="newtab">Open Threads In New Tabs</label>
+						<label>Open Threads In New Tabs</label>
 					</div>
 
 					<div class="body w-lg-100">
 
 						<div class="custom-control custom-switch">
 							<input type="checkbox" class="custom-control-input" id="newtab" name="newtab"{% if v.newtab %} checked{% endif %} onchange="post_toast('/settings/profile?newtab='+document.getElementById('newtab').checked);">
-							<label class="custom-control-label" for="newtab"></label>
+							<label class="custom-control-label"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically open threads in new tabs.</span>
@@ -101,14 +101,14 @@
 				<div class="d-lg-flex border-bottom">
 
 					<div class="title w-lg-25">
-						<label for="newtabexternal">Open External Links In New Tabs</label>
+						<label>Open External Links In New Tabs</label>
 					</div>
 
 					<div class="body w-lg-100">
 
 						<div class="custom-control custom-switch">
 							<input type="checkbox" class="custom-control-input" id="newtabexternal" name="newtabexternal"{% if v.newtabexternal %} checked{% endif %} onchange="post_toast('/settings/profile?newtabexternal='+document.getElementById('newtabexternal').checked);">
-							<label class="custom-control-label" for="newtabexternal"></label>
+							<label class="custom-control-label"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically open external links in new tabs.</span>
@@ -129,14 +129,14 @@
 				<div class="d-lg-flex border-bottom">
 
 					<div class="title w-lg-25">
-						<label for="oldreddit">Use Old Reddit</label>
+						<label>Use Old Reddit</label>
 					</div>
 
 					<div class="body w-lg-100">
 
 						<div class="custom-control custom-switch">
 							<input type="checkbox" class="custom-control-input" id="oldreddit" name="oldreddit"{% if v.oldreddit %} checked{% endif %} onchange="post_toast('/settings/profile?oldreddit='+document.getElementById('oldreddit').checked);">
-							<label class="custom-control-label" for="oldreddit"></label>
+							<label class="custom-control-label"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert reddit.com links to old.reddit.com links.</span>
@@ -148,14 +148,14 @@
 				<div class="d-lg-flex border-bottom">
 
 					<div class="title w-lg-25">
-						<label for="controversial">Sort by Controversial</label>
+						<label>Sort by Controversial</label>
 					</div>
 
 					<div class="body w-lg-100">
 
 						<div class="custom-control custom-switch">
 							<input type="checkbox" class="custom-control-input" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="post_toast('/settings/profile?controversial='+document.getElementById('controversial').checked);">
-							<label class="custom-control-label" for="controversial"></label>
+							<label class="custom-control-label"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically sort reddit.com links by controversial.</span>
@@ -173,14 +173,14 @@
 					<div class="d-lg-flex border-bottom">
 
 						<div class="title w-lg-25">
-							<label for="slurreplacer">Disable +18 Warnings</label>
+							<label>Disable +18 Warnings</label>
 						</div>
 
 						<div class="body w-lg-100">
 
 							<div class="custom-control custom-switch">
 								<input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast('/settings/profile?over18='+document.getElementById('over18').checked);document.getElementById('filter-nsfw-option').classList.toggle('d-none')">
-								<label class="custom-control-label" for="over18"></label>
+								<label class="custom-control-label"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Enable if you would like to not get a warning before viewing +18 content.</span>
@@ -194,14 +194,14 @@
 					<div class="d-lg-flex border-bottom">
 
 						<div class="title w-lg-25">
-							<label for="slurreplacer">Slur Replacer</label>
+							<label>Slur Replacer</label>
 						</div>
 
 						<div class="body w-lg-100">
 
 							<div class="custom-control custom-switch">
 								<input type="checkbox" class="custom-control-input" id="slurreplacer" name="slurreplacer"{% if v.slurreplacer %} checked{% endif %} onchange="post_toast('/settings/profile?slurreplacer='+document.getElementById('slurreplacer').checked);">
-								<label class="custom-control-label" for="slurreplacer"></label>
+								<label class="custom-control-label"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Enable if you would like to automatically replace slurs.</span>
@@ -214,14 +214,14 @@
 					<div class="d-lg-flex border-bottom">
 
 						<div class="title w-lg-25">
-							<label for="hidevotedon">Hide Posts Voted On</label>
+							<label>Hide Posts Voted On</label>
 						</div>
 
 						<div class="body w-lg-100">
 
 							<div class="custom-control custom-switch">
 								<input type="checkbox" class="custom-control-input" id="hidevotedon" name="hidevotedon"{% if v.hidevotedon %} checked{% endif %} onchange="post_toast('/settings/profile?hidevotedon='+document.getElementById('hidevotedon').checked);">
-								<label class="custom-control-label" for="hidevotedon"></label>
+								<label class="custom-control-label"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Enable if you would like to automatically hide posts you have voted on from your frontpage.</span>
@@ -233,7 +233,7 @@
 					<div class="d-lg-flex">
 
 						<div class="title w-lg-25">
-							<label for="filters-text">Custom Filters</label>
+							<label>Custom Filters</label>
 						</div>
 
 						<div class="body w-lg-100">

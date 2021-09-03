@@ -23,16 +23,16 @@
 
 <form action="/admin/image_ban" method="post" class="mb-6" enctype="multipart/form-data">
 	<input type="hidden" name="formkey" value="{{v.formkey}}">
-	<label for="img-input">Image Upload</label>
+	<label>Image Upload</label>
 	<input id="img-input" type="file" class="form-control-file mb-2" name="file">
-	<label for="img-input" class="mt-3">Ban Reason</label>
+	<label class="mt-3">Ban Reason</label>
 	<select name="ban_reason" class="form-control" id="ban_reason">
 		<option disabled selected>Select Ban Reason</option>
 		<option value="Bestiality">Bestiality</option>
 		<option value="Child Sexual Abuse Material">CSAM</option>
 		<option value="Involuntary Pornography">Involuntary Pornography</option>
 	</select>
-	<label for="time-input" class="mt-3">Penalty</label>
+	<label class="mt-3">Penalty</label>
 	<small>Enter the number of days to ban a user who attempts to upload this image</small>
 	<input id="time-input" class="form-control" type="text" name="ban_length" placeholder="Enter 0 for permanent ban" required>
 	<input type="submit" value="Ban Image" class="btn btn-primary mt-3">

@@ -26,10 +26,10 @@
 						<p>
 							<span class="font-weight-bold">Step 2:</span> Enter the six-digit code generated in the authenticator app and your {{'SITE_NAME' | app_config}} account password.
 						</p>
-						<label for="2fa_input">6-digit code</label>
+						<label>6-digit code</label>
 						<input type="text" class="form-control mb-2" id="2fa_input" name="2fa_token" placeholder="# # # # # #" required>
 
-						<label for="2fa_input_password">Password</label>
+						<label>Password</label>
 						<input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" oninput="document.getElementById('enable2faButton').disabled=false" autocomplete="off" required>
 					</div>
 					<div class="modal-footer">
@@ -50,10 +50,10 @@
 							To disable two-step login, please enter your {{'SITE_NAME' | app_config}} account password and the 6-digit code generated in your authentication app. If you no longer have your two-step device, <a href="/lost_2fa">click here</a>.
 						</div>
 
-						<label for="2fa_input_password">Password</label>
+						<label>Password</label>
 						<input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" autocomplete="off" required>
 
-						<label for="2fa_input">6-digit code</label>
+						<label>6-digit code</label>
 						<input type="text" class="form-control mb-2" id="2fa_input" name="2fa_remove" placeholder="# # # # # #" oninput="document.getElementById('disable2faButton').disabled=false" required>
 					</div>
 					<div class="modal-footer">

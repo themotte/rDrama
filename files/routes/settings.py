@@ -96,6 +96,26 @@ def settings_profile_post(v):
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', bio, re.MULTILINE): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
 		bio = bio.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+
+		# check for uploaded image
+		if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
+
+			#check file size
+			if request.content_length > 16 * 1024 * 1024:
+				g.db.rollback()
+				abort(413)
+
+			file = request.files['file']
+			if not file.content_type.startswith('image/'):
+				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
+				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
+
+			if 'pcm' in request.host: url = upload_ibb(file)
+			else: url = upload_imgur(file)
+
+			bio += f"\n\n![]({url})"
+
+
 		with CustomRenderer() as renderer: bio_html = renderer.render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html)
 		# Run safety filter

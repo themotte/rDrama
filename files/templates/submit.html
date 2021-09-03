@@ -314,13 +314,13 @@
 
 												<input type="hidden" name="formkey" value="{{v.formkey}}">
 
-												<label for="title">Post Title</label>
+												<label>Post Title</label>
 
 
 												<input v-model="post_title" class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
 
 												<div id="urlblock">
-														<label for="URL" class="mt-3">URL</label>
+														<label class="mt-3">URL</label>
 														<input class="form-control" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="Optional if you have text." value="{{request.args.get('url','')}}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
 														<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
 												</div>
@@ -330,7 +330,7 @@
 
 													<img loading="lazy" id="image-preview" class="w-100 d-block">
 						
-													<label class="btn btn-secondary m-0" for="file-upload">
+													<label class="btn btn-secondary m-0">
 														<div id="filename-show">Select Image</div>
 														<input id="file-upload" type="file" name="file" accept="image/*" hidden>
 													</label>
@@ -339,7 +339,7 @@
 												</div>
 												</div>
 
-												<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
+												<label class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
 
 												<div class="input-group">
 
@@ -369,7 +369,7 @@
 												&nbsp;
 												<small class="btn btn-secondary format d-inline-block m-0"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="getGif();commentForm('post-text')" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom"  title="Add GIF">GIF</span></small>
 												&nbsp;
-												<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn">
+												<label class="btn btn-secondary format d-inline-block m-0">
 													<div id="emoji-reply-btn" onclick="loadEmojis('post-text')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
 												</label>
 												
@@ -383,12 +383,12 @@
 
 												<div class="custom-control custom-checkbox">
 														<input type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18">
-														<label class="custom-control-label" for="nsfwCheck">+18</label>
+														<label class="custom-control-label">+18</label>
 												</div>
 												
 												<div class="custom-control custom-checkbox">
 														<input type="checkbox" class="custom-control-input" id="privateCheck" name="private">
-														<label class="custom-control-label" for="privateCheck">Draft</label>
+														<label class="custom-control-label">Draft</label>
 												</div>
 												<pre>
 
