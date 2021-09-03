@@ -312,7 +312,7 @@ def api_comment(v):
 		if level == 1: basedguy = get_account(c.post.author_id)
 		else: basedguy = get_account(c.parent_comment.author_id)
 		basedguy.basedcount += 1
-		if pill: basedguy.pills += f"{pill}, "
+		if pill: basedguy.pills += f"{pill.group(1)}, "
 		g.db.add(basedguy)
 		g.db.flush()
 
