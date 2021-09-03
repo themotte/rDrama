@@ -99,7 +99,7 @@
 				<div class="container-fluid nobackground">
 					<div class="d-md-flex text-center text-md-left">
 						<div>
-							<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
+							<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img loading="lazy" src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
 						</div>
 						<div class="ml-3 w-100">
 							{% if u.is_suspended %}
@@ -152,7 +152,7 @@
 					</div> 
 				</div>
 
-				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.gif">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
+				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.gif">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
 				
 				<div class="font-weight-bolder">
 					<span id="profile-coins-amount">{{u.coins}}</span> {{"COINS_NAME" | app_config}}&nbsp;&nbsp; {% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
@@ -323,9 +323,9 @@
 					<div>
 						{% for b in u.badges %}
 							{% if b.url %}
-								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
+								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img loading="lazy" style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
 							{% else %}
-								<img style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
+								<img loading="lazy" style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
 							{% endif %}
 						{% endfor %}
 					</div>
@@ -346,13 +346,13 @@
 <div class="container-fluid text-center bg-white d-md-none">
 	<div class="row">
 		<div class="col px-0">
-			<img src="{{u.banner_url}}" style="width: 100%; height: 65px; object-fit: cover;">
+			<img loading="lazy" src="{{u.banner_url}}" style="width: 100%; height: 65px; object-fit: cover;">
 		</div>
 	</div>
 	<div class="row border-bottom">
 		<div class="col">
 			<div style="margin-top: -34px;">
-				<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
+				<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img loading="lazy" src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
 			</div>
 			<div class="mt-n3 py-3">
 				{% if u.is_suspended %}
@@ -379,7 +379,7 @@
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
-				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.gif">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
+				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.gif">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
 				<div class="font-weight-normal">
 					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span> {{"COINS_NAME" | app_config}}&nbsp;&nbsp;{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
 				</div>
@@ -402,9 +402,9 @@
 				<div class="mb-3">
 					{% for b in u.badges %}
 						{% if b.url %}
-							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
+							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img loading="lazy" style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
 						{% else %}
-							<img style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
+							<img loading="lazy" style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
 						{% endif %}
 					{% endfor %}
 				</div>

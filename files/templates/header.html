@@ -4,8 +4,8 @@
 	<div class="container-fluid" style="padding:0;">
 		<div class="flex-grow-1">
 			<a {% if v %}href="/"{% else %}href="/logged_out"{% endif %} class="navbar-brand">
-				<img height="30" src="/assets/images/{{'SITE_NAME' | app_config}}/headericon.gif">
-				<img src="/assets/images/{{'SITE_NAME' | app_config}}/logo.gif" height="20">
+				<img loading="lazy" height="30" src="/assets/images/{{'SITE_NAME' | app_config}}/headericon.gif">
+				<img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/logo.gif" height="20">
 			</a>
 		</div>
 		<div class="flex-grow-1 d-fl d-none d-md-block">
@@ -81,7 +81,7 @@
 					<a class="nav-link bg-transparent py-0 pr-0" href="{{v.url}}" role="button" id="dropdownMenuLink" data-toggle="dropdown"
 					aria-haspopup="true" aria-expanded="false">
 					<div class="d-flex">
-						<div><img src="{{v.profile_url}}" class="profile-pic-35"></div>
+						<div><img loading="lazy" src="{{v.profile_url}}" class="profile-pic-35"></div>
 						<div class="text-left pl-2">
 							<div style="color: #{{v.namecolor}}" class="text-small font-weight-bold {% if v.patron %}patron{% endif %}"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}};"{% endif %}>{{v.username}}</span></div>
 							<div class="text-small-extra text-purple"><i class="fad fa-coins mr-1"></i><span id="user-coins-amount">{{v.coins}}</span> {{"COINS_NAME" | app_config}}</div>

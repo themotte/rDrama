@@ -138,7 +138,7 @@
 				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{c.author.verified}}"></i>
 				{% endif %}
 
-				<a {% if v %}href="{{c.author.url}}"{% else %}href="/logged_out{{c.author.url}}"{% endif %} style="color:#{{c.author.namecolor}};  font-size:12px; font-weight:bold;"><img src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if c.author.patron %}class="patron" style="background-color:#{{c.author.namecolor}};"{% endif %}>{{c.author.username}}</span></a>{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{% if c.author.quadrant %}<img height="20" src="/assets/images/PCM/quadrants/{{c.author.quadrant}}.gif">{% endif %}{{c.author.customtitle | safe}}</bdi>{% endif %}
+				<a {% if v %}href="{{c.author.url}}"{% else %}href="/logged_out{{c.author.url}}"{% endif %} style="color:#{{c.author.namecolor}};  font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if c.author.patron %}class="patron" style="background-color:#{{c.author.namecolor}};"{% endif %}>{{c.author.username}}</span></a>{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{% if c.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{c.author.quadrant}}.gif">{% endif %}{{c.author.customtitle | safe}}</bdi>{% endif %}
 
 				<span id="timestamp-{{c.id}}" data-toggle="tooltip" data-placement="bottom" title="" class="time-stamp">&nbsp;{{c.age_string}}</span>
 				{% if c.edited_utc %}

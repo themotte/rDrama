@@ -165,6 +165,7 @@ def sanitize(sanitized, noimages=False):
 			tag["rel"] = "nofollow noopener noreferrer"
 			tag["style"] = "max-height: 100px; max-width: 100%;"
 			tag["class"] = "in-comment-image rounded-sm my-2"
+			tag["loading"] = "lazy"
 
 			link = soup.new_tag("a")
 			link["href"] = tag["src"]
@@ -212,11 +213,11 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
-			sanitized = sanitized.replace(f'<p>:{i.group(1)}:</p>', f'<p><img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=60 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"</p>')
+			sanitized = sanitized.replace(f'<p>:{i.group(1)}:</p>', f'<p><img loading="lazy" data-toggle="tooltip" title="{i.group(1)}" delay="0" height=60 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"</p>')
 
 	for i in re.finditer(':([^ ]{1,30}?):', sanitized):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
-			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img data-toggle="tooltip" title="{i.group(1)}" delay="0" height=30 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
+			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img loading="lazy" data-toggle="tooltip" title="{i.group(1)}" delay="0" height=30 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.", "https://").replace("https://m.", "https://")
 

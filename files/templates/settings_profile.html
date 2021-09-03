@@ -180,7 +180,7 @@
 							let bgsDir = backgrounds[bgselector.selectedIndex].folder;
 							for (i=0; i < bgsToDisplay.length; i++) {
 								let onclickPost = bgsDir + "/" + bgsToDisplay[i];
-								str += `<button class="btn btn-secondary m-1 p-0" style="width:15rem; overflow: hidden;"><img style="padding:0.25rem; width: 15rem" src="/assets/images/backgrounds/${bgsDir}/${bgsToDisplay[i]}" alt="${bgsToDisplay[i]}-background" onclick="post('/settings/profile?background=${onclickPost}', function(){window.location.reload(true);})"/></button>`;
+								str += `<button class="btn btn-secondary m-1 p-0" style="width:15rem; overflow: hidden;"><img loading="lazy" style="padding:0.25rem; width: 15rem" src="/assets/images/backgrounds/${bgsDir}/${bgsToDisplay[i]}" alt="${bgsToDisplay[i]}-background" onclick="post('/settings/profile?background=${onclickPost}', function(){window.location.reload(true);})"/></button>`;
 							}
 							bgContainer.innerHTML = str;
 						}
@@ -215,7 +215,7 @@
 				<div class="d-flex">
 
 					<div class="title w-lg-25 text-md-center">
-						<img src="{{v.profile_url}}" class="profile-pic-75">
+						<img loading="lazy" src="{{v.profile_url}}" class="profile-pic-75">
 					</div>
 
 					<div class="body w-lg-100 my-auto">
@@ -258,7 +258,7 @@
 				<div class="d-flex">
 
 					<div class="title w-lg-75 text-md-center">
-						<img src="{{v.banner_url}}" class="banner-pic-135">
+						<img loading="lazy" src="{{v.banner_url}}" class="banner-pic-135">
 					</div>
 
 					<div class="body w-lg-100 my-auto">
