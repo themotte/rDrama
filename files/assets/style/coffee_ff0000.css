@@ -27775,4 +27775,8 @@ blockquote {
   background: None !important;
 }
 
+#frontpage .post-title a:visited {
+  color: #949494;
+}
+
 /*# sourceMappingURL=coffee_ff0000.css.map */

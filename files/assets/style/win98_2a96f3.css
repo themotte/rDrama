@@ -27852,4 +27852,8 @@ blockquote {
   padding: 20px !important;
 }
 
+#frontpage .post-title a:visited {
+  color: #5c5c5c;
+}
+
 /*# sourceMappingURL=win98_2a96f3.css.map */

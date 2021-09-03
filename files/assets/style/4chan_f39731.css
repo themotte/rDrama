@@ -27829,4 +27829,8 @@ blockquote p {
   background: None !important;
 }
 
+#frontpage .post-title a:visited {
+  color: #949494;
+}
+
 /*# sourceMappingURL=4chan_f39731.css.map */

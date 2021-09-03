@@ -27754,4 +27754,8 @@ body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textare
   background: None !important;
 }
 
+#frontpage .post-title a:visited {
+  color: #6e6e6e;
+}
+
 /*# sourceMappingURL=midnight_80ffff.css.map */
