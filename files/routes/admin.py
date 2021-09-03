@@ -231,8 +231,6 @@ def badge_grant_post(v):
 	badge_id = int(request.form.get("badge_id"))
 
 	badge = g.db.query(BadgeDef).filter_by(id=badge_id).first()
-	if badge.kind != 3:
-		abort(403)
 
 	if user.has_badge(badge_id):
 		g.db.query(Badge).filter_by(badge_id=badge_id, user_id=user.id,).delete()
