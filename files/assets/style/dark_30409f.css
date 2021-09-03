@@ -27626,7 +27626,7 @@ img.emoji {
 }
 
 #frontpage .post-title a:visited {
-  color: #b0b0b0;
+  color: #E1E1E1;
 }
 
 @media (max-width: 767.98px) {
@@ -27791,6 +27791,10 @@ pre {
 
 .transparent {
   background: None !important;
+}
+
+#frontpage .post-title a:visited {
+  color: #b0b0b0;
 }
 
 /*# sourceMappingURL=dark_30409f.css.map */
