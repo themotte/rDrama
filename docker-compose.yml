@@ -44,6 +44,7 @@ services:
       - SLOGAN=Dude bussy lmao
       - GUMROAD_TOKEN=3435tdfsdudebussylmaoxxt43
       - GUMROAD_LINK=https://marsey1.gumroad.com/l/tfcvri
+      - CARD_VIEW=1
     links:
       - "redis"
       - "postgres"
