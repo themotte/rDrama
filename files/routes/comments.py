@@ -295,7 +295,7 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
-	if "pcm" in request.host and c.parent_comment and c_aux.body.lower().startswith("based"):
+	if "pcm" in request.host and c_aux.body.lower().startswith("based") and (c.level==0 or c.parent_comment):
 		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			distinguish_level=6,
@@ -307,15 +307,15 @@ def api_comment(v):
 		g.db.add(c_based)
 		g.db.flush()
 
-		basedguy = get_account(c.parent_comment.author_id)
+		if c.level == 0: basedguy = get_account(c.parent_comment.author_id)
+		else: basedguy = get_account(c.parent_submission.author_id)
 		basedguy.basedcount += 1
 		g.db.add(basedguy)
 		g.db.flush()
 
 		body2 = BASED_MSG.format(username=v.username, basedcount=basedguy.basedcount)
 
-		with CustomRenderer(post_id=parent_id) as renderer:
-			body_md = renderer.render(mistletoe.Document(body2))
+		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body2))
 
 		body_based_html = sanitize(body_md)
 		c_aux = CommentAux(
