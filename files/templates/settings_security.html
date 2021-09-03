@@ -24,7 +24,7 @@
 
 								<div class="d-lg-flex">
 
-									<label class="mb-0 w-lg-25">New Password</label>
+									<label for="new_password" class="mb-0 w-lg-25">New Password</label>
 
 									<input class="form-control w-lg-100" id="new_password"
 									aria-describedby="new_password" type="password" name="new_password" autocomplete="off"
@@ -43,7 +43,7 @@
 
 							<div class="d-lg-flex mt-3">
 
-								<label class="mb-0 w-lg-25">Confirm New Password</label>
+								<label for="cnf_password" class="mb-0 w-lg-25">Confirm New Password</label>
 
 								<input class="form-control w-lg-100" id="cnf_password"
 								aria-describedby="cnf_password" type="password" name="cnf_password" autocomplete="off"
@@ -60,7 +60,7 @@
 
 						<div class="d-lg-flex mt-5">
 
-							<label class="mb-0 w-lg-25">Old Password</label>
+							<label for="old_password" class="mb-0 w-lg-25">Old Password</label>
 
 							<input class="form-control mb-2 w-lg-100" id="old_password" autocomplete="off"
 							aria-describedby="old_password" type="password" name="old_password"
@@ -101,7 +101,7 @@
 
 						<div class="d-lg-flex">
 
-							<label class="w-lg-25">Email</label>
+							<label for="new-email" class="w-lg-25">Email</label>
 
 							<div class="w-lg-100">
 
@@ -119,7 +119,7 @@
 
 						<div class="d-lg-flex mt-3">
 
-						<label class="w-lg-25 d-none" id="email-password-label">Password</label>
+						<label for="email-password" class="w-lg-25 d-none" id="email-password-label">Password</label>
 
 						<div class="w-lg-100">
 
@@ -165,14 +165,14 @@
 			<div class="d-lg-flex">
 
 				<div class="title w-lg-25">
-					<label>Use 2-step login</label>
+					<label for="2faToggle">Use 2-step login</label>
 				</div>
 
 				<div class="body w-lg-100">
 
 					<div class="custom-control custom-switch">
 					<input type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" onchange="$('#2faModal').modal('toggle')" {% if not mfa_secret %}checked=""{% endif %}>
-					<label class="custom-control-label"></label>
+					<label class="custom-control-label" for="2faToggle"></label>
 					</div>
 
 					<span class="text-small-extra text-muted">This requires entering a randomly-generated, 6-digit code and your password to login. See <a href="#">Google Authenticator</a> or <a href="#">Authy</a> for more details.</span>
@@ -196,7 +196,7 @@
 
 				<div class="d-lg-flex">
 
-				<label class="w-lg-25" id="email-password-label">Password</label>
+				<label for="forcelog-password" class="w-lg-25" id="email-password-label">Password</label>
 
 				<div class="w-lg-100">
 
@@ -253,7 +253,7 @@
 
 						<div class="d-lg-flex">
 
-							<label class="w-lg-25" id="email-password-label">Password</label>
+							<label for="delete-password" class="w-lg-25" id="email-password-label">Password</label>
 
 							<div class="w-lg-100">
 
@@ -266,7 +266,7 @@
 						{% if v.mfa_secret %}
 						<div class="d-lg-flex mt-3">
 
-							<label class="w-lg-25" id="email-password-label">Two-Factor Code</label>
+							<label for="delete-mfa" class="w-lg-25" id="email-password-label">Two-Factor Code</label>
 
 							<div class="w-lg-100">
 
@@ -279,7 +279,7 @@
 
 						<div class="d-lg-flex mt-3">
 
-							<label class="w-lg-25" id="email-password-label">Feedback</label>
+							<label for="delete-reason" class="w-lg-25" id="email-password-label">Feedback</label>
 
 							<div class="w-lg-100">
 

@@ -20,7 +20,7 @@
 
 					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
-							<label>Quadrant</label>
+							<label for="quadrant">Quadrant</label>
 						</div>
 
 						<div class="body w-lg-100">
@@ -47,7 +47,7 @@
 
 					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
-							<label>Website Theme</label>
+							<label for="theme">Website Theme</label>
 						</div>
 
 						<div class="body w-lg-100">
@@ -82,7 +82,7 @@
 
 							{% for themecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
 							<input type="radio" name="themecolor" id="themecolor-{{themecolor}}" value="{{themecolor}}" {% if v.themecolor == themecolor %}checked{% endif %} onclick="document.getElementById('themecolor-form').submit()"/>
-							<label class="color-radio">
+							<label class="color-radio" for="themecolor-{{themecolor}}">
 								<span style="background-color: #{{themecolor}}">
 								{% if v.themecolor.lower() == themecolor %}
 									<i class="fas fa-check text-white"></i>
@@ -105,7 +105,7 @@
 					<input type="hidden" name="formkey" value="{{v.formkey}}">
   
 					<input class="form-control" type="text" name="themecolor" id="color-code" value="{% if v.themecolor %}{{v.themecolor}}{% endif %}">
-					<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" onclick="form.submit()" hidden=""></label>
+					<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 				</form>
 				
 				</div> -->
@@ -113,7 +113,7 @@
 			</div>
 			<div class="d-lg-flex border-bottom">
 			<div class="title w-lg-25">
-				<label>Website Backgrounds</label>
+				<label for="theme">Website Backgrounds</label>
 			</div>
 				<div class="body w-lg-100">
 					<script>
@@ -305,7 +305,7 @@
 				<div class="d-lg-flex">
 
 					<div class="title w-lg-25">
-						<label>Referral code</label>
+						<label for="referral_code">Referral code</label>
 					</div>
 
 					<div class="body w-lg-100">
@@ -438,7 +438,7 @@
 
 											{% for color in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
 											<input type="radio" name="color" id="color-{{color}}" value="{{color}}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-											<label class="color-radio">
+											<label class="color-radio" for="color-{{color}}">
 												<span style="background-color: #{{color}}">
 												{% if v.namecolor.lower() == color %}
 													<i class="fas fa-check text-white"></i>
@@ -461,7 +461,7 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 				
 									<input class="form-control" type="text" name="color" id="color-code" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
-									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" onclick="form.submit()" hidden=""></label>
+									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 								</form>
 								
 								</div>
@@ -501,7 +501,7 @@
 
 										{% for titlecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
 										<input type="radio" name="titlecolor" id="titlecolor-{{titlecolor}}" value="{{titlecolor}}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()"/>
-										<label class="color-radio">
+										<label class="color-radio" for="titlecolor-{{titlecolor}}">
 											<span style="background-color: #{{titlecolor}}">
 											{% if v.titlecolor.lower() == titlecolor %}
 												<i class="fas fa-check text-white"></i>
@@ -524,7 +524,7 @@
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 			
 								<input class="form-control" type="text" name="titlecolor" id="color-code" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
-								<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" onclick="form.submit()" hidden=""></label>
+								<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 							</form>
 							
 							</div>
@@ -554,10 +554,6 @@
 											&nbsp;
 											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('bio-text')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"></pre>
 											&nbsp;
-											<label class="btn btn-secondary format d-inline-block m-0">
-												<div id="filename-show"><i class="far fa-image"></i></div>
-												<input id="file-upload" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show').innerHTML='image';" hidden>
-											</label>					
 										</div>
 										
 										<pre></pre>
@@ -587,14 +583,14 @@
 						<div class="d-lg-flex border-bottom">
 
 							<div class="title w-lg-25">
-								<label>Private Mode</label>
+								<label for="privateswitch">Private Mode</label>
 							</div>
 
 							<div class="body w-lg-100">
 
 								<div class="custom-control custom-switch">
 									<input type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast('/settings/profile?private='+document.getElementById('privateswitch').checked)">
-									<label class="custom-control-label"></label>
+									<label class="custom-control-label" for="privateswitch"></label>
 								</div>
 
 								<span class="text-small-extra text-muted">This will hide your post and comment history from others. We will also ask search engines to not index your profile page. (Your content will still be accessible via direct link.)</span>
@@ -605,14 +601,14 @@
 						<div class="d-lg-flex border-bottom">
 
 							<div class="title w-lg-25">
-								<label>Disable Subscriptions</label>
+								<label for="nofollowswitch">Disable Subscriptions</label>
 							</div>
 
 							<div class="body w-lg-100">
 
 								<div class="custom-control custom-switch">
 									<input type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="post_toast('/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
-									<label class="custom-control-label"></label>
+									<label class="custom-control-label" for="nofollowswitch"></label>
 								</div>
 
 								<span class="text-small-extra text-muted">Prevent other users from following you.</span>

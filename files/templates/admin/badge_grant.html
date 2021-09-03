@@ -39,7 +39,7 @@
 <input type="hidden" name="formkey" value="{{v.formkey}}">
 
 
-<label>Username</label><br>
+<label for="input-username">Username</label><br>
 <input id="input-username" class="form-control" type="text" name="username" required>
 
 <table class="table table-striped">
@@ -55,17 +55,17 @@
 {% for badge in badge_types %}
 <tr>
 	<td><input type="radio" id="badge-{{badge.id}}" name="badge_id" value="{{badge.id}}"></td>
-	<td><label><img loading="lazy" class="d-block" src="{{badge.path}}" width="70px" height="70px"></label></td>
+	<td><label for="badge-{{badge.id}}"><img loading="lazy" class="d-block" src="{{badge.path}}" width="70px" height="70px"></label></td>
 	<td>{{badge.name}}</td>
 	<td>{{badge.description}}</td>
 </tr>
 {% endfor %}
 </table>
 
-<label>URL</label><br>
+<label for="input-url">URL</label><br>
 <input id="input-url" class="form-control" type="text" name="url" placeholder="Optional">
 
-<label>Custom description</label><br>
+<label for="input-description">Custom description</label><br>
 <input id="input-description" class="form-control" type="text" name="description" placeholder="Leave blank for badge default">
 
 <input class="btn btn-primary" type="submit">
