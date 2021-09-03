@@ -236,7 +236,7 @@ def badge_grant_post(v):
 
 	if user.has_badge(badge_id):
 		g.db.query(Badge).filter_by(badge_id=badge_id, user_id=user.id,).delete()
-		return redirect(user.url)
+		return redirect("/admin/badge_grant")
 	
 	new_badge = Badge(badge_id=badge_id,
 					  user_id=user.id,
@@ -256,10 +256,12 @@ def badge_grant_post(v):
 	\n\n![]({new_badge.path})
 	\n\n{new_badge.name}
 	"""
-
 	send_notification(NOTIFICATIONS_ACCOUNT, user, text)
 
-	if badge_id in [21,22,23,24,28]:
+	if badge_id == 16 and user.has_badge(17):
+		g.db.query(Badge).filter_by(badge_id=17, user_id=user.id).delete()
+
+	elif badge_id in [21,22,23,24,28]:
 		user.patron = int(str(badge_id)[-1])
 
 		grant_awards = {}
