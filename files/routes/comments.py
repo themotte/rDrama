@@ -313,7 +313,7 @@ def api_comment(v):
 		g.db.add(basedguy)
 		g.db.flush()
 
-		body2 = BASED_MSG.format(username=v.username, basedcount=basedguy.basedcount)
+		body2 = BASED_MSG.format(username=basedguy.username, basedcount=basedguy.basedcount)
 
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body2))
 
