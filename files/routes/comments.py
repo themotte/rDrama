@@ -156,7 +156,7 @@ def api_comment(v):
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
-	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+	body = body.replace("\n\n", "\n").replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
@@ -280,7 +280,7 @@ def api_comment(v):
 		else: url = upload_imgur(file)
 		
 		body = request.form.get("body") + f"\n![]({url})"
-		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+		body = body.replace("\n\n", "\n").replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		with CustomRenderer(post_id=parent_id) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
@@ -375,7 +375,7 @@ def api_comment(v):
 		g.db.flush()
 	
 		body = random.choice(LONGPOST_REPLIES)
-		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+		body = body.replace("\n\n", "\n").replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
@@ -564,7 +564,7 @@ def edit_comment(cid, v):
 
 	body = request.form.get("body", "")[:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
-	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+	body = body.replace("\n\n", "\n").replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	with CustomRenderer(post_id=c.post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
@@ -657,7 +657,7 @@ def edit_comment(cid, v):
 		else: url = upload_imgur(file)
 
 		body += f"\n![]({url})"
-		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+		body = body.replace("\n\n", "\n").replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		with CustomRenderer(post_id=c.parent_submission) as renderer:
 			body_md = renderer.render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
