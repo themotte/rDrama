@@ -10,6 +10,8 @@ INSERT INTO public.users (
             '', 'ff66ac', false, false, '', '', 0, false, 0, 
             0, 0, '', true);
 
+insert into public.award_relationships(id,user_id,kind) values(1,1046,'shit');
+
 INSERT INTO public.users (
     id, username, passhash, created_utc, admin_level, over_18, is_activated, bio, bio_html, login_nonce, is_private,
     unban_utc, original_username, customtitle, defaultsorting, defaulttime, namecolor, titlecolor, profileurl, bannerurl,
@@ -49,5 +51,3 @@ INSERT INTO public.users (
             0, 'zozbot', '', 'hot', 'day', '62ca56', 'e4432d', '', '',
             '', '30409f', false, false, '', '', 0, false, 0, 
             0, 0, '', true);
-
-insert into public.award_relationships(id,user_id,kind) values(1,1,'shit');
