@@ -90,7 +90,7 @@ def settings_profile_post(v):
 		bio = request.values.get("bio")[:1500]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', bio, re.MULTILINE): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
-		bio = bio.replace("\n\n", "\n").replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+		bio = bio.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
 		# check for uploaded image
 		if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
