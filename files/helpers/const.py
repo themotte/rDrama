@@ -54,7 +54,7 @@ The only proven method of prevention is the COVID-19 vaccine, paired with approp
 
 Thank you."""
 
-
+BASED_MSG = """@{username}'s Based Count has increased by 1. Their Based Count is now {basedcount}."""
 
 NOTIFICATIONS_ACCOUNT = 1046
 AUTOJANNY_ACCOUNT = 2360

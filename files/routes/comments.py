@@ -295,7 +295,41 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
-	if "rdrama" in request.host and "ivermectin" in c_aux.body_html.lower():
+	if c.parent_comment and c_aux.body.lower().startswith("based"):
+		c_based = Comment(author_id=800,
+			parent_submission=parent_submission,
+			distinguish_level=6,
+			parent_comment_id=c.id,
+			level=level+1,
+			is_bot=True,
+			)
+
+		g.db.add(c_based)
+		g.db.flush()
+
+		basedguy = c.parent_comment.author.basedcount
+		basedguy.basedcount += 1
+		g.db.add(basedguy)
+		g.db.flush()
+
+		body2 = BASED_MSG.format(username=v.username, basedcount=basedguy)
+
+		with CustomRenderer(post_id=parent_id) as renderer:
+			body_md = renderer.render(mistletoe.Document(body2))
+
+		body_based_html = sanitize(body_md)
+		c_aux = CommentAux(
+			id=c_based.id,
+			body_html=body_based_html,
+			body=body2
+		)
+		g.db.add(c_aux)
+		g.db.flush()
+		n = Notification(comment_id=c_based.id, user_id=v.id)
+		g.db.add(n)
+
+
+	if "rdrama" in request.host and "ivermectin" in c_aux.body.lower():
 
 		c.is_banned = True
 		c.ban_reason = "ToS Violation"

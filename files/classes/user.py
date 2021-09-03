@@ -30,7 +30,11 @@ class User(Base, Stndrd, Age_times):
 	background = Column(String)
 	customtitle = Column(String)
 	customtitleplain = Column(String)
-	quadrant = Column(String)
+
+	if "pcm" in site:
+		quadrant = Column(String)
+		basedcount = Column(Integer, default=0)
+
 	titlecolor = Column(String, default=defaultcolor)
 	theme = Column(String, default=defaulttheme)
 	themecolor = Column(String, default=defaultcolor)
