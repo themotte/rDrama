@@ -27802,4 +27802,8 @@ pre {
   background: None !important;
 }
 
+#frontpage .post-title a:visited {
+  color: #7a7a7a;
+}
+
 /*# sourceMappingURL=transparent_80ffff.css.map */
