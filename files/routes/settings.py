@@ -111,10 +111,10 @@ def settings_profile_post(v):
 
 			bio += f"\n\n![]({url})"
 
-		if bio == v.bio:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="You didn't change anything")
+		# if bio == v.bio:
+		# 	return render_template("settings_profile.html",
+		# 						   v=v,
+		# 						   error="You didn't change anything")
 
 		with CustomRenderer() as renderer: bio_html = renderer.render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html)
