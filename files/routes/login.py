@@ -300,7 +300,7 @@ def sign_up_post(v):
 
 	existing_account = get_user(username, graceful=True)
 	if existing_account and existing_account.reserved:
-		return redirect(existing_account.permalink)
+		return redirect(existing_account.url)
 
 	if existing_account or (email and g.db.query(
 			User).filter(User.email.ilike(email)).first()):
@@ -345,26 +345,20 @@ def sign_up_post(v):
 	else: admin_level=0
 
 	# make new user
-	try:
-		new_user = User(
-			username=username,
-			original_username = username,
-			admin_level = admin_level,
-			password=request.form.get("password"),
-			email=email,
-			created_utc=int(time.time()),
-			referred_by=ref_id or None,
-			ban_evade =  int(any([x.is_banned and not x.unban_utc for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x])),
-			agendaposter = any([x.agendaposter for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x])
-			)
-
-	except Exception as e:
-		#print(e)
-		#return "fail!", 418
-		return new_signup("Please enter a valid email")
+	new_user = User(
+		username=username,
+		original_username = username,
+		admin_level = admin_level,
+		password=request.form.get("password"),
+		email=email,
+		created_utc=int(time.time()),
+		referred_by=ref_id or None,
+		ban_evade =  int(any([x.is_banned and not x.unban_utc for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x])),
+		agendaposter = any([x.agendaposter for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x])
+		)
 
 	g.db.add(new_user)
-	g.db.flush()
+	g.db.commit()
 
 	# give a beta badge
 	beta_badge = Badge(user_id=new_user.id,
