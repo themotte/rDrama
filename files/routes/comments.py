@@ -295,7 +295,7 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
-	if "pcm" in request.host and c_aux.body.lower().startswith("based") and (c.level==0 or c.parent_comment):
+	if "pcm" in request.host and c_aux.body.lower().startswith("based"):
 		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			distinguish_level=6,
