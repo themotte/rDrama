@@ -2,7 +2,7 @@ from sqlalchemy.orm import deferred, contains_eager, aliased
 from secrets import token_hex
 import pyotp
 
-from files.helpers.discord import delete_role
+from files.helpers.discord import remove_user
 from files.helpers.images import *
 from files.helpers.const import *
 from .alts import Alt
@@ -525,7 +525,7 @@ class User(Base, Stndrd, Age_times):
 		else:
 			self.bannerurl = None
 			self.profileurl = None
-			delete_role(self, "linked")
+			if self.discord_id: remove_user(self)
 
 		self.is_banned = admin.id if admin else AUTOJANNY_ACCOUNT
 		if reason: self.ban_reason = reason
