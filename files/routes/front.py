@@ -24,7 +24,7 @@ def marseyverse(v):
 
 	listing = []
 
-	while count < 25:
+	while count < 100:
 		for site in [drama,pcm,gigachad,weebzone]:
 			try: post = site[count]
 			except: continue
