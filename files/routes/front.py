@@ -4,7 +4,7 @@ from files.helpers.get import *
 from files.__main__ import app, cache
 from files.classes.submission import Submission
 
-defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "day").strip()
+defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 
 @app.get("/post/")
 def slash_post():

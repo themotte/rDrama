@@ -19,7 +19,7 @@ from files.helpers.security import *
 site = environ.get("DOMAIN").strip()
 defaulttheme = environ.get("DEFAULT_THEME", "light").strip()
 defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
-defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "day").strip()
+defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
 class User(Base, Stndrd, Age_times):
