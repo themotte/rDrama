@@ -6,6 +6,25 @@ from files.classes.submission import Submission
 
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "day").strip()
 
+class Dict2Class(object):
+      
+    def __init__(self, my_dict):
+          
+        for key in my_dict:
+            setattr(self, key, my_dict[key])
+
+@app.get("/marseyverse")
+@auth_desired
+def marseyverse(v):
+
+	data = requests.get("https://pcmemes.net/", headers={"Authorization": "sex"}).json()["data"]
+	listing = []
+	for sex in data:
+		sex = data[0]
+		listing.append(Dict2Class(sex))
+	return render_template("marseyverse.html", v=v, listing=listing)
+
+
 @app.get("/post/")
 def slash_post():
 	return redirect("/")
@@ -254,6 +273,7 @@ def front_all(v):
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
+
 
 @cache.memoize(timeout=86400)
 def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
