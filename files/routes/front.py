@@ -17,7 +17,9 @@ class Post(object):
 @auth_desired
 def marseyverse(v):
 	count = 0
-	drama = requests.get("https://rdrama.net/", headers={"Authorization": "sex"}).json()["data"]
+	drama = requests.get("https://rdrama.net/", headers={"Authorization": "sex"}).json()
+	print(drama)
+	#["data"]
 	pcm = requests.get("https://pcmemes.net/", headers={"Authorization": "sex"}).json()["data"]
 	gigachad = requests.get("https://gigachadlife.com/", headers={"Authorization": "sex"}).json()["data"]
 	weebzone = requests.get("https://weebzone.xyz/", headers={"Authorization": "sex"}).json()["data"]
