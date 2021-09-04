@@ -247,7 +247,7 @@ def front_all(v):
 
 
 
-	if not v and request.path == "/": return redirect("/logged_out")
+	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect("/logged_out")
 
 	if v and "logged_out" in request.full_path: v = None
 
