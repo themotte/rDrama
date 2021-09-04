@@ -26,12 +26,12 @@ def marseyverse(v):
 
 	while count < 25:
 		for site in [drama,pcm,gigachad,weebzone]:
-			post = site[count]
+			try: post = site[count]
+			except: continue
 			listing.append(Post(post))
 		count += 1
-		
-	return render_template("marseyverse.html", v=v, listing=listing)
 
+	return render_template("marseyverse.html", v=v, listing=listing)
 
 @app.get("/post/")
 def slash_post():

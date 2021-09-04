@@ -107,7 +107,7 @@ app.config["RATELIMIT_HEADERS_ENABLED"]=True
 limiter = Limiter(
 	app,
 	key_func=get_ipaddr,
-	#default_limits=["100/minute"],
+	default_limits=["100/minute"],
 	headers_enabled=True,
 	strategy="fixed-window"
 )
