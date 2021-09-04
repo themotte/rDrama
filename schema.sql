@@ -1049,10 +1049,10 @@ CREATE TABLE public.users (
     controversial boolean,
     background text,
     verified text,
-    quadrant text,
     fail_utc integer,
     steal_utc integer,
-    fail2_utc integer
+    fail2_utc integer,
+    cardview boolean
 );
 
 
