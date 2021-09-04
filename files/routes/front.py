@@ -28,7 +28,8 @@ def marseyverse(v):
 
 	while count < 25:
 		for site in [drama,pcm,gigachad,weebzone]:
-			listing.append(Post(site[count]))
+			post = site[count]
+			listing.append(Post(post))
 		count += 1
 		
 	return render_template("marseyverse.html", v=v, listing=listing)
