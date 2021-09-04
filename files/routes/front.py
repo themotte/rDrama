@@ -6,7 +6,7 @@ from files.classes.submission import Submission
 
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "day").strip()
 
-class Dict2Class(object):
+class Post(object):
       
     def __init__(self, my_dict):
           
@@ -19,12 +19,16 @@ def marseyverse(v):
 	count = 0
 	drama = requests.get("https://rdrama.net/", headers={"Authorization": "sex"}).json()["data"]
 	pcm = requests.get("https://pcmemes.net/", headers={"Authorization": "sex"}).json()["data"]
+	gigachad = requests.get("https://gigachadlife.com/", headers={"Authorization": "sex"}).json()["data"]
+	weebzone = requests.get("https://weebzone.xyz/", headers={"Authorization": "sex"}).json()["data"]
+
+	listing = []
 
 	while count < 25:
-	listing = []
-	for sex in data:
-		sex = data[0]
-		listing.append(Dict2Class(sex))
+		for site in [drama,pcm,gigachad,weebzone]:
+			listing.append(Post(site[count]))
+		count += 1
+		
 	return render_template("marseyverse.html", v=v, listing=listing)
 
 
