@@ -16,8 +16,11 @@ class Dict2Class(object):
 @app.get("/marseyverse")
 @auth_desired
 def marseyverse(v):
+	count = 0
+	drama = requests.get("https://rdrama.net/", headers={"Authorization": "sex"}).json()["data"]
+	pcm = requests.get("https://pcmemes.net/", headers={"Authorization": "sex"}).json()["data"]
 
-	data = requests.get("https://pcmemes.net/", headers={"Authorization": "sex"}).json()["data"]
+	while count < 25:
 	listing = []
 	for sex in data:
 		sex = data[0]
