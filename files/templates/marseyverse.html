@@ -115,7 +115,7 @@
 						</div>
 			
 						<h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="stretched-link">
-							{{p.realtitle(v) | safe}}
+							{{p.title | safe}}
 						</a></h5>
 			
 						{% if p.thumb_url %}
