@@ -181,12 +181,20 @@
 														<input class="form-control" id="password_confirm"
 														aria-describedby="passwordConfirmHelp" type="password" name="password_confirm"
 														required="">
-
-														<div class="custom-control custom-checkbox mt-4">
+														
+														{% if "rdrama" in request.host %}
+															<div class="custom-control custom-checkbox mt-4">
+																	<input type="checkbox" class="custom-control-input" id="termsCheck" required>
+																	<label class="custom-control-label terms" for="termsCheck">I accept the <a
+																			href="/post/1xq/posting-guidelines-policies-legal-shit" target="_blank">terms and conditions</a></label>
+															</div>
+														{% elif "pcm" in request.host %}
+															<div class="custom-control custom-checkbox mt-4">
 																<input type="checkbox" class="custom-control-input" id="termsCheck" required>
 																<label class="custom-control-label terms" for="termsCheck">I accept the <a
-																		href="/post/1xq/posting-guidelines-policies-legal-shit" target="_blank">terms and conditions</a></label>
-														</div>
+																		style="color:lightgreen" href="/post/94/hi-welcome-to-pcmemesnet-im-your" target="_blank">terms and conditions</a></label>
+															</div>
+														{% endif %}
 
 														{% if hcaptcha %}
 																<div class="h-captcha" data-sitekey="{{hcaptcha}}"></div>

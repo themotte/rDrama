@@ -102,7 +102,13 @@
 						<hr class="my-2">
 						<div class="px-2">
 							<a class="dropdown-item" href="/assets/{{'SITE_NAME' | app_config}}App.apk"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
-							<a class="dropdown-item" href="{% if 'rdrama' in request.host %}/post/1xq/posting-guidelines-policies-legal-shit{% else %}/rules{% endif %}"><i class="fas fa-balance-scale fa-fw text-left mr-3"></i>Rules</a>
+
+							{% if "rdrama" in request.host %}
+								<a class="dropdown-item" href="/post/1xq/posting-guidelines-policies-legal-shit"><i class="fas fa-balance-scale fa-fw text-left mr-3"></i>Rules</a>
+							{% elif "pcm" in request.host %}
+								<a class="dropdown-item" href="/post/94/hi-welcome-to-pcmemesnet-im-your"><i class="fas fa-balance-scale fa-fw text-left mr-3"></i>Rules</a>
+							{% endif %}
+
 							<a class="dropdown-item" href="/changelog"><i class="fas fa-clipboard fa-fw text-left mr-3"></i>Changelog</a>
 							<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw text-left mr-3"></i>Source code</a>
 							<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw text-left mr-3"></i>Discord</a>
@@ -159,7 +165,12 @@
 		</li>
 		<li class="nav-item"><a class="nav-link" href="/assets/{{'SITE_NAME' | app_config}}App.apk"><i class="fab fa-android fa-fw mr-3"></i>Android app</a></li>
 
-		<li class="nav-item"><a class="nav-link" href="{% if 'rdrama' in request.host %}/post/1xq/posting-guidelines-policies-legal-shit{% else %}/rules{% endif %}"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
+		{% if "rdrama" in request.host %}
+			<li class="nav-item"><a class="nav-link" href="/post/1xq/posting-guidelines-policies-legal-shit"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
+		{% elif "pcm" in request.host %}
+			<li class="nav-item"><a class="nav-link" href="/post/94/hi-welcome-to-pcmemesnet-im-your"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
+		{% endif %}
+
 		<li class="nav-item"><a class="nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a></li>
 		<li class="nav-item"><a class="nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a></li>
 		<li class="nav-item"><a class="nav-link" rel="nofollow noopener noreferrer" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a></li>
