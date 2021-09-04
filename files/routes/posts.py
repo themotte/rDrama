@@ -951,7 +951,7 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if "rdrama" in request.host or new_post.url:
+	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host):
 		c = Comment(author_id=261,
 			distinguish_level=6,
 			parent_submission=new_post.id,
