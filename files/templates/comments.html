@@ -105,16 +105,19 @@
 </div>
 {% endif %}
 
-<div id="comment-{{c.id}}" class="{% if c.unread or (read and c.id not in read) %}context{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="border-left: 2px solid #{{c.author.namecolor}}; {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
+<div id="comment-{{c.id}}" class="{% if c.unread %}context{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="border-left: 2px solid #{{c.author.namecolor}}; {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
 
 	<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 	
 	<div class="comment-body">
 
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
+		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}" {% if read and c.id not in read %}style="background-color: rgba(179,229,255,0.5)"{% endif %}>
 
 			<div class="user-info">
 				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
+
+				{% if read and c.id not in read %}<i style="color:red !important" class="text-admin fas fa-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Unread"></i>{% endif %}
+
 				{% if c.awards %}
 					{% for a in c.awards[:5] %}
 						<i class="{{a.class_list}} px-1" data-toggle="tooltip" data-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
