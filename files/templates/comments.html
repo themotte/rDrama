@@ -302,7 +302,7 @@
 						{% endif %}
 
 						{% if v and v.admin_level==6 and v.id==c.author_id %}
-							<li class="list-inline-item text-success d-none d-md-inline-block"><a id="distinguish-{{c.id}}" href="javascript:void(0)" onclick="admin_comment('{{c.id}}')"><i class="fas fa-id-badge fa-fw"></i>{{'Undistinguish' if c.distinguish_level else 'Distinguish'}}</a></li>
+							<li class="list-inline-item text-info d-none d-md-inline-block"><a id="distinguish-{{c.id}}" href="javascript:void(0)" onclick="admin_comment('{{c.id}}')"><i class="fas fa-id-badge text-info fa-fw"></i>{{'Undistinguish' if c.distinguish_level else 'Distinguish'}}</a></li>
 						{% endif %}
 
 								
@@ -460,7 +460,7 @@
 
 					{% if v %}
 							{% if v.admin_level>=1 and v.id==c.author_id %}
-								<li class="list-group-item"><a class="text-success d-block" id="distinguish-{{c.id}}" href="javascript:void(0)" onclick="admin_comment('{{c.id}}', )" data-dismiss="modal"><i class="fas fa-id-badge"></i>{{'Undistinguish' if c.distinguish_level else 'Distinguish'}}</a></li>
+								<li class="list-group-item text-info"><a class="d-block" id="distinguish-{{c.id}}" href="javascript:void(0)" onclick="admin_comment('{{c.id}}', )" data-dismiss="modal"><i class="fas fa-id-badge text-info"></i>{{'Undistinguish' if c.distinguish_level else 'Distinguish'}}</a></li>
 							{% endif %}
 							{% if v.admin_level>=3 %}
 								<li class="list-group-item"><a class="text-success d-block" href="javascript:void(0)" onclick="approveComment('{{c.id}}')" data-dismiss="modal"><i class="fas fa-check text-success"></i>Approve</a></li>

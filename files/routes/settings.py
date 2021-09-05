@@ -844,12 +844,3 @@ def settings_title_change(v):
 
 	g.db.add(v)
 	return redirect("/settings/profile")
-
-@app.post("/settings/badges")
-@auth_required
-@validate_formkey
-def settings_badge_recheck(v):
-
-	v.refresh_selfset_badges()
-
-	return {"message":"Badges Refreshed"}
