@@ -361,13 +361,11 @@ def changelog(v):
 @auth_desired
 def random_post(v):
 
-
 	x = g.db.query(Submission).filter(Submission.deleted_utc == 0, Submission.is_banned == False)
-
 	total = x.count()
-	n = random.randint(0, total - 1)
+	n = random.randint(1, total - 2)
 
-	post = x.offset(n).limit(1).first()
+	post = x.all()[n]
 	return redirect(f"/post/{post.id}")
 
 @cache.memoize(timeout=86400)

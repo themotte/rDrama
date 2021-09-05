@@ -45,7 +45,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
-		else: pid = 6489
+		elif "rdrama" in request.host: pid = 6489
+		elif "pcm" in request.host: pid = 382
+		else: pid = 1
 	
 	try: pid = int(pid)
 	except: abort(404)
