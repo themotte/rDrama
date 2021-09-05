@@ -254,11 +254,11 @@
 						<li class="list-inline-item arrow-down d-none d-md-inline-block mr-2 comment-{{c.id}}-down active"></li>
 						{% endif %}
 						
-						{% elif v %}
+						{% elif v and "gigachadlife" not in request.host and "marsey.tech" not in request.host %}
 						<li id="comment-{{c.id}}-down" tabindex="0" class="list-inline-item arrow-down downvote-button d-none d-md-inline-block mr-2 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}" data-id-down="{{c.id}}" data-content-type="comment">
 						</li>
 
-						{% else %}
+						{% elif "gigachadlife" not in request.host and "marsey.tech" not in request.host %}
 
 						<li id="comment-{{c.id}}-down" tabindex="0" class="list-inline-item arrow-down d-none d-md-inline-block" onclick="location.href='/login';">
 						</li>
@@ -354,9 +354,9 @@
 							{% if voted==-1 %}
 								<li class="list-inline-item arrow-down d-inline-block d-md-none mr-2 comment-{{c.id}}-up active"></li>
 							{% endif %}
-						{% elif v %}
+						{% elif v and "gigachadlife" not in request.host and "marsey.tech" not in request.host %}
 							<li id="comment-{{c.id}}-down" tabindex="0" class="list-inline-item arrow-down downvote-button d-inline-block d-md-none mr-2 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}" data-id-down="{{c.id}}" data-content-type="comment"></li>
-						{% else %}
+						{% elif "gigachadlife" not in request.host and "marsey.tech" not in request.host %}
 							<li id="comment-{{c.id}}-down" tabindex="0" class="list-inline-item arrow-down d-inline-block d-md-none" onclick="location.href='/login';"></li>
 						{% endif %}
 					</ul>

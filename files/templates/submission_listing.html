@@ -36,7 +36,7 @@
 					<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 					{% if voted==-1 %}
-					<div class="text-muted mx-auto arrow-down post-{{p.id}}-down active"></div>
+						<div class="text-muted mx-auto arrow-down post-{{p.id}}-down active"></div>
 					{% endif %}
 
 				{% elif v %}
@@ -45,7 +45,9 @@
 
 				<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div id="post-{{p.id}}-down" tabindex="0" data-id-down="{{p.id}}" data-content-type="post" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+				{% if "gigachadlife" not in request.host and "marsey.tech" not in request.host %}
+					<div id="post-{{p.id}}-down" tabindex="0" data-id-down="{{p.id}}" data-content-type="post" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+				{% endif %}
 
 				{% else %}
 
@@ -53,8 +55,9 @@
 
 				<span id="post-{{p.id}}-score-none" class="score"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div id="post-{{p.id}}-down" tabindex="0" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
-
+				{% if "gigachadlife" not in request.host and "marsey.tech" not in request.host %}
+					<div id="post-{{p.id}}-down" tabindex="0" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
+				{% endif %}
 
 				{% endif %}
 
@@ -259,8 +262,7 @@
 					<span id="post-score-{{p.id}}-mobile" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="top" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 					{% if voted==-1 %}
-					<span class="ml-2 my-0 arrow-down post-{{p.id}}-down active">
-					</span>
+						<span class="ml-2 my-0 arrow-down post-{{p.id}}-down active"></span>
 					{% endif %}
 
 
@@ -273,8 +275,10 @@
 
 					<span id="post-score-{{p.id}}-mobile" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="top" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					<span id="post-{{p.id}}-down-mobile" tabindex="0" data-id-down="{{p.id}}" data-content-type="post" class="ml-2 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
-					</span>
+					{% if "gigachadlife" not in request.host and "marsey.tech" not in request.host %}
+						<span id="post-{{p.id}}-down-mobile" tabindex="0" data-id-down="{{p.id}}" data-content-type="post" class="ml-2 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
+						</span>
+					{% endif %}
 
 				</li>
 				{% else %}
