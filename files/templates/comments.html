@@ -111,7 +111,7 @@
 	
 	<div class="comment-body">
 
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}" {% if read and c.id not in read %}style="background-color: rgba(179,229,255,0.5)"{% endif %}>
+		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}" {% if read and v and v.id == 1 %}style="background-color: rgba(179,229,255,0.5)"{% endif %}>
 
 			<div class="user-info">
 				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
