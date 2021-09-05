@@ -182,7 +182,7 @@ def post_id(pid, anything=None, v=None):
 		post.preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
 
 	if v and v.id == 1: print(session.get("read_comments"))
-	if session.get("read_comments"): read = session["read_comments"]
+	if session.get("read_comments"): read = list(session.get("read_comments"))
 	else: read = None
 	read_comments = [x.id for x in post.preloaded_comments]
 	if read: session["read_comments"] += read_comments
