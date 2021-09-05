@@ -194,7 +194,7 @@ def post_id(pid, anything=None, v=None):
 		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
 		else: return render_template("errors/nsfw.html", v=v)
 
-	post.tree_comments()	
+	post.tree_comments()
 	if request.headers.get("Authorization"): return post.json
 	else: return post.rendered_page(v=v, read=read, sort=sort)
 
