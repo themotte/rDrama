@@ -857,8 +857,8 @@ def submit_post(v):
 				except UploadException as e:
 					if request.headers.get("Authorization"):
 						return {
-								   "error": str(e),
-							   }, 400
+							"error": str(e),
+						}, 400
 					else:
 						return render_template(
 							"submit.html",
