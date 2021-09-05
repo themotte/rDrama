@@ -5,6 +5,7 @@ sudo apt install redis-server
 rm /etc/redis/redis.conf
 cp /drama/redis.conf /etc/redis/redis.conf
 sudo systemctl restart redis.service
+apt install python3-pip
 sudo pip3 install -r requirements.txt
 . env
 apt install gunicorn
