@@ -195,6 +195,8 @@ def post_id(pid, anything=None, v=None):
 
 	post.tree_comments()
 
+	print(read)
+	
 	if request.headers.get("Authorization"): return post.json
 	else: return post.rendered_page(v=v, read=read, sort=sort)
 
