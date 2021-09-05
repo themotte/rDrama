@@ -73,7 +73,7 @@
 					<a href="javascript:void(0)" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
-				{% else %}
+				{% elif not p.is_video %}
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
