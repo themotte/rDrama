@@ -24,7 +24,7 @@ docker-compose up
 
 4- That's it! Visit `localhost` in your browser.
 
-5- Optional: to configure the site settings and successsfully integrate it with the external services we use (hcaptcha, cloudflare, discord, giphy, mailgun, pusher, imgur, and youtube), please edit the variables in the docker-compose.yml file.
+5- Optional: to change the domain from "localhost" to something else, configure the site settings and integrate it with the external services we use, please edit the variables in the docker-compose.yml file.
 
 ---
 
@@ -51,7 +51,7 @@ source setup
 4- That's it. Visit `localhost` in your browser.
 
 
-5- Optional: to configure the site settings and successsfully integrate it with the external services we use, please run this command and edit the variables:
+5- Optional: to change the domain from "localhost" to something else, configure the site settings and integrate it with the external services we use, please run this command and edit the variables:
 
 ```
 nano /drama/docker-compose.yml
