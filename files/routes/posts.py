@@ -826,13 +826,38 @@ def submit_post(v):
 			abort(413)
 
 		file = request.files['file']
-		if not file.content_type.startswith('image/'):
-			if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
-			else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.form.get("body", "")), 400
+		#if not file.content_type.startswith('image/'):
+		#	if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
+		#	else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.form.get("body", "")), 400
 
+		if not file.content_type.startswith(('image/', 'video/')):
+			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
+			else: return render_template("submit.html", v=v, error=f"File type not allowed.", title=title, body=request.form.get("body", "")), 400
 
-		if 'pcm' in request.host: new_post.url = upload_ibb(file)
-		else: new_post.url = upload_imgur(file)
+		if file.content_type.startswith('video/') and v.coins < app.config["VIDEO_COIN_REQUIREMENT"] and v.admin_level < 1:
+			if request.headers.get("Authorization"):
+				return {
+					"error": f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos"
+				}, 400
+			else:
+				return render_template(
+					"submit.html",
+					v=v,
+					error=f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos.",
+					title=title,
+					body=request.form.get("body", "")
+				), 400
+
+		if 'pcm' in request.host:
+			if file.content_type.startswith('image/'):
+				new_post.url = upload_ibb(file)
+			else:
+				new_post.url = upload_video(file)
+		else:
+			if file.content_type.startswith('image/'):
+				new_post.url = upload_imgur(file)
+			else:
+				new_post.url = upload_video(file)
 
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)
