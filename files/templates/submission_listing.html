@@ -70,7 +70,7 @@
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif p.is_image %}
-					<a href="javascript:void(0)" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}">
+					<a href="javascript:void(0)" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif not p.is_video %}
