@@ -375,6 +375,12 @@ def u_username(username, v=None):
 
 	u = get_user(username, v=v)
 
+	if v and v == u and v.id==1:
+		first = time.time()
+		v.refresh_selfset_badges()
+		second = time.time()
+		print(second-first)
+
 	# check for wrong cases
 
 	if username != u.username:
