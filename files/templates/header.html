@@ -1,9 +1,11 @@
 <!-- Navigation -->
 
 <nav class="shadow shadow-md fixed-top">
-	<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;">
-		<a style="color: white" href="https://reddit.com/r/SubredditDrama">/r/SubredditDrama official site</a>
-	</div>
+	{% if 'rdrama' in request.host %}
+		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;">
+			<a style="color: white" href="https://reddit.com/r/SubredditDrama">/r/SubredditDrama official site</a>
+		</div>
+	{% endif %}
 	<div class="navbar navbar-expand-md navbar-light" id="navbar">
 		<div class="container-fluid" style="padding:0;">
 			<div class="flex-grow-1">
