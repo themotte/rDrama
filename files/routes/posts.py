@@ -181,11 +181,18 @@ def post_id(pid, anything=None, v=None):
 
 		post.preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
 
-	if session.get("read_comments"): read = list(set(session.get("read_comments")))
-	else: read = None
-	read_comments = [x.id for x in post.preloaded_comments]
-	if read: session["read_comments"] += read_comments
-	else: session["read_comments"] = read_comments
+	# if session.get("read_comments"): read = list(set(session.get("read_comments")))
+	# else: read = None
+
+	# unread comment highlight
+	last_view_utc = session.get(str(post.id))
+
+	if last_view_utc:
+		last_view_utc = int(last_view_utc)
+
+	session[str(post.id)] = int(time.time())
+
+	#read_comments = [x.id for x in post.preloaded_comments]
 
 	post.views += 1
 	g.db.add(post)
@@ -196,7 +203,7 @@ def post_id(pid, anything=None, v=None):
 
 	post.tree_comments()
 	if request.headers.get("Authorization"): return post.json
-	else: return post.rendered_page(v=v, read=read, sort=sort)
+	else: return post.rendered_page(v=v, last_view_utc=last_view_utc, sort=sort)
 
 
 @app.post("/edit_post/<pid>")
