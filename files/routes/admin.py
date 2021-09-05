@@ -22,19 +22,6 @@ from files.helpers.discord import add_role
 
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
-@app.get("/admin/received_awards")
-@admin_level_required(6)
-def received_awards(v):
-	for u in g.db.query(User).options(lazyload('*')).all():
-		posts_idlist = g.db.query(Submission.id).filter_by(author_id=u.id).subquery()
-		comments_idlist = g.db.query(Comment.id).filter_by(author_id=u.id).subquery()
-
-		post_awards = g.db.query(AwardRelationship).filter(AwardRelationship.submission_id.in_(posts_idlist)).count()
-		comment_awards = g.db.query(AwardRelationship).filter(AwardRelationship.comment_id.in_(comments_idlist)).count()
-		u.received_award_count = post_awards + comment_awards
-		g.db.add(u)
-	return "sex"
-
 @app.get("/imgurcredits")
 @admin_level_required(6)
 def imgurcredits(v):
