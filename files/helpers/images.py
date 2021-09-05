@@ -1,9 +1,10 @@
 import requests
-from os import environ
+from os import environ, path, remove
 from PIL import Image as IImage, ImageSequence
 import base64
 from files.classes.images import *
 from flask import g
+from werkzeug.utils import secure_filename
 
 CF_KEY = environ.get("CLOUDFLARE_KEY", "").strip()
 CF_ZONE = environ.get("CLOUDFLARE_ZONE", "").strip()
@@ -87,3 +88,29 @@ def upload_imgur(file=None, resize=False, png=False):
 	new_image = Image(text=url, deletehash=resp["deletehash"])
 	g.db.add(new_image)
 	return(url)
+
+
+class UploadException(Exception):
+	"""Custom exception to raise if upload goes wrong"""
+	pass
+
+
+def upload_video(file):
+
+	file_path = path.join("temp", secure_filename(file.filename))
+
+	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
+	with open(file_path, 'rb') as f:
+		try:
+			r = requests.post('https://api.imgur.com/3/upload', headers=headers, data={"video": f})
+			r.raise_for_status()
+
+			resp = r.json()['data']
+		except requests.HTTPError as e:
+			raise UploadException(f"Status code {e.response.status_code} not in range 2**")
+		except Exception:
+			raise UploadException("Error, please try again later.")
+		finally:
+			remove(file_path)
+
+	return resp['link']
