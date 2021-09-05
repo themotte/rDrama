@@ -24,7 +24,7 @@ docker-compose up
 
 4- That's it! Visit `localhost` in your browser.
 
-5- Optional: to change the domain from "localhost" to something else, configure the site settings and integrate it with the external services we use, please edit the variables in the docker-compose.yml file.
+5- Optional: to change the domain from "localhost" to something else, configure the site settings and integrate it with the external services we use, please edit the variables in the docker-compose.yml file and then restart the docker container.
 
 ---
 
@@ -54,5 +54,7 @@ source setup
 5- Optional: to change the domain from "localhost" to something else, configure the site settings and integrate it with the external services we use, please run this command and edit the variables:
 
 ```
-nano /drama/docker-compose.yml
+nano /drama/env.sh
 ```
+
+then run `source restart` to apply the changes.
