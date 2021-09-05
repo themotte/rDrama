@@ -73,7 +73,7 @@ document.body.addEventListener('keydown', function(event) {
 
 		if(search_bar.value == ""){
 			let container = document.getElementById(`EMOJIS_favorite`)
-			console.log("sex"")
+			console.log("sex")
 			console.log(container.innerHTML)
 			container.innerHTML = container.innerHTML.replace("@form@", form);
 
