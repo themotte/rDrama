@@ -154,6 +154,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 							   v=v,
 							   p=self,
 							   sort=sort,
+							   read=read,
 							   linked_comment=comment,
 							   comment_info=comment_info,
 							   render_replies=True,
