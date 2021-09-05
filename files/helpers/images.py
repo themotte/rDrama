@@ -103,7 +103,7 @@ def upload_video(file):
 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
 	with open(file_path, 'rb') as f:
 		try:
-			r = requests.post('https://api.imgur.com/3/upload', headers=headers, data={"video": f})
+			r = requests.post('https://api.imgur.com/3/upload', headers=headers, files={"video": f})
 			print(r.text)
 			#r.raise_for_status()
 
