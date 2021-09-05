@@ -6,5 +6,5 @@ rm /etc/redis/redis.conf
 cp /drama/redis.conf /etc/redis/redis.conf
 sudo systemctl restart redis.service
 sudo pip3 install -r requirements.txt
-. env.sh
+. env
 gunicorn files.__main__:app -k gevent -w 2 --reload -b 0.0.0.0:80 --reload-extra-file ./files/templates/
