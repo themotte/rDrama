@@ -134,7 +134,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 		return f"/post/{self.id}/{output}"
 
-	def rendered_page(self, sort=None, comment=None, comment_info=None, v=None):
+	def rendered_page(self, sort=None, comment=None, read=None, comment_info=None, v=None):
 
 		# check for banned
 		if v and (v.admin_level >= 3 or self.author_id == v.id):
