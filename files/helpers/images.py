@@ -98,6 +98,7 @@ class UploadException(Exception):
 def upload_video(file):
 
 	file_path = path.join("temp", secure_filename(file.filename))
+	file.save(file_path)
 
 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
 	with open(file_path, 'rb') as f:
