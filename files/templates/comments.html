@@ -116,7 +116,7 @@
 			<div class="user-info">
 				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
 
-				{% if last_view_utc and c.created_utc > last_view_utc and not (v and v.id==c.author_id) %}<i class="text-admin fas fa-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Unread"></i>{% endif %}
+				{% if last_view_utc and c.created_utc > last_view_utc and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}<i style="color:red !important" class="text-admin fas fa-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Unread"></i>{% endif %}
 
 				{% if c.awards %}
 					{% for a in c.awards[:5] %}

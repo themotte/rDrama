@@ -67,6 +67,7 @@ class User(Base, Stndrd, Age_times):
 	shadowbanned = Column(Boolean, default=False)
 	over_18 = Column(Boolean, default=False)
 	hidevotedon = Column(Boolean, default=False)
+	highlightcomments = Column(Boolean, default=True)
 	slurreplacer = Column(Boolean, default=True)
 	flairchanged = Column(Boolean, default=False)
 	newtab = Column(Boolean, default=False)
