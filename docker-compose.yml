@@ -56,7 +56,9 @@ services:
 
   redis:
     image: redis
-    command: redis-server --dbfilename dump.rdb --always-show-logo yes --dir ./ --pidfile /var/run/redis_6379.pid
+    command: >
+        bash -c "redis-server --dbfilename dump.rdb --always-show-logo yes --dir ./ --pidfile /var/run/redis_6379.pid
+        && redis-cli config get dir"
     volumes:
       - "./:/service"
     ports:
