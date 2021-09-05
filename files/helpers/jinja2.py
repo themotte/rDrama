@@ -23,7 +23,7 @@ def post_embed(id, v):
 	return render_template("submission_listing.html", listing=[p], v=v)
 
 @app.template_filter("favorite_emojis")
-def favorite_emojis():
+def favorite_emojis('v'):
 	str = ""
 	emojis = session["favorite_emojis"]
 	emojis = sorted(emojis.items(), key=lambda x: x[1], reverse=True)
