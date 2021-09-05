@@ -108,6 +108,7 @@ def upload_video(file):
 
 			resp = r.json()['data']
 		except requests.HTTPError as e:
+			if r: print(r.json())
 			raise UploadException(f"Status code {e.response.status_code} not in range 2**")
 		except Exception:
 			raise UploadException("Error, please try again later.")
