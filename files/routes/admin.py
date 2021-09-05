@@ -33,6 +33,7 @@ def received_awards(v):
 		comment_awards = g.db.query(AwardRelationship).filter(AwardRelationship.comment_id.in_(comments_idlist)).count()
 		u.received_award_count = post_awards + comment_awards
 		g.db.add(u)
+	return "sex"
 
 @app.get("/imgurcredits")
 @admin_level_required(6)
