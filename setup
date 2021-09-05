@@ -3,9 +3,6 @@ sudo apt update
 sudo apt upgrade
 sudo apt install postgresql postgresql-contrib
 sudo apt install redis-server
-sudo rm /etc/redis/redis.conf
-sudo cp redis.conf /etc/redis/redis.conf
-sudo systemctl restart redis.service
 sudo rm /etc/postgresql/12/main/pg_hba.conf
 sudo cp pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
 sudo psql --u postgres -f schema.sql postgres
