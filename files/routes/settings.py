@@ -493,16 +493,12 @@ def settings_images_profile(v):
 	if 'pcm' in request.host: highres = upload_ibb(request.files["profile"])
 	else: highres = upload_imgur(request.files["profile"])
 
-	if not highres:
-		print("fuck")
-		abort(400)
+	if not highres: print("fuck")
 
 	if 'pcm' in request.host: imageurl = upload_ibb(resize=True)
 	else: imageurl = upload_imgur(resize=True)
 
-	if not imageurl:
-		print("sex")
-		abort(400)
+	if not imageurl: print("sex")
 
 	v.highres = highres
 	v.profileurl = imageurl
