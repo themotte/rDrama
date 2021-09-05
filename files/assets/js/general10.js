@@ -35,8 +35,9 @@ document.body.addEventListener('keydown', function(event) {
 
 	}
 
-	function loadEmojis(form) {
+	function loadEmojis(form, sex) {
 
+		console.log(sex)
 		const emojis = [
 		{
 			type:'marsey',
