@@ -401,6 +401,13 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		else: return False
 
 	@property
+	def is_video(self) -> bool:
+		if self.url:
+			return self.url.startswith("https://i.imgur.com") and self.url.lower().endswith('.mp4')
+		else:
+			return False
+
+	@property
 	@lazy
 	def active_flags(self): return self.flags.count()
 
