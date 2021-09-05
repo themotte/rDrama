@@ -1,6 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
+from files.helpers.sanitize import sanitize
 from .mix_ins import *
 import time
 
@@ -68,9 +69,9 @@ class ModAction(Base, Stndrd, Age_times):
 	@property
 	def target_link(self):
 		if self.target_user:
-			return f'<a href="{self.target_user.url}">{self.target_user.username}</a>'
+			return f'<a href="{self.target_user.url}">{sanitize(self.target_user.username)}</a>'
 		elif self.target_post:
-			return f'<a href="{self.target_post.permalink}">{self.target_post.title}</a>'
+			return f'<a href="{self.target_post.permalink}">{sanitize(self.target_post.title)}</a>'
 		elif self.target_comment:
 			return f'<a href="{self.target_comment.permalink}">comment</a>'
 
