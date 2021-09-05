@@ -150,6 +150,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		if "replies" not in self.__dict__ and "preloaded_comments" in self.__dict__:
 			self.tree_comments(comment=comment)
 
+		print(read)
 		return render_template(template,
 							   v=v,
 							   p=self,
