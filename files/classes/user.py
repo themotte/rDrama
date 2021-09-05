@@ -52,6 +52,7 @@ class User(Base, Stndrd, Age_times):
 	passhash = deferred(Column(String))
 	post_count = Column(Integer, default=0)
 	comment_count = Column(Integer, default=0)
+	received_award_count = Column(Integer, default=0)
 	created_utc = Column(Integer, default=0)
 	suicide_utc = Column(Integer, default=0)
 	rent_utc = Column(Integer, default=0)
@@ -352,18 +353,6 @@ class User(Base, Stndrd, Age_times):
 				awards[a.kind]['count'] = 1
 
 		return sorted(list(awards.values()), key=lambda x: x['kind'], reverse=True)
-
-	@property
-	@lazy
-	def received_awards_num(self):
-
-		posts_idlist = g.db.query(Submission.id).filter_by(author_id=self.id).subquery()
-		comments_idlist = g.db.query(Comment.id).filter_by(author_id=self.id).subquery()
-
-		post_awards = g.db.query(AwardRelationship).filter(AwardRelationship.submission_id.in_(posts_idlist)).count()
-		comment_awards = g.db.query(AwardRelationship).filter(AwardRelationship.comment_id.in_(comments_idlist)).count()
-
-		return post_awards + comment_awards
 
 	@property
 	@lazy
