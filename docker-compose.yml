@@ -56,7 +56,7 @@ services:
 
   redis:
     image: redis
-    command: redis-server --dbfilename dump.rdb --always-show-logo yes --dir ./ --pidfile /var/run/redis_6379.pid
+    command: redis-server --dbfilename dump.rdb --always-show-logo yes --dir /drama/ --pidfile /var/run/redis_6379.pid
     ports:
       - "6379:6379"
 
