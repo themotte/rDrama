@@ -104,6 +104,7 @@ def upload_video(file):
 	with open(file_path, 'rb') as f:
 		try:
 			r = requests.post('https://api.imgur.com/3/upload', headers=headers, files={"video": f})
+
 			print(r.text)
 			#r.raise_for_status()
 
