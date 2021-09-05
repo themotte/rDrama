@@ -209,21 +209,24 @@ def sanitize(sanitized, noimages=False):
 	
 	start = '&lt;s&gt;'
 	end = '&lt;/s&gt;' 
+
+	if not session.get("favorite_emojis"): session["favorite_emojis"] = {}
+
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
 	for i in re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
 			sanitized = sanitized.replace(f'<p>:{i.group(1)}:</p>', f'<p><img loading="lazy" data-toggle="tooltip" title="{i.group(1)}" delay="0" height=60 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"</p>')
 
-			# if session.get(i.group(1)): session[i.group(1)] += 1
-			# else: session[i.group(1)] = 1
+			if i.group(1) in session["favorite_emojis"]: session["favorite_emojis"][i.group(1)] += 1
+			else: session["favorite_emojis"][i.group(1)] = 1
 
 	for i in re.finditer(':([^ ]{1,30}?):', sanitized):
 		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
 			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img loading="lazy" data-toggle="tooltip" title="{i.group(1)}" delay="0" height=30 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
-			
-			# if session.get(i.group(1)): session[i.group(1)] += 1
-			# else: session[i.group(1)] = 1
+
+			if i.group(1) in session["favorite_emojis"]: session["favorite_emojis"][i.group(1)] += 1
+			else: session["favorite_emojis"][i.group(1)] = 1
 
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.", "https://").replace("https://m.", "https://")

@@ -72,6 +72,9 @@ document.body.addEventListener('keydown', function(event) {
 		let search_container = document.getElementById('emoji-tab-search')
 
 		if(search_bar.value == ""){
+			let container = document.getElementById(`EMOJIS_favorite`)
+			container.innerHTML = container.innerHTML.replace("@form@", form);
+
 			for (i=0; i < emojis.length; i++) {
 
 				let container = document.getElementById(`EMOJIS_${emojis[i].type}`)

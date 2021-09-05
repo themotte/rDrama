@@ -6,7 +6,10 @@
 				<div>
 					<ul class="nav nav-pills py-2">
 						<li class="nav-item">
-							<a class="nav-link active btn-sm" data-toggle="tab" href="#emoji-tab-marsey">Marsey</a>
+							<a class="nav-link active btn-sm" data-toggle="tab" href="#emoji-tab-favorite">Favorite</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link btn-sm" data-toggle="tab" href="#emoji-tab-marsey">Marsey</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link btn-sm" data-toggle="tab" href="#emoji-tab-platy">Platy</a>
@@ -40,7 +43,12 @@
 					<div id="emoji-tab-search"></div>
 					<div id="no-emojis-found"></div>
 					<div class="tab-content">
-						<div class="tab-pane fade show active" id="emoji-tab-marsey">
+						<div class="tab-pane fade show active" id="emoji-tab-favorite">
+							<div class="d-flex flex-wrap py-3 pl-2" id="EMOJIS_favorite">
+								{{favorite_emojis}}								
+							</div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-marsey">
 							<div class="d-flex flex-wrap py-3 pl-2" id="EMOJIS_marsey"></div>
 						</div>
 						<div class="tab-pane fade" id="emoji-tab-platy">
