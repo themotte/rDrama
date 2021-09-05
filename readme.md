@@ -54,7 +54,7 @@ source setup
 5- Optional: to change the domain from "localhost" to something else and configure the site settings, as well as integrate it with the external services the website uses, please run this command and edit the variables:
 
 ```
-nano /drama/env.sh
+nano /env
 ```
 
 then run `source restart` to apply the changes.

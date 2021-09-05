@@ -5,6 +5,8 @@ sudo apt install redis-server
 rm /etc/redis/redis.conf
 cp /drama/redis.conf /etc/redis/redis.conf
 sudo systemctl restart redis.service
+rm /etc/postgresql/12/main/pg_hba.conf
+cp /drama/pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
 apt install python3-pip
 sudo pip3 install -r requirements.txt
 cp env /env
