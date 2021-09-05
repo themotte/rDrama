@@ -181,11 +181,10 @@ def post_id(pid, anything=None, v=None):
 
 		post.preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
 
-
+	read = session.get("read_comments")
 	read_comments = [x.id for x in post.preloaded_comments]
 	if session.get("read_comments"): session["read_comments"] += read_comments
 	else: session["read_comments"] = read_comments
-	print(session.get("read_comments"))
 
 	post.views += 1
 	g.db.add(post)
@@ -194,7 +193,6 @@ def post_id(pid, anything=None, v=None):
 		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
 		else: return render_template("errors/nsfw.html", v=v)
 
-	
 	post.tree_comments()
 
 	if request.headers.get("Authorization"): return post.json
