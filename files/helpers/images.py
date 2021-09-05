@@ -105,13 +105,11 @@ def upload_video(file):
 		try:
 			r = requests.post('https://api.imgur.com/3/upload', headers=headers, files={"video": f})
 
-			print(r.text)
-			#r.raise_for_status()
+			r.raise_for_status()
 
 			resp = r.json()['data']
 		except requests.HTTPError as e:
-			if r: print(r.json())
-			raise UploadException(f"Status code {e.response.status_code} not in range 2**")
+			raise UploadException("Invalid video. Make sure it's 1 minute long or shorter.")
 		except Exception:
 			raise UploadException("Error, please try again later.")
 		finally:

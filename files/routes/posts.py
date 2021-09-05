@@ -857,7 +857,21 @@ def submit_post(v):
 			if file.content_type.startswith('image/'):
 				new_post.url = upload_imgur(file)
 			else:
-				new_post.url = upload_video(file)
+				try:
+					new_post.url = upload_video(file)
+				except UploadException as e:
+					if request.headers.get("Authorization"):
+						return {
+							"error": str(e),
+						}, 400
+					else:
+						return render_template(
+							"submit.html",
+							v=v,
+							error=str(e),
+							title=title,
+							body=request.form.get("body", "")
+						), 400
 
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)
