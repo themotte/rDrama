@@ -887,7 +887,7 @@ def submit_post(v):
 					post_url = upload_video(file)
 					new_post.url = post_url
 					new_post.processing = True
-					gevent.spawn(check_processing_thread, v, new_post, post_url, g.db)
+					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
 				except UploadException as e:
 					if request.headers.get("Authorization"):
 						return {
@@ -909,7 +909,7 @@ def submit_post(v):
 					post_url = upload_video(file)
 					new_post.url = post_url
 					new_post.processing = True
-					gevent.spawn(check_processing_thread, v, new_post, post_url, g.db)
+					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
 				except UploadException as e:
 					if request.headers.get("Authorization"):
 						return {

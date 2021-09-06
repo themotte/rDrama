@@ -9,6 +9,12 @@ from .const import *
 
 def send_notification(vid, user, text, db=None):
 
+	# for when working outside request context
+	if isinstance(user, int):
+		uid = user
+	else:
+		uid = user.id
+
 	if not db:
 		db = g.db
 
@@ -34,7 +40,7 @@ def send_notification(vid, user, text, db=None):
 	db.add(new_aux)
 
 	notif = Notification(comment_id=new_comment.id,
-						 user_id=user.id)
+						 user_id=uid)
 	db.add(notif)
 
 
