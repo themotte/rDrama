@@ -224,11 +224,13 @@
 		</a>
 	</div>
 {% elif p.is_video %}
-	<div style="text-align: center" class="mt-4">
-		<video controls preload="metadata" style="max-width: 100%" onclick="return false">
-			<source src="{{ p.realurl(v) }}" type="video/mp4">
-		</video>
-	</div>
+	<a href="javascript:void(0)">
+		<div style="text-align: center" class="mt-4">
+			<video controls preload="metadata" style="max-width: 100%">
+				<source src="{{ p.realurl(v) }}" type="video/mp4">
+			</video>
+		</div>
+	</a>
 {% endif %}
 
 {% if p.realbody(v) %}
