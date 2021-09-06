@@ -38,6 +38,16 @@ def make_admin(v, username):
 	return "", 204
 
 
+@app.post("/@<username>/make_fake_admin")
+@admin_level_required(6)
+def make_fake_admin(v, username):
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 1
+	g.db.add(user)
+	return "", 204
+
+
 @app.post("/@<username>/remove_admin")
 @admin_level_required(6)
 def remove_admin(v, username):
