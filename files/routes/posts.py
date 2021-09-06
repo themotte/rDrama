@@ -532,17 +532,30 @@ def filter_title(title):
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
 
-def check_processing_thread(post, link, db):
-
-	print("spawn checking thread")
-	time.sleep(15)
+def check_processing_thread(v, post, link, db):
 
 	image_id = link.split('/')[-1].rstrip('.mp4')
-
 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
-	req = requests.get(f"https://api.imgur.com/3/image/{image_id}", headers=headers)
 
-	print(req.text)
+	while True:
+		time.sleep(15)
+
+		req = requests.get(f"https://api.imgur.com/3/image/{image_id}", headers=headers)
+
+		status = req.json()['data']['processing']['status']
+		if status == 'completed':
+			post.processing = False
+			db.add(post)
+
+			send_notification(
+				NOTIFICATIONS_ACCOUNT,
+				v,
+				f"Your video has finished processing and your [post](/post/{post.id}) is now live.",
+				db=db
+			)
+
+			db.commit()
+			break
 
 
 @app.post("/submit")
@@ -856,7 +869,7 @@ def submit_post(v):
 			if request.headers.get("Authorization"):
 				return {
 					"error": f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos"
-				}, 400
+				}, 403
 			else:
 				return render_template(
 					"submit.html",
@@ -864,7 +877,7 @@ def submit_post(v):
 					error=f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos.",
 					title=title,
 					body=request.form.get("body", "")
-				), 400
+				), 403
 
 		if 'pcm' in request.host:
 			if file.content_type.startswith('image/'):
@@ -873,8 +886,8 @@ def submit_post(v):
 				try:
 					post_url = upload_video(file)
 					new_post.url = post_url
-					thing = gevent.spawn(check_processing_thread, new_post, post_url, g.db)
-					print(thing.started)
+					new_post.processing = True
+					gevent.spawn(check_processing_thread, v, new_post, post_url, g.db)
 				except UploadException as e:
 					if request.headers.get("Authorization"):
 						return {
@@ -895,8 +908,8 @@ def submit_post(v):
 				try:
 					post_url = upload_video(file)
 					new_post.url = post_url
-					thing = gevent.spawn(check_processing_thread, new_post, post_url, g.db)
-					print(thing.started)
+					new_post.processing = True
+					gevent.spawn(check_processing_thread, v, new_post, post_url, g.db)
 				except UploadException as e:
 					if request.headers.get("Authorization"):
 						return {
