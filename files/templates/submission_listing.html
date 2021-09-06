@@ -73,7 +73,7 @@
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif p.embed_url and "youtu" in p.domain %}
-					<a href="javascript:void(0)" class="expandable-video" data-toggle="modal" data-target="#expandVideoModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopVideo('{{ p.realurl(v) }}')">
+					<a href="javascript:void(0)" class="expandable-video" data-toggle="modal" data-target="#expandVideoModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopVideo('{{ p.embed_url }}')">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif p.url and "streamable.com/e/" in p.url %}

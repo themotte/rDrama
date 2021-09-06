@@ -496,9 +496,9 @@
 
 			var inlineVideo = document.getElementById("desktop-expanded-video");
 
-			inlineVideo.src = video.replace("100w.gif", "giphy.gif");
+			inlineVideo.src = video;
 			linkText.href = video;
-			videoLink.href=video;
+			videoLink.href = video;
 
 			linkText.textContent = 'View original';
 			};
@@ -1179,6 +1179,7 @@
 {% endif %}
 
 {% include "expanded_image_modal.html" %}
+{% include "expanded_video_modal.html" %}
 
 <script src="/assets/js/general13.js"></script>
 
