@@ -534,10 +534,13 @@ IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
 def check_processing_thread(v, post, link, db):
 
+	print("thread")
+
 	image_id = link.split('/')[-1].rstrip('.mp4')
 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
 
 	while True:
+		print("sex")
 		# break on error to prevent zombie threads
 		try:
 			time.sleep(15)
@@ -896,6 +899,7 @@ def submit_post(v):
 					post_url = upload_video(file)
 					new_post.url = post_url
 					new_post.processing = True
+					print("starting new thread")
 					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
 				except UploadException as e:
 					if request.headers.get("Authorization"):
@@ -918,6 +922,7 @@ def submit_post(v):
 					post_url = upload_video(file)
 					new_post.url = post_url
 					new_post.processing = True
+					print("starting new thread")
 					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
 				except UploadException as e:
 					if request.headers.get("Authorization"):
