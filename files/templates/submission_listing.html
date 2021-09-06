@@ -21,7 +21,6 @@
 
 
 1 {{environ.get("SITE_NAME")}}
-2 {{app_config("SITE_NAME")}}
 3 {{app.config["SITE_NAME"]}}
 {% if "sex" in 'SITE_NAME' | app_config %}
 	sex
