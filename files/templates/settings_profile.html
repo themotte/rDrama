@@ -64,6 +64,27 @@
 
 					</div>
 
+
+					<div class="d-lg-flex border-bottom">
+
+						<div class="title w-lg-25">
+							<label for="highlightcomments">Highlight New Comments</label>
+						</div>
+
+						<div class="body w-lg-100">
+
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="post_toast('/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
+								<label class="custom-control-label" for="highlightcomments"></label>
+							</div>
+
+							<span class="text-small-extra text-muted">Enable if you would like to have a red dot on comments made after the last time you visited a thread.</span>
+
+						</div>
+
+					</div>
+
+
 					<div class="d-lg-flex border-bottom">
 						<div class="title w-lg-25">
 							<label for="theme">Website Theme</label>
@@ -571,7 +592,7 @@
 											&nbsp;
 											<pre style="padding-top:0.7rem;line-height:1;" class="btn btn-secondary format d-inline-block m-0 font-weight-bolder text-uppercase" onclick="commentForm('bio-text');getGif()" aria-hidden="true" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom" title="Add GIF">GIF</pre>
 											&nbsp;
-											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('bio-text')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"></pre>
+											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('bio-text',{{session.get('favorite_emojis')}})" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"></pre>
 											&nbsp;
 										</div>
 										

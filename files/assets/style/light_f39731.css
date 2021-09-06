@@ -13326,15 +13326,6 @@ body.using-mouse :focus {
   margin-top: 2rem;
 }
 
-#error-400 .sidebar, #error-401 .sidebar, #error-403 .sidebar, #error-404 .sidebar, #error-405 .sidebar, #error-409 .sidebar,
-#error-410 .sidebar, #error-422 .sidebar, #error-429 .sidebar, #error-451 .sidebar, #error-500 .sidebar {
-  display: none !important;
-}
-
-#message .sidebar, #message-success .sidebar {
-  display: none;
-}
-
 #thread .custom-gutters {
   padding: 0 15px;
   background-color: #ffffff;
@@ -13977,14 +13968,6 @@ th {
   transform: rotate(-45deg);
 }
 
-.sidebar-right .fa, .sidebar-right .fas, .sidebar-right .far, .sidebar-right .fab, .sidebar-right .fal, .sidebar-right .fad {
-  font-size: 12px;
-}
-
-.sidebar .title .fa, .sidebar .title .fas, .sidebar .title .far, .sidebar .title .fab, .sidebar .title .fal, .sidebar-section .title .fad {
-  font-size: 12px;
-}
-
 .icon::before {
   display: inline-block;
   font-style: normal;
@@ -14028,20 +14011,10 @@ th {
   overflow-wrap: normal;
 }
 
-#frontpage .voting, #search .voting, #userpage .voting, #guild .voting {
+#frontpage .voting, #search .voting, #userpage .voting {
   margin: auto 0;
 }
 
-/*
-
-#frontpage.toggle-card-view .voting, #search.toggle-card-view .voting, #userpage.toggle-card-view .voting, #guild.toggle-card-view .voting {
-	margin: 0;
-}
-
-*/
-/* .voting div:focus {
-	outline: 0;
-} */
 .active.arrow-up::before {
   color: #f39731;
 }
@@ -14183,26 +14156,22 @@ a:hover .link-arrow {
   opacity: 0.8;
 }
 
-#frontpage .pseudo-submit-form.card, #search .search-results.card, #guild .pseudo-submit-form.card {
+#frontpage .pseudo-submit-form.card, #search .search-results.card {
   background-color: #ffffff;
   border-radius: 0.35rem;
   border: 1px solid #E2E8F0;
 }
 
-#frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body, #guild .pseudo-submit-form.card .card-body {
+#frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body {
   padding-left: 15px;
   padding-right: 15px;
 }
 
-#frontpage .pseudo-submit-form.card .card-body .form-control, #guild .pseudo-submit-form.card .card-body .form-control {
+#frontpage .pseudo-submit-form.card .card-body .form-control {
   background-color: #F5F7FA;
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control:hover, #frontpage .pseudo-submit-form.card .card-body .form-control:active, #frontpage .pseudo-submit-form.card .card-body .form-control:focus {
-  background-color: #ffffff;
-}
-
-#guild .pseudo-submit-form.card .card-body .form-control:hover, #guild .pseudo-submit-form.card .card-body .form-control:active, #guild .pseudo-submit-form.card .card-body .form-control:focus {
   background-color: #ffffff;
 }
 
@@ -14219,213 +14188,6 @@ a:hover .link-arrow {
   opacity: 0.9;
   color: #f39731;
   width: 1rem;
-}
-
-.scrollspy.sidebar-sticky {
-  position: sticky;
-  overflow-y: auto;
-  top: 7rem;
-  height: calc(100vh - 4rem);
-}
-
-.scrollspy.sidebar-sticky .list-group {
-  border-left: 1px solid #E2E8F0;
-}
-
-.scrollspy.sidebar-sticky .list-group .list-group-item {
-  position: relative;
-  display: block;
-  background-color: transparent;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #718096;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-left: 2px solid transparent;
-  border-radius: 0;
-}
-
-.scrollspy.sidebar-sticky .list-group .list-group-item:focus, .scrollspy.sidebar-sticky .list-group .list-group-item:hover {
-  color: #f39731;
-  border-left: 2px solid #f39731;
-}
-
-.scrollspy.sidebar-sticky .list-group .list-group-item.active {
-  background-color: transparent;
-  color: #f39731;
-  font-weight: 600;
-  left: -1px;
-  border-left: solid 2px #f39731;
-  z-index: 2;
-}
-
-.sidebar {
-  -ms-flex: 0 0 300px;
-  flex: 0 0 300px;
-}
-
-.sidebar h1, .sidebar h2, .sidebar h3, .sidebar h4, .sidebar h5, .sidebar h6 {
-  margin-bottom: 1rem;
-}
-
-.sidebar .sidebar-section .title {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.025rem;
-  color: #ffffff;
-  background-color: #f39731;
-  padding: 0.75rem 1rem;
-  text-transform: uppercase;
-}
-
-.sidebar .sidebar-section .body {
-  padding: 1rem;
-  border: solid #E2E8F0;
-  border-width: 0 1px 1px 1px;
-  border-bottom-left-radius: 0.35rem;
-  border-bottom-right-radius: 0.35rem;
-}
-
-.sidebar-section {
-  margin-bottom: 1rem;
-  background-color: #F5F7FA;
-  border-radius: 0.35rem;
-  overflow: hidden;
-  word-break: break-word;
-}
-.sidebar-section .profile-pic.profile-stacked {
-  box-shadow: 0 0 0px 3px #F5F7FA;
-}
-
-.sidebar-section.sidebar-trending .trending-hashtag, .sidebar-section.sidebar-trending .trending-guild {
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  color: #718096;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.sidebar-section.sidebar-trending .trending-hashtag:last-child, .sidebar-section.sidebar-trending .trending-guild:last-of-type {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.sidebar-section.sidebar-alert {
-  color: #121213;
-  background-color: #ffffff;
-  border: none;
-}
-
-.sidebar-section.sidebar-dark-promo .form-control {
-  background-color: #718096;
-  color: #718096;
-}
-
-.sidebar-section.sidebar-dark-promo .form-control:hover, .sidebar-section.sidebar-dark-promo .form-control:active, .sidebar-section.sidebar-dark-promo .form-control:focus {
-  background-color: #ffffff;
-  color: #121213;
-  border-color: #F5F7FA;
-}
-
-.sidebar.sidebar-left.sidebar-collapsed {
-  flex: 0 0 65px;
-  text-align: center;
-}
-
-.sidebar-left.sidebar-collapsed .sidebar-collapsed-hidden {
-  display: none;
-}
-
-.sidebar-left.sidebar-collapsed .sidebar-collapsed-visible {
-  display: block;
-}
-
-.sidebar-left .sidebar-collapsed-visible {
-  display: none;
-}
-
-.sidebar-left .collapsed-toggle::before {
-  cursor: pointer;
-  font-size: 1rem;
-  color: #718096;
-  font-family: "Font Awesome 5 Pro";
-  font-weight: 900;
-  content: "\f348";
-}
-
-.sidebar-left.sidebar-collapsed .collapsed-toggle::before {
-  cursor: pointer;
-  font-size: 1rem;
-  color: #121213;
-  font-family: "Font Awesome 5 Pro";
-  font-weight: 900;
-  content: "\f347";
-}
-
-@media (max-width: 1199.98px) {
-  .sidebar-left .sidebar-collapsed-hidden {
-    display: none;
-  }
-
-  .sidebar-left .sidebar-collapsed-visible {
-    display: block;
-  }
-
-  .sidebar.sidebar-left {
-    flex: 0 0 65px;
-    text-align: center;
-  }
-
-  .sidebar-left .collapsed-toggle-parent {
-    display: none !important;
-  }
-}
-.sidebar.sidebar-left {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 49px;
-  z-index: 1000;
-  height: calc(100vh - 49px);
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-@media (min-width: 1199.98px) {
-  .sidebar.sidebar-left {
-    -ms-flex: 0 0 240px;
-    flex: 0 0 240px;
-  }
-}
-.sidebar-left .sidebar-section {
-  border: 0;
-  box-shadow: none;
-  background-color: transparent;
-}
-
-.sidebar.sidebar-left .sidebar-section .body {
-  border: 0;
-}
-
-.sidebar-left .sidebar-section.sidebar-filters {
-  margin-bottom: 1rem;
-  background-color: transparent;
-  box-shadow: none;
-  border-radius: 0;
-}
-
-.sidebar.sidebar-left .sidebar-section .title {
-  border-bottom: none;
-  background-color: transparent;
-  color: #718096;
-}
-
-.sidebar-section.sidebar-filters .body {
-  padding: 0;
-}
-
-.sidebar-filters .filter-list {
-  list-style: none;
 }
 
 .filter-list .filter-item {
@@ -14470,71 +14232,6 @@ a:hover .link-arrow {
 
 .filter-link:hover, .filter-link:focus {
   color: #f39731;
-}
-
-.sidebar-guild-recommendations .guild-recommendations-list {
-  list-style: none;
-}
-
-.guild-recommendations-list .guild-recommendations-item {
-  color: #718096;
-  text-decoration: none;
-  margin-top: 1rem;
-}
-
-.guild-recommendations-list .guild-recommendations-item:first-child {
-  margin-top: 0;
-}
-
-.guild-recommendations-list .guild-recommendations-link {
-  text-decoration: none;
-}
-
-.guild-recommendations-list .guild-recommendations-link:hover, .guild-recommendations-list .guild-recommendations-link:focus {
-  color: #121213;
-}
-
-.guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active {
-  color: #121213;
-  background-color: #ffffff;
-  border-radius: 0.35rem;
-}
-
-.guild-recommendations-list .guild-recommendations-item .fa, .guild-recommendations-list .guild-recommendations-item .fas, .guild-recommendations-list .guild-recommendations-item .far, .guild-recommendations-list .guild-recommendations-item .fab, .guild-recommendations-list .guild-recommendations-item .fal {
-  margin-right: 0.5rem;
-  color: #718096;
-  text-align: center;
-}
-
-.guild-recommendations-list .guild-recommendations-link:hover .fa, .guild-recommendations-list .guild-recommendations-link:focus .fa, .guild-recommendations-list .guild-recommendations-link:hover .fas, .guild-recommendations-list .guild-recommendations-link:focus .fas, .guild-recommendations-list .guild-recommendations-link:hover .far, .guild-recommendations-list .guild-recommendations-link:focus .far, .guild-recommendations-list .guild-recommendations-link:hover .fab, .guild-recommendations-list .guild-recommendations-link:focus .fab {
-  color: #f39731;
-}
-
-.guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active .fa, .guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active .fas, .guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active .far, .guild-recommendations-list > .guild-recommendations-item > .guild-recommendations-link.active .fab {
-  color: #f39731;
-}
-
-.guild-recommendations-link:hover, .guild-recommendations-link:focus {
-  color: #f39731;
-}
-
-.guild-icon-square-35 {
-  width: 35px;
-  height: 35px;
-  object-fit: cover;
-  border-radius: 0.35rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-}
-
-.sidebar-left .sidebar-section.sidebar-dashboard {
-  margin-bottom: 1rem;
-  background-color: transparent;
-  box-shadow: none;
-  border-radius: 0;
-}
-
-.sidebar-section.sidebar-dashboard .body {
-  padding: 0;
 }
 
 .dashboard-list .dashboard-item {
@@ -14761,52 +14458,52 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 /*
 
-#frontpage.toggle-card-view .tab-bar, #userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar, #guild.toggle-card-view .tab-bar {
+#frontpage.toggle-card-view .tab-bar, #userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar {
 	border-radius: 0;
 }
 
-#frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, #guild.toggle-card-view .posts .card {
+#frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
 	border: none;
 	border-radius: $border-radius;
 	margin-top: 1rem;
 	box-shadow: $box-shadow-sm;
 }
 
-#frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type, #guild.toggle-card-view .posts .card:last-of-type {
+#frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type {
 	border-bottom-left-radius: $border-radius;
 	border-bottom-right-radius: $border-radius;
 	//border: 1px solid $border-color;
 	border-radius: $border-radius;
 }
 
-#frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type, #guild.toggle-card-view .posts .card:first-of-type {
+#frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type {
 	margin-top: 0;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img, #userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img, #guild.toggle-card-view .posts .card .post-img { 
+#frontpage.toggle-card-view .posts .card .post-img, #userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img { 
 	display: none;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img-lg, #userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg, #guild.toggle-card-view .posts .card .post-img-lg { 
+#frontpage.toggle-card-view .posts .card .post-img-lg, #userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg { 
 	display: block;
 	text-align: center;
 }
 
-#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, #guild.toggle-card-view .posts .card .post-img-lg img { 
+#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img { 
 	max-width: 55%;
 	height: auto;
 }
 
-#frontpage.toggle-card-view .posts .card .embed-lg, #userpage.toggle-card-view .posts .card .embed-lg, #search.toggle-card-view .posts .card .embed-lg, #guild.toggle-card-view .posts .card .embed-lg { 
+#frontpage.toggle-card-view .posts .card .embed-lg, #userpage.toggle-card-view .posts .card .embed-lg, #search.toggle-card-view .posts .card .embed-lg { 
 	display: flex;
 	z-index: 2;
 }
 
-#frontpage.toggle-card-view .posts .card .post-preview-lg, #userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg, #guild.toggle-card-view .posts .card .post-preview-lg { 
+#frontpage.toggle-card-view .posts .card .post-preview-lg, #userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg { 
 	display: block;
 }
 
-#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, #userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body, #guild.toggle-card-view .posts .card .post-preview-lg .post-body { 
+#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, #userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body { 
 	-webkit-mask-image: linear-gradient(180deg,#000 40%,transparent);
 	mask-image: linear-gradient(180deg,#000 40%,transparent);
 	overflow: hidden;
@@ -14860,18 +14557,18 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-bottom: 1px solid #E2E8F0;
 }
 
-#frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type, #settings-guild .posts .card:first-of-type {
+#frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type {
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
 }
 
-#frontpage .posts .card:nth-last-of-type(2), #userpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2), #guild .posts .card:nth-last-of-type(2), #settings-guild .posts .card:last-of-type {
+#frontpage .posts .card:nth-last-of-type(2), #userpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2) {
   border-bottom-left-radius: 0.35rem;
   border-bottom-right-radius: 0.35rem;
   border-bottom: 1px solid #E2E8F0;
 }
 
-#frontpage .posts .card, #userpage .posts .card, #search .posts .card, #guild .posts .card, #settings-guild .posts .card {
+#frontpage .posts .card, #userpage .posts .card, #search .posts .card {
   border-width: 1px 1px 0 1px;
   border-color: #E2E8F0;
   border-style: solid;
@@ -14879,7 +14576,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   padding: 0.5rem;
 }
 
-#frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover, #guild .posts .card:hover, #settings-guild .posts .card:hover {
+#frontpage .posts .card:hover, #userpage .posts .card:hover, #search .posts .card:hover {
   background-color: #EDF2F7;
 }
 
@@ -14920,7 +14617,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   width: fit-content;
 }
 
-#frontpage .posts .card .card-footer, #userpage .posts .card .card-footer, #thread .card .card-footer, #search .posts .card .card-footer, #guild .posts .card .card-footer {
+#frontpage .posts .card .card-footer, #userpage .posts .card .card-footer, #thread .card .card-footer, #search .posts .card .card-footer {
   border: 0;
   background-color: transparent;
   padding: 0;
@@ -15174,52 +14871,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 .dropdown-actions .list-inline .list-inline-item:last-child {
   margin-right: 0;
-}
-
-#guild .post-meta-guild {
-  display: none;
-}
-
-.jumbotron-guild {
-  position: relative;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  border-radius: 0;
-  overflow: hidden;
-  margin-bottom: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  z-index: 1;
-}
-
-.jumbotron-guild .guild-banner-contents {
-  display: none;
-}
-
-.jumbotron-guild .jumbotron-overlay {
-  background-color: transparent;
-  background-image: linear-gradient(0deg, #F5F7FA, rgba(247, 247, 248, 0.25)), linear-gradient(90deg, #F5F7FA, rgba(247, 247, 248, 0.25));
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.jumbotron-guild .guild-icon-square-lg {
-  height: 125px;
-  width: 125px;
-  object-fit: cover;
-  border-radius: 0.35rem;
-  border: 5px solid #ffffff;
-}
-
-.guild-description p {
-  margin-bottom: 0.5rem;
 }
 
 .page-link {
@@ -15662,31 +15313,6 @@ ul.comment-section {
   color: #f39731;
 }
 
-.sidebar-post-meta .score {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.sidebar-post-meta .score-percent {
-  font-size: 11px;
-  color: #718096;
-  font-weight: 400;
-}
-
-.sidebar-post-meta .shortlink, .sidebar-post-meta .submission-date {
-  font-size: 12px;
-  color: #718096;
-  font-weight: 400;
-  text-transform: lowercase;
-}
-
-.sidebar-post-meta .link, .sidebar-post-meta .date {
-  font-size: 12px;
-  color: #121213;
-  font-weight: 400;
-  text-transform: capitalize;
-}
-
 #login {
   padding-top: 0;
   height: 100%;
@@ -15737,14 +15363,6 @@ ul.comment-section {
   text-transform: uppercase;
   background-color: #E6E9F0;
   border: none;
-}
-
-#settings-guild {
-  background-color: #ffffff;
-}
-
-#settings-guild .settings .settings-section {
-  border: 1px solid #E2E8F0;
 }
 
 .settings .settings-section {
@@ -16790,22 +16408,18 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     padding: 0.25rem 0.75rem;
   }
 
-  #frontpage, #search, #guild {
-    padding-top: 98px;
-  }
-
   #search .search-results.card {
     border-bottom: 1px solid #e3e3e3;
     border-width: 0 0 1px 0;
     border-radius: 0;
   }
 
-  #frontpage .posts .card, #userpage .posts .card, #search .posts .card, #guild .posts .card {
+  #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
     padding: 7px 15px;
     border-width: 0 0 1px 0;
   }
 
-  #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type, #guild .posts .card:first-of-type {
+  #frontpage .posts .card:first-of-type, #userpage .posts .card:first-of-type, #search .posts .card:first-of-type {
     border-radius: 0;
   }
 
@@ -16821,7 +16435,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     z-index: 3;
   }
 
-  #frontpage .posts .card.enlarged .mobile-thumb-enlarged, #userpage .posts .card.enlarged .mobile-thumb-enlarged, #search .posts .card.enlarged .mobile-thumb-enlarged, #guild .posts .card.enlarged .mobile-thumb-enlarged {
+  #frontpage .posts .card.enlarged .mobile-thumb-enlarged, #userpage .posts .card.enlarged .mobile-thumb-enlarged, #search .posts .card.enlarged .mobile-thumb-enlarged {
     display: block;
   }
 
@@ -16838,7 +16452,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   /*
 
-  #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card, #guild.toggle-card-view .posts .card {
+  #frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
   	border-width: 0 0 1px 0;
   	border-color: $border-color;
   	border-style: solid;
@@ -16847,16 +16461,12 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   	box-shadow: none;
   }
 
-  #frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img, #guild.toggle-card-view .posts .card .post-img-lg img { 
+  #frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img { 
   	max-width: 100%;
   	height: auto;
   }
 
   */
-  .jumbotron-guild {
-    height: 115px;
-  }
-
   .posts, #thread #main-content-col {
     box-shadow: none;
     border-radius: 0;
@@ -16889,7 +16499,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     font-size: 1rem;
   }
 
-  #frontpage .voting, #search .voting, #userpage .voting, #guild .voting {
+  #frontpage .voting, #search .voting, #userpage .voting {
     margin: 0;
   }
 
@@ -17118,10 +16728,6 @@ textarea {
   scrollbar-width: none;
 }
 
-.sidebar-adminpanel input[type=submit] {
-  width: 100%;
-}
-
 .noshow {
   display: none;
 }
@@ -17171,20 +16777,6 @@ div.deleted.banned {
 .in-comment-image {
   max-height: 100px !important;
   max-width: 100px !important;
-}
-
-.sidebar-left .btn:focus {
-  box-shadow: none;
-}
-
-.onboarding-card {
-  height: 180px;
-}
-.onboarding-card .onboarding-card-overlay {
-  background-color: rgba(0, 0, 0, 0.65);
-}
-.onboarding-card.selected .onboarding-card-overlay {
-  background-color: rgba(255, 102, 172, 0.65);
 }
 
 .object-cover {
@@ -17251,6 +16843,38 @@ img.emoji {
 
 .transparent {
   background: None !important;
+}
+
+.jumbotron-guild {
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 0;
+  overflow: hidden;
+  margin-bottom: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.jumbotron-guild .jumbotron-overlay {
+  background-color: transparent;
+  background-image: linear-gradient(180deg, #fff0 0%, rgba(0, 0, 0, 0.8) 50%);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (max-width: 767.98px) {
+  .jumbotron-guild {
+    height: 110px;
+  }
 }
 
 /*# sourceMappingURL=light_f39731.css.map */

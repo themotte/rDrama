@@ -46,7 +46,7 @@ $reddit: #ED4630;
 	transition: none !important;
 	border-radius: 0 !important;
 	font-family: sans-serif;
-	font-size: 12px !important;
+	font-size: 12px;
 }
 
 .card, #mobile-bottom-navigation-bar {
@@ -55,7 +55,7 @@ $reddit: #ED4630;
 }
 
 .pseudo-submit-form .card-header, .card-blank .card-header, .navbar-light, .nav, .flex-row.bg-gray-200.sticky.justify-content-center.d-flex.d-sm-none.mt-3.mb-3.mb-sm-5.rounded {
-	background: #000091!important;
+	background: $white !important;
 	color: $white !important;
 }
 .navbar-light > *, .navbar-brand, .nav-link{
@@ -107,7 +107,7 @@ blockquote {
 .container {
 }
 
-#frontpage .pseudo-submit-form.card .card-body .form-control, #guild .pseudo-submit-form.card .card-body .form-control {
+#frontpage .pseudo-submit-form.card .card-body .form-control {
 	background-color: white !important;
 }
 
@@ -150,4 +150,29 @@ blockquote {
 
 #frontpage .post-title a:visited {
 	color: #5c5c5c;
+}
+
+.post-actions a {
+	color: $muted !important;
+}
+
+.modal-header, .modal .comment-actions a, .modal-title {
+	color: $white !important;
+}
+
+.text-info
+{
+	color: $primary !important;
+}
+
+.score, .comment-actions .score {
+	color: #000;
+}
+
+.arrow-up:hover::before {
+	color: $muted;
+}
+
+#thread {
+	background: $white !important;
 }

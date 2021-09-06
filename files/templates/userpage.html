@@ -125,7 +125,7 @@
 								</span>
 								{% endif %}
 								{% if v and v.has_follower(u) %}
-									<span class="text-primary badge badge-secondary text-small align-middle ml-2">Follows you</span>
+									<span class="followsyou text-primary badge badge-secondary text-small align-middle ml-2">Follows you</span>
 								{% endif %}
 								<div class="profile-actions align-middle d-none ml-2">
 								{% if v and v.id != u.id %}
@@ -198,9 +198,12 @@
 							{% endif %}
 						{% endif %}
 
-						{% if 'rdrama' in request.host and v.id in [28,995] %} 
+						{% if 'rdrama' in request.host and v.id in [1,28,29,995] %} 
 							{% if u.admin_level == 0 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
+								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_fake_admin')">Make fake admin</a>
+							{% elif u.admin_level == 1 %}
+								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_fake_admin')">Remove fake admin</a>
 							{% else %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 							{% endif %}
@@ -306,6 +309,14 @@
 						{% endif %}
 
 						<pre></pre>
+
+						{% if u.verified %}
+							<a class="btn btn-danger" href="javascript:void(0)" onclick="post_toast('/admin/unverify/{{u.id}}')">Unverify</a>
+						{% else %}
+							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/admin/verify/{{u.id}}')">Verify</a>
+						{% endif %}
+
+						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
 							<input type="hidden" name="user" value="{{u.username}}">
@@ -393,7 +404,7 @@
 				</span>
 				{% endif %}
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
-					<span class="text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
+					<span class="followsyou text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
 				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.gif">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
 				<div class="font-weight-normal">
@@ -442,10 +453,29 @@
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'coin-transfer-mobile')">Gift {{"COINS_NAME" | app_config}}</a>
 
-					{% if 'rdrama' not in request.host and v.admin_level == 6 %} 
+					{% if 'pcm' in request.host and v.admin_level == 6 %} 
 						{% if u.admin_level == 0 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
 						{% elif v.id == 10 %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
+						{% endif %}
+					{% endif %}
+
+					{% if 'rdrama' in request.host and v.id in [1,28,29,995] %} 
+						{% if u.admin_level == 0 %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_fake_admin')">Make fake admin</a>
+						{% elif u.admin_level == 1 %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_fake_admin')">Remove fake admin</a>
+						{% else %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
+						{% endif %}
+					{% endif %}
+
+					{% if 'rdrama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
+						{% if u.admin_level == 0 %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
+						{% else %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 						{% endif %}
 					{% endif %}
@@ -542,6 +572,12 @@
 							<a class="btn btn-danger" href="javascript:void(0)" onclick="post_toast('/shadowban/{{u.id}}')">Shadowban</a>
 						{% endif %}
 						
+						{% if u.verified %}
+							<a class="btn btn-danger" href="javasript:void(0)" onclick="post_toast('/admin/unverify/{{u.id}}')">Unverify</a>
+						{% else %}
+							<a class="btn btn-success" href="javasript:void(0)" onclick="post_toast('/admin/verify/{{u.id}}')">Verify</a>
+						{% endif %}
+
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">

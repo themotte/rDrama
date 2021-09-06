@@ -665,7 +665,8 @@ def submit_post(v):
 		except: embed = None
 
 	elif "youtu" in domain:
-		yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+		try: yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+		except: embed = None
 		if not yt_id or len(yt_id) != 11: embed = None
 		else: 
 			params = parse_qs(urlparse(url).query)
@@ -1032,7 +1033,7 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host):
+	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
 		c = Comment(author_id=261,
 			distinguish_level=6,
 			parent_submission=new_post.id,

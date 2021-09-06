@@ -22,18 +22,22 @@ from files.helpers.discord import add_role
 
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
-@app.get("/imgurcredits")
-@admin_level_required(6)
-def imgurcredits(v):
-	req = requests.get('https://api.imgur.com/3/credits', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}).json()
-	return req
-
 @app.post("/@<username>/make_admin")
 @admin_level_required(6)
 def make_admin(v, username):
 	user = get_user(username)
 	if not user: abort(404)
 	user.admin_level = 6
+	g.db.add(user)
+	return "", 204
+
+
+@app.post("/@<username>/make_fake_admin")
+@admin_level_required(6)
+def make_fake_admin(v, username):
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 1
 	g.db.add(user)
 	return "", 204
 
@@ -648,6 +652,24 @@ def unshadowban(user_id, v):
 	
 	cache.delete_memoized(frontlist)
 
+	return "", 204
+
+@app.post("/admin/verify/<user_id>")
+@admin_level_required(6)
+@validate_formkey
+def verify(user_id, v):
+	user = g.db.query(User).filter_by(id=user_id).first()
+	user.verified = "Verified"
+	g.db.add(user)
+	return "", 204
+
+@app.post("/admin/unverify/<user_id>")
+@admin_level_required(6)
+@validate_formkey
+def unverify(user_id, v):
+	user = g.db.query(User).filter_by(id=user_id).first()
+	user.verified = None
+	g.db.add(user)
 	return "", 204
 
 

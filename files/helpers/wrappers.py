@@ -23,7 +23,10 @@ def get_logged_in_user():
 		uid = session.get("user_id")
 		nonce = session.get("login_nonce", 0)
 		if not uid: x= (None, None)
-		v = g.db.query(User).filter_by(id=uid).first()
+		try:
+			if g.db: v = g.db.query(User).filter_by(id=uid).first()
+			else: v = None
+		except: v = None
 
 		if v and v.agendaposter_expires_utc and v.agendaposter_expires_utc < g.timestamp:
 			v.agendaposter_expires_utc = 0
@@ -59,6 +62,8 @@ def check_ban_evade(v):
 			post.ban_reason="ban evasion"
 			g.db.add(post)
 
+			g.db.commit()
+			
 			ma=ModAction(
 				kind="ban_post",
 				user_id=AUTOJANNY_ACCOUNT,

@@ -98,3 +98,12 @@ $reddit: #ED4630;
 #frontpage .post-title a:visited {
 	color: #b0b0b0;
 }
+
+.followsyou {
+	background-color: $dark !important;
+    border: 1px solid $primary !important;
+}
+
+.badge-count {
+	color: $primary;
+}

@@ -106,6 +106,9 @@ def award_post(pid, v):
     if kind in ACTIONS:
         ACTIONS[kind](post=post)
 
+    post.author.received_award_count += 1
+    g.db.add(post.author)
+
     return "", 204
 
 
@@ -166,6 +169,9 @@ def award_comment(cid, v):
 
     if kind in ACTIONS:
         ACTIONS[kind](comment=c)
+
+    c.author.received_award_count += 1
+    g.db.add(c.author)
 
     return "", 204
 
