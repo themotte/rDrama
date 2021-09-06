@@ -538,12 +538,11 @@ def check_processing_thread(post, link, db):
 	time.sleep(15)
 
 	image_id = link.split('/')[-1].rstrip('.mp4')
-	print(f"request https://api.imgur.com/image/{image_id}")
 
 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
-	req = requests.get(f"https://api.imgur.com/image/{image_id}", headers=headers)
+	req = requests.get(f"https://api.imgur.com/3/image/{image_id}", headers=headers)
 
-	#print(req.text)
+	print(req.text)
 
 
 @app.post("/submit")
