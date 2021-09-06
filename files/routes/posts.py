@@ -538,23 +538,27 @@ def check_processing_thread(v, post, link, db):
 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
 
 	while True:
-		time.sleep(15)
+		# break on error to prevent zombie threads
+		try:
+			time.sleep(15)
 
-		req = requests.get(f"https://api.imgur.com/3/image/{image_id}", headers=headers)
+			req = requests.get(f"https://api.imgur.com/3/image/{image_id}", headers=headers)
 
-		status = req.json()['data']['processing']['status']
-		if status == 'completed':
-			post.processing = False
-			db.add(post)
+			status = req.json()['data']['processing']['status']
+			if status == 'completed':
+				post.processing = False
+				db.add(post)
 
-			send_notification(
-				NOTIFICATIONS_ACCOUNT,
-				v,
-				f"Your video has finished processing and your [post](/post/{post.id}) is now live.",
-				db=db
-			)
+				send_notification(
+					NOTIFICATIONS_ACCOUNT,
+					v,
+					f"Your video has finished processing and your [post](/post/{post.id}) is now live.",
+					db=db
+				)
 
-			db.commit()
+				db.commit()
+				break
+		except Exception:
 			break
 
 

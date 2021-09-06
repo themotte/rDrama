@@ -115,4 +115,8 @@ def upload_video(file):
 		finally:
 			remove(file_path)
 
-	return resp['link']
+	link = resp['link']
+	img = Image(text=link, deletehash=resp['deletehash'])
+	g.db.add(img)
+
+	return link
