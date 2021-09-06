@@ -46,7 +46,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
 		elif "rdrama" in request.host: pid = 6489
-		elif "pcm" in request.host: pid = 382
+		elif "pcmemes.net" in request.host: pid = 382
 		else: pid = 1
 	
 	try: pid = int(pid)
@@ -297,7 +297,7 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
-	if "pcm" in request.host and c_aux.body.lower().startswith("based"):
+	if "pcmemes.net" in request.host and c_aux.body.lower().startswith("based"):
 		pill = re.match("based and (.{1,20}?)(-| )pilled", body, re.IGNORECASE)
 
 		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
