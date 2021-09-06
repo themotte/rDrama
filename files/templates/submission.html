@@ -333,7 +333,7 @@
 							{% elif p.is_video %}
 								<div class="row no-gutters">
 									<div class="col">
-										<video controls preload="none" style="max-width: 100%">
+										<video controls preload="metadata" style="max-width: 100%">
 											<source src="{{ p.realurl(v) }}" type="video/mp4">
 										</video>
 									</div>
