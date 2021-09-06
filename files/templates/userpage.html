@@ -204,7 +204,7 @@
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_fake_admin')">Make fake admin</a>
 							{% elif u.admin_level == 1 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_fake_admin')">Remove fake admin</a>
-							{% elif u.admin_level == 6 %}
+							{% else %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 							{% endif %}
 						{% endif %}
@@ -445,10 +445,29 @@
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'coin-transfer-mobile')">Gift {{"COINS_NAME" | app_config}}</a>
 
-					{% if 'rdrama' not in request.host and v.admin_level == 6 %} 
+					{% if 'pcm' in request.host and v.admin_level == 6 %} 
 						{% if u.admin_level == 0 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
 						{% elif v.id == 10 %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
+						{% endif %}
+					{% endif %}
+
+					{% if 'rdrama' in request.host and v.id in [1,28,29,995] %} 
+						{% if u.admin_level == 0 %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_fake_admin')">Make fake admin</a>
+						{% elif u.admin_level == 1 %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_fake_admin')">Remove fake admin</a>
+						{% else %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
+						{% endif %}
+					{% endif %}
+
+					{% if 'rdrama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
+						{% if u.admin_level == 0 %}
+							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
+						{% else %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 						{% endif %}
 					{% endif %}
