@@ -27495,12 +27495,12 @@ blockquote {
   color: #000000 !important;
 }
 
-.score {
+.score, .comment-actions .score {
   color: #000;
 }
 
 .arrow-up:hover::before {
-  color: #404040 !important;
+  color: #404040;
 }
 
 #thread {
