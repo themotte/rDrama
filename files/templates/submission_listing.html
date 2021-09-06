@@ -55,15 +55,11 @@
 					<div {% if request.host in ['gigachadlife.com', 'marsey.tech'] %}style="display:none!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" data-id-down="{{p.id}}" data-content-type="post" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 				{% endif %}
 
-				{% else %}
-
 				<div id="post-{{p.id}}-up" tabindex="0" class="mx-auto arrow-up" onclick="location.href='/login';"></div>
 
 				<span id="post-{{p.id}}-score-none" class="score"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 				<div {% if request.host in ['gigachadlife.com', 'marsey.tech'] %}style="display:none!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
-
-				{% endif %}
 
 			</div>
 		{% endif %}
