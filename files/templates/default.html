@@ -507,7 +507,9 @@
 			var linkText = document.getElementById("desktop-expanded-video-link");
 			var inlineVideo = document.getElementById("desktop-expanded-video2");
 
-			inlineVideo.src = video;
+			str = `<video controls="" preload="metadata" style="max-width: 100%"><source src="${video}" type="video/mp4"></video>`
+
+			inlineVideo.innerHTML = str;
 			linkText.href = video;
 
 			linkText.textContent = 'View original';
