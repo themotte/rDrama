@@ -1052,7 +1052,9 @@ CREATE TABLE public.users (
     fail_utc integer,
     steal_utc integer,
     fail2_utc integer,
-    cardview boolean
+    cardview boolean,
+    received_award_count integer,
+    highlightcomments boolean
 );
 
 
