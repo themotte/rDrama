@@ -572,6 +572,12 @@
 							<a class="btn btn-danger" href="javascript:void(0)" onclick="post_toast('/shadowban/{{u.id}}')">Shadowban</a>
 						{% endif %}
 						
+						{% if u.verified %}
+							<a class="btn btn-danger" href="javasript:void(0)" onclick="post_toast('/admin/unverify/{{u.id}}')">Unverify</a>
+						{% else %}
+							<a class="btn btn-success" href="javasript:void(0)" onclick="post_toast('/admin/verify/{{u.id}}')">Verify</a>
+						{% endif %}
+
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
