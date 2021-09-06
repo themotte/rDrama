@@ -871,7 +871,10 @@ def submit_post(v):
 				new_post.url = upload_ibb(file)
 			else:
 				try:
-					new_post.url = upload_video(file)
+					post_url = upload_imgur(file)
+					new_post.url = post_url
+					thing = gevent.spawn(check_processing_thread, new_post, post_url, g.db)
+					print(thing.started)
 				except UploadException as e:
 					if request.headers.get("Authorization"):
 						return {
