@@ -405,7 +405,7 @@
 	<div style="text-align: center" class="mt-3 mb-4">
 		<iframe src="{{p.embed_url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
 	</div>
-{% elif "streamable.com/" in p.url %}
+{% elif p.url and "streamable.com/e/" in p.url %}
 	<div style="text-align: center" class="mt-3 mb-4">
 		<iframe src="{{p.url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
 	</div>
