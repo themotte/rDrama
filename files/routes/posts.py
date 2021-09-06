@@ -1,3 +1,4 @@
+import time
 from urllib.parse import urlparse
 import mistletoe
 import urllib.parse
@@ -527,6 +528,24 @@ def filter_title(title):
 
 	return title
 
+
+IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
+
+
+def check_processing_thread(post, link, db):
+
+	print("spawn checking thread")
+	time.sleep(15)
+
+	image_id = link.split('/')[-1]
+
+	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
+	req = requests.get(f"https://api.imgur.com/image/{image_id}", headers=headers)
+
+	print(req.text)
+	return
+
+
 @app.post("/submit")
 @limiter.limit("6/minute")
 @is_not_banned
@@ -869,7 +888,9 @@ def submit_post(v):
 						), 400
 		else:
 			if file.content_type.startswith('image/'):
-				new_post.url = upload_imgur(file)
+				post_url = upload_imgur(file)
+				new_post.url = post_url
+				gevent.spawn(check_processing_thread, post=new_post, link=post_url, db=g.db)
 			else:
 				try:
 					new_post.url = upload_video(file)
