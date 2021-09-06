@@ -7,7 +7,10 @@ from .sanitize import *
 from .const import *
 
 
-def send_notification(vid, user, text):
+def send_notification(vid, user, text, db=None):
+
+	if not db:
+		db = g.db
 
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -20,19 +23,19 @@ def send_notification(vid, user, text):
 						  parent_submission=None,
 						  distinguish_level=6,
 						  )
-	g.db.add(new_comment)
+	db.add(new_comment)
 
-	g.db.flush()
+	db.flush()
 
 	new_aux = CommentAux(id=new_comment.id,
 						 body=text,
 						 body_html=text_html,
 						 )
-	g.db.add(new_aux)
+	db.add(new_aux)
 
 	notif = Notification(comment_id=new_comment.id,
 						 user_id=user.id)
-	g.db.add(notif)
+	db.add(notif)
 
 
 def send_pm(vid, user, text):
