@@ -164,3 +164,11 @@ blockquote {
 {
 	color: $primary !important;
 }
+
+.score {
+	color: #000;
+}
+
+.arrow-up:hover::before {
+	color: $white !important;
+}
