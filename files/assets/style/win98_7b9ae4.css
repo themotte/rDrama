@@ -27868,4 +27868,12 @@ blockquote {
   color: #000000 !important;
 }
 
+.score {
+  color: #000;
+}
+
+.arrow-up:hover::before {
+  color: #c0c0c0 !important;
+}
+
 /*# sourceMappingURL=win98_7b9ae4.css.map */
