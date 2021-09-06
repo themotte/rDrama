@@ -45,7 +45,7 @@
 
 				<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div {% if environ.get('disable_downvotes') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" data-id-down="{{p.id}}" data-content-type="post" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" data-id-down="{{p.id}}" data-content-type="post" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 
 				{% else %}
 
@@ -53,7 +53,7 @@
 
 				<span id="post-{{p.id}}-score-none" class="score"{% if not p.is_banned %} data-toggle="tooltip" data-placement="right" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div {% if environ.get('disable_downvotes') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
+				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
 
 				{% endif %}
 
@@ -257,7 +257,7 @@
 
 					<span id="post-score-{{p.id}}-mobile" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-toggle="tooltip" data-placement="top" data-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					<span {% if environ.get('disable_downvotes') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down-mobile" tabindex="0" data-id-down="{{p.id}}" data-content-type="post" class="ml-2 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
+					<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down-mobile" tabindex="0" data-id-down="{{p.id}}" data-content-type="post" class="ml-2 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
 					</span>
 
 				</li>
