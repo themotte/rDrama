@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import mistletoe
 import urllib.parse
 import gevent
+import traceback
 
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
@@ -566,8 +567,8 @@ def check_processing_thread(v, post, link, db):
 				print(f"video upload for post {post.id} failed")
 				break
 		except Exception as e:
-			print(str(e))
-			print("retard")
+			traceback.print_exc()
+			print("retard. aborting thread")
 			break
 
 
