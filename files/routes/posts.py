@@ -543,7 +543,6 @@ def check_processing_thread(post, link, db):
 	req = requests.get(f"https://api.imgur.com/image/{image_id}", headers=headers)
 
 	print(req.text)
-	return
 
 
 @app.post("/submit")
