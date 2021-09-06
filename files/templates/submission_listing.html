@@ -407,7 +407,7 @@
 	{% elif p.is_video %}
 		<a href="javascript:void(0)">
 			<div style="text-align: center" class="mt-4">
-				<video controls preload="none" style="max-width: 100%">
+				<video controls preload="metadata" style="max-width: 100%">
 					<source src="{{p.realurl(v)}}" type="video/mp4">
 				</video>
 			</div>
