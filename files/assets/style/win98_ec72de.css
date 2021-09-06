@@ -27760,7 +27760,7 @@ textarea {
 }
 
 .pseudo-submit-form .card-header, .card-blank .card-header, .navbar-light, .nav, .flex-row.bg-gray-200.sticky.justify-content-center.d-flex.d-sm-none.mt-3.mb-3.mb-sm-5.rounded {
-  background: #000091 !important;
+  background: #c0c0c0 !important;
   color: #c0c0c0 !important;
 }
 
@@ -27854,6 +27854,18 @@ blockquote {
 
 #frontpage .post-title a:visited {
   color: #5c5c5c;
+}
+
+.post-actions a {
+  color: #404040 !important;
+}
+
+.modal-header, .modal .comment-actions a, .modal-title {
+  color: #c0c0c0 !important;
+}
+
+.text-info {
+  color: #000000 !important;
 }
 
 /*# sourceMappingURL=win98_ec72de.css.map */
