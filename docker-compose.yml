@@ -45,6 +45,7 @@ services:
       - GUMROAD_TOKEN=3435tdfsdudebussylmaoxxt43
       - GUMROAD_LINK=https://marsey1.gumroad.com/l/tfcvri
       - CARD_VIEW=1
+      - DISABLE_DOWNVOTES=0
     links:
       - "redis"
       - "postgres"
