@@ -225,7 +225,7 @@
 	</div>
 {% elif p.is_video %}
 	<div style="text-align: center" class="mt-4">
-		<video controls preload="metadata" style="max-width: 100%">
+		<video controls preload="metadata" style="max-width: 100%" onclick="return false">
 			<source src="{{ p.realurl(v) }}" type="video/mp4">
 		</video>
 	</div>
