@@ -76,6 +76,9 @@ app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_URL_SIMILA
 app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD", 0.5))
 app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 0.5))
 
+# how many coins are required to upload videos
+app.config["VIDEO_COIN_REQUIREMENT"] = int(environ.get("VIDEO_COIN_REQUIREMENT", 0))
+
 app.config["CACHE_REDIS_URL"] = environ.get("REDIS_URL").strip()
 app.config["CACHE_DEFAULT_TIMEOUT"] = 60
 app.config["CACHE_KEY_PREFIX"] = "flask_caching_"

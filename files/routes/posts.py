@@ -1,3 +1,4 @@
+import time
 from urllib.parse import urlparse
 import mistletoe
 import urllib.parse
@@ -527,6 +528,44 @@ def filter_title(title):
 
 	return title
 
+
+IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
+
+
+def check_processing_thread(v, post, link, db):
+
+	image_id = link.split('/')[-1].rstrip('.mp4')
+	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
+
+	while True:
+		# break on error to prevent zombie threads
+		try:
+			time.sleep(15)
+
+			req = requests.get(f"https://api.imgur.com/3/image/{image_id}", headers=headers)
+
+			status = req.json()['data']['processing']['status']
+			if status == 'completed':
+				post.processing = False
+				db.add(post)
+
+				send_notification(
+					NOTIFICATIONS_ACCOUNT,
+					v,
+					f"Your video has finished processing and your [post](/post/{post.id}) is now live.",
+					db=db
+				)
+
+				db.commit()
+				break
+			# just in case
+			elif status == 'failed':
+				print(f"video upload for post {post.id} failed")
+				break
+		except Exception:
+			break
+
+
 @app.post("/submit")
 @limiter.limit("6/minute")
 @is_not_banned
@@ -827,13 +866,72 @@ def submit_post(v):
 			abort(413)
 
 		file = request.files['file']
-		if not file.content_type.startswith('image/'):
-			if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
-			else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.form.get("body", "")), 400
+		#if not file.content_type.startswith('image/'):
+		#	if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
+		#	else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.form.get("body", "")), 400
 
+		if not file.content_type.startswith(('image/', 'video/')):
+			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
+			else: return render_template("submit.html", v=v, error=f"File type not allowed.", title=title, body=request.form.get("body", "")), 400
 
-		if 'pcm' in request.host: new_post.url = upload_ibb(file)
-		else: new_post.url = upload_imgur(file)
+		if file.content_type.startswith('video/') and v.coins < app.config["VIDEO_COIN_REQUIREMENT"] and v.admin_level < 1:
+			if request.headers.get("Authorization"):
+				return {
+					"error": f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos"
+				}, 403
+			else:
+				return render_template(
+					"submit.html",
+					v=v,
+					error=f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos.",
+					title=title,
+					body=request.form.get("body", "")
+				), 403
+
+		if 'pcm' in request.host:
+			if file.content_type.startswith('image/'):
+				new_post.url = upload_ibb(file)
+			else:
+				try:
+					post_url = upload_video(file)
+					new_post.url = post_url
+					new_post.processing = True
+					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
+				except UploadException as e:
+					if request.headers.get("Authorization"):
+						return {
+							"error": str(e),
+						}, 400
+					else:
+						return render_template(
+							"submit.html",
+							v=v,
+							error=str(e),
+							title=title,
+							body=request.form.get("body", "")
+						), 400
+		else:
+			if file.content_type.startswith('image/'):
+				new_post.url = upload_imgur(file)
+			else:
+				try:
+					post_url = upload_video(file)
+					new_post.url = post_url
+					new_post.processing = True
+					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
+				except UploadException as e:
+					if request.headers.get("Authorization"):
+						return {
+							"error": str(e),
+						}, 400
+					else:
+						return render_template(
+							"submit.html",
+							v=v,
+							error=str(e),
+							title=title,
+							body=request.form.get("body", "")
+						), 400
 
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)

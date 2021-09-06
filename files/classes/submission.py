@@ -45,6 +45,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	thumburl = Column(String)
 	is_banned = Column(Boolean, default=False)
 	bannedfor = Column(Boolean)
+	processing = Column(Boolean, default=False)
 	views = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
 	distinguish_level = Column(Integer, default=0)
@@ -399,6 +400,13 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def is_image(self):
 		if self.url: return self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999')
 		else: return False
+
+	@property
+	def is_video(self) -> bool:
+		if self.url:
+			return self.url.startswith("https://i.imgur.com") and self.url.lower().endswith('.mp4')
+		else:
+			return False
 
 	@property
 	@lazy
