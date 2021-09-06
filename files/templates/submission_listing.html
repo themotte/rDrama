@@ -72,6 +72,14 @@
 					<a href="javascript:void(0)" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
+				{% elif p.embed_url and "youtu" in p.domain %}
+					<a href="javascript:void(0)" class="expandable-video" data-toggle="modal" data-target="#expandVideoModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopVideo('{{ p.realurl(v) }}')">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
+					</a>
+				{% elif p.url and "streamable.com/e/" in p.url %}
+					<a href="javascript:void(0)" class="expandable-video" data-toggle="modal" data-target="#expandVideoModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopVideo('{{ p.realurl(v) }}')">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
+					</a>
 				{% elif not p.is_video %}
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">

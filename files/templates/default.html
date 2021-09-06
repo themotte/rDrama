@@ -484,6 +484,25 @@
 			linkText.textContent = 'View original';
 			};
 
+
+		// Expand Videos on Desktop
+
+		function expandDesktopVideo(video, link) {
+
+		// Link text
+
+			var linkText = document.getElementById("desktop-expanded-video-link");
+			var videoLink = document.getElementById("desktop-expanded-video-wrap-link");
+
+			var inlineVideo = document.getElementById("desktop-expanded-video");
+
+			inlineVideo.src = video.replace("100w.gif", "giphy.gif");
+			linkText.href = video;
+			videoLink.href=video;
+
+			linkText.textContent = 'View original';
+			};
+
 		post_comment=function(fullname){
 
 
