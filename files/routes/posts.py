@@ -565,7 +565,9 @@ def check_processing_thread(v, post, link, db):
 			elif status == 'failed':
 				print(f"video upload for post {post.id} failed")
 				break
-		except Exception:
+		except Exception as e:
+			print(str(e))
+			print("retard")
 			break
 
 
