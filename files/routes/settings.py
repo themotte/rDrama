@@ -204,7 +204,7 @@ def settings_profile_post(v):
 		return "", 204
 
 	quadrant = request.values.get("quadrant")
-	if quadrant and "pcmemes.net" in request.host.lower():
+	if quadrant and "pcm" in request.host.lower():
 		v.quadrant = quadrant
 		v.customtitle = quadrant
 		if quadrant=="Centrist":

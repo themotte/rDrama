@@ -141,7 +141,7 @@ def leaderboard(v):
 	users3 = users.order_by(User.post_count.desc()).limit(10).all()
 	users4 = users.order_by(User.comment_count.desc()).limit(10).all()
 	users5 = users.order_by(User.received_award_count.desc()).limit(10).all()
-	if "pcmemes.net" in request.host:
+	if "pcm" in request.host:
 		users6 = users.order_by(User.basedcount.desc()).limit(10).all()
 		return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6)
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5)
