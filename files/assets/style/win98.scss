@@ -165,12 +165,12 @@ blockquote {
 	color: $primary !important;
 }
 
-.score {
+.score, .comment-actions .score {
 	color: #000;
 }
 
 .arrow-up:hover::before {
-	color: $muted !important;
+	color: $muted;
 }
 
 #thread {
