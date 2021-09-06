@@ -309,6 +309,14 @@
 						{% endif %}
 
 						<pre></pre>
+
+						{% if u.verified %}
+							<a class="btn btn-danger" href="javasript:void(0)" onclick="post_toast('/admin/unverify/{{u.id}}')">Unverify</a>
+						{% else %}
+							<a class="btn btn-success" href="javasript:void(0)" onclick="post_toast('/admin/verify/{{u.id}}')">Verify</a>
+						{% endif %}
+
+						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
 							<input type="hidden" name="user" value="{{u.username}}">
