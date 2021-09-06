@@ -626,7 +626,8 @@ def submit_post(v):
 		except: embed = None
 
 	elif "youtu" in domain:
-		yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+		try: yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+		except: embed = None
 		if not yt_id or len(yt_id) != 11: embed = None
 		else: 
 			params = parse_qs(urlparse(url).query)
