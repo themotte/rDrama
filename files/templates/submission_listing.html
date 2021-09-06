@@ -389,28 +389,30 @@
 	</div>
 {% endif %}
 
-{% if p.is_image and (not v or v.cardview) %}
-	<div style="text-align: center" class="mt-3 mb-4">
-		<a target="_blank" rel="nofollow noopener noreferrer" href="{{p.url}}">
-			<img loading="lazy" src="{{p.url}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
-		</a>
-	</div>
-{% elif p.is_video %}
-	<a href="javascript:void(0)">
-		<div style="text-align: center" class="mt-4">
-			<video controls preload="metadata" style="max-width: 100%">
-				<source src="{{p.realurl(v)}}" type="video/mp4">
-			</video>
+{% if not v or v.cardview %}
+	{% if p.is_image %}
+		<div style="text-align: center" class="mt-3 mb-4">
+			<a target="_blank" rel="nofollow noopener noreferrer" href="{{p.url}}">
+				<img loading="lazy" src="{{p.url}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
+			</a>
 		</div>
-	</a>
-{% elif p.embed_url and "youtu" in p.domain %}
-	<div style="text-align: center" class="mt-3 mb-4">
-		<iframe src="{{p.embed_url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
-	</div>
-{% elif p.url and "streamable.com/e/" in p.url %}
-	<div style="text-align: center" class="mt-3 mb-4">
-		<iframe src="{{p.url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
-	</div>
+	{% elif p.is_video %}
+		<a href="javascript:void(0)">
+			<div style="text-align: center" class="mt-4">
+				<video controls preload="metadata" style="max-width: 100%">
+					<source src="{{p.realurl(v)}}" type="video/mp4">
+				</video>
+			</div>
+		</a>
+	{% elif p.embed_url and "youtu" in p.domain %}
+		<div style="text-align: center" class="mt-3 mb-4">
+			<iframe src="{{p.embed_url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
+		</div>
+	{% elif p.url and "streamable.com/e/" in p.url %}
+		<div style="text-align: center" class="mt-3 mb-4">
+			<iframe src="{{p.url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
+		</div>
+	{% endif %}
 {% endif %}
 
 {% else %}
