@@ -392,6 +392,14 @@
 			<img loading="lazy" src="{{p.url}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
 		</a>
 	</div>
+{% elif p.embed_url and "youtu" in p.domain or "streamable.com/" in p.url %}
+	<div style="text-align: center" class="mt-3 mb-4">
+		<iframe src="{{p.embed_url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
+	</div>
+{% elif "streamable.com/" in p.url %}
+	<div style="text-align: center" class="mt-3 mb-4">
+		<iframe src="{{p.url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
+	</div>
 {% endif %}
 
 {% else %}
