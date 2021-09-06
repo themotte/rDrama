@@ -660,6 +660,24 @@ def unshadowban(user_id, v):
 
 	return "", 204
 
+@app.post("/admin/verify/<user_id>")
+@admin_level_required(6)
+@validate_formkey
+def verify(user_id, v):
+	user = g.db.query(User).filter_by(id=user_id).first()
+	user.verified = True
+	g.db.add(user)
+	return "", 204
+
+@app.post("/admin/unverify/<user_id>")
+@admin_level_required(6)
+@validate_formkey
+def verify(user_id, v):
+	user = g.db.query(User).filter_by(id=user_id).first()
+	user.verified = False
+	g.db.add(user)
+	return "", 204
+
 
 @app.post("/admin/title_change/<user_id>")
 @admin_level_required(6)
