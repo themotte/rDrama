@@ -890,7 +890,7 @@ def submit_post(v):
 			if file.content_type.startswith('image/'):
 				post_url = upload_imgur(file)
 				new_post.url = post_url
-				gevent.spawn(check_processing_thread, post=new_post, link=post_url, db=g.db)
+				gevent.spawn(check_processing_thread, new_post, post_url, g.db)
 			else:
 				try:
 					new_post.url = upload_video(file)
