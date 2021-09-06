@@ -558,6 +558,10 @@ def check_processing_thread(v, post, link, db):
 
 				db.commit()
 				break
+			# just in case
+			elif status == 'failed':
+				print(f"video upload for post {post.id} failed")
+				break
 		except Exception:
 			break
 
