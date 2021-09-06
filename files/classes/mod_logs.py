@@ -286,12 +286,6 @@ ACTIONTYPES={
 		"color": "bg-danger",
 		"title": 'removed admin @{self.target_user.username}'
 	},
-	"dethrone_self":{
-		"str":'stepped down as guildmaster',
-		"icon":"fa-user-crown",
-		"color": "bg-danger",
-		"title": 'stepped down as guildmaster'
-	},
 	"add_mod":{
 		"str":'added admin {self.target_link}',
 		"icon":"fa-user-crown",
@@ -369,11 +363,5 @@ ACTIONTYPES={
 		"icon":"fa-user-cog",
 		"color": "bg-muted",
 		"title": "changed permissions on invitation to {self.target_user.username}"
-	},
-	"create_guild":{
-		"str": 'created +{self.board.name}',
-		"icon": "fa-chess-rook",
-		"color": "bg-primary",
-		"title": "created +{self.board.name}"
 	}
 }

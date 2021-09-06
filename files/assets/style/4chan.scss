@@ -69,7 +69,7 @@ html * {
     font-family: arial, helvetica, sans-serif;
     color: #800000
     }
-body, #main-content-col, .sidebar {
+body, #main-content-col {
     background-color: $secondary !important;
     }
 .border-right, .border-left, .border-top, .border-bottom, .border {
@@ -77,10 +77,6 @@ body, #main-content-col, .sidebar {
     }
 .card-header {
     border-color: #D9BFB7 !important
-    }
-#guild .pseudo-submit-form.card {
-    background-color: $secondary !important;
-    border: 1px solid #D9BFB7 !important;
     }
 .post-title a {
     color: #800000 !important;

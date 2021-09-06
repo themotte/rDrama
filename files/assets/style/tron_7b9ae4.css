@@ -25529,7 +25529,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   display: none;
 }
 
-.jumbotron-guild {
+.jumbotron-user {
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;
@@ -25543,11 +25543,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   z-index: 1;
 }
 
-.jumbotron-guild .guild-banner-contents {
+.jumbotron-user .guild-banner-contents {
   display: none;
 }
 
-.jumbotron-guild .jumbotron-overlay {
+.jumbotron-user .jumbotron-overlay {
   background-color: transparent;
   background-image: linear-gradient(180deg, #fff0 0%, rgba(0, 0, 0, 0.8) 50%);
   position: absolute;
@@ -25559,7 +25559,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   pointer-events: none;
 }
 
-.jumbotron-guild .guild-icon-square-lg {
+.jumbotron-user .guild-icon-square-lg {
   height: 125px;
   width: 125px;
   object-fit: cover;
@@ -27241,7 +27241,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   */
-  .jumbotron-guild {
+  .jumbotron-user {
     height: 110px;
   }
 
