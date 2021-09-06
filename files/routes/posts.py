@@ -537,7 +537,7 @@ def check_processing_thread(post, link, db):
 	print("spawn checking thread")
 	time.sleep(15)
 
-	image_id = link.split('/')[-1]
+	image_id = link.split('/')[-1].rstrip('.mp4')
 
 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
 	req = requests.get(f"https://api.imgur.com/image/{image_id}", headers=headers)
