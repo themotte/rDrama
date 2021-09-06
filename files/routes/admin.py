@@ -659,7 +659,7 @@ def unshadowban(user_id, v):
 @validate_formkey
 def verify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
-	user.verified = True
+	user.verified = "Verified"
 	g.db.add(user)
 	return "", 204
 
@@ -668,7 +668,7 @@ def verify(user_id, v):
 @validate_formkey
 def unverify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
-	user.verified = False
+	user.verified = None
 	g.db.add(user)
 	return "", 204
 
