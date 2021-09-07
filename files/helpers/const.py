@@ -92,7 +92,7 @@ BASED_MSG = "@{username}'s Based Count has increased by 1. Their Based Count is 
 
 BASEDBOT_ACCOUNT = 800
 NOTIFICATIONS_ACCOUNT = 1046
-if site == "pcmemes.net": AUTOJANNY_ACCOUNT == 1050
+if site == "pcmemes.net": AUTOJANNY_ACCOUNT = 1050
 else: AUTOJANNY_ACCOUNT = 2360
 LONGPOSTBOT_ACCOUNT = 1832
 
