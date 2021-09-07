@@ -58,7 +58,8 @@ def notifications(v):
 
 		i = 0
 		for x in notifications:
-			try: if not x.read: comments[i].unread = True
+			try:
+				if not x.read: comments[i].unread = True
 			except: continue
 			x.read = True
 			g.db.add(x)
