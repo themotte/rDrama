@@ -176,7 +176,7 @@ def admin_level_required(x):
 			if not v:
 				abort(401)
 
-			if v.is_banned:
+			if v.is_suspended:
 				abort(403)
 
 			if v.admin_level < x:

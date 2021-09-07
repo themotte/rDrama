@@ -260,7 +260,7 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def banned_by(self):
 
-		if not self.is_banned: return None
+		if not self.is_suspended: return None
 		return g.db.query(User).filter_by(id=self.is_banned).first()
 
 	def has_badge(self, badgedef_id):
