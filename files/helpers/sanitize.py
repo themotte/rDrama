@@ -212,7 +212,7 @@ def sanitize(sanitized, noimages=False):
 
 	try:
 		if not session.get("favorite_emojis"): session["favorite_emojis"] = {}
-	except Exception:
+	except:
 		pass
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
@@ -224,7 +224,7 @@ def sanitize(sanitized, noimages=False):
 			try:
 				if i.group(1) in session["favorite_emojis"]: session["favorite_emojis"][i.group(1)] += 1
 				else: session["favorite_emojis"][i.group(1)] = 1
-			except Exception:
+			except:
 				pass
 
 	for i in re.finditer(':([^ ]{1,30}?):', sanitized):
@@ -234,7 +234,7 @@ def sanitize(sanitized, noimages=False):
 			try:
 				if i.group(1) in session["favorite_emojis"]: session["favorite_emojis"][i.group(1)] += 1
 				else: session["favorite_emojis"][i.group(1)] = 1
-			except Exception:
+			except:
 				pass
 
 
