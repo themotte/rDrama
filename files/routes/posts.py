@@ -922,7 +922,7 @@ def submit_post(v):
 					# shit to make webm work
 					if not post_url.endswith('.mp4'):
 						post_url += 'mp4'
-					print(post_url)
+					# print(post_url)
 					new_post.url = post_url
 					new_post.processing = True
 					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
