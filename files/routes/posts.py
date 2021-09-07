@@ -919,6 +919,9 @@ def submit_post(v):
 			else:
 				try:
 					post_url = upload_video(file)
+					# shit to make webm work
+					if not post_url.endswith('.mp4'):
+						post_url += 'mp4'
 					print(post_url)
 					new_post.url = post_url
 					new_post.processing = True
