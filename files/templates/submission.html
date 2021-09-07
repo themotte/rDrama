@@ -311,12 +311,12 @@
 								<pre></pre>
 
 							{% elif not p.embed_url and not p.is_image and not p.is_video %}
-							<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
-								<div class="d-flex d-md-none justify-content-between align-items-center border rounded p-2{% if p.realbody(v) %} mb-3{% endif %}">
-									<span>{{p.domain|truncate(30, True)}}</span>
-									<i class="fas fa-external-link-alt text-small"></i>
-								</div>
-							</a>
+								<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
+									<div class="d-flex d-md-none justify-content-between align-items-center border rounded p-2{% if p.realbody(v) %} mb-3{% endif %}">
+										<span>{{p.domain|truncate(30, True)}}</span>
+										<i class="fas fa-external-link-alt text-small"></i>
+									</div>
+								</a>
 							{% endif %}
 						{% endif %}
 						

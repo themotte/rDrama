@@ -72,16 +72,8 @@
 					<a href="javascript:void(0)" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
-				{% elif p.embed_url and "youtu" in p.domain %}
-					<a href="javascript:void(0)" class="expandable-video" data-toggle="modal" data-target="#expandVideoModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopVideo('{{ p.embed_url }}')">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
-					</a>
-				{% elif p.url and "streamable.com/e/" in p.url %}
-					<a href="javascript:void(0)" class="expandable-video" data-toggle="modal" data-target="#expandVideoModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopVideo('{{ p.realurl(v) }}')">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
-					</a>
-				{% elif p.is_video %}
-					<a href="javascript:void(0)" class="expandable-video" data-toggle="modal" data-target="#expandVideoModal2" data-url="{{p.realurl(v)}}" onclick="expandDesktopVideo2('{{ p.realurl(v) }}')">
+				{% elif p.is_video or (p.embed_url and "youtu" in p.domain) or (p.url and "streamable.com/e/" in p.url) %}
+					<a href="javascript:void(0)" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none')">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% else %}
@@ -409,19 +401,17 @@
 			</a>
 		</div>
 	{% elif p.is_video %}
-		<a href="javascript:void(0)">
-			<div style="text-align: center" class="mt-4">
-				<video controls preload="metadata" style="max-width: 100%">
-					<source src="{{p.realurl(v)}}" type="video/mp4">
-				</video>
-			</div>
-		</a>
+		<div id="video-{{p.id}}" style="text-align: center" class="mt-4">
+			<video controls preload="metadata" style="max-width: 100%">
+				<source src="{{p.realurl(v)}}" type="video/mp4">
+			</video>
+		</div>
 	{% elif p.embed_url and "youtu" in p.domain %}
-		<div style="text-align: center" class="mt-3 mb-4">
+		<div id="video-{{p.id}}" style="text-align: center" class="mt-3 mb-4">
 			<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" style="max-width: 100%" width="600" height="337" allow="fullscreen"></iframe>
 		</div>
 	{% elif p.url and "streamable.com/e/" in p.url %}
-		<div style="text-align: center" class="mt-3 mb-4">
+		<div id="video-{{p.id}}" style="text-align: center" class="mt-3 mb-4">
 			<iframe loading="lazy" src="{{p.url}}" frameborder="0" style="max-width: 100%" width="600" height="337" allow="fullscreen"></iframe>
 		</div>
 	{% endif %}

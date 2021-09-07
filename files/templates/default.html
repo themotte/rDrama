@@ -484,27 +484,6 @@
 			linkText.textContent = 'View original';
 			};
 
-
-		// Expand Videos on Desktop
-
-		function expandDesktopVideo(video, link) {
-
-			var linkText = document.getElementById("desktop-expanded-video-link");
-			var inlineVideo = document.getElementById("desktop-expanded-video");
-
-			inlineVideo.src = video;
-			linkText.href = video;
-
-			linkText.textContent = 'View original';
-		};
-
-		function expandDesktopVideo2(video, link) {
-
-			var inlineVideo = document.getElementById("desktop-expanded-video2");
-			inlineVideo.innerHTML = `<video controls="" preload="metadata" style="max-width: 100%"><source src="${video}" type="video/mp4"></video>`;
-		};
-
-
 		post_comment=function(fullname){
 
 
@@ -1181,8 +1160,6 @@
 {% endif %}
 
 {% include "expanded_image_modal.html" %}
-{% include "expanded_video_modal.html" %}
-{% include "expanded_video_modal2.html" %}
 
 <script src="/assets/js/general13.js"></script>
 
