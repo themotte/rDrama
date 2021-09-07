@@ -304,7 +304,6 @@ CREATE TABLE public.client_auths (
     id integer NOT NULL,
     user_id integer,
     oauth_client integer,
-    scope_guildmaster boolean,
     access_token character(128)
 );
 
@@ -807,7 +806,8 @@ CREATE TABLE public.submissions (
     views integer,
     is_bot boolean,
     bannedfor boolean,
-    comment_count integer DEFAULT 0
+    comment_count integer DEFAULT 0,
+    processing boolean DEFAULT false
 );
 
 
@@ -1487,14 +1487,6 @@ ALTER TABLE ONLY public.follows
 
 ALTER TABLE ONLY public.follows
     ADD CONSTRAINT follows_pkey PRIMARY KEY (id);
-
-
---
--- Name: subscriptions guild_membership_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.subscriptions
-    ADD CONSTRAINT guild_membership_unique UNIQUE (user_id, board_id);
 
 
 --
