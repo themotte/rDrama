@@ -72,7 +72,11 @@
 					<a href="javascript:void(0)" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
-				{% elif not p.is_video %}
+				{% elif p.is_video or (p.embed_url and "youtu" in p.domain) or (p.url and "streamable.com/e/" in p.url) %}
+					<a href="javascript:void(0)" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none')">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
+					</a>
+				{% else %}
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
@@ -397,20 +401,18 @@
 			</a>
 		</div>
 	{% elif p.is_video %}
-		<a href="javascript:void(0)">
-			<div style="text-align: center" class="mt-4">
-				<video controls preload="metadata" style="max-width: 100%">
-					<source src="{{p.realurl(v)}}" type="video/mp4">
-				</video>
-			</div>
-		</a>
+		<div id="video-{{p.id}}" style="text-align: center" class="mt-4">
+			<video controls preload="metadata" style="max-width: 100%">
+				<source src="{{p.realurl(v)}}" type="video/mp4">
+			</video>
+		</div>
 	{% elif p.embed_url and "youtu" in p.domain %}
-		<div style="text-align: center" class="mt-3 mb-4">
-			<iframe src="{{p.embed_url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
+		<div id="video-{{p.id}}" style="text-align: center" class="mt-3 mb-4">
+			<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" style="max-width: 100%" width="600" height="337" allow="fullscreen"></iframe>
 		</div>
 	{% elif p.url and "streamable.com/e/" in p.url %}
-		<div style="text-align: center" class="mt-3 mb-4">
-			<iframe src="{{p.url}}" frameborder="0" width="600" height="337" allow="fullscreen"></iframe>
+		<div id="video-{{p.id}}" style="text-align: center" class="mt-3 mb-4">
+			<iframe loading="lazy" src="{{p.url}}" frameborder="0" style="max-width: 100%" width="600" height="337" allow="fullscreen"></iframe>
 		</div>
 	{% endif %}
 {% endif %}

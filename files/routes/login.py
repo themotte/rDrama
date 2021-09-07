@@ -339,7 +339,7 @@ def sign_up_post(v):
 			ref_user.refresh_selfset_badges()
 			g.db.add(ref_user)
 
-	id_1 = g.db.query(User).filter_by(id=1).count()
+	id_1 = g.db.query(User).filter_by(id=6).count()
 	users_count = g.db.query(User).count() #paranoid
 	if id_1 == 0 and users_count < 6: admin_level=6
 	else: admin_level=0

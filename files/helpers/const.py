@@ -1,5 +1,7 @@
 from os import environ
 
+site = environ.get("DOMAIN").strip()
+
 SLURS = {
         " faggot":" cute twink",
         " Faggot":" Cute twink",
@@ -90,7 +92,8 @@ BASED_MSG = "@{username}'s Based Count has increased by 1. Their Based Count is 
 
 BASEDBOT_ACCOUNT = 800
 NOTIFICATIONS_ACCOUNT = 1046
-AUTOJANNY_ACCOUNT = 2360
+if site == "pcmemes.net": AUTOJANNY_ACCOUNT = 1050
+else: AUTOJANNY_ACCOUNT = 2360
 LONGPOSTBOT_ACCOUNT = 1832
 
 PUSHER_INSTANCE_ID = '02ddcc80-b8db-42be-9022-44c546b4dce6'

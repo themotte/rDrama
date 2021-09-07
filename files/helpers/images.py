@@ -110,7 +110,7 @@ def upload_video(file):
 			resp = r.json()['data']
 		except requests.HTTPError as e:
 			raise UploadException("Invalid video. Make sure it's 1 minute long or shorter.")
-		except Exception:
+		except:
 			raise UploadException("Error, please try again later.")
 		finally:
 			remove(file_path)

@@ -31,7 +31,7 @@ class User(Base, Stndrd, Age_times):
 	customtitle = Column(String)
 	customtitleplain = Column(String)
 
-	if "pcm" in site:
+	if "pcmemes.net" in site:
 		quadrant = Column(String)
 		basedcount = Column(Integer, default=0)
 		pills = Column(String, default="")
@@ -260,7 +260,7 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def banned_by(self):
 
-		if not self.is_banned: return None
+		if not self.is_suspended: return None
 		return g.db.query(User).filter_by(id=self.is_banned).first()
 
 	def has_badge(self, badgedef_id):

@@ -82,13 +82,15 @@ def check_ban_evade(v):
 			comment.ban_reason="ban evasion"
 			g.db.add(comment)
 
-			ma=ModAction(
+			try:
+				ma=ModAction(
 				kind="ban_comment",
 				user_id=AUTOJANNY_ACCOUNT,
 				target_comment_id=comment.id,
 				note="ban evasion"
 				)
-			g.db.add(ma)
+				g.db.add(ma)
+			except: pass
 
 		g.db.flush()
 		try: abort(403)
@@ -173,9 +175,6 @@ def admin_level_required(x):
 
 			if not v:
 				abort(401)
-
-			if v.is_banned:
-				abort(403)
 
 			if v.admin_level < x:
 				abort(403)
