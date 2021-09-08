@@ -27374,6 +27374,10 @@ textarea {
     height: 110px;
   }
 }
+.btn {
+  color: #7b9ae4 !important;
+}
+
 * {
   font-family: "Lato";
 }

@@ -27373,6 +27373,10 @@ textarea {
     height: 110px;
   }
 }
+.btn {
+  color: #7b9ae4 !important;
+}
+
 blockquote {
   background-color: #c0c0c0;
 }
