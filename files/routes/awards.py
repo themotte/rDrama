@@ -6,56 +6,56 @@ from files.helpers.const import *
 from files.classes.award import *
 from flask import g, request
 
-if site_name == "Drama":
-	AWARDS = {
-		"ban": {
-			"kind": "ban",
-			"title": "One-Day Ban",
-			"description": "Bans the author for a day.",
-			"icon": "fas fa-gavel",
-			"color": "text-danger",
-			"price": 5000
-		},
-		"shit": {
-			"kind": "shit",
-			"title": "Shit",
-			"description": "Makes flies swarm a post.",
-			"icon": "fas fa-poop",
-			"color": "text-black-50",
-			"price": 1000
-		},
-		"stars": {
-			"kind": "stars",
-			"title": "Stars",
-			"description": "Puts stars on the post.",
-			"icon": "fas fa-sparkles",
-			"color": "text-warning",
-			"price": 1000
-		}
-	}
-else:
-	AWARDS = {
-		"shit": {
-			"kind": "shit",
-			"title": "shit",
-			"description": "Makes flies swarm a post.",
-			"icon": "fas fa-poop",
-			"color": "text-black-50",
-			"price": 1000
-		},
-		"stars": {
-			"kind": "stars",
-			"title": "Stars",
-			"description": "Puts stars on the post.",
-			"icon": "fas fa-sparkles",
-			"color": "text-warning",
-			"price": 1000
-		}
-	}
-
 @app.get("/shop")
 @auth_required
 def shop(v):
+	if site_name == "Drama":
+		AWARDS = {
+			"ban": {
+				"kind": "ban",
+				"title": "One-Day Ban",
+				"description": "Bans the author for a day.",
+				"icon": "fas fa-gavel",
+				"color": "text-danger",
+				"price": 5000
+			},
+			"shit": {
+				"kind": "shit",
+				"title": "Shit",
+				"description": "Makes flies swarm a post.",
+				"icon": "fas fa-poop",
+				"color": "text-black-50",
+				"price": 1000
+			},
+			"stars": {
+				"kind": "stars",
+				"title": "Stars",
+				"description": "Puts stars on the post.",
+				"icon": "fas fa-sparkles",
+				"color": "text-warning",
+				"price": 1000
+			}
+		}
+	else:
+		AWARDS = {
+			"shit": {
+				"kind": "shit",
+				"title": "shit",
+				"description": "Makes flies swarm a post.",
+				"icon": "fas fa-poop",
+				"color": "text-black-50",
+				"price": 1000
+			},
+			"stars": {
+				"kind": "stars",
+				"title": "Stars",
+				"description": "Puts stars on the post.",
+				"icon": "fas fa-sparkles",
+				"color": "text-warning",
+				"price": 1000
+			}
+		}
+
 	query = g.db.query(
 	User.id, User.username, User.patron, User.namecolor,
 	AwardRelationship.kind.label('last_award_kind'), func.count(AwardRelationship.id).label('last_award_count')
