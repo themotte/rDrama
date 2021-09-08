@@ -73,12 +73,12 @@ def shop(v):
 			owned.append(award)
 
 	if v.patron:
-		for k, v in AWARDS.values():
+		for key, val in AWARDS.values():
 			if v.patron == 1: AWARDS[k]["price"] = AWARDS[k]["price"]*0.90
 			elif v.patron == 2: AWARDS[k]["price"] = AWARDS[k]["price"]*0.85
 			elif v.patron == 3: AWARDS[k]["price"] = AWARDS[k]["price"]*0.80
 			elif v.patron == 4: AWARDS[k]["price"] = AWARDS[k]["price"]*0.75
-			else: AWARDS[k]["price"] = AWARDS[k]["price"]*0.70
+			else: AWARDS[key]["price"] = AWARDS[key]["price"]*0.70
 		
 	return render_template("shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
 
