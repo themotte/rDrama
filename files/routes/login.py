@@ -175,7 +175,7 @@ def logout(v):
 	session.pop("user_id", None)
 	session.pop("session_id", None)
 
-	return "", 204
+	return {"message": "Logout successful!"}
 
 
 @app.get("/signup")

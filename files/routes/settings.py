@@ -38,7 +38,7 @@ tiers={
 def removebackground(v):
 	v.background = None
 	g.db.add(v)
-	return "", 204
+	return {"message": "Background removed!"}
 
 @app.post("/settings/profile")
 @auth_required
@@ -201,7 +201,7 @@ def settings_profile_post(v):
 		elif theme == "tron": v.themecolor = "80ffff"
 		elif theme == "win98": v.themecolor = "30409f"
 		g.db.add(v)
-		return "", 204
+		return {"message": "Theme changed!"}
 
 	quadrant = request.values.get("quadrant")
 	if quadrant and "pcm" in request.host.lower():
@@ -235,7 +235,7 @@ def settings_profile_post(v):
 			v.namecolor = "91b9A6"
 			v.titlecolor = "91b9A6"
 		g.db.add(v)
-		return "", 204
+		return {"message": "Quadrant changed!"}
 
 	if updated:
 		g.db.add(v)
@@ -254,7 +254,9 @@ def changelogsub(v):
 
 	cache.delete_memoized(frontlist, v)
 
-	return "", 204
+	g.db.flush()
+	if v.changelogsub: return {"message": "You have subscribed to the changelog!"}
+	else: return {"message": "You have unsubscribed from the changelog!"}
 
 @app.post("/settings/namecolor")
 @auth_required
@@ -551,17 +553,6 @@ def settings_delete_banner(v):
 
 	return render_template("settings_profile.html", v=v,
 						   msg="Banner successfully removed.")
-
-
-@app.post("/settings/read_announcement")
-@auth_required
-@validate_formkey
-def update_announcement(v):
-
-	v.read_announcement_utc = int(time.time())
-	g.db.add(v)
-
-	return "", 204
 
 
 @app.get("/settings/blocks")

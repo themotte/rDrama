@@ -36,7 +36,7 @@ def publish(pid, v):
 	
 	cache.delete_memoized(frontlist)
 
-	return "", 204
+	return {"message": "Post published!"}
 
 @app.get("/submit")
 @auth_required
@@ -1114,7 +1114,7 @@ def delete_post_pid(pid, v):
 
 	cache.delete_memoized(frontlist)
 
-	return "", 204
+	return {"message": "Post deleted!"}
 
 @app.post("/undelete_post/<pid>")
 @auth_required
@@ -1127,7 +1127,7 @@ def undelete_post_pid(pid, v):
 
 	cache.delete_memoized(frontlist)
 
-	return "", 204
+	return {"message": "Post undeleted!"}
 
 
 @app.post("/toggle_comment_nsfw/<cid>")
@@ -1139,7 +1139,9 @@ def toggle_comment_nsfw(cid, v):
 	if not comment.author_id == v.id and not v.admin_level >= 3: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
-	return "", 204
+	g.db.flush()
+	if comment.over_18: return {"message": "Comment has been marked as +18!"}
+	else: return {"message": "Comment has been unmarked as +18!"}
 	
 @app.post("/toggle_post_nsfw/<pid>")
 @auth_required
@@ -1162,7 +1164,9 @@ def toggle_post_nsfw(pid, v):
 			)
 		g.db.add(ma)
 
-	return "", 204
+	g.db.flush()
+	if post.over_18: return {"message": "Post has been marked as +18!"}
+	else: return {"message": "Post has been unmarked as +18!"}
 
 @app.post("/save_post/<pid>")
 @auth_required
@@ -1178,7 +1182,7 @@ def save_post(pid, v):
 	try: g.db.flush()
 	except: g.db.rollback()
 
-	return "", 204
+	return {"message": "Post saved!"}
 
 @app.post("/unsave_post/<pid>")
 @auth_required
@@ -1191,4 +1195,4 @@ def unsave_post(pid, v):
 
 	if save: g.db.delete(save)
 	
-	return "", 204
+	return {"message": "Post unsaved!"}

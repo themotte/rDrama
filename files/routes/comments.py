@@ -902,7 +902,7 @@ def save_comment(cid, v):
 	try: g.db.flush()
 	except: g.db.rollback()
 
-	return "", 204
+	return {"message": "Comment saved!"}
 
 @app.post("/unsave_comment/<cid>")
 @auth_required
@@ -915,4 +915,4 @@ def unsave_comment(cid, v):
 
 	if save: g.db.delete(save)
 
-	return "", 204
+	return {"message": "Comment unsaved!"}

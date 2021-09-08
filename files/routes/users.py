@@ -33,7 +33,7 @@ def pay_rent(v):
 	u.coins += 500
 	g.db.add(u)
 	send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has paid rent!")
-	return "", 204
+	return {"message": "Rent paid!"}
 
 
 @app.post("/steal")
@@ -52,6 +52,8 @@ def steal(v):
 		g.db.add(u)
 		send_notification(NOTIFICATIONS_ACCOUNT, u, f"Some [grubby little rentoid](/@{v.username}) has absconded with 700 of your hard-earned dramacoins to fuel his Funko Pop addiction. Stop being so trusting.")
 		send_notification(NOTIFICATIONS_ACCOUNT, v, f"You have successfully shorted your heroic landlord 700 dramacoins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
+		return {"message": "Attempt successful!"}
+
 	else:
 		if random.random() < 0.15:
 			send_notification(NOTIFICATIONS_ACCOUNT, u, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you sold his Nintendo Switch for 500 dramacoins and called the cops. He was sentenced to one (1) day in renthog prison.")
@@ -66,7 +68,7 @@ def steal(v):
 		g.db.add(v)
 		u.coins += 500
 		g.db.add(u)
-	return "", 204
+		return {"message": "Attempt failed!"}
 
 
 @app.get("/rentoids")
@@ -89,13 +91,13 @@ def thiefs(v):
 @auth_required
 def suicide(v, username):
 	t = int(time.time())
-	if v.admin_level == 0 and t - v.suicide_utc < 86400: return "", 204
+	if v.admin_level == 0 and t - v.suicide_utc < 86400: return {"message": "You're on 1-day cooldown!"}
 	user = get_user(username)
 	suicide = f"Hi there,\n\nA [concerned user]({v.url}) reached out to us about you.\n\nWhen you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.\n\nThere are resources available in your area that are free, confidential, and available 24/7:\n\n- Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)\n- Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)\n- Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.\nIf you don't see a resource in your area above, the moderators at r/SuicideWatch keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now\n\nIf you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.\n\nIt may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.\n\nYour fellow users care about you and there are people who want to help."
 	send_notification(NOTIFICATIONS_ACCOUNT, user, suicide)
 	v.suicide_utc = t
 	g.db.add(v)
-	return "", 204
+	return {"message": "Help message sent!"}
 
 
 @app.get("/@<username>/coins")
@@ -130,7 +132,8 @@ def transfer_coins(v, username):
 		send_notification(v.id, receiver, transfer_message)
 		return {"message": f"{amount} {app.config['COINS_NAME']} transferred!"}, 200
 
-	return "", 204
+	return {"message": f"{app.config['COINS_NAME']} transferred!"}
+
 
 @app.get("/leaderboard")
 @auth_desired
@@ -183,14 +186,14 @@ def song(song):
 def subscribe(v, post_id):
 	new_sub = Subscription(user_id=v.id, submission_id=post_id)
 	g.db.add(new_sub)
-	return "", 204
+	return {"message": "Post subscribed!"}
 	
 @app.post("/unsubscribe/<post_id>")
 @auth_required
 def unsubscribe(v, post_id):
 	sub=g.db.query(Subscription).filter_by(user_id=v.id, submission_id=post_id).first()
 	g.db.delete(sub)
-	return "", 204
+	return {"message": "Post unsubscribed!"}
 
 @app.post("/@<username>/message")
 @limiter.limit("10/hour")
@@ -556,7 +559,7 @@ def follow_user(username, v):
 	if target.id==v.id: return {"error": "You can't follow yourself!"}, 400
 
 	# check for existing follow
-	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first(): return "", 204
+	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first(): return {"message": "User followed!"}
 
 	new_follow = Follow(user_id=v.id, target_id=target.id)
 	g.db.add(new_follow)
@@ -566,8 +569,7 @@ def follow_user(username, v):
 
 	existing = g.db.query(Notification).filter_by(followsender=v.id, user_id=target.id).first()
 	if not existing: send_follow_notif(v.id, target.id, f"@{v.username} has followed you!")
-	return "", 204
-
+	return {"message": "User followed!"}
 
 @app.post("/unfollow/<username>")
 @auth_required
@@ -578,7 +580,7 @@ def unfollow_user(username, v):
 	# check for existing follow
 	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
 
-	if not follow: return "", 204
+	if not follow: return {"message": "User unfollowed!"}
 
 	g.db.delete(follow)
 	target.stored_subscriber_count = g.db.query(Follow).filter_by(target_id=target.id).count()
@@ -586,7 +588,7 @@ def unfollow_user(username, v):
 
 	existing = g.db.query(Notification).filter_by(unfollowsender=v.id, user_id=target.id).first()
 	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has unfollowed you!")
-	return "", 204
+	return {"message": "User followed!"}
 
 
 @app.route("/uid/<id>/pic/profile")
