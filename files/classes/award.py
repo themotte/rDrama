@@ -24,7 +24,7 @@ if site_name == "Drama":
 		"stars": {
 			"kind": "stars",
 			"title": "Stars",
-			"description": "A positive award because we need a positive award. Puts annoying sparkles in the post.",
+			"description": "A positive award because we need a positive award. Puts annoying stars in the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning"
 		}
@@ -41,7 +41,7 @@ else:
 		"stars": {
 			"kind": "stars",
 			"title": "Stars",
-			"description": "A positive award because we need a positive award. Puts annoying sparkles in the post.",
+			"description": "A positive award because we need a positive award. Puts annoying stars in the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning"
 		}
