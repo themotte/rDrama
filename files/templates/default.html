@@ -168,7 +168,7 @@
 			}
 		}
 
-		admin_comment=function(cid){
+		admin_comment=function(cid,button1,button2){
 
 
 			var xhr = new XMLHttpRequest();
@@ -193,6 +193,9 @@
 				}
 			}
 			xhr.send(form)
+
+			document.getElementById(button1).classList.toggle("d-md-inline-block");
+			document.getElementById(button2).classList.toggle("d-md-inline-block");
 		}
 
 		//Autoexpand textedit comments
