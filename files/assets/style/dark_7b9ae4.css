@@ -27377,6 +27377,10 @@ textarea {
   color: #7b9ae4 !important;
 }
 
+.btn-dead:hover, .active.btn-dead:hover, .active.btn-dead {
+  border: 2px solid #805ad5 !important;
+}
+
 * {
   border-color: #7b9ae4;
 }

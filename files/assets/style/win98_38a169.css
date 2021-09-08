@@ -27377,6 +27377,10 @@ textarea {
   color: #000000 !important;
 }
 
+.btn-dead:hover, .active.btn-dead:hover, .active.btn-dead {
+  border: 2px solid #805ad5 !important;
+}
+
 * {
   box-shadow: none !important;
   transition: none !important;
