@@ -75,9 +75,9 @@ def shop(v):
 	awards = []
 	if v.patron:
 		for val in AWARDS.values():
-			if v.patron == 1: val["price"] = int(val["price"]["price"]*0.90)
-			elif v.patron == 2: val["price"] = int(val["price"]["price"]*0.85)
-			elif v.patron == 3: val["price"] = int(val["price"]["price"]*0.80)
+			if v.patron == 1: val["price"] = int(val["price"]*0.90)
+			elif v.patron == 2: val["price"] = int(val["price"]*0.85)
+			elif v.patron == 3: val["price"] = int(val["price"]*0.80)
 			elif v.patron == 4: val["price"] = int(val["price"]*0.75)
 			else: val["price"] = int(val["price"]*0.70)
 			awards.append(val)
