@@ -79,7 +79,7 @@ def shop(v):
 def buy(v, award):
 	if award not in AWARDS: abort(400)
 	price = AWARDS[award]["price"]
-	if v.coins < price: return {"error": "Not enough coins!"}, 400
+	if v.coins < price: return {"error": "Not enough coins."}, 400
 	v.coins -= price
 	g.db.add(v)
 
@@ -138,7 +138,7 @@ def get_awards(v):
 def award_post(pid, v):
 
 	if v.is_suspended and v.unban_utc == 0:
-		return {"error": "forbidden"}, 403
+		return {"error": "forbidden."}, 403
 
 	kind = request.form.get("kind", "")
 
