@@ -168,7 +168,7 @@
 			}
 		}
 
-		admin_comment=function(cid,button1,button2){
+		admin_comment=function(cid,button1,button2,distinguish){
 
 
 			var xhr = new XMLHttpRequest();
@@ -196,6 +196,15 @@
 
 			document.getElementById(button1).classList.toggle("d-md-inline-block");
 			document.getElementById(button2).classList.toggle("d-md-inline-block");
+
+			$('#toast-post-success').toast('dispose');
+			$('#toast-post-success').toast('show');
+			if (distinguish=='yes') {
+				document.getElementById('toast-post-success-text').innerText = "Comment distinguished!";
+			}
+			else {
+				document.getElementById('toast-post-success-text').innerText = "Comment undistinguished!";
+			}
 		}
 
 		//Autoexpand textedit comments

@@ -299,8 +299,8 @@
 						{% endif %}
 
 						{% if v and v.admin_level==6 and v.id==c.author_id %}
-							<li id="undistinguish-{{c.id}}" class="list-inline-item d-none {% if c.distinguish_level %}d-md-inline-block{% endif %}"><a class="text-info"  href="javascript:void(0)" onclick="admin_comment('{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}')"><i class="fas fa-id-badge text-info fa-fw"></i>Undistinguish</a></li>
-							<li id="distinguish-{{c.id}}" class="list-inline-item d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %}"><a class="text-info" href="javascript:void(0)" onclick="admin_comment('{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</a></li>
+							<li id="undistinguish-{{c.id}}" class="list-inline-item d-none {% if c.distinguish_level %}d-md-inline-block{% endif %}"><a class="text-info"  href="javascript:void(0)" onclick="admin_comment('{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')"><i class="fas fa-id-badge text-info fa-fw"></i>Undistinguish</a></li>
+							<li id="distinguish-{{c.id}}" class="list-inline-item d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %}"><a class="text-info" href="javascript:void(0)" onclick="admin_comment('{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</a></li>
 						{% endif %}
 
 								
