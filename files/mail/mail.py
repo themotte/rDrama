@@ -60,7 +60,7 @@ def api_verify_email(v):
 
 	send_verification_email(v)
 
-	return "", 204
+	return {"message": "Email has been sent (ETA ~5 minutes)"}
 
 
 @app.get("/activate")
