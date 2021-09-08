@@ -246,14 +246,8 @@ def before_request():
 @app.after_request
 def after_request(response):
 
-	try:
-		g.db.commit()
-		g.db.close()
-	except Exception as e:
-		g.db.rollback()
-		g.db.close()
-		print(e)
-		abort(500)
+	g.db.commit()
+	g.db.close()
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("Referrer-Policy", "same-origin")
