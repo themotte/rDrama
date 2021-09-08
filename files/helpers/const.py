@@ -35,8 +35,8 @@ SLURS = {
 		" TROON":" 🚂🚃🚃",
 		" NoNewNormal": "HorseDewormerAddicts",
 		" nonewnormal": "horsedewormeraddicts",
-		" Kike": "https://www.sciencedirect.com/science/article/abs/pii/S016028960600033X",
-		" kike": "https://www.sciencedirect.com/science/article/abs/pii/S016028960600033X",
+		" Kike": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
+		" kike": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
 		"faggot ":"cute twink ",
 		"Faggot ":"Cute twink ",
 		"FAGGOT ":"CUTE TWINK ",
@@ -69,8 +69,8 @@ SLURS = {
 		"TROON ":"🚂🚃🚃 ",
 		"NoNewNormal ": "HorseDewormerAddicts ",
 		"nonewnormal ": "horsedewormeraddicts ",
-		"Kike ": "https://www.sciencedirect.com/science/article/abs/pii/S016028960600033X",
-		"kike ": "https://www.sciencedirect.com/science/article/abs/pii/S016028960600033X",
+		"Kike ": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
+		"kike ": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
 
 }
 
