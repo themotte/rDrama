@@ -73,7 +73,7 @@ def shop(v):
 			owned.append(award)
 
 	if v.patron:
-		for key, val in AWARDS.values():
+		for key, val in AWARDS.items():
 			if v.patron == 1: AWARDS[k]["price"] = AWARDS[k]["price"]*0.90
 			elif v.patron == 2: AWARDS[k]["price"] = AWARDS[k]["price"]*0.85
 			elif v.patron == 3: AWARDS[k]["price"] = AWARDS[k]["price"]*0.80
