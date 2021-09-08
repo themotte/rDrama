@@ -48,7 +48,7 @@ def request_api_keys(v):
 
 	g.db.add(new_app)
 
-	send_admin(NOTIFICATIONS_ACCOUNT, f"@{v.username} has requested API keys for `{request.form.get('name')}`. You can approve or deny the request [here](/admin/apps).")
+	send_admin(NOTIFICATIONS_ACCOUNT, f"{v.username} has requested API keys for `{request.form.get('name')}`. You can approve or deny the request [here](/admin/apps).")
 
 	return redirect('/settings/apps')
 
