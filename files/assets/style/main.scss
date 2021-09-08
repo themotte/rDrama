@@ -3632,3 +3632,7 @@ textarea {
 .btn {
 	color: $primary !important;
 }
+
+.btn-dead:hover, .active.btn-dead:hover, .active.btn-dead {
+    border: 2px solid #805ad5 !important;
+}
