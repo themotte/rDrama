@@ -79,6 +79,13 @@ def shop(v):
 def buy(v, award):
 	if award not in AWARDS: abort(400)
 	price = AWARDS[award]["price"]
+	if v.patron:
+		if v.patron == 1: price = price*0.90
+		elif v.patron == 2: price = price*0.85
+		elif v.patron == 3: price = price*0.80
+		elif v.patron == 4: price = price*0.75
+		else: price = price*0.70
+
 	if v.coins < price: return {"error": "Not enough coins."}, 400
 	v.coins -= price
 	g.db.add(v)
