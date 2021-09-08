@@ -168,8 +168,8 @@
 
 						
 						{% if v and v.admin_level>=3 %}
-							<li id="pin-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack"></i>Pin</a></li>
-							<li id="unpin-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack"></i>Unpin</a></li>
+							<li id="pin-{{p.id}}" class="{% if p.is_stickied %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack"></i>Pin</a></li>
+							<li id="unpin-{{p.id}}" class="{% if not p.is_stickied %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack"></i>Unpin</a></li>
 							{% if v==p.author %}
 								<li id="distinguish-{{p.id}}" class="{% if p.distinguish_level %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/distinguish/{{p.id}}','distinguish-{{p.id}}','undistinguish-{{p.id}}')"><i class="fas fa-crown"></i>Distinguish</a></li>
 								<li id="undistinguish-{{p.id}}" class="{% if not p.distinguish_level %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/distinguish/{{p.id}}','distinguish-{{p.id}}','undistinguish-{{p.id}}')"><i class="fas fa-crown"></i>Undistinguish</a></li>
