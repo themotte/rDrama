@@ -74,11 +74,11 @@ def shop(v):
 
 	if v.patron:
 		for key, val in AWARDS.items():
-			if v.patron == 1: AWARDS[key]["price"] = AWARDS[key]["price"]*0.90
-			elif v.patron == 2: AWARDS[key]["price"] = AWARDS[key]["price"]*0.85
-			elif v.patron == 3: AWARDS[key]["price"] = AWARDS[key]["price"]*0.80
-			elif v.patron == 4: AWARDS[key]["price"] = AWARDS[key]["price"]*0.75
-			else: AWARDS[key]["price"] = AWARDS[key]["price"]*0.70
+			if v.patron == 1: AWARDS[key]["price"] = int(AWARDS[key]["price"]*0.90)
+			elif v.patron == 2: AWARDS[key]["price"] = int(AWARDS[key]["price"]*0.85)
+			elif v.patron == 3: AWARDS[key]["price"] = int(AWARDS[key]["price"]*0.80)
+			elif v.patron == 4: AWARDS[key]["price"] = int(AWARDS[key]["price"]*0.75)
+			else: AWARDS[key]["price"] = int(AWARDS[key]["price"]*0.70)
 		
 	return render_template("shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
 
@@ -88,11 +88,11 @@ def buy(v, award):
 	if award not in AWARDS: abort(400)
 	price = AWARDS[award]["price"]
 	if v.patron:
-		if v.patron == 1: price = price*0.90
-		elif v.patron == 2: price = price*0.85
-		elif v.patron == 3: price = price*0.80
-		elif v.patron == 4: price = price*0.75
-		else: price = price*0.70
+		if v.patron == 1: price = int(price*0.90)
+		elif v.patron == 2: price = int(price*0.85)
+		elif v.patron == 3: price = int(price*0.80)
+		elif v.patron == 4: price = int(price*0.75)
+		else: price = int(price*0.70)
 
 	if v.coins < price: return {"error": "Not enough coins."}, 400
 	v.coins -= price
