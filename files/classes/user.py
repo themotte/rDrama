@@ -448,11 +448,6 @@ class User(Base, Stndrd, Age_times):
 		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).first()
 
 
-	@property
-	def banner_url(self):
-		if self.bannerurl: return self.bannerurl
-		else: return f"https://{site}/assets/images/default_bg.gif"
-
 	@cache.memoize(timeout=86400)
 	def defaultpicture(self):
 		pic = random.randint(1, 150)
@@ -473,7 +468,7 @@ class User(Base, Stndrd, Age_times):
 				'id': self.id,
 				'is_private': self.is_private,
 				'profile_url': self.profile_url,
-				'banner_url': self.banner_url,
+				'bannerurl': self.bannerurl,
 				'bio': self.bio,
 				'bio_html': self.bio_html,
 				'flair': self.customtitle
