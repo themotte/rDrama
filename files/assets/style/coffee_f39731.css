@@ -27374,10 +27374,6 @@ textarea {
     height: 110px;
   }
 }
-.btn {
-  color: #f39731 !important;
-}
-
 .btn-dead:hover, .active.btn-dead:hover, .active.btn-dead {
   border: 2px solid #805ad5 !important;
 }
@@ -27412,6 +27408,10 @@ blockquote {
 
 #frontpage .post-title a:visited {
   color: #949494;
+}
+
+.btn {
+  color: #f39731 !important;
 }
 
 /*# sourceMappingURL=coffee_f39731.css.map */
