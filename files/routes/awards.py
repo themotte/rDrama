@@ -63,12 +63,15 @@ def shop(v):
 def buy(v, award):
     if award not in AWARDS: abort(400)
     price = AWARDS[award]["price"]
+    print(price)
     if v.coins < price: return render_template("shop.html", v=v, error="You don't have enough coins to buy this item.")
     v.coins -= price
     g.db.add(v)
 
     award = AwardRelationship(user_id=v.id, kind=award)
     g.db.add(award)
+
+    print(award)
 
     return render_template("shop.html", awards=list(AWARDS.values()), v=v)
 
