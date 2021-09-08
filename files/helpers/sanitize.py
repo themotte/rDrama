@@ -218,22 +218,24 @@ def sanitize(sanitized, noimages=False):
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
 	for i in re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized):
-		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
-			sanitized = sanitized.replace(f'<p>:{i.group(1)}:</p>', f'<p><img loading="lazy" data-toggle="tooltip" title="{i.group(1)}" delay="0" height=60 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"</p>')
+		emoji = i.group(1).lower()
+        if path.isfile(f'./files/assets/images/emojis/{emoji}.gif'):
+			sanitized = sanitized.replace(f'<p>:{emoji}:</p>', f'<p><img loading="lazy" data-toggle="tooltip" title="{emoji}" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.gif"</p>')
 
 			try:
-				if i.group(1) in session["favorite_emojis"]: session["favorite_emojis"][i.group(1)] += 1
-				else: session["favorite_emojis"][i.group(1)] = 1
+				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
+				else: session["favorite_emojis"][emoji] = 1
 			except:
 				pass
 
 	for i in re.finditer(':([^ ]{1,30}?):', sanitized):
-		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
-			sanitized = sanitized.replace(f':{i.group(1)}:', f'<img loading="lazy" data-toggle="tooltip" title="{i.group(1)}" delay="0" height=30 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
+		emoji = i.group(1).lower()
+        if path.isfile(f'./files/assets/images/emojis/{emoji}.gif'):
+			sanitized = sanitized.replace(f':{emoji}:', f'<img loading="lazy" data-toggle="tooltip" title="{emoji}" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.gif"<span>')
 
 			try:
-				if i.group(1) in session["favorite_emojis"]: session["favorite_emojis"][i.group(1)] += 1
-				else: session["favorite_emojis"][i.group(1)] = 1
+				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
+				else: session["favorite_emojis"][emoji] = 1
 			except:
 				pass
 
