@@ -266,8 +266,10 @@
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="/votes?link={{c.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
 						{% if v %}
+							<li id="unsave-{{c.id}}" class="{% if c in v.saved_comment_idlist() %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</a></li>
+
 							<li id="save-{{c.id}}" class="{% if not c in v.saved_comment_idlist() %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" onclick="post_toast3('/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
-							<li id="unsave-{{c.id}}" class="{% if c in v.saved_comment_idlist() %}d-md-inline-block{% endif %} list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</a></li>
+
 							<li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.remove('d-none')"><i class="fas fa-reply" aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a></li>
 
 							{% if v.id!=c.author_id %}
@@ -297,7 +299,8 @@
 						{% endif %}
 
 						{% if v and v.admin_level==6 and v.id==c.author_id %}
-							<li class="list-inline-item d-none d-md-inline-block"><a class="text-info" id="distinguish-{{c.id}}" href="javascript:void(0)" onclick="admin_comment('{{c.id}}')"><i class="fas fa-id-badge text-info fa-fw"></i>{{'Undistinguish' if c.distinguish_level else 'Distinguish'}}</a></li>
+							<li id="undistinguish-{{c.id}}" class="list-inline-item d-none {% if c.distinguish_level %}d-md-inline-block{% endif %}"><a class="text-info"  href="javascript:void(0)" onclick="admin_comment('{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}')"><i class="fas fa-id-badge text-info fa-fw"></i>Undistinguish</a></li>
+							<li id="distinguish-{{c.id}}" class="list-inline-item d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %}"><a class="text-info" href="javascript:void(0)" onclick="admin_comment('{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</a></li>
 						{% endif %}
 
 								
@@ -314,8 +317,13 @@
 
 
 						{% if v and v.admin_level>=3 %}
-							<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a></li>
-							<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a></li>
+							{% if "/flagged/" in request.path %}
+								<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a></li>
+								<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a></li>
+							{% else %}
+								<li id="approve-{{c.id}}" class="list-inline-item text-muted d-none {% if c.is_banned %}d-md-inline-block{% endif %}"><a class="text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a></li>
+								<li id="remove-{{c.id}}" class="list-inline-item text-muted d-none {% if not c.is_banned %}d-md-inline-block{% endif %}"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a></li>
+							{% endif %}
 						{% endif %}
 
 						{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}

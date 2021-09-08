@@ -130,7 +130,7 @@
 		};
 
 		//comment modding
-		function removeComment(post_id) {
+		function removeComment(post_id,button1,button2) {
 			url="/ban_comment/"+post_id
 
 			callback=function(){
@@ -141,9 +141,15 @@
 				button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
 			}
 			post(url, callback, "Comment has been removed.")
+			
+
+			if (typeof button1 !== 'undefined') {
+				document.getElementById(button1).classList.toggle("d-md-inline-block");
+				document.getElementById(button2).classList.toggle("d-md-inline-block");
+			}
 		};
 
-		function approveComment(post_id) {
+		function approveComment(post_id,button1,button2) {
 			url="/unban_comment/"+post_id
 
 			callback=function(){
@@ -155,6 +161,11 @@
 			}
 
 			post(url, callback, "Comment has been approved.")
+
+			if (typeof button1 !== 'undefined') {
+				document.getElementById(button1).classList.toggle("d-md-inline-block");
+				document.getElementById(button2).classList.toggle("d-md-inline-block");
+			}
 		}
 
 		admin_comment=function(cid){
