@@ -466,11 +466,11 @@
 							{% endif %}
 							{% if v.admin_level>=3 %}
 								{% if "/flagged/" in request.path %}
-									<li class="list-group-item"><a class="text-success d-block" href="javascript:void(0)" onclick="approveComment2('{{c.id}}')" data-dismiss="modal"><i class="fas fa-check text-success"></i>Approve</a></li>
 									<li class="list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="removeComment2('{{c.id}}')" data-dismiss="modal"><i class="fas fa-ban text-danger"></i>Remove</a></li>
+									<li class="list-group-item"><a class="text-success d-block" href="javascript:void(0)" onclick="approveComment2('{{c.id}}')" data-dismiss="modal"><i class="fas fa-check text-success"></i>Approve</a></li>
 								{% else %}
-									<li id="approve2-{{c.id}}" class="{% if not c.is_banned %}d-none{% endif %} list-group-item"><a class="text-success d-block" href="javascript:void(0)" onclick="approveComment2('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-check text-success"></i>Approve</a></li>
 									<li id="remove2-{{c.id}}" class="{% if c.is_banned %}d-none{% endif %} list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="removeComment2('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-ban text-danger"></i>Remove</a></li>
+									<li id="approve2-{{c.id}}" class="{% if not c.is_banned %}d-none{% endif %} list-group-item"><a class="text-success d-block" href="javascript:void(0)" onclick="approveComment2('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-check text-success"></i>Approve</a></li>
 								{% endif %}
 							{% endif %}
 							{% if v.admin_level >=4 and c.oauth_app %}
