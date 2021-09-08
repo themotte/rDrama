@@ -68,11 +68,11 @@ def buy(v, award):
     v.coins -= price
     g.db.add(v)
 
-    award = AwardRelationship(user_id=v.id, kind=award)
-    g.db.add(award)
+    thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+    thing += 1
 
-    g.db.commit()
-    print(award)
+    award = AwardRelationship(id=thing, user_id=v.id, kind=award)
+    g.db.add(award)
 
     return "", 204
 
