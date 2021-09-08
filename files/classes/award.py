@@ -10,7 +10,7 @@ if site_name == "Drama":
 		"ban": {
 			"kind": "ban",
 			"title": "One-Day Ban",
-			"description": "Ban the author for a day.",
+			"description": "Bans the author for a day.",
 			"icon": "fas fa-gavel",
 			"color": "text-danger",
 			"price": 5000
@@ -18,7 +18,7 @@ if site_name == "Drama":
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",
-			"description": "Let OP know how much their post sucks ass. Flies will swarm their idiotic post. (flies only work on posts lol!!)",
+			"description": "Makes flies swarm a post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
 			"price": 1000
@@ -26,7 +26,7 @@ if site_name == "Drama":
 		"stars": {
 			"kind": "stars",
 			"title": "Stars",
-			"description": "A positive award because we need a positive award. Puts annoying stars in the post.",
+			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"price": 1000
@@ -37,7 +37,7 @@ else:
 		"shit": {
 			"kind": "shit",
 			"title": "shit",
-			"description": "Let OP know how much their post sucks ass. Flies will swarm their idiotic post. (flies only work on posts lol!!)",
+			"description": "Makes flies swarm a post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
 			"price": 1000
@@ -45,7 +45,7 @@ else:
 		"stars": {
 			"kind": "stars",
 			"title": "Stars",
-			"description": "A positive award because we need a positive award. Puts annoying stars in the post.",
+			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"price": 1000
