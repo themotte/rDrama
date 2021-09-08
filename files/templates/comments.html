@@ -269,10 +269,9 @@
 
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="/votes?link={{c.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
-						{% if v and c.id in v.saved_comment_idlist() %}
-							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/unsave_comment/{{c.id}}')"><i class="fas fa-save"></i>Unsave</a></li>
-						{% else %}
-							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/save_comment/{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
+						{% if v %}
+							<li class="{% if c in v.saved_comment_idlist() %}d-none{% endif %} list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/save_comment/{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
+							<li class="{% if not c in v.saved_comment_idlist() %}d-none{% endif %} list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/unsave_comment/{{c.id}}')"><i class="fas fa-save"></i>Unsave</a></li>
 						{% endif %}
 
 						{% if v %}
@@ -298,11 +297,9 @@
 
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</a></li>
 
-							{% if c.deleted_utc > 0 %}
-								<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast('/undelete/comment/{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</a></li>
-							{% else %}
-								<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</a></li>
-							{% endif %}
+							<li id="delete-{{c.id}}" class="{% if c.deleted_utc %}d-none{% endif %} list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</a></li>
+							
+							<li id="undelete-{{c.id}}" class="{% if not c.deleted_utc %}d-none{% endif %} list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast2('/undelete/comment/{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</a></li>
 
 						{% endif %}
 
