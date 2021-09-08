@@ -607,8 +607,8 @@ def agendaposter(user_id, v):
 
 	g.db.flush()
 
-	if user.agendaposter: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been marked by an admin (@{v.username}) as an agendaposter ({note})")
-	else: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been unmarked by an admin (@{v.username}) as an agendaposter")
+	if user.agendaposter: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been marked by an admin as an agendaposter ({note}).")
+	else: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been unmarked by an admin as an agendaposter.")
 
 	return (redirect(user.url), user)
 
