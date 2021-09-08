@@ -146,7 +146,6 @@ $yiq-contrasted-threshold:	160 !default;
 	}
 
 @import "./node_modules/bootstrap/scss/bootstrap.scss";
-@import "./main.scss";
 
 html {
 	font-size: 14px;
@@ -3469,4 +3468,10 @@ img.emoji {
 	.jumbotron-guild {
 		height: 110px;
 	}
+}
+
+.patron {
+    padding: 2px 5px 3px 5px !important;
+    border-radius: 5px !important;
+	color: white !important;
 }
