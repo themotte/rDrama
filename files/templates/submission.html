@@ -198,8 +198,8 @@
 
 <script src="/assets/js/sparkle.min.js" type="text/javascript"></script>
 
-{% if p.award_count("gold") %}
-{% set sparkles = 10*p.award_count("gold") if p.award_count("gold") <= 5 else 50 %}
+{% if p.award_count("stars") %}
+{% set sparkles = 10*p.award_count("stars") if p.award_count("stars") <= 5 else 50 %}
 <style>
 	#post-content {
 		z-index: 50;
