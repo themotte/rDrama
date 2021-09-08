@@ -897,6 +897,8 @@ def submit_post(v):
 			else:
 				try:
 					post_url = upload_video(file)
+					if not post_url.endswith('.mp4'):
+						post_url += 'mp4'
 					new_post.url = post_url
 					new_post.processing = True
 					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
