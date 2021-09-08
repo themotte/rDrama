@@ -268,9 +268,6 @@
 						{% if v %}
 							<li id="save-{{c.id}}" class="{% if not c in v.saved_comment_idlist() %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" onclick="post_toast3('/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
 							<li id="unsave-{{c.id}}" class="{% if c in v.saved_comment_idlist() %}d-md-inline-block{% endif %} list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</a></li>
-						{% endif %}
-
-						{% if v %}
 							<li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.remove('d-none')"><i class="fas fa-reply" aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a></li>
 
 							{% if v.id!=c.author_id %}
@@ -285,7 +282,7 @@
 						{% if v %}
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)"><i class="fas fa-flag fa-fw"></i>Report</a></li>
 						{% else %}
-							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick=""><i class="fas fa-flag fa-fw"></i>Flag</a></li>
+							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick=""><i class="fas fa-flag fa-fw"></i>Report</a></li>
 						{% endif %}
 
 
@@ -293,7 +290,7 @@
 
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</a></li>
 
-							<li id="delete-{{c.id}}" class="{% if not c.deleted_utc %}d-md-inline-block% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</a></li>
+							<li id="delete-{{c.id}}" class="{% if not c.deleted_utc %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</a></li>
 							
 							<li id="undelete-{{c.id}}" class="{% if c.deleted_utc %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" onclick="post_toast3('/undelete/comment/{{c.id}}','delete-{{c.id}}','undelete-{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</a></li>
 
@@ -497,7 +494,6 @@
 
 </div>
 
-{% endif %}
 {% endif %}
 
 {% endmacro %}
