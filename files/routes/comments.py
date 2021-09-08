@@ -876,16 +876,8 @@ def toggle_comment_pin(cid, v):
 		)
 		g.db.add(ma)
 
-	html=render_template(
-				"comments.html",
-				v=v,
-				comments=[comment],
-				render_replies=False,
-				)
-
-	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
-
-	return html
+	if comment.is_pinned: return {"message": "Comment pinned!"}
+	else: return {"message": "Comment unpinned!"}
 	
 	
 @app.post("/save_comment/<cid>")
