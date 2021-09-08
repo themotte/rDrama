@@ -93,7 +93,7 @@
 <textarea id="userid" style="display: none;">{% if u.song %}{{u.id}}{% else %}nosong{% endif %}</textarea>
 <div class="row d-none d-md-block">
 	<div class="col px-0">
-		<div class="jumbotron jumbotron-fluid jumbotron-guild d-none d-md-block" style="background-image: url({{u.banner_url}})">
+		<div {% if u.banner_url %} class="jumbotron jumbotron-fluid jumbotron-guild d-none d-md-block" style="background-image: url({{u.banner_url}})" {% endif %}>
 			<div class="jumbotron-overlay"></div>
 			<div class="w-100 my-3">
 				<div class="container-fluid nobackground">
