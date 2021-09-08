@@ -605,6 +605,11 @@ def agendaposter(user_id, v):
 
 	user.refresh_selfset_badges()
 
+	g.db.flush()
+
+	if user.agendaposter: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been marked by an admin (@{v.username}) as an agendaposter ({note})")
+	else: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been unmarked by an admin (@{v.username}) as an agendaposter")
+
 	return (redirect(user.url), user)
 
 @app.post("/shadowban/<user_id>")
