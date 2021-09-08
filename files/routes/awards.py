@@ -6,6 +6,72 @@ from files.helpers.const import *
 from files.classes.award import *
 from flask import g, request
 
+if site_name == "Drama":
+	AWARDS = {
+		"ban": {
+			"kind": "ban",
+			"title": "One-Day Ban",
+			"description": "Ban the author for a day.",
+			"icon": "fas fa-gavel",
+			"color": "text-danger",
+			"price": 5000
+		},
+		"shit": {
+			"kind": "shit",
+			"title": "Shit",
+			"description": "Let OP know how much their post sucks ass. Flies will swarm their idiotic post. (flies only work on posts lol!!)",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"price": 1000
+		},
+		"stars": {
+			"kind": "stars",
+			"title": "Stars",
+			"description": "A positive award because we need a positive award. Puts annoying stars in the post.",
+			"icon": "fas fa-sparkles",
+			"color": "text-warning",
+			"price": 1000
+		}
+	}
+else:
+	AWARDS = {
+		"shit": {
+			"kind": "shit",
+			"title": "shit",
+			"description": "Let OP know how much their post sucks ass. Flies will swarm their idiotic post. (flies only work on posts lol!!)",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"price": 1000
+		},
+		"stars": {
+			"kind": "stars",
+			"title": "Stars",
+			"description": "A positive award because we need a positive award. Puts annoying stars in the post.",
+			"icon": "fas fa-sparkles",
+			"color": "text-warning",
+			"price": 1000
+		}
+	}
+
+@app.get("/shop")
+@auth_required
+def shop(v):
+    return render_template("shop.html", awards=list(AWARDS.values()), v=v)
+
+@app.post("/buy/<award>")
+@auth_required
+def buy(v, award):
+    if award not in AWARDS: abort(400)
+    price = AWARDS[award]["price"]
+    if v.coins < price: return render_template("shop.html", v=v, error="You don't have enough coins to buy this item.")
+    v.coins -= price
+    g.db.add(v)
+
+    award = AwardRelationship(user_id=v.id, kind=award)
+    g.db.add(award)
+
+    return render_template("shop.html", awards=list(AWARDS.values()), v=v)
+
 
 def banaward_trigger(post=None, comment=None):
 

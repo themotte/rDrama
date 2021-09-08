@@ -12,21 +12,24 @@ if site_name == "Drama":
 			"title": "One-Day Ban",
 			"description": "Ban the author for a day.",
 			"icon": "fas fa-gavel",
-			"color": "text-danger"
+			"color": "text-danger",
+			"price": 5000
 		},
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",
 			"description": "Let OP know how much their post sucks ass. Flies will swarm their idiotic post. (flies only work on posts lol!!)",
 			"icon": "fas fa-poop",
-			"color": "text-black-50"
+			"color": "text-black-50",
+			"price": 1000
 		},
 		"stars": {
 			"kind": "stars",
 			"title": "Stars",
 			"description": "A positive award because we need a positive award. Puts annoying stars in the post.",
 			"icon": "fas fa-sparkles",
-			"color": "text-warning"
+			"color": "text-warning",
+			"price": 1000
 		}
 	}
 else:
@@ -36,14 +39,16 @@ else:
 			"title": "shit",
 			"description": "Let OP know how much their post sucks ass. Flies will swarm their idiotic post. (flies only work on posts lol!!)",
 			"icon": "fas fa-poop",
-			"color": "text-black-50"
+			"color": "text-black-50",
+			"price": 1000
 		},
 		"stars": {
 			"kind": "stars",
 			"title": "Stars",
 			"description": "A positive award because we need a positive award. Puts annoying stars in the post.",
 			"icon": "fas fa-sparkles",
-			"color": "text-warning"
+			"color": "text-warning",
+			"price": 1000
 		}
 	}
 
