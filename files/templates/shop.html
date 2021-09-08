@@ -82,7 +82,7 @@
 		<td style="font-weight: bold">{{a['description']}}</td>
 		<td style="font-weight: bold">{{a['price']}}</td>
 		{% set kind = a['kind'] %}
-		<td style="font-weight: bold"><a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}')">Buy</a></td>
+		<td style="font-weight: bold"><a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}', function(){window.location.reload(true);})">Buy</a></td>
 	</tr>
 {% endfor %}
 </table>
