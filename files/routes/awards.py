@@ -72,7 +72,6 @@ def shop(v):
 			award["owned_num"] = row['last_award_count']
 			owned.append(award)
 
-	print(owned)
 	return render_template("shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
 
 @app.post("/buy/<award>")
