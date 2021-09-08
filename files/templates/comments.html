@@ -431,10 +431,11 @@
 
 					<li class="list-group-item"><a href="/votes?link={{c.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
-					{% if v and c.id in v.saved_comment_idlist() %}
-						<li class="list-group-item"><a href="javascript:void(0)" onclick="post_toast('/unsave_comment/{{c.id}}')" data-dismiss="modal"><i class="fas fa-save"></i>Unsave</a></li>
-					{% else %}
-						<li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="post_toast('/save_comment/{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
+					{% if v %}
+						<li id="save2-{{c.id}}" class="{% if c.id not in v.saved_comment_idlist() %}d-none{% endif %} list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
+
+						<li id="unsave2-{{c.id}}" class="{% if c.id in v.saved_comment_idlist() %}d-none{% endif %} list-group-item"><a href="javascript:void(0)" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-save"></i>Unsave</a></li>
+
 					{% endif %}
 
 					<li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=5#context"><i class="fas fa-copy"></i><span>Copy link</span></a></li>
@@ -444,21 +445,16 @@
 					<li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')" class="d-block"><i class="fas fa-flag"></i>Report</a></li>
 
 					{% if v and c.parent_submission and c.author_id==v.id %}
-					<li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{c.id}}')" class="d-block"><i class="fas fa-edit"></i>Edit</a></li>
+						<li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{c.id}}')" class="d-block"><i class="fas fa-edit"></i>Edit</a></li>
 
+						<li id="delete2-{{c.id}}" class="list-group-item"><a class="{% if c.deleted_utc %}d-none{% endif %}" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal2('{{c.id}}','delete2-{{c.id}}','undelete2-{{c.id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
 
-					{% if c.deleted_utc > 0 %}
-						<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="post_toast('/undelete/comment/{{c.id}}')" data-dismiss="modal"><i class="fas fa-trash-alt"></i>Undelete</a></li>
-					{% else %}
-						<li class="list-group-item"><a class="d-block" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
+						<li id="undelete2-{{c.id}}" class="list-group-item"><a class="{% if not c.deleted_utc %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/undelete/comment/{{c.id}}','delete2-{{c.id}}','undelete2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-trash-alt"></i>Undelete</a></li>
 					{% endif %}
 
-
-				{% endif %}
-
 					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
-						<li class="list-group-item"><a class="d-block text-info" id="pin-comment-{{c.id}}" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post_toast('/comment_pin/{{c.id}}')" data-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>{{'Unpin' if c.is_pinned else 'Pin'}}</a>
-						</li>
+						<li id="pin2-{{c.id}}" class="list-group-item"><a class="{% if c.is_pinned %}d-none{% endif %} text-info" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post_toast2('/comment_pin/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a></li>
+						<li id="unpin2-{{c.id}}" class="list-group-item"><a class="{% if c.is_pinned %}d-none{% endif %} text-info" href="javascript:void(0)" data-dismiss="modal" data-target="#actionsModal-{{c.id}}" onclick="post_toast2('/comment_pin/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a></li>
 					{% endif %}
 
 					{% if v %}
@@ -474,23 +470,20 @@
 							{% endif %}
 
 							{% if not v.id==c.author_id and v.admin_level == 0 %}
-								<li class="list-group-item">
-									<a class="d-block" href="javascript:void(0)" onclick="post_toast('/settings/block?username={{c.author.username}}')" data-dismiss="modal"><i class="fas fa-eye-slash"></i>Block user</a>
-								</li>
+								<li id="block2-{{c.id}}" class="list-group-item {% if c.is_blocked %}d-none{% endif %}"><a class="d-block" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{c.author.username}}','block2-{{c.id}}','unblock2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-eye-slash"></i>Block user</a></li>
+								<li id="unblock2-{{c.id}}" class="list-group-item {% if not c.is_blocked %}d-none{% endif %}"><a class="d-block" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{c.author.username}}','block2-{{c.id}}','unblock2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-eye-slash"></i>Unblock user</a></li>
 							{% endif %}
 					{% endif %}
 
 					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
-						<li class="list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="post_toast('/toggle_comment_nsfw/{{c.id}}')" data-dismiss="modal"><i class="fas fa-eye-evil text-danger"></i>Toggle +18</a></li>
+						<li id="mark2-{{c.id}}" class="{% if c.over_18 %}d-none{% endif %} list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="post_toast2('/toggle_comment_nsfw/{{c.id}}','mark2-{{c.id}}','unmark2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-eye-evil text-danger"></i>Mark +18</a></li>
+						<li id="unmark2-{{c.id}}" class="{% if not c.over_18 %}d-none{% endif %} list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="post_toast2('/toggle_comment_nsfw/{{c.id}}','mark2-{{c.id}}','unmark2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-eye-evil text-danger"></i>Unmark +18</a></li>
 					{% endif %}
 
 					{% if v and (c.post and v.admin_level == 6) %}
 						{% if c.author_id != v.id %}
-								{% if c.author.is_suspended %}
-								<li class="list-group-item"><a class="text-success d-block" id="unexile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/unban_user/{{c.author_id}}')" data-dismiss="modal"><i class="fas fa-user-minus fa-fw text-success"></i>Unban user</a></li>
-								{% else %}
-								<li class="list-group-item"><a class="text-danger d-block" id="exile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast('/ban_user/{{c.author_id}}')" data-dismiss="modal"><i class="fas fa-user-minus fa-fw text-danger"></i>Ban user</a></li>
-								{% endif %}
+							<li id="ban2-{{c.id}}" class="{% if c.author.is_suspended %}d-none{% endif %} list-group-item"><a class="text-danger d-block" id="exile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast2('/ban_user/{{c.author_id}}','ban2-{{c.id}}','unban2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-user-minus fa-fw text-danger"></i>Ban user</a></li>
+							<li id="unban2-{{c.id}}" class="{% if not c.author.is_suspended %}d-none{% endif %} list-group-item"><a class="text-success d-block" id="unexile-comment2-{{c.id}}" href="javascript:void(0)" onclick="post_toast2('/unban_user/{{c.author_id}}','ban2-{{c.id}}','unban2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-user-minus fa-fw text-success"></i>Unban user</a></li>
 						{% endif %}
 					{% endif %}	
 
