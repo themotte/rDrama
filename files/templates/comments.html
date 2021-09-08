@@ -322,7 +322,7 @@
 								<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a></li>
 							{% else %}
 								<li id="approve-{{c.id}}" class="list-inline-item text-muted d-none {% if c.is_banned %}d-md-inline-block{% endif %}"><a class="text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a></li>
-								<li id="remove-{{c.id}}" class="list-inline-item text-muted d-none {% if not c.is_banned %}d-md-inline-block{% endif %}"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a></li>
+								<li id="remove-{{c.id}}" class="list-inline-item text-muted d-none {% if not c.is_banned %}d-md-inline-block{% endif %}"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a></li>
 							{% endif %}
 						{% endif %}
 
