@@ -804,10 +804,10 @@ def unban_user(user_id, v):
 		)
 	g.db.add(ma)
 
-	if 'reason' in request.args:
-		return {"message": f"@{user.username} was unbanned!"}
-	else:
+	if "@" in request.referrer:
 		return redirect(user.url)
+	else:
+		return {"message": f"@{user.username} was unbanned!"}
 
 @app.post("/ban_post/<post_id>")
 @admin_level_required(3)
