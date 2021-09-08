@@ -219,7 +219,7 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized):
 		emoji = i.group(1).lower()
-        if path.isfile(f'./files/assets/images/emojis/{emoji}.gif'):
+		if path.isfile(f'./files/assets/images/emojis/{emoji}.gif'):
 			sanitized = sanitized.replace(f'<p>:{emoji}:</p>', f'<p><img loading="lazy" data-toggle="tooltip" title="{emoji}" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.gif"</p>')
 
 			try:
@@ -230,7 +230,7 @@ def sanitize(sanitized, noimages=False):
 
 	for i in re.finditer(':([^ ]{1,30}?):', sanitized):
 		emoji = i.group(1).lower()
-        if path.isfile(f'./files/assets/images/emojis/{emoji}.gif'):
+		if path.isfile(f'./files/assets/images/emojis/{emoji}.gif'):
 			sanitized = sanitized.replace(f':{emoji}:', f'<img loading="lazy" data-toggle="tooltip" title="{emoji}" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.gif"<span>')
 
 			try:
