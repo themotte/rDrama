@@ -179,8 +179,13 @@
 						{% if v %}
 
 							{% if v.admin_level >=3 %}
-								<li id="remove-{{p.id}}" class="{% if p.is_banned %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/ban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-ban"></i>Remove</a></li>
-								<li id="approve-{{p.id}}" class="{% if not p.is_banned %}d-none{% endif %} list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post_toast2('/unban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-check"></i>Approve</a></li>
+								{% if "/flagged/" in request.path %}
+									<li class="list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast('/ban_post/{{p.id}}')"><i class="fas fa-ban"></i>Remove</a></li>
+									<li class="list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post_toast('/unban_post/{{p.id}}')"><i class="fas fa-check"></i>Approve</a></li>
+								{% else %}
+									<li id="remove-{{p.id}}" class="{% if p.is_banned %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/ban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-ban"></i>Remove</a></li>
+									<li id="approve-{{p.id}}" class="{% if not p.is_banned %}d-none{% endif %} list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post_toast2('/unban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-check"></i>Approve</a></li>
+								{% endif %}
 							{% endif %}
 
 
