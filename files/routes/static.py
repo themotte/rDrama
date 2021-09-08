@@ -114,7 +114,7 @@ def log_item(id, v):
 
 @app.route("/sex")
 def index():
-    return render_template("index.html", **{"greeting": "Hello from Flask!"})
+	return render_template("index.html", **{"greeting": "Hello from Flask!"})
 
 @app.get("/assets/favicon.ico")
 def favicon():

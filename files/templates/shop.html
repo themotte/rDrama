@@ -33,6 +33,32 @@
 
 <pre></pre>
 <pre></pre>
+<h5>Owned</h5>
+
+<table class="table table-striped">
+<thead class="bg-primary text-white">
+		<tr>
+			<th scope="col">Icon</th>
+			<th scope="col">Title</th>
+			<th scope="col">Number</th>
+		</tr>
+	</thead>
+	<tbody>
+{% for a in awards %}
+	<tr>
+		<td><i class="{{a['icon']}} {{a['color']}}" style="font-size: 30px"></i></td>
+		<td style="font-weight: bold">{{a['title']}}</td>
+		<td style="font-weight: bold">{{a['price']}}</td>
+		{% set kind = a['kind'] %}
+	</tr>
+{% endfor %}
+</table>
+
+<pre>
+
+
+</pre>
+
 <h5>Shop</h5>
 
 <table class="table table-striped">

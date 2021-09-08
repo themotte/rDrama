@@ -757,7 +757,7 @@ def ban_user(user_id, v):
 		kind="exile_user",
 		user_id=v.id,
 		target_user_id=user.id,
-        note=f'reason: "{reason}", duration: {duration}'
+		note=f'reason: "{reason}", duration: {duration}'
 		)
 	g.db.add(ma)
 
