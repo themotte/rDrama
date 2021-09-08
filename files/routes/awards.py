@@ -68,10 +68,11 @@ def shop(v):
 	for row in (r._asdict() for r in query):
 		kind = row['last_award_kind']
 		if kind in AWARDS.keys():
-			owned.append((AWARDS[kind], row['last_award_count']))
+			award = AWARDS[kind]
+			award["owned_num"] = row['last_award_count']
 
 	print(owned)
-	return render_template("shop.html", owned=owned.values(), awards=list(AWARDS.values()), v=v)
+	return render_template("shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
 
 @app.post("/buy/<award>")
 @auth_required
