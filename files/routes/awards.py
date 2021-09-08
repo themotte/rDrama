@@ -74,7 +74,7 @@ def buy(v, award):
     g.db.commit()
     print(award)
 
-    return render_template("shop.html", awards=list(AWARDS.values()), v=v)
+    return "", 204
 
 
 def banaward_trigger(post=None, comment=None):
