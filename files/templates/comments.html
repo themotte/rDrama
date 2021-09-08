@@ -231,18 +231,16 @@
 
 						{% if v and request.path.startswith('/@') and v.admin_level == 0%}
 						
-						{% if voted==1 %}
-						<li class="list-inline-item arrow-up d-none d-md-inline-block mr-2 comment-{{c.id}}-up active"></li>
-						{% endif %}
+							{% if voted==1 %}
+							<li class="list-inline-item arrow-up d-none d-md-inline-block mr-2 comment-{{c.id}}-up active"></li>
+							{% endif %}
 						
 						{% elif v %}
 
-						<li id="comment-{{c.id}}-up" tabindex="0" class="list-inline-item arrow-up upvote-button d-none d-md-inline-block mr-2 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}" data-id-up="{{c.id}}" data-content-type="comment">
-						</li>
+							<li id="comment-{{c.id}}-up" tabindex="0" class="list-inline-item arrow-up upvote-button d-none d-md-inline-block mr-2 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}" data-id-up="{{c.id}}" data-content-type="comment"></li>
 
 						{% else %}
-						<li id="comment-{{c.id}}-up" tabindex="0" class="list-inline-item arrow-up d-none d-md-inline-block mr-2" onclick="location.href='/login';">
-						</li>
+							<li id="comment-{{c.id}}-up" tabindex="0" class="list-inline-item arrow-up d-none d-md-inline-block mr-2" onclick="location.href='/login';"></li>
 
 						{% endif %}
 
@@ -252,18 +250,16 @@
 
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
 						
-						{% if voted==-1 %}
-						<li class="list-inline-item arrow-down d-none d-md-inline-block mr-2 comment-{{c.id}}-down active"></li>
-						{% endif %}
+							{% if voted==-1 %}
+							<li class="list-inline-item arrow-down d-none d-md-inline-block mr-2 comment-{{c.id}}-down active"></li>
+							{% endif %}
 						
 						{% elif v %}
-						<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" class="list-inline-item arrow-down downvote-button d-none d-md-inline-block mr-2 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}" data-id-down="{{c.id}}" data-content-type="comment">
-						</li>
+							<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" class="list-inline-item arrow-down downvote-button d-none d-md-inline-block mr-2 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}" data-id-down="{{c.id}}" data-content-type="comment"></li>
 
 						{% else %}
 
-						<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" class="list-inline-item arrow-down d-none d-md-inline-block" onclick="location.href='/login';">
-						</li>
+							<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" class="list-inline-item arrow-down d-none d-md-inline-block" onclick="location.href='/login';"></li>
 
 						{% endif %}
 
@@ -271,18 +267,18 @@
 
 						{% if v %}
 							<li id="save-{{c.id}}" class="{% if not c in v.saved_comment_idlist() %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" onclick="post_toast3('/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
-							<li id="unsave-{{c.id}}" class="{% if c in v.saved_comment_idlist() %} d-md-inline-block{% endif %} list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</a></li>
+							<li id="unsave-{{c.id}}" class="{% if c in v.saved_comment_idlist() %}d-md-inline-block{% endif %} list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</a></li>
 						{% endif %}
 
 						{% if v %}
-						<li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.remove('d-none')"><i class="fas fa-reply" aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a></li>
+							<li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.remove('d-none')"><i class="fas fa-reply" aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a></li>
 
-						{% if v.id!=c.author_id %}
-						<li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift"
-							aria-hidden="true"></i><span class="d-none d-md-inline-block">Give Award</span></a></li>
+							{% if v.id!=c.author_id %}
+							<li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift"
+								aria-hidden="true"></i><span class="d-none d-md-inline-block">Give Award</span></a></li>
+							{% endif %}
 						{% endif %}
 
-						{% endif %}
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a {% if v %}href="{{c.permalink}}?context=5#context"{% else %}href="/logged_out{{c.permalink}}?context=5#context"{% endif %}><i class="fas fa-book-open"></i>Context</a></li>
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}/?context=5#context"><i class="fas fa-copy"></i>Copy link</a></li>
 						
