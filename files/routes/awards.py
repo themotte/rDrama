@@ -79,8 +79,7 @@ def shop(v):
 def buy(v, award):
 	if award not in AWARDS: abort(400)
 	price = AWARDS[award]["price"]
-	print(price)
-	if v.coins < price: return render_template("shop.html", v=v, error="You don't have enough coins to buy this item.")
+	if v.coins < price: return {"error": "Not enough coins!"}, 400
 	v.coins -= price
 	g.db.add(v)
 
@@ -90,7 +89,7 @@ def buy(v, award):
 	award = AwardRelationship(id=thing, user_id=v.id, kind=award)
 	g.db.add(award)
 
-	return "", 204
+	return {"message": "Award bought!"}
 
 
 def banaward_trigger(post=None, comment=None):
@@ -195,7 +194,7 @@ def award_post(pid, v):
 	post.author.received_award_count += 1
 	g.db.add(post.author)
 
-	return "", 204
+	return {"message": "Award given!"}
 
 
 @app.put("/comment/<cid>/awards")
@@ -259,7 +258,7 @@ def award_comment(cid, v):
 	c.author.received_award_count += 1
 	g.db.add(c.author)
 
-	return "", 204
+	return {"message": "Award given!"}
 
 @app.get("/admin/user_award")
 @auth_required

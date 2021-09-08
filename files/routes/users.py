@@ -167,7 +167,7 @@ def get_profilecss(username):
 @app.get("/songs/<id>")
 def songs(id):
 	try: id = int(id)
-	except: return '', 400
+	except: return "", 400
 	user = g.db.query(User).filter_by(id=id).first()
 	return redirect(f"/song/{user.song}.mp3")
 

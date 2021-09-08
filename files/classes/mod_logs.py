@@ -76,7 +76,7 @@ class ModAction(Base, Stndrd, Age_times):
 			return f'<a href="{self.target_comment.permalink}">comment</a>'
 
 		else:
-			return ''
+			return ""
 
 	@property
 	def json(self):

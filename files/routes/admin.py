@@ -29,7 +29,7 @@ def make_admin(v, username):
 	if not user: abort(404)
 	user.admin_level = 6
 	g.db.add(user)
-	return "", 204
+	return {"message": "User has been made admin!"}
 
 
 @app.post("/@<username>/make_fake_admin")
@@ -39,7 +39,7 @@ def make_fake_admin(v, username):
 	if not user: abort(404)
 	user.admin_level = 1
 	g.db.add(user)
-	return "", 204
+	return {"message": "User has been made fake admin!"}
 
 
 @app.post("/@<username>/remove_admin")
@@ -49,7 +49,7 @@ def remove_admin(v, username):
 	if not user: abort(404)
 	user.admin_level = 0
 	g.db.add(user)
-	return "", 204
+	return {"message": "Admin removed!"}
 
 
 @app.get("/admin/shadowbanned")
@@ -197,11 +197,12 @@ def monthly(v):
 @validate_formkey
 def disablesignups(v):
 	with open('./disablesignups', 'r+') as f:
-		if f.read() == "yes": f.write("no")
-		else: f.write("yes")
-
-	return "", 204
-
+		if f.read() == "yes":
+			f.write("no")
+			return {"message": "Signups enabed!"}
+		else:
+			f.write("yes")
+			return {"message": "Signups disabled!"}
 
 @app.get("/admin/badge_grant")
 @admin_level_required(4)
@@ -633,7 +634,7 @@ def shadowban(user_id, v):
 	
 	cache.delete_memoized(frontlist)
 
-	return "", 204
+	return {"message": "User shadowbanned!"}
 
 
 @app.post("/unshadowban/<user_id>")
@@ -657,7 +658,7 @@ def unshadowban(user_id, v):
 	
 	cache.delete_memoized(frontlist)
 
-	return "", 204
+	return {"message": "User unshadowbanned!"}
 
 @app.post("/admin/verify/<user_id>")
 @admin_level_required(6)
@@ -666,7 +667,7 @@ def verify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
 	user.verified = "Verified"
 	g.db.add(user)
-	return "", 204
+	return {"message": "User verfied!"}
 
 @app.post("/admin/unverify/<user_id>")
 @admin_level_required(6)
@@ -675,7 +676,7 @@ def unverify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
 	user.verified = None
 	g.db.add(user)
-	return "", 204
+	return {"message": "User unverified!"}
 
 
 @app.post("/admin/title_change/<user_id>")
@@ -844,7 +845,7 @@ def ban_post(post_id, v):
 
 	cache.delete_memoized(frontlist)
 
-	return "", 204
+	return {"message": "Post removed!"}
 
 
 @app.post("/unban_post/<post_id>")
@@ -872,7 +873,7 @@ def unban_post(post_id, v):
 
 	cache.delete_memoized(frontlist)
 
-	return "", 204
+	return {"message": "Post approved!"}
 
 
 @app.post("/distinguish/<post_id>")
@@ -895,7 +896,7 @@ def api_distinguish_post(post_id, v):
 
 	g.db.add(post)
 
-	return "", 204
+	return {"message": "Post distinguished!"}
 
 
 @app.post("/sticky/<post_id>")
@@ -916,7 +917,9 @@ def api_sticky_post(post_id, v):
 
 		cache.delete_memoized(frontlist)
 
-	return "", 204
+		g.db.flush()
+		if post.stickied: return {"message": "Post pinned!"}
+		else: return {"message": "Post unpinned!"}
 
 @app.post("/pin/<post_id>")
 @auth_required
@@ -926,8 +929,10 @@ def api_pin_post(post_id, v):
 	if post:
 		post.is_pinned = not (post.is_pinned)
 		g.db.add(post)
+		g.db.flush()
 
-	return "", 204
+		if post.is_pinned: return {"message": "Post pinned!"}
+		else: return {"message": "Post unpinned!"}
 
 @app.post("/ban_comment/<c_id>")
 @admin_level_required(1)
@@ -947,7 +952,7 @@ def api_ban_comment(c_id, v):
 		target_comment_id=comment.id,
 		)
 	g.db.add(ma)
-	return "", 204
+	return {"message": "Comment removed!"}
 
 
 @app.post("/unban_comment/<c_id>")
@@ -971,7 +976,7 @@ def api_unban_comment(c_id, v):
 	comment.is_approved = v.id
 
 
-	return "", 204
+	return {"message": "Comment approved!"}
 
 
 @app.post("/distinguish_comment/<c_id>")

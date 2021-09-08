@@ -828,7 +828,7 @@ def delete_comment(cid, v):
 	cache.delete_memoized(comment_idlist)
 	cache.delete_memoized(User.commentlisting, v)
 
-	return "", 204
+	return {"message": "Comment deleted!"}
 
 @app.post("/undelete/comment/<cid>")
 @auth_required
@@ -850,7 +850,7 @@ def undelete_comment(cid, v):
 	cache.delete_memoized(comment_idlist)
 	cache.delete_memoized(User.commentlisting, v)
 
-	return "", 204
+	return {"message": "Comment undeleted!"}
 
 
 @app.post("/comment_pin/<cid>")
