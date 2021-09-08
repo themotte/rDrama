@@ -72,6 +72,14 @@ def shop(v):
 			award["owned_num"] = row['last_award_count']
 			owned.append(award)
 
+	if v.patron:
+		for k, v in AWARDS:
+			if v.patron == 1: AWARDS[k]["price"] = AWARDS[k]["price"]*0.90
+			elif v.patron == 2: AWARDS[k]["price"] = AWARDS[k]["price"]*0.85
+			elif v.patron == 3: AWARDS[k]["price"] = AWARDS[k]["price"]*0.80
+			elif v.patron == 4: AWARDS[k]["price"] = AWARDS[k]["price"]*0.75
+			else: AWARDS[k]["price"] = AWARDS[k]["price"]*0.70
+		
 	return render_template("shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
 
 @app.post("/buy/<award>")
