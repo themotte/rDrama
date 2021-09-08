@@ -71,6 +71,7 @@ def buy(v, award):
     award = AwardRelationship(user_id=v.id, kind=award)
     g.db.add(award)
 
+    g.db.commit()
     print(award)
 
     return render_template("shop.html", awards=list(AWARDS.values()), v=v)
