@@ -72,17 +72,16 @@ def shop(v):
 			award["owned_num"] = row['last_award_count']
 			owned.append(award)
 
-	awards = []
+	awards = AWARDS.values()
 	if v.patron:
-		for val in AWARDS.values():
+		for val in awards.values():
 			if v.patron == 1: val["price"] = int(val["price"]*0.90)
 			elif v.patron == 2: val["price"] = int(val["price"]*0.85)
 			elif v.patron == 3: val["price"] = int(val["price"]*0.80)
 			elif v.patron == 4: val["price"] = int(val["price"]*0.75)
 			else: val["price"] = int(val["price"]*0.70)
-			awards.append(val)
 
-	return render_template("shop.html", owned=owned, awards=awards, v=v)
+	return render_template("shop.html", owned=owned, awards=list(awards), v=v)
 
 @app.post("/buy/<award>")
 @auth_required
