@@ -64,13 +64,13 @@ def shop(v):
 	.order_by(User.patron.desc(), AwardRelationship.kind.desc()) \
 	.join(User).filter(User.id == v.id).all()
 
-	owned = {}
+	owned = []
 	for row in (r._asdict() for r in query):
 		kind = row['last_award_kind']
 		if kind in AWARDS.keys():
-			owned[kind] = (AWARDS[kind], row['last_award_count'])
+			owned.append((AWARDS[kind], row['last_award_count']))
 
-	print(owned.values())
+	print(owned)
 	return render_template("shop.html", owned=owned.values(), awards=list(AWARDS.values()), v=v)
 
 @app.post("/buy/<award>")
