@@ -449,7 +449,6 @@ class User(Base, Stndrd, Age_times):
 		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).first()
 
 	@property
-	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
 		else: return f"https://{site}/assets/images/{site_name}/preview.gif"
