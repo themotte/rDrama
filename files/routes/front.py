@@ -121,7 +121,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 			cutoff = now - 31536000
 		posts = posts.filter(Submission.created_utc >= cutoff)
 
-	posts = posts.filter_by(is_banned=False,stickied=False,private=False,deleted_utc = 0)
+	posts = posts.filter_by(is_banned=False,stickied=False,private=False).filter(Submission.deleted_utc == 0)
 
 	if v:
 		posts = posts.filter(or_(Submission.processing == False, Submission.author_id == v.id))
