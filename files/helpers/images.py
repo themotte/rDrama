@@ -65,7 +65,7 @@ def upload_imgur(file, resize=False):
 		om.info = i.info
 		try: om.save(f"image.{om.filename.split('.')[-1]}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except Exception as e:
-			print(om.filename)
+			#print(om.filename)
 			print(type(om))
 			print(om.format)
 			print(e)
