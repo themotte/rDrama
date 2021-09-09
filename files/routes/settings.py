@@ -499,6 +499,7 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 	print(file.filename)
+	print(file.filename.split('.')[-1])
 	file.save(f"image.{file.filename.split('.')[-1]}")
 	if 'pcmemes.net' in request.host: highres = upload_ibb(f"image.{file.filename.split('.')[-1]}")
 	else: highres = upload_imgur(f"image.{file.filename.split('.')[-1]}")
