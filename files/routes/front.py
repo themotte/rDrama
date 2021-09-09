@@ -157,10 +157,10 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	if lt:
 		posts = posts.filter(Submission.created_utc < lt)
 
-	if v:
-		posts = posts.join(Submission.author).filter(or_(User.shadowbanned==False, Submission.author_id==v.id))
-	else:
-		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
+	#if v:
+	#	posts = posts.join(Submission.author).filter(or_(User.shadowbanned==False, Submission.author_id==v.id))
+	#else:
+	#	posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
 	if sort == "hot":
 		posts = sorted(posts.all(), key=lambda x: x.hotscore, reverse=True)
