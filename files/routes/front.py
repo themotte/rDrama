@@ -162,8 +162,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	else:
 		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
-	print('fartbinn' in [x.author.username for x in posts])
-
 	if sort == "hot":
 		posts = sorted(posts.all(), key=lambda x: x.hotscore, reverse=True)
 	elif sort == "new":
@@ -183,6 +181,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = random.sample(posts, k=len(posts))
 	else:
 		abort(400)
+
+	print('fartbinn' in [x.author.username for x in posts])
 
 	firstrange = 50 * (page - 1)
 	secondrange = firstrange+51
