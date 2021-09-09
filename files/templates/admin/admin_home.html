@@ -8,24 +8,38 @@
 {% block content %}
 <pre></pre>
 <pre></pre>
-<h4>&nbsp;Admin Tools</h4>
+<h3>&nbsp;Admin Tools</h3>
 {% filter markdown %}
-* [Grant User Award](/admin/user_award)
-* [Advanced Stats](/admin/user_stat_data)
-* [Banned Domains](/admin/banned_domains)
-* [Shadowbanned Users](/admin/shadowbanned)
-* [Users with Agendaposter Theme](/admin/agendaposters)
+#### Content
 * [Flagged Posts](/admin/flagged/posts)
 * [Flagged Comments](/admin/flagged/comments)
 * [Image Posts](/admin/image_posts)
 * [Removed Posts](/admin/removed)
+
+#### Users
+* [Shadowbanned Users](/admin/shadowbanned)
+* [Users with Agendaposter Theme](/admin/agendaposters)
 * [Users Feed](/admin/users)
+
+#### Safety
+* [Banned Domains](/admin/banned_domains)
 * [Remove image from imgur and from cloudflare cache](/admin/image_purge)
 * [Perceptive Hash Image Ban](/admin/image_ban)
 * [Multi Vote Analysis](/admin/alt_votes)
-* [Apps](/admin/apps)
+
+#### Grant
+* [Give User Award](/admin/user_award)
 * [Badges](/admin/badge_grant)
-* [Content Stats](/admin/content_stats)
+
+#### API Access Control
+* [Apps](/admin/apps)
+
+#### Statistics
+* [Content Stats](/stats)
+* [Advanced Stats](/admin/user_stat_data)
+
+#### Configuration
+* [Site Rules](/admin/rules)
 
 {% endfilter %}
 

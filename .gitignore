@@ -115,3 +115,4 @@ local.txt
 *.scssc
 .idea/*
 disablesignups
+/rules.md

@@ -117,8 +117,8 @@
 
 								{% if "rdrama" in request.host %}
 									<a class="dropdown-item" href="/post/2510/posting-guidelines-policies-legal-shit"><i class="fas fa-balance-scale fa-fw text-left mr-3"></i>Rules</a>
-								{% elif "pcm" in request.host %}
-									<a class="dropdown-item" href="/post/94/hi-welcome-to-pcmemesnet-im-your"><i class="fas fa-balance-scale fa-fw text-left mr-3"></i>Rules</a>
+								{% else %}
+									<a class="dropdown-item" href="/rules"><i class="fas fa-balance-scale fa-fw text-left mr-3"></i>Rules</a>
 								{% endif %}
 
 								<a class="dropdown-item" href="/changelog"><i class="fas fa-clipboard fa-fw text-left mr-3"></i>Changelog</a>
@@ -179,8 +179,8 @@
 
 			{% if "rdrama" in request.host %}
 				<li class="nav-item"><a class="nav-link" href="/post/2510/posting-guidelines-policies-legal-shit"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
-			{% elif "pcm" in request.host %}
-				<li class="nav-item"><a class="nav-link" href="/post/94/hi-welcome-to-pcmemesnet-im-your"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
+			{% else %}
+				<li class="nav-item"><a class="nav-link" href="/rules"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
 			{% endif %}
 
 			<li class="nav-item"><a class="nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a></li>
