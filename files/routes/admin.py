@@ -233,9 +233,8 @@ def badge_grant_post(v):
 	user = get_user(request.form.get("username"), graceful=True)
 	if not user: return redirect("/badge_grant?error=no_user")
 
-	badge_id = int(request.form.get("badge_id"))
-
-	badge = g.db.query(BadgeDef).filter_by(id=badge_id).first()
+	try: badge_id = int(request.form.get("badge_id"))
+	except: abort(400)
 
 	if user.has_badge(badge_id):
 		g.db.query(Badge).filter_by(badge_id=badge_id, user_id=user.id,).delete()
