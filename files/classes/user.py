@@ -17,6 +17,7 @@ from files.__main__ import Base, cache
 from files.helpers.security import *
 
 site = environ.get("DOMAIN").strip()
+site_name = environ.get("SITE_NAME").strip()
 defaulttheme = environ.get("DEFAULT_THEME", "light").strip()
 defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
@@ -447,6 +448,11 @@ class User(Base, Stndrd, Age_times):
 
 		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).first()
 
+	@property
+	@lazy
+	def banner_url(self):
+		if self.bannerurl: return self.bannerurl
+		else: return f"https://{site}/assets/images/{site_name}/preview.gif"
 
 	@cache.memoize(timeout=86400)
 	def defaultpicture(self):
