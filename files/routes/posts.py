@@ -918,7 +918,7 @@ def submit_post(v):
 						), 400
 		else:
 			if file.content_type.startswith('image/'):
-				file.save(f"image.{file.format}", optimize=True, quality=30)
+				file.save(f"image.{file.filename.split('.')[-1]}")
 				new_post.url = upload_imgur(f"image.{file.format}")
 			else:
 				try:
