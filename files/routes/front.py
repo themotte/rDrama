@@ -242,15 +242,13 @@ def front_all(v):
 	ids, next_exists = frontlist(sort=sort,
 					page=page,
 					t=t,
-					ids_only=False,
 					v=v,
 					gt=int(request.args.get("utc_greater_than", 0)),
 					lt=int(request.args.get("utc_less_than", 0)),
 					filter_words=v.filter_words if v else [],
 					)
 
-	#posts = get_posts(ids, v=v)
-	posts=ids
+	posts = get_posts(ids, v=v)
 
 	if v and v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
 
