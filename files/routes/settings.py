@@ -527,10 +527,15 @@ def settings_images_banner(v):
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
 	file = request.files["banner"]
-	file.save(f"image.{file.filename.split('.')[-1]}", optimize=True, quality=30)
+	#file.save(f"image.{file.filename.split('.')[-1]}", optimize=True, quality=30)
 
-	if 'pcmemes.net' in request.host: imageurl = upload_ibb(f"image.{file.format}")
-	else: imageurl = upload_imgur(f"image.{file.format}")
+	#if 'pcmemes.net' in request.host: imageurl = upload_ibb(f"image.{file.format}")
+	#else: imageurl = upload_imgur(f"image.{file.format}")
+
+	if 'pcmemes.net' in request.host:
+		imageurl = upload_ibb(file)
+	else:
+		imageurl = upload_imgur(file)
 
 	if imageurl:
 		v.bannerurl = imageurl
