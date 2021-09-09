@@ -535,11 +535,11 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	def is_blocking(self):
-		return self.__dict__.get('_is_blocking', 0)
+		return self.__dict__.get('is_blocking', 0)
 
 	@property
 	def is_blocked(self):
-		return self.__dict__.get('_is_blocked', 0)
+		return self.__dict__.get('is_blocked', 0)
 
 	def refresh_selfset_badges(self):
 

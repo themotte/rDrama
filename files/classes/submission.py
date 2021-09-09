@@ -386,11 +386,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	
 	@property
 	def is_blocked(self):
-		return self.__dict__.get('_is_blocked', False)
+		return self.__dict__.get('is_blocked', False)
 
 	@property
 	def is_blocking(self):
-		return self.__dict__.get('_is_blocking', False)
+		return self.__dict__.get('is_blocking', False)
 
 	#@property
 	#def award_count(self):

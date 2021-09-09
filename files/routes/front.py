@@ -67,8 +67,8 @@ def notifications(v):
 
 	listing = []
 	for c in comments:
-		c._is_blocked = False
-		c._is_blocking = False
+		c.is_blocked = False
+		c.is_blocking = False
 		if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
 			c.replies = []
 			while c.parent_comment and c.parent_comment.author_id == v.id:
