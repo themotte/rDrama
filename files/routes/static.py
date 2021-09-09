@@ -3,9 +3,27 @@ from files.__main__ import app, limiter
 from files.helpers.alerts import *
 from files.classes.award import AWARDS
 from sqlalchemy import func
+from os import path
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
+
+
+@app.get('/rules')
+@auth_desired
+def static_rules(v):
+
+	if not path.exists('./rules.md'):
+		if v and v.admin_level == 6:
+			return render_template('norules.html', v=v)
+		else:
+			abort(404)
+
+	with open('./rules.md', 'r') as f:
+		rules = f.read()
+
+	return render_template('rules.html', rules=rules, v=v)
+
 
 @app.get("/stats")
 @auth_desired

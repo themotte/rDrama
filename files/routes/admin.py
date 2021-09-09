@@ -3,6 +3,7 @@ import calendar
 from sqlalchemy.orm import lazyload
 import imagehash
 from os import remove
+from os.path import exists
 from PIL import Image as IMAGE
 
 from files.helpers.wrappers import *
@@ -50,6 +51,35 @@ def remove_admin(v, username):
 	user.admin_level = 0
 	g.db.add(user)
 	return {"message": "Admin removed!"}
+
+
+@app.get('/admin/rules')
+@admin_level_required(6)
+def get_rules(v):
+
+	try:
+		with open('./rules.md', 'r') as f:
+			rules = f.read()
+	except Exception:
+		rules = None
+
+	return render_template('admin/rules.html', v=v, rules=rules)
+
+
+@app.post('/admin/rules')
+@admin_level_required(6)
+@validate_formkey
+def post_rules(v):
+
+	text = request.form.get('rules', '')
+
+	with open('./rules.md', 'w+') as f:
+		f.write(text)
+
+	with open('./rules.md', 'r') as f:
+		rules = f.read()
+
+	return render_template('admin/rules.html', v=v, rules=rules)
 
 
 @app.get("/admin/shadowbanned")
