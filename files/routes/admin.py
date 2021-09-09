@@ -1052,7 +1052,7 @@ def admin_banned_domains(v):
 @validate_formkey
 def admin_toggle_ban_domain(v):
 
-	domain=request.form.get("DOMAIN").strip()
+	domain=request.form.get("domain", "").strip()
 	if not domain: abort(400)
 
 	reason=request.form.get("reason", "").strip()
