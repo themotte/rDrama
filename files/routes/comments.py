@@ -117,8 +117,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			comment = c[0]
 			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
 			comment.voted = c[1] or 0
-			comment.is_blocking = c[2] or 0
-			comment.is_blocked = c[3] or 0
+			comment._is_blocking = c[2] or 0
+			comment._is_blocked = c[3] or 0
 
 	if request.headers.get("Authorization"): return top_comment.json
 	else: return post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info)

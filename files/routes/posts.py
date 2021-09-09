@@ -136,8 +136,8 @@ def post_id(pid, anything=None, v=None):
 			comment = c[0]
 			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
 			comment.voted = c[1] or 0
-			comment.is_blocking = c[2] or 0
-			comment.is_blocked = c[3] or 0
+			comment._is_blocking = c[2] or 0
+			comment._is_blocked = c[3] or 0
 			output.append(comment)
 
 		post.preloaded_comments = output
