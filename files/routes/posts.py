@@ -919,7 +919,7 @@ def submit_post(v):
 		else:
 			if file.content_type.startswith('image/'):
 				file.save(f"image.{file.filename.split('.')[-1]}")
-				new_post.url = upload_imgur(f"image.{file.format}")
+				new_post.url = upload_imgur(f"image.{file.filename.split('.')[-1]}")
 			else:
 				try:
 					post_url = upload_video(file)
