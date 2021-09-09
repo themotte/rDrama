@@ -182,7 +182,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	else:
 		abort(400)
 
-	print('fartbinn' in [x.author.username for x in posts])
+	#print('fartbinn' in [x.author.username for x in posts])
 
 	firstrange = 50 * (page - 1)
 	secondrange = firstrange+51
