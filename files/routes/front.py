@@ -162,6 +162,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	else:
 		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
+	for x in posts:
+		print(x.author.username)
+
 	if sort == "hot":
 		posts = sorted(posts.all(), key=lambda x: x.hotscore, reverse=True)
 	elif sort == "new":
