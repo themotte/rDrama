@@ -11,12 +11,10 @@ CF_ZONE = environ.get("CLOUDFLARE_ZONE", "").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 IBB_KEY = environ.get("IBB_KEY", "").strip()
 
-def upload_ibb(file=None, resize=False, png=False):
+def upload_ibb(file, resize=False):
 	
-	if file: file.save("image.gif")
-
 	if resize:
-		i = IImage.open("image.gif")
+		i = IImage.open(file)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -30,30 +28,28 @@ def upload_ibb(file=None, resize=False, png=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0)
-		except: return
-
-	if png: filedir = "image.png"
-	else: filedir = "image.gif"
+		try: om.save(f"image.{om.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		except Exception as e:
+			print(e)
+			return
 	try:
-		with open(filedir, 'rb') as f:
+		with open(file, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
 		resp = req.json()['data']
 		url = resp['url']
-	except:
+	except Exception as e:
 		if req: print(req.json())
+		else: print(e)
 		return
 
 	return(url)
 
 
-def upload_imgur(file=None, resize=False, png=False):
+def upload_imgur(file, resize=False):
 	
-	if file: file.save("image.gif")
-
 	if resize:
-		i = IImage.open("image.gif")
+		i = IImage.open(file)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -67,13 +63,12 @@ def upload_imgur(file=None, resize=False, png=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0)
-		except: return(None)
-
-	if png: filedir = "image.png"
-	else: filedir = "image.gif"
+		try: om.save(f"image.{om.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		except Exception as e:
+			print(e)
+			return
 	try:
-		with open(filedir, 'rb') as f:
+		with open(file, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
 		resp = req.json()['data']
@@ -81,8 +76,9 @@ def upload_imgur(file=None, resize=False, png=False):
 		if not "_d." in url:
 			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
 			if "_d." in url: url += "?maxwidth=9999"
-	except:
+	except Exception as e:
 		if req: print(req.json())
+		else: print(e)
 		return
 
 	new_image = Image(text=url, deletehash=resp["deletehash"])

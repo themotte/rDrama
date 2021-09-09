@@ -1220,4 +1220,5 @@ def multiple_plots(**kwargs):
 	plt.savefig("image.png")
 	plt.clf()
 
-	return upload_imgur(png=True)
+	if "pcmemes.net" in request.host: return upload_ibb("image.png")
+	else: return upload_imgur("image.png")

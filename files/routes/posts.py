@@ -501,12 +501,12 @@ def thumbs(new_post):
 		print(f'Unknown content type {x.headers.get("Content-Type")}')
 		return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
-	with open("image.gif", "wb") as file:
+	with open("image.png", "wb") as file:
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	if 'pcm' in request.host: post.thumburl = upload_ibb(resize=True)
-	else: post.thumburl = upload_imgur(resize=True)
+	if 'pcmemes.net' in request.host: post.thumburl = upload_ibb(f"image.png", True)
+	else: post.thumburl = upload_imgur(f"image.png", True)
 
 	g.db.add(post)
 
@@ -533,40 +533,40 @@ def filter_title(title):
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
 
-# def check_processing_thread(v, post, link, db):
+def check_processing_thread(v, post, link, db):
 
-# 	image_id = link.split('/')[-1].rstrip('.mp4')
-# 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
+	image_id = link.split('/')[-1].rstrip('.mp4')
+	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
 
-# 	while True:
-# 		# break on error to prevent zombie threads
-# 		try:
-# 			time.sleep(15)
+	while True:
+		# break on error to prevent zombie threads
+		try:
+			time.sleep(15)
 
-# 			req = requests.get(f"https://api.imgur.com/3/image/{image_id}", headers=headers)
+			req = requests.get(f"https://api.imgur.com/3/image/{image_id}", headers=headers)
 
-# 			status = req.json()['data']['processing']['status']
-# 			if status == 'completed':
-# 				post.processing = False
-# 				db.add(post)
+			status = req.json()['data']['processing']['status']
+			if status == 'completed':
+				post.processing = False
+				db.add(post)
 
-# 				send_notification(
-# 					NOTIFICATIONS_ACCOUNT,
-# 					v,
-# 					f"Your video has finished processing and your [post](/post/{post.id}) is now live.",
-# 					db=db
-# 				)
+				send_notification(
+					NOTIFICATIONS_ACCOUNT,
+					v,
+					f"Your video has finished processing and your [post](/post/{post.id}) is now live.",
+					db=db
+				)
 
-# 				db.commit()
-# 				break
-# 			# just in case
-# 			elif status == 'failed':
-# 				print(f"video upload for post {post.id} failed")
-# 				break
-# 		except Exception as e:
-# 			traceback.print_exc()
-# 			print("retard. aborting thread")
-# 			break
+				db.commit()
+				break
+			# just in case
+			elif status == 'failed':
+				print(f"video upload for post {post.id} failed")
+				break
+		except Exception as e:
+			traceback.print_exc()
+			print("retard. aborting thread")
+			break
 
 
 @app.post("/submit")
@@ -891,9 +891,10 @@ def submit_post(v):
 					body=request.form.get("body", "")
 				), 403
 
-		if 'pcm' in request.host:
+		if 'pcmemes.net' in request.host:
 			if file.content_type.startswith('image/'):
-				new_post.url = upload_ibb(file)
+				file.save(f"image.{file.format}", optimize=True, quality=30)
+				new_post.url = upload_ibb(f"image.{file.format}")
 			else:
 				try:
 					post_url = upload_video(file)
@@ -917,7 +918,8 @@ def submit_post(v):
 						), 400
 		else:
 			if file.content_type.startswith('image/'):
-				new_post.url = upload_imgur(file)
+				file.save(f"image.{file.format}", optimize=True, quality=30)
+				new_post.url = upload_imgur(f"image.{file.format}")
 			else:
 				try:
 					post_url = upload_video(file)

@@ -46,7 +46,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
 		elif "rdrama" in request.host: pid = 6489
-		elif "pcm" in request.host: pid = 382
+		elif 'pcmemes.net' in request.host: pid = 382
 		else: pid = 1
 	
 	try: pid = int(pid)
@@ -278,8 +278,9 @@ def api_comment(v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 		
-		if 'pcm' in request.host: url = upload_ibb(file)
-		else: url = upload_imgur(file)
+		file.save(f"image.{file.format}", optimize=True, quality=30)
+		if 'pcmemes.net' in request.host: url = upload_ibb(f"image.{file.format}")
+		else: url = upload_imgur(f"image.{file.format}")
 		
 		body = request.form.get("body") + f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -297,7 +298,7 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
-	if "pcm" in request.host and c_aux.body.lower().startswith("based"):
+	if 'pcmemes.net' in request.host and c_aux.body.lower().startswith("based"):
 		pill = re.match("based and (.{1,20}?)(-| )pilled", body, re.IGNORECASE)
 
 		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
@@ -693,8 +694,9 @@ def edit_comment(cid, v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 		
-		if 'pcm' in request.host: url = upload_ibb(file)
-		else: url = upload_imgur(file)
+		file.save(f"image.{file.format}", optimize=True, quality=30)
+		if 'pcmemes.net' in request.host: url = upload_ibb(f"image.{file.format}")
+		else: url = upload_imgur(f"image.{file.format}")
 
 		body += f"\n![]({url})"
 		with CustomRenderer(post_id=c.parent_submission) as renderer:

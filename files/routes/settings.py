@@ -113,8 +113,9 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			if 'pcm' in request.host: url = upload_ibb(file)
-			else: url = upload_imgur(file)
+			file.save(f"image.{file.format}", optimize=True, quality=30)
+			if 'pcmemes.net' in request.host: url = upload_ibb(f"image.{file.format}")
+			else: url = upload_imgur(f"image.{file.format}")
 
 			bio += f"\n\n![]({url})"
 
@@ -204,7 +205,7 @@ def settings_profile_post(v):
 		return {"message": "Theme changed!"}
 
 	quadrant = request.values.get("quadrant")
-	if quadrant and "pcm" in request.host.lower():
+	if quadrant and 'pcmemes.net' in request.host.lower():
 		v.quadrant = quadrant
 		v.customtitle = quadrant
 		if quadrant=="Centrist":
@@ -496,13 +497,15 @@ def settings_images_profile(v):
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
-	if 'pcm' in request.host: highres = upload_ibb(request.files["profile"])
-	else: highres = upload_imgur(request.files["profile"])
+	file = request.files["profile"]
+	file.save(f"image.{file.format}", optimize=True, quality=30)
+	if 'pcmemes.net' in request.host: highres = upload_ibb(f"image.{file.format}")
+	else: highres = upload_imgur(f"image.{file.format}")
 
 	if not highres: abort(400)
 
-	if 'pcm' in request.host: imageurl = upload_ibb(resize=True)
-	else: imageurl = upload_imgur(resize=True)
+	if 'pcmemes.net' in request.host: imageurl = upload_ibb(f"image.{file.format}", True)
+	else: imageurl = upload_imgur(f"image.{file.format}", True)
 
 	if not imageurl: abort(400)
 
@@ -523,8 +526,11 @@ def settings_images_banner(v):
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
-	if 'pcm' in request.host: imageurl = upload_ibb(request.files["banner"])
-	else: imageurl = upload_imgur(request.files["banner"])
+	file = request.files["banner"]
+	file.save(f"image.{file.format}", optimize=True, quality=30)
+
+	if 'pcmemes.net' in request.host: imageurl = upload_ibb(f"image.{file.format}")
+	else: imageurl = upload_imgur(f"image.{file.format}")
 
 	if imageurl:
 		v.bannerurl = imageurl

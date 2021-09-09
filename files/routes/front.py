@@ -121,7 +121,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 			cutoff = now - 31536000
 		posts = posts.filter(Submission.created_utc >= cutoff)
 
-	posts = posts.filter_by(is_banned=False,stickied=False,private=False).filter(Submission.deleted_utc == 0)
+	posts = posts.filter_by(is_banned=False,stickied=False,private=False,deleted_utc = 0)
 
 	if v:
 		posts = posts.filter(or_(Submission.processing == False, Submission.author_id == v.id))
@@ -157,6 +157,12 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	if lt:
 		posts = posts.filter(Submission.created_utc < lt)
 
+	if not (v and v.shadowbanned):
+		#posts=posts.join(Submission.author)
+		posts=posts.filter(Submission.author.shadowbanned == False)
+
+	posts = [x for x in posts if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)][:51]
+
 	if sort == "hot":
 		posts = sorted(posts.all(), key=lambda x: x.hotscore, reverse=True)
 	elif sort == "new":
@@ -178,17 +184,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		abort(400)
 
 	firstrange = 50 * (page - 1)
-	secondrange = firstrange+200
+	secondrange = firstrange+51
 	posts = posts[firstrange:secondrange]
-
-	words = ['captainmeta4', ' cm4 ', 'dissident001', 'ladine']
-
-	for post in posts:
-		if post.author and post.author.admin_level == 0:
-			for word in words:
-				if word in post.title.lower():
-					posts.remove(post)
-					break
 
 	if random.random() < 0.004:
 		for post in posts:
@@ -206,8 +203,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 				post.downvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=-1).count()
 				post.views = post.views + random.randint(7,10)
 				g.db.add(post)
-
-	posts = [x for x in posts if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)][:51]
 
 	next_exists = (len(posts) == 51)
 
