@@ -161,8 +161,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		#posts=posts.join(Submission.author)
 		posts=posts.filter(Submission.author.shadowbanned == False)
 
-	posts = [x for x in posts if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)][:51]
-
 	if sort == "hot":
 		posts = sorted(posts.all(), key=lambda x: x.hotscore, reverse=True)
 	elif sort == "new":
