@@ -1195,10 +1195,10 @@ def create_plot(**kwargs):
 		return abort(400)
 
 	# create multiple charts
-	daily_signups = [d["signups"] for d in kwargs["sign_ups"]['daily_signups']][1:][::-1]
-	post_stats = [d["posts"] for d in kwargs["posts"]['post_stats']][1:][::-1]
-	comment_stats = [d["comments"] for d in kwargs["comments"]['comment_stats']][1:][::-1]
-	daily_times = [d["date"] for d in kwargs["sign_ups"]['daily_signups']][1:][::-1]
+	daily_signups = [d["signups"] for d in kwargs["sign_ups"]['daily_signups']][2:][::-1]
+	post_stats = [d["posts"] for d in kwargs["posts"]['post_stats']][2:][::-1]
+	comment_stats = [d["comments"] for d in kwargs["comments"]['comment_stats']][2:][::-1]
+	daily_times = [d["date"] for d in kwargs["sign_ups"]['daily_signups']][2:][::-1]
 
 	multi_plots = multiple_plots(sign_ups=daily_signups,
 								 posts=post_stats,
