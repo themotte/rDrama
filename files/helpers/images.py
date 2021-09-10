@@ -19,7 +19,7 @@ def upload_ibb(filepath=None, file=None, resize=False):
 		file.save(filepath)
 
 	if resize:
-		i = IImage.open("image.gif")
+		i = IImage.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -33,7 +33,7 @@ def upload_ibb(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except: return
 
 	try:
@@ -57,7 +57,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 		file.save(filepath)
 
 	if resize:
-		i = IImage.open("image.gif")
+		i = IImage.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -71,7 +71,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except: return(None)
 
 	try:
