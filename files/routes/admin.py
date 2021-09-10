@@ -198,7 +198,7 @@ def image_posts_listing(v):
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+26
 	posts = [x.id for x in posts if x.is_image][firstrange:secondrange]
-	next_exists = (len(posts) == 26)
+	next_exists = (len(posts) > 25)
 	posts = get_posts(posts[:25], v=v)
 
 	return render_template("admin/image_posts.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
@@ -216,7 +216,7 @@ def flagged_posts(v):
 	).join(Submission.flags).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
 
 	listing = [p.id for p in posts]
-	next_exists = (len(listing) == 26)
+	next_exists = (len(listing) > 25)
 	listing = listing[:25]
 
 	listing = get_posts(listing, v=v)
@@ -238,7 +238,7 @@ def flagged_comments(v):
 	).join(Comment.flags).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in posts]
-	next_exists = (len(listing) == 26)
+	next_exists = (len(listing) > 25)
 	listing = listing[:25]
 
 	listing = get_comments(listing, v=v)
@@ -401,7 +401,7 @@ def users_list(v):
 
 	users = [x for x in users]
 
-	next_exists = (len(users) == 26)
+	next_exists = (len(users) > 25)
 	users = users[:25]
 
 	return render_template("admin/new_users.html",
@@ -550,7 +550,7 @@ def admin_removed(v):
 
 	ids=[x[0] for x in ids]
 
-	next_exists = len(ids) == 26
+	next_exists = len(ids) > 25
 
 	ids = ids[:25]
 

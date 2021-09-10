@@ -25,11 +25,11 @@ def notifications(v):
 		firstrange = 25 * (page - 1)
 		secondrange = firstrange + 26
 		comments = comments[firstrange:secondrange]
-		next_exists = (len(comments) == 26)
+		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif messages:
 		cids = v.notification_messages(page=page)
-		next_exists = (len(cids) == 26)
+		next_exists = (len(cids) > 25)
 		cids = cids[:25]
 		comments = get_comments(cids, v=v)
 	elif posts:
@@ -51,7 +51,7 @@ def notifications(v):
 			Comment.author_id != AUTOJANNY_ACCOUNT,
 		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
-		next_exists = (len(notifications) == 26)
+		next_exists = (len(notifications) > 25)
 		notifications = notifications[:25]
 		cids = [x.comment_id for x in notifications]
 		comments = get_comments(cids, v=v, load_parent=True)
@@ -184,7 +184,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		abort(400)
 
 	firstrange = 50 * (page - 1)
-	secondrange = firstrange+51
+	secondrange = firstrange+200
 	posts = posts[firstrange:secondrange]
 
 	if random.random() < 0.004:
@@ -204,7 +204,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 				post.views = post.views + random.randint(7,10)
 				g.db.add(post)
 
-	next_exists = (len(posts) == 51)
+	next_exists = (len(posts) > 50)
 
 	posts = posts[:50]
 
@@ -349,7 +349,7 @@ def changelog(v):
 					)
 
 	# check existence of next page
-	next_exists = (len(ids) == 51)
+	next_exists = (len(ids) > 50)
 	ids = ids[:50]
 
 	# check if ids exist
@@ -449,7 +449,7 @@ def all_comments(v):
 
 	comments = get_comments(idlist, v=v)
 
-	next_exists = len(idlist) == 26
+	next_exists = len(idlist) > 25
 
 	idlist = idlist[:25]
 
