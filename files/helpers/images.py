@@ -56,7 +56,7 @@ def upload_imgur(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		print(file)
+		print("sex" + file)
 		om.save(file, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
 	with open(file, 'rb') as f:
