@@ -47,7 +47,7 @@ def upload_ibb(filepath=None, file=None, resize=False):
 	return url
 
 
-def upload_imgur(file=None, resize=False):
+def upload_imgur(filepath=None, file=None, resize=False):
 	
 	if file: file.save("image.gif")
 
