@@ -28,22 +28,15 @@ def upload_ibb(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save(f"image.{om.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
-		except Exception as e:
-			print(e)
-			return
-	try:
-		with open(file, 'rb') as f:
-			data={'image': base64.b64encode(f.read())} 
-			req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
-		resp = req.json()['data']
-		url = resp['url']
-	except Exception as e:
-		if req: print(req.json())
-		else: print(e)
-		return
+		om.save(f"image.{om.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
-	return(url)
+	with open(file, 'rb') as f:
+		data={'image': base64.b64encode(f.read())} 
+		req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
+	resp = req.json()['data']
+	url = resp['url']
+
+	return url
 
 
 def upload_imgur(file, resize=False):
@@ -63,30 +56,20 @@ def upload_imgur(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save(f"image.{om.filename.split('.')[-1]}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
-		except Exception as e:
-			#print(om.filename)
-			print(type(om))
-			print(om.format)
-			print(e)
-			return
-	try:
-		with open(file, 'rb') as f:
-			data={'image': base64.b64encode(f.read())} 
-			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
-		resp = req.json()['data']
-		url = resp['link']
-		if not "_d." in url:
-			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
-			if "_d." in url: url += "?maxwidth=9999"
-	except Exception as e:
-		if req: print(req.json())
-		else: print(e)
-		return
+		om.save(f"image.{om.filename.split('.')[-1]}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+
+	with open(file, 'rb') as f:
+		data={'image': base64.b64encode(f.read())} 
+		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
+	resp = req.json()['data']
+	url = resp['link']
+	if not "_d." in url:
+		url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
+		if "_d." in url: url += "?maxwidth=9999"
 
 	new_image = Image(text=url, deletehash=resp["deletehash"])
 	g.db.add(new_image)
-	return(url)
+	return url
 
 
 class UploadException(Exception):
