@@ -28,7 +28,7 @@ IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 def revert_actions(v, username):
 	user = get_user(username)
 	if not user: abort(404)
-	items = g.db.query(Submission, Comment).options(lazyload('*')).all()
+	items = g.db.query(Submission).options(lazyload('*')).all()
 	print(items)
 
 	return {"message": "User has been made admin!"}
