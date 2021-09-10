@@ -1125,9 +1125,9 @@ def admin_nunuke_user(v):
 
 	return redirect(user.url)
 	
-@app.get("/admin/advanced_stats")
-@admin_level_required(2)
-def advanced_stats(v):
+@app.get("/chart")
+@auth_required
+def chart(v):
 
 	days = int(request.args.get("days", 25))
 
