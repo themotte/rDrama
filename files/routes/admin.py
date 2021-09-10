@@ -1210,6 +1210,6 @@ def chart(v):
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
 
-	plt.savefig("image.png")
+	plt.savefig("chart.png")
 	plt.clf()
-	return send_file("../image.png")
+	return send_file("../chart.png")
