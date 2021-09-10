@@ -1156,12 +1156,6 @@ def chart(v):
 					  } for i in range(len(day_cutoffs) - 1)
 					 ]
 
-	user_stats = {'current_users': g.db.query(User).filter_by(is_banned=0, reserved=None).count(),
-				  'banned_users': g.db.query(User).filter(User.is_banned != 0).count(),
-				  'reserved_users': g.db.query(User).filter(User.reserved != None).count(),
-				  'email_verified_users': g.db.query(User).filter_by(is_banned=0, is_activated=True).count(),
-				  }
-
 	post_stats = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
 				   "day_start":day_cutoffs[i + 1],
 				   "posts": g.db.query(Submission).filter(Submission.created_utc < day_cutoffs[i],
@@ -1180,7 +1174,6 @@ def chart(v):
 															 ).count()
 					  } for i in range(len(day_cutoffs) - 1)
 					 ]
-
 
 	# create multiple charts
 	daily_signups = [d["signups"] for d in daily_signups][2:][::-1]
@@ -1218,9 +1211,5 @@ def chart(v):
 	comments_chart.legend(loc='upper left', frameon=True)
 
 	plt.savefig("image.png")
-	plt.clf(
+	plt.clf()
 	return send_file("../image.png")
-
-
-def create_plot(**kwargs):
-
