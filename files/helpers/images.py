@@ -68,7 +68,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		om.save(filepath, save_all=True, append_images=list(frames), loop=0)
 
 	else: i.save(filepath, optimize=True, quality=30)
 
