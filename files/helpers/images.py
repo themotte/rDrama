@@ -28,7 +28,7 @@ def upload_ibb(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save(f"image.{om.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		om.save(file, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
 	with open(file, 'rb') as f:
 		data={'image': base64.b64encode(f.read())} 
@@ -56,7 +56,7 @@ def upload_imgur(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save(f"image.{om.filename.split('.')[-1]}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		om.save(file, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
 	with open(file, 'rb') as f:
 		data={'image': base64.b64encode(f.read())} 
