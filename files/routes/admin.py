@@ -1173,7 +1173,7 @@ def chart(v):
 					  } for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	for d in daily_signups:
-		print(d)
+		print(d["signups"])
 		return "sex"
 	# create multiple charts
 	daily_signups = [d["signups"] for d in daily_signups]
