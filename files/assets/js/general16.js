@@ -311,7 +311,7 @@ function post(url, callback, errortext) {
 	xhr.send(form);
 };
 
-function post_toast(url, callback, data) {
+function post_toast(url, reload, data) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	var form = new FormData()
@@ -335,8 +335,8 @@ function post_toast(url, callback, data) {
 			} catch(e) {
 				document.getElementById('toast-post-success-text').innerText = "Action successful!";
 			}
-			try {callback(xhr)}
-			catch(e) {}
+
+			if (reload == 1) {window.location.reload(true)}
 			return true
 
 		} else if (xhr.status >= 300 && xhr.status < 400) {

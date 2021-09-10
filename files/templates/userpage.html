@@ -244,6 +244,7 @@
 					{% elif v and v.id == u.id %}
 						<a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
 						<a href="/views" class="btn btn-secondary">Profile views</a>
+						<a href="javascript:void(0)" onclick="post_toast('/settings/badges','1')" class="btn btn-secondary">Refresh Badges</a>
 					{% endif %}
 					{% if v and v.id != u.id and v.admin_level > 1 %}
 						<br><br>
@@ -445,8 +446,8 @@
 				</div>
 				{% if v and v.id == u.id %}
 					<a href="/settings/profile" class="btn btn-secondary btn-sm">Edit profile</a>
-					<a href="/views" class="btn btn-secondary btn-sm">Profile views</a>
-				{% endif %}
+					<a href="javascript:void(0)" onclick="post_toast('/settings/badges','1')" class="btn btn-secondary">Refresh Badges</a>
+					{% endif %}
 				{% if v and v.id != u.id %}
 					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/unfollow/{{u.username}}', callback=function(){document.getElementById('button-unsub2').classList.toggle('d-none');document.getElementById('button-sub2').classList.toggle('d-none');})">Unfollow</a>
 					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast('/follow/{{u.username}}', callback=function(){document.getElementById('button-sub2').classList.toggle('d-none');document.getElementById('button-unsub2').classList.toggle('d-none');})">Follow</a>						
