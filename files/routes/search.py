@@ -52,10 +52,13 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 		posts = posts.filter(Submission.over_18==True)
 
 	if 'author' in criteria:
-		posts=posts.filter(
-				Submission.author_id==get_user(criteria['author']).id,
-				User.is_private==False,
-			)
+		if v and v.admin_level == 6:
+			posts = posts.filter(Submission.author_id == get_user(criteria['author']).id)
+		else:
+			posts=posts.filter(
+					Submission.author_id==get_user(criteria['author']).id,
+					User.is_private==False,
+				)
 
 	if 'domain' in criteria:
 		domain=criteria['domain']
