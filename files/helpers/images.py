@@ -36,7 +36,7 @@ def upload_ibb(filepath=None, file=None, resize=False):
 		om.info = i.info
 		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except: return
-	elif format != ".gif":
+	elif format != "gif":
 		i = IImage.open(filepath)
 		i.save(filepath, optimize=True, quality=30)
 
@@ -78,7 +78,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 		om.info = i.info
 		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except: return
-	elif format != ".gif":
+	elif format != "gif":
 		i = IImage.open(filepath)
 		i.save(filepath, optimize=True, quality=30)
 
