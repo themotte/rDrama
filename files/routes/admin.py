@@ -1181,21 +1181,12 @@ def chart(v):
 					  } for i in range(len(day_cutoffs) - 1)
 					 ]
 
-	create_plot(sign_ups={'daily_signups': daily_signups},
-					posts={'post_stats': post_stats},
-					comments={'comment_stats': comment_stats},
-					)
-
-	return send_file("../image.png")
-
-
-def create_plot(**kwargs):
 
 	# create multiple charts
-	daily_signups = [d["signups"] for d in kwargs['daily_signups']][2:][::-1]
-	post_stats = [d["posts"] for d in kwargs['post_stats']][2:][::-1]
-	comment_stats = [d["comments"] for d in kwargs['comment_stats']][2:][::-1]
-	daily_times = [d["date"] for d in kwargs['daily_signups']][2:][::-1]
+	daily_signups = [d["signups"] for d in daily_signups][2:][::-1]
+	post_stats = [d["posts"] for d in post_stats][2:][::-1]
+	comment_stats = [d["comments"] for d in comment_stats][2:][::-1]
+	daily_times = [d["date"] for d in daily_signups][2:][::-1]
 
 	# create multiple charts
 	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)
@@ -1227,4 +1218,9 @@ def create_plot(**kwargs):
 	comments_chart.legend(loc='upper left', frameon=True)
 
 	plt.savefig("image.png")
-	plt.clf()
+	plt.clf(
+	return send_file("../image.png")
+
+
+def create_plot(**kwargs):
+
