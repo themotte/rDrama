@@ -13,7 +13,10 @@ IBB_KEY = environ.get("IBB_KEY", "").strip()
 
 def upload_ibb(filepath=None, file=None, resize=False):
 	
-	if file: file.save("image.gif")
+	if file:
+		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+		filepath = f"image.{format}"
+		file.save(filepath)
 
 	if resize:
 		i = IImage.open("image.gif")
@@ -49,7 +52,10 @@ def upload_ibb(filepath=None, file=None, resize=False):
 
 def upload_imgur(filepath=None, file=None, resize=False):
 	
-	if file: file.save("image.gif")
+	if file:
+		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+		filepath = f"image.{format}"
+		file.save(filepath)
 
 	if resize:
 		i = IImage.open("image.gif")
