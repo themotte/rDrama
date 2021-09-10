@@ -28,10 +28,19 @@ IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 def revert_actions(v, username):
 	user = get_user(username)
 	if not user: abort(404)
-	items = g.db.query(Submission).options(lazyload('*')).all()
-	print(items)
 
-	return {"message": "User has been made admin!"}
+	items = g.db.query(Submission).options(lazyload('*')).filter_by(removed_by=user.id).all() + g.db.query(Comment).options(lazyload('*')).filter_by(removed_by=user.id).all()
+
+	for item in items:
+		item.is_banned = False
+		item.removed_by = None
+		g.db.add(item)
+
+	users = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=user.id).all()
+	for user in users:
+		user.unban()
+
+	return {"message": "Admin actions reverted!"}
 
 @app.post("/@<username>/make_admin")
 @admin_level_required(6)
