@@ -17,6 +17,7 @@ def upload_ibb(filepath=None, file=None, resize=False):
 		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
 		filepath = f"image.{format}"
 		file.save(filepath)
+	else: format = filepath.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
 
 	if resize:
 		i = IImage.open(filepath)
@@ -58,6 +59,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
 		filepath = f"image.{format}"
 		file.save(filepath)
+	else: format = filepath.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
 
 	if resize:
 		i = IImage.open(filepath)
