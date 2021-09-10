@@ -42,7 +42,7 @@ def upload_ibb(filepath=None, file=None, resize=False):
 	return url
 
 
-def upload_ibb(filepath=None, file=None, resize=False):
+def upload_imgur(filepath=None, file=None, resize=False):
 	
 	if filepath: file = IImage.open(file)
 	file.save(f"image.{file.format}", optimize=True, quality=30)

@@ -497,7 +497,6 @@ def thumbs(new_post):
 		image = PILimage.open(BytesIO(x.content))
 
 	else:
-
 		print(f'Unknown content type {x.headers.get("Content-Type")}')
 		return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
