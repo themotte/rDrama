@@ -871,6 +871,7 @@ def ban_post(post_id, v):
 	post.is_approved = 0
 	post.stickied = False
 	post.is_pinned = False
+	post.removed_by = v.id
 
 	ban_reason=request.form.get("reason", "")
 	ban_reason = ban_reason.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -992,6 +993,7 @@ def api_ban_comment(c_id, v):
 
 	comment.is_banned = True
 	comment.is_approved = 0
+	comment.removed_by = v.id
 
 	g.db.add(comment)
 	ma=ModAction(
