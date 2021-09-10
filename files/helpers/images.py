@@ -14,7 +14,8 @@ IBB_KEY = environ.get("IBB_KEY", "").strip()
 def upload_ibb(filepath=None, file=None, resize=False):
 	
 	if file:
-		filepath = f"image.{file.filename.split('.')[-1]}"
+		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+		filepath = f"image.{format}"
 		file.save(filepath)
 
 	i = IImage.open(filepath)
@@ -32,7 +33,7 @@ def upload_ibb(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save(f"image.{i.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
 	else: i.save(filepath, optimize=True, quality=30)
 
@@ -48,7 +49,8 @@ def upload_ibb(filepath=None, file=None, resize=False):
 def upload_imgur(filepath=None, file=None, resize=False):
 	
 	if file:
-		filepath = f"image.{file.filename.split('.')[-1]}"
+		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+		filepath = f"image.{format}"
 		file.save(filepath)
 
 	i = IImage.open(filepath)
@@ -66,7 +68,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save(f"image.{i.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
 	else: i.save(filepath, optimize=True, quality=30)
 
