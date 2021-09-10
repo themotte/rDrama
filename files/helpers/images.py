@@ -11,8 +11,11 @@ CF_ZONE = environ.get("CLOUDFLARE_ZONE", "").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 IBB_KEY = environ.get("IBB_KEY", "").strip()
 
-def upload_ibb(file, resize=False):
+def upload_ibb(filepath=None, file=None, resize=False):
 	
+	if filepath: file = IImage.open(file)
+	file.save(f"image.{file.format}", optimize=True, quality=30)
+	file = IImage.open(file)
 	if resize:
 		i = IImage.open(file)
 		size = 100, 100
@@ -28,7 +31,7 @@ def upload_ibb(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save(file, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		om.save(f"image.{file.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
 	with open(file, 'rb') as f:
 		data={'image': base64.b64encode(f.read())} 
@@ -39,8 +42,11 @@ def upload_ibb(file, resize=False):
 	return url
 
 
-def upload_imgur(file, resize=False):
+def upload_ibb(filepath=None, file=None, resize=False):
 	
+	if filepath: file = IImage.open(file)
+	file.save(f"image.{file.format}", optimize=True, quality=30)
+	file = IImage.open(file)
 	if resize:
 		i = IImage.open(file)
 		size = 100, 100
@@ -57,7 +63,7 @@ def upload_imgur(file, resize=False):
 		om = next(frames)
 		om.info = i.info
 		print("sex" + file)
-		om.save(file, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		om.save(f"image.{file.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
 	with open(file, 'rb') as f:
 		data={'image': base64.b64encode(f.read())} 
