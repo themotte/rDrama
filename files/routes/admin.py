@@ -1153,8 +1153,7 @@ def chart(v):
 					  "day_start":day_cutoffs[i + 1],
 					  "signups": g.db.query(User).filter(User.created_utc < day_cutoffs[i],
 														 User.created_utc > day_cutoffs[i + 1]														 ).count()
-					  } for i in range(len(day_cutoffs) - 1)
-					 ]
+					  } for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	post_stats = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
 				   "day_start":day_cutoffs[i + 1],
@@ -1162,8 +1161,7 @@ def chart(v):
 														  Submission.created_utc > day_cutoffs[i + 1],
 														  Submission.is_banned == False
 														  ).count()
-				   } for i in range(len(day_cutoffs) - 1)
-				  ]
+				   } for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	comment_stats = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
 					  "day_start": day_cutoffs[i + 1],
@@ -1172,14 +1170,13 @@ def chart(v):
 															 Comment.is_banned == False,
 															 Comment.author_id != 1
 															 ).count()
-					  } for i in range(len(day_cutoffs) - 1)
-					 ]
+					  } for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	# create multiple charts
-	daily_signups = [d["signups"] for d in daily_signups][2:][::-1]
-	post_stats = [d["posts"] for d in post_stats][2:][::-1]
-	comment_stats = [d["comments"] for d in comment_stats][2:][::-1]
-	daily_times = [d["date"] for d in daily_signups][2:][::-1]
+	daily_signups = [d["signups"] for d in daily_signups]
+	post_stats = [d["posts"] for d in post_stats]
+	comment_stats = [d["comments"] for d in comment_stats]
+	daily_times = [d["date"] for d in daily_signups]
 
 	# create multiple charts
 	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)
