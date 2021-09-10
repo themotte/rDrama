@@ -183,9 +183,6 @@ def post_id(pid, anything=None, v=None):
 
 		post.preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
 
-	# if session.get("read_comments"): read = list(set(session.get("read_comments")))
-	# else: read = None
-
 	# unread comment highlight
 	last_view_utc = session.get(str(post.id))
 
@@ -194,8 +191,8 @@ def post_id(pid, anything=None, v=None):
 
 	session[str(post.id)] = int(time.time())
 
-	#read_comments = [x.id for x in post.preloaded_comments]
-
+	print(session)
+	
 	post.views += 1
 	g.db.add(post)
 	if isinstance(session.get('over_18', 0), dict): session["over_18"] = 0
