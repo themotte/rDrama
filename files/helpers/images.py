@@ -11,10 +11,9 @@ CF_ZONE = environ.get("CLOUDFLARE_ZONE", "").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 IBB_KEY = environ.get("IBB_KEY", "").strip()
 
-def upload_ibb(file, resize=False):
-	
+def upload_ibb(filepath, resize=False):
 	if resize:
-		i = IImage.open(file)
+		i = IImage.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -28,12 +27,12 @@ def upload_ibb(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save(f"image.{i.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except Exception as e:
 			print(e)
 			return
 	try:
-		with open(file, 'rb') as f:
+		with open(filepath, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
 		resp = req.json()['data']
@@ -46,10 +45,9 @@ def upload_ibb(file, resize=False):
 	return(url)
 
 
-def upload_imgur(file, resize=False):
-	
+def upload_imgur(filepath, resize=False):
 	if resize:
-		i = IImage.open(file)
+		i = IImage.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -63,12 +61,12 @@ def upload_imgur(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save(f"image.{i.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except Exception as e:
 			print(e)
 			return
 	try:
-		with open(file, 'rb') as f:
+		with open(filepath, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
 		resp = req.json()['data']
