@@ -36,9 +36,8 @@ def upload_ibb(filepath=None, file=None, resize=False):
 		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except: return
 
-	filedir = "image.gif"
 	try:
-		with open(filedir, 'rb') as f:
+		with open(filepath, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
 		resp = req.json()['data']
@@ -75,9 +74,8 @@ def upload_imgur(filepath=None, file=None, resize=False):
 		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except: return(None)
 
-	filedir = "image.gif"
 	try:
-		with open(filedir, 'rb') as f:
+		with open(filepath, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
 		resp = req.json()['data']
