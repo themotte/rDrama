@@ -36,7 +36,7 @@ def revert_actions(v, username):
 		item.removed_by = None
 		g.db.add(item)
 
-	users = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=user.id).all()
+	users = g.db.query(User).options(lazyload('*')).filter_by(is_banned=user.id).all()
 	for user in users:
 		user.unban()
 
