@@ -42,7 +42,7 @@ def notifications(v):
 			x.read = True
 			g.db.add(x)
 			comments.append(c)
-		next_exists = (len(comments) == 101)
+		next_exists = (len(comments) > 100)
 		listing = comments[:100]
 	else:
 		notifications = v.notifications.join(Notification.comment).filter(
