@@ -193,7 +193,7 @@ def post_id(pid, anything=None, v=None):
 
 	for key, val in session.items():
 		if type(val) is int:
-			print(key + val)
+			print(key + str(val))
 
 	post.views += 1
 	g.db.add(post)
