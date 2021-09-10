@@ -3,6 +3,7 @@ import calendar
 from sqlalchemy.orm import lazyload
 import imagehash
 from os import remove
+from os.path import exists
 from PIL import Image as IMAGE
 
 from files.helpers.wrappers import *
