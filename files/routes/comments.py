@@ -278,9 +278,8 @@ def api_comment(v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 		
-		file.save(f"image.{file.filename.split('.')[-1]}")
-		if 'pcmemes.net' in request.host: url = upload_ibb(f"image.{file.filename.split('.')[-1]}")
-		else: url = upload_imgur(f"image.{file.filename.split('.')[-1]}")
+		if 'pcmemes.net' in request.host: url = upload_ibb(file=file)
+		else: url = upload_imgur(file=file)
 		
 		body = request.form.get("body") + f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -694,9 +693,8 @@ def edit_comment(cid, v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 		
-		file.save(f"image.{file.format}", optimize=True, quality=30)
-		if 'pcmemes.net' in request.host: url = upload_ibb(f"image.{file.format}")
-		else: url = upload_imgur(f"image.{file.format}")
+		if 'pcmemes.net' in request.host: url = upload_ibb(file=file)
+		else: url = upload_imgur(file=file)
 
 		body += f"\n![]({url})"
 		with CustomRenderer(post_id=c.parent_submission) as renderer:

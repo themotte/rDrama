@@ -291,7 +291,7 @@ def mfa_qr(secret, v):
 
 	mem = io.BytesIO()
 
-	img.save(mem, format="PNG", optimize=True, quality=30)
+	img.save(mem, format="PNG")
 	mem.seek(0, 0)
 	return send_file(mem, mimetype="image/png", as_attachment=False)
 

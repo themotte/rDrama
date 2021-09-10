@@ -506,7 +506,7 @@ def thumbs(new_post):
 			file.write(chunk)
 
 	if 'pcmemes.net' in request.host: post.thumburl = upload_ibb(f"image.png", True)
-	else: post.thumburl = upload_imgur(f"image.png", True)
+	else: post.thumburl = upload_imgur(filepath="image.png", resize=True)
 
 	g.db.add(post)
 
@@ -891,58 +891,30 @@ def submit_post(v):
 					body=request.form.get("body", "")
 				), 403
 
-		if 'pcmemes.net' in request.host:
-			if file.content_type.startswith('image/'):
-				file.save(f"image.{file.format}", optimize=True, quality=30)
-				new_post.url = upload_ibb(f"image.{file.format}")
-			else:
-				try:
-					post_url = upload_video(file)
-					if not post_url.endswith('.mp4'):
-						post_url += 'mp4'
-					new_post.url = post_url
-					new_post.processing = True
-					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
-				except UploadException as e:
-					if request.headers.get("Authorization"):
-						return {
-							"error": str(e),
-						}, 400
-					else:
-						return render_template(
-							"submit.html",
-							v=v,
-							error=str(e),
-							title=title,
-							body=request.form.get("body", "")
-						), 400
+		if file.content_type.startswith('image/'):
+			if 'pcmemes.net' in request.host: new_post.url = upload_ibb(file=file)
+			else: new_post.url = upload_imgur(file=file)
 		else:
-			if file.content_type.startswith('image/'):
-				file.save(f"image.{file.filename.split('.')[-1]}")
-				new_post.url = upload_imgur(f"image.{file.filename.split('.')[-1]}")
-			else:
-				try:
-					post_url = upload_video(file)
-					# shit to make webm work
-					if not post_url.endswith('.mp4'):
-						post_url += 'mp4'
-					# print(post_url)
-					new_post.url = post_url
-					new_post.processing = True
-					gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
-				except UploadException as e:
-					if request.headers.get("Authorization"):
-						return {
-							"error": str(e),
-						}, 400
-					else:
-						return render_template(
-							"submit.html",
-							v=v,
-							error=str(e),
-							title=title,
-							body=request.form.get("body", "")
-						), 400
+			try:
+				post_url = upload_video(file)
+				if not post_url.endswith('.mp4'):
+					post_url += 'mp4'
+				new_post.url = post_url
+				new_post.processing = True
+				gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
+			except UploadException as e:
+				if request.headers.get("Authorization"):
+					return {
+						"error": str(e),
+					}, 400
+				else:
+					return render_template(
+						"submit.html",
+						v=v,
+						error=str(e),
+						title=title,
+						body=request.form.get("body", "")
+					), 400
 
 		g.db.add(new_post)
 		g.db.add(new_post.submission_aux)
