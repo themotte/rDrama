@@ -193,7 +193,9 @@ def post_id(pid, anything=None, v=None):
 
 	for key, val in session.items():
 		if type(val) is int and key not in ['login_nonce','user_id']:
-			print(key + str(val))
+			if time.time() - val > 86400: del session[key]
+	
+	print(session)
 
 	post.views += 1
 	g.db.add(post)
