@@ -192,7 +192,7 @@ def post_id(pid, anything=None, v=None):
 	session[str(post.id)] = int(time.time())
 
 	for key, val in session.items():
-		if type(val) is int:
+		if type(val) is int and key not in ['login_nonce','user_id']:
 			print(key + str(val))
 
 	post.views += 1
