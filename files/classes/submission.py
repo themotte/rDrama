@@ -44,7 +44,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	created_utc = Column(BigInteger, default=0)
 	thumburl = Column(String)
 	is_banned = Column(Boolean, default=False)
-	removed_by = Column(int)
+	removed_by = Column(Integer)
 	bannedfor = Column(Boolean)
 	processing = Column(Boolean, default=False)
 	views = Column(Integer, default=0)
