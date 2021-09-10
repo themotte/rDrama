@@ -31,9 +31,9 @@ def notifications(v):
 		cids = v.notification_messages(page=page)
 		next_exists = (len(cids) == 26)
 		cids = cids[:25]
-		listing = get_comments(cids, v=v)
+		comments = get_comments(cids, v=v)
 	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26)
+		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101)
 
 		comments = []
 		for x in notifications:
@@ -42,8 +42,8 @@ def notifications(v):
 			x.read = True
 			g.db.add(x)
 			comments.append(c)
-		next_exists = (len(comments) == 26)
-		listing = comments[:25]
+		next_exists = (len(comments) == 101)
+		listing = comments[:100]
 	else:
 		notifications = v.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
@@ -65,7 +65,7 @@ def notifications(v):
 			g.db.add(x)
 			i += 1
 
-	if not messages and not posts:
+	if not posts:
 		listing = []
 		for c in comments:
 			c._is_blocked = False
