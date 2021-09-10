@@ -1181,12 +1181,12 @@ def chart(v):
 					  } for i in range(len(day_cutoffs) - 1)
 					 ]
 
-	x = create_plot(sign_ups={'daily_signups': daily_signups},
+	create_plot(sign_ups={'daily_signups': daily_signups},
 					posts={'post_stats': post_stats},
 					comments={'comment_stats': comment_stats},
 					)
 
-	return send_file("image.png")
+	return send_file("../image.png")
 
 
 def create_plot(**kwargs):
