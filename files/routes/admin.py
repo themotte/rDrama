@@ -23,6 +23,16 @@ from files.helpers.discord import add_role
 
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
+@app.post("/@<username>/revert_actions")
+@admin_level_required(6)
+def revert_actions(v, username):
+	user = get_user(username)
+	if not user: abort(404)
+	items = g.db.query(Submission, Comment).options(lazyload('*')).all()
+	print(items)
+
+	return {"message": "User has been made admin!"}
+
 @app.post("/@<username>/make_admin")
 @admin_level_required(6)
 def make_admin(v, username):
