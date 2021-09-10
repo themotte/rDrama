@@ -191,7 +191,8 @@ def post_id(pid, anything=None, v=None):
 
 	session[str(post.id)] = int(time.time())
 
-	for key, val in session.items():
+	test = session.items()
+	for key, val in test:
 		if type(val) is int and key not in ['login_nonce','user_id']:
 			if time.time() - val > 86400: del session[key]
 	
