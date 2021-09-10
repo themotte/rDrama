@@ -14,7 +14,7 @@ IBB_KEY = environ.get("IBB_KEY", "").strip()
 def upload_ibb(filepath=None, file=None, resize=False):
 	
 	if filepath: file = IImage.open(file)
-	file.save(f"image.{file.format}", optimize=True, quality=30)
+	file.save(f"image.png", optimize=True, quality=30)
 	file = IImage.open(file)
 	if resize:
 		i = IImage.open(file)
