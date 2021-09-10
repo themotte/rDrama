@@ -65,32 +65,33 @@ def notifications(v):
 			g.db.add(x)
 			i += 1
 
-	listing = []
-	for c in comments:
-		c._is_blocked = False
-		c._is_blocking = False
-		if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
-			c.replies = []
-			while c.parent_comment and c.parent_comment.author_id == v.id:
-				parent = c.parent_comment
-				if c not in parent.replies2:
-					parent.replies2 = parent.replies2 + [c]
-					parent.replies = parent.replies2
-				c = parent
-			if c not in listing:
-				listing.append(c)
-				c.replies = c.replies2
-		elif c.parent_submission:
-			c.replies = []
-			if c not in listing:
-				listing.append(c)
-		else:
-			if c.parent_comment:
-				while c.level > 1:
-					c = c.parent_comment
+	if not messages and not posts:
+		listing = []
+		for c in comments:
+			c._is_blocked = False
+			c._is_blocking = False
+			if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
+				c.replies = []
+				while c.parent_comment and c.parent_comment.author_id == v.id:
+					parent = c.parent_comment
+					if c not in parent.replies2:
+						parent.replies2 = parent.replies2 + [c]
+						parent.replies = parent.replies2
+					c = parent
+				if c not in listing:
+					listing.append(c)
+					c.replies = c.replies2
+			elif c.parent_submission:
+				c.replies = []
+				if c not in listing:
+					listing.append(c)
+			else:
+				if c.parent_comment:
+					while c.level > 1:
+						c = c.parent_comment
 
-			if c not in listing:
-				listing.append(c)
+				if c not in listing:
+					listing.append(c)
 
 	return render_template("notifications.html",
 						   v=v,
