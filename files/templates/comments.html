@@ -431,9 +431,9 @@
 					<li class="list-group-item"><a href="/votes?link={{c.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
 					{% if v %}
-						<li id="save2-{{c.id}}" class="{% if c not in v.saved_comment_idlist() %}d-none{% endif %} list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
+						<li id="save2-{{c.id}}" class="{% if c in v.saved_comment_idlist() %}d-none{% endif %} list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
 
-						<li id="unsave2-{{c.id}}" class="{% if c in v.saved_comment_idlist() %}d-none{% endif %} list-group-item"><a href="javascript:void(0)" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-save"></i>Unsave</a></li>
+						<li id="unsave2-{{c.id}}" class="{% if c not in v.saved_comment_idlist() %}d-none{% endif %} list-group-item"><a href="javascript:void(0)" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-save"></i>Unsave</a></li>
 
 					{% endif %}
 

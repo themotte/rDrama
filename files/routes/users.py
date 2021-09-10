@@ -291,7 +291,7 @@ def mfa_qr(secret, v):
 
 	mem = io.BytesIO()
 
-	img.save(mem, format="PNG", optimize=True, quality=30)
+	img.save(mem, format="PNG")
 	mem.seek(0, 0)
 	return send_file(mem, mimetype="image/png", as_attachment=False)
 
@@ -423,7 +423,7 @@ def u_username(username, v=None):
 	ids = u.userpagelisting(v=v, page=page, sort=sort, t=t)
 
 	# we got 26 items just to see if a next page exists
-	next_exists = (len(ids) == 26)
+	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
    # If page 1, check for sticky
@@ -526,7 +526,7 @@ def u_username_comments(username, v=None):
 		)
 
 	# we got 26 items just to see if a next page exists
-	next_exists = (len(ids) == 26)
+	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
 	listing = get_comments(ids, v=v)

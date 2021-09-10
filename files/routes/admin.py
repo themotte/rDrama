@@ -23,34 +23,122 @@ from files.helpers.discord import add_role
 
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
+@app.post("/@<username>/revert_actions")
+@admin_level_required(6)
+def revert_actions(v, username):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
+
+		items = g.db.query(Submission).options(lazyload('*')).filter_by(removed_by=user.id).all() + g.db.query(Comment).options(lazyload('*')).filter_by(removed_by=user.id).all()
+
+		for item in items:
+			item.is_banned = False
+			item.removed_by = None
+			g.db.add(item)
+
+		users = g.db.query(User).options(lazyload('*')).filter_by(is_banned=user.id).all()
+		for user in users:
+			user.unban()
+
+	return {"message": "Admin actions reverted!"}
+
+
 @app.post("/@<username>/make_admin")
 @admin_level_required(6)
 def make_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 6
-	g.db.add(user)
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
+		user.admin_level = 6
+		g.db.add(user)
 	return {"message": "User has been made admin!"}
-
-
-@app.post("/@<username>/make_fake_admin")
-@admin_level_required(6)
-def make_fake_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 1
-	g.db.add(user)
-	return {"message": "User has been made fake admin!"}
 
 
 @app.post("/@<username>/remove_admin")
 @admin_level_required(6)
 def remove_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 0
-	g.db.add(user)
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
+		user.admin_level = 0
+		g.db.add(user)
 	return {"message": "Admin removed!"}
+
+
+@app.post("/@<username>/make_fake_admin")
+@admin_level_required(6)
+def make_fake_admin(v, username):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
+		user.admin_level = 1
+		g.db.add(user)
+	return {"message": "User has been made fake admin!"}
+
+
+@app.post("/@<username>/remove_fake_admin")
+@admin_level_required(6)
+def remove_fake_admin(v, username):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
+		user.admin_level = 0
+		g.db.add(user)
+	return {"message": "Fake admin removed!"}
+
+
+@app.post("/admin/monthly")
+@limiter.limit("1/day")
+@admin_level_required(6)
+def monthly(v):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+		_awards = []
+		for u in g.db.query(User).filter(User.patron > 0).all():
+			grant_awards = {}
+
+			if u.patron == 1:
+				grant_awards["shit"] = 1
+				grant_awards["stars"] = 1
+			elif u.patron == 2:
+				grant_awards["shit"] = 3
+				grant_awards["stars"] = 3
+			elif u.patron == 3:
+				grant_awards["shit"] = 5
+				grant_awards["stars"] = 5
+				grant_awards["ban"] = 1
+			elif u.patron == 4:
+				grant_awards["shit"] = 10
+				grant_awards["stars"] = 10
+				grant_awards["ban"] = 3
+			elif u.patron == 5 or u.patron == 8:
+				grant_awards["shit"] = 20
+				grant_awards["stars"] = 20
+				grant_awards["ban"] = 6
+
+
+			for name in grant_awards:
+				for count in range(grant_awards[name]):
+
+					thing += 1
+
+					_awards.append(AwardRelationship(
+						id=thing,
+						user_id=u.id,
+						kind=name
+					))
+
+			text = "You were given the following awards:\n\n"
+
+			for key, value in grant_awards.items():
+				text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
+
+			send_notification(NOTIFICATIONS_ACCOUNT, u, text)
+
+		g.db.bulk_save_objects(_awards)
+
+	return {"message": "Monthly awards granted"}
 
 
 @app.get('/admin/rules')
@@ -110,7 +198,7 @@ def image_posts_listing(v):
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+26
 	posts = [x.id for x in posts if x.is_image][firstrange:secondrange]
-	next_exists = (len(posts) == 26)
+	next_exists = (len(posts) > 25)
 	posts = get_posts(posts[:25], v=v)
 
 	return render_template("admin/image_posts.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
@@ -128,7 +216,7 @@ def flagged_posts(v):
 	).join(Submission.flags).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
 
 	listing = [p.id for p in posts]
-	next_exists = (len(listing) == 26)
+	next_exists = (len(listing) > 25)
 	listing = listing[:25]
 
 	listing = get_posts(listing, v=v)
@@ -150,7 +238,7 @@ def flagged_comments(v):
 	).join(Comment.flags).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in posts]
-	next_exists = (len(listing) == 26)
+	next_exists = (len(listing) > 25)
 	listing = listing[:25]
 
 	listing = get_comments(listing, v=v)
@@ -168,59 +256,6 @@ def admin_home(v):
 	with open('./disablesignups', 'r') as f:
 		x = f.read()
 		return render_template("admin/admin_home.html", v=v, x=x)
-
-@app.post("/admin/monthly")
-@limiter.limit("1/day")
-@admin_level_required(6)
-def monthly(v):
-	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
-	_awards = []
-	for u in g.db.query(User).filter(User.patron > 0).all():
-		grant_awards = {}
-
-		if u.patron == 1:
-			grant_awards["shit"] = 1
-			grant_awards["stars"] = 1
-		elif u.patron == 2:
-			grant_awards["shit"] = 3
-			grant_awards["stars"] = 3
-		elif u.patron == 3:
-			grant_awards["shit"] = 5
-			grant_awards["stars"] = 5
-			grant_awards["ban"] = 1
-		elif u.patron == 4:
-			grant_awards["shit"] = 10
-			grant_awards["stars"] = 10
-			grant_awards["ban"] = 3
-		elif u.patron == 5 or u.patron == 8:
-		 	grant_awards["shit"] = 20
-		 	grant_awards["stars"] = 20
-		 	grant_awards["ban"] = 6
-
-
-		for name in grant_awards:
-			for count in range(grant_awards[name]):
-
-				thing += 1
-
-				_awards.append(AwardRelationship(
-					id=thing,
-					user_id=u.id,
-					kind=name
-				))
-
-		text = "You were given the following awards:\n\n"
-
-		for key, value in grant_awards.items():
-			text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
-
-		send_notification(NOTIFICATIONS_ACCOUNT, u, text)
-
-	g.db.bulk_save_objects(_awards)
-
-
-	return {"message": "Monthly awards granted"}
-
 
 @app.post("/admin/disablesignups")
 @admin_level_required(6)
@@ -366,7 +401,7 @@ def users_list(v):
 
 	users = [x for x in users]
 
-	next_exists = (len(users) == 26)
+	next_exists = (len(users) > 25)
 	users = users[:25]
 
 	return render_template("admin/new_users.html",
@@ -515,7 +550,7 @@ def admin_removed(v):
 
 	ids=[x[0] for x in ids]
 
-	next_exists = len(ids) == 26
+	next_exists = len(ids) > 25
 
 	ids = ids[:25]
 
@@ -852,6 +887,7 @@ def ban_post(post_id, v):
 	post.is_approved = 0
 	post.stickied = False
 	post.is_pinned = False
+	post.removed_by = v.id
 
 	ban_reason=request.form.get("reason", "")
 	ban_reason = ban_reason.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -973,6 +1009,7 @@ def api_ban_comment(c_id, v):
 
 	comment.is_banned = True
 	comment.is_approved = 0
+	comment.removed_by = v.id
 
 	g.db.add(comment)
 	ma=ModAction(
@@ -1125,9 +1162,9 @@ def admin_nunuke_user(v):
 
 	return redirect(user.url)
 	
-@app.get("/admin/user_stat_data")
-@admin_level_required(2)
-def user_stat_data(v):
+@app.get("/chart")
+@auth_required
+def chart(v):
 
 	days = int(request.args.get("days", 25))
 
@@ -1149,74 +1186,13 @@ def user_stat_data(v):
 	day_cutoffs = [today_cutoff - day * i for i in range(days)]
 	day_cutoffs.insert(0, calendar.timegm(now))
 
-	daily_signups = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
-					  "day_start":day_cutoffs[i + 1],
-					  "signups": g.db.query(User).filter(User.created_utc < day_cutoffs[i],
-														 User.created_utc > day_cutoffs[i + 1]														 ).count()
-					  } for i in range(len(day_cutoffs) - 1)
-					 ]
+	daily_times = [time.strftime("%d", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	user_stats = {'current_users': g.db.query(User).filter_by(is_banned=0, reserved=None).count(),
-				  'banned_users': g.db.query(User).filter(User.is_banned != 0).count(),
-				  'reserved_users': g.db.query(User).filter(User.reserved != None).count(),
-				  'email_verified_users': g.db.query(User).filter_by(is_banned=0, is_activated=True).count(),
-				  }
+	daily_signups = [g.db.query(User).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	post_stats = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
-				   "day_start":day_cutoffs[i + 1],
-				   "posts": g.db.query(Submission).filter(Submission.created_utc < day_cutoffs[i],
-														  Submission.created_utc > day_cutoffs[i + 1],
-														  Submission.is_banned == False
-														  ).count()
-				   } for i in range(len(day_cutoffs) - 1)
-				  ]
+	post_stats = [g.db.query(Submission).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	comment_stats = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
-					  "day_start": day_cutoffs[i + 1],
-					  "comments": g.db.query(Comment).filter(Comment.created_utc < day_cutoffs[i],
-															 Comment.created_utc > day_cutoffs[i + 1],
-															 Comment.is_banned == False,
-															 Comment.author_id != 1
-															 ).count()
-					  } for i in range(len(day_cutoffs) - 1)
-					 ]
-
-	x = create_plot(sign_ups={'daily_signups': daily_signups},
-					posts={'post_stats': post_stats},
-					comments={'comment_stats': comment_stats},
-					)
-
-	final = {
-			"multi_plot": x,
-			"user_stats": user_stats,
-			"signup_data": daily_signups,
-			"post_data": post_stats,
-			"comment_data": comment_stats,
-			}
-
-	return final
-
-
-def create_plot(**kwargs):
-
-	if not kwargs:
-		return abort(400)
-
-	# create multiple charts
-	daily_signups = [d["signups"] for d in kwargs["sign_ups"]['daily_signups']][1:][::-1]
-	post_stats = [d["posts"] for d in kwargs["posts"]['post_stats']][1:][::-1]
-	comment_stats = [d["comments"] for d in kwargs["comments"]['comment_stats']][1:][::-1]
-	daily_times = [d["date"] for d in kwargs["sign_ups"]['daily_signups']][1:][::-1]
-
-	multi_plots = multiple_plots(sign_ups=daily_signups,
-								 posts=post_stats,
-								 comments=comment_stats,
-								 daily_times=daily_times)
-
-	return multi_plots
-
-
-def multiple_plots(**kwargs):
+	comment_stats = [g.db.query(Comment).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	# create multiple charts
 	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)
@@ -1226,16 +1202,16 @@ def multiple_plots(**kwargs):
 	signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
 
 	signup_chart.plot(
-		kwargs['daily_times'],
-		kwargs['sign_ups'],
+		daily_times,
+		daily_signups,
 		color='red')
 	posts_chart.plot(
-		kwargs['daily_times'],
-		kwargs['posts'],
+		daily_times,
+		post_stats,
 		color='green')
 	comments_chart.plot(
-		kwargs['daily_times'],
-		kwargs['comments'],
+		daily_times,
+		comment_stats,
 		color='gold')
 
 	signup_chart.set_ylabel("Signups")
@@ -1247,8 +1223,6 @@ def multiple_plots(**kwargs):
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
 
-	plt.savefig("image.png")
+	plt.savefig("chart.png")
 	plt.clf()
-
-	if "pcmemes.net" in request.host: return upload_ibb("image.png")
-	else: return upload_imgur("image.png")
+	return send_file("../chart.png")

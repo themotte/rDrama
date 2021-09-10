@@ -11,10 +11,16 @@ CF_ZONE = environ.get("CLOUDFLARE_ZONE", "").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 IBB_KEY = environ.get("IBB_KEY", "").strip()
 
-def upload_ibb(file, resize=False):
+def upload_ibb(filepath=None, file=None, resize=False):
 	
+	if file:
+		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+		filepath = f"image.{format}"
+		file.save(filepath)
+	else: format = filepath.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+
 	if resize:
-		i = IImage.open(file)
+		i = IImage.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -28,28 +34,35 @@ def upload_ibb(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save(f"image.{om.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
-		except Exception as e:
-			print(e)
-			return
+		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		except: return
+	elif format != "gif":
+		i = IImage.open(filepath)
+		i.save(filepath, optimize=True, quality=30)
+
 	try:
-		with open(file, 'rb') as f:
+		with open(filepath, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
 		resp = req.json()['data']
 		url = resp['url']
-	except Exception as e:
+	except:
 		if req: print(req.json())
-		else: print(e)
 		return
 
-	return(url)
+	return url
 
 
-def upload_imgur(file, resize=False):
+def upload_imgur(filepath=None, file=None, resize=False):
 	
+	if file:
+		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+		filepath = f"image.{format}"
+		file.save(filepath)
+	else: format = filepath.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+
 	if resize:
-		i = IImage.open(file)
+		i = IImage.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -63,15 +76,14 @@ def upload_imgur(file, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save(f"image.{om.filename.split('.')[-1]}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
-		except Exception as e:
-			#print(om.filename)
-			print(type(om))
-			print(om.format)
-			print(e)
-			return
+		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		except: return
+	elif format != "gif":
+		i = IImage.open(filepath)
+		i.save(filepath, optimize=True, quality=30)
+
 	try:
-		with open(file, 'rb') as f:
+		with open(filepath, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
 		resp = req.json()['data']
@@ -79,14 +91,13 @@ def upload_imgur(file, resize=False):
 		if not "_d." in url:
 			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
 			if "_d." in url: url += "?maxwidth=9999"
-	except Exception as e:
+	except:
 		if req: print(req.json())
-		else: print(e)
 		return
 
 	new_image = Image(text=url, deletehash=resp["deletehash"])
 	g.db.add(new_image)
-	return(url)
+	return url
 
 
 class UploadException(Exception):

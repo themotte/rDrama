@@ -213,7 +213,7 @@ def searchposts(v):
 	criteria=searchparse(query)
 	total, ids = searchlisting(criteria, v=v, page=page, t=t, sort=sort)
 
-	next_exists = (len(ids) == 26)
+	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
 	posts = get_posts(ids, v=v)
@@ -255,7 +255,7 @@ def searchcomments(v):
 	criteria=searchparse(query)
 	total, ids = searchcommentlisting(criteria, v=v, page=page, t=t, sort=sort)
 
-	next_exists = (len(ids) == 26)
+	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
 	comments = get_comments(ids, v=v)

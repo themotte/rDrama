@@ -25,15 +25,15 @@ def notifications(v):
 		firstrange = 25 * (page - 1)
 		secondrange = firstrange + 26
 		comments = comments[firstrange:secondrange]
-		next_exists = (len(comments) == 26)
+		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif messages:
 		cids = v.notification_messages(page=page)
-		next_exists = (len(cids) == 26)
+		next_exists = (len(cids) > 25)
 		cids = cids[:25]
 		comments = get_comments(cids, v=v)
 	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26)
+		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101)
 
 		comments = []
 		for x in notifications:
@@ -42,8 +42,8 @@ def notifications(v):
 			x.read = True
 			g.db.add(x)
 			comments.append(c)
-		next_exists = (len(comments) == 26)
-		comments = comments[:25]
+		next_exists = (len(comments) > 100)
+		listing = comments[:100]
 	else:
 		notifications = v.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
@@ -51,7 +51,7 @@ def notifications(v):
 			Comment.author_id != AUTOJANNY_ACCOUNT,
 		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
-		next_exists = (len(notifications) == 26)
+		next_exists = (len(notifications) > 25)
 		notifications = notifications[:25]
 		cids = [x.comment_id for x in notifications]
 		comments = get_comments(cids, v=v, load_parent=True)
@@ -65,32 +65,33 @@ def notifications(v):
 			g.db.add(x)
 			i += 1
 
-	listing = []
-	for c in comments:
-		c._is_blocked = False
-		c._is_blocking = False
-		if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
-			c.replies = []
-			while c.parent_comment and c.parent_comment.author_id == v.id:
-				parent = c.parent_comment
-				if c not in parent.replies2:
-					parent.replies2 = parent.replies2 + [c]
-					parent.replies = parent.replies2
-				c = parent
-			if c not in listing:
-				listing.append(c)
-				c.replies = c.replies2
-		elif c.parent_submission:
-			c.replies = []
-			if c not in listing:
-				listing.append(c)
-		else:
-			if c.parent_comment:
-				while c.level > 1:
-					c = c.parent_comment
+	if not posts:
+		listing = []
+		for c in comments:
+			c._is_blocked = False
+			c._is_blocking = False
+			if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
+				c.replies = []
+				while c.parent_comment and c.parent_comment.author_id == v.id:
+					parent = c.parent_comment
+					if c not in parent.replies2:
+						parent.replies2 = parent.replies2 + [c]
+						parent.replies = parent.replies2
+					c = parent
+				if c not in listing:
+					listing.append(c)
+					c.replies = c.replies2
+			elif c.parent_submission:
+				c.replies = []
+				if c not in listing:
+					listing.append(c)
+			else:
+				if c.parent_comment:
+					while c.level > 1:
+						c = c.parent_comment
 
-			if c not in listing:
-				listing.append(c)
+				if c not in listing:
+					listing.append(c)
 
 	return render_template("notifications.html",
 						   v=v,
@@ -157,9 +158,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	if lt:
 		posts = posts.filter(Submission.created_utc < lt)
 
-	if v:
-		posts = posts.join(Submission.author).filter(or_(User.shadowbanned==False, Submission.author_id==v.id))
-	else:
+	if not v or v.shadowbanned:
 		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
 	if sort == "hot":
@@ -182,10 +181,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	else:
 		abort(400)
 
-	#print('fartbinn' in [x.author.username for x in posts])
-
 	firstrange = 50 * (page - 1)
-	secondrange = firstrange+51
+	secondrange = firstrange+200
 	posts = posts[firstrange:secondrange]
 
 	if random.random() < 0.004:
@@ -205,7 +202,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 				post.views = post.views + random.randint(7,10)
 				g.db.add(post)
 
-	next_exists = (len(posts) == 51)
+	next_exists = (len(posts) > 50)
 
 	posts = posts[:50]
 
@@ -350,7 +347,7 @@ def changelog(v):
 					)
 
 	# check existence of next page
-	next_exists = (len(ids) == 51)
+	next_exists = (len(ids) > 50)
 	ids = ids[:50]
 
 	# check if ids exist
@@ -450,7 +447,7 @@ def all_comments(v):
 
 	comments = get_comments(idlist, v=v)
 
-	next_exists = len(idlist) == 26
+	next_exists = len(idlist) > 25
 
 	idlist = idlist[:25]
 

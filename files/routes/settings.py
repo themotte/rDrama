@@ -113,9 +113,8 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			file.save(f"image.{file.format}", optimize=True, quality=30)
-			if 'pcmemes.net' in request.host: url = upload_ibb(f"image.{file.format}")
-			else: url = upload_imgur(f"image.{file.format}")
+			if 'pcmemes.net' in request.host: url = upload_ibb(file=file)
+			else: url = upload_imgur(file=file)
 
 			bio += f"\n\n![]({url})"
 
@@ -498,17 +497,16 @@ def settings_images_profile(v):
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
 	file = request.files["profile"]
-	print(file.filename)
-	print(file.filename.split('.')[-1])
-	file.save(f"image.{file.filename.split('.')[-1]}")
-	if 'pcmemes.net' in request.host: highres = upload_ibb(f"image.{file.filename.split('.')[-1]}")
-	else: highres = upload_imgur(f"image.{file.filename.split('.')[-1]}")
+	format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+	filepath = f"image.{format}"
+	file.save(filepath)
 
+	if 'pcmemes.net' in request.host: highres = upload_ibb(filepath=filepath)
+	else: highres = upload_imgur(filepath=filepath)
 	if not highres: abort(400)
 
-	if 'pcmemes.net' in request.host: imageurl = upload_ibb(f"image.{file.filename.split('.')[-1]}", True)
-	else: imageurl = upload_imgur(f"image.{file.filename.split('.')[-1]}", True)
-
+	if 'pcmemes.net' in request.host: imageurl = upload_ibb(filepath=filepath, resize=True)
+	else: imageurl = upload_imgur(filepath=filepath, resize=True)
 	if not imageurl: abort(400)
 
 	v.highres = highres
@@ -529,10 +527,8 @@ def settings_images_banner(v):
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
 	file = request.files["banner"]
-	file.save(f"image.{file.filename.split('.')[-1]}")
-
-	if 'pcmemes.net' in request.host: imageurl = upload_ibb(f"image.{file.filename.split('.')[-1]}")
-	else: imageurl = upload_imgur(f"image.{file.filename.split('.')[-1]}")
+	if 'pcmemes.net' in request.host: imageurl = upload_ibb(file=file)
+	else: imageurl = upload_imgur(file=file)
 
 	if imageurl:
 		v.bannerurl = imageurl
@@ -847,3 +843,13 @@ def settings_title_change(v):
 
 	g.db.add(v)
 	return redirect("/settings/profile")
+
+
+@app.post("/settings/badges")
+@auth_required
+@validate_formkey
+def settings_badge_recheck(v):
+
+	v.refresh_selfset_badges()
+
+	return {"message":"Badges Refreshed"}
