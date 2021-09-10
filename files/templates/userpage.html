@@ -44,16 +44,18 @@
 {% block desktopUserBanner %}
 <!-- Desktop -->
 <script>
-	var userid = document.getElementById("userid").value;
-	if (userid != "nosong")
-	{
-		var audio = new Audio(`/songs/${userid}`);
-		audio.loop=true;
-		audio.play();
-		document.getElementById('userpage').addEventListener('click', () => {
-			if (audio.paused) audio.play(); 
-		}, {once : true});
-	}
+    window.addEventListener( 'load', function() {
+		var userid = document.getElementById("userid").value;
+		if (userid != "nosong")
+		{
+			var audio = new Audio(`/songs/${userid}`);
+			audio.loop=true;
+			audio.play();
+			document.getElementById('userpage').addEventListener('click', () => {
+				if (audio.paused) audio.play(); 
+			}, {once : true});
+		}
+	}, false );
 
 	function transferCoins(mobile=false) {
 		let t = event.target;
