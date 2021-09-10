@@ -26,50 +26,119 @@ IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 @app.post("/@<username>/revert_actions")
 @admin_level_required(6)
 def revert_actions(v, username):
-	user = get_user(username)
-	if not user: abort(404)
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
 
-	items = g.db.query(Submission).options(lazyload('*')).filter_by(removed_by=user.id).all() + g.db.query(Comment).options(lazyload('*')).filter_by(removed_by=user.id).all()
+		items = g.db.query(Submission).options(lazyload('*')).filter_by(removed_by=user.id).all() + g.db.query(Comment).options(lazyload('*')).filter_by(removed_by=user.id).all()
 
-	for item in items:
-		item.is_banned = False
-		item.removed_by = None
-		g.db.add(item)
+		for item in items:
+			item.is_banned = False
+			item.removed_by = None
+			g.db.add(item)
 
-	users = g.db.query(User).options(lazyload('*')).filter_by(is_banned=user.id).all()
-	for user in users:
-		user.unban()
+		users = g.db.query(User).options(lazyload('*')).filter_by(is_banned=user.id).all()
+		for user in users:
+			user.unban()
 
 	return {"message": "Admin actions reverted!"}
+
 
 @app.post("/@<username>/make_admin")
 @admin_level_required(6)
 def make_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 6
-	g.db.add(user)
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
+		user.admin_level = 6
+		g.db.add(user)
 	return {"message": "User has been made admin!"}
-
-
-@app.post("/@<username>/make_fake_admin")
-@admin_level_required(6)
-def make_fake_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 1
-	g.db.add(user)
-	return {"message": "User has been made fake admin!"}
 
 
 @app.post("/@<username>/remove_admin")
 @admin_level_required(6)
 def remove_admin(v, username):
-	user = get_user(username)
-	if not user: abort(404)
-	user.admin_level = 0
-	g.db.add(user)
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
+		user.admin_level = 0
+		g.db.add(user)
 	return {"message": "Admin removed!"}
+
+
+@app.post("/@<username>/make_fake_admin")
+@admin_level_required(6)
+def make_fake_admin(v, username):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
+		user.admin_level = 1
+		g.db.add(user)
+	return {"message": "User has been made fake admin!"}
+
+
+@app.post("/@<username>/remove_fake_admin")
+@admin_level_required(6)
+def remove_fake_admin(v, username):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		user = get_user(username)
+		if not user: abort(404)
+		user.admin_level = 0
+		g.db.add(user)
+	return {"message": "Fake admin removed!"}
+
+
+@app.post("/admin/monthly")
+@limiter.limit("1/day")
+@admin_level_required(6)
+def monthly(v):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+		_awards = []
+		for u in g.db.query(User).filter(User.patron > 0).all():
+			grant_awards = {}
+
+			if u.patron == 1:
+				grant_awards["shit"] = 1
+				grant_awards["stars"] = 1
+			elif u.patron == 2:
+				grant_awards["shit"] = 3
+				grant_awards["stars"] = 3
+			elif u.patron == 3:
+				grant_awards["shit"] = 5
+				grant_awards["stars"] = 5
+				grant_awards["ban"] = 1
+			elif u.patron == 4:
+				grant_awards["shit"] = 10
+				grant_awards["stars"] = 10
+				grant_awards["ban"] = 3
+			elif u.patron == 5 or u.patron == 8:
+				grant_awards["shit"] = 20
+				grant_awards["stars"] = 20
+				grant_awards["ban"] = 6
+
+
+			for name in grant_awards:
+				for count in range(grant_awards[name]):
+
+					thing += 1
+
+					_awards.append(AwardRelationship(
+						id=thing,
+						user_id=u.id,
+						kind=name
+					))
+
+			text = "You were given the following awards:\n\n"
+
+			for key, value in grant_awards.items():
+				text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
+
+			send_notification(NOTIFICATIONS_ACCOUNT, u, text)
+
+		g.db.bulk_save_objects(_awards)
+
+	return {"message": "Monthly awards granted"}
 
 
 @app.get('/admin/rules')
@@ -187,59 +256,6 @@ def admin_home(v):
 	with open('./disablesignups', 'r') as f:
 		x = f.read()
 		return render_template("admin/admin_home.html", v=v, x=x)
-
-@app.post("/admin/monthly")
-@limiter.limit("1/day")
-@admin_level_required(6)
-def monthly(v):
-	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
-	_awards = []
-	for u in g.db.query(User).filter(User.patron > 0).all():
-		grant_awards = {}
-
-		if u.patron == 1:
-			grant_awards["shit"] = 1
-			grant_awards["stars"] = 1
-		elif u.patron == 2:
-			grant_awards["shit"] = 3
-			grant_awards["stars"] = 3
-		elif u.patron == 3:
-			grant_awards["shit"] = 5
-			grant_awards["stars"] = 5
-			grant_awards["ban"] = 1
-		elif u.patron == 4:
-			grant_awards["shit"] = 10
-			grant_awards["stars"] = 10
-			grant_awards["ban"] = 3
-		elif u.patron == 5 or u.patron == 8:
-		 	grant_awards["shit"] = 20
-		 	grant_awards["stars"] = 20
-		 	grant_awards["ban"] = 6
-
-
-		for name in grant_awards:
-			for count in range(grant_awards[name]):
-
-				thing += 1
-
-				_awards.append(AwardRelationship(
-					id=thing,
-					user_id=u.id,
-					kind=name
-				))
-
-		text = "You were given the following awards:\n\n"
-
-		for key, value in grant_awards.items():
-			text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
-
-		send_notification(NOTIFICATIONS_ACCOUNT, u, text)
-
-	g.db.bulk_save_objects(_awards)
-
-
-	return {"message": "Monthly awards granted"}
-
 
 @app.post("/admin/disablesignups")
 @admin_level_required(6)
