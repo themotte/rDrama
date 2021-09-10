@@ -311,7 +311,7 @@ function post(url, callback, errortext) {
 	xhr.send(form);
 };
 
-function post_toast(url, reload, data) {
+function post_toast(url, reload, callback, data) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	var form = new FormData()
@@ -337,6 +337,10 @@ function post_toast(url, reload, data) {
 			}
 
 			if (reload == 1) {window.location.reload(true)}
+			else {
+				try {callback(xhr)}
+				catch(e) {}
+			}
 			return true
 
 		} else if (xhr.status >= 300 && xhr.status < 400) {
