@@ -31,7 +31,7 @@ def notifications(v):
 		cids = v.notification_messages(page=page)
 		next_exists = (len(cids) == 26)
 		cids = cids[:25]
-		comments = get_comments(cids, v=v)
+		listing = get_comments(cids, v=v)
 	elif posts:
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26)
 
@@ -43,7 +43,7 @@ def notifications(v):
 			g.db.add(x)
 			comments.append(c)
 		next_exists = (len(comments) == 26)
-		comments = comments[:25]
+		listing = comments[:25]
 	else:
 		notifications = v.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
