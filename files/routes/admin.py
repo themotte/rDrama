@@ -1186,7 +1186,7 @@ def chart(v):
 					comments={'comment_stats': comment_stats},
 					)
 
-	return send_file(x)
+	return send_file("image.png")
 
 
 def create_plot(**kwargs):
@@ -1241,6 +1241,3 @@ def multiple_plots(**kwargs):
 
 	plt.savefig("image.png")
 	plt.clf()
-
-	if "pcmemes.net" in request.host: return upload_ibb(filepath="image.png")
-	else: return upload_imgur(filepath="image.png")
