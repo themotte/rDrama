@@ -1186,15 +1186,7 @@ def chart(v):
 					comments={'comment_stats': comment_stats},
 					)
 
-	final = {
-			"multi_plot": x,
-			"user_stats": user_stats,
-			"signup_data": daily_signups,
-			"post_data": post_stats,
-			"comment_data": comment_stats,
-			}
-
-	return final
+	return redirect(x)
 
 
 def create_plot(**kwargs):
