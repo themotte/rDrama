@@ -1149,31 +1149,23 @@ def chart(v):
 	day_cutoffs = [today_cutoff - day * i for i in range(days)]
 	day_cutoffs.insert(0, calendar.timegm(now))
 
-	daily_signups = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
-					  "day_start":day_cutoffs[i + 1],
-					  "signups": g.db.query(User).filter(User.created_utc < day_cutoffs[i],
-														 User.created_utc > day_cutoffs[i + 1]														 ).count()
-					  } for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	daily_signups = [g.db.query(User).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	post_stats = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
-				   "day_start":day_cutoffs[i + 1],
-				   "posts": g.db.query(Submission).filter(Submission.created_utc < day_cutoffs[i],
+	post_stats = [g.db.query(Submission).filter(Submission.created_utc < day_cutoffs[i],
 														  Submission.created_utc > day_cutoffs[i + 1],
 														  Submission.is_banned == False
 														  ).count()
-				   } for i in range(len(day_cutoffs) - 1)][2:][::-1]
+				   for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	comment_stats = [{"date": time.strftime("%d", time.gmtime(day_cutoffs[i + 1])),
-					  "day_start": day_cutoffs[i + 1],
-					  "comments": g.db.query(Comment).filter(Comment.created_utc < day_cutoffs[i],
+	comment_stats = [g.db.query(Comment).filter(Comment.created_utc < day_cutoffs[i],
 															 Comment.created_utc > day_cutoffs[i + 1],
 															 Comment.is_banned == False,
 															 Comment.author_id != 1
 															 ).count()
-					  } for i in range(len(day_cutoffs) - 1)][2:][::-1]
+					  for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	for d in daily_signups:
-		print(d["signups"])
+		print(d)
 		return "sex"
 	# create multiple charts
 	daily_signups = [d["signups"] for d in daily_signups]
