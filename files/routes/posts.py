@@ -183,25 +183,18 @@ def post_id(pid, anything=None, v=None):
 
 		post.preloaded_comments = [x for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
 
-	# unread comment highlight
-	last_view_utc = session.get(str(post.id))
+	if not v or v.highlightcomments:
+		last_view_utc = session.get(str(post.id))
+		if last_view_utc: last_view_utc = int(last_view_utc)
+		session[str(post.id)] = int(time.time())
 
-	if last_view_utc:
-		last_view_utc = int(last_view_utc)
-
-	session[str(post.id)] = int(time.time())
-
-	print(session)
-
-	keys = []
-	for key, val in session.items():
-		print(key)
-		if type(val) is int and key not in ['login_nonce','user_id']:
-			if time.time() - val > 86400: keys.append(key)
-	
-	print(keys)
-	for key in keys: session.pop(key)
-	print(session)
+		keys = []
+		for key, val in session.items():
+			print(key)
+			if type(val) is int and key not in ['login_nonce','user_id']:
+				if time.time() - val > 86400: keys.append(key)
+		
+		for key in keys: session.pop(key)
 
 	post.views += 1
 	g.db.add(post)
