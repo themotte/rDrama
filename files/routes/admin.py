@@ -1186,7 +1186,7 @@ def chart(v):
 					comments={'comment_stats': comment_stats},
 					)
 
-	return redirect(x)
+	return send_file(x)
 
 
 def create_plot(**kwargs):
