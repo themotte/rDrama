@@ -204,7 +204,9 @@ def post_id(pid, anything=None, v=None):
 
 	post.tree_comments()
 	if request.headers.get("Authorization"): return post.json
-	else: return post.rendered_page(v=v, last_view_utc=last_view_utc, sort=sort)
+	else:
+		if not v or v.highlightcomments: return post.rendered_page(v=v, last_view_utc=last_view_utc, sort=sort)
+		else: return post.rendered_page(v=v, sort=sort)
 
 
 @app.post("/edit_post/<pid>")
