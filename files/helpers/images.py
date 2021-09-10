@@ -33,7 +33,7 @@ def upload_ibb(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0)
+		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except: return
 
 	filedir = "image.gif"
@@ -72,7 +72,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0)
+		try: om.save("image.gif", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except: return(None)
 
 	filedir = "image.gif"
