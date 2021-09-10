@@ -191,8 +191,9 @@ def post_id(pid, anything=None, v=None):
 
 	session[str(post.id)] = int(time.time())
 
-	print(session)
-	
+	for i in session.values():
+		print(i)
+
 	post.views += 1
 	g.db.add(post)
 	if isinstance(session.get('over_18', 0), dict): session["over_18"] = 0
