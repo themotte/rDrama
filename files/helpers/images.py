@@ -13,11 +13,12 @@ IBB_KEY = environ.get("IBB_KEY", "").strip()
 
 def upload_ibb(filepath=None, file=None, resize=False):
 	
-	if filepath: file = IImage.open(file)
-	file.save(f"image.png", optimize=True, quality=30)
-	file = IImage.open(file)
+	if file:
+		filepath = f"image.{file.filename.split('.')[-1]}"
+		file.save(filepath)
+
+	i = IImage.open(filepath)
 	if resize:
-		i = IImage.open(file)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -31,9 +32,11 @@ def upload_ibb(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save(f"image.{file.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		om.save(f"image.{i.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
-	with open(file, 'rb') as f:
+	else: i.save(filepath, optimize=True, quality=30)
+
+	with open(filepath, 'rb') as f:
 		data={'image': base64.b64encode(f.read())} 
 		req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
 	resp = req.json()['data']
@@ -44,11 +47,12 @@ def upload_ibb(filepath=None, file=None, resize=False):
 
 def upload_imgur(filepath=None, file=None, resize=False):
 	
-	if filepath: file = IImage.open(file)
-	file.save(f"image.png", optimize=True, quality=30)
-	file = IImage.open(file)
+	if file:
+		filepath = f"image.{file.filename.split('.')[-1]}"
+		file.save(filepath)
+
+	i = IImage.open(filepath)
 	if resize:
-		i = IImage.open(file)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -62,10 +66,11 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		print("sex" + file)
-		om.save(f"image.{file.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		om.save(f"image.{i.format}", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 
-	with open(file, 'rb') as f:
+	else: i.save(filepath, optimize=True, quality=30)
+
+	with open(filepath, 'rb') as f:
 		data={'image': base64.b64encode(f.read())} 
 		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
 	resp = req.json()['data']
