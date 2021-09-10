@@ -197,7 +197,7 @@ def post_id(pid, anything=None, v=None):
 	for key, val in session.items():
 		print(key)
 		if type(val) is int and key not in ['login_nonce','user_id']:
-			if time.time() - val > 86400: keys += key
+			if time.time() - val > 86400: keys.append(key)
 	
 	print(keys)
 	for key in keys: session.pop(key)
