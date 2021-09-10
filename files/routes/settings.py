@@ -503,7 +503,7 @@ def settings_images_profile(v):
 	else: highres = upload_imgur(file=file)
 	if not highres: abort(400)
 
-	if 'pcmemes.net' in request.host: imageurl = upload_ibb(file=file, resize=True)
+	if 'pcmemes.net' in request.host: imageurl = upload_ibb(file=file2, resize=True)
 	else: imageurl = upload_imgur(file=file2, resize=True)
 	if not imageurl: abort(400)
 
