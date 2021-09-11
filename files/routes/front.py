@@ -22,18 +22,17 @@ def notifications(v):
 	posts = request.args.get('posts', False)
 	if modmail and v.admin_level == 6:
 		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).all()
-		firstrange = 25 * (page - 1)
-		secondrange = firstrange + 26
-		comments = comments[firstrange:secondrange]
-		next_exists = (len(comments) > 25)
-		comments = comments[:25]
+		firstrange = 100 * (page - 1)
+		comments = comments[:firstrange]
+		next_exists = (len(comments) > 100)
+		comments = comments[:100]
 	elif messages:
 		cids = v.notification_messages(page=page)
-		next_exists = (len(cids) > 25)
-		cids = cids[:25]
+		next_exists = (len(cids) > 100)
+		cids = cids[:100]
 		comments = get_comments(cids, v=v)
 	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).all()
+		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(100 * (page - 1)).all()
 
 		comments = []
 		for index, x in enumerate(notifications):
@@ -51,21 +50,20 @@ def notifications(v):
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ACCOUNT,
-		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
+		).order_by(Notification.id.desc()).offset(100 * (page - 1)).all()
 
-		next_exists = (len(notifications) > 25)
-		notifications = notifications[:25]
-		cids = [x.comment_id for x in notifications]
-		comments = get_comments(cids, v=v, load_parent=True)
 
-		i = 0
-		for x in notifications:
-			try:
-				if not x.read: comments[i].unread = True
-			except: continue
-			x.read = True
-			g.db.add(x)
-			i += 1
+		comments = []
+		for index, x in enumerate(notifications):
+			c = x.comment
+			if x.read and index > 101: break
+			elif not x.read:
+				c.unread = True
+				x.read = True
+				g.db.add(x)
+			comments.append(c)
+		next_exists = (len(comments) > 100)
+		listing = comments[:100]
 
 	if not posts:
 		listing = []
@@ -103,6 +101,7 @@ def notifications(v):
 						   standalone=True,
 						   render_replies=True,
 						   is_notification_page=True)
+
 
 @cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
