@@ -360,7 +360,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		g.db.add(self.submission_aux)
 
 	def realtitle(self, v):
-		if self.club and not (v and v.coins > 150): return 'COUNTRY CLUB MEMBERS ONLY'
+		if self.club and not (v and v.coins > 150) and not (v and v.admin_level == 6): return 'COUNTRY CLUB MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
 		else: title = self.title
 
