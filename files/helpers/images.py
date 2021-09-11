@@ -73,7 +73,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 		def thumbnails(frames):
 			for frame in frames:
-				new_image = Image.new("RGBA", frame.size, "WHITE")
+				new_image = IImage.new("RGBA", frame.size, "WHITE")
 				new_image.paste(i, (0, 0), i)
 				new_image.convert('RGB')
 				new_image.thumbnail(size)
