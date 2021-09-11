@@ -1,5 +1,11 @@
 image.png
+image.PNG
 image.gif
+image.GIF
+image.jpg
+image.JPG
+image.jpeg
+image.JPEG
 cache/
 __pycache__/
 *.py[cod]
