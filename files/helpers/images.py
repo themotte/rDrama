@@ -34,12 +34,14 @@ def upload_ibb(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
+		filepath = f"image.{i.format}".lower().replace('jpg','png').replace('jpeg','png')
 		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except Exception as e:
 			print(e)
 			return
 	elif format != "gif":
 		i = IImage.open(filepath)
+		filepath = f"image.{i.format}".lower().replace('jpg','png').replace('jpeg','png')
 		i.save(filepath, optimize=True, quality=30)
 
 	try:
@@ -79,12 +81,14 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
+		filepath = f"image.{i.format}".lower().replace('jpg','png').replace('jpeg','png')
 		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except Exception as e:
 			print(e)
 			return
 	elif format != "gif":
 		i = IImage.open(filepath)
+		filepath = f"image.{i.format}".lower().replace('jpg','png').replace('jpeg','png')
 		i.save(filepath, optimize=True, quality=30)
 
 	try:
