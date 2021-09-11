@@ -62,6 +62,7 @@ def participation_stats(v):
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
 
 @app.get("/paypigs")
+@app.get("/patrons")
 @auth_desired
 def patrons(v):
 	query = g.db.query(

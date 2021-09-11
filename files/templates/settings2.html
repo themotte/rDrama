@@ -153,7 +153,7 @@
 	{% endblock %}
 
 	<!-- Settings content -->
-	<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} mt-3 {% if request.path in ['/leaderboard', '/paypigs'] %}px-0{% endif %}">
+	<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} mt-3 {% if request.path in ['/leaderboard', '/paypigs', '/patrons'] %}px-0{% endif %}">
 
 	{% block content %}
 	{% endblock %}
