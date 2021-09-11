@@ -678,8 +678,8 @@ def settings_apps(v):
 @validate_formkey
 def settings_remove_discord(v):
 
-	if v.admin_level>1:
-		return render_template("settings_filters.html", v=v, error="Admins can't disconnect Discord.")
+	#if v.admin_level>1:
+	#	return render_template("settings_filters.html", v=v, error="Admins can't disconnect Discord.")
 
 	remove_user(v)
 

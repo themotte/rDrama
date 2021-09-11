@@ -393,7 +393,8 @@ CREATE TABLE public.comments (
     is_pinned boolean DEFAULT false,
     app_id integer,
     sentto integer,
-    bannedfor boolean
+    bannedfor boolean,
+    removed_by integer
 );
 
 
@@ -807,7 +808,8 @@ CREATE TABLE public.submissions (
     is_bot boolean,
     bannedfor boolean,
     comment_count integer DEFAULT 0,
-    processing boolean DEFAULT false
+    processing boolean DEFAULT false,
+    removed_by integer
 );
 
 
