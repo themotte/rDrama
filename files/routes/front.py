@@ -23,7 +23,8 @@ def notifications(v):
 	if modmail and v.admin_level == 6:
 		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).all()
 		firstrange = 100 * (page - 1)
-		comments = comments[:firstrange]
+		secondrange = firstrange + 101
+		comments = comments[firstrange:secondrange]
 		next_exists = (len(comments) > 100)
 		comments = comments[:100]
 	elif messages:
