@@ -67,15 +67,16 @@ def upload_imgur(filepath=None, file=None, resize=False):
 	else: format = filepath.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
 
 	if resize:
-		i = IImage.open(filepath)
+		i = IImage.open(filepath).convert("RGBA")
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
+
 
 		def thumbnails(frames):
 			for frame in frames:
 				new_image = IImage.new("RGBA", frame.size, "WHITE")
-				new_image.paste(i, (0, 0), i)
-				new_image.convert('RGB')
+				new_image.paste(frame, mask=frame)
+				new_image.convert("RGB")
 				new_image.thumbnail(size)
 				yield new_image
 
