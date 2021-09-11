@@ -74,8 +74,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 		def thumbnails(frames):
 			for frame in frames:
 				thumbnail = frame.copy()
-				if format == "gif": thumbnail.thumbnail(size, IImage.ANTIALIAS).convert('RGB')
-				else: thumbnail.thumbnail(size, IImage.ANTIALIAS)
+				thumbnail.thumbnail(size)
 				yield thumbnail
 
 		frames = thumbnails(frames)
