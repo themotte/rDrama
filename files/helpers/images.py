@@ -34,14 +34,12 @@ def upload_ibb(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		filepath = f"image.{i.format}"
 		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except Exception as e:
 			print(e)
 			return
 	elif format != "gif":
 		i = IImage.open(filepath)
-		filepath = f"image.{i.format}"
 		i.save(filepath, optimize=True, quality=30)
 
 	try:
@@ -68,32 +66,25 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 	if resize:
 		i = IImage.open(filepath)
-		format = i.format
-		i = IImage.open(filepath).convert("RGBA")
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
-
 		def thumbnails(frames):
 			for frame in frames:
-				new_image = IImage.new("RGBA", frame.size, "WHITE")
-				new_image.paste(frame, mask=frame)
-				new_image.convert("RGB")
-				new_image.thumbnail(size)
-				yield new_image
+				thumbnail = frame.copy()
+				thumbnail.thumbnail(size, IImage.ANTIALIAS)
+				yield thumbnail
 
 		frames = thumbnails(frames)
 
 		om = next(frames)
 		om.info = i.info
-		filepath = f"image.{format}"
 		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except Exception as e:
 			print(e)
 			return
 	elif format != "gif":
 		i = IImage.open(filepath)
-		filepath = f"image.{i.format}"
 		i.save(filepath, optimize=True, quality=30)
 
 	try:
