@@ -64,7 +64,9 @@
 
 			<div style="z-index: 3;">
 				
-				{% if not p.url %}
+				{% if p.club and not (v and v.coins > 150) %}
+					<img loading="lazy" src="/assets/images/emojis/marseyglow.gif" class="post-img">
+				{% elif not p.url %}
 					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
@@ -90,6 +92,8 @@
 		<div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
 			<div class="post-meta text-left x-scroll mb-md-2">
+				{% if p.club %}<span class="patron font-weight-bold" style="background-color:red;">COUNTRY CLUB</span>{% endif %}
+
 				{% if p.bannedfor and p.author.banned_by %}
 					<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
 				{% endif %}
@@ -124,14 +128,6 @@
 			<h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="stretched-link">
 				{{p.realtitle(v) | safe}}
 			</a></h5>
-
-			{% if p.thumb_url %}
-			<div class="row post-img-lg mb-3">
-				<div class="col px-0">
-					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}><img loading="lazy" src="{{p.thumb_url}}" class="img-fluid" alt="post image"></a>
-				</div>
-			</div>
-			{% endif %}
 
 			<div class="post-actions mt-2 d-none d-md-block">
 				<ul class="list-inline text-right d-flex">
@@ -179,6 +175,10 @@
 						{% endif %}
 
 						{% if v %}
+							{% if v.admin_level >=3 or v.id == p.author.id and v.coins > 150 %}
+								<li id="club-{{p.id}}" class="{% if p.club %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye-slash"></i>Mark as +150 coins</a></li>
+								<li id="unclub-{{p.id}}" class="{% if not p.club %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye"></i>Unmark as +150 coins</a></li>
+							{% endif %}
 
 							{% if v.admin_level >=3 %}
 								{% if "/flagged/" in request.path %}
@@ -320,9 +320,12 @@
 					{% if v %}
 						<button id="save2-{{p.id}}" class="{% if p.id in v.saved_idlist() %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast2('/save_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Save</a></button>
 						<button id="unsave2-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast2('/unsave_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</a></button>
-					{% endif %}
 
-					{% if v %}
+						{% if v.admin_level >=3 or v.id == p.author.id and v.coins > 150 %}
+							<button id="club2-{{p.id}}" class="{% if p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye-slash mr-3"></i>Mark as +150 coins</button>
+							<button id="unclub2-{{p.id}}" class="{% if p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye mr-3"></i>Unmark as +150 coins</button>
+						{% endif %}
+
 						{% if v.admin_level >=3 %}
 							<button id="pin2-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-thumbtack text-center mr-3"></i>Pin</button>
 							<button id="unpin2-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-thumbtack text-center mr-3"></i>Unpin</button>

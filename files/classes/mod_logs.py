@@ -262,48 +262,6 @@ ACTIONTYPES={
 		"color": "bg-muted",
 		"title": 'un-pinned post {self.target_post.title}'
 	},
-	"invite_mod":{
-		"str":'invited admin {self.target_link}',
-		"icon":"fa-user-crown",
-		"color": "bg-info",
-		"title": 'invited admin @{self.target_user.username}'
-	},
-	"uninvite_mod":{
-		"str":'rescinded admin invitation to {self.target_link}',
-		"icon":"fa-user-crown",
-		"color": "bg-muted",
-		"title": 'rescinded admin invitation to @{self.target_user.username}'
-	},
-	"accept_mod_invite":{
-		"str":'accepted admin invitation',
-		"icon":"fa-user-crown",
-		"color": "bg-warning",
-		"title": 'accepted admin invitation'
-	},
-	"remove_mod":{
-		"str":'removed admin {self.target_link}',
-		"icon":"fa-user-crown",
-		"color": "bg-danger",
-		"title": 'removed admin @{self.target_user.username}'
-	},
-	"add_mod":{
-		"str":'added admin {self.target_link}',
-		"icon":"fa-user-crown",
-		"color": "bg-success",
-		"title": 'added admin @{self.target_user.username}'
-	},
-	"update_settings":{
-		"str":'updated setting',
-		"icon":"fa-cog",
-		"color": "bg-info",
-		"title": 'updated settings'
-	},
-	"update_appearance":{
-		"str":'updated appearance',
-		"icon":"fa-palette",
-		"color": "bg-info",
-		"title": 'updated appearance'
-	},
 	"set_nsfw":{
 		"str":'set nsfw on post {self.target_link}',
 		"icon":"fa-eye-evil",
@@ -339,6 +297,18 @@ ACTIONTYPES={
 		"icon":"fa-feather-alt",
 		"color": "bg-muted",
 		"title": "reinstated post {self.target_post.title}"
+	},
+	"club":{
+		"str": 'marked post {self.target_link} as viewable to users with +150 coins only',
+		"icon":"fa-eye-slash",
+		"color": "bg-danger",
+		"title": 'marked post {self.target_post} as viewable to users with +150 coins only'
+	},
+	"unclub":{
+		"str": 'unmarked post {self.target_link} as viewable to users with +150 coins only',
+		"icon":"fa-eye",
+		"color": "bg-muted",
+		"title": 'unmarked post {self.target_post} as viewable to users with +150 coins only'
 	},
 	"ban_comment":{
 		"str": 'removed {self.target_link}',

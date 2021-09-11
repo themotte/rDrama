@@ -131,6 +131,12 @@
 					{% if v %}
 						<button id="save2-{{p.id}}" class="{% if p.id in v.saved_idlist() %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast2('/save_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Save</a></button>
 						<button id="unsave2-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast2('/unsave_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</a></button>
+
+						{% if v.admin_level >=3 or v.id == p.author.id and v.coins > 150 %}
+							<button id="club2-{{p.id}}" class="{% if p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye-slash mr-3"></i>Mark as +150 coins</button>
+							<button id="unclub2-{{p.id}}" class="{% if p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye mr-3"></i>Unmark as +150 coins</button>
+						{% endif %}
+
 						{% if v.admin_level >=3 %}
 							<button id="pin2-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-thumbtack text-center mr-3"></i>Pin</button>
 							<button id="unpin2-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-thumbtack text-center mr-3"></i>Unpin</button>
@@ -247,6 +253,7 @@
 				<div id="post-content" class="{% if p.deleted_utc > 0 %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
+						{% if p.club %}<span class="patron font-weight-bold" style="background-color:red;">COUNTRY CLUB</span>{% endif %}
 						{% if p.bannedfor and p.author.banned_by %}
 							<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
 						{% endif %}	
@@ -436,6 +443,11 @@
 						{% endif %}
 
 						{% if v %}
+							{% if v.admin_level >=3 or v.id == p.author.id and v.coins > 150 %}
+								<li id="club-{{p.id}}" class="{% if p.club %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye-slash"></i>Mark as +150 coins</a></li>
+								<li id="unclub-{{p.id}}" class="{% if not p.club %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye"></i>Unmark as +150 coins</a></li>
+							{% endif %}
+
 							{% if v.admin_level >=3 %}
 								<li id="remove-{{p.id}}" class="{% if p.is_banned %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/ban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-ban"></i>Remove</a></li>
 								<li id="approve-{{p.id}}" class="{% if not p.is_banned %}d-none{% endif %} list-inline-item"><a class="text-success" href="javascript:void(0)" onclick="post_toast2('/unban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-check"></i>Approve</a></li>

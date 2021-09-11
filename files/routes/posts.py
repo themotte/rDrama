@@ -21,9 +21,34 @@ from files.__main__ import app, limiter, cache
 from PIL import Image as PILimage
 from .front import frontlist, changeloglist
 
+
 site = environ.get("DOMAIN").strip()
 
 with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
+
+
+@app.post("/toggle_club/<pid>")
+@auth_required
+def toggle_club(pid, v):
+
+	post = get_post(pid)
+
+	if not post.author_id == v.id and not v.admin_level >= 3: abort(403)
+
+	post.club = not post.club
+	g.db.add(post)
+
+	if post.author_id!=v.id:
+		ma=ModAction(
+			kind="club" if post.club else "unclub",
+			user_id=v.id,
+			target_submission_id=post.id,
+			)
+		g.db.add(ma)
+
+	if post.club: return {"message": "Post has been marked as +150-coins only!"}
+	else: return {"message": "Post has been unmarked as +150-coins only!"}
+
 
 @app.post("/publish/<pid>")
 @auth_required
@@ -82,6 +107,8 @@ def post_id(pid, anything=None, v=None):
 		except: abort(404)
 
 	post = get_post(pid, v=v)
+
+	if post.club and not (v and v.coins > 150): abort(403)
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -830,6 +857,7 @@ def submit_post(v):
 
 	new_post = Submission(
 		private=bool(request.form.get("private","")),
+		club=bool(request.form.get("club","")),
 		author_id=v.id,
 		over_18=bool(request.form.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,

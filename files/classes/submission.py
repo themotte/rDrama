@@ -54,6 +54,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	stickied = Column(Boolean, default=False)
 	is_pinned = Column(Boolean, default=False)
 	private = Column(Boolean, default=False)
+	club = Column(Boolean, default=False)
 	comment_count = Column(Integer, default=0)
 	comments = relationship(
 		"Comment",
@@ -359,10 +360,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		g.db.add(self.submission_aux)
 
 	def realtitle(self, v):
-		if self.title_html: title = self.title_html
+		if self.club and not (v and v.coins > 150): return 'COUNTRY CLUB MEMBERS ONLY'
+		elif self.title_html: title = self.title_html
 		else: title = self.title
 
-		if not v or v.slurreplacer: 
+		if not v or v.slurreplacer:
 			for s,r in SLURS.items(): title = title.replace(s, r) 
 
 		return title

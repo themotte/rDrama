@@ -395,6 +395,13 @@
 														<input type="checkbox" class="custom-control-input" id="privateCheck" name="private">
 														<label class="custom-control-label" for="privateCheck">Draft</label>
 												</div>
+
+												{% if v.coins > 150 %}
+													<div class="custom-control custom-checkbox">
+														<input type="checkbox" class="custom-control-input" id="clubCheck" name="club">
+														<label class="custom-control-label" for="clubCheck">+150 dramacoins to view</label>
+													</div>
+												{% endif %}
 												<pre>
 
 
