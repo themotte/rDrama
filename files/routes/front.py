@@ -47,24 +47,26 @@ def notifications(v):
 		next_exists = (len(comments) > 100)
 		listing = comments[:100]
 	else:
+
 		notifications = v.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ACCOUNT,
-		).order_by(Notification.id.desc()).offset(100 * (page - 1)).all()
+		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
+		next_exists = (len(notifications) > 25)
+		notifications = notifications[:25]
+		cids = [x.comment_id for x in notifications]
+		comments = get_comments(cids, v=v, load_parent=True)
 
-		comments = []
-		for index, x in enumerate(notifications):
-			c = x.comment
-			if x.read and index > 101: break
-			elif not x.read:
-				c.unread = True
-				x.read = True
-				g.db.add(x)
-			comments.append(c)
-		next_exists = (len(comments) > 100)
-		listing = comments[:100]
+		i = 0
+		for x in notifications:
+			try:
+				if not x.read: comments[i].unread = True
+			except: continue
+			x.read = True
+			g.db.add(x)
+			i += 1
 
 	if not posts:
 		listing = []
