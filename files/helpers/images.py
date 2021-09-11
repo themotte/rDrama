@@ -35,7 +35,9 @@ def upload_ibb(filepath=None, file=None, resize=False):
 		om = next(frames)
 		om.info = i.info
 		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
-		except: return
+		except Exception as e:
+			print(e)
+			return
 	elif format != "gif":
 		i = IImage.open(filepath)
 		i.save(filepath, optimize=True, quality=30)
@@ -46,7 +48,8 @@ def upload_ibb(filepath=None, file=None, resize=False):
 			req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
 		resp = req.json()['data']
 		url = resp['url']
-	except:
+	except Exception as e:
+		print(e)
 		if req: print(req.json())
 		return
 
@@ -62,6 +65,11 @@ def upload_imgur(filepath=None, file=None, resize=False):
 	else: format = filepath.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
 
 	if resize:
+		# if format = "gif":
+		# new_image = Image.new("RGBA", image.size, "WHITE") # Create a white rgba background
+		# new_image.paste(image, (0, 0), image)              # Paste the image on the background. Go to the links given below for details.
+		# new_image.convert('RGB').save('test.jpg', "JPEG")  # Save as JPEG
+
 		i = IImage.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
@@ -77,7 +85,9 @@ def upload_imgur(filepath=None, file=None, resize=False):
 		om = next(frames)
 		om.info = i.info
 		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
-		except: return
+		except Exception as e:
+			print(e)
+			return
 	elif format != "gif":
 		i = IImage.open(filepath)
 		i.save(filepath, optimize=True, quality=30)
@@ -91,7 +101,8 @@ def upload_imgur(filepath=None, file=None, resize=False):
 		if not "_d." in url:
 			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
 			if "_d." in url: url += "?maxwidth=9999"
-	except:
+	except Exception as e:
+		print(e)
 		if req: print(req.json())
 		return
 
