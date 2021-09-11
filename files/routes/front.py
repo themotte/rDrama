@@ -33,19 +33,19 @@ def notifications(v):
 		cids = cids[:100]
 		comments = get_comments(cids, v=v)
 	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(100 * (page - 1)).all()
+		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).all()
 
 		comments = []
 		for index, x in enumerate(notifications):
 			c = x.comment
-			if x.read and index > 101: break
+			if x.read and index > 26: break
 			elif not x.read:
 				c.unread = True
 				x.read = True
 				g.db.add(x)
 			comments.append(c)
-		next_exists = (len(comments) > 100)
-		listing = comments[:100]
+		next_exists = (len(comments) > 25)
+		listing = comments[:25]
 	else:
 
 		notifications = v.notifications.join(Notification.comment).filter(
