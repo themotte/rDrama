@@ -68,8 +68,11 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 	if resize:
 		i = IImage.open(filepath)
+		format = i.format
+		i = IImage.open(filepath).convert("RGBA")
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
+
 
 		def thumbnails(frames):
 			for frame in frames:
@@ -83,7 +86,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		filepath = f"image.{i.format}"
+		filepath = f"image.{format}"
 		try: om.save(filepath, save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 		except Exception as e:
 			print(e)
