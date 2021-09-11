@@ -67,19 +67,14 @@ def upload_imgur(filepath=None, file=None, resize=False):
 	else: format = filepath.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
 
 	if resize:
-		# if format = "gif":
-		# new_image = Image.new("RGBA", image.size, "WHITE") # Create a white rgba background
-		# new_image.paste(image, (0, 0), image)              # Paste the image on the background. Go to the links given below for details.
-		# new_image.convert('RGB').save('test.jpg', "JPEG")  # Save as JPEG
-
-		i = IImage.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
 		def thumbnails(frames):
 			for frame in frames:
 				thumbnail = frame.copy()
-				thumbnail.thumbnail(size, IImage.ANTIALIAS)
+				if format == "gif": thumbnail.thumbnail(size, IImage.ANTIALIAS).convert('RGB')
+				else: thumbnail.thumbnail(size, IImage.ANTIALIAS)
 				yield thumbnail
 
 		frames = thumbnails(frames)
