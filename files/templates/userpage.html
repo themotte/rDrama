@@ -201,7 +201,7 @@
 							{% endif %}
 						{% endif %}
 
-						{% if 'rdrama' in request.host and v.id in [12,28,29,747,995] %} 
+						{% if 'rdrama' in request.host and v.id in [1,12,28,29,747,995] %} 
 							{% if u.admin_level == 0 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_fake_admin')">Make fake admin</a>
@@ -468,7 +468,7 @@
 						{% endif %}
 					{% endif %}
 
-					{% if 'rdrama' in request.host and v.id in [12,28,29,747,995] %} 
+					{% if 'rdrama' in request.host and v.id in [1,12,28,29,747,995] %} 
 						{% if u.admin_level == 0 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_fake_admin')">Make fake admin</a>
