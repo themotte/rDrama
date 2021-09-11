@@ -151,8 +151,6 @@ def login_post():
 
 	check_for_alts(account.id)
 
-	account.refresh_selfset_badges()
-
 	# check for previous page
 
 	redir = request.form.get("redirect", "/").replace("/logged_out", "")
@@ -336,7 +334,7 @@ def sign_up_post(v):
 		ref_user = g.db.query(User).options(
 			lazyload('*')).filter_by(id=ref_id).first()
 		if ref_user:
-			ref_user.refresh_selfset_badges()
+			ref_user.refresh_referral_badges()
 			g.db.add(ref_user)
 
 	id_1 = g.db.query(User).filter_by(id=6).count()

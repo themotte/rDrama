@@ -446,9 +446,9 @@
 					{% if v and c.parent_submission and c.author_id==v.id %}
 						<li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{c.id}}')" class="d-block"><i class="fas fa-edit"></i>Edit</a></li>
 
-						<li id="delete2-{{c.id}}" class="list-group-item"><a class="{% if c.deleted_utc %}d-none{% endif %}" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal2('{{c.id}}','delete2-{{c.id}}','undelete2-{{c.id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
+						<li id="delete2-{{c.id}}" class="{% if c.deleted_utc %}d-none{% endif %} list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal2('{{c.id}}','delete2-{{c.id}}','undelete2-{{c.id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
 
-						<li id="undelete2-{{c.id}}" class="list-group-item"><a class="{% if not c.deleted_utc %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/undelete/comment/{{c.id}}','delete2-{{c.id}}','undelete2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-trash-alt"></i>Undelete</a></li>
+						<li id="undelete2-{{c.id}}" class="{% if not c.deleted_utc %}d-none{% endif %} list-group-item"><a href="javascript:void(0)" onclick="post_toast2('/undelete/comment/{{c.id}}','delete2-{{c.id}}','undelete2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-trash-alt"></i>Undelete</a></li>
 					{% endif %}
 
 					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}

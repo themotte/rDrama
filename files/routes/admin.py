@@ -667,10 +667,15 @@ def agendaposter(user_id, v):
 		note = note
 	)
 	g.db.add(ma)
-
-	user.refresh_selfset_badges()
-
 	g.db.flush()
+
+	if user.agendaposter:
+		if not user.has_badge(26):
+			badge = Badge(user_id=user.id, badge_id=26)
+			g.db.add(badge)
+	else:
+		badge = user.has_badge(26)
+		if badge: g.db.delete(badge)
 
 	if user.agendaposter: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been marked by an admin as an agendaposter ({note}).")
 	else: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been unmarked by an admin as an agendaposter.")

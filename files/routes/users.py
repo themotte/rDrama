@@ -365,8 +365,6 @@ def u_username(username, v=None):
 
 	u = get_user(username, v=v)
 
-	#if v and v == u: v.refresh_selfset_badges()
-
 	# check for wrong cases
 
 	if username != u.username:

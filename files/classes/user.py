@@ -541,7 +541,7 @@ class User(Base, Stndrd, Age_times):
 	def is_blocked(self):
 		return self.__dict__.get('_is_blocked', 0)
 
-	def refresh_selfset_badges(self):
+	def refresh_referral_badges(self):
 
 		# check self-setting badges
 		badge_types = g.db.query(BadgeDef).filter(BadgeDef.qualification_expr.isnot(None)).all()
