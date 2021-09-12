@@ -147,7 +147,7 @@ def monthly(v):
 def get_rules(v):
 
 	try:
-		with open(f'./{SITE_NAME} rules.md', 'r') as f:
+		with open(f'./{SITE_NAME} rules.html', 'r') as f:
 			rules = f.read()
 	except Exception:
 		rules = None
@@ -162,10 +162,10 @@ def post_rules(v):
 
 	text = request.form.get('rules', '')
 
-	with open(f'./{SITE_NAME} rules.md', 'w+') as f:
+	with open(f'./{SITE_NAME} rules.html', 'w+') as f:
 		f.write(text)
 
-	with open(f'./{SITE_NAME} rules.md', 'r') as f:
+	with open(f'./{SITE_NAME} rules.html', 'r') as f:
 		rules = f.read()
 
 	return render_template('admin/rules.html', v=v, rules=rules)
