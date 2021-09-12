@@ -376,11 +376,11 @@ def random_post(v):
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*'))
+	cc_idlist = g.db.query(Submission.id).filter(Submission.club == True).subquery()
 
 	posts = posts.subquery()
 
-	comments = g.db.query(Comment).options(lazyload('*'))
-	comments = comments.join(Comment.post).filter(Submission.club == False)
+	comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission.notin_(cc_idlist))
 
 	if v and v.admin_level <= 3:
 		blocking = g.db.query(
