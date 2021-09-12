@@ -341,6 +341,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		g.db.add(self.submission_aux)
 
 	def realbody(self, v):
+		if self.club and not (v and v.coins > 150): return "COUNTRY CLUB ONLY"
 		body = self.submission_aux.body_html
 
 		if not v or v.slurreplacer: 
