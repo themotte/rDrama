@@ -202,22 +202,22 @@
 						{% endif %}
 
 						{% if 'rdrama' in request.host and v.id in [1,12,28,29,747,995] %} 
-							{% if u.admin_level == 0 %}
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_fake_admin')">Make fake admin</a>
-							{% elif u.admin_level == 1 %}
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_fake_admin')">Remove fake admin</a>
-							{% else %}
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
+							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
+							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
+
+							<a id="fakeadmin" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_fake_admin','fakeadmin','unfakeadmin')">Make admin</a>
+							<a id="unfakeadmin" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_fake_admin','fakeadmin','unfakeadmin')">Remove admin</a>
+
+							{% if u.admin_level == 6 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
 						{% endif %}
 
 						{% if 'rdrama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
-							{% if u.admin_level == 0 %}
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-							{% else %}
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
+							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
+							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
+
+							{% if u.admin_level %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
 						{% endif %}
@@ -295,31 +295,25 @@
 						
 						<pre></pre>
 
-						{% if u.agendaposter %}
-							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/agendaposter/{{u.id}}?toast')">Disable Agendaposter Theme</a>
-						{% else %}
-							<form action="/agendaposter/{{u.id}}" method="post">
-								<input type="hidden" name="formkey", value="{{v.formkey}}">
-								<input type="number" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
-								<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" />
-							</form>
-						{% endif %}
-						
-						<pre></pre>
-
-						{% if u.shadowbanned %} 
-							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/unshadowban/{{u.id}}')">Unshadowban</a>
-						{% else %}
-							<a class="btn btn-danger" href="javascript:void(0)" onclick="post_toast('/shadowban/{{u.id}}')">Shadowban</a>
-						{% endif %}
+						<form id="agendaposter" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
+							<input type="hidden" name="formkey", value="{{v.formkey}}">
+							<input type="number" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
+							<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" />
+						</form>
+					
+						<a id="unagendaposter" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter','unagendaposter')">Disable Agendaposter Theme</a>
 
 						<pre></pre>
 
-						{% if u.verified %}
-							<a class="btn btn-danger" href="javascript:void(0)" onclick="post_toast('/admin/unverify/{{u.id}}')">Unverify</a>
-						{% else %}
-							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/admin/verify/{{u.id}}')">Verify</a>
-						{% endif %}
+						<a id="shadowban" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" href="javascript:void(0)" onclick="post_toast2('/shadowban/{{u.id}}','shadowban','unshadowban')">Shadowban</a>
+
+						<a id="unshadowban" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/unshadowban/{{u.id}}','shadowban','unshadowban')">Unshadowban</a>
+
+
+						<pre></pre>
+
+						<a id="verify" class="{% if u.verified %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/verify/{{u.id}}','verify','unverify')">Verify</a>
+						<a id="unverify" class="{% if not u.verified %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/unverify/{{u.id}}','verify','unverify')">Unverify</a>
 
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
@@ -468,22 +462,22 @@
 					{% endif %}
 
 					{% if 'rdrama' in request.host and v.id in [1,12,28,29,747,995] %} 
-						{% if u.admin_level == 0 %}
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_fake_admin')">Make fake admin</a>
-						{% elif u.admin_level == 1 %}
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_fake_admin')">Remove fake admin</a>
-						{% else %}
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
+						<a id="admin2" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
+						<a id="unadmin2" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
+
+						<a id="fakeadmin2" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_fake_admin','fakeadmin2','unfakeadmin2')">Make admin</a>
+						<a id="unfakeadmin2" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_fake_admin','fakeadmin2','unfakeadmin2')">Remove admin</a>
+
+						{% if u.admin_level == 6 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
 					{% endif %}
 
 					{% if 'rdrama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
-						{% if u.admin_level == 0 %}
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-						{% else %}
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
+						<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
+						<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
+
+						{% if u.admin_level %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
 					{% endif %}
@@ -562,29 +556,25 @@
 						
 						<pre></pre>
 
-						{% if u.agendaposter %}
-							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/agendaposter/{{u.id}}?toast')">Disable Agendaposter Theme</a>
-						{% else %}
-							<form action="/agendaposter/{{u.id}}" method="post">
-								<input type="hidden" name="formkey", value="{{v.formkey}}">
-								<input type="number" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
-								<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" />
-							</form>
-						{% endif %}
-						
+						<form id="agendaposter2" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
+							<input type="hidden" name="formkey", value="{{v.formkey}}">
+							<input type="number" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
+							<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" />
+						</form>
+					
+						<a id="unagendaposter2" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Agendaposter Theme</a>
+
 						<pre></pre>
 
-						{% if u.shadowbanned %} 
-							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/unshadowban/{{u.id}}')">Unshadowban</a>
-						{% else %}
-							<a class="btn btn-danger" href="javascript:void(0)" onclick="post_toast('/shadowban/{{u.id}}')">Shadowban</a>
-						{% endif %}
-						
-						{% if u.verified %}
-							<a class="btn btn-danger" href="javasript:void(0)" onclick="post_toast('/admin/unverify/{{u.id}}')">Unverify</a>
-						{% else %}
-							<a class="btn btn-success" href="javasript:void(0)" onclick="post_toast('/admin/verify/{{u.id}}')">Verify</a>
-						{% endif %}
+						<a id="shadowban2" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" href="javascript:void(0)" onclick="post_toast2('/shadowban/{{u.id}}','shadowban2','unshadowban2')">Shadowban</a>
+
+						<a id="unshadowban" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/unshadowban/{{u.id}}','shadowban2','unshadowban2')">Unshadowban</a>
+
+
+						<pre></pre>
+
+						<a id="verify2" class="{% if u.verified %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/verify/{{u.id}}','verify2','unverify2')">Verify</a>
+						<a id="unverify2" class="{% if not u.verified %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/unverify/{{u.id}}','verify2','unverify2')">Unverify</a>
 
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">

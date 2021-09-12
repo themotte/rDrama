@@ -25,7 +25,7 @@
 							<div class="input-group mb2">
 								<select id='defaultsortingcomments' class="form-control" form="profile-settings" name="defaultsortingcomments" onchange="post_toast('/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
 								{% for entry in ["new", "old", "top", "bottom", "controversial", "random"] %}
-								<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry else ''}}>{{entry}}</option>
+									<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry else ''}}>{{entry}}</option>
 								{% endfor %}
 							</select>
 							</div>
@@ -63,7 +63,7 @@
 							<div class="input-group mb2">
 								<select id='defaulttime' class="form-control" form="profile-settings" name="defaulttime" onchange="post_toast('/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
 								{% for entry in ["hour", "day", "week", "month", "year", "all"] %}
-								<option value="{{entry}}"{{' selected' if v.defaulttime==entry else ''}}>{{entry}}</option>
+									<option value="{{entry}}"{{' selected' if v.defaulttime==entry else ''}}>{{entry}}</option>
 								{% endfor %}
 							</select>
 							</div>
