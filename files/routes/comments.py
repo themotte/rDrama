@@ -41,6 +41,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	comment = get_comment(cid, v=v)
 	
+	if comment.post and comment.post.club and not (v and v.coins > 150): abort(403)
+
 	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level == 6) : abort(403)
 	
 	if not pid:
@@ -137,6 +139,7 @@ def api_comment(v):
 	parent_id = parent_fullname.split("_")[1]
 	if parent_fullname.startswith("t2"):
 		parent_post = get_post(parent_id, v=v)
+		if parent_post.club and not (v and v.coins > 150): abort(403)
 		parent = parent_post
 		parent_comment_id = None
 		level = 1
