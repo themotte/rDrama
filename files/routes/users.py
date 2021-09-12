@@ -586,7 +586,7 @@ def unfollow_user(username, v):
 
 	existing = g.db.query(Notification).filter_by(unfollowsender=v.id, user_id=target.id).first()
 	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has unfollowed you!")
-	return {"message": "User followed!"}
+	return {"message": "User unfollowed!"}
 
 
 @app.route("/uid/<id>/pic/profile")

@@ -681,7 +681,8 @@ def agendaposter(user_id, v):
 	if user.agendaposter: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been marked by an admin as an agendaposter ({note}).")
 	else: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been unmarked by an admin as an agendaposter.")
 
-	return (redirect(user.url), user)
+	if user.agendaposter: return (redirect(user.url), user)
+	return {"message": "Agendaposter theme disabled!"}
 
 @app.post("/shadowban/<user_id>")
 @admin_level_required(6)
