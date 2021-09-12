@@ -809,7 +809,8 @@ CREATE TABLE public.submissions (
     bannedfor boolean,
     comment_count integer DEFAULT 0,
     processing boolean DEFAULT false,
-    removed_by integer
+    removed_by integer,
+    club boolean
 );
 
 
