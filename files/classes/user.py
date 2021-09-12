@@ -93,6 +93,7 @@ class User(Base, Stndrd, Age_times):
 	is_banned = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
 	ban_reason = Column(String)
+	club_banned = Column(Boolean, default=False)
 	login_nonce = Column(Integer, default=0)
 	reserved = Column(String(256))
 	coins = Column(Integer, default=0)

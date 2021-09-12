@@ -45,6 +45,28 @@ def revert_actions(v, username):
 	return {"message": "Admin actions reverted!"}
 
 
+@app.post("/@<username>/club_ban")
+@admin_level_required(6)
+def toggle_club_ban(v, username):
+
+	u = get_user(username, v=v)
+
+	if not u:
+		abort(404)
+
+	if u.admin_level >= v.admin_level:
+		return {"error": "noob"}
+
+	u.club_banned = not u.club_banned
+
+	for x in u.alts:
+		x.club_banned = not x.club_banned
+
+	return {
+		"message": f"@{username} has been kicked from the country club. Deserved." if u.club_banned else f"@{username}'s ban from club removed"
+	}
+
+
 @app.post("/@<username>/make_admin")
 @admin_level_required(6)
 def make_admin(v, username):

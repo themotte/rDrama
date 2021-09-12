@@ -33,7 +33,7 @@ def toggle_club(pid, v):
 
 	post = get_post(pid)
 
-	if not post.author_id == v.id and not v.admin_level >= 3: abort(403)
+	if not (post.author_id == v.id and not v.club_banned) or not v.admin_level >= 3: abort(403)
 
 	post.club = not post.club
 	g.db.add(post)
@@ -88,18 +88,6 @@ def post_id(pid, anything=None, v=None):
 	if v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 	sort=request.args.get("sort", defaultsortingcomments)
-	
-
-
-
-
-
-
-
-
-
-
-
 
 	try: pid = int(pid)
 	except:
@@ -108,7 +96,12 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if post.club and not (v and v.coins > 150): abort(403)
+	if post.club:
+		if not v:
+			abort(403)
+		elif v.admin_level < 3 and (v.coins < 750 or v.club_banned):
+			abort(403)
+
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
