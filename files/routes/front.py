@@ -185,8 +185,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	else:
 		abort(400)
 
-	firstrange = 50 * (page - 1)
-	secondrange = firstrange+200
+	firstrange = 25 * (page - 1)
+	secondrange = firstrange+100
 	posts = posts[firstrange:secondrange]
 
 	if random.random() < 0.004:
@@ -206,9 +206,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 				post.views = post.views + random.randint(7,10)
 				g.db.add(post)
 
-	next_exists = (len(posts) > 50)
+	next_exists = (len(posts) > 25)
 
-	posts = posts[:50]
+	posts = posts[:25]
 
 	if page == 1: posts = g.db.query(Submission).filter_by(stickied=True).all() + posts
 
@@ -324,8 +324,8 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	else:
 		abort(400)
 
-	firstrange = 50 * (page - 1)
-	secondrange = firstrange+51
+	firstrange = 25 * (page - 1)
+	secondrange = firstrange+26
 	posts = posts[firstrange:secondrange]
 
 	posts = [x.id for x in posts]
@@ -351,8 +351,8 @@ def changelog(v):
 					)
 
 	# check existence of next page
-	next_exists = (len(ids) > 50)
-	ids = ids[:50]
+	next_exists = (len(ids) > 25)
+	ids = ids[:25]
 
 	# check if ids exist
 	posts = get_posts(ids, v=v)
