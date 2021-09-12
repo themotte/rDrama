@@ -175,8 +175,8 @@
 
 						{% if v %}
 							{% if v.admin_level >=3 or v.id == p.author.id and v.coins > 150 %}
-								<li id="club-{{p.id}}" class="{% if p.club %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye-slash"></i>Mark club</a></li>
-								<li id="unclub-{{p.id}}" class="{% if not p.club %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye"></i>Unmark club</a></li>
+								<li id="club-{{p.id}}" class="{% if p.club %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye-slash"></i>Mark club</a></li>
+								<li id="unclub-{{p.id}}" class="{% if not p.club %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye"></i>Unmark club</a></li>
 							{% endif %}
 
 							{% if v.admin_level >=3 %}
@@ -321,8 +321,8 @@
 						<button id="unsave2-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast2('/unsave_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</a></button>
 
 						{% if v.admin_level >=3 or v.id == p.author.id and v.coins > 150 %}
-							<button id="club2-{{p.id}}" class="{% if p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye-slash mr-3"></i>Mark club</button>
-							<button id="unclub2-{{p.id}}" class="{% if not p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye mr-3"></i>Unmark club</button>
+							<button id="club2-{{p.id}}" class="{% if p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-info text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye-slash mr-3"></i>Mark club</button>
+							<button id="unclub2-{{p.id}}" class="{% if not p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-info text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye mr-3"></i>Unmark club</button>
 						{% endif %}
 
 						{% if v.admin_level >=3 %}
