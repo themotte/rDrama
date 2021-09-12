@@ -188,7 +188,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		abort(400)
 
 	firstrange = 25 * (page - 1)
-	secondrange = firstrange+100
+	secondrange = firstrange+200
 	posts = posts[firstrange:secondrange]
 
 	if random.random() < 0.004:
