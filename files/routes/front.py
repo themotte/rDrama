@@ -162,6 +162,11 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	if lt:
 		posts = posts.filter(Submission.created_utc < lt)
 
+	if v and v.shadowbanned:
+		posts = posts.join(Submission.author).filter(or_(User.shadowbanned == False, User.id == v.id))
+	else:
+		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
+
 	if sort == "hot":
 		posts = sorted(posts.all(), key=lambda x: x.hotscore, reverse=True)
 	elif sort == "new":
@@ -202,8 +207,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 				post.downvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=-1).count()
 				post.views = post.views + random.randint(7,10)
 				g.db.add(post)
-
-	posts = [p for p in posts if not p.author.shadowbanned]
 
 	next_exists = (len(posts) > 25)
 
