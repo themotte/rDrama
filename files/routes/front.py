@@ -399,11 +399,6 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 
 	comments = comments.join(posts, Comment.parent_submission == posts.c.id)
 
-	if not v:
-		comments = comments.filter(Submission.club == False)
-	elif v.admin_level < 3 and (v.coins < 750 or v.club_banned):
-		comments = comments.filter(Submission.club == False)
-
 	now = int(time.time())
 	if t == 'hour':
 		cutoff = now - 3600
