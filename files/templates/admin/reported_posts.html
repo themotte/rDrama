@@ -18,12 +18,12 @@
 							<div class="d-flex">
 								<ul class="nav post-nav mr-auto">
 									<li class="nav-item">
-										<a class="nav-link {% if request.path=="/admin/flagged/posts" %} active{% endif %}" href="/admin/flagged/posts">
+										<a class="nav-link {% if request.path=="/admin/reported/posts" %} active{% endif %}" href="/admin/reported/posts">
 											<div>Posts</div>
 										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link {% if request.path=="/admin/flagged/comments" %} active{% endif %}" href="/admin/flagged/comments">
+										<a class="nav-link {% if request.path=="/admin/reported/comments" %} active{% endif %}" href="/admin/reported/comments">
 											<div>Comments</div>
 										</a>
 									</li>
@@ -63,7 +63,7 @@
 {% endblock %}
 
 {% block title %}
-<title>Flagged Posts</title>
+<title>Reported Posts</title>
 <meta name="description" content="on {{'SITE_NAME' | app_config}}">
 {% endblock %}
 

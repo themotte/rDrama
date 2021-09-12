@@ -31,7 +31,7 @@ def api_flag_post(pid, v):
 
 		g.db.add(flag)
 
-	return {"message": "Post flagged!"}
+	return {"message": "Post reported!"}
 
 
 @app.post("/flag/comment/<cid>")
@@ -59,7 +59,7 @@ def api_flag_comment(cid, v):
 
 		g.db.add(flag)
 
-	return {"message": "Comment flagged!"}
+	return {"message": "Comment reported!"}
 
 
 @app.post('/del_report/<report_fn>')

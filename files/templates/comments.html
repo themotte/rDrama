@@ -317,7 +317,7 @@
 
 
 						{% if v and v.admin_level>=3 %}
-							{% if "/flagged/" in request.path %}
+							{% if "/reported/" in request.path %}
 								<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a></li>
 								<li class="list-inline-item text-muted d-none d-md-inline-block"><a class="text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a></li>
 							{% else %}
@@ -465,7 +465,7 @@
 								<li id="undistinguish2-{{c.id}}" class="{% if not c.distinguish_level %}d-none{% endif %} list-group-item"><a class="text-info d-block" href="javascript:void(0)" onclick="admin_comment2('{{c.id}}','distinguish2-{{c.id}}','undistinguish2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-id-badge text-info"></i>Undistinguish</a></li>
 							{% endif %}
 							{% if v.admin_level>=3 %}
-								{% if "/flagged/" in request.path %}
+								{% if "/reported/" in request.path %}
 									<li class="list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="removeComment2('{{c.id}}')" data-dismiss="modal"><i class="fas fa-ban text-danger"></i>Remove</a></li>
 									<li class="list-group-item"><a class="text-success d-block" href="javascript:void(0)" onclick="approveComment2('{{c.id}}')" data-dismiss="modal"><i class="fas fa-check text-success"></i>Approve</a></li>
 								{% else %}

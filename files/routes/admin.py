@@ -205,9 +205,9 @@ def image_posts_listing(v):
 	return render_template("admin/image_posts.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
 
 
-@app.get("/admin/flagged/posts")
+@app.get("/admin/reported/posts")
 @admin_level_required(3)
-def flagged_posts(v):
+def reported_posts(v):
 
 	page = max(1, int(request.args.get("page", 1)))
 
@@ -222,13 +222,13 @@ def flagged_posts(v):
 
 	listing = get_posts(listing, v=v)
 
-	return render_template("admin/flagged_posts.html",
+	return render_template("admin/reported_posts.html",
 						   next_exists=next_exists, listing=listing, page=page, v=v)
 
 
-@app.get("/admin/flagged/comments")
+@app.get("/admin/reported/comments")
 @admin_level_required(3)
-def flagged_comments(v):
+def reported_comments(v):
 
 	page = max(1, int(request.args.get("page", 1)))
 
@@ -244,7 +244,7 @@ def flagged_comments(v):
 
 	listing = get_comments(listing, v=v)
 
-	return render_template("admin/flagged_comments.html",
+	return render_template("admin/reported_comments.html",
 						   next_exists=next_exists,
 						   listing=listing,
 						   page=page,
