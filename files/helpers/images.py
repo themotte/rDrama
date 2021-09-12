@@ -52,7 +52,7 @@ def upload_ibb(filepath=None, file=None, resize=False):
 		url = resp['url']
 	except Exception as e:
 		print(e)
-		if req: print(req.json())
+		print(req.text)
 		return
 
 	return url
@@ -102,7 +102,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 			if "_d." in url: url += "?maxwidth=9999"
 	except Exception as e:
 		print(e)
-		if req: print(req.json())
+		print(req.text)
 		return
 
 	new_image = Image(text=url, deletehash=resp["deletehash"])
