@@ -226,9 +226,9 @@ class User(Base, Stndrd, Age_times):
 		comments = comments.options(contains_eager(Comment.post))
 
 		if not v:
-			comments = comments.join(Comment.post).filter(Submission.club == False)
+			comments = comments.filter(Submission.club == False)
 		elif v.admin_level < 3 and (v.coins < 750 or v.club_banned):
-			comments = comments.join(Comment.post).filter(Submission.club == False)
+			comments = comments.filter(Submission.club == False)
 
 		now = int(time.time())
 		if t == 'hour':
