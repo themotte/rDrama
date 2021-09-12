@@ -150,6 +150,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 	@property
 	@lazy
 	def permalink(self):
+		if self.post and self.post.club: return f"/comment/{self.id}/"
+
 		if self.post: return f"{self.post.permalink}/{self.id}/"
 		else: return f"/comment/{self.id}/"
 
