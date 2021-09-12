@@ -376,21 +376,21 @@
 
 </div>
 
-{% if p.active_flags %}
-	<div id="flaggers-{{p.id}}" class="flaggers d-none">
-		<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
-		<pre></pre>
-		<ul style="padding-left:20px; margin-bottom: 0;">
-			{% for f in p.ordered_flags %}
-				{% if not f.user.shadowbanned or (v and v.shadowbanned) %}
-					<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="post_toast('/del_report/p{{ f.id }}')">[remove]</a>{% endif %}</li>
-				{% endif %}
-			{% endfor %}
-		</ul>
-	</div>
-{% endif %}
-
 {% if not p.club or v and v.coins > 150 %}
+	{% if p.active_flags %}
+		<div id="flaggers-{{p.id}}" class="flaggers d-none">
+			<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+			<pre></pre>
+			<ul style="padding-left:20px; margin-bottom: 0;">
+				{% for f in p.ordered_flags %}
+					{% if not f.user.shadowbanned or (v and v.shadowbanned) %}
+						<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="post_toast('/del_report/p{{ f.id }}')">[remove]</a>{% endif %}</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
+
 	{% if p.realbody(v) %}
 		<div class="d-none card rounded border pb-0 pt-3 my-2" id="post-text-{{p.id}}">
 			{{p.realbody(v) | safe}}
