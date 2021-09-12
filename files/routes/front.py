@@ -162,9 +162,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	if lt:
 		posts = posts.filter(Submission.created_utc < lt)
 
-	if v and v.shadowbanned:
-		posts = posts.join(Submission.author).filter(or_(User.shadowbanned == False, User.id == v.id))
-	else:
+	if not (v and v.shadowbanned):
 		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
 	if sort == "hot":
