@@ -119,7 +119,12 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@lazy
 	def fullname(self):
 		return f"t2_{self.id}"	
-		
+
+	@property
+	@lazy
+	def shortlink(self):
+		return f"https://{site}/post/{self.id}"
+
 	@property
 	@lazy
 	def permalink(self):

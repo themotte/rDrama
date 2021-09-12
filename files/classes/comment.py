@@ -8,6 +8,9 @@ from files.helpers.const import SLURS
 from files.__main__ import Base
 from .mix_ins import *
 from .flags import CommentFlag
+from os import environ
+
+site = environ.get("DOMAIN").strip()
 
 class CommentAux(Base):
 
@@ -138,6 +141,11 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		r = self.__dict__.get("replies", None)
 		if not r and r != []:  r = sorted([x for x in self.child_comments], key=lambda x: x.score, reverse=True)
 		return r
+
+	@property
+	@lazy
+	def shortlink(self):
+		return f"https://{site}/comment/{self.id}"
 
 	@property
 	@lazy
