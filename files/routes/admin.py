@@ -296,7 +296,7 @@ def badge_grant_get(v):
 @validate_formkey
 def badge_grant_post(v):
 
-	user = get_user(request.form.get("username"), graceful=True)
+	user = get_user(request.form.get("username").strip(), graceful=True)
 	if not user: return redirect("/badge_grant?error=no_user")
 
 	try: badge_id = int(request.form.get("badge_id"))
