@@ -22,6 +22,7 @@ from .front import frontlist
 from files.helpers.discord import add_role
 
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
+SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.post("/@<username>/revert_actions")
 @admin_level_required(6)
@@ -146,7 +147,7 @@ def monthly(v):
 def get_rules(v):
 
 	try:
-		with open('./rules.md', 'r') as f:
+		with open(f'./{SITE_NAME} rules.md', 'r') as f:
 			rules = f.read()
 	except Exception:
 		rules = None
@@ -161,10 +162,10 @@ def post_rules(v):
 
 	text = request.form.get('rules', '')
 
-	with open('./rules.md', 'w+') as f:
+	with open(f'./{SITE_NAME} rules.md', 'w+') as f:
 		f.write(text)
 
-	with open('./rules.md', 'r') as f:
+	with open(f'./{SITE_NAME} rules.md', 'r') as f:
 		rules = f.read()
 
 	return render_template('admin/rules.html', v=v, rules=rules)
