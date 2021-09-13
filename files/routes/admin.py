@@ -28,10 +28,8 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @admin_level_required(6)
 def refund(v):
 	for u in g.db.query(User).all():
-		posts = g.db.query(func.sum(Submission.upvotes + Submission.downvotes - 1)).options(lazyload('*')).filter_by(author_id = 1, is_banned = False, deleted_utc = 0).scalar()
-		comments = g.db.query(func.sum(Comment.upvotes + Comment.downvotes - 1)).options(lazyload('*')).filter_by(author_id = 1, is_banned = False, deleted_utc = 0).scalar()
-		print(posts+comments)
-		break
+		posts = g.db.query(func.sum(Submission.upvotes + Submission.downvotes - 1)).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).scalar()
+		comments = g.db.query(func.sum(Comment.upvotes + Comment.downvotes - 1)).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).scalar()
 		u.truecoins = posts+comments
 		g.db.add(u)
 	return "sex"
