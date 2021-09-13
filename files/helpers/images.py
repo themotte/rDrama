@@ -34,9 +34,6 @@ def upload_ibb(file=None, resize=False):
 		except Exception as e:
 			print(e)
 			return
-	else:
-		i = IImage.open("image.webp")
-		i.save("image.webp")
 
 	try:
 		with open("image.webp", 'rb') as f:
