@@ -27,7 +27,7 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @app.get("/admin/refund")
 @admin_level_required(6)
 def refund(v):
-	posts=g.db.query(Submission.upvotes + Submission.downvotes - 1).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()
+	posts=g.db.query(Submission.upvotes + Submission.downvotes - 1).options(lazyload('*')).filter_by(author_id = 1).all()
 	print(posts)
 	# for u in g.db.query(User).all():
 	# 	posts=sum([x[0]+x[1]-1 for x in g.db.query(Submission.upvotes, Submission.downvotes).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()])
