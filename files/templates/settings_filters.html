@@ -122,6 +122,32 @@
 			</div>
 
 
+			<h2 class="h5">Twitter Links</h2>
+
+			<div class="settings-section rounded">
+
+				<div class="d-lg-flex border-bottom">
+
+					<div class="title w-lg-25">
+						<label for="nitter">Use Nitter</label>
+					</div>
+
+					<div class="body w-lg-100">
+
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input" id="nitter" name="nitter"{% if v.nitter %} checked{% endif %} onchange="post_toast('/settings/profile?nitter='+document.getElementById('nitter').checked);">
+							<label class="custom-control-label" for="nitter"></label>
+						</div>
+
+						<span class="text-small-extra text-muted">Enable if you would like to automatically convert twitter.com links to nitter.net links.</span>
+
+					</div>
+
+				</div>
+
+			</div>
+
+
 			<h2 class="h5">Reddit Links</h2>
 
 			<div class="settings-section rounded">
