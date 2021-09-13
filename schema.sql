@@ -74,7 +74,7 @@ CREATE TABLE public.alts (
 );
 
 
-ALTER TABLE public.alts owner to aevann;
+ALTER TABLE public.alts OWNER TO postgres;
 
 --
 -- Name: alts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -89,7 +89,7 @@ CREATE SEQUENCE public.alts_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.alts_id_seq owner to aevann;
+ALTER TABLE public.alts_id_seq OWNER TO postgres;
 
 --
 -- Name: alts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -111,7 +111,7 @@ CREATE TABLE public.award_relationships (
 );
 
 
-ALTER TABLE public.award_relationships owner to aevann;
+ALTER TABLE public.award_relationships OWNER TO postgres;
 
 --
 -- Name: award_relationships_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -126,7 +126,7 @@ CREATE SEQUENCE public.award_relationships_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.award_relationships_id_seq owner to aevann;
+ALTER TABLE public.award_relationships_id_seq OWNER TO postgres;
 
 --
 -- Name: award_relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -149,7 +149,7 @@ CREATE TABLE public.badge_defs (
 );
 
 
-ALTER TABLE public.badge_defs owner to aevann;
+ALTER TABLE public.badge_defs OWNER TO postgres;
 
 --
 -- Name: badge_list_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -164,7 +164,7 @@ CREATE SEQUENCE public.badge_list_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.badge_list_id_seq owner to aevann;
+ALTER TABLE public.badge_list_id_seq OWNER TO postgres;
 
 --
 -- Name: badge_list_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -186,7 +186,7 @@ CREATE TABLE public.badges (
 );
 
 
-ALTER TABLE public.badges owner to aevann;
+ALTER TABLE public.badges OWNER TO postgres;
 
 --
 -- Name: badges_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -201,7 +201,7 @@ CREATE SEQUENCE public.badges_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.badges_id_seq owner to aevann;
+ALTER TABLE public.badges_id_seq OWNER TO postgres;
 
 --
 -- Name: badges_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -222,7 +222,7 @@ CREATE TABLE public.badlinks (
 );
 
 
-ALTER TABLE public.badlinks owner to aevann;
+ALTER TABLE public.badlinks OWNER TO postgres;
 
 --
 -- Name: badlinks_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -237,7 +237,7 @@ CREATE SEQUENCE public.badlinks_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.badlinks_id_seq owner to aevann;
+ALTER TABLE public.badlinks_id_seq OWNER TO postgres;
 
 --
 -- Name: badlinks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -259,7 +259,7 @@ CREATE TABLE public.badpics (
 );
 
 
-ALTER TABLE public.badpics owner to aevann;
+ALTER TABLE public.badpics OWNER TO postgres;
 
 --
 -- Name: badpics_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -274,7 +274,7 @@ CREATE SEQUENCE public.badpics_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.badpics_id_seq owner to aevann;
+ALTER TABLE public.badpics_id_seq OWNER TO postgres;
 
 --
 -- Name: badpics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -294,7 +294,7 @@ CREATE TABLE public.banneddomains (
 );
 
 
-ALTER TABLE public.banneddomains owner to aevann;
+ALTER TABLE public.banneddomains OWNER TO postgres;
 
 --
 -- Name: client_auths; Type: TABLE; Schema: public; Owner: postgres
@@ -308,7 +308,7 @@ CREATE TABLE public.client_auths (
 );
 
 
-ALTER TABLE public.client_auths owner to aevann;
+ALTER TABLE public.client_auths OWNER TO postgres;
 
 --
 -- Name: client_auths_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -323,7 +323,7 @@ CREATE SEQUENCE public.client_auths_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.client_auths_id_seq owner to aevann;
+ALTER TABLE public.client_auths_id_seq OWNER TO postgres;
 
 --
 -- Name: client_auths_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -344,7 +344,7 @@ CREATE TABLE public.commentflags (
 );
 
 
-ALTER TABLE public.commentflags owner to aevann;
+ALTER TABLE public.commentflags OWNER TO postgres;
 
 --
 -- Name: commentflags_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -359,7 +359,7 @@ CREATE SEQUENCE public.commentflags_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.commentflags_id_seq owner to aevann;
+ALTER TABLE public.commentflags_id_seq OWNER TO postgres;
 
 --
 -- Name: commentflags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -398,7 +398,7 @@ CREATE TABLE public.comments (
 );
 
 
-ALTER TABLE public.comments owner to aevann;
+ALTER TABLE public.comments OWNER TO postgres;
 
 --
 -- Name: comments_aux; Type: TABLE; Schema: public; Owner: postgres
@@ -413,7 +413,7 @@ CREATE TABLE public.comments_aux (
 );
 
 
-ALTER TABLE public.comments_aux owner to aevann;
+ALTER TABLE public.comments_aux OWNER TO postgres;
 
 --
 -- Name: comments_aux_key_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -428,7 +428,7 @@ CREATE SEQUENCE public.comments_aux_key_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.comments_aux_key_id_seq owner to aevann;
+ALTER TABLE public.comments_aux_key_id_seq OWNER TO postgres;
 
 --
 -- Name: comments_aux_key_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -450,7 +450,7 @@ CREATE SEQUENCE public.comments_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.comments_id_seq owner to aevann;
+ALTER TABLE public.comments_id_seq OWNER TO postgres;
 
 --
 -- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -473,7 +473,7 @@ CREATE TABLE public.commentvotes (
 );
 
 
-ALTER TABLE public.commentvotes owner to aevann;
+ALTER TABLE public.commentvotes OWNER TO postgres;
 
 --
 -- Name: commentvotes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -488,7 +488,7 @@ CREATE SEQUENCE public.commentvotes_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.commentvotes_id_seq owner to aevann;
+ALTER TABLE public.commentvotes_id_seq OWNER TO postgres;
 
 --
 -- Name: commentvotes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -510,7 +510,7 @@ CREATE SEQUENCE public.domains_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.domains_id_seq owner to aevann;
+ALTER TABLE public.domains_id_seq OWNER TO postgres;
 
 --
 -- Name: domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -531,7 +531,7 @@ CREATE TABLE public.flags (
 );
 
 
-ALTER TABLE public.flags owner to aevann;
+ALTER TABLE public.flags OWNER TO postgres;
 
 --
 -- Name: flags_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -546,7 +546,7 @@ CREATE SEQUENCE public.flags_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.flags_id_seq owner to aevann;
+ALTER TABLE public.flags_id_seq OWNER TO postgres;
 
 --
 -- Name: flags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -566,7 +566,7 @@ CREATE TABLE public.follows (
 );
 
 
-ALTER TABLE public.follows owner to aevann;
+ALTER TABLE public.follows OWNER TO postgres;
 
 --
 -- Name: follows_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -581,7 +581,7 @@ CREATE SEQUENCE public.follows_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.follows_id_seq owner to aevann;
+ALTER TABLE public.follows_id_seq OWNER TO postgres;
 
 --
 -- Name: follows_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -603,7 +603,7 @@ CREATE TABLE public.images (
 );
 
 
-ALTER TABLE public.images owner to aevann;
+ALTER TABLE public.images OWNER TO postgres;
 
 --
 -- Name: images_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -618,7 +618,7 @@ CREATE SEQUENCE public.images_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.images_id_seq owner to aevann;
+ALTER TABLE public.images_id_seq OWNER TO postgres;
 
 --
 -- Name: images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -643,7 +643,7 @@ CREATE TABLE public.modactions (
 );
 
 
-ALTER TABLE public.modactions owner to aevann;
+ALTER TABLE public.modactions OWNER TO postgres;
 
 --
 -- Name: modactions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -658,7 +658,7 @@ CREATE SEQUENCE public.modactions_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.modactions_id_seq owner to aevann;
+ALTER TABLE public.modactions_id_seq OWNER TO postgres;
 
 --
 -- Name: modactions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -683,7 +683,7 @@ CREATE TABLE public.notifications (
 );
 
 
-ALTER TABLE public.notifications owner to aevann;
+ALTER TABLE public.notifications OWNER TO postgres;
 
 --
 -- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -698,7 +698,7 @@ CREATE SEQUENCE public.notifications_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.notifications_id_seq owner to aevann;
+ALTER TABLE public.notifications_id_seq OWNER TO postgres;
 
 --
 -- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -721,7 +721,7 @@ CREATE TABLE public.oauth_apps (
 );
 
 
-ALTER TABLE public.oauth_apps owner to aevann;
+ALTER TABLE public.oauth_apps OWNER TO postgres;
 
 --
 -- Name: oauth_apps_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -736,7 +736,7 @@ CREATE SEQUENCE public.oauth_apps_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.oauth_apps_id_seq owner to aevann;
+ALTER TABLE public.oauth_apps_id_seq OWNER TO postgres;
 
 --
 -- Name: oauth_apps_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -757,7 +757,7 @@ CREATE TABLE public.save_relationship (
 );
 
 
-ALTER TABLE public.save_relationship owner to aevann;
+ALTER TABLE public.save_relationship OWNER TO postgres;
 
 --
 -- Name: save_relationship_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -772,7 +772,7 @@ CREATE SEQUENCE public.save_relationship_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.save_relationship_id_seq owner to aevann;
+ALTER TABLE public.save_relationship_id_seq OWNER TO postgres;
 
 --
 -- Name: save_relationship_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -814,7 +814,7 @@ CREATE TABLE public.submissions (
 );
 
 
-ALTER TABLE public.submissions owner to aevann;
+ALTER TABLE public.submissions OWNER TO postgres;
 
 --
 -- Name: submissions_aux; Type: TABLE; Schema: public; Owner: postgres
@@ -833,7 +833,7 @@ CREATE TABLE public.submissions_aux (
 );
 
 
-ALTER TABLE public.submissions_aux owner to aevann;
+ALTER TABLE public.submissions_aux OWNER TO postgres;
 
 --
 -- Name: submissions_aux_key_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -848,7 +848,7 @@ CREATE SEQUENCE public.submissions_aux_key_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.submissions_aux_key_id_seq owner to aevann;
+ALTER TABLE public.submissions_aux_key_id_seq OWNER TO postgres;
 
 --
 -- Name: submissions_aux_key_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -870,7 +870,7 @@ CREATE SEQUENCE public.submissions_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.submissions_id_seq owner to aevann;
+ALTER TABLE public.submissions_id_seq OWNER TO postgres;
 
 --
 -- Name: submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -891,7 +891,7 @@ CREATE TABLE public.subscriptions (
 );
 
 
-ALTER TABLE public.subscriptions owner to aevann;
+ALTER TABLE public.subscriptions OWNER TO postgres;
 
 --
 -- Name: subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -906,7 +906,7 @@ CREATE SEQUENCE public.subscriptions_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.subscriptions_id_seq owner to aevann;
+ALTER TABLE public.subscriptions_id_seq OWNER TO postgres;
 
 --
 -- Name: subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -929,7 +929,7 @@ CREATE TABLE public.useragents (
 );
 
 
-ALTER TABLE public.useragents owner to aevann;
+ALTER TABLE public.useragents OWNER TO postgres;
 
 --
 -- Name: useragents_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -944,7 +944,7 @@ CREATE SEQUENCE public.useragents_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.useragents_id_seq owner to aevann;
+ALTER TABLE public.useragents_id_seq OWNER TO postgres;
 
 --
 -- Name: useragents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -964,7 +964,7 @@ CREATE TABLE public.userblocks (
 );
 
 
-ALTER TABLE public.userblocks owner to aevann;
+ALTER TABLE public.userblocks OWNER TO postgres;
 
 --
 -- Name: userblocks_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -979,7 +979,7 @@ CREATE SEQUENCE public.userblocks_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.userblocks_id_seq owner to aevann;
+ALTER TABLE public.userblocks_id_seq OWNER TO postgres;
 
 --
 -- Name: userblocks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -1063,7 +1063,7 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users owner to aevann;
+ALTER TABLE public.users OWNER TO postgres;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -1078,7 +1078,7 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_id_seq owner to aevann;
+ALTER TABLE public.users_id_seq OWNER TO postgres;
 
 --
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -1099,7 +1099,7 @@ CREATE TABLE public.viewers (
 );
 
 
-ALTER TABLE public.viewers owner to aevann;
+ALTER TABLE public.viewers OWNER TO postgres;
 
 --
 -- Name: viewers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -1114,7 +1114,7 @@ CREATE SEQUENCE public.viewers_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.viewers_id_seq owner to aevann;
+ALTER TABLE public.viewers_id_seq OWNER TO postgres;
 
 --
 -- Name: viewers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
@@ -1137,7 +1137,7 @@ CREATE TABLE public.votes (
 );
 
 
-ALTER TABLE public.votes owner to aevann;
+ALTER TABLE public.votes OWNER TO postgres;
 
 --
 -- Name: votes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -1152,7 +1152,7 @@ CREATE SEQUENCE public.votes_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.votes_id_seq owner to aevann;
+ALTER TABLE public.votes_id_seq OWNER TO postgres;
 
 --
 -- Name: votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
