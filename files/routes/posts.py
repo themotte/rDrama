@@ -527,7 +527,7 @@ def thumbs(new_post):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	if 'pcmemes.net' in request.host: post.thumburl = upload_ibb(filepath="image.webp", resize=True)
+	if 'pcmemes.ga' in request.host: post.thumburl = upload_ibb(filepath="image.webp", resize=True)
 	else: post.thumburl = upload_imgur(filepath="image.webp", resize=True)
 
 	g.db.add(post)
@@ -914,7 +914,7 @@ def submit_post(v):
 				), 403
 
 		if file.content_type.startswith('image/'):
-			if 'pcmemes.net' in request.host: new_post.url = upload_ibb(file=file)
+			if 'pcmemes.ga' in request.host: new_post.url = upload_ibb(file=file)
 			else: new_post.url = upload_imgur(file=file)
 		else:
 			try:
