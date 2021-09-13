@@ -501,11 +501,14 @@ def settings_images_profile(v):
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
 	file = request.files["profile"]
-	filepath = "image.webp"
-	file.save(filepath)
 
-	if 'pcmemes.net' in request.host: highres = upload_ibb()
-	else: highres = upload_imgur(filepath=filepath)
+	if 'pcmemes.net' in request.host:
+		file.save("image.webp")
+		highres = upload_ibb()
+	else:
+		filepath = f"image." + file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+		file.save(filepath)
+		highres = upload_imgur(filepath=filepath)
 	if not highres: abort(400)
 
 	if 'pcmemes.net' in request.host: imageurl = upload_ibb(resize=True)
