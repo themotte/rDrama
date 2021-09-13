@@ -44,27 +44,46 @@ def revert_actions(v, username):
 
 	return {"message": "Admin actions reverted!"}
 
-
-@app.post("/@<username>/club_ban")
+@app.post("/@<username>/club_allow")
 @admin_level_required(6)
-def toggle_club_ban(v, username):
+def club_allow(v, username):
 
 	u = get_user(username, v=v)
 
-	if not u:
-		abort(404)
+	if not u: abort(404)
 
-	if u.admin_level >= v.admin_level:
-		return {"error": "noob"}
+	if u.admin_level >= v.admin_level: return {"error": "noob"}
 
-	u.club_banned = not u.club_banned
+	u.club_allowed = True
+	u.club_banned = False
+	g.db.add(u)
 
 	for x in u.alts:
-		x.club_banned = u.club_banned
+		x.club_allowed = True
+		x.club_banned = False
+		g.db.add(x)
 
-	return {
-		"message": f"@{username} has been kicked from the country club. Deserved." if u.club_banned else f"@{username}'s ban from club removed"
-	}
+	return {"message": f"@{username} has been allowed into the country club!"}
+
+@app.post("/@<username>/club_ban")
+@admin_level_required(6)
+def club_ban(v, username):
+
+	u = get_user(username, v=v)
+
+	if not u: abort(404)
+
+	if u.admin_level >= v.admin_level: return {"error": "noob"}
+
+	u.club_banned = True
+	u.club_allowed = False
+
+	for x in u.alts:
+		x.club_banned = True
+		u.club_allowed = False
+		g.db.add(x)
+
+	return {"message": f"@{username} has been kicked from the country club. Deserved."}
 
 
 @app.post("/@<username>/make_admin")

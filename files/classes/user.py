@@ -95,6 +95,7 @@ class User(Base, Stndrd, Age_times):
 	unban_utc = Column(Integer, default=0)
 	ban_reason = Column(String)
 	club_banned = Column(Boolean, default=False)
+	club_allowed = Column(Boolean, default=False)
 	login_nonce = Column(Integer, default=0)
 	reserved = Column(String(256))
 	coins = Column(Integer, default=0)
@@ -157,8 +158,9 @@ class User(Base, Stndrd, Age_times):
 		return g.db.query(UserBlock).filter_by(
 			user_id=self.id, target_id=target.id).first()
 
+	@property
 	def paid_dues(self):
-		return self.truecoins > int(environ.get("DUES").strip())
+		return not self.club_banned and (self.admin_level == 6 or self.club_allowed or self.truecoins > int(environ.get("DUES").strip()))
 
 	def any_block_exists(self, other):
 
@@ -230,9 +232,7 @@ class User(Base, Stndrd, Age_times):
 
 		comments = comments.options(contains_eager(Comment.post))
 
-		if not v:
-			comments = comments.filter(Submission.club == False)
-		elif v.admin_level < 3 and (not v.paid_dues or v.club_banned):
+		if not (v and v.paid_dues):
 			comments = comments.filter(Submission.club == False)
 
 		now = int(time.time())

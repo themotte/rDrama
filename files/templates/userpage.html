@@ -328,8 +328,12 @@
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
 
-						<button id="banclub" class="{% if u.club_banned %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_ban','banclub','unbanclub')">Ban from club</button>
-						<button id="unbanclub" class="{% if not u.club_banned %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_ban','banclub','unbanclub')">Unban from club</button>
+						{% if not u.club_allowed %}
+							<button class="btn btn-success" onclick="post_toast('/@{{u.username}}/club_ban')">Grant club access</button>
+						{% endif %}
+						{% if not u.club_banned %}
+							<button class="btn btn-danger" onclick="post_toast('/@{{u.username}}/club_allow')">Bar from club</button>
+						{% endif %}
 					{% endif %}
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
@@ -510,8 +514,12 @@
 					
 					{% if v.admin_level > 1 %}
 
-						<button id="banclub2" class="{% if u.club_banned %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_ban','banclub2','unbanclub2')">Ban from club</button>
-						<button id="unbanclub2" class="{% if not u.club_banned %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_ban','banclub2','unbanclub2')">Unban from club</button>
+					{% if not u.club_allowed %}
+						<button class="btn btn-success" onclick="post_toast('/@{{u.username}}/club_ban')">Grant club access</button>
+					{% endif %}
+					{% if not u.club_banned %}
+						<button class="btn btn-danger" onclick="post_toast('/@{{u.username}}/club_allow')">Bar from club</button>
+					{% endif %}
 
 						<br><br>
 						<div class="body d-lg-flex border-bottom">

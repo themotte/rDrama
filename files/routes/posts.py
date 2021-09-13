@@ -96,12 +96,7 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if post.club:
-		if not v:
-			abort(403)
-		elif v.admin_level < 3 and (not v.paid_dues or v.club_banned):
-			abort(403)
-
+	if post.club and not (v and v.paid_dues): abort(403)
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
