@@ -158,7 +158,7 @@ class User(Base, Stndrd, Age_times):
 			user_id=self.id, target_id=target.id).first()
 
 	def paid_dues(self):
-		return self.truecoins > environ.get("DUES").strip()
+		return self.truecoins > int(environ.get("DUES").strip())
 
 	def any_block_exists(self, other):
 
