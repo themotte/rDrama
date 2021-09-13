@@ -33,6 +33,7 @@ def nig():
 	sex2 = g.db.query(User).all()
 	sex2 = [c for c in sex2 if c.id == 1]
 	print(time.time() - first2)
+	return "fug"
 
 @app.post("/@<username>/revert_actions")
 @admin_level_required(6)
