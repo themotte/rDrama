@@ -375,10 +375,10 @@
 														<label class="custom-control-label" for="privateCheck">Draft</label>
 												</div>
 
-												{% if v.admin_level == 6 or v.coins > 150 %}
+												{% if v.admin_level == 6 or (v.coins >= 750 and not v.club_banned) %}
 													<div class="custom-control custom-checkbox">
 														<input type="checkbox" class="custom-control-input" id="clubCheck" name="club">
-														<label class="custom-control-label" for="clubCheck">+150 coins to view</label>
+														<label class="custom-control-label" for="clubCheck">Country Club thread</label>
 													</div>
 												{% endif %}
 												<pre>

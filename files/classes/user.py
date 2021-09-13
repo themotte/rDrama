@@ -93,6 +93,7 @@ class User(Base, Stndrd, Age_times):
 	is_banned = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
 	ban_reason = Column(String)
+	club_banned = Column(Boolean, default=False)
 	login_nonce = Column(Integer, default=0)
 	reserved = Column(String(256))
 	coins = Column(Integer, default=0)
@@ -223,6 +224,11 @@ class User(Base, Stndrd, Age_times):
 			comments = comments.filter(Comment.is_banned == False)
 
 		comments = comments.options(contains_eager(Comment.post))
+
+		if not v:
+			comments = comments.filter(Submission.club == False)
+		elif v.admin_level < 3 and (v.coins < 750 or v.club_banned):
+			comments = comments.filter(Submission.club == False)
 
 		now = int(time.time())
 		if t == 'hour':
