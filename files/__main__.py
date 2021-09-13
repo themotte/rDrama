@@ -58,11 +58,6 @@ app.jinja_env.cache = {}
 
 app.config["UserAgent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
 
-if "localhost" in app.config["SERVER_NAME"]:
-	app.config["CACHE_TYPE"] = "null"
-else:
-	app.config["CACHE_TYPE"] = "filesystem"
-
 app.config["CACHE_DIR"] = environ.get("CACHE_DIR", "cache")
 
 # captcha configs
@@ -88,8 +83,9 @@ app.config["REDIS_POOL_SIZE"] = 10
 redispool=ConnectionPool(
 	max_connections=app.config["REDIS_POOL_SIZE"],
 	host=app.config["CACHE_REDIS_URL"][8:]
-	) if app.config["CACHE_TYPE"]=="redis" else None
-app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_TYPE"]=="redis" else {}
+	)
+
+app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
 
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
