@@ -27,7 +27,7 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @app.get("/sexing")
 def nig():
 	first = time.time()
-	sex1 = g.db.query(User).filter(User.id == 1).all()
+	sex = [c for c in g.db.query(User).all() if c.id == 1]
 	print(time.time() - first)
 	first2 = time.time()
 	sex2 = g.db.query(User).all()
