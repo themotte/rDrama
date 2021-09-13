@@ -371,18 +371,9 @@ class User(Base, Stndrd, Age_times):
 
 	@cache.memoize(timeout=86400)
 	def notification_messages(self, page=1):
-		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc()).all()
+		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), Comment.child_comments == []).offset(25*(page-1)).limit(26).all()
 
-		firstrange = 25 * (page - 1)
-		secondrange = firstrange + 26
-
-		comments2 = []
-		for c in comments:
-			if c.child_comments == []:
-				comments2.append(c.id)
-				if len(comments2) == secondrange: break
-
-		return comments2[firstrange:secondrange]
+		return comments
 
 	@property
 	@lazy
