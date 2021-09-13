@@ -73,7 +73,8 @@ class User(Base, Stndrd, Age_times):
 	flairchanged = Column(Boolean, default=False)
 	newtab = Column(Boolean, default=False)
 	newtabexternal = Column(Boolean, default=True)
-	oldreddit = Column(Boolean, default=False)
+	oldreddit = Column(Boolean)
+	nitter = Column(Boolean)
 	controversial = Column(Boolean, default=False)
 	submissions = relationship(
 		"Submission",

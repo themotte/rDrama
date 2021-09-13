@@ -325,7 +325,9 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				if "?" in url: url += "&sort=controversial" 
 				else: url += "?sort=controversial"
 			return url
-		elif self.url: return self.url
+		elif self.url:
+			if v and v.nitter: return self.url.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			return self.url
 		else: return ""
  
 	@property
@@ -355,6 +357,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 				body = body.replace(s, r) 
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 		return body
 
 	@property

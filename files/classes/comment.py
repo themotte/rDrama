@@ -273,6 +273,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
+		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+
 		if v and v.controversial:
 			for i in re.finditer('(/comments/.*?)"', body):
 				url = i.group(1)
