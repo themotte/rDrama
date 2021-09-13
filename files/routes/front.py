@@ -29,8 +29,8 @@ def notifications(v):
 		comments = comments[:100]
 	elif messages:
 		cids = v.notification_messages(page=page)
-		next_exists = (len(cids) > 100)
-		cids = cids[:100]
+		next_exists = (len(cids) > 25)
+		cids = cids[:25]
 		comments = get_comments(cids, v=v)
 	elif posts:
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).all()

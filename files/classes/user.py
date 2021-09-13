@@ -373,11 +373,15 @@ class User(Base, Stndrd, Age_times):
 	def notification_messages(self, page=1):
 		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc()).all()
 
-		comments = [c.id for c in comments if c.child_comments == []]
+		comments2 = []
+		for c in comments:
+			if c.child_comments == []:
+				comments2.append(c)
+				if len(comments2) == 26: break
 
-		firstrange = 100 * (page - 1)
-		secondrange = firstrange + 101
-		return comments[firstrange:secondrange]
+		firstrange = 25 * (page - 1)
+		secondrange = firstrange + 26
+		return comments2[firstrange:secondrange]
 
 	@property
 	@lazy
