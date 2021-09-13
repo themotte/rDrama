@@ -27,7 +27,7 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @app.post("/@<username>/revert_actions")
 @admin_level_required(6)
 def revert_actions(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 
@@ -70,7 +70,7 @@ def toggle_club_ban(v, username):
 @app.post("/@<username>/make_admin")
 @admin_level_required(6)
 def make_admin(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 6
@@ -81,7 +81,7 @@ def make_admin(v, username):
 @app.post("/@<username>/remove_admin")
 @admin_level_required(6)
 def remove_admin(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -92,7 +92,7 @@ def remove_admin(v, username):
 @app.post("/@<username>/make_fake_admin")
 @admin_level_required(6)
 def make_fake_admin(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 1
@@ -103,7 +103,7 @@ def make_fake_admin(v, username):
 @app.post("/@<username>/remove_fake_admin")
 @admin_level_required(6)
 def remove_fake_admin(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -115,7 +115,7 @@ def remove_fake_admin(v, username):
 @limiter.limit("1/day")
 @admin_level_required(6)
 def monthly(v):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		_awards = []
 		for u in g.db.query(User).filter(User.patron > 0).all():
