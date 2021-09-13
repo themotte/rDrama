@@ -24,6 +24,16 @@ from files.helpers.discord import add_role
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
+@app.get("/admin/refund")
+@admin_level_required(6)
+def refund(v):
+	for u in g.db.query(User).all():
+		posts=sum([x[0]+x[1]-1 for x in g.db.query(Submission.upvotes, Submission.downvotes).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()])
+		comments=sum([x[0]+x[1]-1 for x in g.db.query(Comment.upvotes, Comment.downvotes).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).all()])
+		u.truecoins = int(posts+comments)
+		g.db.add(u)
+	return "sex"
+
 @app.post("/@<username>/revert_actions")
 @admin_level_required(6)
 def revert_actions(v, username):
