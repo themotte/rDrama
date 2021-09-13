@@ -99,7 +99,7 @@ def post_id(pid, anything=None, v=None):
 	if post.club:
 		if not v:
 			abort(403)
-		elif v.admin_level < 3 and (v.coins < 750 or v.club_banned):
+		elif v.admin_level < 3 and (not v.paid_dues or v.club_banned):
 			abort(403)
 
 

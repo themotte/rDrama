@@ -42,7 +42,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	if comment.post and comment.post.club:
 		if not v:
 			abort(403)
-		elif v.admin_level < 3 and (v.coins < 750 or v.club_banned):
+		elif v.admin_level < 3 and (not v.paid_dues or v.club_banned):
 			abort(403)
 
 	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level == 6) : abort(403)

@@ -64,7 +64,7 @@
 
 			<div style="z-index: 3;">
 				
-				{% if p.club and not (v and v.coins > 750) %}
+				{% if p.club and not (v and v.paid_dues) %}
 					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-img">
 				{% elif not p.url %}
 					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
@@ -174,7 +174,7 @@
 						{% endif %}
 
 						{% if v %}
-							{% if v.admin_level >=3 or v.id == p.author.id and v.coins > 750 %}
+							{% if v.admin_level >=3 or v.id == p.author.id and v.paid_dues %}
 								<li id="club-{{p.id}}" class="{% if p.club %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye-slash"></i>Mark club</a></li>
 								<li id="unclub-{{p.id}}" class="{% if not p.club %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye"></i>Unmark club</a></li>
 							{% endif %}
@@ -321,7 +321,7 @@
 						<button id="save2-{{p.id}}" class="{% if p.id in v.saved_idlist() %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast2('/save_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Save</a></button>
 						<button id="unsave2-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="javascript:void(0)" onclick="post_toast2('/unsave_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</a></button>
 
-						{% if v.admin_level >=3 or v.id == p.author.id and v.coins > 750 %}
+						{% if v.admin_level >=3 or v.id == p.author.id and v.paid_dues %}
 							<button id="club2-{{p.id}}" class="{% if p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-info text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye-slash mr-3"></i>Mark club</button>
 							<button id="unclub2-{{p.id}}" class="{% if not p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-info text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-eye mr-3"></i>Unmark club</button>
 						{% endif %}
@@ -377,7 +377,7 @@
 
 </div>
 
-{% if not p.club or v and v.coins > 750 %}
+{% if not p.club or v and v.paid_dues %}
 	{% if p.active_flags %}
 		<div id="flaggers-{{p.id}}" class="flaggers d-none">
 			<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>

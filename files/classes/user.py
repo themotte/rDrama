@@ -157,6 +157,9 @@ class User(Base, Stndrd, Age_times):
 		return g.db.query(UserBlock).filter_by(
 			user_id=self.id, target_id=target.id).first()
 
+	def paid_dues(self):
+		return self.truecoins > environ.get("DUES").strip()
+
 	def any_block_exists(self, other):
 
 		return g.db.query(UserBlock).filter(
@@ -229,7 +232,7 @@ class User(Base, Stndrd, Age_times):
 
 		if not v:
 			comments = comments.filter(Submission.club == False)
-		elif v.admin_level < 3 and (v.coins < 750 or v.club_banned):
+		elif v.admin_level < 3 and (not v.paid_dues or v.club_banned):
 			comments = comments.filter(Submission.club == False)
 
 		now = int(time.time())
