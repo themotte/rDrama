@@ -376,7 +376,7 @@ class User(Base, Stndrd, Age_times):
 		comments2 = []
 		for c in comments:
 			if c.child_comments == []:
-				comments2.append(c)
+				comments2.append(c.id)
 				if len(comments2) == 26: break
 
 		firstrange = 25 * (page - 1)
