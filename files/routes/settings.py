@@ -501,7 +501,7 @@ def settings_images_profile(v):
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
 	file = request.files["profile"]
-	filepath = f"image.webp"
+	filepath = "image.webp"
 	file.save(filepath)
 
 	if 'pcmemes.net' in request.host: highres = upload_ibb()
