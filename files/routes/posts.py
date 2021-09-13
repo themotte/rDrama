@@ -527,7 +527,7 @@ def thumbs(new_post):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	if 'pcmemes.ga' in request.host: post.thumburl = upload_ibb(filepath="image.webp", resize=True)
+	if 'pcmemes.ga' in request.host: post.thumburl = upload_ibb(resize=True)
 	else: post.thumburl = upload_imgur(filepath="image.webp", resize=True)
 
 	g.db.add(post)
