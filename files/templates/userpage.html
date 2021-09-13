@@ -328,7 +328,7 @@
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
 
-						{% if not u.club_allowed %}
+						{% if not v.paid_dues %}
 							<button class="btn btn-success" onclick="post_toast('/@{{u.username}}/club_ban')">Grant club access</button>
 						{% endif %}
 						{% if not u.club_banned %}
@@ -514,7 +514,7 @@
 					
 					{% if v.admin_level > 1 %}
 
-					{% if not u.club_allowed %}
+					{% if not v.paid_dues %}
 						<button class="btn btn-success" onclick="post_toast('/@{{u.username}}/club_ban')">Grant club access</button>
 					{% endif %}
 					{% if not u.club_banned %}

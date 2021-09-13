@@ -160,7 +160,7 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	def paid_dues(self):
-		return not self.club_banned and (self.admin_level == 6 or self.club_allowed or self.truecoins > int(environ.get("DUES").strip()))
+		return self.admin_level == 6 or self.club_allowed or self.truecoins > int(environ.get("DUES").strip())
 
 	def any_block_exists(self, other):
 
