@@ -22,7 +22,7 @@ def upload_ibb(file=None, resize=False):
 		def thumbnails(frames):
 			for frame in frames:
 				thumbnail = frame.copy()
-				: thumbnail.thumbnail(100, 100, IImage.ANTIALIAS)
+				thumbnail.thumbnail(100, 100, IImage.ANTIALIAS)
 				yield thumbnail
 
 		frames = thumbnails(frames)
