@@ -236,7 +236,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif">
+		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
 
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -452,7 +452,7 @@
 						emojis = Array.from(markdown.matchAll(/:(.{1,30}?):/gi))
 						if(emojis != null){
 							for(i = 0; i < emojis.length; i++){
-								markdown = markdown.replace(emojis[i][0], "<img height=30 src='/assets/images/emojis/" + emojis[i][1] + ".gif'>")
+								markdown = markdown.replace(emojis[i][0], "<img height=30 src='/assets/images/emojis/" + emojis[i][1] + ".webp'>")
 							}
 						}
 						return markdown
@@ -496,7 +496,7 @@
 				f=document.getElementById('file-upload');
 				files = event.clipboardData.files
 				filename = files[0].name.toLowerCase()
-				if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".gif"))
+				if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp"))
 				{
 					f.files = files;
 					$('#filename-show').text(filename);

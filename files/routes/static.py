@@ -137,7 +137,7 @@ def index():
 
 @app.get("/assets/favicon.ico")
 def favicon():
-	return send_file(f"./assets/images/{site_name}/icon.gif")
+	return send_file(f"./assets/images/{site_name}/icon.webp")
 
 @app.get("/api")
 @auth_desired
@@ -173,7 +173,7 @@ def archives(path):
 @limiter.exempt
 def static_service(path):
 	resp = make_response(send_from_directory('./assets', path))
-	if request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
+	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
 		resp.headers.add("Cache-Control", "public, max-age=2628000")
 

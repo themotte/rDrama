@@ -528,7 +528,7 @@ def thumbs(new_post):
 			file.write(chunk)
 
 	if 'pcmemes.net' in request.host: post.thumburl = upload_ibb(filepath="image.png", resize=True)
-	else: post.thumburl = upload_imgur(filepath="image.png", resize=True)
+	else: post.thumburl = upload(filepath="image.png", resize=True)
 
 	g.db.add(post)
 
@@ -546,8 +546,8 @@ def filter_title(title):
 	title = bleach.clean(title, tags=[])
 
 	for i in re.finditer(':(.{1,30}?):', title):
-		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.gif'):
-			title = title.replace(f':{i.group(1)}:', f'<img loading="lazy" data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.gif"<span>')
+		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
+			title = title.replace(f':{i.group(1)}:', f'<img loading="lazy" data-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp"<span>')
 
 	return title
 
@@ -915,7 +915,7 @@ def submit_post(v):
 
 		if file.content_type.startswith('image/'):
 			if 'pcmemes.net' in request.host: new_post.url = upload_ibb(file=file)
-			else: new_post.url = upload_imgur(file=file)
+			else: new_post.url = upload(file=file)
 		else:
 			try:
 				post_url = upload_video(file)

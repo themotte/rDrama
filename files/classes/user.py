@@ -448,18 +448,18 @@ class User(Base, Stndrd, Age_times):
 	@property
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"https://{site}/assets/images/{site_name}/preview.gif"
+		else: return f"https://{site}/assets/images/{site_name}/preview.webp"
 
 	@cache.memoize(timeout=86400)
 	def defaultpicture(self):
 		pic = random.randint(1, 150)
-		return f"https://{site}/assets/images/defaultpictures/{pic}.gif"
+		return f"https://{site}/assets/images/defaultpictures/{pic}.webp"
 
 	@property
 	def profile_url(self):
 		if self.profileurl: return self.profileurl
 		elif "rdrama" in site: return self.defaultpicture()
-		else: return f"https://{site}/assets/images/default-profile-pic.gif"
+		else: return f"https://{site}/assets/images/default-profile-pic.webp"
 
 	@property
 	def json_raw(self):
