@@ -24,6 +24,16 @@ from files.helpers.discord import add_role
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
+@app.get("/sexing")
+def nig():
+	first = time.time()
+	sex1 = g.db.query(User).filter(User.id == 1).all()
+	print(time.time() - first)
+	first2 = time.time()
+	sex2 = g.db.query(User).all()
+	sex2 = [c for c in sex2 if c.id == 1]
+	print(time.time() - first2)
+
 @app.post("/@<username>/revert_actions")
 @admin_level_required(6)
 def revert_actions(v, username):
