@@ -15,8 +15,8 @@ def upload_ibb(file=None, resize=False):
 	
 	if file: file.save("image.webp")
 
-	i = IImage.open("image.webp")
 	if resize:
+		i = IImage.open("image.webp")
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
@@ -34,7 +34,9 @@ def upload_ibb(file=None, resize=False):
 		except Exception as e:
 			print(e)
 			return
-	else: i.save("image.webp")
+	else:
+		i = IImage.open("image.webp")
+		i.save("image.webp")
 
 	try:
 		with open("image.webp", 'rb') as f:
