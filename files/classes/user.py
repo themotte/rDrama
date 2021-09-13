@@ -369,15 +369,6 @@ class User(Base, Stndrd, Age_times):
 		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(
 			Comment.author_id == AUTOJANNY_ACCOUNT).count()
 
-
-	def notification_messages(self, page=1):
-		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
-
-		for c in comments:
-			print(c.child_comments)
-
-		return [c[0] for c in comments]
-
 	@property
 	@lazy
 	def notifications_count(self):

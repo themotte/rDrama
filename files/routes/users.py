@@ -216,8 +216,6 @@ def message2(v, username):
 
 	send_pm(v.id, user, message)
 	
-	cache.delete_memoized(User.notification_messages, user)
-
 	try:
 		beams_client.publish_to_interests(
 			interests=[str(user.id)],
@@ -270,7 +268,6 @@ def messagereply(v):
 	g.db.add(new_aux)
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
-	cache.delete_memoized(User.notification_messages, user)
 
 	return jsonify({"html": render_template("comments.html",
 														v=v,

@@ -21,17 +21,13 @@ def notifications(v):
 	modmail = request.args.get('modmail', False)
 	posts = request.args.get('posts', False)
 	if modmail and v.admin_level == 6:
-		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).all()
-		firstrange = 100 * (page - 1)
-		secondrange = firstrange + 101
-		comments = comments[firstrange:secondrange]
-		next_exists = (len(comments) > 100)
-		comments = comments[:100]
+		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
+		next_exists = (len(comments) > 25)
+		comments = comments[:25]
 	elif messages:
-		cids = v.notification_messages(page=page)
-		next_exists = (len(cids) > 25)
-		cids = cids[:25]
-		comments = get_comments(cids, v=v)
+		comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
+		next_exists = (len(comments) > 25)
+		comments = comments[:25]
 	elif posts:
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).all()
 
