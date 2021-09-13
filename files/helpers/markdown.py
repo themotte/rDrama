@@ -98,3 +98,26 @@ class CustomRenderer(HTMLRenderer):
 		space = token.target[0]
 		target = token.target[1]
 		return f'{space}<a href="https://old.reddit.com/u/{target}" rel="nofollow noopener noreferrer" class="d-inline-block">u/{target}</a>'
+
+
+class Renderer(HTMLRenderer):
+
+	def __init__(self, **kwargs):
+		super().__init__(SubMention,
+						 RedditorMention,
+						 SubMention2,
+						 RedditorMention2,
+						 )
+
+		for i in kwargs:
+			self.__dict__[i] = kwargs[i]
+
+	def render_sub_mention(self, token):
+		space = token.target[0]
+		target = token.target[1]
+		return f'{space}<a href="https://old.reddit.com/r/{target}" rel="nofollow noopener noreferrer" class="d-inline-block">r/{target}</a>'
+		
+	def render_redditor_mention(self, token):
+		space = token.target[0]
+		target = token.target[1]
+		return f'{space}<a href="https://old.reddit.com/u/{target}" rel="nofollow noopener noreferrer" class="d-inline-block">u/{target}</a>'

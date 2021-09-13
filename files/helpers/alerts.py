@@ -147,7 +147,7 @@ def send_unblock_notif(vid, user, text):
 
 def send_pm(vid, user, text):
 
-	text_html = mistletoe.Document(text)
+	text_html = Renderer().render(mistletoe.Document(text))
 
 	text_html = sanitize(text_html, True)
 
@@ -172,7 +172,7 @@ def send_admin(vid, text):
 
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
-	text_html = mistletoe.Document(text)
+	text_html = Renderer().render(mistletoe.Document(text))
 
 	text_html = sanitize(text_html, True)
 
