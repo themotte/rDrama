@@ -118,7 +118,7 @@ def settings_profile_post(v):
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
 			if 'pcmemes.net' in request.host: url = upload_ibb(file=file)
-			else: url = upload(file=file)
+			else: url = upload_imgur(file=file)
 
 			bio += f"\n\n![]({url})"
 
@@ -506,11 +506,11 @@ def settings_images_profile(v):
 	file.save(filepath)
 
 	if 'pcmemes.net' in request.host: highres = upload_ibb(filepath=filepath)
-	else: highres = upload(filepath=filepath)
+	else: highres = upload_imgur(filepath=filepath)
 	if not highres: abort(400)
 
 	if 'pcmemes.net' in request.host: imageurl = upload_ibb(filepath=filepath, resize=True)
-	else: imageurl = upload(filepath=filepath, resize=True)
+	else: imageurl = upload_imgur(filepath=filepath, resize=True)
 	if not imageurl: abort(400)
 
 	v.highres = highres
@@ -532,7 +532,7 @@ def settings_images_banner(v):
 
 	file = request.files["banner"]
 	if 'pcmemes.net' in request.host: imageurl = upload_ibb(file=file)
-	else: imageurl = upload(file=file)
+	else: imageurl = upload_imgur(file=file)
 
 	if imageurl:
 		v.bannerurl = imageurl

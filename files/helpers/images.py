@@ -11,7 +11,46 @@ CF_ZONE = environ.get("CLOUDFLARE_ZONE", "").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 IBB_KEY = environ.get("IBB_KEY", "").strip()
 
-def upload(ibb=False, filepath=None, file=None, resize=False):
+def upload_ibb(file=None, resize=False):
+	
+	if file: file.save("image.webp")
+
+	i = IImage.open("image.webp")
+	if resize:
+		size = 100, 100
+		frames = ImageSequence.Iterator(i)
+
+		def thumbnails(frames):
+			for frame in frames:
+				thumbnail = frame.copy()
+				thumbnail.thumbnail(size, IImage.ANTIALIAS)
+				yield thumbnail
+
+		frames = thumbnails(frames)
+
+		om = next(frames)
+		om.info = i.info
+		try: om.save("image.webp", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
+		except Exception as e:
+			print(e)
+			return
+		i.save("image.webp", optimize=True, quality=30)
+
+	try:
+		with open("image.webp", 'rb') as f:
+			data={'image': base64.b64encode(f.read())} 
+			req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
+		resp = req.json()['data']
+		url = resp['url']
+	except Exception as e:
+		print(e)
+		print(req.text)
+		return
+
+	return url
+
+
+def upload_imgur(filepath=None, file=None, resize=False):
 	
 	if file:
 		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
@@ -47,20 +86,19 @@ def upload(ibb=False, filepath=None, file=None, resize=False):
 	try:
 		with open(filepath, 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
-			if ibb: req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
-			else: req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
+			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
 		resp = req.json()['data']
-		if ibb: url = resp['url']
-		else: url = resp['link']
-		url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
+		url = resp['link']
+		if not "_d." in url:
+			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
+			if "_d." in url: url += "?maxwidth=9999"
 	except Exception as e:
 		print(e)
 		print(req.text)
 		return
 
-	if not ibb:
-		new_image = Image(text=url, deletehash=resp["deletehash"])
-		g.db.add(new_image)
+	new_image = Image(text=url, deletehash=resp["deletehash"])
+	g.db.add(new_image)
 	return url
 
 
