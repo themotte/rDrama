@@ -330,6 +330,7 @@
 
 						<button id="banclub" class="{% if u.club_banned %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_ban','banclub','unbanclub')">Ban from club</button>
 						<button id="unbanclub" class="{% if not u.club_banned %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_ban','banclub','unbanclub')">Unban from club</button>
+					{% endif %}
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
 					{% if v and v.admin_level >=4 %}
