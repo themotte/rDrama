@@ -371,11 +371,11 @@ class User(Base, Stndrd, Age_times):
 
 
 	def notification_messages(self, page=1):
-		comments = g.db.query(Comment.id).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
 
 		for c in comments:
 			print(c.child_comments)
-			
+
 		return [c[0] for c in comments]
 
 	@property
