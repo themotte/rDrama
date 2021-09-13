@@ -16,16 +16,17 @@ def upload_ibb(file=None, resize=False):
 	if file: file.save("image.webp")
 
 	i = IImage.open("image.webp")
-	size = 100, 100
 	frames = ImageSequence.Iterator(i)
 
-	def thumbnails(frames):
-		for frame in frames:
-			thumbnail = frame.copy()
-			if resize: thumbnail.thumbnail(size, IImage.ANTIALIAS)
-			yield thumbnail
+	if resize:
+		size = 100, 100
+		def thumbnails(frames):
+			for frame in frames:
+				thumbnail = frame.copy()
+				: thumbnail.thumbnail(size, IImage.ANTIALIAS)
+				yield thumbnail
 
-	frames = thumbnails(frames)
+		frames = thumbnails(frames)
 
 	om = next(frames)
 	om.info = i.info
