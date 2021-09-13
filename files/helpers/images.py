@@ -40,7 +40,7 @@ def upload_ibb(file=None, resize=False):
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
 		resp = req.json()['data']
-		url = resp['url']
+		url = resp['url'].replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
 	except Exception as e:
 		print(e)
 		print(req.text)
@@ -87,10 +87,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 			data={'image': base64.b64encode(f.read())} 
 			req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}, data=data)
 		resp = req.json()['data']
-		url = resp['link']
-		if not "_d." in url:
-			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
-			if "_d." in url: url += "?maxwidth=9999"
+		url = resp['link'].replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
 	except Exception as e:
 		print(e)
 		print(req.text)
