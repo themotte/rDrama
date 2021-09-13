@@ -518,12 +518,16 @@ def thumbs(new_post):
 		print(f'Unknown content type {x.headers.get("Content-Type")}')
 		return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
-	with open("image.webp", "wb") as file:
-		for chunk in image_req.iter_content(1024):
-			file.write(chunk)
-
-	if 'pcmemes.net' in request.host: post.thumburl = upload_ibb(resize=True)
-	else: post.thumburl = upload_imgur(filepath="image.webp", resize=True)
+	if 'pcmemes.net' in request.host:
+		with open("image.webp", "wb") as file:
+			for chunk in image_req.iter_content(1024):
+				file.write(chunk)
+		post.thumburl = upload_ibb(resize=True)
+	else:
+		with open("image.png", "wb") as file:
+			for chunk in image_req.iter_content(1024):
+				file.write(chunk)
+		post.thumburl = upload_imgur(filepath="image.png", resize=True)
 
 	g.db.add(post)
 
