@@ -209,11 +209,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	@property
 	@lazy
 	def thumb_url(self):
-		if self.over_18: return f"https://{site}/assets/images/nsfw.gif"
-		elif not self.url: return f"https://{site}/assets/images/{site_name}/default_thumb_text.gif"
+		if self.over_18: return f"https://{site}/assets/images/nsfw.webp"
+		elif not self.url: return f"https://{site}/assets/images/{site_name}/default_thumb_text.webp"
 		elif self.thumburl: return self.thumburl
-		elif "youtu.be" in self.domain or "youtube.com" in self.domain: return f"https://{site}/assets/images/default_thumb_yt.gif"
-		else: return f"https://{site}/assets/images/default_thumb_link.gif"
+		elif "youtu.be" in self.domain or "youtube.com" in self.domain: return f"https://{site}/assets/images/default_thumb_yt.webp"
+		else: return f"https://{site}/assets/images/default_thumb_link.webp"
 
 	@property
 
@@ -411,7 +411,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	@property
 	def is_image(self):
-		if self.url: return self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999')
+		if self.url: return self.url.lower().endswith('.webp') or self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999')
 		else: return False
 
 	@property

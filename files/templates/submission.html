@@ -35,7 +35,7 @@
 <meta property="og:description" name="description" content="{{comment_info.body}}" />
 <meta property="og:author" name="author" content="{{'@'+comment_info.author.username}}" />
 <meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.title}} - {{'SITE_NAME' | app_config}}" />
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
 {% if p.is_video %}
 <meta property="og:video" content="{{ p.realurl(v) }}" />
 {% endif %}
@@ -47,7 +47,7 @@
 <meta name="twitter:title" content="{{'@'+comment_info.author.username}} comments on {{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta name="twitter:creator" content="{{'@'+comment_info.author.username}}">
 <meta name="twitter:description" content="{{comment_info.body}}" />
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
 
 {% if linked_comment.author.is_private %}
@@ -64,7 +64,7 @@
 <meta property="og:description" name="description" content="{{p.realbody(V)}}" />
 <meta property="og:author" name="author" content="{{'@'+p.author.username}}" />
 <meta property="og:title" content="{{p.title}} - {{'SITE_NAME' | app_config}}" />
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
 {% if p.is_video %}
 <meta property="og:video" content="{{ p.realurl(v) }}" />
 {% endif %}
@@ -76,7 +76,7 @@
 <meta name="twitter:title" content="{{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta name="twitter:creator" content="{{'@'+p.author.username}}">
 <meta name="twitter:description" content="{{p.realbody(v)}}" />
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
 
 {% if p.author.is_private %}
@@ -194,7 +194,7 @@
 {% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") <= 5 else 100 %}
 <script type="text/javascript">
 	new BugController({
-		imageSprite: "/assets/images/fly-sprite.gif",
+		imageSprite: "/assets/images/fly-sprite.webp",
 		canDie: false,
 		minBugs: {{minbugs}},
 		maxBugs: {{maxbugs}},
@@ -273,7 +273,7 @@
 						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
 						{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{p.author.verified}}"></i>
 						{% endif %}
-						<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} style="color: #{{p.author.namecolor}};  font-weight: bold;" class="user-name"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rdrama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
+						<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} style="color: #{{p.author.namecolor}};  font-weight: bold;" class="user-name"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rdrama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.webp">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 						<span data-toggle="tooltip" data-placement="bottom" id="timestamp" title="">&nbsp;{{p.age_string}}</span>
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
 						
