@@ -371,7 +371,7 @@ class User(Base, Stndrd, Age_times):
 
 	@cache.memoize(timeout=86400)
 	def notification_messages(self, page=1):
-		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not Comment.child_comments.any()).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).filter(or_(Comment.author_id==self.id, Comment.sentto==self.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
 
 		return comments
 
