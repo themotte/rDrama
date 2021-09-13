@@ -329,10 +329,10 @@
 						</form>
 
 						{% if not v.paid_dues %}
-							<button class="btn btn-success" onclick="post_toast('/@{{u.username}}/club_ban')">Grant club access</button>
+							<button class="btn btn-success" onclick="post_toast('/@{{u.username}}/club_allow')">Grant club access</button>
 						{% endif %}
 						{% if not u.club_banned %}
-							<button class="btn btn-danger" onclick="post_toast('/@{{u.username}}/club_allow')">Bar from club</button>
+							<button class="btn btn-danger" onclick="post_toast('/@{{u.username}}/club_ban')">Bar from club</button>
 						{% endif %}
 					{% endif %}
 					<pre></pre>
@@ -515,10 +515,10 @@
 					{% if v.admin_level > 1 %}
 
 					{% if not v.paid_dues %}
-						<button class="btn btn-success" onclick="post_toast('/@{{u.username}}/club_ban')">Grant club access</button>
+						<button class="btn btn-success" onclick="post_toast('/@{{u.username}}/club_allow')">Grant club access</button>
 					{% endif %}
 					{% if not u.club_banned %}
-						<button class="btn btn-danger" onclick="post_toast('/@{{u.username}}/club_allow')">Bar from club</button>
+						<button class="btn btn-danger" onclick="post_toast('/@{{u.username}}/club_ban')">Bar from club</button>
 					{% endif %}
 
 						<br><br>
