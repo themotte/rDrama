@@ -86,8 +86,7 @@ _allowed_protocols = [
 
 _allowed_styles =[
 	'color',
-	'font-weight',
-	'margin-bottom'
+	'font-weight'
 ]
 
 # filter to make all links show domain on hover
