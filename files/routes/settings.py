@@ -78,7 +78,7 @@ def settings_profile_post(v):
 		updated = True
 		v.oldreddit = request.values.get("oldreddit", None) == 'true'
 
-	if request.values.get("nitter", v.nitter) != v.oldrnittereddit:
+	if request.values.get("nitter", v.nitter) != v.nitter:
 		updated = True
 		v.nitter = request.values.get("nitter", None) == 'true'
 
