@@ -367,7 +367,7 @@ def sign_up_post(v):
 		)
 
 	g.db.add(new_user)
-	g.db.commit()
+	g.db.flush()
 
 	# give a beta badge
 	beta_badge = Badge(user_id=new_user.id,

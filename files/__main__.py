@@ -246,8 +246,9 @@ def before_request():
 @app.after_request
 def after_request(response):
 
-	g.db.commit()
-	g.db.close()
+	if g.db:
+		g.db.commit()
+		g.db.close()
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("Referrer-Policy", "same-origin")

@@ -270,7 +270,6 @@ def messagereply(v):
 	g.db.add(new_aux)
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
-	g.db.commit()
 	cache.delete_memoized(User.notification_messages, user)
 
 	return jsonify({"html": render_template("comments.html",

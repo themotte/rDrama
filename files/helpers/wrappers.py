@@ -62,7 +62,7 @@ def check_ban_evade(v):
 			post.ban_reason="ban evasion"
 			g.db.add(post)
 
-			g.db.commit()
+			g.db.flush()
 			
 			ma=ModAction(
 				kind="ban_post",
