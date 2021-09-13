@@ -16,7 +16,7 @@ def upload_ibb(file=None, resize=False):
 	if file: file.save("image.webp")
 
 	i = IImage.open("image.webp")
-	frames = ImageSequence.Iterator(i)
+	frames = list(ImageSequence.Iterator(i))
 
 	if resize:
 		def thumbnails(frames):
