@@ -117,7 +117,7 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			if 'pcmemes.ga' in request.host: url = upload_ibb(file=file)
+			if 'pcmemes.net' in request.host: url = upload_ibb(file=file)
 			else: url = upload_imgur(file=file)
 
 			bio += f"\n\n![]({url})"
@@ -208,7 +208,7 @@ def settings_profile_post(v):
 		return {"message": "Theme changed!"}
 
 	quadrant = request.values.get("quadrant")
-	if quadrant and 'pcmemes.ga' in request.host.lower():
+	if quadrant and 'pcmemes.net' in request.host.lower():
 		v.quadrant = quadrant
 		v.customtitle = quadrant
 		if quadrant=="Centrist":
@@ -505,7 +505,7 @@ def settings_images_profile(v):
 	filepath = f"image.{format}"
 	file.save(filepath)
 
-	if 'pcmemes.ga' in request.host:
+	if 'pcmemes.net' in request.host:
 		file = request.files["profile"]
 		file.save("image.webp")
 		highres = upload_ibb()
@@ -517,7 +517,7 @@ def settings_images_profile(v):
 		highres = upload_imgur(filepath=filepath)
 	if not highres: abort(400)
 
-	if 'pcmemes.ga' in request.host: imageurl = upload_ibb(resize=True)
+	if 'pcmemes.net' in request.host: imageurl = upload_ibb(resize=True)
 	else: imageurl = upload_imgur(filepath=filepath, resize=True)
 	if not imageurl: abort(400)
 
@@ -539,7 +539,7 @@ def settings_images_banner(v):
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
 	file = request.files["banner"]
-	if 'pcmemes.ga' in request.host: imageurl = upload_ibb(file=file)
+	if 'pcmemes.net' in request.host: imageurl = upload_ibb(file=file)
 	else: imageurl = upload_imgur(file=file)
 
 	if imageurl:
