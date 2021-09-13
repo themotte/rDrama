@@ -920,8 +920,7 @@ def ban_post(post_id, v):
 
 	ban_reason=request.form.get("reason", "")
 	ban_reason = ban_reason.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
-	with CustomRenderer() as renderer:
-		ban_reason = renderer.render(mistletoe.Document(ban_reason))
+	ban_reason = CustomRenderer().render(mistletoe.Document(ban_reason))
 	ban_reason = sanitize(ban_reason)
 
 	post.ban_reason = ban_reason

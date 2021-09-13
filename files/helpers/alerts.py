@@ -20,8 +20,7 @@ def send_notification(vid, user, text, db=None):
 
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
-	with CustomRenderer() as renderer:
-		text_html = renderer.render(mistletoe.Document(text))
+	text_html = CustomRenderer().render(mistletoe.Document(text))
 
 	text_html = sanitize(text_html)
 	
@@ -44,33 +43,11 @@ def send_notification(vid, user, text, db=None):
 	db.add(notif)
 
 
-def send_pm(vid, user, text):
-
-	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
-
-	text_html = sanitize(text_html, True)
-
-	new_comment = Comment(author_id=vid,
-						  parent_submission=None,
-						  level=1,
-						  sentto=user.id
-						  )
-	g.db.add(new_comment)
-
-	g.db.flush()
-
-	new_aux = CommentAux(id=new_comment.id, body=text, body_html=text_html)
-	g.db.add(new_aux)
-
-	notif = Notification(comment_id=new_comment.id, user_id=user.id)
-	g.db.add(notif)
-
-
 def send_follow_notif(vid, user, text):
 
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
-	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
+	text_html = CustomRenderer().render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
 	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
@@ -95,8 +72,7 @@ def send_unfollow_notif(vid, user, text):
 
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
-	with CustomRenderer() as renderer:
-		text_html = renderer.render(mistletoe.Document(text))
+	text_html = CustomRenderer().render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
 	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
@@ -121,8 +97,7 @@ def send_block_notif(vid, user, text):
 
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
-	with CustomRenderer() as renderer:
-		text_html = renderer.render(mistletoe.Document(text))
+	text_html = CustomRenderer().render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
 	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
@@ -147,8 +122,7 @@ def send_unblock_notif(vid, user, text):
 
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
-	with CustomRenderer() as renderer:
-		text_html = renderer.render(mistletoe.Document(text))
+	text_html = CustomRenderer().render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
 	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
@@ -169,11 +143,36 @@ def send_unblock_notif(vid, user, text):
 						 unblocksender=vid)
 	g.db.add(notif)
 
+
+
+def send_pm(vid, user, text):
+
+	text_html = mistletoe.Document(text)
+
+	text_html = sanitize(text_html, True)
+
+	new_comment = Comment(author_id=vid,
+						  parent_submission=None,
+						  level=1,
+						  sentto=user.id
+						  )
+	g.db.add(new_comment)
+
+	g.db.flush()
+
+	new_aux = CommentAux(id=new_comment.id, body=text, body_html=text_html)
+	g.db.add(new_aux)
+
+	notif = Notification(comment_id=new_comment.id, user_id=user.id)
+	g.db.add(notif)
+
+
+
 def send_admin(vid, text):
 
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
-	with CustomRenderer() as renderer: text_html = renderer.render(mistletoe.Document(text))
+	text_html = mistletoe.Document(text)
 
 	text_html = sanitize(text_html, True)
 

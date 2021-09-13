@@ -123,7 +123,7 @@ def settings_profile_post(v):
 		# 						   v=v,
 		# 						   error="You didn't change anything")
 
-		with CustomRenderer() as renderer: bio_html = renderer.render(mistletoe.Document(bio))
+		bio_html = CustomRenderer().render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html)
 		# Run safety filter
 		bans = filter_comment_html(bio_html)
