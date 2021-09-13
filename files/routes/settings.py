@@ -505,8 +505,16 @@ def settings_images_profile(v):
 	filepath = f"image.{format}"
 	file.save(filepath)
 
-	if 'pcmemes.ga' in request.host: highres = upload_ibb()
-	else: highres = upload_imgur(filepath=filepath)
+	if 'pcmemes.ga' in request.host:
+		file = request.files["profile"]
+		file.save("image.webp")
+		highres = upload_ibb()
+	else:
+		file = request.files["profile"]
+		format = file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
+		filepath = f"image.{format}"
+		file.save(filepath)
+		highres = upload_imgur(filepath=filepath)
 	if not highres: abort(400)
 
 	if 'pcmemes.ga' in request.host: imageurl = upload_ibb(resize=True)
