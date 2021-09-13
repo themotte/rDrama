@@ -28,7 +28,7 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @admin_level_required(6)
 def refund(v):
 	#for u in g.db.query(User).all():
-	sex = g.db.query(func.sum(Submission.upvotes + Submission.downvotes + Comment.upvotes + Comment.downvotes - 2)).options(lazyload('*')).filter_by(author_id = 1, is_banned = False, deleted_utc = 0).scalar()
+	sex = g.db.query(func.sum(Submission.upvotes + Submission.downvotes - 2)).options(lazyload('*')).filter_by(author_id = 1, is_banned = False, deleted_utc = 0).scalar()
 	print(sex)
 		#g.db.add(u)
 	return "sex"
