@@ -318,8 +318,7 @@ def edit_post(pid, v):
 
 			body = VAXX_MSG.format(username=v.username)
 
-			with CustomRenderer(post_id=p.id) as renderer:
-				body_md = renderer.render(mistletoe.Document(body))
+			body_md = CustomRenderer().render(mistletoe.Document(body))
 
 			body_jannied_html = sanitize(body_md)
 			c_aux = CommentAux(
@@ -355,8 +354,7 @@ def edit_post(pid, v):
 
 			body = AGENDAPOSTER_MSG.format(username=v.username)
 
-			with CustomRenderer(post_id=p.id) as renderer:
-				body_md = renderer.render(mistletoe.Document(body))
+			body_md = CustomRenderer().render(mistletoe.Document(body))
 
 			body_jannied_html = sanitize(body_md)
 			c_aux = CommentAux(
@@ -989,8 +987,7 @@ def submit_post(v):
 
 		body = VAXX_MSG.format(username=v.username)
 
-		with CustomRenderer(post_id=new_post.id) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
 		c_aux = CommentAux(
@@ -1026,8 +1023,7 @@ def submit_post(v):
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
-		with CustomRenderer(post_id=new_post.id) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
 		c_aux = CommentAux(
@@ -1069,7 +1065,7 @@ def submit_post(v):
 		if new_post.url:
 			body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={urllib.parse.quote(new_post.url)}&run=1) (click to archive)"
 			gevent.spawn(archiveorg, new_post.url)
-		with CustomRenderer(post_id=new_post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c.id,

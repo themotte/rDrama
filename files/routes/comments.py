@@ -166,7 +166,7 @@ def api_comment(v):
 	
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
-	with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
 	# Run safety filter
@@ -293,8 +293,7 @@ def api_comment(v):
 		
 		body = request.form.get("body") + f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
-		with CustomRenderer(post_id=parent_id) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
 	if len(body_html) > 20000: abort(400)
@@ -330,7 +329,7 @@ def api_comment(v):
 
 		body2 = BASED_MSG.format(username=basedguy.username, basedcount=basedguy.basedcount, pills=basedguy.pills)
 
-		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body2))
+		body_md = CustomRenderer().render(mistletoe.Document(body2))
 
 		body_based_html = sanitize(body_md)
 		c_aux = CommentAux(
@@ -365,8 +364,7 @@ def api_comment(v):
 
 		body2 = VAXX_MSG.format(username=v.username)
 
-		with CustomRenderer(post_id=parent_id) as renderer:
-			body_md = renderer.render(mistletoe.Document(body2))
+		body_md = CustomRenderer().render(mistletoe.Document(body2))
 
 		body_jannied_html = sanitize(body_md)
 		c_aux = CommentAux(
@@ -399,8 +397,7 @@ def api_comment(v):
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
-		with CustomRenderer(post_id=parent_id) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
 		c_aux = CommentAux(
@@ -426,7 +423,7 @@ def api_comment(v):
 	
 		body = random.choice(LONGPOST_REPLIES)
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
-		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c2.id,
@@ -456,7 +453,7 @@ def api_comment(v):
 		g.db.flush()
 	
 		body = "zoz"
-		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c2.id,
@@ -482,7 +479,7 @@ def api_comment(v):
 		g.db.flush()
 	
 		body = "zle"
-		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c3.id,
@@ -508,7 +505,7 @@ def api_comment(v):
 		g.db.flush()
 	
 		body = "zozzle"
-		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
 			id=c4.id,
@@ -614,7 +611,7 @@ def edit_comment(cid, v):
 	body = request.form.get("body", "")[:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
-	with CustomRenderer(post_id=c.post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
 	bans = filter_comment_html(body_html)
@@ -709,8 +706,7 @@ def edit_comment(cid, v):
 		else: url = upload_imgur(file=file)
 
 		body += f"\n![]({url})"
-		with CustomRenderer(post_id=c.parent_submission) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
 	if len(body_html) > 20000: abort(400)
@@ -738,8 +734,7 @@ def edit_comment(cid, v):
 
 		body = VAXX_MSG.format(username=v.username)
 
-		with CustomRenderer(post_id=c.parent_submission) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
 		c_aux = CommentAux(
@@ -773,8 +768,7 @@ def edit_comment(cid, v):
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
-		with CustomRenderer(post_id=c.parent_submission) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
 		c_aux = CommentAux(
