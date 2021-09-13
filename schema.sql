@@ -1058,7 +1058,8 @@ CREATE TABLE public.users (
     cardview boolean,
     received_award_count integer,
     highlightcomments boolean,
-    club_banned boolean DEFAULT false
+    club_banned boolean DEFAULT false,
+    nitter boolean
 );
 
 
