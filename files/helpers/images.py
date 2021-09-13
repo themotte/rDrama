@@ -19,11 +19,10 @@ def upload_ibb(file=None, resize=False):
 	frames = ImageSequence.Iterator(i)
 
 	if resize:
-		size = 100, 100
 		def thumbnails(frames):
 			for frame in frames:
 				thumbnail = frame.copy()
-				: thumbnail.thumbnail(size, IImage.ANTIALIAS)
+				: thumbnail.thumbnail(100, 100, IImage.ANTIALIAS)
 				yield thumbnail
 
 		frames = thumbnails(frames)
