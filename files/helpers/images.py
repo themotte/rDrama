@@ -15,8 +15,8 @@ def upload_ibb(file=None, resize=False):
 	
 	if file: file.save("image.webp")
 
-	i = IImage.open("image.webp")
 	if resize:
+		i = IImage.open("image.webp")
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
