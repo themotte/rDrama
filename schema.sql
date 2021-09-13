@@ -1057,7 +1057,8 @@ CREATE TABLE public.users (
     fail2_utc integer,
     cardview boolean,
     received_award_count integer,
-    highlightcomments boolean
+    highlightcomments boolean,
+    club_banned boolean DEFAULT false
 );
 
 
