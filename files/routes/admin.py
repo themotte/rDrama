@@ -60,7 +60,7 @@ def toggle_club_ban(v, username):
 	u.club_banned = not u.club_banned
 
 	for x in u.alts:
-		x.club_banned = not x.club_banned
+		x.club_banned = u.club_banned
 
 	return {
 		"message": f"@{username} has been kicked from the country club. Deserved." if u.club_banned else f"@{username}'s ban from club removed"
