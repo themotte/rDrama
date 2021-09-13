@@ -234,152 +234,156 @@ def post_id(pid, anything=None, v=None):
 @validate_formkey
 def edit_post(pid, v):
 
-	title = request.form.get("title")
-
 	p = get_post(pid)
 
-	if not p.author_id == v.id:
-		abort(403)
+	if not p.author_id == v.id: abort(403)
 
+	title = request.form.get("title")
 	body = request.form.get("body", "")
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
-	with CustomRenderer() as renderer: body_md = renderer.render(mistletoe.Document(body))
-	body_html = sanitize(body_md)
 
-	# Run safety filter
-	bans = filter_comment_html(body_html)
-	if bans:
-		ban = bans[0]
-		reason = f"Remove the {ban.domain} link from your post and try again."
-		if ban.reason:
-			reason += f" {ban.reason}"
-			
-		#auto ban for digitally malicious content
-		if any([x.reason==4 for x in bans]):
-			v.ban(days=30, reason="Digitally malicious content is not allowed.")
-			abort(403)
-			
-		return {"error": reason}, 403
+	if title != p.title:
+		p.title = title
+		p.title_html = filter_title(title)
 
-	# check spam
-	soup = BeautifulSoup(body_html, features="html.parser")
-	links = [x['href'] for x in soup.find_all('a') if x.get('href')]
+	if body != p.body:
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE): body = body.replace(i.group(1), f'![]({i.group(1)})')
+		with CustomRenderer() as renderer: body_md = renderer.render(mistletoe.Document(body))
+		body_html = sanitize(body_md)
 
-	for link in links:
-		parse_link = urlparse(link)
-		check_url = ParseResult(scheme="https",
-								netloc=parse_link.netloc,
-								path=parse_link.path,
-								params=parse_link.params,
-								query=parse_link.query,
-								fragment='')
-		check_url = urlunparse(check_url)
+		# Run safety filter
+		bans = filter_comment_html(body_html)
+		if bans:
+			ban = bans[0]
+			reason = f"Remove the {ban.domain} link from your post and try again."
+			if ban.reason:
+				reason += f" {ban.reason}"
+				
+			#auto ban for digitally malicious content
+			if any([x.reason==4 for x in bans]):
+				v.ban(days=30, reason="Digitally malicious content is not allowed.")
+				abort(403)
+				
+			return {"error": reason}, 403
 
-		badlink = g.db.query(BadLink).filter(
-			literal(check_url).contains(
-				BadLink.link)).first()
-		if badlink:
-			if badlink.autoban:
-				text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-				send_notification(NOTIFICATIONS_ACCOUNT, v, text)
-				v.ban(days=1, reason="spam")
+		# check spam
+		soup = BeautifulSoup(body_html, features="html.parser")
+		links = [x['href'] for x in soup.find_all('a') if x.get('href')]
 
-				return redirect('/notifications')
-			else:
+		for link in links:
+			parse_link = urlparse(link)
+			check_url = ParseResult(scheme="https",
+									netloc=parse_link.netloc,
+									path=parse_link.path,
+									params=parse_link.params,
+									query=parse_link.query,
+									fragment='')
+			check_url = urlunparse(check_url)
 
-				return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}
+			badlink = g.db.query(BadLink).filter(
+				literal(check_url).contains(
+					BadLink.link)).first()
+			if badlink:
+				if badlink.autoban:
+					text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+					send_notification(NOTIFICATIONS_ACCOUNT, v, text)
+					v.ban(days=1, reason="spam")
 
+					return redirect('/notifications')
+				else:
 
-	p.body = body
-	p.body_html = body_html
-	p.title = title
-	p.title_html = filter_title(title)
+					return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}
 
-	if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
-	g.db.add(p)
+		p.body = body
+		p.body_html = body_html
 
-	if "rdrama" in request.host and "ivermectin" in body_html.lower():
+		if "rdrama" in request.host and "ivermectin" in body_html.lower():
 
-		p.is_banned = True
-		p.ban_reason = "ToS Violation"
+			p.is_banned = True
+			p.ban_reason = "ToS Violation"
 
-		g.db.add(p)
+			g.db.add(p)
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
-			parent_submission=p.id,
-			level=1,
-			over_18=False,
-			is_bot=True,
-			app_id=None,
-			is_pinned=True,
-			distinguish_level=6
+			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+				parent_submission=p.id,
+				level=1,
+				over_18=False,
+				is_bot=True,
+				app_id=None,
+				is_pinned=True,
+				distinguish_level=6
+				)
+
+			g.db.add(c_jannied)
+			g.db.flush()
+
+			body = VAXX_MSG.format(username=v.username)
+
+			with CustomRenderer(post_id=p.id) as renderer:
+				body_md = renderer.render(mistletoe.Document(body))
+
+			body_jannied_html = sanitize(body_md)
+			c_aux = CommentAux(
+				id=c_jannied.id,
+				body_html=body_jannied_html,
+				body=body
 			)
-
-		g.db.add(c_jannied)
-		g.db.flush()
-
-		body = VAXX_MSG.format(username=v.username)
-
-		with CustomRenderer(post_id=p.id) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
-
-		body_jannied_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c_jannied.id,
-			body_html=body_jannied_html,
-			body=body
-		)
-		g.db.add(c_aux)
-		g.db.flush()
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
+			g.db.add(c_aux)
+			g.db.flush()
+			n = Notification(comment_id=c_jannied.id, user_id=v.id)
+			g.db.add(n)
 
 
-	if v.agendaposter and "trans lives matter" not in body_html.lower():
+		if v.agendaposter and "trans lives matter" not in body_html.lower():
 
-		p.is_banned = True
-		p.ban_reason = "ToS Violation"
+			p.is_banned = True
+			p.ban_reason = "ToS Violation"
 
-		g.db.add(p)
+			g.db.add(p)
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
-			parent_submission=p.id,
-			level=1,
-			over_18=False,
-			is_bot=True,
-			app_id=None,
-			is_pinned=True,
-			distinguish_level=6
+			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+				parent_submission=p.id,
+				level=1,
+				over_18=False,
+				is_bot=True,
+				app_id=None,
+				is_pinned=True,
+				distinguish_level=6
+				)
+
+			g.db.add(c_jannied)
+			g.db.flush()
+
+			body = AGENDAPOSTER_MSG.format(username=v.username)
+
+			with CustomRenderer(post_id=p.id) as renderer:
+				body_md = renderer.render(mistletoe.Document(body))
+
+			body_jannied_html = sanitize(body_md)
+			c_aux = CommentAux(
+				id=c_jannied.id,
+				body_html=body_jannied_html,
+				body=body
 			)
-
-		g.db.add(c_jannied)
-		g.db.flush()
-
-		body = AGENDAPOSTER_MSG.format(username=v.username)
-
-		with CustomRenderer(post_id=p.id) as renderer:
-			body_md = renderer.render(mistletoe.Document(body))
-
-		body_jannied_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c_jannied.id,
-			body_html=body_jannied_html,
-			body=body
-		)
-		g.db.add(c_aux)
-		g.db.flush()
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
-	
-	notify_users = set()
-	
-	soup = BeautifulSoup(body_html, features="html.parser")
-	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
-		username = mention["href"].split("@")[1]
-		user = g.db.query(User).filter_by(username=username).first()
-		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
+			g.db.add(c_aux)
+			g.db.flush()
+			n = Notification(comment_id=c_jannied.id, user_id=v.id)
+			g.db.add(n)
 		
-	for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: https://{site}{p.permalink}")
+
+		notify_users = set()
+		
+		soup = BeautifulSoup(body_html, features="html.parser")
+		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
+			username = mention["href"].split("@")[1]
+			user = g.db.query(User).filter_by(username=username).first()
+			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
+			
+		for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: https://{site}{p.permalink}")
+
+
+	if title != p.title or body != p.body:
+		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
+		g.db.add(p)
 
 	return redirect(p.permalink)
 
