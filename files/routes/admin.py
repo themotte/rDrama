@@ -30,6 +30,8 @@ def refund(v):
 	for u in g.db.query(User).all():
 		posts = g.db.query(func.sum(Submission.upvotes + Submission.downvotes - 1)).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).scalar()
 		comments = g.db.query(func.sum(Comment.upvotes + Comment.downvotes - 1)).options(lazyload('*')).filter_by(author_id = u.id, is_banned = False, deleted_utc = 0).scalar()
+		if not posts: posts = 0
+		if not comments: comments = 0
 		u.truecoins = posts+comments
 		g.db.add(u)
 	return "sex"
