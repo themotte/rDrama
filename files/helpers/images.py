@@ -34,8 +34,6 @@ def upload_ibb(file=None, resize=False):
 		except Exception as e:
 			print(e)
 			return
-		i.save("image.webp")
-
 	try:
 		with open("image.webp", 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
