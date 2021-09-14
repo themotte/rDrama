@@ -185,22 +185,22 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	secondrange = firstrange+100
 	posts = posts[firstrange:secondrange]
 
-	if random.random() < 0.004:
-		for post in posts:
-			if post.author and post.author.shadowbanned:
-				rand = random.randint(5,20)
-				if post.score > rand: continue
-				rand = random.randint(500,1400)
-				vote = Vote(user_id=rand,
-					vote_type=random.choice([-1, 1, 1, 1, 1]),
-					submission_id=post.id)
-				g.db.add(vote)
-				try: g.db.flush()
-				except: g.db.rollback()
-				post.upvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=1).count()
-				post.downvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=-1).count()
-				post.views = post.views + random.randint(7,10)
-				g.db.add(post)
+	# if random.random() < 0.004:
+	# 	for post in posts:
+	# 		if post.author and post.author.shadowbanned:
+	# 			rand = random.randint(5,20)
+	# 			if post.score > rand: continue
+	# 			rand = random.randint(500,1400)
+	# 			vote = Vote(user_id=rand,
+	# 				vote_type=random.choice([-1, 1, 1, 1, 1]),
+	# 				submission_id=post.id)
+	# 			g.db.add(vote)
+	# 			try: g.db.flush()
+	# 			except: g.db.rollback()
+	# 			post.upvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=1).count()
+	# 			post.downvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=-1).count()
+	# 			post.views = post.views + random.randint(7,10)
+	# 			g.db.add(post)
 
 	next_exists = (len(posts) > 25)
 

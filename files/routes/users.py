@@ -553,7 +553,7 @@ def u_username_comments(username, v=None):
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
-	listing = get_comments(ids, v=v, shadowbanned=True)
+	listing = get_comments(ids, v=v)
 
 	is_following = (v and user.has_follower(v))
 
