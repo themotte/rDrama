@@ -48,8 +48,6 @@ def feeds_user(sort='hot', t='all'):
 				with tag("published"):
 					text(datetime.utcfromtimestamp(post.created_utc).isoformat())
 				
-				if post.url: doc.stag("link", href=post.url)
-
 				with tag("author"):
 					with tag("name"):
 						text(post.author.username)
