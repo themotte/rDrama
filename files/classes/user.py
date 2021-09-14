@@ -222,43 +222,6 @@ class User(Base, Stndrd, Age_times):
 		listing = [x.id for x in submissions[firstrange:secondrange]]
 		return listing
 
-	def commentlisting(self, v=None, page=1, sort="new", t="all"):
-		comments = self.comments.options(lazyload('*')).filter(Comment.parent_submission != None)
-
-		if (not v) or (v.id != self.id and v.admin_level == 0):
-			comments = comments.filter(Comment.deleted_utc == 0)
-			comments = comments.filter(Comment.is_banned == False)
-
-		now = int(time.time())
-		if t == 'hour':
-			cutoff = now - 3600
-		elif t == 'day':
-			cutoff = now - 86400
-		elif t == 'week':
-			cutoff = now - 604800
-		elif t == 'month':
-			cutoff = now - 2592000
-		elif t == 'year':
-			cutoff = now - 31536000
-		else:
-			cutoff = 0
-		comments = comments.filter(Comment.created_utc >= cutoff)
-
-		if sort == "new":
-			comments = comments.order_by(Comment.created_utc.desc()).all()
-		elif sort == "old":
-			comments = comments.order_by(Comment.created_utc.asc()).all()
-		elif sort == "controversial":
-			comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
-		elif sort == "top":
-			comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
-		elif sort == "bottom":
-			comments = sorted(comments.all(), key=lambda x: x.score)
-
-		firstrange = 25 * (page - 1)
-		secondrange = firstrange + 26
-		return [x.id for x in comments[firstrange:secondrange]]
-
 	@property
 	def fullname(self):
 		return f"t1_{self.id}"

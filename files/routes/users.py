@@ -512,12 +512,42 @@ def u_username_comments(username, v=None):
 	sort=request.args.get("sort","new")
 	t=request.args.get("t","all")
 
-	ids = user.commentlisting(
-		v=v, 
-		page=page,
-		sort=sort,
-		t=t,
-		)
+
+	comments = u.comments.options(lazyload('*')).filter(Comment.parent_submission != None)
+
+	if (not v) or (v.id != u.id and v.admin_level == 0):
+		comments = comments.filter(Comment.deleted_utc == 0)
+		comments = comments.filter(Comment.is_banned == False)
+
+	now = int(time.time())
+	if t == 'hour':
+		cutoff = now - 3600
+	elif t == 'day':
+		cutoff = now - 86400
+	elif t == 'week':
+		cutoff = now - 604800
+	elif t == 'month':
+		cutoff = now - 2592000
+	elif t == 'year':
+		cutoff = now - 31536000
+	else:
+		cutoff = 0
+	comments = comments.filter(Comment.created_utc >= cutoff)
+
+	if sort == "new":
+		comments = comments.order_by(Comment.created_utc.desc()).all()
+	elif sort == "old":
+		comments = comments.order_by(Comment.created_utc.asc()).all()
+	elif sort == "controversial":
+		comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
+	elif sort == "top":
+		comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
+	elif sort == "bottom":
+		comments = sorted(comments.all(), key=lambda x: x.score)
+
+	firstrange = 25 * (page - 1)
+	secondrange = firstrange + 26
+	ids = [x.id for x in comments[firstrange:secondrange]]
 
 	# we got 26 items just to see if a next page exists
 	next_exists = (len(ids) > 25)
