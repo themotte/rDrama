@@ -12,5 +12,5 @@ sudo psql -U postgres -f seed-db.sql postgres
 sudo apt -y install python3-pip
 sudo pip3 install -r requirements.txt
 sudo apt -y install gunicorn
-source ./env
+. ./env
 env
