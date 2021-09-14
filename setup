@@ -1,7 +1,8 @@
 sudo cd /drama
 sudo apt update
-sudo apt install postgresql postgresql-contrib
-sudo apt install redis-server
+sudo apt -y upgrade
+sudo apt -y install postgresql postgresql-contrib
+sudo apt -y install redis-server
 sudo rm /etc/redis/redis.conf
 sudo cp redis.conf /etc/redis/redis.conf
 sudo systemctl restart redis.service
@@ -9,9 +10,9 @@ sudo rm /etc/postgresql/12/main/pg_hba.conf
 sudo cp pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
 sudo psql --u postgres -f schema.sql postgres
 sudo psql --u postgres -f seed-db.sql postgres
-sudo apt install python3-pip
+sudo apt -y install python3-pip
 sudo pip3 install -r requirements.txt
 sudo cp env /env
 source /env
-sudo apt install gunicorn
+sudo apt -y install gunicorn
 sudo gunicorn files.__main__:app -k gevent -w 2 --reload -b 0.0.0.0:80 --reload-extra-file ./files/templates/ --max-requests 10000 --max-requests-jitter 500
