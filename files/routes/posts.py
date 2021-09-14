@@ -1085,6 +1085,7 @@ def submit_post(v):
 	g.db.add(v)
 
 	cache.delete_memoized(frontlist)
+	cache.delete_memoized(User.userpagelisting)
 	if "[changelog]" in new_post.title or "(changelog)" in new_post.title:
 		send_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)

@@ -256,7 +256,7 @@ def changelogsub(v):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
 
-	cache.delete_memoized(frontlist, v)
+	cache.delete_memoized(frontlist)
 
 	g.db.flush()
 	if v.changelogsub: return {"message": "You have subscribed to the changelog!"}
@@ -641,7 +641,7 @@ def settings_block_user(v):
 
 	if v.admin_level == 1: return {"message": f"@{user.username} banned!"}
 
-	cache.delete_memoized(frontlist, v)
+	cache.delete_memoized(frontlist)
 
 	return {"message": f"@{user.username} blocked."}
 
@@ -666,7 +666,7 @@ def settings_unblock_user(v):
 
 	if v.admin_level == 1: return {"message": f"@{user.username} unbanned!"}
 
-	cache.delete_memoized(frontlist, v)
+	cache.delete_memoized(frontlist)
 
 	return {"message": f"@{user.username} unblocked."}
 

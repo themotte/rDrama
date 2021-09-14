@@ -181,6 +181,47 @@ class User(Base, Stndrd, Age_times):
 	def strid(self):
 		return str(self.id)
 
+	@cache.memoize(timeout=86400)
+	def userpagelisting(self, v=None, page=1, sort="new", t="all"):
+
+		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
+
+		if not (v and (v.admin_level >= 3 or v.id == self.id)):
+			submissions = submissions.filter_by(deleted_utc=0, is_banned=False, private=False)
+
+		now = int(time.time())
+		if t == 'hour':
+			cutoff = now - 3600
+		elif t == 'day':
+			cutoff = now - 86400
+		elif t == 'week':
+			cutoff = now - 604800
+		elif t == 'month':
+			cutoff = now - 2592000
+		elif t == 'year':
+			cutoff = now - 31536000
+		else:
+			cutoff = 0
+		submissions = submissions.filter(Submission.created_utc >= cutoff)
+
+		if sort == "new":
+			submissions = submissions.order_by(Submission.created_utc.desc()).all()
+		elif sort == "old":
+			submissions = submissions.order_by(Submission.created_utc.asc()).all()
+		elif sort == "controversial":
+			submissions = sorted(submissions.all(), key=lambda x: x.score_disputed, reverse=True)
+		elif sort == "top":
+			submissions = sorted(submissions.all(), key=lambda x: x.score, reverse=True)
+		elif sort == "bottom":
+			submissions = sorted(submissions.all(), key=lambda x: x.score)
+		elif sort == "comments":
+			submissions = submissions.order_by(Submission.comment_count.desc()).all()
+
+		firstrange = 25 * (page - 1)
+		secondrange = firstrange + 26
+		listing = [x.id for x in submissions[firstrange:secondrange]]
+		return listing
+
 	@property
 	def fullname(self):
 		return f"t1_{self.id}"
