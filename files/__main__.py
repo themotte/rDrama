@@ -8,6 +8,7 @@ from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
 from flaskext.markdown import Markdown
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
@@ -65,9 +66,7 @@ app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
 redispool=ConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"], host=app.config["CACHE_REDIS_URL"][8:])
-
 app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
-
 
 Markdown(app)
 cache = Cache(app)
@@ -115,8 +114,9 @@ class RetryingQuery(_Query):
 	def first(self):
 		return super().first()
 
-
 db_session=scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
+
+Base = declarative_base()
 
 
 #set the shared redis cache for misc stuff
@@ -128,10 +128,6 @@ r=redis.Redis(
 	connection_pool=redispool
 	) if app.config["CACHE_REDIS_URL"] else None
 
-
-
-# import and bind all routing functions
-from files.routes import *
 
 # enforce https
 @app.before_request
@@ -187,3 +183,6 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 
 	return response
+
+# import and bind all routing functions
+from files.routes import *
