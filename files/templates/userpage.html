@@ -353,7 +353,7 @@
 					<div>
 						{% for b in u.badges %}
 							{% if b.url %}
-								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img loading="lazy" style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
+								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width=60 loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
 							{% else %}
 								<img loading="lazy" style="width: 60px; height: 60px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
 							{% endif %}
@@ -438,7 +438,7 @@
 				<div class="mb-3">
 					{% for b in u.badges %}
 						{% if b.url %}
-							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img loading="lazy" style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
+							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width=32 loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
 						{% else %}
 							<img loading="lazy" style="width: 32px; height: 32px" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
 						{% endif %}
