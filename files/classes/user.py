@@ -222,7 +222,6 @@ class User(Base, Stndrd, Age_times):
 		listing = [x.id for x in submissions[firstrange:secondrange]]
 		return listing
 
-	@cache.memoize(timeout=86400)
 	def commentlisting(self, v=None, page=1, sort="new", t="all"):
 		comments = self.comments.options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.post)
 
