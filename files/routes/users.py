@@ -414,7 +414,43 @@ def u_username(username, v=None):
 	page = int(request.args.get("page", "1"))
 	page = max(page, 1)
 
-	ids = u.userpagelisting(v=v, page=page, sort=sort, t=t)
+
+	submissions = u.submissions.filter_by(is_pinned=False)
+
+	if not (v and (v.admin_level >= 3 or v.id == u.id)):
+		submissions = submissions.filter_by(deleted_utc=0, is_banned=False, private=False)
+
+	now = int(time.time())
+	if t == 'hour':
+		cutoff = now - 3600
+	elif t == 'day':
+		cutoff = now - 86400
+	elif t == 'week':
+		cutoff = now - 604800
+	elif t == 'month':
+		cutoff = now - 2592000
+	elif t == 'year':
+		cutoff = now - 31536000
+	else:
+		cutoff = 0
+	submissions = submissions.filter(Submission.created_utc >= cutoff)
+
+	if sort == "new":
+		submissions = submissions.order_by(Submission.created_utc.desc()).all()
+	elif sort == "old":
+		submissions = submissions.order_by(Submission.created_utc.asc()).all()
+	elif sort == "controversial":
+		submissions = sorted(submissions.all(), key=lambda x: x.score_disputed, reverse=True)
+	elif sort == "top":
+		submissions = sorted(submissions.all(), key=lambda x: x.score, reverse=True)
+	elif sort == "bottom":
+		submissions = sorted(submissions.all(), key=lambda x: x.score)
+	elif sort == "comments":
+		submissions = submissions.order_by(Submission.comment_count.desc()).all()
+
+	firstrange = 25 * (page - 1)
+	secondrange = firstrange + 26
+	ids = [x.id for x in submissions[firstrange:secondrange]]
 
 	# we got 26 items just to see if a next page exists
 	next_exists = (len(ids) > 25)
