@@ -168,27 +168,7 @@ UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
 
 # import and bind all routing functions
-import files.classes
 from files.routes import *
-import files.helpers.jinja2
-
-@cache.memoize(timeout=UA_BAN_CACHE_TTL)
-def get_useragent_ban_response(user_agent_str):
-	"""
-	Given a user agent string, returns a tuple in the form of:
-	(is_user_agent_banned, (insult, status_code))
-	"""
-	#if request.path.startswith("/socket.io/"):
-	#	return False, (None, None)
-
-	result = g.db.query(
-		files.classes.Agent).filter(
-		files.classes.Agent.kwd.in_(
-			user_agent_str.split())).first()
-	if result:
-		return True, (result.mock or "Follow the robots.txt, dumbass",
-					  result.status_code or 418)
-	return False, (None, None)
 
 def drop_connection():
 
@@ -216,11 +196,6 @@ def before_request():
 
 		if not session.get("session_id"):
 			session["session_id"] = secrets.token_hex(16)
-
-	ua_banned, response_tuple = get_useragent_ban_response(
-		request.headers.get("User-Agent", "NoAgent"))
-	if ua_banned and request.path != "/robots.txt":
-		return response_tuple
 
 	if app.config["FORCE_HTTPS"] and request.url.startswith(
 			"http://") and "localhost" not in app.config["SERVER_NAME"]:
