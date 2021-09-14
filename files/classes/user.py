@@ -223,16 +223,11 @@ class User(Base, Stndrd, Age_times):
 		return listing
 
 	def commentlisting(self, v=None, page=1, sort="new", t="all"):
-		comments = self.comments.options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.post)
+		comments = self.comments.options(lazyload('*')).filter(Comment.parent_submission != None)
 
 		if (not v) or (v.id != self.id and v.admin_level == 0):
 			comments = comments.filter(Comment.deleted_utc == 0)
 			comments = comments.filter(Comment.is_banned == False)
-
-		comments = comments.options(contains_eager(Comment.post))
-
-		if not (v and v.paid_dues):
-			comments = comments.filter(Submission.club == False)
 
 		now = int(time.time())
 		if t == 'hour':
