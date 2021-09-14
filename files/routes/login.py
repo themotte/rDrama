@@ -337,7 +337,7 @@ def sign_up_post(v):
 			# check self-setting badges
 			badge_types = g.db.query(BadgeDef).filter(BadgeDef.qualification_expr.isnot(None)).all()
 			for badge in badge_types:
-				if eval(badge.qualification_expr, {}, {'v': v}):
+				if eval(badge.qualification_expr, {}, {'v': ref_user}):
 					if not ref_user.has_badge(badge.id):
 						new_badge = Badge(user_id=ref_user.id, badge_id=badge.id)
 						g.db.add(new_badge)
