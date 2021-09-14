@@ -192,7 +192,7 @@ def get_comment(i, v=None, graceful=False, **kwargs):
 	return comment
 
 
-def get_comments(cids, v=None, load_parent=False):
+def get_comments(cids, v=None, load_parent=False, shadowbanned=False):
 
 	if not cids: return []
 
@@ -229,7 +229,7 @@ def get_comments(cids, v=None, load_parent=False):
 		output = []
 		for c in comments:
 			comment = c[0]
-			if comment.author and comment.author.shadowbanned and not (v and v.id == comment.author_id): continue
+			if comment.author and comment.author.shadowbanned and v.id != comment.author_id and not (shadowbanned and v.admin_level==6): continue
 			comment.voted = c[1] or 0
 			comment._is_blocking = c[2] or 0
 			comment._is_blocked = c[3] or 0
