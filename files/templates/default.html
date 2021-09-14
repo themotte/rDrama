@@ -1233,7 +1233,11 @@
 
  <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %} {% if 'rdrama' in request.host %}margin-top: 29px!important;{% endif %}">
 
-{% if "marsey.tech" not in request.host %}<a  rel="nofollow noopener noreferrer" href="{% if 'rdrama' in request.host %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}"><img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.webp{% else %}cached.webp{% endif %}" width="100%"></a>{% endif %}
+{% if "marsey.tech" not in request.host and '@' not in request.path %}
+	<a  rel="nofollow noopener noreferrer" href="{% if 'rdrama' in request.host %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}">
+		<img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.webp{% else %}cached.webp{% endif %}" width="100%">
+	</a>
+{% endif %}
 
 {% include "header.html" %}
 
