@@ -163,8 +163,6 @@ r=redis.Redis(
 
 local_ban_cache={}
 
-UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
-
 
 
 # import and bind all routing functions
