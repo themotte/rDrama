@@ -423,12 +423,10 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 		comments = sorted(comments.all(), key=lambda x: x.score)
 
 	firstrange = 25 * (page - 1)
-	secondrange = firstrange+100
+	secondrange = firstrange+26
 	comments = comments[firstrange:secondrange]
 
-	comments = [x.id for x in comments if not (x.author and x.author.shadowbanned) or (v and v.id == x.author_id)]
-
-	return comments[:26]
+	return [x.id for x in comments]
 
 @app.get("/comments")
 @auth_desired
