@@ -5,6 +5,7 @@ from urllib.parse import ParseResult, urlunparse, urlparse
 from functools import partial
 from .get import *
 from os import path, environ
+import re
 
 site = environ.get("DOMAIN").strip()
 
