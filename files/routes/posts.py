@@ -890,11 +890,11 @@ def submit_post(v):
 							}
 						)
 				if tag:
-					thumb_candidate_urls.append(expand_url(post.url, tag['content']))
+					thumb_candidate_urls.append(expand_url(new_post.url, tag['content']))
 
 			#parse html doc for <img> elements
 			for tag in soup.find_all("img", attrs={'src':True}):
-				thumb_candidate_urls.append(expand_url(post.url, tag['src']))
+				thumb_candidate_urls.append(expand_url(new_post.url, tag['src']))
 
 
 			#now we have a list of candidate urls to try
