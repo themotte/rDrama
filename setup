@@ -1,5 +1,4 @@
-cp ./env /env
-source /env
+source /drama/env
 cd /drama
 sudo apt update
 sudo apt -y upgrade
