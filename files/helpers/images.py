@@ -33,7 +33,7 @@ def upload_ibb(file=None, resize=False):
 		om.info = i.info
 		om.save("image.webp", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 	else: 
-		print(gifwebp(input_image="image.webp", output_image="image.webp", option="-q 80", logging="-v"))
+		gifwebp(input_image="image.webp", output_image="image.webp", option="-q 80", logging="-v")
 
 
 
