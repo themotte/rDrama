@@ -287,8 +287,11 @@ def themecolor(v):
 @auth_required
 @validate_formkey
 def gumroad(v):
+	if 'rdrama' in request.host: patron = 'Paypig'
+	else: patron = 'Patron'
+
 	if not (v.email and v.is_activated):
-		return {"error": "You must have a verified email to verify patron status and claim awards"}, 400
+		return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
 
 	data = {
 		'access_token': GUMROAD_TOKEN,
@@ -302,7 +305,7 @@ def gumroad(v):
 	response = response[0]
 	tier = tiers[response["variants_and_quantity"]]
 	if v.patron == tier:
-		return {"error": "Patron awards already claimed"}, 400
+		return {"error": f"{patron} rewards already claimed"}, 400
 
 	v.patron = tier
 
@@ -354,7 +357,7 @@ def gumroad(v):
 	g.db.add(new_badge)
 
 	g.db.add(v)
-	return {"message": "Patron awards claimed"}
+	return {"message": f"{patron} rewards claimed!"}
 
 @app.post("/settings/titlecolor")
 @auth_required
