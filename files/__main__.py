@@ -127,6 +127,7 @@ r=redis.Redis(
 	connection_pool=redispool
 	) if app.config["CACHE_REDIS_URL"] else None
 
+db_session = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
 
 # enforce https
 @app.before_request
@@ -138,7 +139,7 @@ def before_request():
 	if app.config["BOT_DISABLE"] and request.headers.get("X-User-Type")=="Bot":
 		abort(503)
 
-	g.db = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
+	g.db = db_session()
 
 	g.timestamp = int(time.time())
 
