@@ -75,6 +75,7 @@ class UploadException(Exception):
 	pass
 
 
+
 def upload_video(file):
 
 	file_path = path.join("temp", secure_filename(file.filename))
