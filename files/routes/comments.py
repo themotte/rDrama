@@ -285,8 +285,7 @@ def api_comment(v):
 			g.db.rollback()
 			abort(413)
 
-		if 'pcmemes.net' in request.host: url = upload_ibb(file=file)
-		else: url = upload_imgur(file=file)
+		upload_ibb(file=file)
 		
 		body = request.form.get("body") + f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -698,8 +697,7 @@ def edit_comment(cid, v):
 			g.db.rollback()
 			abort(413)
 
-		if 'pcmemes.net' in request.host: url = upload_ibb(file=file)
-		else: url = upload_imgur(file=file)
+		url = upload_ibb(file=file)
 
 		body += f"\n![]({url})"
 		body_md = CustomRenderer().render(mistletoe.Document(body))

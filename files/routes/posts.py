@@ -801,8 +801,7 @@ def submit_post(v):
 				), 403
 
 		if file.content_type.startswith('image/'):
-			if 'pcmemes.net' in request.host: new_post.url = upload_ibb(file=file)
-			else: new_post.url = upload_imgur(file=file)
+			new_post.url = upload_ibb(file=file)
 		else:
 			try:
 				post_url = upload_video(file)

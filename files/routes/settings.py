@@ -117,8 +117,7 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			if 'pcmemes.net' in request.host: url = upload_ibb(file=file)
-			else: url = upload_imgur(file=file)
+			upload_ibb(file=file)
 
 			bio += f"\n\n![]({url})"
 
@@ -502,17 +501,11 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 
-	if 'pcmemes.net' in request.host:
-		file.save("image.webp")
-		highres = upload_ibb()
-	else:
-		filepath = f"image." + file.filename.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
-		file.save(filepath)
-		highres = upload_imgur(filepath=filepath)
+	file.save("image.webp")
+	highres = upload_ibb()
 	if not highres: abort(400)
 
-	if 'pcmemes.net' in request.host: imageurl = upload_ibb(resize=True)
-	else: imageurl = upload_imgur(filepath=filepath, resize=True)
+	imageurl = upload_ibb(resize=True)
 	if not imageurl: abort(400)
 
 	v.highres = highres
@@ -533,8 +526,7 @@ def settings_images_banner(v):
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
 	file = request.files["banner"]
-	if 'pcmemes.net' in request.host: imageurl = upload_ibb(file=file)
-	else: imageurl = upload_imgur(file=file)
+	imageurl = upload_ibb(file=file)
 
 	if imageurl:
 		v.bannerurl = imageurl
