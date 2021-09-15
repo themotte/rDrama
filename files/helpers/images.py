@@ -5,6 +5,7 @@ import base64
 from files.classes.images import *
 from flask import g
 from werkzeug.utils import secure_filename
+from webptools import gifwebp
 
 CF_KEY = environ.get("CLOUDFLARE_KEY", "").strip()
 CF_ZONE = environ.get("CLOUDFLARE_ZONE", "").strip()
@@ -41,14 +42,7 @@ def upload_ibb(file=None, resize=False):
 
 
 	else: 
-		sequence = []
-		im = IImage.open("image.webp")
-		for frame in ImageSequence.Iterator(im):
-			sequence.append(frame.copy())
-
-		sequence[0].save("image.webp", save_all=True,  append_images = sequence[1:])
-
-
+		print(gifwebp(input_image="image.webp", output_image="image.webp", option="-q 80", logging="-v"))
 
 
 
