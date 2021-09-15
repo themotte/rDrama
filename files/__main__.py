@@ -114,7 +114,6 @@ class RetryingQuery(_Query):
 	def first(self):
 		return super().first()
 
-db_session=scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
 
 Base = declarative_base()
 
@@ -139,7 +138,7 @@ def before_request():
 	if app.config["BOT_DISABLE"] and request.headers.get("X-User-Type")=="Bot":
 		abort(503)
 
-	g.db = db_session()
+	g.db = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
 
 	g.timestamp = int(time.time())
 
@@ -172,7 +171,7 @@ def before_request():
 @app.after_request
 def after_request(response):
 
-	if g.db:
+	if hasattr(g, 'db') and g.db:
 		g.db.commit()
 		g.db.close()
 
