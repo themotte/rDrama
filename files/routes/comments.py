@@ -285,7 +285,7 @@ def api_comment(v):
 			g.db.rollback()
 			abort(413)
 
-		upload_ibb(file=file)
+		url = upload_ibb(file=file)
 		
 		body = request.form.get("body") + f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
