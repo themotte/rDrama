@@ -159,9 +159,12 @@
 							<li id="pin-profile-{{p.id}}" class="{% if p.is_stickied %}d-none{% endif %} list-inline-item"><a class="text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack"></i>Pin to profile</a></li>
 							<li id="unpin-profile-{{p.id}}" class="{% if not p.is_stickied %}d-none{% endif %} list-inline-item"><a class="text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack"></i>Unpin from profile</a></li>
 
-							<li id="delete-{{p.id}}" class="{% if p.deleted_utc %}d-none{% endif %} list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.id}}','undelete-{{p.id}}','delete-{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
-							<li id="undelete-{{p.id}}" class="{% if not p.deleted_utc %}d-none{% endif %} list-inline-item"><a href="javascript:void(0)" onclick="post_toast2('/undelete_post/{{p.id}}','undelete-{{p.id}}','delete-{{p.id}}')"><i class="fas fa-trash-alt"></i>Undelete</a></li>
-						{% endif %}
+								{% if p.deleted_utc > 0 %}
+									<li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/undelete_post/{{p.id}}')"><i class="fas fa-trash-alt"></i>Undelete</a></li>
+								{% else %}
+									<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
+								{% endif %}
+							{% endif %}
 
 						
 						{% if v and v.admin_level>=3 %}
@@ -301,8 +304,11 @@
 						<button id="pin-profile2-{{p.id}}" class="{% if p.is_pinned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-muted text-left"href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-thumbtack text-center mr-3"></i>Pin to profile</button>
 						<button id="unpin-profile2-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-muted text-left" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-thumbtack text-center mr-3"></i>Unpin from profile</button>
 
-						<button id="delete2-{{p.id}}" class="{% if p.deleted_utc %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.id}}','undelete2-{{p.id}}','delete2-{{p.id}}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
-						<button id="undelete2-{{p.id}}" class="{% if not p.deleted_utc %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast2('/undelete_post/{{p.id}}','undelete2-{{p.id}}','delete2-{{p.id}}')" data-dismiss="modal"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
+						{% if p.deleted_utc > 0 %}
+							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast('/undelete_post/{{p.id}}')" data-dismiss="modal"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
+						{% else %}
+							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
+						{% endif %}
 					{% endif %}
 
 					<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>
