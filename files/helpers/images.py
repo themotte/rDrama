@@ -1,6 +1,6 @@
 import requests
 from os import environ, path, remove
-from PIL import Image as IImage, ImageSequence
+from PIL import Image, ImageSequence
 import base64
 from files.classes.images import *
 from flask import g
@@ -16,14 +16,14 @@ def upload_ibb(file=None, resize=False):
 	if file: file.save("image.webp")
 
 	if resize:
-		i = IImage.open("image.webp")
+		i = Image.open("image.webp")
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
 		def thumbnails(frames):
 			for frame in frames:
 				thumbnail = frame.copy()
-				thumbnail.thumbnail(size, IImage.ANTIALIAS)
+				thumbnail.thumbnail(size, Image.ANTIALIAS)
 				yield thumbnail
 
 		frames = thumbnails(frames)
@@ -79,14 +79,14 @@ def upload_imgur(filepath=None, file=None, resize=False):
 	else: format = filepath.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
 
 	if resize:
-		i = IImage.open(filepath)
+		i = Image.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
 		def thumbnails(frames):
 			for frame in frames:
 				thumbnail = frame.copy()
-				thumbnail.thumbnail(size, IImage.ANTIALIAS)
+				thumbnail.thumbnail(size, Image.ANTIALIAS)
 				yield thumbnail
 
 		frames = thumbnails(frames)
@@ -99,7 +99,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 			print(e)
 			return
 	elif format != "gif":
-		i = IImage.open(filepath)
+		i = Image.open(filepath)
 		filepath = f"image.{i.format}".lower().replace('jpg','png').replace('jpeg','png')
 		i.save(filepath, optimize=True, quality=30)
 
