@@ -827,7 +827,7 @@ def settings_title_change(v):
 
 	if v.flairchanged: abort(403)
 	
-	new_name=request.form.get("title").strip()[:100]
+	new_name=request.form.get("title").strip()[:100].replace("𒐪","")
 
 	#make sure name is different
 	if new_name==v.customtitle:
