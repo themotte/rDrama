@@ -31,35 +31,18 @@ def upload_ibb(file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		try: om.save("image.webp", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
-		except Exception as e:
-			print(e)
-			return
-
-
-
-
-
-
+		om.save("image.webp", save_all=True, append_images=list(frames), loop=0, optimize=True, quality=30)
 	else: 
 		print(gifwebp(input_image="image.webp", output_image="image.webp", option="-q 80", logging="-v"))
 
 
 
 
-
-
-
-	try:
-		with open("image.webp", 'rb') as f:
-			data={'image': base64.b64encode(f.read())} 
-			req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
-		resp = req.json()['data']
-		url = resp['url']
-	except Exception as e:
-		print(e)
-		print(req.text)
-		return
+	with open("image.webp", 'rb') as f:
+		data={'image': base64.b64encode(f.read())} 
+		req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
+	resp = req.json()['data']
+	url = resp['url']
 
 	return url
 
