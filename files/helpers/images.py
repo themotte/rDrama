@@ -56,11 +56,6 @@ def upload_ibb(file=None, resize=False):
 
 
 
-
-
-
-
-
 	try:
 		with open("image.webp", 'rb') as f:
 			data={'image': base64.b64encode(f.read())} 
