@@ -1,6 +1,6 @@
 import requests
 from os import environ, path, remove
-from PIL import Image, ImageSequence
+from PIL import Image as IImage, ImageSequence
 import base64
 from files.classes.images import *
 from flask import g
@@ -16,14 +16,14 @@ def upload_ibb(file=None, resize=False):
 	if file: file.save("image.webp")
 
 	if resize:
-		i = Image.open("image.webp")
+		i = IImage.open("image.webp")
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
 		def thumbnails(frames):
 			for frame in frames:
 				thumbnail = frame.copy()
-				thumbnail.thumbnail(size, Image.ANTIALIAS)
+				thumbnail.thumbnail(size, IImage.ANTIALIAS)
 				yield thumbnail
 
 		frames = thumbnails(frames)
@@ -40,13 +40,13 @@ def upload_ibb(file=None, resize=False):
 
 
 
-		else: 
-			sequence = []
-			im = Image.open("image.webp")
-			for frame in ImageSequence.Iterator(im):
-				sequence.append(frame.copy())
+	else: 
+		sequence = []
+		im = IImage.open("image.webp")
+		for frame in ImageSequence.Iterator(im):
+			sequence.append(frame.copy())
 
-			sequence[0].save("image.webp", save_all=True,  append_images = sequence[1:])
+		sequence[0].save("image.webp", save_all=True,  append_images = sequence[1:])
 
 
 
@@ -79,14 +79,14 @@ def upload_imgur(filepath=None, file=None, resize=False):
 	else: format = filepath.split('.')[-1].lower().replace('jpg','png').replace('jpeg','png')
 
 	if resize:
-		i = Image.open(filepath)
+		i = IImage.open(filepath)
 		size = 100, 100
 		frames = ImageSequence.Iterator(i)
 
 		def thumbnails(frames):
 			for frame in frames:
 				thumbnail = frame.copy()
-				thumbnail.thumbnail(size, Image.ANTIALIAS)
+				thumbnail.thumbnail(size, IImage.ANTIALIAS)
 				yield thumbnail
 
 		frames = thumbnails(frames)
@@ -99,7 +99,7 @@ def upload_imgur(filepath=None, file=None, resize=False):
 			print(e)
 			return
 	elif format != "gif":
-		i = Image.open(filepath)
+		i = IImage.open(filepath)
 		filepath = f"image.{i.format}".lower().replace('jpg','png').replace('jpeg','png')
 		i.save(filepath, optimize=True, quality=30)
 
