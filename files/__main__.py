@@ -160,7 +160,7 @@ def before_request():
 def teardown_request(error):
 	if hasattr(g, 'db') and g.db:
 		try: g.db.commit()
-		except: g.db.rolleback()
+		except: g.db.rollback()
 		g.db.close()
 
 @app.after_request
