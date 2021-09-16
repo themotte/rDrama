@@ -43,6 +43,8 @@ def notifications(v):
 			comments.append(c)
 		
 		g.db.bulk_update_mappings(Notification, notifs)
+		g.db.commit()
+
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
 	else:
@@ -58,14 +60,17 @@ def notifications(v):
 		cids = [x.comment_id for x in notifications]
 		comments = get_comments(cids, v=v, load_parent=True)
 
+		notifs = []
 		i = 0
 		for x in notifications:
 			try:
 				if not x.read: comments[i].unread = True
 			except: continue
-			x.read = True
-			g.db.add(x)
+			notifs.append({'id': x.id, 'read': True})
 			i += 1
+
+		g.db.bulk_update_mappings(Notification, notifs)
+		g.db.commit()
 
 	if not posts:
 		listing = []
@@ -95,8 +100,6 @@ def notifications(v):
 				if c not in listing:
 					listing.append(c)
 
-
-	g.db.commit()
 
 	return render_template("notifications.html",
 						   v=v,
