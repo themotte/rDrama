@@ -316,18 +316,18 @@
     const file = "src\\App.svelte";
 
     function create_fragment(ctx) {
-    	let h5;
+    	let h1;
     	let t1;
     	let img;
     	let img_src_value;
 
     	const block = {
     		c: function create() {
-    			h5 = element("h1");
-    			h5.textContent = "Average svelte enjoyer:";
+    			h1 = element("h1");
+    			h1.textContent = "Average svelte enjoyer:";
     			t1 = space();
     			img = element("img");
-    			add_location(h5, file, 5, 0, 112);
+    			add_location(h1, file, 5, 0, 112);
     			if (!src_url_equal(img.src, img_src_value = /*src*/ ctx[0])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", /*name*/ ctx[1]);
     			add_location(img, file, 6, 0, 145);
@@ -336,7 +336,7 @@
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, h5, anchor);
+    			insert_dev(target, h1, anchor);
     			insert_dev(target, t1, anchor);
     			insert_dev(target, img, anchor);
     		},
@@ -344,7 +344,7 @@
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(h5);
+    			if (detaching) detach_dev(h1);
     			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(img);
     		}
