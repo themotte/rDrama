@@ -600,7 +600,7 @@
     	let emojis = Array.from(markdown.matchAll(/:(.{1,30}?):/gi));
 
     	if (emojis != null) {
-    		for (i = 0; i < emojis.length; i++) {
+    		for (let i = 0; i < emojis.length; i++) {
     			markdown = markdown.replace(emojis[i][0], "<img height=30 src='/assets/images/emojis/" + emojis[i][1] + ".webp'>");
     		}
     	}
