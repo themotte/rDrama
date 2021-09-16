@@ -402,6 +402,8 @@ def settings_security_post(v):
 
 		g.db.add(v)
 
+		g.db.commit()
+
 		return redirect("/settings/security?msg=" +
 						escape("Your password has been changed."))
 
@@ -455,6 +457,8 @@ def settings_security_post(v):
 
 		v.mfa_secret = secret
 		g.db.add(v)
+
+		g.db.commit()
 
 		return redirect("/settings/security?msg=" +
 						escape("Two-factor authentication enabled."))
@@ -561,6 +565,7 @@ def settings_delete_profile(v):
 	v.highres = None
 	v.profileurl = None
 	g.db.add(v)
+	g.db.commit()
 	return render_template("settings_profile.html", v=v,
 						   msg="Profile picture successfully removed.")
 
@@ -581,8 +586,6 @@ def settings_delete_banner(v):
 @auth_required
 def settings_blockedpage(v):
 
-
-	#users=[x.target for x in v.blocked]
 
 	return render_template("settings_blocks.html",
 						   v=v)

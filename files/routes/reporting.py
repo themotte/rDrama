@@ -31,7 +31,7 @@ def api_flag_post(pid, v):
 
 		g.db.add(flag)
 
-	g.db.commit()
+		g.db.commit()
 
 	return {"message": "Post reported!"}
 
@@ -61,7 +61,7 @@ def api_flag_comment(cid, v):
 
 		g.db.add(flag)
 
-	g.db.commit()
+		g.db.commit()
 
 	return {"message": "Comment reported!"}
 

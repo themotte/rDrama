@@ -53,6 +53,7 @@ def steal(v):
 		g.db.add(u)
 		send_notification(NOTIFICATIONS_ACCOUNT, u, f"Some [grubby little rentoid](/@{v.username}) has absconded with 700 of your hard-earned dramacoins to fuel his Funko Pop addiction. Stop being so trusting.")
 		send_notification(NOTIFICATIONS_ACCOUNT, v, f"You have successfully shorted your heroic landlord 700 dramacoins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
+		g.db.commit()
 		return {"message": "Attempt successful!"}
 
 	else:
@@ -135,7 +136,7 @@ def transfer_coins(v, username):
 		send_notification(v.id, receiver, transfer_message)
 		return {"message": f"{amount} {app.config['COINS_NAME']} transferred!"}, 200
 
-	g.db.commit()
+		g.db.commit()
 
 	return {"message": f"{app.config['COINS_NAME']} transferred!"}
 
@@ -397,6 +398,7 @@ def u_username(username, v=None):
 									  viewer_id = v.id)
 
 		g.db.add(view)
+		g.db.commit()
 
 		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):

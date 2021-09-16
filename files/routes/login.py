@@ -154,6 +154,9 @@ def login_post():
 	# check for previous page
 
 	redir = request.form.get("redirect", "/").replace("/logged_out", "")
+
+	g.db.commit()
+
 	return redirect(redir)
 
 
@@ -506,6 +509,8 @@ def post_reset(v):
 	user.passhash = hash_password(password)
 	g.db.add(user)
 
+	g.db.commit()
+
 	return render_template("message_success.html",
 						   title="Password reset successful!",
 						   message="Login normally to access your account.")
@@ -589,6 +594,8 @@ def reset_2fa():
 	user.mfa_secret=None
 
 	g.db.add(user)
+
+	g.db.commit()
 
 	return render_template("message_success.html",
 						   title="Two-factor authentication removed.",

@@ -1182,8 +1182,6 @@ def toggle_post_nsfw(pid, v):
 			)
 		g.db.add(ma)
 
-	g.db.flush()
-
 	g.db.commit()
 
 	if post.over_18: return {"message": "Post has been marked as +18!"}
@@ -1199,9 +1197,6 @@ def save_post(pid, v):
 	new_save=SaveRelationship(user_id=v.id, submission_id=post.id, type=1)
 
 	g.db.add(new_save)
-
-	try: g.db.flush()
-	except: g.db.rollback()
 
 	g.db.commit()
 

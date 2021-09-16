@@ -196,7 +196,7 @@ def get_awards(v):
 	return jsonify(return_value)
 
 
-@app.put("/post/<pid>/awards")
+@app.post("/post/<pid>/awards")
 @auth_required
 @validate_formkey
 def award_post(pid, v):
@@ -258,10 +258,11 @@ def award_post(pid, v):
 	post.author.received_award_count += 1
 	g.db.add(post.author)
 
+	g.db.commit()
 	return {"message": "Award given!"}
 
 
-@app.put("/comment/<cid>/awards")
+@app.post("/comment/<cid>/awards")
 @auth_required
 @validate_formkey
 def award_comment(cid, v):
@@ -322,6 +323,7 @@ def award_comment(cid, v):
 	c.author.received_award_count += 1
 	g.db.add(c.author)
 
+	g.db.commit()
 	return {"message": "Award given!"}
 
 @app.get("/admin/user_award")

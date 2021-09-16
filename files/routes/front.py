@@ -92,6 +92,9 @@ def notifications(v):
 				if c not in listing:
 					listing.append(c)
 
+
+	g.db.commit()
+
 	return render_template("notifications.html",
 						   v=v,
 						   notifications=listing,
