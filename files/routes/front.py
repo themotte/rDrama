@@ -42,7 +42,7 @@ def notifications(v):
 				notifs.append({'id': x.id, 'read': True})
 			comments.append(c)
 		
-		g.db.bulk_update_mappings(User, notifs)
+		g.db.bulk_update_mappings(Notification, notifs)
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
 	else:
