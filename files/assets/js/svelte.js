@@ -323,7 +323,7 @@
 
     	const block = {
     		c: function create() {
-    			h5 = element("h5");
+    			h5 = element("h1");
     			h5.textContent = "Average svelte enjoyer:";
     			t1 = space();
     			img = element("img");
