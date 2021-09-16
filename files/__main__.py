@@ -169,12 +169,15 @@ def before_request():
 	else:
 		g.system="other/other"
 
-@app.after_request
-def after_request(response):
-
+@app.teardown_appcontext
+def teardown_request():
 	if hasattr(g, 'db') and g.db:
 		g.db.commit()
 		g.db.close()
+		g.db.remove()
+
+@app.after_request
+def after_request(response):
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("Referrer-Policy", "same-origin")
