@@ -112,8 +112,8 @@ def post_id(pid, anything=None, v=None):
 			blocked.c.id,
 		)
 		
-		shadowbanned = g.db.query(User.id).filter(User.shadowbanned == False).subquery()
-		comments = comments.filter(Comment.author_id.notin_(shadowbanned))
+		# shadowbanned = g.db.query(User.id).filter(User.shadowbanned == False).subquery()
+		# comments = comments.filter(Comment.author_id.notin_(shadowbanned))
 
 		if v.admin_level >=4:
 			comments=comments.options(joinedload(Comment.oauth_app))
@@ -152,6 +152,7 @@ def post_id(pid, anything=None, v=None):
 
 		output = []
 		for c in comments:
+			if c.author.shadowbanned and not (v and v.shadowbanned) and not (v and v.admin_level == 6): continue
 			comment = c[0]
 			comment.voted = c[1] or 0
 			comment._is_blocking = c[2] or 0
