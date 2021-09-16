@@ -131,12 +131,11 @@ def transfer_coins(v, username):
 		receiver.coins += amount
 		g.db.add(receiver)
 		g.db.add(v)
+		g.db.commit()
 
 		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
 		send_notification(v.id, receiver, transfer_message)
 		return {"message": f"{amount} {app.config['COINS_NAME']} transferred!"}, 200
-
-		g.db.commit()
 
 	return {"message": f"{app.config['COINS_NAME']} transferred!"}
 
