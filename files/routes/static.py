@@ -94,6 +94,7 @@ def admins(v):
 	return render_template("admins.html", v=v, admins=admins)
 
 @app.get("/log")
+@app.get("/modlog")
 @auth_desired
 def log(v):
 
