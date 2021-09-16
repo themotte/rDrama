@@ -105,6 +105,15 @@
 
 		});
 
+        // Open comment reply box
+
+        function openReplyBox(id) {
+            const element = document.getElementById(`reply-to-${id}`);
+            element.classList.remove('d-none')
+
+            element.getElementsByTagName('textarea')[0].focus()
+        }
+
 		// Comment edit form
 
 		toggleEdit=function(id){

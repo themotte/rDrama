@@ -275,7 +275,7 @@
 								aria-hidden="true"></i><span class="d-none d-md-inline-block">Give Award</span></a></li>
 							{% endif %}
 
-							<li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.remove('d-none')"><i class="fas fa-reply" aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a></li>
+							<li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="openReplyBox('{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a></li>
 						{% endif %}
 
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a {% if v %}href="{{c.permalink}}?context=5#context"{% else %}href="/logged_out{{c.permalink}}?context=5#context"{% endif %}><i class="fas fa-book-open"></i>Context</a></li>
