@@ -32,14 +32,19 @@ def notifications(v):
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 		comments = []
+		notifs = []
+
 		for index, x in enumerate(notifications):
 			c = x.comment
 			if x.read and index > 26: break
 			elif not x.read:
 				c.unread = True
+				notifs.append({'id': x.id, 'read': True})
 				x.read = True
 				g.db.add(x)
 			comments.append(c)
+		
+		session.bulk_update_mappings(User, notifs)
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
 	else:
