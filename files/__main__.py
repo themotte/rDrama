@@ -170,7 +170,7 @@ def before_request():
 		g.system="other/other"
 
 @app.teardown_appcontext
-def teardown_request():
+def teardown_request(error):
 	if hasattr(g, 'db') and g.db:
 		g.db.commit()
 		g.db.close()
