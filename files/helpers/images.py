@@ -34,9 +34,8 @@ def upload_ibb(file=None, resize=False):
 		om.info = i.info
 		om.save("image.webp", save_all=True, append_images=list(frames), loop=0)
 	else:
-		if i.format.lower() == "gif": gifwebp(input_image="image.webp", output_image="image.webp")
+		if i.format.lower() == "gif": gifwebp(input_image="image.webp", output_image="image.webp", option="-q 80")
 		else: i.save("image.webp")
-
 
 
 	with open("image.webp", 'rb') as f:
