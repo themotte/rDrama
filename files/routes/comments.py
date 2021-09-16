@@ -584,6 +584,8 @@ def api_comment(v):
 	parent_post.comment_count = g.db.query(Comment).filter_by(parent_submission=parent_post.id).count()
 	g.db.add(parent_post)
 
+	g.db.commit()
+
 	if request.headers.get("Authorization"): return c.json
 	else: return jsonify({"html": render_template("comments.html",
 													v=v,
@@ -807,6 +809,8 @@ def edit_comment(cid, v):
 				n = Notification(comment_id=c.id, user_id=x)
 				g.db.add(n)
 
+	g.db.commit()
+
 	return jsonify({"html": c.body_html})
 
 
@@ -829,6 +833,8 @@ def delete_comment(cid, v):
 	
 	cache.delete_memoized(comment_idlist)
 
+	g.db.commit()
+
 	return {"message": "Comment deleted!"}
 
 @app.post("/undelete/comment/<cid>")
@@ -849,6 +855,8 @@ def undelete_comment(cid, v):
 	g.db.add(c)
 
 	cache.delete_memoized(comment_idlist)
+
+	g.db.commit()
 
 	return {"message": "Comment undeleted!"}
 
@@ -876,6 +884,8 @@ def toggle_comment_pin(cid, v):
 		)
 		g.db.add(ma)
 
+	g.db.commit()
+
 	if comment.is_pinned: return {"message": "Comment pinned!"}
 	else: return {"message": "Comment unpinned!"}
 	
@@ -894,6 +904,8 @@ def save_comment(cid, v):
 	try: g.db.flush()
 	except: g.db.rollback()
 
+	g.db.commit()
+
 	return {"message": "Comment saved!"}
 
 @app.post("/unsave_comment/<cid>")
@@ -906,5 +918,7 @@ def unsave_comment(cid, v):
 	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=comment.id, type=2).first()
 
 	if save: g.db.delete(save)
+
+	g.db.commit()
 
 	return {"message": "Comment unsaved!"}

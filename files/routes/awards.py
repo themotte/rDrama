@@ -151,6 +151,8 @@ def buy(v, award):
 	award = AwardRelationship(id=thing, user_id=v.id, kind=award)
 	g.db.add(award)
 
+	g.db.commit()
+
 	return {"message": "Award bought!"}
 
 
@@ -372,5 +374,7 @@ def admin_userawards_post(v):
 		text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
 
 	send_notification(NOTIFICATIONS_ACCOUNT, u, text)
+
+	g.db.commit()
 
 	return render_template("admin/user_award.html", awards=list(AWARDS.values()), v=v)

@@ -46,6 +46,8 @@ def toggle_club(pid, v):
 			)
 		g.db.add(ma)
 
+	g.db.commit()
+
 	if post.club: return {"message": "Post has been marked as +150-coins only!"}
 	else: return {"message": "Post has been unmarked as +150-coins only!"}
 
@@ -60,6 +62,8 @@ def publish(pid, v):
 	g.db.add(post)
 	
 	cache.delete_memoized(frontlist)
+
+	g.db.commit()
 
 	return {"message": "Post published!"}
 
@@ -384,6 +388,8 @@ def edit_post(pid, v):
 	if title != p.title or body != p.body:
 		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
 		g.db.add(p)
+
+	g.db.commit()
 
 	return redirect(p.permalink)
 
@@ -1096,6 +1102,8 @@ def submit_post(v):
 		send_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
+	g.db.commit()
+
 	if request.headers.get("Authorization"): return new_post.json
 	else: return redirect(new_post.permalink)
 
@@ -1117,6 +1125,8 @@ def delete_post_pid(pid, v):
 
 	cache.delete_memoized(frontlist)
 
+	g.db.commit()
+
 	return {"message": "Post deleted!"}
 
 @app.post("/undelete_post/<pid>")
@@ -1129,6 +1139,8 @@ def undelete_post_pid(pid, v):
 	g.db.add(post)
 
 	cache.delete_memoized(frontlist)
+
+	g.db.commit()
 
 	return {"message": "Post undeleted!"}
 
@@ -1143,6 +1155,9 @@ def toggle_comment_nsfw(cid, v):
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
 	g.db.flush()
+
+	g.db.commit()
+
 	if comment.over_18: return {"message": "Comment has been marked as +18!"}
 	else: return {"message": "Comment has been unmarked as +18!"}
 	
@@ -1168,6 +1183,9 @@ def toggle_post_nsfw(pid, v):
 		g.db.add(ma)
 
 	g.db.flush()
+
+	g.db.commit()
+
 	if post.over_18: return {"message": "Post has been marked as +18!"}
 	else: return {"message": "Post has been unmarked as +18!"}
 
@@ -1185,6 +1203,8 @@ def save_post(pid, v):
 	try: g.db.flush()
 	except: g.db.rollback()
 
+	g.db.commit()
+
 	return {"message": "Post saved!"}
 
 @app.post("/unsave_post/<pid>")
@@ -1198,4 +1218,6 @@ def unsave_post(pid, v):
 
 	if save: g.db.delete(save)
 	
+	g.db.commit()
+
 	return {"message": "Post unsaved!"}

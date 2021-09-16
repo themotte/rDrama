@@ -101,6 +101,7 @@ def api_vote_post(post_id, new, v):
 	post.upvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=1).count()
 	post.downvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=-1).count()
 	g.db.add(post)
+	g.db.commit()
 	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
@@ -155,4 +156,5 @@ def api_vote_comment(comment_id, new, v):
 	comment.upvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=1).count()
 	comment.downvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=-1).count()
 	g.db.add(comment)
+	g.db.commit()
 	return "", 204

@@ -489,6 +489,8 @@ class User(Base, Stndrd, Age_times):
 		self.unban_utc = 0
 
 		g.db.add(self)
+		g.db.commit()
+
 
 	@property
 	def is_suspended(self):

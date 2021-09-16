@@ -42,6 +42,7 @@ def revert_actions(v, username):
 		for user in users:
 			user.unban()
 
+	g.db.commit()
 	return {"message": "Admin actions reverted!"}
 
 @app.post("/@<username>/club_allow")
@@ -63,6 +64,7 @@ def club_allow(v, username):
 		x.club_banned = False
 		g.db.add(x)
 
+	g.db.commit()
 	return {"message": f"@{username} has been allowed into the country club!"}
 
 @app.post("/@<username>/club_ban")
@@ -83,6 +85,7 @@ def club_ban(v, username):
 		u.club_allowed = False
 		g.db.add(x)
 
+	g.db.commit()
 	return {"message": f"@{username} has been kicked from the country club. Deserved."}
 
 
@@ -94,6 +97,7 @@ def make_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 6
 		g.db.add(user)
+	g.db.commit()
 	return {"message": "User has been made admin!"}
 
 
@@ -105,6 +109,7 @@ def remove_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 0
 		g.db.add(user)
+	g.db.commit()
 	return {"message": "Admin removed!"}
 
 
@@ -116,6 +121,7 @@ def make_fake_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 1
 		g.db.add(user)
+	g.db.commit()
 	return {"message": "User has been made fake admin!"}
 
 
@@ -127,6 +133,7 @@ def remove_fake_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 0
 		g.db.add(user)
+	g.db.commit()
 	return {"message": "Fake admin removed!"}
 
 
@@ -180,6 +187,7 @@ def monthly(v):
 
 		g.db.bulk_save_objects(_awards)
 
+	g.db.commit()
 	return {"message": "Monthly awards granted"}
 
 
@@ -428,6 +436,7 @@ def badge_grant_post(v):
 
 		g.db.add(user)
 	
+	g.db.commit()
 	return redirect("/admin/badge_grant")
 
 
@@ -578,6 +587,7 @@ def admin_link_accounts(v):
 
 	g.db.add(new_alt)
 
+	g.db.commit()
 	return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
 
 
@@ -670,6 +680,7 @@ def admin_image_ban(v):
 
 	g.db.add(new_bp)
 
+	g.db.commit()
 	return render_template("admin/image_ban.html", v=v, success=True)
 
 
@@ -722,6 +733,7 @@ def agendaposter(user_id, v):
 	if user.agendaposter: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been marked by an admin as an agendaposter ({note}).")
 	else: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been unmarked by an admin as an agendaposter.")
 
+	g.db.commit()
 	if user.agendaposter: return (redirect(user.url), user)
 	return {"message": "Agendaposter theme disabled!"}
 
@@ -746,6 +758,7 @@ def shadowban(user_id, v):
 	
 	cache.delete_memoized(frontlist)
 
+	g.db.commit()
 	return {"message": "User shadowbanned!"}
 
 
@@ -770,6 +783,7 @@ def unshadowban(user_id, v):
 	
 	cache.delete_memoized(frontlist)
 
+	g.db.commit()
 	return {"message": "User unshadowbanned!"}
 
 @app.post("/admin/verify/<user_id>")
@@ -779,6 +793,7 @@ def verify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
 	user.verified = "Verified"
 	g.db.add(user)
+	g.db.commit()
 	return {"message": "User verfied!"}
 
 @app.post("/admin/unverify/<user_id>")
@@ -788,6 +803,7 @@ def unverify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
 	user.verified = None
 	g.db.add(user)
+	g.db.commit()
 	return {"message": "User unverified!"}
 
 
@@ -821,6 +837,7 @@ def admin_title_change(user_id, v):
 		)
 	g.db.add(ma)
 
+	g.db.commit()
 	return (redirect(user.url), user)
 
 @app.post("/ban_user/<user_id>")
@@ -874,6 +891,8 @@ def ban_user(user_id, v):
 		)
 	g.db.add(ma)
 
+	g.db.commit()
+
 	if 'reason' in request.args:
 		if reason.startswith("/post/"):
 			post = reason.split("/post/")[1].split("/")[0]
@@ -916,6 +935,8 @@ def unban_user(user_id, v):
 		)
 	g.db.add(ma)
 
+	g.db.commit()
+
 	if "@" in request.referrer:
 		return redirect(user.url)
 	else:
@@ -957,6 +978,8 @@ def ban_post(post_id, v):
 
 	cache.delete_memoized(frontlist)
 
+	g.db.commit()
+
 	return {"message": "Post removed!"}
 
 
@@ -985,6 +1008,8 @@ def unban_post(post_id, v):
 
 	cache.delete_memoized(frontlist)
 
+	g.db.commit()
+
 	return {"message": "Post approved!"}
 
 
@@ -1008,6 +1033,8 @@ def api_distinguish_post(post_id, v):
 
 	g.db.add(post)
 
+	g.db.commit()
+
 	return {"message": "Post distinguished!"}
 
 
@@ -1029,7 +1056,7 @@ def api_sticky_post(post_id, v):
 
 		cache.delete_memoized(frontlist)
 
-		g.db.flush()
+		g.db.commit()
 		if post.stickied: return {"message": "Post pinned!"}
 		else: return {"message": "Post unpinned!"}
 
@@ -1041,7 +1068,7 @@ def api_pin_post(post_id, v):
 	if post:
 		post.is_pinned = not (post.is_pinned)
 		g.db.add(post)
-		g.db.flush()
+		g.db.commit()
 
 		if post.is_pinned: return {"message": "Post pinned!"}
 		else: return {"message": "Post unpinned!"}
@@ -1065,6 +1092,7 @@ def api_ban_comment(c_id, v):
 		target_comment_id=comment.id,
 		)
 	g.db.add(ma)
+	g.db.commit()
 	return {"message": "Comment removed!"}
 
 
@@ -1088,6 +1116,7 @@ def api_unban_comment(c_id, v):
 	comment.is_banned = False
 	comment.is_approved = v.id
 
+	g.db.commit()
 
 	return {"message": "Comment approved!"}
 
@@ -1114,6 +1143,8 @@ def admin_distinguish_comment(c_id, v):
 				)
 
 	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
+
+	g.db.commit()
 
 	return html
 
@@ -1146,6 +1177,9 @@ def admin_toggle_ban_domain(v):
 	else:
 		d = BannedDomain(domain=domain, reason=reason)
 		g.db.add(d)
+
+	g.db.commit()
+
 	return redirect("/admin/banned_domains/")
 
 
@@ -1177,6 +1211,8 @@ def admin_nuke_user(v):
 		)
 	g.db.add(ma)
 
+	g.db.commit()
+
 	return redirect(user.url)
 
 @app.post("/admin/unnuke_user")
@@ -1206,6 +1242,8 @@ def admin_nunuke_user(v):
 		target_user_id=user.id,
 		)
 	g.db.add(ma)
+
+	g.db.commit()
 
 	return redirect(user.url)
 	

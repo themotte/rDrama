@@ -31,6 +31,8 @@ def api_flag_post(pid, v):
 
 		g.db.add(flag)
 
+	g.db.commit()
+
 	return {"message": "Post reported!"}
 
 
@@ -59,6 +61,8 @@ def api_flag_comment(cid, v):
 
 		g.db.add(flag)
 
+	g.db.commit()
+
 	return {"message": "Comment reported!"}
 
 
@@ -78,5 +82,7 @@ def remove_report(report_fn, v):
 		return {"error": "Invalid report ID"}, 400
 
 	g.db.delete(report)
+
+	g.db.commit()
 
 	return {"message": "Removed report"}

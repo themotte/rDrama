@@ -29,7 +29,7 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).all()
+		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 		comments = []
 		for index, x in enumerate(notifications):

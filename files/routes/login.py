@@ -388,6 +388,8 @@ def sign_up_post(v):
 	session["user_id"] = new_user.id
 	session["session_id"] = token_hex(16)
 
+	g.db.commit()
+
 	return redirect("/")
 
 

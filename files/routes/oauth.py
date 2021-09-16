@@ -32,6 +32,8 @@ def authorize(v):
 
 	g.db.add(new_auth)
 
+	g.db.commit()
+
 	return redirect(f"{application.redirect_uri}?token={access_token}")
 
 
@@ -50,6 +52,8 @@ def request_api_keys(v):
 
 	send_admin(NOTIFICATIONS_ACCOUNT, f"{v.username} has requested API keys for `{request.form.get('name')}`. You can approve or deny the request [here](/admin/apps).")
 
+	g.db.commit()
+
 	return redirect('/settings/apps')
 
 
@@ -65,6 +69,8 @@ def delete_oauth_app(v, aid):
 		g.db.delete(auth)
 
 	g.db.delete(app)
+
+	g.db.commit()
 
 	return redirect('/apps')
 
@@ -82,6 +88,8 @@ def edit_oauth_app(v, aid):
 	app.description = request.form.get("description")[:256]
 
 	g.db.add(app)
+
+	g.db.commit()
 
 	return redirect('/settings/apps')
 
@@ -106,6 +114,8 @@ def admin_app_approve(v, aid):
 
 	g.db.add(new_auth)
 
+	g.db.commit()
+
 	send_notification(NOTIFICATIONS_ACCOUNT, user, f"Your application `{app.app_name}` has been approved. Here's your access token: `{access_token}`\nPlease check the guide [here](/api) if you don't know what to do next.")
 
 	return {"message": f"{app.app_name} approved"}
@@ -125,6 +135,8 @@ def admin_app_revoke(v, aid):
 
 		g.db.delete(app)
 
+	g.db.commit()
+
 	return {"message": f"App revoked"}
 
 
@@ -141,6 +153,8 @@ def admin_app_reject(v, aid):
 	send_notification(NOTIFICATIONS_ACCOUNT, app.author, f"Your application `{app.app_name}` has been rejected.")
 
 	g.db.delete(app)
+
+	g.db.commit()
 
 	return {"message": f"App rejected"}
 
@@ -221,5 +235,7 @@ def reroll_oauth_tokens(aid, v):
 
 	a.client_id = secrets.token_urlsafe(64)[:64]
 	g.db.add(a)
+
+	g.db.commit()
 
 	return {"message": "Client ID Rerolled", "id": a.client_id}

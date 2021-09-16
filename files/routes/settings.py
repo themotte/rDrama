@@ -38,6 +38,7 @@ tiers={
 def removebackground(v):
 	v.background = None
 	g.db.add(v)
+	g.db.commit()
 	return {"message": "Background removed!"}
 
 @app.post("/settings/profile")
@@ -243,6 +244,7 @@ def settings_profile_post(v):
 
 	if updated:
 		g.db.add(v)
+		g.db.commit()
 
 		return {"message": "Your settings have been updated."}
 
@@ -258,7 +260,7 @@ def changelogsub(v):
 
 	cache.delete_memoized(frontlist)
 
-	g.db.flush()
+	g.db.commit()
 	if v.changelogsub: return {"message": "You have subscribed to the changelog!"}
 	else: return {"message": "You have unsubscribed from the changelog!"}
 
@@ -271,6 +273,7 @@ def namecolor(v):
 	if len(color) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
 	v.namecolor = color
 	g.db.add(v)
+	g.db.commit()
 	return redirect("/settings/profile")
 	
 @app.post("/settings/themecolor")
@@ -282,6 +285,7 @@ def themecolor(v):
 	if len(themecolor) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
 	v.themecolor = themecolor
 	g.db.add(v)
+	g.db.commit()
 	return redirect("/settings/profile")
 
 @app.post("/settings/gumroad")
@@ -358,6 +362,8 @@ def gumroad(v):
 	g.db.add(new_badge)
 
 	g.db.add(v)
+	g.db.commit()
+
 	return {"message": f"{patron} rewards claimed!"}
 
 @app.post("/settings/titlecolor")
@@ -369,6 +375,8 @@ def titlecolor(v):
 	if len(titlecolor) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
 	v.titlecolor = titlecolor
 	g.db.add(v)
+	g.db.commit()
+
 	return redirect("/settings/profile")
 
 @app.post("/settings/security")
@@ -466,6 +474,8 @@ def settings_security_post(v):
 		v.mfa_secret = None
 		g.db.add(v)
 
+		g.db.commit()
+
 		return redirect("/settings/security?msg=" +
 						escape("Two-factor authentication disabled."))
 
@@ -487,6 +497,8 @@ def settings_log_out_others(v):
 	session["login_nonce"] = v.login_nonce
 
 	g.db.add(v)
+
+	g.db.commit()
 
 	return render_template("settings_security.html", v=v,
 						   msg="All other devices have been logged out")
@@ -516,6 +528,8 @@ def settings_images_profile(v):
 	v.profileurl = imageurl
 	g.db.add(v)
 
+	g.db.commit()
+
 	return render_template("settings_profile.html", v=v, msg="Profile picture successfully updated.")
 
 
@@ -535,6 +549,7 @@ def settings_images_banner(v):
 	if imageurl:
 		v.bannerurl = imageurl
 		g.db.add(v)
+		g.db.commit()
 
 	return render_template("settings_profile.html", v=v, msg="Banner successfully updated.")
 
@@ -556,6 +571,7 @@ def settings_delete_banner(v):
 
 	v.bannerurl = None
 	g.db.add(v)
+	g.db.commit()
 
 	return render_template("settings_profile.html", v=v,
 						   msg="Banner successfully removed.")
@@ -588,6 +604,8 @@ def settings_css(v):
 	else:
 		v.css = 'body *::before, body *::after { content: "Trans rights are human rights!"; }'
 	g.db.add(v)
+	g.db.commit()
+
 	return render_template("settings_css.html", v=v)
 
 @app.get("/settings/profilecss")
@@ -604,6 +622,8 @@ def settings_profilecss(v):
 	profilecss = request.form.get("profilecss").replace('\\', '')[:50000]
 	v.profilecss = profilecss
 	g.db.add(v)
+	g.db.commit()
+
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/block")
@@ -639,6 +659,8 @@ def settings_block_user(v):
 
 	cache.delete_memoized(frontlist)
 
+	g.db.commit()
+
 	return {"message": f"@{user.username} blocked."}
 
 
@@ -664,6 +686,8 @@ def settings_unblock_user(v):
 
 	cache.delete_memoized(frontlist)
 
+	g.db.commit()
+
 	return {"message": f"@{user.username} unblocked."}
 
 
@@ -687,6 +711,8 @@ def settings_remove_discord(v):
 
 	v.discord_id=None
 	g.db.add(v)
+
+	g.db.commit()
 
 	return redirect("/settings/profile")
 
@@ -741,6 +767,8 @@ def settings_name_change(v):
 	set_nick(v, new_name)
 
 	g.db.add(v)
+
+	g.db.commit()
 
 	return redirect("/settings/profile")
 
@@ -822,6 +850,8 @@ def settings_song_change(v):
 	v.song=id
 	g.db.add(v)
 
+	g.db.commit()
+
 	return redirect("/settings/profile")
 
 @app.post("/settings/title_change")
@@ -844,4 +874,6 @@ def settings_title_change(v):
 	v.customtitle = filter_title(new_name)
 
 	g.db.add(v)
+	g.db.commit()
+
 	return redirect("/settings/profile")

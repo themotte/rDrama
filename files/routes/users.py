@@ -33,6 +33,7 @@ def pay_rent(v):
 	u.coins += 500
 	g.db.add(u)
 	send_notification(NOTIFICATIONS_ACCOUNT, u, f"@{v.username} has paid rent!")
+	g.db.commit()
 	return {"message": "Rent paid!"}
 
 
@@ -68,6 +69,7 @@ def steal(v):
 		g.db.add(v)
 		u.coins += 500
 		g.db.add(u)
+		g.db.commit()
 		return {"message": "Attempt failed!"}
 
 
@@ -97,6 +99,7 @@ def suicide(v, username):
 	send_notification(NOTIFICATIONS_ACCOUNT, user, suicide)
 	v.suicide_utc = t
 	g.db.add(v)
+	g.db.commit()
 	return {"message": "Help message sent!"}
 
 
@@ -131,6 +134,8 @@ def transfer_coins(v, username):
 		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
 		send_notification(v.id, receiver, transfer_message)
 		return {"message": f"{amount} {app.config['COINS_NAME']} transferred!"}, 200
+
+	g.db.commit()
 
 	return {"message": f"{app.config['COINS_NAME']} transferred!"}
 
@@ -186,6 +191,7 @@ def song(song):
 def subscribe(v, post_id):
 	new_sub = Subscription(user_id=v.id, submission_id=post_id)
 	g.db.add(new_sub)
+	g.db.commit()
 	return {"message": "Post subscribed!"}
 	
 @app.post("/unsubscribe/<post_id>")
@@ -193,6 +199,7 @@ def subscribe(v, post_id):
 def unsubscribe(v, post_id):
 	sub=g.db.query(Subscription).filter_by(user_id=v.id, submission_id=post_id).first()
 	g.db.delete(sub)
+	g.db.commit()
 	return {"message": "Post unsubscribed!"}
 
 @app.post("/@<username>/message")
@@ -232,6 +239,8 @@ def message2(v, username):
 	except Exception as e:
 		print(e)
 
+	g.db.commit()
+
 	return redirect(f"/@{username}")
 
 
@@ -268,6 +277,8 @@ def messagereply(v):
 	g.db.add(new_aux)
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
+
+	g.db.commit()
 
 	return jsonify({"html": render_template("comments.html",
 														v=v,
@@ -594,6 +605,9 @@ def follow_user(username, v):
 
 	existing = g.db.query(Notification).filter_by(followsender=v.id, user_id=target.id).first()
 	if not existing: send_follow_notif(v.id, target.id, f"@{v.username} has followed you!")
+
+	g.db.commit()
+
 	return {"message": "User followed!"}
 
 @app.post("/unfollow/<username>")
@@ -613,6 +627,9 @@ def unfollow_user(username, v):
 
 	existing = g.db.query(Notification).filter_by(unfollowsender=v.id, user_id=target.id).first()
 	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has unfollowed you!")
+
+	g.db.commit()
+
 	return {"message": "User unfollowed!"}
 
 
