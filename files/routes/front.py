@@ -40,8 +40,6 @@ def notifications(v):
 			elif not x.read:
 				c.unread = True
 				notifs.append({'id': x.id, 'read': True})
-				x.read = True
-				g.db.add(x)
 			comments.append(c)
 		
 		g.db.bulk_update_mappings(User, notifs)
