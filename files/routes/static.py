@@ -61,8 +61,8 @@ def participation_stats(v):
 
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
 
-@app.get("/paypigs")
 @app.get("/patrons")
+@app.get("/paypigs")
 @auth_desired
 def patrons(v):
 	query = g.db.query(
@@ -87,6 +87,7 @@ def patrons(v):
 	return render_template("patrons.html", v=v, result=result)
 
 @app.get("/admins")
+@app.get("/badmins")
 @auth_desired
 def admins(v):
 	admins = g.db.query(User).filter_by(admin_level=6).order_by(User.coins.desc()).all()
