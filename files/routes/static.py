@@ -8,10 +8,6 @@ from os import path
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
 
-@app.route("/svelte")
-def svelte():
-	return render_template('svelte.html')
-
 @app.get('/rules')
 @auth_desired
 def static_rules(v):

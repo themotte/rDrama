@@ -4,8 +4,6 @@
 
 		{% include "bootstrap.html" %}
 
-		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
-		<script src="https://cdn.jsdelivr.net/remarkable/1.7.1/remarkable.min.js"></script>	
 		<script>
 		
 			$(document).ready(function() {
@@ -327,7 +325,9 @@
 
 												<div class="input-group">
 
-														<textarea v-model="post_body" form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required>{{text}}</textarea>
+														<div id="svelte-app"></div>
+
+														<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required>{{text}}</textarea>
 
 														<span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
 
@@ -356,11 +356,7 @@
 												<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn">
 													<div id="emoji-reply-btn" onclick="loadEmojis('post-text')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
 												</label>
-												
-												<div class="btn btn-secondary" @click="togglePreview()" style="float: right;">
-													[[ show_preview ? 'Hide preview' : 'Show preview' ]]
-												</div>						
-											
+																							
 												<pre></pre>
 												<div class="form-text text-small"><a href="/formatting" target="_blank">Formatting help</a></div>
 												<pre></pre>
@@ -410,61 +406,8 @@
 
 			</form>
 
-			<div v-show="show_preview" class="card-blank" id="submit-page" style="height:max-content; min-height: 25rem; transition: 15s;">
-				<h1 class="m-3">Markdown Preview</h1>
-				<hr>
-				<div class="m-3">
-					<div id="post-body-markdown" v-html="post_body_markdown" style="max-height: 500px; overflow-y: scroll;"></div>
-				</div>
-			</div>
-
 		</div>
 		{% endblock %}
-
-		<style>
-			@media(min-width: 768px){
-					.submit-grid-view{
-					display: grid; 
-					grid-template-columns: 1fr 3fr 3fr 1fr;  
-					grid-column-gap: 1rem;
-					}
-				}
-			#post-body-markdown img{
-				max-height: 100px !important;
-				max-width: 100px !important;
-				border-radius: 0.35rem;
-				margin: 0.5rem 0;
-			}
-		</style>
-		<script>
-			var md = new Remarkable();
-			new Vue({
-				el: "#submitapp",
-				delimiters: ['[[', ']]'],
-				data: {
-					post_body: "",
-					post_tag: "",
-					show_preview: false,
-				},
-				computed: {
-					post_body_markdown: function(){
-						markdown = md.render(this.post_body)
-						emojis = Array.from(markdown.matchAll(/:(.{1,30}?):/gi))
-						if(emojis != null){
-							for(i = 0; i < emojis.length; i++){
-								markdown = markdown.replace(emojis[i][0], "<img height=30 src='/assets/images/emojis/" + emojis[i][1] + ".webp'>")
-							}
-						}
-						return markdown
-					}
-				},
-				methods: {
-					togglePreview() {
-						this.show_preview = !this.show_preview
-					}
-				}
-			})
-		</script> 
 	
 		<!-- {{'SITE_NAME' | app_config}} JS -->
 
