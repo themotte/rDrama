@@ -4,6 +4,8 @@
 
 		{% include "bootstrap.html" %}
 
+		<script defer src='/assets/js/svelte.js'></script>
+
 		<script>
 		
 			$(document).ready(function() {
@@ -326,8 +328,6 @@
 												<div class="input-group">
 
 														<div id="svelte-app"></div>
-
-														<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required>{{text}}</textarea>
 
 														<span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
 
