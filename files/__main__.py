@@ -118,8 +118,6 @@ class RetryingQuery(_Query):
 Base = declarative_base()
 
 
-#set the shared redis cache for misc stuff
-
 r=redis.Redis(
 	host=app.config["CACHE_REDIS_URL"][8:], 
 	decode_responses=True, 
@@ -129,15 +127,13 @@ r=redis.Redis(
 
 db_session = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
 
-# enforce https
+
 @app.before_request
 def before_request():
 
-	if request.method.lower() != "get" and app.config["READ_ONLY"]:
-		return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
+	if request.method.lower() != "get" and app.config["READ_ONLY"]: return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
 
-	if app.config["BOT_DISABLE"] and request.headers.get("X-User-Type")=="Bot":
-		abort(503)
+	if app.config["BOT_DISABLE"] and request.headers.get("X-User-Type")=="Bot": abort(503)
 
 	g.db = db_session()
 
@@ -146,28 +142,19 @@ def before_request():
 	#do not access session for static files
 	if not request.path.startswith("/assets"):
 		session.permanent = True
+		if not session.get("session_id"): session["session_id"] = secrets.token_hex(16)
 
-		if not session.get("session_id"):
-			session["session_id"] = secrets.token_hex(16)
-
-	if app.config["FORCE_HTTPS"] and request.url.startswith(
-			"http://") and "localhost" not in app.config["SERVER_NAME"]:
+	if app.config["FORCE_HTTPS"] and request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
 		url = request.url.replace("http://", "https://", 1)
 		return redirect(url, code=301)
 
 	ua=request.headers.get("User-Agent","")
-	if "CriOS/" in ua:
-		g.system="ios/chrome"
-	elif "Version/" in ua:
-		g.system="android/webview"
-	elif "Mobile Safari/" in ua:
-		g.system="android/chrome"
-	elif "Safari/" in ua:
-		g.system="ios/safari"
-	elif "Mobile/" in ua:
-		g.system="ios/webview"
-	else:
-		g.system="other/other"
+	if "CriOS/" in ua: g.system="ios/chrome"
+	elif "Version/" in ua: g.system="android/webview"
+	elif "Mobile Safari/" in ua: g.system="android/chrome"
+	elif "Safari/" in ua: g.system="ios/safari"
+	elif "Mobile/" in ua: g.system="ios/webview"
+	else: g.system="other/other"
 
 @app.teardown_appcontext
 def teardown_request(error):
@@ -180,11 +167,9 @@ def after_request(response):
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("Referrer-Policy", "same-origin")
-
 	response.headers.add("Feature-Policy", "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; vibrate 'none'; fullscreen 'none'; payment 'none';")
 	response.headers.add("X-Frame-Options", "deny")
-
 	return response
 
-# import and bind all routing functions
+
 from files.routes import *
