@@ -9,7 +9,7 @@ GIPHY_KEY = environ.get('GIPHY_KEY').rstrip()
 
 @app.route("/giphy", methods=["GET"])
 @app.route("/giphy<path>", methods=["GET"])
-def giphy():
+def giphy(path=None):
 
 	searchTerm = request.args.get("searchTerm", "")
 	limit = int(request.args.get("limit", 48))
