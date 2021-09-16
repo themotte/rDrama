@@ -112,9 +112,6 @@ def post_id(pid, anything=None, v=None):
 			blocked.c.id,
 		)
 		
-		# shadowbanned = g.db.query(User.id).filter(User.shadowbanned == False).subquery()
-		# comments = comments.filter(Comment.author_id.notin_(shadowbanned))
-
 		if v.admin_level >=4:
 			comments=comments.options(joinedload(Comment.oauth_app))
  
@@ -162,11 +159,9 @@ def post_id(pid, anything=None, v=None):
 		post.preloaded_comments = output
 
 	else:
-		comments = g.db.query(
-			Comment
-		).filter(
-			Comment.parent_submission == post.id
-		)
+		shadowbanned = g.db.query(User.id).filter(User.shadowbanned == True).subquery()
+
+		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id.notin_(shadowbanned))
 
 		if sort == "top":
 			comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
