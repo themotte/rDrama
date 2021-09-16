@@ -329,6 +329,15 @@
 												<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
 
 												<div id="svelte-app" class="input-group">
+													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
+
+													<div class="btn btn-secondary" style="float: right;">
+														Show preview
+													</div>
+													
+													<pre></pre>
+													
+													<span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
 												</div>
 
 												<p></p>
