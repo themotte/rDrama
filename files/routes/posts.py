@@ -112,6 +112,10 @@ def post_id(pid, anything=None, v=None):
 			blocked.c.id,
 		)
 
+		shadowbanned = g.db.query(User.id).filter(User.shadowbanned == False).subquery()
+
+		comments = comments.filter(Comment.author_id.notin_(shadowbanned))
+		
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
 			comments = comments.join(Comment.author).filter(User.shadowbanned == False)
 

@@ -10,7 +10,6 @@ services:
       - PYTHONPATH="/service"
       - REDIS_URL=redis://redis
       - DATABASE_URL=postgresql://postgres@postgres:5432/postgres
-      - DATABASE_CONNECTION_POOL_URL=postgresql://postgres@postgres:5432/postgres
       - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
       - DOMAIN=localhost
       - SITE_NAME=Drama
