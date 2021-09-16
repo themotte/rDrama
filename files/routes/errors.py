@@ -102,10 +102,7 @@ def error_451(e, v):
 @app.errorhandler(500)
 @auth_desired
 def error_500(e, v):
-	try:
-		g.db.rollback()
-	except AttributeError:
-		pass
+	g.db.rollback()
 
 	if request.headers.get("Authorization"): return {"error": "500 Internal Server Error"}, 500
 	else: return render_template('errors/500.html', v=v), 500

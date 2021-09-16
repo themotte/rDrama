@@ -111,7 +111,6 @@ def settings_profile_post(v):
 			
 			#check file size
 			if request.content_length > 16 * 1024 * 1024:
-				g.db.rollback()
 				abort(413)
 
 			file = request.files['file']
@@ -514,7 +513,6 @@ def settings_log_out_others(v):
 def settings_images_profile(v):
 
 	if request.content_length > 16 * 1024 * 1024:
-		g.db.rollback()
 		abort(413)
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
@@ -542,7 +540,6 @@ def settings_images_profile(v):
 @validate_formkey
 def settings_images_banner(v):
 	if request.content_length > 16 * 1024 * 1024:
-		g.db.rollback()
 		abort(413)
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403

@@ -901,9 +901,6 @@ def save_comment(cid, v):
 
 	g.db.add(new_save)
 
-	try: g.db.flush()
-	except: g.db.rollback()
-
 	g.db.commit()
 
 	return {"message": "Comment saved!"}
