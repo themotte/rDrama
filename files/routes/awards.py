@@ -198,7 +198,7 @@ ALLOW_MULTIPLE = (
 	"stars"
 )
 
-@app.post("/fucking")
+@app.post("/post/<pid>/awards")
 @auth_required
 def award_post(pid, v):
 
@@ -206,8 +206,7 @@ def award_post(pid, v):
 		return {"error": "forbidden."}, 403
 
 	kind = request.form.get("kind", "")
-
-	print("sex")
+	
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
 

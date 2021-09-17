@@ -17,7 +17,7 @@ function bruh(kind) {
 				</button>
 			</div>
 			<div id="awardModalBody" class="modal-body">
-				<form action="/fucking" method="post">
+				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
 					<div class="card-columns awards-wrapper">
 						{% for award in v.user_awards %}
 							<a href="javascript:void(0)" id="{{award.kind}}" class="card" onclick="bruh('{{award.kind}}')">
