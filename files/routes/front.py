@@ -19,15 +19,15 @@ def notifications(v):
 	modmail = request.args.get('modmail', False)
 	posts = request.args.get('posts', False)
 	if modmail and v.admin_level == 6:
-		comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif messages:
-		comments = g.db.query(Comment).options(lazyload('*')).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif posts:
-		notifications = v.notifications.options(lazyload('*')).join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
+		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 		comments = []
 		
@@ -46,7 +46,7 @@ def notifications(v):
 		listing = comments[:25]
 	else:
 
-		notifications = v.notifications.options(lazyload('*')).join(Notification.comment).filter(
+		notifications = v.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
 			Comment.author_id != AUTOJANNY_ACCOUNT,
