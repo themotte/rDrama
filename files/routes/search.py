@@ -90,10 +90,10 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 	elif v:
 		blocking = g.db.query(
 			UserBlock.target_id).filter_by(
-			user_id=v.id).all()()
+			user_id=v.id).subquery()
 		blocked = g.db.query(
 			UserBlock.user_id).filter_by(
-			target_id=v.id).all()()
+			target_id=v.id).subquery()
 
 		posts = posts.filter(
 			Submission.author_id.notin_(blocking),

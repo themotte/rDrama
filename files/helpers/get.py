@@ -74,8 +74,8 @@ def get_post(i, v=None, graceful=False, **kwargs):
 
 	if v:
 		vt = g.db.query(Vote).options(lazyload('*')).filter_by(
-			user_id=v.id, submission_id=i).all()
-		blocking = v.blocking.all()
+			user_id=v.id, submission_id=i).subquery()
+		blocking = v.blocking.subquery()
 
 		items = g.db.query(
 			Submission,
@@ -125,10 +125,10 @@ def get_posts(pids, v=None):
 		vt = g.db.query(Vote).options(lazyload('*')).filter(
 			Vote.submission_id.in_(pids), 
 			Vote.user_id==v.id
-			).all()
+			).subquery()
 
-		blocking = v.blocking.all()
-		blocked = v.blocked.all()
+		blocking = v.blocking.subquery()
+		blocked = v.blocked.subquery()
 
 		query = g.db.query(
 			Submission,
@@ -199,11 +199,11 @@ def get_comments(cids, v=None, load_parent=False):
 	cids=tuple(cids)
 
 	if v:
-		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).all()
+		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
 
-		blocking = v.blocking.all()
+		blocking = v.blocking.subquery()
 
-		blocked = v.blocked.all()
+		blocked = v.blocked.subquery()
 
 		comments = g.db.query(
 			Comment,

@@ -103,14 +103,14 @@ def post_id(pid, anything=None, v=None):
 	if post.club and not (v and v.paid_dues): abort(403)
 
 	if v:
-		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).all()
+		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
 
-		blocking = v.blocking.all()
+		blocking = v.blocking.subquery()
 
-		blocked = v.blocked.all()
+		blocked = v.blocked.subquery()
 
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
-			shadowbanned = g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()
+			shadowbanned = g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).subquery()
 			comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id.notin_(shadowbanned))
 
 		comments = g.db.query(
@@ -121,7 +121,7 @@ def post_id(pid, anything=None, v=None):
 		)
 		
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
-			shadowbanned = g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()
+			shadowbanned = g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).subquery()
 			comments = comments.filter(Comment.author_id.notin_(shadowbanned))
 
 		if v.admin_level >=4:
@@ -170,7 +170,7 @@ def post_id(pid, anything=None, v=None):
 		post.preloaded_comments = output
 
 	else:
-		shadowbanned = g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()
+		shadowbanned = g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).subquery()
 
 		comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission == post.id, Comment.author_id.notin_(shadowbanned))
 
