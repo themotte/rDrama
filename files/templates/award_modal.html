@@ -43,124 +43,94 @@
 </div>
 
 <style>
-	.awards-wrapper input[type="radio"] {
+	.check-card {
+		list-style: none;
+		margin: 40px auto;
+	width: 320px;
+	}
+	.check-card .check-card-item {
+		position: relative;
+		width: 100%;
+		margin: 0 1% 15px;
+		font-size: 16px;
+		background: #3c9895;
+		overflow: hidden;
+	}
+	.check-card li label {
+		display: block;
+		position: absolute;
+		height: 300px;
+		width: 100%;
+		z-index: 100;
+		cursor: pointer;
+	}
+	.check-card .check-card-body {
+		height: 300px;
+		color: #fff;
+		z-index: 2;
+		position: relative;
+	}
+	.check-card .check-card-body-in {
+		padding: 40px 20px 20px;
+
+	}
+	.check-card .check-card-title {
+		font-family: 'Oswald', sans-serif;
+		font-size: 32px;
+		margin-bottom: 5px;
+	}
+	.check-card .check-card-bg,
+	.check-card .check-card-toggle {
+		position: relative;
+		background: #2e2d37;
+		width: 36px;
+		height: 36px;
+		top: 10px;
+		left: 10px;
+		-webkit-border-radius: 50%;
+		border-radius: 50%;
+	}
+	.check-card .check-card-bg {
+		position: absolute;
+		background: #2e2d37;
+		-webkit-transition: all .3s ease-out;
+		transition: all .3s ease-out;
+		-webkit-transform:scale(1);
+		transform:scale(1);
+		z-index: 0;
+	}
+	.check-card .check-card-toggle span {
+		position: absolute;
+		display: block;
+		width: 20px;
+		margin-left: -10px;
+		height: 1px;
+		top: 50%;
+		left: 50%;
+		background: #fff;
+		-webkit-transition: all .4s ease-out;
+		transition: all .4s ease-out;
+
+		-webkit-transform: rotate(-270deg);
+		transform: rotate(-270deg);
+	}
+	.check-card .check-card-toggle span:first-child {
+		-webkit-transform: rotate(180deg);
+		transform: rotate(180deg);
+	}
+	.check-card input[type=checkbox] {
 		display: none;
 	}
-
-	.awards-wrapper label {
-		cursor: pointer;
-		padding: 15px;
-		text-align: center;
-		text-transform: none!important;
+	.check-card input[type=checkbox]:checked ~ .check-card-body .check-card-toggle span {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
 	}
-
-	.awards-wrapper label i {
-		font-size: 45px;
+	.check-card input[type=checkbox]:checked ~ .check-card-body .check-card-toggle span:first-child {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
 	}
-
-	.awards-wrapper label.disabled {
-		opacity: 0.6;
+	.check-card input[type=checkbox]:checked ~ .check-card-bg {
+		-webkit-transform:scale(25);
+		transform:scale(25);
 	}
-
-	.awards-wrapper label:hover {
-		/*background-color: rgba(173, 226, 255, 0.7)!important;*/
-		background-color: var(--primary)!important;
-	}
-
-	.awards-wrapper input[type="radio"]:checked+label {
-		/*background-color: rgba(173, 226, 255, 0.9)!important;*/
-		background-color: var(--primary)!important;
-	}
-
-
-	.check-card {
-	list-style: none;
-	margin: 40px auto;
-  width: 320px;
-}
-.check-card .check-card-item {
-	position: relative;
-	width: 100%;
-	margin: 0 1% 15px;
-	font-size: 16px;
-	background: #3c9895;
-	overflow: hidden;
-}
-.check-card li label {
-	display: block;
-	position: absolute;
-	height: 300px;
-	width: 100%;
-	z-index: 100;
-	cursor: pointer;
-}
-.check-card .check-card-body {
-	height: 300px;
-	color: #fff;
-	z-index: 2;
-	position: relative;
-}
-.check-card .check-card-body-in {
-	padding: 40px 20px 20px;
-
-}
-.check-card .check-card-title {
-	font-family: 'Oswald', sans-serif;
-	font-size: 32px;
-	margin-bottom: 5px;
-}
-.check-card .check-card-bg,
-.check-card .check-card-toggle {
-	position: relative;
-	background: #2e2d37;
-	width: 36px;
-	height: 36px;
-	top: 10px;
-	left: 10px;
-	-webkit-border-radius: 50%;
-	border-radius: 50%;
-}
-.check-card .check-card-bg {
-	position: absolute;
-	background: #2e2d37;
-	-webkit-transition: all .3s ease-out;
-	transition: all .3s ease-out;
-	-webkit-transform:scale(1);
-	transform:scale(1);
-	z-index: 0;
-}
-.check-card .check-card-toggle span {
-	position: absolute;
-	display: block;
-	width: 20px;
-	margin-left: -10px;
-	height: 1px;
-	top: 50%;
-	left: 50%;
-	background: #fff;
-	-webkit-transition: all .4s ease-out;
-	transition: all .4s ease-out;
-
-	-webkit-transform: rotate(-270deg);
-	transform: rotate(-270deg);
-}
-.check-card .check-card-toggle span:first-child {
-	-webkit-transform: rotate(180deg);
-	transform: rotate(180deg);
-}
-.check-card input[type=checkbox] {
-	display: none;
-}
-.check-card input[type=checkbox]:checked ~ .check-card-body .check-card-toggle span {
-	-webkit-transform: rotate(0deg);
-	transform: rotate(0deg);
-}
-.check-card input[type=checkbox]:checked ~ .check-card-body .check-card-toggle span:first-child {
-	-webkit-transform: rotate(0deg);
-	transform: rotate(0deg);
-}
-.check-card input[type=checkbox]:checked ~ .check-card-bg {
-	-webkit-transform:scale(25);
-	transform:scale(25);
-}
 </style>
