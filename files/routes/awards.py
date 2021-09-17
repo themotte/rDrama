@@ -200,14 +200,13 @@ ALLOW_MULTIPLE = (
 
 @app.post("/post/<pid>/awards")
 @auth_required
-@validate_formkey
 def award_post(pid, v):
 
 	if v.is_suspended and v.unban_utc == 0:
 		return {"error": "forbidden."}, 403
 
 	kind = request.form.get("kind", "")
-
+	
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
 
@@ -260,12 +259,11 @@ def award_post(pid, v):
 	g.db.add(post.author)
 
 	g.db.commit()
-	return {"message": "Award given!"}
+	return redirect(request.referrer)
 
 
 @app.post("/comment/<cid>/awards")
 @auth_required
-@validate_formkey
 def award_comment(cid, v):
 
 	if v.is_suspended and v.unban_utc == 0:
@@ -325,7 +323,7 @@ def award_comment(cid, v):
 	g.db.add(c.author)
 
 	g.db.commit()
-	return {"message": "Award given!"}
+	return redirect(request.referrer)
 
 @app.get("/admin/user_award")
 @auth_required

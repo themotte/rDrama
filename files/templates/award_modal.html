@@ -1,4 +1,12 @@
-<input type="hidden" id="awardTarget" value="" />
+<script>
+function bruh(kind) {
+	document.getElementById('giveaward').disabled=false;
+	document.getElementById('kind').value=kind;
+	try {document.getElementsByClassName('picked')[0].classList.toggle('picked');} catch(e) {}
+	document.getElementById(kind).classList.toggle('picked')
+}
+</script>
+
 <div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="awardModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -9,35 +17,24 @@
 				</button>
 			</div>
 			<div id="awardModalBody" class="modal-body">
-				<form class="pt-3 pb-0" action="/post/{{p.id}}/awards" method="post">
+				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
 					<div class="card-columns awards-wrapper">
 						{% for award in v.user_awards %}
-							<div>
-								<label class="card" onclick="document.getElementById('desc-{{award.kind}}').classList.toggle('d-none');document.getElementById('giveaward').disabled=false">
-									<i class="{{award.icon}} {{award.color}}"></i><br />
-									<span class="d-block pt-2" style="font-weight: bold; font-size: 14px;">{{award.title}}</span>
-									<span class="text-muted">{{award.owned}} owned</span>
-								</label>
-							</div>
-							<div id="desc-{{award.kind}}" class="d-none">
-								<div class="award-desc p-3">
-									<i style="font-size: 35px;"></i>
-									<div style="margin-left: 15px;">
-										<strong>{{pickedAward.title}} Award</strong><br />
-										<span class="text-muted">{{pickedAward.description}}</span>
-									</div>
-								</div>
-								<label for="note" class="pt-4">Note (optional):</label>
-								<textarea id="note" name="note" class="form-control" placeholder="Note to include in award notification"></textarea>
-							</div>
-							<input name="{{award.kind}}" hidden>
-							<input id="giveaward" class="btn btn-primary" type="submit" value="Give Award" disabled>
+							<a href="javascript:void(0)" id="{{award.kind}}" class="card" onclick="bruh('{{award.kind}}')">
+								<i class="{{award.icon}} {{award.color}}"></i><br />
+								<span class="d-block pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</span>
+								<span class="text-muted">{{award.owned}} owned</span>
+							</a>
 						{% endfor %}
 					</div>
+					<label for="note" class="pt-4">Note (optional):</label>
+					<input id="kind" name="kind" value="" hidden>
+					<textarea id="note" name="note" class="form-control" placeholder="Note to include in award notification"></textarea>
+					<input id="giveaward" class="btn btn-primary" style="float:right" type="submit" value="Give Award" disabled>
 				</form>
 			</div>
+		</div>
 	</div>
-</div>
 </div>
 
 <style>
@@ -45,36 +42,26 @@
 		display: none;
 	}
 
-	.awards-wrapper label {
+	.awards-wrapper a {
 		cursor: pointer;
 		padding: 15px;
 		text-align: center;
 		text-transform: none!important;
 	}
 
-	.awards-wrapper label i {
+	.awards-wrapper a i {
 		font-size: 45px;
 	}
 
-	.awards-wrapper label.disabled {
+	.awards-wrapper a.disabled {
 		opacity: 0.6;
 	}
 
-	.awards-wrapper label:hover {
-		/*background-color: rgba(173, 226, 255, 0.7)!important;*/
+	.awards-wrapper a:hover, .picked {
 		background-color: var(--primary)!important;
-		background-opacity: 0.4;
 	}
 
-	.awards-wrapper input[type="radio"]:checked+label {
-		/*background-color: rgba(173, 226, 255, 0.9)!important;*/
+	.awards-wrapper input[type="radio"]:checked+a {
 		background-color: var(--primary)!important;
-		background-opacity: 0.9;
-	}
-
-	.award-desc {
-		border-radius: 5px;
-		background-color: rgba(221, 221, 221, 0.23);
-		display: flex;
 	}
 </style>

@@ -33,7 +33,7 @@ def toggle_club(pid, v):
 
 	post = get_post(pid)
 
-	if (post.author_id != v.id or v.club_banned) and not v.admin_level >= 3: abort(403)
+	if post.author_id != v.id or not v.paid_dues: abort(403)
 
 	post.club = not post.club
 	g.db.add(post)
@@ -251,7 +251,7 @@ def edit_post(pid, v):
 		p.title_html = filter_title(title)
 
 	if body != p.body:
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
@@ -803,7 +803,7 @@ def submit_post(v):
 		else: return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.form.get("body", "")), 400
 
 	# render text
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE):
+	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	body_md = CustomRenderer().render(mistletoe.Document(body))
@@ -859,9 +859,12 @@ def submit_post(v):
 	# check for embeddable video
 	domain = parsed_url.netloc
 
+	if v.paid_dues: club = bool(request.form.get("club",""))
+	else: club = False
+
 	new_post = Submission(
 		private=bool(request.form.get("private","")),
-		club=bool(request.form.get("club","")),
+		club=club,
 		author_id=v.id,
 		over_18=bool(request.form.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,

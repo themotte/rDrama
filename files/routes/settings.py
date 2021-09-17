@@ -102,7 +102,7 @@ def settings_profile_post(v):
 	if request.values.get("bio"):
 		bio = request.values.get("bio")[:1500]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', bio, re.MULTILINE):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
 			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
 		bio = bio.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
@@ -312,6 +312,7 @@ def gumroad(v):
 		return {"error": f"{patron} rewards already claimed"}, 400
 
 	v.patron = tier
+	g.db.add(v)
 
 	grant_awards = {}
 	if tier == 1:
@@ -355,12 +356,12 @@ def gumroad(v):
 
 	g.db.bulk_save_objects(_awards)
 
-	new_badge = Badge(badge_id=20+tier,
-					  user_id=v.id,
-					  )
-	g.db.add(new_badge)
+	if not v.has_badge(20+tier):
+		new_badge = Badge(badge_id=20+tier,
+						user_id=v.id,
+						)
+		g.db.add(new_badge)
 
-	g.db.add(v)
 	g.db.commit()
 
 	return {"message": f"{patron} rewards claimed!"}
