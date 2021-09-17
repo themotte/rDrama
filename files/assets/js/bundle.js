@@ -1061,7 +1061,7 @@
     }
 
     new App({
-    	target: document.querySelector('#svelte-app2')
+    	target: document.querySelector('#awardModal')
     });
 
 }());
