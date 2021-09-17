@@ -411,20 +411,20 @@
     			attr_dev(input, "id", /*index*/ ctx[9]);
     			attr_dev(input, "class", "svelte-13ovg7j");
     			toggle_class(input, "disabled", /*award*/ ctx[7].owned < 1);
-    			add_location(input, file, 50, 8, 1286);
+    			add_location(input, file, 50, 8, 1291);
     			attr_dev(i, "class", "" + (/*award*/ ctx[7].icon + " " + /*award*/ ctx[7].color + " svelte-13ovg7j"));
-    			add_location(i, file, 52, 9, 1464);
-    			add_location(br, file, 52, 51, 1506);
+    			add_location(i, file, 52, 9, 1469);
+    			add_location(br, file, 52, 51, 1511);
     			attr_dev(span0, "class", "text-muted");
-    			add_location(span0, file, 54, 9, 1624);
+    			add_location(span0, file, 54, 9, 1629);
     			attr_dev(span1, "class", "d-block pt-2");
     			set_style(span1, "font-weight", "bold");
     			set_style(span1, "font-size", "14px");
-    			add_location(span1, file, 53, 9, 1523);
+    			add_location(span1, file, 53, 9, 1528);
     			attr_dev(label, "class", "card svelte-13ovg7j");
     			attr_dev(label, "for", /*index*/ ctx[9]);
     			toggle_class(label, "disabled", /*award*/ ctx[7].owned < 1);
-    			add_location(label, file, 51, 8, 1384);
+    			add_location(label, file, 51, 8, 1389);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
@@ -544,24 +544,24 @@
     			textarea = element("textarea");
     			set_style(i, "font-size", "35px");
     			attr_dev(i, "class", "" + (/*pickedAward*/ ctx[4].icon + " " + /*pickedAward*/ ctx[4].color + " svelte-13ovg7j"));
-    			add_location(i, file, 63, 8, 1824);
-    			add_location(strong, file, 65, 9, 1956);
-    			add_location(br, file, 65, 51, 1998);
+    			add_location(i, file, 63, 8, 1829);
+    			add_location(strong, file, 65, 9, 1961);
+    			add_location(br, file, 65, 51, 2003);
     			attr_dev(span, "class", "text-muted");
-    			add_location(span, file, 66, 9, 2015);
+    			add_location(span, file, 66, 9, 2020);
     			set_style(div0, "margin-left", "15px");
-    			add_location(div0, file, 64, 8, 1913);
+    			add_location(div0, file, 64, 8, 1918);
     			attr_dev(div1, "class", "award-desc p-3 svelte-13ovg7j");
-    			add_location(div1, file, 62, 7, 1786);
+    			add_location(div1, file, 62, 7, 1791);
     			attr_dev(label, "for", "note");
     			attr_dev(label, "class", "pt-4");
-    			add_location(label, file, 69, 7, 2112);
+    			add_location(label, file, 69, 7, 2117);
     			attr_dev(textarea, "id", "note");
     			attr_dev(textarea, "name", "note");
     			attr_dev(textarea, "class", "form-control");
     			attr_dev(textarea, "placeholder", "Note to include in award notification");
-    			add_location(textarea, file, 70, 7, 2176);
-    			add_location(div2, file, 61, 6, 1772);
+    			add_location(textarea, file, 70, 7, 2181);
+    			add_location(div2, file, 61, 6, 1777);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -621,7 +621,7 @@
     			attr_dev(button, "class", "btn btn-link");
     			attr_dev(button, "id", "awardButton");
     			toggle_class(button, "disabled", /*pickedAward*/ ctx[4] === null);
-    			add_location(button, file, 83, 4, 2708);
+    			add_location(button, file, 83, 4, 2713);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -664,11 +664,11 @@
     			attr_dev(span, "class", "spinner-border spinner-border-sm");
     			attr_dev(span, "role", "status");
     			attr_dev(span, "aria-hidden", "true");
-    			add_location(span, file, 79, 5, 2571);
+    			add_location(span, file, 79, 5, 2576);
     			attr_dev(button, "class", "btn btn-warning");
     			attr_dev(button, "type", "button");
     			button.disabled = true;
-    			add_location(button, file, 78, 4, 2509);
+    			add_location(button, file, 78, 4, 2514);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -765,40 +765,40 @@
     			attr_dev(input, "type", "hidden");
     			attr_dev(input, "id", "awardTarget");
     			input.value = "";
-    			add_location(input, file, 36, 0, 659);
+    			add_location(input, file, 36, 0, 664);
     			attr_dev(h5, "class", "modal-title");
-    			add_location(h5, file, 40, 4, 867);
+    			add_location(h5, file, 40, 4, 872);
     			attr_dev(i, "class", "far fa-times");
-    			add_location(i, file, 42, 30, 1020);
+    			add_location(i, file, 42, 30, 1025);
     			attr_dev(span, "aria-hidden", "true");
-    			add_location(span, file, 42, 5, 995);
+    			add_location(span, file, 42, 5, 1000);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "close");
     			attr_dev(button0, "data-dismiss", "modal");
     			attr_dev(button0, "aria-label", "Close");
-    			add_location(button0, file, 41, 4, 912);
+    			add_location(button0, file, 41, 4, 917);
     			attr_dev(div0, "class", "modal-header");
-    			add_location(div0, file, 39, 3, 835);
+    			add_location(div0, file, 39, 3, 840);
     			attr_dev(div1, "class", "card-columns awards-wrapper svelte-13ovg7j");
-    			add_location(div1, file, 47, 5, 1167);
+    			add_location(div1, file, 47, 5, 1172);
     			attr_dev(form, "class", "pt-3 pb-0");
-    			add_location(form, file, 46, 4, 1136);
+    			add_location(form, file, 46, 4, 1141);
     			attr_dev(div2, "id", "awardModalBody");
     			attr_dev(div2, "class", "modal-body");
-    			add_location(div2, file, 45, 3, 1086);
+    			add_location(div2, file, 45, 3, 1091);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "btn btn-link text-muted");
     			attr_dev(button1, "data-dismiss", "modal");
-    			add_location(button1, file, 76, 3, 2395);
+    			add_location(button1, file, 76, 3, 2400);
     			attr_dev(div3, "class", "modal-footer");
-    			add_location(div3, file, 75, 2, 2364);
+    			add_location(div3, file, 75, 2, 2369);
     			attr_dev(div4, "class", "modal-content");
-    			add_location(div4, file, 38, 2, 803);
+    			add_location(div4, file, 38, 2, 808);
     			attr_dev(div5, "class", "modal-dialog modal-dialog-scrollable modal-dialog-centered");
     			attr_dev(div5, "role", "document");
-    			add_location(div5, file, 37, 1, 711);
+    			add_location(div5, file, 37, 1, 716);
     			attr_dev(div6, "id", "svelte-app2");
-    			add_location(div6, file, 35, 0, 635);
+    			add_location(div6, file, 35, 0, 640);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -910,7 +910,7 @@
     	let pending = false;
     	let note = "";
     	let picked = null;
-    	const awards = document.getElementById("awards").value;
+    	const awards = document.getElementById("user_awards").value;
     	console.log(awards);
 
     	function pickedAward() {
