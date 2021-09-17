@@ -10,14 +10,8 @@ class UserBlock(Base, Stndrd, Age_times):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	target_id = Column(Integer, ForeignKey("users.id"))
 
-	user = relationship(
-		"User",
-		innerjoin=True,
-		primaryjoin="User.id==UserBlock.user_id")
-	target = relationship(
-		"User",
-		innerjoin=True,
-		primaryjoin="User.id==UserBlock.target_id")
+	user = relationship("User", innerjoin=True, primaryjoin="User.id==UserBlock.user_id", viewonly=True)
+	target = relationship("User", innerjoin=True, primaryjoin="User.id==UserBlock.target_id", viewonly=True)
 
 	def __repr__(self):
 
