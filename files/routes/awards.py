@@ -198,7 +198,7 @@ ALLOW_MULTIPLE = (
 	"stars"
 )
 
-@app.post("/fucking")
+@app.get("/fucking")
 @auth_required
 @validate_formkey
 def award_post(pid, v):
