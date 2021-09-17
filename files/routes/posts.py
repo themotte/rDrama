@@ -33,7 +33,7 @@ def toggle_club(pid, v):
 
 	post = get_post(pid)
 
-	if (post.author_id != v.id or v.club_banned) and not v.admin_level >= 3: abort(403)
+	if post.author_id != v.id or not v.paid_dues: abort(403)
 
 	post.club = not post.club
 	g.db.add(post)
@@ -859,9 +859,12 @@ def submit_post(v):
 	# check for embeddable video
 	domain = parsed_url.netloc
 
+	if v.paid_dues: club = bool(request.form.get("club",""))
+	else: club = False
+
 	new_post = Submission(
 		private=bool(request.form.get("private","")),
-		club=bool(request.form.get("club","")),
+		club=club,
 		author_id=v.id,
 		over_18=bool(request.form.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
