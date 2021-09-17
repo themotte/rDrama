@@ -252,8 +252,7 @@ def award_post(pid, v):
 
 	send_notification(NOTIFICATIONS_ACCOUNT, post.author, msg)
 
-	if kind in ACTIONS:
-		ACTIONS[kind](post=post)
+	if kind in ACTIONS: ACTIONS[kind](post=post)
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)

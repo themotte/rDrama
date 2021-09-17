@@ -130,12 +130,11 @@ def admin_app_revoke(v, aid):
 	if app.id:
 		for auth in g.db.query(ClientAuth).options(lazyload('*')).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
-		g.db.flush()
 		send_notification(NOTIFICATIONS_ACCOUNT, app.author, f"Your application `{app.app_name}` has been revoked.")
 
 		g.db.delete(app)
 
-	g.db.commit()
+		g.db.commit()
 
 	return {"message": f"App revoked"}
 
@@ -149,7 +148,6 @@ def admin_app_reject(v, aid):
 
 	for auth in g.db.query(ClientAuth).options(lazyload('*')).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
-	g.db.flush()
 	send_notification(NOTIFICATIONS_ACCOUNT, app.author, f"Your application `{app.app_name}` has been rejected.")
 
 	g.db.delete(app)

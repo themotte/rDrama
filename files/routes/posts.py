@@ -448,7 +448,7 @@ def filter_title(title):
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
 
-def check_processing_thread(v, post, link, db):
+def check_processing_thread(v, post, link):
 
 	image_id = link.split('/')[-1].rstrip('.mp4')
 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
@@ -463,16 +463,15 @@ def check_processing_thread(v, post, link, db):
 			status = req.json()['data']['processing']['status']
 			if status == 'completed':
 				post.processing = False
-				db.add(post)
+				g.db.add(post)
 
 				send_notification(
 					NOTIFICATIONS_ACCOUNT,
 					v,
-					f"Your video has finished processing and your [post](/post/{post.id}) is now live.",
-					db=db
+					f"Your video has finished processing and your [post](/post/{post.id}) is now live."
 				)
 
-				db.commit()
+				g.db.commit()
 				break
 			# just in case
 			elif status == 'failed':
@@ -933,7 +932,7 @@ def submit_post(v):
 					post_url += 'mp4'
 				new_post.url = post_url
 				new_post.processing = True
-				gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
+				gevent.spawn(check_processing_thread, v.id, new_post, post_url)
 			except UploadException as e:
 				if request.headers.get("Authorization"):
 					return {
@@ -1211,8 +1210,8 @@ def unsave_post(pid, v):
 
 	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
 
-	if save: g.db.delete(save)
-	
-	g.db.commit()
+	if save:
+		g.db.delete(save)
+		g.db.commit()
 
 	return {"message": "Post unsaved!"}

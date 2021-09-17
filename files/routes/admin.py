@@ -42,7 +42,7 @@ def revert_actions(v, username):
 		for user in users:
 			user.unban()
 
-	g.db.commit()
+		g.db.commit()
 	return {"message": "Admin actions reverted!"}
 
 @app.post("/@<username>/club_allow")
@@ -97,7 +97,7 @@ def make_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 6
 		g.db.add(user)
-	g.db.commit()
+		g.db.commit()
 	return {"message": "User has been made admin!"}
 
 
@@ -109,7 +109,7 @@ def remove_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 0
 		g.db.add(user)
-	g.db.commit()
+		g.db.commit()
 	return {"message": "Admin removed!"}
 
 
@@ -121,7 +121,7 @@ def make_fake_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 1
 		g.db.add(user)
-	g.db.commit()
+		g.db.commit()
 	return {"message": "User has been made fake admin!"}
 
 
@@ -133,7 +133,7 @@ def remove_fake_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 0
 		g.db.add(user)
-	g.db.commit()
+		g.db.commit()
 	return {"message": "Fake admin removed!"}
 
 
@@ -436,7 +436,7 @@ def badge_grant_post(v):
 
 		g.db.add(user)
 	
-	g.db.commit()
+		g.db.commit()
 	return redirect("/admin/badge_grant")
 
 
@@ -720,7 +720,6 @@ def agendaposter(user_id, v):
 		note = note
 	)
 	g.db.add(ma)
-	g.db.flush()
 
 	if user.agendaposter:
 		if not user.has_badge(26):
@@ -891,8 +890,6 @@ def ban_user(user_id, v):
 		)
 	g.db.add(ma)
 
-	g.db.commit()
-
 	if 'reason' in request.args:
 		if reason.startswith("/post/"):
 			post = reason.split("/post/")[1].split("/")[0]
@@ -904,8 +901,11 @@ def ban_user(user_id, v):
 			comment = get_comment(comment)
 			comment.bannedfor = True
 			g.db.add(comment)
+		g.db.commit()
 		return {"message": f"@{user.username} was banned!"}
-	else: return redirect(user.url)
+	else:
+		g.db.commit()
+		return redirect(user.url)
 
 
 @app.post("/unban_user/<user_id>")
@@ -937,10 +937,8 @@ def unban_user(user_id, v):
 
 	g.db.commit()
 
-	if "@" in request.referrer:
-		return redirect(user.url)
-	else:
-		return {"message": f"@{user.username} was unbanned!"}
+	if "@" in request.referrer: return redirect(user.url)
+	else: return {"message": f"@{user.username} was unbanned!"}
 
 @app.post("/ban_post/<post_id>")
 @admin_level_required(3)

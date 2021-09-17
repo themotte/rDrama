@@ -96,5 +96,6 @@ def activate(v):
 		g.db.add(mail_badge)
 
 	g.db.add(user)
+	g.db.commit()
 
 	return render_template("message_success.html", v=v, title="Email verified.", message=f"Your email {email} has been verified. Thank you.")

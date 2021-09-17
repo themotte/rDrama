@@ -92,15 +92,14 @@ def check_ban_evade(v):
 				g.db.add(ma)
 			except: pass
 
-		g.db.flush()
 		try: abort(403)
 		except Exception as e: print(e)
 
 	else:
 		v.ban_evade +=1
 		g.db.add(v)
-		g.db.flush()
 
+	g.db.commit()
 
 
 
