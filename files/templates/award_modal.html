@@ -11,16 +11,16 @@
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
 					<div class="card-columns awards-wrapper">
 						{% for award in v.user_awards %}
-							<input type="checkbox" name="check" value="1" onclick="document.getElementById('giveaward').disabled=false">
+							<input type="checkbox" name="check" value="1" onclick="document.getElementById('giveaward').disabled=false;document.getElementById('kind').value="{{award.kind}}">
 							<label class="card" >
 								<i class="{{award.icon}} {{award.color}}"></i><br />
 								<span class="d-block pt-2" style="font-weight: bold; font-size: 14px;">{{award.title}}</span>
 								<span class="text-muted">{{award.owned}} owned</span>
 							</label>
-							<input name="kind" value="{{award.kind}}" hidden>
 						{% endfor %}
 					</div>
 					<label for="note" class="pt-4">Note (optional):</label>
+					<input id="kind" name="kind" value="{{award.kind}}" hidden>
 					<textarea id="note" name="note" class="form-control" placeholder="Note to include in award notification"></textarea>
 					<input id="giveaward" class="btn btn-primary" style="float:right" type="submit" value="Give Award" disabled>
 					</div>
