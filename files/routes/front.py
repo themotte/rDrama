@@ -14,7 +14,7 @@ def slash_post():
 
 @app.get("/testing")
 def testing():
-	notifications = g.db.query(Notification)
+	notifications = g.db.query(Notification).limit(25)
 	
 	t = time.time()
 
