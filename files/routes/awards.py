@@ -264,7 +264,6 @@ def award_post(pid, v):
 
 @app.post("/comment/<cid>/awards")
 @auth_required
-@validate_formkey
 def award_comment(cid, v):
 
 	if v.is_suspended and v.unban_utc == 0:
