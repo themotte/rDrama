@@ -312,6 +312,7 @@ def gumroad(v):
 		return {"error": f"{patron} rewards already claimed"}, 400
 
 	v.patron = tier
+	g.db.add(v)
 
 	grant_awards = {}
 	if tier == 1:
@@ -355,12 +356,12 @@ def gumroad(v):
 
 	g.db.bulk_save_objects(_awards)
 
-	new_badge = Badge(badge_id=20+tier,
-					  user_id=v.id,
-					  )
-	g.db.add(new_badge)
+	if not v.has_badge(20+tier):
+		new_badge = Badge(badge_id=20+tier,
+						user_id=v.id,
+						)
+		g.db.add(new_badge)
 
-	g.db.add(v)
 	g.db.commit()
 
 	return {"message": f"{patron} rewards claimed!"}
