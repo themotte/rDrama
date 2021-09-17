@@ -10,23 +10,6 @@ defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 def slash_post():
 	return redirect("/")
 
-# this is a test
-
-@app.get("/testing")
-def testing():
-	notifications = g.db.query(Notification).limit(25)
-	
-	t = time.time()
-
-	for x in notifications:
-		x.read = True
-		g.db.add(x)
-	
-	g.db.commit()
-	print(time.time() - t)
-	return "sex"
-
-
 @app.get("/notifications")
 @auth_required
 def notifications(v):
@@ -48,110 +31,6 @@ def notifications(v):
 
 		comments = []
 		
-		t = time.time()
-		notifs = []
-
-		for index, x in enumerate(notifications):
-			c = x.comment
-			if x.read and index > 26: break
-			elif not x.read:
-				c.unread = True
-				notifs.append({'id': x.id, 'read': True})
-			comments.append(c)
-		
-		g.db.bulk_update_mappings(Notification, notifs)
-		g.db.commit()
-		print(time.time() - t)
-
-		next_exists = (len(comments) > 25)
-		listing = comments[:25]
-	else:
-
-		notifications = v.notifications.join(Notification.comment).filter(
-			Comment.is_banned == False,
-			Comment.deleted_utc == 0,
-			Comment.author_id != AUTOJANNY_ACCOUNT,
-		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
-
-		next_exists = (len(notifications) > 25)
-		notifications = notifications[:25]
-		cids = [x.comment_id for x in notifications]
-		comments = get_comments(cids, v=v, load_parent=True)
-
-		notifs = []
-		i = 0
-		for x in notifications:
-			try:
-				if not x.read: comments[i].unread = True
-			except: continue
-			notifs.append({'id': x.id, 'read': True})
-			i += 1
-
-		g.db.bulk_update_mappings(Notification, notifs)
-		g.db.commit()
-
-	if not posts:
-		listing = []
-		for c in comments:
-			c._is_blocked = False
-			c._is_blocking = False
-			if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
-				c.replies = []
-				while c.parent_comment and c.parent_comment.author_id == v.id:
-					parent = c.parent_comment
-					if c not in parent.replies2:
-						parent.replies2 = parent.replies2 + [c]
-						parent.replies = parent.replies2
-					c = parent
-				if c not in listing:
-					listing.append(c)
-					c.replies = c.replies2
-			elif c.parent_submission:
-				c.replies = []
-				if c not in listing:
-					listing.append(c)
-			else:
-				if c.parent_comment:
-					while c.level > 1:
-						c = c.parent_comment
-
-				if c not in listing:
-					listing.append(c)
-
-
-	return render_template("notifications.html",
-						   v=v,
-						   notifications=listing,
-						   next_exists=next_exists,
-						   page=page,
-						   standalone=True,
-						   render_replies=True,
-						   is_notification_page=True)
-
-
-@app.get("/notifications2")
-@auth_required
-def notifications2(v):
-	try: page = int(request.args.get('page', 1))
-	except: page = 1
-	messages = request.args.get('messages', False)
-	modmail = request.args.get('modmail', False)
-	posts = request.args.get('posts', False)
-	if modmail and v.admin_level == 6:
-		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
-		next_exists = (len(comments) > 25)
-		comments = comments[:25]
-	elif messages:
-		comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
-		next_exists = (len(comments) > 25)
-		comments = comments[:25]
-	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
-
-		comments = []
-		
-		t = time.time()
-
 		for index, x in enumerate(notifications):
 			c = x.comment
 			if x.read and index > 26: break
@@ -162,7 +41,6 @@ def notifications2(v):
 			comments.append(c)
 		
 		g.db.commit()
-		print(time.time() - t)
 
 		next_exists = (len(comments) > 25)
 		listing = comments[:25]
@@ -179,16 +57,16 @@ def notifications2(v):
 		cids = [x.comment_id for x in notifications]
 		comments = get_comments(cids, v=v, load_parent=True)
 
-		notifs = []
 		i = 0
 		for x in notifications:
 			try:
-				if not x.read: comments[i].unread = True
+				if not x.read:
+					comments[i].unread = True
+					x.read = True
+					g.db.add(x)
 			except: continue
-			notifs.append({'id': x.id, 'read': True})
 			i += 1
 
-		g.db.bulk_update_mappings(Notification, notifs)
 		g.db.commit()
 
 	if not posts:
