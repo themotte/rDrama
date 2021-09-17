@@ -23,6 +23,53 @@ defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
+if site_name == "Drama":
+	AWARDS = {
+		"ban": {
+			"kind": "ban",
+			"title": "One-Day Ban",
+			"description": "Bans the author for a day.",
+			"icon": "fas fa-gavel",
+			"color": "text-danger",
+			"price": 5000
+		},
+		"shit": {
+			"kind": "shit",
+			"title": "Shit",
+			"description": "Makes flies swarm a post.",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"price": 1000
+		},
+		"stars": {
+			"kind": "stars",
+			"title": "Stars",
+			"description": "Puts stars on the post.",
+			"icon": "fas fa-sparkles",
+			"color": "text-warning",
+			"price": 1000
+		}
+	}
+else:
+	AWARDS = {
+		"shit": {
+			"kind": "shit",
+			"title": "shit",
+			"description": "Makes flies swarm a post.",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"price": 1000
+		},
+		"stars": {
+			"kind": "stars",
+			"title": "Stars",
+			"description": "Puts stars on the post.",
+			"icon": "fas fa-sparkles",
+			"color": "text-warning",
+			"price": 1000
+		}
+	}
+
 class User(Base, Stndrd, Age_times):
 	__tablename__ = "users"
 	id = Column(Integer, primary_key=True)
@@ -132,6 +179,18 @@ class User(Base, Stndrd, Age_times):
 		kwargs["created_utc"] = int(time.time())
 
 		super().__init__(**kwargs)
+
+	@property
+	@lazy
+	def user_awards(v):
+
+		return_value = list(AWARDS.values())
+
+		user_awards = v.awards
+
+		for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
+
+		return return_value
 
 	@property
 	@lazy
