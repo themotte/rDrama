@@ -10,6 +10,12 @@ defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 def slash_post():
 	return redirect("/")
 
+@app.get("/testing")
+def testing():
+	notifications = g.db.query(Notification).options(lazyload('*')).join(Notification.comment).limit(26)
+	notifications2 = g.db.query(Notification).join(Notification.comment).limit(26)
+	return "sex"
+
 @app.get("/notifications")
 @auth_required
 def notifications(v):
