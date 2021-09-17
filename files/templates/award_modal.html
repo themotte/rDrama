@@ -11,7 +11,7 @@
 			<div id="awardModalBody" class="modal-body">
 				<form class="pt-3 pb-0" action="/post/{{p.id}}/awards" method="post">
 					<div class="card-columns awards-wrapper">
-						{% for award in v.awards %}
+						{% for award in v.user_awards %}
 							<div>
 								<label class="card" onclick="document.getElementById('desc-{{award.kind}}').classList.toggle('d-none');document.getElementById('giveaward').disabled=false">
 									<i class="{{award.icon}} {{award.color}}"></i><br />
