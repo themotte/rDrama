@@ -82,11 +82,11 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	post.replies=[top_comment]
 
 	if v:
-		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
+		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).all()
 
-		blocking = v.blocking.subquery()
+		blocking = v.blocking.all()
 
-		blocked = v.blocked.subquery()
+		blocked = v.blocked.all()
 
 		comments = g.db.query(
 			Comment,
