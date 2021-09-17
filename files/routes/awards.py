@@ -81,7 +81,7 @@ def shop(v):
 			elif v.patron == 4: val["price"] = int(val["price"]*0.75)
 			else: val["price"] = int(val["price"]*0.70)
 
-	return render_template("shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
+	return render_template("settings_shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
 
 @app.post("/buy/<award>")
 @auth_required
