@@ -9,7 +9,7 @@ from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session, Query as _Query
+from sqlalchemy.orm import lazyload, sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import redis
@@ -84,8 +84,7 @@ _engine=create_engine(
 	app.config['DATABASE_URL'],
 	poolclass=QueuePool,
 	pool_size=int(environ.get("PG_POOL_SIZE",10)),
-	pool_use_lifo=True,
-	echo=True
+	pool_use_lifo=True
 )
 
 def retry(f):
