@@ -38,7 +38,6 @@ def send_notification(vid, user, text):
 	notif = Notification(comment_id=new_comment.id,
 						 user_id=uid)
 	g.db.add(notif)
-	g.db.commit()
 
 
 def send_follow_notif(vid, user, text):
