@@ -62,20 +62,7 @@
 		t.disabled = true;
 
 		post_toast("/@{{u.username}}/transfer_coins",
-			xhr => {
-				if(xhr.status == 200) {
-					fetch("/@{{u.username}}/coins")
-						.then(r => r.json())
-						.then(m => {
-							document.getElementById("profile-coins-amount").innerText = m["coins"];
-							document.getElementById("profile-coins-amount-mobile").innerText = m["coins"];
-						})
-
-					fetch("/@{{v.username}}/coins")
-						.then(r => r.json())
-						.then(m => document.getElementById(`user-coins-amount`).innerText = m["coins"])
-				}
-			},
+			false,
 			{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value}
 		);
 

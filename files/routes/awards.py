@@ -191,7 +191,7 @@ def get_awards(v):
 
 	user_awards = v.awards
 	for val in return_value:
-		val['owned'] = len([x for x in user_awards if x.kind == val['kind'] and not x.given])
+		val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
 
 	return jsonify(return_value)
 
