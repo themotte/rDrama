@@ -208,6 +208,7 @@ def award_post(pid, v):
 
 	kind = request.form.get("kind", "")
 
+	print("sex")
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
 
