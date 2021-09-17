@@ -135,7 +135,6 @@ def transfer_coins(v, username):
 
 		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
 		send_notification(NOTIFICATIONS_ACCOUNT, receiver, transfer_message)
-		return {"message": f"{amount} {app.config['COINS_NAME']} transferred!"}, 200
 
 	return {"message": f"{app.config['COINS_NAME']} transferred!"}
 
