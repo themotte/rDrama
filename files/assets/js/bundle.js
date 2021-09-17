@@ -318,13 +318,6 @@
         else
             dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
     }
-    function set_data_dev(text, data) {
-        data = '' + data;
-        if (text.wholeText === data)
-            return;
-        dispatch_dev('SvelteDOMSetData', { node: text, data });
-        text.data = data;
-    }
     function validate_each_argument(arg) {
         if (typeof arg !== 'string' && !(arg && typeof arg === 'object' && 'length' in arg)) {
             let msg = '{#each} only iterates over array-like objects.';
@@ -367,124 +360,25 @@
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[8] = list[i];
-    	child_ctx[10] = i;
+    	child_ctx[7] = list[i];
+    	child_ctx[9] = i;
     	return child_ctx;
     }
 
-    // (55:4) {#if loaded}
-    function create_if_block_1(ctx) {
-    	let form;
-    	let div;
-    	let t;
-    	let each_value = /*awards*/ ctx[1];
-    	validate_each_argument(each_value);
-    	let each_blocks = [];
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
-    	}
-
-    	let if_block = /*picked*/ ctx[3] != null && create_if_block_2(ctx);
-
-    	const block = {
-    		c: function create() {
-    			form = element("form");
-    			div = element("div");
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			t = space();
-    			if (if_block) if_block.c();
-    			attr_dev(div, "class", "card-columns awards-wrapper svelte-13ovg7j");
-    			add_location(div, file, 56, 6, 1272);
-    			attr_dev(form, "class", "pt-3 pb-0");
-    			add_location(form, file, 55, 5, 1240);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, form, anchor);
-    			append_dev(form, div);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(div, null);
-    			}
-
-    			append_dev(form, t);
-    			if (if_block) if_block.m(form, null);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*awards, picked*/ 10) {
-    				each_value = /*awards*/ ctx[1];
-    				validate_each_argument(each_value);
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(div, null);
-    					}
-    				}
-
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
-    				}
-
-    				each_blocks.length = each_value.length;
-    			}
-
-    			if (/*picked*/ ctx[3] != null) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block_2(ctx);
-    					if_block.c();
-    					if_block.m(form, null);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(form);
-    			destroy_each(each_blocks, detaching);
-    			if (if_block) if_block.d();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_1.name,
-    		type: "if",
-    		source: "(55:4) {#if loaded}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (59:8) {#if award.owned < 1}
-    function create_if_block_3(ctx) {
+    // (49:7) {#if award.owned < 1}
+    function create_if_block_2(ctx) {
     	let input;
     	let t0;
     	let label;
     	let i;
-    	let i_class_value;
     	let br;
     	let t1;
     	let span1;
-    	let t2_value = /*award*/ ctx[8].title + "";
+    	let t2_value = /*award*/ ctx[7].title + "";
     	let t2;
     	let t3;
     	let span0;
-    	let t4_value = /*award*/ ctx[8].owned + "";
+    	let t4_value = /*award*/ ctx[7].owned + "";
     	let t4;
     	let t5;
     	let t6;
@@ -501,33 +395,33 @@
     			t1 = space();
     			span1 = element("span");
     			t2 = text(t2_value);
-    			t3 = text("/span>\r\n\t\t\t\t\t\t\t\t\t\t");
+    			t3 = text("/span>\r\n\t\t\t\t\t\t\t\t\t");
     			span0 = element("span");
     			t4 = text(t4_value);
     			t5 = text(" owned");
     			t6 = space();
     			attr_dev(input, "type", "radio");
-    			attr_dev(input, "id", /*index*/ ctx[10]);
+    			attr_dev(input, "id", /*index*/ ctx[9]);
     			attr_dev(input, "class", "svelte-13ovg7j");
-    			toggle_class(input, "disabled", /*award*/ ctx[8].owned < 1);
-    			add_location(input, file, 59, 9, 1394);
-    			attr_dev(i, "class", i_class_value = "" + (/*award*/ ctx[8].icon + " " + /*award*/ ctx[8].color + " svelte-13ovg7j"));
-    			add_location(i, file, 61, 10, 1574);
-    			add_location(br, file, 61, 52, 1616);
+    			toggle_class(input, "disabled", /*award*/ ctx[7].owned < 1);
+    			add_location(input, file, 49, 8, 1225);
+    			attr_dev(i, "class", "" + (/*award*/ ctx[7].icon + " " + /*award*/ ctx[7].color + " svelte-13ovg7j"));
+    			add_location(i, file, 51, 9, 1403);
+    			add_location(br, file, 51, 51, 1445);
     			attr_dev(span0, "class", "text-muted");
-    			add_location(span0, file, 63, 10, 1736);
+    			add_location(span0, file, 53, 9, 1563);
     			attr_dev(span1, "class", "d-block pt-2");
     			set_style(span1, "font-weight", "bold");
     			set_style(span1, "font-size", "14px");
-    			add_location(span1, file, 62, 10, 1634);
+    			add_location(span1, file, 52, 9, 1462);
     			attr_dev(label, "class", "card svelte-13ovg7j");
-    			attr_dev(label, "for", /*index*/ ctx[10]);
-    			toggle_class(label, "disabled", /*award*/ ctx[8].owned < 1);
-    			add_location(label, file, 60, 9, 1493);
+    			attr_dev(label, "for", /*index*/ ctx[9]);
+    			toggle_class(label, "disabled", /*award*/ ctx[7].owned < 1);
+    			add_location(label, file, 50, 8, 1323);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
-    			set_input_value(input, /*picked*/ ctx[3]);
+    			set_input_value(input, /*picked*/ ctx[1]);
     			insert_dev(target, t0, anchor);
     			insert_dev(target, label, anchor);
     			append_dev(label, i);
@@ -542,28 +436,13 @@
     			append_dev(span1, t6);
 
     			if (!mounted) {
-    				dispose = listen_dev(input, "change", /*input_change_handler*/ ctx[6]);
+    				dispose = listen_dev(input, "change", /*input_change_handler*/ ctx[5]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*picked*/ 8) {
-    				set_input_value(input, /*picked*/ ctx[3]);
-    			}
-
-    			if (dirty & /*awards*/ 2) {
-    				toggle_class(input, "disabled", /*award*/ ctx[8].owned < 1);
-    			}
-
-    			if (dirty & /*awards*/ 2 && i_class_value !== (i_class_value = "" + (/*award*/ ctx[8].icon + " " + /*award*/ ctx[8].color + " svelte-13ovg7j"))) {
-    				attr_dev(i, "class", i_class_value);
-    			}
-
-    			if (dirty & /*awards*/ 2 && t2_value !== (t2_value = /*award*/ ctx[8].title + "")) set_data_dev(t2, t2_value);
-    			if (dirty & /*awards*/ 2 && t4_value !== (t4_value = /*award*/ ctx[8].owned + "")) set_data_dev(t4, t4_value);
-
-    			if (dirty & /*awards*/ 2) {
-    				toggle_class(label, "disabled", /*award*/ ctx[8].owned < 1);
+    			if (dirty & /*picked*/ 2) {
+    				set_input_value(input, /*picked*/ ctx[1]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -577,19 +456,19 @@
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_3.name,
+    		id: create_if_block_2.name,
     		type: "if",
-    		source: "(59:8) {#if award.owned < 1}",
+    		source: "(49:7) {#if award.owned < 1}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (58:7) {#each awards as award, index}
+    // (48:6) {#each awards as award, index}
     function create_each_block(ctx) {
     	let if_block_anchor;
-    	let if_block = /*award*/ ctx[8].owned < 1 && create_if_block_3(ctx);
+    	let if_block = /*award*/ ctx[7].owned < 1 && create_if_block_2(ctx);
 
     	const block = {
     		c: function create() {
@@ -601,18 +480,7 @@
     			insert_dev(target, if_block_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (/*award*/ ctx[8].owned < 1) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block_3(ctx);
-    					if_block.c();
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
+    			if (/*award*/ ctx[7].owned < 1) if_block.p(ctx, dirty);
     		},
     		d: function destroy(detaching) {
     			if (if_block) if_block.d(detaching);
@@ -624,15 +492,15 @@
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(58:7) {#each awards as award, index}",
+    		source: "(48:6) {#each awards as award, index}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (70:6) {#if picked != null}
-    function create_if_block_2(ctx) {
+    // (60:5) {#if picked != null}
+    function create_if_block_1(ctx) {
     	let div2;
     	let div1;
     	let i;
@@ -657,36 +525,36 @@
     			t0 = space();
     			div0 = element("div");
     			strong = element("strong");
-    			strong.textContent = `${/*pickedAward*/ ctx[5].title} Award`;
+    			strong.textContent = `${/*pickedAward*/ ctx[4].title} Award`;
     			br = element("br");
     			t3 = space();
     			span = element("span");
-    			span.textContent = `${/*pickedAward*/ ctx[5].description}`;
+    			span.textContent = `${/*pickedAward*/ ctx[4].description}`;
     			t5 = space();
     			label = element("label");
     			label.textContent = "Note (optional):";
     			t7 = space();
     			textarea = element("textarea");
     			set_style(i, "font-size", "35px");
-    			attr_dev(i, "class", "" + (/*pickedAward*/ ctx[5].icon + " " + /*pickedAward*/ ctx[5].color + " svelte-13ovg7j"));
-    			add_location(i, file, 72, 9, 1944);
-    			add_location(strong, file, 74, 10, 2078);
-    			add_location(br, file, 74, 52, 2120);
+    			attr_dev(i, "class", "" + (/*pickedAward*/ ctx[4].icon + " " + /*pickedAward*/ ctx[4].color + " svelte-13ovg7j"));
+    			add_location(i, file, 62, 8, 1763);
+    			add_location(strong, file, 64, 9, 1895);
+    			add_location(br, file, 64, 51, 1937);
     			attr_dev(span, "class", "text-muted");
-    			add_location(span, file, 75, 10, 2138);
+    			add_location(span, file, 65, 9, 1954);
     			set_style(div0, "margin-left", "15px");
-    			add_location(div0, file, 73, 9, 2034);
+    			add_location(div0, file, 63, 8, 1852);
     			attr_dev(div1, "class", "award-desc p-3 svelte-13ovg7j");
-    			add_location(div1, file, 71, 8, 1905);
+    			add_location(div1, file, 61, 7, 1725);
     			attr_dev(label, "for", "note");
     			attr_dev(label, "class", "pt-4");
-    			add_location(label, file, 78, 8, 2238);
+    			add_location(label, file, 68, 7, 2051);
     			attr_dev(textarea, "id", "note");
     			attr_dev(textarea, "name", "note");
     			attr_dev(textarea, "class", "form-control");
     			attr_dev(textarea, "placeholder", "Note to include in award notification");
-    			add_location(textarea, file, 79, 8, 2303);
-    			add_location(div2, file, 70, 7, 1890);
+    			add_location(textarea, file, 69, 7, 2115);
+    			add_location(div2, file, 60, 6, 1711);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -702,16 +570,16 @@
     			append_dev(div2, label);
     			append_dev(div2, t7);
     			append_dev(div2, textarea);
-    			set_input_value(textarea, /*note*/ ctx[2]);
+    			set_input_value(textarea, /*note*/ ctx[0]);
 
     			if (!mounted) {
-    				dispose = listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[7]);
+    				dispose = listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[6]);
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*note*/ 4) {
-    				set_input_value(textarea, /*note*/ ctx[2]);
+    			if (dirty & /*note*/ 1) {
+    				set_input_value(textarea, /*note*/ ctx[0]);
     			}
     		},
     		d: function destroy(detaching) {
@@ -723,16 +591,16 @@
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_2.name,
+    		id: create_if_block_1.name,
     		type: "if",
-    		source: "(70:6) {#if picked != null}",
+    		source: "(60:5) {#if picked != null}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (93:3) {:else}
+    // (82:3) {:else}
     function create_else_block(ctx) {
     	let button;
     	let mounted;
@@ -745,8 +613,8 @@
     			attr_dev(button, "type", "submit");
     			attr_dev(button, "class", "btn btn-link");
     			attr_dev(button, "id", "awardButton");
-    			toggle_class(button, "disabled", /*pickedAward*/ ctx[5] === null);
-    			add_location(button, file, 93, 4, 2849);
+    			toggle_class(button, "disabled", /*pickedAward*/ ctx[4] === null);
+    			add_location(button, file, 82, 4, 2647);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -768,14 +636,14 @@
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(93:3) {:else}",
+    		source: "(82:3) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (88:3) {#if pending}
+    // (77:3) {#if pending}
     function create_if_block(ctx) {
     	let button;
     	let span;
@@ -789,11 +657,11 @@
     			attr_dev(span, "class", "spinner-border spinner-border-sm");
     			attr_dev(span, "role", "status");
     			attr_dev(span, "aria-hidden", "true");
-    			add_location(span, file, 89, 5, 2712);
+    			add_location(span, file, 78, 5, 2510);
     			attr_dev(button, "class", "btn btn-warning");
     			attr_dev(button, "type", "button");
     			button.disabled = true;
-    			add_location(button, file, 88, 4, 2650);
+    			add_location(button, file, 77, 4, 2448);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -810,7 +678,7 @@
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(88:3) {#if pending}",
+    		source: "(77:3) {#if pending}",
     		ctx
     	});
 
@@ -818,11 +686,11 @@
     }
 
     function create_fragment(ctx) {
-    	let div5;
+    	let div6;
     	let input;
     	let t0;
+    	let div5;
     	let div4;
-    	let div3;
     	let div0;
     	let h5;
     	let t2;
@@ -830,15 +698,26 @@
     	let span;
     	let i;
     	let t3;
+    	let div2;
+    	let form;
     	let div1;
     	let t4;
-    	let div2;
+    	let t5;
+    	let div3;
     	let button1;
-    	let t6;
-    	let if_block0 = /*loaded*/ ctx[0] && create_if_block_1(ctx);
+    	let t7;
+    	let each_value = /*awards*/ ctx[2];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	let if_block0 = /*picked*/ ctx[1] != null && create_if_block_1(ctx);
 
     	function select_block_type(ctx, dirty) {
-    		if (/*pending*/ ctx[4]) return create_if_block;
+    		if (/*pending*/ ctx[3]) return create_if_block;
     		return create_else_block;
     	}
 
@@ -847,11 +726,11 @@
 
     	const block = {
     		c: function create() {
-    			div5 = element("div");
+    			div6 = element("div");
     			input = element("input");
     			t0 = space();
+    			div5 = element("div");
     			div4 = element("div");
-    			div3 = element("div");
     			div0 = element("div");
     			h5 = element("h5");
     			h5.textContent = "Give Award";
@@ -860,80 +739,124 @@
     			span = element("span");
     			i = element("i");
     			t3 = space();
-    			div1 = element("div");
-    			if (if_block0) if_block0.c();
-    			t4 = space();
     			div2 = element("div");
+    			form = element("form");
+    			div1 = element("div");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t4 = space();
+    			if (if_block0) if_block0.c();
+    			t5 = space();
+    			div3 = element("div");
     			button1 = element("button");
     			button1.textContent = "Cancel";
-    			t6 = space();
+    			t7 = space();
     			if_block1.c();
     			attr_dev(input, "type", "hidden");
     			attr_dev(input, "id", "awardTarget");
     			input.value = "";
-    			add_location(input, file, 44, 0, 744);
+    			add_location(input, file, 35, 0, 598);
     			attr_dev(h5, "class", "modal-title");
-    			add_location(h5, file, 48, 4, 952);
+    			add_location(h5, file, 39, 4, 806);
     			attr_dev(i, "class", "far fa-times");
-    			add_location(i, file, 50, 30, 1105);
+    			add_location(i, file, 41, 30, 959);
     			attr_dev(span, "aria-hidden", "true");
-    			add_location(span, file, 50, 5, 1080);
+    			add_location(span, file, 41, 5, 934);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "close");
     			attr_dev(button0, "data-dismiss", "modal");
     			attr_dev(button0, "aria-label", "Close");
-    			add_location(button0, file, 49, 4, 997);
+    			add_location(button0, file, 40, 4, 851);
     			attr_dev(div0, "class", "modal-header");
-    			add_location(div0, file, 47, 3, 920);
-    			attr_dev(div1, "id", "awardModalBody");
-    			attr_dev(div1, "class", "modal-body");
-    			add_location(div1, file, 53, 3, 1171);
+    			add_location(div0, file, 38, 3, 774);
+    			attr_dev(div1, "class", "card-columns awards-wrapper svelte-13ovg7j");
+    			add_location(div1, file, 46, 5, 1106);
+    			attr_dev(form, "class", "pt-3 pb-0");
+    			add_location(form, file, 45, 4, 1075);
+    			attr_dev(div2, "id", "awardModalBody");
+    			attr_dev(div2, "class", "modal-body");
+    			add_location(div2, file, 44, 3, 1025);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "btn btn-link text-muted");
     			attr_dev(button1, "data-dismiss", "modal");
-    			add_location(button1, file, 86, 3, 2536);
-    			attr_dev(div2, "class", "modal-footer");
-    			add_location(div2, file, 85, 2, 2505);
-    			attr_dev(div3, "class", "modal-content");
-    			add_location(div3, file, 46, 2, 888);
-    			attr_dev(div4, "class", "modal-dialog modal-dialog-scrollable modal-dialog-centered");
-    			attr_dev(div4, "role", "document");
-    			add_location(div4, file, 45, 1, 796);
-    			attr_dev(div5, "id", "svelte-app2");
-    			add_location(div5, file, 43, 0, 720);
+    			add_location(button1, file, 75, 3, 2334);
+    			attr_dev(div3, "class", "modal-footer");
+    			add_location(div3, file, 74, 2, 2303);
+    			attr_dev(div4, "class", "modal-content");
+    			add_location(div4, file, 37, 2, 742);
+    			attr_dev(div5, "class", "modal-dialog modal-dialog-scrollable modal-dialog-centered");
+    			attr_dev(div5, "role", "document");
+    			add_location(div5, file, 36, 1, 650);
+    			attr_dev(div6, "id", "svelte-app2");
+    			add_location(div6, file, 34, 0, 574);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div5, anchor);
-    			append_dev(div5, input);
-    			append_dev(div5, t0);
+    			insert_dev(target, div6, anchor);
+    			append_dev(div6, input);
+    			append_dev(div6, t0);
+    			append_dev(div6, div5);
     			append_dev(div5, div4);
-    			append_dev(div4, div3);
-    			append_dev(div3, div0);
+    			append_dev(div4, div0);
     			append_dev(div0, h5);
     			append_dev(div0, t2);
     			append_dev(div0, button0);
     			append_dev(button0, span);
     			append_dev(span, i);
-    			append_dev(div3, t3);
-    			append_dev(div3, div1);
-    			if (if_block0) if_block0.m(div1, null);
-    			append_dev(div3, t4);
-    			append_dev(div3, div2);
-    			append_dev(div2, button1);
-    			append_dev(div2, t6);
-    			if_block1.m(div2, null);
+    			append_dev(div4, t3);
+    			append_dev(div4, div2);
+    			append_dev(div2, form);
+    			append_dev(form, div1);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div1, null);
+    			}
+
+    			append_dev(form, t4);
+    			if (if_block0) if_block0.m(form, null);
+    			append_dev(div4, t5);
+    			append_dev(div4, div3);
+    			append_dev(div3, button1);
+    			append_dev(div3, t7);
+    			if_block1.m(div3, null);
     		},
     		p: function update(ctx, [dirty]) {
-    			if (/*loaded*/ ctx[0]) {
+    			if (dirty & /*awards, picked*/ 6) {
+    				each_value = /*awards*/ ctx[2];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div1, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if (/*picked*/ ctx[1] != null) {
     				if (if_block0) {
     					if_block0.p(ctx, dirty);
     				} else {
     					if_block0 = create_if_block_1(ctx);
     					if_block0.c();
-    					if_block0.m(div1, null);
+    					if_block0.m(form, null);
     				}
     			} else if (if_block0) {
     				if_block0.d(1);
@@ -945,7 +868,8 @@
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div5);
+    			if (detaching) detach_dev(div6);
+    			destroy_each(each_blocks, detaching);
     			if (if_block0) if_block0.d();
     			if_block1.d();
     		}
@@ -976,17 +900,10 @@
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
-    	let loaded = false;
     	let awards = [];
     	let pending = false;
     	let note = "";
     	let picked = null;
-
-    	fetch('/awards').then(response => response.json()).then(json => {
-    		$$invalidate(1, awards = json);
-    	});
-
-    	loaded = true;
 
     	function pickedAward() {
     		if (picked !== null) {
@@ -1004,16 +921,15 @@
 
     	function input_change_handler() {
     		picked = this.value;
-    		$$invalidate(3, picked);
+    		$$invalidate(1, picked);
     	}
 
     	function textarea_input_handler() {
     		note = this.value;
-    		$$invalidate(2, note);
+    		$$invalidate(0, note);
     	}
 
     	$$self.$capture_state = () => ({
-    		loaded,
     		awards,
     		pending,
     		note,
@@ -1023,11 +939,10 @@
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('loaded' in $$props) $$invalidate(0, loaded = $$props.loaded);
-    		if ('awards' in $$props) $$invalidate(1, awards = $$props.awards);
-    		if ('pending' in $$props) $$invalidate(4, pending = $$props.pending);
-    		if ('note' in $$props) $$invalidate(2, note = $$props.note);
-    		if ('picked' in $$props) $$invalidate(3, picked = $$props.picked);
+    		if ('awards' in $$props) $$invalidate(2, awards = $$props.awards);
+    		if ('pending' in $$props) $$invalidate(3, pending = $$props.pending);
+    		if ('note' in $$props) $$invalidate(0, note = $$props.note);
+    		if ('picked' in $$props) $$invalidate(1, picked = $$props.picked);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -1035,10 +950,9 @@
     	}
 
     	return [
-    		loaded,
-    		awards,
     		note,
     		picked,
+    		awards,
     		pending,
     		pickedAward,
     		input_change_handler,
