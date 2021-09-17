@@ -187,7 +187,7 @@ def send_admin(vid, text):
 	new_aux = CommentAux(id=new_comment.id, body=text, body_html=text_html)
 	g.db.add(new_aux)
 
-	admins = g.db.query(User).filter(User.admin_level > 0).all()
+	admins = g.db.query(User).options(lazyload('*')).filter(User.admin_level > 0).all()
 	for admin in admins:
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 		g.db.add(notif)

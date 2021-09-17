@@ -33,28 +33,28 @@ def participation_stats(v):
 	day = now - 86400
 
 	data = {"valid_users": g.db.query(User).count(),
-			"private_users": g.db.query(User).filter_by(is_private=True).count(),
-			"banned_users": g.db.query(User).filter(User.is_banned > 0).count(),
-			"verified_email_users": g.db.query(User).filter_by(is_activated=True).count(),
+			"private_users": g.db.query(User).options(lazyload('*')).filter_by(is_private=True).count(),
+			"banned_users": g.db.query(User).options(lazyload('*')).filter(User.is_banned > 0).count(),
+			"verified_email_users": g.db.query(User).options(lazyload('*')).filter_by(is_activated=True).count(),
 			"total_coins": g.db.query(func.sum(User.coins)).scalar(),
-			"signups_last_24h": g.db.query(User).filter(User.created_utc > day).count(),
+			"signups_last_24h": g.db.query(User).options(lazyload('*')).filter(User.created_utc > day).count(),
 			"total_posts": g.db.query(Submission).count(),
 			"posting_users": g.db.query(Submission.author_id).distinct().count(),
-			"listed_posts": g.db.query(Submission).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
-			"removed_posts": g.db.query(Submission).filter_by(is_banned=True).count(),
-			"deleted_posts": g.db.query(Submission).filter(Submission.deleted_utc > 0).count(),
-			"posts_last_24h": g.db.query(Submission).filter(Submission.created_utc > day).count(),
+			"listed_posts": g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
+			"removed_posts": g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=True).count(),
+			"deleted_posts": g.db.query(Submission).options(lazyload('*')).filter(Submission.deleted_utc > 0).count(),
+			"posts_last_24h": g.db.query(Submission).options(lazyload('*')).filter(Submission.created_utc > day).count(),
 			"total_comments": g.db.query(Comment).count(),
 			"commenting_users": g.db.query(Comment.author_id).distinct().count(),
-			"removed_comments": g.db.query(Comment).filter_by(is_banned=True).count(),
-			"deleted_comments": g.db.query(Comment).filter(Comment.deleted_utc>0).count(),
-			"comments_last_24h": g.db.query(Comment).filter(Comment.created_utc > day).count(),
+			"removed_comments": g.db.query(Comment).options(lazyload('*')).filter_by(is_banned=True).count(),
+			"deleted_comments": g.db.query(Comment).options(lazyload('*')).filter(Comment.deleted_utc>0).count(),
+			"comments_last_24h": g.db.query(Comment).options(lazyload('*')).filter(Comment.created_utc > day).count(),
 			"post_votes": g.db.query(Vote).count(),
 			"post_voting_users": g.db.query(Vote.user_id).distinct().count(),
 			"comment_votes": g.db.query(CommentVote).count(),
 			"comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
 			"total_awards": g.db.query(AwardRelationship).count(),
-			"awards_given": g.db.query(AwardRelationship).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
+			"awards_given": g.db.query(AwardRelationship).options(lazyload('*')).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
 			}
 
 
@@ -89,7 +89,7 @@ def patrons(v):
 @app.get("/badmins")
 @auth_desired
 def admins(v):
-	admins = g.db.query(User).filter_by(admin_level=6).order_by(User.coins.desc()).all()
+	admins = g.db.query(User).options(lazyload('*')).filter_by(admin_level=6).order_by(User.coins.desc()).all()
 	return render_template("admins.html", v=v, admins=admins)
 
 @app.get("/log")
@@ -100,7 +100,7 @@ def log(v):
 	page=int(request.args.get("page",1))
 
 	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
-	else: actions=g.db.query(ModAction).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
+	else: actions=g.db.query(ModAction).options(lazyload('*')).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 
 	next_exists=len(actions)==26
 	actions=actions[:25]
@@ -116,7 +116,7 @@ def log_item(id, v):
 		try: id = int(id, 36)
 		except: abort(404)
 
-	action=g.db.query(ModAction).filter_by(id=id).first()
+	action=g.db.query(ModAction).options(lazyload('*')).filter_by(id=id).first()
 
 	if not action:
 		abort(404)
@@ -228,7 +228,7 @@ def blocks(v):
 def banned(v):
 
 
-	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
+	users = [x for x in g.db.query(User).options(lazyload('*')).filter(User.is_banned > 0, User.unban_utc == 0).all()]
 	return render_template("banned.html", v=v, users=users)
 
 @app.get("/formatting")

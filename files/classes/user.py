@@ -155,7 +155,7 @@ class User(Base, Stndrd, Age_times):
 
 	def has_block(self, target):
 
-		return g.db.query(UserBlock).filter_by(
+		return g.db.query(UserBlock).options(lazyload('*')).filter_by(
 			user_id=self.id, target_id=target.id).first()
 
 	@property
@@ -164,7 +164,7 @@ class User(Base, Stndrd, Age_times):
 
 	def any_block_exists(self, other):
 
-		return g.db.query(UserBlock).filter(
+		return g.db.query(UserBlock).options(lazyload('*')).filter(
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
 				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
 
@@ -187,7 +187,7 @@ class User(Base, Stndrd, Age_times):
 		if self.shadowbanned and not (v and (v.admin_level >= 3 or v.id == self.id)):
 			return []
 
-		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
+		submissions = g.db.query(Submission).options(lazyload('*')).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
 
 		if not (v and (v.admin_level >= 3 or v.id == self.id)):
 			submissions = submissions.filter_by(deleted_utc=0, is_banned=False, private=False)
@@ -233,7 +233,7 @@ class User(Base, Stndrd, Age_times):
 	def banned_by(self):
 
 		if not self.is_suspended: return None
-		return g.db.query(User).filter_by(id=self.is_banned).first()
+		return g.db.query(User).options(lazyload('*')).filter_by(id=self.is_banned).first()
 
 	def has_badge(self, badgedef_id):
 		return self.badges.filter_by(badge_id=badgedef_id).first()
@@ -310,11 +310,11 @@ class User(Base, Stndrd, Age_times):
 
 		awards = {}
 
-		posts_idlist = g.db.query(Submission.id).filter_by(author_id=self.id).subquery()
-		comments_idlist = g.db.query(Comment.id).filter_by(author_id=self.id).subquery()
+		posts_idlist = g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id).subquery()
+		comments_idlist = g.db.query(Comment.id).options(lazyload('*')).filter_by(author_id=self.id).subquery()
 
-		post_awards = g.db.query(AwardRelationship).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
-		comment_awards = g.db.query(AwardRelationship).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
+		post_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
+		comment_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
 
 		total_awards = post_awards + comment_awards
 
@@ -345,7 +345,7 @@ class User(Base, Stndrd, Age_times):
 	@lazy
 	def alts(self):
 
-		subq = g.db.query(Alt).filter(
+		subq = g.db.query(Alt).options(lazyload('*')).filter(
 			or_(
 				Alt.user1 == self.id,
 				Alt.user2 == self.id
@@ -407,7 +407,7 @@ class User(Base, Stndrd, Age_times):
 
 	def has_follower(self, user):
 
-		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).first()
+		return g.db.query(Follow).options(lazyload('*')).filter_by(target_id=self.id, user_id=user.id).first()
 
 	@property
 	def banner_url(self):
@@ -511,16 +511,16 @@ class User(Base, Stndrd, Age_times):
 			OauthApp.id.asc()).all()]
 
 	def subscribed_idlist(self, page=1):
-		posts = g.db.query(Subscription.submission_id).filter_by(user_id=self.id).all()
+		posts = g.db.query(Subscription.submission_id).options(lazyload('*')).filter_by(user_id=self.id).all()
 		return [x[0] for x in posts]
 
 	def saved_idlist(self, page=1):
 
-		posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
+		posts = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False,
 																		   deleted_utc=0
 																		   )
 
-		saved = g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id == self.id).subquery()
+		saved = g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).subquery()
 		posts = posts.filter(Submission.id.in_(saved))
 
 		if self.admin_level == 0:
@@ -542,9 +542,9 @@ class User(Base, Stndrd, Age_times):
 
 	def saved_comment_idlist(self, page=1):
 
-		comments = g.db.query(Comment.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
+		comments = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
 
-		saved = g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id == self.id).subquery()
+		saved = g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).subquery()
 		comments = comments.filter(Comment.id.in_(saved))
 
 		if self.admin_level == 0:

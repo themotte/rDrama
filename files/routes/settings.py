@@ -417,7 +417,7 @@ def settings_security_post(v):
 			return redirect("/settings/security?error=That email is already yours!")
 
 		# check to see if email is in use
-		existing = g.db.query(User).filter(User.id != v.id,
+		existing = g.db.query(User).options(lazyload('*')).filter(User.id != v.id,
 										   func.lower(User.email) == new_email.lower()).first()
 		if existing:
 			return redirect("/settings/security?error=" +
@@ -652,7 +652,7 @@ def settings_block_user(v):
 
 	
 
-	existing = g.db.query(Notification).filter_by(blocksender=v.id, user_id=user.id).first()
+	existing = g.db.query(Notification).options(lazyload('*')).filter_by(blocksender=v.id, user_id=user.id).first()
 	if not existing: send_block_notif(v.id, user.id, f"@{v.username} has blocked you!")
 
 	if v.admin_level == 1: return {"message": f"@{user.username} banned!"}
@@ -679,7 +679,7 @@ def settings_unblock_user(v):
 
 	
 
-	existing = g.db.query(Notification).filter_by(unblocksender=v.id, user_id=user.id).first()
+	existing = g.db.query(Notification).options(lazyload('*')).filter_by(unblocksender=v.id, user_id=user.id).first()
 	if not existing: send_unblock_notif(v.id, user.id, f"@{v.username} has unblocked you!")
 
 	if v.admin_level == 1: return {"message": f"@{user.username} unbanned!"}
@@ -759,7 +759,7 @@ def settings_name_change(v):
 						   v=v,
 						   error=f"Username `{new_name}` is already in use.")
 
-	v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
+	v=g.db.query(User).with_for_update().options(lazyload('*')).options(lazyload('*')).filter_by(id=v.id).first()
 
 	v.username=new_name
 	v.name_changed_utc=int(time.time())
@@ -778,7 +778,7 @@ def settings_name_change(v):
 def settings_song_change(v):
 	song=request.form.get("song").strip()
 
-	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User).filter_by(song=v.song).count() == 1:
+	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User).options(lazyload('*')).filter_by(song=v.song).count() == 1:
 		os.remove(f"/songs/{v.song}.mp3")
 		v.song=None
 		g.db.add(v)
@@ -821,7 +821,7 @@ def settings_song_change(v):
 						error=f"Duration of the video must not exceed 10 minutes.")
 
 
-	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User).filter_by(song=v.song).count() == 1:
+	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User).options(lazyload('*')).filter_by(song=v.song).count() == 1:
 		os.remove(f"/songs/{v.song}.mp3")
 
 	ydl_opts = {
