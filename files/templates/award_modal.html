@@ -2,8 +2,7 @@
 function bruh(kind) {
 	document.getElementById('giveaward').disabled=false;
 	document.getElementById('kind').value=kind;
-	var picked = document.getElementsByClassName('picked')[0]
-	if (picked !== null) {picked.classList.toggle('picked');}
+	try {document.getElementsByClassName('picked')[0].classList.toggle('picked');} catch(e) {}
 	document.getElementById(kind).classList.toggle('picked')
 }
 </script>
