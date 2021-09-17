@@ -103,15 +103,15 @@ def post_id(pid, anything=None, v=None):
 	if post.club and not (v and v.paid_dues): abort(403)
 
 	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
+		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
 
 		blocking = v.blocking.subquery()
 
 		blocked = v.blocked.subquery()
 
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
-			shadowbanned = g.db.query(User.id).filter(User.shadowbanned == True).subquery()
-			comments = g.db.query(Comment).filter(Comment.author_id.notin_(shadowbanned))
+			shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
+			comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id.notin_(shadowbanned))
 
 		comments = g.db.query(
 			Comment,
@@ -121,7 +121,7 @@ def post_id(pid, anything=None, v=None):
 		)
 		
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
-			shadowbanned = g.db.query(User.id).filter(User.shadowbanned == True).subquery()
+			shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
 			comments = comments.filter(Comment.author_id.notin_(shadowbanned))
 
 		if v.admin_level >=4:
@@ -170,9 +170,8 @@ def post_id(pid, anything=None, v=None):
 		post.preloaded_comments = output
 
 	else:
-		shadowbanned = g.db.query(User.id).filter(User.shadowbanned == True).subquery()
-
-		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id.notin_(shadowbanned))
+		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
+		comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission == post.id, Comment.author_id.notin_(shadowbanned))
 
 		if sort == "top":
 			comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
@@ -202,8 +201,8 @@ def post_id(pid, anything=None, v=None):
 		# 			g.db.add(vote)
 		# 			try: g.db.flush()
 		# 			except: g.db.rollback()
-		# 			comment.upvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=1).count()
-		# 			comment.downvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=-1).count()
+		# 			comment.upvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
+		# 			comment.downvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
 		# 			g.db.add(comment)
 
 		post.preloaded_comments = comments
@@ -220,14 +219,15 @@ def post_id(pid, anything=None, v=None):
 		
 		for key in keys: session.pop(key)
 
-	#post.views += 1
-	#g.db.add(post)
+	post.views += 1
+	g.db.add(post)
 	if isinstance(session.get('over_18', 0), dict): session["over_18"] = 0
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
 		else: return render_template("errors/nsfw.html", v=v)
 
 	post.tree_comments()
+	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
 	else:
 		if not v or v.highlightcomments: return post.rendered_page(v=v, last_view_utc=last_view_utc, sort=sort)
@@ -285,7 +285,7 @@ def edit_post(pid, v):
 									fragment='')
 			check_url = urlunparse(check_url)
 
-			badlink = g.db.query(BadLink).filter(
+			badlink = g.db.query(BadLink).options(lazyload('*')).filter(
 				literal(check_url).contains(
 					BadLink.link)).first()
 			if badlink:
@@ -379,7 +379,7 @@ def edit_post(pid, v):
 		soup = BeautifulSoup(body_html, features="html.parser")
 		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 			username = mention["href"].split("@")[1]
-			user = g.db.query(User).filter_by(username=username).first()
+			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 			
 		for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: https://{site}{p.permalink}")
@@ -448,7 +448,7 @@ def filter_title(title):
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 
 
-def check_processing_thread(v, post, link, db):
+def check_processing_thread(v, post, link):
 
 	image_id = link.split('/')[-1].rstrip('.mp4')
 	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
@@ -463,16 +463,15 @@ def check_processing_thread(v, post, link, db):
 			status = req.json()['data']['processing']['status']
 			if status == 'completed':
 				post.processing = False
-				db.add(post)
+				g.db.add(post)
 
 				send_notification(
 					NOTIFICATIONS_ACCOUNT,
 					v,
-					f"Your video has finished processing and your [post](/post/{post.id}) is now live.",
-					db=db
+					f"Your video has finished processing and your [post](/post/{post.id}) is now live."
 				)
 
-				db.commit()
+				g.db.commit()
 				break
 			# just in case
 			elif status == 'failed':
@@ -622,7 +621,7 @@ def submit_post(v):
 			url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg")
 			if "_d." in url: url += "?maxwidth=9999"
 
-		repost = g.db.query(Submission).join(Submission.submission_aux).filter(
+		repost = g.db.query(Submission).join(Submission.submission_aux).options(lazyload('*')).filter(
 			SubmissionAux.url.ilike(url),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
@@ -665,7 +664,7 @@ def submit_post(v):
 	
 	body = request.form.get("body", "")
 	# check for duplicate
-	dup = g.db.query(Submission).join(Submission.submission_aux).filter(
+	dup = g.db.query(Submission).join(Submission.submission_aux).options(lazyload('*')).filter(
 
 		Submission.author_id == v.id,
 		Submission.deleted_utc == 0,
@@ -843,7 +842,7 @@ def submit_post(v):
 								fragment='')
 		check_url = urlunparse(check_url)
 
-		badlink = g.db.query(BadLink).filter(
+		badlink = g.db.query(BadLink).options(lazyload('*')).filter(
 			literal(check_url).contains(
 				BadLink.link)).first()
 		if badlink:
@@ -933,7 +932,7 @@ def submit_post(v):
 					post_url += 'mp4'
 				new_post.url = post_url
 				new_post.processing = True
-				gevent.spawn(check_processing_thread, v.id, new_post, post_url, g.db)
+				gevent.spawn(check_processing_thread, v.id, new_post, post_url)
 			except UploadException as e:
 				if request.headers.get("Authorization"):
 					return {
@@ -966,7 +965,7 @@ def submit_post(v):
 	soup = BeautifulSoup(body_html, features="html.parser")
 	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 		username = mention["href"].split("@")[1]
-		user = g.db.query(User).filter_by(username=username).first()
+		user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
 	for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: https://{site}{new_post.permalink}")
@@ -1150,7 +1149,7 @@ def undelete_post_pid(pid, v):
 @validate_formkey
 def toggle_comment_nsfw(cid, v):
 
-	comment = g.db.query(Comment).filter_by(id=cid).first()
+	comment = g.db.query(Comment).options(lazyload('*')).filter_by(id=cid).first()
 	if not comment.author_id == v.id and not v.admin_level >= 3: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
@@ -1209,10 +1208,10 @@ def unsave_post(pid, v):
 
 	post=get_post(pid)
 
-	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
+	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
 
-	if save: g.db.delete(save)
-	
-	g.db.commit()
+	if save:
+		g.db.delete(save)
+		g.db.commit()
 
 	return {"message": "Post unsaved!"}

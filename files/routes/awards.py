@@ -7,6 +7,7 @@ from files.classes.award import *
 from flask import g, request
 
 @app.get("/shop")
+@app.get("/settings/shop")
 @auth_required
 def shop(v):
 	if site_name == "Drama":
@@ -80,7 +81,22 @@ def shop(v):
 			elif v.patron == 4: val["price"] = int(val["price"]*0.75)
 			else: val["price"] = int(val["price"]*0.70)
 
-	return render_template("shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
+	return render_template("settings_shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
+
+
+
+@app.get("/awards")
+@auth_required
+def get_awards(v):
+
+	return_value = list(AWARDS.values())
+
+	user_awards = v.awards
+	for val in return_value:
+		val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
+
+	return jsonify(return_value)
+
 
 @app.post("/buy/<award>")
 @auth_required
@@ -182,20 +198,6 @@ ALLOW_MULTIPLE = (
 	"stars"
 )
 
-
-@app.get("/awards")
-@auth_required
-def get_awards(v):
-
-	return_value = list(AWARDS.values())
-
-	user_awards = v.awards
-	for val in return_value:
-		val['owned'] = len([x for x in user_awards if x.kind == val['kind'] and not x.given])
-
-	return jsonify(return_value)
-
-
 @app.post("/post/<pid>/awards")
 @auth_required
 @validate_formkey
@@ -209,7 +211,7 @@ def award_post(pid, v):
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
 
-	post_award = g.db.query(AwardRelationship).filter(
+	post_award = g.db.query(AwardRelationship).options(lazyload('*')).filter(
 		and_(
 			AwardRelationship.kind == kind,
 			AwardRelationship.user_id == v.id,
@@ -221,7 +223,7 @@ def award_post(pid, v):
 	if not post_award:
 		return {"error": "You don't have that award."}, 404
 
-	post = g.db.query(Submission).filter_by(id=pid).first()
+	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=pid).first()
 
 	if not post or post.is_banned or post.deleted_utc > 0:
 		return {"error": "That post doesn't exist or has been deleted or removed."}, 404
@@ -229,7 +231,7 @@ def award_post(pid, v):
 	if post.author_id == v.id:
 		return {"error": "You can't award yourself."}, 403
 
-	existing_award = g.db.query(AwardRelationship).filter(
+	existing_award = g.db.query(AwardRelationship).options(lazyload('*')).filter(
 		and_(
 			AwardRelationship.submission_id == post.id,
 			AwardRelationship.user_id == v.id,
@@ -252,8 +254,7 @@ def award_post(pid, v):
 
 	send_notification(NOTIFICATIONS_ACCOUNT, post.author, msg)
 
-	if kind in ACTIONS:
-		ACTIONS[kind](post=post)
+	if kind in ACTIONS: ACTIONS[kind](post=post)
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -275,7 +276,7 @@ def award_comment(cid, v):
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
 
-	comment_award = g.db.query(AwardRelationship).filter(
+	comment_award = g.db.query(AwardRelationship).options(lazyload('*')).filter(
 		and_(
 			AwardRelationship.kind == kind,
 			AwardRelationship.user_id == v.id,
@@ -287,7 +288,7 @@ def award_comment(cid, v):
 	if not comment_award:
 		return {"error": "You don't have that award."}, 404
 
-	c = g.db.query(Comment).filter_by(id=cid).first()
+	c = g.db.query(Comment).options(lazyload('*')).filter_by(id=cid).first()
 
 	if not c or c.is_banned or c.deleted_utc > 0:
 		return {"error": "That comment doesn't exist or has been deleted or removed."}, 404
@@ -295,7 +296,7 @@ def award_comment(cid, v):
 	if c.author_id == v.id:
 		return {"error": "You can't award yourself."}, 403
 
-	existing_award = g.db.query(AwardRelationship).filter(
+	existing_award = g.db.query(AwardRelationship).options(lazyload('*')).filter(
 		and_(
 			AwardRelationship.comment_id == c.id,
 			AwardRelationship.user_id == v.id,

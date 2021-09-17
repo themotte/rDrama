@@ -7,16 +7,13 @@ from .sanitize import *
 from .const import *
 
 
-def send_notification(vid, user, text, db=None):
+def send_notification(vid, user, text):
 
 	# for when working outside request context
 	if isinstance(user, int):
 		uid = user
 	else:
 		uid = user.id
-
-	if not db:
-		db = g.db
 
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
 	text = text.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -28,19 +25,19 @@ def send_notification(vid, user, text, db=None):
 						  parent_submission=None,
 						  distinguish_level=6,
 						  )
-	db.add(new_comment)
+	g.db.add(new_comment)
 
-	db.flush()
+	g.db.flush()
 
 	new_aux = CommentAux(id=new_comment.id,
 						 body=text,
 						 body_html=text_html,
 						 )
-	db.add(new_aux)
+	g.db.add(new_aux)
 
 	notif = Notification(comment_id=new_comment.id,
 						 user_id=uid)
-	db.add(notif)
+	g.db.add(notif)
 
 
 def send_follow_notif(vid, user, text):
@@ -186,7 +183,7 @@ def send_admin(vid, text):
 	new_aux = CommentAux(id=new_comment.id, body=text, body_html=text_html)
 	g.db.add(new_aux)
 
-	admins = g.db.query(User).filter(User.admin_level > 0).all()
+	admins = g.db.query(User).options(lazyload('*')).filter(User.admin_level > 0).all()
 	for admin in admins:
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 		g.db.add(notif)

@@ -31,18 +31,18 @@ def revert_actions(v, username):
 		user = get_user(username)
 		if not user: abort(404)
 
-		items = g.db.query(Submission).options(lazyload('*')).filter_by(removed_by=user.id).all() + g.db.query(Comment).options(lazyload('*')).filter_by(removed_by=user.id).all()
+		items = g.db.query(Submission).options(lazyload('*')).options(lazyload('*')).filter_by(removed_by=user.id).all() + g.db.query(Comment).options(lazyload('*')).options(lazyload('*')).filter_by(removed_by=user.id).all()
 
 		for item in items:
 			item.is_banned = False
 			item.removed_by = None
 			g.db.add(item)
 
-		users = g.db.query(User).options(lazyload('*')).filter_by(is_banned=user.id).all()
+		users = g.db.query(User).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=user.id).all()
 		for user in users:
 			user.unban()
 
-	g.db.commit()
+		g.db.commit()
 	return {"message": "Admin actions reverted!"}
 
 @app.post("/@<username>/club_allow")
@@ -97,7 +97,7 @@ def make_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 6
 		g.db.add(user)
-	g.db.commit()
+		g.db.commit()
 	return {"message": "User has been made admin!"}
 
 
@@ -109,7 +109,7 @@ def remove_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 0
 		g.db.add(user)
-	g.db.commit()
+		g.db.commit()
 	return {"message": "Admin removed!"}
 
 
@@ -121,7 +121,7 @@ def make_fake_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 1
 		g.db.add(user)
-	g.db.commit()
+		g.db.commit()
 	return {"message": "User has been made fake admin!"}
 
 
@@ -133,7 +133,7 @@ def remove_fake_admin(v, username):
 		if not user: abort(404)
 		user.admin_level = 0
 		g.db.add(user)
-	g.db.commit()
+		g.db.commit()
 	return {"message": "Fake admin removed!"}
 
 
@@ -144,7 +144,7 @@ def monthly(v):
 	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		_awards = []
-		for u in g.db.query(User).filter(User.patron > 0).all():
+		for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
 			grant_awards = {}
 
 			if u.patron == 1:
@@ -224,7 +224,7 @@ def post_rules(v):
 @auth_required
 def shadowbanned(v):
 	if not (v and v.admin_level == 6): abort(404)
-	users = [x for x in g.db.query(User).filter_by(shadowbanned = True).all()]
+	users = [x for x in g.db.query(User).options(lazyload('*')).filter_by(shadowbanned = True).all()]
 	return render_template("banned.html", v=v, users=users)
 
 
@@ -232,7 +232,7 @@ def shadowbanned(v):
 @auth_required
 def agendaposters(v):
 	if not (v and v.admin_level == 6): abort(404)
-	users = [x for x in g.db.query(User).filter_by(agendaposter = True).all()]
+	users = [x for x in g.db.query(User).options(lazyload('*')).filter_by(agendaposter = True).all()]
 	return render_template("banned.html", v=v, users=users)
 
 
@@ -260,7 +260,7 @@ def reported_posts(v):
 
 	page = max(1, int(request.args.get("page", 1)))
 
-	posts = g.db.query(Submission).filter_by(
+	posts = g.db.query(Submission).options(lazyload('*')).filter_by(
 		is_approved=0,
 		is_banned=False
 	).join(Submission.flags).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
@@ -352,7 +352,7 @@ def badge_grant_post(v):
 	except: abort(400)
 
 	if user.has_badge(badge_id):
-		g.db.query(Badge).filter_by(badge_id=badge_id, user_id=user.id,).delete()
+		g.db.query(Badge).options(lazyload('*')).filter_by(badge_id=badge_id, user_id=user.id,).delete()
 		return redirect("/admin/badge_grant")
 	
 	new_badge = Badge(badge_id=badge_id,
@@ -376,7 +376,7 @@ def badge_grant_post(v):
 	send_notification(NOTIFICATIONS_ACCOUNT, user, text)
 
 	if badge_id == 16 and user.has_badge(17):
-		g.db.query(Badge).filter_by(badge_id=17, user_id=user.id).delete()
+		g.db.query(Badge).options(lazyload('*')).filter_by(badge_id=17, user_id=user.id).delete()
 
 	elif badge_id in [21,22,23,24,28]:
 		user.patron = int(str(badge_id)[-1])
@@ -436,7 +436,7 @@ def badge_grant_post(v):
 
 		g.db.add(user)
 	
-	g.db.commit()
+		g.db.commit()
 	return redirect("/admin/badge_grant")
 
 
@@ -446,7 +446,7 @@ def users_list(v):
 
 	page = int(request.args.get("page", 1))
 
-	users = g.db.query(User).filter_by(is_banned=0
+	users = g.db.query(User).options(lazyload('*')).filter_by(is_banned=0
 									   ).order_by(User.created_utc.desc()
 												  ).offset(25 * (page - 1)).limit(26)
 
@@ -597,7 +597,7 @@ def admin_removed(v):
 
 	page = int(request.args.get("page", 1))
 
-	ids = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).order_by(
+	ids = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=True).order_by(
 		Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
@@ -621,7 +621,7 @@ def admin_removed(v):
 def admin_image_purge(v):
 	
 	name = request.form.get("url")
-	image = g.db.query(Image).filter(Image.text == name).first()
+	image = g.db.query(Image).options(lazyload('*')).filter(Image.text == name).first()
 	if image:
 		requests.delete(f'https://api.imgur.com/3/image/{image.deletehash}', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"})
 		headers = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
@@ -663,7 +663,7 @@ def admin_image_ban(v):
 	h = ''.join([str(d) for d in bindigits])
 
 	#check db for existing
-	badpic = g.db.query(BadPic).filter_by(
+	badpic = g.db.query(BadPic).options(lazyload('*')).filter_by(
 		phash=h
 		).first()
 
@@ -688,7 +688,7 @@ def admin_image_ban(v):
 @admin_level_required(6)
 @validate_formkey
 def agendaposter(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 
 	expiry = request.form.get("days", 0)
 	if expiry:
@@ -720,7 +720,6 @@ def agendaposter(user_id, v):
 		note = note
 	)
 	g.db.add(ma)
-	g.db.flush()
 
 	if user.agendaposter:
 		if not user.has_badge(26):
@@ -741,7 +740,7 @@ def agendaposter(user_id, v):
 @admin_level_required(6)
 @validate_formkey
 def shadowban(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 	if user.admin_level != 0: abort(403)
 	user.shadowbanned = True
 	g.db.add(user)
@@ -766,7 +765,7 @@ def shadowban(user_id, v):
 @admin_level_required(6)
 @validate_formkey
 def unshadowban(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 	if user.admin_level != 0: abort(403)
 	user.shadowbanned = False
 	g.db.add(user)
@@ -790,7 +789,7 @@ def unshadowban(user_id, v):
 @admin_level_required(6)
 @validate_formkey
 def verify(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 	user.verified = "Verified"
 	g.db.add(user)
 	g.db.commit()
@@ -800,7 +799,7 @@ def verify(user_id, v):
 @admin_level_required(6)
 @validate_formkey
 def unverify(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 	user.verified = None
 	g.db.add(user)
 	g.db.commit()
@@ -812,7 +811,7 @@ def unverify(user_id, v):
 @validate_formkey
 def admin_title_change(user_id, v):
 
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 
 	if user.admin_level != 0: abort(403)
 
@@ -821,7 +820,7 @@ def admin_title_change(user_id, v):
 	user.customtitleplain=new_name
 	new_name = sanitize(new_name)
 
-	user=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=user.id).first()
+	user=g.db.query(User).with_for_update().options(lazyload('*')).options(lazyload('*')).filter_by(id=user.id).first()
 	user.customtitle=new_name
 	user.flairchanged = bool(request.form.get("locked"))
 	g.db.add(user)
@@ -845,7 +844,7 @@ def admin_title_change(user_id, v):
 @validate_formkey
 def ban_user(user_id, v):
 	
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 
 	if user.admin_level >= v.admin_level: abort(403)
 
@@ -896,8 +895,6 @@ def ban_user(user_id, v):
 		)
 	g.db.add(ma)
 
-	g.db.commit()
-
 	if 'reason' in request.args:
 		if reason.startswith("/post/"):
 			post = reason.split("/post/")[1].split("/")[0]
@@ -909,8 +906,11 @@ def ban_user(user_id, v):
 			comment = get_comment(comment)
 			comment.bannedfor = True
 			g.db.add(comment)
+		g.db.commit()
 		return {"message": f"@{user.username} was banned!"}
-	else: return redirect(user.url)
+	else:
+		g.db.commit()
+		return redirect(user.url)
 
 
 @app.post("/unban_user/<user_id>")
@@ -918,7 +918,7 @@ def ban_user(user_id, v):
 @validate_formkey
 def unban_user(user_id, v):
 
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 
 	if not user:
 		abort(400)
@@ -942,17 +942,15 @@ def unban_user(user_id, v):
 
 	g.db.commit()
 
-	if "@" in request.referrer:
-		return redirect(user.url)
-	else:
-		return {"message": f"@{user.username} was unbanned!"}
+	if "@" in request.referrer: return redirect(user.url)
+	else: return {"message": f"@{user.username} was unbanned!"}
 
 @app.post("/ban_post/<post_id>")
 @admin_level_required(3)
 @validate_formkey
 def ban_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
+	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
 
 	if not post:
 		abort(400)
@@ -993,7 +991,7 @@ def ban_post(post_id, v):
 @validate_formkey
 def unban_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
+	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
 
 	if not post:
 		abort(400)
@@ -1023,7 +1021,7 @@ def unban_post(post_id, v):
 @validate_formkey
 def api_distinguish_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
+	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
 
 	if not post:
 		abort(404)
@@ -1047,7 +1045,7 @@ def api_distinguish_post(post_id, v):
 @admin_level_required(3)
 def api_sticky_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
+	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
 	if post:
 		post.stickied = not (post.stickied)
 		g.db.add(post)
@@ -1069,7 +1067,7 @@ def api_sticky_post(post_id, v):
 @auth_required
 def api_pin_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
+	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
 	if post:
 		post.is_pinned = not (post.is_pinned)
 		g.db.add(post)
@@ -1082,7 +1080,7 @@ def api_pin_post(post_id, v):
 @admin_level_required(1)
 def api_ban_comment(c_id, v):
 
-	comment = g.db.query(Comment).filter_by(id=c_id).first()
+	comment = g.db.query(Comment).options(lazyload('*')).filter_by(id=c_id).first()
 	if not comment:
 		abort(404)
 
@@ -1105,7 +1103,7 @@ def api_ban_comment(c_id, v):
 @admin_level_required(1)
 def api_unban_comment(c_id, v):
 
-	comment = g.db.query(Comment).filter_by(id=c_id).first()
+	comment = g.db.query(Comment).options(lazyload('*')).filter_by(id=c_id).first()
 	if not comment:
 		abort(404)
 	g.db.add(comment)
@@ -1177,7 +1175,7 @@ def admin_toggle_ban_domain(v):
 
 	reason=request.form.get("reason", "").strip()
 
-	d = g.db.query(BannedDomain).filter_by(domain=domain).first()
+	d = g.db.query(BannedDomain).options(lazyload('*')).filter_by(domain=domain).first()
 	if d: g.db.delete(d)
 	else:
 		d = BannedDomain(domain=domain, reason=reason)
@@ -1195,14 +1193,14 @@ def admin_nuke_user(v):
 
 	user=get_user(request.form.get("user"))
 
-	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+	for post in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=user.id).all():
 		if post.is_banned:
 			continue
 			
 		post.is_banned=True
 		g.db.add(post)
 
-	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+	for comment in g.db.query(Comment).options(lazyload('*')).filter_by(author_id=user.id).all():
 		if comment.is_banned:
 			continue
 
@@ -1227,14 +1225,14 @@ def admin_nunuke_user(v):
 
 	user=get_user(request.form.get("user"))
 
-	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+	for post in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=user.id).all():
 		if not post.is_banned:
 			continue
 			
 		post.is_banned=False
 		g.db.add(post)
 
-	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+	for comment in g.db.query(Comment).options(lazyload('*')).filter_by(author_id=user.id).all():
 		if not comment.is_banned:
 			continue
 
@@ -1278,11 +1276,11 @@ def chart(v):
 
 	daily_times = [time.strftime("%d", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	daily_signups = [g.db.query(User).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	daily_signups = [g.db.query(User).options(lazyload('*')).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	post_stats = [g.db.query(Submission).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	post_stats = [g.db.query(Submission).options(lazyload('*')).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	comment_stats = [g.db.query(Comment).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	comment_stats = [g.db.query(Comment).options(lazyload('*')).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	# create multiple charts
 	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)

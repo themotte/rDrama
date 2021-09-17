@@ -17,7 +17,7 @@ import gevent
 from redis import ConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-app = Flask(__name__, template_folder='./templates', static_folder='./static')
+app = Flask(__name__, template_folder='./templates')
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
@@ -83,7 +83,7 @@ limiter = Limiter(
 _engine=create_engine(
 	app.config['DATABASE_URL'],
 	poolclass=QueuePool,
-	pool_size=int(environ.get("PG_POOL_SIZE",10)),
+	pool_size=197,
 	pool_use_lifo=True
 )
 

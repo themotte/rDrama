@@ -24,7 +24,7 @@ def get_user(username, v=None, graceful=False):
 			return None
 
 	if v:
-		block = g.db.query(UserBlock).filter(
+		block = g.db.query(UserBlock).options(lazyload('*')).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -43,16 +43,16 @@ def get_user(username, v=None, graceful=False):
 
 def get_account(id, v=None):
 
-	user = g.db.query(User).filter_by(id = id).first()
+	user = g.db.query(User).options(lazyload('*')).filter_by(id = id).first()
 				
 	if not user:
 		try: id = int(str(id), 36)
 		except: abort(404)
-		user = g.db.query(User).filter_by(id = id).first()
+		user = g.db.query(User).options(lazyload('*')).filter_by(id = id).first()
 		if not user: abort(404)
 
 	if v:
-		block = g.db.query(UserBlock).filter(
+		block = g.db.query(UserBlock).options(lazyload('*')).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -73,7 +73,7 @@ def get_account(id, v=None):
 def get_post(i, v=None, graceful=False, **kwargs):
 
 	if v:
-		vt = g.db.query(Vote).filter_by(
+		vt = g.db.query(Vote).options(lazyload('*')).filter_by(
 			user_id=v.id, submission_id=i).subquery()
 		blocking = v.blocking.subquery()
 
@@ -122,7 +122,7 @@ def get_posts(pids, v=None):
 	pids=tuple(pids)
 
 	if v:
-		vt = g.db.query(Vote).filter(
+		vt = g.db.query(Vote).options(lazyload('*')).filter(
 			Vote.submission_id.in_(pids), 
 			Vote.user_id==v.id
 			).subquery()
@@ -155,7 +155,7 @@ def get_posts(pids, v=None):
 			output[i]._is_blocking = query[i][2] or 0
 			output[i]._is_blocked = query[i][3] or 0
 	else:
-		output = g.db.query(Submission,).filter(Submission.id.in_(pids)).all()
+		output = g.db.query(Submission,).options(lazyload('*')).filter(Submission.id.in_(pids)).all()
 
 	return sorted(output, key=lambda x: pids.index(x.id))
 
@@ -163,11 +163,11 @@ def get_comment(i, v=None, graceful=False, **kwargs):
 
 	if v:
 
-		comment=g.db.query(Comment).filter(Comment.id == i).first()
+		comment=g.db.query(Comment).options(lazyload('*')).filter(Comment.id == i).first()
 
 		if not comment and not graceful: abort(404)
 
-		block = g.db.query(UserBlock).filter(
+		block = g.db.query(UserBlock).options(lazyload('*')).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -179,14 +179,14 @@ def get_comment(i, v=None, graceful=False, **kwargs):
 			)
 		).first()
 
-		vts = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id)
-		vt = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
+		vts = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id)
+		vt = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id).first()
 		comment._is_blocking = block and block.user_id == v.id
 		comment._is_blocked = block and block.target_id == v.id
 		comment.voted = vt.vote_type if vt else 0
 
 	else:
-		comment = g.db.query(Comment).filter(Comment.id == i).first()
+		comment = g.db.query(Comment).options(lazyload('*')).filter(Comment.id == i).first()
 		if not comment and not graceful:abort(404)
 
 	return comment
@@ -199,7 +199,7 @@ def get_comments(cids, v=None, load_parent=False):
 	cids=tuple(cids)
 
 	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
+		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
 
 		blocking = v.blocking.subquery()
 
@@ -238,7 +238,7 @@ def get_comments(cids, v=None, load_parent=False):
 			output.append(comment)
 
 	else:
-		output = g.db.query(Comment).join(Comment.author).filter(Comment.id.in_(cids), User.shadowbanned == False).all()
+		output = g.db.query(Comment).join(Comment.author).options(lazyload('*')).filter(Comment.id.in_(cids), User.shadowbanned == False).all()
 
 	if load_parent:
 		parents = [x.parent_comment_id for x in output if x.parent_comment_id]
@@ -263,7 +263,7 @@ def get_domain(s):
 
 	domain_list = tuple(list(domain_list))
 
-	doms = [x for x in g.db.query(BannedDomain).filter(
+	doms = [x for x in g.db.query(BannedDomain).options(lazyload('*')).filter(
 		BannedDomain.domain.in_(domain_list)).all()]
 
 	if not doms:

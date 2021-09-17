@@ -1,5 +1,3 @@
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
-
 <input type="hidden" id="awardTarget" value="" />
 <div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="awardModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
@@ -11,45 +9,33 @@
 				</button>
 			</div>
 			<div id="awardModalBody" class="modal-body">
-				<form v-if="loaded" id="sex" class="pt-3 pb-0">
+				<form class="pt-3 pb-0" action="/post/{{p.id}}/awards" method="post">
 					<div class="card-columns awards-wrapper">
-						<div v-for="(award, index) in awards" :key="index">
-							<input type="radio" :id="index" :value="index" v-model="picked" :disabled="award.owned < 1">
-							<label class="card" :for="index" :class="{ disabled: award.owned < 1 }">
-								<i :class="award.icon+' '+award.color"></i><br />
-								<span class="d-block pt-2" style="font-weight: bold; font-size: 14px;">[[ award.title ]]</span>
-								<span class="text-muted">[[ award.owned ]] owned</span>
-							</label>
-						</div>
-					</div>
-					<div v-if="picked !== null">
-						<div class="award-desc p-3">
-							<i style="font-size: 35px;" :class="pickedAward.icon+' '+pickedAward.color"></i>
-							<div style="margin-left: 15px;">
-								<strong>[[ pickedAward.title ]] Award</strong><br />
-								<span class="text-muted">[[ pickedAward.description ]]</span>
+						{% for award in v.user_awards %}
+							<div>
+								<label class="card" onclick="document.getElementById('desc-{{award.kind}}').classList.toggle('d-none');document.getElementById('giveaward').disabled=false">
+									<i class="{{award.icon}} {{award.color}}"></i><br />
+									<span class="d-block pt-2" style="font-weight: bold; font-size: 14px;">{{award.title}}</span>
+									<span class="text-muted">{{award.owned}} owned</span>
+								</label>
 							</div>
-						</div>
-						<label for="note" class="pt-4">Note (optional):</label>
-						<textarea id="note" name="note" v-model="note" class="form-control" placeholder="Note to include in award notification"></textarea>
+							<div id="desc-{{award.kind}}" class="d-none">
+								<div class="award-desc p-3">
+									<i style="font-size: 35px;"></i>
+									<div style="margin-left: 15px;">
+										<strong>{{pickedAward.title}} Award</strong><br />
+										<span class="text-muted">{{pickedAward.description}}</span>
+									</div>
+								</div>
+								<label for="note" class="pt-4">Note (optional):</label>
+								<textarea id="note" name="note" class="form-control" placeholder="Note to include in award notification"></textarea>
+							</div>
+							<input name="{{award.kind}}" hidden>
+							<input id="giveaward" class="btn btn-primary" type="submit" value="Give Award" disabled>
+						{% endfor %}
 					</div>
 				</form>
-				<div v-else-if="error" class="p-5 text-center">
-					<h4>Failed to fetch awards</h4>
-					<button class="btn btn-primary">Retry</button>
-				</div>
-				<div v-else class="p-5 text-center">
-					<h4>Loading...</h4>
-				</div>
 			</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-			<button v-if="pending" class="btn btn-warning" type="button" disabled>
-  				<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-  				Gifting...
-			</button>
-			<button v-else type="submit" class="btn btn-link" id="awardButton" @click="submit" :disabled="pickedAward === null">Give Award</button>
-		</div>
 	</div>
 </div>
 </div>
@@ -92,61 +78,3 @@
 		display: flex;
 	}
 </style>
-
-<script>
-	new Vue({
-		el: "#awardModal",
-		delimiters: ['[[', ']]'],
-		data: {
-			loaded: false,
-			error: false,
-			pending: false,
-			awards: [],
-			picked: null,
-			note: ""
-		},
-		computed: {
-			pickedAward: function() {
-				if (this.picked !== null) {
-					return this.awards[this.picked];
-				} else {
-					return null;
-				}
-			}
-		},
-		methods: {
-			async submit() {
-				this.pending = true;
-
-				const target = document.getElementById("awardTarget").value;
-
-				const f = new FormData();
-				f.append("formkey", formkey());
-				f.append("kind", this.pickedAward.kind || "");
-				f.append("note", this.note)
-
-				let response = await fetch(target, {
-					method: "POST",
-					body: f
-				});
-
-				if (response.ok) {
-					location.reload();
-				} else {
-					this.pending = false;
-					let s = await response.json();
-					alert(s.error);
-				}
-			}
-		},
-		mounted() {
-			fetch('/awards')
-				.then(response => response.json())
-				.then(json => {
-					this.awards = json;
-				});
-
-			this.loaded = true;
-		}
-	})
-</script>

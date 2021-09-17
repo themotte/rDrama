@@ -23,6 +23,53 @@ defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
+if site_name == "Drama":
+	AWARDS = {
+		"ban": {
+			"kind": "ban",
+			"title": "One-Day Ban",
+			"description": "Bans the author for a day.",
+			"icon": "fas fa-gavel",
+			"color": "text-danger",
+			"price": 5000
+		},
+		"shit": {
+			"kind": "shit",
+			"title": "Shit",
+			"description": "Makes flies swarm a post.",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"price": 1000
+		},
+		"stars": {
+			"kind": "stars",
+			"title": "Stars",
+			"description": "Puts stars on the post.",
+			"icon": "fas fa-sparkles",
+			"color": "text-warning",
+			"price": 1000
+		}
+	}
+else:
+	AWARDS = {
+		"shit": {
+			"kind": "shit",
+			"title": "shit",
+			"description": "Makes flies swarm a post.",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"price": 1000
+		},
+		"stars": {
+			"kind": "stars",
+			"title": "Stars",
+			"description": "Puts stars on the post.",
+			"icon": "fas fa-sparkles",
+			"color": "text-warning",
+			"price": 1000
+		}
+	}
+
 class User(Base, Stndrd, Age_times):
 	__tablename__ = "users"
 	id = Column(Integer, primary_key=True)
@@ -76,20 +123,12 @@ class User(Base, Stndrd, Age_times):
 	oldreddit = Column(Boolean)
 	nitter = Column(Boolean)
 	controversial = Column(Boolean, default=False)
-	submissions = relationship(
-		"Submission",
-		lazy="dynamic",
-		primaryjoin="Submission.author_id==User.id")
-	comments = relationship(
-		"Comment",
-		lazy="dynamic",
-		primaryjoin="Comment.author_id==User.id")
+	submissions = relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", viewonly=True)
+	comments = relationship("Comment", lazy="dynamic", primaryjoin="Comment.author_id==User.id", viewonly=True)
 	bio = Column(String)
 	bio_html = Column(String)
-	badges = relationship("Badge", lazy="dynamic")
-	notifications = relationship(
-		"Notification",
-		lazy="dynamic")
+	badges = relationship("Badge", lazy="dynamic", viewonly=True)
+	notifications = relationship("Notification", lazy="dynamic", viewonly=True)
 
 	is_banned = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
@@ -112,31 +151,24 @@ class User(Base, Stndrd, Age_times):
 	discord_id = Column(String(64))
 	ban_evade = Column(Integer, default=0)
 	original_username = deferred(Column(String(255)))
-	subscriptions = relationship("Subscription")
+	subscriptions = relationship("Subscription", viewonly=True)
 
-	following = relationship("Follow", primaryjoin="Follow.user_id==User.id")
-	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id")
+	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
+	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id", viewonly=True)
 
-	viewers = relationship("ViewerRelationship", primaryjoin="User.id == ViewerRelationship.user_id")
+	viewers = relationship("ViewerRelationship", primaryjoin="User.id == ViewerRelationship.user_id", viewonly=True)
 
-	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id")
-	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
+	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id", viewonly=True)
+	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
 
-	_applications = relationship("OauthApp", lazy="dynamic")
-	authorizations = relationship("ClientAuth", lazy="dynamic")
+	_applications = relationship("OauthApp", lazy="dynamic", viewonly=True)
+	authorizations = relationship("ClientAuth", lazy="dynamic", viewonly=True)
 
-	awards = relationship(
-		"AwardRelationship",
-		lazy="dynamic",
-		primaryjoin="User.id==AwardRelationship.user_id"
-	)
+	awards = relationship("AwardRelationship", lazy="dynamic", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
 
 	referred_by = Column(Integer, ForeignKey("users.id"))
 
-	referrals = relationship(
-		"User",
-		lazy="joined"
-	)
+	referrals = relationship("User", lazy="joined", viewonly=True)
 
 	def __init__(self, **kwargs):
 
@@ -150,12 +182,24 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	@lazy
+	def user_awards(v):
+
+		return_value = list(AWARDS.values())
+
+		user_awards = v.awards
+
+		for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
+
+		return return_value
+
+	@property
+	@lazy
 	def referral_count(self):
 		return len(self.referrals)
 
 	def has_block(self, target):
 
-		return g.db.query(UserBlock).filter_by(
+		return g.db.query(UserBlock).options(lazyload('*')).filter_by(
 			user_id=self.id, target_id=target.id).first()
 
 	@property
@@ -164,7 +208,7 @@ class User(Base, Stndrd, Age_times):
 
 	def any_block_exists(self, other):
 
-		return g.db.query(UserBlock).filter(
+		return g.db.query(UserBlock).options(lazyload('*')).filter(
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
 				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
 
@@ -187,7 +231,7 @@ class User(Base, Stndrd, Age_times):
 		if self.shadowbanned and not (v and (v.admin_level >= 3 or v.id == self.id)):
 			return []
 
-		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
+		submissions = g.db.query(Submission).options(lazyload('*')).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
 
 		if not (v and (v.admin_level >= 3 or v.id == self.id)):
 			submissions = submissions.filter_by(deleted_utc=0, is_banned=False, private=False)
@@ -233,7 +277,7 @@ class User(Base, Stndrd, Age_times):
 	def banned_by(self):
 
 		if not self.is_suspended: return None
-		return g.db.query(User).filter_by(id=self.is_banned).first()
+		return g.db.query(User).options(lazyload('*')).filter_by(id=self.is_banned).first()
 
 	def has_badge(self, badgedef_id):
 		return self.badges.filter_by(badge_id=badgedef_id).first()
@@ -288,21 +332,6 @@ class User(Base, Stndrd, Age_times):
 
 		return f"Unban in {text}"
 
-	@property
-	@lazy
-	def display_awards(self):
-
-		awards = {}
-		active_awards = [x for x in self.awards if not x.given]
-
-		for a in active_awards:
-			if a.kind in awards:
-				awards[a.kind]['count'] += 1
-			else:
-				awards[a.kind] = a.type
-				awards[a.kind]['count'] = 1
-
-		return sorted(list(awards.values()), key=lambda x: x['kind'], reverse=True)
 
 	@property
 	@lazy
@@ -310,11 +339,11 @@ class User(Base, Stndrd, Age_times):
 
 		awards = {}
 
-		posts_idlist = g.db.query(Submission.id).filter_by(author_id=self.id).subquery()
-		comments_idlist = g.db.query(Comment.id).filter_by(author_id=self.id).subquery()
+		posts_idlist = [x[0] for x in g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id).all()]
+		comments_idlist = [x[0] for x in g.db.query(Comment.id).options(lazyload('*')).filter_by(author_id=self.id).all()]
 
-		post_awards = g.db.query(AwardRelationship).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
-		comment_awards = g.db.query(AwardRelationship).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
+		post_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
+		comment_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
 
 		total_awards = post_awards + comment_awards
 
@@ -345,7 +374,7 @@ class User(Base, Stndrd, Age_times):
 	@lazy
 	def alts(self):
 
-		subq = g.db.query(Alt).filter(
+		subq = g.db.query(Alt).options(lazyload('*')).filter(
 			or_(
 				Alt.user1 == self.id,
 				Alt.user2 == self.id
@@ -407,7 +436,7 @@ class User(Base, Stndrd, Age_times):
 
 	def has_follower(self, user):
 
-		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).first()
+		return g.db.query(Follow).options(lazyload('*')).filter_by(target_id=self.id, user_id=user.id).first()
 
 	@property
 	def banner_url(self):
@@ -511,25 +540,25 @@ class User(Base, Stndrd, Age_times):
 			OauthApp.id.asc()).all()]
 
 	def subscribed_idlist(self, page=1):
-		posts = g.db.query(Subscription.submission_id).filter_by(user_id=self.id).all()
+		posts = g.db.query(Subscription.submission_id).options(lazyload('*')).filter_by(user_id=self.id).all()
 		return [x[0] for x in posts]
 
 	def saved_idlist(self, page=1):
 
-		posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False,
+		posts = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False,
 																		   deleted_utc=0
 																		   )
 
-		saved = g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id == self.id).subquery()
+		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
 		posts = posts.filter(Submission.id.in_(saved))
 
 		if self.admin_level == 0:
-			blocking = g.db.query(
+			blocking = [x[0] for x in g.db.query(
 				UserBlock.target_id).filter_by(
-				user_id=self.id).subquery()
-			blocked = g.db.query(
+				user_id=self.id).all()]
+			blocked = [x[0] for x in g.db.query(
 				UserBlock.user_id).filter_by(
-				target_id=self.id).subquery()
+				target_id=self.id).all()]
 
 			posts = posts.filter(
 				Submission.author_id.notin_(blocking),
@@ -542,18 +571,18 @@ class User(Base, Stndrd, Age_times):
 
 	def saved_comment_idlist(self, page=1):
 
-		comments = g.db.query(Comment.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
+		comments = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
 
-		saved = g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id == self.id).subquery()
+		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
 		comments = comments.filter(Comment.id.in_(saved))
 
 		if self.admin_level == 0:
-			blocking = g.db.query(
+			blocking = [x[0] for x in g.db.query(
 				UserBlock.target_id).filter_by(
-				user_id=self.id).subquery()
-			blocked = g.db.query(
+				user_id=self.id).all()]
+			blocked = [x[0] for x in g.db.query(
 				UserBlock.user_id).filter_by(
-				target_id=self.id).subquery()
+				target_id=self.id).all()]
 
 			comments = comments.filter(
 				Comment.author_id.notin_(blocking),
@@ -580,8 +609,7 @@ class ViewerRelationship(Base):
 	viewer_id = Column(Integer, ForeignKey('users.id'))
 	last_view_utc = Column(Integer)
 
-	user = relationship("User", lazy="joined", primaryjoin="ViewerRelationship.user_id == User.id")
-	viewer = relationship("User", lazy="joined", primaryjoin="ViewerRelationship.viewer_id == User.id")
+	viewer = relationship("User", lazy="joined", primaryjoin="ViewerRelationship.viewer_id == User.id", viewonly=True)
 
 	def __init__(self, **kwargs):
 

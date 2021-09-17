@@ -33,12 +33,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	__tablename__ = "submissions"
 
 	id = Column(BigInteger, primary_key=True)
-	submission_aux = relationship(
-		"SubmissionAux",
-		lazy="joined",
-		uselist=False,
-		innerjoin=True,
-		primaryjoin="Submission.id==SubmissionAux.id")
+	submission_aux = relationship("SubmissionAux", lazy="joined", uselist=False, innerjoin=True, primaryjoin="Submission.id==SubmissionAux.id", viewonly=True)
 	author_id = Column(BigInteger, ForeignKey("users.id"))
 	edited_utc = Column(BigInteger, default=0)
 	created_utc = Column(BigInteger, default=0)
@@ -56,19 +51,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	private = Column(Boolean, default=False)
 	club = Column(Boolean, default=False)
 	comment_count = Column(Integer, default=0)
-	comments = relationship(
-		"Comment",
-		lazy="joined",
-		primaryjoin="Comment.parent_submission==Submission.id",
-		)
-	flags = relationship("Flag", lazy="dynamic")
+	comments = relationship("Comment", lazy="joined", primaryjoin="Comment.parent_submission==Submission.id", viewonly=True)
+	flags = relationship("Flag", lazy="dynamic", viewonly=True)
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
-	author = relationship(
-		"User",
-		lazy="joined",
-		innerjoin=True,
-		primaryjoin="Submission.author_id==User.id")
+	author = relationship("User", lazy="joined", innerjoin=True, primaryjoin="Submission.author_id==User.id", viewonly=True)
 	is_pinned = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
 
@@ -76,14 +63,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	downvotes = Column(Integer, default=0)
 
 	app_id=Column(Integer, ForeignKey("oauth_apps.id"))
-	oauth_app=relationship("OauthApp")
+	oauth_app=relationship("OauthApp", viewonly=True)
 
-	approved_by = relationship(
-		"User",
-		uselist=False,
-		primaryjoin="Submission.is_approved==User.id")
+	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)
 
-	awards = relationship("AwardRelationship", lazy="joined")
+	awards = relationship("AwardRelationship", lazy="joined", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
 

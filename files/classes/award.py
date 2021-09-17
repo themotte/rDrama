@@ -64,17 +64,10 @@ class AwardRelationship(Base):
 	comment_id = Column(Integer, ForeignKey("comments.id"), default=None)
 	kind = Column(String(20))
 
-	user = relationship("User", primaryjoin="AwardRelationship.user_id==User.id", lazy="joined")
-	post = relationship(
-		"Submission",
-		primaryjoin="AwardRelationship.submission_id==Submission.id",
-		lazy="joined"
-	)
-	comment = relationship(
-		"Comment",
-		primaryjoin="AwardRelationship.comment_id==Comment.id",
-		lazy="joined"
-	)
+	user = relationship("User", primaryjoin="AwardRelationship.user_id==User.id", lazy="joined", viewonly=True)
+
+	post = relationship("Submission", primaryjoin="AwardRelationship.submission_id==Submission.id", lazy="joined", viewonly=True)
+	comment = relationship("Comment", primaryjoin="AwardRelationship.comment_id==Comment.id", lazy="joined", viewonly=True)
 
 	@property
 	def given(self):

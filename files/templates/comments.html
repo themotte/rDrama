@@ -9,7 +9,6 @@
 {% set ups=c.upvotes %}
 {% set downs=c.downvotes %}
 {% set score=ups-downs %}
-{% include "emoji_modal.html" %}
 
 {% if v and v.shadowbanned %}
 	{% set replies=c.replies3 %}
@@ -271,8 +270,7 @@
 							<li id="save-{{c.id}}" class="{% if not c in v.saved_comment_idlist() %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" onclick="post_toast3('/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
 
 							{% if v.id!=c.author_id %}
-							<li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift"
-								aria-hidden="true"></i><span class="d-none d-md-inline-block">Give Award</span></a></li>
+								<li class="list-inline-item text-muted"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift" aria-hidden="true"></i><span class="d-none d-md-inline-block">Give Award</span></a></li>
 							{% endif %}
 
 							<li class="list-inline-item text-muted"><a href="javascript:void(0)" onclick="openReplyBox('{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a></li>
@@ -528,4 +526,12 @@
 	</div>
 </div>
 
+{% if v %}
+	{% include "gif_modal.html" %}
+	{% include "emoji_modal.html" %}
+	{% include "award_modal.html" %}
+	{% include "delete_comment_modal.html" %}
+{% endif %}
+{% include "expanded_image_modal.html" %}
+{% include "flag_comment_modal.html" %}
 </body>

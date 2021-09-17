@@ -17,7 +17,7 @@ class OauthApp(Base, Stndrd):
 	redirect_uri = Column(String(4096))
 	description = Column(String(256))
 	author_id = Column(Integer, ForeignKey("users.id"))
-	author = relationship("User")
+	author = relationship("User", viewonly=True)
 
 	def __repr__(self): return f"<OauthApp(id={self.id})>"
 
@@ -27,7 +27,7 @@ class OauthApp(Base, Stndrd):
 
 	def idlist(self, page=1, **kwargs):
 
-		posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(app_id=self.id)
+		posts = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(app_id=self.id)
 		
 		posts=posts.order_by(Submission.created_utc.desc())
 
@@ -37,7 +37,7 @@ class OauthApp(Base, Stndrd):
 
 	def comments_idlist(self, page=1, **kwargs):
 
-		posts = g.db.query(Comment.id).options(lazyload('*')).filter_by(app_id=self.id)
+		posts = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(app_id=self.id)
 		
 		posts=posts.order_by(Comment.created_utc.desc())
 
@@ -53,5 +53,5 @@ class ClientAuth(Base, Stndrd):
 	oauth_client = Column(Integer, ForeignKey("oauth_apps.id"))
 	access_token = Column(String(128))
 	user_id = Column(Integer, ForeignKey("users.id"))
-	user = relationship("User", lazy="joined")
-	application = relationship("OauthApp", lazy="joined")
+	user = relationship("User", lazy="joined", viewonly=True)
+	application = relationship("OauthApp", lazy="joined", viewonly=True)

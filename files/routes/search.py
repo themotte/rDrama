@@ -88,12 +88,12 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 	if v and v.admin_level >= 4:
 		pass
 	elif v:
-		blocking = g.db.query(
+		blocking = [x[0] for x in g.db.query(
 			UserBlock.target_id).filter_by(
-			user_id=v.id).subquery()
-		blocked = g.db.query(
+			user_id=v.id).all()]
+		blocked = [x[0] for x in g.db.query(
 			UserBlock.user_id).filter_by(
-			target_id=v.id).subquery()
+			target_id=v.id).all()]
 
 		posts = posts.filter(
 			Submission.author_id.notin_(blocking),
@@ -150,7 +150,7 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
 def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 
-	comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.comment_aux)
+	comments = g.db.query(Comment).options(lazyload('*')).options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.comment_aux)
 
 	if 'q' in criteria:
 		words=criteria['q'].split()
@@ -278,7 +278,7 @@ def searchusers(v):
 	term=term.replace('\\','')
 	term=term.replace('_','\_')
 	
-	users=g.db.query(User).filter(User.username.ilike(f'%{term}%'))
+	users=g.db.query(User).options(lazyload('*')).filter(User.username.ilike(f'%{term}%'))
 	
 	users=users.order_by(User.username.ilike(term).desc(), User.stored_subscriber_count.desc())
 	
