@@ -11,11 +11,13 @@
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
 					<div class="card-columns awards-wrapper">
 						{% for award in v.user_awards %}
-							<label class="card" onclick="document.getElementById('desc-{{award.kind}}').classList.toggle('d-none');document.getElementById('giveaward').disabled=false">
-								<i class="{{award.icon}} {{award.color}}"></i><br />
-								<span class="d-block pt-2" style="font-weight: bold; font-size: 14px;">{{award.title}}</span>
-								<span class="text-muted">{{award.owned}} owned</span>
-							</label>
+							<div>
+								<label class="card" onclick="document.getElementById('desc-{{award.kind}}').classList.toggle('d-none');document.getElementById('giveaward').disabled=false">
+									<i class="{{award.icon}} {{award.color}}"></i><br />
+									<span class="d-block pt-2" style="font-weight: bold; font-size: 14px;">{{award.title}}</span>
+									<span class="text-muted">{{award.owned}} owned</span>
+								</label>
+							</div>
 							<input name="{{award.kind}}" hidden>
 						{% endfor %}
 						<label for="note" class="pt-4">Note (optional):</label>
