@@ -445,6 +445,31 @@
 
 		};
 
+		// ban modal
+
+		const banModal = function(link, id, name) {
+			document.getElementById("banModalTitle").innerHTML = `Ban @${name}`;
+			document.getElementById("ban-modal-link").innerHTML = `<a href="${link}">${link}</a>`;
+			document.getElementById("banUserButton").innerHTML = `Ban @${name}`;
+
+			document.getElementById("banUserButton").onclick = function() {
+				let fd = new FormData(document.getElementById("banModalForm"));
+				fd.append("formkey", formkey());
+
+				let xhr = new XMLHttpRequest();
+				xhr.open("POST", `/ban_user/${id}?form`, true);
+				xhr.withCredentials = true;
+
+				xhr.onload = function(){
+					$('#toast-post-success').toast('dispose');
+					$('#toast-post-success').toast('show');
+					document.getElementById('toast-post-success-text').innerHTML = `@${name} banned`;
+				}
+
+				xhr.send(fd);
+			}
+		};
+
 		//reporting
 		// Report Comment
 
@@ -1344,6 +1369,11 @@
 {% include "gif_modal.html" %}
 {% include "delete_comment_modal.html" %}
 {% include "delete_post_modal.html" %}
+
+{% if v.admin_level > 1 %}
+{% include "ban_modal.html" %}
+{% endif %}
+
 {% endif %}
 
 {% include "expanded_image_modal.html" %}
