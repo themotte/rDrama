@@ -9,7 +9,7 @@ from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import lazyload, sessionmaker, scoped_session, Query as _Query
+from sqlalchemy.orm import sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import redis
