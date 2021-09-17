@@ -111,7 +111,7 @@ def post_id(pid, anything=None, v=None):
 
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
 			shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
-			comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id.notin_(shadowbanned))
+			comments = g.db.query(Comment).filter(Comment.author_id.notin_(shadowbanned))
 
 		comments = g.db.query(
 			Comment,
@@ -226,7 +226,6 @@ def post_id(pid, anything=None, v=None):
 		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
 		else: return render_template("errors/nsfw.html", v=v)
 
-	post.tree_comments()
 	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
 	else:
