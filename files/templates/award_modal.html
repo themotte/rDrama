@@ -3,7 +3,7 @@ function toggle(kind) {
 	document.getElementById('giveaward').disabled=false;
 	document.getElementById('kind').value=kind;
 	var picked = document.getElementsByClassName('picked')
-	if (picked !== null) {picked.classList.toggle('picked');}
+	if (picked !== undefined) {picked.classList.toggle('picked');}
 	document.getElementById(kind).classList.toggle('picked')
 }
 </script>
