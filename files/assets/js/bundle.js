@@ -404,20 +404,20 @@
     			attr_dev(input, "id", /*index*/ ctx[9]);
     			attr_dev(input, "class", "svelte-13ovg7j");
     			toggle_class(input, "disabled", /*award*/ ctx[7].owned < 1);
-    			add_location(input, file, 49, 8, 1225);
+    			add_location(input, file, 49, 8, 1264);
     			attr_dev(i, "class", "" + (/*award*/ ctx[7].icon + " " + /*award*/ ctx[7].color + " svelte-13ovg7j"));
-    			add_location(i, file, 51, 9, 1403);
-    			add_location(br, file, 51, 51, 1445);
+    			add_location(i, file, 51, 9, 1442);
+    			add_location(br, file, 51, 51, 1484);
     			attr_dev(span0, "class", "text-muted");
-    			add_location(span0, file, 53, 9, 1563);
+    			add_location(span0, file, 53, 9, 1602);
     			attr_dev(span1, "class", "d-block pt-2");
     			set_style(span1, "font-weight", "bold");
     			set_style(span1, "font-size", "14px");
-    			add_location(span1, file, 52, 9, 1462);
+    			add_location(span1, file, 52, 9, 1501);
     			attr_dev(label, "class", "card svelte-13ovg7j");
     			attr_dev(label, "for", /*index*/ ctx[9]);
     			toggle_class(label, "disabled", /*award*/ ctx[7].owned < 1);
-    			add_location(label, file, 50, 8, 1323);
+    			add_location(label, file, 50, 8, 1362);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
@@ -537,24 +537,24 @@
     			textarea = element("textarea");
     			set_style(i, "font-size", "35px");
     			attr_dev(i, "class", "" + (/*pickedAward*/ ctx[4].icon + " " + /*pickedAward*/ ctx[4].color + " svelte-13ovg7j"));
-    			add_location(i, file, 62, 8, 1763);
-    			add_location(strong, file, 64, 9, 1895);
-    			add_location(br, file, 64, 51, 1937);
+    			add_location(i, file, 62, 8, 1802);
+    			add_location(strong, file, 64, 9, 1934);
+    			add_location(br, file, 64, 51, 1976);
     			attr_dev(span, "class", "text-muted");
-    			add_location(span, file, 65, 9, 1954);
+    			add_location(span, file, 65, 9, 1993);
     			set_style(div0, "margin-left", "15px");
-    			add_location(div0, file, 63, 8, 1852);
+    			add_location(div0, file, 63, 8, 1891);
     			attr_dev(div1, "class", "award-desc p-3 svelte-13ovg7j");
-    			add_location(div1, file, 61, 7, 1725);
+    			add_location(div1, file, 61, 7, 1764);
     			attr_dev(label, "for", "note");
     			attr_dev(label, "class", "pt-4");
-    			add_location(label, file, 68, 7, 2051);
+    			add_location(label, file, 68, 7, 2090);
     			attr_dev(textarea, "id", "note");
     			attr_dev(textarea, "name", "note");
     			attr_dev(textarea, "class", "form-control");
     			attr_dev(textarea, "placeholder", "Note to include in award notification");
-    			add_location(textarea, file, 69, 7, 2115);
-    			add_location(div2, file, 60, 6, 1711);
+    			add_location(textarea, file, 69, 7, 2154);
+    			add_location(div2, file, 60, 6, 1750);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -614,7 +614,7 @@
     			attr_dev(button, "class", "btn btn-link");
     			attr_dev(button, "id", "awardButton");
     			toggle_class(button, "disabled", /*pickedAward*/ ctx[4] === null);
-    			add_location(button, file, 82, 4, 2647);
+    			add_location(button, file, 82, 4, 2686);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -657,11 +657,11 @@
     			attr_dev(span, "class", "spinner-border spinner-border-sm");
     			attr_dev(span, "role", "status");
     			attr_dev(span, "aria-hidden", "true");
-    			add_location(span, file, 78, 5, 2510);
+    			add_location(span, file, 78, 5, 2549);
     			attr_dev(button, "class", "btn btn-warning");
     			attr_dev(button, "type", "button");
     			button.disabled = true;
-    			add_location(button, file, 77, 4, 2448);
+    			add_location(button, file, 77, 4, 2487);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -706,7 +706,7 @@
     	let div3;
     	let button1;
     	let t7;
-    	let each_value = /*awards*/ ctx[2];
+    	let each_value = /*awards*/ ctx[3];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -717,7 +717,7 @@
     	let if_block0 = /*picked*/ ctx[1] != null && create_if_block_1(ctx);
 
     	function select_block_type(ctx, dirty) {
-    		if (/*pending*/ ctx[3]) return create_if_block;
+    		if (/*pending*/ ctx[2]) return create_if_block;
     		return create_else_block;
     	}
 
@@ -758,40 +758,40 @@
     			attr_dev(input, "type", "hidden");
     			attr_dev(input, "id", "awardTarget");
     			input.value = "";
-    			add_location(input, file, 35, 0, 598);
+    			add_location(input, file, 35, 0, 637);
     			attr_dev(h5, "class", "modal-title");
-    			add_location(h5, file, 39, 4, 806);
+    			add_location(h5, file, 39, 4, 845);
     			attr_dev(i, "class", "far fa-times");
-    			add_location(i, file, 41, 30, 959);
+    			add_location(i, file, 41, 30, 998);
     			attr_dev(span, "aria-hidden", "true");
-    			add_location(span, file, 41, 5, 934);
+    			add_location(span, file, 41, 5, 973);
     			attr_dev(button0, "type", "button");
     			attr_dev(button0, "class", "close");
     			attr_dev(button0, "data-dismiss", "modal");
     			attr_dev(button0, "aria-label", "Close");
-    			add_location(button0, file, 40, 4, 851);
+    			add_location(button0, file, 40, 4, 890);
     			attr_dev(div0, "class", "modal-header");
-    			add_location(div0, file, 38, 3, 774);
+    			add_location(div0, file, 38, 3, 813);
     			attr_dev(div1, "class", "card-columns awards-wrapper svelte-13ovg7j");
-    			add_location(div1, file, 46, 5, 1106);
+    			add_location(div1, file, 46, 5, 1145);
     			attr_dev(form, "class", "pt-3 pb-0");
-    			add_location(form, file, 45, 4, 1075);
+    			add_location(form, file, 45, 4, 1114);
     			attr_dev(div2, "id", "awardModalBody");
     			attr_dev(div2, "class", "modal-body");
-    			add_location(div2, file, 44, 3, 1025);
+    			add_location(div2, file, 44, 3, 1064);
     			attr_dev(button1, "type", "button");
     			attr_dev(button1, "class", "btn btn-link text-muted");
     			attr_dev(button1, "data-dismiss", "modal");
-    			add_location(button1, file, 75, 3, 2334);
+    			add_location(button1, file, 75, 3, 2373);
     			attr_dev(div3, "class", "modal-footer");
-    			add_location(div3, file, 74, 2, 2303);
+    			add_location(div3, file, 74, 2, 2342);
     			attr_dev(div4, "class", "modal-content");
-    			add_location(div4, file, 37, 2, 742);
+    			add_location(div4, file, 37, 2, 781);
     			attr_dev(div5, "class", "modal-dialog modal-dialog-scrollable modal-dialog-centered");
     			attr_dev(div5, "role", "document");
-    			add_location(div5, file, 36, 1, 650);
+    			add_location(div5, file, 36, 1, 689);
     			attr_dev(div6, "id", "svelte-app2");
-    			add_location(div6, file, 34, 0, 574);
+    			add_location(div6, file, 34, 0, 613);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -826,8 +826,8 @@
     			if_block1.m(div3, null);
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*awards, picked*/ 6) {
-    				each_value = /*awards*/ ctx[2];
+    			if (dirty & /*awards, picked*/ 10) {
+    				each_value = /*awards*/ ctx[3];
     				validate_each_argument(each_value);
     				let i;
 
@@ -900,10 +900,10 @@
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
-    	let awards = [];
     	let pending = false;
     	let note = "";
     	let picked = null;
+    	const awards = document.getElementById("awards").value;
 
     	function pickedAward() {
     		if (picked !== null) {
@@ -930,17 +930,16 @@
     	}
 
     	$$self.$capture_state = () => ({
-    		awards,
     		pending,
     		note,
     		picked,
+    		awards,
     		pickedAward,
     		submit
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('awards' in $$props) $$invalidate(2, awards = $$props.awards);
-    		if ('pending' in $$props) $$invalidate(3, pending = $$props.pending);
+    		if ('pending' in $$props) $$invalidate(2, pending = $$props.pending);
     		if ('note' in $$props) $$invalidate(0, note = $$props.note);
     		if ('picked' in $$props) $$invalidate(1, picked = $$props.picked);
     	};
@@ -952,8 +951,8 @@
     	return [
     		note,
     		picked,
-    		awards,
     		pending,
+    		awards,
     		pickedAward,
     		input_change_handler,
     		textarea_input_handler
