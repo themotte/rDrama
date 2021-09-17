@@ -12,8 +12,9 @@ def slash_post():
 
 @app.get("/testing")
 def testing():
-	notifications = g.db.query(Notification).options(lazyload('*')).join(Notification.comment).limit(26)
-	notifications2 = g.db.query(Notification).join(Notification.comment).limit(26)
+	notifications = g.db.query(Notification).options(lazyload('*'))
+	print("FUCK\nFUCK\nFUCK")
+	notifications2 = g.db.query(Notification)
 	return "sex"
 
 @app.get("/notifications")
