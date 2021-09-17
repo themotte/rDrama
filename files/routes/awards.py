@@ -323,7 +323,7 @@ def award_comment(cid, v):
 	g.db.add(c.author)
 
 	g.db.commit()
-	return {"message": "Award given!"}
+	return redirect(request.referrer)
 
 @app.get("/admin/user_award")
 @auth_required
