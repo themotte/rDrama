@@ -333,7 +333,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		g.db.add(self.submission_aux)
 
 	def realbody(self, v):
-		if self.club and not (v and v.coins > 150): return "COUNTRY CLUB ONLY"
+		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
 		body = self.submission_aux.body_html
 
 		if not v or v.slurreplacer: 
@@ -354,7 +354,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 		g.db.add(self.submission_aux)
 
 	def realtitle(self, v):
-		if self.club and not (v and v.coins > 150) and not (v and v.admin_level == 6): return 'COUNTRY CLUB MEMBERS ONLY'
+		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6): return 'COUNTRY CLUB MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
 		else: title = self.title
 
