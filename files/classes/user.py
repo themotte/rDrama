@@ -197,6 +197,17 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	@lazy
+	def user_awards(v):
+
+		return_value = list(AWARDS.values())
+
+		user_awards = v.awards
+		for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
+
+		return jsonify(return_value)
+
+	@property
+	@lazy
 	def referral_count(self):
 		return len(self.referrals)
 
@@ -658,14 +669,3 @@ class ViewerRelationship(Base):
 		else:
 			years = int(months / 12)
 			return f"{years}yr ago"
-
-@property
-@lazy
-def user_awards(v):
-
-	return_value = list(AWARDS.values())
-
-	user_awards = v.awards
-	for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
-
-	return jsonify(return_value)
