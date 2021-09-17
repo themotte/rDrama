@@ -353,8 +353,8 @@ class User(Base, Stndrd, Age_times):
 
 		awards = {}
 
-		posts_idlist = g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id).subquery()
-		comments_idlist = g.db.query(Comment.id).options(lazyload('*')).filter_by(author_id=self.id).subquery()
+		posts_idlist = g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id).all()
+		comments_idlist = g.db.query(Comment.id).options(lazyload('*')).filter_by(author_id=self.id).all()
 
 		post_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
 		comment_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
@@ -569,10 +569,10 @@ class User(Base, Stndrd, Age_times):
 		if self.admin_level == 0:
 			blocking = g.db.query(
 				UserBlock.target_id).filter_by(
-				user_id=self.id).subquery()
+				user_id=self.id).all()
 			blocked = g.db.query(
 				UserBlock.user_id).filter_by(
-				target_id=self.id).subquery()
+				target_id=self.id).all()
 
 			posts = posts.filter(
 				Submission.author_id.notin_(blocking),
@@ -593,10 +593,10 @@ class User(Base, Stndrd, Age_times):
 		if self.admin_level == 0:
 			blocking = g.db.query(
 				UserBlock.target_id).filter_by(
-				user_id=self.id).subquery()
+				user_id=self.id).all()
 			blocked = g.db.query(
 				UserBlock.user_id).filter_by(
-				target_id=self.id).subquery()
+				target_id=self.id).all()
 
 			comments = comments.filter(
 				Comment.author_id.notin_(blocking),
