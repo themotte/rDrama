@@ -256,7 +256,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		g.db.add(self.comment_aux)
 
 	def realbody(self, v):
-		if self.post and self.post.club and not (v and v.coins > 150): return "<p>COUNTRY CLUB ONLY</p>"
+		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
 		body = self.comment_aux.body_html
 
 		if not v or v.slurreplacer: 

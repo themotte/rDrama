@@ -140,7 +140,7 @@ def api_comment(v):
 	parent_id = parent_fullname.split("_")[1]
 	if parent_fullname.startswith("t2"):
 		parent_post = get_post(parent_id, v=v)
-		if parent_post.club and not (v and v.coins > 150): abort(403)
+		if parent_post.club and not (v and v.paid_dues): abort(403)
 		parent = parent_post
 		parent_comment_id = None
 		level = 1
