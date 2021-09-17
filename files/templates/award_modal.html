@@ -1,3 +1,13 @@
+<script>
+function toggle(kind) {
+	document.getElementById('giveaward').disabled=false;
+	document.getElementById('kind').value=kind;
+	var picked = document.getElementsByClassName('picked')
+	if (picked !== null) {picked.classList.toggle('picked');}
+	document.getElementById(kind).classList.toggle('picked')
+}
+</script>
+
 <div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="awardModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -11,10 +21,7 @@
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
 					<div class="card-columns awards-wrapper">
 						{% for award in v.user_awards %}
-							<a href="javascript:void(0)" id="{{award.kind}}" class="card" onclick="document.getElementById('giveaward').disabled=false;
-							document.getElementById('kind').value={{award.kind}};
-							document.getElementsByClassName('picked').classList.toggle('picked');
-							document.getElementById('{{award.kind}}').classList.toggle('picked')">
+							<a href="javascript:void(0)" id="{{award.kind}}" class="card" onclick="toggle({{award.kind}})">
 								<i class="{{award.icon}} {{award.color}}"></i><br />
 								<span class="d-block pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</span>
 								<span class="text-muted">{{award.owned}} owned</span>
