@@ -251,7 +251,7 @@ def edit_post(pid, v):
 		p.title_html = filter_title(title)
 
 	if body != p.body:
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
@@ -803,7 +803,7 @@ def submit_post(v):
 		else: return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.form.get("body", "")), 400
 
 	# render text
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|PNG|JPG|JPEG|GIF|9999))', body, re.MULTILINE):
+	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	body_md = CustomRenderer().render(mistletoe.Document(body))
