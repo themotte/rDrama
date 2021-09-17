@@ -567,12 +567,12 @@ class User(Base, Stndrd, Age_times):
 		posts = posts.filter(Submission.id.in_(saved))
 
 		if self.admin_level == 0:
-			blocking = g.db.query(
+			blocking = [x[0] for x in g.db.query(
 				UserBlock.target_id).filter_by(
-				user_id=self.id).all()
-			blocked = g.db.query(
+				user_id=self.id).all()]
+			blocked = [x[0] for x in g.db.query(
 				UserBlock.user_id).filter_by(
-				target_id=self.id).all()
+				target_id=self.id).all()]
 
 			posts = posts.filter(
 				Submission.author_id.notin_(blocking),
@@ -591,12 +591,12 @@ class User(Base, Stndrd, Age_times):
 		comments = comments.filter(Comment.id.in_(saved))
 
 		if self.admin_level == 0:
-			blocking = g.db.query(
+			blocking = [x[0] for x in g.db.query(
 				UserBlock.target_id).filter_by(
-				user_id=self.id).all()
-			blocked = g.db.query(
+				user_id=self.id).all()]
+			blocked = [x[0] for x in g.db.query(
 				UserBlock.user_id).filter_by(
-				target_id=self.id).all()
+				target_id=self.id).all()]
 
 			comments = comments.filter(
 				Comment.author_id.notin_(blocking),

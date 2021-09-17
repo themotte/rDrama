@@ -136,12 +136,12 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = posts.filter_by(processing=False)
 
 	if v and v.admin_level == 0:
-		blocking = g.db.query(
+		blocking = [x[0] for x in g.db.query(
 			UserBlock.target_id).filter_by(
-			user_id=v.id).all()
-		blocked = g.db.query(
+			user_id=v.id).all()]
+		blocked = [x[0] for x in g.db.query(
 			UserBlock.user_id).filter_by(
-			target_id=v.id).all()
+			target_id=v.id).all()]
 		posts = posts.filter(
 			Submission.author_id.notin_(blocking),
 			Submission.author_id.notin_(blocked)
@@ -268,12 +268,12 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	posts = g.db.query(Submission).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
 	if v and v.admin_level == 0:
-		blocking = g.db.query(
+		blocking = [x[0] for x in g.db.query(
 			UserBlock.target_id).filter_by(
-			user_id=v.id).all()
-		blocked = g.db.query(
+			user_id=v.id).all()]
+		blocked = [x[0] for x in g.db.query(
 			UserBlock.user_id).filter_by(
-			target_id=v.id).all()
+			target_id=v.id).all()]
 		posts = posts.filter(
 			Submission.author_id.notin_(blocking),
 			Submission.author_id.notin_(blocked)
@@ -378,19 +378,19 @@ def random_post(v):
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*'))
-	cc_idlist = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.club == True).all()
+	cc_idlist = [x[0] for x in g.db.query(Submission.id).options(lazyload('*')).filter(Submission.club == True).all()]
 
 	posts = posts.subquery()
 
 	comments = g.db.query(Comment).options(lazyload('*')).options(lazyload('*')).filter(Comment.parent_submission.notin_(cc_idlist))
 
 	if v and v.admin_level <= 3:
-		blocking = g.db.query(
+		blocking = [x[0] for x in g.db.query(
 			UserBlock.target_id).filter_by(
-			user_id=v.id).all()
-		blocked = g.db.query(
+			user_id=v.id).all()]
+		blocked = [x[0] for x in g.db.query(
 			UserBlock.user_id).filter_by(
-			target_id=v.id).all()
+			target_id=v.id).all()]
 
 		comments = comments.filter(
 			Comment.author_id.notin_(blocking),

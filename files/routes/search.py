@@ -88,12 +88,12 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 	if v and v.admin_level >= 4:
 		pass
 	elif v:
-		blocking = g.db.query(
+		blocking = [x[0] for x in g.db.query(
 			UserBlock.target_id).filter_by(
-			user_id=v.id).all()
-		blocked = g.db.query(
+			user_id=v.id).all()]
+		blocked = [x[0] for x in g.db.query(
 			UserBlock.user_id).filter_by(
-			target_id=v.id).all()
+			target_id=v.id).all()]
 
 		posts = posts.filter(
 			Submission.author_id.notin_(blocking),
