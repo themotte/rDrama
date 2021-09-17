@@ -12,6 +12,23 @@ def slash_post():
 
 # this is a test
 
+@app.get("/testing")
+def testing(v):
+	notifications = g.db.query(Notification).all()
+
+	comments = []
+	
+	t = time.time()
+
+	for x in notifications:
+		x.read = True
+		g.db.add(x)
+	
+	g.db.commit()
+	print(time.time() - t)
+	return "sex"
+
+
 @app.get("/notifications")
 @auth_required
 def notifications(v):
