@@ -13,7 +13,7 @@ def slash_post():
 # this is a test
 
 @app.get("/testing")
-def testing(v):
+def testing():
 	notifications = g.db.query(Notification).all()
 
 	comments = []
