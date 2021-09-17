@@ -9,7 +9,6 @@
 {% set ups=c.upvotes %}
 {% set downs=c.downvotes %}
 {% set score=ups-downs %}
-{% include "emoji_modal.html" %}
 
 {% if v and v.shadowbanned %}
 	{% set replies=c.replies3 %}
@@ -527,4 +526,12 @@
 	</div>
 </div>
 
+{% if v %}
+	{% include "gif_modal.html" %}
+	{% include "emoji_modal.html" %}
+	{% include "award_modal.html" %}
+	{% include "delete_comment_modal.html" %}
+{% endif %}
+{% include "expanded_image_modal.html" %}
+{% include "flag_comment_modal.html" %}
 </body>

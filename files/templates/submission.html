@@ -669,7 +669,7 @@
 	{% if p.replies %}
 	<div class="comment-section">
 	{% with comments=p.replies %}
-	{% include "comments.html" %}
+		{% include "comments.html" %}
 	{% endwith %}
  </div>
  {% elif not p.replies and p.deleted_utc == 0 %}
@@ -692,10 +692,8 @@
 </div>
 
 {% if v and v.id==p.author_id %}
-{% include "delete_post_modal.html" %}
+	{% include "delete_post_modal.html" %}
 {% endif %}
-
-{% include "delete_comment_modal.html" %}
 
 
 {% endblock %}
@@ -709,8 +707,8 @@
 {% endblock %}
 
 {% block GIFpicker %}
-{% if v %}
-{% include "gif_modal.html" %}
-{% include "emoji_modal.html" %}
-{% endif %}
+	{% if v %}
+		{% include "award_modal.html" %}
+	{% endif %}
+	{% include "expanded_image_modal.html" %}
 {% endblock %}
