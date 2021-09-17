@@ -353,8 +353,8 @@ class User(Base, Stndrd, Age_times):
 
 		awards = {}
 
-		posts_idlist = g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id).all()
-		comments_idlist = g.db.query(Comment.id).options(lazyload('*')).filter_by(author_id=self.id).all()
+		posts_idlist = [x[0] for x in g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id).all()]
+		comments_idlist = [x[0] for x in g.db.query(Comment.id).options(lazyload('*')).filter_by(author_id=self.id).all()]
 
 		post_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
 		comment_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
@@ -563,7 +563,7 @@ class User(Base, Stndrd, Age_times):
 																		   deleted_utc=0
 																		   )
 
-		saved = g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).subquery()
+		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
 		posts = posts.filter(Submission.id.in_(saved))
 
 		if self.admin_level == 0:
@@ -587,7 +587,7 @@ class User(Base, Stndrd, Age_times):
 
 		comments = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
 
-		saved = g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).subquery()
+		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
 		comments = comments.filter(Comment.id.in_(saved))
 
 		if self.admin_level == 0:
