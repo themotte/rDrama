@@ -11,12 +11,11 @@
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
 					<div class="card-columns awards-wrapper">
 						{% for award in v.user_awards %}
-							<input type="checkbox" name="check" value="1" onclick="document.getElementById('giveaward').disabled=false;document.getElementById('kind').value="{{award.kind}}">
-							<label class="card" >
+							<a href="javascript:void(0)" class="card" onclick="document.getElementById('giveaward').disabled=false;document.getElementById('kind').value={{award.kind}}">
 								<i class="{{award.icon}} {{award.color}}"></i><br />
 								<span class="d-block pt-2" style="font-weight: bold; font-size: 14px;">{{award.title}}</span>
 								<span class="text-muted">{{award.owned}} owned</span>
-							</label>
+							</a>
 						{% endfor %}
 					</div>
 					<label for="note" class="pt-4">Note (optional):</label>
@@ -35,28 +34,26 @@
 		display: none;
 	}
 
-	.awards-wrapper label {
+	.awards-wrapper a {
 		cursor: pointer;
 		padding: 15px;
 		text-align: center;
 		text-transform: none!important;
 	}
 
-	.awards-wrapper label i {
+	.awards-wrapper a i {
 		font-size: 45px;
 	}
 
-	.awards-wrapper label.disabled {
+	.awards-wrapper a.disabled {
 		opacity: 0.6;
 	}
 
-	.awards-wrapper label:hover {
-		/*background-color: rgba(173, 226, 255, 0.7)!important;*/
+	.awards-wrapper a:hover {
 		background-color: var(--primary)!important;
 	}
 
-	.awards-wrapper input[type="radio"]:checked+label {
-		/*background-color: rgba(173, 226, 255, 0.9)!important;*/
+	.awards-wrapper input[type="radio"]:checked+a {
 		background-color: var(--primary)!important;
 	}
 </style>
