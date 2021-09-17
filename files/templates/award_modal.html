@@ -11,7 +11,7 @@
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
 					<div class="card-columns awards-wrapper">
 						{% for award in v.user_awards %}
-							<a href="javascript:void(0)" class="card" onclick="document.getElementById('giveaward').disabled=false;document.getElementById('kind').value={{award.kind}}">
+							<a href="javascript:void(0)" id="{{award.kind]}" class="card" onclick="document.getElementById('giveaward').disabled=false;document.getElementById('kind').value={{award.kind}};document.getElementById('{{award.kind]}').classList.toggle('picked')">
 								<i class="{{award.icon}} {{award.color}}"></i><br />
 								<span class="d-block pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</span>
 								<span class="text-muted">{{award.owned}} owned</span>
@@ -49,7 +49,7 @@
 		opacity: 0.6;
 	}
 
-	.awards-wrapper a:hover, .awards-wrapper a:focus {
+	.awards-wrapper a:hover, picked {
 		background-color: var(--primary)!important;
 	}
 
