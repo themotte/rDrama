@@ -183,20 +183,6 @@ ALLOW_MULTIPLE = (
 	"stars"
 )
 
-
-@app.get("/awards")
-@auth_required
-def get_awards(v):
-
-	return_value = list(AWARDS.values())
-
-	user_awards = v.awards
-	for val in return_value:
-		val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
-
-	return jsonify(return_value)
-
-
 @app.post("/post/<pid>/awards")
 @auth_required
 @validate_formkey
