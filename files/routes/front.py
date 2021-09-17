@@ -12,9 +12,9 @@ def slash_post():
 
 @app.get("/testing")
 def testing():
-	notifications = g.db.query(Notification).options(lazyload('*'))
+	notifications = g.db.query(Notification).options(lazyload('*')).all()
 	print("FUCK\nFUCK\nFUCK")
-	notifications2 = g.db.query(Notification)
+	notifications2 = g.db.query(Notification).all()
 	return "sex"
 
 @app.get("/notifications")
