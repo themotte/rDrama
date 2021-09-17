@@ -10,13 +10,6 @@ defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 def slash_post():
 	return redirect("/")
 
-@app.get("/testing")
-def testing():
-	notifications = g.db.query(Notification).options(lazyload('*')).all()
-	print("FUCK\nFUCK\nFUCK")
-	notifications2 = g.db.query(Notification).all()
-	return "sex"
-
 @app.get("/notifications")
 @auth_required
 def notifications(v):
@@ -26,11 +19,11 @@ def notifications(v):
 	modmail = request.args.get('modmail', False)
 	posts = request.args.get('posts', False)
 	if modmail and v.admin_level == 6:
-		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif messages:
-		comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).options(lazyload('*')).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif posts:
@@ -210,8 +203,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	# 			g.db.add(vote)
 	# 			try: g.db.flush()
 	# 			except: g.db.rollback()
-	# 			post.upvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=1).count()
-	# 			post.downvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=-1).count()
+	# 			post.upvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
+	# 			post.downvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=-1).count()
 	# 			post.views = post.views + random.randint(7,10)
 	# 			g.db.add(post)
 
@@ -219,7 +212,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts[:25]
 
-	if page == 1: posts = g.db.query(Submission).filter_by(stickied=True).all() + posts
+	if page == 1: posts = g.db.query(Submission).options(lazyload('*')).filter_by(stickied=True).all() + posts
 
 	if ids_only: posts = [x.id for x in posts]
 
@@ -272,7 +265,7 @@ def front_all(v):
 @cache.memoize(timeout=86400)
 def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 
-	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
+	posts = g.db.query(Submission).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
 	if v and v.admin_level == 0:
 		blocking = g.db.query(
@@ -374,7 +367,7 @@ def changelog(v):
 @auth_desired
 def random_post(v):
 
-	x = g.db.query(Submission).filter(Submission.deleted_utc == 0, Submission.is_banned == False)
+	x = g.db.query(Submission).options(lazyload('*')).filter(Submission.deleted_utc == 0, Submission.is_banned == False)
 	total = x.count()
 	n = random.randint(1, total - 2)
 
@@ -385,11 +378,11 @@ def random_post(v):
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*'))
-	cc_idlist = g.db.query(Submission.id).filter(Submission.club == True).subquery()
+	cc_idlist = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.club == True).subquery()
 
 	posts = posts.subquery()
 
-	comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission.notin_(cc_idlist))
+	comments = g.db.query(Comment).options(lazyload('*')).options(lazyload('*')).filter(Comment.parent_submission.notin_(cc_idlist))
 
 	if v and v.admin_level <= 3:
 		blocking = g.db.query(

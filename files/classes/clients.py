@@ -27,7 +27,7 @@ class OauthApp(Base, Stndrd):
 
 	def idlist(self, page=1, **kwargs):
 
-		posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(app_id=self.id)
+		posts = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(app_id=self.id)
 		
 		posts=posts.order_by(Submission.created_utc.desc())
 
@@ -37,7 +37,7 @@ class OauthApp(Base, Stndrd):
 
 	def comments_idlist(self, page=1, **kwargs):
 
-		posts = g.db.query(Comment.id).options(lazyload('*')).filter_by(app_id=self.id)
+		posts = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(app_id=self.id)
 		
 		posts=posts.order_by(Comment.created_utc.desc())
 

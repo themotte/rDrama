@@ -82,7 +82,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	post.replies=[top_comment]
 
 	if v:
-		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
+		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
 
 		blocking = v.blocking.subquery()
 
@@ -184,7 +184,7 @@ def api_comment(v):
 		return {"error": reason}, 401
 
 	# check existing
-	existing = g.db.query(Comment).join(CommentAux).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment).join(CommentAux).options(lazyload('*')).filter(Comment.author_id == v.id,
 															 Comment.deleted_utc == 0,
 															 Comment.parent_comment_id == parent_comment_id,
 															 Comment.parent_submission == parent_submission,
@@ -260,7 +260,7 @@ def api_comment(v):
 								fragment='')
 		check_url = urlunparse(check_url)
 
-		badlink = g.db.query(BadLink).filter(
+		badlink = g.db.query(BadLink).options(lazyload('*')).filter(
 			literal(check_url).contains(
 				BadLink.link)).first()
 
@@ -527,7 +527,7 @@ def api_comment(v):
 		# queue up notification for parent author
 		notify_users = set()
 		
-		for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all():
+		for x in g.db.query(Subscription.user_id).options(lazyload('*')).filter_by(submission_id=c.parent_submission).all():
 			notify_users.add(x[0])
 		
 		if parent.author.id != v.id: notify_users.add(parent.author.id)
@@ -537,7 +537,7 @@ def api_comment(v):
 		for mention in mentions:
 			username = mention["href"].split("@")[1]
 
-			user = g.db.query(User).filter_by(username=username).first()
+			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 
 			if user:
 				if v.any_block_exists(user):
@@ -581,7 +581,7 @@ def api_comment(v):
 	v.comment_count = v.comments.filter(Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
-	parent_post.comment_count = g.db.query(Comment).filter_by(parent_submission=parent_post.id).count()
+	parent_post.comment_count = g.db.query(Comment).options(lazyload('*')).filter_by(parent_submission=parent_post.id).count()
 	g.db.add(parent_post)
 
 	g.db.commit()
@@ -650,7 +650,7 @@ def edit_comment(cid, v):
 								fragment='')
 		check_url = urlunparse(check_url)
 
-		badlink = g.db.query(BadLink).filter(
+		badlink = g.db.query(BadLink).options(lazyload('*')).filter(
 			literal(check_url).contains(
 				BadLink.link)).first()
 
@@ -795,7 +795,7 @@ def edit_comment(cid, v):
 		for mention in mentions:
 			username = mention["href"].split("@")[1]
 
-			user = g.db.query(User).filter_by(username=username).first()
+			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 
 			if user:
 				if v.any_block_exists(user):
@@ -819,7 +819,7 @@ def edit_comment(cid, v):
 @validate_formkey
 def delete_comment(cid, v):
 
-	c = g.db.query(Comment).filter_by(id=cid).first()
+	c = g.db.query(Comment).options(lazyload('*')).filter_by(id=cid).first()
 
 	if not c:
 		abort(404)
@@ -842,7 +842,7 @@ def delete_comment(cid, v):
 @validate_formkey
 def undelete_comment(cid, v):
 
-	c = g.db.query(Comment).filter_by(id=cid).first()
+	c = g.db.query(Comment).options(lazyload('*')).filter_by(id=cid).first()
 
 	if not c:
 		abort(404)
@@ -912,7 +912,7 @@ def unsave_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=comment.id, type=2).first()
+	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=comment.id, type=2).first()
 
 	if save: g.db.delete(save)
 

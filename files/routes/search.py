@@ -150,7 +150,7 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
 def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 
-	comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.comment_aux)
+	comments = g.db.query(Comment).options(lazyload('*')).options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.comment_aux)
 
 	if 'q' in criteria:
 		words=criteria['q'].split()
@@ -278,7 +278,7 @@ def searchusers(v):
 	term=term.replace('\\','')
 	term=term.replace('_','\_')
 	
-	users=g.db.query(User).filter(User.username.ilike(f'%{term}%'))
+	users=g.db.query(User).options(lazyload('*')).filter(User.username.ilike(f'%{term}%'))
 	
 	users=users.order_by(User.username.ilike(term).desc(), User.stored_subscriber_count.desc())
 	
