@@ -7,6 +7,7 @@ from files.classes.award import *
 from flask import g, request
 
 @app.get("/shop")
+@app.get("/settings/shop")
 @auth_required
 def shop(v):
 	if site_name == "Drama":
