@@ -436,7 +436,8 @@ def badge_grant_post(v):
 
 		g.db.add(user)
 	
-		g.db.commit()
+	
+	g.db.commit()
 	return redirect("/admin/badge_grant")
 
 
