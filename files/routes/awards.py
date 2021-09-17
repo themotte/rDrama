@@ -198,10 +198,8 @@ ALLOW_MULTIPLE = (
 	"stars"
 )
 
-@app.get("/fucking")
 @app.post("/fucking")
 @auth_required
-@validate_formkey
 def award_post(pid, v):
 
 	if v.is_suspended and v.unban_utc == 0:
