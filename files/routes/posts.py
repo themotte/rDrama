@@ -171,7 +171,7 @@ def post_id(pid, anything=None, v=None):
 
 	else:
 		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
-		comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission == post.id, Comment.author_id.notin_(shadowbanned))
+		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id.notin_(shadowbanned))
 
 		if sort == "top":
 			comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
