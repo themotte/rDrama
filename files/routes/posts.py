@@ -220,14 +220,15 @@ def post_id(pid, anything=None, v=None):
 		
 		for key in keys: session.pop(key)
 
-	#post.views += 1
-	#g.db.add(post)
+	post.views += 1
+	g.db.add(post)
 	if isinstance(session.get('over_18', 0), dict): session["over_18"] = 0
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
 		else: return render_template("errors/nsfw.html", v=v)
 
 	post.tree_comments()
+	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
 	else:
 		if not v or v.highlightcomments: return post.rendered_page(v=v, last_view_utc=last_view_utc, sort=sort)
