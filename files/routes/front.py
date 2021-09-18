@@ -57,7 +57,6 @@ def notifications(v):
 		cids = [x.comment_id for x in notifications]
 		comments = get_comments(cids, v=v, load_parent=True)
 
-		t = time.time()
 		i = 0
 		for x in notifications:
 			try:
@@ -69,7 +68,6 @@ def notifications(v):
 			i += 1
 
 		g.db.commit()
-		print(time.time() - t)
 
 	if not posts:
 		listing = []
