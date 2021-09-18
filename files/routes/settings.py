@@ -339,8 +339,6 @@ def gumroad(v):
 		grant_awards["stars"] = 20
 		grant_awards["ban"] = 6
 
-	_awards = []
-
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
 	for name in grant_awards:
@@ -348,13 +346,13 @@ def gumroad(v):
 
 			thing += 1
 
-			_awards.append(AwardRelationship(
+			award = AwardRelationship(
 				id=thing,
 				user_id=v.id,
 				kind=name
-			))
+			)
 
-	g.db.add_all(_awards)
+			g.db.add(award)
 
 	if not v.has_badge(20+tier):
 		new_badge = Badge(badge_id=20+tier,

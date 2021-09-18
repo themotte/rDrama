@@ -330,7 +330,6 @@ def admin_userawards_post(v):
 
 	u = get_user(request.form.get("username", '1'), graceful=False, v=v)
 
-	awards = []
 	notify_awards = {}
 
 	latest = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first()
@@ -348,13 +347,14 @@ def admin_userawards_post(v):
 			for x in range(int(value)):
 				thing += 1
 
-				awards.append(AwardRelationship(
+				award = AwardRelationship(
 					id=thing,
 					user_id=u.id,
 					kind=key
-				))
+				)
 
-	g.db.add_all(awards)
+				g.db.add(award)
+
 	text = "You were given the following awards:\n\n"
 
 	for key, value in notify_awards.items():
