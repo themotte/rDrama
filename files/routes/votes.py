@@ -150,9 +150,11 @@ def api_vote_comment(comment_id, new, v):
 
 		g.db.add(vote)
 
-	g.db.flush()
-	comment.upvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
-	comment.downvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
-	g.db.add(comment)
-	g.db.commit()
+	try:
+		g.db.flush()
+		comment.upvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
+		comment.downvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
+		g.db.add(comment)
+		g.db.commit()
+	except: g.db.rolleback()
 	return "", 204
