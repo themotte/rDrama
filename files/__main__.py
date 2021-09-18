@@ -83,7 +83,7 @@ limiter = Limiter(
 _engine=create_engine(
 	app.config['DATABASE_URL'],
 	poolclass=QueuePool,
-	pool_size=197,
+	pool_size=97,
 	pool_use_lifo=True
 )
 
