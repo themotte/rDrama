@@ -248,7 +248,7 @@ def googleplayapp():
 
 @app.route("/service-worker.js")
 def serviceworker():
-	with open(".well-known/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
+	return redirect("https://js.pusher.com/beams/service-worker.js")
 
 
 @app.get("/settings/security")
