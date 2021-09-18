@@ -896,11 +896,12 @@ def save_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	new_save=SaveRelationship(user_id=v.id, submission_id=comment.id, type=2)
+	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=comment.id, type=2).first()
 
-	g.db.add(new_save)
-
-	g.db.commit()
+	if not save:
+		new_save=SaveRelationship(user_id=v.id, submission_id=comment.id, type=2)
+		g.db.add(new_save)
+		g.db.commit()
 
 	return {"message": "Comment saved!"}
 

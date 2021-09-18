@@ -143,7 +143,6 @@ def remove_fake_admin(v, username):
 def monthly(v):
 	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
-		_awards = []
 		for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
 			grant_awards = {}
 
@@ -172,11 +171,13 @@ def monthly(v):
 
 					thing += 1
 
-					_awards.append(AwardRelationship(
+					award = AwardRelationship(
 						id=thing,
 						user_id=u.id,
 						kind=name
-					))
+					)
+
+					g.db.add(award)
 
 			text = "You were given the following awards:\n\n"
 
@@ -185,7 +186,6 @@ def monthly(v):
 
 			send_notification(NOTIFICATIONS_ACCOUNT, u, text)
 
-		g.db.bulk_save_objects(_awards)
 
 	g.db.commit()
 	return {"message": "Monthly awards granted"}
@@ -409,8 +409,6 @@ def badge_grant_post(v):
 
 		if len(grant_awards):
 
-			_awards = []
-
 			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
 			for name in grant_awards:
@@ -418,13 +416,13 @@ def badge_grant_post(v):
 
 					thing += 1
 
-					_awards.append(AwardRelationship(
+					award = AwardRelationship(
 						id=thing,
 						user_id=user.id,
 						kind=name
-					))
+					)
 
-			g.db.bulk_save_objects(_awards)
+					g.db.add(award)
 
 			text = "You were given the following awards:\n\n"
 

@@ -50,53 +50,11 @@ def error_405(e, v):
 	else: return render_template('errors/405.html', v=v), 405
 
 
-@app.errorhandler(409)
-@auth_desired
-def error_409(e, v):
-	if request.headers.get("Authorization"): return {"error": "409 Conflict"}, 409
-	else: return render_template('errors/409.html', v=v), 409
-
-
-@app.errorhandler(410)
-@auth_desired
-def error_410(e, v):
-	if request.headers.get("Authorization"): return {"error": "410 Request Payload Too Large"}, 410
-	else: return render_template('errors/410.html', v=v), 410
-
-
-@app.errorhandler(413)
-@auth_desired
-def error_413(e, v):
-	if request.headers.get("Authorization"): return {"error": "413 Image Size Too Large"}, 413
-	else: return render_template('errors/413.html', v=v), 413
-
-
-@app.errorhandler(418)
-@auth_desired
-def error_418(e, v):
-	if request.headers.get("Authorization"): return {"error": "418 I'm A Teapot"}, 418
-	else: return render_template('errors/418.html', v=v), 418
-
-
-@app.errorhandler(422)
-@auth_desired
-def error_422(e, v):
-	if request.headers.get("Authorization"): return {"error": "422 Unprocessable Entity"}, 422
-	else: return render_template('errors/422.html', v=v), 422
-
-
 @app.errorhandler(429)
 @auth_desired
 def error_429(e, v):
 	if request.headers.get("Authorization"): return {"error": "429 Too Many Requests"}, 429
 	else: return render_template('errors/429.html', v=v), 429
-
-
-@app.errorhandler(451)
-@auth_desired
-def error_451(e, v):
-	if request.headers.get("Authorization"): return {"error": "451 Unavailable For Legal Reasons"}, 451
-	else: return render_template('errors/451.html', v=v), 451
 
 
 @app.errorhandler(500)
@@ -106,21 +64,6 @@ def error_500(e, v):
 
 	if request.headers.get("Authorization"): return {"error": "500 Internal Server Error"}, 500
 	else: return render_template('errors/500.html', v=v), 500
-
-
-@app.errorhandler(502)
-@auth_desired
-def error_502(e, v):
-	if request.headers.get("Authorization"): return {"error": "502 Bad Gateway"}, 502
-	else: return render_template('errors/502.html', v=v), 502
-
-
-@app.errorhandler(503)
-@auth_desired
-def error_503(e, v):
-	if request.headers.get("Authorization"): return {"error": "503 Service Unavailable"}, 503
-	else: return render_template('errors/503.html', v=v), 503
-
 
 
 @app.post("/allow_nsfw")
