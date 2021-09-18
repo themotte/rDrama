@@ -108,7 +108,7 @@ def notifications(v):
 						   is_notification_page=True)
 
 
-@cache.memoize(timeout=86400)
+@cache.memoize(timeout=3600)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*'))
@@ -262,7 +262,7 @@ def front_all(v):
 	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
 
-@cache.memoize(timeout=86400)
+@cache.memoize(timeout=3600)
 def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
@@ -374,7 +374,7 @@ def random_post(v):
 	post = x.offset(n).limit(1).first()
 	return redirect(f"/post/{post.id}")
 
-@cache.memoize(timeout=86400)
+@cache.memoize(timeout=3600)
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*'))

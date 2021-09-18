@@ -225,7 +225,7 @@ class User(Base, Stndrd, Age_times):
 	def strid(self):
 		return str(self.id)
 
-	@cache.memoize(timeout=86400)
+	@cache.memoize(timeout=3600)
 	def userpagelisting(self, v=None, page=1, sort="new", t="all"):
 
 		if self.shadowbanned and not (v and (v.admin_level >= 3 or v.id == self.id)):
@@ -443,7 +443,7 @@ class User(Base, Stndrd, Age_times):
 		if self.bannerurl: return self.bannerurl
 		else: return f"https://{site}/assets/images/{site_name}/preview.webp"
 
-	@cache.memoize(timeout=86400)
+	@cache.memoize(timeout=3600)
 	def defaultpicture(self):
 		pic = random.randint(1, 150)
 		return f"https://{site}/assets/images/defaultpictures/{pic}.webp"
