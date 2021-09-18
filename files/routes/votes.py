@@ -69,7 +69,7 @@ def api_vote_post(post_id, new, v):
 	post = get_post(post_id)
 
 	# check for existing vote
-	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
+	existing = g.db.query(Vote).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post.id).first()
 
 	if existing and existing.vote_type == new: return "", 204
 
@@ -96,8 +96,8 @@ def api_vote_post(post_id, new, v):
 					)
 		g.db.add(vote)
 	
-	post.upvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=1).count()
-	post.downvotes = g.db.query(Vote).filter_by(submission_id=post.id, vote_type=-1).count()
+	post.upvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
+	post.downvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=-1).count()
 	g.db.add(post)
 	g.db.commit()
 	return "", 204
@@ -121,7 +121,7 @@ def api_vote_comment(comment_id, new, v):
 	comment = get_comment(comment_id)
 
 	# check for existing vote
-	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
+	existing = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id).first()
 
 	if existing and existing.vote_type == new: return "", 204
 
@@ -149,8 +149,8 @@ def api_vote_comment(comment_id, new, v):
 
 		g.db.add(vote)
 		
-	comment.upvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=1).count()
-	comment.downvotes = g.db.query(CommentVote).filter_by(comment_id=comment.id, vote_type=-1).count()
+	comment.upvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
+	comment.downvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
 	g.db.add(comment)
 	g.db.commit()
 	return "", 204
