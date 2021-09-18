@@ -61,8 +61,6 @@ def check_ban_evade(v):
 			post.is_banned=True
 			post.ban_reason="ban evasion"
 			g.db.add(post)
-
-			g.db.flush()
 			
 			ma=ModAction(
 				kind="ban_post",
@@ -71,8 +69,6 @@ def check_ban_evade(v):
 				note="ban evasion"
 				)
 			g.db.add(ma)
-
-		g.db.flush()
 
 		for comment in g.db.query(Comment).options(lazyload('*')).filter_by(author_id=v.id).all():
 			if comment.is_banned:

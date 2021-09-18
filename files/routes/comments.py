@@ -322,7 +322,6 @@ def api_comment(v):
 		basedguy.basedcount += 1
 		if pill: basedguy.pills += f"{pill.group(1)}, "
 		g.db.add(basedguy)
-		g.db.flush()
 
 		body2 = BASED_MSG.format(username=basedguy.username, basedcount=basedguy.basedcount, pills=basedguy.pills)
 
