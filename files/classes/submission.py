@@ -28,7 +28,7 @@ class SubmissionAux(Base):
 	embed_url = Column(String(256))
 
 
-class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
+class Submission(Base, Age_times):
 
 	__tablename__ = "submissions"
 

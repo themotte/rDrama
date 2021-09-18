@@ -59,7 +59,7 @@
 
 
 <meta property="og:article:author" content="{{'@'+p.author.username}}" />
-<meta property="article:published_time" content="{{p.created_iso}}" />
+<meta property="article:published_time" content="{{p.created_datetime}}" />
 {% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}" />{% endif %}
 <meta property="og:description" name="description" content="{{p.realbody(V)}}" />
 <meta property="og:author" name="author" content="{{'@'+p.author.username}}" />

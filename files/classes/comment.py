@@ -23,7 +23,7 @@ class CommentAux(Base):
 	ban_reason = Column(String(256), default='')
 
 
-class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
+class Comment(Base, Age_times):
 
 	__tablename__ = "comments"
 

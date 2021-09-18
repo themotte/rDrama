@@ -15,14 +15,6 @@ class Stndrd:
 	def created_datetime(self):
 		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
 
-	@property
-	@lazy
-	def created_iso(self):
-
-		t = time.gmtime(self.created_utc)
-		return time.strftime("%Y-%m-%dT%H:%M:%S+00:00", t)
-
-
 class Age_times:
 
 	@property
@@ -110,50 +102,3 @@ class Age_times:
 	@property
 	def edited_datetime(self):
 		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.edited_utc)))
-
-class Scores:
-
-	@property
-	def score_percent(self):
-
-		return 101
-
-	@property
-	def score(self):
-		return int(self.score) or 0
-
-
-class Fuzzing:
-
-	@property
-	def score(self):
-
-		real = self.score
-		real = int(real)
-		if real <= 10:
-			return real
-
-		k = 0.01
-
-		a = math.floor(real * (1 - k))
-		b = math.ceil(real * (1 + k))
-		return random.randint(a, b)
-
-	@property
-	def upvotes(self):
-
-		if self.upvotes <= 10: return self.upvotes
-
-		lower = int(self.upvotes * 0.99)
-		upper = int(self.upvotes * 1.01) + 1
-
-		return random.randint(lower, upper)
-
-	@property
-	def downvotes(self):
-		if self.downvotes <= 10: return self.downvotes
-
-		lower = int(self.downvotes * 0.99)
-		upper = int(self.downvotes * 1.01) + 1
-
-		return random.randint(lower, upper)
