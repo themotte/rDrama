@@ -901,7 +901,8 @@ def save_comment(cid, v):
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, submission_id=comment.id, type=2)
 		g.db.add(new_save)
-		g.db.commit()
+		try: g.db.commit()
+		except: g.db.rollback()
 
 	return {"message": "Comment saved!"}
 
@@ -914,8 +915,8 @@ def unsave_comment(cid, v):
 
 	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=comment.id, type=2).first()
 
-	if save: g.db.delete(save)
-
-	g.db.commit()
+	if save:
+		g.db.delete(save)
+		g.db.commit()
 
 	return {"message": "Comment unsaved!"}
