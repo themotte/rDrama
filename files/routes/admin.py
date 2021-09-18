@@ -185,7 +185,7 @@ def monthly(v):
 
 			send_notification(NOTIFICATIONS_ACCOUNT, u, text)
 
-		g.db.bulk_save_objects(_awards)
+		g.db.add_all(_awards)
 
 	g.db.commit()
 	return {"message": "Monthly awards granted"}
@@ -424,7 +424,7 @@ def badge_grant_post(v):
 						kind=name
 					))
 
-			g.db.bulk_save_objects(_awards)
+			g.db.add_all(_awards)
 
 			text = "You were given the following awards:\n\n"
 

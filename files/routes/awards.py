@@ -354,7 +354,7 @@ def admin_userawards_post(v):
 					kind=key
 				))
 
-	g.db.bulk_save_objects(awards)
+	g.db.add_all(awards)
 	text = "You were given the following awards:\n\n"
 
 	for key, value in notify_awards.items():

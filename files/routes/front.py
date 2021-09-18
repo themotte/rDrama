@@ -30,16 +30,18 @@ def notifications(v):
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 		comments = []
-		
+		notifs = []
+
 		for index, x in enumerate(notifications):
 			c = x.comment
 			if x.read and index > 26: break
 			elif not x.read:
 				c.unread = True
 				x.read = True
-				g.db.add(x)
+				notifs.append(x)
 			comments.append(c)
-		
+
+		g.db.add(notifs)
 		g.db.commit()
 
 		next_exists = (len(comments) > 25)
@@ -58,15 +60,17 @@ def notifications(v):
 		comments = get_comments(cids, v=v, load_parent=True)
 
 		i = 0
+		notifs = []
 		for x in notifications:
 			try:
 				if not x.read:
 					comments[i].unread = True
 					x.read = True
-					g.db.add(x)
+					notifs.append(x)
 			except: continue
 			i += 1
 
+		g.db.add(notifs)
 		g.db.commit()
 
 	if not posts:

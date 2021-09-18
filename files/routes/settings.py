@@ -354,7 +354,7 @@ def gumroad(v):
 				kind=name
 			))
 
-	g.db.bulk_save_objects(_awards)
+	g.db.add_all(_awards)
 
 	if not v.has_badge(20+tier):
 		new_badge = Badge(badge_id=20+tier,
