@@ -222,6 +222,8 @@ def monthly2(v):
 
 		for name in grant_awards:
 			for count in range(grant_awards[name]):
+				
+				thing += 1
 
 				a = AwardRelationship(
 					id=thing,
