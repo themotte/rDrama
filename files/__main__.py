@@ -125,7 +125,7 @@ r=redis.Redis(
 	connection_pool=redispool
 	) if app.config["CACHE_REDIS_URL"] else None
 
-db_session = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
+db_session = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery, autoflush=False))
 
 
 @app.before_request

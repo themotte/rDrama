@@ -117,30 +117,9 @@
 </div>
 </div>
 
-{% include "bootstrap.html" %}
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-<!-- ClipboardJS -->
-
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-
-<!-- Instantiate clipboard by passing a string selector -->
-<script type="text/javascript">
-	var clipboard = new ClipboardJS('.copy-link');
-	clipboard.on('success', function(e) {
-
-		jQuery(function($) {
-			$('#toast-success').toast('show');
-	})
-		console.log(e);
-});
-	clipboard.on('error', function(e) {
-
-		jQuery(function($) {
-			$('#toast-error').toast('show');
-	})
-		console.log(e);
-});
-</script>
 
 <!-- {{'SITE_NAME' | app_config}} JS -->
 
