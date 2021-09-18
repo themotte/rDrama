@@ -138,7 +138,6 @@ def remove_fake_admin(v, username):
 
 
 @app.get("/admin/monthly")
-@limiter.limit("1/day")
 @admin_level_required(6)
 def monthly(v):
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
@@ -194,9 +193,8 @@ def monthly(v):
 
 
 @app.get("/admin/monthly2")
-@limiter.limit("1/day")
 @admin_level_required(6)
-def monthly(v):
+def monthly2(v):
 	t = time.time()
 	for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
 		grant_awards = {}
