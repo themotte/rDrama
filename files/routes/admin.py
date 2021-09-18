@@ -195,6 +195,7 @@ def monthly(v):
 @app.get("/admin/monthly2")
 @admin_level_required(6)
 def monthly2(v):
+	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 	t = time.time()
 	for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
 		grant_awards = {}
@@ -223,6 +224,7 @@ def monthly2(v):
 			for count in range(grant_awards[name]):
 
 				a = AwardRelationship(
+					id=thing,
 					user_id=u.id,
 					kind=name
 				)
