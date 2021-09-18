@@ -137,57 +137,108 @@ def remove_fake_admin(v, username):
 	return {"message": "Fake admin removed!"}
 
 
-@app.post("/admin/monthly")
+@app.get("/admin/monthly")
 @limiter.limit("1/day")
 @admin_level_required(6)
 def monthly(v):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
-		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
-		_awards = []
-		for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
-			grant_awards = {}
+	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+	_awards = []
+	t = time.time()
+	for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
+		grant_awards = {}
 
-			if u.patron == 1:
-				grant_awards["shit"] = 1
-				grant_awards["stars"] = 1
-			elif u.patron == 2:
-				grant_awards["shit"] = 3
-				grant_awards["stars"] = 3
-			elif u.patron == 3:
-				grant_awards["shit"] = 5
-				grant_awards["stars"] = 5
-				grant_awards["ban"] = 1
-			elif u.patron == 4:
-				grant_awards["shit"] = 10
-				grant_awards["stars"] = 10
-				grant_awards["ban"] = 3
-			elif u.patron == 5 or u.patron == 8:
-				grant_awards["shit"] = 20
-				grant_awards["stars"] = 20
-				grant_awards["ban"] = 6
+		if u.patron == 1:
+			grant_awards["shit"] = 1
+			grant_awards["stars"] = 1
+		elif u.patron == 2:
+			grant_awards["shit"] = 3
+			grant_awards["stars"] = 3
+		elif u.patron == 3:
+			grant_awards["shit"] = 5
+			grant_awards["stars"] = 5
+			grant_awards["ban"] = 1
+		elif u.patron == 4:
+			grant_awards["shit"] = 10
+			grant_awards["stars"] = 10
+			grant_awards["ban"] = 3
+		elif u.patron == 5 or u.patron == 8:
+			grant_awards["shit"] = 20
+			grant_awards["stars"] = 20
+			grant_awards["ban"] = 6
 
 
-			for name in grant_awards:
-				for count in range(grant_awards[name]):
+		for name in grant_awards:
+			for count in range(grant_awards[name]):
 
-					thing += 1
+				thing += 1
 
-					_awards.append(AwardRelationship(
-						id=thing,
-						user_id=u.id,
-						kind=name
-					))
+				_awards.append(AwardRelationship(
+					id=thing,
+					user_id=u.id,
+					kind=name
+				))
 
-			text = "You were given the following awards:\n\n"
+		text = "You were given the following awards:\n\n"
 
-			for key, value in grant_awards.items():
-				text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
+		for key, value in grant_awards.items():
+			text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
 
-			send_notification(NOTIFICATIONS_ACCOUNT, u, text)
+		send_notification(NOTIFICATIONS_ACCOUNT, u, text)
 
-		g.db.add_all(_awards)
+	g.db.add_all(_awards)
 
 	g.db.commit()
+	print(time.time() - t)
+	return {"message": "Monthly awards granted"}
+
+
+
+@app.get("/admin/monthly2")
+@limiter.limit("1/day")
+@admin_level_required(6)
+def monthly(v):
+	t = time.time()
+	for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
+		grant_awards = {}
+
+		if u.patron == 1:
+			grant_awards["shit"] = 1
+			grant_awards["stars"] = 1
+		elif u.patron == 2:
+			grant_awards["shit"] = 3
+			grant_awards["stars"] = 3
+		elif u.patron == 3:
+			grant_awards["shit"] = 5
+			grant_awards["stars"] = 5
+			grant_awards["ban"] = 1
+		elif u.patron == 4:
+			grant_awards["shit"] = 10
+			grant_awards["stars"] = 10
+			grant_awards["ban"] = 3
+		elif u.patron == 5 or u.patron == 8:
+			grant_awards["shit"] = 20
+			grant_awards["stars"] = 20
+			grant_awards["ban"] = 6
+
+
+		for name in grant_awards:
+			for count in range(grant_awards[name]):
+
+				a = AwardRelationship(
+					user_id=u.id,
+					kind=name
+				))
+				g.db.add(a)
+
+		text = "You were given the following awards:\n\n"
+
+		for key, value in grant_awards.items():
+			text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
+
+		send_notification(NOTIFICATIONS_ACCOUNT, u, text)
+
+	g.db.commit()
+	print(time.time() - t)
 	return {"message": "Monthly awards granted"}
 
 
