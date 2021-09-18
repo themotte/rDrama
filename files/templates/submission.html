@@ -209,8 +209,8 @@
 
 {% if p.award_count("stars") %}
 	<script src="/assets/js/star.js" type="text/javascript"></script>
-	{% set minbugs = 10*p.award_count("stars") if p.award_count("stars") <= 5 else 50 %}
-	{% set maxbugs = 20*p.award_count("stars") if p.award_count("stars") <= 5 else 100 %}
+	{% set minbugs = 100*p.award_count("stars") if p.award_count("stars") <= 5 else 500 %}
+	{% set maxbugs = 200*p.award_count("stars") if p.award_count("stars") <= 5 else 1000 %}
 	<script type="text/javascript">
 		new BugController({
 			imageSprite: "/assets/images/star.png",
