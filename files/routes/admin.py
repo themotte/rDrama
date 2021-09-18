@@ -227,7 +227,7 @@ def monthly(v):
 				a = AwardRelationship(
 					user_id=u.id,
 					kind=name
-				))
+				)
 				g.db.add(a)
 
 		text = "You were given the following awards:\n\n"
