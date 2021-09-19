@@ -99,7 +99,7 @@ def log(v):
 
 	page=int(request.values.get("page",1))
 
-	actions = g.db.query(ModAction).offset(25 * (page - 1)).limit(26).all()
+	actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	next_exists = len(actions)==26
 	actions = actions[:25]
