@@ -156,5 +156,5 @@ def api_vote_comment(comment_id, new, v):
 		comment.downvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
 		g.db.add(comment)
 		g.db.commit()
-	except: g.db.rolleback()
+	except: g.db.rollback()
 	return "", 204
