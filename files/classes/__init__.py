@@ -1,4 +1,3 @@
-from files.__main__ import app
 from .alts import *
 from .badges import *
 from .clients import *
@@ -12,5 +11,6 @@ from .votes import *
 from .images import *
 from .domains import *
 from .subscriptions import *
+from files.__main__ import app
 from .mod_logs import *
 from .award import *
