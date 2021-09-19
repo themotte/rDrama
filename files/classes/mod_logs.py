@@ -36,9 +36,6 @@ class ModAction(Base, Stndrd, Age_times):
 	def __repr__(self):
 		return f"<ModAction(id={self.id})>"
 
-	@property
-	def actiontype(self):
-		return ACTIONTYPES[self.kind]
 
 	@property
 	def note(self):
@@ -59,10 +56,9 @@ class ModAction(Base, Stndrd, Age_times):
 	@property
 	def string(self):
 
-		output =  self.actiontype["str"].format(self=self)
+		output =  ACTIONTYPES["str"].format(self=self)
 
-		if self.note:
-			output += f" <i>({self.note})</i>"
+		if self.note: output += f" <i>({self.note})</i>"
 
 		return output
 
@@ -79,259 +75,136 @@ class ModAction(Base, Stndrd, Age_times):
 			return ""
 
 	@property
-	def json(self):
-		data={
-			"id":self.id,
-			"kind": self.kind,
-			"created_utc": self.created_utc,
-			"mod": self.user.username,
-		}
-
-		if self.target_user_id:
-			data["target_user_id"]=self.target_user.id
-			data["target_user"]=self.target_user.username
-
-		if self.target_comment_id:
-			data["target_comment_id"]=self.target_comment.id
-
-		if self.target_submission_id:
-			data["target_submission_id"]=self.target_submission.id
-
-		if self._note:
-			data["note"]=self._note
-
-		return data
-	
-
-
-
-	@property
 	def icon(self):
-		return self.actiontype['icon']
+		return ACTIONTYPES['icon']
 
 	@property
 	def color(self):
-		return self.actiontype['color']
+		return ACTIONTYPES['color']
 
 	@property
 	def permalink(self):
-		return f"/log/{self.id}"
-	@property
-	def title_text(self):
-		return f"@{self.user.username} {self.actiontype['title'].format(self=self)}"
-	
+		return f"/log/{self.id}"	
 	
 
 
 ACTIONTYPES={
-	"kick_post":{
-		"str":'kicked post {self.target_link}',
-		"icon":"fa-sign-out fa-flip-horizontal",
-		"color": "bg-danger",
-		"title": 'kicked post {self.target_post.title}'
-	},
-	"approve_post":{
-		"str":'approved post {self.target_link}',
-		"icon":"fa-check",
-		"color": "bg-success",
-		"title": 'approved post {self.target_post.title}'
-	},	
-	"yank_post":{
-		"str":'yanked post {self.target_link}',
-		"icon":"fa-hand-lizard",
-		"color": "bg-muted",
-		"title": 'yanked post {self.target_post.title}'
-	},
 	"ban_user":{
 		"str":'banned user {self.target_link}',
 		"icon":"fa-user-slash",
 		"color": "bg-danger",
-		"title": 'banned user {self.target_user.username}'
 	},
 	"unban_user":{
 		"str":'unbanned user {self.target_link}',
 		"icon": "fa-user-slash",
 		"color": "bg-muted",
-		"title": 'unbanned user {self.target_user.username}'
+	},
+	"club_allow":{
+		"str":'disallowed user {self.target_link} from the country club',
+		"icon":"fa-user-slash",
+		"color": "bg-danger",
+	},
+	"club_ban":{
+		"str":'allowed user {self.target_link} into the country club',
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
 	},
 	"nuke_user":{
 		"str":'removed all content of {self.target_link}',
 		"icon":"fa-user-slash",
 		"color": "bg-danger",
-		"title": 'removed all content of {self.target_user.username}'
 	},
 	"unnuke_user":{
 		"str":'approved all content of {self.target_link}',
 		"icon": "fa-user-slash",
 		"color": "bg-muted",
-		"title": 'approved all content of {self.target_user.username}'
 	},
 	"shadowban": {
 		"str": 'shadowbanned {self.target_link}',
 		"icon": "fa-user-slash",
 		"color": "bg-danger",
-		"title": 'shadowbanned {self.target_user.username}'
 	},
 	"unshadowban": {
 		"str": 'unshadowbanned {self.target_link}',
 		"icon": "fa-user-slash",
 		"color": "bg-muted",
-		"title": 'unshadowbanned {self.target_user.username}'
 	},
 	"agendaposter": {
 		"str": "set agendaposter theme on {self.target_link}",
 		"icon": "fa-user-slash",
 		"color": "bg-muted",
-		"title": "set agendaposter theme on {self.target_link}"
 	},
 	"unagendaposter": {
 		"str": "removed agendaposter theme from {self.target_link}",
 		"icon": "fa-user-slash",
 		"color": "bg-muted",
-		"title": "removed agendaposter theme from {self.target_link}"
 	},
 	"set_flair_locked":{
 		"str":"set {self.target_link}'s flair (locked)",
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
-		"title": "set {self.target_link}'s flair (locked)"
 	},
 	"set_flair_notlocked":{
 		"str":"set {self.target_link}'s flair (not locked)",
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
-		"title": "set {self.target_link}'s flair (not locked)"
-	},
-	"contrib_user":{
-		"str":'added contributor {self.target_link}',
-		"icon": "fa-user-check",
-		"color": "bg-info",
-		"title": 'added contributor {self.target_user.username}'
-	},
-	"uncontrib_user":{
-		"str":'removed contributor {self.target_link}',
-		"icon": "fa-user-check",
-		"color": "bg-muted",
-		"title": 'removed user {self.target_user.username}'
-	},
-	"herald_comment":{
-		"str":'heralded their {self.target_link}',
-		"icon": "fa-crown",
-		"color": "bg-warning",
-		"title": 'heralded their comment'
-	},
-	"herald_post":{
-		"str":'heralded their post {self.target_link}',
-		"icon": "fa-crown",
-		"color": "bg-warning",
-		"title": 'heralded their post {self.target_post.title}'
-	},
-	"unherald_comment":{
-		"str":'un-heralded their {self.target_link}',
-		"icon": "fa-crown",
-		"color": "bg-muted",
-		"title": 'un-heralded their comment'
-		},
-	"unherald_post":{
-		"str":'un-heralded their post {self.target_link}',
-		"icon": "fa-crown",
-		"color": "bg-muted",
-		"title": 'un-heralded their post {self.target_post.title}'
 	},
 	"pin_comment":{
 		"str":'pinned a {self.target_link}',
 		"icon":"fa-thumbtack fa-rotate--45",
 		"color": "bg-info",
-		"title": 'pinned a comment'
 	},
 	"unpin_comment":{
 		"str":'un-pinned a {self.target_link}',
 		"icon":"fa-thumbtack fa-rotate--45",
 		"color": "bg-muted",
-		"title": 'un-pinned a comment'
 	},
 	"pin_post":{
 		"str":'pinned post {self.target_link}',
 		"icon":"fa-thumbtack fa-rotate--45",
 		"color": "bg-success",
-		"title": 'pinned post {self.target_post.title}'
 	},
 	"unpin_post":{
 		"str":'un-pinned post {self.target_link}',
 		"icon":"fa-thumbtack fa-rotate--45",
 		"color": "bg-muted",
-		"title": 'un-pinned post {self.target_post.title}'
 	},
 	"set_nsfw":{
 		"str":'set nsfw on post {self.target_link}',
 		"icon":"fa-eye-evil",
 		"color": "bg-danger",
-		"title": 'set nsfw on post {self.target_post.title}'
 	},
 	"unset_nsfw":{
 		"str":'un-set nsfw on post {self.target_link}',
 		"icon":"fa-eye-evil",
 		"color": "bg-muted",
-		"title": 'un-set nsfw on post {self.target_post.title}'
-	},
-	"set_nsfl":{
-		"str":'set nsfl on post {self.target_link}',
-		"icon":"fa-skull",
-		"color": "bg-black",
-		"title": 'set nsfl on post {self.target_post.title}'
-	},
-	"unset_nsfl":{
-		"str":'un-set nsfl on post {self.target_link}',
-		"icon":"fa-skull",
-		"color": "bg-muted",
-		"title": 'un-set nsfw on post {self.target_post.title}'
 	},
 	"ban_post":{
 		"str": 'removed post {self.target_link}',
 		"icon":"fa-feather-alt",
 		"color": "bg-danger",
-		"title": "removed post {self.target_post.title}"
 	},
 	"unban_post":{
 		"str": 'reinstated post {self.target_link}',
 		"icon":"fa-feather-alt",
 		"color": "bg-muted",
-		"title": "reinstated post {self.target_post.title}"
 	},
 	"club":{
 		"str": 'marked post {self.target_link} as viewable to users with +150 coins only',
 		"icon":"fa-eye-slash",
 		"color": "bg-danger",
-		"title": 'marked post {self.target_post} as viewable to users with +150 coins only'
 	},
 	"unclub":{
 		"str": 'unmarked post {self.target_link} as viewable to users with +150 coins only',
 		"icon":"fa-eye",
 		"color": "bg-muted",
-		"title": 'unmarked post {self.target_post} as viewable to users with +150 coins only'
 	},
 	"ban_comment":{
 		"str": 'removed {self.target_link}',
 		"icon":"fa-comment",
 		"color": "bg-danger",
-		"title": "removed comment"
 	},
 	"unban_comment":{
 		"str": 'reinstated {self.target_link}',
 		"icon":"fa-comment",
 		"color": "bg-muted",
-		"title": "reinstated comment"
 	},
-	"change_perms":{
-		"str": 'changed permissions on admin {self.target_link}',
-		"icon":"fa-user-cog",
-		"color": "bg-info",
-		"title": "changed permissions on {self.target_user.username}"
-	},
-	"change_invite":{
-		"str": 'changed  permissions on admin invitation to {self.target_link}',
-		"icon":"fa-user-cog",
-		"color": "bg-muted",
-		"title": "changed permissions on invitation to {self.target_user.username}"
-	}
 }
