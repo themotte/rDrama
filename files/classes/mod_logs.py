@@ -56,7 +56,7 @@ class ModAction(Base, Stndrd, Age_times):
 	@property
 	def string(self):
 
-		output =  ACTIONTYPES["str"].format(self=self)
+		output =  ACTIONTYPES[self.kind]["str"].format(self=self)
 
 		if self.note: output += f" <i>({self.note})</i>"
 
@@ -76,11 +76,11 @@ class ModAction(Base, Stndrd, Age_times):
 
 	@property
 	def icon(self):
-		return ACTIONTYPES['icon']
+		return ACTIONTYPES[self.kind]['icon']
 
 	@property
 	def color(self):
-		return ACTIONTYPES['color']
+		return ACTIONTYPES[self.kind]['color']
 
 	@property
 	def permalink(self):
