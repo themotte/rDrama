@@ -47,6 +47,7 @@ class OauthApp(Base):
 
 		return [x[0] for x in posts.all()]
 
+
 	def comments_idlist(self, page=1, **kwargs):
 
 		posts = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(app_id=self.id)
