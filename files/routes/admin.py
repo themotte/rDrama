@@ -843,7 +843,6 @@ def admin_title_change(user_id, v):
 @validate_formkey
 def ban_user(user_id, v):
 	
-	print("sex")
 	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 
 	if user.admin_level >= v.admin_level: abort(403)
