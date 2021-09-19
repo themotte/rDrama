@@ -39,7 +39,9 @@ def revert_actions(v, username):
 
 		users = g.db.query(User).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=user.id).all()
 		for user in users:
-			user.unban()
+			user.is_banned = 0
+			user.unban_utc = 0
+			g.db.add(user)
 
 		g.db.commit()
 	return {"message": "Admin actions reverted!"}
@@ -936,12 +938,16 @@ def unban_user(user_id, v):
 	if not user:
 		abort(400)
 
-	user.unban()
+	user.is_banned = 0
+	user.unban_utc = 0
+	g.db.add(user)
 
 	if request.values.get("alts", ""):
 		for x in user.alts:
 			if x.admin_level == 0:
-				x.unban()
+				x.is_banned = 0
+				x.unban_utc = 0
+				g.db.add(x)
 
 	send_notification(NOTIFICATIONS_ACCOUNT, user,
 					  "Your account has been reinstated. Please carefully review and abide by the [rules](/post/2510) to ensure that you don't get suspended again.")

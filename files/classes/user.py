@@ -533,14 +533,6 @@ class User(Base):
 		g.db.add(self)
 
 
-	def unban(self):
-
-		self.is_banned = 0
-		self.unban_utc = 0
-
-		g.db.add(self)
-		g.db.commit()
-
 
 	@property
 	@lazy
