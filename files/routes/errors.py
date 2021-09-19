@@ -21,7 +21,7 @@ def error_400(e, v):
 def error_401(e):
 
 	path = request.path
-	qs = urlencode(dict(request.args))
+	qs = urlencode(dict(request.values))
 	argval = quote(f"{path}?{qs}", safe='')
 	output = f"/login?redirect={argval}"
 
@@ -70,7 +70,7 @@ def error_500(e, v):
 def allow_nsfw():
 
 	session["over_18"] = int(time.time()) + 3600
-	return redirect(request.form.get("redir", "/"))
+	return redirect(request.values.get("redir", "/"))
 
 
 @app.get("/error/<error>")

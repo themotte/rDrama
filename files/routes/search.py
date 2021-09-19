@@ -203,12 +203,12 @@ def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 def searchposts(v):
 
 
-	query = request.args.get("q", '').strip()
+	query = request.values.get("q", '').strip()
 
-	page = max(1, int(request.args.get("page", 1)))
+	page = max(1, int(request.values.get("page", 1)))
 
-	sort = request.args.get("sort", "top").lower()
-	t = request.args.get('t', 'all').lower()
+	sort = request.values.get("sort", "top").lower()
+	t = request.values.get('t', 'all').lower()
 
 	criteria=searchparse(query)
 	total, ids = searchlisting(criteria, v=v, page=page, t=t, sort=sort)
@@ -244,13 +244,13 @@ def searchposts(v):
 def searchcomments(v):
 
 
-	query = request.args.get("q", '').strip()
+	query = request.values.get("q", '').strip()
 
-	try: page = max(1, int(request.args.get("page", 1)))
+	try: page = max(1, int(request.values.get("page", 1)))
 	except: page = 1
 
-	sort = request.args.get("sort", "top").lower()
-	t = request.args.get('t', 'all').lower()
+	sort = request.values.get("sort", "top").lower()
+	t = request.values.get('t', 'all').lower()
 
 	criteria=searchparse(query)
 	total, ids = searchcommentlisting(criteria, v=v, page=page, t=t, sort=sort)
@@ -269,11 +269,11 @@ def searchcomments(v):
 def searchusers(v):
 
 
-	query = request.args.get("q", '').strip()
+	query = request.values.get("q", '').strip()
 
-	page = max(1, int(request.args.get("page", 1)))
-	sort = request.args.get("sort", "top").lower()
-	t = request.args.get('t', 'all').lower()
+	page = max(1, int(request.values.get("page", 1)))
+	sort = request.values.get("sort", "top").lower()
+	t = request.values.get('t', 'all').lower()
 	term=query.lstrip('@')
 	term=term.replace('\\','')
 	term=term.replace('_','\_')

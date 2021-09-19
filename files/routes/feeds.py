@@ -10,7 +10,7 @@ from files.__main__ import app
 @app.get('/rss/<sort>/<t>')
 def feeds_user(sort='hot', t='all'):
 
-	page = int(request.args.get("page", 1))
+	page = int(request.values.get("page", 1))
 
 	ids, next_exists = frontlist(
 		sort=sort,

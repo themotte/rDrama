@@ -9,7 +9,7 @@ from files.__main__ import app
 @app.get("/authorize")
 @auth_required
 def authorize_prompt(v):
-	client_id = request.args.get("client_id")
+	client_id = request.values.get("client_id")
 	application = g.db.query(OauthApp).options(lazyload('*')).filter_by(client_id=client_id).first()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	return render_template("oauth.html", v=v, application=application)
@@ -20,7 +20,7 @@ def authorize_prompt(v):
 @validate_formkey
 def authorize(v):
 
-	client_id = request.form.get("client_id")
+	client_id = request.values.get("client_id")
 	application = g.db.query(OauthApp).options(lazyload('*')).filter_by(client_id=client_id).first()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	access_token = secrets.token_urlsafe(128)[:128]
@@ -42,15 +42,15 @@ def authorize(v):
 def request_api_keys(v):
 
 	new_app = OauthApp(
-		app_name=request.form.get('name'),
-		redirect_uri=request.form.get('redirect_uri'),
+		app_name=request.values.get('name'),
+		redirect_uri=request.values.get('redirect_uri'),
 		author_id=v.id,
-		description=request.form.get("description")[:256]
+		description=request.values.get("description")[:256]
 	)
 
 	g.db.add(new_app)
 
-	send_admin(NOTIFICATIONS_ACCOUNT, f"{v.username} has requested API keys for `{request.form.get('name')}`. You can approve or deny the request [here](/admin/apps).")
+	send_admin(NOTIFICATIONS_ACCOUNT, f"{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps).")
 
 	g.db.commit()
 
@@ -83,9 +83,9 @@ def edit_oauth_app(v, aid):
 	aid = int(aid)
 	app = g.db.query(OauthApp).options(lazyload('*')).filter_by(id=aid).first()
 
-	app.redirect_uri = request.form.get('redirect_uri')
-	app.app_name = request.form.get('name')
-	app.description = request.form.get("description")[:256]
+	app.redirect_uri = request.values.get('redirect_uri')
+	app.app_name = request.values.get('name')
+	app.description = request.values.get("description")[:256]
 
 	g.db.add(app)
 
@@ -168,7 +168,7 @@ def admin_app_id(v, aid):
 			OauthApp.author)).filter_by(
 		id=aid).first()
 
-	pids=oauth.idlist(page=int(request.args.get("page",1)),
+	pids=oauth.idlist(page=int(request.values.get("page",1)),
 		)
 
 	next_exists=len(pids)==101
@@ -194,7 +194,7 @@ def admin_app_id_comments(v, aid):
 			OauthApp.author)).filter_by(
 		id=aid).first()
 
-	cids=oauth.comments_idlist(page=int(request.args.get("page",1)),
+	cids=oauth.comments_idlist(page=int(request.values.get("page",1)),
 		)
 
 	next_exists=len(cids)==101

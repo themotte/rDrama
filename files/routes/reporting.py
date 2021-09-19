@@ -16,7 +16,7 @@ def api_flag_post(pid, v):
 
 		if existing: return "", 409
 
-		reason = request.form.get("reason", "").strip()[:100]
+		reason = request.values.get("reason", "").strip()[:100]
 		if "<" in reason: return {"error": f"Reasons can't contain <"}
 
 		for i in re.finditer(':(.{1,30}?):', reason):
@@ -47,7 +47,7 @@ def api_flag_comment(cid, v):
 			user_id=v.id, comment_id=comment.id).first()
 
 		if existing: return "", 409
-		reason = request.form.get("reason", "").strip()[:100]
+		reason = request.values.get("reason", "").strip()[:100]
 		if "<" in reason: return {"error": f"Reasons can't contain <"}
 
 		for i in re.finditer(':(.{1,30}?):', reason):

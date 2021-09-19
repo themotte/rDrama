@@ -13,11 +13,11 @@ def slash_post():
 @app.get("/notifications")
 @auth_required
 def notifications(v):
-	try: page = int(request.args.get('page', 1))
+	try: page = int(request.values.get('page', 1))
 	except: page = 1
-	messages = request.args.get('messages', False)
-	modmail = request.args.get('modmail', False)
-	posts = request.args.get('posts', False)
+	messages = request.values.get('messages', False)
+	modmail = request.values.get('modmail', False)
+	posts = request.values.get('posts', False)
 	if modmail and v.admin_level == 6:
 		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
@@ -230,7 +230,7 @@ def front_all(v):
 
 	if v and "logged_out" in request.full_path: v = None
 
-	try: page = int(request.args.get("page") or 1)
+	try: page = int(request.values.get("page") or 1)
 	except: abort(400)
 
 	# prevent invalid paging
@@ -243,15 +243,15 @@ def front_all(v):
 		defaultsorting = "hot"
 		defaulttime = defaulttimefilter
 
-	sort=request.args.get("sort", defaultsorting)
-	t=request.args.get('t', defaulttime)
+	sort=request.values.get("sort", defaultsorting)
+	t=request.values.get('t', defaulttime)
 
 	ids, next_exists = frontlist(sort=sort,
 					page=page,
 					t=t,
 					v=v,
-					gt=int(request.args.get("utc_greater_than", 0)),
-					lt=int(request.args.get("utc_less_than", 0)),
+					gt=int(request.values.get("utc_greater_than", 0)),
+					lt=int(request.values.get("utc_less_than", 0)),
 					filter_words=v.filter_words if v else [],
 					)
 
@@ -339,18 +339,18 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 def changelog(v):
 
 
-	page = int(request.args.get("page") or 1)
+	page = int(request.values.get("page") or 1)
 	page = max(page, 1)
 
-	sort=request.args.get("sort", "new")
-	t=request.args.get('t', "all")
+	sort=request.values.get("sort", "new")
+	t=request.values.get('t', "all")
 
 	ids = changeloglist(sort=sort,
 					page=page,
 					t=t,
 					v=v,
-					gt=int(request.args.get("utc_greater_than", 0)),
-					lt=int(request.args.get("utc_less_than", 0)),
+					gt=int(request.values.get("utc_greater_than", 0)),
+					lt=int(request.values.get("utc_less_than", 0)),
 					)
 
 	# check existence of next page
@@ -440,10 +440,10 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 def all_comments(v):
 
 
-	page = int(request.args.get("page", 1))
+	page = int(request.values.get("page", 1))
 
-	sort=request.args.get("sort", "new")
-	t=request.args.get("t", defaulttimefilter)
+	sort=request.values.get("sort", "new")
+	t=request.values.get("t", defaulttimefilter)
 
 	idlist = comment_idlist(v=v,
 							page=page,

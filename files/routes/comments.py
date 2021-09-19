@@ -61,7 +61,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	post._preloaded_comments = [comment]
 
 	# context improver
-	try: context = int(request.args.get("context", 0))
+	try: context = int(request.values.get("context", 0))
 	except: context = 0
 	comment_info = comment
 	c = comment
@@ -77,7 +77,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	if v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
-	sort=request.args.get("sort", defaultsortingcomments)
+	sort=request.values.get("sort", defaultsortingcomments)
 
 	post.replies=[top_comment]
 
@@ -133,8 +133,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 @validate_formkey
 def api_comment(v):
 
-	parent_submission = request.form.get("submission")
-	parent_fullname = request.form.get("parent_fullname")
+	parent_submission = request.values.get("submission")
+	parent_fullname = request.values.get("parent_fullname")
 
 	# get parent item info
 	parent_id = parent_fullname.split("_")[1]
@@ -156,7 +156,7 @@ def api_comment(v):
 		abort(400)
 
 	#process and sanitize
-	body = request.form.get("body", "")[:10000]
+	body = request.values.get("body", "")[:10000]
 	body = body.strip()
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
@@ -271,7 +271,7 @@ def api_comment(v):
 				parent_submission=parent_submission,
 				parent_comment_id=parent_comment_id,
 				level=level,
-				over_18=parent_post.over_18 or request.form.get("over_18","")=="true",
+				over_18=parent_post.over_18 or request.values.get("over_18","")=="true",
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None
 				)
@@ -288,7 +288,7 @@ def api_comment(v):
 
 		url = upload_ibb(file=file)
 		
-		body = request.form.get("body") + f"\n![]({url})"
+		body = request.values.get("body") + f"\n![]({url})"
 		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
@@ -605,7 +605,7 @@ def edit_comment(cid, v):
 
 	if c.is_banned or c.deleted_utc > 0: abort(403)
 
-	body = request.form.get("body", "")[:10000]
+	body = request.values.get("body", "")[:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")

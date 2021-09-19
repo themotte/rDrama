@@ -191,7 +191,7 @@ def award_post(pid, v):
 	if v.is_suspended and v.unban_utc == 0:
 		return {"error": "forbidden."}, 403
 
-	kind = request.form.get("kind", "")
+	kind = request.values.get("kind", "")
 	
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
@@ -233,7 +233,7 @@ def award_post(pid, v):
 
 	msg = f"@{v.username} has given your [post]({post.permalink}) the {AWARDS[kind]['title']} Award!"
 
-	note = request.form.get("note", "")
+	note = request.values.get("note", "")
 	if note:
 		msg += f"\n\n> {note}"
 
@@ -255,7 +255,7 @@ def award_comment(cid, v):
 	if v.is_suspended and v.unban_utc == 0:
 		return {"error": "forbidden"}, 403
 
-	kind = request.form.get("kind", "")
+	kind = request.values.get("kind", "")
 
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
@@ -296,7 +296,7 @@ def award_comment(cid, v):
 
 	msg = f"@{v.username} has given your [comment]({c.permalink}) the {AWARDS[kind]['title']} Award!"
 
-	note = request.form.get("note", "")
+	note = request.values.get("note", "")
 	if note:
 		msg += f"\n\n> {note}"
 
@@ -328,14 +328,14 @@ def admin_userawards_post(v):
 	if v.admin_level < 6:
 		abort(403)
 
-	u = get_user(request.form.get("username", '1'), graceful=False, v=v)
+	u = get_user(request.values.get("username", '1'), graceful=False, v=v)
 
 	notify_awards = {}
 
 	latest = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first()
 	thing = latest.id
 
-	for key, value in request.form.items():
+	for key, value in request.values.items():
 		if key not in AWARDS:
 			continue
 

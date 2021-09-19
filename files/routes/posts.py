@@ -91,7 +91,7 @@ def post_id(pid, anything=None, v=None):
 
 	if v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
-	sort=request.args.get("sort", defaultsortingcomments)
+	sort=request.values.get("sort", defaultsortingcomments)
 
 	try: pid = int(pid)
 	except:
@@ -242,8 +242,8 @@ def edit_post(pid, v):
 
 	if not p.author_id == v.id: abort(403)
 
-	title = request.form.get("title")
-	body = request.form.get("body", "")
+	title = request.values.get("title")
+	body = request.values.get("body", "")
 
 	if title != p.title:
 		p.title = title
@@ -397,7 +397,7 @@ def edit_post(pid, v):
 @auth_required
 def get_post_title(v):
 
-	url = request.args.get("url", None)
+	url = request.values.get("url", None)
 	if not url:
 		return abort(400)
 
@@ -601,8 +601,8 @@ def thumbs(new_post):
 @validate_formkey
 def submit_post(v):
 
-	title = request.form.get("title", "")
-	url = request.form.get("url", "")
+	title = request.values.get("title", "")
+	url = request.values.get("url", "")
 
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
@@ -633,24 +633,24 @@ def submit_post(v):
 
 	if not title:
 		if request.headers.get("Authorization"): return {"error": "Please enter a better title"}, 400
-		else: return render_template("submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.form.get("body", "")), 400
+		else: return render_template("submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.values.get("body", "")), 400
 
 
 	elif len(title) > 500:
 		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
-		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.form.get("body", "")), 400
+		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
 
 	parsed_url = urlparse(url)
-	if not (parsed_url.scheme and parsed_url.netloc) and not request.form.get(
+	if not (parsed_url.scheme and parsed_url.netloc) and not request.values.get(
 			"body") and not request.files.get("file", None):
 
 		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
-		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.form.get("body", "")), 400
+		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
 
 
 	# Force https for submitted urls
 
-	if request.form.get("url"):
+	if request.values.get("url"):
 		new_url = ParseResult(scheme="https",
 							  netloc=parsed_url.netloc,
 							  path=parsed_url.path,
@@ -661,7 +661,7 @@ def submit_post(v):
 	else:
 		url = ""
 	
-	body = request.form.get("body", "")
+	body = request.values.get("body", "")
 	# check for duplicate
 	dup = g.db.query(Submission).join(Submission.submission_aux).options(lazyload('*')).filter(
 
@@ -691,7 +691,7 @@ def submit_post(v):
 			v.ban(reason="Sexualizing minors")
 
 		if request.headers.get("Authorization"): return {"error":"ToS violation"}, 400
-		else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.form.get("body", "")), 400
+		else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if "twitter.com" in domain:
 		try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
@@ -794,12 +794,12 @@ def submit_post(v):
 	if len(str(body)) > 10000:
 
 		if request.headers.get("Authorization"): return {"error":"10000 character limit for text body."}, 400
-		else: return render_template("submit.html", v=v, error="10000 character limit for text body.", title=title, url=url, body=request.form.get("body", "")), 400
+		else: return render_template("submit.html", v=v, error="10000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if len(url) > 2048:
 
 		if request.headers.get("Authorization"): return {"error":"2048 character limit for URLs."}, 400
-		else: return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.form.get("body", "")), 400
+		else: return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
 
 	# render text
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
@@ -822,7 +822,7 @@ def submit_post(v):
 			abort(403)
 			
 		if request.headers.get("Authorization"): return {"error": reason}, 403
-		else: return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.form.get("body", "")), 403
+		else: return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 
 	# check spam
 	soup = BeautifulSoup(body_html, features="html.parser")
@@ -853,19 +853,19 @@ def submit_post(v):
 				return redirect('/notifications')
 			else:
 				if request.headers.get("Authorization"): return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400
-				else: return render_template("submit.html", v=v, error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}.", title=title, url=url, body=request.form.get("body", "")), 400
+				else: return render_template("submit.html", v=v, error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	# check for embeddable video
 	domain = parsed_url.netloc
 
-	if v.paid_dues: club = bool(request.form.get("club",""))
+	if v.paid_dues: club = bool(request.values.get("club",""))
 	else: club = False
 
 	new_post = Submission(
-		private=bool(request.form.get("private","")),
+		private=bool(request.values.get("private","")),
 		club=club,
 		author_id=v.id,
-		over_18=bool(request.form.get("over_18","")),
+		over_18=bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("X-User-Type","").lower()=="bot"
 	)
@@ -905,11 +905,11 @@ def submit_post(v):
 		file = request.files['file']
 		#if not file.content_type.startswith('image/'):
 		#	if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
-		#	else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.form.get("body", "")), 400
+		#	else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.values.get("body", "")), 400
 
 		if not file.content_type.startswith(('image/', 'video/')):
 			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
-			else: return render_template("submit.html", v=v, error=f"File type not allowed.", title=title, body=request.form.get("body", "")), 400
+			else: return render_template("submit.html", v=v, error=f"File type not allowed.", title=title, body=request.values.get("body", "")), 400
 
 		if file.content_type.startswith('video/') and v.coins < app.config["VIDEO_COIN_REQUIREMENT"] and v.admin_level < 1:
 			if request.headers.get("Authorization"):
@@ -922,7 +922,7 @@ def submit_post(v):
 					v=v,
 					error=f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos.",
 					title=title,
-					body=request.form.get("body", "")
+					body=request.values.get("body", "")
 				), 403
 
 		if file.content_type.startswith('image/'):
@@ -946,7 +946,7 @@ def submit_post(v):
 						v=v,
 						error=str(e),
 						title=title,
-						body=request.form.get("body", "")
+						body=request.values.get("body", "")
 					), 400
 
 		g.db.add(new_post)

@@ -67,10 +67,10 @@ def api_verify_email(v):
 @auth_desired
 def activate(v):
 
-	email = request.args.get("email", "")
-	id = request.args.get("id", "")
-	timestamp = int(request.args.get("time", "0"))
-	token = request.args.get("token", "")
+	email = request.values.get("email", "")
+	id = request.values.get("id", "")
+	timestamp = int(request.values.get("time", "0"))
+	token = request.values.get("token", "")
 
 	if int(time.time()) - timestamp > 3600:
 		return render_template("message.html", v=v, title="Verification link expired.",

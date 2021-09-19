@@ -209,7 +209,7 @@ def get_rules(v):
 @validate_formkey
 def post_rules(v):
 
-	text = request.form.get('rules', '')
+	text = request.values.get('rules', '')
 
 	with open(f'./{SITE_NAME} rules.html', 'w+') as f:
 		f.write(text)
@@ -240,7 +240,7 @@ def agendaposters(v):
 @admin_level_required(3)
 def image_posts_listing(v):
 
-	try: page = int(request.args.get('page', 1))
+	try: page = int(request.values.get('page', 1))
 	except: page = 1
 
 	posts = g.db.query(Submission).order_by(Submission.id.desc())
@@ -258,7 +258,7 @@ def image_posts_listing(v):
 @admin_level_required(3)
 def reported_posts(v):
 
-	page = max(1, int(request.args.get("page", 1)))
+	page = max(1, int(request.values.get("page", 1)))
 
 	posts = g.db.query(Submission).options(lazyload('*')).filter_by(
 		is_approved=0,
@@ -279,7 +279,7 @@ def reported_posts(v):
 @admin_level_required(3)
 def reported_comments(v):
 
-	page = max(1, int(request.args.get("page", 1)))
+	page = max(1, int(request.values.get("page", 1)))
 
 	posts = g.db.query(Comment
 					   ).filter_by(
@@ -333,9 +333,9 @@ def badge_grant_get(v):
 						   v=v,
 						   badge_types=badge_types,
 						   error=errors.get(
-							   request.args.get("error"),
-							   None) if request.args.get('error') else None,
-						   msg="Badge successfully assigned" if request.args.get(
+							   request.values.get("error"),
+							   None) if request.values.get('error') else None,
+						   msg="Badge successfully assigned" if request.values.get(
 							   "msg") else None
 						   )
 
@@ -345,10 +345,10 @@ def badge_grant_get(v):
 @validate_formkey
 def badge_grant_post(v):
 
-	user = get_user(request.form.get("username").strip(), graceful=True)
+	user = get_user(request.values.get("username").strip(), graceful=True)
 	if not user: return redirect("/badge_grant?error=no_user")
 
-	try: badge_id = int(request.form.get("badge_id"))
+	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
 
 	if user.has_badge(badge_id):
@@ -359,10 +359,10 @@ def badge_grant_post(v):
 					  user_id=user.id,
 					  )
 
-	desc = request.form.get("description")
+	desc = request.values.get("description")
 	if desc: new_badge.description = desc
 
-	url = request.form.get("url")
+	url = request.values.get("url")
 	if url: new_badge.url = url
 
 	g.db.add(new_badge)
@@ -443,7 +443,7 @@ def badge_grant_post(v):
 @admin_level_required(2)
 def users_list(v):
 
-	page = int(request.args.get("page", 1))
+	page = int(request.values.get("page", 1))
 
 	users = g.db.query(User).options(lazyload('*')).filter_by(is_banned=0
 									   ).order_by(User.created_utc.desc()
@@ -465,11 +465,11 @@ def users_list(v):
 @admin_level_required(4)
 def alt_votes_get(v):
 
-	if not request.args.get("u1") or not request.args.get("u2"):
+	if not request.values.get("u1") or not request.values.get("u2"):
 		return render_template("admin/alt_votes.html", v=v)
 
-	u1 = request.args.get("u1")
-	u2 = request.args.get("u2")
+	u1 = request.values.get("u1")
+	u2 = request.values.get("u2")
 
 	if not u1 or not u2:
 		return redirect("/admin/alt_votes")
@@ -575,8 +575,8 @@ def alt_votes_get(v):
 @validate_formkey
 def admin_link_accounts(v):
 
-	u1 = int(request.form.get("u1"))
-	u2 = int(request.form.get("u2"))
+	u1 = int(request.values.get("u1"))
+	u2 = int(request.values.get("u2"))
 
 	new_alt = Alt(
 		user1=u1, 
@@ -594,7 +594,7 @@ def admin_link_accounts(v):
 @admin_level_required(3)
 def admin_removed(v):
 
-	page = int(request.args.get("page", 1))
+	page = int(request.values.get("page", 1))
 
 	ids = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=True).order_by(
 		Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
@@ -619,7 +619,7 @@ def admin_removed(v):
 @admin_level_required(5)
 def admin_image_purge(v):
 	
-	name = request.form.get("url")
+	name = request.values.get("url")
 	image = g.db.query(Image).options(lazyload('*')).filter(Image.text == name).first()
 	if image:
 		requests.delete(f'https://api.imgur.com/3/image/{image.deletehash}', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"})
@@ -673,8 +673,8 @@ def admin_image_ban(v):
 
 	new_bp=BadPic(
 		phash=h,
-		ban_reason=request.form.get("ban_reason"),
-		ban_time=int(request.form.get("ban_length",0))
+		ban_reason=request.values.get("ban_reason"),
+		ban_time=int(request.values.get("ban_length",0))
 		)
 
 	g.db.add(new_bp)
@@ -689,7 +689,7 @@ def admin_image_ban(v):
 def agendaposter(user_id, v):
 	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 
-	expiry = request.form.get("days", 0)
+	expiry = request.values.get("days", 0)
 	if expiry:
 		expiry = int(expiry)
 		expiry = g.timestamp + expiry*60*60*24
@@ -710,7 +710,7 @@ def agendaposter(user_id, v):
 	if not user.agendaposter: kind = "unagendaposter"
 	else:
 		kind = "agendaposter"
-		note = f"for {request.form.get('days')} days" if expiry else "never expires"
+		note = f"for {request.values.get('days')} days" if expiry else "never expires"
 
 	ma = ModAction(
 		kind=kind,
@@ -814,14 +814,14 @@ def admin_title_change(user_id, v):
 
 	if user.admin_level != 0: abort(403)
 
-	new_name=request.form.get("title").strip()
+	new_name=request.values.get("title").strip()
 
 	user.customtitleplain=new_name
 	new_name = sanitize(new_name)
 
 	user=g.db.query(User).with_for_update().options(lazyload('*')).options(lazyload('*')).filter_by(id=user.id).first()
 	user.customtitle=new_name
-	user.flairchanged = bool(request.form.get("locked"))
+	user.flairchanged = bool(request.values.get("locked"))
 	g.db.add(user)
 
 	if user.flairchanged: kind = "set_flair_locked"
@@ -849,9 +849,9 @@ def ban_user(user_id, v):
 
 	# check for number of days for suspension
 	if 'form' in request.values:
-		days = int(request.form.get("days")) if request.form.get('days') else 0
-		reason = sanitize(request.form.get("reason", ""))
-		message = request.form.get("reason", "")
+		days = int(request.values.get("days")) if request.values.get('days') else 0
+		reason = sanitize(request.values.get("reason", ""))
+		message = request.values.get("reason", "")
 	else:
 		days = int(request.values.get("days")) if request.values.get('days') else 0
 		reason = sanitize(request.values.get("reason", ""))
@@ -876,7 +876,7 @@ def ban_user(user_id, v):
 
 		user.ban(admin=v, reason=reason)
 
-	if request.form.get("alts", ""):
+	if request.values.get("alts", ""):
 		for x in user.alts:
 			if x.admin_level > 0: break
 			x.ban(admin=v, reason=reason)
@@ -894,7 +894,7 @@ def ban_user(user_id, v):
 		)
 	g.db.add(ma)
 
-	if 'reason' in request.args:
+	if 'reason' in request.values:
 		if reason.startswith("/post/"):
 			post = reason.split("/post/")[1]
 			post = get_post(post)
@@ -924,7 +924,7 @@ def unban_user(user_id, v):
 
 	user.unban()
 
-	if request.form.get("alts", ""):
+	if request.values.get("alts", ""):
 		for x in user.alts:
 			if x.admin_level == 0:
 				x.unban()
@@ -960,7 +960,7 @@ def ban_post(post_id, v):
 	post.is_pinned = False
 	post.removed_by = v.id
 
-	ban_reason=request.form.get("reason", "")
+	ban_reason=request.values.get("reason", "")
 	ban_reason = ban_reason.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	ban_reason = CustomRenderer().render(mistletoe.Document(ban_reason))
 	ban_reason = sanitize(ban_reason)
@@ -1169,10 +1169,10 @@ def admin_banned_domains(v):
 @validate_formkey
 def admin_toggle_ban_domain(v):
 
-	domain=request.form.get("domain", "").strip()
+	domain=request.values.get("domain", "").strip()
 	if not domain: abort(400)
 
-	reason=request.form.get("reason", "").strip()
+	reason=request.values.get("reason", "").strip()
 
 	d = g.db.query(BannedDomain).options(lazyload('*')).filter_by(domain=domain).first()
 	if d: g.db.delete(d)
@@ -1190,7 +1190,7 @@ def admin_toggle_ban_domain(v):
 @validate_formkey
 def admin_nuke_user(v):
 
-	user=get_user(request.form.get("user"))
+	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=user.id).all():
 		if post.is_banned:
@@ -1222,7 +1222,7 @@ def admin_nuke_user(v):
 @validate_formkey
 def admin_nunuke_user(v):
 
-	user=get_user(request.form.get("user"))
+	user=get_user(request.values.get("user"))
 
 	for post in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=user.id).all():
 		if not post.is_banned:
@@ -1253,7 +1253,7 @@ def admin_nunuke_user(v):
 @auth_required
 def chart(v):
 
-	days = int(request.args.get("days", 25))
+	days = int(request.values.get("days", 25))
 
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,

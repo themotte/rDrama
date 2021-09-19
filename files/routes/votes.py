@@ -10,7 +10,7 @@ from files.__main__ import app
 def admin_vote_info_get(v):
 
 
-	link = request.args.get("link")
+	link = request.values.get("link")
 	if not link: return render_template("votes.html", v=v)
 
 	try:

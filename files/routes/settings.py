@@ -267,7 +267,7 @@ def changelogsub(v):
 @auth_required
 @validate_formkey
 def namecolor(v):
-	color = str(request.form.get("color", "")).strip()
+	color = str(request.values.get("color", "")).strip()
 	if color.startswith('#'): color = color[1:]
 	if len(color) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
 	v.namecolor = color
@@ -279,7 +279,7 @@ def namecolor(v):
 @auth_required
 @validate_formkey
 def themecolor(v):
-	themecolor = str(request.form.get("themecolor", "")).strip()
+	themecolor = str(request.values.get("themecolor", "")).strip()
 	if themecolor.startswith('#'): themecolor = themecolor[1:]
 	if len(themecolor) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
 	v.themecolor = themecolor
@@ -368,7 +368,7 @@ def gumroad(v):
 @auth_required
 @validate_formkey
 def titlecolor(v):
-	titlecolor = str(request.form.get("titlecolor", "")).strip()
+	titlecolor = str(request.values.get("titlecolor", "")).strip()
 	if titlecolor.startswith('#'): titlecolor = titlecolor[1:]
 	if len(titlecolor) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
 	v.titlecolor = titlecolor
@@ -381,22 +381,22 @@ def titlecolor(v):
 @auth_required
 @validate_formkey
 def settings_security_post(v):
-	if request.form.get("new_password"):
-		if request.form.get(
-				"new_password") != request.form.get("cnf_password"):
+	if request.values.get("new_password"):
+		if request.values.get(
+				"new_password") != request.values.get("cnf_password"):
 			return redirect("/settings/security?error=" +
 							escape("Passwords do not match."))
 
-		if not re.match(valid_password_regex, request.form.get("new_password")):
+		if not re.match(valid_password_regex, request.values.get("new_password")):
 			#print(f"signup fail - {username } - invalid password")
 			return redirect("/settings/security?error=" + 
 							escape("Password must be between 8 and 100 characters."))
 
-		if not v.verifyPass(request.form.get("old_password")):
+		if not v.verifyPass(request.values.get("old_password")):
 			return render_template(
 				"settings_security.html", v=v, error="Incorrect password")
 
-		v.passhash = v.hash_password(request.form.get("new_password"))
+		v.passhash = v.hash_password(request.values.get("new_password"))
 
 		g.db.add(v)
 
@@ -405,13 +405,13 @@ def settings_security_post(v):
 		return redirect("/settings/security?msg=" +
 						escape("Your password has been changed."))
 
-	if request.form.get("new_email"):
+	if request.values.get("new_email"):
 
-		if not v.verifyPass(request.form.get('password')):
+		if not v.verifyPass(request.values.get('password')):
 			return redirect("/settings/security?error=" +
 							escape("Invalid password."))
 
-		new_email = request.form.get("new_email","").strip()
+		new_email = request.values.get("new_email","").strip()
 		if new_email == v.email:
 			return redirect("/settings/security?error=That email is already yours!")
 
@@ -441,15 +441,15 @@ def settings_security_post(v):
 		return redirect("/settings/security?msg=" + escape(
 			"Check your email and click the verification link to complete the email change."))
 
-	if request.form.get("2fa_token", ""):
+	if request.values.get("2fa_token", ""):
 
-		if not v.verifyPass(request.form.get('password')):
+		if not v.verifyPass(request.values.get('password')):
 			return redirect("/settings/security?error=" +
 							escape("Invalid password or token."))
 
-		secret = request.form.get("2fa_secret")
+		secret = request.values.get("2fa_secret")
 		x = pyotp.TOTP(secret)
-		if not x.verify(request.form.get("2fa_token"), valid_window=1):
+		if not x.verify(request.values.get("2fa_token"), valid_window=1):
 			return redirect("/settings/security?error=" +
 							escape("Invalid password or token."))
 
@@ -461,13 +461,13 @@ def settings_security_post(v):
 		return redirect("/settings/security?msg=" +
 						escape("Two-factor authentication enabled."))
 
-	if request.form.get("2fa_remove", ""):
+	if request.values.get("2fa_remove", ""):
 
-		if not v.verifyPass(request.form.get('password')):
+		if not v.verifyPass(request.values.get('password')):
 			return redirect("/settings/security?error=" +
 							escape("Invalid password or token."))
 
-		token = request.form.get("2fa_remove")
+		token = request.values.get("2fa_remove")
 
 		if not v.validate_2fa(token):
 			return redirect("/settings/security?error=" +
@@ -486,7 +486,7 @@ def settings_security_post(v):
 @validate_formkey
 def settings_log_out_others(v):
 
-	submitted_password = request.form.get("password", "")
+	submitted_password = request.values.get("password", "")
 
 	if not v.verifyPass(submitted_password):
 		return render_template("settings_security.html",
@@ -596,7 +596,7 @@ def settings_css_get(v):
 @app.post("/settings/css")
 @auth_required
 def settings_css(v):
-	css = request.form.get("css").replace('\\', '')[:50000]
+	css = request.values.get("css").replace('\\', '')[:50000]
 
 	if not v.agendaposter:
 		v.css = css
@@ -618,7 +618,7 @@ def settings_profilecss_get(v):
 @auth_required
 def settings_profilecss(v):
 	if v.coins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
-	profilecss = request.form.get("profilecss").replace('\\', '')[:50000]
+	profilecss = request.values.get("profilecss").replace('\\', '')[:50000]
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()
@@ -727,7 +727,7 @@ def settings_content_get(v):
 @validate_formkey
 def settings_name_change(v):
 
-	new_name=request.form.get("name").strip()
+	new_name=request.values.get("name").strip()
 
 	#make sure name is different
 	if new_name==v.username:
@@ -775,7 +775,7 @@ def settings_name_change(v):
 @auth_required
 @validate_formkey
 def settings_song_change(v):
-	song=request.form.get("song").strip()
+	song=request.values.get("song").strip()
 
 	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User).options(lazyload('*')).filter_by(song=v.song).count() == 1:
 		os.remove(f"/songs/{v.song}.mp3")
@@ -860,7 +860,7 @@ def settings_title_change(v):
 
 	if v.flairchanged: abort(403)
 	
-	new_name=request.form.get("title").strip()[:100].replace("𒐪","")
+	new_name=request.values.get("title").strip()[:100].replace("𒐪","")
 
 	#make sure name is different
 	if new_name==v.customtitle:

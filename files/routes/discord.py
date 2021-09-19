@@ -34,7 +34,7 @@ def discord_redirect(v):
 
 	#validate state
 	now=int(time.time())
-	state=request.args.get('state','').split('.')
+	state=request.values.get('state','').split('.')
 
 	timestamp=state[0]
 
@@ -47,7 +47,7 @@ def discord_redirect(v):
 		abort(400)
 
 	#get discord token
-	code = request.args.get("code","")
+	code = request.values.get("code","")
 	if not code:
 		abort(400)
 

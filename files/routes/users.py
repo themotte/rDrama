@@ -120,7 +120,7 @@ def transfer_coins(v, username):
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
 	if receiver.id != v.id:
-		amount = request.form.get("amount", "")
+		amount = request.values.get("amount", "")
 		amount = int(amount) if amount.isdigit() else None
 
 		if amount is None or amount <= 0: return {"error": f"Invalid amount of {app.config['COINS_NAME']}."}, 400
@@ -210,7 +210,7 @@ def message2(v, username):
 	user = get_user(username, v=v)
 	if user.is_blocking: return {"error": "You're blocking this user."}, 403
 	if user.is_blocked: return {"error": "This user is blocking you."}, 403
-	message = request.form.get("message", "")[:1000].strip()
+	message = request.values.get("message", "")[:1000].strip()
 
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 
@@ -248,8 +248,8 @@ def message2(v, username):
 @auth_required
 def messagereply(v):
 
-	message = request.form.get("body", "")[:1000].strip()
-	id = int(request.form.get("parent_id"))
+	message = request.values.get("body", "")[:1000].strip()
+	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
 	user = parent.author
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -421,9 +421,9 @@ def u_username(username, v=None):
 		else: return render_template("userpage_blocked.html", u=u, v=v)
 
 
-	sort = request.args.get("sort", "new")
-	t = request.args.get("t", "all")
-	page = int(request.args.get("page", "1"))
+	sort = request.values.get("sort", "new")
+	t = request.values.get("t", "all")
+	page = int(request.values.get("page", "1"))
 	page = max(page, 1)
 
 	ids = u.userpagelisting(v=v, page=page, sort=sort, t=t)
@@ -520,9 +520,9 @@ def u_username_comments(username, v=None):
 													v=v)
 
 
-	page = int(request.args.get("page", "1"))
-	sort=request.args.get("sort","new")
-	t=request.args.get("t","all")
+	page = int(request.values.get("page", "1"))
+	sort=request.values.get("sort","new")
+	t=request.values.get("t","all")
 
 
 	comments = u.comments.options(lazyload('*')).filter(Comment.parent_submission != None)
@@ -649,7 +649,7 @@ def user_profile_uid(id):
 @auth_required
 def saved_posts(v, username):
 
-	page=int(request.args.get("page",1))
+	page=int(request.values.get("page",1))
 
 	ids=v.saved_idlist(page=page)
 
@@ -673,7 +673,7 @@ def saved_posts(v, username):
 @auth_required
 def saved_comments(v, username):
 
-	page=int(request.args.get("page",1))
+	page=int(request.values.get("page",1))
 
 	ids=v.saved_comment_idlist(page=page)
 

@@ -97,7 +97,7 @@ def admins(v):
 # @auth_desired
 # def log(v):
 
-# 	page=int(request.args.get("page",1))
+# 	page=int(request.values.get("page",1))
 
 # 	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
 # 	else: actions=g.db.query(ModAction).options(lazyload('*')).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
@@ -150,7 +150,7 @@ def contact(v):
 @app.post("/contact")
 @auth_desired
 def submit_contact(v):
-	message = f'This message has been sent automatically to all admins via https://{site}/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.form.get("message", "")
+	message = f'This message has been sent automatically to all admins via https://{site}/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
 	send_admin(v.id, message)
 	g.db.commit()
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
@@ -254,8 +254,8 @@ def settings_security(v):
 	return render_template("settings_security.html",
 						   v=v,
 						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None,
-						   error=request.args.get("error") or None,
-						   msg=request.args.get("msg") or None
+						   error=request.values.get("error") or None,
+						   msg=request.values.get("msg") or None
 						   )
 
 @app.post("/dismiss_mobile_tip")

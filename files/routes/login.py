@@ -11,7 +11,7 @@ valid_password_regex = re.compile("^.{8,100}$")
 @auth_desired
 def login_get(v):
 
-	redir = request.args.get("redirect", "/").replace("/logged_out", "")
+	redir = request.values.get("redirect", "/").replace("/logged_out", "")
 	if v:
 		return redirect(redir)
 
@@ -78,7 +78,7 @@ def check_for_alts(current_id):
 @limiter.limit("6/minute")
 def login_post():
 
-	username = request.form.get("username")
+	username = request.values.get("username")
 
 	if not username: abort(400)
 	if "@" in username:
@@ -93,9 +93,9 @@ def login_post():
 
 	# test password
 
-	if request.form.get("password"):
+	if request.values.get("password"):
 
-		if not account.verifyPass(request.form.get("password")):
+		if not account.verifyPass(request.values.get("password")):
 			time.sleep(random.uniform(0, 2))
 			return render_template("login.html", failed=True)
 
@@ -106,21 +106,21 @@ def login_post():
 								   v=account,
 								   time=now,
 								   hash=hash,
-								   redirect=request.form.get("redirect", "/")
+								   redirect=request.values.get("redirect", "/")
 								   )
-	elif request.form.get("2fa_token", "x"):
+	elif request.values.get("2fa_token", "x"):
 		now = int(time.time())
 
-		if now - int(request.form.get("time")) > 600:
+		if now - int(request.values.get("time")) > 600:
 			return redirect('/login')
 
-		formhash = request.form.get("hash")
-		if not validate_hash(f"{account.id}+{request.form.get('time')}+2fachallenge",
+		formhash = request.values.get("hash")
+		if not validate_hash(f"{account.id}+{request.values.get('time')}+2fachallenge",
 							 formhash
 							 ):
 			return redirect("/login")
 
-		if not account.validate_2fa(request.form.get("2fa_token", "").strip()):
+		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
 			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
 			return render_template("login_2fa.html",
 								   v=account,
@@ -145,7 +145,7 @@ def login_post():
 
 	# check for previous page
 
-	redir = request.form.get("redirect", "/").replace("/logged_out", "")
+	redir = request.values.get("redirect", "/").replace("/logged_out", "")
 
 	g.db.commit()
 
@@ -184,7 +184,7 @@ def sign_up_get(v):
 		abort(403)
 
 	# check for referral in link
-	ref = request.args.get("ref", None)
+	ref = request.values.get("ref", None)
 	if ref:
 		ref_user = g.db.query(User).options(lazyload('*')).filter(User.username.ilike(ref)).first()
 
@@ -207,9 +207,9 @@ def sign_up_get(v):
 					   digestmod='md5'
 					   ).hexdigest()
 
-	redir = request.args.get("redirect", "/").replace("/logged_out", "")
+	redir = request.values.get("redirect", "/").replace("/logged_out", "")
 
-	error = request.args.get("error", None)
+	error = request.values.get("error", None)
 
 	return render_template("sign_up.html",
 						   formkey=formkey,
@@ -235,8 +235,8 @@ def sign_up_post(v):
 	if not agent:
 		abort(403)
 
-	form_timestamp = request.form.get("now", '0')
-	form_formkey = request.form.get("formkey", "none")
+	form_timestamp = request.values.get("now", '0')
+	form_formkey = request.values.get("formkey", "none")
 
 	submitted_token = session.get("signup_token", "")
 	if not submitted_token:
@@ -251,16 +251,16 @@ def sign_up_post(v):
 
 	now = int(time.time())
 
-	username = request.form.get("username").strip()
+	username = request.values.get("username").strip()
 
 	# define function that takes an error message and generates a new signup
 	# form
 	def new_signup(error):
 
 		args = {"error": error}
-		if request.form.get("referred_by"):
+		if request.values.get("referred_by"):
 			user = g.db.query(User).options(lazyload('*')).filter_by(
-				id=request.form.get("referred_by")).first()
+				id=request.values.get("referred_by")).first()
 			if user:
 				args["ref"] = user.username
 
@@ -275,19 +275,19 @@ def sign_up_post(v):
 		return new_signup("There was a problem. Please try again.")
 
 	# check for matched passwords
-	if not request.form.get(
-			"password") == request.form.get("password_confirm"):
+	if not request.values.get(
+			"password") == request.values.get("password_confirm"):
 		return new_signup("Passwords did not match. Please try again.")
 
 	# check username/pass conditions
 	if not re.fullmatch(valid_username_regex, username):
 		return new_signup("Invalid username")
 
-	if not re.fullmatch(valid_password_regex, request.form.get("password")):
+	if not re.fullmatch(valid_password_regex, request.values.get("password")):
 		return new_signup("Password must be between 8 and 100 characters.")
 
 	# Check for existing accounts
-	email = request.form.get("email")
+	email = request.values.get("email")
 	email = email.strip()
 	if not email: email = None
 
@@ -303,7 +303,7 @@ def sign_up_post(v):
 
 	# check bot
 	if app.config.get("HCAPTCHA_SITEKEY"):
-		token = request.form.get("h-captcha-response")
+		token = request.values.get("h-captcha-response")
 		if not token:
 			return new_signup("Unable to verify captcha [1].")
 
@@ -322,7 +322,7 @@ def sign_up_post(v):
 	session.pop("signup_token")
 
 	# get referral
-	ref_id = int(request.form.get("referred_by", 0))
+	ref_id = int(request.values.get("referred_by", 0))
 
 	# upgrade user badge
 	if ref_id:
@@ -352,7 +352,7 @@ def sign_up_post(v):
 		username=username,
 		original_username = username,
 		admin_level = admin_level,
-		password=request.form.get("password"),
+		password=request.values.get("password"),
 		email=email,
 		created_utc=int(time.time()),
 		referred_by=ref_id or None,
@@ -392,8 +392,8 @@ def get_forgot():
 @app.post("/forgot")
 def post_forgot():
 
-	username = request.form.get("username").lstrip('@')
-	email = request.form.get("email",'').strip()
+	username = request.values.get("username").lstrip('@')
+	email = request.values.get("email",'').strip()
 
 	email=email.replace("_","\_")
 
@@ -430,9 +430,9 @@ def post_forgot():
 @app.get("/reset")
 def get_reset():
 
-	user_id = request.args.get("id")
-	timestamp = int(request.args.get("time",0))
-	token = request.args.get("token")
+	user_id = request.values.get("id")
+	timestamp = int(request.values.get("time",0))
+	token = request.values.get("token")
 
 	now = int(time.time())
 
@@ -464,12 +464,12 @@ def post_reset(v):
 	if v:
 		return redirect('/')
 
-	user_id = request.form.get("user_id")
-	timestamp = int(request.form.get("time"))
-	token = request.form.get("token")
+	user_id = request.values.get("user_id")
+	timestamp = int(request.values.get("time"))
+	token = request.values.get("token")
 
-	password = request.form.get("password")
-	confirm_password = request.form.get("confirm_password")
+	password = request.values.get("password")
+	confirm_password = request.values.get("confirm_password")
 
 	now = int(time.time())
 
@@ -514,7 +514,7 @@ def lost_2fa(v):
 @limiter.limit("6/minute")
 def request_2fa_disable():
 
-	username=request.form.get("username")
+	username=request.values.get("username")
 	user=get_user(username, graceful=True)
 	if not user or not user.email or not user.mfa_secret:
 		return render_template("message.html",
@@ -522,7 +522,7 @@ def request_2fa_disable():
 						   message="If username, password, and email match, we will send you an email.")
 
 
-	email=request.form.get("email")
+	email=request.values.get("email")
 	if email != user.email and email.endswith("@gmail.com"):
 		email=email.split('@')[0]
 		email=email.split('+')[0]
@@ -534,7 +534,7 @@ def request_2fa_disable():
 							message="If username, password, and email match, we will send you an email.")
 
 
-	password =request.form.get("password")
+	password =request.values.get("password")
 	if not user.verifyPass(password):
 		return render_template("message.html",
 						   title="Removal request received",
@@ -561,15 +561,15 @@ def request_2fa_disable():
 def reset_2fa():
 
 	now=int(time.time())
-	t=int(request.args.get("t"))
+	t=int(request.values.get("t"))
 
 	if now > t+3600*24:
 		return render_template("message.html",
 						   title="Expired Link",
 						   error="That link has expired.")
 
-	token=request.args.get("token")
-	uid=request.args.get("id")
+	token=request.values.get("token")
+	uid=request.values.get("id")
 
 	user=get_account(uid)
 
