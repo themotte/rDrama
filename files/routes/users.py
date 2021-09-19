@@ -10,6 +10,7 @@ from files.mail import *
 from flask import *
 from files.__main__ import app, limiter
 from pusher_push_notifications import PushNotifications
+from sqlalchemy.orm import contains_eager
 
 site = environ.get("DOMAIN").strip()
 

@@ -2,8 +2,9 @@ from files.helpers.wrappers import *
 import re
 from sqlalchemy import *
 from flask import *
-from files.__main__ import app, cache
+from files.__main__ import app
 import random
+from sqlalchemy.orm import contains_eager
 
 query_regex=re.compile("(\w+):(\S+)")
 valid_params=[
