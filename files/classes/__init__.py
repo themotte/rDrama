@@ -1,3 +1,4 @@
+from files.__main__ import app
 from .alts import *
 from .badges import *
 from .clients import *
