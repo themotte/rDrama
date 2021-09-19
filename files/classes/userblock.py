@@ -1,9 +1,8 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from .mix_ins import *
 from files.__main__ import Base
 
-class UserBlock(Base, Stndrd, Age_times):
+class UserBlock(Base):
 
 	__tablename__ = "userblocks"
 	id = Column(Integer, primary_key=True)
@@ -12,6 +11,11 @@ class UserBlock(Base, Stndrd, Age_times):
 
 	user = relationship("User", innerjoin=True, primaryjoin="User.id==UserBlock.user_id", viewonly=True)
 	target = relationship("User", innerjoin=True, primaryjoin="User.id==UserBlock.target_id", viewonly=True)
+
+	@property
+	@lazy
+	def created_date(self):
+		return time.strftime("%d %b %Y", time.gmtime(self.created_utc))
 
 	def __repr__(self):
 

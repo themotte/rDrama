@@ -2,12 +2,11 @@ from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, lazyload
 
-from .mix_ins import Stndrd
 from .submission import Submission
 from .comment import Comment
 from files.__main__ import Base
 
-class OauthApp(Base, Stndrd):
+class OauthApp(Base):
 
 	__tablename__ = "oauth_apps"
 
@@ -20,6 +19,17 @@ class OauthApp(Base, Stndrd):
 	author = relationship("User", viewonly=True)
 
 	def __repr__(self): return f"<OauthApp(id={self.id})>"
+
+
+	@property
+	@lazy
+	def created_date(self):
+		return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
+
+	@property
+	@lazy
+	def created_datetime(self):
+		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
 
 	@property
 	def permalink(self): return f"/admin/app/{self.id}"
@@ -45,7 +55,7 @@ class OauthApp(Base, Stndrd):
 
 		return [x[0] for x in posts.all()]
 
-class ClientAuth(Base, Stndrd):
+class ClientAuth(Base):
 
 	__tablename__ = "client_auths"
 
@@ -55,3 +65,13 @@ class ClientAuth(Base, Stndrd):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	user = relationship("User", lazy="joined", viewonly=True)
 	application = relationship("OauthApp", lazy="joined", viewonly=True)
+
+	@property
+	@lazy
+	def created_date(self):
+		return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
+
+	@property
+	@lazy
+	def created_datetime(self):
+		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))

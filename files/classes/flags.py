@@ -1,9 +1,8 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
-from .mix_ins import *
 
-class Flag(Base, Stndrd):
+class Flag(Base):
 
 	__tablename__ = "flags"
 
@@ -18,8 +17,18 @@ class Flag(Base, Stndrd):
 
 		return f"<Flag(id={self.id})>"
 
+	@property
+	@lazy
+	def created_date(self):
+		return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
 
-class CommentFlag(Base, Stndrd):
+	@property
+	@lazy
+	def created_datetime(self):
+		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
+
+
+class CommentFlag(Base):
 
 	__tablename__ = "commentflags"
 
@@ -33,3 +42,13 @@ class CommentFlag(Base, Stndrd):
 	def __repr__(self):
 
 		return f"<CommentFlag(id={self.id})>"
+
+	@property
+	@lazy
+	def created_date(self):
+		return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
+
+	@property
+	@lazy
+	def created_datetime(self):
+		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))

@@ -70,7 +70,7 @@ else:
 		}
 	}
 
-class User(Base, Stndrd, Age_times):
+class User(Base):
 	__tablename__ = "users"
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
@@ -179,6 +179,13 @@ class User(Base, Stndrd, Age_times):
 		kwargs["created_utc"] = int(time.time())
 
 		super().__init__(**kwargs)
+
+
+	@property
+	@lazy
+	def created_date(self):
+
+		return time.strftime("%d %b %Y", time.gmtime(self.created_utc))
 
 	@property
 	@lazy

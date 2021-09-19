@@ -1,10 +1,9 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
-from .mix_ins import *
 import time
 
-class ModAction(Base, Stndrd, Age_times):
+class ModAction(Base):
 	__tablename__ = "modactions"
 	id = Column(BigInteger, primary_key=True)
 
@@ -34,6 +33,38 @@ class ModAction(Base, Stndrd, Age_times):
 
 	def __repr__(self):
 		return f"<ModAction(id={self.id})>"
+
+	@property
+	def age_string(self):
+
+		age = self.age
+
+		if age < 60:
+			return "just now"
+		elif age < 3600:
+			minutes = int(age / 60)
+			return f"{minutes}m ago"
+		elif age < 86400:
+			hours = int(age / 3600)
+			return f"{hours}hr ago"
+		elif age < 2678400:
+			days = int(age / 86400)
+			return f"{days}d ago"
+
+		now = time.gmtime()
+		ctd = time.gmtime(self.created_utc)
+
+		# compute number of months
+		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
+		# remove a month count if current day of month < creation day of month
+		if now.tm_mday < ctd.tm_mday:
+			months -= 1
+
+		if months < 12:
+			return f"{months}mo ago"
+		else:
+			years = int(months / 12)
+			return f"{years}yr ago"
 
 
 	@property

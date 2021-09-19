@@ -1,12 +1,11 @@
 from flask import render_template, g
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import relationship
 import re, random
 from urllib.parse import urlparse
 from files.helpers.lazy import lazy
 from files.helpers.const import SLURS
 from files.__main__ import Base
-from .mix_ins import *
 from .flags import *
 from os import environ
 
@@ -28,7 +27,7 @@ class SubmissionAux(Base):
 	embed_url = Column(String(256))
 
 
-class Submission(Base, Age_times):
+class Submission(Base):
 
 	__tablename__ = "submissions"
 
@@ -82,6 +81,82 @@ class Submission(Base, Age_times):
 
 	def __repr__(self):
 		return f"<Submission(id={self.id})>"
+
+
+	@property
+	@lazy
+	def created_datetime(self):
+		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
+
+	@property
+	@lazy
+	def age_string(self):
+
+		age = int(time.time()) - self.created_utc
+
+		if age < 60:
+			return "just now"
+		elif age < 3600:
+			minutes = int(age / 60)
+			return f"{minutes}m ago"
+		elif age < 86400:
+			hours = int(age / 3600)
+			return f"{hours}hr ago"
+		elif age < 2678400:
+			days = int(age / 86400)
+			return f"{days}d ago"
+
+		now = time.gmtime()
+		ctd = time.gmtime(self.created_utc)
+
+		# compute number of months
+		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
+		# remove a month count if current day of month < creation day of month
+		if now.tm_mday < ctd.tm_mday:
+			months -= 1
+
+		if months < 12:
+			return f"{months}mo ago"
+		else:
+			years = int(months / 12)
+			return f"{years}yr ago"
+
+	@property
+	@lazy
+	def edited_string(self):
+
+		if not self.edited_utc: return "never"
+
+		age = int(time.time()) - self.edited_utc
+
+		if age < 60:
+			return "just now"
+		elif age < 3600:
+			minutes = int(age / 60)
+			return f"{minutes}m ago"
+		elif age < 86400:
+			hours = int(age / 3600)
+			return f"{hours}hr ago"
+		elif age < 2678400:
+			days = int(age / 86400)
+			return f"{days}d ago"
+
+		now = time.gmtime()
+		ctd = time.gmtime(self.edited_utc)
+		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
+
+		if months < 12:
+			return f"{months}mo ago"
+		else:
+			years = now.tm_year - ctd.tm_year
+			return f"{years}yr ago"
+
+
+	@property
+	@lazy
+	def edited_datetime(self):
+		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.edited_utc)))
+
 
 	@property
 	@lazy
@@ -414,7 +489,7 @@ class Submission(Base, Age_times):
 	def ordered_flags(self): return self.flags.order_by(Flag.id).all()
 
 
-class SaveRelationship(Base, Stndrd):
+class SaveRelationship(Base):
 
 	__tablename__="save_relationship"
 
@@ -422,3 +497,13 @@ class SaveRelationship(Base, Stndrd):
 	user_id=Column(Integer, ForeignKey("users.id"))
 	submission_id=Column(Integer, ForeignKey("submissions.id"))
 	type=Column(Integer)
+
+	@property
+	@lazy
+	def created_date(self):
+		return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
+
+	@property
+	@lazy
+	def created_datetime(self):
+		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
