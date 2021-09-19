@@ -450,7 +450,7 @@
 
 		const banModal = function(link, id, name) {
 			document.getElementById("banModalTitle").innerHTML = `Ban @${name}`;
-			document.getElementById("ban-modal-link").innerHTML = `<a href="${link}">${link}</a>`;
+			document.getElementById("reason").innerHTML = link;
 			document.getElementById("banUserButton").innerHTML = `Ban @${name}`;
 
 			document.getElementById("banUserButton").onclick = function() {
