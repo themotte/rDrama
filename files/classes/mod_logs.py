@@ -39,7 +39,7 @@ class ModAction(Base):
 	@lazy
 	def age_string(self):
 
-		age = self.age
+		age = int(time.time()) - self.created_utc
 
 		if age < 60:
 			return "just now"
