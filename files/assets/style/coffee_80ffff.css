@@ -27374,10 +27374,6 @@ textarea {
     height: 110px;
   }
 }
-.btn-dead:hover, .active.btn-dead:hover, .active.btn-dead {
-  border-color: #805ad5 !important;
-}
-
 * {
   font-family: "Lato";
 }
