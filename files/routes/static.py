@@ -60,7 +60,6 @@ def participation_stats(v):
 
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
 
-@app.get("/patrons")
 @app.get("/paypigs")
 @auth_desired
 def patrons(v):
@@ -86,21 +85,18 @@ def patrons(v):
 	return render_template("patrons.html", v=v, result=result)
 
 @app.get("/admins")
-@app.get("/badmins")
 @auth_desired
 def admins(v):
 	admins = g.db.query(User).options(lazyload('*')).filter_by(admin_level=6).order_by(User.coins.desc()).all()
 	return render_template("admins.html", v=v, admins=admins)
 
 @app.get("/log")
-@app.get("/modlog")
 @auth_desired
 def log(v):
 
 	page=int(request.values.get("page",1))
 
-	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
-	else: actions=g.db.query(ModAction).options(lazyload('*')).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
+	actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	next_exists = len(actions)==26
 	actions = actions[:25]
