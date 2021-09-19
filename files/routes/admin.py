@@ -64,6 +64,14 @@ def club_allow(v, username):
 		x.club_banned = False
 		g.db.add(x)
 
+
+	ma=ModAction(
+		kind="club_allow",
+		user_id=v.id,
+		target_user_id=user.id,
+		)
+	g.db.add(ma)
+
 	g.db.commit()
 	return {"message": f"@{username} has been allowed into the country club!"}
 
@@ -84,6 +92,13 @@ def club_ban(v, username):
 		x.club_banned = True
 		u.club_allowed = False
 		g.db.add(x)
+
+	ma=ModAction(
+		kind="club_ban",
+		user_id=v.id,
+		target_user_id=user.id,
+		)
+	g.db.add(ma)
 
 	g.db.commit()
 	return {"message": f"@{username} has been kicked from the country club. Deserved."}
