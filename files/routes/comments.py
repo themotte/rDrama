@@ -1,6 +1,3 @@
-import traceback
-import sys
-
 from files.helpers.wrappers import *
 from files.helpers.filters import *
 from files.helpers.alerts import *
@@ -10,7 +7,6 @@ from files.helpers.const import *
 from files.classes import *
 from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
-
 from flask import *
 from files.__main__ import app, limiter
 

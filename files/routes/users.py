@@ -1,9 +1,6 @@
 import qrcode
 import io
 import time
-import traceback
-import sys
-
 from files.classes.user import ViewerRelationship
 from files.helpers.alerts import *
 from files.helpers.sanitize import *

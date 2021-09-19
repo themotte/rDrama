@@ -1,7 +1,6 @@
-from sqlalchemy.orm import deferred, contains_eager, aliased
+from sqlalchemy.orm import deferred, aliased
 from secrets import token_hex
 import pyotp
-
 from files.helpers.discord import remove_user
 from files.helpers.images import *
 from files.helpers.const import *
