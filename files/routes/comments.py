@@ -9,6 +9,7 @@ from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
+from sqlalchemy.orm import contains_eager
 
 site = environ.get("DOMAIN").strip()
 
