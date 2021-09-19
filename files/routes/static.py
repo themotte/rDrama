@@ -90,6 +90,12 @@ def admins(v):
 	admins = g.db.query(User).options(lazyload('*')).filter_by(admin_level=6).order_by(User.coins.desc()).all()
 	return render_template("admins.html", v=v, admins=admins)
 
+
+@app.get("/log")
+@auth_desired
+def log(v):
+	return render_template("modlog.html", v=v)
+
 # @app.get("/log")
 # @auth_desired
 # def log(v):
