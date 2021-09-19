@@ -1,8 +1,8 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-
 from files.__main__ import Base, app
 from os import environ
+from files.helpers.lazy import lazy
 
 site_name = environ.get("SITE_NAME").strip()
 
