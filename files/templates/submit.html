@@ -237,11 +237,9 @@
 
 			// markdown
 
-			function fugggg() {
+			function markdown() {
 				
-				console.log('fug')
 				var input = document.getElementById('post-text').value;
-				console.log(input)
 
 				var emojis = Array.from(input.matchAll(/:(.{1,30}?):/gi))
 					if(emojis != null){
@@ -250,11 +248,7 @@
 							}
 					}
 				
-				console.log(input)
-
-				document.getElementById('preview').value = 'fugggg'
-
-				console.log('biggq')
+				document.getElementById('preview').innerHTML = input
 				
 			}
 
@@ -346,14 +340,14 @@
 													</label>
 						
 													<small class="form-text text-muted">Optional if you have text.</small>
-													<small class="form-text text-muted">You can upload videos up to 1 minute long if you have at least {{ 'VIDEO_COIN_REQUIREMENT' | app_config }} {{ 'COINS_NAME' | app_config }}{% if v.admin_level > 1 %} or are an admin{% endif %}.</small>
+													<small class="form-text text-muted">You can upload videos up to 1 minute long.{% endif %}.</small>
 												</div>
 												</div>
 
 												<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
 
 												<div>
-													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="fugggg();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
+													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
 
 													<div class="btn btn-secondary" onclick="document.getElementById('preview').classList.toggle('d-none');" style="float: right;">
 														Toggle preview
