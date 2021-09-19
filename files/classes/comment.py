@@ -176,7 +176,6 @@ class Comment(Base):
 		elif self.parent_submission: return f"t2_{self.parent_submission}"
 
 	@property
-	@lazy
 	def replies(self):
 		r = self.__dict__.get("replies", None)
 		if r: r = [x for x in r if not x.author.shadowbanned]
@@ -188,7 +187,6 @@ class Comment(Base):
 		self.__dict__["replies"] = value
 
 	@property
-	@lazy
 	def replies2(self):
 		return self.__dict__.get("replies2", [])
 
@@ -197,7 +195,6 @@ class Comment(Base):
 		self.__dict__["replies2"] = value
 
 	@property
-	@lazy
 	def replies3(self):
 		r = self.__dict__.get("replies", None)
 		if not r and r != []:  r = sorted([x for x in self.child_comments], key=lambda x: x.score, reverse=True)
