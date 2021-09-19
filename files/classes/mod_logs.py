@@ -69,7 +69,6 @@ class ModAction(Base, Stndrd, Age_times):
 			return f'<a href="{self.target_post.permalink}">{self.target_post.title}</a>'
 		elif self.target_comment:
 			return f'<a href="{self.target_comment.permalink}">comment</a>'
-
 		else:
 			return ""
 
