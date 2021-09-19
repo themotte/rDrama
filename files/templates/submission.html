@@ -179,7 +179,7 @@
 					{% endif %}
 
 					{% if v and v.admin_level == 6 and v.id!=p.author_id %}
-						<button id="ban2-{{p.id}}" data-dismiss="modal" data-toggle="modal" data-target="#banModal" onclick="banModal('{{p.permalink}}', '{{ p.author.id }}', '{{p.author.username}}')" class="{% if p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)"><i class="fas fa-user-minus mr-3"></i>Ban user</a></button>
+						<button id="ban2-{{p.id}}" data-dismiss="modal" data-toggle="modal" data-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')" class="{% if p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)"><i class="fas fa-user-minus mr-3"></i>Ban user</a></button>
 						<button id="unban2-{{p.id}}" class="{% if not p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left" href="javascript:void(0)" onclick="post_toast2('/unban_user/{{p.author_id}}','ban2-{{p.id}}','unban2-{{p.id}}')" data-dismiss="modal"><i class="fas fa-user-minus mr-3"></i>Unban user</a></button>
 					{% endif %}
 				</ul>
@@ -471,7 +471,7 @@
 							{% endif %}
 
 							{% if v.admin_level >=3 and v.id!=p.author_id %}
-								<li id="ban-{{p.id}}" class="{% if p.author.is_suspended %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" data-toggle="modal" data-target="#banModal" onclick="banModal('{{p.permalink}}', '{{ p.author.id }}', '{{p.author.username}}')"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</a></li>
+								<li id="ban-{{p.id}}" class="{% if p.author.is_suspended %}d-none{% endif %} list-inline-item"><a class="text-danger" href="javascript:void(0)" data-toggle="modal" data-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</a></li>
 								<li id="unban-{{p.id}}" class="{% if not p.author.is_suspended %}d-none{% endif %} list-inline-item"><a class="text-danger" id="unexile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast2('/unban_user/{{p.author_id}}','ban-{{p.id}}','unban-{{p.id}}')"><i class="fas fa-user-slash"></i>Unban user</a></li>
 							{% endif %}
 						{% endif %}
