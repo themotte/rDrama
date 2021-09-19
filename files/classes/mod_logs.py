@@ -43,7 +43,7 @@ class ModAction(Base, Stndrd, Age_times):
 	@property
 	def note(self):
 
-		if self.kind=="exile_user":
+		if self.kind=="ban_user":
 			if self.target_post:
 				return f'for <a href="{self.target_post.permalink}">post</a>'
 			elif self.target_comment:
@@ -142,13 +142,13 @@ ACTIONTYPES={
 		"color": "bg-muted",
 		"title": 'yanked post {self.target_post.title}'
 	},
-	"exile_user":{
+	"ban_user":{
 		"str":'banned user {self.target_link}',
 		"icon":"fa-user-slash",
 		"color": "bg-danger",
 		"title": 'banned user {self.target_user.username}'
 	},
-	"unexile_user":{
+	"unban_user":{
 		"str":'unbanned user {self.target_link}',
 		"icon": "fa-user-slash",
 		"color": "bg-muted",

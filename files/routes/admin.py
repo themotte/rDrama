@@ -888,7 +888,7 @@ def ban_user(user_id, v):
 	elif days == 1: duration = "1 day"
 	else: duration = f"{days} days"
 	ma=ModAction(
-		kind="exile_user",
+		kind="ban_user",
 		user_id=v.id,
 		target_user_id=user.id,
 		note=f'reason: "{reason}", duration: {duration}'
@@ -934,7 +934,7 @@ def unban_user(user_id, v):
 					  "Your account has been reinstated. Please carefully review and abide by the [rules](/post/2510) to ensure that you don't get suspended again.")
 
 	ma=ModAction(
-		kind="unexile_user",
+		kind="unban_user",
 		user_id=v.id,
 		target_user_id=user.id,
 		)
