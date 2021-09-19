@@ -70,7 +70,6 @@ class ModAction(Base):
 
 
 	@property
-	@lazy
 	def note(self):
 
 		if self.kind=="ban_user":

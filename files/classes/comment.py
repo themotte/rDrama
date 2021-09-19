@@ -309,7 +309,6 @@ class Comment(Base):
 		return self.__dict__.get('_is_blocked', 0)
 
 	@property
-	@lazy
 	def body(self):
 		if self.comment_aux: return self.comment_aux.body
 		else: return ""
@@ -320,7 +319,6 @@ class Comment(Base):
 		g.db.add(self.comment_aux)
 
 	@property
-	@lazy
 	def body_html(self):
 		return self.comment_aux.body_html
 
@@ -355,7 +353,6 @@ class Comment(Base):
 		return body
 
 	@property
-	@lazy
 	def ban_reason(self):
 		return self.comment_aux.ban_reason
 

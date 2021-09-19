@@ -366,7 +366,6 @@ class Submission(Base):
 		return len([x for x in self.awards if x.kind == kind])
 
 	@property
-	@lazy
 	def title(self):
 		return self.submission_aux.title
 
@@ -376,7 +375,6 @@ class Submission(Base):
 		g.db.add(self.submission_aux)
 
 	@property
-	@lazy
 	def url(self):
 		return self.submission_aux.url
 
@@ -401,7 +399,6 @@ class Submission(Base):
 		else: return ""
  
 	@property
-	@lazy
 	def body(self):
 		return self.submission_aux.body
 
@@ -411,7 +408,6 @@ class Submission(Base):
 		g.db.add(self.submission_aux)
 
 	@property
-	@lazy
 	def body_html(self):
 		return self.submission_aux.body_html
 
@@ -433,7 +429,6 @@ class Submission(Base):
 		return body
 
 	@property
-	@lazy
 	def title_html(self):
 		return self.submission_aux.title_html
 
@@ -453,7 +448,6 @@ class Submission(Base):
 		return title
 
 	@property
-	@lazy
 	def ban_reason(self):
 		return self.submission_aux.ban_reason
 
@@ -463,7 +457,6 @@ class Submission(Base):
 		g.db.add(self.submission_aux)
 
 	@property
-	@lazy
 	def embed_url(self):
 		return self.submission_aux.embed_url
 
