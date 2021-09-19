@@ -2,6 +2,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
 import time
+from files.helpers.lazy import lazy
 
 class ModAction(Base):
 	__tablename__ = "modactions"
@@ -35,6 +36,7 @@ class ModAction(Base):
 		return f"<ModAction(id={self.id})>"
 
 	@property
+	@lazy
 	def age_string(self):
 
 		age = self.age
@@ -68,6 +70,7 @@ class ModAction(Base):
 
 
 	@property
+	@lazy
 	def note(self):
 
 		if self.kind=="ban_user":
@@ -84,6 +87,7 @@ class ModAction(Base):
 		self._note=x
 
 	@property
+	@lazy
 	def string(self):
 
 		output =  ACTIONTYPES[self.kind]["str"].format(self=self)
@@ -93,6 +97,7 @@ class ModAction(Base):
 		return output
 
 	@property
+	@lazy
 	def target_link(self):
 		if self.target_user:
 			return f'<a href="{self.target_user.url}">{self.target_user.username}</a>'
@@ -104,14 +109,17 @@ class ModAction(Base):
 			return ""
 
 	@property
+	@lazy
 	def icon(self):
 		return ACTIONTYPES[self.kind]['icon']
 
 	@property
+	@lazy
 	def color(self):
 		return ACTIONTYPES[self.kind]['color']
 
 	@property
+	@lazy
 	def permalink(self):
 		return f"/log/{self.id}"	
 	

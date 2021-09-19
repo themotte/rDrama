@@ -2,7 +2,7 @@ import re
 from urllib.parse import urlencode, urlparse, parse_qs
 from flask import *
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import relationship
 from files.helpers.lazy import lazy
 from files.helpers.const import SLURS
 from files.__main__ import Base
@@ -187,6 +187,7 @@ class Comment(Base):
 		self.__dict__["replies"] = value
 
 	@property
+	@lazy
 	def replies2(self):
 		return self.__dict__.get("replies2", [])
 
@@ -215,6 +216,7 @@ class Comment(Base):
 		else: return f"/comment/{self.id}/"
 
 	@property
+	@lazy
 	def json_raw(self):
 		flags = {}
 		for f in self.flags: flags[f.user.username] = f.reason
@@ -252,6 +254,7 @@ class Comment(Base):
 		return len([x for x in self.awards if x.kind == kind])
 
 	@property
+	@lazy
 	def json_core(self):
 		if self.is_banned:
 			data= {'is_banned': True,
@@ -280,6 +283,7 @@ class Comment(Base):
 		return data
 
 	@property
+	@lazy
 	def json(self):
 	
 		data=self.json_core
@@ -297,14 +301,17 @@ class Comment(Base):
 		return data
 
 	@property
+	@lazy
 	def is_blocking(self):
 		return self.__dict__.get('_is_blocking', 0)
 
 	@property
+	@lazy
 	def is_blocked(self):
 		return self.__dict__.get('_is_blocked', 0)
 
 	@property
+	@lazy
 	def body(self):
 		if self.comment_aux: return self.comment_aux.body
 		else: return ""
@@ -315,6 +322,7 @@ class Comment(Base):
 		g.db.add(self.comment_aux)
 
 	@property
+	@lazy
 	def body_html(self):
 		return self.comment_aux.body_html
 
@@ -349,6 +357,7 @@ class Comment(Base):
 		return body
 
 	@property
+	@lazy
 	def ban_reason(self):
 		return self.comment_aux.ban_reason
 

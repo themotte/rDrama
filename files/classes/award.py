@@ -70,17 +70,21 @@ class AwardRelationship(Base):
 	comment = relationship("Comment", primaryjoin="AwardRelationship.comment_id==Comment.id", lazy="joined", viewonly=True)
 
 	@property
+	@lazy
 	def given(self):
 		return bool(self.submission_id) or bool(self.comment_id)
 
 	@property
+	@lazy
 	def type(self):
 		return AWARDS[self.kind]
 
 	@property
+	@lazy
 	def title(self):
 		return self.type['title']
 
 	@property
+	@lazy
 	def class_list(self):
 		return self.type['icon']+' '+self.type['color']

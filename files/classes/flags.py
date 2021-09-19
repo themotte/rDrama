@@ -1,6 +1,7 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
+from files.helpers.lazy import lazy
 
 class Flag(Base):
 

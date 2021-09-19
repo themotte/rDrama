@@ -313,6 +313,7 @@ class Submission(Base):
 		return data
 
 	@property
+	@lazy
 	def json_core(self):
 
 		if self.is_banned:
@@ -334,6 +335,7 @@ class Submission(Base):
 		return self.json_raw
 
 	@property
+	@lazy
 	def json(self):
 
 		data=self.json_core
@@ -357,6 +359,7 @@ class Submission(Base):
 		return len([x for x in self.awards if x.kind == kind])
 
 	@property
+	@lazy
 	def title(self):
 		return self.submission_aux.title
 
@@ -366,6 +369,7 @@ class Submission(Base):
 		g.db.add(self.submission_aux)
 
 	@property
+	@lazy
 	def url(self):
 		return self.submission_aux.url
 
@@ -390,6 +394,7 @@ class Submission(Base):
 		else: return ""
  
 	@property
+	@lazy
 	def body(self):
 		return self.submission_aux.body
 
@@ -399,6 +404,7 @@ class Submission(Base):
 		g.db.add(self.submission_aux)
 
 	@property
+	@lazy
 	def body_html(self):
 		return self.submission_aux.body_html
 
@@ -420,6 +426,7 @@ class Submission(Base):
 		return body
 
 	@property
+	@lazy
 	def title_html(self):
 		return self.submission_aux.title_html
 
@@ -439,6 +446,7 @@ class Submission(Base):
 		return title
 
 	@property
+	@lazy
 	def ban_reason(self):
 		return self.submission_aux.ban_reason
 
@@ -448,6 +456,7 @@ class Submission(Base):
 		g.db.add(self.submission_aux)
 
 	@property
+	@lazy
 	def embed_url(self):
 		return self.submission_aux.embed_url
 
@@ -457,10 +466,12 @@ class Submission(Base):
 		g.db.add(self.submission_aux)
 	
 	@property
+	@lazy
 	def is_blocked(self):
 		return self.__dict__.get('_is_blocked', False)
 
 	@property
+	@lazy
 	def is_blocking(self):
 		return self.__dict__.get('_is_blocking', False)
 
@@ -469,11 +480,13 @@ class Submission(Base):
 		#return len(self.awards)
 
 	@property
+	@lazy
 	def is_image(self):
 		if self.url: return self.url.lower().endswith('.webp') or self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999')
 		else: return False
 
 	@property
+	@lazy
 	def is_video(self) -> bool:
 		if self.url:
 			return self.url.startswith("https://i.imgur.com") and self.url.lower().endswith('.mp4')

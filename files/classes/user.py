@@ -210,6 +210,7 @@ class User(Base):
 			user_id=self.id, target_id=target.id).first()
 
 	@property
+	@lazy
 	def paid_dues(self):
 		return self.admin_level == 6 or self.club_allowed or (self.truecoins > int(environ.get("DUES").strip()) and not self.club_banned)
 
@@ -225,10 +226,12 @@ class User(Base):
 		return x.verify(token, valid_window=1)
 
 	@property
+	@lazy
 	def age(self):
 		return int(time.time()) - self.created_utc
 
 	@property
+	@lazy
 	def strid(self):
 		return str(self.id)
 
@@ -277,10 +280,12 @@ class User(Base):
 		return listing
 
 	@property
+	@lazy
 	def fullname(self):
 		return f"t1_{self.id}"
 
 	@property
+	@lazy
 	def banned_by(self):
 		if not self.is_suspended: return None
 		return g.db.query(User).filter_by(id=self.is_banned).first()
@@ -296,6 +301,7 @@ class User(Base):
 		return check_password_hash(self.passhash, password)
 
 	@property
+	@lazy
 	def formkey(self):
 
 		if "session_id" not in session:
@@ -310,6 +316,7 @@ class User(Base):
 		return validate_hash(f"{session['session_id']}+{self.id}+{self.login_nonce}", formkey)
 
 	@property
+	@lazy
 	def url(self):
 		return f"/@{self.username}"
 
@@ -317,6 +324,7 @@ class User(Base):
 		return f"<User(username={self.username})>"
 
 	@property
+	@lazy
 	def unban_string(self):
 		if self.unban_utc == 0:
 			return "permanently banned"
@@ -445,6 +453,7 @@ class User(Base):
 		return g.db.query(Follow).options(lazyload('*')).filter_by(target_id=self.id, user_id=user.id).first()
 
 	@property
+	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
 		else: return f"https://{site}/assets/images/{site_name}/preview.webp"
@@ -455,12 +464,14 @@ class User(Base):
 		return f"https://{site}/assets/images/defaultpictures/{pic}.webp"
 
 	@property
+	@lazy
 	def profile_url(self):
 		if self.profileurl: return self.profileurl
 		elif "rdrama" in site: return self.defaultpicture()
 		else: return f"https://{site}/assets/images/default-profile-pic.webp"
 
 	@property
+	@lazy
 	def json_raw(self):
 		data = {'username': self.username,
 				'url': self.url,
@@ -478,6 +489,7 @@ class User(Base):
 		return data
 
 	@property
+	@lazy
 	def json_core(self):
 
 		now = int(time.time())
@@ -492,6 +504,7 @@ class User(Base):
 		return self.json_raw
 
 	@property
+	@lazy
 	def json(self):
 		data = self.json_core
 
@@ -528,19 +541,23 @@ class User(Base):
 
 
 	@property
+	@lazy
 	def is_suspended(self):
 		return (self.is_banned and (not self.unban_utc or self.unban_utc > time.time()))
 
 	@property
+	@lazy
 	def is_blocking(self):
 		return self.__dict__.get('_is_blocking', 0)
 
 	@property
+	@lazy
 	def is_blocked(self):
 		return self.__dict__.get('_is_blocked', 0)
 
 
 	@property
+	@lazy
 	def applications(self):
 		return [x for x in self._applications.order_by(
 			OauthApp.id.asc()).all()]
@@ -600,6 +617,7 @@ class User(Base):
 		return [x[0] for x in comments.offset(25 * (page - 1)).limit(26).all()]
 
 	@property
+	@lazy
 	def filter_words(self):
 		l = [i.strip() for i in self.custom_filter_list.split('\n')] if self.custom_filter_list else []
 		l = [i for i in l if i]
@@ -625,11 +643,13 @@ class ViewerRelationship(Base):
 		super().__init__(**kwargs)
 
 	@property
+	@lazy
 	def last_view_since(self):
 
 		return int(time.time()) - self.last_view_utc
 
 	@property
+	@lazy
 	def last_view_string(self):
 
 		age = self.last_view_since

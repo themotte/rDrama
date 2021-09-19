@@ -24,6 +24,7 @@ class Vote(Base):
 		return f"<Vote(id={self.id})>"
 
 	@property
+	@lazy
 	def json_core(self):
 		data={
 			"user_id": self.user_id,
@@ -33,6 +34,7 @@ class Vote(Base):
 		return data
 
 	@property
+	@lazy
 	def json(self):
 		data=self.json_core
 		data["user"]=self.user.json_core
@@ -62,6 +64,7 @@ class CommentVote(Base):
 		return f"<CommentVote(id={self.id})>"
 
 	@property
+	@lazy
 	def json_core(self):
 		data={
 			"user_id": self.user_id,
@@ -71,6 +74,7 @@ class CommentVote(Base):
 		return data
 
 	@property
+	@lazy
 	def json(self):
 		data=self.json_core
 		data["user"]=self.user.json_core

@@ -1,10 +1,10 @@
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, lazyload
-
 from .submission import Submission
 from .comment import Comment
 from files.__main__ import Base
+from files.helpers.lazy import lazy
 
 class OauthApp(Base):
 
@@ -32,6 +32,7 @@ class OauthApp(Base):
 		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
 
 	@property
+	@lazy
 	def permalink(self): return f"/admin/app/{self.id}"
 
 
@@ -54,6 +55,8 @@ class OauthApp(Base):
 		posts=posts.offset(100*(page-1)).limit(101)
 
 		return [x[0] for x in posts.all()]
+
+
 
 class ClientAuth(Base):
 

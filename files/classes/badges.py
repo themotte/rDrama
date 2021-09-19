@@ -22,11 +22,13 @@ class BadgeDef(Base):
 		return f"<BadgeDef(badge_id={self.id})>"
 
 	@property
+	@lazy
 	def path(self):
 
 		return f"/assets/images/{site_name}/badges/{self.icon}"
 
 	@property
+	@lazy
 	def json_core(self):
 		return {
 			"name": self.name,
@@ -53,6 +55,7 @@ class Badge(Base):
 		return f"<Badge(user_id={self.user_id}, badge_id={self.badge_id})>"
 
 	@property
+	@lazy
 	def text(self):
 		if self.description:
 			return self.description
@@ -60,18 +63,22 @@ class Badge(Base):
 			return self.badge.description
 
 	@property
+	@lazy
 	def type(self):
 		return self.badge.id
 
 	@property
+	@lazy
 	def name(self):
 		return self.badge.name
 
 	@property
+	@lazy
 	def path(self):
 		return self.badge.path
 
 	@property
+	@lazy
 	def json_core(self):
 
 		return {'text': self.text,
