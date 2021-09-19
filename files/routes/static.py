@@ -94,7 +94,7 @@ def admins(v):
 @auth_desired
 def log(v):
 
-	page=int(request.values.get("page",1))
+	page=int(request.values.get("page", 1))
 
 	actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
