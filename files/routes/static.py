@@ -132,10 +132,6 @@ def log_item(id, v):
 		action=action
 		)
 
-@app.route("/sex")
-def index():
-	return render_template("index.html", **{"greeting": "Hello from Flask!"})
-
 @app.get("/assets/favicon.ico")
 def favicon():
 	return send_file(f"./assets/images/{site_name}/icon.webp")
@@ -248,8 +244,7 @@ def googleplayapp():
 
 @app.route("/service-worker.js")
 def serviceworker():
-	return redirect("https://js.pusher.com/beams/service-worker.js")
-
+	with open("files/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
 
 @app.get("/settings/security")
 @auth_required
