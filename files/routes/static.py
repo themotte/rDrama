@@ -94,12 +94,13 @@ def admins(v):
 @auth_desired
 def log(v):
 
-	page=int(request.values.get("page", 1))
+	page=int(request.args.get("page",1))
 
-	actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	else: actions=g.db.query(ModAction).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 
-	next_exists = len(actions)==26
-	actions = actions[:25]
+	next_exists=len(actions)==26
+	actions=actions[:25]
 
 	return render_template("log.html", v=v, actions=actions, next_exists=next_exists, page=page)
 
