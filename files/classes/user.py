@@ -15,6 +15,7 @@ from .badges import *
 from .clients import *
 from files.__main__ import Base, cache
 from files.helpers.security import *
+import random
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
