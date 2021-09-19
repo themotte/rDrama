@@ -327,6 +327,7 @@ class Comment(Base):
 		self.comment_aux.body_html = x
 		g.db.add(self.comment_aux)
 
+	@lazy
 	def realbody(self, v):
 		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
 		body = self.comment_aux.body_html
@@ -365,6 +366,7 @@ class Comment(Base):
 	#def award_count(self):
 		#return len(self.awards)
 
+	@lazy
 	def collapse_for_user(self, v):
 
 		if self.over_18 and not (v and v.over_18) and not self.post.over_18:

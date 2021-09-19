@@ -36,7 +36,7 @@ class OauthApp(Base):
 	@lazy
 	def permalink(self): return f"/admin/app/{self.id}"
 
-
+	@lazy
 	def idlist(self, page=1, **kwargs):
 
 		posts = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(app_id=self.id)
@@ -47,7 +47,7 @@ class OauthApp(Base):
 
 		return [x[0] for x in posts.all()]
 
-
+	@lazy
 	def comments_idlist(self, page=1, **kwargs):
 
 		posts = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(app_id=self.id)

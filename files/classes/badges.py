@@ -88,6 +88,7 @@ class Badge(Base):
 				'icon_url':f"https://{app.config['SERVER_NAME']}{self.path}"
 				}
 
-	property
+	@property
+	@lazy
 	def json(self):
 		return self.json_core

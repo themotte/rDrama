@@ -417,6 +417,7 @@ class User(Base):
 
 		return output
 
+	@lazy
 	def alts_threaded(self, db):
 
 		subq = db.query(Alt).filter(
@@ -531,6 +532,7 @@ class User(Base):
 
 		g.db.add(self)
 
+
 	def unban(self):
 
 		self.is_banned = 0
@@ -562,10 +564,12 @@ class User(Base):
 		return [x for x in self._applications.order_by(
 			OauthApp.id.asc()).all()]
 
+	@lazy
 	def subscribed_idlist(self, page=1):
 		posts = g.db.query(Subscription.submission_id).options(lazyload('*')).filter_by(user_id=self.id).all()
 		return [x[0] for x in posts]
 
+	@lazy
 	def saved_idlist(self, page=1):
 
 		posts = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False,
@@ -592,6 +596,7 @@ class User(Base):
 
 		return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
 
+	@lazy
 	def saved_comment_idlist(self, page=1):
 
 		comments = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)

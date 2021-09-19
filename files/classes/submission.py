@@ -209,6 +209,7 @@ class Submission(Base):
 
 		return f"/post/{self.id}/{output}"
 
+	@lazy
 	def rendered_page(self, sort=None, last_view_utc=None, comment=None, comment_info=None, v=None):
 
 		# check for banned
@@ -282,7 +283,7 @@ class Submission(Base):
 		else: return f"https://{site}/assets/images/default_thumb_link.webp"
 
 	@property
-
+	@lazy
 	def json_raw(self):
 		flags = {}
 		for f in self.flags: flags[f.user.username] = f.reason
@@ -383,6 +384,7 @@ class Submission(Base):
 		self.submission_aux.url = x
 		g.db.add(self.submission_aux)
 
+	@lazy
 	def realurl(self, v):
 		if v and v.agendaposter and random.randint(1, 10) < 4:
 			return 'https://secure.actblue.com/donate/ms_blm_homepage_2019'
@@ -416,6 +418,7 @@ class Submission(Base):
 		self.submission_aux.body_html = x
 		g.db.add(self.submission_aux)
 
+	@lazy
 	def realbody(self, v):
 		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
 		body = self.submission_aux.body_html
@@ -437,6 +440,7 @@ class Submission(Base):
 		self.submission_aux.title_html = x
 		g.db.add(self.submission_aux)
 
+	@lazy
 	def realtitle(self, v):
 		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6): return 'COUNTRY CLUB MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
