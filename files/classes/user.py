@@ -41,9 +41,9 @@ if site_name == "Drama":
 			"color": "text-black-50",
 			"price": 1000
 		},
-		"stars": {
-			"kind": "stars",
-			"title": "Stars",
+		"fireflies": {
+			"kind": "fireflies",
+			"title": "fireflies",
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
@@ -60,9 +60,9 @@ else:
 			"color": "text-black-50",
 			"price": 1000
 		},
-		"stars": {
-			"kind": "stars",
-			"title": "Stars",
+		"fireflies": {
+			"kind": "fireflies",
+			"title": "fireflies",
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
@@ -459,16 +459,11 @@ class User(Base):
 		if self.bannerurl: return self.bannerurl
 		else: return f"https://{site}/assets/images/{site_name}/preview.webp"
 
-	@cache.memoize(timeout=3600)
-	def defaultpicture(self):
-		pic = random.randint(1, 150)
-		return f"https://{site}/assets/images/defaultpictures/{pic}.webp"
-
 	@property
 	@lazy
 	def profile_url(self):
 		if self.profileurl: return self.profileurl
-		elif "rdrama" in site: return self.defaultpicture()
+		elif "rdrama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp"
 		else: return f"https://{site}/assets/images/default-profile-pic.webp"
 
 	@property

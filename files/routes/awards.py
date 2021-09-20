@@ -28,9 +28,9 @@ def shop(v):
 				"color": "text-black-50",
 				"price": 1000
 			},
-			"stars": {
-				"kind": "stars",
-				"title": "Stars",
+			"fireflies": {
+				"kind": "fireflies",
+				"title": "fireflies",
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
@@ -47,9 +47,9 @@ def shop(v):
 				"color": "text-black-50",
 				"price": 1000
 			},
-			"stars": {
-				"kind": "stars",
-				"title": "Stars",
+			"fireflies": {
+				"kind": "fireflies",
+				"title": "fireflies",
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
@@ -105,9 +105,9 @@ def buy(v, award):
 				"color": "text-black-50",
 				"price": 1000
 			},
-			"stars": {
-				"kind": "stars",
-				"title": "Stars",
+			"fireflies": {
+				"kind": "fireflies",
+				"title": "fireflies",
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
@@ -124,9 +124,9 @@ def buy(v, award):
 				"color": "text-black-50",
 				"price": 1000
 			},
-			"stars": {
-				"kind": "stars",
-				"title": "Stars",
+			"fireflies": {
+				"kind": "fireflies",
+				"title": "fireflies",
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
@@ -181,7 +181,7 @@ ACTIONS = {
 ALLOW_MULTIPLE = (
 	"ban",
 	"shit",
-	"stars"
+	"fireflies"
 )
 
 @app.post("/post/<pid>/awards")

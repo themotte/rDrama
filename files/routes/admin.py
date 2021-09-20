@@ -164,21 +164,21 @@ def monthly(v):
 
 			if u.patron == 1:
 				grant_awards["shit"] = 1
-				grant_awards["stars"] = 1
+				grant_awards["fireflies"] = 1
 			elif u.patron == 2:
 				grant_awards["shit"] = 3
-				grant_awards["stars"] = 3
+				grant_awards["fireflies"] = 3
 			elif u.patron == 3:
 				grant_awards["shit"] = 5
-				grant_awards["stars"] = 5
+				grant_awards["fireflies"] = 5
 				grant_awards["ban"] = 1
 			elif u.patron == 4:
 				grant_awards["shit"] = 10
-				grant_awards["stars"] = 10
+				grant_awards["fireflies"] = 10
 				grant_awards["ban"] = 3
 			elif u.patron == 5 or u.patron == 8:
 				grant_awards["shit"] = 20
-				grant_awards["stars"] = 20
+				grant_awards["fireflies"] = 20
 				grant_awards["ban"] = 6
 
 
@@ -402,25 +402,25 @@ def badge_grant_post(v):
 		if badge_id == 21:
 			if user.discord_id: add_role(user, "1")
 			grant_awards["shit"] = 1
-			grant_awards["stars"] = 1
+			grant_awards["fireflies"] = 1
 		elif badge_id == 22:
 			if user.discord_id: add_role(user, "2")
 			grant_awards["shit"] = 3
-			grant_awards["stars"] = 3
+			grant_awards["fireflies"] = 3
 		elif badge_id == 23:
 			if user.discord_id: add_role(user, "3")
 			grant_awards["shit"] = 5
-			grant_awards["stars"] = 5
+			grant_awards["fireflies"] = 5
 			grant_awards["ban"] = 1
 		elif badge_id in [24, 28]:
 			if user.discord_id: add_role(user, "4")
 			grant_awards["shit"] = 10
-			grant_awards["stars"] = 10
+			grant_awards["fireflies"] = 10
 			grant_awards["ban"] = 3
 		elif badge_id == 25:
 		 	if user.discord_id: add_role(user, "5")
 		 	grant_awards["shit"] = 20
-		 	grant_awards["stars"] = 20
+		 	grant_awards["fireflies"] = 20
 		 	grant_awards["ban"] = 6
 
 		if len(grant_awards):
@@ -630,20 +630,6 @@ def admin_removed(v):
 						   next_exists=next_exists
 						   )
 
-
-@app.post("/admin/image_purge")
-@admin_level_required(5)
-def admin_image_purge(v):
-	
-	name = request.values.get("url")
-	image = g.db.query(Image).options(lazyload('*')).filter(Image.text == name).first()
-	if image:
-		requests.delete(f'https://api.imgur.com/3/image/{image.deletehash}', headers = {"Authorization": f"Client-ID {IMGUR_KEY}"})
-		headers = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
-		data = {'files': [name]}
-		url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"
-		requests.post(url, headers=headers, json=data)
-	return redirect("/admin/image_purge")
 
 
 @app.post("/admin/image_ban")
@@ -1330,6 +1316,6 @@ def chart(v):
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
 
-	plt.savefig("chart.png")
+	plt.savefig("chart.webp")
 	plt.clf()
-	return send_file("../chart.png")
+	return send_file("../chart.webp")

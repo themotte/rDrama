@@ -24,9 +24,9 @@ if site_name == "Drama":
 			"color": "text-black-50",
 			"price": 1000
 		},
-		"stars": {
-			"kind": "stars",
-			"title": "Stars",
+		"fireflies": {
+			"kind": "fireflies",
+			"title": "fireflies",
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
@@ -43,9 +43,9 @@ else:
 			"color": "text-black-50",
 			"price": 1000
 		},
-		"stars": {
-			"kind": "stars",
-			"title": "Stars",
+		"fireflies": {
+			"kind": "fireflies",
+			"title": "fireflies",
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
