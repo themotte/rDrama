@@ -23,6 +23,14 @@ from files.helpers.discord import add_role
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
+
+@app.get("/truescore")
+@admin_level_required(6)
+def truescore(v):
+	users = g.db.query(User).options(lazyload('*')).order_by(User.truecoins.desc()).limit(25).all()
+	return render_template("truescore.html", v=v, users1=users)
+
+
 @app.post("/@<username>/revert_actions")
 @admin_level_required(6)
 def revert_actions(v, username):

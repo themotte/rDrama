@@ -152,6 +152,7 @@ def leaderboard(v):
 		return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6)
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5)
 
+
 @app.get("/@<username>/css")
 def get_css(username):
 	user = get_user(username)
