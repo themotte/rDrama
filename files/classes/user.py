@@ -43,7 +43,7 @@ if site_name == "Drama":
 		},
 		"fireflies": {
 			"kind": "fireflies",
-			"title": "fireflies",
+			"title": "Fireflies",
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
@@ -54,7 +54,7 @@ else:
 	AWARDS = {
 		"shit": {
 			"kind": "shit",
-			"title": "shit",
+			"title": "Shit",
 			"description": "Makes flies swarm a post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
@@ -62,7 +62,7 @@ else:
 		},
 		"fireflies": {
 			"kind": "fireflies",
-			"title": "fireflies",
+			"title": "Fireflies",
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",

@@ -30,7 +30,7 @@ def shop(v):
 			},
 			"fireflies": {
 				"kind": "fireflies",
-				"title": "fireflies",
+				"title": "Fireflies",
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
@@ -41,7 +41,7 @@ def shop(v):
 		AWARDS = {
 			"shit": {
 				"kind": "shit",
-				"title": "shit",
+				"title": "Shit",
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
@@ -49,7 +49,7 @@ def shop(v):
 			},
 			"fireflies": {
 				"kind": "fireflies",
-				"title": "fireflies",
+				"title": "Fireflies",
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
@@ -107,7 +107,7 @@ def buy(v, award):
 			},
 			"fireflies": {
 				"kind": "fireflies",
-				"title": "fireflies",
+				"title": "Fireflies",
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
@@ -118,7 +118,7 @@ def buy(v, award):
 		AWARDS = {
 			"shit": {
 				"kind": "shit",
-				"title": "shit",
+				"title": "Shit",
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
@@ -126,7 +126,7 @@ def buy(v, award):
 			},
 			"fireflies": {
 				"kind": "fireflies",
-				"title": "fireflies",
+				"title": "Fireflies",
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
