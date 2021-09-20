@@ -68,7 +68,7 @@ app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
 redispool=ConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"], host=app.config["CACHE_REDIS_URL"][8:])
-app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
+# app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
 
 Markdown(app)
 cache = Cache(app)
