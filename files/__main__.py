@@ -59,12 +59,13 @@ app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
 app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 app.config["CACHE_TYPE"] = "filesystem"
+app.config["CACHE_DIR"] = "cache"
 app.config["RATELIMIT_STORAGE_URL"] = "redis://127.0.0.1"
 
 r=redis.Redis(host="127.0.0.1",  decode_responses=True, ssl_cert_reqs=None)
 
-Markdown(app)
 cache = Cache(app)
+Markdown(app)
 Compress(app)
 
 limiter = Limiter(
