@@ -28,7 +28,7 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @admin_level_required(6)
 def truescore(v):
 	users = g.db.query(User).options(lazyload('*')).order_by(User.truecoins.desc()).limit(25).all()
-	return render_template("truescore.html", v=v, users1=users)
+	return render_template("truescore.html", v=v, users=users)
 
 
 @app.post("/@<username>/revert_actions")
