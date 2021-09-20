@@ -432,9 +432,9 @@
 					<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v"></i>Votes</li></a>
 
 					{% if v %}
-						<li id="save2-{{c.id}}" class="list-group-item {% if c in v.saved_comment_idlist() %}d-none{% endif %}" href="javascript:void(0)" data-dismiss="modal" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save"></i>Save</li>
+						<li id="save2-{{c.id}}" class="list-group-item {% if c not in v.saved_comment_idlist() %}d-none{% endif %}" href="javascript:void(0)" data-dismiss="modal" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save"></i>Save</li>
 
-						<li id="unsave2-{{c.id}}" class="list-group-item {% if c not in v.saved_comment_idlist() %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-save"></i>Unsave</li>
+						<li id="unsave2-{{c.id}}" class="list-group-item {% if c in v.saved_comment_idlist() %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-save"></i>Unsave</li>
 					{% endif %}
 
 					<li href="javascript:void(0);" role="button" class="list-group-item copy-link" data-dismiss="modal" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=5#context"><i class="fas fa-copy"></i>Copy link</li>
