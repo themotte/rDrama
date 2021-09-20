@@ -96,11 +96,13 @@ def api_vote_post(post_id, new, v):
 					)
 		g.db.add(vote)
 	
-	g.db.flush()
-	post.upvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
-	post.downvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=-1).count()
-	g.db.add(post)
-	g.db.commit()
+	try:
+		g.db.flush()
+		post.upvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
+		post.downvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=-1).count()
+		g.db.add(post)
+		g.db.commit()
+	except: g.db.rollback()
 	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
