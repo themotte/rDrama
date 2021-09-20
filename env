@@ -1,5 +1,3 @@
-export PYTHONPATH="/service"
-export REDIS_URL="redis://redis"
 export DATABASE_URL="postgresql://postgres@postgres:5432/postgres"
 export MASTER_KEY="-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA="
 export DOMAIN="localhost"

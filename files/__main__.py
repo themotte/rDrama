@@ -11,7 +11,6 @@ from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
-from sqlalchemy.pool import QueuePool
 import gevent
 from werkzeug.middleware.proxy_fix import ProxyFix
 import redis
@@ -76,15 +75,9 @@ limiter = Limiter(
 	strategy="fixed-window"
 )
 
-_engine=create_engine(
-	app.config['DATABASE_URL'],
-	poolclass=QueuePool,
-	pool_size=97,
-	pool_use_lifo=True
-)
-
-
 Base = declarative_base()
+
+engine = create_engine(app.config['DATABASE_URL'])
 
 db_session = scoped_session(sessionmaker(engine))
 
