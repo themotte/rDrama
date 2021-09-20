@@ -583,7 +583,6 @@ class User(Base):
 
 		return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
 
-	@lazy
 	def saved_comment_idlist(self, page=1):
 
 		comments = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
