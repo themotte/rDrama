@@ -9,7 +9,7 @@ from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session, Query as _Query
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import gevent
@@ -83,37 +83,10 @@ _engine=create_engine(
 	pool_use_lifo=True
 )
 
-def retry(f):
-
-	def wrapper(self, *args, **kwargs):
-		try:
-			return f(self, *args, **kwargs)
-		except:
-			self.session.rollback()
-			return f(self, *args, **kwargs)
-
-	wrapper.__name__=f.__name__
-	return wrapper
-
-
-class RetryingQuery(_Query):
-
-	@retry
-	def all(self):
-		return super().all()
-
-	@retry
-	def count(self):
-		return super().count()
-
-	@retry
-	def first(self):
-		return super().first()
-
 
 Base = declarative_base()
 
-db_session = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
+db_session = scoped_session(sessionmaker(engine))
 
 
 @app.before_request
