@@ -235,7 +235,7 @@ class User(Base):
 	def strid(self):
 		return str(self.id)
 
-	@cache.memoize(timeout=3600)
+	@cache.memoize(timeout=86400)
 	def userpagelisting(self, v=None, page=1, sort="new", t="all"):
 
 		if self.shadowbanned and not (v and (v.admin_level >= 3 or v.id == self.id)):
