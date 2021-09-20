@@ -224,6 +224,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 @auth_desired
 def front_all(v):
 
+	ti = time.time()
+
 	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect("/logged_out")
 
 	if v and "logged_out" in request.full_path: v = None
@@ -257,6 +259,7 @@ def front_all(v):
 
 	if v and v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
 
+	print(time.time() - ti)
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
