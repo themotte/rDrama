@@ -14,7 +14,6 @@ from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import redis
 import gevent
-from redis import ConnectionPool
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__, template_folder='./templates')
@@ -44,8 +43,6 @@ app.config["DEFAULT_COLOR"] = environ.get("DEFAULT_COLOR", "ff0000").strip()
 app.config["DEFAULT_THEME"] = environ.get("DEFAULT_THEME", "light").strip() + "_" + environ.get("DEFAULT_COLOR", "ff0000").strip()
 app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1)) if ("localhost" not in app.config["SERVER_NAME"] and "127.0.0.1" not in app.config["SERVER_NAME"]) else 0
 app.config["UserAgent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
-app.config["CACHE_TYPE"] = "filesystem"
-app.config["CACHE_DIR"] = "cache"
 app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","").strip()
 app.config["HCAPTCHA_SECRET"] = environ.get("HCAPTCHA_SECRET","").strip()
 app.config["SPAM_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_SIMILARITY_THRESHOLD", 0.5))
@@ -54,24 +51,27 @@ app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_URL_SIMILA
 app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD", 0.5))
 app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 0.5))
 app.config["VIDEO_COIN_REQUIREMENT"] = int(environ.get("VIDEO_COIN_REQUIREMENT", 0))
-# app.config["CACHE_REDIS_URL"] = environ.get("REDIS_URL").strip()
-# app.config["CACHE_DEFAULT_TIMEOUT"] = 60
-# app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
-app.config["REDIS_POOL_SIZE"] = 10
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
-app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL").strip()
+app.config["RATELIMIT_STORAGE_URL"] = "redis://127.0.0.1"
 app.config["RATELIMIT_KEY_PREFIX"] = "flask_limiting_"
 app.config["RATELIMIT_ENABLED"] = True
 app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
 app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
+app.config["CACHE_TYPE"] = "redis"
+app.config["CACHE_REDIS_URL"] = "redis://127.0.0.1"
+app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
-redispool=ConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"], host=environ.get("REDIS_URL").strip()[8:])
-# app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
+r=redis.Redis(
+	host="127.0.0.1", 
+	decode_responses=True, 
+	ssl_cert_reqs=None,
+	)
+
+cache = Cache(app)
 
 Markdown(app)
-cache = Cache(app)
 Compress(app)
 
 limiter = Limiter(
@@ -118,14 +118,6 @@ class RetryingQuery(_Query):
 
 
 Base = declarative_base()
-
-
-r=redis.Redis(
-	host=environ.get("REDIS_URL").strip()[8:], 
-	decode_responses=True, 
-	ssl_cert_reqs=None,
-	connection_pool=redispool
-	) if environ.get("REDIS_URL").strip() else None
 
 db_session = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery, autoflush=False))
 
