@@ -327,7 +327,6 @@ class Comment(Base):
 		self.comment_aux.body_html = x
 		g.db.add(self.comment_aux)
 
-	@lazy
 	def realbody(self, v):
 		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
 		body = self.comment_aux.body_html

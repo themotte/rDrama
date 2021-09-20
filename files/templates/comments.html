@@ -429,7 +429,7 @@
 			<div class="modal-body">
 				<ul class="list-group comment-actions">
 
-					<li class="list-group-item"><a href="/votes?link={{c.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
+					<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v"></i>Votes</li></a>
 
 					{% if v %}
 						<li id="save2-{{c.id}}" class="{% if c in v.saved_comment_idlist() %}d-none{% endif %} list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save"></i>Save</a></li>
@@ -438,19 +438,19 @@
 
 					{% endif %}
 
-					<li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=5#context"><i class="fas fa-copy"></i>Copy link</a></li>
+					<a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=5#context"><li class="list-group-item"><i class="fas fa-copy"></i>Copy link</li></a>
 
-					<li class="list-group-item"><a {% if v %} href="{{c.permalink}}?context=5#context" {% else %} href="/logged_out{{c.permalink}}?context=5#context" {% endif %}><i class="fas fa-dna"></i>Context</a></li>
+					<a {% if v %} href="{{c.permalink}}?context=5#context" {% else %} href="/logged_out{{c.permalink}}?context=5#context" {% endif %}><li class="list-group-item"><i class="fas fa-dna"></i>Context</li></a>
 
-					<li class="list-group-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')" class="d-block"><i class="fas fa-flag"></i>Report</a></li>
+					<a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')" class="d-block"><li class="list-group-item"><i class="fas fa-flag"></i>Report</li></a>
 
 					{% if v and c.parent_submission and c.author_id==v.id %}
-						<li class="list-group-item"><a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{c.id}}')" class="d-block"><i class="fas fa-edit"></i>Edit</a></li>
+						<a href="javascript:void(0)" data-dismiss="modal" onclick="toggleEdit('{{c.id}}')" class="d-block"><li class="list-group-item"><i class="fas fa-edit"></i>Edit</li></a>
 
 						{% if c.deleted_utc > 0 %}
-							<li class="list-group-item"><a class="d-block" href="javascript:void(0)" onclick="post_toast('/undelete/comment/{{c.id}}')" data-dismiss="modal"><i class="fas fa-trash-alt"></i>Undelete</a></li>
+							<a class="d-block" href="javascript:void(0)" onclick="post_toast('/undelete/comment/{{c.id}}')" data-dismiss="modal"><li class="list-group-item"><i class="fas fa-trash-alt"></i>Undelete</li></a>
 						{% else %}
-							<li class="list-group-item"><a class="d-block" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
+							<a class="d-block" href="javascript:void(0)" data-toggle="modal" data-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><li class="list-group-item"><i class="fas fa-trash-alt"></i>Delete</li></a>
 						{% endif %}
 					{% endif %}
 
@@ -468,15 +468,15 @@
 							{% endif %}
 							{% if v.admin_level>=3 %}
 								{% if "/reported/" in request.path %}
-									<li class="list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="removeComment2('{{c.id}}')" data-dismiss="modal"><i class="fas fa-ban text-danger"></i>Remove</a></li>
-									<li class="list-group-item"><a class="text-success d-block" href="javascript:void(0)" onclick="approveComment2('{{c.id}}')" data-dismiss="modal"><i class="fas fa-check text-success"></i>Approve</a></li>
+									<a class="text-danger d-block" href="javascript:void(0)" onclick="removeComment2('{{c.id}}')" data-dismiss="modal"><li class="list-group-item"><i class="fas fa-ban text-danger"></i>Remove</li></a>
+									<a class="text-success d-block" href="javascript:void(0)" onclick="approveComment2('{{c.id}}')" data-dismiss="modal"><li class="list-group-item"><i class="fas fa-check text-success"></i>Approve</li></a>
 								{% else %}
 									<li id="remove2-{{c.id}}" class="{% if c.is_banned %}d-none{% endif %} list-group-item"><a class="text-danger d-block" href="javascript:void(0)" onclick="removeComment2('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-ban text-danger"></i>Remove</a></li>
 									<li id="approve2-{{c.id}}" class="{% if not c.is_banned %}d-none{% endif %} list-group-item"><a class="text-success d-block" href="javascript:void(0)" onclick="approveComment2('{{c.id}}','approve2-{{c.id}}','remove2-{{c.id}}')" data-dismiss="modal"><i class="fas fa-check text-success"></i>Approve</a></li>
 								{% endif %}
 							{% endif %}
 							{% if v.admin_level >=4 and c.oauth_app %}
-								<li class="list-group-item"><a class="d-block text-info" href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code text-info"></i>API App</a></li>
+								<a class="d-block text-info" href="{{c.oauth_app.permalink}}/comments"><li class="list-group-item"><i class="fas fa-code text-info"></i>API App</li></a>
 							{% endif %}
 
 							{% if not v.id==c.author_id and v.admin_level == 0 %}

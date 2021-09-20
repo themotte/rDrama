@@ -69,7 +69,7 @@ def club_allow(v, username):
 	ma=ModAction(
 		kind="club_allow",
 		user_id=v.id,
-		target_user_id=user.id,
+		target_user_id=u.id,
 		)
 	g.db.add(ma)
 
@@ -97,7 +97,7 @@ def club_ban(v, username):
 	ma=ModAction(
 		kind="club_ban",
 		user_id=v.id,
-		target_user_id=user.id,
+		target_user_id=u.id,
 		)
 	g.db.add(ma)
 
