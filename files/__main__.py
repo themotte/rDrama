@@ -20,8 +20,8 @@ app = Flask(__name__, template_folder='./templates')
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
-import faulthandler
-faulthandler.enable()
+# import faulthandler
+# faulthandler.enable()
 
 app.config["SITE_NAME"]=environ.get("SITE_NAME").strip()
 app.config["COINS_NAME"]=environ.get("COINS_NAME").strip()
