@@ -204,8 +204,7 @@ def settings_profile_post(v):
 		if theme == "coffee" or theme == "4chan": v.themecolor = "38a169"
 		elif theme == "tron": v.themecolor = "80ffff"
 		elif theme == "win98": v.themecolor = "30409f"
-		g.db.add(v)
-		return {"message": "Theme changed!"}
+		updated = True
 
 	quadrant = request.values.get("quadrant")
 	if quadrant and 'pcmemes.net' in request.host.lower():
@@ -238,8 +237,8 @@ def settings_profile_post(v):
 		elif quadrant=="Right":
 			v.namecolor = "91b9A6"
 			v.titlecolor = "91b9A6"
-		g.db.add(v)
-		return {"message": "Quadrant changed!"}
+
+		updated = True
 
 	if updated:
 		g.db.add(v)
@@ -654,13 +653,12 @@ def settings_block_user(v):
 	existing = g.db.query(Notification).options(lazyload('*')).filter_by(blocksender=v.id, user_id=user.id).first()
 	if not existing: send_block_notif(v.id, user.id, f"@{v.username} has blocked you!")
 
-	if v.admin_level == 1: return {"message": f"@{user.username} banned!"}
-
 	cache.delete_memoized(frontlist)
 
 	g.db.commit()
 
-	return {"message": f"@{user.username} blocked."}
+	if v.admin_level == 1: return {"message": f"@{user.username} banned!"}
+	else: return {"message": f"@{user.username} blocked."}
 
 
 @app.post("/settings/unblock")
@@ -681,11 +679,11 @@ def settings_unblock_user(v):
 	existing = g.db.query(Notification).options(lazyload('*')).filter_by(unblocksender=v.id, user_id=user.id).first()
 	if not existing: send_unblock_notif(v.id, user.id, f"@{v.username} has unblocked you!")
 
-	if v.admin_level == 1: return {"message": f"@{user.username} unbanned!"}
-
 	cache.delete_memoized(frontlist)
 
 	g.db.commit()
+
+	if v.admin_level == 1: return {"message": f"@{user.username} unbanned!"}
 
 	return {"message": f"@{user.username} unblocked."}
 
