@@ -418,7 +418,6 @@ class Submission(Base):
 		self.submission_aux.body_html = x
 		g.db.add(self.submission_aux)
 
-	@lazy
 	def realbody(self, v):
 		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
 		body = self.submission_aux.body_html
