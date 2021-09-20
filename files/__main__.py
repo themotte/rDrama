@@ -3,6 +3,7 @@ gevent.monkey.patch_all()
 from os import environ
 import secrets
 from flask import *
+from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
@@ -13,7 +14,6 @@ from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
 import gevent
 from werkzeug.middleware.proxy_fix import ProxyFix
-from flask_caching import Cache
 import redis
 
 app = Flask(__name__, template_folder='./templates')
@@ -63,8 +63,8 @@ app.config["RATELIMIT_STORAGE_URL"] = "redis://127.0.0.1"
 
 r=redis.Redis(host="127.0.0.1",  decode_responses=True, ssl_cert_reqs=None)
 
-cache = Cache(app)
 Markdown(app)
+cache = Cache(app)
 Compress(app)
 
 limiter = Limiter(
