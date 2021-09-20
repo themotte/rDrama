@@ -7,8 +7,6 @@ from flask import g
 from werkzeug.utils import secure_filename
 from webptools import gifwebp
 
-CF_KEY = environ.get("CLOUDFLARE_KEY", "").strip()
-CF_ZONE = environ.get("CLOUDFLARE_ZONE", "").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 IBB_KEY = environ.get("IBB_KEY", "").strip()
 

@@ -311,7 +311,7 @@
 						{% endif %}
 					{% endif %}
 
-					<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</button>
+					<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>
 
 					{% if v and v.id!=p.author_id %}
 					<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
