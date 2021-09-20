@@ -54,9 +54,9 @@ app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_URL_SIMILA
 app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD", 0.5))
 app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 0.5))
 app.config["VIDEO_COIN_REQUIREMENT"] = int(environ.get("VIDEO_COIN_REQUIREMENT", 0))
-app.config["CACHE_REDIS_URL"] = environ.get("REDIS_URL").strip()
-app.config["CACHE_DEFAULT_TIMEOUT"] = 60
-app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
+# app.config["CACHE_REDIS_URL"] = environ.get("REDIS_URL").strip()
+# app.config["CACHE_DEFAULT_TIMEOUT"] = 60
+# app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 app.config["REDIS_POOL_SIZE"] = 10
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
@@ -67,7 +67,7 @@ app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
 app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
-redispool=ConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"], host=app.config["CACHE_REDIS_URL"][8:])
+redispool=ConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"], host=environ.get("REDIS_URL").strip()[8:])
 # app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
 
 Markdown(app)
@@ -121,11 +121,11 @@ Base = declarative_base()
 
 
 r=redis.Redis(
-	host=app.config["CACHE_REDIS_URL"][8:], 
+	host=environ.get("REDIS_URL").strip()[8:], 
 	decode_responses=True, 
 	ssl_cert_reqs=None,
 	connection_pool=redispool
-	) if app.config["CACHE_REDIS_URL"] else None
+	) if environ.get("REDIS_URL").strip() else None
 
 db_session = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery, autoflush=False))
 
