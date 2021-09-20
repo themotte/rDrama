@@ -113,7 +113,7 @@ class RetryingQuery(_Query):
 
 Base = declarative_base()
 
-db_session = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery, autoflush=False))
+db_session = scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
 
 
 @app.before_request
