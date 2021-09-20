@@ -44,7 +44,7 @@ app.config["DEFAULT_COLOR"] = environ.get("DEFAULT_COLOR", "ff0000").strip()
 app.config["DEFAULT_THEME"] = environ.get("DEFAULT_THEME", "light").strip() + "_" + environ.get("DEFAULT_COLOR", "ff0000").strip()
 app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1)) if ("localhost" not in app.config["SERVER_NAME"] and "127.0.0.1" not in app.config["SERVER_NAME"]) else 0
 app.config["UserAgent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
-app.config["CACHE_TYPE"] = "simple"
+app.config["CACHE_TYPE"] = "redis"
 app.config["CACHE_DIR"] = environ.get("CACHE_DIR", "cache")
 app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","").strip()
 app.config["HCAPTCHA_SECRET"] = environ.get("HCAPTCHA_SECRET","").strip()
@@ -68,7 +68,7 @@ app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 
 redispool=ConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"], host=app.config["CACHE_REDIS_URL"][8:])
-#app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
+app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
 
 Markdown(app)
 cache = Cache(app)
