@@ -70,10 +70,6 @@ class AwardRelationship(Base):
 	post = relationship("Submission", primaryjoin="AwardRelationship.submission_id==Submission.id", lazy="joined", viewonly=True)
 	comment = relationship("Comment", primaryjoin="AwardRelationship.comment_id==Comment.id", lazy="joined", viewonly=True)
 
-	@property
-	@lazy
-	def given(self):
-		return bool(self.submission_id) or bool(self.comment_id)
 
 	@property
 	@lazy
