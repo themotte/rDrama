@@ -513,13 +513,3 @@ class SaveRelationship(Base):
 	user_id=Column(Integer, ForeignKey("users.id"))
 	submission_id=Column(Integer, ForeignKey("submissions.id"))
 	type=Column(Integer)
-
-	@property
-	@lazy
-	def created_date(self):
-		return time.strftime("%d %B %Y", time.gmtime(self.created_utc))
-
-	@property
-	@lazy
-	def created_datetime(self):
-		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
