@@ -3,7 +3,6 @@ gevent.monkey.patch_all()
 from os import environ
 import secrets
 from flask import *
-from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
@@ -12,9 +11,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session, Query as _Query
 from sqlalchemy import *
 from sqlalchemy.pool import QueuePool
-import redis
 import gevent
 from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_caching import Cache
+import redis
 
 app = Flask(__name__, template_folder='./templates')
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
@@ -53,24 +53,17 @@ app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT
 app.config["VIDEO_COIN_REQUIREMENT"] = int(environ.get("VIDEO_COIN_REQUIREMENT", 0))
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
-app.config["RATELIMIT_STORAGE_URL"] = "redis://127.0.0.1"
 app.config["RATELIMIT_KEY_PREFIX"] = "flask_limiting_"
 app.config["RATELIMIT_ENABLED"] = True
 app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
 app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
-app.config["CACHE_TYPE"] = "redis"
-app.config["CACHE_REDIS_URL"] = "redis://127.0.0.1"
-app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
+app.config["CACHE_TYPE"] = "filesystem"
+app.config["RATELIMIT_STORAGE_URL"] = "redis://127.0.0.1"
 
-r=redis.Redis(
-	host="127.0.0.1", 
-	decode_responses=True, 
-	ssl_cert_reqs=None,
-	)
+r=redis.Redis(host="127.0.0.1",  decode_responses=True, ssl_cert_reqs=None)
 
 cache = Cache(app)
-
 Markdown(app)
 Compress(app)
 
