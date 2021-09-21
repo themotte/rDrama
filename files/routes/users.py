@@ -607,6 +607,7 @@ def follow_user(username, v):
 	new_follow = Follow(user_id=v.id, target_id=target.id)
 	g.db.add(new_follow)
 
+	g.db.flush()
 	target.stored_subscriber_count = g.db.query(Follow).options(lazyload('*')).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
@@ -629,6 +630,8 @@ def unfollow_user(username, v):
 	if not follow: return {"message": "User unfollowed!"}
 
 	g.db.delete(follow)
+	
+	g.db.flush()
 	target.stored_subscriber_count = g.db.query(Follow).options(lazyload('*')).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
