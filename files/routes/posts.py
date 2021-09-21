@@ -48,8 +48,8 @@ def toggle_club(pid, v):
 
 	g.db.commit()
 
-	if post.club: return {"message": "Post has been marked as +150-coins only!"}
-	else: return {"message": "Post has been unmarked as +150-coins only!"}
+	if post.club: return {"message": "Post has been marked as club-only!"}
+	else: return {"message": "Post has been unmarked as club-only!"}
 
 
 @app.post("/publish/<pid>")

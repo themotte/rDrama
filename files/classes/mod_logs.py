@@ -220,12 +220,12 @@ ACTIONTYPES={
 		"color": "bg-muted",
 	},
 	"club":{
-		"str": 'marked post {self.target_link} as viewable to users with +150 coins only',
+		"str": 'marked post {self.target_link} as club-only',
 		"icon":"fa-eye-slash",
 		"color": "bg-danger",
 	},
 	"unclub":{
-		"str": 'unmarked post {self.target_link} as viewable to users with +150 coins only',
+		"str": 'unmarked post {self.target_link} as club-only',
 		"icon":"fa-eye",
 		"color": "bg-muted",
 	},
