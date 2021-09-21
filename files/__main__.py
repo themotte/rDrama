@@ -84,8 +84,6 @@ db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 @app.before_request
 def before_request():
-	
-	if request.content_length > 16 * 1024 * 1024: abort(413)
 
 	if request.method.lower() != "get" and app.config["READ_ONLY"]: return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
 

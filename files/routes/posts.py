@@ -588,6 +588,7 @@ def thumbs(new_post):
 @is_not_banned
 @validate_formkey
 def submit_post(v):
+	if request.content_length > 16 * 1024 * 1024: abort(413)
 
 	title = request.values.get("title", "")
 	url = request.values.get("url", "")

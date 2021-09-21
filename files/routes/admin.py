@@ -644,6 +644,8 @@ def admin_removed(v):
 @admin_level_required(4)
 @validate_formkey
 def admin_image_ban(v):
+	if request.content_length > 16 * 1024 * 1024: abort(413)
+
 
 	i=request.files['file']
 

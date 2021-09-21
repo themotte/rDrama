@@ -40,6 +40,8 @@ def removebackground(v):
 @auth_required
 @validate_formkey
 def settings_profile_post(v):
+	if request.content_length > 16 * 1024 * 1024: abort(413)
+
 	updated = False
 
 	if request.values.get("background", v.background) != v.background:
@@ -497,6 +499,7 @@ def settings_log_out_others(v):
 @auth_required
 @validate_formkey
 def settings_images_profile(v):
+	if request.content_length > 16 * 1024 * 1024: abort(413)
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
@@ -522,6 +525,7 @@ def settings_images_profile(v):
 @auth_required
 @validate_formkey
 def settings_images_banner(v):
+	if request.content_length > 16 * 1024 * 1024: abort(413)
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
