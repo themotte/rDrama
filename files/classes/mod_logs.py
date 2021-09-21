@@ -174,10 +174,12 @@ ACTIONTYPES={
 	"set_flair_locked":{
 		"str":"set {self.target_link}'s flair (locked)",
 		"icon": "fa-user-slash",
+		"color": "bg-muted",
 	},
 	"set_flair_notlocked":{
 		"str":"set {self.target_link}'s flair (not locked)",
 		"icon": "fa-user-slash",
+		"color": "bg-muted",
 	},
 	"pin_comment":{
 		"str":'pinned a {self.target_link}',
