@@ -115,7 +115,7 @@ def get_coins(v, username):
 @validate_formkey
 def transfer_coins(v, username):
 	receiver = g.db.query(User).filter_by(username=username).first()
-	tax_receiver = g.db.query(User).filter_by(id=1).first()
+	tax_receiver = g.db.query(User).filter_by(id=747).first()
 
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
