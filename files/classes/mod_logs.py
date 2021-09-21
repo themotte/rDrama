@@ -95,8 +95,7 @@ class ModAction(Base):
 	def target_link(self):
 		if self.target_user: return f'<a href="{self.target_user.url}">{self.target_user.username}</a>'
 		elif self.target_post: return f'<a href="{self.target_post.permalink}">{self.target_post.title.replace("<","").replace(">","")}</a>'
-		elif self.target_comment: return f'<a href="{self.target_comment.permalink}">comment</a>'
-		else: return ""
+		elif self.target_comment_id: return f'<a href="/comment/{self.target_comment_id}">comment</a>'
 
 	@property
 	@lazy
