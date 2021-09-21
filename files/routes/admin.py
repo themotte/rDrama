@@ -184,7 +184,7 @@ def monthly(v):
 				grant_awards["shit"] = 10
 				grant_awards["fireflies"] = 10
 				grant_awards["ban"] = 3
-			elif u.patron == 5:
+			elif u.patron == 5 or u.patron == 8:
 				grant_awards["shit"] = 20
 				grant_awards["fireflies"] = 20
 				grant_awards["ban"] = 6
@@ -403,7 +403,6 @@ def badge_grant_post(v):
 		g.db.query(Badge).options(lazyload('*')).filter_by(badge_id=17, user_id=user.id).delete()
 
 	elif badge_id in [21,22,23,24,25,28]:
-		if badge_id == 28: badge_id = 25
 		user.patron = int(str(badge_id)[-1])
 
 		grant_awards = {}

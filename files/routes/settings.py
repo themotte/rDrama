@@ -288,8 +288,7 @@ def gumroad(v):
 	if 'rdrama' in request.host: patron = 'Paypig'
 	else: patron = 'Patron'
 
-	if not (v.email and v.is_activated):
-		return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
+	if not (v.email and v.is_activated): return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
 
 	data = {
 		'access_token': GUMROAD_TOKEN,
@@ -297,8 +296,7 @@ def gumroad(v):
 	}
 	response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
 
-	if len(response) == 0:
-		return {"error": "Email not found"}, 404
+	if len(response) == 0: return {"error": "Email not found"}, 404
 
 	response = response[0]
 	tier = tiers[response["variants_and_quantity"]]
