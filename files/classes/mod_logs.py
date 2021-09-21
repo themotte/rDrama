@@ -18,6 +18,8 @@ class ModAction(Base):
 
 
 	user = relationship("User", lazy="joined", primaryjoin="User.id==ModAction.user_id")
+	target_user = relationship("User", lazy="joined", primaryjoin="User.id==ModAction.target_user_id")
+	target_post = relationship("Submission", lazy="joined")
 
 	def __init__(self, *args, **kwargs):
 		if "created_utc" not in kwargs:
@@ -69,10 +71,11 @@ class ModAction(Base):
 	def note(self):
 
 		if self.kind=="ban_user":
-			if self.target_submission_id: return f'for <a href="/post/{self.target_submission_id}">post</a>'
+			if self.target_post: return f'for <a href="{self.target_post.permalink}">post</a>'
 			elif self.target_comment_id: return f'for <a href="/comment/{self.target_comment_id}">comment</a>'
 			else: return self._note
-		else: return self._note or ""
+		else:
+			return self._note or ""
 
 	@note.setter
 	def note(self, x):
@@ -83,15 +86,18 @@ class ModAction(Base):
 	def string(self):
 
 		output =  ACTIONTYPES[self.kind]["str"].format(self=self)
+
 		if self.note: output += f" <i>({self.note})</i>"
+
 		return output
 
 	@property
 	@lazy
 	def target_link(self):
-		if self.target_user_id: return f'<a href="/id/{self.target_user_id}">{self.target_user.username}</a>'
-		elif self.target_submission_id: return f'<a href="/post/{self.target_submission_id}">{self.target_post.title.replace("<","").replace(">","")}</a>'
-		elif self.target_comment_id: return f'<a href="/comment/{self.target_comment_id}">comment</a>'
+		if self.target_user: return f'<a href="{self.target_user.url}">{self.target_user.username}</a>'
+		elif self.target_post: return f'<a href="{self.target_post.permalink}">{self.target_post.title.replace("<","").replace(">","")}</a>'
+		elif self.target_comment: return f'<a href="{self.target_comment.permalink}">comment</a>'
+		else: return ""
 
 	@property
 	@lazy
