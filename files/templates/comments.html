@@ -1,3 +1,25 @@
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+<script>
+	var clipboard = new ClipboardJS('.copy-link');
+		clipboard.on('success', function(e) {
+
+				jQuery(function($) {
+						$('#toast-success').toast('show');
+				})
+				console.log(e);
+		});
+		clipboard.on('error', function(e) {
+
+				jQuery(function($) {
+						$('#toast-error').toast('show');
+				})
+				console.log(e);
+		});
+</script>
+
+
 {% macro single_comment(c, level=1) %}
 <!---beginning of comment {{c.id}}--->
 
