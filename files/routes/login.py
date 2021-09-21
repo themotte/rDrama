@@ -44,32 +44,33 @@ def check_for_alts(current_id):
 				g.db.add(new_alt)
 			except BaseException:
 				pass
-
-		otheralts = g.db.query(Alt).options(lazyload('*')).filter(or_(Alt.user1 == past_id, Alt.user2 == past_id, Alt.user1 == current_id, Alt.user2 == current_id)).all()
+			
+		alts = g.db.query(Alt).options(lazyload('*'))
+		otheralts = alts.filter(or_(Alt.user1 == past_id, Alt.user2 == past_id, Alt.user1 == current_id, Alt.user2 == current_id)).all()
 		for a in otheralts:
-			try:
+			existing = alts.filter_by(user1=a.user1, user2=past_id).first()
+			if not existing:
 				new_alt = Alt(user1=a.user1, user2=past_id)
 				g.db.add(new_alt)
 				g.db.flush()
-			except: g.db.rollback()
 		for a in otheralts:
-			try:
+			existing = alts.filter_by(user1=a.user1, user2=current_id).first()
+			if not existing:
 				new_alt = Alt(user1=a.user1, user2=current_id)
 				g.db.add(new_alt)
 				g.db.flush()
-			except: g.db.rollback()
 		for a in otheralts:
-			try:
+			existing = alts.filter_by(user1=a.user2, user2=past_id).first()
+			if not existing:
 				new_alt = Alt(user1=a.user2, user2=past_id)
 				g.db.add(new_alt)
 				g.db.flush()
-			except: g.db.rollback()
 		for a in otheralts:
-			try:
+			existing = alts.filter_by(user1=a.user2, user2=current_id).first()
+			if not existing:
 				new_alt = Alt(user1=a.user2, user2=current_id)
 				g.db.add(new_alt)
 				g.db.flush()
-			except: g.db.rollback()
 
 # login post procedure
 
