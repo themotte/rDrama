@@ -1,6 +1,7 @@
 import qrcode
 import io
 import time
+import math
 from files.classes.user import ViewerRelationship
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
@@ -113,7 +114,8 @@ def get_coins(v, username):
 @is_not_banned
 @validate_formkey
 def transfer_coins(v, username):
-	receiver = get_user(username)
+	receiver = g.db.query(User).filter_by(username=username).first()
+	tax_receiver = g.db.query(User).filter_by(id=1).first()
 
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
@@ -125,9 +127,12 @@ def transfer_coins(v, username):
 		if v.coins < amount: return {"error": f"You don't have enough {app.config['COINS_NAME']}"}, 400
 		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['COINS_NAME']}."}, 400
 
-		v.coins -= amount
-		receiver.coins += amount
+		tax = math.ceil(amount*0.01)
+		v.coins -= amount-tax
+		receiver.coins += amount-tax
+		tax_receiver.coins += tax
 		g.db.add(receiver)
+		g.db.add(tax_receiver)
 		g.db.add(v)
 
 		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
@@ -135,7 +140,9 @@ def transfer_coins(v, username):
 
 		g.db.commit()
 
-	return {"message": f"{app.config['COINS_NAME']} transferred!"}
+		return {"message": f"{amount-tax} {app.config['COINS_NAME']} transferred!"}, 200
+
+	return {"message": f"You can't transfer {app.config['COINS_NAME']} to yourself!"}, 400
 
 
 @app.get("/leaderboard")

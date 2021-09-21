@@ -59,9 +59,9 @@ app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 app.config["CACHE_TYPE"] = "filesystem"
 app.config["CACHE_DIR"] = "cache"
-app.config["RATELIMIT_STORAGE_URL"] = "redis://127.0.0.1"
+app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL", "redis://127.0.0.1")
 
-r=redis.Redis(host="127.0.0.1",  decode_responses=True, ssl_cert_reqs=None)
+r=redis.Redis(host=environ.get("REDIS_URL", "redis://127.0.0.1"),  decode_responses=True, ssl_cert_reqs=None)
 
 cache = Cache(app)
 Markdown(app)

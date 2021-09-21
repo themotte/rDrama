@@ -318,7 +318,7 @@ function post_toast(url, reload, data) {
 
 	if(typeof data === 'object' && data !== null) {
 		for(let k of Object.keys(data)) {
-				form.append(k, data[k]);
+			form.append(k, data[k]);
 		}
 	}
 
@@ -469,6 +469,63 @@ function post_toast3(url, button1, button2) {
 	document.getElementById(button2).classList.toggle("d-md-inline-block");
 }
 
+//i cant even
+function post_toast_callback(url, data, callback) {
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	var form = new FormData()
+
+	if(typeof data === 'object' && data !== null) {
+		for(let k of Object.keys(data)) {
+			form.append(k, data[k]);
+		}
+	}
+
+	form.append("formkey", formkey());
+	xhr.withCredentials=true;
+
+	xhr.onload = function() {
+		let result = callback(xhr);
+			
+		if (xhr.status >= 200 && xhr.status < 300) {
+			$('#toast-post-error').toast('dispose');
+			$('#toast-post-success').toast('dispose');
+			$('#toast-post-success').toast('show');
+
+			try {
+				if(typeof result == "string") {
+					document.getElementById('toast-post-success-text').innerText = result;
+				} else {
+					document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+				}
+			} catch(e) {
+				document.getElementById('toast-post-success-text').innerText = "Action successful!";
+			}
+
+			return true;
+		} else {
+			$('#toast-post-success').toast('dispose');
+			$('#toast-post-error').toast('dispose');
+			$('#toast-post-error').toast('show');
+
+			try {
+				if(typeof result == "string") {
+					document.getElementById('toast-post-error-text').innerText = result;
+				} else {
+					document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
+				}
+				return false
+			} catch(e) {
+				document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
+			}
+
+			return false;
+		}
+	};
+
+	xhr.send(form);
+
+}
 
 // Search Icon
 // Change navbar search icon when form is in focus, active states
