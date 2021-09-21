@@ -127,7 +127,7 @@ def discord_redirect(v):
 
 		add_role(v, "feedback")
 
-		time.sleep(0.1)
+		time.sleep(0.3)
 
 		if v.coins > 100: add_role(v, "linked")
 		else: add_role(v, "norep")
