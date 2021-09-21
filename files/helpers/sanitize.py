@@ -245,13 +245,13 @@ def sanitize(sanitized, noimages=False):
 	for i in re.finditer('" target="_blank">(https://youtube.com/watch\?v\=.*?)</a>', sanitized):
 		url = i.group(1)
 		replacing = f'<a href="{url}" target="_blank">{url}</a>'
-		htmlsource = f'<div style="padding-top:5px; padding-bottom: 10px;"><iframe frameborder="0" src="{url}?controls=0"></iframe></div>'
+		htmlsource = f'<div style="padding-top:5px; padding-bottom: 10px;"><iframe style="max-width:100%" frameborder="0" src="{url}?controls=0"></iframe></div>'
 		sanitized = sanitized.replace(replacing, htmlsource.replace("watch?v=", "embed/"))
 
 	for i in re.finditer('<a href="(https://streamable.com/e/.*?)"', sanitized):
 		url = i.group(1)
 		replacing = f'<a href="{url}" target="_blank">{url}</a>'
-		htmlsource = f'<div style="padding-top:5px; padding-bottom: 10px;"><iframe frameborder="0" src="{url}?controls=0"></iframe></div>'
+		htmlsource = f'<div style="padding-top:5px; padding-bottom: 10px;"><iframe style="max-width:100%" frameborder="0" src="{url}?controls=0"></iframe></div>'
 		sanitized = sanitized.replace(replacing, htmlsource)
 
 	for i in re.finditer('<a href="(https://open.spotify.com/embed/.*?)"', sanitized):
