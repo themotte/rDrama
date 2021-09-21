@@ -117,20 +117,16 @@ def discord_redirect(v):
 	if x.status_code in [201, 204]:
 
 		if v.id == 1: add_role(v, "shrigma")
-		time.sleep(0.1)
-		if v.admin_level > 0: add_role(v, "admin")
+		elif v.admin_level > 0: add_role(v, "admin")
 		else: add_role(v, "newuser")
 		
 		time.sleep(0.1)
 		
-		if v.patron: add_role(v, str(v.patron))
+		if v.patron:
+			add_role(v, str(v.patron))
+			time.sleep(0.1)
 
 		add_role(v, "feedback")
-
-		time.sleep(0.3)
-
-		if v.coins > 100: add_role(v, "linked")
-		else: add_role(v, "norep")
 		
 	else:
 		return x.json()
