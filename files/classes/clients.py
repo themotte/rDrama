@@ -68,8 +68,8 @@ class ClientAuth(Base):
 	oauth_client = Column(Integer, ForeignKey("oauth_apps.id"))
 	access_token = Column(String(128))
 	user_id = Column(Integer, ForeignKey("users.id"))
-	user = relationship("User", lazy="joined")
-	application = relationship("OauthApp", lazy="joined")
+	user = relationship("User")
+	application = relationship("OauthApp")
 
 	@property
 	@lazy

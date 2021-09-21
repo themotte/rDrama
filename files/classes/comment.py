@@ -28,7 +28,7 @@ class Comment(Base):
 	__tablename__ = "comments"
 
 	id = Column(Integer, primary_key=True)
-	comment_aux = relationship("CommentAux", lazy="joined", uselist=False, innerjoin=True, primaryjoin="Comment.id==CommentAux.id")
+	comment_aux = relationship("CommentAux", uselist=False, primaryjoin="Comment.id==CommentAux.id")
 	author_id = Column(Integer, ForeignKey("users.id"))
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
 	# this column is foreignkeyed to comment(id) but we can't do that yet as
@@ -54,7 +54,7 @@ class Comment(Base):
 
 	post = relationship("Submission")
 	flags = relationship("CommentFlag", lazy="dynamic")
-	author = relationship("User", lazy="joined", innerjoin=True, primaryjoin="User.id==Comment.author_id")
+	author = relationship("User", primaryjoin="User.id==Comment.author_id")
 
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
@@ -62,7 +62,7 @@ class Comment(Base):
 	parent_comment = relationship("Comment", remote_side=[id])
 	child_comments = relationship("Comment", remote_side=[parent_comment_id])
 
-	awards = relationship("AwardRelationship", lazy="joined")
+	awards = relationship("AwardRelationship")
 
 	def __init__(self, *args, **kwargs):
 
@@ -408,8 +408,8 @@ class Notification(Base):
 	blocksender = Column(Integer)
 	unblocksender = Column(Integer)
 
-	comment = relationship("Comment", lazy="joined", innerjoin=True)
-	user=relationship("User", innerjoin=True)
+	comment = relationship("Comment")
+	user=relationship("User")
 
 	def __repr__(self):
 

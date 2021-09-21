@@ -13,7 +13,7 @@ class Flag(Base):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	reason = Column(String(100))
 	
-	user = relationship("User", lazy = "joined", primaryjoin = "Flag.user_id == User.id", uselist = False)
+	user = relationship("User", primaryjoin = "Flag.user_id == User.id", uselist = False)
 
 	def __repr__(self):
 
@@ -39,7 +39,7 @@ class CommentFlag(Base):
 	comment_id = Column(Integer, ForeignKey("comments.id"))
 	reason = Column(String(100))
 	
-	user = relationship("User", lazy = "joined", primaryjoin = "CommentFlag.user_id == User.id", uselist = False)
+	user = relationship("User", primaryjoin = "CommentFlag.user_id == User.id", uselist = False)
 
 	def __repr__(self):
 

@@ -168,7 +168,7 @@ class User(Base):
 
 	referred_by = Column(Integer, ForeignKey("users.id"))
 
-	referrals = relationship("User", lazy="joined")
+	referrals = relationship("User")
 
 	def __init__(self, **kwargs):
 
@@ -623,7 +623,7 @@ class ViewerRelationship(Base):
 	viewer_id = Column(Integer, ForeignKey('users.id'))
 	last_view_utc = Column(Integer)
 
-	viewer = relationship("User", lazy="joined", primaryjoin="ViewerRelationship.viewer_id == User.id")
+	viewer = relationship("User", primaryjoin="ViewerRelationship.viewer_id == User.id")
 
 	def __init__(self, **kwargs):
 

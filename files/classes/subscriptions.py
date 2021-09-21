@@ -25,7 +25,7 @@ class Follow(Base):
 	target_id = Column(BigInteger, ForeignKey("users.id"))
 
 	user = relationship("User", uselist=False, primaryjoin="User.id==Follow.user_id")
-	target = relationship("User", lazy="joined", primaryjoin="User.id==Follow.target_id")
+	target = relationship("User", primaryjoin="User.id==Follow.target_id")
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)

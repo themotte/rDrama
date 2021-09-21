@@ -33,7 +33,7 @@ class Submission(Base):
 	__tablename__ = "submissions"
 
 	id = Column(BigInteger, primary_key=True)
-	submission_aux = relationship("SubmissionAux", lazy="joined", uselist=False, innerjoin=True, primaryjoin="Submission.id==SubmissionAux.id")
+	submission_aux = relationship("SubmissionAux", uselist=False, primaryjoin="Submission.id==SubmissionAux.id")
 	author_id = Column(BigInteger, ForeignKey("users.id"))
 	edited_utc = Column(BigInteger, default=0)
 	created_utc = Column(BigInteger, default=0)
@@ -51,11 +51,11 @@ class Submission(Base):
 	private = Column(Boolean, default=False)
 	club = Column(Boolean, default=False)
 	comment_count = Column(Integer, default=0)
-	comments = relationship("Comment", lazy="joined", primaryjoin="Comment.parent_submission==Submission.id")
+	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 	flags = relationship("Flag", lazy="dynamic")
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
-	author = relationship("User", lazy="joined", innerjoin=True, primaryjoin="Submission.author_id==User.id")
+	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	is_pinned = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
 
@@ -67,7 +67,7 @@ class Submission(Base):
 
 	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id")
 
-	awards = relationship("AwardRelationship", lazy="joined")
+	awards = relationship("AwardRelationship")
 
 	def __init__(self, *args, **kwargs):
 
