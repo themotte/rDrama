@@ -174,10 +174,12 @@ ACTIONTYPES={
 	"set_flair_locked":{
 		"str":"set {self.target_link}'s flair (locked)",
 		"icon": "fa-user-slash",
+		"color": "bg-muted",
 	},
 	"set_flair_notlocked":{
 		"str":"set {self.target_link}'s flair (not locked)",
 		"icon": "fa-user-slash",
+		"color": "bg-muted",
 	},
 	"pin_comment":{
 		"str":'pinned a {self.target_link}',
@@ -220,12 +222,12 @@ ACTIONTYPES={
 		"color": "bg-muted",
 	},
 	"club":{
-		"str": 'marked post {self.target_link} as viewable to users with +150 coins only',
+		"str": 'marked post {self.target_link} as club-only',
 		"icon":"fa-eye-slash",
 		"color": "bg-danger",
 	},
 	"unclub":{
-		"str": 'unmarked post {self.target_link} as viewable to users with +150 coins only',
+		"str": 'unmarked post {self.target_link} as club-only',
 		"icon":"fa-eye",
 		"color": "bg-muted",
 	},

@@ -26,11 +26,6 @@ tiers={
 	"(Landchad)": 3,
 	"(Terminally online turboautist)": 4,
 	"(Footpig)": 5,
-	"(Chad)": 1,
-	"(Megachad)": 2,
-	"(Gigachad)": 3,
-	"(Terachad)": 4,
-	"(Petachad)": 5
 	}
 
 @app.post("/settings/removebackground")
@@ -307,8 +302,7 @@ def gumroad(v):
 
 	response = response[0]
 	tier = tiers[response["variants_and_quantity"]]
-	if v.patron == tier:
-		return {"error": f"{patron} rewards already claimed"}, 400
+	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
 
 	v.patron = tier
 	g.db.add(v)

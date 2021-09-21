@@ -25,7 +25,7 @@ class BadgeDef(Base):
 	@lazy
 	def path(self):
 
-		return f"/assets/images/{site_name}/badges/{self.icon}"
+		return f"/assets/images/badges/{self.icon}"
 
 	@property
 	@lazy
