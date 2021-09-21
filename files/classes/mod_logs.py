@@ -117,7 +117,7 @@ ACTIONTYPES={
 		"color": "bg-danger",
 	},
 	"unban_user":{
-		"str":'nigga',
+		"str":'unbanned user {self.target_link}',
 		"icon": "fa-user-slash",
 		"color": "bg-muted",
 	},
