@@ -128,7 +128,7 @@ def transfer_coins(v, username):
 		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['COINS_NAME']}."}, 400
 
 		tax = math.ceil(amount*0.01)
-		v.coins -= amount-tax
+		v.coins -= amount
 		receiver.coins += amount-tax
 		tax_receiver.coins += tax
 		g.db.add(receiver)
