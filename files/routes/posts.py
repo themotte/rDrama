@@ -698,14 +698,13 @@ def submit_post(v):
 		except: embed = None
 
 	elif "youtu" in domain:
-		try: yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
-		except: embed = None
-		if not yt_id or len(yt_id) != 11: embed = None
-		else: 
+		try:
+			yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
 			params = parse_qs(urlparse(url).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
 			else: embed = f"https://youtube.com/embed/{yt_id}"
+		except: embed = None
 
 	elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 		id = url.split("/post/")[1]
