@@ -70,7 +70,7 @@
 			{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
 		    (xhr) => {
 			if(xhr.status == 200) {
-			    document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - transferred;
+			    document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
 			    document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
 			    document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
 			}
