@@ -79,7 +79,7 @@ Base = declarative_base()
 
 engine = create_engine(app.config['DATABASE_URL'])
 
-db_session = scoped_session(sessionmaker(engine))
+db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 
 @app.before_request
