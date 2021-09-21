@@ -104,10 +104,6 @@ def settings_profile_post(v):
 		# check for uploaded image
 		if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 			
-			#check file size
-			if request.content_length > 16 * 1024 * 1024:
-				abort(413)
-
 			file = request.files['file']
 			if not file.content_type.startswith('image/'):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
@@ -502,9 +498,6 @@ def settings_log_out_others(v):
 @validate_formkey
 def settings_images_profile(v):
 
-	if request.content_length > 16 * 1024 * 1024:
-		abort(413)
-
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
 	file = request.files["profile"]
@@ -529,8 +522,6 @@ def settings_images_profile(v):
 @auth_required
 @validate_formkey
 def settings_images_banner(v):
-	if request.content_length > 16 * 1024 * 1024:
-		abort(413)
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 

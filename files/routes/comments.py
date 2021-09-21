@@ -279,9 +279,6 @@ def api_comment(v):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
-		if request.content_length > 16 * 1024 * 1024:
-			g.db.rollback()
-			abort(413)
 
 		url = upload_ibb(file=file)
 		
@@ -693,9 +690,6 @@ def edit_comment(cid, v):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
-		if request.content_length > 16 * 1024 * 1024:
-			g.db.rollback()
-			abort(413)
 
 		url = upload_ibb(file=file)
 

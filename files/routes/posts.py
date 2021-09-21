@@ -193,22 +193,6 @@ def post_id(pid, anything=None, v=None):
 		else:
 			abort(422)
 
-		# if random.random() < 0.02:
-		# 	for comment in comments:
-		# 		if comment.author and comment.author.shadowbanned:
-		# 			rand = random.randint(5,20)
-		# 			if comment.score > rand: continue
-		# 			rand = random.randint(500,1400)
-		# 			vote = CommentVote(user_id=rand,
-		# 				vote_type=random.choice([-1, 1, 1, 1, 1]),
-		# 				comment_id=comment.id)
-		# 			g.db.add(vote)
-		# 			try: g.db.flush()
-		# 			except: g.db.rollback()
-		# 			comment.upvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
-		# 			comment.downvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
-		# 			g.db.add(comment)
-
 		post.preloaded_comments = comments
 
 	if not v or v.highlightcomments:
@@ -895,11 +879,6 @@ def submit_post(v):
 
 	# check for uploaded image
 	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
-
-		#check file size
-		if request.content_length > 16 * 1024 * 1024:
-			g.db.rollback()
-			abort(413)
 
 		file = request.files['file']
 		#if not file.content_type.startswith('image/'):
