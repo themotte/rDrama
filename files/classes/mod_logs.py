@@ -16,7 +16,6 @@ class ModAction(Base):
 	_note=Column(String(256), default=None)
 	created_utc = Column(Integer, default=0)
 
-
 	user = relationship("User", lazy="joined", primaryjoin="User.id==ModAction.user_id")
 	target_user = relationship("User", lazy="joined", primaryjoin="User.id==ModAction.target_user_id")
 	target_post = relationship("Submission", lazy="joined")
