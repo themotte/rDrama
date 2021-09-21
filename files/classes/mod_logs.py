@@ -92,7 +92,6 @@ class ModAction(Base):
 		if self.target_user_id: return f'<a href="/id/{self.target_user_id}">{self.target_user.username}</a>'
 		elif self.target_submission_id: return f'<a href="/post/{self.target_submission_id}">{self.target_post.title.replace("<","").replace(">","")}</a>'
 		elif self.target_comment_id: return f'<a href="/comment/{self.target_comment_id}">comment</a>'
-		else: return ""
 
 	@property
 	@lazy
