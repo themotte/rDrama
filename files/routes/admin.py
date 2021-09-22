@@ -870,9 +870,6 @@ def ban_user(user_id, v):
 		reason = sanitize(request.values.get("reason", ""))
 		message = request.values.get("reason", "")
 
-	print(days)
-	print(days == 0)
-	print(days == 1)
 	if not user: abort(400)
 	
 	if days > 0:
