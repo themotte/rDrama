@@ -161,7 +161,7 @@ class User(Base):
 	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id", viewonly=True)
 	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
 
-	_applications = relationship("OauthApp", lazy="dynamic", viewonly=True)
+	apps = relationship("OauthApp", lazy="dynamic", viewonly=True)
 	authorizations = relationship("ClientAuth", lazy="dynamic", viewonly=True)
 
 	awards = relationship("AwardRelationship", lazy="dynamic", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
@@ -537,8 +537,7 @@ class User(Base):
 	@property
 	@lazy
 	def applications(self):
-		return [x for x in self._applications.order_by(
-			OauthApp.id.asc()).all()]
+		return [x for x in self.apps.order_by(OauthApp.id.asc()).all()]
 
 	@lazy
 	def subscribed_idlist(self, page=1):
