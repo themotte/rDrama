@@ -188,8 +188,7 @@ ALLOW_MULTIPLE = (
 @auth_required
 def award_post(pid, v):
 
-	if v.is_suspended and v.unban_utc == 0:
-		return {"error": "forbidden."}, 403
+	if v.is_suspended and v.unban_utc == 0: return {"error": "forbidden."}, 403
 
 	kind = request.values.get("kind", "")
 	
@@ -252,8 +251,7 @@ def award_post(pid, v):
 @auth_required
 def award_comment(cid, v):
 
-	if v.is_suspended and v.unban_utc == 0:
-		return {"error": "forbidden"}, 403
+	if v.is_suspended and v.unban_utc == 0: return {"error": "forbidden"}, 403
 
 	kind = request.values.get("kind", "")
 
