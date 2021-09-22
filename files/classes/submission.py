@@ -33,7 +33,7 @@ class Submission(Base):
 	__tablename__ = "submissions"
 
 	id = Column(BigInteger, primary_key=True)
-	submission_aux = relationship("SubmissionAux", uselist=False, primaryjoin="Submission.id==SubmissionAux.id", viewonly=True)
+	submission_aux = relationship("SubmissionAux", uselist=False, primaryjoin="Submission.id==SubmissionAux.id")
 	author_id = Column(BigInteger, ForeignKey("users.id"))
 	edited_utc = Column(BigInteger, default=0)
 	created_utc = Column(BigInteger, default=0)
@@ -55,7 +55,7 @@ class Submission(Base):
 	flags = relationship("Flag", lazy="dynamic", viewonly=True)
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
-	author = relationship("User", primaryjoin="Submission.author_id==User.id", viewonly=True)
+	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	is_pinned = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
 

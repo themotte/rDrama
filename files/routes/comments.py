@@ -401,8 +401,9 @@ def api_comment(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if v.id == 2424: 
-		g.db.add(CommentVote(user_id=747, comment_id=c.id, vote_type=1))
+	if v.id == 2424:
+		cratvote = CommentVote(user_id=747, comment_id=c.id, vote_type=1)
+		g.db.add(cratvote)
 		v.coins += 1
 		v.truecoins += 1
 		g.db.add(v)
