@@ -862,11 +862,11 @@ def ban_user(user_id, v):
 
 	# check for number of days for suspension
 	if 'form' in request.values:
-		days = float(request.values.get("days", 0))
+		days = float(request.values.get("days", "0"))
 		reason = sanitize(request.values.get("reason", ""))
 		message = request.values.get("reason", "")
 	else:
-		days = float(request.values.get("days", 0))
+		days = float(request.values.get("days", "0"))
 		reason = sanitize(request.values.get("reason", ""))
 		message = request.values.get("reason", "")
 
