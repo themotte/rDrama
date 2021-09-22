@@ -217,11 +217,10 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	li = list(re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized))
-	for i in li:
+	for i in re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized):
 		emoji = i.group(1).lower()
 		if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'<p>:{emoji}:</p>', f'<p style="margin-bottom:0;"><img loading="lazy" data-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp"></p>', sanitized)
+			sanitized = sanitized.replace(f'<p>:{emoji}:</p>', f'<p style="margin-bottom:0;"><img loading="lazy" data-toggle="tooltip" title="{emoji}" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp"></p>')
 
 			try:
 				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
