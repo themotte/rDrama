@@ -30,7 +30,7 @@ def join_discord(v):
 @app.get("/sex")
 @admin_level_required(6)
 def sex(v):
-	users = g.db.query(User).options(lazyload('*')).filter(User.discord_id is not None).all()
+	users = g.db.query(User).options(lazyload('*')).filter(User.discord_id != None).all()
 	headers={
 		'Authorization': f"Bot {BOT_TOKEN}",
 		'Content-Type': "application/json"
