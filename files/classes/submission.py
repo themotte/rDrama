@@ -224,6 +224,7 @@ class Submission(Base):
 							   sort=sort,
 							   linked_comment=comment,
 							   comment_info=comment_info,
+							   render_replies=True
 							   )
 
 	@property

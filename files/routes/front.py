@@ -99,12 +99,13 @@ def notifications(v):
 
 
 	return render_template("notifications.html",
-						   v=v,
-						   notifications=listing,
-						   next_exists=next_exists,
-						   page=page,
-						   standalone=True,
-						   is_notification_page=True)
+							v=v,
+							notifications=listing,
+							next_exists=next_exists,
+							page=page,
+							standalone=True,
+							render_replies=True
+						   )
 
 
 
