@@ -37,6 +37,7 @@ def sex(v):
 	}
 	for u in users:
 		print(u.username)
+		print(u.discord_id)
 		print(requests.patch(f"https://discord.com/api/guilds/846509313497628715/members/{u.discord_id}", headers=headers, data={"nick":u.username}).text)
 
 
