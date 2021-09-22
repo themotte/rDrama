@@ -55,20 +55,12 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		if request.headers.get("Authorization"): return {'error': f'This content is not suitable for some users and situations.'}
 		else: render_template("errors/nsfw.html", v=v)
 
-	post._preloaded_comments = [comment]
-
-	# context improver
 	try: context = int(request.values.get("context", 0))
 	except: context = 0
 	comment_info = comment
 	c = comment
 	while context > 0 and c.level > 1:
-
-		parent = get_comment(c.parent_comment_id, v=v)
-
-		post._preloaded_comments += [parent]
-
-		c = parent
+		c = c.parent_comment
 		context -= 1
 	top_comment = c
 
@@ -114,12 +106,16 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			isouter=True
 		)
 
+		output = []
 		for c in comments:
 			comment = c[0]
 			comment.voted = c[1] or 0
-			comment._is_blocking = c[2] or 0
-			comment._is_blocked = c[3] or 0
+			comment.is_blocking = c[2] or 0
+			comment.is_blocked = c[3] or 0
+			output.append(comment)
 
+		post.preloaded_comments = output
+			
 	if request.headers.get("Authorization"): return top_comment.json
 	else: return post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info)
 
@@ -593,7 +589,6 @@ def api_comment(v):
 	else: return jsonify({"html": render_template("comments.html",
 													v=v,
 													comments=[c],
-													render_replies=False,
 													)})
 
 

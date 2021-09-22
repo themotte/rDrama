@@ -533,16 +533,6 @@ class User(Base):
 	def is_suspended(self):
 		return (self.is_banned and (not self.unban_utc or self.unban_utc > time.time()))
 
-	@property
-	@lazy
-	def is_blocking(self):
-		return self.__dict__.get('_is_blocking', 0)
-
-	@property
-	@lazy
-	def is_blocked(self):
-		return self.__dict__.get('_is_blocked', 0)
-
 
 	@property
 	@lazy

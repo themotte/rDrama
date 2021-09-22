@@ -212,19 +212,10 @@ class Submission(Base):
 	@lazy
 	def rendered_page(self, sort=None, last_view_utc=None, comment=None, comment_info=None, v=None):
 
-		# check for banned
-		if v and (v.admin_level >= 3 or self.author_id == v.id):
-			template = "submission.html"
-		elif self.is_banned:
-			template = "submission_banned.html"
-		else:
-			template = "submission.html"
+		if self.is_banned and not (v and (v.admin_level >= 3 or self.author_id == v.id)): template = "submission_banned.html"
+		else: template = "submission.html"
 
-		# load and tree comments
-		# calling this function with a comment object will do a comment
-		# permalink thing
-		if "replies" not in self.__dict__ and "preloaded_comments" in self.__dict__:
-			self.tree_comments(comment=comment)
+		self.tree_comments(comment=comment)
 
 		return render_template(template,
 							   v=v,
@@ -233,7 +224,6 @@ class Submission(Base):
 							   sort=sort,
 							   linked_comment=comment,
 							   comment_info=comment_info,
-							   render_replies=True,
 							   )
 
 	@property
@@ -247,9 +237,8 @@ class Submission(Base):
 
 	def tree_comments(self, comment=None, v=None):
 
-		comments = self.__dict__.get('preloaded_comments',[])
-		if not comments:
-			return
+		comments = self.__dict__.get('preloaded_comments', [])
+		if not comments: return
 
 		pinned_comment=[]
 
@@ -257,21 +246,16 @@ class Submission(Base):
 		for c in comments:
 
 			if c.is_pinned and c.parent_fullname==self.fullname:
-				pinned_comment+=[c]
+				pinned_comment += [c]
 				continue
 
-			if c.parent_fullname in index:
-				index[c.parent_fullname].append(c)
-			else:
-				index[c.parent_fullname] = [c]
+			if c.parent_fullname in index: index[c.parent_fullname].append(c)
+			else: index[c.parent_fullname] = [c]
 
-		for c in comments:
-			c.__dict__["replies"] = index.get(c.fullname, [])
+		for c in comments: c.__dict__["replies"] = index.get(c.fullname, [])
 
-		if comment:
-			self.__dict__["replies"] = [comment]
-		else:
-			self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
+		if comment: self.__dict__["replies"] = [comment]
+		else: self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
 	@property
 	@lazy
@@ -468,20 +452,6 @@ class Submission(Base):
 		self.submission_aux.embed_url = x
 		g.db.add(self.submission_aux)
 	
-	@property
-	@lazy
-	def is_blocked(self):
-		return self.__dict__.get('_is_blocked', False)
-
-	@property
-	@lazy
-	def is_blocking(self):
-		return self.__dict__.get('_is_blocking', False)
-
-	#@property
-	#def award_count(self):
-		#return len(self.awards)
-
 	@property
 	@lazy
 	def is_image(self):

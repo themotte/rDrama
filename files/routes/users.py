@@ -295,7 +295,6 @@ def messagereply(v):
 	return jsonify({"html": render_template("comments.html",
 														v=v,
 														comments=[new_comment],
-														render_replies=False,
 														)})
 
 @app.get("/2faqr/<secret>")

@@ -65,26 +65,24 @@
 
 
 
-		{% if render_replies %} 
-			{% if level<7 %}
-				<div id="replies-of-{{c.id}}" class="">
-					{% set standalone=False %}
-					{% for reply in replies %}
-						{{single_comment(reply, level=level+1)}}
-					{% endfor %}
-				</div>
-			{% elif replies %}
-				<div id="replies-of-{{c.id}}" class="d-none d-md-block">
-					{% set standalone=False %}
-					{% for reply in replies %}
-						{{single_comment(reply, level=level+1)}}
-					{% endfor %}
-				</div>
-				<div id="morecomment-{{c.id}}" class="d-block d-md-none mt-2 more-comments text-small">
-					<a {% if v %}href="{{c.permalink}}?context=5#context"{% else %}href="/logged_out{{c.permalink}}?context=5#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
-				</div>
-			{% endif %}
-	{% endif %}
+		{% if level<7 %}
+			<div id="replies-of-{{c.id}}" class="">
+				{% set standalone=False %}
+				{% for reply in replies %}
+					{{single_comment(reply, level=level+1)}}
+				{% endfor %}
+			</div>
+		{% elif replies %}
+			<div id="replies-of-{{c.id}}" class="d-none d-md-block">
+				{% set standalone=False %}
+				{% for reply in replies %}
+					{{single_comment(reply, level=level+1)}}
+				{% endfor %}
+			</div>
+			<div id="morecomment-{{c.id}}" class="d-block d-md-none mt-2 more-comments text-small">
+				<a {% if v %}href="{{c.permalink}}?context=5#context"{% else %}href="/logged_out{{c.permalink}}?context=5#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+			</div>
+		{% endif %}
 </div>
 </div>
 
@@ -417,23 +415,21 @@
 		</div>
 
 
-		{% if render_replies %} 
-			{% if level<7 %}
-				<div id="replies-of-{{c.id}}">
-					{% for reply in replies %}
-						{{single_comment(reply, level=level+1)}}
-					{% endfor %}
-				</div>
-			{% elif replies %}
-				<div id="replies-of-{{c.id}}" class="d-none d-md-block">
-					{% for reply in replies %}
-						{{single_comment(reply, level=level+1)}}
-					{% endfor %}
-				</div>
-				<div id="morecomment-{{c.id}}" class="d-block d-md-none mt-2 more-comments text-small">
-					<a {% if v %}href="{{c.permalink}}#context"{% else %}href="/logged_out{{c.permalink}}#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
-				</div>
-			{% endif %}
+		{% if level<7 %}
+			<div id="replies-of-{{c.id}}">
+				{% for reply in replies %}
+					{{single_comment(reply, level=level+1)}}
+				{% endfor %}
+			</div>
+		{% elif replies %}
+			<div id="replies-of-{{c.id}}" class="d-none d-md-block">
+				{% for reply in replies %}
+					{{single_comment(reply, level=level+1)}}
+				{% endfor %}
+			</div>
+			<div id="morecomment-{{c.id}}" class="d-block d-md-none mt-2 more-comments text-small">
+				<a {% if v %}href="{{c.permalink}}#context"{% else %}href="/logged_out{{c.permalink}}#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+			</div>
 		{% endif %}
 	</div>
 

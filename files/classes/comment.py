@@ -297,16 +297,6 @@ class Comment(Base):
 		return data
 
 	@property
-	@lazy
-	def is_blocking(self):
-		return self.__dict__.get('_is_blocking', 0)
-
-	@property
-	@lazy
-	def is_blocked(self):
-		return self.__dict__.get('_is_blocked', 0)
-
-	@property
 	def body(self):
 		if self.comment_aux: return self.comment_aux.body
 		else: return ""
