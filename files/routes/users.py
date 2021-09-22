@@ -220,8 +220,8 @@ def unsubscribe(v, post_id):
 def message2(v, username):
 
 	user = get_user(username, v=v)
-	if user.is_blocking: return {"error": "You're blocking this user."}, 403
-	if user.is_blocked: return {"error": "This user is blocking you."}, 403
+	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
+	if hasattr(user, 'is_blocked') and user.is_blocked: return {"error": "This user is blocking you."}, 403
 	message = request.values.get("message", "")[:1000].strip()
 
 	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
@@ -421,13 +421,13 @@ def u_username(username, v=None):
 			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
 			else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
-
-	if u.is_blocking and (not v or v.admin_level < 3):
+	
+	if hasattr(u, 'is_blocking') and u.is_blocking and (not v or v.admin_level < 3):
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
 		else: return render_template("userpage_blocking.html", u=u, v=v)
 
 
-	if u.is_blocked and (not v or v.admin_level < 3):
+	if hasattr(u, 'is_blocked') and u.is_blocked and (not v or v.admin_level < 3):
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
 		else: return render_template("userpage_blocked.html", u=u, v=v)
 
@@ -518,13 +518,13 @@ def u_username_comments(username, v=None):
 			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
 			else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
-	if u.is_blocking and (not v or v.admin_level < 3):
+	if hasattr(u, 'is_blocking') and u.is_blocking and (not v or v.admin_level < 3):
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
 		else: return render_template("userpage_blocking.html",
 													u=u,
 													v=v)
 
-	if u.is_blocked and (not v or v.admin_level < 3):
+	if hasattr(u, 'is_blocked') and u.is_blocked and (not v or v.admin_level < 3):
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
 		else: return render_template("userpage_blocked.html",
 													u=u,
@@ -590,9 +590,9 @@ def u_username_info(username, v=None):
 
 	user=get_user(username, v=v)
 
-	if user.is_blocking:
+	if hasattr(user, 'is_blocking') and user.is_blocking:
 		return {"error": "You're blocking this user."}, 401
-	elif user.is_blocked:
+	elif hasattr(user, 'is_blocked') and user.is_blocked:
 		return {"error": "This user is blocking you."}, 403
 
 	return user.json
