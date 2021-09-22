@@ -154,8 +154,8 @@
 				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}
 				{% if c.is_op %}<i class="fas fa-microphone-stand text-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="OP"></i>{% endif %}
 				{% if c.is_bot %}<i class="fad fa-robot text-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Bot"></i>{% endif %}
-				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{% if v and v.admin_level >= 2 %}You're blocking this user, but you can see this comment because {{'it\'s an admin comment' if c.distinguish_level else 'you\'re an admin'}}.{% else %}Comment author is banned{% endif %}"></i>{% endif %}
-				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you, but you can see this comment because {{'it\'s an admin comment' if c.distinguish_level else 'you\'re an admin'}}."></i>{% endif %}
+				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{% if v and v.admin_level >= 2 %}You're blocking this user, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}.{% else %}Comment author is banned{% endif %}"></i>{% endif %}
+				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="This user is blocking you, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}."></i>{% endif %}
 
 				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{c.author.verified}}"></i>
 				{% endif %}
