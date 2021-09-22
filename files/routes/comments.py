@@ -401,6 +401,14 @@ def api_comment(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
+	if v.id == 2424: 
+		g.db.add(CommentVote(user_id=747, comment_id=c.id, vote_type=1))
+		v.coins += 1
+		v.truecoins += 1
+		g.db.add(v)
+		c.upvotes += 1
+		g.db.add(c)
+
 	if "rdrama" in request.host and len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
 		c2 = Comment(author_id=LONGPOSTBOT_ACCOUNT,
 			parent_submission=parent_submission,

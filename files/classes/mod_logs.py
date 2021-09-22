@@ -126,12 +126,12 @@ ACTIONTYPES={
 		"color": "bg-muted",
 	},
 	"club_allow":{
-		"str":'disallowed user {self.target_link} from the country club',
+		"str":'allowed user {self.target_link} into the country club',
 		"icon":"fa-user-slash",
 		"color": "bg-danger",
 	},
 	"club_ban":{
-		"str":'allowed user {self.target_link} into the country club',
+		"str":'disallowed user {self.target_link} from the country club',
 		"icon": "fa-user-slash",
 		"color": "bg-muted",
 	},
