@@ -583,6 +583,8 @@ def api_comment(v):
 	parent_post.comment_count = g.db.query(Comment).options(lazyload('*')).filter_by(parent_submission=parent_post.id).count()
 	g.db.add(parent_post)
 
+	c.voted = 1
+	
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
