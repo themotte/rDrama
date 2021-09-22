@@ -317,7 +317,7 @@ class Comment(Base):
 
 	def realbody(self, v):
 		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
-		body = self.comment_aux.body_html
+		body = self.body_html
 
 		if not v or v.slurreplacer: 
 			for s,r in SLURS.items(): body = body.replace(s, r) 
