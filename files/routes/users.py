@@ -114,8 +114,11 @@ def get_coins(v, username):
 @is_not_banned
 @validate_formkey
 def transfer_coins(v, username):
+	TAX_RECEIVER_ID = 747
+	TAX_RATE = 0.01
+
 	receiver = g.db.query(User).filter_by(username=username).first()
-	tax_receiver = g.db.query(User).filter_by(id=747).first()
+	tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
 
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
@@ -127,7 +130,7 @@ def transfer_coins(v, username):
 		if v.coins < amount: return {"error": f"You don't have enough {app.config['COINS_NAME']}"}, 400
 		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['COINS_NAME']}."}, 400
 
-		tax = math.ceil(amount*0.01)
+		tax = math.ceil(amount*TAX_RATE)
 		v.coins -= amount
 		receiver.coins += amount-tax
 		tax_receiver.coins += tax
@@ -137,6 +140,9 @@ def transfer_coins(v, username):
 
 		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
 		send_notification(NOTIFICATIONS_ACCOUNT, receiver, transfer_message)
+
+		log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
+		send_notification(NOTIFICATIONS_ACCOUNT, TAX_RECEIVER_ID, log_message)
 
 		g.db.commit()
 
