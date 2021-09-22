@@ -16,9 +16,9 @@ class ModAction(Base):
 	_note=Column(String(256), default=None)
 	created_utc = Column(Integer, default=0)
 
-	user = relationship("User", primaryjoin="User.id==ModAction.user_id")
-	target_user = relationship("User", primaryjoin="User.id==ModAction.target_user_id")
-	target_post = relationship("Submission")
+	user = relationship("User", primaryjoin="User.id==ModAction.user_id", viewonly=True)
+	target_user = relationship("User", primaryjoin="User.id==ModAction.target_user_id", viewonly=True)
+	target_post = relationship("Submission", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
 		if "created_utc" not in kwargs:

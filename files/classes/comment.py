@@ -28,7 +28,7 @@ class Comment(Base):
 	__tablename__ = "comments"
 
 	id = Column(Integer, primary_key=True)
-	comment_aux = relationship("CommentAux", uselist=False, primaryjoin="Comment.id==CommentAux.id")
+	comment_aux = relationship("CommentAux", uselist=False, primaryjoin="Comment.id==CommentAux.id", viewonly=True)
 	author_id = Column(Integer, ForeignKey("users.id"))
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
 	# this column is foreignkeyed to comment(id) but we can't do that yet as
@@ -50,19 +50,19 @@ class Comment(Base):
 	sentto=Column(Integer)
 
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
-	oauth_app=relationship("OauthApp")
+	oauth_app = relationship("OauthApp", viewonly=True)
 
-	post = relationship("Submission")
-	flags = relationship("CommentFlag", lazy="dynamic")
-	author = relationship("User", primaryjoin="User.id==Comment.author_id")
+	post = relationship("Submission", viewonly=True)
+	flags = relationship("CommentFlag", lazy="dynamic", viewonly=True)
+	author = relationship("User", primaryjoin="User.id==Comment.author_id", viewonly=True)
 
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
 
-	parent_comment = relationship("Comment", remote_side=[id])
-	child_comments = relationship("Comment", remote_side=[parent_comment_id])
+	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
+	child_comments = relationship("Comment", remote_side=[parent_comment_id], viewonly=True)
 
-	awards = relationship("AwardRelationship")
+	awards = relationship("AwardRelationship", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
 
@@ -408,8 +408,8 @@ class Notification(Base):
 	blocksender = Column(Integer)
 	unblocksender = Column(Integer)
 
-	comment = relationship("Comment")
-	user=relationship("User")
+	comment = relationship("Comment", viewonly=True)
+	user = relationship("User", viewonly=True)
 
 	def __repr__(self):
 

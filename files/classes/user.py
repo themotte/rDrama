@@ -123,12 +123,12 @@ class User(Base):
 	oldreddit = Column(Boolean)
 	nitter = Column(Boolean)
 	controversial = Column(Boolean, default=False)
-	submissions = relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id")
-	comments = relationship("Comment", lazy="dynamic", primaryjoin="Comment.author_id==User.id")
+	submissions = relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", viewonly=True)
+	comments = relationship("Comment", lazy="dynamic", primaryjoin="Comment.author_id==User.id", viewonly=True)
 	bio = Column(String)
 	bio_html = Column(String)
-	badges = relationship("Badge", lazy="dynamic")
-	notifications = relationship("Notification", lazy="dynamic")
+	badges = relationship("Badge", lazy="dynamic", viewonly=True)
+	notifications = relationship("Notification", lazy="dynamic", viewonly=True)
 
 	is_banned = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
@@ -151,24 +151,24 @@ class User(Base):
 	discord_id = Column(String(64))
 	ban_evade = Column(Integer, default=0)
 	original_username = deferred(Column(String(255)))
-	subscriptions = relationship("Subscription")
+	subscriptions = relationship("Subscription", viewonly=True)
 
-	following = relationship("Follow", primaryjoin="Follow.user_id==User.id")
-	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id")
+	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
+	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id", viewonly=True)
 
-	viewers = relationship("ViewerRelationship", primaryjoin="User.id == ViewerRelationship.user_id")
+	viewers = relationship("ViewerRelationship", primaryjoin="User.id == ViewerRelationship.user_id", viewonly=True)
 
-	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id")
-	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id")
+	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id", viewonly=True)
+	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
 
-	_applications = relationship("OauthApp", lazy="dynamic")
-	authorizations = relationship("ClientAuth", lazy="dynamic")
+	_applications = relationship("OauthApp", lazy="dynamic", viewonly=True)
+	authorizations = relationship("ClientAuth", lazy="dynamic", viewonly=True)
 
-	awards = relationship("AwardRelationship", lazy="dynamic", primaryjoin="User.id==AwardRelationship.user_id")
+	awards = relationship("AwardRelationship", lazy="dynamic", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
 
 	referred_by = Column(Integer, ForeignKey("users.id"))
 
-	referrals = relationship("User")
+	referrals = relationship("User", viewonly=True)
 
 	def __init__(self, **kwargs):
 
@@ -623,7 +623,7 @@ class ViewerRelationship(Base):
 	viewer_id = Column(Integer, ForeignKey('users.id'))
 	last_view_utc = Column(Integer)
 
-	viewer = relationship("User", primaryjoin="ViewerRelationship.viewer_id == User.id")
+	viewer = relationship("User", primaryjoin="ViewerRelationship.viewer_id == User.id", viewonly=True)
 
 	def __init__(self, **kwargs):
 
