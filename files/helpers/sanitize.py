@@ -217,8 +217,8 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	li1 = re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized)
-	li2 = re.finditer(':([^ ]{1,30}?):', sanitized)
+	li1 = list(re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized))
+	li2 = list(re.finditer(':([^ ]{1,30}?):', sanitized))
 
 	for i in li1:
 		emoji = i.group(1).lower()
