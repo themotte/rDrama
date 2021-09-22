@@ -516,7 +516,6 @@ class User(Base):
 		if days > 0:
 			ban_time = int(time.time()) + (days * 86400)
 			self.unban_utc = ban_time
-
 		else:
 			self.bannerurl = None
 			self.profileurl = None

@@ -299,7 +299,7 @@
 							<form action="/ban_user/{{u.id}}" method="post" action="">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
-								<input style="font-size:11px;" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
+								<input style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
 								<div class="custom-control custom-checkbox">
 									<input type="checkbox" id="alts-2-desktop" class="custom-control-input" name="alts" value="1">
 									<label class="custom-control-label" for="alts-2-desktop">Include alts</label>
@@ -312,7 +312,7 @@
 
 						<form id="agendaposter" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input type="number" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
+							<input type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
 							<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" />
 						</form>
 					
@@ -574,7 +574,7 @@
 							<form action="/ban_user/{{u.id}}/" method="post">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
-								<input style="font-size:11px;" type="number" class="form-control" name="days" placeholder="Days (blank = permanent)">
+								<input style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
 								<br />
 								<div class="custom-control custom-checkbox">
 									<input type="checkbox" id="alts-2-mobile" class="custom-control-input" name="alts" value="1">
@@ -589,7 +589,7 @@
 
 						<form id="agendaposter2" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input type="number" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
+							<input type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" />
 							<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" />
 						</form>
 					
