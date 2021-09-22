@@ -38,14 +38,14 @@ def revert_actions(v, username):
 		user = get_user(username)
 		if not user: abort(404)
 
-		items = g.db.query(Submission).options(lazyload('*')).options(lazyload('*')).filter_by(removed_by=user.id).all() + g.db.query(Comment).options(lazyload('*')).options(lazyload('*')).filter_by(removed_by=user.id).all()
+		items = g.db.query(Submission).options(lazyload('*')).filter_by(removed_by=user.id).all() + g.db.query(Comment).options(lazyload('*')).filter_by(removed_by=user.id).all()
 
 		for item in items:
 			item.is_banned = False
 			item.removed_by = None
 			g.db.add(item)
 
-		users = g.db.query(User).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=user.id).all()
+		users = g.db.query(User).options(lazyload('*')).filter_by(is_banned=user.id).all()
 		for user in users:
 			user.is_banned = 0
 			user.unban_utc = 0
@@ -620,7 +620,7 @@ def admin_removed(v):
 
 	page = int(request.values.get("page", 1))
 
-	ids = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=True).order_by(
+	ids = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).order_by(
 		Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
@@ -831,7 +831,7 @@ def admin_title_change(user_id, v):
 	user.customtitleplain=new_name
 	new_name = sanitize(new_name)
 
-	user=g.db.query(User).with_for_update().options(lazyload('*')).options(lazyload('*')).filter_by(id=user.id).first()
+	user=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=user.id).first()
 	user.customtitle=new_name
 	user.flairchanged = bool(request.values.get("locked"))
 	g.db.add(user)

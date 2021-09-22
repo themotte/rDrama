@@ -241,7 +241,7 @@ class User(Base):
 		if self.shadowbanned and not (v and (v.admin_level >= 3 or v.id == self.id)):
 			return []
 
-		submissions = g.db.query(Submission).options(lazyload('*')).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
+		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
 
 		if not (v and (v.admin_level >= 3 or v.id == self.id)):
 			submissions = submissions.filter_by(deleted_utc=0, is_banned=False, private=False)
@@ -547,7 +547,7 @@ class User(Base):
 	@lazy
 	def saved_idlist(self, page=1):
 
-		posts = g.db.query(Submission.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
+		posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
 
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
 		posts = posts.filter(Submission.id.in_(saved))
@@ -572,7 +572,7 @@ class User(Base):
 	@lazy
 	def saved_comment_idlist(self, page=1):
 
-		comments = g.db.query(Comment.id).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
+		comments = g.db.query(Comment.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
 
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
 		comments = comments.filter(Comment.id.in_(saved))

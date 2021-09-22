@@ -31,7 +31,33 @@ def searchparse(text):
 	return criteria
 
 
-def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
+
+
+
+@app.get("/search/posts")
+@auth_desired
+def searchposts(v):
+
+
+	query = request.values.get("q", '').strip()
+
+	page = max(1, int(request.values.get("page", 1)))
+
+	sort = request.values.get("sort", "top").lower()
+	t = request.values.get('t', 'all').lower()
+
+	criteria=searchparse(query)
+
+
+
+
+
+
+
+
+
+
+
 
 	posts = g.db.query(Submission).options(
 				lazyload('*')
@@ -146,12 +172,58 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 	secondrange = firstrange+26
 	posts = posts[firstrange:secondrange]
 
-	return total, [x.id for x in posts]
+	ids = [x.id for x in posts]
 
 
-def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 
-	comments = g.db.query(Comment).options(lazyload('*')).options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.comment_aux)
+
+	next_exists = (len(ids) > 25)
+	ids = ids[:25]
+
+	posts = get_posts(ids, v=v)
+
+	if v and v.admin_level>3 and "domain" in criteria:
+		domain=criteria['domain']
+		domain_obj=get_domain(domain)
+	else:
+		domain=None
+		domain_obj=None
+
+	if request.headers.get("Authorization"): return {"data":[x.json for x in posts]}
+	else: return render_template("search.html",
+						   v=v,
+						   query=query,
+						   total=total,
+						   page=page,
+						   listing=posts,
+						   sort=sort,
+						   t=t,
+						   next_exists=next_exists,
+						   domain=domain,
+						   domain_obj=domain_obj
+						   )
+
+@app.get("/search/comments")
+@auth_desired
+def searchcomments(v):
+
+
+	query = request.values.get("q", '').strip()
+
+	try: page = max(1, int(request.values.get("page", 1)))
+	except: page = 1
+
+	sort = request.values.get("sort", "top").lower()
+	t = request.values.get('t', 'all').lower()
+
+	criteria=searchparse(query)
+
+
+
+
+
+
+	comments = g.db.query(Comment).filter(Comment.parent_submission != None).join(Comment.comment_aux)
 
 	if 'q' in criteria:
 		words=criteria['q'].split()
@@ -197,64 +269,14 @@ def searchcommentlisting(criteria, v=None, page=1, t="None", sort="top"):
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+26
 	comments = comments[firstrange:secondrange]
-	return total, [x.id for x in comments]
-
-@app.get("/search/posts")
-@auth_desired
-def searchposts(v):
+	ids = [x.id for x in comments]
 
 
-	query = request.values.get("q", '').strip()
-
-	page = max(1, int(request.values.get("page", 1)))
-
-	sort = request.values.get("sort", "top").lower()
-	t = request.values.get('t', 'all').lower()
-
-	criteria=searchparse(query)
-	total, ids = searchlisting(criteria, v=v, page=page, t=t, sort=sort)
-
-	next_exists = (len(ids) > 25)
-	ids = ids[:25]
-
-	posts = get_posts(ids, v=v)
-
-	if v and v.admin_level>3 and "domain" in criteria:
-		domain=criteria['domain']
-		domain_obj=get_domain(domain)
-	else:
-		domain=None
-		domain_obj=None
-
-	if request.headers.get("Authorization"): return {"data":[x.json for x in posts]}
-	else: return render_template("search.html",
-						   v=v,
-						   query=query,
-						   total=total,
-						   page=page,
-						   listing=posts,
-						   sort=sort,
-						   t=t,
-						   next_exists=next_exists,
-						   domain=domain,
-						   domain_obj=domain_obj
-						   )
-
-@app.get("/search/comments")
-@auth_desired
-def searchcomments(v):
 
 
-	query = request.values.get("q", '').strip()
 
-	try: page = max(1, int(request.values.get("page", 1)))
-	except: page = 1
 
-	sort = request.values.get("sort", "top").lower()
-	t = request.values.get('t', 'all').lower()
 
-	criteria=searchparse(query)
-	total, ids = searchcommentlisting(criteria, v=v, page=page, t=t, sort=sort)
 
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]

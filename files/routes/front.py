@@ -249,7 +249,7 @@ def front_all(v):
 @cache.memoize(timeout=86400)
 def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 
-	posts = g.db.query(Submission).options(lazyload('*')).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
+	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
@@ -366,7 +366,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 
 	posts = posts.subquery()
 
-	comments = g.db.query(Comment).options(lazyload('*')).options(lazyload('*')).filter(Comment.parent_submission.notin_(cc_idlist))
+	comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission.notin_(cc_idlist))
 
 	if v and v.admin_level <= 3:
 		blocking = [x[0] for x in g.db.query(
