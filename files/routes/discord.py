@@ -118,15 +118,11 @@ def discord_redirect(v):
 
 		if v.id == 1: add_role(v, "shrigma")
 		elif v.admin_level > 0: add_role(v, "admin")
-		else: add_role(v, "newuser")
-		
-		time.sleep(0.1)
+		else: add_role(v, "feedback")
 		
 		if v.patron:
-			add_role(v, str(v.patron))
 			time.sleep(0.1)
-
-		add_role(v, "feedback")
+			add_role(v, str(v.patron))
 		
 	else:
 		return x.json()
