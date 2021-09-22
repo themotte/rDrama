@@ -846,9 +846,10 @@ def admin_title_change(user_id, v):
 		note=f'"{new_name}"'
 		)
 	g.db.add(ma)
-
 	g.db.commit()
-	return (redirect(user.url), user)
+
+	if 'redir' in request.values: return (redirect(user.url), user)
+	else: return {"message": f"@{user.username} was unbanned!"}
 
 @app.post("/ban_user/<user_id>")
 @admin_level_required(6)
@@ -918,11 +919,11 @@ def ban_user(user_id, v):
 			comment = get_comment(comment)
 			comment.bannedfor = True
 			g.db.add(comment)
-		g.db.commit()
-		return {"message": f"@{user.username} was banned!"}
-	else:
-		g.db.commit()
-		return redirect(user.url)
+
+	g.db.commit()
+
+	if 'redir' in request.values: return (redirect(user.url), user)
+	else: return {"message": f"@{user.username} was banned!"}
 
 
 @app.post("/unban_user/<user_id>")
