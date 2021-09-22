@@ -31,8 +31,6 @@ class Comment(Base):
 	comment_aux = relationship("CommentAux", uselist=False, primaryjoin="Comment.id==CommentAux.id")
 	author_id = Column(Integer, ForeignKey("users.id"))
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
-	# this column is foreignkeyed to comment(id) but we can't do that yet as
-	# "comment" class isn't yet defined
 	created_utc = Column(Integer, default=0)
 	edited_utc = Column(Integer, default=0)
 	is_banned = Column(Boolean, default=False)
