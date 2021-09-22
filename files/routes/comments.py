@@ -157,7 +157,7 @@ def api_comment(v):
 	
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
-	body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
@@ -280,7 +280,7 @@ def api_comment(v):
 		url = upload_ibb(file=file)
 		
 		body = request.values.get("body") + f"\n![]({url})"
-		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
@@ -418,7 +418,7 @@ def api_comment(v):
 		g.db.flush()
 	
 		body = random.choice(LONGPOST_REPLIES)
-		body = body.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
 		c_aux = CommentAux(
@@ -610,6 +610,7 @@ def edit_comment(cid, v):
 	body = request.values.get("body", "")[:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
+	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
