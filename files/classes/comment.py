@@ -18,7 +18,7 @@ class CommentAux(Base):
 
 	key_id = Column(Integer, primary_key=True)
 	id = Column(Integer, ForeignKey("comments.id"))
-	body = Column(String(10000))
+	body = Column(String(10000), default=None)
 	body_html = Column(String(20000))
 	ban_reason = Column(String(256), default='')
 
@@ -28,7 +28,7 @@ class Comment(Base):
 	__tablename__ = "comments"
 
 	id = Column(Integer, primary_key=True)
-	comment_aux = relationship("CommentAux", uselist=False, primaryjoin="Comment.id==CommentAux.id")
+	comment_aux = relationship("CommentAux", lazy="joined", uselist=False, innerjoin=True, primaryjoin="Comment.id==CommentAux.id")
 	author_id = Column(Integer, ForeignKey("users.id"))
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
 	created_utc = Column(Integer, default=0)
@@ -348,10 +348,6 @@ class Comment(Base):
 	def ban_reason(self, x):
 		self.comment_aux.ban_reason = x
 		g.db.add(self.comment_aux)
-
-	#@property
-	#def award_count(self):
-		#return len(self.awards)
 
 	@lazy
 	def collapse_for_user(self, v):
