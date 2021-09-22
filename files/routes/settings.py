@@ -101,7 +101,7 @@ def settings_profile_post(v):
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
 			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
-		bio = bio.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+		bio = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', bio)
 
 		# check for uploaded image
 		if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":

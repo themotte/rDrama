@@ -976,7 +976,6 @@ def ban_post(post_id, v):
 	post.removed_by = v.id
 
 	ban_reason=request.values.get("reason", "")
-	ban_reason = ban_reason.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
 	ban_reason = CustomRenderer().render(mistletoe.Document(ban_reason))
 	ban_reason = sanitize(ban_reason)
 

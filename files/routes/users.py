@@ -224,8 +224,6 @@ def message2(v, username):
 	if hasattr(user, 'is_blocked') and user.is_blocked: return {"error": "This user is blocking you."}, 403
 	message = request.values.get("message", "")[:1000].strip()
 
-	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
-
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).options(lazyload('*')).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
@@ -233,7 +231,27 @@ def message2(v, username):
 															).options(contains_eager(Comment.comment_aux)).first()
 	if existing: return redirect('/notifications?messages=true')
 
-	send_pm(v.id, user, message)
+	text = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', message)
+
+	text_html = Renderer().render(mistletoe.Document(text))
+
+	text_html = sanitize(text_html, True)
+
+	new_comment = Comment(author_id=v.id,
+						  parent_submission=None,
+						  level=1,
+						  sentto=user.id
+						  )
+	g.db.add(new_comment)
+
+	g.db.flush()
+
+	new_aux = CommentAux(id=new_comment.id, body=text, body_html=text_html)
+	g.db.add(new_aux)
+
+	notif = Notification(comment_id=new_comment.id, user_id=user.id)
+	g.db.add(notif)
+
 	
 	try:
 		beams_client.publish_to_interests(
@@ -264,7 +282,7 @@ def messagereply(v):
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
 	user = parent.author
-	message = message.replace("\n", "\n\n").replace("\n\n\n\n\n\n", "\n\n").replace("\n\n\n\n", "\n\n").replace("\n\n\n", "\n\n")
+	message = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', message)
 
 	# check existing
 	existing = g.db.query(Comment).join(CommentAux).options(lazyload('*')).filter(Comment.author_id == v.id,
