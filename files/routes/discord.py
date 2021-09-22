@@ -27,6 +27,19 @@ def join_discord(v):
 
 	return redirect(f"https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&redirect_uri=https%3A%2F%2F{app.config['SERVER_NAME']}%2Fdiscord_redirect&response_type=code&scope=identify%20guilds.join&state={state}")
 
+@app.get("/sex")
+@admin_level_required(6)
+def sex(v):
+	users = g.db.query(User).options(lazyload('*')).filter(User.discord_id is not None).all()
+	headers={
+		'Authorization': f"Bot {BOT_TOKEN}",
+		'Content-Type': "application/json"
+	}
+	for u in users:
+		print(u.username)
+		print(requests.patch(f"https://discord.com/api/guilds/846509313497628715/members/{u.discord_id}", headers=headers, data={"nick":u.username}).text)
+
+
 @app.get("/discord_redirect")
 @auth_required
 def discord_redirect(v):
