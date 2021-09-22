@@ -132,7 +132,7 @@ def discord_redirect(v):
 
 		if v.id == 1: add_role(v, "shrigma")
 		elif v.admin_level > 0: add_role(v, "admin")
-		else: add_role(v, "feedback")
+		else: add_role(v, "linked")
 		
 		if v.patron:
 			time.sleep(0.1)
