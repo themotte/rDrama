@@ -217,7 +217,10 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	for i in re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized):
+	li1 = re.finditer('<p>:([^ ]{1,30}?):</p>', sanitized)
+	li2 = re.finditer(':([^ ]{1,30}?):', sanitized)
+
+	for i in li1:
 		emoji = i.group(1).lower()
 		if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 			sanitized = sanitized.replace(f'<p>:{emoji}:</p>', f'<p style="margin-bottom:0;"><img loading="lazy" data-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp"></p>')
@@ -228,16 +231,16 @@ def sanitize(sanitized, noimages=False):
 			except:
 				pass
 
-	# for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
-	# 	emoji = i.group(1).lower()
-	# 	if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-	# 		sanitized = sanitized.replace(f':{emoji}:', f'<img loading="lazy" data-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp">')
+	for i in li2:
+		emoji = i.group(1).lower()
+		if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
+			sanitized = sanitized.replace(f':{emoji}:', f'<img loading="lazy" data-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp">')
 
-	# 		try:
-	# 			if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-	# 			else: session["favorite_emojis"][emoji] = 1
-	# 		except:
-	# 			pass
+			try:
+				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
+				else: session["favorite_emojis"][emoji] = 1
+			except:
+				pass
 
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.", "https://").replace("https://m.", "https://")
