@@ -869,7 +869,8 @@ def toggle_comment_pin(cid, v):
 	if v.admin_level < 1 and v.id != comment.post.author_id:
 		abort(403)
 
-	comment.is_pinned = not comment.is_pinned
+	if comment.is_pinned: comment.is_pinned = None
+	else: comment.is_pinned = v.username
 
 	g.db.add(comment)
 	g.db.flush()

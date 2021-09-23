@@ -56,7 +56,6 @@ class Submission(Base):
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
-	is_pinned = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
 
 	upvotes = Column(Integer, default=1)
