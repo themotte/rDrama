@@ -595,6 +595,7 @@ def thumbnail_thread(pid):
 	db.commit()
 	db.close()
 
+	return True, "Success"
 
 @app.post("/submit")
 @limiter.limit("6/minute")
