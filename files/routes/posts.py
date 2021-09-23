@@ -580,10 +580,8 @@ def thumbnail_thread(pid):
 		image = PILimage.open(BytesIO(x.content))
 
 	else:
-
 		db.close()
 		return
-
 
 	with open("image.webp", "wb") as file:
 		for chunk in image_req.iter_content(1024):
@@ -593,8 +591,8 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 	db.close()
-
 	return
+
 
 @app.post("/submit")
 @limiter.limit("6/minute")
