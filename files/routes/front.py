@@ -179,7 +179,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	elif sort == "controversial":
 		posts = sorted(posts.all(), key=lambda x: x.score_disputed, reverse=True)
 	elif sort == "top":
-		posts = posts.order_by(Submission.upvotes - Submission.downvotes).all()
+		posts = posts.order_by(Submission.downvotes - Submission.upvotes).all()
 	elif sort == "bottom":
 		posts = sorted(posts.all(), key=lambda x: x.score)
 	elif sort == "comments":
