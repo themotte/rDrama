@@ -15,8 +15,6 @@ function getEmoji(searchTerm, form) {
 	const old	= commentBox.value;
 	const curPos = commentBox.selectionStart;
 
-	console.log(curPos);
-
 	commentBox.value = old.slice(0, curPos) + emoji + old.slice(curPos);
 }
 
