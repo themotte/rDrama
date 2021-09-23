@@ -476,11 +476,11 @@ def thumbnail_thread(pid):
 		x=requests.get(fetch_url, headers=headers)
 	except:
 		db.close()
-		return False, "Unable to connect to source"
+		return
 
 	if x.status_code != 200:
 		db.close()
-		return False, f"Source returned status {x.status_code}."
+		return
 	
 
 	#if content is image, stick with that. Otherwise, parse html.
@@ -570,8 +570,7 @@ def thumbnail_thread(pid):
 		else:
 			#getting here means we are out of candidate urls (or there never were any)
 			db.close()
-			return False, "No usable images"
-
+			return
 
 
 
@@ -583,7 +582,7 @@ def thumbnail_thread(pid):
 	else:
 
 		db.close()
-		return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
+		return
 
 
 	with open("image.webp", "wb") as file:
@@ -595,7 +594,7 @@ def thumbnail_thread(pid):
 	db.commit()
 	db.close()
 
-	return True, "Success"
+	return
 
 @app.post("/submit")
 @limiter.limit("6/minute")
