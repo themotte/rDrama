@@ -168,9 +168,13 @@ async function getGif(searchTerm) {
 		// GIF array
 		var gifURL = [];
 
-		// loop for fetching mutliple GIFs and creating the card divs
-		if (max < 48 && max > 0) {
-			for (var i = 0; i <= max; i++) {
+		if (max <= 0) {
+			noGIFs.innerHTML = '<div class="text-center py-3 mt-3"><div class="mb-3"><i class="fad fa-frown text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>';
+			container.innerHTML = null;
+			loadGIFs.innerHTML = null;
+		}
+		else {
+			for (var i = 0; i <= 47; i++) {
 			gifURL[i] = "https://media.giphy.com/media/" + data[i].id + "/200w_d.webp";
 			if (data[i].username==''){
 				container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + data[i].id + '/100w.webp' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img loading="lazy" class="img-fluid" src="' + gifURL[i] + '"></div>');
@@ -181,11 +185,6 @@ async function getGif(searchTerm) {
 			noGIFs.innerHTML = null;
 			loadGIFs.innerHTML = '<div class="text-center py-3"><div class="mb-3"><i class="fad fa-grin-beam-sweat text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Thou&#39;ve reached the end of the list!</p></div>';
 			}
-		}
-		else if (max <= 0) {
-			noGIFs.innerHTML = '<div class="text-center py-3 mt-3"><div class="mb-3"><i class="fad fa-frown text-gray-500" style="font-size: 3.5rem;"></i></div><p class="font-weight-bold text-gray-500 mb-0">Aw shucks. No GIFs found...</p></div>';
-			container.innerHTML = null;
-			loadGIFs.innerHTML = null;
 		}
 	}
 }
