@@ -124,7 +124,7 @@
 									<i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{u.original_username}}"></i>
 								</span>
 								{% endif %}
-								{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.verified}}"></i></span>{% endif %}
+								{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="{{u.verified}}"></i></span>{% endif %}
 								{% if u.admin_level > 1 or (u.admin_level == 1 and (not v or v.admin_level < 2)) %}
 								<span>
 									<i class="fas fa-broom text-admin align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Admin"></i>
@@ -167,11 +167,11 @@
 				<div class="font-weight-bolder">
 					<span id="profile-coins-amount">{{u.coins}}</span>
 					
-					&nbsp;<img data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{'COINS_NAME' | app_config}}" height="20" src="https://rdrama.net/assets/images/emojis/marseybux.webp">&nbsp;&nbsp;
+					&nbsp;<img data-toggle="tooltip" data-placement="bottom" title="{{'COINS_NAME' | app_config}}" height="20" src="https://rdrama.net/assets/images/emojis/marseybux.webp">&nbsp;&nbsp;
 
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					
-					joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
+					joined <span data-toggle="tooltip" data-placement="bottom" title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
 				{% if "pcm" in request.host %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
 				{% if u.bio_html %}
@@ -370,9 +370,9 @@
 					<div>
 						{% for b in u.badges %}
 							{% if b.url %}
-								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="60" loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
+								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="60" loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="{{b.name}} - {{b.text}}"></a>
 							{% else %}
-								<img width="60" loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
+								<img width="60" loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="{{b.name}} - {{b.text}}">
 							{% endif %}
 						{% endfor %}
 					</div>
@@ -408,7 +408,7 @@
 					<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
 					{% if u.unban_utc %}<h5 style="color:#ff66ac;">{{u.unban_string}}</h5>{% endif %}
 				{% endif %}
-				{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.verified}}"></i></span>&nbsp;{% endif %}
+				{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-toggle="tooltip" data-placement="bottom" title="{{u.verified}}"></i></span>&nbsp;{% endif %}
 				<a class="text-black"><h1 class="h5 d-inline-block" style="color: #{{u.namecolor}}"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span></h1></a>
 				
 				{% if u.username != u.original_username %}
@@ -432,7 +432,7 @@
 				<div class="font-weight-normal">
 					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span>
 
-					&nbsp;<img data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{'COINS_NAME' | app_config}}" height="15" src="https://rdrama.net/assets/images/emojis/marseybux.webp">&nbsp;&nbsp;
+					&nbsp;<img data-toggle="tooltip" data-placement="bottom" title="{{'COINS_NAME' | app_config}}" height="15" src="https://rdrama.net/assets/images/emojis/marseybux.webp">&nbsp;&nbsp;
 					
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					
@@ -440,7 +440,7 @@
 						<br>Based count: {{u.basedcount}}
 					{% endif %}
 
-					<br>joined <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
+					<br>joined <span data-toggle="tooltip" data-placement="bottom" title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
 				</div>
 				{% if u.bio_html %}
 				<p class="text-muted text-break">{{u.bio_html | safe}}</p>
@@ -461,9 +461,9 @@
 				<div class="mb-3">
 					{% for b in u.badges %}
 						{% if b.url %}
-							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="32" loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}"></a>
+							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="32" loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="{{b.name}} - {{b.text}}"></a>
 						{% else %}
-							<img width="32" loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{b.name}} - {{b.text}}">
+							<img width="32" loading="lazy" src="{{b.path}}" data-toggle="tooltip" data-placement="bottom" title="{{b.name}} - {{b.text}}">
 						{% endif %}
 					{% endfor %}
 				</div>
