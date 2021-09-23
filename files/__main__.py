@@ -120,7 +120,6 @@ def after_request(response):
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("Referrer-Policy", "same-origin")
-	response.headers.add("Feature-Policy", "geolocation 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; vibrate 'none'; fullscreen 'none'; payment 'none';")
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
