@@ -994,6 +994,9 @@ def ban_post(post_id, v):
 
 	cache.delete_memoized(frontlist)
 
+	v.coins += 1
+	g.db.add(v)
+
 	g.db.commit()
 
 	return {"message": "Post removed!"}
@@ -1023,6 +1026,9 @@ def unban_post(post_id, v):
 	g.db.add(post)
 
 	cache.delete_memoized(frontlist)
+
+	v.coins -= 1
+	g.db.add(v)
 
 	g.db.commit()
 
