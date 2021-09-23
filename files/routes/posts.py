@@ -17,7 +17,7 @@ from files.helpers.const import *
 from files.classes import *
 from flask import *
 from io import BytesIO
-from files.__main__ import app, limiter, cache
+from files.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage
 from .front import frontlist, changeloglist
 
@@ -460,28 +460,35 @@ def check_processing_thread(v, post, link):
 			print("retard. aborting thread")
 			break
 
-def thumbs(new_post):
-	pid = new_post.id
-	post = get_post(pid, graceful=True, session=g.db)
+
+def thumbnail_thread(pid):
+
+	db = db_session()
+
+	post = get_post(pid, graceful=True, session=db)
 	if not post:
 		# account for possible follower lag
 		time.sleep(60)
-		post = get_post(pid, session=g.db)
+		post = get_post(pid, session=db)
+
 
 	fetch_url=post.url
-
-	#get the content
 
 	#mimic chrome browser agent
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
 	try:
+		print(f"loading {fetch_url}")
 		x=requests.get(fetch_url, headers=headers)
 	except:
+		print(f"unable to connect to {fetch_url}")
+		db.close()
 		return False, "Unable to connect to source"
 
 	if x.status_code != 200:
+		db.close()
 		return False, f"Source returned status {x.status_code}."
+	
 
 	#if content is image, stick with that. Otherwise, parse html.
 
@@ -490,11 +497,30 @@ def thumbs(new_post):
 		soup=BeautifulSoup(x.content, 'html.parser')
 		#parse html
 
+		#first, set metadata
+		try:
+			meta_title=soup.find('title')
+			if meta_title:
+				post.submission_aux.meta_title=str(meta_title.string)[0:500]
+
+			meta_desc = soup.find('meta', attrs={"name":"description"})
+			if meta_desc:
+				post.submission_aux.meta_description=meta_desc['content'][0:1000]
+
+			if meta_title or meta_desc:
+				db.add(post.submission_aux)
+				db.commit()
+
+		except Exception as e:
+			print(f"Error while parsing for metadata: {e}")
+			pass
+
 		#create list of urls to check
 		thumb_candidate_urls=[]
 
 		#iterate through desired meta tags
 		meta_tags = [
+			"ruqqus:thumbnail",
 			"twitter:image",
 			"og:image",
 			"thumbnail"
@@ -502,6 +528,7 @@ def thumbs(new_post):
 
 		for tag_name in meta_tags:
 			
+			print(f"Looking for meta tag: {tag_name}")
 
 
 			tag = soup.find(
@@ -529,29 +556,38 @@ def thumbs(new_post):
 
 		#now we have a list of candidate urls to try
 		for url in thumb_candidate_urls:
+			print(f"Trying url {url}")
 
 			try:
 				image_req=requests.get(url, headers=headers)
 			except:
+				print(f"Unable to connect to candidate url {url}")
 				continue
 
 			if image_req.status_code >= 400:
+				print(f"status code {x.status_code}")
 				continue
 
 			if not image_req.headers.get("Content-Type","").startswith("image/"):
+				print(f'bad type {image_req.headers.get("Content-Type","")}, try next')
 				continue
 
 			if image_req.headers.get("Content-Type","").startswith("image/svg"):
+				print("svg, try next")
 				continue
 
 			image = PILimage.open(BytesIO(image_req.content))
 			if image.width < 30 or image.height < 30:
+				print("image too small, next")
 				continue
 
+			print("Image is good, upload it")
 			break
 
 		else:
 			#getting here means we are out of candidate urls (or there never were any)
+			print("Unable to find image")
+			db.close()
 			return False, "No usable images"
 
 
@@ -559,20 +595,32 @@ def thumbs(new_post):
 
 	elif x.headers.get("Content-Type","").startswith("image/"):
 		#image is originally loaded fetch_url
+		print("post url is direct image")
 		image_req=x
 		image = PILimage.open(BytesIO(x.content))
 
 	else:
+
 		print(f'Unknown content type {x.headers.get("Content-Type")}')
+		db.close()
 		return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
-	with open("image.webp", "wb") as file:
+
+	print(f"Have image, uploading")
+
+	name = f"posts/{post.base36id}/thumb.png"
+	tempname = name.replace("/", "_")
+
+	with open(tempname, "wb") as file:
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
+
 	post.thumburl = upload_ibb(resize=True)
+	db.add(post)
+	db.commit()
+	db.close()
 
-	g.db.add(post)
-
+	return True, "Success"
 
 @app.post("/submit")
 @limiter.limit("6/minute")
@@ -927,10 +975,11 @@ def submit_post(v):
 
 
 
-
-
-	# thumbnail generation
-	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbs(new_post)
+	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
+		new_thread = gevent.spawn(
+			thumbnail_thread,
+			new_post.id
+		)
 
 	notify_users = set()
 	
