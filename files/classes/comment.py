@@ -44,7 +44,7 @@ class Comment(Base):
 
 	over_18 = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
-	is_pinned = Column(String, default=False)
+	is_pinned = Column(String)
 	sentto=Column(Integer)
 
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
