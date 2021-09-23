@@ -161,9 +161,10 @@ async function getGif(searchTerm) {
 		cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
 		let response = await fetch("/giphy?searchTerm=" + searchTerm + "&limit=48");
-		let data = await response.json().data
+		let data = await response.json()
 		console.log(data)
 		var max = data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
+		data = data.data
 		// GIF array
 		var gifURL = [];
 
