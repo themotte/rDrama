@@ -171,7 +171,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
 	if sort == "hot":
-		posts = posts.order_by(-1*(Submission.upvotes - Submission.downvotes)/((int(time.time()) - Submission.created_utc)/1000))
+		posts = posts.order_by(-1*(Submission.upvotes - Submission.downvotes)/((Submission.created_utc)/1000))
 	elif sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
