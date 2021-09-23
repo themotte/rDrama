@@ -20,7 +20,7 @@ class CommentAux(Base):
 	id = Column(Integer, ForeignKey("comments.id"))
 	body = deferred(Column(String(10000)))
 	body_html = deferred(Column(String(20000)))
-	ban_reason = Column(String(256), default='')
+	ban_reason = Column(String(256))
 
 
 class Comment(Base):
