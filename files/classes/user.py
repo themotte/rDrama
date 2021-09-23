@@ -241,10 +241,10 @@ class User(Base):
 		if self.shadowbanned and not (v and (v.admin_level >= 3 or v.id == self.id)):
 			return []
 
-		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
+		posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
 
 		if not (v and (v.admin_level >= 3 or v.id == self.id)):
-			submissions = submissions.filter_by(deleted_utc=0, is_banned=False, private=False)
+			posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False)
 
 		now = int(time.time())
 		if t == 'hour':
@@ -259,25 +259,24 @@ class User(Base):
 			cutoff = now - 31536000
 		else:
 			cutoff = 0
-		submissions = submissions.filter(Submission.created_utc >= cutoff)
+		posts = posts.filter(Submission.created_utc >= cutoff)
 
 		if sort == "new":
-			submissions = submissions.order_by(Submission.created_utc.desc()).all()
+			posts = posts.order_by(Submission.created_utc.desc())
 		elif sort == "old":
-			submissions = submissions.order_by(Submission.created_utc.asc()).all()
+			posts = posts.order_by(Submission.created_utc.asc())
 		elif sort == "controversial":
-			submissions = sorted(submissions.all(), key=lambda x: x.score_disputed, reverse=True)
+			posts = posts.order_by(Submission.upvotes * Submission.downvotes)
 		elif sort == "top":
-			submissions = sorted(submissions.all(), key=lambda x: x.score, reverse=True)
+			posts = posts.order_by(Submission.downvotes - Submission.upvotes)
 		elif sort == "bottom":
-			submissions = sorted(submissions.all(), key=lambda x: x.score)
+			posts = posts.order_by(Submission.upvotes - Submission.downvotes)
 		elif sort == "comments":
-			submissions = submissions.order_by(Submission.comment_count.desc()).all()
+			posts = posts.order_by(Submission.comment_count.desc())
 
-		firstrange = 25 * (page - 1)
-		secondrange = firstrange + 26
-		listing = [x.id for x in submissions[firstrange:secondrange]]
-		return listing
+		posts = posts.offset(25 * (page - 1)).limit(26).all()
+
+		return [x[0] for x in posts]
 
 	@property
 	@lazy

@@ -144,18 +144,8 @@ class Comment(Base):
 
 	@property
 	@lazy
-	def score(self):
-		return self.upvotes - self.downvotes
-
-	@property
-	@lazy
 	def fullname(self):
 		return f"t3_{self.id}"
-
-	@property
-	@lazy
-	def score_disputed(self):
-		return (self.upvotes+1) * (self.downvotes+1)
 
 	@property
 	@lazy

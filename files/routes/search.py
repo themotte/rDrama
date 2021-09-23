@@ -59,7 +59,7 @@ def searchposts(v):
 
 
 
-	posts = g.db.query(Submission).options(
+	posts = g.db.query(Submission.id).options(
 				lazyload('*')
 			).join(
 				Submission.submission_aux,
@@ -149,30 +149,23 @@ def searchposts(v):
 		)
 
 	if sort == "new":
-		posts = posts.order_by(Submission.created_utc.desc()).all()
+		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
-		posts = posts.order_by(Submission.created_utc.asc()).all()
+		posts = posts.order_by(Submission.created_utc.asc())
 	elif sort == "controversial":
-		posts = sorted(posts.all(), key=lambda x: x.score_disputed, reverse=True)
+		posts = posts.order_by(Submission.upvotes * Submission.downvotes)
 	elif sort == "top":
-		posts = sorted(posts.all(), key=lambda x: x.score, reverse=True)
+		posts = posts.order_by(Submission.downvotes - Submission.upvotes)
 	elif sort == "bottom":
-		posts = sorted(posts.all(), key=lambda x: x.score)
+		posts = posts.order_by(Submission.upvotes - Submission.downvotes)
 	elif sort == "comments":
-		posts = posts.order_by(Submission.comment_count.desc()).all()
-	elif sort == "random":
-		posts = posts.all()
-		posts = random.sample(posts, k=len(posts))
-	else:
-		abort(400)
+		posts = posts.order_by(Submission.comment_count.desc())
+
+	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
 	total = len(posts)
 
-	firstrange = 25 * (page - 1)
-	secondrange = firstrange+26
-	posts = posts[firstrange:secondrange]
-
-	ids = [x.id for x in posts]
+	ids = [x[0] for x in posts]
 
 
 

@@ -576,19 +576,18 @@ def u_username_comments(username, v=None):
 	comments = comments.filter(Comment.created_utc >= cutoff)
 
 	if sort == "new":
-		comments = comments.order_by(Comment.created_utc.desc()).all()
+		comments = comments.order_by(Comment.created_utc.desc())
 	elif sort == "old":
-		comments = comments.order_by(Comment.created_utc.asc()).all()
+		comments = comments.order_by(Comment.created_utc.asc())
 	elif sort == "controversial":
-		comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
+		comments = comments.order_by(Comment.upvotes * Comment.downvotes)
 	elif sort == "top":
-		comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
+		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 	elif sort == "bottom":
-		comments = sorted(comments.all(), key=lambda x: x.score)
+		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-	firstrange = 25 * (page - 1)
-	secondrange = firstrange + 26
-	ids = [x.id for x in comments[firstrange:secondrange]]
+	comments = comments.offset(25 * (page - 1)).limit(26).all()
+	ids = [x.id for x in comments]
 
 	# we got 26 items just to see if a next page exists
 	next_exists = (len(ids) > 25)
