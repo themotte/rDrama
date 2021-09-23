@@ -109,7 +109,7 @@ def notifications(v):
 
 
 
-@cache.memoize(timeout=86400)
+#@cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*'))
@@ -172,7 +172,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	if sort == "hot":
 		ti = int(time.time())
-		posts = posts.order_by(-1*(Submission.upvotes - Submission.downvotes)/((ti - Submission.created_utc)/1000))
+		posts = posts.order_by(-10000000*(Submission.upvotes - Submission.downvotes + 1)/(((ti - Submission.created_utc + 3600)/1000)**(1.35)))
+
 	elif sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
@@ -186,7 +187,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc())
 
-	posts = posts.offset(25 * (page - 1)).limit(26).all()
+	if sort != "hot": posts = posts.offset(25 * (page - 1)).limit(26).all()
 
 
 	next_exists = (len(posts) > 25)
