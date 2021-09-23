@@ -161,6 +161,7 @@ function getGif(searchTerm) {
 		cancelBtn.innerHTML = '<button class="btn btn-link pl-3 pr-0" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
 		var response = fetch("/giphy?searchTerm=" + searchTerm + "&limit=48")
+		console.log(response)
 		var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
 		// GIF array
 		var gifURL = [];
