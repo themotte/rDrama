@@ -1998,7 +1998,7 @@ const char *quotes[] =
 "Fuck off we're full",
 "NPC lol",
 "Lock her up",
-"libtards smh"
+"libtards smh",
 "mayocide isn't funny guys"
 };
 
