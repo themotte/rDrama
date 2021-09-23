@@ -10,15 +10,14 @@ var commentFormID;
 // Insert EMOJI markdown into comment box function
 
 function getEmoji(searchTerm, form) {
+	const emoji = ' :'+searchTerm+': '
+	const commentBox = document.getElementById(form);
+	const old	= commentBox.value;
+	const curPos = commentBox.selectionStart;
 
-	var emoji = ' :'+searchTerm+': '
-		
-	var commentBox = document.getElementById(form);
+	console.log(curPos);
 
-	var old	= commentBox.value;
-
-	commentBox.value = old + emoji;
-
+	commentBox.value = old.slice(0, curPos) + emoji + old.slice(curPos);
 }
 
 function loadEmojis(form) {
