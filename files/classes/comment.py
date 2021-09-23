@@ -28,7 +28,7 @@ class Comment(Base):
 	__tablename__ = "comments"
 
 	id = Column(Integer, primary_key=True)
-	comment_aux = relationship("CommentAux", uselist=False, primaryjoin="Comment.id==CommentAux.id")
+	comment_aux = relationship("CommentAux", lazy="joined", uselist=False, innerjoin=True, primaryjoin="Comment.id==CommentAux.id")
 	author_id = Column(Integer, ForeignKey("users.id"))
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
 	created_utc = Column(Integer, default=0)
