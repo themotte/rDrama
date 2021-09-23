@@ -283,7 +283,7 @@
 
 						{% endif %}
 
-						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="/votes?link={{c.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
+						<a href="/votes?link={{c.fullname}}"><li class="list-inline-item text-muted d-none d-md-inline-block"><i class="fas fa-arrows-v"></i>Votes</li></a>
 
 						{% if v %}
 							<li id="unsave-{{c.id}}" class="{% if c in v.saved_comment_idlist() %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')"><i class="fas fa-save"></i>Unsave</a></li>
