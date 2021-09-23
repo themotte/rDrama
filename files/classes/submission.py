@@ -167,6 +167,11 @@ class Submission(Base):
 
 	@property
 	@lazy
+	def score(self):
+		return self.upvotes - self.downvotes
+
+	@property
+	@lazy
 	def hotscore(self):
 		return 10000000*(self.upvotes - self.downvotes + 1)/(((self.age+3600)/1000)**(1.35))
 

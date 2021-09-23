@@ -59,7 +59,7 @@ def searchposts(v):
 
 
 
-	posts = g.db.query(Submission.id).options(
+	posts = g.db.query(Submission).options(
 				lazyload('*')
 			).join(
 				Submission.submission_aux,
@@ -165,7 +165,7 @@ def searchposts(v):
 
 	total = len(posts)
 
-	ids = [x[0] for x in posts]
+	ids = [x.id for x in posts]
 
 
 
