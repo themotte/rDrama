@@ -164,7 +164,6 @@ function getGif(searchTerm) {
 		fetch("/giphy?searchTerm=" + searchTerm + "&limit=48")
 		  .then(response => {
 			var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
-			var randomNumber = Math.round(Math.random() * 6) //random number between 0 and max -1
 			// GIF array
 			var gifURL = [];
 	
