@@ -473,10 +473,8 @@ def thumbnail_thread(pid):
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
 	try:
-		print(f"loading {fetch_url}")
 		x=requests.get(fetch_url, headers=headers)
 	except:
-		print(f"unable to connect to {fetch_url}")
 		db.close()
 		return False, "Unable to connect to source"
 
@@ -507,7 +505,6 @@ def thumbnail_thread(pid):
 				db.commit()
 
 		except Exception as e:
-			print(f"Error while parsing for metadata: {e}")
 			pass
 
 		#create list of urls to check
@@ -523,8 +520,6 @@ def thumbnail_thread(pid):
 
 		for tag_name in meta_tags:
 			
-			print(f"Looking for meta tag: {tag_name}")
-
 
 			tag = soup.find(
 				'meta', 
@@ -551,37 +546,29 @@ def thumbnail_thread(pid):
 
 		#now we have a list of candidate urls to try
 		for url in thumb_candidate_urls:
-			print(f"Trying url {url}")
 
 			try:
 				image_req=requests.get(url, headers=headers)
 			except:
-				print(f"Unable to connect to candidate url {url}")
 				continue
 
 			if image_req.status_code >= 400:
-				print(f"status code {x.status_code}")
 				continue
 
 			if not image_req.headers.get("Content-Type","").startswith("image/"):
-				print(f'bad type {image_req.headers.get("Content-Type","")}, try next')
 				continue
 
 			if image_req.headers.get("Content-Type","").startswith("image/svg"):
-				print("svg, try next")
 				continue
 
 			image = PILimage.open(BytesIO(image_req.content))
 			if image.width < 30 or image.height < 30:
-				print("image too small, next")
 				continue
 
-			print("Image is good, upload it")
 			break
 
 		else:
 			#getting here means we are out of candidate urls (or there never were any)
-			print("Unable to find image")
 			db.close()
 			return False, "No usable images"
 
@@ -590,13 +577,11 @@ def thumbnail_thread(pid):
 
 	elif x.headers.get("Content-Type","").startswith("image/"):
 		#image is originally loaded fetch_url
-		print("post url is direct image")
 		image_req=x
 		image = PILimage.open(BytesIO(x.content))
 
 	else:
 
-		print(f'Unknown content type {x.headers.get("Content-Type")}')
 		db.close()
 		return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
@@ -610,7 +595,6 @@ def thumbnail_thread(pid):
 	db.commit()
 	db.close()
 
-	return True, "Success"
 
 @app.post("/submit")
 @limiter.limit("6/minute")
