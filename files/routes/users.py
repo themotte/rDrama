@@ -580,7 +580,7 @@ def u_username_comments(username, v=None):
 	elif sort == "old":
 		comments = comments.order_by(Comment.created_utc.asc())
 	elif sort == "controversial":
-		comments = comments.order_by(Comment.upvotes * Comment.downvotes)
+		comments = comments.order_by(-1 * Comment.upvotes * (Comment.downvotes+1))
 	elif sort == "top":
 		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 	elif sort == "bottom":

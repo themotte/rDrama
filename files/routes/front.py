@@ -180,7 +180,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	elif sort == "old":
 		posts = posts.order_by(Submission.created_utc.asc())
 	elif sort == "controversial":
-		posts = posts.order_by(Submission.upvotes * Submission.downvotes)
+		posts = posts.order_by(-1 * Submission.upvotes * (Submission.downvotes+1))
 	elif sort == "top":
 		posts = posts.order_by(Submission.downvotes - Submission.upvotes)
 	elif sort == "bottom":
@@ -292,7 +292,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	elif sort == "old":
 		posts = posts.order_by(Submission.created_utc.asc())
 	elif sort == "controversial":
-		posts = posts.order_by(Submission.upvotes * Submission.downvotes)
+		posts = posts.order_by(-1 * Submission.upvotes * (Submission.downvotes+1))
 	elif sort == "top":
 		posts = posts.order_by(Submission.downvotes - Submission.upvotes)
 	elif sort == "bottom":
@@ -393,7 +393,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 	elif sort == "old":
 		comments = comments.order_by(Comment.created_utc.asc())
 	elif sort == "controversial":
-		comments = comments.order_by(Comment.upvotes * Comment.downvotes)
+		comments = comments.order_by(-1 * Comment.upvotes * (Comment.downvotes+1))
 	elif sort == "top":
 		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 	elif sort == "bottom":
