@@ -494,7 +494,7 @@
 							{% endif %}
 						{% endif %}
 						{% if v.admin_level >=4 and c.oauth_app %}
-							<li class="list-group-item text-info" href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code text-info"></i>API App</li>
+							<a href="{{c.oauth_app.permalink}}/comments"><li class="list-group-item text-info" ><i class="fas fa-code text-info"></i>API App</li></a>
 						{% endif %}
 
 						{% if not v.id==c.author_id and v.admin_level == 0 %}

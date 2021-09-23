@@ -332,10 +332,10 @@
 						{% endif %}
 					{% endif %}
 
-					<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</a></button>
+					<a href="/votes?link={{p.fullname}}"><button class="nobackground btn btn-link btn-block btn-lg text-left text-muted"><i class="fas fa-arrows-v text-center text-muted mr-3"></i>Votes</button></a>
 
 					{% if v and v.id!=p.author_id %}
-					<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
+						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift text-center text-muted mr-3"></i>Give Award</button>
 					{% endif %}
 
 					{% if v %}
@@ -371,7 +371,7 @@
 						{% endif %}
 
 						{% if v.admin_level >=4 and p.oauth_app %}
-							<button class="nobackground btn btn-link btn-block btn-lg text-muted text-left"	href="{{p.oauth_app.permalink}}" href="{{p.oauth_app.permalink}}"><i class="far fa-code text-center text-info mr-3"></i>API App</button>
+							<a href="{{p.oauth_app.permalink}}"><button class="nobackground btn btn-link btn-block btn-lg text-muted text-left"><i class="far fa-code text-center text-info mr-3"></i>API App</button></a>
 						{% endif %}
 
 					{% endif %}
@@ -387,8 +387,8 @@
 					{% endif %}
 
 					{% if not v.id==p.author_id and v.admin_level == 1 %}
-						<li id="sex-user-{{p.id}}" class="list-inline-item{% if p.is_blocking %} d-none{% endif %}"><a class="text-danger" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')" data-dismiss="modal"><i class="fas fa-user-slash text-danger"></i>Ban user</a></li>
-						<li id="unsex-user-{{p.id}}" class="list-inline-item{% if not p.is_blocking %} d-none{% endif %}"><a class="text-success" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')" data-dismiss="modal"><i class="fas fa-user-slash text-success"></i>Unban user</a></li>
+						<button id="sex-user-{{p.id}}" class="list-inline-item{% if p.is_blocking %} d-none{% endif %} text-danger" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')" data-dismiss="modal"><i class="fas fa-user-slash text-danger"></i>Ban user</button>
+						<button id="unsex-user-{{p.id}}" class="list-inline-item{% if not p.is_blocking %} d-none{% endif %} text-success" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')" data-dismiss="modal"><i class="fas fa-user-slash text-success"></i>Unban user</button>
 					{% endif %}
 
 					{% if v and v.admin_level == 6 and v.id!=p.author_id %}
