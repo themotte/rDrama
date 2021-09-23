@@ -146,6 +146,7 @@ def settings_profile_post(v):
 		v.bio = bio[:1500]
 		v.bio_html=bio_html
 		g.db.add(v)
+		g.db.commit()
 		return render_template("settings_profile.html",
 							   v=v,
 							   msg="Your bio has been updated.")
@@ -161,6 +162,7 @@ def settings_profile_post(v):
 
 		v.custom_filter_list=filters
 		g.db.add(v)
+		g.db.commit()
 		return render_template("settings_profile.html",
 							   v=v,
 							   msg="Your custom filters have been updated.")
@@ -477,9 +479,7 @@ def settings_log_out_others(v):
 
 	submitted_password = request.values.get("password", "")
 
-	if not v.verifyPass(submitted_password):
-		return render_template("settings_security.html",
-							   v=v, error="Incorrect Password"), 401
+	if not v.verifyPass(submitted_password): return render_template("settings_security.html", v=v, error="Incorrect Password"), 401
 
 	# increment account's nonce
 	v.login_nonce += 1
@@ -491,8 +491,7 @@ def settings_log_out_others(v):
 
 	g.db.commit()
 
-	return render_template("settings_security.html", v=v,
-						   msg="All other devices have been logged out")
+	return render_template("settings_security.html", v=v, msg="All other devices have been logged out")
 
 
 @app.post("/settings/images/profile")
@@ -568,14 +567,11 @@ def settings_delete_banner(v):
 @auth_required
 def settings_blockedpage(v):
 
-
-	return render_template("settings_blocks.html",
-						   v=v)
+	return render_template("settings_blocks.html", v=v)
 
 @app.get("/settings/css")
 @auth_required
 def settings_css_get(v):
-
 
 	return render_template("settings_css.html", v=v)
 
@@ -628,7 +624,7 @@ def settings_block_user(v):
 		return {"error": f"You have already blocked @{user.username}."}, 409
 
 	if user.id == NOTIFICATIONS_ACCOUNT:
-		return {"error": "You can't block @files."}, 409
+		return {"error": "You can't block this user."}, 409
 
 	new_block = UserBlock(user_id=v.id,
 						  target_id=user.id,
@@ -679,7 +675,6 @@ def settings_unblock_user(v):
 @auth_required
 def settings_apps(v):
 
-
 	return render_template("settings_apps.html", v=v)
 
 
@@ -687,9 +682,6 @@ def settings_apps(v):
 @auth_required
 @validate_formkey
 def settings_remove_discord(v):
-
-	#if v.admin_level>1:
-	#	return render_template("settings_filters.html", v=v, error="Admins can't disconnect Discord.")
 
 	remove_user(v)
 
@@ -703,7 +695,6 @@ def settings_remove_discord(v):
 @app.get("/settings/content")
 @auth_required
 def settings_content_get(v):
-
 
 	return render_template("settings_filters.html", v=v)
 
@@ -766,6 +757,7 @@ def settings_song_change(v):
 		os.remove(f"/songs/{v.song}.mp3")
 		v.song=None
 		g.db.add(v)
+		g.db.commit()
 		return redirect("/settings/profile")
 
 	song = song.replace("https://music.youtube.com", "https://youtube.com")
@@ -784,6 +776,7 @@ def settings_song_change(v):
 	if path.isfile(f'/songs/{id}.mp3'): 
 		v.song=id
 		g.db.add(v)
+		g.db.commit()
 		return redirect("/settings/profile")
 		
 	
