@@ -601,12 +601,7 @@ def thumbnail_thread(pid):
 		return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
 
-	print(f"Have image, uploading")
-
-	name = f"posts/{post.base36id}/thumb.png"
-	tempname = name.replace("/", "_")
-
-	with open(tempname, "wb") as file:
+	with open("image.webp", "wb") as file:
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
