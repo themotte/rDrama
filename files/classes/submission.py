@@ -1,6 +1,6 @@
 from flask import render_template, g
 from sqlalchemy import *
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, deferred
 import re, random
 from urllib.parse import urlparse
 from files.helpers.lazy import lazy
@@ -22,8 +22,8 @@ class SubmissionAux(Base):
 	title = Column(String(500))
 	title_html = Column(String(500))
 	url = Column(String(500))
-	body = Column(String(10000))
-	body_html = Column(String(20000))
+	body = deferred(Column(String(10000)))
+	body_html = deferred(Column(String(20000)))
 	ban_reason = Column(String(128))
 	embed_url = Column(String(256))
 
