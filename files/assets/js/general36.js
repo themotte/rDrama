@@ -174,7 +174,7 @@ async function getGif(searchTerm) {
 			loadGIFs.innerHTML = null;
 		}
 		else {
-			for (var i = 0; i <= 47; i++) {
+			for (var i = 0; i < 48; i++) {
 			gifURL[i] = "https://media.giphy.com/media/" + data[i].id + "/200w_d.webp";
 			if (data[i].username==''){
 				container.innerHTML += ('<div class="card bg-white" style="overflow: hidden" data-dismiss="modal" aria-label="Close" onclick="insertGIF(\'' + 'https://media.giphy.com/media/' + data[i].id + '/100w.webp' + '\',\'' + commentFormID + '\')"><div class="gif-cat-overlay"></div><img loading="lazy" class="img-fluid" src="' + gifURL[i] + '"></div>');
