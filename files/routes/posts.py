@@ -951,10 +951,7 @@ def submit_post(v):
 
 
 	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
-		gevent.spawn(
-			thumbnail_thread,
-			new_post.id
-		)
+		gevent.spawn( thumbnail_thread, new_post.id)
 
 	notify_users = set()
 	
