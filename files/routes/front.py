@@ -109,7 +109,7 @@ def notifications(v):
 
 
 
-@cache.memoize(timeout=86400)
+# @cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*'))
@@ -179,7 +179,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	elif sort == "controversial":
 		posts = sorted(posts.all(), key=lambda x: x.score_disputed, reverse=True)
 	elif sort == "top":
-		posts = sorted(posts.all(), key=lambda x: x.score, reverse=True)
+		posts = posts.order_by(Submission.upvotes - Submission.downvotes).all()
 	elif sort == "bottom":
 		posts = sorted(posts.all(), key=lambda x: x.score)
 	elif sort == "comments":
