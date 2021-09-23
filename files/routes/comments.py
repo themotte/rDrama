@@ -9,7 +9,7 @@ from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
-from sqlalchemy.orm import contains_eager
+
 
 site = environ.get("DOMAIN").strip()
 
@@ -183,7 +183,7 @@ def api_comment(v):
 															 Comment.parent_comment_id == parent_comment_id,
 															 Comment.parent_submission == parent_submission,
 															 CommentAux.body == body
-															 ).options(contains_eager(Comment.comment_aux)).first()
+															 ).first()
 	if existing:
 		return {"error": f"You already made that comment: {existing.permalink}"}, 409
 
@@ -207,7 +207,7 @@ def api_comment(v):
 			CommentAux.body.op(
 				'<->')(body) < app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"],
 			Comment.created_utc > cutoff
-		).options(contains_eager(Comment.comment_aux)).all()
+		).all()
 
 		threshold = app.config["COMMENT_SPAM_COUNT_THRESHOLD"]
 		if v.age >= (60 * 60 * 24 * 7):
@@ -671,7 +671,7 @@ def edit_comment(cid, v):
 		CommentAux.body.op(
 			'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
 		Comment.created_utc > cutoff
-	).options(contains_eager(Comment.comment_aux)).all()
+	).all()
 
 	threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
 	if v.age >= (60 * 60 * 24 * 30):

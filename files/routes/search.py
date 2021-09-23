@@ -3,8 +3,7 @@ import re
 from sqlalchemy import *
 from flask import *
 from files.__main__ import app
-import random
-from sqlalchemy.orm import contains_eager
+
 
 query_regex=re.compile("(\w+):(\S+)")
 valid_params=[
@@ -143,11 +142,6 @@ def searchposts(v):
 			cutoff = 0
 		posts = posts.filter(Submission.created_utc >= cutoff)
 
-	posts=posts.options(
-		contains_eager(Submission.submission_aux),
-		contains_eager(Submission.author),
-		)
-
 	if sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
@@ -244,9 +238,6 @@ def searchcomments(v):
 		else:
 			cutoff = 0
 		comments = comments.filter(Comment.created_utc >= cutoff)
-
-	comments=comments.options(contains_eager(Comment.comment_aux))
-
 
 
 

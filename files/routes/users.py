@@ -11,7 +11,6 @@ from files.mail import *
 from flask import *
 from files.__main__ import app, limiter
 from pusher_push_notifications import PushNotifications
-from sqlalchemy.orm import contains_eager
 
 site = environ.get("DOMAIN").strip()
 
@@ -228,7 +227,7 @@ def message2(v, username):
 	existing = g.db.query(Comment).join(CommentAux).options(lazyload('*')).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
 															CommentAux.body == message,
-															).options(contains_eager(Comment.comment_aux)).first()
+															).first()
 	if existing: return redirect('/notifications?messages=true')
 
 	text = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', message)
@@ -288,7 +287,7 @@ def messagereply(v):
 	existing = g.db.query(Comment).join(CommentAux).options(lazyload('*')).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
 															CommentAux.body == message,
-															).options(contains_eager(Comment.comment_aux)).first()
+															).first()
 	if existing:
 		if existing.parent_comment_id: return redirect(f'/notifications?messages=true#comment-{existing.parent_comment_id}')
 		else: return redirect(f'/notifications?messages=true#comment-{existing.id}')
