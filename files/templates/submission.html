@@ -415,7 +415,7 @@
 							<li class="list-inline-item"><a href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a></li>
 						{% endif %}
 
-						<a href="/votes?link={{p.fullname}}"><li class="list-inline-item"><i class="fas fa-arrows-v"></i>Votes</li></a>
+						<li class="list-inline-item"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 						
 						{% if v and v.id!=p.author_id %}
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>
