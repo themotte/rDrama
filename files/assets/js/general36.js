@@ -162,7 +162,7 @@ async function getGif(searchTerm) {
 
 		let response = await fetch("/giphy?searchTerm=" + searchTerm + "&limit=48");
 
-		var max = response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
+		var max = await response.data.length - 1 //length of response, minus 1 (cuz array starts at index 0)
 		// GIF array
 		var gifURL = [];
 
