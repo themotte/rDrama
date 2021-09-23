@@ -31,7 +31,7 @@ def upload_ibb(file=None, resize=False):
 		om = next(frames)
 		om.info = i.info
 		om.save("image.webp", save_all=True, append_images=list(frames), loop=0)
-	else:
+	elif i.format.lower() != "webp":
 		if i.format.lower() == "gif": gifwebp(input_image="image.webp", output_image="image.webp", option="-q 80")
 		else: i.save("image.webp")
 
@@ -48,7 +48,6 @@ def upload_ibb(file=None, resize=False):
 class UploadException(Exception):
 	"""Custom exception to raise if upload goes wrong"""
 	pass
-
 
 
 def upload_video(file):
