@@ -210,7 +210,7 @@ def searchcomments(v):
 
 
 
-	comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.comment_aux)
+	comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.comment_aux)
 
 	if 'q' in criteria:
 		words=criteria['q'].split()
