@@ -112,7 +112,7 @@ def notifications(v):
 @cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
 
-	posts = g.db.query(Submission).options(lazyload('*'))
+	posts = g.db.query(Submission.id).options(lazyload('*'))
 
 	if 'rdrama' in request.host and t != 'day' and sort in ["hot","controversial"]:
 		cutoff = int(time.time()) - 86400
@@ -172,35 +172,32 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	if sort == "hot":
 		posts = sorted(posts.all(), key=lambda x: x.hotscore, reverse=True)
+		firstrange = 25 * (page - 1)
+		secondrange = firstrange+100
+		posts = posts[firstrange:secondrange]
 	elif sort == "new":
-		posts = posts.order_by(Submission.created_utc.desc()).all()
+		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
-		posts = posts.order_by(Submission.created_utc.asc()).all()
+		posts = posts.order_by(Submission.created_utc.asc())
 	elif sort == "controversial":
-		posts = sorted(posts.all(), key=lambda x: x.score_disputed, reverse=True)
+		posts = posts.order_by(-1 * Submission.upvotes * (Submission.downvotes+1))
 	elif sort == "top":
-		posts = sorted(posts.all(), key=lambda x: x.score, reverse=True)
+		posts = posts.order_by(Submission.downvotes - Submission.upvotes)
 	elif sort == "bottom":
-		posts = sorted(posts.all(), key=lambda x: x.score)
+		posts = posts.order_by(Submission.upvotes - Submission.downvotes)
 	elif sort == "comments":
-		posts = posts.order_by(Submission.comment_count.desc()).all()
-	elif sort == "random":
-		posts = posts.all()
-		posts = random.sample(posts, k=len(posts))
-	else:
-		abort(400)
+		posts = posts.order_by(Submission.comment_count.desc())
 
-	firstrange = 25 * (page - 1)
-	secondrange = firstrange+100
-	posts = posts[firstrange:secondrange]
+	if sort != "hot": posts = posts.offset(25 * (page - 1)).limit(26).all()
+
 
 	next_exists = (len(posts) > 25)
 
 	posts = posts[:25]
 
-	if page == 1: posts = g.db.query(Submission).options(lazyload('*')).filter(Submission.stickied != None).all() + posts
+	if page == 1: posts = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.stickied != None).all() + posts
 
-	if ids_only: posts = [x.id for x in posts]
+	if ids_only: posts = [x[0] for x in posts]
 
 	return posts, next_exists
 
@@ -249,7 +246,7 @@ def front_all(v):
 @cache.memoize(timeout=86400)
 def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 
-	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
+	posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
@@ -290,32 +287,22 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	if lt:
 		posts = posts.filter(Submission.created_utc < lt)
 
-	if sort == "hot":
-		posts = sorted(posts.all(), key=lambda x: x.hotscore, reverse=True)
-	elif sort == "new":
-		posts = posts.order_by(Submission.created_utc.desc()).all()
+	if sort == "new":
+		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
-		posts = posts.order_by(Submission.created_utc.asc()).all()
+		posts = posts.order_by(Submission.created_utc.asc())
 	elif sort == "controversial":
-		posts = sorted(posts.all(), key=lambda x: x.score_disputed, reverse=True)
+		posts = posts.order_by(-1 * Submission.upvotes * (Submission.downvotes+1))
 	elif sort == "top":
-		posts = sorted(posts.all(), key=lambda x: x.score, reverse=True)
+		posts = posts.order_by(Submission.downvotes - Submission.upvotes)
 	elif sort == "bottom":
-		posts = sorted(posts.all(), key=lambda x: x.score)
+		posts = posts.order_by(Submission.upvotes - Submission.downvotes)
 	elif sort == "comments":
-		posts = posts.order_by(Submission.comment_count.desc()).all()
-	elif sort == "random":
-		posts = posts.all()
-		posts = random.sample(posts, k=len(posts))
-	else:
-		abort(400)
+		posts = posts.order_by(Submission.comment_count.desc())
 
-	firstrange = 25 * (page - 1)
-	secondrange = firstrange+26
-	posts = posts[firstrange:secondrange]
+	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
-	posts = [x.id for x in posts]
-	return posts
+	return [x[0] for x in posts]
 
 @app.get("/changelog")
 @auth_desired
@@ -366,7 +353,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 
 	posts = posts.subquery()
 
-	comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission.notin_(cc_idlist))
+	comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.parent_submission.notin_(cc_idlist))
 
 	if v and v.admin_level <= 3:
 		blocking = [x[0] for x in g.db.query(
@@ -402,21 +389,18 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 	comments = comments.filter(Comment.created_utc >= cutoff)
 
 	if sort == "new":
-		comments = comments.order_by(Comment.created_utc.desc()).all()
+		comments = comments.order_by(Comment.created_utc.desc())
 	elif sort == "old":
-		comments = comments.order_by(Comment.created_utc.asc()).all()
+		comments = comments.order_by(Comment.created_utc.asc())
 	elif sort == "controversial":
-		comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
+		comments = comments.order_by(-1 * Comment.upvotes * (Comment.downvotes+1))
 	elif sort == "top":
-		comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
+		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 	elif sort == "bottom":
-		comments = sorted(comments.all(), key=lambda x: x.score)
+		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-	firstrange = 25 * (page - 1)
-	secondrange = firstrange+26
-	comments = comments[firstrange:secondrange]
-
-	return [x.id for x in comments]
+	comments = comments.offset(25 * (page - 1)).limit(26).all()
+	return [x[0] for x in comments]
 
 @app.get("/comments")
 @auth_desired

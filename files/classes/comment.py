@@ -154,11 +154,6 @@ class Comment(Base):
 
 	@property
 	@lazy
-	def score_disputed(self):
-		return (self.upvotes+1) * (self.downvotes+1)
-
-	@property
-	@lazy
 	def parent(self):
 
 		if not self.parent_submission: return None

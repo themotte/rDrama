@@ -24,7 +24,7 @@
 							<p>Change the default sorting for comments.</p>
 							<div class="input-group mb2">
 								<select id='defaultsortingcomments' class="form-control" form="profile-settings" name="defaultsortingcomments" onchange="post_toast('/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
-								{% for entry in ["new", "old", "top", "bottom", "controversial", "random"] %}
+								{% for entry in ["new", "old", "top", "bottom", "controversial"] %}
 									<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry else ''}}>{{entry}}</option>
 								{% endfor %}
 							</select>
@@ -43,7 +43,7 @@
 							<p>Change the default sorting for posts.</p>
 							<div class="input-group mb2">
 								<select id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="post_toast('/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
-								{% for entry in ["hot", "new", "old", "top", "bottom", "controversial", "comments", "random"] %}
+								{% for entry in ["hot", "new", "old", "top", "bottom", "controversial", "comments"] %}
 								<option value="{{entry}}"{{' selected' if v.defaultsorting==entry else ''}}>{{entry}}</option>
 								{% endfor %}
 							</select>

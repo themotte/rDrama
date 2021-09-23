@@ -175,11 +175,6 @@ class Submission(Base):
 	def hotscore(self):
 		return 10000000*(self.upvotes - self.downvotes + 1)/(((self.age+3600)/1000)**(1.35))
 
-	@property
-	@lazy
-	def score_disputed(self):
-		return (self.upvotes+1) * (self.downvotes+1)
-
 
 	@property
 	@lazy

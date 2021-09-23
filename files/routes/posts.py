@@ -147,24 +147,19 @@ def post_id(pid, anything=None, v=None):
 			isouter=True
 		)
 
-		if sort == "top":
-			comments = sorted(comments.all(), key=lambda x: x[0].score, reverse=True)
-		elif sort == "bottom":
-			comments = sorted(comments.all(), key=lambda x: x[0].score)
-		elif sort == "new":
-			comments = comments.order_by(Comment.created_utc.desc()).all()
+		if sort == "new":
+			comments = comments.order_by(Comment.created_utc.desc())
 		elif sort == "old":
-			comments = comments.order_by(Comment.created_utc.asc()).all()
+			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = sorted(comments.all(), key=lambda x: x[0].score_disputed, reverse=True)
-		elif sort == "random":
-			c = comments.all()
-			comments = random.sample(c, k=len(c))
-		else:
-			abort(422)
+			comments = comments.order_by(-1 * Comment.upvotes * (Comment.downvotes+1))
+		elif sort == "top":
+			comments = comments.order_by(Comment.downvotes - Comment.upvotes)
+		elif sort == "bottom":
+			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
 		output = []
-		for c in comments:
+		for c in comments.all():
 			comment = c[0]
 			comment.voted = c[1] or 0
 			comment.is_blocking = c[2] or 0
@@ -177,23 +172,18 @@ def post_id(pid, anything=None, v=None):
 		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
 		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id.notin_(shadowbanned))
 
-		if sort == "top":
-			comments = sorted(comments.all(), key=lambda x: x.score, reverse=True)
-		elif sort == "bottom":
-			comments = sorted(comments.all(), key=lambda x: x.score)
-		elif sort == "new":
-			comments = comments.order_by(Comment.created_utc.desc()).all()
+		if sort == "new":
+			comments = comments.order_by(Comment.created_utc.desc())
 		elif sort == "old":
-			comments = comments.order_by(Comment.created_utc.asc()).all()
+			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = sorted(comments.all(), key=lambda x: x.score_disputed, reverse=True)
-		elif sort == "random":
-			c = comments.all()
-			comments = random.sample(c, k=len(c))
-		else:
-			abort(422)
+			comments = comments.order_by(-1 * Comment.upvotes * (Comment.downvotes+1))
+		elif sort == "top":
+			comments = comments.order_by(Comment.downvotes - Comment.upvotes)
+		elif sort == "bottom":
+			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		post.preloaded_comments = comments
+		post.preloaded_comments = comments.all()
 
 	if not v or v.highlightcomments:
 		last_view_utc = session.get(str(post.id))

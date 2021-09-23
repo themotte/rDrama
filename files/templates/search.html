@@ -39,7 +39,6 @@
 					{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
 					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
 					{% if sort=="comments" %}<i class="fas fa-comments mr-1"></i>{% endif %}
-					{% if sort=="random" %}<i class="fas fa-random mr-1"></i>{% endif %}
 					{{sort | capitalize}}
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
@@ -49,7 +48,6 @@
 					{% if not sort=="old" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=old&t={{t}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
 					{% if not sort=="controversial" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=controversial&t={{t}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
 					{% if not sort=="comments" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=comments&t={{t}}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
-					{% if not sort=="random" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=random&t={{t}}"><i class="fas fa-random mr-2"></i>Random</a>{% endif %}
 				</div>
 			</div>
 		</div>
