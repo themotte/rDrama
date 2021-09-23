@@ -465,12 +465,7 @@ def thumbnail_thread(pid):
 
 	db = db_session()
 
-	post = get_post(pid, graceful=True, session=db)
-	if not post:
-		# account for possible follower lag
-		time.sleep(60)
-		post = get_post(pid, session=db)
-
+	post = db.query(Submission).filter_by(id=pid).first()
 
 	fetch_url=post.url
 
