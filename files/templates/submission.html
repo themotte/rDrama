@@ -267,7 +267,7 @@
 							{% endfor %}
 						{% endif %}
 						{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-toggle="tooltip" data-placement="bottom" title="Shadowbanned user"></i>{% endif %}
-						{% if p.stickied %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned by {{p.stickied}}"></i>{% endif %}
+						{% if p.stickied %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned by @{{p.stickied}}"></i>{% endif %}
 						{% if p.is_pinned %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to profile"></i>{% endif %}
 						{% if p.distinguish_level %} <i class="fas fa-broom text-admin" data-toggle="tooltip" data-placement="bottom" title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}
 						{% if p.is_bot %} <i class="fad fa-robot text-info" data-toggle="tooltip" data-placement="bottom"	data-original-title="Bot"></i>{% endif %}
