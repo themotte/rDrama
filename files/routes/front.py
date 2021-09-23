@@ -186,7 +186,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc())
 
-	if sort != "hot": posts = posts.offset(25 * (page - 1)).limit(26).all()
+	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
 
 	next_exists = (len(posts) > 25)
