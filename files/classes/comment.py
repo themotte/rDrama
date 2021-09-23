@@ -18,7 +18,7 @@ class CommentAux(Base):
 
 	key_id = Column(Integer, primary_key=True)
 	id = Column(Integer, ForeignKey("comments.id"))
-	body = Column(String(10000), default=None)
+	body = Column(String(10000))
 	body_html = Column(String(20000))
 	ban_reason = Column(String(256), default='')
 
