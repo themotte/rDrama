@@ -171,10 +171,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
 	if sort == "hot":
-		posts = sorted(posts.all(), key=lambda x: x.hotscore, reverse=True)
-		firstrange = 25 * (page - 1)
-		secondrange = firstrange+100
-		posts = posts[firstrange:secondrange]
+		posts = posts.order_by(-10000000*(Submission.upvotes - Submission.downvotes + 1)/(((int(time.time()) - Submission.created_utc + 3600)/1000)*(1.35)))
 	elif sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
@@ -188,8 +185,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc())
 
-	if sort != "hot": posts = posts.offset(25 * (page - 1)).limit(26).all()
-
+	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
 	next_exists = (len(posts) > 25)
 
