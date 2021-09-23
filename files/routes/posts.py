@@ -1100,7 +1100,7 @@ def delete_post_pid(pid, v):
 
 	post.deleted_utc = int(time.time())
 	post.is_pinned = False
-	post.stickied = False
+	post.stickied = None
 
 	g.db.add(post)
 

@@ -971,7 +971,7 @@ def ban_post(post_id, v):
 
 	post.is_banned = True
 	post.is_approved = 0
-	post.stickied = False
+	post.stickied = None
 	post.is_pinned = False
 	post.removed_by = v.id
 
@@ -1066,7 +1066,8 @@ def api_sticky_post(post_id, v):
 
 	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
 	if post:
-		post.stickied = not (post.stickied)
+		if post.stickied: post.stickied = None
+		else: post.stickied = v.username
 		g.db.add(post)
 
 		ma=ModAction(
