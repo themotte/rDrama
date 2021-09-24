@@ -104,9 +104,6 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	ti = int(time.time()) + 3600
-	print((post.upvotes + 1)/(ti - post.created_utc))
-
 	if post.club and not (v and v.paid_dues): abort(403)
 
 	if v:
