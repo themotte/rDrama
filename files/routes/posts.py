@@ -1012,7 +1012,6 @@ def submit_post(v):
 	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
 		new_post.comment_count = 1
 		g.db.add(new_post)
-		g.db.flush()
 
 		if "rdrama" in request.host:
 			if v.id == 995:
@@ -1031,8 +1030,6 @@ def submit_post(v):
 		body_html = sanitize(body_md)
 
 
-		print("test")
-
 		c = Comment(author_id=261,
 			distinguish_level=6,
 			parent_submission=new_post.id,
@@ -1046,8 +1043,6 @@ def submit_post(v):
 
 		g.db.add(c)
 		g.db.flush()
-
-		print("wtf")
 
 
 		n = Notification(comment_id=c.id, user_id=v.id)
