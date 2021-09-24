@@ -68,17 +68,9 @@ def searchposts(v):
 		words=tuple(words)
 		posts=posts.filter(*words)
 		
-	if 'over18' in criteria:
-		posts = posts.filter(Submission.over_18==True)
+	if 'over18' in criteria: posts = posts.filter(Submission.over_18==True)
 
-	if 'author' in criteria:
-		if v and v.admin_level == 6:
-			posts = posts.filter(Submission.author_id == get_user(criteria['author']).id)
-		else:
-			posts=posts.filter(
-					Submission.author_id==get_user(criteria['author']).id,
-					User.is_private==False,
-				)
+	if 'author' in criteria: posts = posts.filter(Submission.author_id == get_user(criteria['author']).id)
 
 	if 'domain' in criteria:
 		domain=criteria['domain']
