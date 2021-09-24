@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.8
--- Dumped by pg_dump version 12.8 (Ubuntu 12.8-0ubuntu0.20.04.1)
+-- Dumped from database version 13.4
+-- Dumped by pg_dump version 13.4 (Ubuntu 13.4-1.pgdg20.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -41,7 +41,7 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
 -- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
 --
 
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+COMMENT ON EXTENSION pg_stat_statements IS 'track planning and execution statistics of all SQL statements executed';
 
 
 --
@@ -356,11 +356,11 @@ CREATE TABLE public.comments (
     upvotes integer,
     downvotes integer,
     is_bot boolean DEFAULT false,
-    is_pinned boolean DEFAULT false,
     app_id integer,
     sentto integer,
     bannedfor boolean,
-    removed_by integer
+    removed_by integer,
+    is_pinned text
 );
 
 
@@ -717,7 +717,6 @@ CREATE TABLE public.submissions (
     over_18 boolean,
     distinguish_level integer,
     created_str character varying(255),
-    stickied boolean,
     deleted_utc integer NOT NULL,
     domain_ref integer,
     is_approved integer NOT NULL,
@@ -734,7 +733,8 @@ CREATE TABLE public.submissions (
     comment_count integer DEFAULT 0,
     processing boolean DEFAULT false,
     removed_by integer,
-    club boolean
+    club boolean,
+    stickied text
 );
 
 
@@ -1950,13 +1950,6 @@ CREATE INDEX submissions_created_utc_desc_idx ON public.submissions USING btree 
 --
 
 CREATE INDEX submissions_over18_index ON public.submissions USING btree (over_18);
-
-
---
--- Name: submissions_sticky_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submissions_sticky_index ON public.submissions USING btree (stickied);
 
 
 --

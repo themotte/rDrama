@@ -1,0 +1,11 @@
+from os import getpid
+import time
+
+with open("/tmp/r.log", "a") as f: f.write(str(time.ctime()) + " " + str(getpid()) + " " + request.method + " " + request.full_path + "\n")
+with open("/tmp/r.log", "a") as f: f.write(str(time.ctime()) + " " + str(getpid()) + " " + request.method + " " + request.full_path + " finished\n")
+
+from werkzeug.middleware.profiler import ProfilerMiddleware
+from os import getpid
+app.config['PROFILE'] = True
+app.wsgi_app = ProfilerMiddleware(app.wsgi_app, profile_dir="/tmp", filename_format='{method}:{path}:{elapsed:.0f}ms:{time:.0f}:' + str(getpid()) + '.prof', stream=None)
+
