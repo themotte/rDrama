@@ -109,7 +109,7 @@ def notifications(v):
 
 
 
-#@cache.memoize(timeout=86400)
+@cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*'))
@@ -167,7 +167,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = posts.filter(Submission.created_utc < lt)
 
 	if not (v and v.shadowbanned):
-		posts = posts.join(Submission.author.shadowbanned).filter(shadowbanned == False)
+		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
 	if sort == "hot":
 		ti = int(time.time())
