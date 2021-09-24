@@ -139,7 +139,7 @@
 				{% if last_view_utc and c.created_utc > last_view_utc and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}<i style="color:red !important" class="text-admin fas fa-circle" data-toggle="tooltip" data-placement="bottom" title="Unread"></i>{% endif %}
 
 				{% if c.awards %}
-					{% for a in c.awards[:5] %}
+					{% for a in c.awards %}
 						<i class="{{a.class_list}} px-1" data-toggle="tooltip" data-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
 					{% endfor %}
 				{% endif %}

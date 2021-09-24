@@ -58,7 +58,7 @@ def searchposts(v):
 
 
 
-	posts = g.db.query(Submission).options(lazyload('*'))
+	posts = g.db.query(Submission.id).options(lazyload('*'))
 	
 	if not (v and v.admin_level == 6): posts = posts.filter(Submission.private == False)
 	
@@ -153,7 +153,7 @@ def searchposts(v):
 
 	total = len(posts)
 
-	ids = [x.id for x in posts]
+	ids = [x[0] for x in posts]
 
 
 
