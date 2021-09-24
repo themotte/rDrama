@@ -391,7 +391,7 @@ def visitors(v):
 def u_username(username, v=None):
 
 
-	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}")
+	if not v and "logged_out" not in request.path: return redirect(f"/logged_out{request.full_path}")
 
 	if v and "logged_out" in request.full_path: v = None
 
@@ -504,7 +504,7 @@ def u_username(username, v=None):
 def u_username_comments(username, v=None):
 
 
-	if not v and "logged_out" not in request.path: return redirect(f"/logged_out/@{username}/comments")
+	if not v and "logged_out" not in request.path: return redirect(f"/logged_out{request.full_path}")
 
 	if v and "logged_out" in request.full_path: v = None
 

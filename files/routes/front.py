@@ -202,7 +202,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 @auth_desired
 def front_all(v):
 
-	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect("/logged_out")
+	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
 	if v and "logged_out" in request.full_path: v = None
 
