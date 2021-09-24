@@ -224,9 +224,9 @@ def message2(v, username):
 	message = request.values.get("message", "")[:1000].strip()
 
 	# check existing
-	existing = g.db.query(Comment).join(CommentAux).options(lazyload('*')).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
-															CommentAux.body == message,
+															Comment.body == message,
 															).first()
 	if existing: return redirect('/notifications?messages=true')
 
@@ -239,14 +239,14 @@ def message2(v, username):
 	new_comment = Comment(author_id=v.id,
 						  parent_submission=None,
 						  level=1,
-						  sentto=user.id
+						  sentto=user.id,
+						  body=text,
+						  body_html=text_html,
 						  )
 	g.db.add(new_comment)
 
 	g.db.flush()
 
-	new_aux = CommentAux(id=new_comment.id, body=text, body_html=text_html)
-	g.db.add(new_aux)
 
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
@@ -284,9 +284,9 @@ def messagereply(v):
 	message = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', message)
 
 	# check existing
-	existing = g.db.query(Comment).join(CommentAux).options(lazyload('*')).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
-															CommentAux.body == message,
+															Comment.body == message,
 															).first()
 	if existing:
 		if existing.parent_comment_id: return redirect(f'/notifications?messages=true#comment-{existing.parent_comment_id}')
@@ -298,12 +298,13 @@ def messagereply(v):
 							parent_submission=None,
 							parent_comment_id=id,
 							level=parent.level + 1,
-							sentto=user.id
+							sentto=user.id,
+							body=message,
+							body_html=text_html,
 							)
 	g.db.add(new_comment)
 	g.db.flush()
-	new_aux = CommentAux(id=new_comment.id, body=message, body_html=text_html)
-	g.db.add(new_aux)
+
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 

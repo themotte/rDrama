@@ -12,23 +12,12 @@ import time
 
 site = environ.get("DOMAIN").strip()
 
-class CommentAux(Base):
-
-	__tablename__ = "comments_aux"
-
-	key_id = Column(Integer, primary_key=True)
-	id = Column(Integer, ForeignKey("comments.id"))
-	body = deferred(Column(String(10000)))
-	body_html = deferred(Column(String(20000)))
-	ban_reason = Column(String(256))
-
 
 class Comment(Base):
 
 	__tablename__ = "comments"
 
 	id = Column(Integer, primary_key=True)
-	comment_aux = relationship("CommentAux", lazy="joined", uselist=False, innerjoin=True, primaryjoin="Comment.id==CommentAux.id")
 	author_id = Column(Integer, ForeignKey("users.id"))
 	parent_submission = Column(Integer, ForeignKey("submissions.id"))
 	created_utc = Column(Integer, default=0)
@@ -41,25 +30,23 @@ class Comment(Base):
 	is_approved = Column(Integer, default=0)
 	level = Column(Integer, default=0)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
-
 	over_18 = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
 	is_pinned = Column(String)
 	sentto=Column(Integer)
-
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	oauth_app = relationship("OauthApp", viewonly=True)
+	upvotes = Column(Integer, default=1)
+	downvotes = Column(Integer, default=0)
+	body = deferred(Column(String(10000)))
+	body_html = deferred(Column(String(20000)))
+	ban_reason = Column(String(256))
 
 	post = relationship("Submission", viewonly=True)
 	flags = relationship("CommentFlag", lazy="dynamic", viewonly=True)
 	author = relationship("User", primaryjoin="User.id==Comment.author_id")
-
-	upvotes = Column(Integer, default=1)
-	downvotes = Column(Integer, default=0)
-
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
 	child_comments = relationship("Comment", remote_side=[parent_comment_id], viewonly=True)
-
 	awards = relationship("AwardRelationship", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
@@ -291,25 +278,6 @@ class Comment(Base):
 
 		return data
 
-	@property
-	def body(self):
-		if self.comment_aux: return self.comment_aux.body
-		else: return ""
-
-	@body.setter
-	def body(self, x):
-		self.comment_aux.body = x
-		g.db.add(self.comment_aux)
-
-	@property
-	def body_html(self):
-		return self.comment_aux.body_html
-
-	@body_html.setter
-	def body_html(self, x):
-		self.comment_aux.body_html = x
-		g.db.add(self.comment_aux)
-
 	def realbody(self, v):
 		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
 		body = self.body_html
@@ -334,15 +302,6 @@ class Comment(Base):
 				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
 		return body
-
-	@property
-	def ban_reason(self):
-		return self.comment_aux.ban_reason
-
-	@ban_reason.setter
-	def ban_reason(self, x):
-		self.comment_aux.ban_reason = x
-		g.db.add(self.comment_aux)
 
 	@lazy
 	def collapse_for_user(self, v):
