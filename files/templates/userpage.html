@@ -198,7 +198,7 @@
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
 					{% if v and v.id != u.id %}
-						<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub','button-sub')">Unfollow</a>
+						{% if u.id != 995 %}<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub','button-sub')">Unfollow</a>{% endif %}
 						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/follow/{{u.username}}','button-unsub','button-sub')">Follow</a>						
 						
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'message')">Message</a>
@@ -472,7 +472,7 @@
 					<a href="/views" class="btn btn-secondary">Profile views</a>
 					{% endif %}
 				{% if v and v.id != u.id %}
-					<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">Unfollow</a>
+					{% if u.id != 995 %}<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">Unfollow</a>{% endif %}
 					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">Follow</a>						
 					
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">Message</a>
