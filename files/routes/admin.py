@@ -1270,10 +1270,16 @@ def admin_nunuke_user(v):
 
 	return redirect(user.url)
 	
+	
 @app.get("/chart")
 @auth_required
 def chart(v):
+	file = cached_chart()
+	return send_file(f"../{file}")
 
+
+@cache.memoize(timeout=86400)
+def cached_chart():
 	days = int(request.values.get("days", 25))
 
 	now = time.gmtime()
@@ -1331,6 +1337,7 @@ def chart(v):
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
 
-	plt.savefig("chart.png")
+	file = "chart.png"
+	plt.savefig(file)
 	plt.clf()
-	return send_file("../chart.png")
+	return file
