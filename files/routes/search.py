@@ -141,9 +141,9 @@ def searchposts(v):
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc())
 
-	posts = posts.offset(25 * (page - 1)).limit(26).all()
-
 	total = len(posts)
+
+	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
 	ids = [x[0] for x in posts]
 
