@@ -283,8 +283,10 @@ class Comment(Base):
 
 		body = self.body_html
 
+		if not body: return ""
+		
 		if not v or v.slurreplacer: 
-			for s,r in SLURS.items(): body = body.replace(s, r) 
+			for s, r in SLURS.items(): body = body.replace(s, r) 
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
