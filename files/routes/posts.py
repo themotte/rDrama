@@ -1012,6 +1012,7 @@ def submit_post(v):
 	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
 		new_post.comment_count = 1
 		g.db.add(new_post)
+		g.db.flush()
 
 		if "rdrama" in request.host:
 			if v.id == 995:
