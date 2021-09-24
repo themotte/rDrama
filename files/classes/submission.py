@@ -13,27 +13,12 @@ import time
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
 
-class SubmissionAux(Base):
-
-	__tablename__ = "submissions_aux"
-
-	key_id = Column(BigInteger, primary_key=True)
-	id = Column(BigInteger, ForeignKey("submissions.id"))
-	title = Column(String(500))
-	title_html = Column(String(500))
-	url = Column(String(500))
-	body = deferred(Column(String(10000)))
-	body_html = deferred(Column(String(20000)))
-	ban_reason = Column(String(128))
-	embed_url = Column(String(256))
-
 
 class Submission(Base):
 
 	__tablename__ = "submissions"
 
 	id = Column(BigInteger, primary_key=True)
-	submission_aux = relationship("SubmissionAux", uselist=False, primaryjoin="Submission.id==SubmissionAux.id")
 	author_id = Column(BigInteger, ForeignKey("users.id"))
 	edited_utc = Column(BigInteger, default=0)
 	created_utc = Column(BigInteger, default=0)
@@ -57,15 +42,19 @@ class Submission(Base):
 	over_18 = Column(Boolean, default=False)
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	is_bot = Column(Boolean, default=False)
-
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
-
 	app_id=Column(Integer, ForeignKey("oauth_apps.id"))
+	title = Column(String(500))
+	title_html = Column(String(500))
+	url = Column(String(500))
+	body = deferred(Column(String(10000)))
+	body_html = deferred(Column(String(20000)))
+	ban_reason = Column(String(128))
+	embed_url = Column(String(256))
+
 	oauth_app = relationship("OauthApp", viewonly=True)
-
 	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)
-
 	awards = relationship("AwardRelationship", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
@@ -339,24 +328,6 @@ class Submission(Base):
 	def award_count(self, kind) -> int:
 		return len([x for x in self.awards if x.kind == kind])
 
-	@property
-	def title(self):
-		return self.submission_aux.title
-
-	@title.setter
-	def title(self, x):
-		self.submission_aux.title = x
-		g.db.add(self.submission_aux)
-
-	@property
-	def url(self):
-		return self.submission_aux.url
-
-	@url.setter
-	def url(self, x):
-		self.submission_aux.url = x
-		g.db.add(self.submission_aux)
-
 	@lazy
 	def realurl(self, v):
 		if v and v.agendaposter and random.randint(1, 10) < 4:
@@ -373,27 +344,9 @@ class Submission(Base):
 			return self.url
 		else: return ""
  
-	@property
-	def body(self):
-		return self.submission_aux.body
-
-	@body.setter
-	def body(self, x):
-		self.submission_aux.body = x
-		g.db.add(self.submission_aux)
-
-	@property
-	def body_html(self):
-		return self.submission_aux.body_html
-
-	@body_html.setter
-	def body_html(self, x):
-		self.submission_aux.body_html = x
-		g.db.add(self.submission_aux)
-
 	def realbody(self, v):
 		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
-		body = self.submission_aux.body_html
+		body = self.body_html
 
 		if not v or v.slurreplacer: 
 			for s,r in SLURS.items(): 
@@ -402,15 +355,6 @@ class Submission(Base):
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 		return body
-
-	@property
-	def title_html(self):
-		return self.submission_aux.title_html
-
-	@title_html.setter
-	def title_html(self, x):
-		self.submission_aux.title_html = x
-		g.db.add(self.submission_aux)
 
 	@lazy
 	def realtitle(self, v):
@@ -423,24 +367,6 @@ class Submission(Base):
 
 		return title
 
-	@property
-	def ban_reason(self):
-		return self.submission_aux.ban_reason
-
-	@ban_reason.setter
-	def ban_reason(self, x):
-		self.submission_aux.ban_reason = x
-		g.db.add(self.submission_aux)
-
-	@property
-	def embed_url(self):
-		return self.submission_aux.embed_url
-
-	@embed_url.setter
-	def embed_url(self, x):
-		self.submission_aux.embed_url = x
-		g.db.add(self.submission_aux)
-	
 	@property
 	@lazy
 	def is_image(self):

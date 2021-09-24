@@ -490,23 +490,6 @@ def thumbnail_thread(pid):
 		soup=BeautifulSoup(x.content, 'html.parser')
 		#parse html
 
-		#first, set metadata
-		try:
-			meta_title=soup.find('title')
-			if meta_title:
-				post.submission_aux.meta_title=str(meta_title.string)[0:500]
-
-			meta_desc = soup.find('meta', attrs={"name":"description"})
-			if meta_desc:
-				post.submission_aux.meta_description=meta_desc['content'][0:1000]
-
-			if meta_title or meta_desc:
-				db.add(post.submission_aux)
-				db.commit()
-
-		except Exception as e:
-			pass
-
 		#create list of urls to check
 		thumb_candidate_urls=[]
 
@@ -616,8 +599,8 @@ def submit_post(v):
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
 			url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
-		repost = g.db.query(Submission).join(Submission.submission_aux).options(lazyload('*')).filter(
-			SubmissionAux.url.ilike(url),
+		repost = g.db.query(Submission).options(lazyload('*')).filter(
+			Submission.url.ilike(url),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()
@@ -659,13 +642,13 @@ def submit_post(v):
 	
 	body = request.values.get("body", "")
 	# check for duplicate
-	dup = g.db.query(Submission).join(Submission.submission_aux).options(lazyload('*')).filter(
+	dup = g.db.query(Submission).options(lazyload('*')).filter(
 
 		Submission.author_id == v.id,
 		Submission.deleted_utc == 0,
-		SubmissionAux.title == title,
-		SubmissionAux.url == url,
-		SubmissionAux.body == body
+		Submission.title == title,
+		Submission.url == url,
+		Submission.body == body
 	).first()
 
 	if dup:
@@ -716,17 +699,15 @@ def submit_post(v):
 
 	similar_posts = g.db.query(Submission).options(
 		lazyload('*')
-		).join(
-			Submission.submission_aux
 		).filter(
 			#or_(
 			#	and_(
 					Submission.author_id == v.id,
-					SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+					Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
 					Submission.created_utc > cutoff
 			#	),
 			#	and_(
-			#		SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
+			#		Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
 			#		Submission.created_utc > cutoff
 			#	)
 			#)
@@ -735,17 +716,15 @@ def submit_post(v):
 	if url:
 		similar_urls = g.db.query(Submission).options(
 			lazyload('*')
-		).join(
-			Submission.submission_aux
 		).filter(
 			#or_(
 			#	and_(
 					Submission.author_id == v.id,
-					SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+					Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
 					Submission.created_utc > cutoff
 			#	),
 			#	and_(
-			#		SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"]/2,
+			#		Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"]/2,
 			#		Submission.created_utc > cutoff
 			#	)
 			#)
@@ -862,24 +841,18 @@ def submit_post(v):
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
-		is_bot = request.headers.get("X-User-Type","").lower()=="bot"
+		is_bot = request.headers.get("X-User-Type","").lower()=="bot",
+		url=url,
+		body=body,
+		body_html=body_html,
+		embed_url=embed,
+		title=title,
+		title_html=filter_title(title)
 	)
 
 	g.db.add(new_post)
 	g.db.flush()
 	
-
-	new_post_aux = SubmissionAux(id=new_post.id,
-								 url=url,
-								 body=body,
-								 body_html=body_html,
-								 embed_url=embed,
-								 title=title,
-								 title_html=filter_title(title)
-								 )
-	g.db.add(new_post_aux)
-	g.db.flush()
-
 	vote = Vote(user_id=v.id,
 				vote_type=1,
 				submission_id=new_post.id
@@ -940,7 +913,6 @@ def submit_post(v):
 					), 400
 
 		g.db.add(new_post)
-		g.db.add(new_post.submission_aux)
 	
 	g.db.flush()
 
