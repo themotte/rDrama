@@ -862,7 +862,7 @@ def submit_post(v):
 		author_id=v.id,
 		over_18=bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
-		is_bot = request.headers.get("X-User-Type","").lower()=="bot"
+		is_bot = request.headers.get("X-User-Type","").lower()=="bot",
 		url=url,
 		body=body,
 		body_html=body_html,
