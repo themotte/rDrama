@@ -232,6 +232,14 @@ class User(Base):
 
 	@property
 	@lazy
+	def alts_unique(self):
+		alts = []
+		for u in self.alts:
+			if u not in alts: alts.append(u)
+		return alts
+
+	@property
+	@lazy
 	def strid(self):
 		return str(self.id)
 

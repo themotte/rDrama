@@ -356,7 +356,7 @@
 						{% endif %}
 						<span>Alts:</span>
 						<ul>
-							{% for account in u.alts %}
+							{% for account in u.alts_unique %}
 								<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
 							{% endfor %}
 						</ul>
@@ -633,7 +633,7 @@
 					{% endif %}
 					<span>Alts:</span>
 					<ul>
-						{% for account in u.alts %}
+						{% for account in u.alts_unique %}
 						<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
 						{% endfor %}
 					</ul>

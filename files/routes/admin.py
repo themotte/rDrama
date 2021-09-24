@@ -66,7 +66,7 @@ def club_allow(v, username):
 	u.club_banned = False
 	g.db.add(u)
 
-	for x in u.alts:
+	for x in u.alts_unique:
 		x.club_allowed = True
 		x.club_banned = False
 		g.db.add(x)
@@ -95,7 +95,7 @@ def club_ban(v, username):
 	u.club_banned = True
 	u.club_allowed = False
 
-	for x in u.alts:
+	for x in u.alts_unique:
 		x.club_banned = True
 		u.club_allowed = False
 		g.db.add(x)
