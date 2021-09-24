@@ -39,7 +39,7 @@ class Comment(Base):
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
 	body = deferred(Column(String(20000)))
-	body_html = Column(String(40000))
+	body_html = deferred(Column(String(40000)))
 	ban_reason = Column(String(256))
 
 	post = relationship("Submission", viewonly=True)
@@ -284,7 +284,7 @@ class Comment(Base):
 		body = self.body_html
 
 		if not body: return ""
-		
+
 		if not v or v.slurreplacer: 
 			for s, r in SLURS.items(): body = body.replace(s, r) 
 

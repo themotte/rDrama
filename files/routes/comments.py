@@ -272,7 +272,7 @@ def api_comment(v):
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
-	if len(body_html) > 20000: abort(400)
+	if len(body_html) > 40000: abort(400)
 
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
@@ -691,7 +691,7 @@ def edit_comment(cid, v):
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
-	if len(body_html) > 20000: abort(400)
+	if len(body_html) > 40000: abort(400)
 
 	c.body = body[:10000]
 	c.body_html = body_html
