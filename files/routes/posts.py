@@ -460,6 +460,10 @@ def thumbnail_thread(pid):
 	db = db_session()
 
 	post = db.query(Submission).filter_by(id=pid).first()
+	
+	if not post:
+		time.sleep(5)
+		post = db.query(Submission).filter_by(id=pid).first()
 
 	fetch_url=post.url
 
