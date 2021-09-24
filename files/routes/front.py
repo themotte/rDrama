@@ -109,6 +109,47 @@ def notifications(v):
 
 
 
+@app.get("/")
+@app.get("/logged_out")
+@auth_desired
+def front_all(v):
+
+	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
+
+	if v and "logged_out" in request.full_path: v = None
+
+	try: page = int(request.values.get("page") or 1)
+	except: abort(400)
+
+	# prevent invalid paging
+	page = max(page, 1)
+
+	if v:
+		defaultsorting = v.defaultsorting
+		defaulttime = v.defaulttime
+	else:
+		defaultsorting = "hot"
+		defaulttime = defaulttimefilter
+
+	sort=request.values.get("sort", defaultsorting)
+	t=request.values.get('t', defaulttime)
+
+	ids, next_exists = frontlist(sort=sort,
+					page=page,
+					t=t,
+					v=v,
+					filter_words=v.filter_words if v else [],
+					)
+
+	posts = get_posts(ids, v=v)
+
+	if v and v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
+
+	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
+	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
+
+
+
 @cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
 
@@ -160,12 +201,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	gt = kwargs.get("gt")
 	lt = kwargs.get("lt")
 
-	if gt:
-		posts = posts.filter(Submission.created_utc > gt)
-
-	if lt:
-		posts = posts.filter(Submission.created_utc < lt)
-
 	if not (v and v.shadowbanned):
 		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
@@ -197,46 +232,33 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	return posts, next_exists
 
-@app.get("/")
-@app.get("/logged_out")
+
+@app.get("/changelog")
 @auth_desired
-def front_all(v):
+def changelog(v):
 
-	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
-	if v and "logged_out" in request.full_path: v = None
-
-	try: page = int(request.values.get("page") or 1)
-	except: abort(400)
-
-	# prevent invalid paging
+	page = int(request.values.get("page") or 1)
 	page = max(page, 1)
 
-	if v:
-		defaultsorting = v.defaultsorting
-		defaulttime = v.defaulttime
-	else:
-		defaultsorting = "hot"
-		defaulttime = defaulttimefilter
+	sort=request.values.get("sort", "new")
+	t=request.values.get('t', "all")
 
-	sort=request.values.get("sort", defaultsorting)
-	t=request.values.get('t', defaulttime)
-
-	ids, next_exists = frontlist(sort=sort,
+	ids = changeloglist(sort=sort,
 					page=page,
 					t=t,
 					v=v,
-					gt=int(request.values.get("utc_greater_than", 0)),
-					lt=int(request.values.get("utc_less_than", 0)),
-					filter_words=v.filter_words if v else [],
 					)
 
+	# check existence of next page
+	next_exists = (len(ids) > 25)
+	ids = ids[:25]
+
+	# check if ids exist
 	posts = get_posts(ids, v=v)
 
-	if v and v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
-
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
+	else: return render_template("changelog.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
 
 @cache.memoize(timeout=86400)
@@ -276,12 +298,6 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	gt = kwargs.get("gt")
 	lt = kwargs.get("lt")
 
-	if gt:
-		posts = posts.filter(Submission.created_utc > gt)
-
-	if lt:
-		posts = posts.filter(Submission.created_utc < lt)
-
 	if sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
@@ -298,35 +314,6 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
 	return [x[0] for x in posts]
-
-@app.get("/changelog")
-@auth_desired
-def changelog(v):
-
-
-	page = int(request.values.get("page") or 1)
-	page = max(page, 1)
-
-	sort=request.values.get("sort", "new")
-	t=request.values.get('t', "all")
-
-	ids = changeloglist(sort=sort,
-					page=page,
-					t=t,
-					v=v,
-					gt=int(request.values.get("utc_greater_than", 0)),
-					lt=int(request.values.get("utc_less_than", 0)),
-					)
-
-	# check existence of next page
-	next_exists = (len(ids) > 25)
-	ids = ids[:25]
-
-	# check if ids exist
-	posts = get_posts(ids, v=v)
-
-	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	else: return render_template("changelog.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
 
 @app.get("/random")
