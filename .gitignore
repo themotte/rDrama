@@ -3,7 +3,7 @@ cache/
 __pycache__/
 *.py[cod]
 *$py.class
-chart.webp
+chart.png
 
 # C extensions
 *.so
