@@ -54,19 +54,19 @@ def check_for_alts(current_id):
 				new_alt = Alt(user1=a.user1, user2=past_id)
 				g.db.add(new_alt)
 				g.db.flush()
-		for a in otheralts:
+
 			existing = alts.filter_by(user1=a.user1, user2=current_id).first()
 			if not existing:
 				new_alt = Alt(user1=a.user1, user2=current_id)
 				g.db.add(new_alt)
 				g.db.flush()
-		for a in otheralts:
+
 			existing = alts.filter_by(user1=a.user2, user2=past_id).first()
 			if not existing:
 				new_alt = Alt(user1=a.user2, user2=past_id)
 				g.db.add(new_alt)
 				g.db.flush()
-		for a in otheralts:
+
 			existing = alts.filter_by(user1=a.user2, user2=current_id).first()
 			if not existing:
 				new_alt = Alt(user1=a.user2, user2=current_id)
