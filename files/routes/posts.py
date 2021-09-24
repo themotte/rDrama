@@ -1150,11 +1150,12 @@ def save_post(pid, v):
 
 	post=get_post(pid)
 
-	new_save=SaveRelationship(user_id=v.id, submission_id=post.id, type=1)
+	save = g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
 
-	g.db.add(new_save)
-
-	g.db.commit()
+	if not save:
+		new_save=SaveRelationship(user_id=v.id, submission_id=post.id, type=1)
+		g.db.add(new_save)
+		g.db.commit()
 
 	return {"message": "Post saved!"}
 
@@ -1165,7 +1166,7 @@ def unsave_post(pid, v):
 
 	post=get_post(pid)
 
-	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
+	save = g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
 
 	if save:
 		g.db.delete(save)

@@ -1331,6 +1331,6 @@ def chart(v):
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
 
-	plt.savefig("chart.webp")
+	plt.savefig("chart.png")
 	plt.clf()
-	return send_file("../chart.webp")
+	return send_file("../chart.png")
