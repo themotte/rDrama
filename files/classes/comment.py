@@ -38,8 +38,8 @@ class Comment(Base):
 	oauth_app = relationship("OauthApp", viewonly=True)
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
-	body = deferred(Column(String(10000)))
-	body_html = deferred(Column(String(20000)))
+	body = deferred(Column(String(20000)))
+	body_html = Column(String(40000))
 	ban_reason = Column(String(256))
 
 	post = relationship("Submission", viewonly=True)
@@ -280,6 +280,7 @@ class Comment(Base):
 
 	def realbody(self, v):
 		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
+
 		body = self.body_html
 
 		if not v or v.slurreplacer: 
