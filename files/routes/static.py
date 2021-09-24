@@ -27,7 +27,7 @@ def static_rules(v):
 
 
 @app.get("/stats")
-@auth_desired
+@auth_required
 def participation_stats(v):
 
 	now = int(time.time())
