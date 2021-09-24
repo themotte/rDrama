@@ -377,6 +377,7 @@ def badge_grant_post(v):
 
 	if user.has_badge(badge_id):
 		g.db.query(Badge).options(lazyload('*')).filter_by(badge_id=badge_id, user_id=user.id,).delete()
+		g.db.commit()
 		return redirect("/admin/badge_grant")
 	
 	new_badge = Badge(badge_id=badge_id,
