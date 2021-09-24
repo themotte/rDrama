@@ -141,7 +141,7 @@ def searchposts(v):
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc())
 
-	total = len(posts)
+	total = posts.count()
 
 	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
