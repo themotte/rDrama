@@ -780,6 +780,8 @@ def submit_post(v):
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
+	if len(body_html) > 20000: abort(400)
+
 	# Run safety filter
 	bans = filter_comment_html(body_html)
 	if bans:

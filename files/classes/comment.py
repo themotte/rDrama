@@ -38,8 +38,8 @@ class Comment(Base):
 	oauth_app = relationship("OauthApp", viewonly=True)
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
-	body = deferred(Column(String(20000)))
-	body_html = deferred(Column(String(40000)))
+	body = deferred(Column(String(10000)))
+	body_html = deferred(Column(String(20000)))
 	ban_reason = Column(String(256))
 
 	post = relationship("Submission", viewonly=True)
