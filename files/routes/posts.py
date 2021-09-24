@@ -941,7 +941,7 @@ def submit_post(v):
 	g.db.flush()
 
 
-	if "rdrama" in request.host and "ivermectin" in new_post_aux.body_html.lower():
+	if "rdrama" in request.host and "ivermectin" in new_post.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "ToS Violation"
@@ -977,7 +977,7 @@ def submit_post(v):
 		g.db.add(n)
 
 
-	if v.agendaposter and "trans lives matter" not in new_post_aux.body_html.lower():
+	if v.agendaposter and "trans lives matter" not in new_post.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "ToS Violation"
