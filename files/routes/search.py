@@ -61,8 +61,6 @@ def searchposts(v):
 	posts = g.db.query(Submission).options(
 				lazyload('*')
 			).join(
-				Submission.submission_aux,
-			).join(
 				Submission.author
 			)
 	
