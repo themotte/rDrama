@@ -1,5 +1,4 @@
 import time
-import calendar
 from sqlalchemy.orm import lazyload
 import imagehash
 from os import remove
@@ -15,7 +14,6 @@ from files.helpers.images import *
 from files.helpers.const import *
 from files.classes import *
 from flask import *
-import matplotlib.pyplot as plt
 from files.__main__ import app, cache, limiter
 from .front import frontlist
 from files.helpers.discord import add_role
@@ -1269,75 +1267,3 @@ def admin_nunuke_user(v):
 	g.db.commit()
 
 	return redirect(user.url)
-	
-	
-@app.get("/chart")
-@auth_required
-def chart(v):
-	file = cached_chart()
-	return send_file(f"../{file}")
-
-
-@cache.memoize(timeout=86400)
-def cached_chart():
-	days = int(request.values.get("days", 25))
-
-	now = time.gmtime()
-	midnight_this_morning = time.struct_time((now.tm_year,
-											  now.tm_mon,
-											  now.tm_mday,
-											  0,
-											  0,
-											  0,
-											  now.tm_wday,
-											  now.tm_yday,
-											  0)
-											 )
-	today_cutoff = calendar.timegm(midnight_this_morning)
-
-	day = 3600 * 24
-
-	day_cutoffs = [today_cutoff - day * i for i in range(days)]
-	day_cutoffs.insert(0, calendar.timegm(now))
-
-	daily_times = [time.strftime("%d", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
-
-	daily_signups = [g.db.query(User).options(lazyload('*')).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
-
-	post_stats = [g.db.query(Submission).options(lazyload('*')).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
-
-	comment_stats = [g.db.query(Comment).options(lazyload('*')).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
-
-	# create multiple charts
-	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)
-	posts_chart = plt.subplot2grid((20, 4), (7, 0), rowspan=5, colspan=4)
-	comments_chart = plt.subplot2grid((20, 4), (14, 0), rowspan=5, colspan=4)
-
-	signup_chart.grid(), posts_chart.grid(), comments_chart.grid()
-
-	signup_chart.plot(
-		daily_times,
-		daily_signups,
-		color='red')
-	posts_chart.plot(
-		daily_times,
-		post_stats,
-		color='green')
-	comments_chart.plot(
-		daily_times,
-		comment_stats,
-		color='gold')
-
-	signup_chart.set_ylabel("Signups")
-	posts_chart.set_ylabel("Posts")
-	comments_chart.set_ylabel("Comments")
-	comments_chart.set_xlabel("Time (UTC)")
-
-	signup_chart.legend(loc='upper left', frameon=True)
-	posts_chart.legend(loc='upper left', frameon=True)
-	comments_chart.legend(loc='upper left', frameon=True)
-
-	file = "chart.png"
-	plt.savefig(file)
-	plt.clf()
-	return file
