@@ -287,7 +287,7 @@ def reported_posts(v):
 	posts = g.db.query(Submission).options(lazyload('*')).filter_by(
 		is_approved=0,
 		is_banned=False
-	).join(Submission.flags).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
+	).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
 
 	listing = [p.id for p in posts]
 	next_exists = (len(listing) > 25)
@@ -309,7 +309,7 @@ def reported_comments(v):
 					   ).filter_by(
 		is_approved=0,
 		is_banned=False
-	).join(Comment.flags).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in posts]
 	next_exists = (len(listing) > 25)

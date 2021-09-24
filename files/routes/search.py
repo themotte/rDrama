@@ -58,11 +58,7 @@ def searchposts(v):
 
 
 
-	posts = g.db.query(Submission).options(
-				lazyload('*')
-			).join(
-				Submission.author
-			)
+	posts = g.db.query(Submission).options(lazyload('*'))
 	
 	if not (v and v.admin_level == 6): posts = posts.filter(Submission.private == False)
 	

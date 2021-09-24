@@ -167,7 +167,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = posts.filter(Submission.created_utc < lt)
 
 	if not (v and v.shadowbanned):
-		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
+		posts = posts.join(Submission.author.shadowbanned).filter(User.shadowbanned == False)
 
 	if sort == "hot":
 		ti = int(time.time())
@@ -256,7 +256,6 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 			Submission.author_id.notin_(blocked)
 		)
 
-	posts=posts.join(Submission.author)
 	posts=posts.filter(Submission.title.ilike(f'_changelog%', User.admin_level == 6))
 
 	if t != 'all':

@@ -372,8 +372,7 @@ class User(Base):
 	@property
 	@lazy
 	def post_notifications_count(self):
-		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(
-			Comment.author_id == AUTOJANNY_ACCOUNT).count()
+		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).count()
 
 	@property
 	@lazy
