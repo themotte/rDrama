@@ -287,6 +287,13 @@ def edit_post(pid, v):
 
 			g.db.add(p)
 
+			body = VAXX_MSG.format(username=v.username)
+
+			body_md = CustomRenderer().render(mistletoe.Document(body))
+
+			body_jannied_html = sanitize(body_md)
+
+
 			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
 				parent_submission=p.id,
 				level=1,
@@ -294,24 +301,15 @@ def edit_post(pid, v):
 				is_bot=True,
 				app_id=None,
 				is_pinned=True,
-				distinguish_level=6
+				distinguish_level=6,
+				body_html=body_jannied_html,
+				body=body
 				)
 
 			g.db.add(c_jannied)
 			g.db.flush()
 
-			body = VAXX_MSG.format(username=v.username)
 
-			body_md = CustomRenderer().render(mistletoe.Document(body))
-
-			body_jannied_html = sanitize(body_md)
-			c_aux = CommentAux(
-				id=c_jannied.id,
-				body_html=body_jannied_html,
-				body=body
-			)
-			g.db.add(c_aux)
-			g.db.flush()
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
@@ -323,6 +321,12 @@ def edit_post(pid, v):
 
 			g.db.add(p)
 
+			body = AGENDAPOSTER_MSG.format(username=v.username)
+
+			body_md = CustomRenderer().render(mistletoe.Document(body))
+
+			body_jannied_html = sanitize(body_md)
+
 			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
 				parent_submission=p.id,
 				level=1,
@@ -330,24 +334,14 @@ def edit_post(pid, v):
 				is_bot=True,
 				app_id=None,
 				is_pinned=True,
-				distinguish_level=6
+				distinguish_level=6,
+				body_html=body_jannied_html,
+				body=body
 				)
 
 			g.db.add(c_jannied)
 			g.db.flush()
 
-			body = AGENDAPOSTER_MSG.format(username=v.username)
-
-			body_md = CustomRenderer().render(mistletoe.Document(body))
-
-			body_jannied_html = sanitize(body_md)
-			c_aux = CommentAux(
-				id=c_jannied.id,
-				body_html=body_jannied_html,
-				body=body
-			)
-			g.db.add(c_aux)
-			g.db.flush()
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 		
@@ -941,48 +935,20 @@ def submit_post(v):
 	g.db.flush()
 
 
-	if "rdrama" in request.host and "ivermectin" in new_post_aux.body_html.lower():
+	if "rdrama" in request.host and "ivermectin" in new_post.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "ToS Violation"
 
 		g.db.add(new_post)
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
-			parent_submission=new_post.id,
-			level=1,
-			over_18=False,
-			is_bot=True,
-			app_id=None,
-			is_pinned=True,
-			distinguish_level=6
-		)
-
-		g.db.add(c_jannied)
-		g.db.flush()
 
 		body = VAXX_MSG.format(username=v.username)
 
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c_jannied.id,
-			body_html=body_jannied_html,
-			body=body
-		)
-		g.db.add(c_aux)
-		g.db.flush()
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
 
-
-	if v.agendaposter and "trans lives matter" not in new_post_aux.body_html.lower():
-
-		new_post.is_banned = True
-		new_post.ban_reason = "ToS Violation"
-
-		g.db.add(new_post)
 
 		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
 			parent_submission=new_post.id,
@@ -991,40 +957,55 @@ def submit_post(v):
 			is_bot=True,
 			app_id=None,
 			is_pinned=True,
-			distinguish_level=6
+			distinguish_level=6,
+			body_html=body_jannied_html,
+			body=body,
 		)
 
 		g.db.add(c_jannied)
 		g.db.flush()
+
+
+		n = Notification(comment_id=c_jannied.id, user_id=v.id)
+		g.db.add(n)
+
+
+	if v.agendaposter and "trans lives matter" not in new_post.body_html.lower():
+
+		new_post.is_banned = True
+		new_post.ban_reason = "ToS Violation"
+
+		g.db.add(new_post)
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c_jannied.id,
-			body_html=body_jannied_html,
-			body=body
-		)
-		g.db.add(c_aux)
-		g.db.flush()
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
 
-	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
-		c = Comment(author_id=261,
-			distinguish_level=6,
+
+
+		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
 			is_bot=True,
 			app_id=None,
-			)
+			is_pinned=True,
+			distinguish_level=6,
+			body_html=body_jannied_html,
+			body=body,
+		)
 
-		g.db.add(c)
+		g.db.add(c_jannied)
 		g.db.flush()
 
+
+
+		n = Notification(comment_id=c_jannied.id, user_id=v.id)
+		g.db.add(n)
+
+	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
 		new_post.comment_count = 1
 		g.db.add(new_post)
 
@@ -1043,13 +1024,24 @@ def submit_post(v):
 			gevent.spawn(archiveorg, new_post.url)
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c.id,
+
+
+		c = Comment(author_id=261,
+			distinguish_level=6,
+			parent_submission=new_post.id,
+			level=1,
+			over_18=False,
+			is_bot=True,
+			app_id=None,
 			body_html=body_html,
-			body=body
-		)
-		g.db.add(c_aux)
+			body=body,
+			)
+
+		g.db.add(c)
 		g.db.flush()
+
+
+
 		n = Notification(comment_id=c.id, user_id=v.id)
 		g.db.add(n)
 		g.db.flush()

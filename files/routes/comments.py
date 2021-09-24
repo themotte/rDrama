@@ -178,11 +178,11 @@ def api_comment(v):
 		return {"error": reason}, 401
 
 	# check existing
-	existing = g.db.query(Comment).join(CommentAux).options(lazyload('*')).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
 															 Comment.deleted_utc == 0,
 															 Comment.parent_comment_id == parent_comment_id,
 															 Comment.parent_submission == parent_submission,
-															 CommentAux.body == body
+															 Comment.body == body
 															 ).first()
 	if existing:
 		return {"error": f"You already made that comment: {existing.permalink}"}, 409
@@ -201,10 +201,9 @@ def api_comment(v):
 		similar_comments = g.db.query(Comment
 										).options(
 			lazyload('*')
-		).join(Comment.comment_aux
-				 ).filter(
+		).filter(
 			Comment.author_id == v.id,
-			CommentAux.body.op(
+			Comment.body.op(
 				'<->')(body) < app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"],
 			Comment.created_utc > cutoff
 		).all()
@@ -261,17 +260,6 @@ def api_comment(v):
 		if badlink: return {"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason}"}, 403
 	# create comment
 	parent_id = parent_fullname.split("_")[1]
-	c = Comment(author_id=v.id,
-				parent_submission=parent_submission,
-				parent_comment_id=parent_comment_id,
-				level=level,
-				over_18=parent_post.over_18 or request.values.get("over_18","")=="true",
-				is_bot=is_bot,
-				app_id=v.client.application.id if v.client else None
-				)
-
-	g.db.add(c)
-	g.db.flush()
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
@@ -285,28 +273,23 @@ def api_comment(v):
 		body_html = sanitize(body_md)
 
 	if len(body_html) > 20000: abort(400)
-	c_aux = CommentAux(
-		id=c.id,
-		body_html=body_html,
-		body=body[:10000]
-	)
 
-	g.db.add(c_aux)
+	c = Comment(author_id=v.id,
+				parent_submission=parent_submission,
+				parent_comment_id=parent_comment_id,
+				level=level,
+				over_18=parent_post.over_18 or request.values.get("over_18","")=="true",
+				is_bot=is_bot,
+				app_id=v.client.application.id if v.client else None,
+				body_html=body_html,
+				body=body[:10000]
+				)
+
+	g.db.add(c)
 	g.db.flush()
 
-	if 'pcmemes.net' in request.host and c_aux.body.lower().startswith("based"):
+	if 'pcmemes.net' in request.host and c.body.lower().startswith("based"):
 		pill = re.match("based and (.{1,20}?)(-| )pilled", body, re.IGNORECASE)
-
-		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
-			parent_submission=parent_submission,
-			distinguish_level=6,
-			parent_comment_id=c.id,
-			level=level+1,
-			is_bot=True,
-			)
-
-		g.db.add(c_based)
-		g.db.flush()
 
 		if level == 1: basedguy = get_account(c.post.author_id)
 		else: basedguy = get_account(c.parent_comment.author_id)
@@ -319,57 +302,38 @@ def api_comment(v):
 		body_md = CustomRenderer().render(mistletoe.Document(body2))
 
 		body_based_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c_based.id,
+
+		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
+			parent_submission=parent_submission,
+			distinguish_level=6,
+			parent_comment_id=c.id,
+			level=level+1,
+			is_bot=True,
 			body_html=body_based_html,
 			body=body2
-		)
-		g.db.add(c_aux)
+			)
+
+		g.db.add(c_based)
 		g.db.flush()
 
 		n = Notification(comment_id=c_based.id, user_id=v.id)
 		g.db.add(n)
 
 
-	if "rdrama" in request.host and "ivermectin" in c_aux.body.lower():
+	if "rdrama" in request.host and "ivermectin" in c.body.lower():
 
 		c.is_banned = True
 		c.ban_reason = "ToS Violation"
 
 		g.db.add(c)
-
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
-			parent_submission=parent_submission,
-			distinguish_level=6,
-			parent_comment_id=c.id,
-			level=level+1,
-			is_bot=True,
-			)
-
-		g.db.add(c_jannied)
-		g.db.flush()
 
 		body2 = VAXX_MSG.format(username=v.username)
 
 		body_md = CustomRenderer().render(mistletoe.Document(body2))
 
 		body_jannied_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c_jannied.id,
-			body_html=body_jannied_html,
-			body=body2
-		)
-		g.db.add(c_aux)
-		g.db.flush()
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
 
-	if v.agendaposter and "trans lives matter" not in c_aux.body_html.lower():
 
-		c.is_banned = True
-		c.ban_reason = "ToS Violation"
-
-		g.db.add(c)
 
 		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
 			parent_submission=parent_submission,
@@ -377,23 +341,50 @@ def api_comment(v):
 			parent_comment_id=c.id,
 			level=level+1,
 			is_bot=True,
+			body_html=body_jannied_html,
+			body=body2
 			)
 
 		g.db.add(c_jannied)
 		g.db.flush()
+
+
+
+		n = Notification(comment_id=c_jannied.id, user_id=v.id)
+		g.db.add(n)
+
+	if v.agendaposter and "trans lives matter" not in c.body_html.lower():
+
+		c.is_banned = True
+		c.ban_reason = "ToS Violation"
+
+		g.db.add(c)
+
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c_jannied.id,
+
+
+
+		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			parent_submission=parent_submission,
+			distinguish_level=6,
+			parent_comment_id=c.id,
+			level=level+1,
+			is_bot=True,
 			body_html=body_jannied_html,
 			body=body
-		)
-		g.db.add(c_aux)
+			)
+
+		g.db.add(c_jannied)
 		g.db.flush()
+
+
+
+
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
@@ -407,27 +398,28 @@ def api_comment(v):
 		g.db.add(c)
 
 	if "rdrama" in request.host and len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
-		c2 = Comment(author_id=LONGPOSTBOT_ACCOUNT,
-			parent_submission=parent_submission,
-			parent_comment_id=c.id,
-			level=level+1,
-			is_bot=True,
-			)
-
-		g.db.add(c2)
-		g.db.flush()
 	
 		body = random.choice(LONGPOST_REPLIES)
 		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c2.id,
+
+
+
+		c2 = Comment(author_id=LONGPOSTBOT_ACCOUNT,
+			parent_submission=parent_submission,
+			parent_comment_id=c.id,
+			level=level+1,
+			is_bot=True,
 			body_html=body_html2,
 			body=body
-		)
-		g.db.add(c_aux)
+			)
+
+		g.db.add(c2)
 		g.db.flush()
+
+
+
 		n = Notification(comment_id=c2.id, user_id=v.id)
 		g.db.add(n)
 
@@ -438,29 +430,38 @@ def api_comment(v):
 
 
 	if "rdrama" in request.host and random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
+	
+		body = "zoz"
+		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_html2 = sanitize(body_md)
+
+
+
+
 		c2 = Comment(author_id=1833,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
 			is_bot=True,
+			body_html=body_html2,
+			body=body
 			)
 
 		g.db.add(c2)
 		g.db.flush()
-	
-		body = "zoz"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c2.id,
-			body_html=body_html2,
-			body=body
-		)
-		g.db.add(c_aux)
-		g.db.flush()
+
+
+
 		n = Notification(comment_id=c2.id, user_id=v.id)
 		g.db.add(n)
 
+
+
+
+	
+		body = "zle"
+		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_html2 = sanitize(body_md)
 
 
 
@@ -469,49 +470,35 @@ def api_comment(v):
 			parent_comment_id=c2.id,
 			level=level+2,
 			is_bot=True,
+			body_html=body_html2,
+			body=body,
 			)
 
 		g.db.add(c3)
 		g.db.flush()
+		
+		
+
+
+
+		
 	
-		body = "zle"
+		body = "zozzle"
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c3.id,
-			body_html=body_html2,
-			body=body
-		)
-		g.db.add(c_aux)
-		g.db.flush()
-		
-		
 
 
-
-		
 		c4 = Comment(author_id=1833,
 			parent_submission=parent_submission,
 			parent_comment_id=c3.id,
 			level=level+3,
 			is_bot=True,
+			body_html=body_html2,
+			body=body
 			)
 
 		g.db.add(c4)
 		g.db.flush()
-	
-		body = "zozzle"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c4.id,
-			body_html=body_html2,
-			body=body
-		)
-		g.db.add(c_aux)
-		g.db.flush()
-
-
 
 
 
@@ -665,10 +652,9 @@ def edit_comment(cid, v):
 	similar_comments = g.db.query(Comment
 									).options(
 		lazyload('*')
-	).join(Comment.comment_aux
-			 ).filter(
+	).filter(
 		Comment.author_id == v.id,
-		CommentAux.body.op(
+		Comment.body.op(
 			'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
 		Comment.created_utc > cutoff
 	).all()
@@ -717,29 +703,29 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 
+		body = VAXX_MSG.format(username=v.username)
+
+		body_md = CustomRenderer().render(mistletoe.Document(body))
+
+		body_jannied_html = sanitize(body_md)
+
+
+
 		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
 			parent_submission=c.parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,
 			level=c.level+1,
 			is_bot=True,
+			body_html=body_jannied_html,
+			body=body
 			)
 
 		g.db.add(c_jannied)
 		g.db.flush()
 
-		body = VAXX_MSG.format(username=v.username)
 
-		body_md = CustomRenderer().render(mistletoe.Document(body))
 
-		body_jannied_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c_jannied.id,
-			body_html=body_jannied_html,
-			body=body
-		)
-		g.db.add(c_aux)
-		g.db.flush()
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
@@ -751,29 +737,30 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
-			parent_submission=c.parent_submission,
-			distinguish_level=6,
-			parent_comment_id=c.id,
-			level=c.level+1,
-			is_bot=True,
-			)
-
-		g.db.add(c_jannied)
-		g.db.flush()
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
-		c_aux = CommentAux(
-			id=c_jannied.id,
+
+
+
+		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			parent_submission=c.parent_submission,
+			distinguish_level=6,
+			parent_comment_id=c.id,
+			level=c.level+1,
+			is_bot=True,
 			body_html=body_jannied_html,
-			body=body
-		)
-		g.db.add(c_aux)
+			body=body,
+			)
+
+		g.db.add(c_jannied)
 		g.db.flush()
+
+
+
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 

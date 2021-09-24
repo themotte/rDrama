@@ -208,11 +208,11 @@ def searchcomments(v):
 
 
 
-	comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.parent_submission != None).join(Comment.comment_aux)
+	comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.parent_submission != None)
 
 	if 'q' in criteria:
 		words=criteria['q'].split()
-		words=[CommentAux.body.ilike('%'+x+'%') for x in words]
+		words=[Comment.body.ilike('%'+x+'%') for x in words]
 		words=tuple(words)
 		comments=comments.filter(*words)
 
