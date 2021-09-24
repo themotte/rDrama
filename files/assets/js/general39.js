@@ -2,17 +2,19 @@
 // Identify which comment form to insert GIF into
 
 var commentFormID;
-	function commentForm(form) {
+function commentForm(form) {
 		commentFormID = form;
 };
 
+
+const TEXTAREA_POS = 'curr-pos'
 
 // Insert EMOJI markdown into comment box function
 
 function getEmoji(searchTerm, form) {
 	const commentBox = document.getElementById(form);
 	const old = commentBox.value;
-	const curPos = commentBox.selectionStart;
+	const curPos = $(commentBox).data(TEXTAREA_POS);
 
 	const firstHalf = old.slice(0, curPos)
 	const lastHalf = old.slice(curPos)
@@ -29,8 +31,8 @@ function getEmoji(searchTerm, form) {
 	commentBox.value = firstHalf + emoji + lastHalf;
 
 	const newPos = curPos + emoji.length
-	commentBox.selectionStart = newPos
-	commentBox.selectionEnd = newPos
+
+	$(commentBox).data(TEXTAREA_POS, newPos)
 }
 
 function loadEmojis(form) {
@@ -72,6 +74,9 @@ function loadEmojis(form) {
 	if(search_bar.value == ""){
 		let container = document.getElementById(`EMOJIS_favorite`)
 		container.innerHTML = container.innerHTML.replace(/@form@/g, form)
+
+		const commentBox = document.getElementById(form);
+		$(commentBox).data(TEXTAREA_POS, commentBox.selectionStart)
 
 		for (i=0; i < emojis.length; i++) {
 
