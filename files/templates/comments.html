@@ -24,7 +24,7 @@
 <!---beginning of comment {{c.id}}--->
 
 <script>
-	var date = new Date('{{c.created_datetime}}');
+	var date = new Date('{{c.created_utc * 1000}}');
 	document.getElementById('timestamp-{{c.id}}').title = date.toString();
 </script>
 
