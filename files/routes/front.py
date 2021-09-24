@@ -152,11 +152,11 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	if not (v and v.changelogsub):
 		posts=posts.join(Submission.submission_aux)
-		posts=posts.filter(not_(SubmissionAux.title.ilike(f'[changelog]%')))
+		posts=posts.filter(not_(Submission.title.ilike(f'[changelog]%')))
 
 	if v and filter_words:
 		for word in filter_words:
-			posts=posts.filter(not_(SubmissionAux.title.ilike(f'%{word}%')))
+			posts=posts.filter(not_(Submission.title.ilike(f'%{word}%')))
 
 	gt = kwargs.get("gt")
 	lt = kwargs.get("lt")
@@ -258,7 +258,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 		)
 
 	posts=posts.join(Submission.submission_aux).join(Submission.author)
-	posts=posts.filter(SubmissionAux.title.ilike(f'_changelog%', User.admin_level == 6))
+	posts=posts.filter(Submission.title.ilike(f'_changelog%', User.admin_level == 6))
 
 	if t != 'all':
 		cutoff = 0

@@ -70,7 +70,7 @@ def searchposts(v):
 	
 	if 'q' in criteria:
 		words=criteria['q'].split()
-		words=[SubmissionAux.title.ilike('%'+x+'%') for x in words]
+		words=[Submission.title.ilike('%'+x+'%') for x in words]
 		words=tuple(words)
 		posts=posts.filter(*words)
 		
@@ -90,18 +90,18 @@ def searchposts(v):
 		domain=criteria['domain']
 		posts=posts.filter(
 			or_(
-				SubmissionAux.url.ilike("https://"+domain+'/%'),
-				SubmissionAux.url.ilike("https://"+domain+'/%'),
-				SubmissionAux.url.ilike("https://"+domain),
-				SubmissionAux.url.ilike("https://"+domain),
-				SubmissionAux.url.ilike("https://www."+domain+'/%'),
-				SubmissionAux.url.ilike("https://www."+domain+'/%'),
-				SubmissionAux.url.ilike("https://www."+domain),
-				SubmissionAux.url.ilike("https://www."+domain),
-				SubmissionAux.url.ilike("https://old." + domain + '/%'),
-				SubmissionAux.url.ilike("https://old." + domain + '/%'),
-				SubmissionAux.url.ilike("https://old." + domain),
-				SubmissionAux.url.ilike("https://old." + domain)
+				Submission.url.ilike("https://"+domain+'/%'),
+				Submission.url.ilike("https://"+domain+'/%'),
+				Submission.url.ilike("https://"+domain),
+				Submission.url.ilike("https://"+domain),
+				Submission.url.ilike("https://www."+domain+'/%'),
+				Submission.url.ilike("https://www."+domain+'/%'),
+				Submission.url.ilike("https://www."+domain),
+				Submission.url.ilike("https://www."+domain),
+				Submission.url.ilike("https://old." + domain + '/%'),
+				Submission.url.ilike("https://old." + domain + '/%'),
+				Submission.url.ilike("https://old." + domain),
+				Submission.url.ilike("https://old." + domain)
 				)
 			)
 

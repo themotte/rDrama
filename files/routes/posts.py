@@ -617,7 +617,7 @@ def submit_post(v):
 			url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
 		repost = g.db.query(Submission).join(Submission.submission_aux).options(lazyload('*')).filter(
-			SubmissionAux.url.ilike(url),
+			Submission.url.ilike(url),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()
@@ -663,9 +663,9 @@ def submit_post(v):
 
 		Submission.author_id == v.id,
 		Submission.deleted_utc == 0,
-		SubmissionAux.title == title,
-		SubmissionAux.url == url,
-		SubmissionAux.body == body
+		Submission.title == title,
+		Submission.url == url,
+		Submission.body == body
 	).first()
 
 	if dup:
@@ -722,11 +722,11 @@ def submit_post(v):
 			#or_(
 			#	and_(
 					Submission.author_id == v.id,
-					SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+					Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
 					Submission.created_utc > cutoff
 			#	),
 			#	and_(
-			#		SubmissionAux.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
+			#		Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
 			#		Submission.created_utc > cutoff
 			#	)
 			#)
@@ -741,11 +741,11 @@ def submit_post(v):
 			#or_(
 			#	and_(
 					Submission.author_id == v.id,
-					SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
+					Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
 					Submission.created_utc > cutoff
 			#	),
 			#	and_(
-			#		SubmissionAux.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"]/2,
+			#		Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"]/2,
 			#		Submission.created_utc > cutoff
 			#	)
 			#)
@@ -863,23 +863,17 @@ def submit_post(v):
 		over_18=bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("X-User-Type","").lower()=="bot"
+		url=url,
+		body=body,
+		body_html=body_html,
+		embed_url=embed,
+		title=title,
+		title_html=filter_title(title)
 	)
 
 	g.db.add(new_post)
 	g.db.flush()
 	
-
-	new_post_aux = SubmissionAux(id=new_post.id,
-								 url=url,
-								 body=body,
-								 body_html=body_html,
-								 embed_url=embed,
-								 title=title,
-								 title_html=filter_title(title)
-								 )
-	g.db.add(new_post_aux)
-	g.db.flush()
-
 	vote = Vote(user_id=v.id,
 				vote_type=1,
 				submission_id=new_post.id
