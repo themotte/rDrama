@@ -360,41 +360,11 @@ CREATE TABLE public.comments (
     sentto integer,
     bannedfor boolean,
     removed_by integer,
-    is_pinned text
-);
-
-
---
--- Name: comments_aux; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.comments_aux (
-    id integer,
-    body character varying(10000),
+    is_pinned text,
+    body character varying(20000),
     body_html character varying(40000),
-    ban_reason character varying(128),
-    key_id integer NOT NULL
+    ban_reason character varying(256)
 );
-
-
---
--- Name: comments_aux_key_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.comments_aux_key_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: comments_aux_key_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.comments_aux_key_id_seq OWNED BY public.comments_aux.key_id;
 
 
 --
@@ -734,45 +704,15 @@ CREATE TABLE public.submissions (
     processing boolean DEFAULT false,
     removed_by integer,
     club boolean,
-    stickied text
-);
-
-
---
--- Name: submissions_aux; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.submissions_aux (
-    id integer,
+    stickied text,
     title character varying(500),
     url character varying(2083),
     body character varying(10000),
     body_html character varying(20000),
     embed_url character varying(10000),
     ban_reason character varying(128),
-    key_id integer NOT NULL,
     title_html text
 );
-
-
---
--- Name: submissions_aux_key_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.submissions_aux_key_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: submissions_aux_key_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.submissions_aux_key_id_seq OWNED BY public.submissions_aux.key_id;
 
 
 --
@@ -1092,13 +1032,6 @@ ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.com
 
 
 --
--- Name: comments_aux key_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.comments_aux ALTER COLUMN key_id SET DEFAULT nextval('public.comments_aux_key_id_seq'::regclass);
-
-
---
 -- Name: commentvotes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1159,13 +1092,6 @@ ALTER TABLE ONLY public.save_relationship ALTER COLUMN id SET DEFAULT nextval('p
 --
 
 ALTER TABLE ONLY public.submissions ALTER COLUMN id SET DEFAULT nextval('public.submissions_id_seq'::regclass);
-
-
---
--- Name: submissions_aux key_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.submissions_aux ALTER COLUMN key_id SET DEFAULT nextval('public.submissions_aux_key_id_seq'::regclass);
 
 
 --
@@ -1281,14 +1207,6 @@ ALTER TABLE ONLY public.client_auths
 
 ALTER TABLE ONLY public.commentflags
     ADD CONSTRAINT commentflags_pkey PRIMARY KEY (id);
-
-
---
--- Name: comments_aux comments_aux_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.comments_aux
-    ADD CONSTRAINT comments_aux_pkey PRIMARY KEY (key_id);
 
 
 --
@@ -1425,14 +1343,6 @@ ALTER TABLE ONLY public.save_relationship
 
 ALTER TABLE ONLY public.save_relationship
     ADD CONSTRAINT save_relationship_pkey PRIMARY KEY (id);
-
-
---
--- Name: submissions_aux submissions_aux_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.submissions_aux
-    ADD CONSTRAINT submissions_aux_pkey PRIMARY KEY (key_id);
 
 
 --
@@ -1645,20 +1555,6 @@ CREATE INDEX cflag_user_idx ON public.commentflags USING btree (user_id);
 
 
 --
--- Name: comment_body_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX comment_body_idx ON public.comments_aux USING btree (body) WHERE (octet_length((body)::text) <= 2704);
-
-
---
--- Name: comment_body_trgm_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX comment_body_trgm_idx ON public.comments_aux USING gin (body public.gin_trgm_ops);
-
-
---
 -- Name: comment_parent_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1680,13 +1576,6 @@ CREATE INDEX commentflag_comment_index ON public.commentflags USING btree (comme
 
 
 --
--- Name: comments_aux_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX comments_aux_id_idx ON public.comments_aux USING btree (id);
-
-
---
 -- Name: comments_parent_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1698,13 +1587,6 @@ CREATE INDEX comments_parent_id_idx ON public.comments USING btree (parent_comme
 --
 
 CREATE INDEX comments_user_index ON public.comments USING btree (author_id);
-
-
---
--- Name: commentsaux_body_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX commentsaux_body_idx ON public.comments_aux USING gin (to_tsvector('english'::regconfig, (body)::text));
 
 
 --
@@ -1869,20 +1751,6 @@ CREATE INDEX subimssion_binary_group_idx ON public.submissions USING btree (is_b
 
 
 --
--- Name: submission_aux_url_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submission_aux_url_idx ON public.submissions_aux USING btree (url);
-
-
---
--- Name: submission_aux_url_trgm_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submission_aux_url_trgm_idx ON public.submissions_aux USING gin (url public.gin_trgm_ops);
-
-
---
 -- Name: submission_domainref_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1925,20 +1793,6 @@ CREATE INDEX submissions_author_index ON public.submissions USING btree (author_
 
 
 --
--- Name: submissions_aux_id_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submissions_aux_id_idx ON public.submissions_aux USING btree (id);
-
-
---
--- Name: submissions_aux_title_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submissions_aux_title_idx ON public.submissions_aux USING btree (title);
-
-
---
 -- Name: submissions_created_utc_desc_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1950,13 +1804,6 @@ CREATE INDEX submissions_created_utc_desc_idx ON public.submissions USING btree 
 --
 
 CREATE INDEX submissions_over18_index ON public.submissions USING btree (over_18);
-
-
---
--- Name: submissions_title_trgm_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX submissions_title_trgm_idx ON public.submissions_aux USING gin (title public.gin_trgm_ops);
 
 
 --
