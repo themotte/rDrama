@@ -906,16 +906,19 @@ def ban_user(user_id, v):
 
 	if 'reason' in request.values:
 		if reason.startswith("/post/"):
-			post = reason.split("/post/")[1]
-			post = get_post(post)
-			post.bannedfor = True
-			g.db.add(post)
+			try:
+				post = int(reason.split("/post/")[1])
+				post = get_post(post)
+				post.bannedfor = True
+				g.db.add(post)
+			except: pass
 		elif reason.startswith("/comment/"):
-			comment = reason.split("/comment/")[1]
-			comment = get_comment(comment)
-			comment.bannedfor = True
-			g.db.add(comment)
-
+			try:
+				comment = int(reason.split("/comment/")[1])
+				comment = get_comment(comment)
+				comment.bannedfor = True
+				g.db.add(comment)
+			except: pass
 	g.db.commit()
 
 	if 'redir' in request.values: return (redirect(user.url), user)

@@ -549,6 +549,9 @@
 	{% include "emoji_modal.html" %}
 	{% include "award_modal.html" %}
 	{% include "delete_comment_modal.html" %}
+	{% if v.admin_level == 6 %}
+		{% include "ban_modal.html" %}
+	{% endif %}
 {% endif %}
 {% include "expanded_image_modal.html" %}
 {% include "flag_comment_modal.html" %}
