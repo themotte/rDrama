@@ -27374,6 +27374,16 @@ textarea {
     height: 110px;
   }
 }
+@media (min-width: 767.98px) {
+  .card-columns {
+    column-count: 4 !important;
+  }
+}
+@media (min-width: 992px) {
+  .card-columns {
+    column-count: 5 !important;
+  }
+}
 * {
   font-family: "Lato";
 }
