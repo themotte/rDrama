@@ -218,6 +218,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	elif sort == "bottom":
 		posts = posts.order_by(Submission.upvotes - Submission.downvotes)
 	elif sort == "comments":
+		print("WTF")
 		posts = posts.order_by(Submission.comment_count.desc())
 
 	posts = posts.offset(25 * (page - 1)).limit(26).all()
