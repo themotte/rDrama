@@ -155,6 +155,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = g.db.query(Submission.id).options(lazyload('*'))
 
+	print(posts.all())
+
 	if 'rdrama' in request.host and sort == "hot":
 		cutoff = int(time.time()) - 86400
 		posts = posts.filter(Submission.created_utc >= cutoff)
@@ -174,8 +176,11 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
 
+	print(posts.all())
+
 	if v:
 		posts = posts.filter(or_(Submission.processing == False, Submission.author_id == v.id))
+		print(posts.all())
 	else:
 		posts = posts.filter_by(processing=False)
 
@@ -227,7 +232,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	if ids_only: posts = [x[0] for x in posts]
 
-	print(posts)
 	return posts, next_exists
 
 
