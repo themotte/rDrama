@@ -209,8 +209,9 @@ def subscribe(v, post_id):
 @auth_required
 def unsubscribe(v, post_id):
 	sub=g.db.query(Subscription).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post_id).first()
-	g.db.delete(sub)
-	g.db.commit()
+	if sub:
+		g.db.delete(sub)
+		g.db.commit()
 	return {"message": "Post unsubscribed!"}
 
 @app.post("/@<username>/message")
