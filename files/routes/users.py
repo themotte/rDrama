@@ -630,7 +630,9 @@ def follow_user(username, v):
 	new_follow = Follow(user_id=v.id, target_id=target.id)
 	g.db.add(new_follow)
 
-	g.db.flush()
+	try: g.db.flush()
+	except: g.db.rollback()
+
 	target.stored_subscriber_count = g.db.query(Follow).options(lazyload('*')).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
