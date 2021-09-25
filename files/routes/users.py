@@ -646,6 +646,8 @@ def unfollow_user(username, v):
 
 	target = get_user(username)
 
+	if target.id == 995: abort(403)
+
 	# check for existing follow
 	follow = g.db.query(Follow).options(lazyload('*')).filter_by(user_id=v.id, target_id=target.id).first()
 
