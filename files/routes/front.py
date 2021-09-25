@@ -150,7 +150,7 @@ def front_all(v):
 
 
 
-@cache.memoize(timeout=86400)
+#@cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
 
 	posts = g.db.query(Submission).options(lazyload('*'))
@@ -198,9 +198,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		for word in filter_words:
 			posts=posts.filter(not_(Submission.title.ilike(f'%{word}%')))
 
-	gt = kwargs.get("gt")
-	lt = kwargs.get("lt")
-
 	if not (v and v.shadowbanned):
 		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
 
@@ -219,9 +216,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = posts.order_by(Submission.upvotes - Submission.downvotes)
 	elif sort == "comments":
 		print("WTF")
-		print([x.comment_count for x in posts.all()])
+		print(posts.all())
 		posts = posts.order_by(Submission.comment_count.desc())
-		print([x.comment_count for x in posts.all()])
+		print(posts.all())
 
 	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
@@ -297,9 +294,6 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 		elif t == 'year':
 			cutoff = now - 31536000
 		posts = posts.filter(Submission.created_utc >= cutoff)
-
-	gt = kwargs.get("gt")
-	lt = kwargs.get("lt")
 
 	if sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
