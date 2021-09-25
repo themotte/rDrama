@@ -13,6 +13,7 @@
 	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+	<script src="/assets/js/general39.js"></script>
 
 	<script>
 
@@ -95,17 +96,14 @@
 		<meta name="twitter:url" content="{{request.host}}" />
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
-	<!-- Bootstrap core CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 	<!-- {{'SITE_NAME' | app_config}} CSS -->
 
-	<link rel="stylesheet" href="/assets/style/{{v.theme}}_{{v.themecolor}}.css">
-	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/style/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+	<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css">
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 
 	<!-- Font Awesome -->
-	<link href="/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
+	<link href="/assets/css/fa.css" rel="stylesheet"> <!--load all styles -->
 
 	<script>
 		function formkey() {
@@ -232,8 +230,74 @@
  </div>
 
  {% if v %}
- {% include "2fa_modal.html" %}
- {% endif %}
+	<!-- 2FA Modal -->
+	<div class="modal fade" id="2faModal" tabindex="-1" role="dialog" aria-labelledby="2faModalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{% if mfa_secret %}Setup two-step login{% elif mfa_secret and not v.email %}Email required for two-step login{% else %}Disable two-step login{% endif %}</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true"><i class="far fa-times"></i></span>
+					</button>
+				</div>
+				{% if mfa_secret %}
+				<div>
+					<form action="/settings/security" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
+						<div class="modal-body">
+							<p>
+								<span class="font-weight-bold">Step 1:</span> Scan this barcode (or enter the code) using a two-factor authentication app such as Google Authenticator or Authy.
+							</p>
+							<div class="text-center mb-3">
+								<img loading="lazy" class="img-fluid" style="width: 175px;" src="/2faqr/{{mfa_secret}}">
+								<pre></pre>
+								<div class="text-small text-muted">Or enter this code: {{mfa_secret}}</div>
+							</div>
+							<p>
+								<span class="font-weight-bold">Step 2:</span> Enter the six-digit code generated in the authenticator app and your {{'SITE_NAME' | app_config}} account password.
+							</p>
+							<label for="2fa_input">6-digit code</label>
+							<input type="text" class="form-control mb-2" id="2fa_input" name="2fa_token" placeholder="# # # # # #" required>
+
+							<label for="2fa_input_password">Password</label>
+							<input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" oninput="document.getElementById('enable2faButton').disabled=false" autocomplete="off" required>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
+							<input id="enable2faButton" class="btn btn-primary" type="submit" value="Enable 2-step login" disabled>
+						</div>
+					</form>
+				</div>
+				{% else %}
+				<div>
+					<form action="/settings/security" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="hidden" name="2fa_secret" value="{{mfa_secret}}">
+						<div class="modal-body">
+
+							<div class="alert alert-warning" role="alert">
+								<i class="fas fa-info-circle"></i>
+								To disable two-step login, please enter your {{'SITE_NAME' | app_config}} account password and the 6-digit code generated in your authentication app. If you no longer have your two-step device, <a href="/lost_2fa">click here</a>.
+							</div>
+
+							<label for="2fa_input_password">Password</label>
+							<input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" autocomplete="off" required>
+
+							<label for="2fa_input">6-digit code</label>
+							<input type="text" class="form-control mb-2" id="2fa_input" name="2fa_remove" placeholder="# # # # # #" oninput="document.getElementById('disable2faButton').disabled=false" required>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
+							<input id="disable2faButton" class="btn btn-primary" type="submit" value="Disable 2-step login" disabled>
+						</div>
+					</form>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endif %}
 
  <!-- Clipboard Toast -->
 
@@ -264,7 +328,7 @@
 	</div>
 </div>
 
-<script src="/assets/js/general39.js"></script>
+
 
 {% block onload %}{% endblock %}
 

@@ -1,3 +1,30 @@
+<script>
+	function delete_postModal(id,button1,button2) {
+
+		// Passed data for modal
+
+		document.getElementById("deletePostButton-mobile").addEventListener("click", delete_post);
+
+		document.getElementById("deletePostButton").addEventListener("click", delete_post);
+
+		function delete_post(){	
+
+			this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting post';	
+			this.disabled = true; 
+			post('/delete_post/' + id,
+				callback = function() {
+
+					location.reload();
+				}
+				)
+		}
+
+		document.getElementById(button1).classList.toggle("d-none");
+		document.getElementById(button2).classList.toggle("d-none");
+
+	};
+</script>
+
 <!-- Delete Post Modal -->
 <div class="modal fade modal-sm-bottom" id="deletePostModal" tabindex="-1" role="dialog" aria-labelledby="deletePostModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">

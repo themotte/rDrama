@@ -1,4 +1,29 @@
 
+<script>
+		const banModal = function(link, id, name) {
+			document.getElementById("banModalTitle").innerHTML = `Ban @${name}`;
+			document.getElementById("ban-modal-link").value = link;
+			document.getElementById("banUserButton").innerHTML = `Ban @${name}`;
+
+			document.getElementById("banUserButton").onclick = function() {
+				let fd = new FormData(document.getElementById("banModalForm"));
+				fd.append("formkey", formkey());
+
+				let xhr = new XMLHttpRequest();
+				xhr.open("POST", `/ban_user/${id}?form`, true);
+				xhr.withCredentials = true;
+
+				xhr.onload = function(){
+					$('#toast-post-success').toast('dispose');
+					$('#toast-post-success').toast('show');
+					document.getElementById('toast-post-success-text').innerHTML = `@${name} banned`;
+				}
+
+				xhr.send(fd);
+			}
+		};
+</script>
+
 <div class="modal fade" id="banModal" tabindex="-1" role="dialog" aria-labelledby="banModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">

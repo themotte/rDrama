@@ -1,7 +1,469 @@
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 
+{% if v %}
+	<script>
+		function post_toast3(url, button1, button2) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", url, true);
+			var form = new FormData()
+
+			if(typeof data === 'object' && data !== null) {
+				for(let k of Object.keys(data)) {
+						form.append(k, data[k]);
+				}
+			}
+
+
+			form.append("formkey", formkey());
+			xhr.withCredentials=true;
+
+			xhr.onload = function() {
+				if (xhr.status >= 200 && xhr.status < 300) {
+					$('#toast-post-success').toast('dispose');
+					$('#toast-post-success').toast('show');
+					try {
+						document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+					} catch(e) {
+						document.getElementById('toast-post-success-text').innerText = "Action successful!";
+					}
+					return true
+
+				} else if (xhr.status >= 300 && xhr.status < 400) {
+					window.location.href = JSON.parse(xhr.response)["redirect"]
+				} else {
+					try {
+						data=JSON.parse(xhr.response);
+
+						$('#toast-post-error').toast('dispose');
+						$('#toast-post-error').toast('show');
+						document.getElementById('toast-post-error-text').innerText = data["error"];
+						return false
+					} catch(e) {
+						$('#toast-post-success').toast('dispose');
+						$('#toast-post-error').toast('dispose');
+						$('#toast-post-error').toast('show');
+						document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
+						return false
+					}
+				}
+			};
+
+			xhr.send(form);
+
+			document.getElementById(button1).classList.toggle("d-md-inline-block");
+			document.getElementById(button2).classList.toggle("d-md-inline-block");
+		}
+
+		//reporting
+		// Report Comment
+
+		report_commentModal = function(id, author) {
+
+		document.getElementById("comment-author").textContent = author;
+
+		//offtopic.disabled=true;
+
+		document.getElementById("reportCommentButton").onclick = function() {
+
+			this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting comment';
+			this.disabled = true;
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", '/flag/comment/'+id, true);
+			var form = new FormData()
+			form.append("formkey", formkey());
+			form.append("reason", document.getElementById("reason-comment").value);
+
+			xhr.withCredentials=true;
+
+			xhr.onload=function() {
+				document.getElementById("reportCommentFormBefore").classList.add('d-none');
+				document.getElementById("reportCommentFormAfter").classList.remove('d-none');
+			};
+
+			xhr.onerror=function(){alert(errortext)};
+			xhr.send(form);
+		}
+
+		};
+
+		$('#reportCommentModal').on('hidden.bs.modal', function () {
+
+		var button = document.getElementById("reportCommentButton");
+
+		var beforeModal = document.getElementById("reportCommentFormBefore");
+		var afterModal = document.getElementById("reportCommentFormAfter");
+
+		button.innerHTML='Report comment';
+		button.disabled= false;
+		afterModal.classList.add('d-none');
+
+		if ( beforeModal.classList.contains('d-none') ) {
+			beforeModal.classList.remove('d-none');
+		}
+
+		});
+
+		//Commenting form
+
+		// Expand comment box on focus, hide otherwise
+
+		$('.comment-box').focus(function (event) {
+			event.preventDefault();
+
+			$(this).parent().parent().addClass("collapsed");
+
+		});
+
+		// Open comment reply box
+
+		function openReplyBox(id) {
+			const element = document.getElementById(`reply-to-${id}`);
+			element.classList.remove('d-none')
+
+			element.getElementsByTagName('textarea')[0].focus()
+		}
+
+		// Comment edit form
+
+		toggleEdit=function(id){
+			comment=document.getElementById("comment-text-"+id);
+			form=document.getElementById("comment-edit-"+id);
+			box=document.getElementById('edit-box-comment-'+id);
+			actions = document.getElementById('comment-' + id +'-actions');
+
+			comment.classList.toggle("d-none");
+			form.classList.toggle("d-none");
+			actions.classList.toggle("d-none");
+			autoExpand(box);
+		};
+
+
+		// Delete Comment
+
+		function delete_commentModal(id,button1,button2) {
+
+			// Passed data for modal
+
+			document.getElementById("deleteCommentButton").onclick = function() {	
+
+				this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
+				this.disabled = true; 
+				post('/delete/comment/' + id,
+					callback = function() {
+
+						location.reload();
+					}
+					)
+			}
+
+			document.getElementById(button1).classList.toggle("d-md-inline-block");
+			document.getElementById(button2).classList.toggle("d-md-inline-block");
+
+			};
+
+		function delete_commentModal2(id,button1,button2) {
+
+			// Passed data for modal
+
+			document.getElementById("deleteCommentButton").onclick = function() {	
+
+				this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
+				this.disabled = true; 
+				post('/delete/comment/' + id,
+					callback = function() {
+
+						location.reload();
+					}
+					)
+			}
+
+			document.getElementById(button1).classList.toggle("d-none");
+			document.getElementById(button2).classList.toggle("d-none");
+		};
+
+
+		post_comment=function(fullname){
+
+
+			var form = new FormData();
+
+			form.append('formkey', formkey());
+			form.append('parent_fullname', fullname);
+			form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
+			form.append('body', document.getElementById('reply-form-body-'+fullname).value);
+			form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/comment");
+			xhr.withCredentials=true;
+			xhr.onload=function(){
+				if (xhr.status==200) {
+					commentForm=document.getElementById('comment-form-space-'+fullname);
+					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
+					$('#toast-comment-success').toast('dispose');
+					$('#toast-comment-error').toast('dispose');
+					$('#toast-comment-success').toast('show');
+				}
+				else {
+					var commentError = document.getElementById("comment-error-text");
+					$('#toast-comment-success').toast('dispose');
+					$('#toast-comment-error').toast('dispose');
+					$('#toast-comment-error').toast('show');
+					commentError.textContent = JSON.parse(xhr.response)["error"];
+				}
+			}
+			xhr.send(form)
+
+			document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
+
+		}
+
+		post_reply=function(id){
+
+			var form = new FormData();
+
+			form.append('formkey', formkey());
+			form.append('parent_id', id);
+			form.append('body', document.getElementById('reply-form-body-'+id).value);
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/reply");
+			xhr.withCredentials=true;
+			xhr.onload=function(){
+				if (xhr.status==200) {
+					commentForm=document.getElementById('comment-form-space-'+id);
+					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
+					$('#toast-comment-success').toast('dispose');
+					$('#toast-comment-error').toast('dispose');
+					$('#toast-comment-success').toast('show');
+				}
+				else {
+					var commentError = document.getElementById("comment-error-text");
+					$('#toast-comment-success').toast('dispose');
+					$('#toast-comment-error').toast('dispose');
+					$('#toast-comment-error').toast('show');
+					commentError.textContent = JSON.parse(xhr.response)["error"];
+				}
+			}
+			xhr.send(form)
+
+			document.getElementById('save-reply-to-'+id).classList.add('disabled');
+
+			}
+
+			comment_edit=function(id){
+
+				var commentError = document.getElementById("comment-error-text");
+
+				var form = new FormData();
+
+				form.append('formkey', formkey());
+				form.append('body', document.getElementById('comment-edit-body-'+id).value);
+				form.append('file', document.getElementById('file-edit-reply-'+id).files[0]);
+
+				var xhr = new XMLHttpRequest();
+				xhr.open("post", "/edit_comment/"+id);
+				xhr.withCredentials=true;
+				xhr.onload=function(){
+					if (xhr.status==200) {
+						commentForm=document.getElementById('comment-text-'+id);
+						commentForm.innerHTML=JSON.parse(xhr.response)["html"];
+						document.getElementById('cancel-edit-'+id).click()
+						$('#toast-comment-success').toast('dispose');
+						$('#toast-comment-error').toast('dispose');
+						$('#toast-comment-success').toast('show');
+					}
+					else {
+						$('#toast-comment-success').toast('dispose');
+						$('#toast-comment-error').toast('dispose');
+						$('#toast-comment-error').toast('show');
+						commentError.textContent = JSON.parse(xhr.response)["error"];
+					}
+				}
+				xhr.send(form)
+
+			}
+	</script>
+{% endif %}
+
+
+{% if v and v.admin_level == 6 %}
+	<script>
+		//comment modding
+		function removeComment(post_id,button1,button2) {
+			url="/ban_comment/"+post_id
+
+			callback=function(){
+				document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+
+				button=document.getElementById("moderate-"+post_id);
+				button.onclick=function(){approveComment(post_id)};
+				button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
+			}
+			post(url, callback, "Comment has been removed.")
+			
+
+			if (typeof button1 !== 'undefined') {
+				document.getElementById(button1).classList.toggle("d-md-inline-block");
+				document.getElementById(button2).classList.toggle("d-md-inline-block");
+			}
+		};
+
+		function approveComment(post_id,button1,button2) {
+			url="/unban_comment/"+post_id
+
+			callback=function(){
+				document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+
+				button=document.getElementById("moderate-"+post_id);
+				button.onclick=function(){removeComment(post_id)};
+				button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
+			}
+
+			post(url, callback, "Comment has been approved.")
+
+			if (typeof button1 !== 'undefined') {
+				document.getElementById(button1).classList.toggle("d-md-inline-block");
+				document.getElementById(button2).classList.toggle("d-md-inline-block");
+			}
+		}
+
+
+		function removeComment2(post_id,button1,button2) {
+			url="/ban_comment/"+post_id
+
+			callback=function(){
+				document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+
+				button=document.getElementById("moderate-"+post_id);
+				button.onclick=function(){approveComment(post_id)};
+				button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
+			}
+			post(url, callback, "Comment has been removed.")
+			
+
+			if (typeof button1 !== 'undefined') {
+				document.getElementById(button1).classList.toggle("d-none");
+				document.getElementById(button2).classList.toggle("d-none");
+			}
+		};
+
+		function approveComment2(post_id,button1,button2) {
+			url="/unban_comment/"+post_id
+
+			callback=function(){
+				document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+
+				button=document.getElementById("moderate-"+post_id);
+				button.onclick=function(){removeComment(post_id)};
+				button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
+			}
+
+			post(url, callback, "Comment has been approved.")
+
+			if (typeof button1 !== 'undefined') {
+				document.getElementById(button1).classList.toggle("d-none");
+				document.getElementById(button2).classList.toggle("d-none");
+			}
+		}
+
+
+		admin_comment=function(cid,button1,button2,distinguish){
+
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/distinguish_comment/"+cid);
+
+			var form = new FormData();
+
+			form.append('formkey', formkey());
+
+			xhr.withCredentials=true;
+			xhr.onload=function(){
+				if (xhr.status==200) {
+					comment=document.getElementById('comment-'+cid+'-only');
+					comment.innerHTML=JSON.parse(xhr.response)["html"];
+				}
+				else {
+					var commentError = document.getElementById("comment-error-text");
+					$('#toast-comment-success').toast('dispose');
+					$('#toast-comment-error').toast('dispose');
+					$('#toast-comment-error').toast('show');
+					commentError.textContent = JSON.parse(xhr.response)["error"];
+				}
+			}
+			xhr.send(form)
+
+			document.getElementById(button1).classList.toggle("d-md-inline-block");
+			document.getElementById(button2).classList.toggle("d-md-inline-block");
+
+			$('#toast-post-success').toast('dispose');
+			$('#toast-post-success').toast('show');
+			if (distinguish=='yes') {
+				document.getElementById('toast-post-success-text').innerText = "Comment distinguished!";
+			}
+			else {
+				document.getElementById('toast-post-success-text').innerText = "Comment undistinguished!";
+			}
+		}
+
+			
+		admin_comment2=function(cid,button1,button2,distinguish){
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/distinguish_comment/"+cid);
+
+			var form = new FormData();
+
+			form.append('formkey', formkey());
+
+			xhr.withCredentials=true;
+			xhr.onload=function(){
+				if (xhr.status==200) {
+					comment=document.getElementById('comment-'+cid+'-only');
+					comment.innerHTML=JSON.parse(xhr.response)["html"];
+				}
+				else {
+					var commentError = document.getElementById("comment-error-text");
+					$('#toast-comment-success').toast('dispose');
+					$('#toast-comment-error').toast('dispose');
+					$('#toast-comment-error').toast('show');
+					commentError.textContent = JSON.parse(xhr.response)["error"];
+				}
+			}
+			xhr.send(form)
+
+			document.getElementById(button1).classList.toggle("d-none");
+			document.getElementById(button2).classList.toggle("d-none");
+
+			$('#toast-post-success').toast('dispose');
+			$('#toast-post-success').toast('show');
+			if (distinguish=='yes') {
+				document.getElementById('toast-post-success-text').innerText = "Comment distinguished!";
+			}
+			else {
+				document.getElementById('toast-post-success-text').innerText = "Comment undistinguished!";
+			}
+		}
+	</script>
+{% endif %}
+
 <script>
+
+	// comment collapse
+
+	// Toggle comment collapse
+
+	function collapse_comment(comment_id) {
+		const comment = "comment-" + comment_id
+		const element = document.getElementById(comment)
+		const closed = element.classList.toggle("collapsed")
+		const top = element.getBoundingClientRect().y
+
+		if (closed && top < 0) {
+			element.scrollIntoView()
+			window.scrollBy(0, - 100)
+		}
+	};
+
 	var clipboard = new ClipboardJS('.copy-link');
 		clipboard.on('success', function(e) {
 
@@ -302,8 +764,6 @@
 						
 						{% if v %}
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)"><i class="fas fa-flag fa-fw"></i>Report</a></li>
-						{% else %}
-							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-toggle="modal" data-target="#reportCommentModal" onclick=""><i class="fas fa-flag fa-fw"></i>Report</a></li>
 						{% endif %}
 
 
@@ -548,11 +1008,76 @@
 	{% include "gif_modal.html" %}
 	{% include "emoji_modal.html" %}
 	{% include "award_modal.html" %}
-	{% include "delete_comment_modal.html" %}
 	{% if v.admin_level == 6 %}
 		{% include "ban_modal.html" %}
 	{% endif %}
+
+	<!-- Delete Comment Modal -->
+	<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Delete comment?</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true"><i class="far fa-times"></i></span>
+					</button>
+				</div>
+				
+				<div class="modal-body text-center">
+
+					<div class="py-4">
+						<i class="fad fa-trash-alt text-muted" style="font-size: 3.5rem;"></i>
+					</div>
+
+					<p>Your comment will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.</p>
+				</div>
+				
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
+					<button id="deleteCommentButton" class="btn btn-danger">Delete comment</button>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="reportCommentModal" tabindex="-1" role="dialog" aria-labelledby="reportCommentModalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Report <span id="comment-author"></span>'s comment</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true"><i class="far fa-times"></i></span>
+					</button>
+				</div>
+				<!-- Before report is made, show this -->
+				<div class="" id="reportCommentFormBefore">
+					<form id="report-comment-form" method="post">
+						<div class="modal-body">
+							<div class="h6">We're sorry something here is wrong.</div>
+							<small class="form-text text-muted">Please enter a reason for reporting below.</small>
+							<pre></pre>
+							<input maxlength="100" id="reason-comment" class="form-control"/>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
+							<button type="button" id="reportCommentButton" class="btn btn-danger">Report comment</button>
+						</div>
+					</form>
+				</div>
+				<!-- After report is made, show this -->
+				<div class="d-none" id="reportCommentFormAfter">
+					<div class="modal-body">
+						<div class="h6">Thank you for reporting this comment!</div>
+						<small class="form-text text-muted">We'll take it from here.</small>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endif %}
 {% include "expanded_image_modal.html" %}
-{% include "flag_comment_modal.html" %}
 </body>
