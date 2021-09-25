@@ -173,7 +173,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		elif t == 'year':
 			cutoff = now - 31536000
 		print(cutoff)
-		print(posts.all())
 		posts = posts.filter(Submission.created_utc >= cutoff)
 
 	posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
