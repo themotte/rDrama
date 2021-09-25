@@ -174,13 +174,12 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 			cutoff = now - 31536000
 		posts = posts.filter(Submission.created_utc >= cutoff)
 
-	posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
-
 	print(posts.all())
+
+	posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
 
 	if v:
 		posts = posts.filter(or_(Submission.processing == False, Submission.author_id == v.id))
-		print(posts.all())
 	else:
 		posts = posts.filter_by(processing=False)
 
