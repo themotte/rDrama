@@ -1,6 +1,19 @@
 {% extends "default.html" %}
 
 
+{% set title=p.realtitle(v) %}
+{% set ups=p.upvotes %}
+{% set downs=p.downvotes %}
+{% set score=ups-downs %}
+
+{% if v %}
+{% set voted=p.voted if p.voted else 0 %}
+{% else %}
+{% set voted=-2 %}
+{% endif %}
+
+{% block title %}
+
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 
 {% if v and v.id == p.author_id %}
@@ -26,22 +39,6 @@
 
 
 <script>
-	var clipboard = new ClipboardJS('.copy-link');
-		clipboard.on('success', function(e) {
-
-				jQuery(function($) {
-						$('#toast-success').toast('show');
-				})
-				console.log(e);
-		});
-		clipboard.on('error', function(e) {
-
-				jQuery(function($) {
-						$('#toast-error').toast('show');
-				})
-				console.log(e);
-		});
-
 	var date = new Date('{{p.created_datetime}}');
 	document.getElementById('timestamp').title = date.toString();
 	{% if p.edited_utc %}
@@ -49,19 +46,6 @@
 		document.getElementById('edited_timestamp').title = date.toString();
 	{% endif %}
 </script>
-
-{% set title=p.realtitle(v) %}
-{% set ups=p.upvotes %}
-{% set downs=p.downvotes %}
-{% set score=ups-downs %}
-
-{% if v %}
-{% set voted=p.voted if p.voted else 0 %}
-{% else %}
-{% set voted=-2 %}
-{% endif %}
-
-{% block title %}
 
 <meta charset="utf-8" />
 <meta property="og:type" content="article" />
