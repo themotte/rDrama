@@ -153,7 +153,7 @@ def front_all(v):
 #@cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
 
-	posts = g.db.query(Submission).options(lazyload('*'))
+	posts = g.db.query(Submission.id).options(lazyload('*'))
 
 	if 'rdrama' in request.host and sort == "hot":
 		cutoff = int(time.time()) - 86400
@@ -223,9 +223,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts[:25]
 
-	if page == 1: posts = g.db.query(Submission).options(lazyload('*')).filter(Submission.stickied != None).all() + posts
+	if page == 1: posts = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.stickied != None).all() + posts
 
-	if ids_only: posts = [x.id for x in posts]
+	if ids_only: posts = [x[0] for x in posts]
 
 	print(posts)
 	return posts, next_exists
