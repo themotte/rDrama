@@ -244,7 +244,8 @@ def award_post(pid, v):
 	g.db.add(post.author)
 
 	g.db.commit()
-	return redirect(request.referrer)
+	if request.referrer: return redirect(request.referrer)
+	else: return redirect("/")
 
 
 @app.post("/comment/<cid>/awards")
