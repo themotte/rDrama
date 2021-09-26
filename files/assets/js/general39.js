@@ -3,10 +3,6 @@ document.addEventListener("DOMContentLoaded", function(){
     tooltipTriggerList.map(function(element){
         return new bootstrap.Tooltip(element);
     });
-
-	for(let el of document.getElementsByClassName("toast")) {
-		new bootstrap.Toast(el);
-	}
 });
 
 

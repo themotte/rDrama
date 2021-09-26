@@ -62,9 +62,12 @@
 			let result = callback(xhr);
 				
 			if (xhr.status >= 200 && xhr.status < 300) {
-				document.getElementById('toast-post-error').toast('dispose');
-				document.getElementById('toast-post-success').toast('dispose');
-				document.getElementById('toast-post-success').toast('show');
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.hide();
+				
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				myToast.hide();
+				myToast.show();
 
 				try {
 					if(typeof result == "string") {
@@ -78,9 +81,12 @@
 
 				return true;
 			} else {
-				document.getElementById('toast-post-success').toast('dispose');
-				document.getElementById('toast-post-error').toast('dispose');
-				document.getElementById('toast-post-error').toast('show');
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				myToast.hide();
+
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.hide();
+				myToast.show();
 
 				try {
 					if(typeof result == "string") {
