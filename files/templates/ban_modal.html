@@ -14,8 +14,9 @@
 				xhr.withCredentials = true;
 
 				xhr.onload = function(){
-					document.getElementById('toast-post-success').toast('dispose');
-					document.getElementById('toast-post-success').toast('show');
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+					myToast.hide();
+					myToast.show();
 					document.getElementById('toast-post-success-text').innerHTML = `@${name} banned`;
 				}
 
