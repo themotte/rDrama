@@ -40,8 +40,9 @@ function post_toast(url, reload, data) {
 
 	xhr.onload = function() {
 		if (xhr.status >= 200 && xhr.status < 300) {
-			document.getElementById('toast-post-success').toast('dispose');
-			document.getElementById('toast-post-success').toast('show');
+			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			myToast.hide();
+			myToast.show();
 			try {
 				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
 			} catch(e) {
@@ -57,14 +58,17 @@ function post_toast(url, reload, data) {
 			try {
 				data=JSON.parse(xhr.response);
 
-				document.getElementById('toast-post-error').toast('dispose');
-				document.getElementById('toast-post-error').toast('show');
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.hide();
+				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 				return false
 			} catch(e) {
-				document.getElementById('toast-post-success').toast('dispose');
-				document.getElementById('toast-post-error').toast('dispose');
-				document.getElementById('toast-post-error').toast('show');
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				myToast.hide();
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.hide();
+				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
 				return false
 			}
@@ -93,8 +97,9 @@ function post_toast2(url, button1, button2) {
 
 	xhr.onload = function() {
 		if (xhr.status >= 200 && xhr.status < 300) {
-			document.getElementById('toast-post-success').toast('dispose');
-			document.getElementById('toast-post-success').toast('show');
+			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			myToast.hide();
+			myToast.show();
 			try {
 				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
 			} catch(e) {
@@ -108,14 +113,17 @@ function post_toast2(url, button1, button2) {
 			try {
 				data=JSON.parse(xhr.response);
 
-				document.getElementById('toast-post-error').toast('dispose');
-				document.getElementById('toast-post-error').toast('show');
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.hide();
+				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 				return false
 			} catch(e) {
-				document.getElementById('toast-post-success').toast('dispose');
-				document.getElementById('toast-post-error').toast('dispose');
-				document.getElementById('toast-post-error').toast('show');
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				myToast.hide();
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.hide();
+				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
 				return false
 			}
