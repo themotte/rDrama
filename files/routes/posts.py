@@ -75,7 +75,6 @@ def publish(pid, v):
 @auth_required
 def submit_get(v):
 
-		
 	return render_template("submit.html",
 						   v=v)
 

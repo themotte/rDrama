@@ -17,21 +17,17 @@
 
 	<script>
 
-		// var clipboard = new ClipboardJS('.copy-link');
-		// 	clipboard.on('success', function(e) {
-
-		// 			jQuery(function($) {
-		// 					document.getElementById('toast-success').toast('show');
-		// 			})
-		// 			console.log(e);
-		// 	});
-		// 	clipboard.on('error', function(e) {
-
-		// 			jQuery(function($) {
-		// 					document.getElementById('toast-error').toast('show');
-		// 			})
-		// 			console.log(e);
-		// 	});
+		var clipboard = new ClipboardJS('.copy-link');
+		clipboard.on('success', function(e) {
+				var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
+				myToast.show();
+				console.log(e);
+		});
+		clipboard.on('error', function(e) {
+				var myToast = new bootstrap.Toast(document.getElementById('toast-error'));
+				myToast.show();
+				console.log(e);
+		});
 
 
 		//email change
