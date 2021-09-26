@@ -7,8 +7,7 @@
 			}
 			event.preventDefault();
 
-			let source = event.target || event.srcElement;
-			source = source.parentNode;
+			let source = (event.target || event.srcElement).parentNode;
 			var url= source.dataset.bsUrl;
 
 			expandDesktopImage(url);
