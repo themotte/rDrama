@@ -115,7 +115,7 @@
 		for(let el of document.getElementsByClassName('comment-box')) {
 			el.addEventListener('focus', function(event) {
 				event.preventDefault();
-				this.parent().parent().addClass("collapsed");
+				this.parentNode.parentNode.addClass("collapsed");
 			});
 		}
 
