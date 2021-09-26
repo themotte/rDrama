@@ -5,7 +5,6 @@
 //     });
 // });
 
-
 function post(url, callback, errortext) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
