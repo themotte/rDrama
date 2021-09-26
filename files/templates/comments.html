@@ -141,7 +141,7 @@
 
 		// Delete Comment
 
-		function delete_commentModal(id,button1,button2) {
+		function delete_commentModal(id) {
 
 			// Passed data for modal
 
@@ -157,29 +157,6 @@
 					)
 			}
 
-			document.getElementById(button1).classList.toggle("d-md-inline-block");
-			document.getElementById(button2).classList.toggle("d-md-inline-block");
-
-			};
-
-		function delete_commentModal2(id,button1,button2) {
-
-			// Passed data for modal
-
-			document.getElementById("deleteCommentButton").onclick = function() {	
-
-				this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
-				this.disabled = true; 
-				post('/delete/comment/' + id,
-					callback = function() {
-
-						location.reload();
-					}
-					)
-			}
-
-			document.getElementById(button1).classList.toggle("d-none");
-			document.getElementById(button2).classList.toggle("d-none");
 		};
 
 
