@@ -217,12 +217,12 @@
 		if (!("standalone" in window.navigator && window.navigator.standalone)){
 			if (window.innerWidth <= 737){
 				try {
-					document.getElementById('mobile-prompt').tooltip('show')
+					document.getElementById('mobile-prompt').trigger()
 					
 					document.getElementsByClassName('tooltip')[0].addEventListener(
 						'click', 
 						function(event){
-							document.getElementById('mobile-prompt').tooltip('hide')
+							document.getElementById('mobile-prompt').trigger()
 							var xhr = new XMLHttpRequest();
 							xhr.withCredentials=true;
 							xhr.open("POST", '/dismiss_mobile_tip', true);
