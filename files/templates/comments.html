@@ -280,7 +280,7 @@
 			callback=function(){
 				document.getElementById("comment-"+post_id+"-only").classList.add("banned");
 
-				button=document.getElementById("moderate-"+post_id);
+				button=document.getElementById("remove-"+post_id);
 				button.onclick=function(){approveComment(post_id)};
 				button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
 			}
@@ -299,7 +299,7 @@
 			callback=function(){
 				document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
 
-				button=document.getElementById("moderate-"+post_id);
+				button=document.getElementById("remove-"+post_id);
 				button.onclick=function(){removeComment(post_id)};
 				button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 			}
@@ -319,7 +319,7 @@
 			callback=function(){
 				document.getElementById("comment-"+post_id+"-only").classList.add("banned");
 
-				button=document.getElementById("moderate-"+post_id);
+				button=document.getElementById("remove-"+post_id);
 				button.onclick=function(){approveComment(post_id)};
 				button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
 			}
@@ -338,7 +338,7 @@
 			callback=function(){
 				document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
 
-				button=document.getElementById("moderate-"+post_id);
+				button=document.getElementById("remove-"+post_id);
 				button.onclick=function(){removeComment(post_id)};
 				button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 			}
