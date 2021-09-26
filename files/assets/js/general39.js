@@ -94,13 +94,13 @@ function post_toast2(url, button1, button2) {
 
 	xhr.onload = function() {
 		if (xhr.status >= 200 && xhr.status < 300) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-			myToast.show();
 			try {
 				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
 			} catch(e) {
 				document.getElementById('toast-post-success-text').innerText = "Action successful!";
 			}
+			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			myToast.show();
 			return true
 
 		} else if (xhr.status >= 300 && xhr.status < 400) {
