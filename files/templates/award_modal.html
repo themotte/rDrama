@@ -49,6 +49,7 @@
 			var thisDownvoteButton = downvoteButton[j];
 			var thisScoreText = scoreText[j];
 			var thisScore = Number(thisScoreText.textContent);
+			var voteDirection = "0"
 
 			if (thisUpvoteButton.classList.contains('active')) {
 				thisUpvoteButton.classList.remove('active')
@@ -99,6 +100,7 @@
 			var thisDownvoteButton = downvoteButton[j];
 			var thisScoreText = scoreText[j];
 			var thisScore = Number(thisScoreText.textContent);
+			var voteDirection = "0"
 
 			if (thisDownvoteButton.classList.contains('active')) {
 				thisDownvoteButton.classList.remove('active')
