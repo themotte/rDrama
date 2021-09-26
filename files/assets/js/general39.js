@@ -1,4 +1,14 @@
-//POST
+document.addEventListener("DOMContentLoaded", function(){
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(element){
+        return new bootstrap.Tooltip(element);
+    });
+
+    var toastTriggerList = [].slice.call(document.querySelectorAll('.toast'));
+    toastTriggerList.map(function(element){
+        return new bootstrap.Toast(element);
+    });
+});
 
 function post(url, callback, errortext) {
 	var xhr = new XMLHttpRequest();
@@ -121,15 +131,3 @@ function post_toast2(url, button1, button2) {
 	document.getElementById(button1).classList.toggle("d-none");
 	document.getElementById(button2).classList.toggle("d-none");
 }
-
-document.addEventListener("DOMContentLoaded", function(){
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function(element){
-        return new bootstrap.Tooltip(element);
-    });
-
-    var toastTriggerList = [].slice.call(document.querySelectorAll('.toast'));
-    toastTriggerList.map(function(element){
-        return new bootstrap.Toast(element);
-    });
-});
