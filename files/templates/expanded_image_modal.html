@@ -8,6 +8,7 @@
 			event.preventDefault();
 
 			const source = event.target || event.srcElement;
+			console.log(source.nodeName);
 			var url= source.data('url');
 
 			expandDesktopImage(url,url);
