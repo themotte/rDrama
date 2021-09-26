@@ -10,8 +10,7 @@
 			let source = event.target || event.srcElement;
 			source = source.parentNode;
 			console.log(source.nodeName);
-			var url= source.dataset['bs-url'];
-			console.log(source.dataset);
+			var url= source.dataset.bsUrl;
 
 			expandDesktopImage(url);
 		}
