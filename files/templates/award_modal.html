@@ -2,13 +2,11 @@
 	// Voting
 
 	function post_vote(url, callback) {
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	var form = new FormData()
-	form.append("formkey", formkey());
-	xhr.withCredentials=true;
-
-	xhr.onload = function() {
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		var form = new FormData()
+		form.append("formkey", formkey());
+		xhr.withCredentials=true;
 		xhr.send(form);
 	}
 
