@@ -9,29 +9,7 @@
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
-		if (xhr.status==204) {}
-			else if (xhr.status >= 200 && xhr.status < 300) {
-				$('#toast-post-success').toast('dispose');
-				$('#toast-post-success').toast('show');
-				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
-				callback(xhr)
-				return true
-
-			} else if (xhr.status >= 300 && xhr.status < 400) {
-				window.location.href = JSON.parse(xhr.response)["redirect"]
-			} else {
-				data=JSON.parse(xhr.response);
-				
-				$('#toast-post-error').toast('dispose');
-				$('#toast-post-error').toast('show');
-				document.getElementById('toast-post-error-text').innerText = data["error"];
-				return false
-				
-			}
-		};
-
 		xhr.send(form);
-
 	}
 
 	var upvote = function(event) {

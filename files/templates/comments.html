@@ -372,8 +372,10 @@
 			document.getElementById(button1).classList.toggle("d-md-inline-block");
 			document.getElementById(button2).classList.toggle("d-md-inline-block");
 
-			document.getElementById('toast-post-success').toast('dispose');
-			document.getElementById('toast-post-success').toast('show');
+			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			myToast.hide();
+			myToast.show();
+
 			if (distinguish=='yes') {
 				document.getElementById('toast-post-success-text').innerText = "Comment distinguished!";
 			}
