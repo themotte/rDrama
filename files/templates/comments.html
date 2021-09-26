@@ -172,15 +172,19 @@
 				if (xhr.status==200) {
 					commentForm=document.getElementById('comment-form-space-'+fullname);
 					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-					document.getElementById('toast-comment-success').toast('dispose');
-					document.getElementById('toast-comment-error').toast('dispose');
-					document.getElementById('toast-comment-success').toast('show');
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+					myToast.hide();
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+					myToast.hide();
+					myToast.show();
 				}
 				else {
 					var commentError = document.getElementById("comment-error-text");
-					document.getElementById('toast-comment-success').toast('dispose');
-					document.getElementById('toast-comment-error').toast('dispose');
-					document.getElementById('toast-comment-error').toast('show');
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+					myToast.hide();
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+					myToast.hide();
+					myToast.show();
 					commentError.textContent = JSON.parse(xhr.response)["error"];
 				}
 			}
@@ -204,16 +208,20 @@
 				if (xhr.status==200) {
 					commentForm=document.getElementById('comment-form-space-'+id);
 					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-					document.getElementById('toast-comment-success').toast('dispose');
-					document.getElementById('toast-comment-error').toast('dispose');
-					document.getElementById('toast-comment-success').toast('show');
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+					myToast.hide();
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+					myToast.hide();
+					myToast.show();
 				}
 				else {
 					var commentError = document.getElementById("comment-error-text");
-					document.getElementById('toast-comment-success').toast('dispose');
-					document.getElementById('toast-comment-error').toast('dispose');
-					document.getElementById('toast-comment-error').toast('show');
-					commentError.textContent = JSON.parse(xhr.response)["error"];
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+					myToast.hide();
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+					myToast.hide();
+					myToast.show();
+					
 				}
 			}
 			xhr.send(form)
@@ -240,14 +248,19 @@
 						commentForm=document.getElementById('comment-text-'+id);
 						commentForm.innerHTML=JSON.parse(xhr.response)["html"];
 						document.getElementById('cancel-edit-'+id).click()
-						document.getElementById('toast-comment-success').toast('dispose');
-						document.getElementById('toast-comment-error').toast('dispose');
-						document.getElementById('toast-comment-success').toast('show');
+						var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+						myToast.hide();
+						var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+						myToast.hide();
+						myToast.show();
 					}
 					else {
-						document.getElementById('toast-comment-success').toast('dispose');
-						document.getElementById('toast-comment-error').toast('dispose');
-						document.getElementById('toast-comment-error').toast('show');
+						var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+						myToast.hide();
+						var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+						myToast.hide();
+						myToast.show();
+					
 						commentError.textContent = JSON.parse(xhr.response)["error"];
 					}
 				}
@@ -357,9 +370,12 @@
 				}
 				else {
 					var commentError = document.getElementById("comment-error-text");
-					document.getElementById('toast-comment-success').toast('dispose');
-					document.getElementById('toast-comment-error').toast('dispose');
-					document.getElementById('toast-comment-error').toast('show');
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+					myToast.hide();
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+					myToast.hide();
+					myToast.show();
+					
 					commentError.textContent = JSON.parse(xhr.response)["error"];
 				}
 			}
@@ -397,9 +413,12 @@
 				}
 				else {
 					var commentError = document.getElementById("comment-error-text");
-					document.getElementById('toast-comment-success').toast('dispose');
-					document.getElementById('toast-comment-error').toast('dispose');
-					document.getElementById('toast-comment-error').toast('show');
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+					myToast.hide();
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+					myToast.hide();
+					myToast.show();
+					
 					commentError.textContent = JSON.parse(xhr.response)["error"];
 				}
 			}

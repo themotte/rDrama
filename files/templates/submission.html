@@ -55,15 +55,20 @@
 			if (xhr.status==200) {
 				commentForm=document.getElementById('comment-form-space-'+fullname);
 				commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-				document.getElementById('toast-comment-success').toast('dispose');
-				document.getElementById('toast-comment-error').toast('dispose');
-				document.getElementById('toast-comment-success').toast('show');
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.hide();
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				myToast.hide();
+				myToast.show();
 			}
 			else {
 				var commentError = document.getElementById("comment-error-text");
-				document.getElementById('toast-comment-success').toast('dispose');
-				document.getElementById('toast-comment-error').toast('dispose');
-				document.getElementById('toast-comment-error').toast('show');
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				myToast.hide();
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.hide();
+				myToast.show();
+					
 				commentError.textContent = JSON.parse(xhr.response)["error"];
 			}
 		}
