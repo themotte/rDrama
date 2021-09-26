@@ -21,14 +21,14 @@
 		clipboard.on('success', function(e) {
 
 				jQuery(function($) {
-						$('#toast-success').toast('show');
+						document.getElementById('toast-success').toast('show');
 				})
 				console.log(e);
 		});
 		clipboard.on('error', function(e) {
 
 				jQuery(function($) {
-						$('#toast-error').toast('show');
+						document.getElementById('toast-error').toast('show');
 				})
 				console.log(e);
 		});

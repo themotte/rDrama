@@ -20,8 +20,8 @@
 
 			xhr.onload = function() {
 				if (xhr.status >= 200 && xhr.status < 300) {
-					$('#toast-post-success').toast('dispose');
-					$('#toast-post-success').toast('show');
+					document.getElementById('toast-post-success').toast('dispose');
+					document.getElementById('toast-post-success').toast('show');
 					try {
 						document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
 					} catch(e) {
@@ -35,14 +35,14 @@
 					try {
 						data=JSON.parse(xhr.response);
 
-						$('#toast-post-error').toast('dispose');
-						$('#toast-post-error').toast('show');
+						document.getElementById('toast-post-error').toast('dispose');
+						document.getElementById('toast-post-error').toast('show');
 						document.getElementById('toast-post-error-text').innerText = data["error"];
 						return false
 					} catch(e) {
-						$('#toast-post-success').toast('dispose');
-						$('#toast-post-error').toast('dispose');
-						$('#toast-post-error').toast('show');
+						document.getElementById('toast-post-success').toast('dispose');
+						document.getElementById('toast-post-error').toast('dispose');
+						document.getElementById('toast-post-error').toast('show');
 						document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
 						return false
 					}
@@ -87,7 +87,7 @@
 
 		};
 
-		$('#reportCommentModal').on('hidden.bs.modal', function () {
+		document.getElementById('reportCommentModal').on('hidden.bs.modal', function () {
 
 		var button = document.getElementById("reportCommentButton");
 
@@ -200,15 +200,15 @@
 				if (xhr.status==200) {
 					commentForm=document.getElementById('comment-form-space-'+fullname);
 					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-					$('#toast-comment-success').toast('dispose');
-					$('#toast-comment-error').toast('dispose');
-					$('#toast-comment-success').toast('show');
+					document.getElementById('toast-comment-success').toast('dispose');
+					document.getElementById('toast-comment-error').toast('dispose');
+					document.getElementById('toast-comment-success').toast('show');
 				}
 				else {
 					var commentError = document.getElementById("comment-error-text");
-					$('#toast-comment-success').toast('dispose');
-					$('#toast-comment-error').toast('dispose');
-					$('#toast-comment-error').toast('show');
+					document.getElementById('toast-comment-success').toast('dispose');
+					document.getElementById('toast-comment-error').toast('dispose');
+					document.getElementById('toast-comment-error').toast('show');
 					commentError.textContent = JSON.parse(xhr.response)["error"];
 				}
 			}
@@ -232,15 +232,15 @@
 				if (xhr.status==200) {
 					commentForm=document.getElementById('comment-form-space-'+id);
 					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-					$('#toast-comment-success').toast('dispose');
-					$('#toast-comment-error').toast('dispose');
-					$('#toast-comment-success').toast('show');
+					document.getElementById('toast-comment-success').toast('dispose');
+					document.getElementById('toast-comment-error').toast('dispose');
+					document.getElementById('toast-comment-success').toast('show');
 				}
 				else {
 					var commentError = document.getElementById("comment-error-text");
-					$('#toast-comment-success').toast('dispose');
-					$('#toast-comment-error').toast('dispose');
-					$('#toast-comment-error').toast('show');
+					document.getElementById('toast-comment-success').toast('dispose');
+					document.getElementById('toast-comment-error').toast('dispose');
+					document.getElementById('toast-comment-error').toast('show');
 					commentError.textContent = JSON.parse(xhr.response)["error"];
 				}
 			}
@@ -268,14 +268,14 @@
 						commentForm=document.getElementById('comment-text-'+id);
 						commentForm.innerHTML=JSON.parse(xhr.response)["html"];
 						document.getElementById('cancel-edit-'+id).click()
-						$('#toast-comment-success').toast('dispose');
-						$('#toast-comment-error').toast('dispose');
-						$('#toast-comment-success').toast('show');
+						document.getElementById('toast-comment-success').toast('dispose');
+						document.getElementById('toast-comment-error').toast('dispose');
+						document.getElementById('toast-comment-success').toast('show');
 					}
 					else {
-						$('#toast-comment-success').toast('dispose');
-						$('#toast-comment-error').toast('dispose');
-						$('#toast-comment-error').toast('show');
+						document.getElementById('toast-comment-success').toast('dispose');
+						document.getElementById('toast-comment-error').toast('dispose');
+						document.getElementById('toast-comment-error').toast('show');
 						commentError.textContent = JSON.parse(xhr.response)["error"];
 					}
 				}
@@ -385,9 +385,9 @@
 				}
 				else {
 					var commentError = document.getElementById("comment-error-text");
-					$('#toast-comment-success').toast('dispose');
-					$('#toast-comment-error').toast('dispose');
-					$('#toast-comment-error').toast('show');
+					document.getElementById('toast-comment-success').toast('dispose');
+					document.getElementById('toast-comment-error').toast('dispose');
+					document.getElementById('toast-comment-error').toast('show');
 					commentError.textContent = JSON.parse(xhr.response)["error"];
 				}
 			}
@@ -396,8 +396,8 @@
 			document.getElementById(button1).classList.toggle("d-md-inline-block");
 			document.getElementById(button2).classList.toggle("d-md-inline-block");
 
-			$('#toast-post-success').toast('dispose');
-			$('#toast-post-success').toast('show');
+			document.getElementById('toast-post-success').toast('dispose');
+			document.getElementById('toast-post-success').toast('show');
 			if (distinguish=='yes') {
 				document.getElementById('toast-post-success-text').innerText = "Comment distinguished!";
 			}
@@ -423,9 +423,9 @@
 				}
 				else {
 					var commentError = document.getElementById("comment-error-text");
-					$('#toast-comment-success').toast('dispose');
-					$('#toast-comment-error').toast('dispose');
-					$('#toast-comment-error').toast('show');
+					document.getElementById('toast-comment-success').toast('dispose');
+					document.getElementById('toast-comment-error').toast('dispose');
+					document.getElementById('toast-comment-error').toast('show');
 					commentError.textContent = JSON.parse(xhr.response)["error"];
 				}
 			}
@@ -434,8 +434,8 @@
 			document.getElementById(button1).classList.toggle("d-none");
 			document.getElementById(button2).classList.toggle("d-none");
 
-			$('#toast-post-success').toast('dispose');
-			$('#toast-post-success').toast('show');
+			document.getElementById('toast-post-success').toast('dispose');
+			document.getElementById('toast-post-success').toast('show');
 			if (distinguish=='yes') {
 				document.getElementById('toast-post-success-text').innerText = "Comment distinguished!";
 			}
@@ -468,14 +468,14 @@
 		clipboard.on('success', function(e) {
 
 				jQuery(function($) {
-						$('#toast-success').toast('show');
+						document.getElementById('toast-success').toast('show');
 				})
 				console.log(e);
 		});
 		clipboard.on('error', function(e) {
 
 				jQuery(function($) {
-						$('#toast-error').toast('show');
+						document.getElementById('toast-error').toast('show');
 				})
 				console.log(e);
 		});

@@ -62,9 +62,9 @@
 			let result = callback(xhr);
 				
 			if (xhr.status >= 200 && xhr.status < 300) {
-				$('#toast-post-error').toast('dispose');
-				$('#toast-post-success').toast('dispose');
-				$('#toast-post-success').toast('show');
+				document.getElementById('toast-post-error').toast('dispose');
+				document.getElementById('toast-post-success').toast('dispose');
+				document.getElementById('toast-post-success').toast('show');
 
 				try {
 					if(typeof result == "string") {
@@ -78,9 +78,9 @@
 
 				return true;
 			} else {
-				$('#toast-post-success').toast('dispose');
-				$('#toast-post-error').toast('dispose');
-				$('#toast-post-error').toast('show');
+				document.getElementById('toast-post-success').toast('dispose');
+				document.getElementById('toast-post-error').toast('dispose');
+				document.getElementById('toast-post-error').toast('show');
 
 				try {
 					if(typeof result == "string") {

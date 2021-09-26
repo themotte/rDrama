@@ -148,8 +148,8 @@
 					window.location.reload(true);
 				}
 				else {
-					$('#toast-exile-error').toast('dispose');
-					$('#toast-exile-error').toast('show');
+					document.getElementById('toast-exile-error').toast('dispose');
+					document.getElementById('toast-exile-error').toast('show');
 					exileError.textContent = JSON.parse(xhr.response)["error"];
 				}
 			}

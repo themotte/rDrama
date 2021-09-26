@@ -199,7 +199,7 @@
 				id=$(this).data('id');
 
 
-				$('#post-text-'+id).toggleClass('d-none');
+				document.getElementById('post-text-'+id).toggleClass('d-none');
 				$('.text-expand-icon-'+id).toggleClass('fa-expand-alt');
 				$('.text-expand-icon-'+id).toggleClass('fa-compress-alt');
 
@@ -214,11 +214,11 @@
 		if (!("standalone" in window.navigator && window.navigator.standalone)){
 			if (window.innerWidth <= 737){
 				try {
-					$('#mobile-prompt').tooltip('show')
+					document.getElementById('mobile-prompt').tooltip('show')
 					$('.tooltip')[0].addEventListener(
 						'click', 
 						function(event){
-							$('#mobile-prompt').tooltip('hide')
+							document.getElementById('mobile-prompt').tooltip('hide')
 							var xhr = new XMLHttpRequest();
 							xhr.withCredentials=true;
 							xhr.open("POST", '/dismiss_mobile_tip', true);
