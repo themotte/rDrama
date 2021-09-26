@@ -8,7 +8,7 @@
 			event.preventDefault();
 
 			let source = event.target || event.srcElement;
-			source = source.parentNode();
+			source = source.parentNode;
 			console.log(source.nodeName);
 			var url= source.data('url');
 
