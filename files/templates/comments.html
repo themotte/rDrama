@@ -465,14 +465,14 @@
 	};
 
 	var clipboard = new ClipboardJS('.copy-link');
-		clipboard.addEventListener('success', function(e) {
+		clipboard.on('success', function(e) {
 
 				jQuery(function($) {
 						document.getElementById('toast-success').toast('show');
 				})
 				console.log(e);
 		});
-		clipboard.addEventListener('error', function(e) {
+		clipboard.on('error', function(e) {
 
 				jQuery(function($) {
 						document.getElementById('toast-error').toast('show');
