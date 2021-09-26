@@ -124,7 +124,12 @@ function post_toast2(url, button1, button2) {
 
 document.addEventListener("DOMContentLoaded", function(){
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function(element){
+    tooltipTriggerList.map(function(element){
         return new bootstrap.Tooltip(element);
+    });
+
+    var toastTriggerList = [].slice.call(document.querySelectorAll('.toast'));
+    toastTriggerList.map(function(element){
+        return new bootstrap.Toast(element);
     });
 });
