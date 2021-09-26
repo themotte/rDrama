@@ -92,9 +92,13 @@
 		var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
 		var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
 		var scoreText = document.getElementsByClassName(type + '-score-' + id);
+		console.log(upvoteButton.length)
+		console.log(downvoteButton.length)
+		console.log(scoreText.length)
 
 		for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
+			console.log("sex")
 			var thisUpvoteButton = upvoteButton[j];
 			var thisDownvoteButton = downvoteButton[j];
 			var thisScoreText = scoreText[j];
