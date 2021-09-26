@@ -2,21 +2,21 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 <script>
-	var clipboard = new ClipboardJS('.copy-link');
-		clipboard.on('success', function(e) {
+	// var clipboard = new ClipboardJS('.copy-link');
+	// 	clipboard.on('success', function(e) {
 
-				jQuery(function($) {
-						document.getElementById('toast-success').toast('show');
-				})
-				console.log(e);
-		});
-		clipboard.on('error', function(e) {
+	// 			jQuery(function($) {
+	// 					document.getElementById('toast-success').toast('show');
+	// 			})
+	// 			console.log(e);
+	// 	});
+	// 	clipboard.on('error', function(e) {
 
-				jQuery(function($) {
-						document.getElementById('toast-error').toast('show');
-				})
-				console.log(e);
-		});
+	// 			jQuery(function($) {
+	// 					document.getElementById('toast-error').toast('show');
+	// 			})
+	// 			console.log(e);
+	// 	});
 </script>
 
 {% for p in listing %}
