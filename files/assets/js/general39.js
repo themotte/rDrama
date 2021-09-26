@@ -122,8 +122,8 @@ function post_toast2(url, button1, button2) {
 	document.getElementById(button2).classList.toggle("d-none");
 }
 
-// Tooltips
+// // Tooltips
 
-$(document).ready(function(){
-	$('[data-bs-toggle="tooltip"]').tooltip(); 
-});
+// $(document).ready(function(){
+// 	$('[data-bs-toggle="tooltip"]').tooltip(); 
+// });
