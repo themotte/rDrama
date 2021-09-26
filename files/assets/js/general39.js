@@ -41,7 +41,6 @@ function post_toast(url, reload, data) {
 	xhr.onload = function() {
 		if (xhr.status >= 200 && xhr.status < 300) {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-			myToast.hide();
 			myToast.show();
 			try {
 				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
@@ -59,7 +58,6 @@ function post_toast(url, reload, data) {
 				data=JSON.parse(xhr.response);
 
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.hide();
 				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 				return false
@@ -67,7 +65,6 @@ function post_toast(url, reload, data) {
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 				myToast.hide();
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.hide();
 				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
 				return false
@@ -98,7 +95,6 @@ function post_toast2(url, button1, button2) {
 	xhr.onload = function() {
 		if (xhr.status >= 200 && xhr.status < 300) {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-			myToast.hide();
 			myToast.show();
 			try {
 				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
@@ -114,7 +110,6 @@ function post_toast2(url, button1, button2) {
 				data=JSON.parse(xhr.response);
 
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.hide();
 				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 				return false
@@ -122,7 +117,6 @@ function post_toast2(url, button1, button2) {
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 				myToast.hide();
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.hide();
 				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
 				return false

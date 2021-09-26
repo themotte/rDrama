@@ -15,7 +15,6 @@
 
 				xhr.onload = function(){
 					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-					myToast.hide();
 					myToast.show();
 					document.getElementById('toast-post-success-text').innerHTML = `@${name} banned`;
 				}

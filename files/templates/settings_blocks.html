@@ -151,7 +151,6 @@
 					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 					myToast.hide();
 					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-					myToast.hide();
 					myToast.show();
 					
 					exileError.textContent = JSON.parse(xhr.response)["error"];
