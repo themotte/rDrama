@@ -22,19 +22,6 @@ function post(url, callback, errortext) {
 	xhr.send(form);
 };
 
-const expandDesktopImage = (image, link) => {
-	var linkText = document.getElementById("desktop-expanded-image-link");
-	var imgLink = document.getElementById("desktop-expanded-image-wrap-link");
-
-	var inlineImage = document.getElementById("desktop-expanded-image");
-
-	inlineImage.src = image.replace("100w.webp", "giphy.webp");
-	linkText.href = image;
-	imgLink.href=image;
-
-	linkText.textContent = 'View original';
-}
-
 function post_toast(url, reload, data) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
