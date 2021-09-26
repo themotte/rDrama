@@ -10,12 +10,12 @@
 
 		<script>
 		
-			$(document).ready(function() {
+			document.ready(function() {
 				document.getElementById('submitform').submit(function() {
 						// disable button
-						$("#create_button").prop("disabled", true);
+						document.getElementById('create_button').prop("disabled", true);
 						// add spinner to button
-						$("#create_button").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Creating post');
+						document.getElementById('create_button').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Creating post');
 					});
 				});
 

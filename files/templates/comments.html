@@ -1,5 +1,5 @@
 
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.jsscript>
 
 {% if v %}
 	<script>
@@ -108,12 +108,12 @@
 
 		// Expand comment box on focus, hide otherwise
 
-		$('.comment-box').focus(function (event) {
-			event.preventDefault();
-
-			$(this).parent().parent().addClass("collapsed");
-
-		});
+		for(let el of document.getElementsByClassName('comment-box')) {
+			el.addEventListener('focus', function(event) {
+				event.preventDefault();
+				this.parent().parent().addClass("collapsed");
+			});
+		}
 
 		// Open comment reply box
 

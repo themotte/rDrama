@@ -1,15 +1,17 @@
 <script>
-	$('.expandable-image').click( function(event) {
+	for(let el of document.getElementsByClassName('expandable-image')) {
+		el.onclick = function(event) {
 
-		if (event.which != 1) {
-			return
+			if (event.which != 1) {
+				return
+			}
+			event.preventDefault();
+
+			var url= this.data('url');
+
+			expandDesktopImage(url,url);
 		}
-		event.preventDefault();
-
-		var url= $(this).data('url');
-
-		expandDesktopImage(url,url);
-	})
+	}
 
 	// Expand Images on Desktop
 

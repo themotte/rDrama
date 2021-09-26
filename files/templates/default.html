@@ -192,18 +192,21 @@
 				autoExpand(event.target);
 			}, false);
 		
-			$('.text-expand').click(function(event){
-				if (event.which != 1) {
-					return
-				};
-				id=$(this).data('id');
+
+			for(let el of document.getElementsByClassName('text-expand')) {
+				el.onclick = function(event){
+					if (event.which != 1) {
+						return
+					};
+					id=this.data('id');
 
 
-				document.getElementById('post-text-'+id).toggleClass('d-none');
-				$('.text-expand-icon-'+id).toggleClass('fa-expand-alt');
-				$('.text-expand-icon-'+id).toggleClass('fa-compress-alt');
+					document.getElementById('post-text-'+id).toggleClass('d-none');
+					document.getElementsByClassName('text-expand-icon-'+id)[0].toggleClass('fa-expand-alt');
+					document.getElementsByClassName('text-expand-icon-'+id)[0].toggleClass('fa-compress-alt');
 
-			})
+				}
+			}
 
 		</script>
 
@@ -215,7 +218,8 @@
 			if (window.innerWidth <= 737){
 				try {
 					document.getElementById('mobile-prompt').tooltip('show')
-					$('.tooltip')[0].addEventListener(
+					
+					document.getElementsByClassName('tooltip')[0].addEventListener(
 						'click', 
 						function(event){
 							document.getElementById('mobile-prompt').tooltip('hide')
