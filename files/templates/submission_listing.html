@@ -3,14 +3,14 @@
 
 <script>
 	var clipboard = new ClipboardJS('.copy-link');
-		clipboard.on('success', function(e) {
+		clipboard.addEventListener('success', function(e) {
 
 				jQuery(function($) {
 						document.getElementById('toast-success').toast('show');
 				})
 				console.log(e);
 		});
-		clipboard.on('error', function(e) {
+		clipboard.addEventListener('error', function(e) {
 
 				jQuery(function($) {
 						document.getElementById('toast-error').toast('show');

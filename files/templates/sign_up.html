@@ -12,7 +12,7 @@
 			//Signup js
 			// Display username and password requirements on input
 
-			document.getElementById('password-register').on('input', function () {
+			document.getElementById('password-register').addEventListener('input', function () {
 
 				var charCount = document.getElementById("password-register").value;
 				var id = document.getElementById("passwordHelpRegister");
@@ -31,7 +31,7 @@
 		
 			// Check username length, special chars
 
-			document.getElementById('username-register').on('input', function () {
+			document.getElementById('username-register').addEventListener('input', function () {
 
 				var charCount = document.getElementById("username-register").value;
 				var id = document.getElementById("usernameHelpRegister");

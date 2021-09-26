@@ -87,7 +87,7 @@
 
 		};
 
-		document.getElementById('reportCommentModal').on('hidden.bs.modal', function () {
+		document.getElementById('reportCommentModal').addEventListener('hidden.bs.modal', function () {
 
 		var button = document.getElementById("reportCommentButton");
 
@@ -465,14 +465,14 @@
 	};
 
 	var clipboard = new ClipboardJS('.copy-link');
-		clipboard.on('success', function(e) {
+		clipboard.addEventListener('success', function(e) {
 
 				jQuery(function($) {
 						document.getElementById('toast-success').toast('show');
 				})
 				console.log(e);
 		});
-		clipboard.on('error', function(e) {
+		clipboard.addEventListener('error', function(e) {
 
 				jQuery(function($) {
 						document.getElementById('toast-error').toast('show');

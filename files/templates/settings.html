@@ -18,14 +18,14 @@
 	<script>
 
 		var clipboard = new ClipboardJS('.copy-link');
-			clipboard.on('success', function(e) {
+			clipboard.addEventListener('success', function(e) {
 
 					jQuery(function($) {
 							document.getElementById('toast-success').toast('show');
 					})
 					console.log(e);
 			});
-			clipboard.on('error', function(e) {
+			clipboard.addEventListener('error', function(e) {
 
 					jQuery(function($) {
 							document.getElementById('toast-error').toast('show');
@@ -38,7 +38,7 @@
 
 		// Show confirm password field when user clicks email box
 
-		document.getElementById('new_email').on('input', function () {
+		document.getElementById('new_email').addEventListener('input', function () {
 
 			var id = document.getElementById("email-password");
 			var id2 = document.getElementById("email-password-label");
@@ -52,7 +52,7 @@
 	
 		// 2FA toggle modal
 
-		document.getElementById('2faModal').on('hidden.bs.modal', function () {
+		document.getElementById('2faModal').addEventListener('hidden.bs.modal', function () {
 
 			var box = document.getElementById("2faToggle");
 			

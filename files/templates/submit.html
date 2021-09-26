@@ -446,7 +446,7 @@
 				}
 			}
 
-			document.getElementById('file-upload').on('change', function(e){
+			document.getElementById('file-upload').addEventListener('change', function(e){
 				f=document.getElementById('file-upload');
 				document.getElementById('urlblock').addClass('d-none');
 				document.getElementById('filename-show').text(document.getElementById('file-upload')[0].files[0].name);
