@@ -4,11 +4,11 @@ document.addEventListener("DOMContentLoaded", function(){
         return new bootstrap.Tooltip(element);
     });
 
-    var toastTriggerList = [].slice.call(document.querySelectorAll('.toast'));
-    toastTriggerList.map(function(element){
-        return new bootstrap.Toast(element);
-    });
+	for(let el of document.getElementsByClassName("toast")) {
+		new bootstrap.Toast(el);
+	}
 });
+
 
 function post(url, callback, errortext) {
 	var xhr = new XMLHttpRequest();
