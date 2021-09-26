@@ -846,10 +846,10 @@ def undelete_comment(cid, v):
 	return {"message": "Comment undeleted!"}
 
 
-@app.post("/comment_pin/<cid>")
+@app.post("/pin_comment/<cid>")
 @auth_required
 @validate_formkey
-def toggle_comment_pin(cid, v):
+def toggle_pin_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
