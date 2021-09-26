@@ -212,30 +212,6 @@
 
 	{% endif %}
 
-	<script>
-		//mobile prompt
-		if (!("standalone" in window.navigator && window.navigator.standalone)){
-			if (window.innerWidth <= 737){
-				try {
-					document.getElementById('mobile-prompt').show()
-					
-					document.getElementsByClassName('tooltip')[0].addEventListener(
-						'click', 
-						function(event){
-							document.getElementById('mobile-prompt').hide()
-							var xhr = new XMLHttpRequest();
-							xhr.withCredentials=true;
-							xhr.open("POST", '/dismiss_mobile_tip', true);
-							xhr.send();
-						}
-					)
-				} catch (error) {
-					console.error(error);
-				}
-			}
-		}
-	</script>
-
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
