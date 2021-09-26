@@ -2,17 +2,17 @@
 	// Voting
 
 	function post_vote(url, callback) {
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", url, true);
-		var form = new FormData()
-		form.append("formkey", formkey());
-		xhr.withCredentials=true;
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	var form = new FormData()
+	form.append("formkey", formkey());
+	xhr.withCredentials=true;
 
-		xhr.onload = function() {
-			if (xhr.status==204) {}
+	xhr.onload = function() {
+		if (xhr.status==204) {}
 			else if (xhr.status >= 200 && xhr.status < 300) {
-				$('#toast-post-success').toast('dispose');
-				$('#toast-post-success').toast('show');
+				document.getElementById('toast-post-success').toast('dispose');
+				document.getElementById('toast-post-success').toast('show');
 				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
 				callback(xhr)
 				return true
@@ -22,8 +22,8 @@
 			} else {
 				data=JSON.parse(xhr.response);
 				
-				$('#toast-post-error').toast('dispose');
-				$('#toast-post-error').toast('show');
+				document.getElementById('toast-post-error').toast('dispose');
+				document.getElementById('toast-post-error').toast('show');
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 				return false
 				
