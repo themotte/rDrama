@@ -157,36 +157,36 @@
 
 			};
 
-			// Run AutoSuggestTitle function on load
+			// // Run AutoSuggestTitle function on load
 
-			if (window.location.pathname=='/submit') {
-				window.onload = autoSuggestTitle();
-			}
+			// if (window.location.pathname=='/submit') {
+			// 	window.onload = autoSuggestTitle();
+			// }
 
-			// Paste to create submission
+			// // Paste to create submission
 
-			document.addEventListener('paste', function (event) {
+			// document.addEventListener('paste', function (event) {
 
-				var nothingFocused = document.activeElement === document.body;
+			// 	var nothingFocused = document.activeElement === document.body;
 
-				if (nothingFocused) {
+			// 	if (nothingFocused) {
 
-					var clipText = event.clipboardData.getData('Text');
+			// 		var clipText = event.clipboardData.getData('Text');
 
-					var url = new RegExp('^(?:[a-z]+:)?//', 'i');
+			// 		var url = new RegExp('^(?:[a-z]+:)?//', 'i');
 
-					if (url.test(clipText) && window.location.pathname !== '/submit') {
-						window.location.href = '/submit?url=' + clipText;
-					}
-					else if (url.test(clipText) && window.location.pathname == '/submit') {
+			// 		if (url.test(clipText) && window.location.pathname !== '/submit') {
+			// 			window.location.href = '/submit?url=' + clipText;
+			// 		}
+			// 		else if (url.test(clipText) && window.location.pathname == '/submit') {
 
-						document.getElementById("post-URL").value = clipText;
+			// 			document.getElementById("post-URL").value = clipText;
 
-						autoSuggestTitle()
+			// 			autoSuggestTitle()
 
-					}
-				}
-			});
+			// 		}
+			// 	}
+			// });
 
 			//	Submit Page Front-end Validation
 
