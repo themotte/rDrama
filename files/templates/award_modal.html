@@ -11,8 +11,8 @@
 	xhr.onload = function() {
 		if (xhr.status==204) {}
 			else if (xhr.status >= 200 && xhr.status < 300) {
-				document.getElementById('toast-post-success').toast('dispose');
-				document.getElementById('toast-post-success').toast('show');
+				$('#toast-post-success').toast('dispose');
+				$('#toast-post-success').toast('show');
 				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
 				callback(xhr)
 				return true
@@ -22,8 +22,8 @@
 			} else {
 				data=JSON.parse(xhr.response);
 				
-				document.getElementById('toast-post-error').toast('dispose');
-				document.getElementById('toast-post-error').toast('show');
+				$('#toast-post-error').toast('dispose');
+				$('#toast-post-error').toast('show');
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 				return false
 				
@@ -49,7 +49,7 @@
 			var thisDownvoteButton = downvoteButton[j];
 			var thisScoreText = scoreText[j];
 			var thisScore = Number(thisScoreText.textContent);
-			var voteDirection = "0"
+			var voteDirection = "0";
 
 			if (thisUpvoteButton.classList.contains('active')) {
 				thisUpvoteButton.classList.remove('active')
@@ -100,7 +100,7 @@
 			var thisDownvoteButton = downvoteButton[j];
 			var thisScoreText = scoreText[j];
 			var thisScore = Number(thisScoreText.textContent);
-			var voteDirection = "0"
+			var voteDirection = "0";
 
 			if (thisDownvoteButton.classList.contains('active')) {
 				thisDownvoteButton.classList.remove('active')
@@ -185,7 +185,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Give Award</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
 			</div>
