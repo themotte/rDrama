@@ -88,15 +88,13 @@
 
 		var type = event.target.dataset.contentType;
 		var id = event.target.dataset.idDown;
-		console.log(type)
-		console.log(id)
+		console.log(event)
+		console.log(event.target)
+		console.log(event.target.dataset)
 
 		var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
 		var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
 		var scoreText = document.getElementsByClassName(type + '-score-' + id);
-		console.log(upvoteButton.length)
-		console.log(downvoteButton.length)
-		console.log(scoreText.length)
 
 		for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
@@ -141,33 +139,29 @@
 	}
 
 
-	var register_votes = function() {
-		var upvoteButtons = document.getElementsByClassName('upvote-button')
+	var upvoteButtons = document.getElementsByClassName('upvote-button')
 
-		var downvoteButtons = document.getElementsByClassName('downvote-button')
+	var downvoteButtons = document.getElementsByClassName('downvote-button')
 
-		var voteDirection = 0
+	var voteDirection = 0
 
-		for (var i = 0; i < upvoteButtons.length; i++) {
-			upvoteButtons[i].addEventListener('click', upvote, false);
-			upvoteButtons[i].addEventListener('keydown', function(event) {
-				if (event.keyCode === 13) {
-					upvote(event)
-				}
-			}, false)
-		};
+	for (var i = 0; i < upvoteButtons.length; i++) {
+		upvoteButtons[i].addEventListener('click', upvote, false);
+		upvoteButtons[i].addEventListener('keydown', function(event) {
+			if (event.keyCode === 13) {
+				upvote(event)
+			}
+		}, false)
+	};
 
-		for (var i = 0; i < downvoteButtons.length; i++) {
-			downvoteButtons[i].addEventListener('click', downvote, false);
-			downvoteButtons[i].addEventListener('keydown', function(event) {
-				if (event.keyCode === 13) {
-					downvote(event)
-				}
-			}, false)
-		};
-	}
-
-	register_votes()
+	for (var i = 0; i < downvoteButtons.length; i++) {
+		downvoteButtons[i].addEventListener('click', downvote, false);
+		downvoteButtons[i].addEventListener('keydown', function(event) {
+			if (event.keyCode === 13) {
+				downvote(event)
+			}
+		}, false)
+	};
 
 	// award modal
 
