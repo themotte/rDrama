@@ -33,7 +33,7 @@
 				
 				{% if app.client_id %}
 				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
-				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
+				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-bs-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
 				{% endif %}
 				
 				
@@ -73,7 +73,7 @@
 
 				{% if app.client_id %}
 				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
-				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
+				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-bs-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
 				{% endif %}
 
 				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
@@ -150,13 +150,13 @@
 
 
 {% block clipboard %}
-<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body text-center">
 		<i class="fas fa-check-circle text-success mr-2"></i>Token copied to clipboard
 	</div>
 </div>
 
-<div class="toast clipboard" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+<div class="toast clipboard" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body text-center">
 		<i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy data
 	</div>

@@ -332,11 +332,11 @@ ol > li::before {
 	margin-right: 1.5rem;
 }
 
-[data-toggle="collapse"] .fa:before {	 
+[data-bs-toggle="collapse"] .fa:before {	 
 	content: "\f139";
 	}
 	
-[data-toggle="collapse"].collapsed .fa:before {
+[data-bs-toggle="collapse"].collapsed .fa:before {
 	content: "\f13a";
 }
 

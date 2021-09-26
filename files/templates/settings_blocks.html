@@ -14,7 +14,7 @@
 			<span>
 				{{error}}
 			</span>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true"><i class="far fa-times"></i></span>
 			</button>
 		</div>
@@ -36,7 +36,7 @@
 				<p class="text-small text-muted mb-md-0">You have blocked the following users. They cannot reply to your content or notify you with a username mention.</p>
 			</div>
 			<div class="mt-auto">
-				<button class="btn btn-primary" data-toggle="modal" data-target="#blockmodal">Block user</button>
+				<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#blockmodal">Block user</button>
 			</div>
 		</div>
 
@@ -64,7 +64,7 @@
 
 						<td>
 							<div class="dropdown float-right dropdown-actions">
-								<a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
+								<a href="#" role="button" id="dropdownMoreLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
 									<i class="fas fa-ellipsis-h text-muted"></i>
 								</a>
 								<div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
@@ -97,7 +97,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Block users</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true"><i class="far fa-times"></i></span>
 					</button>
 				</div>
@@ -106,7 +106,7 @@
 					<input type="text" name="username" placeholder="enter username" id="exile-username" class="form-control" maxlength=25 required>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
 					<button type="button" class="btn btn-primary" id="exileUserButton" onclick="block_user()">Block user</button>
 				</div>
 			</div>
@@ -114,7 +114,7 @@
 	</div>
 </div>
 
-<div class="toast error" id="toast-exile-error" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
+<div class="toast error" id="toast-exile-error" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body text-center">
 		<i class="fas fa-exclamation-circle text-danger mr-2"></i><span id="toast-error-message">Error. Please try again.</span>
 	</div>

@@ -331,8 +331,8 @@
     }
   }
 
-  ~ .custom-file-label[data-browse]::after {
-    content: attr(data-browse);
+  ~ .custom-file-label[data-bs-browse]::after {
+    content: attr(data-bs-browse);
   }
 }
 

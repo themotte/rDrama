@@ -189,7 +189,7 @@ p {
 }
 
 abbr[title],
-abbr[data-original-title] {
+abbr[data-bs-original-title] {
   text-decoration: underline;
   text-decoration: underline dotted;
   cursor: help;
@@ -4970,8 +4970,8 @@ input[type=button].btn-block {
 .custom-file-input:lang(en) ~ .custom-file-label::after {
   content: "Browse";
 }
-.custom-file-input ~ .custom-file-label[data-browse]::after {
-  content: attr(data-browse);
+.custom-file-input ~ .custom-file-label[data-bs-browse]::after {
+  content: attr(data-bs-browse);
 }
 
 .custom-file-label {
@@ -13421,11 +13421,11 @@ ol > li::before {
   margin-right: 1.5rem;
 }
 
-[data-toggle=collapse] .fa:before {
+[data-bs-toggle=collapse] .fa:before {
   content: "\f139";
 }
 
-[data-toggle=collapse].collapsed .fa:before {
+[data-bs-toggle=collapse].collapsed .fa:before {
   content: "\f13a";
 }
 

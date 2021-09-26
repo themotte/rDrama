@@ -98,7 +98,7 @@
 
 				for (j=0; j < arr.length; j++) {
 					if(arr[j].match(search_bar.value)){
-						str += `<button class="btn m-1 px-0" onclick="getEmoji(\'${arr[j]}\', \'${form}\')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"/></button>`;
+						str += `<button class="btn m-1 px-0" onclick="getEmoji(\'${arr[j]}\', \'${form}\')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"/></button>`;
 					}
 				}
 
@@ -112,7 +112,7 @@
 				let container = document.getElementById(`EMOJIS_${emojis[i].type}`)
 				for (j=0; j < arr.length; j++) {
 					if(arr[j].match(search_bar.value.toLowerCase())){
-					str += `<button class="btn m-1 px-0" onclick="getEmoji(\'${arr[j]}\', \'${form}\')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"/></button>`;
+					str += `<button class="btn m-1 px-0" onclick="getEmoji(\'${arr[j]}\', \'${form}\')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"/></button>`;
 					}
 				}
 				container.innerHTML = ""
@@ -131,32 +131,32 @@
 				<div>
 					<ul class="nav nav-pills py-2">
 						<li class="nav-item">
-							<a class="nav-link active emojitab" data-toggle="tab" href="#emoji-tab-favorite">Favorite</a>
+							<a class="nav-link active emojitab" data-bs-toggle="tab" href="#emoji-tab-favorite">Favorite</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link emojitab" data-toggle="tab" href="#emoji-tab-marsey">Marsey</a>
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-marsey">Marsey</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link emojitab" data-toggle="tab" href="#emoji-tab-platy">Platy</a>
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-platy">Platy</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link emojitab" data-toggle="tab" href="#emoji-tab-tay">Tay</a>
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-tay">Tay</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link emojitab" data-toggle="tab" href="#emoji-tab-classic">Classic</a>
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-classic">Classic</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link emojitab" data-toggle="tab" href="#emoji-tab-rage">Rage</a>
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-rage">Rage</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link emojitab" data-toggle="tab" href="#emoji-tab-wojak">Wojak</a>
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-wojak">Wojak</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link emojitab" data-toggle="tab" href="#emoji-tab-flags">Flags</a>
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-flags">Flags</a>
 						</li>
 					</ul>
 				</div>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<i class="fal fa-times text-muted"></i>
 				</button>
 			</div>

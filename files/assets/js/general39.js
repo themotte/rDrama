@@ -125,5 +125,5 @@ function post_toast2(url, button1, button2) {
 // Tooltips
 
 $(document).ready(function(){
-	$('[data-toggle="tooltip"]').tooltip(); 
+	$('[data-bs-toggle="tooltip"]').tooltip(); 
 });

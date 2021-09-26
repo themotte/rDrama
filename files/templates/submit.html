@@ -317,7 +317,7 @@
 												<input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
 
 												<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn-2">
-													<div id="emoji-reply-btn-2" onclick="loadEmojis('post-title')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
+													<div id="emoji-reply-btn-2" onclick="loadEmojis('post-title')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
 												</label>
 
 												<div id="urlblock">
@@ -341,7 +341,7 @@
 												</div>
 												</div>
 
-												<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
+												<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Uses markdown. Limited to 10000 characters."></i></label>
 
 												<div>
 													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
@@ -357,21 +357,21 @@
 
 												<p></p>
 												<small class="btn btn-secondary format d-inline-block m-0">
-												<i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-text')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i>
+												<i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Bold"></i>
 												</small>
 												&nbsp; 
 												<small class="btn btn-secondary format d-inline-block m-0">
-												<i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-text')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i>
+												<i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Italicize"></i>
 												</small>
 												&nbsp; 
 												<small class="btn btn-secondary format d-inline-block m-0">
-												<i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('post-text')" data-toggle="tooltip" data-placement="bottom" title="Quote"></i>
+												<i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Quote"></i>
 												</small>
 												&nbsp;
-												<small class="btn btn-secondary format d-inline-block m-0"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="getGif();commentForm('post-text')" data-toggle="modal" data-target="#gifModal" data-toggle="tooltip" data-placement="bottom"  title="Add GIF">GIF</span></small>
+												<small class="btn btn-secondary format d-inline-block m-0"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="getGif();commentForm('post-text')" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add GIF">GIF</span></small>
 												&nbsp;
 												<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn">
-													<div id="emoji-reply-btn" onclick="loadEmojis('post-text')" aria-hidden="true" data-toggle="modal" data-target="#emojiModal" data-toggle="tooltip" data-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
+													<div id="emoji-reply-btn" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
 												</label>
 																							
 												<pre></pre>
