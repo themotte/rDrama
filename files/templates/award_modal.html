@@ -2,14 +2,14 @@
 	// Voting
 
 	function post_vote(url, callback) {
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	var form = new FormData()
-	form.append("formkey", formkey());
-	xhr.withCredentials=true;
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		var form = new FormData()
+		form.append("formkey", formkey());
+		xhr.withCredentials=true;
 
-	xhr.onload = function() {
-		if (xhr.status==204) {}
+		xhr.onload = function() {
+			if (xhr.status==204) {}
 			else if (xhr.status >= 200 && xhr.status < 300) {
 				$('#toast-post-success').toast('dispose');
 				$('#toast-post-success').toast('show');
@@ -42,7 +42,6 @@
 		var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
 		var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
 		var scoreText = document.getElementsByClassName(type + '-score-' + id);
-		var voteDirection = "0";
 
 		for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
@@ -93,7 +92,6 @@
 		var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
 		var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
 		var scoreText = document.getElementsByClassName(type + '-score-' + id);
-		var voteDirection = "0";
 
 		for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
