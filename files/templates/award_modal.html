@@ -42,6 +42,7 @@
 		var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
 		var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
 		var scoreText = document.getElementsByClassName(type + '-score-' + id);
+		var voteDirection = "0"
 
 		for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
@@ -49,7 +50,6 @@
 			var thisDownvoteButton = downvoteButton[j];
 			var thisScoreText = scoreText[j];
 			var thisScore = Number(thisScoreText.textContent);
-			var voteDirection = "0";
 
 			if (thisUpvoteButton.classList.contains('active')) {
 				thisUpvoteButton.classList.remove('active')
@@ -93,6 +93,7 @@
 		var downvoteButton = document.getElementsByClassName(type + '-' + id + '-down');
 		var upvoteButton = document.getElementsByClassName(type + '-' + id + '-up');
 		var scoreText = document.getElementsByClassName(type + '-score-' + id);
+		var voteDirection = "0"
 
 		for (var j = 0; j < upvoteButton.length && j < downvoteButton.length && j < scoreText.length; j++) {
 
@@ -100,7 +101,6 @@
 			var thisDownvoteButton = downvoteButton[j];
 			var thisScoreText = scoreText[j];
 			var thisScore = Number(thisScoreText.textContent);
-			var voteDirection = "0";
 
 			if (thisDownvoteButton.classList.contains('active')) {
 				thisDownvoteButton.classList.remove('active')
