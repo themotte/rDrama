@@ -124,7 +124,7 @@
 		toggleEdit=function(id){
 			comment=document.getElementById("comment-text-"+id);
 			form=document.getElementById("comment-edit-"+id);
-			box=document.getElementById('edit-box-comment-'+id);
+			box=document.getElementById('comment-edit-body-'+id);
 			actions = document.getElementById('comment-' + id +'-actions');
 
 			comment.classList.toggle("d-none");
@@ -683,7 +683,7 @@
 				<div id="comment-edit-{{c.id}}" class="d-none comment-write collapsed child">
 					<form id="comment-edit-form-{{c.id}}" action="/edit_comment/{{c.id}}" method="post" class="input-group" enctype="multipart/form-data"> 
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<textarea id="comment-edit-body-{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" id="edit-box-comment-{{c.id}}" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
+						<textarea id="comment-edit-body-{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
 						<div class="comment-format"> 
 							<small class="btn btn-secondary format d-inline-block m-0"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add GIF">GIF</span></small>
 							&nbsp;
