@@ -272,7 +272,12 @@
 			url="/ban_comment/"+post_id
 
 			callback=function(){
-				document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+
+				try {
+					document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+				} catch(e) {
+					document.getElementById("context").classList.add("banned");
+				}
 
 				button=document.getElementById("remove-"+post_id);
 				button.onclick=function(){approveComment(post_id)};
@@ -291,7 +296,11 @@
 			url="/unban_comment/"+post_id
 
 			callback=function(){
-				document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+				try {
+					document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+				} catch(e) {
+					document.getElementById("context").classList.remove("banned");
+				}
 
 				button=document.getElementById("remove-"+post_id);
 				button.onclick=function(){removeComment(post_id)};
