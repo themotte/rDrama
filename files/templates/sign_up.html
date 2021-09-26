@@ -190,7 +190,7 @@
 														{% endif %}
 
 														{% if hcaptcha %}
-																<div class="h-captcha" data-bs-sitekey="{{hcaptcha}}"></div>
+																<div class="h-captcha" data-sitekey="{{ HCAPTCHA_SITEKEY | app_config }}"></div>
 																<script src="https://hcaptcha.com/1/api.js" async defer></script>
 														{% endif %}
 
