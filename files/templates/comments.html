@@ -110,15 +110,6 @@
 
 		//Commenting form
 
-		// Expand comment box on focus, hide otherwise
-
-		for(let el of document.getElementsByClassName('comment-box')) {
-			el.addEventListener('focus', function(event) {
-				event.preventDefault();
-				this.parentNode.parentNode.addClass("collapsed");
-			});
-		}
-
 		// Open comment reply box
 
 		function openReplyBox(id) {
