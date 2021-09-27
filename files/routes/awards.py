@@ -327,7 +327,10 @@ def admin_userawards_post(v):
 	if v.admin_level < 6:
 		abort(403)
 
-	u = get_user(request.values.get("username", '1'), graceful=False, v=v)
+	try: u = request.values.get("username").strip()
+	except: abort(404)
+
+	u = get_user(u, graceful=False, v=v)
 
 	notify_awards = {}
 
