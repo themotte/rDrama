@@ -425,23 +425,23 @@
 				if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp"))
 				{
 					f.files = files;
-					document.getElementById('filename-show').text(filename);
-					document.getElementById('urlblock').addClass('d-none');
+					document.getElementById('filename-show').textContent = filename;
+					document.getElementById('urlblock').classList.add('d-none');
 					var fileReader = new FileReader();
 					fileReader.readAsDataURL(f.files[0]);
-					fileReader.addEventListener("load", function () {document.getElementById('image-preview').attr('src', this.result);});  
-					document.getElementById('file-upload').attr('required', false);
+					fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
+					document.getElementById('file-upload').setAttribute('required', 'false');
 					checkForRequired();
 				}
 			}
 
 			document.getElementById('file-upload').addEventListener('change', function(e){
 				f=document.getElementById('file-upload');
-				document.getElementById('urlblock').addClass('d-none');
-				document.getElementById('filename-show').text(document.getElementById('file-upload')[0].files[0].name);
+				document.getElementById('urlblock').classList.add('d-none');
+				document.getElementById('filename-show').textContent = document.getElementById('file-upload').files[0].name;
 				var fileReader = new FileReader();
 				fileReader.readAsDataURL(f.files[0]);
-				fileReader.addEventListener("load", function () {document.getElementById('image-preview').attr('src', this.result);});  
+				fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
 				checkForRequired();
 			})
 		</script>

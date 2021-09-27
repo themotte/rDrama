@@ -7,15 +7,16 @@
 			}
 			event.preventDefault();
 
-			var url= this.data('url');
+			let source = (event.target || event.srcElement).parentNode;
+			var url= source.dataset.bsUrl;
 
-			expandDesktopImage(url,url);
+			expandDesktopImage(url);
 		}
 	}
 
 	// Expand Images on Desktop
 
-	function expandDesktopImage(image, link) {
+	function expandDesktopImage(image) {
 
 		// Link text
 

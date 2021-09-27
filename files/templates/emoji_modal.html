@@ -23,14 +23,14 @@
 			commentFormID = form;
 	};
 
-	const TEXTAREA_POS = 'curr-pos'
+	const TEXTAREA_POS_ATTR = 'data-curr-pos'
 
 	// Insert EMOJI markdown into comment box function
 
 	function getEmoji(searchTerm, form) {
 		const commentBox = document.getElementById(form);
 		const old = commentBox.value;
-		const curPos = commentBox.data(TEXTAREA_POS);
+		const curPos = parseInt(commentBox.getAttribute(TEXTAREA_POS_ATTR));
 
 		const firstHalf = old.slice(0, curPos)
 		const lastHalf = old.slice(curPos)
@@ -48,7 +48,7 @@
 
 		const newPos = curPos + emoji.length
 
-		commentBox.data(TEXTAREA_POS, newPos)
+		commentBox.setAttribute(TEXTAREA_POS_ATTR, newPos);
 	}
 
 	function loadEmojis(form) {
@@ -92,7 +92,7 @@
 			container.innerHTML = container.innerHTML.replace(/@form@/g, form)
 
 			const commentBox = document.getElementById(form);
-			commentBox.data(TEXTAREA_POS, commentBox.selectionStart)
+			commentBox.setAttribute(TEXTAREA_POS_ATTR, commentBox.selectionStart);
 
 			for (i=0; i < emojis.length; i++) {
 
