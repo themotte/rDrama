@@ -124,7 +124,6 @@ class User(Base):
 	nitter = Column(Boolean)
 	controversial = Column(Boolean, default=False)
 	submissions = relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", viewonly=True)
-	comments = relationship("Comment", lazy="dynamic", primaryjoin="Comment.author_id==User.id", viewonly=True)
 	bio = Column(String(1500))
 	bio_html = Column(String(10000))
 	badges = relationship("Badge", lazy="dynamic", viewonly=True)
