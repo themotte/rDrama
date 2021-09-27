@@ -160,17 +160,12 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = posts.filter(Submission.created_utc >= cutoff)
 	elif t != 'all':
 		now = int(time.time())
-		if t == 'hour':
-			cutoff = now - 3600
-		elif t == 'day':
-			cutoff = now - 86400
-		elif t == 'week':
-			cutoff = now - 604800
-		elif t == 'month':
-			cutoff = now - 2592000
-		elif t == 'year':
-			cutoff = now - 31536000
-		if cutoff: posts = posts.filter(Submission.created_utc >= cutoff)
+		if t == 'hour': cutoff = now - 3600
+		elif t == 'week': cutoff = now - 604800
+		elif t == 'month': cutoff = now - 2592000
+		elif t == 'year': cutoff = now - 31536000
+		else: cutoff = now - 86400
+		posts = posts.filter(Submission.created_utc >= cutoff)
 
 	posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
 
