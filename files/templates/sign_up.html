@@ -2,16 +2,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-		
-		
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-		<script src="/assets/js/general41.js"></script>
 
 		<script>
-		
-			//Signup js
-			// Display username and password requirements on input
-
 			document.getElementById('password-register').addEventListener('input', function () {
 
 				var charCount = document.getElementById("password-register").value;
@@ -28,9 +21,6 @@
 				};
 
 			});
-		
-			// Check username length, special chars
-
 			document.getElementById('username-register').addEventListener('input', function () {
 
 				var charCount = document.getElementById("username-register").value;
@@ -52,8 +42,7 @@
 				}
 
 				if (!/[^a-zA-Z0-9_\-$]/.test(charCount)) {
-					// Change alert text
-					id.innerHTML = '<span class="form-text font-weight-bold text-success mt-1">Username is a-okay!';
+										id.innerHTML = '<span class="form-text font-weight-bold text-success mt-1">Username is a-okay!';
 
 					if (charCount.length < 3) {
 						id.innerHTML = '<span class="form-text font-weight-bold text-muted mt-1">Username must be at least 3 characters long.';
@@ -68,6 +57,7 @@
 
 			});
 		</script>
+
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="Sign up in under 27 seconds.">
@@ -174,7 +164,6 @@
 														<input class="form-control" id="password_confirm"
 														aria-describedby="passwordConfirmHelp" type="password" name="password_confirm"
 														required="">
-														
 														{% if "rdrama" in request.host %}
 															<div class="custom-control custom-checkbox mt-4">
 																	<input type="checkbox" class="custom-control-input" id="termsCheck" required>

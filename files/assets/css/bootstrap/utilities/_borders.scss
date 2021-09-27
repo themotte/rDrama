@@ -1,7 +1,5 @@
-// stylelint-disable property-blacklist, declaration-no-important
 
 //
-// Border
 //
 
 .border         { border: $border-width solid $border-color !important; }
@@ -27,7 +25,6 @@
 }
 
 //
-// Border-radius
 //
 
 .rounded-sm {

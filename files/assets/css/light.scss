@@ -1,4 +1,3 @@
-// Colors
 
 $primary: #ff66ac;
 $dark: #23183E;
@@ -60,7 +59,6 @@ $theme-colors: (
 	"reddit": $reddit
 );
 
-// Borders
 
 $input-border-color: $gray-300;
 $border-color: $gray-300;
@@ -68,12 +66,10 @@ $border-color: $gray-300;
 $border-radius: .35rem;
 $border-radius-sm: .25rem;
 
-// Fonts
 
 $font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
 
-// Font size
 
 $font-size-base: 1rem;
 
@@ -89,13 +85,11 @@ $display5-weight: 400;
 
 $lead-font-size: $font-size-base * 1.325 !default;
 
-// Font weight
 
 $font-weight-bold: 600;
 $font-weight-bolder: 700;
 $headings-font-weight: $font-weight-bold;
 
-// Spacing
 
 $spacer: 1rem;
 $spacers: (
@@ -104,11 +98,8 @@ $spacers: (
 	8: ($spacer * 10)
 );
 
-// Sizing
 
-// This variable affects the `.h-*` and `.w-*` classes.
 $sizes: () !default;
-// stylelint-disable-next-line scss/dollar-variable-default
 $sizes: map-merge(
 	(
 	25: 25%,
@@ -121,7 +112,6 @@ $sizes: map-merge(
 	$sizes
 );
 
-// Box Shadow
 
 $box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
 
@@ -129,15 +119,12 @@ $box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
 
 $box-shadow-lg: 0 8px 20px 0 rgba( $black, .1 );
 
-// Tool Tips
 
 $tooltip-opacity: 1;
 
-// Color contrast
 
 $yiq-contrasted-threshold:	160 !default;
 
-// Callouts
 
 @each $color, $value in $theme-colors {
 	.bd-callout-#{$color} {
@@ -204,7 +191,6 @@ body.using-mouse :focus {
 	background-color: $gray-100;
 }
 
-// Docs
 
 #article .navbar-light .navbar-nav .nav-link {
 	color: $black;
@@ -227,7 +213,6 @@ body.using-mouse :focus {
 	margin-top: 2rem;
 }
 
-// Padding and Margins
 
 #thread .custom-gutters {
 	padding: 0 15px;
@@ -239,7 +224,6 @@ body.using-mouse :focus {
 	padding-right: 15px;
 }
 
-// Positioning
 
 .sticky {
 	position: -webkit-sticky;
@@ -268,7 +252,6 @@ body.using-mouse :focus {
 	z-index: 4;
 }
 
-// Type
 
 .text-lg {
 	font-size: $font-size-lg!important;
@@ -300,13 +283,11 @@ body.using-mouse :focus {
 	font-size: 16px;
 }
 
-// Links
 
 a.dropdown-toggle:hover {
 	text-decoration: none;
 }
 
-// list items
 
 .comment-text ul li ul {
 	padding-left: 0;
@@ -335,12 +316,10 @@ ol > li::before {
 [data-bs-toggle="collapse"] .fa:before {	 
 	content: "\f139";
 	}
-	
 [data-bs-toggle="collapse"].collapsed .fa:before {
 	content: "\f13a";
 }
 
-// Buttons
 
 .btn {
 	font-weight: $font-weight-bold;
@@ -400,7 +379,6 @@ ol > li::before {
 	vertical-align: middle;
 }
 
-// Tooltips
 
 .tooltip {
 	font-weight: $font-weight-bold;
@@ -426,7 +404,6 @@ ol > li::before {
 	border-top-color: $black !important;
 }
 
-// Callouts
 
 .bd-callout {
 	padding: 1.25rem;
@@ -437,7 +414,6 @@ ol > li::before {
 	border-radius: .25rem;
 }
 
-// Alerts
 
 .alert {
 	padding: .5rem 1rem;
@@ -456,7 +432,6 @@ ol > li::before {
 	margin-right: 0.5rem;
 }
 
-// Toasts
 
 .toast {
 	font-size: $font-size-base;
@@ -475,7 +450,6 @@ ol > li::before {
 	border-radius: $border-radius;
 }
 
-// Navbar and tab Bar
 
 .navbar-light {
 	background-color: $white;
@@ -522,7 +496,6 @@ ol > li::before {
 	z-index: 5;
 }
 
-// Nav links
 
 .navbar-nav .nav-link {
 	padding: 0.25rem 0.5rem;
@@ -629,7 +602,6 @@ ol > li::before {
 
 .post-nav > .nav-item > .nav-link.active {
 	color: $primary;
-	//box-shadow: inset 0 -2px 0 $primary;
 }
 
 .settings-nav > .nav-item > .nav-link.active {
@@ -655,7 +627,6 @@ ol > li::before {
 	color: $gray-500;
 }
 
-// Settings navigation
 
 .settings-nav > .nav-item > .nav-link.active {
 	color: $primary;
@@ -672,7 +643,6 @@ ol > li::before {
 	color: $muted;
 }
 
-// Color Picker
 
 .color-picker input[type="radio"] {
 	display: none;
@@ -696,7 +666,6 @@ label.color-radio span {
 }
 
 
-// Nav pills
 
 #page .nav-pills .nav-link {
 	border-radius: 0;
@@ -725,7 +694,6 @@ label.color-radio span {
 	border-bottom: 2px solid $primary;
 }
 
-// Navbar icons and search box
 
 .form-inline.search .form-control:hover, .form-inline.search .form-control:active, .form-inline.search .form-control:focus {
 	border-color: $purple;
@@ -772,7 +740,6 @@ label.color-radio span {
 	color: $black;
 }
 
-// Jumbotron and Backgrounds
 
 .bg-svg {
 	background-color: $dark;
@@ -780,7 +747,6 @@ label.color-radio span {
 	background-size: cover;
 }
 
-// Inputs
 
 .form-control {
 	color: $muted;
@@ -876,19 +842,16 @@ label.terms {
 	color: $black;
 }
 
-// Typography
 
 small, .small {
 	font-size: $small-font-size;
 }
 
-// Tables
 
 th {
 	font-weight: $font-weight-bold;
 }
 
-// Font Awesome
 
 .fa-rotate-45 {
 	-webkit-transform: rotate(45deg);
@@ -933,7 +896,6 @@ th {
 	color: $gray;
 }
 
-// Voting
 
 .voting {
 	position: relative;
@@ -1044,7 +1006,6 @@ th {
 	color: $gray-300 !important;		
 }
 
-// Link Arrow Symbol
 
 a .link-arrow {
 position: relative;
@@ -1059,13 +1020,11 @@ right: -.5rem;
 color: $dark;
 }
 
-// Custom Box Shadows (behaves like borders)
 
 .box-shadow-bottom {
 	box-shadow: inset 0 -1px 0 $border-color;
 }
 
-// Custom Borders
 
 .border-1 {
 	border-width: 1px;
@@ -1092,7 +1051,6 @@ color: $dark;
 	border-style: solid;
 }
 
-// Opacity
 
 .opacity-25 {
 	opacity: .25;
@@ -1106,13 +1064,11 @@ color: $dark;
 	opacity: .8;
 }
 
-// Main Content
 
 #frontpage .pseudo-submit-form.card, #search .search-results.card {
 	background-color: $white;
 	border-radius: $border-radius;
 	border: 1px solid $border-color;
-	//box-shadow: $box-shadow-sm;
 }
 
 #frontpage .pseudo-submit-form.card .card-body, #search .search-results.card .card-body {
@@ -1166,7 +1122,6 @@ color: $dark;
 	color: $black;
 	background-color: $white;
 	border-radius: $border-radius;
-	//border: 1px solid $border-color;
 }
 
 .filter-list .filter-item .fa, .filter-list .filter-item .fas, .filter-list .filter-item .far, .filter-list .filter-item .fab, .filter-list .filter-item .fal {
@@ -1247,13 +1202,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	margin-bottom: .25rem;
 }
 
-// Progress Bar
 
 .progress {
 	border-radius: 50%;
 }
 
-// User and Profile
 
 .user-name {
 	color: inherit;
@@ -1414,7 +1367,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	margin-left: 0;
 }
 
-// Thread Card View
 
 /*
 
@@ -1432,7 +1384,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 #frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type {
 	border-bottom-left-radius: $border-radius;
 	border-bottom-right-radius: $border-radius;
-	//border: 1px solid $border-color;
 	border-radius: $border-radius;
 }
 
@@ -1506,7 +1457,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	border: none;
 }
 
-// Thread
 
 .card-header:first-child {
 	border-radius: $border-radius $border-radius 0 0;
@@ -1591,7 +1541,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	overflow: hidden;
 }
 
-// Modals (post actions, delete confirmations, etc)
 
 .modal-backdrop.show {
 	opacity: 1;
@@ -1727,7 +1676,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	font-size: 1.25rem;
 }
 
-// Small devices (landscape phones, less than 768px)
 @media (max-width: 767.98px) {
 	.modal.modal.modal-sm-bottom .modal-dialog {
 		position: fixed;
@@ -1757,7 +1705,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	}
 } 
 
-// Dropdown actions
 
 .dropdown-actions {
 	position: relative;
@@ -1842,13 +1789,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	margin-right: 0;
 }
 
-// Pagination
 
 .page-link {
 	font-weight: $font-weight-bold;
 }
 
-// Small devices (landscape phones, less than 768px)
 @media (max-width: 767.98px) {
 	.post-actions .list-inline .list-inline-item {
 	margin-right: 1.5rem;
@@ -1932,7 +1877,6 @@ div:hover .thumb-img-link-overlay {
 	display: none;
 }
 
-// Small devices (landscape phones, less than 768px)
 @media (max-width: 767.98px) { 
 	.post-img {
 	width: 80px;
@@ -1959,7 +1903,6 @@ div:hover .thumb-img-link-overlay {
 	color: $muted;
 }
 
-// Thread Comments
 
 .comments-count {
 	display: flex;
@@ -2040,7 +1983,6 @@ blockquote p {
 	margin-bottom: 0;
 }
 
-// Modal Comment Actions
 
 .modal .comment-actions .list-group-item {
 	border: none;
@@ -2061,7 +2003,6 @@ blockquote p {
 	font-size: $font-size-base;
 }
 
-// Comments
 
 .comment-section {
 	background-color: $gray-100;
@@ -2264,7 +2205,6 @@ ul.comment-section {
 	padding-right: .25rem;
 }
 
-// Thread Reactions
 
 .reactions-count {
 	margin-bottom: 3rem;
@@ -2298,7 +2238,6 @@ ul.comment-section {
 	color: $purple
 }
 
-// Login Page
 
 #login {
 	padding-top: 0;
@@ -2341,13 +2280,11 @@ ul.comment-section {
 	font-weight: $font-weight-normal;
 }
 
-// Pagination
 
 .pagination {
 	padding: 1rem 0;
 }
 
-// Tables
 
 .table .thead-dark th {
 	color: $muted;
@@ -2357,13 +2294,11 @@ ul.comment-section {
 	border: none;
 }
 
-// Settings Page
 
 .settings .settings-section {
 	margin-bottom: 3rem;
 	background: $white;
 	border: 1px solid $border-color;
-	//box-shadow: $box-shadow-sm;
 	border-radius: 0.35rem;
 	overflow: hidden;
 }
@@ -2380,7 +2315,6 @@ ul.comment-section {
 	background-color: $gray-200;
 }
 
-// Modal Profile Actions
 
 .modal .profile-actions .list-group-item {
 	border: none;
@@ -2401,7 +2335,6 @@ ul.comment-section {
 	font-size: $font-size-base;
 }
 
-// Profile Page
 
 .profile-actions a {
 	color: $gray;
@@ -2438,7 +2371,6 @@ ul.comment-section {
 	color: $black;
 }
 
-// Footer
 
 #page .footer h1, #page .footer h2, #page .footer h3, #page .footer h4, #page .footer h5, #page .footer h6,
 #article .footer h1, #article .footer h2, #article .footer h3, #article .footer h4, #article .footer h5, #article .footer h6 {
@@ -2471,7 +2403,6 @@ ul.comment-section {
 	color: $white;
 }
 
-// Empty States
 
 .empty-state-img {
 	width: 200px;
@@ -2479,7 +2410,6 @@ ul.comment-section {
 	filter: brightness(0);
 }
 
-// Animate FA Icons
 
 .ghost {
 	-webkit-animation: ghost 2s infinite	alternate;
@@ -2498,7 +2428,6 @@ ul.comment-section {
 	100% { transform: translateY(-20px); }
 };
 
-// Responsive Borders
 
 @each $breakpoint in map-keys($grid-breakpoints) {
 	@include media-breakpoint-up($breakpoint) {
@@ -2532,7 +2461,6 @@ ul.comment-section {
 		border: none !important;
 	}
 
-// Responsive Border Radius
  
 	.rounded#{$infix}		{ @include border-radius($border-radius); }
 	.rounded#{$infix}-top	{ @include border-top-radius($border-radius); @include border-bottom-radius(0); }
@@ -2545,7 +2473,6 @@ ul.comment-section {
 	}
 }
 
-// Responsive Shadow
 
 @media (min-width: 768px) {
 	.shadow-md {
@@ -2553,7 +2480,6 @@ ul.comment-section {
 	}
 	}
 
-// Responsive Sizing
 
 @media (min-width: 576px) {
 	.w-sm-25 {
@@ -2587,7 +2513,6 @@ ul.comment-section {
 		height: auto !important;
 	}
 	}
-	
 	@media (min-width: 768px) {
 	.w-md-25 {
 		width: 25% !important;
@@ -2620,7 +2545,6 @@ ul.comment-section {
 		height: auto !important;
 	}
 	}
-	
 	@media (min-width: 992px) {
 	.w-lg-25 {
 		width: 25% !important;
@@ -2653,7 +2577,6 @@ ul.comment-section {
 		height: auto !important;
 	}
 	}
-	
 	@media (min-width: 1200px) {
 	.w-xl-25 {
 		width: 25% !important;
@@ -2687,7 +2610,6 @@ ul.comment-section {
 	}
 	}
 
-// Submit Page
 
 .text-format {
 	display: flex;
@@ -2722,14 +2644,12 @@ ul.comment-section {
 	border-bottom-right-radius: .25rem;
 }
 
-// Transitions 
 
 .transition-15 {
 	-webkit-transition: width .15s;
 	transition: width .15s;
 }
 
-// Custom Checkboxes and Radio Buttons
 
 .custom-control-label {
 	text-transform: none;
@@ -2744,15 +2664,12 @@ ul.comment-section {
 	border: 1px solid $purple;
 }
 
-// Custom Switch (iOS-like toggle)
 
 .custom-switch {
 	padding-left: 2.25rem;
-	padding-bottom: 1rem; // added for positioning
-}
+	padding-bottom: 1rem; }
 
-.custom-switch .custom-control-label { // added for alignment with the switch
-	padding-top: 0.5rem;
+.custom-switch .custom-control-label { 	padding-top: 0.5rem;
 	padding-left: 2rem;
 	padding-bottom: 0.1rem;
 }
@@ -2771,8 +2688,7 @@ ul.comment-section {
 .custom-switch .custom-control-label::before {
 	left: -2.25rem;
 	height: 1.5rem;
-	width: 2.75rem;	// it was 1.75rem before. Sliding way is longer than before.
-	pointer-events: all;
+	width: 2.75rem;		pointer-events: all;
 	border-radius: 1rem;
 	background-color: $gray-500;
 	border: $gray-500 solid 1px;
@@ -2786,9 +2702,7 @@ ul.comment-section {
 .custom-switch .custom-control-label::after {
 	top: calc(0.25rem + 2px);
 	left: calc(-2.25rem + 2px);
-	width: calc(1.5rem - 4px);	 // it was calc(1rem - 4px) before. Oval is bigger than before.
-	height: calc(1.5rem - 4px);	// it was calc(1rem - 4px) before. Oval is bigger than before.
-	background-color: $white;
+	width: calc(1.5rem - 4px);	 	height: calc(1.5rem - 4px);		background-color: $white;
 	border-radius: 2rem; //	 it was 0.5rem before. Oval is bigger than before.
 	transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-transform 0.15s ease-in-out;
 	transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -2807,7 +2721,6 @@ ul.comment-section {
 	transform: translateX(1.25rem); //translateX(0.75rem);
 }
 
-// Code
 
 pre code {
 	word-break: break-word;
@@ -2815,7 +2728,6 @@ pre code {
 	color: $code;
 }
 
-// Code Prettify
 
 pre.prettyprint {
 	padding: 0;
@@ -2873,7 +2785,6 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 	color: #fff;
 }
 
-// GIF Keyboard
 
 .gif-categories .card {
 	overflow: hidden;
@@ -2915,16 +2826,13 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 	border-radius: $border-radius;
 }
 
-// Responsive media queries
 
-// Medium devices (tablets, less than 992px)
 @media (max-width: 991.98px) {
 	#frontpage, #search {
 		padding-top: 49px;
 	}
 }
 
-// Small devices (landscape phones, less than 768px)
 @media (max-width: 767.98px) {
 
 html {
@@ -3024,7 +2932,6 @@ body, #settings, #notifications, #submit{
 	padding-top: 2px;
 }
 
-// Toasts
 
 .toast {
 	bottom: 1.5rem;
@@ -3051,7 +2958,6 @@ body, #settings, #notifications, #submit{
 
 */
 
-// Posts and thread
 
 .posts, #thread #main-content-col {
 	box-shadow: none;
@@ -3121,7 +3027,6 @@ body, #settings, #notifications, #submit{
 	font-size: $font-size-lg;
 }
 
-// Voting Mobile
 
 .comment-actions .score {
 	color: $muted;
@@ -3158,7 +3063,6 @@ body, #settings, #notifications, #submit{
 	font-size: $small-font-size;
 }
 
-// Comments
 
 .comment-section {
 	background-color: $white;
@@ -3201,13 +3105,11 @@ body, #settings, #notifications, #submit{
 	color: $gray-400;
 }
 
-// User and Profile (mobile)
 
 .banner-pic-135 {
 	max-width: 100%
 }
 
-// Horizontal scroll
 
 .x-scroll-parent {
 	overflow: hidden;
@@ -3312,14 +3214,12 @@ textarea, input[type=text] {
 
 }
 
-// Scroll bar
 
 .hide-scrollbar::-webkit-scrollbar {
 	width: 0px;
 	background: transparent;
 }
 
-// Hides scroll bar in FF
 
 .hide-scrollbar {
 	scrollbar-width: none;
@@ -3344,11 +3244,9 @@ div.banned {
 div.deleted {
 	background-color: $deleted;
 }	
-	
 div.deleted.banned {
 	background-color: $deletedandbanned
 }
-			
 .distinguish-admin .user-name, .distinguish-mod	 .user-name {		
 	color: white;		
 	padding: 0px 3px 2px 3px;		
@@ -3412,13 +3310,11 @@ img.emoji {
 	padding-right: 20px;
 	cursor: pointer;
 	}
-	
 .comment .comment-collapse-desktop:hover {
 	border-left-color: $gray !important; }
 
 .comment.collapsed .comment-collapse-desktop:hover {
 	color: $gray !important; }
-	
 #frontpage .post-title a:visited {
 	color: $gray;
 }

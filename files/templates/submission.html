@@ -17,63 +17,20 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 {% if v and v.id == p.author_id %}
-<script>
-	// Post edit form
+	<script>
+		togglePostEdit=function(id){
 
-	togglePostEdit=function(id){
+			body=document.getElementById("post-body");
+			title=document.getElementById("post-title");
+			form=document.getElementById("edit-post-body-"+id);
+			box=document.getElementById("post-edit-box-"+id);
 
-		body=document.getElementById("post-body");
-		title=document.getElementById("post-title");
-		form=document.getElementById("edit-post-body-"+id);
-		box=document.getElementById("post-edit-box-"+id);
-
-		body.classList.toggle("d-none");
-		title.classList.toggle("d-none");
-		form.classList.toggle("d-none");
-		autoExpand(box);
-	};
-</script>
-{% endif %}
-
-{% if v %}
-<script>
-	post_comment=function(fullname){
-
-		var form = new FormData();
-
-		form.append('formkey', formkey());
-		form.append('parent_fullname', fullname);
-		form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
-		form.append('body', document.getElementById('reply-form-body-'+fullname).value);
-		form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
-		var xhr = new XMLHttpRequest();
-		xhr.open("post", "/comment");
-		xhr.withCredentials=true;
-		xhr.onload=function(){
-			if (xhr.status==200) {
-				commentForm=document.getElementById('comment-form-space-'+fullname);
-				commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.hide();
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-				myToast.show();
-			}
-			else {
-				var commentError = document.getElementById("comment-error-text");
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-				myToast.hide();
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.show();
-					
-				commentError.textContent = JSON.parse(xhr.response)["error"];
-			}
-		}
-		xhr.send(form)
-
-		document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
-
-	}
-</script>
+			body.classList.toggle("d-none");
+			title.classList.toggle("d-none");
+			form.classList.toggle("d-none");
+			autoExpand(box);
+		};
+	</script>
 {% endif %}
 
 <script>
@@ -84,6 +41,37 @@
 		document.getElementById('edited_timestamp').title = date.toString();
 	{% endif %}
 </script>
+
+{% if p.award_count("shit") %}
+	<script src="/assets/js/bug-min.js"></script>
+	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
+	{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
+	<script>
+		new BugController({
+			imageSprite: "/assets/images/fly-sprite.webp",
+			canDie: false,
+			minBugs: {{minbugs}},
+			maxBugs: {{maxbugs}},
+			mouseOver: "multiply"
+		});
+	</script>
+{% endif %}
+
+
+{% if p.award_count("fireflies") %}
+	<script src="/assets/js/fireflies.js"></script>
+	{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
+	{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
+	<script>
+		new BugController({
+			imageSprite: "/assets/images/fireflies.webp",
+			canDie: false,
+			minBugs: {{minbugs}},
+			maxBugs: {{maxbugs}},
+			mouseOver: "multiply"
+		});
+	</script>
+{% endif %}
 
 <meta charset="utf-8" />
 <meta property="og:type" content="article" />
@@ -254,36 +242,6 @@
 
 {% block content %}
 
-{% if p.award_count("shit") %}
-	<script src="/assets/js/bug-min.js"></script>
-	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
-	{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
-	<script>
-		new BugController({
-			imageSprite: "/assets/images/fly-sprite.webp",
-			canDie: false,
-			minBugs: {{minbugs}},
-			maxBugs: {{maxbugs}},
-			mouseOver: "multiply"
-		});
-	</script>
-{% endif %}
-
-
-{% if p.award_count("fireflies") %}
-	<script src="/assets/js/fireflies.js"></script>
-	{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
-	{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
-	<script>
-		new BugController({
-			imageSprite: "/assets/images/fireflies.webp",
-			canDie: false,
-			minBugs: {{minbugs}},
-			maxBugs: {{maxbugs}},
-			mouseOver: "multiply"
-		});
-	</script>
-{% endif %}
 
 <div class="row mb-3">
 
@@ -325,11 +283,9 @@
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp" title="">&nbsp;{{p.age_string}}</span>
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
 						
-						
 						{% if p.edited_utc %}&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp" title="">{{p.edited_string}}</span>{% endif %}
 						&nbsp;&nbsp;{{p.views}} views
 					</div>
-					
 					{% if p.active_flags %}
 					<div id="flaggers" class="flaggers d-none">
 						<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
@@ -343,7 +299,6 @@
 						</ul>
 					</div>
 					{% endif %}
-				
 					{% if p.realurl(v) %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3"><a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 							{% if p.club %}<span class="patron font-weight-bolder" style="background-color:red; font-size:12px;">COUNTRY CLUB</span>{% endif %}
@@ -361,7 +316,6 @@
 							{% if "streamable.com/" in p.realurl(v) %}
 								<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;"><iframe loading="lazy" src="{{p.realurl(v)}}" frameborder="0" width="100%" height="100%" allowfullscreen="" style="width: 100%; height: 100%; position: absolute;"></iframe></div>
 								<pre></pre>
-								
 							{% elif "spotify.com/" in p.realurl(v) %}
 								{% if "spotify.com/embed/" in p.realurl(v) %}
 									{% set streamurl=p.realurl(v) %}
@@ -380,7 +334,6 @@
 								</a>
 							{% endif %}
 						{% endif %}
-						
 						<div id="post-text" style="z-index: 50">
 							{% if p.is_image %}
 								<div class="row no-gutters">
@@ -445,7 +398,6 @@
 							</div>
 							</div>
 							{% endif %}
-				
 							<div class="d-none d-md-flex justify-content-between align-items-center mt-2">
 								<div class="post-actions mt-2">
 				<ul class="list-inline text-right d-flex">
@@ -460,7 +412,6 @@
 						{% endif %}
 
 						<li class="list-inline-item"><a href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
-						
 						{% if v and v.id!=p.author_id %}
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a></li>
 						{% endif %}
@@ -488,7 +439,6 @@
 								<li class="list-inline-item"><a href="javascript:void(0)" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
 							{% endif %}
 						{% endif %}
-						
 						{% if v and v.admin_level>=3 %}
 							<li id="pin-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack"></i>Pin</a></li>
 							<li id="unpin-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} list-inline-item"><a class="text-info" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack"></i>Unpin</a></li>
@@ -538,7 +488,6 @@
 								<li id="unban-{{p.id}}" class="{% if not p.author.is_suspended %}d-none{% endif %} list-inline-item"><a class="text-danger" id="unexile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast2('/unban_user/{{p.author_id}}','ban-{{p.id}}','unban-{{p.id}}')"><i class="fas fa-user-slash"></i>Unban user</a></li>
 							{% endif %}
 						{% endif %}
-												
 								</ul>
 							</div>
 
@@ -553,7 +502,6 @@
 						<div id="post-{{p.id}}-up" tabindex="0" data-bs-id-up="{{p.id}}" data-bs-content-type="post" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 
 						<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="+{{ups}} | -{{downs}}">{{score}}</span>
-						
 						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" data-bs-id-down="{{p.id}}" data-bs-content-type="post" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 					</div>
 

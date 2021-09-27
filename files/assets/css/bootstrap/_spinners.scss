@@ -1,5 +1,4 @@
 //
-// Rotating border
 //
 
 @keyframes spinner-border {
@@ -13,8 +12,7 @@
   vertical-align: text-bottom;
   border: $spinner-border-width solid currentColor;
   border-right-color: transparent;
-  // stylelint-disable-next-line property-blacklist
-  border-radius: 50%;
+    border-radius: 50%;
   animation: spinner-border .75s linear infinite;
 }
 
@@ -25,7 +23,6 @@
 }
 
 //
-// Growing circle
 //
 
 @keyframes spinner-grow {
@@ -43,8 +40,7 @@
   height: $spinner-height;
   vertical-align: text-bottom;
   background-color: currentColor;
-  // stylelint-disable-next-line property-blacklist
-  border-radius: 50%;
+    border-radius: 50%;
   opacity: 0;
   animation: spinner-grow .75s linear infinite;
 }

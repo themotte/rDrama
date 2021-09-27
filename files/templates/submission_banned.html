@@ -76,7 +76,6 @@
 			{% if p.is_banned and p.ban_reason %}
 			<div class="text-danger mt-4 mb-2">Reason: {{p.ban_reason | safe}}</div>
 			{% endif %}
-			
 			{% if v and v.admin_level >=3 and p.body_html %}
 												<div class="post-body mt-4 mb-2"> 
 				{{p.body_html | safe}}
@@ -117,19 +116,15 @@
 <!-- Mobile responsive fixed footer with post actions -->
 
 				<div class="row fixed-top bg-white shadow d-inline-flex d-md-none p-3" id="footer-actions" style="z-index: 3; top: 48px; transition: top cubic-bezier(0, 0, 0.2, 1) 220ms;">
-				
 						<div class="col text-center">
-				
 								<div class="post-actions mx-auto">
 										<ul class="list-inline">
-												
 												<li id="voting-mobile" class="voting list-inline-item{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 														<span id="arrow-mobile-up" class="mr-2 arrow-mobile-up">
 																<i class="fas fa-arrow-alt-up mx-0"></i>
 														</span>
 
 
-																
 				<span id="post-{{p.id}}-score-mobile-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
 					<span id="post-{{p.id}}-score-mobile-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
 					<span id="post-{{p.id}}-score-mobile-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
@@ -142,9 +137,7 @@
 
 										</ul>
 								</div>
-				
 						</div>
-				
 				</div>
 
 {% endblock %}

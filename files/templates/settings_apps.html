@@ -30,12 +30,10 @@
 				<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
 				<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}">
 				
-				
 				{% if app.client_id %}
 				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
 				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
 				{% endif %}
-				
 				
 				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
 				<input id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}">

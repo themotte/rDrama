@@ -24810,7 +24810,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	border: 0.1px solid $border-color;
 	border-radius: $border-radius;
 	margin-top: 1rem;
-	//box-shadow: $box-shadow-sm;
 }
 
 #frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type {

@@ -1,7 +1,5 @@
-// Do not forget to update getting-started/theming.md!
 :root {
-  // Custom variable values only support SassScript inside `#{}`.
-  @each $color, $value in $colors {
+    @each $color, $value in $colors {
     --#{$color}: #{$value};
   }
 
@@ -13,8 +11,6 @@
     --breakpoint-#{$bp}: #{$value};
   }
 
-  // Use `inspect` for lists so that quoted items keep the quotes.
-  // See https://github.com/sass/sass/issues/2383#issuecomment-336349172
-  --font-family-sans-serif: #{inspect($font-family-sans-serif)};
+      --font-family-sans-serif: #{inspect($font-family-sans-serif)};
   --font-family-monospace: #{inspect($font-family-monospace)};
 }
