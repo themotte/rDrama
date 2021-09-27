@@ -25,6 +25,7 @@ def send_notification(vid, user, text):
 							distinguish_level=6,
 							body=text,
 							body_html=text_html,
+							notifiedto=uid
 						  )
 	g.db.add(new_comment)
 

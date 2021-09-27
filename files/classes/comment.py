@@ -34,6 +34,7 @@ class Comment(Base):
 	is_bot = Column(Boolean, default=False)
 	is_pinned = Column(String(255))
 	sentto=Column(Integer)
+	notifiedto=Column(Integer)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	oauth_app = relationship("OauthApp", viewonly=True)
 	upvotes = Column(Integer, default=1)
