@@ -33,15 +33,6 @@
 	</script>
 {% endif %}
 
-<script>
-	var date = new Date('{{p.created_datetime}}');
-	document.getElementById('timestamp').title = date.toString();
-	{% if p.edited_utc %}
-		var date = new Date('{{p.edited_datetime}}');
-		document.getElementById('edited_timestamp').title = date.toString();
-	{% endif %}
-</script>
-
 {% if p.award_count("shit") %}
 	<script src="/assets/js/bug-min.js"></script>
 	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
@@ -587,6 +578,25 @@
 
 </div>
 
+
+<script>
+    // closure to avoid variable conflicts
+    (() => {
+        const date = new Date('{{p.created_datetime}}');
+        document.getElementById('timestamp').title = date.toString();
+        {% if p.edited_utc %}
+            const dateEdited = new Date('{{p.edited_datetime}}');
+            document.getElementById('edited_timestamp').title = dateEdited.toString();
+        {% endif %}
+
+        {% if (not v or v.highlightcomments) %}
+            showNewCommentCounts('{{p.id}}', {{p.comment_count}})
+        {% endif %}
+        saveCommentsCount('{{p.id}}', {{p.comment_count}})
+    })()
+
+</script>
+
 <div class="row border-md-0 comment-section pb-3">
 	<div class="col border-top">
 		<div class="comments-count py-3">
@@ -691,24 +701,6 @@
 </div>
 
 </div>
-
-<script>
-    // closure to avoid variable conflicts
-    (() => {
-        const date = new Date('{{p.created_datetime}}');
-        document.getElementById('timestamp').title = date.toString();
-        {% if p.edited_utc %}
-            const dateEdited = new Date('{{p.edited_datetime}}');
-            document.getElementById('edited_timestamp').title = dateEdited.toString();
-        {% endif %}
-
-        {% if (not v or v.highlightcomments) %}
-            showNewCommentCounts('{{p.id}}', {{p.comment_count}})
-        {% endif %}
-        saveCommentsCount('{{p.id}}', {{p.comment_count}})
-    })()
-
-</script>
 
 {% if v and v.id==p.author_id %}
 	{% include "delete_post_modal.html" %}

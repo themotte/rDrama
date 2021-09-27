@@ -151,50 +151,6 @@ function post_toast2(url, button1, button2) {
     document.getElementById(button2).classList.toggle("d-none");
 }
 
-
-// New comment counts
-
-// localstorage comment counts format: {"<postId>": {c: <totalComments>, t: <timestampUpdated>}}
-const COMMENT_COUNTS_ID = "comment-counts"
-
-/**
- * Display the number of new comments present since the last time the post was opened
- */
-function showNewCommentCounts(postId, newTotal) {
-	const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
-
-	const lastCount = comments[postId]
-	if (lastCount) {
-		const newComments = newTotal - lastCount.c
-		if (newComments > 0) {
-			document.querySelectorAll(`#post-${postId} .new-comments`).forEach(elem => {
-				elem.textContent = ` (+${newComments})`
-				elem.classList.remove("d-none")
-			})
-		}
-	}
-}
-
-function incrementCommentCount(postId) {
-	saveCommentsCount(postId)
-}
-
-/**
- * Saves the comment count to the localStorage
- *
- * @param postId The id of the post associated with the comments
- * @param lastTotalComs The new amount, If null it will just increment the previous amount
- */
-function saveCommentsCount(postId, lastTotalComs = null) {
-	const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
-
-	const newTotal = lastTotalComs || ((comments[postId] || { c: 0 }).c + 1)
-
-	comments[postId] = { c: newTotal, t: Date.now() }
-
-	window.localStorage.setItem(COMMENT_COUNTS_ID, JSON.stringify(comments))
-}
-
 /**
  * Cleans the expired entries (5 days). It runs every hour.
  */

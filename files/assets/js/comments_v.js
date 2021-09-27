@@ -91,22 +91,25 @@ document.getElementById("reportCommentButton").onclick = function() {
 
 };
 
-document.getElementById('reportCommentModal').addEventListener('hidden.bs.modal', function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-var button = document.getElementById("reportCommentButton");
+    document.getElementById('reportCommentModal').addEventListener('hidden.bs.modal', function () {
 
-var beforeModal = document.getElementById("reportCommentFormBefore");
-var afterModal = document.getElementById("reportCommentFormAfter");
+        var button = document.getElementById("reportCommentButton");
 
-button.innerHTML='Report comment';
-button.disabled= false;
-afterModal.classList.add('d-none');
+        var beforeModal = document.getElementById("reportCommentFormBefore");
+        var afterModal = document.getElementById("reportCommentFormAfter");
 
-if ( beforeModal.classList.contains('d-none') ) {
-    beforeModal.classList.remove('d-none');
-}
+        button.innerHTML = 'Report comment';
+        button.disabled = false;
+        afterModal.classList.add('d-none');
 
-});
+        if (beforeModal.classList.contains('d-none')) {
+            beforeModal.classList.remove('d-none');
+        }
+
+    });
+})
 
 function openReplyBox(id) {
     const element = document.getElementById(`reply-to-${id}`);
