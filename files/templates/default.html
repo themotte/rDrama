@@ -210,24 +210,20 @@
 
             // New comment counts
 
-            // comment counts format: {"123412": {c: 12, t: 23532456263}}
+            // comment counts format: {"<postId>": {c: <totalComments>, t: <timestampUpdated>}}
             const COMMENT_COUNTS_ID = "comment-counts"
 
             /**
              * Display the number of new comments present since the last time the post was opened
              */
-            function showNewCommentCounts(postId, lastTotalComs) {
+            function showNewCommentCounts(postId, newTotal) {
                 const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
 
-                console.log(postId)
                 const lastCount = comments[postId]
-                console.log(lastCount)
                 if (lastCount) {
-                    const newComments = lastTotalComs - lastCount.c
-                    console.log('new:', newComments)
+                    const newComments = newTotal - lastCount.c
                     if (newComments > 0) {
                         document.querySelectorAll(`#post-${postId} .new-comments`).forEach(elem => {
-                            console.log(elem)
                             elem.textContent = ` (+${newComments})`
                             elem.classList.remove("d-none")
                         })
@@ -250,12 +246,9 @@
 
                 const newTotal = lastTotalComs || ((comments[postId] || { c: 0 }).c + 1)
 
-                console.log(newTotal)
                 comments[postId] = { c: newTotal, t: Date.now() }
 
                 window.localStorage.setItem(COMMENT_COUNTS_ID, JSON.stringify(comments))
-
-                //TODO: restrict on display unread comments flag
             }
 
             /**
@@ -286,7 +279,6 @@
                 // So it does not slow the load of the main page with the clean up
                 setTimeout(cleanCache, 500)
             }
-
             cleanCommentsCache()
 
 		</script>
