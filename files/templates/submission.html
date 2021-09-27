@@ -33,15 +33,6 @@
 	</script>
 {% endif %}
 
-<script>
-	var date = new Date('{{p.created_datetime}}');
-	document.getElementById('timestamp').title = date.toString();
-	{% if p.edited_utc %}
-		var date = new Date('{{p.edited_datetime}}');
-		document.getElementById('edited_timestamp').title = date.toString();
-	{% endif %}
-</script>
-
 {% if p.award_count("shit") %}
 	<script src="/assets/js/bug-min.js"></script>
 	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
@@ -72,6 +63,8 @@
 		});
 	</script>
 {% endif %}
+
+{% include 'embeds/new_comments_count.html' %}
 
 <meta charset="utf-8" />
 <meta property="og:type" content="article" />
@@ -282,7 +275,7 @@
 						<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} style="color: #{{p.author.namecolor}};  font-weight: bold;" class="user-name"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rdrama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.webp">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp" title="">&nbsp;{{p.age_string}}</span>
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
-						
+
 						{% if p.edited_utc %}&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp" title="">{{p.edited_string}}</span>{% endif %}
 						&nbsp;&nbsp;{{p.views}} views
 					</div>
@@ -402,7 +395,12 @@
 								<div class="post-actions mt-2">
 				<ul class="list-inline text-right d-flex">
 
-						<li class="list-inline-item"><a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
+						<li class="list-inline-item">
+                            <a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+                                <i class="fas fa-comment-dots"></i>{{p.comment_count}}
+                                <span class="text-info d-none new-comments"></span>
+                            </a>
+                        </li>
 
 						{% if v and v.id==p.author_id %}
 							{% if p.private %}
@@ -540,7 +538,12 @@
 		<div class="post-actions">
 			<ul class="list-inline text-right d-flex">
 
-				<li class="list-inline-item mr-auto"><a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
+				<li class="list-inline-item mr-auto">
+                    <a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+                        <i class="fas fa-comment-dots"></i>{{p.comment_count}}
+                        <span class="text-info d-none new-comments"></span>
+                    </a>
+                </li>
 
 				<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}"><i class="fas fa-link"></i>Copy link</a></li>
 				{% if v %}
@@ -576,6 +579,25 @@
 	</div>
 
 </div>
+
+
+<script>
+    // closure to avoid variable conflicts
+    (() => {
+        const date = new Date('{{p.created_datetime}}');
+        document.getElementById('timestamp').title = date.toString();
+        {% if p.edited_utc %}
+            const dateEdited = new Date('{{p.edited_datetime}}');
+            document.getElementById('edited_timestamp').title = dateEdited.toString();
+        {% endif %}
+
+        {% if (not v or v.highlightcomments) %}
+            showNewCommentCounts('{{p.id}}', {{p.comment_count}})
+        {% endif %}
+        saveCommentsCount('{{p.id}}', {{p.comment_count}})
+    })()
+
+</script>
 
 <div class="row border-md-0 comment-section pb-3">
 	<div class="col border-top">
@@ -634,7 +656,7 @@
 					<input type="checkbox" class="custom-control-input" id="nsfwCheck-{{p.fullname}}" name="over_18" form="reply-to-{{p.fullname}}">
 					<label class="custom-control-label" for="nsfwCheck">+18</label>
 				</div>
- -->				<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{p.fullname}}')">Comment</a>
+ -->				<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
 			</div>
 		</form>
 	</div>

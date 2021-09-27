@@ -33,6 +33,8 @@
 	<script src="/assets/js/comments_admin.js"></script>
 {% endif %}
 
+{% include 'embeds/new_comments_count.html' %}
+
 <script>
 
 	function collapse_comment(comment_id) {
@@ -64,11 +66,6 @@
 {% macro single_comment(c, level=1) %}
 <!---beginning of comment {{c.id}}--->
 
-<script>
-	var date = new Date('{{c.created_datetime}}');
-	document.getElementById('timestamp-{{c.id}}').title = date.toString();
-</script>
-
 {% set ups=c.upvotes %}
 {% set downs=c.downvotes %}
 {% set score=ups-downs %}
@@ -93,9 +90,9 @@
 				<div id="comment-{{c.id}}-only">
 
 						<div class="user-info">
-						<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>			
-						{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
-								[{% if c.is_banned %}Removed by admins{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% elif c.is_blocked %}This user has blocked you{% endif %}]
+							<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
+							{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
+							[{% if c.is_banned %}Removed by admins{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% elif c.is_blocked %}This user has blocked you{% endif %}]
 						</div>
 
 
@@ -434,10 +431,10 @@
 							<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.id}}').innerHTML='image';" hidden>
 						</label>
 						<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-						<a id="save-reply-to-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}');" href="javascript:void(0)">Comment</a> 
+						<a id="save-reply-to-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
 					</div>
 					<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-block d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-					<a id="save-reply-to-{{c.fullname}}" class="d-block d-md-none btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}');" href="javascript:void(0)">Comment</a> 
+					<a id="save-reply-to-{{c.fullname}}" class="d-block d-md-none btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
 				</form> 
 			</div>
 
@@ -550,6 +547,13 @@
 </div>
 
 </div>
+
+<script>
+	(() => {
+		const date = new Date('{{c.created_datetime}}');
+		document.getElementById('timestamp-{{c.id}}').title = date.toString();
+	})()
+</script>
 
 {% endif %}
 
