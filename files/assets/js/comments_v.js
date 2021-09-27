@@ -91,22 +91,25 @@ document.getElementById("reportCommentButton").onclick = function() {
 
 };
 
-document.getElementById('reportCommentModal').addEventListener('hidden.bs.modal', function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-var button = document.getElementById("reportCommentButton");
+    document.getElementById('reportCommentModal').addEventListener('hidden.bs.modal', function () {
 
-var beforeModal = document.getElementById("reportCommentFormBefore");
-var afterModal = document.getElementById("reportCommentFormAfter");
+        var button = document.getElementById("reportCommentButton");
 
-button.innerHTML='Report comment';
-button.disabled= false;
-afterModal.classList.add('d-none');
+        var beforeModal = document.getElementById("reportCommentFormBefore");
+        var afterModal = document.getElementById("reportCommentFormAfter");
 
-if ( beforeModal.classList.contains('d-none') ) {
-    beforeModal.classList.remove('d-none');
-}
+        button.innerHTML = 'Report comment';
+        button.disabled = false;
+        afterModal.classList.add('d-none');
 
-});
+        if (beforeModal.classList.contains('d-none')) {
+            beforeModal.classList.remove('d-none');
+        }
+
+    });
+})
 
 function openReplyBox(id) {
     const element = document.getElementById(`reply-to-${id}`);
@@ -143,44 +146,6 @@ function delete_commentModal(id) {
     }
 
 };
-
-
-post_comment=function(fullname){
-
-
-    var form = new FormData();
-
-    form.append('formkey', formkey());
-    form.append('parent_fullname', fullname);
-    form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
-    form.append('body', document.getElementById('reply-form-body-'+fullname).value);
-    form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
-    var xhr = new XMLHttpRequest();
-    xhr.open("post", "/comment");
-    xhr.withCredentials=true;
-    xhr.onload=function(){
-        if (xhr.status==200) {
-            commentForm=document.getElementById('comment-form-space-'+fullname);
-            commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-            myToast.hide();
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-            myToast.show();
-        }
-        else {
-            var commentError = document.getElementById("comment-error-text");
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-            myToast.hide();
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-            myToast.show();
-            commentError.textContent = JSON.parse(xhr.response)["error"];
-        }
-    }
-    xhr.send(form)
-
-    document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
-
-}
 
 post_reply=function(id){
 
@@ -248,9 +213,9 @@ comment_edit=function(id){
     }
     xhr.send(form)
 
-    }
+}
 
-post_comment=function(fullname){
+post_comment=function(fullname, postId){
 
     var form = new FormData();
 
@@ -259,6 +224,7 @@ post_comment=function(fullname){
     form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
     form.append('body', document.getElementById('reply-form-body-'+fullname).value);
     form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
+
     var xhr = new XMLHttpRequest();
     xhr.open("post", "/comment");
     xhr.withCredentials=true;
@@ -270,6 +236,8 @@ post_comment=function(fullname){
             myToast.hide();
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
             myToast.show();
+
+            incrementCommentCount(postId)
         }
         else {
             var commentError = document.getElementById("comment-error-text");
