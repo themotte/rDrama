@@ -17,8 +17,10 @@ def join_discord(v):
 	
 	if v.is_suspended != 0: return "You're banned"
 	
-	if 'rdrama' in request.host and v.admin_level == 0 and v.patron == 0 and v.coins < 150: return f"You must earn 150 {COINS_NAME} before entering the Discord server. You earn {COINS_NAME} by making posts/comments and getting upvoted."
+	if 'rdrama' in request.host and v.admin_level == 0 and v.patron == 0 and v.truecoins < 150: return f"You must earn 150 {COINS_NAME} before entering the Discord server. You earn {COINS_NAME} by making posts/comments and getting upvoted."
 	
+	if v.shadowbanned or v.agendaposter: return ""
+
 	now=int(time.time())
 
 	state=generate_hash(f"{now}+{v.id}+discord")
