@@ -76,15 +76,6 @@
 </script>
 {% endif %}
 
-<script>
-	var date = new Date('{{p.created_datetime}}');
-	document.getElementById('timestamp').title = date.toString();
-	{% if p.edited_utc %}
-		var date = new Date('{{p.edited_datetime}}');
-		document.getElementById('edited_timestamp').title = date.toString();
-	{% endif %}
-</script>
-
 <meta charset="utf-8" />
 <meta property="og:type" content="article" />
 
@@ -450,7 +441,12 @@
 								<div class="post-actions mt-2">
 				<ul class="list-inline text-right d-flex">
 
-						<li class="list-inline-item"><a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
+						<li class="list-inline-item">
+                            <a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+                                <i class="fas fa-comment-dots"></i>{{p.comment_count}}
+                                <span class="text-info d-none new-comments"></span>
+                            </a>
+                        </li>
 
 						{% if v and v.id==p.author_id %}
 							{% if p.private %}
@@ -592,7 +588,12 @@
 		<div class="post-actions">
 			<ul class="list-inline text-right d-flex">
 
-				<li class="list-inline-item mr-auto"><a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}><i class="fas fa-comment-dots"></i>{{p.comment_count}}</a></li>
+				<li class="list-inline-item mr-auto">
+                    <a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+                        <i class="fas fa-comment-dots"></i>{{p.comment_count}}
+                        <span class="text-info d-none new-comments"></span>
+                    </a>
+                </li>
 
 				<li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}"><i class="fas fa-link"></i>Copy link</a></li>
 				{% if v %}
@@ -733,6 +734,22 @@
 </div>
 
 </div>
+
+<script>
+    // closure to avoid variable conflicts
+    (() => {
+        const date = new Date('{{p.created_datetime}}');
+        document.getElementById('timestamp').title = date.toString();
+        {% if p.edited_utc %}
+            const dateEdited = new Date('{{p.edited_datetime}}');
+            document.getElementById('edited_timestamp').title = dateEdited.toString();
+        {% endif %}
+
+        showNewCommentCounts({{p.id}}, {{p.comment_count}})
+        saveCommentsCount({{p.id}}, {{p.comment_count}})
+    })()
+
+</script>
 
 {% if v and v.id==p.author_id %}
 	{% include "delete_post_modal.html" %}

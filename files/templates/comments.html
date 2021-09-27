@@ -383,11 +383,6 @@
 {% macro single_comment(c, level=1) %}
 <!---beginning of comment {{c.id}}--->
 
-<script>
-	var date = new Date('{{c.created_datetime}}');
-	document.getElementById('timestamp-{{c.id}}').title = date.toString();
-</script>
-
 {% set ups=c.upvotes %}
 {% set downs=c.downvotes %}
 {% set score=ups-downs %}
@@ -881,6 +876,13 @@
 </div>
 
 {% endif %}
+
+<script>
+    (() => {
+        const date = new Date('{{c.created_datetime}}');
+        document.getElementById('timestamp-{{c.id}}').title = date.toString();
+    })()
+</script>
 
 {% endmacro %}
 

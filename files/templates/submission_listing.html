@@ -17,15 +17,6 @@
 
 {% for p in listing %}
 
-<script>
-	var date = new Date('{{p.created_datetime}}');
-	document.getElementById('timestamp-{{p.id}}').title = date.toString();
-	{% if p.edited_utc %}
-		var date = new Date('{{p.edited_datetime}}');
-		document.getElementById('edited_timestamp-{{p.id}}').title = date.toString();
-	{% endif %}
-</script>
-
 {% set ups=p.upvotes %}
 {% set downs=p.downvotes %}
 {% set score=ups-downs %}
@@ -399,6 +390,19 @@
 </div>
 
 </div>
+
+<script>
+    (() => {
+        const date = new Date('{{p.created_datetime}}');
+        document.getElementById('timestamp-{{p.id}}').title = date.toString();
+        {% if p.edited_utc %}
+            const dateEdited = new Date('{{p.edited_datetime}}');
+            document.getElementById('edited_timestamp-{{p.id}}').title = dateEdited.toString();
+        {% endif %}
+
+        showNewCommentCounts({{p.id}}, {{p.comment_count}})
+    })()
+</script>
 
 {% if p.active_flags %}
 	<div id="flaggers-{{p.id}}" class="flaggers d-none">
