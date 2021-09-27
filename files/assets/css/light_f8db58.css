@@ -358,8 +358,7 @@ select {
 }
 
 button,
-[type=button],
-[type=reset],
+[type=button], [type=reset],
 [type=submit] {
   -webkit-appearance: button;
 }
@@ -13153,7 +13152,6 @@ a.text-reddit:hover, a.text-reddit:focus {
   *,
 *::before,
 *::after {
-    text-shadow: none !important;
     box-shadow: none !important;
   }
 
