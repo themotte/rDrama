@@ -73,27 +73,6 @@ window.addEventListener( 'load', function() {
     }
 }, false );
 
-function transferCoins(mobile=false) {
-    let t = event.target;
-    t.disabled = true;
-
-    let amount = parseInt(document.getElementById("coins-transfer-amount").value);
-    let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
-
-    post_toast_callback("/@{{u.username}}/transfer_coins",
-        {"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
-        (xhr) => {
-        if(xhr.status == 200) {
-            document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
-            document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
-            document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
-        }
-        }
-    );
-
-    setTimeout(_ => t.disabled = false, 2000);
-}
-
 function updateTax(mobile=false) {
     let suf = mobile ? "-mobile" : "";
     let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
