@@ -1,363 +1,15 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 {% if v %}
-	<script>
-		function post_toast3(url, button1, button2) {
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", url, true);
-			var form = new FormData()
-
-			if(typeof data === 'object' && data !== null) {
-				for(let k of Object.keys(data)) {
-						form.append(k, data[k]);
-				}
-			}
-
-
-			form.append("formkey", formkey());
-			xhr.withCredentials=true;
-
-			xhr.onload = function() {
-				if (xhr.status >= 200 && xhr.status < 300) {
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-					myToast.show();
-					try {
-						document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
-					} catch(e) {
-						document.getElementById('toast-post-success-text').innerText = "Action successful!";
-					}
-					return true
-
-				} else if (xhr.status >= 300 && xhr.status < 400) {
-					window.location.href = JSON.parse(xhr.response)["redirect"]
-				} else {
-
-					try {
-						data=JSON.parse(xhr.response);
-					} catch(e) {}
-
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-					myToast.hide();
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-					myToast.show();
-					document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
-					return false
-				}
-			};
-
-			xhr.send(form);
-
-			document.getElementById(button1).classList.toggle("d-md-inline-block");
-			document.getElementById(button2).classList.toggle("d-md-inline-block");
-		}
-
-		//reporting
-		// Report Comment
-
-		report_commentModal = function(id, author) {
-
-		document.getElementById("comment-author").textContent = author;
-
-		//offtopic.disabled=true;
-
-		document.getElementById("reportCommentButton").onclick = function() {
-
-			this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting comment';
-			this.disabled = true;
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", '/flag/comment/'+id, true);
-			var form = new FormData()
-			form.append("formkey", formkey());
-			form.append("reason", document.getElementById("reason-comment").value);
-
-			xhr.withCredentials=true;
-
-			xhr.onload=function() {
-				document.getElementById("reportCommentFormBefore").classList.add('d-none');
-				document.getElementById("reportCommentFormAfter").classList.remove('d-none');
-			};
-
-			xhr.onerror=function(){alert(errortext)};
-			xhr.send(form);
-		}
-
-		};
-
-        document.addEventListener("DOMContentLoaded", function() {
-
-            document.getElementById('reportCommentModal').addEventListener('hidden.bs.modal', function () {
-
-                const button = document.getElementById("reportCommentButton");
-
-                const beforeModal = document.getElementById("reportCommentFormBefore");
-                const afterModal = document.getElementById("reportCommentFormAfter");
-
-                button.innerHTML = 'Report comment';
-                button.disabled = false;
-                afterModal.classList.add('d-none');
-
-                if (beforeModal.classList.contains('d-none')) {
-                    beforeModal.classList.remove('d-none');
-                }
-
-            });
-        });
-
-		//Commenting form
-
-		// Open comment reply box
-
-		function openReplyBox(id) {
-			const element = document.getElementById(`reply-to-${id}`);
-			element.classList.remove('d-none')
-
-			element.getElementsByTagName('textarea')[0].focus()
-		}
-
-		// Comment edit form
-
-		toggleEdit=function(id){
-			comment=document.getElementById("comment-text-"+id);
-			form=document.getElementById("comment-edit-"+id);
-			box=document.getElementById('comment-edit-body-'+id);
-			actions = document.getElementById('comment-' + id +'-actions');
-
-			comment.classList.toggle("d-none");
-			form.classList.toggle("d-none");
-			actions.classList.toggle("d-none");
-			autoExpand(box);
-		};
-
-
-		// Delete Comment
-
-		function delete_commentModal(id) {
-
-			// Passed data for modal
-
-			document.getElementById("deleteCommentButton").onclick = function() {	
-
-				this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
-				this.disabled = true; 
-				post('/delete/comment/' + id,
-					callback = function() {
-
-						location.reload();
-					}
-					)
-			}
-
-		};
-
-
-		post_comment=function(fullname, postId){
-
-
-			var form = new FormData();
-
-			form.append('formkey', formkey());
-			form.append('parent_fullname', fullname);
-			form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
-			form.append('body', document.getElementById('reply-form-body-'+fullname).value);
-			form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
-			var xhr = new XMLHttpRequest();
-			xhr.open("post", "/comment");
-			xhr.withCredentials=true;
-			xhr.onload=function(){
-				if (xhr.status==200) {
-					commentForm=document.getElementById('comment-form-space-'+fullname);
-					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-					myToast.hide();
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-					myToast.show();
-
-                    incrementCommentCount(postId)
-				}
-				else {
-					var commentError = document.getElementById("comment-error-text");
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-					myToast.hide();
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-					myToast.show();
-					commentError.textContent = JSON.parse(xhr.response)["error"];
-				}
-			}
-			xhr.send(form)
-
-			document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
-
-		}
-
-		post_reply=function(id){
-
-			var form = new FormData();
-
-			form.append('formkey', formkey());
-			form.append('parent_id', id);
-			form.append('body', document.getElementById('reply-form-body-'+id).value);
-			var xhr = new XMLHttpRequest();
-			xhr.open("post", "/reply");
-			xhr.withCredentials=true;
-			xhr.onload=function(){
-				if (xhr.status==200) {
-					commentForm=document.getElementById('comment-form-space-'+id);
-					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-					myToast.hide();
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-					myToast.show();
-				}
-				else {
-					var commentError = document.getElementById("comment-error-text");
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-					myToast.hide();
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-					myToast.show();
-					
-				}
-			}
-			xhr.send(form)
-
-			document.getElementById('save-reply-to-'+id).classList.add('disabled');
-
-			}
-
-			comment_edit=function(id){
-
-				var commentError = document.getElementById("comment-error-text");
-
-				var form = new FormData();
-
-				form.append('formkey', formkey());
-				form.append('body', document.getElementById('comment-edit-body-'+id).value);
-				form.append('file', document.getElementById('file-edit-reply-'+id).files[0]);
-
-				var xhr = new XMLHttpRequest();
-				xhr.open("post", "/edit_comment/"+id);
-				xhr.withCredentials=true;
-				xhr.onload=function(){
-					if (xhr.status==200) {
-						commentForm=document.getElementById('comment-text-'+id);
-						commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-						document.getElementById('cancel-edit-'+id).click()
-						var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-						myToast.hide();
-						var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-						myToast.show();
-					}
-					else {
-						var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-						myToast.hide();
-						var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-						myToast.show();
-					
-						commentError.textContent = JSON.parse(xhr.response)["error"];
-					}
-				}
-				xhr.send(form)
-
-			}
-	</script>
+	<script src="/assets/js/comments_v.js"></script>
 {% endif %}
 
 
 {% if v and v.admin_level == 6 %}
-	<script>
-		//comment modding
-		function removeComment(post_id,button1,button2) {
-			url="/ban_comment/"+post_id
-
-			callback=function(){
-
-				try {
-					document.getElementById("comment-"+post_id+"-only").classList.add("banned");
-				} catch(e) {
-					document.getElementById("context").classList.add("banned");
-				}
-
-				button=document.getElementById("remove-"+post_id);
-				button.onclick=function(){approveComment(post_id)};
-				button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
-			}
-			post(url, callback, "Comment has been removed.")
-			
-
-			if (typeof button1 !== 'undefined') {
-				document.getElementById(button1).classList.toggle("d-md-inline-block");
-				document.getElementById(button2).classList.toggle("d-md-inline-block");
-			}
-		};
-
-		function approveComment(post_id,button1,button2) {
-			url="/unban_comment/"+post_id
-
-			callback=function(){
-				try {
-					document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
-				} catch(e) {
-					document.getElementById("context").classList.remove("banned");
-				}
-
-				button=document.getElementById("remove-"+post_id);
-				button.onclick=function(){removeComment(post_id)};
-				button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
-			}
-
-			post(url, callback, "Comment has been approved.")
-
-			if (typeof button1 !== 'undefined') {
-				document.getElementById(button1).classList.toggle("d-md-inline-block");
-				document.getElementById(button2).classList.toggle("d-md-inline-block");
-			}
-		}
-
-
-		function removeComment2(post_id,button1,button2) {
-			url="/ban_comment/"+post_id
-
-			callback=function(){
-				document.getElementById("comment-"+post_id+"-only").classList.add("banned");
-
-				button=document.getElementById("remove-"+post_id);
-				button.onclick=function(){approveComment(post_id)};
-				button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
-			}
-			post(url, callback, "Comment has been removed.")
-			
-
-			if (typeof button1 !== 'undefined') {
-				document.getElementById(button1).classList.toggle("d-none");
-				document.getElementById(button2).classList.toggle("d-none");
-			}
-		};
-
-		function approveComment2(post_id,button1,button2) {
-			url="/unban_comment/"+post_id
-
-			callback=function(){
-				document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
-
-				button=document.getElementById("remove-"+post_id);
-				button.onclick=function(){removeComment(post_id)};
-				button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
-			}
-
-			post(url, callback, "Comment has been approved.")
-
-			if (typeof button1 !== 'undefined') {
-				document.getElementById(button1).classList.toggle("d-none");
-				document.getElementById(button2).classList.toggle("d-none");
-			}
-		}
-	</script>
+	<script src="/assets/js/comments_admin.js"></script>
 {% endif %}
 
 <script>
-
-	// comment collapse
-
-	// Toggle comment collapse
 
 	function collapse_comment(comment_id) {
 		const comment = "comment-" + comment_id
@@ -488,7 +140,6 @@
 <div id="comment-{{c.id}}" class="{% if c.unread %}context{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="border-left: 2px solid #{{c.author.namecolor}}; {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
 
 	<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
-	
 	<div class="comment-body">
 
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="{% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
@@ -507,7 +158,6 @@
 				{% if c.bannedfor and c.author.banned_by %}
 					<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User was banned for this comment by @{{c.author.banned_by.username}}"></i></a>
 				{% endif %}
-		
 				{% if c.active_flags %}<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Reports</a>{% endif %}
 				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 				{% if v and v.admin_level==6 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned user"></i>{% endif %}
@@ -528,7 +178,6 @@
 				<span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 				{% endif %}
 			</div>
-			
 			{% if c.active_flags %}
 			<div id="flaggers-{{c.id}}" class="flaggers d-none">
 				<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
@@ -553,7 +202,6 @@
 				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ACCOUNT and c.author_id!=AUTOJANNY_ACCOUNT and c.author_id!=v.id %}
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.toggle('d-none')">Reply</a>
 					<pre></pre>
-					
 					<div id="reply-m-{{c.id}}" class="d-none">
 						<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
 							<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
@@ -578,7 +226,6 @@
 					</div>
 				{% endif %}
 			</div>
-			
 			{% if c.parent_submission %}
 
 				{% if v and v.id==c.author_id %}
@@ -591,7 +238,6 @@
 							&nbsp;
 							<small class="btn btn-secondary format d-inline-block m-0"><i class="fas fa-smile-beam" aria-hidden="true" onclick="loadEmojis('comment-edit-body-{{c.id}}')" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="Add Emoji"></i></small>
 							&nbsp;
-							
 							<label class="btn btn-secondary format d-inline-block m-0" for="file-edit-reply-{{c.id}}">
 								<div id="filename-edit-reply-{{c.id}}"><i class="far fa-image"></i></div>
 								<input id="file-edit-reply-{{c.id}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-edit-reply-{{c.id}}').innerHTML='image';" hidden>
@@ -605,16 +251,13 @@
 					</form>
 				</div>
 				{% endif %}
-		
 				<div id="comment-{{c.id}}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 					<ul class="list-inline text-right text-md-left">
 
 						{% if v and request.path.startswith('/@') and v.admin_level == 0%}
-						
 							{% if voted==1 %}
 							<li class="list-inline-item arrow-up d-none d-md-inline-block mr-2 comment-{{c.id}}-up active"></li>
 							{% endif %}
-						
 						{% elif v %}
 
 							<li id="comment-{{c.id}}-up" tabindex="0" class="list-inline-item arrow-up upvote-button d-none d-md-inline-block mr-2 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}" data-bs-id-up="{{c.id}}" data-bs-content-type="comment"></li>
@@ -629,11 +272,9 @@
 						</li>
 
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
-						
 							{% if voted==-1 %}
 							<li class="list-inline-item arrow-down d-none d-md-inline-block mr-2 comment-{{c.id}}-down active"></li>
 							{% endif %}
-						
 						{% elif v %}
 							<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" class="list-inline-item arrow-down downvote-button d-none d-md-inline-block mr-2 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}" data-bs-id-down="{{c.id}}" data-bs-content-type="comment"></li>
 
@@ -659,7 +300,6 @@
 
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a {% if v %}href="{{c.permalink}}?context=5#context"{% else %}href="/logged_out{{c.permalink}}?context=5#context"{% endif %}><i class="fas fa-book-open"></i>Context</a></li>
 						<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}/?context=5#context"><i class="fas fa-copy"></i>Copy link</a></li>
-						
 						{% if v %}
 							<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)"><i class="fas fa-flag fa-fw"></i>Report</a></li>
 						{% endif %}
@@ -681,7 +321,6 @@
 							<li id="distinguish-{{c.id}}" class="list-inline-item d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %}"><a class="text-info" href="javascript:void(0)" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</a></li>
 						{% endif %}
 
-								
 						{% if v and not v.id==c.author_id and v.admin_level == 0 %}
 							<li id="unblock-{{c.id}}" class="{% if c.is_blocked %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" onclick="post_toast3('/settings/unblock?username={{c.author.username}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash fa-fw"></i>Unblock user</a></li>
 							<li id="block-{{c.id}}" class="{% if not c.is_blocked %}d-md-inline-block{% endif %} list-inline-item text-muted d-none"><a href="javascript:void(0)" onclick="post_toast3('/settings/block?username={{c.author.username}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash fa-fw"></i>Block user</a></li>
@@ -726,7 +365,6 @@
 						{% else %}
 							<li id="comment-{{c.id}}-up" tabindex="0" class="list-inline-item arrow-up d-inline-block d-md-none mr-2" onclick="location.href='/login';"></li>
 						{% endif %}
-						
 						<li class="list-inline-item d-inline-block d-md-none mr-2"><span class="points" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"><span id="comment-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{score}}</span></span></li>
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
 							{% if voted==-1 %}
@@ -926,7 +564,6 @@
 						<span aria-hidden="true"><i class="far fa-times"></i></span>
 					</button>
 				</div>
-				
 				<div class="modal-body text-center">
 
 					<div class="py-4">
@@ -935,12 +572,10 @@
 
 					<p>Your comment will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.</p>
 				</div>
-				
 				<div class="modal-footer">
 					<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
 					<button id="deleteCommentButton" class="btn btn-danger">Delete comment</button>
 				</div>
-				
 			</div>
 		</div>
 	</div>

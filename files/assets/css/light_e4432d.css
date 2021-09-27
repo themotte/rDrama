@@ -358,8 +358,7 @@ select {
 }
 
 button,
-[type=button],
-[type=reset],
+[type=button], [type=reset],
 [type=submit] {
   -webkit-appearance: button;
 }
@@ -13153,7 +13152,6 @@ a.text-reddit:hover, a.text-reddit:focus {
   *,
 *::before,
 *::after {
-    text-shadow: none !important;
     box-shadow: none !important;
   }
 
@@ -14472,7 +14470,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 #frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type {
 	border-bottom-left-radius: $border-radius;
 	border-bottom-right-radius: $border-radius;
-	//border: 1px solid $border-color;
 	border-radius: $border-radius;
 }
 

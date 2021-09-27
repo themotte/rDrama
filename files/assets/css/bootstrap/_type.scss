@@ -1,7 +1,5 @@
-// stylelint-disable declaration-no-important, selector-list-comma-newline-after
 
 //
-// Headings
 //
 
 h1, h2, h3, h4, h5, h6,
@@ -25,7 +23,6 @@ h6, .h6 { @include font-size($h6-font-size); }
   font-weight: $lead-font-weight;
 }
 
-// Type display classes
 .display-1 {
   @include font-size($display1-size);
   font-weight: $display1-weight;
@@ -49,7 +46,6 @@ h6, .h6 { @include font-size($h6-font-size); }
 
 
 //
-// Horizontal rules
 //
 
 hr {
@@ -61,7 +57,6 @@ hr {
 
 
 //
-// Emphasis
 //
 
 small,
@@ -78,14 +73,12 @@ mark,
 
 
 //
-// Lists
 //
 
 .list-unstyled {
   @include list-unstyled();
 }
 
-// Inline turns list items into inline-block
 .list-inline {
   @include list-unstyled();
 }
@@ -99,16 +92,13 @@ mark,
 
 
 //
-// Misc
 //
 
-// Builds on `abbr`
 .initialism {
   @include font-size(90%);
   text-transform: uppercase;
 }
 
-// Blockquotes
 .blockquote {
   margin-bottom: $spacer;
   @include font-size($blockquote-font-size);
@@ -120,6 +110,5 @@ mark,
   color: $blockquote-small-color;
 
   &::before {
-    content: "\2014\00A0"; // em dash, nbsp
-  }
+    content: "\2014\00A0";   }
 }

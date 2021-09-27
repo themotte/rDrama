@@ -244,7 +244,7 @@ def award_post(pid, v):
 	g.db.add(post.author)
 
 	g.db.commit()
-	if request.referrer: return redirect(request.referrer)
+	if len(request.referrer) > 1: return redirect(request.referrer)
 	else: return redirect("/")
 
 

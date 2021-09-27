@@ -1,21 +1,12 @@
-// stylelint-disable declaration-no-important, selector-no-qualifying-type
 
-// Source: https://github.com/h5bp/dark.css/blob/master/src/_print.css
 
-// ==========================================================================
-// Print styles.
-// Inlined to avoid the additional HTTP request:
-// https://www.phpied.com/delay-loading-your-print-css/
-// ==========================================================================
 
 @if $enable-print-styles {
   @media print {
     *,
     *::before,
     *::after {
-      // Bootstrap specific; comment out `color` and `background`
-      //color: $black !important; // Black prints faster
-      text-shadow: none !important;
+            //color: $black !important;       text-shadow: none !important;
       //background: transparent !important;
       box-shadow: none !important;
     }
@@ -26,39 +17,30 @@
       }
     }
 
-    // Bootstrap specific; comment the following selector out
-    //a[href]::after {
-    //  content: " (" attr(href) ")";
-    //}
+        //a[href]::after {
+        //}
 
     abbr[title]::after {
       content: " (" attr(title) ")";
     }
 
-    // Bootstrap specific; comment the following selector out
-    //
-    // Don't show links that are fragment identifiers,
-    // or use the `javascript:` pseudo protocol
-    //
+        //
+            //
 
     //a[href^="#"]::after,
     //a[href^="javascript:"]::after {
-    // content: "";
-    //}
+        //}
 
     pre {
       white-space: pre-wrap !important;
     }
     pre,
     blockquote {
-      border: $border-width solid $gray-500; // Bootstrap custom code; using `$border-width` instead of 1px
-      page-break-inside: avoid;
+      border: $border-width solid $gray-500;       page-break-inside: avoid;
     }
 
     //
-    // Printing Tables:
-    // https://web.archive.org/web/20180815150934/https://css-discuss.incutio.com/wiki/Printing_Tables
-    //
+            //
 
     thead {
       display: table-header-group;
@@ -81,12 +63,8 @@
       page-break-after: avoid;
     }
 
-    // Bootstrap specific changes start
-
-    // Specify a size and min-width to make printing closer across browsers.
-    // We don't set margin here because it breaks `size` in Chrome. We also
-    // don't use `!important` on `size` as it breaks in Chrome.
-    @page {
+    
+                @page {
       size: $print-page-size;
     }
     body {
@@ -96,8 +74,7 @@
       min-width: $print-body-min-width !important;
     }
 
-    // Bootstrap components
-    .navbar {
+        .navbar {
       display: none;
     }
     .badge {
@@ -136,6 +113,5 @@
       border-color: $table-border-color;
     }
 
-    // Bootstrap specific changes end
-  }
+      }
 }

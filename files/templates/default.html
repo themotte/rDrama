@@ -1,18 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	
-	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="/assets/js/general41.js"></script>
 
 	{% if v and v.agendaposter %}
 		<script>
-			/*
-			Bug.js - https://github.com/Auz/Bug
-			Released under MIT-style license.
-			Original Screen Bug http://screen-bug.googlecode.com/git/index.html
-			*/
 			var BugDispatch={options:{minDelay:500,maxDelay:1E4,minBugs:2,maxBugs:20,minSpeed:5,maxSpeed:10,maxLargeTurnDeg:150,maxSmallTurnDeg:10,maxWiggleDeg:5,imageSprite:"fly-sprite.webp",bugWidth:13,bugHeight:14,num_frames:5,zoom:10,canFly:!0,canDie:!0,numDeathTypes:3,monitorMouseMovement:!1,eventDistanceToBug:40,minTimeBetweenMultipy:1E3,mouseOver:"random"},initialize:function(a){this.options=mergeOptions(this.options,a);this.options.minBugs>this.options.maxBugs&&(this.options.minBugs=this.options.maxBugs);
 			this.modes=["multiply","nothing"];this.options.canFly&&this.modes.push("fly","flyoff");this.options.canDie&&this.modes.push("die");-1==this.modes.indexOf(this.options.mouseOver)&&(this.options.mouseOver="random");this.transform=null;this.transforms={Moz:function(a){this.bug.style.MozTransform=a},webkit:function(a){this.bug.style.webkitTransform=a},O:function(a){this.bug.style.OTransform=a},ms:function(a){this.bug.style.msTransform=a},Khtml:function(a){this.bug.style.KhtmlTransform=a},w3c:function(a){this.bug.style.transform=
 			a}};if("transform"in document.documentElement.style)this.transform=this.transforms.w3c;else{var b=["Moz","webkit","O","ms","Khtml"],c=0;for(c=0;c<b.length;c++)if(b[c]+"Transform"in document.documentElement.style){this.transform=this.transforms[b[c]];break}}if(this.transform){this.bugs=[];b="multiply"===this.options.mouseOver?this.options.minBugs:this.random(this.options.minBugs,this.options.maxBugs,!0);c=0;var d=this;for(c=0;c<b;c++){a=JSON.parse(JSON.stringify(this.options));var e=SpawnBug();a.wingsOpen=
@@ -46,8 +38,6 @@
 			this.random(50,300)},bug_near_window_edge:function(){this.near_edge=0;this.bug.top<this.options.edge_resistance?this.near_edge|=this.NEAR_TOP_EDGE:this.bug.top>document.documentElement.clientHeight-this.options.edge_resistance&&(this.near_edge|=this.NEAR_BOTTOM_EDGE);this.bug.left<this.options.edge_resistance?this.near_edge|=this.NEAR_LEFT_EDGE:this.bug.left>document.documentElement.clientWidth-this.options.edge_resistance&&(this.near_edge|=this.NEAR_RIGHT_EDGE);return this.near_edge},getPos:function(){return this.inserted&&
 			this.bug&&this.bug.style?{top:parseInt(this.bug.top,10),left:parseInt(this.bug.left,10)}:null}},SpawnBug=function(){var a={},b;for(b in Bug)Bug.hasOwnProperty(b)&&(a[b]=Bug[b]);return a},mergeOptions=function(a,b,c){"undefined"==typeof c&&(c=!0);a=c?cloneOf(a):a;for(var d in b)b.hasOwnProperty(d)&&(a[d]=b[d]);return a},cloneOf=function(a){if(null==a||"object"!=typeof a)return a;var b=a.constructor(),c;for(c in a)a.hasOwnProperty(c)&&(b[c]=cloneOf(a[c]));return b};
 			window.requestAnimFrame=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a,b){window.setTimeout(a,1E3/60)}}();
-		</script>
-		<script>
 			new BugController({
 				imageSprite: "/assets/images/fly-sprite.webp",
 				canDie: false,
@@ -77,212 +67,7 @@
 
 	{% if v %}
 		<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
-			
-		<script>
-			const beamsClient = new PusherPushNotifications.Client({
-				instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6',
-			});		
-			
-			beamsClient
-			.start()
-			.then((beamsClient) => beamsClient.getDeviceId())
-			.then(() => beamsClient.addDeviceInterest('{{v.strid}}'))
-			.then(() => beamsClient.getDeviceInterests())
-			.catch(console.error);
-
-			// Text Formatting
-
-			// Bold Text
-
-			makeBold = function (form) {
-				var text = document.getElementById(form);
-				var startIndex = text.selectionStart,
-				endIndex = text.selectionEnd;
-				var selectedText = text.value.substring(startIndex, endIndex);
-
-				var format = '**'
-
-				if (selectedText.includes('**')) {
-					text.value = selectedText.replace(/\*/g, '');
-					
-				}
-				else if (selectedText.length == 0) {
-					text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-				}
-				else {
-					text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
-				}
-			}
-
-			// Italicize Comment Text
-
-			makeItalics = function (form) {
-				var text = document.getElementById(form);
-				var startIndex = text.selectionStart,
-				endIndex = text.selectionEnd;
-				var selectedText = text.value.substring(startIndex, endIndex);
-
-				var format = '*'
-
-				if (selectedText.includes('*')) {
-					text.value = selectedText.replace(/\*/g, '');
-					
-				}
-				else if (selectedText.length == 0) {
-					text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-				}
-				else {
-					text.value = text.value.substring(0, startIndex) + format + selectedText + format + text.value.substring(endIndex);
-				}
-			}
-
-			// Quote Comment Text
-
-			makeQuote = function (form) {
-				var text = document.getElementById(form);
-				var startIndex = text.selectionStart,
-				endIndex = text.selectionEnd;
-				var selectedText = text.value.substring(startIndex, endIndex);
-
-				var format = '>'
-
-				if (selectedText.includes('>')) {
-					text.value = text.value.substring(0, startIndex) + selectedText.replace(/\>/g, '') + text.value.substring(endIndex);
-					
-				}
-				else if (selectedText.length == 0) {
-					text.value = text.value.substring(0, startIndex) + selectedText + text.value.substring(endIndex);
-				}
-				else {
-					text.value = text.value.substring(0, startIndex) + format + selectedText + text.value.substring(endIndex);
-				}
-			}
-
-			function autoExpand (field) {
-
-				//get current scroll position
-				xpos=window.scrollX;
-				ypos=window.scrollY;
-
-				// Reset field height
-				field.style.height = 'inherit';
-
-				// Get the computed styles for the element
-				var computed = window.getComputedStyle(field);
-
-				// Calculate the height
-				var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
-				+ parseInt(computed.getPropertyValue('padding-top'), 10)
-				+ field.scrollHeight
-				+ parseInt(computed.getPropertyValue('padding-bottom'), 10)
-				+ parseInt(computed.getPropertyValue('border-bottom-width'), 10)
-				+ 32;
-
-				field.style.height = height + 'px';
-
-				//keep window position from changing
-				window.scrollTo(xpos,ypos);
-
-			};
-
-
-			document.addEventListener('input', function (event) {
-				if (event.target.tagName.toLowerCase() !== 'textarea') return;
-				autoExpand(event.target);
-			}, false);
-		
-
-			for(let el of document.getElementsByClassName('text-expand')) {
-				el.onclick = function(event){
-					if (event.which != 1) {
-						return
-					};
-					id=this.data('id');
-
-
-					document.getElementById('post-text-'+id).toggleClass('d-none');
-					document.getElementsByClassName('text-expand-icon-'+id)[0].toggleClass('fa-expand-alt');
-					document.getElementsByClassName('text-expand-icon-'+id)[0].toggleClass('fa-compress-alt');
-
-				}
-			}
-
-
-            // New comment counts
-
-            // comment counts format: {"<postId>": {c: <totalComments>, t: <timestampUpdated>}}
-            const COMMENT_COUNTS_ID = "comment-counts"
-
-            /**
-             * Display the number of new comments present since the last time the post was opened
-             */
-            function showNewCommentCounts(postId, newTotal) {
-                const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
-
-                const lastCount = comments[postId]
-                if (lastCount) {
-                    const newComments = newTotal - lastCount.c
-                    if (newComments > 0) {
-                        document.querySelectorAll(`#post-${postId} .new-comments`).forEach(elem => {
-                            elem.textContent = ` (+${newComments})`
-                            elem.classList.remove("d-none")
-                        })
-                    }
-                }
-            }
-
-            function incrementCommentCount(postId) {
-                saveCommentsCount(postId)
-            }
-
-            /**
-             * Saves the comment count to the localStorage
-             *
-             * @param postId The id of the post associated with the comments
-             * @param lastTotalComs The new amount, If null it will just increment the previous amount
-             */
-            function saveCommentsCount(postId, lastTotalComs = null) {
-                const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
-
-                const newTotal = lastTotalComs || ((comments[postId] || { c: 0 }).c + 1)
-
-                comments[postId] = { c: newTotal, t: Date.now() }
-
-                window.localStorage.setItem(COMMENT_COUNTS_ID, JSON.stringify(comments))
-            }
-
-            /**
-             * Cleans the expired entries (5 days). It runs every hour.
-             */
-            function cleanCommentsCache() {
-                const LAST_CACHE_CLEAN_ID = "last-cache-clean"
-                const EXPIRE_INTERVAL_MILLIS = 5 * 24 * 60 * 60 * 1000
-                const CACHE_CLEAN_INTERVAL = 60 * 60 * 1000 // 1 hour
-
-                function cleanCache() {
-                    const lastCacheClean = JSON.parse(localStorage.getItem(LAST_CACHE_CLEAN_ID)) || Date.now()
-                    const now = Date.now()
-
-                    if (now - lastCacheClean > CACHE_CLEAN_INTERVAL) {
-                        const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
-
-                        for (let [key, value] of Object.entries(comments)) {
-                            if (now - value.t > EXPIRE_INTERVAL_MILLIS) {
-                                delete comments[key]
-                            }
-                        }
-                        window.localStorage.setItem(COMMENT_COUNTS_ID, JSON.stringify(comments))
-                    }
-                    window.localStorage.setItem(LAST_CACHE_CLEAN_ID, JSON.stringify(now))
-                }
-
-                // So it does not slow the load of the main page with the clean up
-                setTimeout(cleanCache, 500)
-            }
-            cleanCommentsCache()
-
-		</script>
-
+		<script src="/assets/js/default.js"></script>
 	{% endif %}
 
 
@@ -292,7 +77,6 @@
 	<meta name="thumbnail" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.webp">
 
 	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
-	
 	{% block title %}
 	<title>{{'SITE_NAME' | app_config}}</title>
 
@@ -461,7 +245,6 @@
 		/>
 
 
-		
 		{% block stylesheets %}
 
 		{% if v %}
@@ -480,13 +263,10 @@
 		{% endblock %}
 
 		{% if v %}
-
-		<script>
-			function formkey() {
-			return '{{v.formkey}}';
-		}
-	</script>
-	{% endif %}
+			<script>
+				function formkey() {return '{{v.formkey}}';}
+			</script>
+		{% endif %}
 
  </head>
 
@@ -535,7 +315,6 @@
 			{% endblock %}
 
 		</div>
-		
 	</div>
 </div>
 
