@@ -83,22 +83,25 @@
 
 		};
 
-		document.getElementById('reportCommentModal').addEventListener('hidden.bs.modal', function () {
+        document.addEventListener("DOMContentLoaded", function() {
 
-		var button = document.getElementById("reportCommentButton");
+            document.getElementById('reportCommentModal').addEventListener('hidden.bs.modal', function () {
 
-		var beforeModal = document.getElementById("reportCommentFormBefore");
-		var afterModal = document.getElementById("reportCommentFormAfter");
+                const button = document.getElementById("reportCommentButton");
 
-		button.innerHTML='Report comment';
-		button.disabled= false;
-		afterModal.classList.add('d-none');
+                const beforeModal = document.getElementById("reportCommentFormBefore");
+                const afterModal = document.getElementById("reportCommentFormAfter");
 
-		if ( beforeModal.classList.contains('d-none') ) {
-			beforeModal.classList.remove('d-none');
-		}
+                button.innerHTML = 'Report comment';
+                button.disabled = false;
+                afterModal.classList.add('d-none');
 
-		});
+                if (beforeModal.classList.contains('d-none')) {
+                    beforeModal.classList.remove('d-none');
+                }
+
+            });
+        });
 
 		//Commenting form
 
@@ -147,7 +150,7 @@
 		};
 
 
-		post_comment=function(fullname){
+		post_comment=function(fullname, postId){
 
 
 			var form = new FormData();
@@ -168,6 +171,8 @@
 					myToast.hide();
 					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 					myToast.show();
+
+                    incrementCommentCount(postId)
 				}
 				else {
 					var commentError = document.getElementById("comment-error-text");
@@ -758,10 +763,10 @@
 							<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.id}}').innerHTML='image';" hidden>
 						</label>
 						<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-						<a id="save-reply-to-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}');" href="javascript:void(0)">Comment</a> 
+						<a id="save-reply-to-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
 					</div>
 					<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-block d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-					<a id="save-reply-to-{{c.fullname}}" class="d-block d-md-none btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}');" href="javascript:void(0)">Comment</a> 
+					<a id="save-reply-to-{{c.fullname}}" class="d-block d-md-none btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
 				</form> 
 			</div>
 

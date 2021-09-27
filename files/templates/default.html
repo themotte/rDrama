@@ -219,16 +219,24 @@
             function showNewCommentCounts(postId, lastTotalComs) {
                 const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
 
-                const lastCount = comments["" + postId]
+                console.log(postId)
+                const lastCount = comments[postId]
+                console.log(lastCount)
                 if (lastCount) {
-                    const newComments = lastTotalComs - lastCount.p
+                    const newComments = lastTotalComs - lastCount.c
+                    console.log('new:', newComments)
                     if (newComments > 0) {
                         document.querySelectorAll(`#post-${postId} .new-comments`).forEach(elem => {
+                            console.log(elem)
                             elem.textContent = ` (+${newComments})`
                             elem.classList.remove("d-none")
                         })
                     }
                 }
+            }
+
+            function incrementCommentCount(postId) {
+                saveCommentsCount(postId)
             }
 
             /**
@@ -240,13 +248,12 @@
             function saveCommentsCount(postId, lastTotalComs = null) {
                 const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
 
-                lastTotalComs = lastTotalComs || (comments["" + postId] || { c: 0 }).c + 1
+                const newTotal = lastTotalComs || ((comments[postId] || { c: 0 }).c + 1)
 
-                comments["" + postId] = { p: lastTotalComs, t: Date.now() }
+                console.log(newTotal)
+                comments[postId] = { c: newTotal, t: Date.now() }
 
                 window.localStorage.setItem(COMMENT_COUNTS_ID, JSON.stringify(comments))
-
-                //TODO: increment count on submit response and new comment
 
                 //TODO: restrict on display unread comments flag
             }
@@ -271,10 +278,8 @@
                                 delete comments[key]
                             }
                         }
-
                         window.localStorage.setItem(COMMENT_COUNTS_ID, JSON.stringify(comments))
                     }
-
                     window.localStorage.setItem(LAST_CACHE_CLEAN_ID, JSON.stringify(now))
                 }
 

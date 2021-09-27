@@ -37,7 +37,7 @@
 
 {% if v %}
 <script>
-	post_comment=function(fullname){
+	post_comment=function(fullname, postId){
 
 		var form = new FormData();
 
@@ -57,6 +57,8 @@
 				myToast.hide();
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 				myToast.show();
+
+                incrementCommentCount(postId)
 			}
 			else {
 				var commentError = document.getElementById("comment-error-text");
@@ -687,7 +689,7 @@
 					<input type="checkbox" class="custom-control-input" id="nsfwCheck-{{p.fullname}}" name="over_18" form="reply-to-{{p.fullname}}">
 					<label class="custom-control-label" for="nsfwCheck">+18</label>
 				</div>
- -->				<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{p.fullname}}')">Comment</a>
+ -->				<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
 			</div>
 		</form>
 	</div>
@@ -745,8 +747,8 @@
             document.getElementById('edited_timestamp').title = dateEdited.toString();
         {% endif %}
 
-        showNewCommentCounts({{p.id}}, {{p.comment_count}})
-        saveCommentsCount({{p.id}}, {{p.comment_count}})
+        showNewCommentCounts('{{p.id}}', {{p.comment_count}})
+        saveCommentsCount('{{p.id}}', {{p.comment_count}})
     })()
 
 </script>
