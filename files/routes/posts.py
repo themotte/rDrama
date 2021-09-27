@@ -354,7 +354,7 @@ def edit_post(pid, v):
 			
 		message = f"@{v.username} has mentioned you: https://{site}{p.permalink}"
 		for x in notify_users:
-			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.sentto == x.id, Comment.body == message, Comment.notifiedto == x.id).first()
+			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x.id).first()
 			if not existing: send_notification(NOTIFICATIONS_ACCOUNT, x, message)
 
 
