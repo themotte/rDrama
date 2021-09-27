@@ -346,8 +346,8 @@ def sign_up_post(v):
 
 			g.db.add(ref_user)
 
-	id_1 = g.db.query(User).options(lazyload('*')).filter_by(id=6).count()
-	users_count = g.db.query(User).count() #paranoid
+	id_1 = g.db.query(User.id).options(lazyload('*')).filter_by(id=6).count()
+	users_count = g.db.query(User.id).count() #paranoid
 	if id_1 == 0 and users_count < 6: admin_level=6
 	else: admin_level=0
 

@@ -34,29 +34,29 @@ def participation_stats(v):
 
 	day = now - 86400
 
-	data = {"valid_users": g.db.query(User).count(),
-			"private_users": g.db.query(User).options(lazyload('*')).filter_by(is_private=True).count(),
-			"banned_users": g.db.query(User).options(lazyload('*')).filter(User.is_banned > 0).count(),
-			"verified_email_users": g.db.query(User).options(lazyload('*')).filter_by(is_activated=True).count(),
+	data = {"valid_users": g.db.query(User.id).count(),
+			"private_users": g.db.query(User.id).options(lazyload('*')).filter_by(is_private=True).count(),
+			"banned_users": g.db.query(User.id).options(lazyload('*')).filter(User.is_banned > 0).count(),
+			"verified_email_users": g.db.query(User.id).options(lazyload('*')).filter_by(is_activated=True).count(),
 			"total_coins": g.db.query(func.sum(User.coins)).scalar(),
-			"signups_last_24h": g.db.query(User).options(lazyload('*')).filter(User.created_utc > day).count(),
-			"total_posts": g.db.query(Submission).count(),
+			"signups_last_24h": g.db.query(User.id).options(lazyload('*')).filter(User.created_utc > day).count(),
+			"total_posts": g.db.query(Submission.id).count(),
 			"posting_users": g.db.query(Submission.author_id).distinct().count(),
-			"listed_posts": g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
-			"removed_posts": g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=True).count(),
-			"deleted_posts": g.db.query(Submission).options(lazyload('*')).filter(Submission.deleted_utc > 0).count(),
-			"posts_last_24h": g.db.query(Submission).options(lazyload('*')).filter(Submission.created_utc > day).count(),
-			"total_comments": g.db.query(Comment).count(),
+			"listed_posts": g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
+			"removed_posts": g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).count(),
+			"deleted_posts": g.db.query(Submission.id).options(lazyload('*')).filter(Submission.deleted_utc > 0).count(),
+			"posts_last_24h": g.db.query(Submission.id).options(lazyload('*')).filter(Submission.created_utc > day).count(),
+			"total_comments": g.db.query(Comment.id).count(),
 			"commenting_users": g.db.query(Comment.author_id).distinct().count(),
-			"removed_comments": g.db.query(Comment).options(lazyload('*')).filter_by(is_banned=True).count(),
-			"deleted_comments": g.db.query(Comment).options(lazyload('*')).filter(Comment.deleted_utc>0).count(),
-			"comments_last_24h": g.db.query(Comment).options(lazyload('*')).filter(Comment.created_utc > day).count(),
-			"post_votes": g.db.query(Vote).count(),
+			"removed_comments": g.db.query(Comment.id).options(lazyload('*')).filter_by(is_banned=True).count(),
+			"deleted_comments": g.db.query(Comment.id).options(lazyload('*')).filter(Comment.deleted_utc>0).count(),
+			"comments_last_24h": g.db.query(Comment.id).options(lazyload('*')).filter(Comment.created_utc > day).count(),
+			"post_votes": g.db.query(Vote.id).count(),
 			"post_voting_users": g.db.query(Vote.user_id).distinct().count(),
-			"comment_votes": g.db.query(CommentVote).count(),
+			"comment_votes": g.db.query(CommentVote.id).count(),
 			"comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
-			"total_awards": g.db.query(AwardRelationship).count(),
-			"awards_given": g.db.query(AwardRelationship).options(lazyload('*')).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
+			"total_awards": g.db.query(AwardRelationship.id).count(),
+			"awards_given": g.db.query(AwardRelationship.id).options(lazyload('*')).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
 			}
 
 
@@ -94,11 +94,11 @@ def cached_chart():
 
 	daily_times = [time.strftime("%d", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	daily_signups = [g.db.query(User).options(lazyload('*')).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	daily_signups = [g.db.query(User.id).options(lazyload('*')).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	post_stats = [g.db.query(Submission).options(lazyload('*')).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	post_stats = [g.db.query(Submission.id).options(lazyload('*')).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	comment_stats = [g.db.query(Comment).options(lazyload('*')).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	comment_stats = [g.db.query(Comment.id).options(lazyload('*')).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	# create multiple charts
 	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)

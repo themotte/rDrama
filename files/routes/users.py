@@ -558,7 +558,7 @@ def u_username_comments(username, v=None):
 	t=request.values.get("t","all")
 
 
-	comments = u.comments.options(lazyload('*')).filter(Comment.parent_submission != None)
+	comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == u.id, Comment.parent_submission != None)
 
 	if (not v) or (v.id != u.id and v.admin_level == 0):
 		comments = comments.filter(Comment.deleted_utc == 0)
@@ -636,7 +636,7 @@ def follow_user(username, v):
 	try: g.db.flush()
 	except: g.db.rollback()
 
-	target.stored_subscriber_count = g.db.query(Follow).options(lazyload('*')).filter_by(target_id=target.id).count()
+	target.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
 	existing = g.db.query(Notification).options(lazyload('*')).filter_by(followsender=v.id, user_id=target.id).first()
@@ -662,7 +662,7 @@ def unfollow_user(username, v):
 	g.db.delete(follow)
 	
 	g.db.flush()
-	target.stored_subscriber_count = g.db.query(Follow).options(lazyload('*')).filter_by(target_id=target.id).count()
+	target.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
 	existing = g.db.query(Notification).options(lazyload('*')).filter_by(unfollowsender=v.id, user_id=target.id).first()

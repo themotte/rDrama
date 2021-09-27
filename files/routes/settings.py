@@ -753,7 +753,7 @@ def settings_name_change(v):
 def settings_song_change(v):
 	song=request.values.get("song").strip()
 
-	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User).options(lazyload('*')).filter_by(song=v.song).count() == 1:
+	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).options(lazyload('*')).filter_by(song=v.song).count() == 1:
 		os.remove(f"/songs/{v.song}.mp3")
 		v.song=None
 		g.db.add(v)
@@ -798,7 +798,7 @@ def settings_song_change(v):
 						error=f"Duration of the video must not exceed 10 minutes.")
 
 
-	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User).options(lazyload('*')).filter_by(song=v.song).count() == 1:
+	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).options(lazyload('*')).filter_by(song=v.song).count() == 1:
 		os.remove(f"/songs/{v.song}.mp3")
 
 	ydl_opts = {

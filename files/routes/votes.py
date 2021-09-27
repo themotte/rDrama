@@ -98,8 +98,8 @@ def api_vote_post(post_id, new, v):
 	
 	try:
 		g.db.flush()
-		post.upvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
-		post.downvotes = g.db.query(Vote).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=-1).count()
+		post.upvotes = g.db.query(Vote.id).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
+		post.downvotes = g.db.query(Vote.id).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=-1).count()
 		g.db.add(post)
 		g.db.commit()
 	except: g.db.rollback()
@@ -154,8 +154,8 @@ def api_vote_comment(comment_id, new, v):
 
 	try:
 		g.db.flush()
-		comment.upvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
-		comment.downvotes = g.db.query(CommentVote).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
+		comment.upvotes = g.db.query(CommentVote.id).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
+		comment.downvotes = g.db.query(CommentVote.id).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
 		g.db.add(comment)
 		g.db.commit()
 	except: g.db.rollback()

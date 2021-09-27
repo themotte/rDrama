@@ -352,7 +352,10 @@ def edit_post(pid, v):
 			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 			
-		for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: https://{site}{p.permalink}")
+		message = f"@{v.username} has mentioned you: https://{site}{p.permalink}"
+		for x in notify_users:
+			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.sentto == x.id, Comment.body == message).first()
+			if not existing: send_notification(NOTIFICATIONS_ACCOUNT, x, message)
 
 
 	if title != p.title or body != p.body:
