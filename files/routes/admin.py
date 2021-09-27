@@ -168,7 +168,10 @@ def monthly(v):
 		for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
 			grant_awards = {}
 
-			if u.patron == 1:
+			if u.id == 1376:
+				grant_awards["fireflies"] = 40
+				grant_awards["ban"] = 6
+			elif u.patron == 1:
 				grant_awards["shit"] = 1
 				grant_awards["fireflies"] = 1
 			elif u.patron == 2:
