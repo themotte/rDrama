@@ -64,9 +64,9 @@
 				<div id="comment-{{c.id}}-only">
 
 						<div class="user-info">
-						<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>			
-						{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
-								[{% if c.is_banned %}Removed by admins{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% elif c.is_blocked %}This user has blocked you{% endif %}]
+							<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
+							{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
+							[{% if c.is_banned %}Removed by admins{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% elif c.is_blocked %}This user has blocked you{% endif %}]
 						</div>
 
 
@@ -518,14 +518,14 @@
 
 </div>
 
-{% endif %}
-
 <script>
-    (() => {
-        const date = new Date('{{c.created_datetime}}');
-        document.getElementById('timestamp-{{c.id}}').title = date.toString();
-    })()
+	(() => {
+		const date = new Date('{{c.created_datetime}}');
+		document.getElementById('timestamp-{{c.id}}').title = date.toString();
+	})()
 </script>
+
+{% endif %}
 
 {% endmacro %}
 

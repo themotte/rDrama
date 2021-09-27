@@ -144,44 +144,6 @@ function delete_commentModal(id) {
 
 };
 
-
-post_comment=function(fullname){
-
-
-    var form = new FormData();
-
-    form.append('formkey', formkey());
-    form.append('parent_fullname', fullname);
-    form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
-    form.append('body', document.getElementById('reply-form-body-'+fullname).value);
-    form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
-    var xhr = new XMLHttpRequest();
-    xhr.open("post", "/comment");
-    xhr.withCredentials=true;
-    xhr.onload=function(){
-        if (xhr.status==200) {
-            commentForm=document.getElementById('comment-form-space-'+fullname);
-            commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-            myToast.hide();
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-            myToast.show();
-        }
-        else {
-            var commentError = document.getElementById("comment-error-text");
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-            myToast.hide();
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-            myToast.show();
-            commentError.textContent = JSON.parse(xhr.response)["error"];
-        }
-    }
-    xhr.send(form)
-
-    document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
-
-}
-
 post_reply=function(id){
 
     var form = new FormData();
@@ -248,7 +210,7 @@ comment_edit=function(id){
     }
     xhr.send(form)
 
-    }
+}
 
 post_comment=function(fullname, postId){
 
@@ -259,6 +221,7 @@ post_comment=function(fullname, postId){
     form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
     form.append('body', document.getElementById('reply-form-body-'+fullname).value);
     form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
+
     var xhr = new XMLHttpRequest();
     xhr.open("post", "/comment");
     xhr.withCredentials=true;
