@@ -672,6 +672,29 @@ def unfollow_user(username, v):
 
 	return {"message": "User unfollowed!"}
 
+@app.post("/remove_follow/<username>")
+@auth_required
+def remove_follow(username, v):
+	target = get_user(username)
+
+	# check for existing follow
+	follow = g.db.query(Follow).options(lazyload('*')).filter_by(user_id=target.id, target_id=v.id).first()
+
+	if not follow: return {"message": "Follower removed!"}
+
+	g.db.delete(follow)
+	
+	g.db.flush()
+	v.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=v.id).count()
+	g.db.add(v)
+
+	existing = g.db.query(Notification).options(lazyload('*')).filter_by(removefollowsender=v.id, user_id=target.id).first()
+	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has removed your follow!")
+
+	g.db.commit()
+
+	return {"message": "Follower removed!"}
+
 
 @app.route("/uid/<id>/pic/profile")
 @limiter.exempt

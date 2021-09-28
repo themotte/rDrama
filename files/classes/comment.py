@@ -347,6 +347,7 @@ class Notification(Base):
 	read = Column(Boolean, default=False)
 	followsender = Column(Integer)
 	unfollowsender = Column(Integer)
+	removefollowsender = Column(Integer)
 	blocksender = Column(Integer)
 	unblocksender = Column(Integer)
 
