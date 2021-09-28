@@ -289,9 +289,6 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 			cutoff = now - 31536000
 		posts = posts.filter(Submission.created_utc >= cutoff)
 
-	gt = kwargs.get("gt")
-	lt = kwargs.get("lt")
-
 	if sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":
