@@ -12,11 +12,6 @@
 				myToast.show();
 				console.log(e);
 		});
-		clipboard.on('error', function(e) {
-				var myToast = new bootstrap.Toast(document.getElementById('toast-error'));
-				myToast.show();
-				console.log(e);
-		});
 
 
 		document.getElementById('new_email').addEventListener('input', function () {
@@ -268,12 +263,6 @@
 <div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body text-center">
 		<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
-	</div>
-</div>
-
-<div class="toast clipboard" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
-	<div class="toast-body text-center">
-		<i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy link
 	</div>
 </div>
 {% endblock %}

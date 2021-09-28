@@ -56,11 +56,6 @@
 			myToast.show();
 			console.log(e);
 	});
-	clipboard.on('error', function(e) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-error'));
-			myToast.show();
-			console.log(e);
-	});
 </script>
 
 {% macro single_comment(c, level=1) %}
