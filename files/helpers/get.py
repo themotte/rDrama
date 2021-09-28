@@ -213,7 +213,8 @@ def get_comments(cids, v=None, load_parent=False):
 		).filter(Comment.id.in_(cids))
  
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
-			comments = comments.join(Comment.author).filter(User.shadowbanned == False)
+			shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
+			comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id.notin_(shadowbanned))
 
 		comments = comments.join(
 			votes,
@@ -238,7 +239,8 @@ def get_comments(cids, v=None, load_parent=False):
 			output.append(comment)
 
 	else:
-		output = g.db.query(Comment).join(Comment.author).options(lazyload('*')).filter(Comment.id.in_(cids), User.shadowbanned == False).all()
+		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
+		output = g.db.query(Comment).options(lazyload('*')).filter(Comment.id.in_(cids), Comment.author_id.notin_(shadowbanned)).all()
 
 	if load_parent:
 		parents = [x.parent_comment_id for x in output if x.parent_comment_id]

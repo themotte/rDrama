@@ -197,7 +197,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	lt = kwargs.get("lt")
 
 	if not (v and v.shadowbanned):
-		posts = posts.join(Submission.author).filter(User.shadowbanned == False)
+		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
+		posts = g.db.query(Submission).options(lazyload('*')).filter(Submission.author_id.notin_(shadowbanned))
 
 	if sort == "hot":
 		ti = int(time.time()) + 3600
@@ -273,7 +274,8 @@ def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
 			Submission.author_id.notin_(blocked)
 		)
 
-	posts=posts.filter(Submission.title.ilike(f'_changelog%', User.admin_level == 6))
+	admins = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.admin_level == 6).all()]
+	posts = posts.filter(Submission.title.ilike('_changelog%'), Submission.author_id.in_(admins))
 
 	if t != 'all':
 		cutoff = 0
@@ -347,8 +349,6 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
 
 	if not v or not v.admin_level >= 3:
 		comments = comments.filter_by(is_banned=False).filter(Comment.deleted_utc == 0)
-
-	comments = comments.join(posts, Comment.parent_submission == posts.c.id)
 
 	now = int(time.time())
 	if t == 'hour':

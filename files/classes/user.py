@@ -422,38 +422,6 @@ class User(Base):
 
 		return output
 
-	@lazy
-	def alts_threaded(self, db):
-
-		subq = db.query(Alt).filter(
-			or_(
-				Alt.user1 == self.id,
-				Alt.user2 == self.id
-			)
-		).subquery()
-
-		data = db.query(
-			User,
-			aliased(Alt, alias=subq)
-		).join(
-			subq,
-			or_(
-				subq.c.user1 == User.id,
-				subq.c.user2 == User.id
-			)
-		).filter(
-			User.id != self.id
-		).order_by(User.username.asc()).all()
-
-		data = [x for x in data]
-		output = []
-		for x in data:
-			user = x[0]
-			user._is_manual = x[1].is_manual
-			output.append(user)
-
-		return output
-
 	def has_follower(self, user):
 
 		return g.db.query(Follow).options(lazyload('*')).filter_by(target_id=self.id, user_id=user.id).first()
