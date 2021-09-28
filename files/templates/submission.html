@@ -15,6 +15,7 @@
 {% block title %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+<script src="/assets/js/new_comments_count.js"></script>
 
 {% if v and v.id == p.author_id %}
 	<script>
@@ -32,6 +33,24 @@
 		};
 	</script>
 {% endif %}
+
+<script>
+    // closure to avoid variable conflicts
+    (() => {
+        const date = new Date('{{p.created_datetime}}');
+        document.getElementById('timestamp').title = date.toString();
+        {% if p.edited_utc %}
+            const dateEdited = new Date('{{p.edited_datetime}}');
+            document.getElementById('edited_timestamp').title = dateEdited.toString();
+        {% endif %}
+
+        {% if (not v or v.highlightcomments) %}
+            showNewCommentCounts('{{p.id}}', {{p.comment_count}})
+        {% endif %}
+        saveCommentsCount('{{p.id}}', {{p.comment_count}})
+    })()
+
+</script>
 
 {% if p.award_count("shit") %}
 	<script src="/assets/js/bug-min.js"></script>
@@ -64,7 +83,6 @@
 	</script>
 {% endif %}
 
-{% include 'embeds/new_comments_count.html' %}
 
 <meta charset="utf-8" />
 <meta property="og:type" content="article" />
@@ -133,7 +151,6 @@
 {% block pagetype %}thread{% endblock %}
 
 {% block actionsModal %}
-<!-- Post Actions Modal -->
 <div class="modal fade modal-sm-bottom d-md-none" id="actionsModal" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -492,8 +509,7 @@
 						</div>
 
 					</div>
-					<!-- Voting on "medium" devices or larger, hidden on smaller devices -->
-
+					
 					{% if v %}
 
 					<div id="voting" class="voting d-none d-md-block mb-auto">
@@ -579,25 +595,6 @@
 	</div>
 
 </div>
-
-
-<script>
-    // closure to avoid variable conflicts
-    (() => {
-        const date = new Date('{{p.created_datetime}}');
-        document.getElementById('timestamp').title = date.toString();
-        {% if p.edited_utc %}
-            const dateEdited = new Date('{{p.edited_datetime}}');
-            document.getElementById('edited_timestamp').title = dateEdited.toString();
-        {% endif %}
-
-        {% if (not v or v.highlightcomments) %}
-            showNewCommentCounts('{{p.id}}', {{p.comment_count}})
-        {% endif %}
-        saveCommentsCount('{{p.id}}', {{p.comment_count}})
-    })()
-
-</script>
 
 <div class="row border-md-0 comment-section pb-3">
 	<div class="col border-top">

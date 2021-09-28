@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-	<script>
-		function formkey() {return '{{v.formkey}}';}
-	</script>
+<head>	
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script>function formkey() {return '{{v.formkey}}';}</script>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -37,25 +37,21 @@
 
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
-	<!-- {{'SITE_NAME' | app_config}} CSS -->
-
+	
 	{% if v %}
 	<link id="css-link" rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css">
 	{% else %}
 	<link id="css-link" rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css">
 	{% endif %}
 
-	<!-- Font Awesome -->
-	<link href="/assets/css/fa.css" rel="stylesheet"> <!--load all styles -->
-
+		<link href="/assets/css/fa.css" rel="stylesheet"> 
 </head>
 
 <body id="settings2" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
 
 	{% include "header.html" %}
 
-	<!-- sub-header container -->
-
+	
 	{% block subHeader %}
 	<div class="container-fluid bg-light">
 		<div class="row py-3">
@@ -73,13 +69,11 @@
 	</div>
 	{% endblock %}
 
-	<!-- tabs container -->
-	{% block subNav %}
+		{% block subNav %}
 
 {% if True %}
 	{% set mod = (v.admin_level==6) %}
-	<!-- Desktop -->
-	<div class="container-fluid bg-white sticky d-none d-md-block">
+		<div class="container-fluid bg-white sticky d-none d-md-block">
 		<div class="row box-shadow-bottom">
 			<div class="col">
 				<div class="container">
@@ -113,8 +107,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- Mobile -->
-	<div class="container-fluid bg-white sticky d-md-none">
+		<div class="container-fluid bg-white sticky d-md-none">
 		<div class="row box-shadow-bottom">
 			<div class="col">
 				<div class="d-flex flex-row-reverse justify-content-center">
@@ -145,16 +138,14 @@
 	{% endif %}
 	{% endblock %}
 
-	<!-- Settings content -->
-	<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} mt-3 {% if request.path in ['/leaderboard', '/paypigs', '/patrons'] %}px-0{% endif %}">
+		<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} mt-3 {% if request.path in ['/leaderboard', '/paypigs', '/patrons'] %}px-0{% endif %}">
 
 	{% block content %}
 	{% endblock %}
 
  </div>
 
- <!-- Clipboard Toast -->
-
+ 
  <div class="toast clipboard" id="toast-clipboard-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body text-center">
 		<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
@@ -195,8 +186,6 @@
 {% endblock %}
 
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 
 {% block scripts %}
 {% endblock %}

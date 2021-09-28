@@ -2,13 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<style>
-		.navsettings {
-			padding-left: 0.6rem !important;
-			padding-right: 0.6rem !important;
-		}
-	</style>
-
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
@@ -48,6 +41,13 @@
 		function formkey() {return '{{v.formkey}}';}
 	</script>
 
+	<style>
+		.navsettings {
+			padding-left: 0.6rem !important;
+			padding-right: 0.6rem !important;
+		}
+	</style>
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
@@ -75,21 +75,17 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
 
-	<!-- {{'SITE_NAME' | app_config}} CSS -->
-
+	
 	<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css">
 	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 
-	<!-- Font Awesome -->
-	<link href="/assets/css/fa.css" rel="stylesheet"> <!--load all styles -->
-
+		<link href="/assets/css/fa.css" rel="stylesheet"> 
 </head>
 
 <body id="settings" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
 
 	{% include "header.html" %}
-	<!-- Page Content -->
-	<div class="container">
+		<div class="container">
 
 		<div class="row justify-content-around">
 
@@ -126,10 +122,8 @@
 
 		</div>
 
-		<!-- Settings tabs -->
-
-		<!-- Desktop -->
-
+		
+		
 		<div class="flex-row bg-white box-shadow-bottom sticky d-none d-sm-flex mt-3 mb-3 mb-sm-5">
 
 			<ul class="nav settings-nav">
@@ -161,8 +155,7 @@
 
 		</div>
 
-		<!-- Mobile -->
-
+		
 		<div class="flex-row bg-white box-shadow-bottom sticky justify-content-center d-flex d-sm-none mt-3 mb-3 mb-sm-5">
 
 			<ul class="nav settings-nav">
@@ -202,8 +195,7 @@
  </div>
 
  {% if v %}
-	<!-- 2FA Modal -->
-	<div class="modal fade" id="2faModal" tabindex="-1" role="dialog" aria-labelledby="2faModalTitle" aria-hidden="true">
+		<div class="modal fade" id="2faModal" tabindex="-1" role="dialog" aria-labelledby="2faModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -271,8 +263,7 @@
 	</div>
 {% endif %}
 
- <!-- Clipboard Toast -->
-
+ 
 {% block clipboard %}
 <div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body text-center">
@@ -288,7 +279,6 @@
 {% endblock %}
 
 
-<!--Post toasts -->
 <div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body bg-success text-center text-white">
 		<i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text"></span>

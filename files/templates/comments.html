@@ -35,10 +35,9 @@
 	<script src="/assets/js/comments_admin.js"></script>
 {% endif %}
 
-{% include 'embeds/new_comments_count.html' %}
+<script src="/assets/js/new_comments_count.js"></script>
 
 <script>
-
 	function collapse_comment(comment_id) {
 		const comment = "comment-" + comment_id
 		const element = document.getElementById(comment)
@@ -64,10 +63,13 @@
 	});
 </script>
 
-
 {% macro single_comment(c, level=1) %}
-<!---beginning of comment {{c.id}}--->
-
+<script>
+	(() => {
+		const date = new Date('{{c.created_datetime}}');
+		document.getElementById('timestamp-{{c.id}}').title = date.toString();
+	})()
+</script>
 {% set ups=c.upvotes %}
 {% set downs=c.downvotes %}
 {% set score=ups-downs %}
@@ -78,7 +80,6 @@
 	{% set replies=c.replies %}
 {% endif %}
 
-<!--conditions under which a comment might be hidden-->
 
 {% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking or c.is_blocked) and not (v and v.admin_level>0) and not (v and v.id==c.author_id) %}
 
@@ -203,8 +204,7 @@
 				{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{% if c.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{c.author.quadrant}}.webp">{% endif %}{{c.author.customtitle | safe}}</bdi>{% endif %}
 
 
-				<!-- {% if c.parent_comment_id and not standalone and level<=7 %}<a href="#comment-{{ c.parent_comment_id }}" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{ c.parent_comment.author.username }}</a>{% endif %} -->
-
+				
 				<span id="timestamp-{{c.id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" class="time-stamp">&nbsp;{{c.age_string}}</span>
 				{% if c.edited_utc %}
 				<span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
@@ -464,7 +464,6 @@
 	</div>
 
 
-<!-- Comment Actions Modal -->
 <div class="modal fade d-md-none" id="actionsModal-{{c.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -550,13 +549,6 @@
 
 </div>
 
-<script>
-	(() => {
-		const date = new Date('{{c.created_datetime}}');
-		document.getElementById('timestamp-{{c.id}}').title = date.toString();
-	})()
-</script>
-
 {% endif %}
 
 {% endmacro %}
@@ -585,8 +577,7 @@
 		{% include "ban_modal.html" %}
 	{% endif %}
 
-	<!-- Delete Comment Modal -->
-	<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
+		<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -620,8 +611,7 @@
 						<span aria-hidden="true"><i class="far fa-times"></i></span>
 					</button>
 				</div>
-				<!-- Before report is made, show this -->
-				<div class="" id="reportCommentFormBefore">
+								<div class="" id="reportCommentFormBefore">
 					<form id="report-comment-form" method="post">
 						<div class="modal-body">
 							<div class="h6">We're sorry something here is wrong.</div>
@@ -635,8 +625,7 @@
 						</div>
 					</form>
 				</div>
-				<!-- After report is made, show this -->
-				<div class="d-none" id="reportCommentFormAfter">
+								<div class="d-none" id="reportCommentFormAfter">
 					<div class="modal-body">
 						<div class="h6">Thank you for reporting this comment!</div>
 						<small class="form-text text-muted">We'll take it from here.</small>

@@ -2,16 +2,6 @@
 
 {% block pagetitle %}Moderation Log{% endblock %}
 
-{% block stylesheets %}
-
-{% if v %}
-	<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css">
-	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
-{% else %}
-	<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css">
-{% endif %}
-
-{% endblock %}
 
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -29,6 +19,13 @@
 			console.log(e);
 	});
 </script>
+
+{% if v %}
+	<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css">
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+{% else %}
+	<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css">
+{% endif %}
 
 <div class="row justify-content-around">
 

@@ -6,6 +6,10 @@
 
 		<script src="/assets/js/signup.js"></script>
 
+		{% if hcaptcha %}
+			<script src="https://hcaptcha.com/1/api.js"></script>
+		{% endif %}
+
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="Sign up in under 27 seconds.">
@@ -31,15 +35,13 @@
 
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
-		<!-- {{'SITE_NAME' | app_config}} CSS -->
-		<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css">
+				<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css">
 
 </head>
 
 <body id="login">
 
-		<!-- Navigation -->
-		<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
+				<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
 				<div class="container-fluid">
 						<button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
 						aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +50,6 @@
 		</div>
 </nav>
 
-<!-- Page Content -->
 
 <div class="container-fluid position-absolute h-100 p-0 overflow-auto">
 		<div class="row no-gutters h-100">
@@ -128,7 +129,6 @@
 
 														{% if hcaptcha %}
 															<div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
-															<script src="https://hcaptcha.com/1/api.js"></script>
 														{% endif %}
 
 														<button class="btn btn-primary login w-100 mt-3" id="register_button">Register</button>
@@ -161,7 +161,6 @@
 		</div>
 </div>
 
-<!-- {{'SITE_NAME' | app_config}} JS -->
 
 
 

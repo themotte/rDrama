@@ -18,6 +18,7 @@
 {% block pagetype %}userpage{% endblock %}
 
 {% block title %}
+<script src="/assets/js/userpage2.js"></script>
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
@@ -42,9 +43,6 @@
 {% endblock %}
 
 {% block desktopUserBanner %}
-<!-- Desktop -->
-
-<script src="/assets/js/userpage2.js"></script>
 
 <script>
 	function transferCoins(mobile=false) {
@@ -351,7 +349,6 @@
 {% endblock %}
 
 {% block mobileUserBanner %}
-<!-- Mobile -->
 <div class="container-fluid text-center bg-white d-md-none">
 	<div class="row">
 		<div class="col px-0">

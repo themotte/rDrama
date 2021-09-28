@@ -66,7 +66,7 @@
 	{% endif %}
 
 	{% if v %}
-		<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+		<script>function formkey() {return '{{v.formkey}}';}</script>
 		<script src="/assets/js/default.js"></script>
 	{% endif %}
 
@@ -98,8 +98,7 @@
 	<meta name="twitter:url" content="{{request.path | full_link}}" />
 	{% endblock %}
 
-	<!-- iOS webapp -->
-	<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-touch-fullscreen" content="yes">
 	<meta name="format-detection" content="telephone=no">
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
@@ -256,17 +255,9 @@
 
 		{% endblock %}
 
-		<!-- Font Awesome -->
-		<link href="/assets/css/fa.css" rel="stylesheet"> <!--load all styles -->
-
+				<link href="/assets/css/fa.css" rel="stylesheet"> 
 		{% block fixedMobileBarJS %}
 		{% endblock %}
-
-		{% if v %}
-			<script>
-				function formkey() {return '{{v.formkey}}';}
-			</script>
-		{% endif %}
 
  </head>
 
@@ -280,7 +271,6 @@
 
 {% include "header.html" %}
 
-<!-- Page Content -->
 
 {% block mobileUserBanner %}
 {% endblock %}
@@ -334,7 +324,6 @@
 {% block GIFpicker %}
 {% endblock %}
 
-<!-- Clipboard Toast -->
 
 <div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body text-center">

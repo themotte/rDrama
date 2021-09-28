@@ -21,8 +21,7 @@
 
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
-		<!-- {{'SITE_NAME' | app_config}} Board CSS -->
-
+		
 		{% block stylesheets %}
 		{% if v %}
 			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css">
@@ -32,19 +31,15 @@
 		{% endif %}
 		{% endblock %}
 
-		<!-- Font Awesome -->
-		<link href="/assets/css/fa.css" rel="stylesheet"> <!--load all styles -->
-</head>
+				<link href="/assets/css/fa.css" rel="stylesheet"> </head>
 
 <body id="submit" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}display: block;">
 
-		<!-- Navigation -->
-		{% include "header.html" %}
+				{% include "header.html" %}
 
 		{% block form %}
 
-		<!-- Page Content -->
-
+		
 		<div class="submit-grid-view">
 			<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" style="grid-column: 2">
 
@@ -171,8 +166,7 @@
 
 		</div>
 		{% endblock %}
-		<!-- {{'SITE_NAME' | app_config}} JS -->
-
+		
 <pre>
 
 
