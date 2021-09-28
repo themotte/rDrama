@@ -83,21 +83,6 @@ document.addEventListener('input', function (event) {
     autoExpand(event.target);
 }, false);
 
-for(let el of document.getElementsByClassName('text-expand')) {
-    el.onclick = function(event){
-        if (event.which != 1) {
-            return
-        };
-        id=this.data('id');
-
-
-        document.getElementById('post-text-'+id).toggleClass('d-none');
-        document.getElementsByClassName('text-expand-icon-'+id)[0].toggleClass('fa-expand-alt');
-        document.getElementsByClassName('text-expand-icon-'+id)[0].toggleClass('fa-compress-alt');
-
-    }
-}
-
 function post_toast2(url, button1, button2) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
