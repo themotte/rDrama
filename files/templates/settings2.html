@@ -138,7 +138,7 @@
 	{% endif %}
 	{% endblock %}
 
-		<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} mt-3 {% if request.path in ['/leaderboard', '/paypigs', '/patrons'] %}px-0{% elif request.path == 'changelog' %}px-2{% endif %}">
+		<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} mt-3 {% if request.path in ['/leaderboard', '/paypigs', '/patrons'] %}px-0{% elif request.path == '/changelog' %}px-2{% endif %}">
 
 	{% block content %}
 	{% endblock %}
