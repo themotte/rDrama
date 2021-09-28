@@ -602,8 +602,10 @@
 
 {% block content %}
 
+{% if v %}
 {% include "emoji_modal.html" %}
 {% include "gif_modal.html" %}
+{% endif %}
 
 <div id="profilecontent" class="row no-gutters">
 	<div class="col">
