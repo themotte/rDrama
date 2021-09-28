@@ -193,12 +193,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		for word in filter_words:
 			posts=posts.filter(not_(Submission.title.ilike(f'%{word}%')))
 
-	gt = kwargs.get("gt")
-	lt = kwargs.get("lt")
-
 	if not (v and v.shadowbanned):
 		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
-		posts = g.db.query(Submission).options(lazyload('*')).filter(Submission.author_id.notin_(shadowbanned))
+		posts = posts.filter(Submission.author_id.notin_(shadowbanned))
 
 	if sort == "hot":
 		ti = int(time.time()) + 3600

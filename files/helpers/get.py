@@ -1,6 +1,5 @@
 from files.classes import *
 from flask import g
-from sqlalchemy.orm import joinedload
 
 def get_user(username, v=None, graceful=False):
 
@@ -83,8 +82,6 @@ def get_post(i, v=None, graceful=False, **kwargs):
 			blocking.c.id,
 		)
 
-		if v.admin_level>=4:
-			items=items.options(joinedload(Submission.oauth_app))
 		items=items.filter(Submission.id == i
 		).join(
 			vt, 
@@ -214,7 +211,7 @@ def get_comments(cids, v=None, load_parent=False):
  
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
 			shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
-			comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id.notin_(shadowbanned))
+			comments = comments.filter(Comment.author_id.notin_(shadowbanned))
 
 		comments = comments.join(
 			votes,

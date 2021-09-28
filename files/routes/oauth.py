@@ -5,6 +5,7 @@ from files.helpers.const import *
 from files.classes import *
 from flask import *
 from files.__main__ import app
+from sqlalchemy.orm import joinedload
 
 @app.get("/authorize")
 @auth_required
