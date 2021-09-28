@@ -32,14 +32,14 @@
 					</span>
 				</form>
 			</div>
-			<a class="mobile-nav-icon d-block d-md-none" href="/random"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
+			<a class="mobile-nav-icon d-md-none" href="/random"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
 			{% if v and v.admin_level > 0 %}
-			<a class="mobile-nav-icon d-block d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
+			<a class="mobile-nav-icon d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
 			{% endif %}
 			{% if v %}
-			<a class="mobile-nav-icon d-block d-md-none" href="/submit"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
+			<a class="mobile-nav-icon d-md-none" href="/submit"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
 			{% else %}
-			<a class="mobile-nav-icon d-block d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
+			<a class="mobile-nav-icon d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
 			{% endif %}
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
 			aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -177,19 +177,19 @@
 			<li class="nav-item">
 				<a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
 			</li>
-			<li class="nav-item"><a class="nav-link" href="/assets/{{'SITE_NAME' | app_config}}_App.apk"><i class="fab fa-android fa-fw mr-3"></i>Android app</a></li>
+			<a class="nav-item nav-link" href="/assets/{{'SITE_NAME' | app_config}}_App.apk"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
 
 			{% if "rdrama" in request.host %}
-				<li class="nav-item"><a class="nav-link" href="/post/2510/posting-guidelines-policies-legal-shit"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
+				<a class="nav-item nav-link" href="/post/2510/posting-guidelines-policies-legal-shit"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a>
 			{% else %}
-				<li class="nav-item"><a class="nav-link" href="/rules"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
+				<a class="nav-item nav-link" href="/rules"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a>
 			{% endif %}
 
-			<li class="nav-item"><a class="nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a></li>
-			<li class="nav-item"><a class="nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a></li>
-			{% if 'pcm' not in request.host %}<li class="nav-item"><a class="nav-link" rel="nofollow noopener noreferrer" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a></li>{% endif %}
-			{% if 'rdrama' in request.host %}<li class="nav-item"><a class="nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Subreddit archives</a></li>{% endif %}
-			<li class="nav-item"><a class="nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a></li>
+			<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
+			<a class="nav-item nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
+			{% if 'pcm' not in request.host %}<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>{% endif %}
+			{% if 'rdrama' in request.host %}<a class="nav-item nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Subreddit archives</a>{% endif %}
+			<a class="nav-item nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
 
 			<li class="nav-item border-top border-bottom mt-2 pt-2">
 				<a class="nav-link" href="javascript:void(0)", onclick="post_toast('/logout', '1')"><i class="fas fa-sign-out fa-fw mr-3 text-danger"></i>Log out</a>

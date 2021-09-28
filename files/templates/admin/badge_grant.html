@@ -55,7 +55,7 @@
 {% for badge in badge_types %}
 <tr>
 	<td><input type="radio" id="badge-{{badge.id}}" name="badge_id" value="{{badge.id}}"></td>
-	<td><label for="badge-{{badge.id}}"><img loading="lazy" class="d-block" src="{{badge.path}}" width="70px" height="70px"></label></td>
+	<td><label for="badge-{{badge.id}}"><img loading="lazy" src="{{badge.path}}" width="70px" height="70px"></label></td>
 	<td>{{badge.name}}</td>
 	<td>{{badge.description}}</td>
 </tr>

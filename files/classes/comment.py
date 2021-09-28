@@ -4,7 +4,7 @@ from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 from files.helpers.lazy import lazy
-from files.helpers.const import SLURS
+from files.helpers.const import SLURS, replace_keep_case
 from files.__main__ import Base
 from .flags import CommentFlag
 from os import environ
@@ -286,8 +286,8 @@ class Comment(Base):
 
 		if not body: return ""
 
-		if not v or v.slurreplacer: 
-			for s, r in SLURS.items(): body = body.replace(s, r) 
+		if not v or v.slurreplacer:
+			for s, r in SLURS.items(): body = replace_keep_case(f"{s} ", f"{r} ", replace_keep_case(f" {s}", f" {r}", body))
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 

@@ -14,7 +14,7 @@
 				<button type="button" class="col px-0 ml-3 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.path=='/' and request.full_path!='/?sort=hot&t=all' and request.full_path!='/?sort=new&t=all' %}text-purple{% else %}text-muted{% endif %}">
-										<i class="fas fa-home-alt text-lg d-block"></i>
+										<i class="fas fa-home-alt text-lg"></i>
 										<div class="text-small">Home</div>
 								</div>
 						</a>
@@ -23,7 +23,7 @@
 				<button type="button" class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/?sort=hot&t=all" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.full_path=='/?sort=hot&t=all' %}text-purple{% else %}text-muted{% endif %}">
-										<i class="fas fa-fire text-lg d-block"></i>
+										<i class="fas fa-fire text-lg"></i>
 										<div class="text-small">Hot</div>
 								</div>
 						</a>
@@ -32,7 +32,7 @@
 				<button type="button" class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/?sort=new&t=all" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.full_path=='/?sort=new&t=all' %}text-purple{% else %}text-muted{% endif %}">
-										<i class="fas fa-sparkles text-lg d-block"></i>
+										<i class="fas fa-sparkles text-lg"></i>
 										<div class="text-small">New</div>
 								</div>
 						</a>
@@ -41,7 +41,7 @@
 				<button type="button" class="col px-2 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/comments" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.path=='/comments' %}text-purple{% else %}text-muted{% endif %}">
-										<i class="fas fa-comment-dots text-lg d-block"></i>
+										<i class="fas fa-comment-dots text-lg"></i>
 										<div class="text-small">Comments</div>
 								</div>
 						</a>
@@ -49,7 +49,7 @@
 				<button type="button" class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/leaderboard" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.path=='/leaderboard' %}text-purple{% else %}text-muted{% endif %}">
-										<i class="fas fa-trophy text-lg d-block"></i>
+										<i class="fas fa-trophy text-lg"></i>
 										<div class="text-small">Users</div>
 								</div>
 						</a>
@@ -58,7 +58,7 @@
 				<button type="button" class="col px-0 mr-3 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="{{v.url}}" class="text-decoration-none" role="button">
 								<div class="text-center {% if request.path==v.url %}text-purple{% else %}text-muted{% endif %}">
-										<i class="fas fa-user-circle text-lg d-block"></i>
+										<i class="fas fa-user-circle text-lg"></i>
 										<div class="text-small">Profile</div>
 								</div>
 						</a>
@@ -67,7 +67,7 @@
 				<button type="button" class="col px-0 mr-3 btn btn-dead m-0" style="background: None !important; border: None;">
 						<a href="/signup" class="text-decoration-none" role="button">
 								<div class="text-center text-muted">
-										<i class="fas fa-user-plus text-lg d-block"></i>
+										<i class="fas fa-user-plus text-lg"></i>
 										<div class="text-small">Sign Up</div>
 								</div>
 						</a>

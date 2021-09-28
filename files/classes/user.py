@@ -120,7 +120,7 @@ class User(Base):
 	flairchanged = Column(Boolean, default=False)
 	newtab = Column(Boolean, default=False)
 	newtabexternal = Column(Boolean, default=True)
-	oldreddit = Column(Boolean)
+	oldreddit = Column(Boolean, default=True)
 	nitter = Column(Boolean)
 	controversial = Column(Boolean, default=False)
 	submissions = relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", viewonly=True)

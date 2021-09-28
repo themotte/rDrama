@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship, deferred
 import re, random
 from urllib.parse import urlparse
 from files.helpers.lazy import lazy
-from files.helpers.const import SLURS
+from files.helpers.const import SLURS, replace_keep_case
 from files.__main__ import Base
 from .flags import *
 from os import environ
@@ -344,7 +344,7 @@ class Submission(Base):
 
 		if not v or v.slurreplacer: 
 			for s,r in SLURS.items(): 
-				body = body.replace(s, r) 
+				body = replace_keep_case(f"{s} ", f"{r} ", replace_keep_case(f" {s}", f" {r}", body))
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
@@ -357,7 +357,7 @@ class Submission(Base):
 		else: title = self.title
 
 		if not v or v.slurreplacer:
-			for s,r in SLURS.items(): title = title.replace(s, r) 
+			for s,r in SLURS.items(): title = replace_keep_case(f"{s} ", f"{r} ", replace_keep_case(f" {s}", f" {r}", title))
 
 		return title
 
