@@ -22,11 +22,13 @@
 	}
 </style> -->
 
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 {% if v %}
+	{% include "award_modal.html" %}
 	<script src="/assets/js/comments_v.js"></script>
 {% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 
 {% if v and v.admin_level == 6 %}
@@ -579,7 +581,6 @@
 {% if v %}
 	{% include "gif_modal.html" %}
 	{% include "emoji_modal.html" %}
-	{% include "award_modal.html" %}
 	{% if v.admin_level == 6 %}
 		{% include "ban_modal.html" %}
 	{% endif %}
