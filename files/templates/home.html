@@ -145,4 +145,28 @@
 		.catch(console.error);
 	</script>
 {% endif %}
+<script>
+	if (("standalone" in window.navigator) &&
+				window.navigator.standalone){
+
+		} else {
+			if (window.innerWidth <= 737){
+				try {
+					document.getElementById('mobile-prompt').tooltip('show')
+					document.getElementsByClassName('tooltip')[0].addEventListener(
+						'click', 
+						function(event){
+							document.getElementById('mobile-prompt').tooltip('hide')
+							var xhr = new XMLHttpRequest();
+							xhr.withCredentials=true;
+							xhr.open("POST", '/dismiss_mobile_tip', true);
+							xhr.send();
+						}
+					)
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		}
+</script>
 {% endblock %}
