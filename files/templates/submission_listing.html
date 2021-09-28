@@ -8,9 +8,9 @@
 
 <script>
 	function expandText(id) {
-		document.getElementById('post-text-'+id).toggleClass('d-none');
-		document.getElementsByClassName('text-expand-icon-'+id)[0].toggleClass('fa-expand-alt');
-		document.getElementsByClassName('text-expand-icon-'+id)[0].toggleClass('fa-compress-alt');
+		document.getElementById('post-text-'+id).classList.toggle('d-none');
+		document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
+		document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
 	};
 
 	var clipboard = new ClipboardJS('.copy-link');
@@ -162,7 +162,7 @@
 			<div class="post-actions mt-2 d-none d-md-block">
 				<ul class="list-inline text-right d-flex">
 						{% if p.realbody(v) %}
-						<a class="list-inline-item text-expand" href="javascript:void(0)" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
+						<a class="list-inline-item" href="javascript:void(0)" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 						{% endif %}
                         <li class="list-inline-item">
                             <a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
@@ -264,7 +264,7 @@
 			<a class="copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}" style="margin-right: 15px;"><i class="fas fa-link"></i></a>
 
 			{% if p.realbody(v) and request.path != "/changelog"%}
-				<a class="list-inline-item text-expand" href="javascript:void(0)" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
+				<a class="list-inline-item" href="javascript:void(0)" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 			{% endif %}
 
 			{% if v %}
