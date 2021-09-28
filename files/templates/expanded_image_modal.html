@@ -1,19 +1,4 @@
 <script>
-	for(let el of document.getElementsByClassName('expandable-image')) {
-		el.onclick = function(event) {
-
-			if (event.which != 1) {
-				return
-			}
-			event.preventDefault();
-
-			let source = (event.target || event.srcElement).parentNode;
-			var url= source.dataset.bsUrl;
-
-			expandDesktopImage(url);
-		}
-	}
-
 	function expandDesktopImage(image) {
 
 		var linkText = document.getElementById("desktop-expanded-image-link");
