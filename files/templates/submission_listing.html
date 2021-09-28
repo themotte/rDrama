@@ -1,3 +1,6 @@
+{% if v %}
+	{% include "award_modal.html" %}
+{% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
@@ -525,7 +528,6 @@
 {% endfor %}
 
 {% if v %}
-	{% include "award_modal.html" %}
 	{% include "delete_post_modal.html" %}
 	{% include "report_post_modal.html" %}
 	{% if v.admin_level == 6 %}
