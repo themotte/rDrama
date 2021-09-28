@@ -167,7 +167,7 @@
 
 	<script>
 		if (!("standalone" in window.navigator) && window.navigator.standalone) {
-			if (window.innerWidth <= 737) {
+			// if (window.innerWidth <= 737) {
 				document.getElementById('mobile-prompt').show()
 				document.getElementsByClassName('tooltip')[0].onclick = function(event){
 					document.getElementById('mobile-prompt').hide()
@@ -176,7 +176,7 @@
 					xhr.open("POST", '/dismiss_mobile_tip', true);
 					xhr.send();
 				}
-			}
+			// }
 		}
 	</script>
 <!-- {% endif %} -->
