@@ -27378,6 +27378,10 @@ textarea {
     column-count: 5 !important;
   }
 }
+.container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
+  padding-bottom: 30px;
+}
+
 * {
   border-color: #38a169;
 }

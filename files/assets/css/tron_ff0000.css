@@ -27379,6 +27379,10 @@ textarea {
     column-count: 5 !important;
   }
 }
+.container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
+  padding-bottom: 30px;
+}
+
 #frontpage .post-title a:visited {
   color: #f0f0f0;
 }
