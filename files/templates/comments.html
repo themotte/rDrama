@@ -35,7 +35,7 @@
 	<script src="/assets/js/comments_admin.js"></script>
 {% endif %}
 
-<script src="/assets/js/new_comments_count2.js"></script>
+<script src="/assets/js/new_comments_count3.js"></script>
 
 <script>
 	function collapse_comment(comment_id) {
@@ -177,7 +177,7 @@
 						lastCount = comments['{{p.id}}']
 						console.log({{c.created_utc}})
 						console.log(lastCount.t)
-						document.getElementsById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>'
+						document.getElementById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>'
 					</script>
 					<div id="reddot-{{c.id}}"></div>
 				{% endif %}

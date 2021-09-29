@@ -32,8 +32,9 @@ if (typeof showNewCommentCounts === 'undefined') {
 		const newTotal = lastTotalComs || ((comments[postId] || { c: 0 }).c + 1)
 
 		var t = Date.now()
-
-		comments[postId] = { c: newTotal, t: (t-(t%1000))/1000 }
+		t = (t-(t%1000))/1000
+		console.log(t)
+		comments[postId] = { c: newTotal, t: t }
 
 		window.localStorage.setItem("comment-counts", JSON.stringify(comments))
 	}

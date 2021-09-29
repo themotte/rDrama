@@ -236,8 +236,6 @@ post_comment=function(fullname, postId){
             myToast.hide();
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
             myToast.show();
-
-            saveCommentsCount(postId)
         }
         else {
             var commentError = document.getElementById("comment-error-text");
