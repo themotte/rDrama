@@ -177,6 +177,12 @@ def post_id(pid, anything=None, v=None):
 
 		post.preloaded_comments = comments.all()
 
+	keys = []
+	for key, val in session.items():
+		if type(val) is int and key not in ['login_nonce','user_id']:
+			keys.append(key)
+	
+	for key in keys: session.pop(key)
 
 	post.views += 1
 	g.db.add(post)
