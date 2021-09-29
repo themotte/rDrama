@@ -175,11 +175,11 @@
 					<script>
 						comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 						lastCount = comments['{{p.id}}']
-						console.log({{c.created_utc}})
+						console.log({{c.created_utc*1000}})
 						console.log(lastCount.t)
 						document.getElementById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>'
 					</script>
-					<div id="reddot-{{c.id}}"></div>
+					<span id="reddot-{{c.id}}"></span>
 				{% endif %}
 
 				{% if c.awards %}

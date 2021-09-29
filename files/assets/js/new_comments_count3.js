@@ -20,21 +20,12 @@ if (typeof showNewCommentCounts === 'undefined') {
 		}
 	}
 
-	/**
-		* Saves the comment count to the localStorage
-		*
-		* @param postId The id of the post associated with the comments
-		* @param lastTotalComs The new amount, If null it will just increment the previous amount
-		*/
 	function saveCommentsCount(postId, lastTotalComs = null) {
 		const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 
 		const newTotal = lastTotalComs || ((comments[postId] || { c: 0 }).c + 1)
 
-		var t = Date.now()
-		t = (t-(t%1000))/1000
-		console.log(t)
-		comments[postId] = { c: newTotal, t: t }
+		comments[postId] = { c: newTotal, t: Date.now() }
 
 		window.localStorage.setItem("comment-counts", JSON.stringify(comments))
 	}
