@@ -175,7 +175,7 @@
 					<script>
 						comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 						lastCount = comments['{{p.id}}']
-						console.log('{{c.created_utc}}')
+						console.log({{c.created_utc}})
 						console.log(lastCount.t)
 						if ({{c.created_utc}} > lastCount.t) {
 							console.log('fuck')
