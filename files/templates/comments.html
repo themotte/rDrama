@@ -173,8 +173,8 @@
 
 				{% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
 					<script>
-						const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
-						const lastCount = comments[postId]
+						comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
+						lastCount = comments[postId]
 						if ({{c.created_utc}} > lastCount.t) {
 							document.getElementsById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>'
 						}
