@@ -2,13 +2,11 @@
 if (typeof showNewCommentCounts === 'undefined') {
 
 	// localstorage comment counts format: {"<postId>": {c: <totalComments>, t: <timestampUpdated>}}
-	const COMMENT_COUNTS_ID = "comment-counts"
-
 	/**
 		* Display the number of new comments present since the last time the post was opened
 		*/
 	function showNewCommentCounts(postId, newTotal) {
-		const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
+		const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 
 		const lastCount = comments[postId]
 		if (lastCount) {
@@ -29,13 +27,13 @@ if (typeof showNewCommentCounts === 'undefined') {
 		* @param lastTotalComs The new amount, If null it will just increment the previous amount
 		*/
 	function saveCommentsCount(postId, lastTotalComs = null) {
-		const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
+		const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 
 		const newTotal = lastTotalComs || ((comments[postId] || { c: 0 }).c + 1)
 
 		comments[postId] = { c: newTotal, t: Date.now() }
 
-		window.localStorage.setItem(COMMENT_COUNTS_ID, JSON.stringify(comments))
+		window.localStorage.setItem("comment-counts", JSON.stringify(comments))
 	}
 
 
@@ -52,14 +50,14 @@ if (typeof showNewCommentCounts === 'undefined') {
 			const now = Date.now()
 
 			if (now - lastCacheClean > CACHE_CLEAN_INTERVAL) {
-				const comments = JSON.parse(localStorage.getItem(COMMENT_COUNTS_ID)) || {}
+				const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 
 				for (let [key, value] of Object.entries(comments)) {
 					if (now - value.t > EXPIRE_INTERVAL_MILLIS) {
 						delete comments[key]
 					}
 				}
-				window.localStorage.setItem(COMMENT_COUNTS_ID, JSON.stringify(comments))
+				window.localStorage.setItem("comment-counts", JSON.stringify(comments))
 			}
 			window.localStorage.setItem(LAST_CACHE_CLEAN_ID, JSON.stringify(now))
 		}

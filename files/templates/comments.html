@@ -173,7 +173,7 @@
 
 				{% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
 					<script>
-						comments = JSON.parse(localStorage.getItem({{c.id}})) || {}
+						comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 						lastCount = comments['{{p.id}}']
 						if (lastCount && {{c.created_utc}} > lastCount.t) {
 							document.getElementsById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>'
