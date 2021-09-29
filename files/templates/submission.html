@@ -34,24 +34,6 @@
 	</script>
 {% endif %}
 
-<script>
-    // closure to avoid variable conflicts
-    (() => {
-        const date = new Date('{{p.created_datetime}}');
-        document.getElementById('timestamp').title = date.toString();
-        {% if p.edited_utc %}
-            const dateEdited = new Date('{{p.edited_datetime}}');
-            document.getElementById('edited_timestamp').title = dateEdited.toString();
-        {% endif %}
-
-        {% if (not v or v.highlightcomments) %}
-            showNewCommentCounts('{{p.id}}', {{p.comment_count}})
-        {% endif %}
-        saveCommentsCount('{{p.id}}', {{p.comment_count}})
-    })()
-
-</script>
-
 {% if p.award_count("shit") %}
 	<script src="/assets/js/bug-min.js"></script>
 	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
@@ -709,5 +691,25 @@
 {% if v %}
 	{% include "report_post_modal.html" %}
 {% endif %}
+
+<script>
+	(() => {
+		const date = new Date('{{p.created_datetime}}');
+		document.getElementById('timestamp').title = date.toString();
+		{% if p.edited_utc %}
+			const dateEdited = new Date('{{p.edited_datetime}}');
+			document.getElementById('edited_timestamp').title = dateEdited.toString();
+		{% endif %}
+
+		{% if (not v or v.highlightcomments) %}
+			showNewCommentCounts('{{p.id}}', {{p.comment_count}})
+		{% endif %}
+
+		const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+		const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || { c: 0 }).c + 1)
+		comments['{{p.id}}'] = { c: newTotal, t: Date.now() }
+		window.localStorage.setItem("comment-counts", JSON.stringify(comments))
+	})()
+</script>
 
 {% endblock %}

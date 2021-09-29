@@ -1,10 +1,4 @@
-// only allows the script to execute once
 if (typeof showNewCommentCounts === 'undefined') {
-
-	// localstorage comment counts format: {"<postId>": {c: <totalComments>, t: <timestampUpdated>}}
-	/**
-		* Display the number of new comments present since the last time the post was opened
-		*/
 	function showNewCommentCounts(postId, newTotal) {
 		const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 
@@ -20,46 +14,26 @@ if (typeof showNewCommentCounts === 'undefined') {
 		}
 	}
 
-	function saveCommentsCount(postId, lastTotalComs = null) {
-		const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+	const LAST_CACHE_CLEAN_ID = "last-cache-clean"
+	const EXPIRE_INTERVAL_MILLIS = 5 * 24 * 60 * 60 * 1000
+	const CACHE_CLEAN_INTERVAL = 60 * 60 * 1000 // 1 hour
 
-		const newTotal = lastTotalComs || ((comments[postId] || { c: 0 }).c + 1)
+	function cleanCache() {
+		const lastCacheClean = JSON.parse(localStorage.getItem(LAST_CACHE_CLEAN_ID)) || Date.now()
+		const now = Date.now()
 
-		comments[postId] = { c: newTotal, t: Date.now() }
+		if (now - lastCacheClean > CACHE_CLEAN_INTERVAL) {
+			const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 
-		window.localStorage.setItem("comment-counts", JSON.stringify(comments))
-	}
-
-
-	/**
-		* Cleans the expired entries (5 days). It runs every hour.
-		*/
-	function cleanCommentsCache() {
-		const LAST_CACHE_CLEAN_ID = "last-cache-clean"
-		const EXPIRE_INTERVAL_MILLIS = 5 * 24 * 60 * 60 * 1000
-		const CACHE_CLEAN_INTERVAL = 60 * 60 * 1000 // 1 hour
-
-		function cleanCache() {
-			const lastCacheClean = JSON.parse(localStorage.getItem(LAST_CACHE_CLEAN_ID)) || Date.now()
-			const now = Date.now()
-
-			if (now - lastCacheClean > CACHE_CLEAN_INTERVAL) {
-				const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
-
-				for (let [key, value] of Object.entries(comments)) {
-					if (now - value.t > EXPIRE_INTERVAL_MILLIS) {
-						delete comments[key]
-					}
+			for (let [key, value] of Object.entries(comments)) {
+				if (now - value.t > EXPIRE_INTERVAL_MILLIS) {
+					delete comments[key]
 				}
-				window.localStorage.setItem("comment-counts", JSON.stringify(comments))
 			}
-			window.localStorage.setItem(LAST_CACHE_CLEAN_ID, JSON.stringify(now))
+			window.localStorage.setItem("comment-counts", JSON.stringify(comments))
 		}
-
-		// So it does not slow the load of the main page with the clean up
-		setTimeout(cleanCache, 500)
+		window.localStorage.setItem(LAST_CACHE_CLEAN_ID, JSON.stringify(now))
 	}
 
-	cleanCommentsCache()
-
+	setTimeout(cleanCache, 500)
 }
