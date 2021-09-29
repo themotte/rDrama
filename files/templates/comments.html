@@ -175,7 +175,8 @@
 					<script>
 						comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 						lastCount = comments['{{p.id}}']
-						console.log('{{c.created_utc}}' + lastCount.t)
+						console.log('{{c.created_utc}}')
+						console.log(lastCount.t)
 						if ({{c.created_utc}} > lastCount.t) {
 							console.log('fuck')
 							document.getElementsById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>'
