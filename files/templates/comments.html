@@ -57,12 +57,24 @@
 </script>
 
 {% macro single_comment(c, level=1) %}
+
+{% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
+	<script>
+		comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+		lastCount = comments['{{p.id}}']
+		if (lastCount && {{c.created_utc*1000}} > lastCount.t) {
+			document.getElementById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>'
+		}
+	</script>
+{% endif %}
+
 <script>
 	(() => {
 		const date = new Date('{{c.created_datetime}}');
 		document.getElementById('timestamp-{{c.id}}').title = date.toString();
 	})()
 </script>
+
 {% set ups=c.upvotes %}
 {% set downs=c.downvotes %}
 {% set score=ups-downs %}
@@ -169,16 +181,7 @@
 			<div class="user-info">
 				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
 
-				{% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
-					<script>
-						comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
-						lastCount = comments['{{p.id}}']
-						if (lastCount && {{c.created_utc*1000}} > lastCount.t) {
-							document.getElementById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unread"></i>'
-						}
-					</script>
-					<span id="reddot-{{c.id}}"></span>
-				{% endif %}
+				<span id="reddot-{{c.id}}"></span>
 
 				{% if c.awards %}
 					{% for a in c.awards %}
