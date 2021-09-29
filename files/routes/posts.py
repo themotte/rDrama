@@ -177,17 +177,6 @@ def post_id(pid, anything=None, v=None):
 
 		post.preloaded_comments = comments.all()
 
-	if not v or v.highlightcomments:
-		last_view_utc = session.get(str(post.id))
-		if last_view_utc: last_view_utc = int(last_view_utc)
-		session[str(post.id)] = int(time.time())
-
-		keys = []
-		for key, val in session.items():
-			if type(val) is int and key not in ['login_nonce','user_id']:
-				if time.time() - val > 86400: keys.append(key)
-		
-		for key in keys: session.pop(key)
 
 	post.views += 1
 	g.db.add(post)
@@ -198,9 +187,7 @@ def post_id(pid, anything=None, v=None):
 
 	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
-	else:
-		if not v or v.highlightcomments: return post.rendered_page(v=v, last_view_utc=last_view_utc, sort=sort)
-		else: return post.rendered_page(v=v, sort=sort)
+	else: return post.rendered_page(v=v, sort=sort)
 
 
 @app.post("/edit_post/<pid>")

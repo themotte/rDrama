@@ -22,10 +22,6 @@ if (typeof showNewCommentCounts === 'undefined') {
 		}
 	}
 
-	function incrementCommentCount(postId) {
-		saveCommentsCount(postId)
-	}
-
 	/**
 		* Saves the comment count to the localStorage
 		*

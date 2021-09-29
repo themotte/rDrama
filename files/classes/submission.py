@@ -181,7 +181,7 @@ class Submission(Base):
 		return f"/post/{self.id}/{output}"
 
 	@lazy
-	def rendered_page(self, sort=None, last_view_utc=None, comment=None, comment_info=None, v=None):
+	def rendered_page(self, sort=None, comment=None, comment_info=None, v=None):
 
 		if self.is_banned and not (v and (v.admin_level >= 3 or self.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
@@ -191,7 +191,6 @@ class Submission(Base):
 		return render_template(template,
 							   v=v,
 							   p=self,
-							   last_view_utc=last_view_utc,
 							   sort=sort,
 							   linked_comment=comment,
 							   comment_info=comment_info,
