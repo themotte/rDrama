@@ -1,6 +1,4 @@
-report_postModal = function(id, author) {
-
-    document.getElementById("post-author").textContent = author;
+report_postModal = function(id) {
 
     submitbutton=document.getElementById("reportPostButton");
 
