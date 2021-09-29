@@ -93,7 +93,7 @@
 
 			<div style="z-index: 3;">
 				{% if p.club and not (v and v.paid_dues) %}
-					<img loading="lazy" src="/assets/images/emojis2/marseyglow.webp" class="post-img">
+					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-img">
 				{% elif not p.url %}
 					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">

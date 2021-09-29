@@ -394,8 +394,8 @@ def filter_title(title):
 	title = bleach.clean(title, tags=[])
 
 	for i in re.finditer(':(.{1,30}?):', title):
-		if path.isfile(f'./files/assets/images/emojis2/{i.group(1)}.webp'):
-			title = title.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis2/{i.group(1)}.webp">')
+		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
+			title = title.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp">')
 
 	return title
 

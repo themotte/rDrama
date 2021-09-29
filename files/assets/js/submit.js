@@ -188,7 +188,7 @@ function markdown() {
     var emojis = Array.from(input.matchAll(/:(.{1,30}?):/gi))
         if(emojis != null){
                 for(i = 0; i < emojis.length; i++){
-                    input = input.replace(emojis[i][0], "<img height=30 src='/assets/images/emojis2/" + emojis[i][1] + ".webp'>")
+                    input = input.replace(emojis[i][0], "<img height=30 src='/assets/images/emojis/" + emojis[i][1] + ".webp'>")
                 }
         }
     document.getElementById('preview').innerHTML = marked(input)
