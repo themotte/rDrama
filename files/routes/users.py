@@ -106,7 +106,7 @@ def suicide(v, username):
 @auth_required
 def get_coins(v, username):
 	user = get_user(username)
-	if user is not None: return {"coins": user.coins}, 200
+	if user != None: return {"coins": user.coins}, 200
 	else: return {"error": "invalid_user"}, 404
 
 @app.post("/@<username>/transfer_coins")

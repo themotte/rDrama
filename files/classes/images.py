@@ -12,13 +12,9 @@ class Image(Base):
 
 class BadPic(Base):
 
-	#Class for tracking fuzzy hashes of banned csam images
-
 	__tablename__="badpics"
 	id = Column(BigInteger, primary_key=True)
-	description=Column(String(255))
+	description=Column(String(200))
 	phash=Column(String(64))
 	ban_reason=Column(String(64))
 	ban_time=Column(Integer)
-
-	

@@ -32,7 +32,7 @@ class Comment(Base):
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
 	over_18 = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
-	is_pinned = Column(String(255))
+	is_pinned = Column(String(25))
 	sentto=Column(Integer)
 	notifiedto=Column(Integer)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))

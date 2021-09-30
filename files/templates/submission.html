@@ -260,7 +260,7 @@
 								<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{a.title}} Award given by @{{a.user.username}}"></i>
 							{% endfor %}
 						{% endif %}
-						{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned user"></i>{% endif %}
+						{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Shadowbanned by @{{p.author.shadowbanned}}"></i>{% endif %}
 						{% if p.stickied %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{p.stickied}}"></i>{% endif %}
 						{% if p.is_pinned %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned to profile"></i>{% endif %}
 						{% if p.distinguish_level %} <i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}

@@ -194,7 +194,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 			posts=posts.filter(not_(Submission.title.ilike(f'%{word}%')))
 
 	if not (v and v.shadowbanned):
-		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned == True).all()]
+		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
 		posts = posts.filter(Submission.author_id.notin_(shadowbanned))
 
 	if sort == "hot":

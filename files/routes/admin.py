@@ -755,11 +755,11 @@ def agendaposter(user_id, v):
 def shadowban(user_id, v):
 	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 	if user.admin_level != 0: abort(403)
-	user.shadowbanned = True
+	user.shadowbanned = v.username
 	g.db.add(user)
 	for alt in user.alts:
 		if alt.admin_level > 0: break
-		alt.shadowbanned = True
+		alt.shadowbanned = v.username
 		g.db.add(alt)
 	ma = ModAction(
 		kind="shadowban",
@@ -780,10 +780,10 @@ def shadowban(user_id, v):
 def unshadowban(user_id, v):
 	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 	if user.admin_level != 0: abort(403)
-	user.shadowbanned = False
+	user.shadowbanned = None
 	g.db.add(user)
 	for alt in user.alts:
-		alt.shadowbanned = False
+		alt.shadowbanned = None
 		g.db.add(alt)
 
 	ma = ModAction(

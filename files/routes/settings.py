@@ -46,7 +46,7 @@ def settings_profile_post(v):
 
 	if request.values.get("background", v.background) != v.background:
 		updated = True
-		v.background= request.values.get("background", None)
+		v.background = request.values.get("background", None)
 
 	if request.values.get("slurreplacer", v.slurreplacer) != v.slurreplacer:
 		updated = True
@@ -755,7 +755,7 @@ def settings_song_change(v):
 
 	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).options(lazyload('*')).filter_by(song=v.song).count() == 1:
 		os.remove(f"/songs/{v.song}.mp3")
-		v.song=None
+		v.song = None
 		g.db.add(v)
 		g.db.commit()
 		return redirect("/settings/profile")
@@ -774,7 +774,7 @@ def settings_song_change(v):
 	if "&" in id: id = id.split("&")[0]
 
 	if path.isfile(f'/songs/{id}.mp3'): 
-		v.song=id
+		v.song = id
 		g.db.add(v)
 		g.db.commit()
 		return redirect("/settings/profile")
@@ -824,7 +824,7 @@ def settings_song_change(v):
 	songfile = max(paths, key=path.getctime)
 	os.rename(songfile, f"/songs/{id}.mp3")
 
-	v.song=id
+	v.song = id
 	g.db.add(v)
 
 	g.db.commit()
