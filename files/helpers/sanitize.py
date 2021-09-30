@@ -217,8 +217,8 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	for i in re.finditer('^(\s+)?((:[\w]+:)+(\s+)?)+$', sanitized):
-		emojis = i.group(0).lower()
+	for i in re.findall('^(\s+)?((:[\w]+:)+(\s+)?)+$', sanitized):
+		emojis = i.lower()
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', emojis):
 			emoji = i.group(1)
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
