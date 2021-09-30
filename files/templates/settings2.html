@@ -49,32 +49,13 @@
 
 <body id="settings2" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
 
-	{% include "header.html" %}
+{% include "header.html" %}
 
-	
-	{% block subHeader %}
-	<div class="container-fluid bg-light">
-		<div class="row py-3">
-			<div class="col">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<span class="font-weight-bold">
-							</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	{% endblock %}
+{% block subNav %}
 
-		{% block subNav %}
-
-{% if True %}
-	{% set mod = (v.admin_level==6) %}
-		<div class="container-fluid bg-white sticky d-none d-md-block">
-		<div class="row box-shadow-bottom">
+{% set mod = (v.admin_level==6) %}
+<div class="container-fluid bg-white sticky d-none d-md-block" style="padding-top: 40px; padding-bottom: 0 !important;">
+	<div class="row box-shadow-bottom">
 			<div class="col">
 				<div class="container">
 					<div class="row box-shadow-bottom bg-white">
@@ -107,7 +88,7 @@
 			</div>
 		</div>
 	</div>
-		<div class="container-fluid bg-white sticky d-md-none">
+		<div class="container-fluid bg-white sticky d-md-none" style="padding-top: 40px; padding-bottom: 10px !important;">
 		<div class="row box-shadow-bottom">
 			<div class="col px-0">
 				<div class="d-flex flex-row-reverse justify-content-center">
@@ -135,13 +116,12 @@
 			</div>
 		</div>
 	</div>
-	{% endif %}
-	{% endblock %}
+{% endblock %}
 
-		<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} mt-3 {% if request.path in ['/leaderboard', '/paypigs', '/patrons'] %}px-0{% elif request.path == '/changelog' %}px-2{% endif %}">
+<div class="{% if request.path == '/banned' or request.path == '/blocks' %}container-fluid{% else %}container{% endif %} {% if request.path in ['/leaderboard', '/paypigs', '/patrons'] %}px-0{% elif request.path == '/changelog' %}px-2{% endif %}">
 
-	{% block content %}
-	{% endblock %}
+{% block content %}
+{% endblock %}
 
  </div>
 
