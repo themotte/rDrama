@@ -149,18 +149,14 @@ def sanitize(sanitized, noimages=False):
 									]
 							).clean(sanitized)
 
-	#soupify
 	soup = BeautifulSoup(sanitized, features="html.parser")
 
-	#img elements - embed
 	for tag in soup.find_all("img"):
 
 		url = tag.get("src", "")
 		if not url: continue
 
 		if "profile-pic-20" not in tag.get("class", ""):
-			#print(tag.get('class'))
-			# set classes and wrap in link
 
 			tag["rel"] = "nofollow noopener noreferrer"
 			tag["style"] = "max-height: 100px; max-width: 100%;"
@@ -219,7 +215,6 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.finditer("^(\s+)?((:[\w]+:)+(\s+)?)+", sanitized.replace("<p>", "").replace("</p>", ""), re.MULTILINE):
 		emojis = i.group(0).lower()
-		print(emojis)
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', emojis):
 			emoji = i.group(1).lower()
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
