@@ -10,7 +10,6 @@ from files.helpers.sanitize import *
 from files.helpers.filters import *
 from files.helpers.markdown import *
 from files.helpers.session import *
-from files.helpers.thumbs import *
 from files.helpers.alerts import send_notification
 from files.helpers.discord import send_message
 from files.helpers.const import *
@@ -425,6 +424,21 @@ def check_processing_thread(v, post, link):
 
 
 def thumbnail_thread(pid):
+
+	def expand_url(post_url, fragment_url):
+
+		# convert src into full url
+		if fragment_url.startswith("https://"):
+			return fragment_url
+		elif fragment_url.startswith("http://"):
+			return f"https://{fragment_url.split('http://')[1]}"
+		elif fragment_url.startswith('//'):
+			return f"https:{fragment_url}"
+		elif fragment_url.startswith('/'):
+			parsed_url = urlparse(post_url)
+			return f"https://{parsed_url.netloc}{fragment_url}"
+		else:
+			return f"{post_url}{'/' if not post_url.endswith('/') else ''}{fragment_url}"
 
 	db = db_session()
 
