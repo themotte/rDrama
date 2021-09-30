@@ -215,6 +215,7 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.finditer("^\s*((:\w+:)\s*)+$", sanitized.replace("<p>", "").replace("</p>", ""), re.MULTILINE):
 		emojis = i.group(0).lower()
+		print(emojis)
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', emojis):
 			emoji = i.group(1).lower()
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
@@ -226,9 +227,7 @@ def sanitize(sanitized, noimages=False):
 				except:
 					pass
 		old = "<p>" + i.group(0).lower() + "</p>"
-		print(old)
 		new = '<p style="margin-bottom:0 !important">' + emojis + "</p>"
-		print(new)
 		sanitized = sanitized.replace(old, new)
 
 	for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
