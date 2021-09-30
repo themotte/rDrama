@@ -213,22 +213,20 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	for i in re.finditer("^\s*((:\w+:)\s*)+$", sanitized.replace("<p>", "").replace("</p>", ""), re.MULTILINE):
+	for i in re.finditer("<p>\s*((:\w+:)\s*)+<\/p>", sanitized.replace("<p>", "").replace("</p>", ""), re.MULTILINE):
 		emojis = i.group(0).lower()
-		print(emojis)
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', emojis):
 			emoji = i.group(1).lower()
-			print(emoji)
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 				emojis = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', emojis)
 
-				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-				else: session["favorite_emojis"][emoji] = 1
-				
-		old = "<p>" + i.group(0).lower() + "</p>"
-		print(old)
-		new = '<p style="margin-bottom:0 !important">' + emojis + "</p>"
-		sanitized = sanitized.replace(old, new)
+				try:
+					if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
+					else: session["favorite_emojis"][emoji] = 1
+				except:
+					pass
+		emojis = emojis.replace('<p>', '<p style="margin-bottom:0 !important>')
+		sanitized = sanitized.replace(i.group(1), emojis)
 
 	for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
 		emoji = i.group(1).lower()
