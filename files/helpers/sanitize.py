@@ -225,9 +225,9 @@ def sanitize(sanitized, noimages=False):
 					else: session["favorite_emojis"][emoji] = 1
 				except:
 					pass
-		old = "<p>" + i.group(0).lower()
+		old = "<p>" + i.group(0).lower() + "</p>"
 		print(old)
-		new = '<p style="margin-bottom:0 !important>' + emojis
+		new = '<p style="margin-bottom:0 !important">' + emojis + "</p>"
 		print(new)
 		sanitized = sanitized.replace(old, new)
 
