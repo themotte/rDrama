@@ -1,7 +1,6 @@
 import requests
 from os import environ, path, remove
 from PIL import Image as IImage, ImageSequence
-import base64
 from files.classes.images import *
 from flask import g
 from werkzeug.utils import secure_filename
