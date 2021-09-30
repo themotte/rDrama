@@ -219,6 +219,7 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.findall('^(\s+)?((:[\w]+:)+(\s+)?)+$', sanitized):
 		emojis = i.lower()
+		print(emojis)
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', emojis):
 			emoji = i.group(1)
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
