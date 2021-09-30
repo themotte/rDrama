@@ -227,6 +227,7 @@ def sanitize(sanitized, noimages=False):
 				except:
 					pass
 		old = "<p>" + i.group(0).lower() + "</p>"
+		print(old)
 		new = '<p style="margin-bottom:0 !important">' + emojis + "</p>"
 		sanitized = sanitized.replace(old, new)
 
