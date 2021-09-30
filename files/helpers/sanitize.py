@@ -223,7 +223,7 @@ def sanitize(sanitized, noimages=False):
 			emoji = i.group(1)
 			print(emoji)
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				sanitized = sanitized.replace(f':{emoji}:', f'<p style="margin-bottom:0;"><img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp"></p>')
+				sanitized = sanitized.replace(f':{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">')
 
 				try:
 					if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
