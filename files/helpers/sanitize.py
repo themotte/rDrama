@@ -217,8 +217,7 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	print(sanitized)
-	for i in re.finditer("^(\s+)?((:[\w]+:)+(\s+)?)+", sanitized.replace("<p>", "").replace("</p>", "")):
+	for i in re.finditer("^(\s+)?((:[\w]+:)+(\s+)?)+", sanitized.replace("<p>", "").replace("</p>", ""), re.MULTILINE):
 		print(i)
 		emojis = i.group(0).lower()
 		print(emojis)
