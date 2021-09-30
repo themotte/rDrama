@@ -9,6 +9,7 @@ from webptools import gifwebp
 
 IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 IBB_KEY = environ.get("IBB_KEY", "").strip()
+CATBOX_KEY = environ.get("CATBOX_KEY", "").strip()
 
 def upload_ibb(file=None, resize=False):
 	
@@ -37,12 +38,9 @@ def upload_ibb(file=None, resize=False):
 
 
 	with open("image.webp", 'rb') as f:
-		data={'image': base64.b64encode(f.read())} 
-		req = requests.post(f'https://api.imgbb.com/1/upload?key={IBB_KEY}', data=data)
-	resp = req.json()['data']
-	url = resp['url']
+		req = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f})
 
-	return url
+	return req.text
 
 
 class UploadException(Exception):
