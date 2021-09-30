@@ -218,6 +218,7 @@ def sanitize(sanitized, noimages=False):
 		print(emojis)
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', emojis):
 			emoji = i.group(1).lower()
+			print(emoji)
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 				emojis = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', emojis)
 
