@@ -169,29 +169,34 @@ def settings_profile_post(v):
 
 
 
+	frontsize = request.values.get("frontsize")
+	if frontsize:
+		if frontsize in ["25", "50", "100"]:
+			v.frontsize = int(frontsize)
+			updated = True
+			cache.delete_memoized(frontlist)
+		else: abort(400)
+
 	defaultsortingcomments = request.values.get("defaultsortingcomments")
 	if defaultsortingcomments:
 		if defaultsortingcomments in ["new", "old", "controversial", "top", "bottom"]:
 			v.defaultsortingcomments = defaultsortingcomments
 			updated = True
-		else:
-			abort(400)
+		else: abort(400)
 
 	defaultsorting = request.values.get("defaultsorting")
 	if defaultsorting:
 		if defaultsorting in ["hot", "new", "old", "comments", "controversial", "top", "bottom"]:
 			v.defaultsorting = defaultsorting
 			updated = True
-		else:
-			abort(400)
+		else: abort(400)
 
 	defaulttime = request.values.get("defaulttime")
 	if defaulttime:
 		if defaulttime in ["hour", "day", "week", "month", "year", "all"]:
 			v.defaulttime = defaulttime
 			updated = True
-		else:
-			abort(400)
+		else: abort(400)
 
 	theme = request.values.get("theme")
 	if theme:
