@@ -2,9 +2,9 @@
 
 <script>
 	function vote(type, id, dir) {
-		var upvote = document.getElementsByClassName(type + '-' + id + '-up');
-		var downvote = document.getElementsByClassName(type + '-' + id + '-down');
-		var scoretext = document.getElementsByClassName(type + '-score-' + id);
+		var upvote = document.getElementById(type + '-' + id + '-up');
+		var downvote = document.getElementById(type + '-' + id + '-down');
+		var scoretext = document.getElementById(type + '-score-' + id);
 
 		var score = Number(scoretext.textContent);
 
