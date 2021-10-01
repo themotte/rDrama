@@ -223,8 +223,10 @@ def sanitize(sanitized, noimages=False):
 				else: session["favorite_emojis"][emoji] = 1
 		emojis = emojis.replace("<p>", "<p style='margin-bottom:0 !important'>")
 		print(sanitized)
+		print('\n')
 		sanitized = sanitized.replace(i.group(1), emojis)
 		print(sanitized)
+		print('\n\n\n\n\n\n\n')
 
 	print('last')
 	print(sanitized)
