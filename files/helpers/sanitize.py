@@ -223,7 +223,9 @@ def sanitize(sanitized, noimages=False):
 				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 				else: session["favorite_emojis"][emoji] = 1
 		
-		sanitized = sanitized.replace("<p>" + i.group(0) + "</p>", emojis)
+		old = "<p>" + i.group(0) + "</p>"
+		new = "<p style='margin-bottom:0 !important'>" + emojis + "</p>"
+		sanitized = sanitized.replace(old, new)
 
 	for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
 		emoji = i.group(1).lower()
