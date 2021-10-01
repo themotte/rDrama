@@ -1,6 +1,10 @@
 function vote(type, upvote, downvote, scoretext) {
 
+    upvote = document.getElementsById(upvote);
+    downvote = document.getElementsById(downvote);
+    scoretext = document.getElementsById(scoretext);
     var score = Number(scoretext.textContent);
+
     if (type == "1") {
         if (upvote.classList.contains('active')) {
             upvote.classList.remove('active')
