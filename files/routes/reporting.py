@@ -2,6 +2,7 @@ from files.helpers.wrappers import *
 from files.helpers.get import *
 from flask import g
 from files.__main__ import app
+from os import path
 
 @app.post("/flag/post/<pid>")
 @auth_desired
