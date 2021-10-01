@@ -3,10 +3,10 @@
 {% if u and u.profilecss %}
 	{% block stylesheets %}
 		{% if v %}
-			<link rel="stylesheet" href="/assets/css2/{{v.theme}}_{{v.themecolor}}.css">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css2/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
-			<link rel="stylesheet" href="/assets/css2/{{'DEFAULT_THEME' | app_config}}.css">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css">
 		{% endif %}
 		{% if u and u.profilecss %}
 			<link rel="stylesheet" href="/@{{u.username}}/profilecss">
@@ -18,7 +18,7 @@
 {% block pagetype %}userpage{% endblock %}
 
 {% block title %}
-<script src="/assets/js/userpage2.js"></script>
+<script src="/assets/js/userpage.js?v=1"></script>
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">

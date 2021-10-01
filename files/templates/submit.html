@@ -24,14 +24,14 @@
 		
 		{% block stylesheets %}
 		{% if v %}
-			<link rel="stylesheet" href="/assets/css2/{{v.theme}}_{{v.themecolor}}.css">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css2/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
-			<link rel="stylesheet" href="/assets/css2/{{'DEFAULT_THEME' | app_config}}.css">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css">
 		{% endif %}
 		{% endblock %}
 
-				<link href="/assets/css2/fa.css" rel="stylesheet"> </head>
+				<link href="/assets/css/fa.css" rel="stylesheet"> </head>
 
 <body id="submit" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}display: block;">
 
