@@ -18,7 +18,7 @@
 							{% else %}
 								<a href="javascript:void(0)" id="{{award.kind}}" class="card disabled">
 							{% endif %}
-								<i class="{{award.icon}} {{award.color}}"></i>
+								<i class="{{award.icon}} {{award.color}}"></i><br>
 								<span class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</span>
 								<div class="text-muted">{{award.owned}} owned</div>
 							</a>
@@ -48,12 +48,6 @@
 
 	.awards-wrapper a i {
 		font-size: 25px;
-	}
-
-	@media (min-width: 767.98px) {
-		.awards-wrapper a i {
-			font-size: 45px;
-		}
 	}
 
 	.awards-wrapper a.disabled {
