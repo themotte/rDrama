@@ -1,9 +1,7 @@
 import requests
-from os import environ, path, remove
+from os import environ
 from PIL import Image as IImage, ImageSequence
 from files.classes.images import *
-from flask import g
-from werkzeug.utils import secure_filename
 from webptools import gifwebp
 
 CATBOX_KEY = environ.get("CATBOX_KEY", "").strip()
