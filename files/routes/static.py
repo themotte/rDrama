@@ -308,9 +308,9 @@ def formatting(v):
 
 	return render_template("formatting.html", v=v)
 	
-@app.get("/.well-known/brave-rewards-verification.txt")
-def brave():
-	with open(".well-known/brave-rewards-verification.txt", "r") as f: return Response(f.read(), mimetype='text/plain')
+# @app.get("/.well-known/brave-rewards-verification.txt")
+# def brave():
+# 	with open(".well-known/brave-rewards-verification.txt", "r") as f: return Response(f.read(), mimetype='text/plain')
 
 @app.get("/.well-known/assetlinks.json")
 def googleplayapp():
