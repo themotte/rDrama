@@ -215,16 +215,16 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.finditer("<p>\s*((:\w+:)\s*)+<\/p>", sanitized):
 		old = i.group(0)
-		emojis = old.lower().replace("<p>", "<p style='margin-bottom:0 !important'>")
-		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', emojis):
+		new = old.lower().replace("<p>", "<p style='margin-bottom:0 !important'>")
+		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				emojis = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', emojis)
+				new = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', new)
 				
 				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 				else: session["favorite_emojis"][emoji] = 1
 
-		sanitized = sanitized.replace(old, emojis)
+		sanitized = sanitized.replace(old, new)
 
 
 	for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
