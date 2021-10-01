@@ -86,7 +86,7 @@ def post_id(pid, anything=None, v=None):
 
 	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
-	if v and request.full_path.startswith('/logged_out'): v = None
+	if v and request.path.startswith('/logged_out'): v = None
 
 	try: pid = int(pid)
 	except Exception as e: pass
