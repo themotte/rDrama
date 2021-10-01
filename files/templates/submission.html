@@ -562,7 +562,7 @@
 					</span>
 					{% endif %}
 
-					<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}">{{score}}</span>
+					<span id="post-mobile-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}">{{score}}</span>
 
 					{% if v %}
 						<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-mobile-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post-mobile', '{{p.id}}', '-1')" class="ml-2 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></span>
