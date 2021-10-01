@@ -6,8 +6,6 @@ from flask import g
 from werkzeug.utils import secure_filename
 from webptools import gifwebp
 
-IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
-IBB_KEY = environ.get("IBB_KEY", "").strip()
 CATBOX_KEY = environ.get("CATBOX_KEY", "").strip()
 
 def upload_ibb(file=None, resize=False):
@@ -49,26 +47,9 @@ class UploadException(Exception):
 
 def upload_video(file):
 
-	file_path = path.join("temp", secure_filename(file.filename))
-	file.save(file_path)
+	file.save("video.mp4")
 
-	headers = {"Authorization": f"Client-ID {IMGUR_KEY}"}
-	with open(file_path, 'rb') as f:
-		try:
-			r = requests.post('https://api.imgur.com/3/upload', headers=headers, files={"video": f})
+	with open("video.mp4", 'rb') as f:
+		req = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f})
 
-			r.raise_for_status()
-
-			resp = r.json()['data']
-		except requests.HTTPError as e:
-			raise UploadException("Invalid video. Make sure it's 1 minute long or shorter.")
-		except:
-			raise UploadException("Error, please try again later.")
-		finally:
-			remove(file_path)
-
-	link = resp['link']
-	img = Image(text=link, deletehash=resp['deletehash'])
-	g.db.add(img)
-
-	return link
+	return req.text

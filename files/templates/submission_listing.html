@@ -137,7 +137,6 @@
 				{% if p.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You're blocking this user, but you can see this post because {{'it\'s pinned' if p.stickied else 'you\'re an admin'}}."></i>{% endif %}
 				{% if p.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you."></i>{% endif %}
 				{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
-				{% if p.processing %}<span class="badge border-warning border-1 text-small-extra">uploading...</span>{% endif %}
 				{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
 				{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
 				{% endif %}

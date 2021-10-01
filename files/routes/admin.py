@@ -18,7 +18,6 @@ from files.__main__ import app, cache, limiter
 from .front import frontlist
 from files.helpers.discord import add_role
 
-IMGUR_KEY = environ.get("IMGUR_KEY", "").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 

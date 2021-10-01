@@ -169,11 +169,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
 
-	if v:
-		posts = posts.filter(or_(Submission.processing == False, Submission.author_id == v.id))
-	else:
-		posts = posts.filter_by(processing=False)
-
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
 			UserBlock.target_id).filter_by(
