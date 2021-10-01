@@ -38,18 +38,3 @@ def upload_ibb(file=None, resize=False):
 		req = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f})
 
 	return req.text
-
-
-class UploadException(Exception):
-	"""Custom exception to raise if upload goes wrong"""
-	pass
-
-
-def upload_video(file):
-
-	file.save("video.mp4")
-
-	with open("video.mp4", 'rb') as f:
-		req = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f})
-
-	return req.text

@@ -834,7 +834,13 @@ def submit_post(v):
 				), 403
 
 		if file.content_type.startswith('image/'): new_post.url = upload_ibb(file=file)
-		elif file.content_type.startswith('video/'): new_post.post_url = upload_video(file)
+		elif file.content_type.startswith('video/'):
+			file.save("video.mp4")
+			with open("video.mp4", 'rb') as f:
+				req = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f})
+			print(req)
+			print(req.text)
+			new_post.post_url = req.text
 
 		g.db.add(new_post)
 	
