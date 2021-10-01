@@ -840,7 +840,7 @@ def submit_post(v):
 				req = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f})
 			print(req)
 			print(req.text)
-			new_post.post_url = req.text
+			new_post.url = req.text
 
 		g.db.add(new_post)
 	
