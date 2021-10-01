@@ -214,26 +214,16 @@ def sanitize(sanitized, noimages=False):
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
 	for i in re.finditer("<p>\s*((:\w+:)\s*)+<\/p>", sanitized):
-		emojis = i.group(0).lower()
+		emojis = i.group(0).lower().replace("<p>", "").replace("</p>", "")
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', emojis):
 			emoji = i.group(1).lower()
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				print(emojis)
 				emojis = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', emojis)
-				print(emojis)
-				break
 				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 				else: session["favorite_emojis"][emoji] = 1
-		break
-		emojis = emojis.replace("<p>", "<p style='margin-bottom:0 !important'>")
-		print(sanitized)
-		print('\n')
-		sanitized = sanitized.replace(i.group(1), emojis)
-		print(sanitized)
-		print('\n\n\n\n\n\n\n')
 
-	print('last')
-	print(sanitized)
+		sanitized = sanitized.replace(i.group(1), emojis)
+
 	for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
 		emoji = i.group(1).lower()
 		if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
