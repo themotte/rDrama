@@ -395,9 +395,9 @@ def visitors(v):
 def u_username(username, v=None):
 
 
-	if not v and "logged_out" not in request.path: return redirect(f"/logged_out{request.full_path}")
+	if not v and not request.path.startswith('logged_out'): return redirect(f"/logged_out{request.full_path}")
 
-	if v and "logged_out" in request.full_path: v = None
+	if v and request.path.startswith('logged_out'): v = None
 
 	# username is unique so at most this returns one result. Otherwise 404
 
@@ -508,9 +508,9 @@ def u_username(username, v=None):
 def u_username_comments(username, v=None):
 
 
-	if not v and "logged_out" not in request.path: return redirect(f"/logged_out{request.full_path}")
+	if not v and not request.path.startswith('logged_out'): return redirect(f"/logged_out{request.full_path}")
 
-	if v and "logged_out" in request.full_path: v = None
+	if v and request.path.startswith('logged_out'): v = None
 
 	# username is unique so at most this returns one result. Otherwise 404
 
