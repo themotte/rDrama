@@ -198,7 +198,7 @@ document.onpaste = function(event) {
     f=document.getElementById('file-upload');
     files = event.clipboardData.files
     filename = files[0].name.toLowerCase()
-    if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp"))
+    if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
     {
         f.files = files;
         document.getElementById('filename-show').textContent = filename;
@@ -215,10 +215,10 @@ document.getElementById('file-upload').addEventListener('change', function(){
     f=document.getElementById('file-upload');
     document.getElementById('urlblock').classList.add('d-none');
     document.getElementById('filename-show').textContent = document.getElementById('file-upload').files[0].name;
-    var fileReader = new FileReader();
-    filename = f.files[0].files[0].name.toLowerCase()
-    if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp"))
+    filename = f.files[0].name.toLowerCase()
+    if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".webp"))
     {
+        var fileReader = new FileReader();
         fileReader.readAsDataURL(f.files[0]);
         fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
         checkForRequired();
