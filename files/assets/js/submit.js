@@ -211,12 +211,16 @@ document.onpaste = function(event) {
     }
 }
 
-document.getElementById('file-upload').addEventListener('change', function(e){
+document.getElementById('file-upload').addEventListener('change', function(){
     f=document.getElementById('file-upload');
     document.getElementById('urlblock').classList.add('d-none');
     document.getElementById('filename-show').textContent = document.getElementById('file-upload').files[0].name;
     var fileReader = new FileReader();
-    fileReader.readAsDataURL(f.files[0]);
-    fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
-    checkForRequired();
+    filename = f.files[0].files[0].name.toLowerCase()
+    if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp"))
+    {
+        fileReader.readAsDataURL(f.files[0]);
+        fileReader.addEventListener("load", function () {document.getElementById('image-preview').setAttribute('src', this.result);});  
+        checkForRequired();
+    }
 })
