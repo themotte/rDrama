@@ -251,9 +251,8 @@ def sanitize(sanitized, noimages=False):
 		htmlsource = f'<div style="padding-top:5px; padding-bottom: 10px;"><iframe style="max-width:100%" frameborder="0" src="{url}?controls=0"></iframe></div>'
 		sanitized = sanitized.replace(replacing, htmlsource)
 
-	for i in re.finditer('https:.*?\.mp4', sanitized):
-		url = i.group(0)
-		sanitized = sanitized.replace(url, f'<video controls="" preload="metadata" style="max-width: 100%"><source src="{url}" type="video/mp4"></video>')
+	for i in re.finditer('<p>(https:.*?\.mp4)</p>', sanitized):
+		sanitized = sanitized.replace(i.group(0), f'<p><video controls="" preload="metadata" style="max-width: 100%"><source src="{i.group(1)}" type="video/mp4"></video>')
 
 	for i in re.finditer('<a href="(https://open.spotify.com/embed/.*?)"', sanitized):
 		url = i.group(1)
