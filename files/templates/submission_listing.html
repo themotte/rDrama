@@ -70,19 +70,19 @@
 
 				{% elif v %}
 
-				<div id="post-{{p.id}}-up" tabindex="0" data-bs-id-up="{{p.id}}" data-bs-content-type="post" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
+				<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('1', 'post-{{p.id}}-up', 'post-{{p.id}}-down', 'post-score-{{p.id}}')">
 
 				<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" data-bs-id-down="{{p.id}}" data-bs-content-type="post" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('-1', 'post-{{p.id}}-up', 'post-{{p.id}}-down', 'post-score-{{p.id}}')">
 
 				{% else %}
 
-				<div id="post-{{p.id}}-up" tabindex="0" class="mx-auto arrow-up" onclick="location.href='/login';"></div>
+				<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('1', 'post-{{p.id}}-up', 'post-{{p.id}}-down', 'post-score-{{p.id}}')" class="mx-auto arrow-up" onclick="location.href='/login';"></div>
 
 				<span id="post-{{p.id}}-score-none" class="score"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
+				<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('-1', 'post-{{p.id}}-up', 'post-{{p.id}}-down', 'post-score-{{p.id}}')" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
 
 				{% endif %}
 
@@ -289,24 +289,24 @@
 				{% elif v %}
 				<li id="voting-{{p.id}}-mobile" class="voting list-inline-item d-md-none">
 
-					<span id="post-{{p.id}}-up-mobile" tabindex="0" data-bs-id-up="{{p.id}}" data-bs-content-type="post" class="mr-2 arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}">
+					<span id="post-{{p.id}}-up-mobile" tabindex="0">
 					</span>
 
 					<span id="post-score-{{p.id}}-mobile" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down-mobile" tabindex="0" data-bs-id-down="{{p.id}}" data-bs-content-type="post" class="ml-2 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}">
+					<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down-mobile" tabindex="0">
 					</span>
 
 				</li>
 				{% else %}
 				<li id="voting-{{p.id}}-mobile" class="voting list-inline-item d-md-none">
-					<span id="arrow-{{p.id}}-mobile-up" tabindex="0" class="mr-2 arrow-mobile-up" onclick="location.href='/login';">
+					<span id="arrow-{{p.id}}-mobile-up" tabindex="0" href="javascript:void(0)" onclick="vote('1', 'arrow-{{p.id}}-mobile-up', 'arrow-{{p.id}}-mobile-down', 'post-score-{{p.id}}-mobile')" class="mr-2 arrow-mobile-up" onclick="location.href='/login';">
 						<i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
-					</span>
+					</span>"
 
 					<span id="post-score-{{p.id}}-mobile" class="score"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
-					<span id="arrow-{{p.id}}-mobile-down" tabindex="0" class="arrow-mobile-down ml-2 my-0" onclick="location.href='/login';">
+					<span id="arrow-{{p.id}}-mobile-down" tabindex="0" href="javascript:void(0)" onclick="vote('-1', 'arrow-{{p.id}}-mobile-up', 'arrow-{{p.id}}-mobile-down', 'post-score-{{p.id}}-mobile') class="arrow-mobile-down ml-2 my-0" onclick="location.href='/login';">
 						<i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
 					</span>
 				</li>
