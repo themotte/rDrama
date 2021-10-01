@@ -1938,13 +1938,6 @@ ALTER TABLE ONLY public.notifications
 
 
 --
--- Name: FUNCTION pg_stat_statements_reset(userid oid, dbid oid, queryid bigint); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.pg_stat_statements_reset(userid oid, dbid oid, queryid bigint) TO doadmin WITH GRANT OPTION;
-
-
---
 -- PostgreSQL database dump complete
 --
 
