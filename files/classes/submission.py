@@ -1,3 +1,4 @@
+from _typeshed import Self
 from flask import render_template, g
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
@@ -364,14 +365,6 @@ class Submission(Base):
 	def is_image(self):
 		if self.url: return self.url.lower().endswith('.webp') or self.url.lower().endswith('.jpg') or self.url.lower().endswith('.png') or self.url.lower().endswith('.gif') or self.url.lower().endswith('.jpeg') or self.url.lower().endswith('?maxwidth=9999')
 		else: return False
-
-	@property
-	@lazy
-	def is_video(self) -> bool:
-		if self.url:
-			return self.url.startswith("https://i.imgur.com") and self.url.lower().endswith('.mp4')
-		else:
-			return False
 
 	@property
 	@lazy
