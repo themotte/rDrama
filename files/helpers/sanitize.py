@@ -220,9 +220,11 @@ def sanitize(sanitized, noimages=False):
 			emoji = i.group(1).lower()
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 				emojis = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', emojis)
-				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-				else: session["favorite_emojis"][emoji] = 1
-
+				
+				# if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
+				# else: session["favorite_emojis"][emoji] = 1
+		print(sanitized)
+		print(emojis)
 		sanitized = sanitized.replace(i.group(1), emojis)
 
 	# for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
