@@ -872,7 +872,8 @@ CREATE TABLE public.users (
     club_banned boolean DEFAULT false,
     nitter boolean,
     truecoins integer,
-    club_allowed boolean DEFAULT false
+    club_allowed boolean DEFAULT false,
+    frontsize integer
 );
 
 
