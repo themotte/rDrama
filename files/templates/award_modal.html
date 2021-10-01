@@ -1,13 +1,14 @@
 <script src="/assets/js/award_modal4.js"></script>
 
 <script>
-	function vote(type, upvote, downvote, scoretext) {
-		upvote = document.getElementById(upvote);
-		downvote = document.getElementById(downvote);
-		scoretext = document.getElementById(scoretext);
+	function vote(type, id, dir) {
+		var upvote = document.getElementsByClassName(type + '-' + id + '-up');
+		var downvote = document.getElementsByClassName(type + '-' + id + '-down');
+		var scoretext = document.getElementsByClassName(type + '-score-' + id);
+
 		var score = Number(scoretext.textContent);
 
-		if (type == "1") {
+		if (dir == "1") {
 			if (upvote.classList.contains('active')) {
 				upvote.classList.remove('active')
 				scoretext.textContent = score - 1
@@ -69,7 +70,7 @@
 		}
 
 		var xhr = new XMLHttpRequest();
-		xhr.open("POST", "/vote/" + type + "/" + id + "/" + votedirection, true);
+		xhr.open("POST", "/vote/" + type.replace('-mobile','') + "/" + id + "/" + votedirection, true);
 		var form = new FormData()
 		form.append("formkey", formkey());
 		xhr.withCredentials=true;
