@@ -1,4 +1,3 @@
-from _typeshed import Self
 from flask import render_template, g
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
