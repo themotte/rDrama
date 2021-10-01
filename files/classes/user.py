@@ -122,6 +122,7 @@ class User(Base):
 	newtabexternal = Column(Boolean, default=True)
 	oldreddit = Column(Boolean, default=True)
 	nitter = Column(Boolean)
+	frontsize = Column(Integer, default=25)
 	controversial = Column(Boolean, default=False)
 	submissions = relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", viewonly=True)
 	bio = Column(String(1500))
