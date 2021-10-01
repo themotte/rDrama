@@ -80,7 +80,7 @@
 <meta property="og:author" name="author" content="{{'@'+comment_info.author.username}}" />
 <meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
-{% if p.url.lower().endswith('.mp4') %}
+{% if p.url and p.url.lower().endswith('.mp4') %}
 <meta property="og:video" content="{{ p.realurl(v) }}" />
 {% endif %}
 <meta property="og:url" content="{{comment_info.permalink | full_link}}" />
@@ -109,7 +109,7 @@
 <meta property="og:author" name="author" content="{{'@'+p.author.username}}" />
 <meta property="og:title" content="{{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
-{% if p.url.lower().endswith('.mp4') %}
+{% if p.url and p.url.lower().endswith('.mp4') %}
 <meta property="og:video" content="{{ p.realurl(v) }}" />
 {% endif %}
 <meta property="og:url" content="{{p.permalink | full_link}}" />
@@ -316,7 +316,7 @@
 								<iframe loading="lazy" src="{{streamurl}}" width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 								<pre></pre>
 
-							{% elif not p.embed_url and not p.is_image and not p.url.lower().endswith('.mp4') %}
+							{% elif not p.embed_url and not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
 								<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
 									<div class="d-flex d-md-none justify-content-between align-items-center border rounded p-2{% if p.realbody(v) %} mb-3{% endif %}">
 										<span>{{p.domain|truncate(30, True)}}</span>
@@ -335,7 +335,7 @@
 									</div>
 								</div>
 								<pre></pre>
-							{% elif p.url.lower().endswith('.mp4') %}
+							{% elif p.url and p.url.lower().endswith('.mp4') %}
 								<div class="row no-gutters">
 									<div class="col">
 										<video controls preload="metadata" style="max-width: 100%">
@@ -521,7 +521,7 @@
 
 		</div>
 
-		{% if not p.is_image and not p.url.lower().endswith('.mp4') %}
+		{% if not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
 			<div class="row no-gutters d-md-none">
 				<div class="col">
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}"></a>
