@@ -1946,8 +1946,6 @@ I may be home schooled, but I'm smart enough to see the evidence for the Jewish 
 {[para]}
 I ordered a shit dildo using Google+. When it first came out, you had to sign up with G+ in order to get the discount. It was supposed to smell and feel like a shit. Was pretty underhelming when it arrived, because it only looked like a shit. It didn't even feel like a shit when it went in my boipussy. Needless to say, I don't use it anymore. The one upside was that the shit dildo was password protected, so no one else could use it.
 {[para]}
-Error in fetchQuote() line 4 character 0: 400 AUTHENTICATION_ERROR - could not connect to server
-{[para]}
 Did you know that the bathtub was first marketed in north america as a horse trough and hog scalder?
 {[para]}
 ![](https://i.imgur.com/Pr813V9.gif)
@@ -1986,49 +1984,11 @@ Are you writing fiction now?
 {[para]}
 everyone forgets the reduce in reduce, reuse, recycle
 {[para]}
-<pre><code>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-
-const char *quotes[] = 
-{
-"But her emails",
-"Cuck",
-"Fuck off we're full",
-"NPC lol",
-"Lock her up",
-"libtards smh",
-"mayocide isn't funny guys"
-};
-
-void quote_if_bBlasted(int is_blasted)
-{
-	if(is_blasted == 1)
-	{
-		int random_quote = rand() % 7;
-		printf("%s", quotes[random_quote]);
-	}
-}
-
-int main(void)
-{
-    int bussy_blasted = 1;
-	srand(time(NULL));
-	quote_if_bBlasted(bussy_blasted);
-}
-</code></pre>
-{[para]}
 Because the community got taken over by them.
 
 The gaming community is as close you get to a white supremacists eithout going to a white supremacist rally And kids play games. The future is fucked in ways I don't think people realize, if you think these days are bad, oh boy wait untill the 12 year olds who have grown up around people saying the N word constantly become adults. Yeah...
 
 Basically gaming has legitamatley been a fucking horrible plauge on the world and has been a massive cause of the recent rise of racism.
-{[para]}
-I don't even hate women, and I'm sure as hell not an incel. You seem to have just fabricated that bit. I've literally said like 20 times on here the "I hate women" bit is ironic.
-
-~ @pizzashill
 {[para]}
 This is a story of how i learned about the meaning of life... by shitting violently on my bathroom.
 
