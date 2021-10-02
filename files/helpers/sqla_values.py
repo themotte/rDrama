@@ -5,10 +5,10 @@ from sqlalchemy.sql.expression import FromClause
 class values(FromClause):
 	named_with_column = True
 
-	def __init__(self, columns, *args, **kw):
+	def __init__(self, columns, *args, **kwargs):
 		self._column_args = columns
 		self.list = args
-		self.alias_name = self.name = kw.pop('alias_name', None)
+		self.alias_name = self.name = kwargs.pop('alias_name', None)
 
 	def _populate_column_collection(self):
 		for c in self._column_args:
@@ -16,7 +16,7 @@ class values(FromClause):
 
 
 @compiles(values)
-def compile_values(element, compiler, asfrom=False, **kw):
+def compile_values(element, compiler, asfrom=False):
 	columns = element.columns
 	v = "VALUES %s" % ", ".join(
 		"(%s)" % ", ".join(

@@ -69,7 +69,7 @@ def get_account(id, v=None):
 	return user
 
 
-def get_post(i, v=None, graceful=False, **kwargs):
+def get_post(i, v=None, graceful=False):
 
 	if v:
 		vt = g.db.query(Vote).options(lazyload('*')).filter_by(
@@ -156,7 +156,7 @@ def get_posts(pids, v=None):
 
 	return sorted(output, key=lambda x: pids.index(x.id))
 
-def get_comment(i, v=None, graceful=False, **kwargs):
+def get_comment(i, v=None, graceful=False):
 
 	if v:
 

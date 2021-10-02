@@ -216,13 +216,13 @@ def api(v):
 	return render_template("api.html", v=v)
 
 @app.get("/contact")
-@auth_desired
+@auth_required
 def contact(v):
 
 	return render_template("contact.html", v=v)
 
 @app.post("/contact")
-@auth_desired
+@auth_required
 def submit_contact(v):
 	message = f'This message has been sent automatically to all admins via https://{site}/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
 	send_admin(v.id, message)

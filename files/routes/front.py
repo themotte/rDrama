@@ -151,7 +151,7 @@ def front_all(v):
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', **kwargs):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words=''):
 
 	posts = g.db.query(Submission.id).options(lazyload('*'))
 
@@ -255,7 +255,7 @@ def changelog(v):
 
 
 @cache.memoize(timeout=86400)
-def changeloglist(v=None, sort="new", page=1 ,t="all", **kwargs):
+def changeloglist(v=None, sort="new", page=1 ,t="all"):
 
 	posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
@@ -319,7 +319,7 @@ def random_post(v):
 	return redirect(f"/post/{post.id}")
 
 @cache.memoize(timeout=86400)
-def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", **kwargs):
+def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
 	posts = g.db.query(Submission).options(lazyload('*'))
 	cc_idlist = [x[0] for x in g.db.query(Submission.id).options(lazyload('*')).filter(Submission.club == True).all()]

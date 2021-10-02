@@ -47,15 +47,6 @@
 	{% include "expanded_image_modal.html" %}
 {% endif %}
 
-{% if v and v.id==p.author_id %}
-	{% include "delete_post_modal.html" %}
-{% endif %}
-
-{% if v %}
-	{% include "report_post_modal.html" %}
-{% endif %}
-
-
 {% if p.award_count("shit") %}
 	<script src="/assets/js/bug-min.js"></script>
 	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
@@ -724,5 +715,14 @@
 		window.localStorage.setItem("comment-counts", JSON.stringify(comments))
 	})()
 </script>
+
+
+{% if v and v.id==p.author_id %}
+	{% include "delete_post_modal.html" %}
+{% endif %}
+
+{% if v %}
+	{% include "report_post_modal.html" %}
+{% endif %}
 
 {% endblock %}
