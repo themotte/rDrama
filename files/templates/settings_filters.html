@@ -24,7 +24,7 @@
 						<div class="input-group mb2">
 							<select id='frontsize' class="form-control" form="profile-settings" name="frontsize" onchange="post_toast('/settings/profile?frontsize='+document.getElementById('frontsize').value)">
 							{% for entry in [25, 50, 100] %}
-								<option value="{{entry}}"{{' selected' if v.frontsize==entry else ''}}>{{entry}}</option>
+								<option value="{{entry}}"{{' selected' if v.frontsize==entry}}>{{entry}}</option>
 							{% endfor %}
 						</select>
 						</div>
@@ -49,7 +49,7 @@
 							<div class="input-group mb2">
 								<select id='defaultsortingcomments' class="form-control" form="profile-settings" name="defaultsortingcomments" onchange="post_toast('/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
 								{% for entry in ["new", "old", "top", "bottom", "controversial"] %}
-									<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry else ''}}>{{entry}}</option>
+									<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry}}>{{entry}}</option>
 								{% endfor %}
 							</select>
 							</div>
@@ -68,7 +68,7 @@
 							<div class="input-group mb2">
 								<select id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="post_toast('/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
 								{% for entry in ["hot", "new", "old", "top", "bottom", "controversial", "comments"] %}
-								<option value="{{entry}}"{{' selected' if v.defaultsorting==entry else ''}}>{{entry}}</option>
+								<option value="{{entry}}"{{' selected' if v.defaultsorting==entry}}>{{entry}}</option>
 								{% endfor %}
 							</select>
 							</div>
@@ -87,7 +87,7 @@
 							<div class="input-group mb2">
 								<select id='defaulttime' class="form-control" form="profile-settings" name="defaulttime" onchange="post_toast('/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
 								{% for entry in ["hour", "day", "week", "month", "year", "all"] %}
-									<option value="{{entry}}"{{' selected' if v.defaulttime==entry else ''}}>{{entry}}</option>
+									<option value="{{entry}}"{{' selected' if v.defaulttime==entry}}>{{entry}}</option>
 								{% endfor %}
 							</select>
 							</div>
