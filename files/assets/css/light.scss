@@ -2988,7 +2988,7 @@ body, #settings, #notifications, #submit{
 
 .voting {
 	font-weight: $font-weight-normal;
-	font-size: $font-size-base;
+	font-size: 1.2rem;
 }
 
 #frontpage .voting, #search .voting, #userpage .voting {
@@ -3037,7 +3037,7 @@ body, #settings, #notifications, #submit{
 }
 
 .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
-	font-size: $font-size-lg;
+	font-size: 1.5rem;
 	color: $gray-400;
 	opacity: 1;
 }
@@ -3158,7 +3158,7 @@ body, #settings, #notifications, #submit{
 
 .comment-actions {
 	font-weight: $font-weight-normal;
-	font-size: $font-size-base;
+	font-size: 1.2rem;
 }
 
 .comment-write .comment-format .format {
