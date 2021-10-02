@@ -308,7 +308,8 @@ def award_comment(cid, v):
 	g.db.add(c.author)
 
 	g.db.commit()
-	return redirect(request.referrer)
+	if request.referrer and len(request.referrer) > 1: return redirect(request.referrer)
+	else: return redirect("/")
 
 @app.get("/admin/user_award")
 @auth_required
