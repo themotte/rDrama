@@ -26880,7 +26880,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   .voting {
     font-weight: 400;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   #frontpage .voting, #search .voting, #userpage .voting {
@@ -26924,7 +26924,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     color: #433434;
     opacity: 1;
   }
@@ -27040,7 +27040,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
 
   .comment-actions {
     font-weight: 400;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   .comment-write .comment-format .format {
