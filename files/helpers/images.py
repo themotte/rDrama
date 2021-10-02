@@ -33,6 +33,6 @@ def upload_ibb(file=None, resize=False):
 
 
 	with open("image.webp", 'rb') as f:
-		req = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f})
+		req = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f}).text
 
-	return req.text
+	if req.startswith('https://'): return req
