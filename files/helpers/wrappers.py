@@ -47,22 +47,22 @@ def check_ban_evade(v):
 		return
 	
 	if random.randint(0,30) < v.ban_evade:
-		v.ban(reason="ban evasion")
-		send_notification(NOTIFICATIONS_ACCOUNT, v, "Your account has been permanently suspended for the following reason:\n\n> ban evasion")
+		v.ban(reason="permaban evasion")
+		send_notification(NOTIFICATIONS_ACCOUNT, v, "Your account has been permanently suspended for the following reason:\n\n> permaban evasion")
 
 		for post in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=v.id).all():
 			if post.is_banned:
 				continue
 
 			post.is_banned=True
-			post.ban_reason="ban evasion"
+			post.ban_reason="permaban evasion"
 			g.db.add(post)
 			
 			ma=ModAction(
 				kind="ban_post",
 				user_id=AUTOJANNY_ACCOUNT,
 				target_submission_id=post.id,
-				note="ban evasion"
+				note="permaban evasion"
 				)
 			g.db.add(ma)
 
@@ -71,7 +71,7 @@ def check_ban_evade(v):
 				continue
 
 			comment.is_banned=True
-			comment.ban_reason="ban evasion"
+			comment.ban_reason="permaban evasion"
 			g.db.add(comment)
 
 			try:
