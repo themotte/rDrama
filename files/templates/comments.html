@@ -1,6 +1,39 @@
+<style>
+	html {
+		scroll-padding-top: 75px;
+	}
+	.comment {
+		overflow: hidden;
+	}
+	.comment .comment-body {
+		padding: 3px 0;
+	}
+	.comment-anchor {
+		margin-top: -75px;
+		padding: 1px;
+	}
+	.comment-anchor::before {
+		content: '';
+		display: block;
+		padding-top: 75px;
+	}
+	.comment-anchor:target {
+		animation: highlight 2s!important;
+	}
+	@keyframes highlight {
+		0% {
+			background: rgba(255,255,255,0.6);
+		}
+		100% {
+			background: none;
+		}
+	}
+</style>
+
+
 {% if v %}
 	{% include "award_modal.html" %}
-	<script src="/assets/js/comments_v.js?v=1"></script>
+	<script src="/assets/js/comments_v.js?v=2"></script>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -88,7 +121,7 @@
 
 
 	{% if render_replies %} 
-		{% if level<10 %}
+		{% if level<7 %}
 			<div id="replies-of-{{c.id}}" class="">
 				{% set standalone=False %}
 				{% for reply in replies %}
@@ -148,7 +181,8 @@
 </div>
 {% endif %}
 
-<div id="comment-{{c.id}}" class="{% if c.unread %}context{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="border-left: 2px solid #{{c.author.namecolor}}; {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
+<div id="comment-{{c.id}}" class="anchor {% if c.unread %}context{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="border-left: 2px solid #{{c.author.namecolor}}; {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
+
 	<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 	<div class="comment-body">
 
@@ -183,6 +217,9 @@
 
 				<a {% if v %}href="{{c.author.url}}"{% else %}href="/logged_out{{c.author.url}}"{% endif %} style="color:#{{c.author.namecolor}};  font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and 'rdrama' in request.host %}class="mod"{% endif %}>{{c.author.username}}</span></a>
 				{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{% if c.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{c.author.quadrant}}.webp">{% endif %}{{c.author.customtitle | safe}}</bdi>{% endif %}
+
+				{% if c.parent_comment_id and not standalone and level<=7 %}<a href="#comment-{{ c.parent_comment_id }}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{ c.parent_comment.author.username }}</a>{% endif %}
+
 				
 				<span id="timestamp-{{c.id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" class="time-stamp">&nbsp;{{c.age_string}}</span>
 				{% if c.edited_utc %}
@@ -419,7 +456,7 @@
 
 
 	{% if render_replies %} 
-		{% if level<10 %}
+		{% if level<7 %}
 			<div id="replies-of-{{c.id}}">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
