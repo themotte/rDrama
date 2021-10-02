@@ -92,7 +92,7 @@
 <meta property="og:type" content="article" />
 
 {% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc > 0 %}
-<title>{{'@'+comment_info.author.username}} comments on "{{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}"</title>
+<title>{{'@'+comment_info.author.username}} comments on "{{p.title}} - {{'SITE_NAME' | app_config}}"</title>
 
 
 <meta property="og:article:author" content="{{'@'+comment_info.author.username}}" />
@@ -121,7 +121,7 @@
 {% endif %}
 
 {% else %}
-<title>{{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}</title>
+<title>{{p.title}} - {{'SITE_NAME' | app_config}}</title>
 
 
 <meta property="og:article:author" content="{{'@'+p.author.username}}" />
