@@ -133,7 +133,7 @@
 					<span id="profile-coins-amount">{{u.coins}}</span>
 					&nbsp;<img data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{'COINS_NAME' | app_config}}" height="20" src="https://rdrama.net/assets/images/emojis/marseybux.webp">&nbsp;&nbsp;
 
-					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1}}</a>&nbsp;&nbsp; {% endif %}
+					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
 				{% if "pcm" in request.host %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
@@ -389,7 +389,7 @@
 					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span>
 
 					&nbsp;<img data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{'COINS_NAME' | app_config}}" height="15" src="https://rdrama.net/assets/images/emojis/marseybux.webp">&nbsp;&nbsp;
-					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1}}</a>&nbsp;&nbsp; {% endif %}
+					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					{% if "pcm" in request.host %}
 						<br>Based count: {{u.basedcount}}
 					{% endif %}
