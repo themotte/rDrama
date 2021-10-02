@@ -37,6 +37,7 @@
 
 {% if 'marsey.tech' in request.host %}
 	{% if v %}
+		<script src="/assets/js/comments_v.js?v=1"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -45,46 +46,6 @@
 		{% endif %}
 	{% endif %}
 	{% include "expanded_image_modal.html" %}
-{% endif %}
-
-{% if 'marsey.tech' in request.host and v %}
-	<script>
-		post_comment=function(fullname, postId){
-
-			var form = new FormData();
-
-			form.append('formkey', formkey());
-			form.append('parent_fullname', fullname);
-			form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
-			form.append('body', document.getElementById('reply-form-body-'+fullname).value);
-			form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
-
-			var xhr = new XMLHttpRequest();
-			xhr.open("post", "/comment");
-			xhr.withCredentials=true;
-			xhr.onload=function(){
-				if (xhr.status==200) {
-					commentForm=document.getElementById('comment-form-space-'+fullname);
-					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-					myToast.hide();
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-					myToast.show();
-				}
-				else {
-					var commentError = document.getElementById("comment-error-text");
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-					myToast.hide();
-					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-					myToast.show();
-					commentError.textContent = JSON.parse(xhr.response)["error"];
-				}
-			}
-			xhr.send(form)
-
-			document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
-		}
-	</script>
 {% endif %}
 
 {% if p.award_count("shit") %}
