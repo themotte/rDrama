@@ -16,10 +16,10 @@
 </script>
 
 {% if v %}
-	<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=1">
-	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=1">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+	<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=2">
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=2">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 {% else %}
-	<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=1">
+	<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=2">
 {% endif %}
 
 <div class="row justify-content-around">
@@ -52,7 +52,9 @@
 							<span>{{ma.string | safe}}</span>
 						</div>
 
-						<div class="text-gray-500">{{ma.age_string}} <a href="{{ma.permalink}}"><i class="far fa-link ml-1 text-muted"></i></a> <a href="javascript:void(0)" class="copy-link" role="button"data-clipboard-text="{{ma.permalink | full_link}}"><i class="far fa-copy ml-1 text-muted"></i></a></div>
+						<div class="text-gray-500">{{ma.age_string}} <a href="{{ma.permalink}}"><i class="far fa-link ml-1 text-muted"></i></a>
+							<a href="javascript:void(0)" class="copy-link" role="button"data-clipboard-text="{{ma.permalink | full_link}}"><i class="far fa-copy ml-1 text-muted"></i></a>
+						</div>
 
 					</div>
 				</div>
