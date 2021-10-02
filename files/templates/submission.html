@@ -47,6 +47,46 @@
 	{% include "expanded_image_modal.html" %}
 {% endif %}
 
+{% if 'marsey.tech' in request.host and v %}
+	<script>
+		post_comment=function(fullname, postId){
+
+			var form = new FormData();
+
+			form.append('formkey', formkey());
+			form.append('parent_fullname', fullname);
+			form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
+			form.append('body', document.getElementById('reply-form-body-'+fullname).value);
+			form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/comment");
+			xhr.withCredentials=true;
+			xhr.onload=function(){
+				if (xhr.status==200) {
+					commentForm=document.getElementById('comment-form-space-'+fullname);
+					commentForm.innerHTML=JSON.parse(xhr.response)["html"];
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+					myToast.hide();
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+					myToast.show();
+				}
+				else {
+					var commentError = document.getElementById("comment-error-text");
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+					myToast.hide();
+					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+					myToast.show();
+					commentError.textContent = JSON.parse(xhr.response)["error"];
+				}
+			}
+			xhr.send(form)
+
+			document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
+		}
+	</script>
+{% endif %}
+
 {% if p.award_count("shit") %}
 	<script src="/assets/js/bug-min.js"></script>
 	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
@@ -83,7 +123,7 @@
 <meta property="og:type" content="article" />
 
 {% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc > 0 %}
-<title>{{'@'+comment_info.author.username}} comments on "{{p.title}} - {{'SITE_NAME' | app_config}}"</title>
+<title>{{'@'+comment_info.author.username}} comments on "{{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}"</title>
 
 
 <meta property="og:article:author" content="{{'@'+comment_info.author.username}}" />
@@ -112,7 +152,7 @@
 {% endif %}
 
 {% else %}
-<title>{{p.title}} - {{'SITE_NAME' | app_config}}</title>
+<title>{{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}</title>
 
 
 <meta property="og:article:author" content="{{'@'+p.author.username}}" />
@@ -556,7 +596,7 @@
                     </a>
                 </li>
 
-				<a class="list-inline-item copy-link" style="margin-top:5px" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}"><i class="fas fa-link"></i>Copy link</a>
+				<a class="list-inline-item copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rdrama' in request.host %}https://taytay.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}"><i class="fas fa-link"></i>Copy link</a>
 				{% if v %}
 				<li class="list-inline-item">
 					<a href="#" data-bs-toggle="modal" data-bs-target="#actionsModal">
@@ -715,7 +755,6 @@
 		window.localStorage.setItem("comment-counts", JSON.stringify(comments))
 	})()
 </script>
-
 
 {% if v and v.id==p.author_id %}
 	{% include "delete_post_modal.html" %}
