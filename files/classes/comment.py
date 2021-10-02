@@ -307,6 +307,34 @@ class Comment(Base):
 
 		return body
 
+	def plainbody(self, v):
+		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
+
+		body = self.body
+
+		if not body: return ""
+
+		if not v or v.slurreplacer: 
+			for s, r in SLURS.items(): body = body.replace(s, r) 
+
+		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+
+		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+
+		if v and v.controversial:
+			for i in re.finditer('(/comments/.*?)"', body):
+				url = i.group(1)
+				p = urlparse(url).query
+				p = parse_qs(p)
+
+				if 'sort' not in p:
+					p['sort'] = ['controversial']
+
+				url_noquery = url.split('?')[0]
+				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
+
+		return body
+
 	@lazy
 	def collapse_for_user(self, v):
 

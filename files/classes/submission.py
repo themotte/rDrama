@@ -348,10 +348,32 @@ class Submission(Base):
 		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 		return body
 
+	def plainbody(self, v):
+		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
+		body = self.body
+
+		if not v or v.slurreplacer: 
+			for s,r in SLURS.items(): 
+				body = body.replace(s, r) 
+
+		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+		return body
+
 	@lazy
 	def realtitle(self, v):
 		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6): return 'COUNTRY CLUB MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
+		else: title = self.title
+
+		if not v or v.slurreplacer:
+			for s,r in SLURS.items(): title = title.replace(s, r) 
+
+		return title
+
+	@lazy
+	def plaintitle(self, v):
+		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6): return 'COUNTRY CLUB MEMBERS ONLY'
 		else: title = self.title
 
 		if not v or v.slurreplacer:
