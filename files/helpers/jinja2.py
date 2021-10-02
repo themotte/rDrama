@@ -18,7 +18,7 @@ def post_embed(id, v):
 	try: id = int(id)
 	except: return None
 	
-	p = get_post(id, graceful=True)
+	p = get_post(id, v, graceful=True)
 	
 	return render_template("submission_listing.html", listing=[p], v=v)
 
