@@ -1,15 +1,14 @@
 {% extends "default.html" %}
 
 
-{% set title=p.realtitle(v) %}
 {% set ups=p.upvotes %}
 {% set downs=p.downvotes %}
 {% set score=ups-downs %}
 
 {% if v %}
-{% set voted=p.voted if p.voted else 0 %}
+	{% set voted=p.voted if p.voted else 0 %}
 {% else %}
-{% set voted=-2 %}
+	{% set voted=-2 %}
 {% endif %}
 
 {% block title %}
@@ -84,15 +83,15 @@
 <meta property="og:type" content="article" />
 
 {% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc > 0 %}
-<title>{{'@'+comment_info.author.username}} comments on "{{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}"</title>
+<title>{{'@'+comment_info.author.username}} comments on "{{p.title}} - {{'SITE_NAME' | app_config}}"</title>
 
 
 <meta property="og:article:author" content="{{'@'+comment_info.author.username}}" />
 <meta property="article:published_time" content="{{comment_info.created_datetime}}" />
 {% if comment_info.edited_utc %}<meta property="article:modified_time" content="{{comment_info.edited_string}}" />{% endif %}
-<meta property="og:description" name="description" content="{{comment_info.realbody(v)}}" />
+<meta property="og:description" name="description" content="{{comment_info.body}}" />
 <meta property="og:author" name="author" content="{{'@'+comment_info.author.username}}" />
-<meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}" />
+<meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
 {% if p.url and p.url.lower().endswith('.mp4') %}
 	<meta property="og:video" content="{{ p.realurl(v) }}" />
@@ -102,9 +101,9 @@
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="{{request.host_url}}">
-<meta name="twitter:title" content="{{'@'+comment_info.author.username}} comments on {{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}" />
+<meta name="twitter:title" content="{{'@'+comment_info.author.username}} comments on {{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta name="twitter:creator" content="{{'@'+comment_info.author.username}}">
-<meta name="twitter:description" content="{{comment_info.realbody(v)}}" />
+<meta name="twitter:description" content="{{comment_info.body}}" />
 <meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
 
@@ -113,15 +112,15 @@
 {% endif %}
 
 {% else %}
-<title>{{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}</title>
+<title>{{p.title}} - {{'SITE_NAME' | app_config}}</title>
 
 
 <meta property="og:article:author" content="{{'@'+p.author.username}}" />
 <meta property="article:published_time" content="{{p.created_datetime}}" />
 {% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}" />{% endif %}
-<meta property="og:description" name="description" content="{{p.realbody(V)}}" />
+<meta property="og:description" name="description" content="{{p.body}}" />
 <meta property="og:author" name="author" content="{{'@'+p.author.username}}" />
-<meta property="og:title" content="{{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}" />
+<meta property="og:title" content="{{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
 {% if p.url and p.url.lower().endswith('.mp4') %}
 <meta property="og:video" content="{{ p.realurl(v) }}" />
@@ -131,9 +130,9 @@
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="{{request.host_url}}">
-<meta name="twitter:title" content="{{p.realtitle(v)}} - {{'SITE_NAME' | app_config}}" />
+<meta name="twitter:title" content="{{p.title}} - {{'SITE_NAME' | app_config}}" />
 <meta name="twitter:creator" content="{{'@'+p.author.username}}">
-<meta name="twitter:description" content="{{p.realbody(v)}}" />
+<meta name="twitter:description" content="{{p.body}}" />
 <meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
 
@@ -307,12 +306,12 @@
 					{% if p.realurl(v) %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3"><a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 							{% if p.club %}<span class="patron font-weight-bolder" style="background-color:red; font-size:12px;">COUNTRY CLUB</span>{% endif %}
-							{{title | safe}}
+							{{p.realtitle(v) | safe}}
 						</a></h1>					
 					{% else %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3">
 							{% if p.club %}<span class="patron font-weight-bolder" style="background-color:red; font-size:12px;">COUNTRY CLUB</span>{% endif %}
-							{{title | safe}}
+							{{p.realtitle(v) | safe}}
 						</h1>
 					{% endif %}
 
