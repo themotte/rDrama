@@ -262,8 +262,7 @@ def get_domain(s):
 
 	domain_list = tuple(list(domain_list))
 
-	doms = [x for x in g.db.query(BannedDomain).options(lazyload('*')).filter(
-		BannedDomain.domain.in_(domain_list)).all()]
+	doms = [x for x in g.db.query(BannedDomain).options(lazyload('*')).filter(BannedDomain.domain.in_(domain_list)).all()]
 
 	if not doms:
 		return None
