@@ -171,8 +171,8 @@ def settings_profile_post(v):
 
 	frontsize = request.values.get("frontsize")
 	if frontsize:
-		if frontsize in [25, 50, 100]:
-			v.frontsize = frontsize
+		if frontsize in ["25", "50", "100"]:
+			v.frontsize = int(frontsize)
 			updated = True
 			cache.delete_memoized(frontlist)
 		else: abort(400)
