@@ -116,7 +116,7 @@ def front_all(v):
 
 	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
-	if v and request.path.startswith('/logged_out'): v = None
+	if v and "logged_out" in request.full_path: v = None
 
 	try: page = int(request.values.get("page") or 1)
 	except: abort(400)
@@ -208,13 +208,11 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc())
 
-	size = 25
+	posts = posts.offset(25 * (page - 1)).limit(26).all()
 
-	posts = posts.offset(size * (page - 1)).limit(size+1).all()
+	next_exists = (len(posts) > 25)
 
-	next_exists = (len(posts) > size)
-
-	posts = posts[:size]
+	posts = posts[:25]
 
 	if page == 1: posts = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.stickied != None).all() + posts
 
