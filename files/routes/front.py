@@ -208,7 +208,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc())
 
-	if v: size = v.frontsize
+	if v:
+		if v.agendaposter: size = 5
+		else: size = v.frontsize
 	else: size = 25
 
 	posts = posts.offset(size * (page - 1)).limit(size+1).all()
