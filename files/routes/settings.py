@@ -381,7 +381,6 @@ def settings_security_post(v):
 							escape("Passwords do not match."))
 
 		if not re.match(valid_password_regex, request.values.get("new_password")):
-			#print(f"signup fail - {username } - invalid password")
 			return redirect("/settings/security?error=" + 
 							escape("Password must be between 8 and 100 characters."))
 
@@ -791,10 +790,7 @@ def settings_song_change(v):
 		
 	
 	req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={id}&key={YOUTUBE_KEY}&part=contentDetails").json()
-	try: duration = req['items'][0]['contentDetails']['duration']
-	except:
-		print(req)
-		abort(400)
+	duration = req['items'][0]['contentDetails']['duration']
 	if "H" in duration:
 		return render_template("settings_profile.html",
 					v=v,

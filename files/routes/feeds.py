@@ -33,7 +33,6 @@ def feeds_user(sort='hot', t='all'):
 		doc.stag("link", href=request.url_root)
 
 		for post in posts:
-			#print("POST IMAGE "+ str( post.is_image ))
 			with tag("entry", ("xml:base", request.url)):
 				with tag("title", type="text"):
 					text(post.title)

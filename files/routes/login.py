@@ -271,26 +271,21 @@ def sign_up_post(v):
 		return redirect(f"/signup?{urlencode(args)}")
 
 	if now - int(form_timestamp) < 5:
-		#print(f"signup fail - {username } - too fast")
 		return new_signup("There was a problem. Please try again.")
 
 	if not hmac.compare_digest(correct_formkey, form_formkey):
-		#print(f"signup fail - {username } - mismatched formkeys")
 		return new_signup("There was a problem. Please try again.")
 
-	# check for matched passwords
 	if not request.values.get(
 			"password") == request.values.get("password_confirm"):
 		return new_signup("Passwords did not match. Please try again.")
 
-	# check username/pass conditions
 	if not re.fullmatch(valid_username_regex, username):
 		return new_signup("Invalid username")
 
 	if not re.fullmatch(valid_password_regex, request.values.get("password")):
 		return new_signup("Password must be between 8 and 100 characters.")
 
-	# Check for existing accounts
 	email = request.values.get("email")
 	email = email.strip()
 	if not email: email = None
@@ -301,11 +296,9 @@ def sign_up_post(v):
 
 	if existing_account or (email and g.db.query(
 			User).filter(User.email.ilike(email)).first()):
-		# #print(f"signup fail - {username } - email already exists")
 		return new_signup(
 			"An account with that username or email already exists.")
 
-	# check bot
 	if app.config.get("HCAPTCHA_SITEKEY"):
 		token = request.values.get("h-captcha-response")
 		if not token:
@@ -319,21 +312,16 @@ def sign_up_post(v):
 		x = requests.post(url, data=data)
 
 		if not x.json()["success"]:
-			#print(x.json())
 			return new_signup("Unable to verify captcha [2].")
 
-	# kill tokens
 	session.pop("signup_token")
 
-	# get referral
 	ref_id = int(request.values.get("referred_by", 0))
 
-	# upgrade user badge
 	if ref_id:
 		ref_user = g.db.query(User).options(
 			lazyload('*')).filter_by(id=ref_id).first()
 		if ref_user:
-			# check self-setting badges
 			badge_types = g.db.query(BadgeDef).options(lazyload('*')).filter(BadgeDef.qualification_expr.isnot(None)).all()
 			for badge in badge_types:
 				if eval(badge.qualification_expr, {}, {'v': ref_user}):

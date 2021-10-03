@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 import mistletoe
 import urllib.parse
 import gevent
-import traceback
+import requests
 
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
