@@ -254,7 +254,7 @@ def static_service(path):
 @app.get('/hostedimages/<path:path>')
 @limiter.exempt
 def images(path):
-	resp = make_response(send_from_directory('./images', path))
+	resp = make_response(send_from_directory('/hostedimages', path))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")
 	return resp
