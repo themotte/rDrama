@@ -27332,10 +27332,6 @@ img.emoji {
   background: None !important;
 }
 
-.navbar {
-  padding: 0.5rem 0.8rem 0.3rem 0.7rem;
-}
-
 textarea {
   resize: both !important;
 }
@@ -27385,6 +27381,15 @@ textarea {
   padding-bottom: 30px;
 }
 
+.navbar {
+  padding: 0.5rem 0.5rem 0.3rem 0.5rem;
+}
+
+@media (min-width: 767.98px) {
+  .navbar {
+    padding: 0.5rem 3rem 0.3rem 0.5rem;
+  }
+}
 #frontpage .post-title a:visited {
   color: #f0f0f0;
 }
