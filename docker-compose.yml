@@ -13,8 +13,6 @@ services:
       - DOMAIN=localhost
       - SITE_NAME=Drama
       - GIPHY_KEY=3435tdfsdudebussylmaoxxt43
-      - MAILGUN_KEY=3435tdfsdudebussylmaoxxt43
-      - MAILGUN_DOMAIN=rdrama.net
       - FORCE_HTTPS=0
       - DISCORD_SERVER_ID=3435tdfsdudebussylmaoxxt43
       - DISCORD_CLIENT_ID=3435tdfsdudebussylmaoxxt43
@@ -41,6 +39,8 @@ services:
       - CARD_VIEW=1
       - DISABLE_DOWNVOTES=0
       - DUES=0
+      - MAIL_USERNAME=blahblahblah@gmail.com
+      - MAIL_PASSWORD=3435tdfsdudebussylmaoxxt43
     links:
       - "redis"
       - "postgres"

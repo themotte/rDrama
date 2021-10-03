@@ -16,7 +16,7 @@ name = environ.get("SITE_NAME").strip()
 
 def send_mail(to_address, subject, html):
 
-	msg = Message(html=html, subject=subject, sender="rdrama@rdrama.net", recipients=[to_address])
+	msg = Message(html=html, subject=subject, sender=f"{name}@{site}", recipients=[to_address])
 	mail.send(msg)
 
 
