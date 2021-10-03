@@ -12,6 +12,7 @@ from .front import frontlist
 import os
 from .posts import filter_title
 from files.helpers.discord import add_role
+from shutil import copyfile
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
@@ -503,15 +504,17 @@ def settings_images_profile(v):
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
+	file = request.files["profile"]
+
 	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
-	request.files["profile"].save(name)
+	file.save(name)
 	highres = process_image(name)
 
 	if not highres: abort(400)
 
-	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
-	request.files["profile"].save(name)
-	imageurl = process_image(name, True)
+	name2 = name.replace('.webp', '_resized.webp')
+	copyfile(name, name2)
+	imageurl = process_image(name2, True)
 
 	if not imageurl: abort(400)
 
