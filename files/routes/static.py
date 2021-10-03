@@ -14,8 +14,8 @@ site_name = environ.get("SITE_NAME").strip()
 @app.route("/mailtest")
 def mailtest():
 	msg = Message(html="<h1>Hello<h1>",
-					sender="from@example.com",
-					recipients=["to@example.com"])
+					sender="rdrama@rdrama.net",
+					recipients=["randomname42029@gmail.com"])
 	mail.send(msg)
 
 @app.get('/rules')
