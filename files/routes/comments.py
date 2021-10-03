@@ -575,10 +575,7 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	else: return jsonify({"html": render_template("comments.html",
-													v=v,
-													comments=[c],
-													)})
+	else: return render_template("comments.html", v=v, comments=[c])
 
 
 
@@ -797,7 +794,7 @@ def edit_comment(cid, v):
 
 	g.db.commit()
 
-	return jsonify({"html": c.body_html})
+	return c.body_html
 
 
 @app.post("/delete/comment/<cid>")

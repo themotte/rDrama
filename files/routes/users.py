@@ -314,10 +314,7 @@ def messagereply(v):
 
 	g.db.commit()
 
-	return jsonify({"html": render_template("comments.html",
-														v=v,
-														comments=[new_comment],
-														)})
+	return render_template("comments.html", v=v, comments=[new_comment])
 
 @app.get("/2faqr/<secret>")
 @auth_required
