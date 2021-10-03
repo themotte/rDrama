@@ -20,8 +20,8 @@ from files.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage
 from .front import frontlist, changeloglist
 
-
 site = environ.get("DOMAIN").strip()
+CATBOX_KEY = environ.get("CATBOX_KEY").strip()
 
 with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
 
@@ -809,13 +809,9 @@ def submit_post(v):
 
 	g.db.refresh(new_post)
 
-	# check for uploaded image
 	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 
 		file = request.files['file']
-		#if not file.content_type.startswith('image/'):
-		#	if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
-		#	else: return render_template("submit.html", v=v, error=f"Image files only.", title=title, body=request.values.get("body", "")), 400
 
 		if not file.content_type.startswith(('image/', 'video/')):
 			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
@@ -840,10 +836,10 @@ def submit_post(v):
 			file.save(name)
 			new_post.url = process_image(name)
 			
-		# elif file.content_type.startswith('video/'):
-		# 	file.save("video.mp4")
-		# 	with open("video.mp4", 'rb') as f:
-		# 		new_post.url = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f}).text
+		elif file.content_type.startswith('video/'):
+			file.save("video.mp4")
+			with open("video.mp4", 'rb') as f:
+				new_post.url = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f}).text
 
 		g.db.add(new_post)
 	
