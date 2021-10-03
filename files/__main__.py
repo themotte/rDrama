@@ -61,6 +61,12 @@ app.config["RATELIMIT_HEADERS_ENABLED"]=True
 app.config["CACHE_TYPE"] = "filesystem"
 app.config["CACHE_DIR"] = "cache"
 app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL", "redis://127.0.0.1")
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'Aevann3@gmail.com'
+app.config['MAIL_PASSWORD'] = environ.get("MAIL_PASSWORD", "").strip()
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://127.0.0.1"),  decode_responses=True, ssl_cert_reqs=None)
 
