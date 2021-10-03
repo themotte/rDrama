@@ -527,7 +527,7 @@ def thumbnail_thread(pid):
 @is_not_banned
 @validate_formkey
 def submit_post(v):
-	if request.content_length > 16 * 1024 * 1024: abort(413)
+	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
 	title = request.values.get("title", "")
 	url = request.values.get("url", "")
