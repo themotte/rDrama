@@ -509,7 +509,7 @@ def thumbnail_thread(pid):
 		db.close()
 		return
 
-	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}'
+	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
 
 	with open(name, "wb") as file:
 		for chunk in image_req.iter_content(1024):
@@ -836,7 +836,7 @@ def submit_post(v):
 				), 403
 
 		if file.content_type.startswith('image/'):
-			name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}'
+			name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
 			file.save(name)
 			new_post.url = process_image(name)
 			

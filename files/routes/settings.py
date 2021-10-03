@@ -111,7 +111,7 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}'
+			name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
 			file.save(name)
 			url = process_image(name)
 
@@ -506,13 +506,13 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 
-	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}'
+	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
 	file.save(name)
 	highres = process_image(name)
 
 	if not highres: abort(400)
 
-	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}'
+	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
 	file.save(name)
 	imageurl = process_image(name, True)
 
@@ -537,7 +537,7 @@ def settings_images_banner(v):
 
 	file = request.files["banner"]
 
-	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}'
+	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
 	file.save(name)
 	imageurl = process_image(name)
 
