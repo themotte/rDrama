@@ -7,7 +7,8 @@ from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
-from flaskext.markdown import Markdown
+from flask_mail import Mail
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
@@ -63,10 +64,6 @@ app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL", "redis://127.0.0.
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://127.0.0.1"),  decode_responses=True, ssl_cert_reqs=None)
 
-cache = Cache(app)
-Markdown(app)
-Compress(app)
-
 limiter = Limiter(
 	app,
 	key_func=get_ipaddr,
@@ -81,6 +78,9 @@ engine = create_engine(app.config['DATABASE_URL'])
 
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
+cache = Cache(app)
+Compress(app)
+mail = Mail(app)
 
 @app.before_request
 def before_request():

@@ -20,7 +20,6 @@ services:
       - DISCORD_CLIENT_ID=3435tdfsdudebussylmaoxxt43
       - DISCORD_CLIENT_SECRET=3435tdfsdudebussylmaoxxt43
       - DISCORD_BOT_TOKEN=3435tdfsdudebussylmaoxxt43
-      - CATBOX_KEY=3435tdfsdudebussylmaoxxt43
      #- HCAPTCHA_SITEKEY=3435tdfsdudebussylmaoxxt43
       - HCAPTCHA_SECRET=3435tdfsdudebussylmaoxxt43
       - YOUTUBE_KEY=3435tdfsdudebussylmaoxxt43

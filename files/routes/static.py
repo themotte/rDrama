@@ -1,14 +1,22 @@
 from files.mail import *
-from files.__main__ import app, limiter
+from files.__main__ import app, limiter, mail
 from files.helpers.alerts import *
 from files.classes.award import AWARDS
 from sqlalchemy import func
 from os import path
 import calendar
 import matplotlib.pyplot as plt
+from flask_mail import Message
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
+
+@app.route("/mailtest")
+def mailtest():
+    msg = Message(html="<h1>Hello<h1>",
+                  sender="from@example.com",
+                  recipients=["to@example.com"])
+	mail.send(msg)
 
 @app.get('/rules')
 @auth_desired
