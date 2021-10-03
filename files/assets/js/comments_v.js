@@ -53,7 +53,7 @@ function post_toast3(url, button1, button2) {
             myToast.hide();
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
             myToast.show();
-            document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
+            document.getElementById('toast-post-error-text').innerText = "Error. Please try again later.";
             return false
         }
     };
@@ -167,11 +167,11 @@ post_reply=function(id){
             myToast.show();
         }
         else {
-            var commentError = document.getElementById("comment-error-text");
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
             myToast.hide();
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
             myToast.show();
+            document.getElementById("comment-error-text").textContent = "Error. Please try again later.";
         }
     }
     xhr.send(form)
@@ -181,8 +181,6 @@ post_reply=function(id){
 }
 
 comment_edit=function(id){
-
-    var commentError = document.getElementById("comment-error-text");
 
     var form = new FormData();
 
@@ -208,14 +206,14 @@ comment_edit=function(id){
             myToast.hide();
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
             myToast.show();
-            commentError.textContent = JSON.parse(xhr.response)["error"];
+            document.getElementById("comment-error-text").textContent = "Error. Please try again later.";
         }
     }
     xhr.send(form)
 
 }
 
-post_comment=function(fullname, postId){
+post_comment=function(fullname){
 
     var form = new FormData();
 
@@ -238,12 +236,11 @@ post_comment=function(fullname, postId){
             myToast.show();
         }
         else {
-            var commentError = document.getElementById("comment-error-text");
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
             myToast.hide();
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
             myToast.show();
-            commentError.textContent = JSON.parse(xhr.response)["error"];
+            document.getElementById("comment-error-text").textContent = "Error. Please try again later.";
         }
     }
     xhr.send(form)

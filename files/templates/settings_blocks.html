@@ -10,8 +10,6 @@
 
 		var exileForm = document.getElementById("exile-form");
 
-		var exileError = document.getElementById("toast-error-message");
-
 		var usernameField = document.getElementById("exile-username");
 
 		var isValidUsername = usernameField.checkValidity();
@@ -35,7 +33,7 @@
 					myToast.hide();
 					var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 					myToast.show();
-					exileError.textContent = JSON.parse(xhr.response)["error"];
+					document.getElementById("toast-error-message").textContent = "Error. Please try again later.";
 				}
 			}
 			xhr.send(f)

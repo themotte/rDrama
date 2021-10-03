@@ -124,7 +124,7 @@ function post_toast2(url, button1, button2) {
                 myToast.hide();
                 var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
                 myToast.show();
-                document.getElementById('toast-post-error-text').innerText = "Error. Try again later.";
+                document.getElementById('toast-post-error-text').innerText = "Error. Please try again later.";
                 return false
             }
         }
