@@ -64,7 +64,7 @@ app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL", "redis://127.0.0.
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'Aevann3@gmail.com'
+app.config['MAIL_USERNAME'] = environ.get("MAIL_USERNAME", "").strip()
 app.config['MAIL_PASSWORD'] = environ.get("MAIL_PASSWORD", "").strip()
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://127.0.0.1"),  decode_responses=True, ssl_cert_reqs=None)

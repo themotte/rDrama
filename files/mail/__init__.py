@@ -7,30 +7,17 @@ from urllib.parse import quote
 from files.helpers.security import *
 from files.helpers.wrappers import *
 from files.classes import *
-from files.__main__ import app
+from files.__main__ import app, mail
+from flask_mail import Message
 
 site = environ.get("DOMAIN").strip()
 name = environ.get("SITE_NAME").strip()
-mailgun_domain = environ.get("MAILGUN_DOMAIN", "").strip()
 
-def send_mail(to_address, subject, html, plaintext=None, files={},
-			  from_address=f"{name} <noreply@mail.{site}>"):
 
-	url = f"https://api.mailgun.net/v3/{mailgun_domain}/messages"
+def send_mail(to_address, subject, html):
 
-	data = {"from": from_address,
-			"to": [to_address],
-			"subject": subject,
-			"text": plaintext,
-			"html": html,
-			}
-
-	return requests.post(url,
-						 auth=(
-							 "api", environ.get("MAILGUN_KEY").strip()),
-						 data=data,
-						 files=[("attachment", (k, files[k])) for k in files]
-						 )
+	msg = Message(html=html, subject=subject, sender="rdrama@rdrama.net", recipients=[to_address])
+	mail.send(msg)
 
 
 def send_verification_email(user, email=None):

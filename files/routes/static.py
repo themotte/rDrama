@@ -6,18 +6,9 @@ from sqlalchemy import func
 from os import path
 import calendar
 import matplotlib.pyplot as plt
-from flask_mail import Message
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
-
-@app.route("/mailtest")
-def mailtest():
-	msg = Message(html="<h1>Hello<h1>",
-					sender="rdrama@rdrama.net",
-					recipients=["randomname42029@gmail.com"])
-	mail.send(msg)
-	return "sex"
 
 @app.get('/rules')
 @auth_desired
