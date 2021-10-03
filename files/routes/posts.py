@@ -840,10 +840,10 @@ def submit_post(v):
 			file.save(name)
 			new_post.url = process_image(name)
 			
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				new_post.url = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f}).text
+		# elif file.content_type.startswith('video/'):
+		# 	file.save("video.mp4")
+		# 	with open("video.mp4", 'rb') as f:
+		# 		new_post.url = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f}).text
 
 		g.db.add(new_post)
 	

@@ -2,6 +2,7 @@ from files.helpers.wrappers import *
 from files.helpers.security import *
 from files.helpers.discord import add_role
 from files.__main__ import app
+import requests
 
 SERVER_ID = environ.get("DISCORD_SERVER_ID",'').strip()
 CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').strip()
