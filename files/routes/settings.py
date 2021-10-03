@@ -539,7 +539,7 @@ def settings_images_banner(v):
 
 	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.gif'
 	file.save(name)
-	imageurl = DOMAIN + process_image(name)
+	imageurl = request.host_url[:-1] + process_image(name)
 
 	if imageurl:
 		v.bannerurl = imageurl
