@@ -17,6 +17,7 @@ def mailtest():
 					sender="rdrama@rdrama.net",
 					recipients=["randomname42029@gmail.com"])
 	mail.send(msg)
+	return "sex"
 
 @app.get('/rules')
 @auth_desired
