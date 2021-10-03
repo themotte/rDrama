@@ -25493,7 +25493,7 @@ blockquote p {
 }
 
 .comment-actions .list-inline .list-inline-item {
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .comment-actions .list-inline .list-inline-item .dropdown-item {
