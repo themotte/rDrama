@@ -263,7 +263,9 @@ def api_comment(v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		url = upload_ibb(file=file)
+		name = f'/hostedimages/{time.time()}{secrets.token_urlsafe(8)}'
+		file.save(name)
+		url = process_image(name)
 		
 		body = request.values.get("body") + f"\n![]({url})"
 		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
@@ -682,7 +684,9 @@ def edit_comment(cid, v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		url = upload_ibb(file=file)
+		name = f'/hostedimages/{time.time()}{secrets.token_urlsafe(8)}'
+		file.save(name)
+		url = process_image(name)
 
 		body += f"\n![]({url})"
 		body_md = CustomRenderer().render(mistletoe.Document(body))

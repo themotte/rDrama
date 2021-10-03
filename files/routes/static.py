@@ -229,19 +229,19 @@ def submit_contact(v):
 	g.db.commit()
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
 
-@app.route('/archives')
+@app.get('/archives')
 @limiter.exempt
 def archivesindex():
 	return redirect("/archives/index.html")
 
-@app.route('/archives/<path:path>')
+@app.get('/archives/<path:path>')
 @limiter.exempt
 def archives(path):
 	resp = make_response(send_from_directory('/archives', path))
 	if request.path.endswith('.css'): resp.headers.add("Content-Type", "text/css")
 	return resp
 
-@app.route('/assets/<path:path>')
+@app.get('/assets/<path:path>')
 @limiter.exempt
 def static_service(path):
 	resp = make_response(send_from_directory('./assets', path))
@@ -249,6 +249,14 @@ def static_service(path):
 		resp.headers.remove("Cache-Control")
 		resp.headers.add("Cache-Control", "public, max-age=2628000")
 
+	return resp
+
+@app.get('/hostedimages/<path:path>')
+@limiter.exempt
+def images(path):
+	resp = make_response(send_from_directory('./images', path))
+	resp.headers.remove("Cache-Control")
+	resp.headers.add("Cache-Control", "public, max-age=2628000")
 	return resp
 
 @app.get("/robots.txt")
@@ -308,7 +316,7 @@ def formatting(v):
 
 	return render_template("formatting.html", v=v)
 
-@app.route("/service-worker.js")
+@app.get("/service-worker.js")
 def serviceworker():
 	with open("files/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
 

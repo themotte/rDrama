@@ -5,6 +5,7 @@ __pycache__/
 *$py.class
 chart.png
 video.mp4
+hostedimages/
 
 # C extensions
 *.so

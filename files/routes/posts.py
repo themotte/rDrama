@@ -509,11 +509,13 @@ def thumbnail_thread(pid):
 		db.close()
 		return
 
-	with open("image.webp", "wb") as file:
+	name = f'/hostedimages/{time.time()}{secrets.token_urlsafe(8)}'
+
+	with open(name, "wb") as file:
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = upload_ibb(resize=True)
+	post.thumburl = process_image(name, True)
 	db.add(post)
 	db.commit()
 	db.close()
@@ -833,7 +835,11 @@ def submit_post(v):
 					body=request.values.get("body", "")
 				), 403
 
-		if file.content_type.startswith('image/'): new_post.url = upload_ibb(file=file)
+		if file.content_type.startswith('image/'):
+			name = f'/hostedimages/{time.time()}{secrets.token_urlsafe(8)}'
+			file.save(name)
+			new_post.url = process_image(name)
+			
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:

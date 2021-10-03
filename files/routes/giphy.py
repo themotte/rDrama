@@ -7,8 +7,8 @@ from files.__main__ import app
 GIPHY_KEY = environ.get('GIPHY_KEY').rstrip()
 
 
-@app.route("/giphy", methods=["GET"])
-@app.route("/giphy<path>", methods=["GET"])
+@app.get("/giphy")
+@app.get("/giphy<path>")
 def giphy(path=None):
 
 	searchTerm = request.values.get("searchTerm", "")

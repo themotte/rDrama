@@ -696,7 +696,7 @@ def remove_follow(username, v):
 	return {"message": "Follower removed!"}
 
 
-@app.route("/uid/<id>/pic/profile")
+@app.get("/uid/<id>/pic/profile")
 @limiter.exempt
 def user_profile_uid(id):
 	try: id = int(id)

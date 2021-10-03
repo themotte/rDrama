@@ -505,7 +505,7 @@ def post_reset(v):
 						   title="Password reset successful!",
 						   message="Login normally to access your account.")
 
-@app.route("/lost_2fa")
+@app.get("/lost_2fa")
 @auth_desired
 def lost_2fa(v):
 

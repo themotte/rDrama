@@ -1,16 +1,10 @@
-import requests
-from os import environ
 from PIL import Image as IImage, ImageSequence
 from files.classes.images import *
 from webptools import gifwebp
 
-CATBOX_KEY = environ.get("CATBOX_KEY", "").strip()
-
-def upload_ibb(file=None, resize=False):
+def process_image(filename=None, resize=False):
 	
-	if file: file.save("image.webp")
-
-	i = IImage.open("image.webp")
+	i = IImage.open(filename)
 
 	if resize:
 		size = 100, 100
@@ -26,13 +20,9 @@ def upload_ibb(file=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save("image.webp", save_all=True, append_images=list(frames), loop=0)
+		om.save(filename, save_all=True, append_images=list(frames), loop=0)
 	elif i.format.lower() != "webp":
-		if i.format.lower() == "gif": gifwebp(input_image="image.webp", output_image="image.webp", option="-q 80")
-		else: i.save("image.webp")
+		if i.format.lower() == "gif": gifwebp(input_image=filename, output_image=filename, option="-q 80")
+		else: i.save(filename)
 
-
-	with open("image.webp", 'rb') as f:
-		req = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f}).text
-
-	if req.startswith('https://'): return req
+	return filename

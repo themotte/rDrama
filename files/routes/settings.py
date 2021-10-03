@@ -111,14 +111,11 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			url = upload_ibb(file=file)
+			name = f'/hostedimages/{time.time()}{secrets.token_urlsafe(8)}'
+			file.save(name)
+			url = process_image(name)
 
 			bio += f"\n\n![]({url})"
-
-		# if bio == v.bio:
-		# 	return render_template("settings_profile.html",
-		# 						   v=v,
-		# 						   error="You didn't change anything")
 
 		bio_html = CustomRenderer().render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html)
@@ -509,11 +506,16 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 
-	file.save("image.webp")
-	highres = upload_ibb()
+	name = f'/hostedimages/{time.time()}{secrets.token_urlsafe(8)}'
+	file.save(name)
+	highres = process_image(name)
+
 	if not highres: abort(400)
 
-	imageurl = upload_ibb(resize=True)
+	name = f'/hostedimages/{time.time()}{secrets.token_urlsafe(8)}'
+	file.save(name)
+	imageurl = process_image(name, True)
+
 	if not imageurl: abort(400)
 
 	v.highres = highres
@@ -534,7 +536,10 @@ def settings_images_banner(v):
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
 	file = request.files["banner"]
-	imageurl = upload_ibb(file=file)
+
+	name = f'/hostedimages/{time.time()}{secrets.token_urlsafe(8)}'
+	file.save(name)
+	imageurl = process_image(name)
 
 	if imageurl:
 		v.bannerurl = imageurl
