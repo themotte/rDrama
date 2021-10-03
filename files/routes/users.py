@@ -278,6 +278,7 @@ def message2(v, username):
 
 
 @app.post("/reply")
+@limiter.limit("6/minute")
 @auth_required
 def messagereply(v):
 
@@ -286,15 +287,6 @@ def messagereply(v):
 	parent = get_comment(id, v=v)
 	user = parent.author
 	message = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', message)
-
-	# check existing
-	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
-															Comment.sentto == user.id,
-															Comment.body == message,
-															).first()
-	if existing:
-		if existing.parent_comment_id: return redirect(f'/notifications?messages=true#comment-{existing.parent_comment_id}')
-		else: return redirect(f'/notifications?messages=true#comment-{existing.id}')
 
 	text_html = Renderer().render(mistletoe.Document(message))
 	text_html = sanitize(text_html, True)
