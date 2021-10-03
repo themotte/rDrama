@@ -503,16 +503,14 @@ def settings_images_profile(v):
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
-	file = request.files["profile"]
-
 	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
-	file.save(name)
+	request.files["profile"].save(name)
 	highres = process_image(name)
 
 	if not highres: abort(400)
 
 	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
-	file.save(name)
+	request.files["profile"].save(name)
 	imageurl = process_image(name, True)
 
 	if not imageurl: abort(400)
