@@ -509,13 +509,13 @@ def thumbnail_thread(pid):
 		db.close()
 		return
 
-	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
+	name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.gif'
 
 	with open(name, "wb") as file:
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = process_image(name, True)
+	post.thumburl = "https://" + site + process_image(name, True)
 	db.add(post)
 	db.commit()
 	db.close()
@@ -832,9 +832,9 @@ def submit_post(v):
 				), 403
 
 		if file.content_type.startswith('image/'):
-			name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.webp'
+			name = f'/hostedimages/{int(time.time())}{secrets.token_urlsafe(8)}.gif'
 			file.save(name)
-			new_post.url = process_image(name)
+			new_post.url = request.host_url[:-1] + process_image(name)
 			
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
