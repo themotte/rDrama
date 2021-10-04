@@ -742,8 +742,9 @@ def agendaposter(user_id, v):
 	else: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been unmarked by an admin as an agendaposter.")
 
 	g.db.commit()
-	if user.agendaposter: return (redirect(user.url), user)
+	if user.agendaposter: return redirect(user.url)
 	return {"message": "Agendaposter theme disabled!"}
+
 
 @app.post("/shadowban/<user_id>")
 @admin_level_required(6)
@@ -846,8 +847,7 @@ def admin_title_change(user_id, v):
 	g.db.add(ma)
 	g.db.commit()
 
-	if 'redir' in request.values: return (redirect(user.url), user)
-	else: return {"message": f"@{user.username} was unbanned!"}
+	return redirect(user.url)
 
 @app.post("/ban_user/<user_id>")
 @admin_level_required(6)
@@ -920,7 +920,7 @@ def ban_user(user_id, v):
 			except: pass
 	g.db.commit()
 
-	if 'redir' in request.values: return (redirect(user.url), user)
+	if 'redir' in request.values: redirect(user.url)
 	else: return {"message": f"@{user.username} was banned!"}
 
 
@@ -959,6 +959,7 @@ def unban_user(user_id, v):
 
 	if "@" in request.referrer: return redirect(user.url)
 	else: return {"message": f"@{user.username} was unbanned!"}
+
 
 @app.post("/ban_post/<post_id>")
 @admin_level_required(3)
@@ -1237,6 +1238,7 @@ def admin_nuke_user(v):
 	g.db.commit()
 
 	return redirect(user.url)
+
 
 @app.post("/admin/unnuke_user")
 @admin_level_required(4)
