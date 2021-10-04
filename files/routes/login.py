@@ -328,9 +328,6 @@ def sign_up_post(v):
 					if not ref_user.has_badge(badge.id):
 						new_badge = Badge(user_id=ref_user.id, badge_id=badge.id)
 						g.db.add(new_badge)
-				else:
-					bad_badge = ref_user.has_badge(badge.id)
-					if bad_badge: g.db.delete(bad_badge)
 
 			g.db.add(ref_user)
 

@@ -400,10 +400,7 @@ def badge_grant_post(v):
 	"""
 	send_notification(NOTIFICATIONS_ACCOUNT, user, text)
 
-	if badge_id == 16 and user.has_badge(17):
-		g.db.query(Badge).options(lazyload('*')).filter_by(badge_id=17, user_id=user.id).delete()
-
-	elif badge_id in [21,22,23,24,25,28]:
+	if badge_id in [21,22,23,24,25,28]:
 		user.patron = int(str(badge_id)[-1])
 
 		grant_awards = {}
