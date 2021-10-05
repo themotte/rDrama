@@ -195,7 +195,7 @@ function markdown() {
                 var remoji = emoji.substring(1);
             } else {
                 style = "";
-                var remoji = emoji;
+                var remoji = emoji.replace(/:/g,'');
             }
 
             input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji + ".webp' " + style + ">")
