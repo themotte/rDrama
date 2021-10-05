@@ -18,6 +18,15 @@
 
 {% if v and v.id == p.author_id %}
 	<script>
+		function poll_vote(cid) {	
+			var type = document.getElementById(cid).checked;
+			var scoretext = document.getElementById('poll-' + cid);
+			var score = Number(scoretext.textContent);
+			if (type == "true") scoretext.textContent = score + 1;
+			else scoretext.textContent = score - 1;
+			post('/vote/poll/' + cid + '?vote=' + type);
+		}
+		
 		togglePostEdit=function(id){
 
 			body=document.getElementById("post-body");
@@ -359,9 +368,9 @@
 							{{p.realbody(v) | safe}}
 
 							{% for c in p.options %}
-								<div class="custom-control">
-									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="post('/vote/poll/{{c.id}}?vote=' + document.getElementById('{{c.id}}').checked);">
-									<label class="custom-control-label" for="{{c.id}}">{{c.body}} - <a href="/votes?link=t3_{{c.id}}">{{c.upvotes}} votes</a></label>
+								<div class="custom-control">								
+									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
+									<label class="custom-control-label" for="{{c.id}}">{{c.body}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
 								</div>
 							{% endfor %}
 
