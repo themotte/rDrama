@@ -245,7 +245,7 @@ def sanitize(sanitized, noimages=False):
 			remoji = emoji
 
 		if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
-			sanitized = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{remoji}.webp"> style', sanitized)
+			sanitized = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{remoji}.webp"> {style}', sanitized)
 
 			if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
 			else: session["favorite_emojis"][remoji] = 1
