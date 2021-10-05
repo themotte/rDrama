@@ -190,11 +190,13 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.finditer("<p>\s*(((:\w+:)|(!\w+!))\s*)+<\/p>", sanitized):
 		old = i.group(0)
+		print(old)
 		new = old.lower().replace("<p>", "<p style='margin-bottom:0'>")
 		for i in re.finditer('\w*(?<!")((:([^ ]{1,30}?):)|(!([^ ]{1,30}?)!))', new):
 			emoji = i.group(1).lower()
 			delim = emoji[0]
 			emoji = emoji[1:-1]
+			print(emoji)
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 				if delim == "!":
 					new = re.sub(f'\w*(?<!")!{emoji}!', f'<img loading="lazy" data-bs-toggle="tooltip" alt="!{emoji}!" title="!{emoji}!" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp" style="transform: scaleX(-1)">', new)
