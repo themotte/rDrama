@@ -156,8 +156,6 @@ post_reply=function(id){
     }
     xhr.send(form)
 
-    document.getElementById('save-reply-to-'+id).classList.add('disabled');
-
     document.querySelectorAll('[data-src]').forEach(elem => {
         elem.src = elem.dataset.src;
     })
@@ -230,8 +228,6 @@ post_comment=function(fullname){
         }
     }
     xhr.send(form)
-
-    document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
 
     document.querySelectorAll('[data-src]').forEach(elem => {
         elem.src = elem.dataset.src;
