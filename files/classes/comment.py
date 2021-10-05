@@ -63,8 +63,10 @@ class Comment(Base):
 		return f"<Comment(id={self.id})>"
 
 	def poll_voted(self, v):
-		vote = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=self.id).first()
-		if vote: return vote.vote_type
+		if v:
+			vote = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=self.id).first()
+			if vote: return vote.vote_type
+			else: return None
 		else: return None
 
 	@property
