@@ -191,6 +191,14 @@ function markdown() {
                     input = input.replace(emojis[i][0], "<img height=30 src='/assets/images/emojis/" + emojis[i][1] + ".webp'>")
                 }
         }
+
+    var emojis = Array.from(input.matchAll(/!(.{1,30}?)!/gi))
+    if(emojis != null){
+            for(i = 0; i < emojis.length; i++){
+                input = input.replace(emojis[i][0], "<img height=30 style='transform: scaleX(-1)' src='/assets/images/emojis/" + emojis[i][1] + ".webp'>")
+            }
+    }
+
     document.getElementById('preview').innerHTML = marked(input)
 }
 
