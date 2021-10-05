@@ -91,6 +91,31 @@ _allowed_styles =[
 	'transform'
 ]
 
+# filter to make all links show domain on hover
+
+def a_modify(attrs, whatever):
+
+	raw_url=attrs.get((None, "href"), None)
+	if raw_url:
+		parsed_url = urlparse(raw_url)
+
+		domain = parsed_url.netloc
+		attrs[(None, "target")] = "_blank"
+		if domain and not domain.endswith(domain):
+			attrs[(None, "rel")] = "nofollow noopener noreferrer"
+
+			new_url = ParseResult(scheme="https",
+								  netloc=parsed_url.netloc,
+								  path=parsed_url.path,
+								  params=parsed_url.params,
+								  query=parsed_url.query,
+								  fragment=parsed_url.fragment)
+
+			attrs[(None, "href")] = urlunparse(new_url)
+
+	return attrs
+
+
 def sanitize(sanitized, noimages=False):
 
 	sanitized = sanitized.replace("\ufeff", "").replace("m.youtube.com", "youtube.com")
@@ -106,6 +131,7 @@ def sanitize(sanitized, noimages=False):
 									filters=[partial(LinkifyFilter,
 													skip_tags=["pre"],
 													parse_email=False,
+													callbacks=[a_modify]
 													)
 											]
 									).clean(sanitized)
@@ -117,6 +143,7 @@ def sanitize(sanitized, noimages=False):
 							filters=[partial(LinkifyFilter,
 											skip_tags=["pre"],
 											parse_email=False,
+											callbacks=[a_modify]
 											)
 									]
 							).clean(sanitized)
@@ -148,9 +175,6 @@ def sanitize(sanitized, noimages=False):
 
 	#disguised link preventer
 	for tag in soup.find_all("a"):
-
-		tag["target"] = "_blank"
-		if site not in tag["href"]: tag["rel"] = "nofollow noopener noreferrer"
 
 		if re.match("https?://\S+", str(tag.string)):
 			try:
@@ -188,43 +212,43 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	for i in re.finditer("<p>\s*(((:\w+:)|(!\w+!))\s*)+<\/p>", sanitized):
+	for i in re.finditer("<p>\s*((:[!\w]+:)\s*)+<\/p>", sanitized):
 		old = i.group(0)
-		new = old.lower()
+		new = old.lower().replace("<p>", "<p style='margin-bottom:0 !important'>")
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
-			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				new = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', new)
-				
-				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-				else: session["favorite_emojis"][emoji] = 1
 
-		for i in re.finditer('\w*(?<!")!([^ ]{1,30}?)!', new):
-			emoji = i.group(1).lower()
-			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				new = re.sub(f'\w*(?<!")!{emoji}!', f'<img loading="lazy" data-bs-toggle="tooltip" alt="!{emoji}!" title="!{emoji}!" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp" style="transform: scaleX(-1)">', new)
-				
-				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-				else: session["favorite_emojis"][emoji] = 1
+			if emoji.startswith("!"):
+				style = 'style="transform: scaleX(-1)"'
+				remoji = emoji[1:]
+			else:
+				style = ""
+				remoji = emoji
 
-		sanitized = sanitized.replace(old, new.replace("<p>", "<p style='margin-bottom:0'>"))
+			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
+				new = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{remoji}.webp" {style}>', new)
+				
+				if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
+				else: session["favorite_emojis"][remoji] = 1
+
+		sanitized = sanitized.replace(old, new)
 
 
 	for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
 		emoji = i.group(1).lower()
-		if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
 
-			if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-			else: session["favorite_emojis"][emoji] = 1
+		if emoji.startswith("!"):
+			style = 'style="transform: scaleX(-1)"'
+			remoji = emoji[1:]
+		else:
+			style = ""
+			remoji = emoji
 
-	for i in re.finditer('\w*(?<!")!([^ ]{1,30}?)!', sanitized):
-		emoji = i.group(1).lower()
-		if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'\w*(?<!")!{emoji}!', f'<img loading="lazy" data-bs-toggle="tooltip" alt="!{emoji}!" title="!{emoji}!" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp" style="transform: scaleX(-1)">', sanitized)
+		if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
+			sanitized = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{remoji}.webp">', sanitized)
 
-			if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-			else: session["favorite_emojis"][emoji] = 1
+			if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
+			else: session["favorite_emojis"][remoji] = 1
 
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("https://m.wikipedia", "https://wikipedia").replace("https://m.youtube", "https://youtube")
