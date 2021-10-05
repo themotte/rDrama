@@ -920,7 +920,7 @@ def ban_user(user_id, v):
 			except: pass
 	g.db.commit()
 
-	if 'redir' in request.values: redirect(user.url)
+	if 'redir' in request.values: return redirect(user.url)
 	else: return {"message": f"@{user.username} was banned!"}
 
 
