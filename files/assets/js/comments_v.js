@@ -1,17 +1,9 @@
-function post(url, callback, errortext) {
+function post(url) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     var form = new FormData()
     form.append("formkey", formkey());
     xhr.withCredentials=true;
-    xhr.onerror=function() { alert(errortext); };
-    xhr.onload = function() {
-        if (xhr.status >= 200 && xhr.status < 300) {
-            if (typeof callback === "function") callback();
-        } else {
-            xhr.onerror();
-        }
-    };
     xhr.send(form);
 };
 
