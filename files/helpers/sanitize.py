@@ -190,7 +190,7 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.finditer("<p>\s*(((:\w+:)|(!\w+!))\s*)+<\/p>", sanitized):
 		old = i.group(0)
-		new = old.lower().replace("<p>", "<p style='margin-bottom:0'>")
+		new = old.lower()
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			print(emoji)
@@ -209,7 +209,7 @@ def sanitize(sanitized, noimages=False):
 				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 				else: session["favorite_emojis"][emoji] = 1
 
-		sanitized = sanitized.replace(old, new)
+		sanitized = sanitized.replace(old, new.replace("<p>", "<p style='margin-bottom:0'>"))
 
 
 	for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
