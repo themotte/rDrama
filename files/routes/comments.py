@@ -120,6 +120,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 @app.post("/comment")
 @limiter.limit("6/minute")
+@limiter.limit("1/second")
 @is_not_banned
 @validate_formkey
 def api_comment(v):
