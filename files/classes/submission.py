@@ -1,19 +1,17 @@
-from flask import render_template, g
+from flask import render_template
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred, lazyload
+from sqlalchemy.orm import relationship, deferred
 import re, random
 from urllib.parse import urlparse
 from files.helpers.lazy import lazy
 from files.helpers.const import SLURS
-from files.__main__ import Base
+from files.__main__ import Base, shadowbanned
 from .flags import Flag
-from .user import User
 from os import environ
 import time
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
-shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
 
 class Submission(Base):
 

@@ -132,3 +132,6 @@ def after_request(response):
 
 
 from files.routes import *
+
+
+shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]

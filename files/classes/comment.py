@@ -2,18 +2,15 @@ import re
 from urllib.parse import urlencode, urlparse, parse_qs
 from flask import *
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred, lazyload
+from sqlalchemy.orm import relationship, deferred
 from files.helpers.lazy import lazy
 from files.helpers.const import SLURS
-from files.__main__ import Base
+from files.__main__ import Base, shadowbanned
 from .flags import CommentFlag
-from .user import User
 from os import environ
 import time
 
 site = environ.get("DOMAIN").strip()
-
-shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
 
 class Comment(Base):
 
