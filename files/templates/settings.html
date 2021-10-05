@@ -24,11 +24,6 @@
 			id3.classList.remove("d-none");
 		});
 		
-		document.getElementById('2faModal').addEventListener('hidden.bs.modal', function () {
-			var box = document.getElementById("2faToggle");
-			box.checked = !box.checked;
-		});
-
 		function emailVerifyText() {
 			document.getElementById("email-verify-text").innerHTML = "Verification email sent! Please check your inbox.";
 		}

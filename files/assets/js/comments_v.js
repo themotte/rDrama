@@ -91,26 +91,6 @@ document.getElementById("reportCommentButton").onclick = function() {
 
 };
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    document.getElementById('reportCommentModal').addEventListener('hidden.bs.modal', function () {
-
-        var button = document.getElementById("reportCommentButton");
-
-        var beforeModal = document.getElementById("reportCommentFormBefore");
-        var afterModal = document.getElementById("reportCommentFormAfter");
-
-        button.innerHTML = 'Report comment';
-        button.disabled = false;
-        afterModal.classList.add('d-none');
-
-        if (beforeModal.classList.contains('d-none')) {
-            beforeModal.classList.remove('d-none');
-        }
-
-    });
-})
-
 function openReplyBox(id) {
     const element = document.getElementById(`reply-to-${id}`);
     element.classList.remove('d-none')
@@ -178,6 +158,9 @@ post_reply=function(id){
 
     document.getElementById('save-reply-to-'+id).classList.add('disabled');
 
+    document.querySelectorAll('[data-src]').forEach(elem => {
+        elem.src = elem.dataset.src;
+    })
 }
 
 comment_edit=function(id){
@@ -211,6 +194,9 @@ comment_edit=function(id){
     }
     xhr.send(form)
 
+    document.querySelectorAll('[data-src]').forEach(elem => {
+        elem.src = elem.dataset.src;
+    })
 }
 
 post_comment=function(fullname){
