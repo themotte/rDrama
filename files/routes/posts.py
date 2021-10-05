@@ -735,7 +735,7 @@ def submit_post(v):
 	options = []
 	for i in re.finditer('\s*\$([^\$]+)\$\s*', body):
 		options.append(i.group(1))
-		body.replace(i.group(0), "")
+		body = body.replace(i.group(0), "")
 
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)

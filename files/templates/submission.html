@@ -360,8 +360,8 @@
 
 							{% for c in p.options %}
 								<div class="custom-control">
-									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="post('/vote/comment/<comment_id>/?vote=' + document.getElementById('{{c.id}}').checked);">
-									<label class="custom-control-label" for="{{c.id}}">{{c.body}} - <a href="/votes?link=t3_{{c.id}}">{c.upvotes} votes</a></label>
+									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="post('/vote/comment/{{c.id}}/?vote=' + document.getElementById('{{c.id}}').checked);">
+									<label class="custom-control-label" for="{{c.id}}">{{c.body}} - <a href="/votes?link=t3_{{c.id}}">{{c.upvotes}} votes</a></label>
 								</div>
 							{% endfor %}
 
