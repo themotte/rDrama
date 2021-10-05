@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from files.helpers.lazy import lazy
 from files.helpers.const import SLURS
 from files.__main__ import Base
-from .flags import *
+from .flags import Flag
 from os import environ
 import time
 
@@ -35,11 +35,8 @@ class Submission(Base):
 	private = Column(Boolean, default=False)
 	club = Column(Boolean, default=False)
 	comment_count = Column(Integer, default=0)
-	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id", viewonly=True)
-	flags = relationship("Flag", lazy="dynamic", viewonly=True)
 	is_approved = Column(Integer, ForeignKey("users.id"), default=0)
 	over_18 = Column(Boolean, default=False)
-	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	is_bot = Column(Boolean, default=False)
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
@@ -52,6 +49,9 @@ class Submission(Base):
 	ban_reason = Column(String(128))
 	embed_url = Column(String(256))
 
+	comments = relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_submission==Submission.id", viewonly=True)
+	flags = relationship("Flag", lazy="dynamic", viewonly=True)
+	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
 	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)
 	awards = relationship("AwardRelationship", viewonly=True)
@@ -70,6 +70,16 @@ class Submission(Base):
 	def __repr__(self):
 		return f"<Submission(id={self.id})>"
 
+
+	@property
+	@lazy
+	def options(self):
+		return self.comments.filter_by(author_id = 3369)
+
+	@property
+	@lazy
+	def created_datetime(self):
+		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
 
 	@property
 	@lazy

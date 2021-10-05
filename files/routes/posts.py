@@ -123,7 +123,8 @@ def post_id(pid, anything=None, v=None):
 			comments = comments.filter(Comment.author_id.notin_(shadowbanned))
  
 		comments=comments.filter(
-			Comment.parent_submission == post.id
+			Comment.parent_submission == post.id,
+			Comment.author_id != 3369,
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -161,7 +162,7 @@ def post_id(pid, anything=None, v=None):
 
 	else:
 		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
-		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id.notin_(shadowbanned))
+		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id != 3369, Comment.author_id.notin_(shadowbanned))
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -730,8 +731,16 @@ def submit_post(v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
+
+	options = []
+	for i in re.finditer('\s*\$([^\$]+)\$\s*', body):
+		options.append(i.group(1))
+		body.replace(i.group(0), "")
+
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
+
+
 
 	if len(body_html) > 20000: abort(400)
 
@@ -806,6 +815,16 @@ def submit_post(v):
 	g.db.add(new_post)
 	g.db.flush()
 	
+	for option in options:
+		c = Comment(author_id=3369,
+			parent_submission=new_post.id,
+			level=1,
+			body=option,
+			)
+
+		g.db.add(c)
+		g.db.flush()
+
 	vote = Vote(user_id=v.id,
 				vote_type=1,
 				submission_id=new_post.id
