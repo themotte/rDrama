@@ -247,4 +247,7 @@ post_comment=function(fullname){
 
     document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
 
+    document.querySelectorAll('[data-src]').forEach(elem => {
+        elem.src = elem.dataset.src;
+    })
 }
