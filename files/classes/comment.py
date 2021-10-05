@@ -5,12 +5,13 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 from files.helpers.lazy import lazy
 from files.helpers.const import SLURS
-from files.__main__ import Base, shadowbanned
+from files.__main__ import Base
 from .flags import CommentFlag
 from os import environ
 import time
 
 site = environ.get("DOMAIN").strip()
+
 
 class Comment(Base):
 
@@ -356,12 +357,12 @@ class Comment(Base):
 	
 	@property
 	@lazy
-	def active_flags(self): return self.ordered_flags.count()
+	def active_flags(self): return self.flags.count()
 
 	@property
 	@lazy
-	def ordered_flags(self):
-		return self.flags.filter(CommentFlag.user_id.notin_(shadowbanned)).order_by(CommentFlag.id).all()
+	def ordered_flags(self): return self.flags.order_by(CommentFlag.id).all()
+
 
 
 class Notification(Base):

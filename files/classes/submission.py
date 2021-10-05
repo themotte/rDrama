@@ -1,17 +1,18 @@
-from flask import render_template
+from flask import render_template, g
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 import re, random
 from urllib.parse import urlparse
 from files.helpers.lazy import lazy
 from files.helpers.const import SLURS
-from files.__main__ import Base, shadowbanned
-from .flags import Flag
+from files.__main__ import Base
+from .flags import *
 from os import environ
 import time
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
+
 
 class Submission(Base):
 
@@ -388,12 +389,11 @@ class Submission(Base):
 
 	@property
 	@lazy
-	def active_flags(self): return self.ordered_flags.count()
+	def active_flags(self): return self.flags.count()
 
 	@property
 	@lazy
-	def ordered_flags(self):
-		return self.flags.filter(Flag.user_id.notin_(shadowbanned)).order_by(Flag.id).all()
+	def ordered_flags(self): return self.flags.order_by(Flag.id).all()
 
 
 class SaveRelationship(Base):
