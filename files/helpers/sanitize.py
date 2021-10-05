@@ -192,8 +192,10 @@ def sanitize(sanitized, noimages=False):
 		old = i.group(0)
 		new = old.lower().replace("<p>", "<p style='margin-bottom:0'>")
 		for i in re.finditer('\w*(?<!")((:([^ ]{1,30}?):)|(!([^ ]{1,30}?)!))', new):
-			emoji = i.group(1).lower()
+			emoji = i.group(0).lower()
+			print(emoji)
 			delim = emoji[0]
+			print(delim)
 			emoji = emoji[1:-1]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 				if delim == "!":
