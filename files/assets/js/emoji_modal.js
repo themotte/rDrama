@@ -64,6 +64,8 @@ function getEmoji(searchTerm) {
     const newPos = curPos + emoji.length
 
     commentBox.setAttribute(TEXTAREA_POS_ATTR, newPos.toString());
+
+    if (typeof checkForRequired === "function") checkForRequired();
 }
 
 function loadEmojis(form) {
