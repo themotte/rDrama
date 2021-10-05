@@ -189,7 +189,7 @@ function markdown() {
     if(emojis != null){
         for(i = 0; i < emojis.length; i++){
             var emoji = emojis[i][0]
-            if (emoji.startswith("!"))
+            if (emoji.startsWith("!"))
             {
                 style = 'style="transform: scaleX(-1)"';
                 var remoji = emoji.substring(1);
@@ -201,7 +201,7 @@ function markdown() {
             input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji + ".webp' " + style + ">")
         }
     }
-    
+
     document.getElementById('preview').innerHTML = marked(input)
 }
 
