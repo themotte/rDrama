@@ -186,23 +186,22 @@ function markdown() {
     var input = document.getElementById('post-text').value;
 
     var emojis = Array.from(input.matchAll(/:(.{1,30}?):/gi))
-        if(emojis != null){
-                for(i = 0; i < emojis.length; i++){
-                    var emoji = emojis[i][0]
-                    if (emoji.startswith("!"))
-                    {
-                        style = 'style="transform: scaleX(-1)"';
-                        var remoji = emoji.substring(1);
-                    } else {
-                        style = "";
-                        var remoji = emoji;
-                    }
+    if(emojis != null){
+        for(i = 0; i < emojis.length; i++){
+            var emoji = emojis[i][0]
+            if (emoji.startswith("!"))
+            {
+                style = 'style="transform: scaleX(-1)"';
+                var remoji = emoji.substring(1);
+            } else {
+                style = "";
+                var remoji = emoji;
+            }
 
-                    input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji + ".webp' " + style + ">")
-                }
+            input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji + ".webp' " + style + ">")
         }
     }
-
+    
     document.getElementById('preview').innerHTML = marked(input)
 }
 
