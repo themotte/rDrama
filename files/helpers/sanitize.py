@@ -212,7 +212,7 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	for i in re.finditer("<p>\s*((:[!\w]+:)\s*)+<\/p>", sanitized):
+	for i in re.finditer("<p>\s*(:!?[\w]+:\s*)+<\/p>", sanitized):
 		old = i.group(0)
 		new = old.lower().replace("<p>", "<p style='margin-bottom:0 !important'>")
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', new):
