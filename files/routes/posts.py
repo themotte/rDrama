@@ -388,7 +388,7 @@ def filter_title(title):
 			remoji = emoji
 
 		if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
-			title = title.replace(f':{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{emoji}" delay="0" height=20 src="https://{site}/assets/images/emojis/{remoji}.webp" style>')
+			title = title.replace(f':{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{emoji}" delay="0" height=20 src="https://{site}/assets/images/emojis/{remoji}.webp" {style}>')
 
 	return title
 
