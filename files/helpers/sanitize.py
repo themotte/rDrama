@@ -93,7 +93,7 @@ _allowed_styles =[
 
 # filter to make all links show domain on hover
 
-def a_modify(attrs, whatever):
+def a_modify(attrs):
 
 	raw_url=attrs.get((None, "href"), None)
 	if raw_url:
@@ -104,8 +104,6 @@ def a_modify(attrs, whatever):
 		if domain and not domain.endswith(domain):
 			attrs[(None, "rel")] = "nofollow noopener noreferrer"
 
-			# Force https for all external links in comments
-			# (Website already forces its own https)
 			new_url = ParseResult(scheme="https",
 								  netloc=parsed_url.netloc,
 								  path=parsed_url.path,
