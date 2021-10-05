@@ -193,6 +193,7 @@ def sanitize(sanitized, noimages=False):
 		new = old.lower().replace("<p>", "<p style='margin-bottom:0'>")
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
+			print(emoji)
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 				new = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', new)
 				
@@ -201,6 +202,7 @@ def sanitize(sanitized, noimages=False):
 
 		for i in re.finditer('\w*(?<!")!([^ ]{1,30}?)!', new):
 			emoji = i.group(1).lower()
+			print(emoji)
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 				new = re.sub(f'\w*(?<!")!{emoji}!', f'<img loading="lazy" data-bs-toggle="tooltip" alt="!{emoji}!" title="!{emoji}!" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp" style="transform: scaleX(-1)">', new)
 				
