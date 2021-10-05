@@ -91,29 +91,29 @@ _allowed_styles =[
 	'transform'
 ]
 
-# filter to make all links show domain on hover
+# # filter to make all links show domain on hover
 
-def a_modify(attrs, whatever):
+# def a_modify(attrs, whatever):
 
-	raw_url=attrs.get((None, "href"), None)
-	if raw_url:
-		parsed_url = urlparse(raw_url)
+# 	raw_url=attrs.get((None, "href"), None)
+# 	if raw_url:
+# 		parsed_url = urlparse(raw_url)
 
-		domain = parsed_url.netloc
-		attrs[(None, "target")] = "_blank"
-		if domain and not domain.endswith(domain):
-			attrs[(None, "rel")] = "nofollow noopener noreferrer"
+# 		domain = parsed_url.netloc
+# 		attrs[(None, "target")] = "_blank"
+# 		if domain and not domain.endswith(domain):
+# 			attrs[(None, "rel")] = "nofollow noopener noreferrer"
 
-			new_url = ParseResult(scheme="https",
-								  netloc=parsed_url.netloc,
-								  path=parsed_url.path,
-								  params=parsed_url.params,
-								  query=parsed_url.query,
-								  fragment=parsed_url.fragment)
+# 			new_url = ParseResult(scheme="https",
+# 								  netloc=parsed_url.netloc,
+# 								  path=parsed_url.path,
+# 								  params=parsed_url.params,
+# 								  query=parsed_url.query,
+# 								  fragment=parsed_url.fragment)
 
-			attrs[(None, "href")] = urlunparse(new_url)
+# 			attrs[(None, "href")] = urlunparse(new_url)
 
-	return attrs
+# 	return attrs
 
 
 def sanitize(sanitized, noimages=False):
@@ -131,7 +131,7 @@ def sanitize(sanitized, noimages=False):
 									filters=[partial(LinkifyFilter,
 													skip_tags=["pre"],
 													parse_email=False,
-													callbacks=[a_modify]
+													# callbacks=[a_modify]
 													)
 											]
 									).clean(sanitized)
@@ -143,7 +143,7 @@ def sanitize(sanitized, noimages=False):
 							filters=[partial(LinkifyFilter,
 											skip_tags=["pre"],
 											parse_email=False,
-											callbacks=[a_modify]
+											# callbacks=[a_modify]
 											)
 									]
 							).clean(sanitized)
