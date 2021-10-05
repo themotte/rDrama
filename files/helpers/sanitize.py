@@ -93,7 +93,7 @@ _allowed_styles =[
 
 # filter to make all links show domain on hover
 
-def a_modify(attrs):
+def a_modify(attrs, whatever):
 
 	raw_url=attrs.get((None, "href"), None)
 	if raw_url:
