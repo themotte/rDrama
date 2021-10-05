@@ -15,18 +15,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="/assets/js/new_comments_count.js?v=1"></script>
+<script>
+	function poll_vote(cid) {	
+		var type = document.getElementById(cid).checked;
+		var scoretext = document.getElementById('poll-' + cid);
+		var score = Number(scoretext.textContent);
+		if (type == true) scoretext.textContent = score + 1;
+		else scoretext.textContent = score - 1;
+		post('/vote/poll/' + cid + '?vote=' + type);
+	}
+</script>
 
 {% if v and v.id == p.author_id %}
-	<script>
-		function poll_vote(cid) {	
-			var type = document.getElementById(cid).checked;
-			var scoretext = document.getElementById('poll-' + cid);
-			var score = Number(scoretext.textContent);
-			if (type == true) scoretext.textContent = score + 1;
-			else scoretext.textContent = score - 1;
-			post('/vote/poll/' + cid + '?vote=' + type);
-		}
-		
+	<script>		
 		togglePostEdit=function(id){
 
 			body=document.getElementById("post-body");
