@@ -212,43 +212,37 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: 			sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	for i in re.finditer("<p>\s*(:!?[\w]+:\s*)+<\/p>", sanitized):
+	for i in re.finditer("<p>\s*(:!?\w+:\s*)+<\/p>", sanitized):
 		old = i.group(0)
 		new = old.lower().replace("<p>", "<p style='margin-bottom:0 !important'>")
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
-
 			if emoji.startswith("!"):
-				style = 'style="transform: scaleX(-1)"'
-				remoji = emoji[1:]
-			else:
-				style = ""
-				remoji = emoji
-
-			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{remoji}.webp" {style}>', new)
-				
-				if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
-				else: session["favorite_emojis"][remoji] = 1
+				emoji = emoji[1:]
+				if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
+					new = re.sub(f'\w*(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp" >', new)
+			
+			elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
+				new = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', new)
+					
+			if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
+			else: session["favorite_emojis"][emoji] = 1
 
 		sanitized = sanitized.replace(old, new)
 
 
 	for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
 		emoji = i.group(1).lower()
-
 		if emoji.startswith("!"):
-			style = 'style="transform: scaleX(-1)"'
-			remoji = emoji[1:]
-		else:
-			style = ""
-			remoji = emoji
-
-		if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
-			sanitized = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{remoji}.webp"> {style}', sanitized)
-
-			if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
-			else: session["favorite_emojis"][remoji] = 1
+			emoji = emoji[1:]
+			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
+				sanitized = re.sub(f'\w*(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp" >', sanitized)
+		
+		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
+			sanitized = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
+				
+		if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
+		else: session["favorite_emojis"][emoji] = 1
 
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("https://m.wikipedia", "https://wikipedia").replace("https://m.youtube", "https://youtube")
