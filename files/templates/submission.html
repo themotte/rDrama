@@ -281,7 +281,7 @@
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
 						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
-						{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
+						{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.id == 541 %}#62ca56{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{p.author.verified}}"></i>
 						{% endif %}
 						<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} style="color: #{{p.author.namecolor}};  font-weight: bold;" class="user-name"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rdrama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.webp">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp" title="">&nbsp;{{p.age_string}}</span>
@@ -296,9 +296,7 @@
 						<pre></pre>
 						<ul style="padding-left:20px; margin-bottom: 0;">
 							{% for f in p.ordered_flags %}
-								{% if not f.user.shadowbanned or (v and v.shadowbanned) %}
-									<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="post_toast('/del_report/p{{ f.id }}')">[remove]</a>{% endif %}</li>
-								{% endif %}
+								<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="post_toast('/del_report/p{{ f.id }}')">[remove]</a>{% endif %}</li>
 							{% endfor %}
 						</ul>
 					</div>

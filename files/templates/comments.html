@@ -212,7 +212,7 @@
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% if v and v.admin_level >= 2 %}You're blocking this user, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}.{% else %}Comment author is banned{% endif %}"></i>{% endif %}
 				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This user is blocking you, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}."></i>{% endif %}
 
-				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:#1DA1F2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
+				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.id == 541 %}#62ca56{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{c.author.verified}}"></i>
 				{% endif %}
 
 				<a {% if v %}href="{{c.author.url}}"{% else %}href="/logged_out{{c.author.url}}"{% endif %} style="color:#{{c.author.namecolor}};  font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and 'rdrama' in request.host %}class="mod"{% endif %}>{{c.author.username}}</span></a>
@@ -232,9 +232,7 @@
 				<pre></pre>
 				<ul style="padding-left:20px; margin-bottom: 0;">
 					{% for f in c.ordered_flags %}
-						{% if not f.user.shadowbanned or (v and v.shadowbanned) %}
-							<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="post_toast('/del_report/c{{ f.id }}')">[remove]</a>{% endif %}</li>
-						{% endif %}
+						<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="post_toast('/del_report/c{{ f.id }}')">[remove]</a>{% endif %}</li>
 					{% endfor %}
 				</ul>
 			</div>
