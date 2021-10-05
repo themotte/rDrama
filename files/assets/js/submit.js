@@ -189,16 +189,14 @@ function markdown() {
     if(emojis != null){
         for(i = 0; i < emojis.length; i++){
             var emoji = emojis[i][0]
-            if (emoji.startsWith("!"))
+            var remoji = emoji.replace(/:/g,'');
+            if (remoji.startsWith("!"))
             {
-                style = 'style="transform: scaleX(-1)"';
-                var remoji = emoji.substring(1);
+                input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji.substring(1) + ".webp' style='transform: scaleX(-1)'>")
             } else {
-                style = "";
-                var remoji = emoji.replace(/:/g,'');
+                input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji + ".webp'>")
             }
 
-            input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji + ".webp' " + style + ">")
         }
     }
 
