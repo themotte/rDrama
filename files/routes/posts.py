@@ -378,12 +378,17 @@ def filter_title(title):
 	title = bleach.clean(title, tags=[])
 
 	for i in re.finditer(':(.{1,30}?):', title):
-		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
-			title = title.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp">')
+		emoji = i.group(1)
 
-	for i in re.finditer('!(.{1,30}?)!', title):
-		if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
-			title = title.replace(f'!{i.group(1)}!', f'<img loading="lazy" style="transform: scaleX(-1)" data-bs-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp">')
+		if emoji.startswith("!"):
+			style = 'style="transform: scaleX(-1)"'
+			remoji = emoji[1:]
+		else:
+			style = ""
+			remoji = emoji
+
+		if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
+			title = title.replace(f':{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{emoji}" delay="0" height=20 src="https://{site}/assets/images/emojis/{remoji}.webp" style>')
 
 	return title
 
