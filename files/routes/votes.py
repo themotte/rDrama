@@ -174,7 +174,7 @@ def api_vote_poll(comment_id, v):
 
 	comment_id = int(comment_id)
 
-	existing = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id).first()
+	existing = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment_id).first()
 
 	if existing and existing.vote_type == vote: return "", 204
 
