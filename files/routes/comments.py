@@ -286,6 +286,7 @@ def api_comment(v):
 				body=body[:10000]
 				)
 
+	c.upvotes = 1
 	g.db.add(c)
 	g.db.flush()
 
@@ -562,6 +563,7 @@ def api_comment(v):
 						 )
 
 	g.db.add(vote)
+	
 
 	cache.delete_memoized(comment_idlist)
 
