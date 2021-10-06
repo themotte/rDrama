@@ -384,7 +384,7 @@ def filter_title(title):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				title = title.replace(f':!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{emoji}.webp" style="transform: scaleX(-1)">')
+				title = title.replace(f':!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{emoji}.webp" style="transform: scaleX(-1);-webkit-transform: scaleX(-1);">')
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 			title = title.replace(f':{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{emoji}.webp">')
 
