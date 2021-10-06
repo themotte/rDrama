@@ -1,5 +1,4 @@
 from PIL import Image as IImage, ImageSequence
-from files.classes.images import *
 from webptools import gifwebp
 
 def process_image(filename=None, resize=False):
