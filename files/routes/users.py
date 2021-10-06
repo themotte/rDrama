@@ -227,7 +227,6 @@ def message2(v, username):
 
 	message = request.values.get("message", "")[:1000].strip()
 
-	# check existing
 	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
 															Comment.body == message,
