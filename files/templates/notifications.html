@@ -16,7 +16,7 @@
   <div class="col p-0 w-100">
 	<ul class="nav settings-nav" style="padding:0 30px;">
 	<li class="nav-item">
-		<a class="nav-link py-3{% if not '=' in request.full_path %} active{% endif %}" href="/notifications">
+		<a class="nav-link py-3{% if not '=true' in request.full_path %} active{% endif %}" href="/notifications">
 		All
 		</a>
 	</li>
@@ -46,7 +46,6 @@
 	<h1 class="h3 d-md-none">Inbox</h1>
 
 	{% with comments=notifications %}
-
 		{% include "comments.html" %}
 	{% endwith %}
 
