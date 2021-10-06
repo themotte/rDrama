@@ -167,7 +167,7 @@ def sanitize(sanitized, noimages=False):
 	#whatever else happens with images, there are only two sets of classes allowed
 	for tag in soup.find_all("img"):
 		if 'profile-pic-20' not in tag.attrs.get("class",""):
-			tag.attrs['class']="in-comment-image rounded-sm my-2"
+			tag.attrs['class']="in-comment-image rounded-sm my-2 lozard"
 
 	#table format
 	for tag in soup.find_all("table"):
