@@ -224,34 +224,6 @@ def edit_post(pid, v):
 				
 			return {"error": reason}, 403
 
-		# check spam
-		soup = BeautifulSoup(body_html, features="html.parser")
-		links = [x['href'] for x in soup.find_all('a') if x.get('href')]
-
-		for link in links:
-			parse_link = urlparse(link)
-			check_url = ParseResult(scheme="https",
-									netloc=parse_link.netloc,
-									path=parse_link.path,
-									params=parse_link.params,
-									query=parse_link.query,
-									fragment='')
-			check_url = urlunparse(check_url)
-
-			badlink = g.db.query(BadLink).options(lazyload('*')).filter(
-				literal(check_url).contains(
-					BadLink.link)).first()
-			if badlink:
-				if badlink.autoban:
-					text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-					send_notification(NOTIFICATIONS_ACCOUNT, v, text)
-					v.ban(days=1, reason="spam")
-
-					return redirect('/notifications')
-				else:
-
-					return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}
-
 		p.body = body
 		p.body_html = body_html
 
@@ -758,37 +730,6 @@ def submit_post(v):
 			
 		if request.headers.get("Authorization"): return {"error": reason}, 403
 		else: return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
-
-	# check spam
-	soup = BeautifulSoup(body_html, features="html.parser")
-	links = [x['href'] for x in soup.find_all('a') if x.get('href')]
-
-	if url:
-		links = [url] + links
-
-	for link in links:
-		parse_link = urlparse(link)
-		check_url = ParseResult(scheme="https",
-								netloc=parse_link.netloc,
-								path=parse_link.path,
-								params=parse_link.params,
-								query=parse_link.query,
-								fragment='')
-		check_url = urlunparse(check_url)
-
-		badlink = g.db.query(BadLink).options(lazyload('*')).filter(
-			literal(check_url).contains(
-				BadLink.link)).first()
-		if badlink:
-			if badlink.autoban:
-				text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-				send_notification(NOTIFICATIONS_ACCOUNT, v, text)
-				v.ban(days=1, reason="spam")
-
-				return redirect('/notifications')
-			else:
-				if request.headers.get("Authorization"): return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}, 400
-				else: return render_template("submit.html", v=v, error=f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	# check for embeddable video
 	domain = parsed_url.netloc
