@@ -42,7 +42,7 @@ class Submission(Base):
 	downvotes = Column(Integer, default=0)
 	app_id=Column(Integer, ForeignKey("oauth_apps.id"))
 	title = Column(String(500))
-	title_html = Column(String(500))
+	title_html = Column(String(1000))
 	url = Column(String(500))
 	body = deferred(Column(String(10000)))
 	body_html = deferred(Column(String(20000)))

@@ -7,12 +7,3 @@ class BannedDomain(Base):
 	id = Column(Integer, primary_key=True)
 	domain = Column(String(50))
 	reason = Column(String(100))
-
-
-class BadLink(Base):
-
-	__tablename__ = "badlinks"
-	id = Column(Integer, primary_key=True)
-	link = Column(String(512))
-	reason = Column(String(100))
-	autoban = Column(Boolean, default=False)

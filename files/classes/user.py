@@ -72,18 +72,18 @@ else:
 
 class User(Base):
 	__tablename__ = "users"
-	id = Column(Integer, primary_key=True)
-	username = Column(String(25))
-	namecolor = Column(String(6), default=defaultcolor)
-	background = Column(String(20))
-	customtitle = Column(String(300))
-	customtitleplain = Column(String(100))
 
 	if "pcmemes.net" in site:
 		quadrant = Column(String(20))
 		basedcount = Column(Integer, default=0)
 		pills = deferred(Column(String(300), default=""))
 
+	id = Column(Integer, primary_key=True)
+	username = Column(String(25))
+	namecolor = Column(String(6), default=defaultcolor)
+	background = Column(String(20))
+	customtitle = Column(String(300))
+	customtitleplain = Column(String(100))
 	titlecolor = Column(String(6), default=defaultcolor)
 	theme = Column(String(10), default=defaulttheme)
 	themecolor = Column(String(6), default=defaultcolor)
@@ -124,12 +124,8 @@ class User(Base):
 	nitter = Column(Boolean)
 	frontsize = Column(Integer, default=25)
 	controversial = Column(Boolean, default=False)
-	submissions = relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", viewonly=True)
 	bio = Column(String(1500))
 	bio_html = Column(String(10000))
-	badges = relationship("Badge", lazy="dynamic", viewonly=True)
-	notifications = relationship("Notification", lazy="dynamic", viewonly=True)
-
 	is_banned = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
 	ban_reason = Column(String(120))
@@ -145,29 +141,25 @@ class User(Base):
 	defaultsortingcomments = Column(String(15), default="top")
 	defaultsorting = Column(String(15), default="hot")
 	defaulttime = Column(String(5), default=defaulttimefilter)
-
 	is_nofollow = Column(Boolean, default=False)
 	custom_filter_list = Column(String(1000))
 	discord_id = Column(String(64))
 	ban_evade = Column(Integer, default=0)
 	original_username = deferred(Column(String(25)))
-	subscriptions = relationship("Subscription", viewonly=True)
-
-	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
-	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id", viewonly=True)
-
-	viewers = relationship("ViewerRelationship", primaryjoin="User.id == ViewerRelationship.user_id", viewonly=True)
-
-	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id", viewonly=True)
-	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
-
-	apps = relationship("OauthApp", lazy="dynamic", viewonly=True)
-	authorizations = relationship("ClientAuth", lazy="dynamic", viewonly=True)
-
-	awards = relationship("AwardRelationship", lazy="dynamic", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
-
 	referred_by = Column(Integer, ForeignKey("users.id"))
 
+	submissions = relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", viewonly=True)
+	badges = relationship("Badge", lazy="dynamic", viewonly=True)
+	notifications = relationship("Notification", lazy="dynamic", viewonly=True)
+	subscriptions = relationship("Subscription", viewonly=True)
+	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
+	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id", viewonly=True)
+	viewers = relationship("ViewerRelationship", primaryjoin="User.id == ViewerRelationship.user_id", viewonly=True)
+	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id", viewonly=True)
+	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
+	apps = relationship("OauthApp", lazy="dynamic", viewonly=True)
+	authorizations = relationship("ClientAuth", lazy="dynamic", viewonly=True)
+	awards = relationship("AwardRelationship", lazy="dynamic", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
 	referrals = relationship("User", viewonly=True)
 
 	def __init__(self, **kwargs):

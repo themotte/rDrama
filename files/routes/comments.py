@@ -239,25 +239,6 @@ def api_comment(v):
 
 			return {"error": "Too much spam!"}, 403
 
-	# check badlinks
-	soup = BeautifulSoup(body_html, features="html.parser")
-	links = [x['href'] for x in soup.find_all('a') if x.get('href')]
-
-	for link in links:
-		parse_link = urlparse(link)
-		check_url = ParseResult(scheme="https",
-								netloc=parse_link.netloc,
-								path=parse_link.path,
-								params=parse_link.params,
-								query=parse_link.query,
-								fragment='')
-		check_url = urlunparse(check_url)
-
-		badlink = g.db.query(BadLink).options(lazyload('*')).filter(
-			literal(check_url).contains(
-				BadLink.link)).first()
-
-		if badlink: return {"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason}"}, 403
 	# create comment
 	parent_id = parent_fullname.split("_")[1]
 
@@ -619,32 +600,10 @@ def edit_comment(cid, v):
 		if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
 		else: return render_template("comment_failed.html",
 												action=f"/edit_comment/{c.id}",
-												badlinks=[
-													x.domain for x in bans],
+												badlinks=[x.domain for x in bans],
 												body=body,
 												v=v
 												)
-	# check badlinks
-	soup = BeautifulSoup(body_html, features="html.parser")
-	links = [x['href'] for x in soup.find_all('a') if x.get('href')]
-
-	for link in links:
-		parse_link = urlparse(link)
-		check_url = ParseResult(scheme="https",
-								netloc=parse_link.netloc,
-								path=parse_link.path,
-								params=parse_link.params,
-								query=parse_link.query,
-								fragment='')
-		check_url = urlunparse(check_url)
-
-		badlink = g.db.query(BadLink).options(lazyload('*')).filter(
-			literal(check_url).contains(
-				BadLink.link)).first()
-
-		if badlink:
-			return {"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason}"}, 403
-
 	# check spam - this should hopefully be faster
 	now = int(time.time())
 	cutoff = now - 60 * 60 * 24
