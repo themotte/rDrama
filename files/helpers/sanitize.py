@@ -77,7 +77,7 @@ no_images = ['b',
 						]
 
 _allowed_attributes = {
-	'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name']
+	'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name', 'direction']
 	}
 
 _allowed_protocols = [
@@ -90,31 +90,6 @@ _allowed_styles =[
 	'font-weight',
 	'transform'
 ]
-
-# filter to make all links show domain on hover
-
-def a_modify(attrs, whatever):
-
-	raw_url=attrs.get((None, "href"), None)
-	if raw_url:
-		parsed_url = urlparse(raw_url)
-
-		domain = parsed_url.netloc
-		attrs[(None, "target")] = "_blank"
-		if domain and not domain.endswith(domain):
-			attrs[(None, "rel")] = "nofollow noopener noreferrer"
-
-			new_url = ParseResult(scheme="https",
-								  netloc=parsed_url.netloc,
-								  path=parsed_url.path,
-								  params=parsed_url.params,
-								  query=parsed_url.query,
-								  fragment=parsed_url.fragment)
-
-			attrs[(None, "href")] = urlunparse(new_url)
-
-	return attrs
-
 
 def sanitize(sanitized, noimages=False):
 
@@ -131,7 +106,6 @@ def sanitize(sanitized, noimages=False):
 									filters=[partial(LinkifyFilter,
 													skip_tags=["pre"],
 													parse_email=False,
-													callbacks=[a_modify]
 													)
 											]
 									).clean(sanitized)
@@ -143,7 +117,6 @@ def sanitize(sanitized, noimages=False):
 							filters=[partial(LinkifyFilter,
 											skip_tags=["pre"],
 											parse_email=False,
-											callbacks=[a_modify]
 											)
 									]
 							).clean(sanitized)
@@ -161,7 +134,6 @@ def sanitize(sanitized, noimages=False):
 			tag["style"] = "max-height: 100px; max-width: 100%;"
 			tag["class"] = "in-comment-image rounded-sm my-2"
 			tag["loading"] = "lazy"
-			tag["data-src"] = tag["src"]
 
 			link = soup.new_tag("a")
 			link["href"] = tag["src"]
@@ -172,12 +144,13 @@ def sanitize(sanitized, noimages=False):
 			link["data-bs-toggle"] = "modal"
 			link["data-bs-target"] = "#expandImageModal"
 
-			tag["src"] = ""
-
 			tag.wrap(link)
 
 	#disguised link preventer
 	for tag in soup.find_all("a"):
+
+		tag["target"] = "_blank"
+		if site not in tag["href"]: tag["rel"] = "nofollow noopener noreferrer"
 
 		if re.match("https?://\S+", str(tag.string)):
 			try:
