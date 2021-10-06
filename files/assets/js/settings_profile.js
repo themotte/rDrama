@@ -1,18 +1,11 @@
-function post(url, callback, errortext) {
+function post(url) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	var form = new FormData()
 	form.append("formkey", formkey());
 	xhr.withCredentials=true;
-	xhr.onerror=function() { alert(errortext); };
-	xhr.onload = function() {
-		if (xhr.status >= 200 && xhr.status < 300) {
-			callback();
-		} else {
-			xhr.onerror();
-		}
-	};
 	xhr.send(form);
+    window.location.reload(true)
 };
 
 function updatebgselection(){
@@ -74,7 +67,7 @@ function updatebgselection(){
         let bgsDir = backgrounds[bgselector.selectedIndex].folder;
         for (i=0; i < bgsToDisplay.length; i++) {
             let onclickPost = bgsDir + "/" + bgsToDisplay[i];
-            str += `<button class="btn btn-secondary m-1 p-0" style="width:15rem; overflow: hidden;"><img loading="lazy" style="padding:0.25rem; width: 15rem" src="/assets/images/backgrounds/${bgsDir}/${bgsToDisplay[i]}" alt="${bgsToDisplay[i]}-background" onclick="post('/settings/profile?background=${onclickPost}', function(){window.location.reload(true);})"/></button>`;
+            str += `<button class="btn btn-secondary m-1 p-0" style="width:15rem; overflow: hidden;"><img loading="lazy" style="padding:0.25rem; width: 15rem" src="/assets/images/backgrounds/${bgsDir}/${bgsToDisplay[i]}" alt="${bgsToDisplay[i]}-background" onclick="post('/settings/profile?background=${onclickPost}')"/></button>`;
         }
         bgContainer.innerHTML = str;
     }

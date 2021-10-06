@@ -1,19 +1,17 @@
 function removeComment(post_id,button1,button2) {
     url="/ban_comment/"+post_id
 
-    callback=function(){
+    post(url)
 
-        try {
-            document.getElementById("comment-"+post_id+"-only").classList.add("banned");
-        } catch(e) {
-            document.getElementById("context").classList.add("banned");
-        }
-
-        button=document.getElementById("remove-"+post_id);
-        button.onclick=function(){approveComment(post_id)};
-        button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
+    try {
+        document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+    } catch(e) {
+        document.getElementById("context").classList.add("banned");
     }
-    post(url, callback, "Comment has been removed.")
+
+    var button=document.getElementById("remove-"+post_id);
+    button.onclick=function(){approveComment(post_id)};
+    button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
 
     if (typeof button1 !== 'undefined') {
         document.getElementById(button1).classList.toggle("d-md-inline-block");
@@ -24,19 +22,17 @@ function removeComment(post_id,button1,button2) {
 function approveComment(post_id,button1,button2) {
     url="/unban_comment/"+post_id
 
-    callback=function(){
-        try {
-            document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
-        } catch(e) {
-            document.getElementById("context").classList.remove("banned");
-        }
+    post(url)
 
-        button=document.getElementById("remove-"+post_id);
-        button.onclick=function(){removeComment(post_id)};
-        button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
+    try {
+        document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+    } catch(e) {
+        document.getElementById("context").classList.remove("banned");
     }
 
-    post(url, callback, "Comment has been approved.")
+    var button=document.getElementById("remove-"+post_id);
+    button.onclick=function(){removeComment(post_id)};
+    button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 
     if (typeof button1 !== 'undefined') {
         document.getElementById(button1).classList.toggle("d-md-inline-block");
@@ -48,14 +44,12 @@ function approveComment(post_id,button1,button2) {
 function removeComment2(post_id,button1,button2) {
     url="/ban_comment/"+post_id
 
-    callback=function(){
-        document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+    post(url)
 
-        button=document.getElementById("remove-"+post_id);
-        button.onclick=function(){approveComment(post_id)};
-        button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
-    }
-    post(url, callback, "Comment has been removed.")
+    document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+    var button=document.getElementById("remove-"+post_id);
+    button.onclick=function(){approveComment(post_id)};
+    button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
 
     if (typeof button1 !== 'undefined') {
         document.getElementById(button1).classList.toggle("d-none");
@@ -66,15 +60,12 @@ function removeComment2(post_id,button1,button2) {
 function approveComment2(post_id,button1,button2) {
     url="/unban_comment/"+post_id
 
-    callback=function(){
-        document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+    post(url)
 
-        button=document.getElementById("remove-"+post_id);
-        button.onclick=function(){removeComment(post_id)};
-        button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
-    }
-
-    post(url, callback, "Comment has been approved.")
+    document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+    var button=document.getElementById("remove-"+post_id);
+    button.onclick=function(){removeComment(post_id)};
+    button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 
     if (typeof button1 !== 'undefined') {
         document.getElementById(button1).classList.toggle("d-none");

@@ -1,33 +1,19 @@
 <script>
-	function post(url, callback, errortext) {
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", url, true);
-		var form = new FormData()
-		form.append("formkey", formkey());
-		xhr.withCredentials=true;
-		xhr.onerror=function() { alert(errortext); };
-		xhr.onload = function() {
-			if (xhr.status >= 200 && xhr.status < 300) {
-				callback();
-			} else {
-				xhr.onerror();
-			}
-		};
-		xhr.send(form);
-	};
-
 	function delete_postModal(id) {
 
 		function delete_post(){	
 
 			this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting post';	
 			this.disabled = true; 
-			post('/delete_post/' + id,
-				callback = function() {
 
-					location.reload();
-				}
-				)
+			var url = '/delete_post/' + id
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", url, true);
+			var form = new FormData()
+			form.append("formkey", formkey());
+			xhr.withCredentials=true;
+			xhr.send(form);
+			location.reload();
 		}
 
 		document.getElementById("deletePostButton-mobile").onclick = delete_post;

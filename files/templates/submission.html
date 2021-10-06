@@ -15,9 +15,25 @@
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="/assets/js/new_comments_count.js?v=1"></script>
+<script>
+	function poll_vote(cid) {
+		{% if v %}
+			var type = document.getElementById(cid).checked;
+			var scoretext = document.getElementById('poll-' + cid);
+			var score = Number(scoretext.textContent);
+			if (type == true) scoretext.textContent = score + 1;
+			else scoretext.textContent = score - 1;
+			post('/vote/poll/' + cid + '?vote=' + type);
+		{% else %}
+			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+			myToast.show();
+			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
+		{% endif %}
+	}
+</script>
 
 {% if v and v.id == p.author_id %}
-	<script>
+	<script>		
 		togglePostEdit=function(id){
 
 			body=document.getElementById("post-body");
@@ -34,9 +50,9 @@
 {% endif %}
 
 
-{% if 'marsey.tech' in request.host %}
+{% if 'rdrama' not in request.host %}
 	{% if v %}
-		<script src="/assets/js/comments_v.js?v=8"></script>
+		<script src="/assets/js/comments_v.js?v=11"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -357,6 +373,15 @@
 								<pre></pre>
 							{% endif %}
 							{{p.realbody(v) | safe}}
+
+							{% for c in p.options %}
+								<div class="custom-control">								
+									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
+									<label class="custom-control-label" for="{{c.id}}">{{c.body}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
+								</div>
+							{% endfor %}
+
+
 						</div>
 
 						{% if p.embed_url %}

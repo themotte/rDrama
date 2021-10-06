@@ -76,4 +76,5 @@ function insertGIF(url,form) {
 
     commentBox.value = old + gif;
 
+    if (typeof checkForRequired === "function") checkForRequired();
 }

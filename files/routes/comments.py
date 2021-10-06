@@ -286,6 +286,7 @@ def api_comment(v):
 				body=body[:10000]
 				)
 
+	c.upvotes = 1
 	g.db.add(c)
 	g.db.flush()
 
@@ -562,13 +563,14 @@ def api_comment(v):
 						 )
 
 	g.db.add(vote)
+	
 
 	cache.delete_memoized(comment_idlist)
 
 	v.comment_count = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == v.id, Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
-	parent_post.comment_count = g.db.query(Comment.id).options(lazyload('*')).filter_by(parent_submission=parent_post.id).count()
+	parent_post.comment_count += 1
 	g.db.add(parent_post)
 
 	c.voted = 1

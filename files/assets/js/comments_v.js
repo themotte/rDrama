@@ -1,17 +1,9 @@
-function post(url, callback, errortext) {
+function post(url) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     var form = new FormData()
     form.append("formkey", formkey());
     xhr.withCredentials=true;
-    xhr.onerror=function() { alert(errortext); };
-    xhr.onload = function() {
-        if (xhr.status >= 200 && xhr.status < 300) {
-            callback();
-        } else {
-            xhr.onerror();
-        }
-    };
     xhr.send(form);
 };
 
@@ -117,12 +109,8 @@ function delete_commentModal(id) {
 
         this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
         this.disabled = true; 
-        post('/delete/comment/' + id,
-            callback = function() {
-
-                location.reload();
-            }
-            )
+        post('/delete/comment/' + id)
+        location.reload();
     }
 
 };

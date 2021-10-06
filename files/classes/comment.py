@@ -2,7 +2,8 @@ import re
 from urllib.parse import urlencode, urlparse, parse_qs
 from flask import *
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import relationship, deferred, lazyload
+from files.classes.votes import CommentVote
 from files.helpers.lazy import lazy
 from files.helpers.const import SLURS
 from files.__main__ import Base
@@ -37,7 +38,7 @@ class Comment(Base):
 	notifiedto=Column(Integer)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	oauth_app = relationship("OauthApp", viewonly=True)
-	upvotes = Column(Integer, default=1)
+	upvotes = Column(Integer, default=0)
 	downvotes = Column(Integer, default=0)
 	body = deferred(Column(String(10000)))
 	body_html = deferred(Column(String(20000)))
@@ -60,6 +61,13 @@ class Comment(Base):
 	def __repr__(self):
 
 		return f"<Comment(id={self.id})>"
+
+	def poll_voted(self, v):
+		if v:
+			vote = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=self.id).first()
+			if vote: return vote.vote_type
+			else: return None
+		else: return None
 
 	@property
 	@lazy

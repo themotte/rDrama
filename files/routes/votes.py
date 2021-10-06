@@ -161,3 +161,33 @@ def api_vote_comment(comment_id, new, v):
 		g.db.commit()
 	except: g.db.rollback()
 	return "", 204
+
+
+@app.post("/vote/poll/<comment_id>")
+@auth_required
+def api_vote_poll(comment_id, v):
+	
+	vote = request.values.get("vote")
+	if vote == "true": new = 1
+	elif vote == "false": new = 0
+	else: abort(400)
+
+	comment_id = int(comment_id)
+	comment = get_comment(comment_id)
+
+	existing = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id).first()
+
+	if existing and existing.vote_type == vote: return "", 204
+
+	if existing:
+		existing.vote_type = new
+		g.db.add(existing)
+	else:
+		vote = CommentVote(user_id=v.id, vote_type=new, comment_id=comment.id)
+		g.db.add(vote)
+
+	g.db.flush()
+	comment.upvotes = g.db.query(CommentVote.id).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
+	g.db.add(comment)
+	g.db.commit()
+	return "", 204
