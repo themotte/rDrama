@@ -208,7 +208,7 @@ def edit_post(pid, v):
 	if body != p.body:
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
-		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
 		# Run safety filter
@@ -266,7 +266,7 @@ def edit_post(pid, v):
 
 			body = VAXX_MSG.format(username=v.username)
 
-			body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
+			body_md = CustomRenderer().render(mistletoe.Document(body))
 
 			body_jannied_html = sanitize(body_md)
 
@@ -300,7 +300,7 @@ def edit_post(pid, v):
 
 			body = AGENDAPOSTER_MSG.format(username=v.username)
 
-			body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
+			body_md = CustomRenderer().render(mistletoe.Document(body))
 
 			body_jannied_html = sanitize(body_md)
 
@@ -737,7 +737,7 @@ def submit_post(v):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
-	body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
+	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
 
@@ -905,7 +905,7 @@ def submit_post(v):
 
 		body = VAXX_MSG.format(username=v.username)
 
-		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
 
@@ -939,7 +939,7 @@ def submit_post(v):
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
-		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 
 		body_jannied_html = sanitize(body_md)
 
@@ -982,7 +982,7 @@ def submit_post(v):
 		if new_post.url:
 			body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={urllib.parse.quote(new_post.url)}&run=1) (click to archive)"
 			gevent.spawn(archiveorg, new_post.url)
-		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
+		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
 
