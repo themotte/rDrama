@@ -9,38 +9,50 @@
 <pre></pre>
 <pre></pre>
 <h3>&nbsp;Admin Tools</h3>
-{% filter markdown %}
-#### Content
-* [Reported Posts](/admin/reported/posts)
-* [Reported Comments](/admin/reported/comments)
-* [Image Posts](/admin/image_posts)
-* [Removed Posts](/admin/removed)
 
-#### Users
-* [Shadowbanned Users](/admin/shadowbanned)
-* [Users with Agendaposter Theme](/admin/agendaposters)
-* [Users Feed](/admin/users)
+<h4>Content</h4>
+<ul>
+	<li><a href="/admin/reported/posts">Reported Posts</a></li>
+	<li><a href="/admin/reported/comments">Reported Comments</a></li>
+	<li><a href="/admin/image_posts">Image Posts</a></li>
+	<li><a href="/admin/removed">Removed Posts</a></li>
+</ul>
 
-#### Safety
-* [Banned Domains](/admin/banned_domains)
-* [Perceptive Hash Image Ban](/admin/image_ban)
-* [Multi Vote Analysis](/admin/alt_votes)
+<h4>Users</h4>
+<ul>
+	<li><a href="/admin/shadowbanned">Shadowbanned Users</a></li>
+	<li><a href="/admin/agendaposters">Users with Agendaposter Theme</a></li>
+	<li><a href="/admin/users">Users Feed</a></li>
+</ul>
 
-#### Grant
-* [Give User Award](/admin/user_award)
-* [Badges](/admin/badge_grant)
+<h4>Safety</h4>
+<ul>
+	<li><a href="/admin/banned_domains">Banned Domains</a></li>
+	<li><a href="/admin/image_ban">Perceptive Hash Image Ban</a></li>
+	<li><a href="/admin/alt_votes">Multi Vote Analysis</a></li>
+</ul>
 
-#### API Access Control
-* [Apps](/admin/apps)
+<h4>Grant</h4>
+<ul>
+	<li><a href="/admin/user_award">Give User Award</a></li>
+	<li><a href="/admin/badge_grant">Badges</a></li>
+</ul>
 
-#### Statistics
-* [Content Stats](/stats)
-* [Stat Chart](/chart)
+<h4>API Access Control</h4>
+<ul>
+	<li><a href="/admin/apps">Apps</a></li>
+</ul>
 
-#### Configuration
-* [Site Rules](/admin/rules)
+<h4>Statistics</h4>
+<ul>
+	<li><a href="/stats">Content Stats</a></li>
+	<li><a href="/chart">Stat Chart</a></li>
+</ul>
 
-{% endfilter %}
+<h4>Configuration</h4>
+<ul>
+	<li><a href="/admin/rules">Site Rules</a></li>
+</ul>
 
 <div class="custom-control custom-switch">
 	<input type="checkbox" class="custom-control-input" id="disablesignups" name="disablesignups" {% if x == "yes" %}checked{% endif %} onchange="post_toast('/admin/disablesignups');">

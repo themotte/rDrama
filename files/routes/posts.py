@@ -731,7 +731,7 @@ def submit_post(v):
 	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 
 	options = []
-	for i in re.finditer('\s*\$([^\$\n]+)\$\s*', body):
+	for i in re.finditer('\s*\$$([^\$\n]+)\$$\s*', body):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
