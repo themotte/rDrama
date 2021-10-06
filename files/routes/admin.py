@@ -247,7 +247,7 @@ def post_rules(v):
 @auth_required
 def shadowbanned(v):
 	if not (v and v.admin_level == 6): abort(404)
-	users = [x for x in g.db.query(User).options(lazyload('*')).filter_by(shadowbanned != None).all()]
+	users = [x for x in g.db.query(User).options(lazyload('*')).filter(User.shadowbanned != None).all()]
 	return render_template("banned.html", v=v, users=users)
 
 
