@@ -9,15 +9,12 @@
 
 
 </pre>
-{% filter markdown %}
-# Formatting
+<h1>Formatting</h1>
 
 On {{'SITE_NAME' | app_config}}, you can use Markdown formatting.
 
 
-## Inline formatting
-
-{% endfilter %}
+<h2>Inline formatting</h2>
 
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
@@ -76,9 +73,7 @@ On {{'SITE_NAME' | app_config}}, you can use Markdown formatting.
 	</tbody>
 </table>
 
-{% filter markdown %}
-
-## Block formatting
+<h2>Block formatting</h2>
 
 These Markdown tags format an entire paragraph of text at a time.
 
@@ -131,11 +126,9 @@ These Markdown tags format an entire paragraph of text at a time.
 </table>
 
 
-## Custom Formatting
+<h2>Custom Formatting</h2>
 
 We also have some custom hooks for mentioning users and subreddits. Note that these only work if the mentioned user or subreddit actually exists.
-
-{% endfilter %}
 
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
@@ -164,9 +157,7 @@ We also have some custom hooks for mentioning users and subreddits. Note that th
 	</tbody>
 </table>
 
-{% filter markdown %}
-
-## Custom HTML
+<h2>Custom HTML</h2>
 
 And we allow custom HTML in most places.
 
@@ -493,8 +484,6 @@ Allowed styles:
 		</tr>
 	</tbody>
 </table>
-
-{% endfilter %}
 
 {% include "expanded_image_modal.html" %}
 
