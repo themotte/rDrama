@@ -195,38 +195,6 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 
 --
--- Name: badlinks; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.badlinks (
-    id integer NOT NULL,
-    reason text,
-    link character varying(512),
-    autoban boolean
-);
-
-
---
--- Name: badlinks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.badlinks_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: badlinks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.badlinks_id_seq OWNED BY public.badlinks.id;
-
-
---
 -- Name: badpics; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -266,7 +234,7 @@ ALTER SEQUENCE public.badpics_id_seq OWNED BY public.badpics.id;
 CREATE TABLE public.banneddomains (
     id integer NOT NULL,
     domain character varying(100),
-    reason text
+    reason character varying(100)
 );
 
 
@@ -310,7 +278,7 @@ CREATE TABLE public.commentflags (
     id integer NOT NULL,
     user_id integer,
     comment_id integer,
-    reason text
+    reason character varying(350)
 );
 
 
@@ -360,7 +328,7 @@ CREATE TABLE public.comments (
     sentto integer,
     bannedfor boolean,
     removed_by integer,
-    is_pinned text,
+    is_pinned character varying(25),
     body character varying(10000),
     body_html character varying(40000),
     ban_reason character varying(256),
@@ -450,7 +418,7 @@ CREATE TABLE public.flags (
     id integer NOT NULL,
     user_id integer,
     post_id integer,
-    reason text
+    reason character varying(350)
 );
 
 
@@ -506,39 +474,6 @@ ALTER SEQUENCE public.follows_id_seq OWNED BY public.follows.id;
 
 
 --
--- Name: images; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.images (
-    id integer NOT NULL,
-    state character varying(8),
-    text character varying(255),
-    number integer,
-    deletehash text
-);
-
-
---
--- Name: images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.images_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.images_id_seq OWNED BY public.images.id;
-
-
---
 -- Name: modactions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -550,7 +485,7 @@ CREATE TABLE public.modactions (
     target_comment_id integer,
     created_utc integer DEFAULT 0,
     kind character varying(32) DEFAULT NULL::character varying,
-    _note text DEFAULT NULL::character varying
+    _note character varying(256) DEFAULT NULL::character varying
 );
 
 
@@ -697,7 +632,7 @@ CREATE TABLE public.submissions (
     upvotes integer,
     downvotes integer,
     app_id integer,
-    thumburl text,
+    thumburl character varying(60),
     private boolean,
     views integer,
     is_bot boolean,
@@ -705,14 +640,14 @@ CREATE TABLE public.submissions (
     comment_count integer DEFAULT 0,
     removed_by integer,
     club boolean,
-    stickied text,
+    stickied character varying(25),
     title character varying(500),
     url character varying(2083),
     body character varying(10000),
     body_html character varying(20000),
     embed_url character varying(10000),
     ban_reason character varying(128),
-    title_html text
+    title_html character varying(1500)
 );
 
 
@@ -828,28 +763,28 @@ CREATE TABLE public.users (
     stored_subscriber_count integer DEFAULT 0,
     ban_evade integer DEFAULT 0,
     original_username character varying(255),
-    customtitle text,
-    defaultsorting text,
-    defaulttime text,
-    namecolor text,
-    titlecolor text,
-    profileurl text,
-    bannerurl text,
+    customtitle character varying(1000),
+    defaultsorting character varying(15),
+    defaulttime character varying(5),
+    namecolor character varying(6),
+    titlecolor character varying(6),
+    profileurl character varying(65),
+    bannerurl character varying(65),
     hidevotedon boolean,
     newtab boolean,
     flairchanged boolean,
-    defaultsortingcomments text,
-    theme text,
-    song text,
+    defaultsortingcomments character varying(15),
+    theme character varying(15),
+    song character varying(50),
     slurreplacer boolean,
-    shadowbanned text,
+    shadowbanned character varying(25),
     newtabexternal boolean,
-    customtitleplain text,
-    themecolor text,
+    customtitleplain character varying(100),
+    themecolor character varying(6),
     changelogsub boolean,
     oldreddit boolean,
-    css text,
-    profilecss text,
+    css character varying(4000),
+    profilecss character varying(4000),
     coins integer,
     agendaposter boolean,
     agendaposter_expires_utc integer DEFAULT 0,
@@ -857,12 +792,12 @@ CREATE TABLE public.users (
     suicide_utc integer,
     post_count integer,
     comment_count integer,
-    highres text,
+    highres character varying(60),
     rent_utc integer,
     patron integer,
     controversial boolean,
-    background text,
-    verified text,
+    background character varying(20),
+    verified character varying(20),
     fail_utc integer,
     steal_utc integer,
     fail2_utc integer,
@@ -992,13 +927,6 @@ ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badge
 
 
 --
--- Name: badlinks id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badlinks ALTER COLUMN id SET DEFAULT nextval('public.badlinks_id_seq'::regclass);
-
-
---
 -- Name: badpics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1052,13 +980,6 @@ ALTER TABLE ONLY public.flags ALTER COLUMN id SET DEFAULT nextval('public.flags_
 --
 
 ALTER TABLE ONLY public.follows ALTER COLUMN id SET DEFAULT nextval('public.follows_id_seq'::regclass);
-
-
---
--- Name: images id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.images ALTER COLUMN id SET DEFAULT nextval('public.images_id_seq'::regclass);
 
 
 --
@@ -1180,14 +1101,6 @@ ALTER TABLE ONLY public.badges
 
 
 --
--- Name: badlinks badlinks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badlinks
-    ADD CONSTRAINT badlinks_pkey PRIMARY KEY (id);
-
-
---
 -- Name: badpics badpics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1265,14 +1178,6 @@ ALTER TABLE ONLY public.follows
 
 ALTER TABLE ONLY public.follows
     ADD CONSTRAINT follows_pkey PRIMARY KEY (id);
-
-
---
--- Name: images images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.images
-    ADD CONSTRAINT images_pkey PRIMARY KEY (id);
 
 
 --
@@ -1505,13 +1410,6 @@ CREATE INDEX badges_badge_id_idx ON public.badges USING btree (badge_id);
 --
 
 CREATE INDEX badges_user_index ON public.badges USING btree (user_id);
-
-
---
--- Name: badlink_link_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX badlink_link_idx ON public.badlinks USING btree (link);
 
 
 --
