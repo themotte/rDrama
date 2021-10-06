@@ -184,8 +184,7 @@ def sign_up_get(v):
 	if v: return redirect("/")
 
 	agent = request.headers.get("User-Agent", None)
-	if not agent:
-		abort(403)
+	if not agent: abort(403)
 
 	# check for referral in link
 	ref = request.values.get("ref", None)
@@ -232,12 +231,10 @@ def sign_up_post(v):
 	with open('./disablesignups', 'r') as f:
 		if f.read() == "yes": return "New account registration is currently closed. Please come back later.", 403
 
-	if v:
-		abort(403)
+	if v: abort(403)
 
 	agent = request.headers.get("User-Agent", None)
-	if not agent:
-		abort(403)
+	if not agent: abort(403)
 
 	form_timestamp = request.values.get("now", '0')
 	form_formkey = request.values.get("formkey", "none")
