@@ -1,7 +1,6 @@
 import bleach
 from bs4 import BeautifulSoup
 from bleach.linkifier import LinkifyFilter
-from urllib.parse import ParseResult, urlunparse, urlparse
 from functools import partial
 from .get import *
 from os import path, environ
@@ -88,7 +87,8 @@ _allowed_protocols = [
 _allowed_styles =[
 	'color',
 	'font-weight',
-	'transform'
+	'transform',
+	'-webkit-transform',
 ]
 
 def sanitize(sanitized, noimages=False):

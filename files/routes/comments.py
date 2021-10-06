@@ -157,7 +157,7 @@ def api_comment(v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
-	body_md = CustomRenderer().render(mistletoe.Document(body))
+	body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 	body_html = sanitize(body_md)
 
 	# Run safety filter
@@ -270,7 +270,7 @@ def api_comment(v):
 		
 		body = request.values.get("body") + f"\n![]({url})"
 		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
-		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 		body_html = sanitize(body_md)
 
 	if len(body_html) > 20000: abort(400)
@@ -365,7 +365,7 @@ def api_comment(v):
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
-		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 
 		body_jannied_html = sanitize(body_md)
 
@@ -403,7 +403,7 @@ def api_comment(v):
 	
 		body = random.choice(LONGPOST_REPLIES)
 		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
-		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 		body_html2 = sanitize(body_md)
 
 
@@ -434,7 +434,7 @@ def api_comment(v):
 	if "rdrama" in request.host and random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
 	
 		body = "zoz"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 		body_html2 = sanitize(body_md)
 
 
@@ -462,7 +462,7 @@ def api_comment(v):
 
 	
 		body = "zle"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 		body_html2 = sanitize(body_md)
 
 
@@ -486,7 +486,7 @@ def api_comment(v):
 		
 	
 		body = "zozzle"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 		body_html2 = sanitize(body_md)
 
 
@@ -597,7 +597,7 @@ def edit_comment(cid, v):
 	body = request.values.get("body", "")[:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
-	body_md = CustomRenderer().render(mistletoe.Document(body))
+	body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 	body_html = sanitize(body_md)
 
 	bans = filter_comment_html(body_html)
@@ -689,7 +689,7 @@ def edit_comment(cid, v):
 		url = request.host_url[:-1] + process_image(name)
 
 		body += f"\n![]({url})"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 		body_html = sanitize(body_md)
 
 	if len(body_html) > 20000: abort(400)
@@ -706,7 +706,7 @@ def edit_comment(cid, v):
 
 		body = VAXX_MSG.format(username=v.username)
 
-		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 
 		body_jannied_html = sanitize(body_md)
 
@@ -741,7 +741,7 @@ def edit_comment(cid, v):
 
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
-		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_md = CustomRenderer().render(mistletoe.Document(body)).replace("<marquee>","<marquee><p>").replace("</marquee>","</marquee></p>")
 
 		body_jannied_html = sanitize(body_md)
 
