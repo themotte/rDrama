@@ -202,16 +202,22 @@ Allowed tags:
 		<tr>
 			<td>Line Break</td>
 			<td>
-				
+				<pre>
+Line 1
+&lt;br&gt;
+Line 2
+				</pre>
 			</td>
 			<td>
-				Line 1<br>Line 2
+				Line 1
+				<br>
+				Line 2
 			</td>
 		</tr>
 		<tr>
 			<td>Code</td>
 			<td>
-				
+				&lt;code&gt;This is code&lt;/code&gt;
 			</td>
 			<td>
 				<code>This is code</code>
@@ -220,7 +226,7 @@ Allowed tags:
 		<tr>
 			<td>Strikethrough</td>
 			<td>
-				
+				The last word will have a &lt;del&gt;strikethrough&lt;/del&gt;
 			</td>
 			<td>
 				The last word will have a <del>strikethrough</del>
@@ -229,7 +235,7 @@ Allowed tags:
 		<tr>
 			<td>Emphasis</td>
 			<td>
-				
+				We &lt;em&gt;cannot&lt;/em&gt; live like this.
 			</td>
 			<td>
 				We <em>cannot</em> live like this.
@@ -238,7 +244,14 @@ Allowed tags:
 		<tr>
 			<td>Headings</td>
 			<td>
-				
+				<pre>
+&lt;h1&gt;This is heading 1&lt;/h1&gt;
+&lt;h2&gt;This is heading 2&lt;/h2&gt;
+&lt;h3&gt;This is heading 3&lt;/h3&gt;
+&lt;h4&gt;This is heading 4&lt;/h4&gt;
+&lt;h5&gt;This is heading 5&lt;/h5&gt;
+&lt;h6&gt;This is heading 6&lt;/h6&gt;
+				</pre>
 			</td>
 			<td>
 				<h1>This is heading 1</h1>
@@ -252,7 +265,11 @@ Allowed tags:
 		<tr>
 			<td>Horizontal Rule</td>
 			<td>
-				
+				<pre>
+Text 1
+&lt;hr&gt;
+Text 2
+				</pre>
 			</td>
 			<td>
 				Text 1
@@ -263,7 +280,8 @@ Allowed tags:
 		<tr>
 			<td>Italics</td>
 			<td>
-				
+				&lt;i&gt;This&lt;/i&gt; is how you get italics.
+				<i>This</i> is how you get italics.
 			</td>
 			<td>
 				<i>This</i> is how you get italics.
@@ -272,7 +290,16 @@ Allowed tags:
 		<tr>
 			<td>Lists</td>
 			<td>
-				
+				<pre>
+&lt;ul&gt;
+	&lt;li&gt;Bullet 1&lt;/li&gt;
+	&lt;li&gt;Bullet 2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+	&lt;li&gt;Number 1&lt;/li&gt;
+	&lt;li&gt;Number 2&lt;/li&gt;
+&lt;/ol&gt;
+				</pre>
 			</td>
 			<td>
 				<ul>
@@ -288,7 +315,10 @@ Allowed tags:
 		<tr>
 			<td>Paragraphs</td>
 			<td>
-				
+				<pre>
+&lt;p&gt;Paragraph 1&lt;/p&gt;
+&lt;p&gt;Paragraph 2&lt;/p&gt;
+				</pre>
 			</td>
 			<td>
 				<p>Paragraph 1</p>
@@ -297,9 +327,15 @@ Allowed tags:
 		</tr>
 		<tr>
 			<td>Preformatted Text</td>
-			<td>
-				
-			</td>
+			<td><pre>
+&lt;pre&gt;
+	Text in a pre element
+	is displayed in a fixed-width
+	font, and it preserves
+	both      spaces and
+	line breaks
+&lt;/pre&gt;
+			</pre></td>
 			<td>
 				<pre>
 Text in a pre element
@@ -313,7 +349,7 @@ line breaks
 		<tr>
 			<td>Strong</td>
 			<td>
-				
+				&lt;strong&gt;This text is important!&lt;/strong&gt;
 			</td>
 			<td>
 				<strong>This text is important!</strong>
@@ -322,7 +358,7 @@ line breaks
 		<tr>
 			<td>Subscript</td>
 			<td>
-				
+				This text contains &lt;sub&gt;subscript&lt;/sub&gt; text.
 			</td>
 			<td>
 				This text contains <sub>subscript</sub> text.
@@ -331,7 +367,7 @@ line breaks
 		<tr>
 			<td>Superscript</td>
 			<td>
-				
+				E = mc&lt;sup&gt;2&lt;/sup&gt;
 			</td>
 			<td>
 				E = mc<sup>2</sup>
@@ -339,8 +375,28 @@ line breaks
 		</tr>
 		<tr>
 			<td>Tables</td>
-			<td>
-				
+			<td><pre>
+&lt;table&gt;
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Col 1&lt;/td&gt;
+			&lt;td&gt;Col 2&lt;/td&gt;
+			&lt;td&gt;Col 3&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;td&gt;1&lt;/td&gt;
+			&lt;td&gt;2&lt;/td&gt;
+			&lt;td&gt;3&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;4&lt;/td&gt;
+			&lt;td&gt;5&lt;/td&gt;
+			&lt;td&gt;6&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;</pre>
 			</td>
 			<td>
 				<table>
@@ -369,7 +425,9 @@ line breaks
 		<tr>
 			<td>Marquee</td>
 			<td>
-				
+				&lt;marquee width="60%" direction="up" height="100px"&gt;
+					This is a sample scrolling text that has scrolls in the upper direction.
+				&lt;/marquee&gt;
 			</td>
 			<td>
 				<marquee width="60%" direction="up" height="100px">
@@ -380,7 +438,7 @@ line breaks
 		<tr>
 			<td>Links</td>
 			<td>
-				
+				This is a &lt;a href='https://www.w3schools.com/tags/tag_a.asp'&gt;link&lt;/a&gt;
 			</td>
 			<td>
 				This is a <a href='https://www.w3schools.com/tags/tag_a.asp'>link</a>
@@ -389,7 +447,7 @@ line breaks
 		<tr>
 			<td>Images</td>
 			<td>
-				
+				&lt;img src="https://i.imgur.com/SwVuagI_d.webp" width="200"&gt;
 			</td>
 			<td>
 				<img src="https://i.imgur.com/SwVuagI_d.webp" width="200">
@@ -398,7 +456,7 @@ line breaks
 		<tr>
 			<td>Span</td>
 			<td>
-				
+				My mother has &lt;span style="color:blue"&gt;blue&lt;/span&gt; eyes.
 			</td>
 			<td>
 				My mother has <span style="color:blue">blue</span> eyes.
@@ -406,9 +464,6 @@ line breaks
 		</tr>
 	</tbody>
 </table>
-
-- img
-- span
 
 Allowed styles:
 
