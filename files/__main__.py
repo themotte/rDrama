@@ -6,7 +6,6 @@ from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
-from flaskext.markdown import Markdown
 from flask_limiter.util import get_ipaddr
 from flask_mail import Mail
 
@@ -85,7 +84,6 @@ engine = create_engine(app.config['DATABASE_URL'])
 db_session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 cache = Cache(app)
-Markdown(app)
 Compress(app)
 mail = Mail(app)
 
