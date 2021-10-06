@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship, deferred
 import re, random
 from urllib.parse import urlparse
 from files.helpers.lazy import lazy
-from files.helpers.const import SLURS
+from files.helpers.const import SLURS, AUTOPOLLER_ACCOUNT
 from files.__main__ import Base
 from .flags import Flag
 from os import environ
@@ -74,7 +74,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def options(self):
-		return self.comments.filter_by(author_id = 3369)
+		return self.comments.filter_by(author_id = AUTOPOLLER_ACCOUNT)
 
 	@property
 	@lazy

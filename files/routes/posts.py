@@ -124,7 +124,7 @@ def post_id(pid, anything=None, v=None):
  
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
-			Comment.author_id != 3369,
+			Comment.author_id != AUTOPOLLER_ACCOUNT,
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -162,7 +162,7 @@ def post_id(pid, anything=None, v=None):
 
 	else:
 		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
-		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id != 3369, Comment.author_id.notin_(shadowbanned))
+		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT, Comment.author_id.notin_(shadowbanned))
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -816,7 +816,7 @@ def submit_post(v):
 	g.db.flush()
 	
 	for option in options:
-		c = Comment(author_id=3369,
+		c = Comment(author_id=AUTOPOLLER_ACCOUNT,
 			parent_submission=new_post.id,
 			level=1,
 			body=option,
