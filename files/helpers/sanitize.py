@@ -134,6 +134,8 @@ def sanitize(sanitized, noimages=False):
 			tag["style"] = "max-height: 100px; max-width: 100%;"
 			tag["class"] = "in-comment-image rounded-sm my-2"
 			tag["loading"] = "lazy"
+			tag["data-src"] = tag["src"]
+			tag["src"] = ""
 
 			link = soup.new_tag("a")
 			link["href"] = tag["src"]
