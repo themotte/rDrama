@@ -190,7 +190,7 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.finditer("[^a]>\s*(:!?\w+:\s*)+<\/", sanitized):
 		old = i.group(0)
-		new = old.lower().replace(">", " style='margin-bottom:0 !important'>")
+		if 'marseylong' in old: new = old.lower().replace(">", " style='margin-bottom:0 !important'>")
 		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("!"):

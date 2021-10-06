@@ -1,8 +1,5 @@
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('[data-src]').forEach(elem => {
-        elem.src = elem.dataset.src;
-    })
-});
+const observer = lozad();
+observer.observe();
 
 makeBold = function (form) {
     var text = document.getElementById(form);
