@@ -142,7 +142,7 @@ def sanitize(sanitized, noimages=False):
 			link["rel"] = "nofollow noopener noreferrer"
 			link["target"] = "_blank"
 
-			link["onclick"] = f"expandDesktopImage('{tag['src']}');"
+			link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
 			link["data-bs-toggle"] = "modal"
 			link["data-bs-target"] = "#expandImageModal"
 
