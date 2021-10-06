@@ -132,7 +132,7 @@ def sanitize(sanitized, noimages=False):
 
 			tag["rel"] = "nofollow noopener noreferrer"
 			tag["style"] = "max-height: 100px; max-width: 100%;"
-			tag["class"] = "in-comment-image rounded-sm my-2 lozard"
+			tag["class"] = "in-comment-image rounded-sm my-2 lozad"
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
 			tag["src"] = ""
@@ -167,7 +167,7 @@ def sanitize(sanitized, noimages=False):
 	#whatever else happens with images, there are only two sets of classes allowed
 	for tag in soup.find_all("img"):
 		if 'profile-pic-20' not in tag.attrs.get("class",""):
-			tag.attrs['class']="in-comment-image rounded-sm my-2 lozard"
+			tag.attrs['class']="in-comment-image rounded-sm my-2 lozad"
 
 	#table format
 	for tag in soup.find_all("table"):
@@ -199,7 +199,7 @@ def sanitize(sanitized, noimages=False):
 			if emoji.startswith("!"):
 				emoji = emoji[1:]
 				if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-					new = re.sub(f'\w*(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=60 data-src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored lozard">', new)
+					new = re.sub(f'\w*(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=60 data-src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored lozad">', new)
 			
 			elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 				new = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 class="lozad" data-src="https://{site}/assets/images/emojis/{emoji}.webp">', new)
