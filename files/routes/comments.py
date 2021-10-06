@@ -9,6 +9,7 @@ from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
+from urllib.parse import ParseResult, urlunparse, urlparse
 
 
 site = environ.get("DOMAIN").strip()

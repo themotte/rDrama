@@ -1,10 +1,7 @@
 import time
-from urllib.parse import urlparse
 import mistletoe
-import urllib.parse
 import gevent
 import requests
-
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.filters import *
@@ -19,6 +16,7 @@ from io import BytesIO
 from files.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage
 from .front import frontlist, changeloglist
+from urllib.parse import ParseResult, urlunparse, urlparse, quote
 
 site = environ.get("DOMAIN").strip()
 CATBOX_KEY = environ.get("CATBOX_KEY").strip()
@@ -980,7 +978,7 @@ def submit_post(v):
 			body += "\n\n---\n\n"
 		else: body = ""
 		if new_post.url:
-			body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={urllib.parse.quote(new_post.url)}&run=1) (click to archive)"
+			body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)"
 			gevent.spawn(archiveorg, new_post.url)
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
