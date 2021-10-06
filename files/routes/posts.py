@@ -385,8 +385,9 @@ def filter_title(title):
 				title = title.replace(f':!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">')
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 			title = title.replace(f':{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{emoji}.webp">')
-
-	return title
+	
+	if len(title) > 500: abort(400)
+	else: return title
 
 
 
