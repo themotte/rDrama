@@ -127,27 +127,21 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 def api_comment(v):
 	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
-	parent_submission = request.values.get("submission")
-	parent_fullname = request.values.get("parent_fullname")
+	parent_submission = request.values.get("submission").strip()
+	parent_fullname = request.values.get("parent_fullname").strip()
 
-	# get parent item info
-	parent_id = parent_fullname.split("_")[1]
-	if parent_fullname.startswith("t2"):
-		parent_post = get_post(parent_id, v=v)
-		if parent_post.club and not (v and v.paid_dues): abort(403)
+	parent_post = get_post(parent_submission, v=v)
+	if parent_post.club and not (v and v.paid_dues): abort(403)
+
+	if parent_fullname.startswith("t2_"):
 		parent = parent_post
 		parent_comment_id = None
 		level = 1
-		parent_submission = parent_id
-	elif parent_fullname.startswith("t3"):
-		parent = get_comment(parent_id, v=v)
+	elif parent_fullname.startswith("t3_"):
+		parent = get_comment(parent_fullname.split("_")[1], v=v)
 		parent_comment_id = parent.id
 		level = parent.level + 1
-		parent_id = parent.parent_submission
-		parent_submission = parent_id
-		parent_post = get_post(parent_id)
-	else:
-		abort(400)
+	else: abort(400)
 
 	#process and sanitize
 	body = request.values.get("body", "")[:10000]
@@ -238,9 +232,6 @@ def api_comment(v):
 				g.db.add(ma)
 
 			return {"error": "Too much spam!"}, 403
-
-	# create comment
-	parent_id = parent_fullname.split("_")[1]
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
