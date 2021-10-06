@@ -63,7 +63,7 @@ class AwardRelationship(Base):
 	user_id = Column(Integer, ForeignKey("users.id"))
 	submission_id = Column(Integer, ForeignKey("submissions.id"))
 	comment_id = Column(Integer, ForeignKey("comments.id"))
-	kind = Column(String(20))
+	kind = Column(String)
 
 	user = relationship("User", primaryjoin="AwardRelationship.user_id==User.id", viewonly=True)
 

@@ -4,17 +4,17 @@ from files.__main__ import Base
 class Image(Base):
 	__tablename__ = "images"
 	id = Column(BigInteger, primary_key=True)
-	state = Column(String(8))
+	state = Column(String)
 	number = Column(Integer)
-	text = Column(String(64))
-	deletehash = Column(String(64))
+	text = Column(String)
+	deletehash = Column(String)
 
 
 class BadPic(Base):
 
 	__tablename__="badpics"
 	id = Column(BigInteger, primary_key=True)
-	description=Column(String(200))
-	phash=Column(String(64))
-	ban_reason=Column(String(64))
+	description=Column(String)
+	phash=Column(String)
+	ban_reason=Column(String)
 	ban_time=Column(Integer)

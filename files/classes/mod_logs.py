@@ -9,11 +9,11 @@ class ModAction(Base):
 	id = Column(BigInteger, primary_key=True)
 
 	user_id = Column(Integer, ForeignKey("users.id"))
-	kind = Column(String(32))
+	kind = Column(String)
 	target_user_id = Column(Integer, ForeignKey("users.id"), default=0)
 	target_submission_id = Column(Integer, ForeignKey("submissions.id"), default=0)
 	target_comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
-	_note=Column(String(256))
+	_note=Column(String)
 	created_utc = Column(Integer, default=0)
 
 	user = relationship("User", primaryjoin="User.id==ModAction.user_id", viewonly=True)

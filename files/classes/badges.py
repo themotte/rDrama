@@ -11,11 +11,11 @@ class BadgeDef(Base):
 	__tablename__ = "badge_defs"
 
 	id = Column(BigInteger, primary_key=True)
-	name = Column(String(64))
-	description = Column(String(64))
-	icon = Column(String(64))
+	name = Column(String)
+	description = Column(String)
+	icon = Column(String)
 	kind = Column(Integer, default=1)
-	qualification_expr = Column(String(128))
+	qualification_expr = Column(String)
 
 	def __repr__(self):
 
@@ -46,8 +46,8 @@ class Badge(Base):
 
 	user_id = Column(Integer, ForeignKey('users.id'))
 	badge_id = Column(Integer, ForeignKey("badge_defs.id"))
-	description = Column(String(64))
-	url = Column(String(256))
+	description = Column(String)
+	url = Column(String)
 	badge = relationship("BadgeDef", viewonly=True)
 
 	def __repr__(self):

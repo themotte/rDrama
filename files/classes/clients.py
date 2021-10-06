@@ -12,10 +12,10 @@ class OauthApp(Base):
 	__tablename__ = "oauth_apps"
 
 	id = Column(Integer, primary_key=True)
-	client_id = Column(String(64))
-	app_name = Column(String(50))
-	redirect_uri = Column(String(4096))
-	description = Column(String(256))
+	client_id = Column(String)
+	app_name = Column(String)
+	redirect_uri = Column(String)
+	description = Column(String)
 	author_id = Column(Integer, ForeignKey("users.id"))
 	author = relationship("User", viewonly=True)
 
@@ -66,7 +66,7 @@ class ClientAuth(Base):
 
 	id = Column(Integer, primary_key=True)
 	oauth_client = Column(Integer, ForeignKey("oauth_apps.id"))
-	access_token = Column(String(128))
+	access_token = Column(String)
 	user_id = Column(Integer, ForeignKey("users.id"))
 	user = relationship("User", viewonly=True)
 	application = relationship("OauthApp", viewonly=True)
