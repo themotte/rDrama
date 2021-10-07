@@ -293,7 +293,7 @@
 						{% if p.stickied %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned by @{{p.stickied}}"></i>{% endif %}
 						{% if p.is_pinned %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Pinned to profile"></i>{% endif %}
 						{% if p.distinguish_level %} <i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}
-						{% if p.is_bot %} <i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	data-bs-original-title="Bot"></i>{% endif %}
+						{% if p.is_bot %} <i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="Bot"></i>{% endif %}
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
 						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
@@ -533,7 +533,7 @@
 					<div id="voting" class="voting d-none d-md-block mb-auto">
 						<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 
-						<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="+{{ups}} | -{{downs}}">{{score}}</span>
+						<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}">{{score}}</span>
 						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 					</div>
 
@@ -542,7 +542,7 @@
 					<div id="voting" class="voting d-none d-md-block mb-auto">
 						<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="arrow-up mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
 						</div>
-						<span id="post-{{p.id}}-score-none" class="score text-muted"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+						<span id="post-{{p.id}}-score-none" class="score text-muted"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="arrow-down mx-auto" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></div>
 					</div>
 
@@ -597,7 +597,7 @@
 					</span>
 					{% endif %}
 
-					<span id="post-mobile-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}">{{score}}</span>
+					<span id="post-mobile-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="+{{ups}} | -{{downs}}">{{score}}</span>
 
 					{% if v %}
 						<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-mobile-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post-mobile', '{{p.id}}', '-1')" class="ml-2 my-0 arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></span>
