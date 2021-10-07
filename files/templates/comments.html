@@ -33,7 +33,7 @@
 
 {% if v %}
 	{% include "award_modal.html" %}
-	<script src="/assets/js/comments_v.js?v=13"></script>
+	<script src="/assets/js/comments_v.js?v=14"></script>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -221,7 +221,7 @@
 				{% if c.parent_comment_id and not standalone and level<=7 %}<a href="#comment-{{ c.parent_comment_id }}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{ c.parent_comment.author.username }}</a>{% endif %}
 
 				
-				<span id="timestamp-{{c.id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" class="time-stamp">&nbsp;{{c.age_string}}</span>
+				<span id="timestamp-{{c.id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
 				{% if c.edited_utc %}
 				<span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 				{% endif %}

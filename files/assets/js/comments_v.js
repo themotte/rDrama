@@ -129,10 +129,6 @@ post_reply=function(id){
         if (xhr.status==200) {
             commentForm=document.getElementById('comment-form-space-'+id);
             commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src');
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-            myToast.hide();
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-            myToast.show();
         }
         else {
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
@@ -161,10 +157,6 @@ comment_edit=function(id){
             commentForm=document.getElementById('comment-text-'+id);
             commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src');
             document.getElementById('cancel-edit-'+id).click()
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-            myToast.hide();
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-            myToast.show();
         }
         else {
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
@@ -194,10 +186,6 @@ post_comment=function(fullname){
         if (xhr.status==200) {
             commentForm=document.getElementById('comment-form-space-'+fullname);
             commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src');
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-            myToast.hide();
-            var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-            myToast.show();
         }
         else {
             var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
