@@ -265,7 +265,7 @@
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
 				{{c.realbody(v) | safe}}
 
-				{% for c in c.options %}
+				{% for c2 in c.options %}
 					dsffdsdssd
 					<div class="custom-control">								
 						<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
