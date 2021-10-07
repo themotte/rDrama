@@ -763,7 +763,6 @@ def submit_post(v):
 			)
 
 		g.db.add(c)
-		g.db.flush()
 
 	vote = Vote(user_id=v.id,
 				vote_type=1,
@@ -771,8 +770,6 @@ def submit_post(v):
 				)
 	g.db.add(vote)
 	g.db.flush()
-
-	g.db.refresh(new_post)
 
 	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 

@@ -195,7 +195,20 @@ class Submission(Base):
 		if self.is_banned and not (v and (v.admin_level >= 3 or self.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 
-		self.tree_comments(comment=comment)
+		comments = self.__dict__.get('preloaded_comments', [])
+		if comments:
+			pinned_comment = []
+			index = {}
+			for c in comments:
+				if c.is_pinned and c.parent_fullname==self.fullname:
+					pinned_comment += [c]
+					continue
+				if c.parent_fullname in index: index[c.parent_fullname].append(c)
+				else: index[c.parent_fullname] = [c]
+
+			for c in comments: c.__dict__["replies"] = index.get(c.fullname, [])
+			if comment: self.__dict__["replies"] = [comment]
+			else: self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
 		return render_template(template,
 							   v=v,
@@ -215,27 +228,6 @@ class Submission(Base):
 		if domain.startswith("www."): domain = domain.split("www.")[1]
 		return domain.replace("old.reddit.com", "reddit.com")
 
-	def tree_comments(self, comment=None, v=None):
-
-		comments = self.__dict__.get('preloaded_comments', [])
-		if not comments: return
-
-		pinned_comment=[]
-
-		index = {}
-		for c in comments:
-
-			if c.is_pinned and c.parent_fullname==self.fullname:
-				pinned_comment += [c]
-				continue
-
-			if c.parent_fullname in index: index[c.parent_fullname].append(c)
-			else: index[c.parent_fullname] = [c]
-
-		for c in comments: c.__dict__["replies"] = index.get(c.fullname, [])
-
-		if comment: self.__dict__["replies"] = [comment]
-		else: self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
 	@property
 	@lazy

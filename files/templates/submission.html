@@ -15,22 +15,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="/assets/js/new_comments_count.js?v=10"></script>
-<script>
-	function poll_vote(cid) {
-		{% if v %}
-			var type = document.getElementById(cid).checked;
-			var scoretext = document.getElementById('poll-' + cid);
-			var score = Number(scoretext.textContent);
-			if (type == true) scoretext.textContent = score + 1;
-			else scoretext.textContent = score - 1;
-			post('/vote/poll/' + cid + '?vote=' + type);
-		{% else %}
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-			myToast.show();
-			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-		{% endif %}
-	}
-</script>
 
 {% if v and v.id == p.author_id %}
 	<script>		

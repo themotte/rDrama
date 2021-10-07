@@ -9,7 +9,6 @@ from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
-from urllib.parse import ParseResult, urlunparse, urlparse
 
 
 site = environ.get("DOMAIN").strip()
@@ -90,7 +89,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			comments = comments.filter(Comment.author_id.notin_(shadowbanned))
 		 
 		comments=comments.filter(
-			Comment.parent_submission == post.id
+			Comment.parent_submission == post.id,
+			Comment.author_id != AUTOPOLLER_ACCOUNT
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -152,6 +152,12 @@ def api_comment(v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
+
+	options = []
+	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):
+		options.append(i.group(1))
+		body = body.replace(i.group(0), "")
+
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
@@ -262,6 +268,17 @@ def api_comment(v):
 	c.upvotes = 1
 	g.db.add(c)
 	g.db.flush()
+
+	for option in options:
+		c_option = Comment(author_id=AUTOPOLLER_ACCOUNT,
+			parent_submission=parent_submission,
+			parent_comment_id=c.id,
+			level=level+1,
+			body=option
+			)
+
+		g.db.add(c_option)
+
 
 	if 'pcmemes.net' in request.host and c.body.lower().startswith("based"):
 		pill = re.match("based and (.{1,20}?)(-| )pilled", body, re.IGNORECASE)

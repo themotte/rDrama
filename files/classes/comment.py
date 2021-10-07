@@ -10,6 +10,7 @@ from files.__main__ import Base
 from .flags import CommentFlag
 from os import environ
 import time
+from files.helpers.const import AUTOPOLLER_ACCOUNT
 
 site = environ.get("DOMAIN").strip()
 
@@ -169,7 +170,7 @@ class Comment(Base):
 	def replies(self):
 		r = self.__dict__.get("replies", None)
 		if r: r = [x for x in r if not x.author.shadowbanned]
-		if not r and r != []:  r = sorted([x for x in self.child_comments if not x.author.shadowbanned], key=lambda x: x.score, reverse=True)
+		if not r and r != []:  r = sorted([x for x in self.child_comments if not x.author.shadowbanned and x.author_id != AUTOPOLLER_ACCOUNT], key=lambda x: x.score, reverse=True)
 		return r
 
 	@replies.setter
@@ -187,7 +188,7 @@ class Comment(Base):
 	@property
 	def replies3(self):
 		r = self.__dict__.get("replies", None)
-		if not r and r != []:  r = sorted([x for x in self.child_comments], key=lambda x: x.score, reverse=True)
+		if not r and r != []:  r = sorted([x for x in self.child_comments if x.author_id != AUTOPOLLER_ACCOUNT], key=lambda x: x.score, reverse=True)
 		return r
 
 	@property

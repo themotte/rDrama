@@ -66,6 +66,26 @@
 
 {% include "expanded_image_modal.html" %}
 
+
+<script>
+	function poll_vote(cid) {
+		{% if v %}
+			var type = document.getElementById(cid).checked;
+			var scoretext = document.getElementById('poll-' + cid);
+			var score = Number(scoretext.textContent);
+			if (type == true) scoretext.textContent = score + 1;
+			else scoretext.textContent = score - 1;
+			post('/vote/poll/' + cid + '?vote=' + type);
+		{% else %}
+			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+			myToast.show();
+			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
+		{% endif %}
+	}
+</script>
+
+
+
 {% macro single_comment(c, level=1) %}
 
 {% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
@@ -244,6 +264,13 @@
 
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
 				{{c.realbody(v) | safe}}
+
+				{% for c in c.options %}
+					<div class="custom-control">								
+						<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
+						<label class="custom-control-label" for="{{c.id}}">{{c.body}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
+					</div>
+				{% endfor %}
 
 				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ACCOUNT and c.author_id!=AUTOJANNY_ACCOUNT and c.author_id!=v.id %}
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.toggle('d-none')">Reply</a>
