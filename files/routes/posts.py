@@ -763,6 +763,7 @@ def submit_post(v):
 			)
 
 		g.db.add(c)
+		g.db.flush()
 
 	vote = Vote(user_id=v.id,
 				vote_type=1,
