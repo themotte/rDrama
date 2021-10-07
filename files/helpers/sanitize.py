@@ -131,8 +131,8 @@ def sanitize(sanitized, noimages=False):
 		if "profile-pic-20" not in tag.get("class", ""):
 
 			tag["rel"] = "nofollow noopener noreferrer"
-			tag["style"] = "max-height: 100px; max-width: 100%;"
-			tag["class"] = "in-comment-image rounded-sm my-2"
+			tag["height"] = "200px"
+			tag["class"] = "rounded-sm my-2"
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
 			tag["src"] = ""
@@ -148,28 +148,18 @@ def sanitize(sanitized, noimages=False):
 
 			tag.wrap(link)
 
-	#disguised link preventer
 	for tag in soup.find_all("a"):
 
 		tag["target"] = "_blank"
 		if site not in tag["href"]: tag["rel"] = "nofollow noopener noreferrer"
 
 		if re.match("https?://\S+", str(tag.string)):
-			try:
-				tag.string = tag["href"]
-			except:
-				tag.string = ""
+			try: tag.string = tag["href"]
+			except: tag.string = ""
 
-	#clean up tags in code
 	for tag in soup.find_all("code"):
 		tag.contents=[x.string for x in tag.contents if x.string]
 
-	#whatever else happens with images, there are only two sets of classes allowed
-	for tag in soup.find_all("img"):
-		if 'profile-pic-20' not in tag.attrs.get("class",""):
-			tag.attrs['class']="in-comment-image rounded-sm my-2"
-
-	#table format
 	for tag in soup.find_all("table"):
 		tag.attrs['class']="table table-striped"
 
@@ -185,8 +175,7 @@ def sanitize(sanitized, noimages=False):
 
 	try:
 		if not session.get("favorite_emojis"): session["favorite_emojis"] = {}
-	except:
-		pass
+	except: pass
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
