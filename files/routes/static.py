@@ -231,12 +231,10 @@ def submit_contact(v):
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
 
 @app.get('/archives')
-@limiter.exempt
 def archivesindex():
 	return redirect("/archives/index.html")
 
 @app.get('/archives/<path:path>')
-@limiter.exempt
 def archives(path):
 	resp = make_response(send_from_directory('/archives', path))
 	if request.path.endswith('.css'): resp.headers.add("Content-Type", "text/css")
@@ -252,10 +250,11 @@ def static_service(path):
 
 	return resp
 
+@app.get('/images/<path:path>')
 @app.get('/hostedimages/<path:path>')
 @limiter.exempt
 def images(path):
-	resp = make_response(send_from_directory('/hostedimages', path))
+	resp = make_response(send_from_directory('/images', path))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")
 	return resp
