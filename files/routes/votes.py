@@ -80,17 +80,17 @@ def api_vote_post(post_id, new, v):
 			post.author.coins += 1
 			post.author.truecoins += 1
 			g.db.add(post.author)
+			existing.vote_type = new
+			g.db.add(existing)
 		elif existing.vote_type != 0 and new == 0:
 			post.author.coins -= 1
 			post.author.truecoins -= 1
 			g.db.add(post.author)
-		existing.vote_type = new
-		g.db.add(existing)
-	else:
-		if new != 0:
-			post.author.coins += 1
-			post.author.truecoins += 1
-			g.db.add(post.author)
+			g.db.delete(existing)
+	elif new != 0:
+		post.author.coins += 1
+		post.author.truecoins += 1
+		g.db.add(post.author)
 		vote = Vote(user_id=v.id,
 					vote_type=new,
 					submission_id=post_id,
@@ -134,22 +134,22 @@ def api_vote_comment(comment_id, new, v):
 			comment.author.coins += 1
 			comment.author.truecoins += 1
 			g.db.add(comment.author)
+			existing.vote_type = new
+			g.db.add(existing)
 		elif existing.vote_type != 0 and new == 0:
 			comment.author.coins -= 1
 			comment.author.truecoins -= 1
 			g.db.add(comment.author)
-		existing.vote_type = new
-		g.db.add(existing)
-	else:
-		if new != 0:
-			comment.author.coins += 1
-			comment.author.truecoins += 1
-			g.db.add(comment.author)
+			g.db.delete(existing)
+	elif new != 0:
+		comment.author.coins += 1
+		comment.author.truecoins += 1
+		g.db.add(comment.author)
 		vote = CommentVote(user_id=v.id,
-						   vote_type=new,
-						   comment_id=comment_id,
+						vote_type=new,
+						comment_id=comment_id,
 						app_id=v.client.application.id if v.client else None
-						   )
+						)
 
 		g.db.add(vote)
 
@@ -176,12 +176,14 @@ def api_vote_poll(comment_id, v):
 
 	existing = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id).first()
 
-	if existing and existing.vote_type == vote: return "", 204
+	if existing and existing.vote_type == new: return "", 204
 
 	if existing:
-		existing.vote_type = new
-		g.db.add(existing)
-	else:
+		if new == 1:
+			existing.vote_type = new
+			g.db.add(existing)
+		else: g.db.delete(existing)
+	elif new == 1:
 		vote = CommentVote(user_id=v.id, vote_type=new, comment_id=comment.id)
 		g.db.add(vote)
 
