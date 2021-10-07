@@ -274,11 +274,11 @@ def image_posts_listing(v):
 	try: page = int(request.values.get('page', 1))
 	except: page = 1
 
-	posts = g.db.query(Submission.id).order_by(Submission.id.desc())
+	posts = g.db.query(Submission).order_by(Submission.id.desc())
 
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+26
-	posts = [x[0] for x in posts if x.is_image][firstrange:secondrange]
+	posts = [x.id for x in posts if x.is_image][firstrange:secondrange]
 	next_exists = (len(posts) > 25)
 	posts = get_posts(posts[:25], v=v)
 
