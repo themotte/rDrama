@@ -4,7 +4,7 @@ from files.helpers.get import *
 from files.helpers.const import *
 from files.classes import *
 from flask import *
-from files.__main__ import app
+from files.__main__ import app, limiter
 from sqlalchemy.orm import joinedload
 
 @app.get("/authorize")
@@ -17,6 +17,7 @@ def authorize_prompt(v):
 
 
 @app.post("/authorize")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def authorize(v):
@@ -39,6 +40,7 @@ def authorize(v):
 
 
 @app.post("/api_keys")
+@limiter.limit("1/second")
 @is_not_banned
 def request_api_keys(v):
 
@@ -59,6 +61,7 @@ def request_api_keys(v):
 
 
 @app.post("/delete_app/<aid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def delete_oauth_app(v, aid):
@@ -77,6 +80,7 @@ def delete_oauth_app(v, aid):
 
 
 @app.post("/edit_app/<aid>")
+@limiter.limit("1/second")
 @is_not_banned
 @validate_formkey
 def edit_oauth_app(v, aid):
@@ -96,6 +100,7 @@ def edit_oauth_app(v, aid):
 
 
 @app.post("/admin/app/approve/<aid>")
+@limiter.limit("1/second")
 @admin_level_required(3)
 @validate_formkey
 def admin_app_approve(v, aid):
@@ -123,6 +128,7 @@ def admin_app_approve(v, aid):
 
 
 @app.post("/admin/app/revoke/<aid>")
+@limiter.limit("1/second")
 @admin_level_required(3)
 @validate_formkey
 def admin_app_revoke(v, aid):
@@ -141,6 +147,7 @@ def admin_app_revoke(v, aid):
 
 
 @app.post("/admin/app/reject/<aid>")
+@limiter.limit("1/second")
 @admin_level_required(3)
 @validate_formkey
 def admin_app_reject(v, aid):
@@ -223,6 +230,7 @@ def admin_apps_list(v):
 
 
 @app.post("/oauth/reroll/<aid>")
+@limiter.limit("1/second")
 @auth_required
 def reroll_oauth_tokens(aid, v):
 

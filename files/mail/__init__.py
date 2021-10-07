@@ -1,5 +1,4 @@
 from os import environ
-import requests
 import time
 from flask import *
 from urllib.parse import quote
@@ -7,7 +6,7 @@ from urllib.parse import quote
 from files.helpers.security import *
 from files.helpers.wrappers import *
 from files.classes import *
-from files.__main__ import app, mail
+from files.__main__ import app, mail, limiter
 from flask_mail import Message
 
 site = environ.get("DOMAIN").strip()
@@ -42,6 +41,7 @@ def send_verification_email(user, email=None):
 
 
 @app.post("/verify_email")
+@limiter.limit("1/second")
 @auth_required
 def api_verify_email(v):
 

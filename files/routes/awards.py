@@ -1,4 +1,4 @@
-from files.__main__ import app
+from files.__main__ import app, limiter
 from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.get import *
@@ -85,6 +85,7 @@ def shop(v):
 
 
 @app.post("/buy/<award>")
+@limiter.limit("1/second")
 @auth_required
 def buy(v, award):
 	if site_name == "Drama":
@@ -185,6 +186,7 @@ ALLOW_MULTIPLE = (
 )
 
 @app.post("/post/<pid>/awards")
+@limiter.limit("1/second")
 @auth_required
 def award_post(pid, v):
 
@@ -248,6 +250,7 @@ def award_post(pid, v):
 
 
 @app.post("/comment/<cid>/awards")
+@limiter.limit("1/second")
 @auth_required
 def award_comment(cid, v):
 
@@ -320,6 +323,7 @@ def admin_userawards_get(v):
 	return render_template("admin/user_award.html", awards=list(AWARDS.values()), v=v)
 
 @app.post("/admin/user_award")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def admin_userawards_post(v):

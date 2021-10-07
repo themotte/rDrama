@@ -21,6 +21,7 @@ beams_client = PushNotifications(
 
 
 @app.post("/pay_rent")
+@limiter.limit("1/second")
 @auth_required
 def pay_rent(v):
 	if v.coins < 500: return "You must have more than 500 coins."
@@ -36,6 +37,7 @@ def pay_rent(v):
 
 
 @app.post("/steal")
+@limiter.limit("1/second")
 @is_not_banned
 def steal(v):
 	if int(time.time()) - v.created_utc < 604800:
@@ -89,6 +91,7 @@ def thiefs(v):
 
 
 @app.post("/@<username>/suicide")
+@limiter.limit("1/second")
 @auth_required
 def suicide(v, username):
 	t = int(time.time())
@@ -110,6 +113,7 @@ def get_coins(v, username):
 	else: return {"error": "invalid_user"}, 404
 
 @app.post("/@<username>/transfer_coins")
+@limiter.limit("1/second")
 @is_not_banned
 @validate_formkey
 def transfer_coins(v, username):
@@ -198,6 +202,7 @@ def song(song):
 	return resp
 
 @app.post("/subscribe/<post_id>")
+@limiter.limit("1/second")
 @auth_required
 def subscribe(v, post_id):
 	new_sub = Subscription(user_id=v.id, submission_id=post_id)
@@ -206,6 +211,7 @@ def subscribe(v, post_id):
 	return {"message": "Post subscribed!"}
 	
 @app.post("/unsubscribe/<post_id>")
+@limiter.limit("1/second")
 @auth_required
 def unsubscribe(v, post_id):
 	sub=g.db.query(Subscription).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post_id).first()
@@ -215,6 +221,7 @@ def unsubscribe(v, post_id):
 	return {"message": "Post unsubscribed!"}
 
 @app.post("/@<username>/message")
+@limiter.limit("1/second")
 @limiter.limit("10/hour")
 @auth_required
 def message2(v, username):
@@ -277,6 +284,7 @@ def message2(v, username):
 
 
 @app.post("/reply")
+@limiter.limit("1/second")
 @limiter.limit("6/minute")
 @auth_required
 def messagereply(v):
@@ -608,6 +616,7 @@ def u_username_info(username, v=None):
 
 
 @app.post("/follow/<username>")
+@limiter.limit("1/second")
 @auth_required
 def follow_user(username, v):
 
@@ -621,9 +630,7 @@ def follow_user(username, v):
 	new_follow = Follow(user_id=v.id, target_id=target.id)
 	g.db.add(new_follow)
 
-	try: g.db.flush()
-	except: g.db.rollback()
-
+	g.db.flush()
 	target.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
@@ -635,6 +642,7 @@ def follow_user(username, v):
 	return {"message": "User followed!"}
 
 @app.post("/unfollow/<username>")
+@limiter.limit("1/second")
 @auth_required
 def unfollow_user(username, v):
 
@@ -661,6 +669,7 @@ def unfollow_user(username, v):
 	return {"message": "User unfollowed!"}
 
 @app.post("/remove_follow/<username>")
+@limiter.limit("1/second")
 @auth_required
 def remove_follow(username, v):
 	target = get_user(username)

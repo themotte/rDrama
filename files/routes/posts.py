@@ -25,6 +25,7 @@ with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
 
 
 @app.post("/toggle_club/<pid>")
+@limiter.limit("1/second")
 @auth_required
 def toggle_club(pid, v):
 
@@ -50,6 +51,7 @@ def toggle_club(pid, v):
 
 
 @app.post("/publish/<pid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def publish(pid, v):
@@ -188,6 +190,7 @@ def post_id(pid, anything=None, v=None):
 
 
 @app.post("/edit_post/<pid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def edit_post(pid, v):
@@ -501,6 +504,7 @@ def thumbnail_thread(pid):
 
 
 @app.post("/submit")
+@limiter.limit("1/second")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
@@ -958,6 +962,7 @@ def submit_post(v):
 
 
 @app.post("/delete_post/<pid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def delete_post_pid(pid, v):
@@ -979,6 +984,7 @@ def delete_post_pid(pid, v):
 	return {"message": "Post deleted!"}
 
 @app.post("/undelete_post/<pid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def undelete_post_pid(pid, v):
@@ -995,6 +1001,7 @@ def undelete_post_pid(pid, v):
 
 
 @app.post("/toggle_comment_nsfw/<cid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def toggle_comment_nsfw(cid, v):
@@ -1011,6 +1018,7 @@ def toggle_comment_nsfw(cid, v):
 	else: return {"message": "Comment has been unmarked as +18!"}
 	
 @app.post("/toggle_post_nsfw/<pid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def toggle_post_nsfw(pid, v):
@@ -1037,6 +1045,7 @@ def toggle_post_nsfw(pid, v):
 	else: return {"message": "Post has been unmarked as +18!"}
 
 @app.post("/save_post/<pid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def save_post(pid, v):
@@ -1053,6 +1062,7 @@ def save_post(pid, v):
 	return {"message": "Post saved!"}
 
 @app.post("/unsave_post/<pid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def unsave_post(pid, v):

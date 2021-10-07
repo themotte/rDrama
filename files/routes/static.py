@@ -222,6 +222,7 @@ def contact(v):
 	return render_template("contact.html", v=v)
 
 @app.post("/contact")
+@limiter.limit("1/second")
 @auth_required
 def submit_contact(v):
 	message = f'This message has been sent automatically to all admins via https://{site}/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
@@ -333,6 +334,7 @@ def settings_security(v):
 						   )
 
 @app.post("/dismiss_mobile_tip")
+@limiter.limit("1/second")
 def dismiss_mobile_tip():
 
 	session["tooltip_last_dismissed"]=int(time.time())

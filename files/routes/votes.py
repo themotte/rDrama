@@ -2,7 +2,7 @@ from files.helpers.wrappers import *
 from files.helpers.get import *
 from files.classes import *
 from flask import *
-from files.__main__ import app
+from files.__main__ import app, limiter
 from sqlalchemy.orm import joinedload
 
 
@@ -56,6 +56,7 @@ def admin_vote_info_get(v):
 
 
 @app.post("/vote/post/<post_id>/<new>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def api_vote_post(post_id, new, v):
@@ -97,16 +98,15 @@ def api_vote_post(post_id, new, v):
 					)
 		g.db.add(vote)
 	
-	try:
-		g.db.flush()
-		post.upvotes = g.db.query(Vote.id).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
-		post.downvotes = g.db.query(Vote.id).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=-1).count()
-		g.db.add(post)
-		g.db.commit()
-	except: g.db.rollback()
+	g.db.flush()
+	post.upvotes = g.db.query(Vote.id).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
+	post.downvotes = g.db.query(Vote.id).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=-1).count()
+	g.db.add(post)
+	g.db.commit()
 	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def api_vote_comment(comment_id, new, v):
@@ -153,17 +153,16 @@ def api_vote_comment(comment_id, new, v):
 
 		g.db.add(vote)
 
-	try:
-		g.db.flush()
-		comment.upvotes = g.db.query(CommentVote.id).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
-		comment.downvotes = g.db.query(CommentVote.id).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
-		g.db.add(comment)
-		g.db.commit()
-	except: g.db.rollback()
+	g.db.flush()
+	comment.upvotes = g.db.query(CommentVote.id).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
+	comment.downvotes = g.db.query(CommentVote.id).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=-1).count()
+	g.db.add(comment)
+	g.db.commit()
 	return "", 204
 
 
 @app.post("/vote/poll/<comment_id>")
+@limiter.limit("1/second")
 @auth_required
 def api_vote_poll(comment_id, v):
 	

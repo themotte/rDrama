@@ -120,8 +120,8 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 
 @app.post("/comment")
-@limiter.limit("6/minute")
 @limiter.limit("1/second")
+@limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
 def api_comment(v):
@@ -574,6 +574,7 @@ def api_comment(v):
 
 
 @app.post("/edit_comment/<cid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def edit_comment(cid, v):
@@ -770,6 +771,7 @@ def edit_comment(cid, v):
 
 
 @app.post("/delete/comment/<cid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def delete_comment(cid, v):
@@ -793,6 +795,7 @@ def delete_comment(cid, v):
 	return {"message": "Comment deleted!"}
 
 @app.post("/undelete/comment/<cid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def undelete_comment(cid, v):
@@ -817,6 +820,7 @@ def undelete_comment(cid, v):
 
 
 @app.post("/pin_comment/<cid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def toggle_pin_comment(cid, v):
@@ -847,6 +851,7 @@ def toggle_pin_comment(cid, v):
 	
 	
 @app.post("/save_comment/<cid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def save_comment(cid, v):
@@ -858,12 +863,12 @@ def save_comment(cid, v):
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, submission_id=comment.id, type=2)
 		g.db.add(new_save)
-		try: g.db.commit()
-		except: g.db.rollback()
+		g.db.commit()
 
 	return {"message": "Comment saved!"}
 
 @app.post("/unsave_comment/<cid>")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def unsave_comment(cid, v):
