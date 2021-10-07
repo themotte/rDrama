@@ -259,17 +259,20 @@
 			{% endif %}
 
 			{% if c.is_banned and c.ban_reason %}
-			<div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">Reason: {{c.ban_reason}}</div>
+				<div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">Reason: {{c.ban_reason}}</div>
 			{% endif %}
 
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
 				{{c.realbody(v) | safe}}
-				{% for c in c.options %}
-					<div class="custom-control">								
-						<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
-						<label class="custom-control-label" for="{{c.id}}">{{c.body}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
-					</div>
-				{% endfor %}
+				{% if c.options %}
+					{% for c in c.options %}
+						<div class="custom-control">								
+							<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
+							<label class="custom-control-label" for="{{c.id}}">{{c.body}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
+						</div>
+					{% endfor %}
+					&nbsp;
+				{% endif %}
 
 				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ACCOUNT and c.author_id!=AUTOJANNY_ACCOUNT and c.author_id!=v.id %}
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.toggle('d-none')">Reply</a>
