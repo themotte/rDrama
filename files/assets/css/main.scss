@@ -3311,6 +3311,11 @@ div.deleted.banned {
 	color: $admin;
 }
 
+.in-comment-image {
+	max-height: 100px !important;
+	max-width: 100px !important;
+}
+
 .onboarding-card {
 	height: 180px;
 	.onboarding-card-overlay {

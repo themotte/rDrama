@@ -1367,6 +1367,61 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 	margin-left: 0;
 }
 
+
+/*
+
+#frontpage.toggle-card-view .tab-bar, #userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar {
+	border-radius: 0;
+}
+
+#frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
+	border: none;
+	border-radius: $border-radius;
+	margin-top: 1rem;
+	box-shadow: $box-shadow-sm;
+}
+
+#frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type {
+	border-bottom-left-radius: $border-radius;
+	border-bottom-right-radius: $border-radius;
+	border-radius: $border-radius;
+}
+
+#frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type {
+	margin-top: 0;
+}
+
+#frontpage.toggle-card-view .posts .card .post-img, #userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img { 
+	display: none;
+}
+
+#frontpage.toggle-card-view .posts .card .post-img-lg, #userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg { 
+	display: block;
+	text-align: center;
+}
+
+#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img { 
+	max-width: 55%;
+	height: auto;
+}
+
+#frontpage.toggle-card-view .posts .card .embed-lg, #userpage.toggle-card-view .posts .card .embed-lg, #search.toggle-card-view .posts .card .embed-lg { 
+	display: flex;
+	z-index: 2;
+}
+
+#frontpage.toggle-card-view .posts .card .post-preview-lg, #userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg { 
+	display: block;
+}
+
+#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, #userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body { 
+	-webkit-mask-image: linear-gradient(180deg,#000 40%,transparent);
+	mask-image: linear-gradient(180deg,#000 40%,transparent);
+	overflow: hidden;
+}
+
+*/
+
 .toggle-view .nav-link {
 	color: $gray;
 	font-size: $small-font-size;
@@ -1825,8 +1880,8 @@ div:hover .thumb-img-link-overlay {
 
 @media (max-width: 767.98px) { 
 	.post-img {
-		width: 80px;
-		height: 60px;
+	width: 80px;
+	height: 60px;
 }
 
 .post-img-overlay {
@@ -3210,6 +3265,11 @@ div.deleted.banned {
 }		
 .distinguish-mod .user-name::before {		
  content: "[M] "		
+}
+
+.in-comment-image {
+	max-height: 100px !important;
+	max-width: 100px !important;
 }
 
 .object-cover {
