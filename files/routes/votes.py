@@ -87,6 +87,9 @@ def api_vote_post(post_id, new, v):
 			post.author.truecoins -= 1
 			g.db.add(post.author)
 			g.db.delete(existing)
+		else:
+			existing.vote_type = new
+			g.db.add(existing)
 	elif new != 0:
 		post.author.coins += 1
 		post.author.truecoins += 1
@@ -141,6 +144,9 @@ def api_vote_comment(comment_id, new, v):
 			comment.author.truecoins -= 1
 			g.db.add(comment.author)
 			g.db.delete(existing)
+		else:
+			existing.vote_type = new
+			g.db.add(existing)
 	elif new != 0:
 		comment.author.coins += 1
 		comment.author.truecoins += 1
