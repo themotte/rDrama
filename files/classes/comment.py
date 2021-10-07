@@ -74,7 +74,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def options(self):
-		return self.child_comments.filter_by(author_id = AUTOPOLLER_ACCOUNT)
+		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ACCOUNT]
 
 	@property
 	@lazy
