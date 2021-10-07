@@ -266,6 +266,7 @@
 				{{c.realbody(v) | safe}}
 
 				{% for c in c.options %}
+					dsffdsdssd
 					<div class="custom-control">								
 						<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
 						<label class="custom-control-label" for="{{c.id}}">{{c.body}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
