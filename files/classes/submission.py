@@ -74,7 +74,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def options(self):
-		return self.comments.filter_by(author_id = AUTOPOLLER_ACCOUNT)
+		return self.comments.filter_by(author_id = AUTOPOLLER_ACCOUNT, level=1)
 
 	@property
 	@lazy
