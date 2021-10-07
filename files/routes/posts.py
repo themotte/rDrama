@@ -351,7 +351,7 @@ def filter_title(title):
 	# sanitize title
 	title = bleach.clean(title, tags=[])
 
-	for i in re.finditer(':(.{1,30}?):', title):
+	for i in re.finditer('(?<!"):([^ ]{1,30}?):', title):
 		emoji = i.group(1)
 
 		if emoji.startswith("!"):

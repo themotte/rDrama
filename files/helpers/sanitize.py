@@ -194,15 +194,15 @@ def sanitize(sanitized, noimages=False):
 		old = i.group(0)
 		if 'marseylong' in old: new = old.lower().replace(">", " style='margin-bottom:0 !important'>")
 		else: new = old.lower()
-		for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', new):
+		for i in re.finditer('(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("!"):
 				emoji = emoji[1:]
 				if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-					new = re.sub(f'\w*(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">', new)
+					new = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">', new)
 			
 			elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				new = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', new)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=60 src="https://{site}/assets/images/emojis/{emoji}.webp">', new)
 					
 			if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 			else: session["favorite_emojis"][emoji] = 1
@@ -210,15 +210,15 @@ def sanitize(sanitized, noimages=False):
 		sanitized = sanitized.replace(old, new)
 
 
-	for i in re.finditer('\w*(?<!"):([^ ]{1,30}?):', sanitized):
+	for i in re.finditer('(?<!"):([^ ]{1,30}?):', sanitized):
 		emoji = i.group(1).lower()
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'\w*(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">', sanitized)
+				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">', sanitized)
 		
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'\w*(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
+			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
 				
 		if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 		else: session["favorite_emojis"][emoji] = 1
