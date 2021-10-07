@@ -357,9 +357,10 @@ def filter_title(title):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				title = title.replace(f':!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">')
+				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">', title)
+				
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			title = title.replace(f':{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{emoji}.webp">')
+			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp">', title)
 	
 	if len(title) > 1500: abort(400)
 	else: return title

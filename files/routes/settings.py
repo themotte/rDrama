@@ -13,6 +13,7 @@ import os
 from .posts import filter_title
 from files.helpers.discord import add_role
 from shutil import copyfile
+import requests
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
