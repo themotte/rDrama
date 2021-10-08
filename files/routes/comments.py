@@ -767,11 +767,9 @@ def delete_comment(cid, v):
 
 	c = g.db.query(Comment).options(lazyload('*')).filter_by(id=cid).first()
 
-	if not c:
-		abort(404)
+	if not c: abort(404)
 
-	if not c.author_id == v.id:
-		abort(403)
+	if not c.author_id == v.id: abort(403)
 
 	c.deleted_utc = int(time.time())
 
