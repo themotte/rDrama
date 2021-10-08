@@ -543,7 +543,7 @@ def submit_post(v):
 
 	if request.values.get("url"):
 		qd = parse_qs(parsed_url.query)
-		filtered = dict((k, v) for k, v in qd.iteritems() if not k.startswith('utm_'))
+		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
 		new_url = ParseResult(scheme="https",
 							  netloc=parsed_url.netloc,
 							  path=parsed_url.path,
