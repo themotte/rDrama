@@ -8,7 +8,7 @@ import re
 
 site = environ.get("DOMAIN").strip()
 
-_allowed_tags = tags = ['b',
+allowed_tags = tags = ['b',
 						'blockquote',
 						'br',
 						'code',
@@ -75,8 +75,11 @@ no_images = ['b',
 						'span',
 						]
 
-_allowed_attributes = {'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name', 'direction']}
+allowed_attributes = {'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name', 'direction']}
 
+allowed_protocols = ['http', 'https']
+
+allowed_styles =['color', 'font-weight', 'transform', '-webkit-transform']
 
 def sanitize(sanitized, noimages=False):
 
@@ -87,9 +90,9 @@ def sanitize(sanitized, noimages=False):
 
 	if noimages:
 		sanitized = bleach.Cleaner(tags=no_images,
-									attributes=_allowed_attributes,
-									protocols=_allowed_protocols,
-									styles=_allowed_styles,
+									attributes=allowed_attributes,
+									protocols=allowed_protocols,
+									styles=allowed_styles,
 									filters=[partial(LinkifyFilter,
 													skip_tags=["pre"],
 													parse_email=False,
@@ -97,8 +100,8 @@ def sanitize(sanitized, noimages=False):
 											]
 									).clean(sanitized)
 	else:
-		sanitized = bleach.Cleaner(tags=_allowed_tags,
-							attributes=_allowed_attributes,
+		sanitized = bleach.Cleaner(tags=allowed_tags,
+							attributes=allowed_attributes,
 							protocols=['http', 'https'],
 							styles=['color','font-weight','transform','-webkit-transform'],
 							filters=[partial(LinkifyFilter,
