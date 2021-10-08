@@ -820,7 +820,6 @@ def undelete_comment(cid, v):
 
 
 @app.post("/pin_comment/<cid>")
-@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def toggle_pin_comment(cid, v):

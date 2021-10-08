@@ -25,7 +25,6 @@ with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
 
 
 @app.post("/toggle_club/<pid>")
-@limiter.limit("1/second")
 @auth_required
 def toggle_club(pid, v):
 
@@ -1002,7 +1001,6 @@ def undelete_post_pid(pid, v):
 
 
 @app.post("/toggle_comment_nsfw/<cid>")
-@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def toggle_comment_nsfw(cid, v):
@@ -1019,7 +1017,6 @@ def toggle_comment_nsfw(cid, v):
 	else: return {"message": "Comment has been unmarked as +18!"}
 	
 @app.post("/toggle_post_nsfw/<pid>")
-@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def toggle_post_nsfw(pid, v):
