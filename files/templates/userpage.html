@@ -3,10 +3,10 @@
 {% if u and u.profilecss %}
 	{% block stylesheets %}
 		{% if v %}
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=20">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=20">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=60">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=60">{% endif %}
 		{% else %}
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=20">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=60">
 		{% endif %}
 		{% if u and u.profilecss %}
 			<link rel="stylesheet" href="/@{{u.username}}/profilecss">
@@ -25,7 +25,7 @@
 	}
 </style>
 
-<script src="/assets/js/userpage.js?v=10"></script>
+<script src="/assets/js/userpage.js?v=50"></script>
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">

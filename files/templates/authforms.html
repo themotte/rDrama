@@ -14,10 +14,10 @@
 
 
 				{% if v %}
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=20">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=20">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=60">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=60">{% endif %}
 		{% else %}
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=20">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=60">
 		{% endif %}
 
 </head>
