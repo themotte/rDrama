@@ -23582,15 +23582,10 @@ p {
 
 pre {
   white-space: pre-wrap;
-  /* Since CSS 2.1 */
   white-space: -moz-pre-wrap;
-  /* Mozilla, since 1999 */
   white-space: -pre-wrap;
-  /* Opera 4-6 */
   white-space: -o-pre-wrap;
-  /* Opera 7 */
   word-wrap: break-word;
-  /* Internet Explorer 5.5+ */
 }
 
 body.using-mouse :focus {
@@ -24118,32 +24113,26 @@ label.color-radio span {
 }
 
 .form-inline.search .form-control::placeholder {
-  /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #000000;
 }
 
 .form-inline.search .form-control::-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
   color: #000000;
 }
 
 .form-inline.search .form-control::-ms-input-placeholder {
-  /* Microsoft Edge */
   color: #000000;
 }
 
 .form-inline.search .form-control:active::placeholder, .form-inline.search .form-control:focus::placeholder {
-  /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #000000;
 }
 
 .form-inline.search .form-control:active::-ms-input-placeholder, .form-inline.search .form-control:focus::-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
   color: #000000;
 }
 
 .form-inline.search .form-control:active::-ms-input-placeholder, .form-inline.search .form-control:focus::-ms-input-placeholder {
-  /* Microsoft Edge */
   color: #000000;
 }
 
@@ -24195,17 +24184,14 @@ label.color-radio span {
 }
 
 .form-control::placeholder {
-  /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #000000;
 }
 
 .form-control::-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
   color: #000000;
 }
 
 .form-control::-ms-input-placeholder {
-  /* Microsoft Edge */
   color: #000000;
 }
 
@@ -24340,16 +24326,6 @@ th {
   margin: auto 0;
 }
 
-/*
-
-#frontpage.toggle-card-view .voting, #search.toggle-card-view .voting, #userpage.toggle-card-view .voting {
-	margin: 0;
-}
-
-*/
-/* .voting div:focus {
-	outline: 0;
-} */
 .active.arrow-up::before {
   color: #7f8fa6;
 }
@@ -24386,21 +24362,6 @@ th {
   opacity: 0.5;
 }
 
-/* .upvoted .arrow-up::before {
-	color: $upvote;
-}
-
-.upvoted .arrow-up:hover::before {
-	opacity: 1;
-}
-
-.downvoted .arrow-down::before {
-	color: $downvote;
-}
-
-.downvoted .arrow-down:hover::before {
-	opacity: 1;
-} */
 .comment-actions .arrow-up {
   top: 0;
 }
@@ -24795,59 +24756,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   margin-left: 0;
 }
 
-/*
-
-#frontpage.toggle-card-view .tab-bar, #userpage.toggle-card-view .tab-bar, #search.toggle-card-view .tab-bar {
-	border-radius: 0;
-}
-
-#frontpage.toggle-card-view .posts .card, #userpage.toggle-card-view .posts .card, #search.toggle-card-view .posts .card {
-	border: 0.1px solid $border-color;
-	border-radius: $border-radius;
-	margin-top: 1rem;
-}
-
-#frontpage.toggle-card-view .posts .card:last-of-type, #userpage.toggle-card-view .posts .card:last-of-type, #search.toggle-card-view .posts .card:last-of-type {
-	border-bottom-left-radius: $border-radius;
-	border-bottom-right-radius: $border-radius;
-	border: 0.1px solid $border-color;
-	border-radius: $border-radius;
-}
-
-#frontpage.toggle-card-view .posts .card:first-of-type, #userpage.toggle-card-view .posts .card:first-of-type, #search.toggle-card-view .posts .card:first-of-type {
-	margin-top: 0;
-}
-
-#frontpage.toggle-card-view .posts .card .post-img, #userpage.toggle-card-view .posts .card .post-img, #search.toggle-card-view .posts .card .post-img {
-	display: none;
-}
-
-#frontpage.toggle-card-view .posts .card .post-img-lg, #userpage.toggle-card-view .posts .card .post-img-lg, #search.toggle-card-view .posts .card .post-img-lg {
-	display: block;
-	text-align: center;
-}
-
-#frontpage.toggle-card-view .posts .card .post-img-lg img, #userpage.toggle-card-view .posts .card .post-img-lg img, #search.toggle-card-view .posts .card .post-img-lg img {
-	max-width: 55%;
-	height: auto;
-}
-
-#frontpage.toggle-card-view .posts .card .embed-lg, #userpage.toggle-card-view .posts .card .embed-lg, #search.toggle-card-view .posts .card .embed-lg {
-	display: flex;
-	z-index: 2;
-}
-
-#frontpage.toggle-card-view .posts .card .post-preview-lg, #userpage.toggle-card-view .posts .card .post-preview-lg, #search.toggle-card-view .posts .card .post-preview-lg {
-	display: block;
-}
-
-#frontpage.toggle-card-view .posts .card .post-preview-lg .post-body, #userpage.toggle-card-view .posts .card .post-preview-lg .post-body, #search.toggle-card-view .posts .card .post-preview-lg .post-body {
-	-webkit-mask-image: linear-gradient(180deg,#000 40%,transparent);
-	mask-image: linear-gradient(180deg,#000 40%,transparent);
-	overflow: hidden;
-}
-
-*/
 .toggle-view .nav-link {
   color: #fff;
   font-size: 12px;
@@ -27001,9 +26909,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     overflow-x: scroll;
     white-space: nowrap;
     scrollbar-width: none;
-    /* Firefox */
     -ms-overflow-style: none;
-    /* IE 10+ */
   }
 
   .x-scroll::-webkit-scrollbar {
@@ -27011,7 +26917,6 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     overflow-x: scroll;
     white-space: nowrap;
     background: transparent;
-    /* Chrome/Safari/Webkit */
   }
 
   #thread .post-title {
@@ -27160,12 +27065,6 @@ div.deleted.banned {
   max-width: 100% !important;
   border-radius: 0.2rem !important;
   margin-top: 0.5rem !important;
-  margin-bottom: 0.5rem !important;
-}
-
-.embedvid {
-  max-height: 200px !important;
-  max-width: 100% !important;
 }
 
 .emoji {
@@ -27176,9 +27075,16 @@ div.deleted.banned {
   height: 60px !important;
 }
 
+.embedvid {
+  max-height: 300px !important;
+  max-width: 100% !important;
+  margin-top: 0.5rem !important;
+}
+
 .spotify {
   max-height: 80px !important;
   max-width: 100% !important;
+  margin-top: 0.5rem !important;
 }
 
 .onboarding-card {
@@ -27208,7 +27114,6 @@ img.emoji {
   object-fit: contain;
 }
 
-/* Dark mode spoiler */
 .spoiler {
   color: #c0c0c0;
   background-color: #c0c0c0;
