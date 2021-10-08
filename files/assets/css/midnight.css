@@ -37,7 +37,7 @@
 @import "./main.scss";
 
 body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textarea {
-	background-color: $bg-dark !important;
+	background-color: var(--bg-dark) !important;
 }
 
 .transparent, #login {

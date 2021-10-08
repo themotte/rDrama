@@ -40,19 +40,19 @@ blockquote {
 }
 
 .text-muted {
-	color: $black !important;
+	color: var(--black) !important;
 }
 
 .text-white {
-	color: $primary !important;
+	color: var(--primary) !important;
 }
 
 .modal .comment-actions a {
-	color: $gray-500;
+	color: var(--gray-500);
 }
 
 .navbar-light .navbar-nav .nav-link .fa, .navbar-light .navbar-nav .nav-link .fas, .navbar-light .navbar-nav .nav-link .far, .navbar-light .navbar-nav .nav-link .fab {
-	color: $black;
+	color: var(--black);
 }
 
 .dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active {
@@ -64,7 +64,7 @@ html * {
 	color: #800000
 	}
 body, #main-content-col {
-	background-color: $secondary !important;
+	background-color: var(--secondary) !important;
 	}
 .border-right, .border-left, .border-top, .border-bottom, .border {
 	border-color: #D9BFB7 !important
@@ -76,7 +76,7 @@ body, #main-content-col {
 	color: #800000 !important;
 	}
 .comment, .card {
-	background-color: $secondary !important;
+	background-color: var(--secondary) !important;
 	border-color: #D9BFB7 !important;
 	}
 .form-control {
@@ -92,7 +92,7 @@ body, #main-content-col {
 	color: #F00 !important
 	}
 a {
-	color: $primary;
+	color: var(--primary);
 }
 
 blockquote p {
@@ -108,5 +108,5 @@ blockquote p {
 }
 
 .btn {
-	color: $primary !important;
+	color: var(--primary) !important;
 }

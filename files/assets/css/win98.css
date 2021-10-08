@@ -45,15 +45,15 @@
 
 .card, #mobile-bottom-navigation-bar {
 	transform: none !important;
-	background-color: $gray-500 !important;
+	background-color: var(--gray-500) !important;
 }
 
 .pseudo-submit-form .card-header, .card-blank .card-header, .navbar-light, .nav, .flex-row.bg-gray-200.sticky.justify-content-center.d-flex.d-sm-none.mt-3.mb-3.mb-sm-5.rounded {
 	background: $white !important;
-	color: $white !important;
+	color: var(--white) !important;
 }
 .navbar-light > *, .navbar-brand, .nav-link{
-	color: $white !important;
+	color: var(--white) !important;
 }
 
 .nav-link, .btn, .btn-secondary, .col.px-0.pl-2.btn.btn-dead.my-0.mx-2 {
@@ -86,11 +86,11 @@
 }
 
 .post-title, .text-small-extra.text-muted, #actual-comments > .text-muted, .text-left.pl-2 {
-	color: $black !important;
+	color: var(--black) !important;
 }
 
 .arrow-up::before {
-	color: $muted;
+	color: var(--muted);
 }
 
 blockquote {
@@ -114,7 +114,7 @@ blockquote {
 }
 
 .flaggers {
-	background-color: $white !important;
+	background-color: var(--white) !important;
 }
 
 .form-control, .form-control:disabled, .form-control[readonly] {
@@ -123,7 +123,7 @@ blockquote {
 }
 
 .arrow-down::before {
-	color: $muted !important;
+	color: var(--muted) !important;
 }
 
 .table {
@@ -147,16 +147,16 @@ blockquote {
 }
 
 .post-actions a {
-	color: $muted !important;
+	color: var(--muted) !important;
 }
 
 .modal-header, .modal .comment-actions a, .modal-title {
-	color: $white !important;
+	color: var(--white) !important;
 }
 
 .text-info
 {
-	color: $primary !important;
+	color: var(--primary) !important;
 }
 
 .score, .comment-actions .score {
@@ -164,7 +164,7 @@ blockquote {
 }
 
 .arrow-up:hover::before {
-	color: $muted;
+	color: var(--muted);
 }
 
 #thread {

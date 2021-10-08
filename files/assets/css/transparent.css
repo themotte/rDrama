@@ -36,26 +36,26 @@
 @import "./main.scss";
 
 * {
-	border-color: $primary;
+	border-color: var(--primary);
 }
 
 .border {
-	border-color: $primary !important;
+	border-color: var(--primary) !important;
 }
 
 .form-control {
 	background: transparent;
-	border-color: $primary !important;
+	border-color: var(--primary) !important;
 }
 
 .btn {
 	background: transparent;
-	border-color: $primary !important;
+	border-color: var(--primary) !important;
 }
 
 .form-control:disabled, .form-control[readonly] {
 	background: transparent;
-	border-color: $primary !important;
+	border-color: var(--primary) !important;
 }
 
 .btn-success {

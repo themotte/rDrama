@@ -46,15 +46,15 @@ blockquote {
 }
 
 .text-muted {
-	color: $black !important;
+	color: var(--black) !important;
 }
 
 .modal .comment-actions a {
-	color: $gray-500;
+	color: var(--gray-500);
 }
 
 .navbar-light .navbar-nav .nav-link .fa, .navbar-light .navbar-nav .nav-link .fas, .navbar-light .navbar-nav .nav-link .far, .navbar-light .navbar-nav .nav-link .fab {
-	color: $black;
+	color: var(--black);
 }
 
 .dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active {
@@ -70,7 +70,7 @@ blockquote {
 }
 
 .btn {
-	color: $primary !important;
+	color: var(--primary) !important;
 }
 
 .table {
