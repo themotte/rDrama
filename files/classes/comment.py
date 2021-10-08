@@ -314,8 +314,7 @@ class Comment(Base):
 				p = urlparse(url).query
 				p = parse_qs(p)
 
-				if 'sort' not in p:
-					p['sort'] = ['controversial']
+				if 'sort' not in p: p['sort'] = ['controversial']
 
 				url_noquery = url.split('?')[0]
 				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
@@ -342,8 +341,7 @@ class Comment(Base):
 				p = urlparse(url).query
 				p = parse_qs(p)
 
-				if 'sort' not in p:
-					p['sort'] = ['controversial']
+				if 'sort' not in p: p['sort'] = ['controversial']
 
 				url_noquery = url.split('?')[0]
 				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")

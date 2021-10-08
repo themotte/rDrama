@@ -526,8 +526,11 @@ def submit_post(v):
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
 			url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
+		if "?" in url: url2 = url.split('?')[0]
+		else: url2 = url
+
 		repost = g.db.query(Submission).options(lazyload('*')).filter(
-			Submission.url.ilike(url),
+			Submission.url.ilike(f'{url2}%'),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()
@@ -547,21 +550,19 @@ def submit_post(v):
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
 
 	parsed_url = urlparse(url)
-	if not (parsed_url.scheme and parsed_url.netloc) and not request.values.get(
-			"body") and not request.files.get("file", None):
-
+	if not (parsed_url.scheme and parsed_url.netloc) and not request.values.get("body") and not request.files.get("file", None):
 		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
 		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
 
 
-	# Force https for submitted urls
-
 	if request.values.get("url"):
+		qd = parse_qs(parsed_url.query)
+		filtered = dict((k, v) for k, v in qd.iteritems() if not k.startswith('utm_'))
 		new_url = ParseResult(scheme="https",
 							  netloc=parsed_url.netloc,
 							  path=parsed_url.path,
 							  params=parsed_url.params,
-							  query=parsed_url.query,
+							  query=urlencode(filtered, doseq=True),
 							  fragment=parsed_url.fragment)
 		url = urlunparse(new_url)
 	else:
