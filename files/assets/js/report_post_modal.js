@@ -1,27 +1,27 @@
 report_postModal = function(id) {
 
-    submitbutton=document.getElementById("reportPostButton");
+	submitbutton=document.getElementById("reportPostButton");
 
-    submitbutton.onclick = function() {
+	submitbutton.onclick = function() {
 
-        this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting post';
-        this.disabled = true;
+		this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting post';
+		this.disabled = true;
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", '/flag/post/'+id, true);
-        var form = new FormData()
-        form.append("formkey", formkey());
-        form.append("reason", document.getElementById("reason").value);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", '/flag/post/'+id, true);
+		var form = new FormData()
+		form.append("formkey", formkey());
+		form.append("reason", document.getElementById("reason").value);
 
-        xhr.withCredentials=true;
+		xhr.withCredentials=true;
 
-        xhr.onload=function() {
-            document.getElementById("reportPostFormBefore").classList.add('d-none');
-            document.getElementById("reportPostFormAfter").classList.remove('d-none');
-        };
+		xhr.onload=function() {
+			document.getElementById("reportPostFormBefore").classList.add('d-none');
+			document.getElementById("reportPostFormAfter").classList.remove('d-none');
+		};
 
-        xhr.onerror=function(){alert(errortext)};
-        xhr.send(form);
+		xhr.onerror=function(){alert(errortext)};
+		xhr.send(form);
 
-    }
+	}
 };
