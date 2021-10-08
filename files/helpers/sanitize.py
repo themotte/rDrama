@@ -78,23 +78,35 @@ no_images = ['b',
 _allowed_attributes = {'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name', 'direction']}
 
 
-def sanitize(sanitized):
+def sanitize(sanitized, noimages=False):
 
 	sanitized = sanitized.replace("\ufeff", "").replace("m.youtube.com", "youtube.com")
 
 	for i in re.finditer('https://i.imgur.com/(([^_]*?)\.(jpg|png|jpeg))', sanitized):
 		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d." + i.group(3) + "?maxwidth=9999")
 
-	sanitized = bleach.Cleaner(tags=_allowed_tags,
-						attributes=_allowed_attributes,
-						protocols=['http', 'https'],
-						styles=['color','font-weight','transform','-webkit-transform'],
-						filters=[partial(LinkifyFilter,
-										skip_tags=["pre"],
-										parse_email=False,
-										)
-								]
-						).clean(sanitized)
+	if noimages:
+		sanitized = bleach.Cleaner(tags=no_images,
+									attributes=_allowed_attributes,
+									protocols=_allowed_protocols,
+									styles=_allowed_styles,
+									filters=[partial(LinkifyFilter,
+													skip_tags=["pre"],
+													parse_email=False,
+													)
+											]
+									).clean(sanitized)
+	else:
+		sanitized = bleach.Cleaner(tags=_allowed_tags,
+							attributes=_allowed_attributes,
+							protocols=['http', 'https'],
+							styles=['color','font-weight','transform','-webkit-transform'],
+							filters=[partial(LinkifyFilter,
+											skip_tags=["pre"],
+											parse_email=False,
+											)
+									]
+							).clean(sanitized)
 
 	soup = BeautifulSoup(sanitized, features="html.parser")
 
