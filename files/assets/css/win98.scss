@@ -1,43 +1,38 @@
+:root {
+	--dark: #fff;
+	--secondary: #000000;
+	--danger: #E53E3E;
+	--white: #c0c0c0;
+	--black: #000000;
+	--light: #000000;
+	--success: #38A169;
+	--muted: #404040;
+	--info: #168EEA;
+	--purple: #ff66ac;
+	--red: #E53E3E;
+	--gray: #fff;
+	--green: #38A169;
+	--gray-100: #394552;
+	--gray-200: #c0c0c0;
+	--gray-300: #c0c0c0;
+	--gray-400: #242C33;
+	--gray-500: #c0c0c0;
+	--gray-600: #c0c0c0;
+	--gray-700: #c0c0c0;
+	--gray-800: #07090A;
+	--gray-900: #000000;
+	--upvote: #ff66ac;
+	--downvote: #38B2AC;
+	--admin: #ff66ac;
+	--banned: #960000;
+	--deleted: #969600;
+	--deletedandbanned: #964000;
+	--mod: #07c20c;
+	--code: #e83e8c;
+	--gold: #ECC94B;
+	--reddit: #ED4630;
+}
 
-$primary: #ff66ac;
-$dark: #fff;
-$secondary: #000000;
-$danger: #E53E3E;
-$white: #c0c0c0;
-$black: #000000;
-$light: #000000;
-$success: #38A169;
-$muted: #404040;
-$info: #168EEA;
-
-$purple: #ff66ac;
-$red: #E53E3E;
-$gray: #fff;
-$green: #38A169;
-
-$gray-100: #394552;
-$gray-200: #c0c0c0;
-$gray-300: #c0c0c0;
-$gray-400: #242C33;
-$gray-500: #c0c0c0;
-$gray-600: #c0c0c0;
-$gray-700: #c0c0c0;
-$gray-800: #07090A;
-$gray-900: #000000;
-
-$upvote: #ff66ac;
-$downvote: #38B2AC;
-$admin: #ff66ac;
-$banned: #960000;
-$deleted: #969600;
-$deletedandbanned: #964000;
-$mod: #07c20c;
-$code: #e83e8c;
-
-$gold: #ECC94B;
-$reddit: #ED4630;
-
-@import "./bootstrap/bootstrap.scss";
 @import "./main.scss";
 
 * {
