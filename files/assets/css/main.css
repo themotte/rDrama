@@ -4177,8 +4177,11 @@ input[type=button].btn-block {
 .navbar-light .navbar-brand:hover, .navbar-light .navbar-brand:focus {
   color: rgba(0, 0, 0, 0.9);
 }
-.navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .nav-link:hover {
+.navbar-light .navbar-nav .nav-link {
   color: rgba(0, 0, 0, 0.5);
+}
+.navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus {
+  color: rgba(0, 0, 0, 0.7);
 }
 .navbar-light .navbar-nav .nav-link.disabled {
   color: rgba(0, 0, 0, 0.3);
@@ -11272,12 +11275,11 @@ ol > li::before {
   padding: 0.25rem 0.5rem;
 }
 
-.navbar-light .navbar-nav .nav-link {
+.navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .nav-link:hover {
   color: var(--black);
 }
 
 .navbar-light .navbar-nav .nav-link:hover {
-  background-color: var(--light);
   border-radius: 0.35rem;
 }
 
