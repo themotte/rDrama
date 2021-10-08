@@ -250,7 +250,6 @@ def get_comments(cids, v=None, load_parent=False):
 
 def get_domain(s):
 
-	# parse domain into all possible subdomains
 	parts = s.split(".")
 	domain_list = set([])
 	for i in range(len(parts)):
@@ -267,8 +266,6 @@ def get_domain(s):
 	if not doms:
 		return None
 
-	# return the most specific domain - the one with the longest domain
-	# property
 	doms = sorted(doms, key=lambda x: len(x.domain), reverse=True)
 
 	return doms[0]

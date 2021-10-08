@@ -107,7 +107,6 @@ def auth_desired(f):
 
 
 def auth_required(f):
-	# decorator for any view that requires login (ex. settings)
 
 	def wrapper(*args, **kwargs):
 
@@ -120,7 +119,6 @@ def auth_required(f):
 
 		g.v = v
 
-		# an ugly hack to make api work
 		resp = make_response(f(*args, v=v, **kwargs))
 		return resp
 
@@ -129,7 +127,6 @@ def auth_required(f):
 
 
 def is_not_banned(f):
-	# decorator that enforces lack of ban
 
 	def wrapper(*args, **kwargs):
 

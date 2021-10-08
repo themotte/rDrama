@@ -121,7 +121,6 @@ def front_all(v):
 	try: page = int(request.values.get("page") or 1)
 	except: abort(400)
 
-	# prevent invalid paging
 	page = max(page, 1)
 
 	if v:
@@ -243,11 +242,9 @@ def changelog(v):
 					v=v,
 					)
 
-	# check existence of next page
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
-	# check if ids exist
 	posts = get_posts(ids, v=v)
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}

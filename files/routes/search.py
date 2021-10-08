@@ -14,7 +14,6 @@ valid_params=[
 
 def searchparse(text):
 
-	#takes test in filter:term format and returns data
 
 	criteria = {x[0]:x[1] for x in query_regex.findall(text)}
 

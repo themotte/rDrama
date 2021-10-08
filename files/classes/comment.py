@@ -102,9 +102,7 @@ class Comment(Base):
 		now = time.gmtime()
 		ctd = time.gmtime(self.created_utc)
 
-		# compute number of months
 		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
-		# remove a month count if current day of month < creation day of month
 		if now.tm_mday < ctd.tm_mday:
 			months -= 1
 
@@ -234,7 +232,6 @@ class Comment(Base):
 			'score': self.score,
 			'upvotes': self.upvotes,
 			'downvotes': self.downvotes,
-			#'award_count': self.award_count,
 			'is_bot': self.is_bot,
 			'flags': flags,
 			}

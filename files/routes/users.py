@@ -395,13 +395,10 @@ def u_username(username, v=None):
 
 	if v and request.path.startswith('/logged_out'): v = None
 
-	# username is unique so at most this returns one result. Otherwise 404
 
-	# case insensitive search
 
 	u = get_user(username, v=v)
 
-	# check for wrong cases
 
 	if username != u.username:
 		return redirect(request.path.replace(username, u.username))
@@ -410,7 +407,6 @@ def u_username(username, v=None):
 		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
 		else: return render_template("userpage_reserved.html", u=u, v=v)
 
-	# viewers
 	if v and u.id != v.id:
 		view = g.db.query(ViewerRelationship).options(lazyload('*')).filter(
 			and_(
@@ -457,7 +453,6 @@ def u_username(username, v=None):
 
 	ids = u.userpagelisting(v=v, page=page, sort=sort, t=t)
 
-	# we got 26 items just to see if a next page exists
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
@@ -508,13 +503,10 @@ def u_username_comments(username, v=None):
 
 	if v and request.path.startswith('/logged_out'): v = None
 
-	# username is unique so at most this returns one result. Otherwise 404
 
-	# case insensitive search
 
 	user = get_user(username, v=v)
 
-	# check for wrong cases
 
 	if username != user.username: return redirect(f'{user.url}/comments')
 
@@ -589,7 +581,6 @@ def u_username_comments(username, v=None):
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	ids = [x.id for x in comments]
 
-	# we got 26 items just to see if a next page exists
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
@@ -624,7 +615,6 @@ def follow_user(username, v):
 
 	if target.id==v.id: return {"error": "You can't follow yourself!"}, 400
 
-	# check for existing follow
 	if g.db.query(Follow).options(lazyload('*')).filter_by(user_id=v.id, target_id=target.id).first(): return {"message": "User followed!"}
 
 	new_follow = Follow(user_id=v.id, target_id=target.id)
@@ -650,7 +640,6 @@ def unfollow_user(username, v):
 
 	if target.id == 995: abort(403)
 
-	# check for existing follow
 	follow = g.db.query(Follow).options(lazyload('*')).filter_by(user_id=v.id, target_id=target.id).first()
 
 	if not follow: return {"message": "User unfollowed!"}
@@ -674,7 +663,6 @@ def unfollow_user(username, v):
 def remove_follow(username, v):
 	target = get_user(username)
 
-	# check for existing follow
 	follow = g.db.query(Follow).options(lazyload('*')).filter_by(user_id=target.id, target_id=v.id).first()
 
 	if not follow: return {"message": "Follower removed!"}

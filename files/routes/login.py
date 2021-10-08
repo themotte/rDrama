@@ -22,12 +22,10 @@ def login_get(v):
 
 
 def check_for_alts(current_id):
-	# account history
 	past_accs = set(session.get("history", []))
 	past_accs.add(current_id)
 	session["history"] = list(past_accs)
 
-	# record alts
 	for past_id in session["history"]:
 
 		if past_id == current_id:
@@ -95,7 +93,6 @@ def login_post():
 		time.sleep(random.uniform(0, 2))
 		return render_template("login.html", failed=True)
 
-	# test password
 
 	if request.values.get("password"):
 
@@ -141,7 +138,6 @@ def login_post():
 		account.unban_utc = 0
 		g.db.add(account)
 
-	# set session and user id
 	session["user_id"] = account.id
 	session["session_id"] = token_hex(16)
 	session["login_nonce"] = account.login_nonce
@@ -149,7 +145,6 @@ def login_post():
 
 	check_for_alts(account.id)
 
-	# check for previous page
 
 	redir = request.values.get("redirect", "/").replace("/logged_out", "")
 
@@ -189,7 +184,6 @@ def sign_up_get(v):
 	agent = request.headers.get("User-Agent", None)
 	if not agent: abort(403)
 
-	# check for referral in link
 	ref = request.values.get("ref", None)
 	if ref:
 		ref_user = g.db.query(User).options(lazyload('*')).filter(User.username.ilike(ref)).first()
@@ -200,14 +194,12 @@ def sign_up_get(v):
 	if ref_user and (ref_user.id in session.get("history", [])):
 		return render_template("sign_up_failed_ref.html")
 
-	# Make a unique form key valid for one account creation
 	now = int(time.time())
 	token = token_hex(16)
 	session["signup_token"] = token
 
 	formkey_hashstr = str(now) + token + agent
 
-	# formkey is a hash of session token, timestamp, and IP address
 	formkey = hmac.new(key=bytes(environ.get("MASTER_KEY"), "utf-16"),
 					   msg=bytes(formkey_hashstr, "utf-16"),
 					   digestmod='md5'
@@ -258,8 +250,6 @@ def sign_up_post(v):
 
 	username = request.values.get("username").strip()
 
-	# define function that takes an error message and generates a new signup
-	# form
 	def new_signup(error):
 
 		args = {"error": error}
@@ -337,7 +327,6 @@ def sign_up_post(v):
 	if id_1 == 0 and users_count < 6: admin_level=6
 	else: admin_level=0
 
-	# make new user
 	new_user = User(
 		username=username,
 		original_username = username,
@@ -354,14 +343,11 @@ def sign_up_post(v):
 	g.db.add(new_user)
 	g.db.flush()
 
-	# check alts
 
 	check_for_alts(new_user.id)
 
-	# send welcome/verify email
 	if email: send_verification_email(new_user)
 
-	# send welcome message
 	if "rdrama" in request.host: send_notification(NOTIFICATIONS_ACCOUNT, new_user, "Dude bussy lmao")
 
 	session["user_id"] = new_user.id
@@ -402,7 +388,6 @@ def post_forgot():
 			User.email.ilike(email)).first()
 
 	if user:
-		# generate url
 		now = int(time.time())
 		token = generate_hash(f"{user.id}+{now}+forgot+{user.login_nonce}")
 		url = f"https://{app.config['SERVER_NAME']}/reset?id={user.id}&time={now}&token={token}"
@@ -533,7 +518,6 @@ def request_2fa_disable():
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
-	#compute token
 	valid=int(time.time())
 	token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}+{user.login_nonce}")
 
@@ -569,7 +553,6 @@ def reset_2fa():
 	if not validate_hash(f"{user.id}+{user.username}+disable2fa+{t}+{user.mfa_secret}+{user.login_nonce}", token):
 		abort(403)
 
-	#validation successful, remove 2fa
 	user.mfa_secret=None
 
 	g.db.add(user)

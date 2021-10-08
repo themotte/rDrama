@@ -107,9 +107,7 @@ class Submission(Base):
 		now = time.gmtime()
 		ctd = time.gmtime(self.created_utc)
 
-		# compute number of months
 		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
-		# remove a month count if current day of month < creation day of month
 		if now.tm_mday < ctd.tm_mday:
 			months -= 1
 
@@ -266,7 +264,6 @@ class Submission(Base):
 				'downvotes': self.downvotes,
 				'stickied': self.stickied,
 				'distinguish_level': self.distinguish_level,
-				#'award_count': self.award_count,
 				'voted': self.voted if hasattr(self, 'voted') else 0,
 				'flags': flags,
 				}

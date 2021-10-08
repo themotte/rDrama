@@ -9,7 +9,6 @@ from .const import *
 
 def send_notification(vid, user, text):
 
-	# for when working outside request context
 	if isinstance(user, int):
 		uid = user
 	else:

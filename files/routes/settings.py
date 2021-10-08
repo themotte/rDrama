@@ -107,7 +107,6 @@ def settings_profile_post(v):
 			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
 		bio = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', bio)
 
-		# check for uploaded image
 		if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 			
 			file = request.files['file']
@@ -123,7 +122,6 @@ def settings_profile_post(v):
 
 		bio_html = CustomRenderer().render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html)
-		# Run safety filter
 		bans = filter_comment_html(bio_html)
 
 		if len(bio_html) > 10000:
@@ -137,7 +135,6 @@ def settings_profile_post(v):
 			if ban.reason:
 				reason += f" {ban.reason}"
 				
-			#auto ban for digitally malicious content
 			if any([x.reason==4 for x in bans]):
 				v.ban(days=30, reason="Digitally malicious content is not allowed.")
 			return {"error": reason}, 401
@@ -416,7 +413,6 @@ def settings_security_post(v):
 		if new_email == v.email:
 			return redirect("/settings/security?error=That email is already yours!")
 
-		# check to see if email is in use
 		existing = g.db.query(User).options(lazyload('*')).filter(User.id != v.id,
 										   func.lower(User.email) == new_email.lower()).first()
 		if existing:
@@ -492,10 +488,8 @@ def settings_log_out_others(v):
 
 	if not v.verifyPass(submitted_password): return render_template("settings_security.html", v=v, error="Incorrect Password"), 401
 
-	# increment account's nonce
 	v.login_nonce += 1
 
-	# update cookie accordingly
 	session["login_nonce"] = v.login_nonce
 
 	g.db.add(v)
@@ -865,7 +859,6 @@ def settings_title_change(v):
 	
 	new_name=request.values.get("title").strip()[:100].replace("𒐪","")
 
-	#make sure name is different
 	if new_name==v.customtitle:
 		return render_template("settings_profile.html",
 						   v=v,

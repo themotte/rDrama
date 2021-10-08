@@ -143,7 +143,6 @@ def api_comment(v):
 		level = parent.level + 1
 	else: abort(400)
 
-	#process and sanitize
 	body = request.values.get("body", "")[:10000]
 	body = body.strip()
 
@@ -162,7 +161,6 @@ def api_comment(v):
 	body_md = CustomRenderer().render(mistletoe.Document(body_md))
 	body_html = sanitize(body_md)
 
-	# Run safety filter
 	bans = filter_comment_html(body_html)
 
 	if bans:
@@ -171,14 +169,12 @@ def api_comment(v):
 		if ban.reason:
 			reason += f" {ban.reason}"
 			
-		#auto ban for digitally malicious content
 		if any([x.reason==4 for x in bans]):
 			v.ban(days=30, reason="Digitally malicious content")
 		if any([x.reason==7 for x in bans]):
 			v.ban( reason="Sexualizing minors")
 		return {"error": reason}, 401
 
-	# check existing
 	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
 															 Comment.deleted_utc == 0,
 															 Comment.parent_comment_id == parent_comment_id,
@@ -191,10 +187,8 @@ def api_comment(v):
 	if parent.author.any_block_exists(v) and not v.admin_level>=3:
 		return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
-	# get bot status
 	is_bot = request.headers.get("X-User-Type","")=="Bot"
 
-	# check spam - this should hopefully be faster
 	if not is_bot:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
@@ -503,7 +497,6 @@ def api_comment(v):
 
 
 	if not v.shadowbanned:
-		# queue up notification for parent author
 		notify_users = set()
 		
 		for x in g.db.query(Subscription.user_id).options(lazyload('*')).filter_by(submission_id=c.parent_submission).all():
@@ -547,7 +540,6 @@ def api_comment(v):
 
 
 
-	# create auto upvote
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,
 						 vote_type=1
@@ -599,7 +591,6 @@ def edit_comment(cid, v):
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your comment and try again."
 
-		#auto ban for digitally malicious content
 		if any([x.reason==4 for x in bans]):
 			v.ban(days=30, reason="Digitally malicious content is not allowed.")
 			return {"error":"Digitally malicious content is not allowed."}
@@ -614,7 +605,6 @@ def edit_comment(cid, v):
 												body=body,
 												v=v
 												)
-	# check spam - this should hopefully be faster
 	now = int(time.time())
 	cutoff = now - 60 * 60 * 24
 
@@ -741,7 +731,6 @@ def edit_comment(cid, v):
 
 	g.db.flush()
 	
-	# queue up notifications for username mentions
 	notify_users = set()
 	soup = BeautifulSoup(body_html, features="html.parser")
 	mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))

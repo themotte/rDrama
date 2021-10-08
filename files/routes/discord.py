@@ -36,7 +36,6 @@ def join_discord(v):
 def discord_redirect(v):
 
 
-	#validate state
 	now=int(time.time())
 	state=request.values.get('state','').split('.')
 
@@ -50,7 +49,6 @@ def discord_redirect(v):
 	if not validate_hash(f"{timestamp}+{v.id}+discord", state):
 		abort(400)
 
-	#get discord token
 	code = request.values.get("code","")
 	if not code:
 		abort(400)
@@ -79,7 +77,6 @@ def discord_redirect(v):
 		abort(403)
 
 
-	#get user ID
 	url="https://discord.com/api/users/@me"
 	headers={
 		'Authorization': f"Bearer {token}"
@@ -90,13 +87,11 @@ def discord_redirect(v):
 
 
 
-	#add user to discord
 	headers={
 		'Authorization': f"Bot {BOT_TOKEN}",
 		'Content-Type': "application/json"
 	}
 
-	#remove existing user if applicable
 	if v.discord_id and v.discord_id != x['id']:
 		url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{v.discord_id}"
 		requests.delete(url, headers=headers)

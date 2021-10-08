@@ -211,7 +211,6 @@ def edit_post(pid, v):
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
-		# Run safety filter
 		bans = filter_comment_html(body_html)
 		if bans:
 			ban = bans[0]
@@ -219,7 +218,6 @@ def edit_post(pid, v):
 			if ban.reason:
 				reason += f" {ban.reason}"
 				
-			#auto ban for digitally malicious content
 			if any([x.reason==4 for x in bans]):
 				v.ban(days=30, reason="Digitally malicious content is not allowed.")
 				abort(403)
@@ -347,7 +345,6 @@ def filter_title(title):
 	title = title.replace("\r", "")
 	title = title.replace("\t", "")
 
-	# sanitize title
 	title = bleach.clean(title, tags=[])
 
 	for i in re.finditer('(?<!"):([^ ]{1,30}?):', title):
@@ -370,7 +367,6 @@ def thumbnail_thread(pid):
 
 	def expand_url(post_url, fragment_url):
 
-		# convert src into full url
 		if fragment_url.startswith("https://"):
 			return fragment_url
 		elif fragment_url.startswith("http://"):
@@ -393,7 +389,6 @@ def thumbnail_thread(pid):
 
 	fetch_url=post.url
 
-	#mimic chrome browser agent
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
 	try:
@@ -407,17 +402,12 @@ def thumbnail_thread(pid):
 		return
 	
 
-	#if content is image, stick with that. Otherwise, parse html.
 
 	if x.headers.get("Content-Type","").startswith("text/html"):
-		#parse html, find image, load image
 		soup=BeautifulSoup(x.content, 'html.parser')
-		#parse html
 
-		#create list of urls to check
 		thumb_candidate_urls=[]
 
-		#iterate through desired meta tags
 		meta_tags = [
 			"ruqqus:thumbnail",
 			"twitter:image",
@@ -446,12 +436,10 @@ def thumbnail_thread(pid):
 			if tag:
 				thumb_candidate_urls.append(expand_url(post.url, tag['content']))
 
-		#parse html doc for <img> elements
 		for tag in soup.find_all("img", attrs={'src':True}):
 			thumb_candidate_urls.append(expand_url(post.url, tag['src']))
 
 
-		#now we have a list of candidate urls to try
 		for url in thumb_candidate_urls:
 
 			try:
@@ -475,14 +463,12 @@ def thumbnail_thread(pid):
 			break
 
 		else:
-			#getting here means we are out of candidate urls (or there never were any)
 			db.close()
 			return
 
 
 
 	elif x.headers.get("Content-Type","").startswith("image/"):
-		#image is originally loaded fetch_url
 		image_req=x
 		image = PILimage.open(BytesIO(x.content))
 
@@ -569,7 +555,6 @@ def submit_post(v):
 		url = ""
 	
 	body = request.values.get("body", "")
-	# check for duplicate
 	dup = g.db.query(Submission).options(lazyload('*')).filter(
 
 		Submission.author_id == v.id,
@@ -583,13 +568,11 @@ def submit_post(v):
 		return redirect(dup.permalink)
 
 
-	# check for domain specific rules
 
 	parsed_url = urlparse(url)
 
 	domain = parsed_url.netloc
 
-	# check ban status
 	domain_obj = get_domain(domain)
 	if domain_obj:		  
 		if domain_obj.reason==4:
@@ -620,7 +603,6 @@ def submit_post(v):
 
 	else: embed = None
 
-	# similarity check
 	now = int(time.time())
 	cutoff = now - 60 * 60 * 24
 
@@ -628,34 +610,18 @@ def submit_post(v):
 	similar_posts = g.db.query(Submission).options(
 		lazyload('*')
 		).filter(
-			#or_(
-			#	and_(
 					Submission.author_id == v.id,
 					Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
 					Submission.created_utc > cutoff
-			#	),
-			#	and_(
-			#		Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"]/2,
-			#		Submission.created_utc > cutoff
-			#	)
-			#)
 	).all()
 
 	if url:
 		similar_urls = g.db.query(Submission).options(
 			lazyload('*')
 		).filter(
-			#or_(
-			#	and_(
 					Submission.author_id == v.id,
 					Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
 					Submission.created_utc > cutoff
-			#	),
-			#	and_(
-			#		Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"]/2,
-			#		Submission.created_utc > cutoff
-			#	)
-			#)
 		).all()
 	else:
 		similar_urls = []
@@ -692,7 +658,6 @@ def submit_post(v):
 			g.db.add(ma)
 		return redirect("/notifications")
 
-	# catch too-long body
 	if len(str(body)) > 10000:
 
 		if request.headers.get("Authorization"): return {"error":"10000 character limit for text body."}, 400
@@ -703,7 +668,6 @@ def submit_post(v):
 		if request.headers.get("Authorization"): return {"error":"2048 character limit for URLs."}, 400
 		else: return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
 
-	# render text
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
@@ -720,7 +684,6 @@ def submit_post(v):
 
 	if len(body_html) > 20000: abort(400)
 
-	# Run safety filter
 	bans = filter_comment_html(body_html)
 	if bans:
 		ban = bans[0]
@@ -728,7 +691,6 @@ def submit_post(v):
 		if ban.reason:
 			reason += f" {ban.reason}"
 			
-		#auto ban for digitally malicious content
 		if any([x.reason==4 for x in bans]):
 			v.ban(days=30, reason="Digitally malicious content is not allowed.")
 			abort(403)
@@ -736,7 +698,6 @@ def submit_post(v):
 		if request.headers.get("Authorization"): return {"error": reason}, 403
 		else: return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 
-	# check for embeddable video
 	domain = parsed_url.netloc
 
 	if v.paid_dues: club = bool(request.values.get("club",""))

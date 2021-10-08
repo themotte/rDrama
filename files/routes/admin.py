@@ -658,7 +658,6 @@ def admin_image_ban(v):
 	i=request.files['file']
 
 
-	#make phash
 	tempname = f"admin_image_ban_{v.username}_{int(time.time())}"
 
 	i.save(tempname)
@@ -668,20 +667,17 @@ def admin_image_ban(v):
 	value = int(str(h), 16) 
 	bindigits = [] 
 	 
-	# Seed digit: 2**0 
 	digit = (value % 2) 
 	value //= 2 
 	bindigits.append(digit) 
 	 
 	while value > 0: 
-		# Next power of 2**n 
 		digit = (value % 2) 
 		value //= 2 
 		bindigits.append(digit) 
 		 
 	h = ''.join([str(d) for d in bindigits])
 
-	#check db for existing
 	badpic = g.db.query(BadPic).options(lazyload('*')).filter_by(
 		phash=h
 		).first()
@@ -874,7 +870,6 @@ def ban_user(user_id, v):
 
 	if user.admin_level >= v.admin_level: abort(403)
 
-	# check for number of days for suspension
 	if 'form' in request.values:
 		days = float(request.values.get("days")) if request.values.get('days') else 0
 		reason = sanitize(request.values.get("reason", ""))

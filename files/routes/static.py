@@ -100,7 +100,6 @@ def cached_chart():
 
 	comment_stats = [g.db.query(Comment.id).options(lazyload('*')).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
-	# create multiple charts
 	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)
 	posts_chart = plt.subplot2grid((20, 4), (7, 0), rowspan=5, colspan=4)
 	comments_chart = plt.subplot2grid((20, 4), (14, 0), rowspan=5, colspan=4)

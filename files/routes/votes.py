@@ -62,14 +62,12 @@ def api_vote_post(post_id, new, v):
 
 	if new not in ["-1", "0", "1"]: abort(400)
 
-	# disallow bots
 	if request.headers.get("X-User-Type","") == "Bot": abort(403)
 
 	new = int(new)
 
 	post = get_post(post_id)
 
-	# check for existing vote
 	existing = g.db.query(Vote).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post.id).first()
 
 	if existing and existing.vote_type == new: return "", 204
@@ -127,7 +125,6 @@ def api_vote_comment(comment_id, new, v):
 
 	comment = get_comment(comment_id)
 
-	# check for existing vote
 	existing = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id).first()
 
 	if existing and existing.vote_type == new: return "", 204

@@ -98,8 +98,7 @@ def before_request():
 
 	g.timestamp = int(time.time())
 
-	#do not access session for static files
-	if not request.path.startswith("/assets"):
+	if not request.path.startswith("/assets") and not request.path.startswith("/images") and not request.path.startswith("/hostedimages"):
 		session.permanent = True
 		if not session.get("session_id"): session["session_id"] = secrets.token_hex(16)
 

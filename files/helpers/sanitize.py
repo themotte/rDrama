@@ -148,7 +148,6 @@ def sanitize(sanitized, noimages=False):
 
 			tag.wrap(link)
 
-	#disguised link preventer
 	for tag in soup.find_all("a"):
 
 		tag["target"] = "_blank"
@@ -160,16 +159,13 @@ def sanitize(sanitized, noimages=False):
 			except:
 				tag.string = ""
 
-	#clean up tags in code
 	for tag in soup.find_all("code"):
 		tag.contents=[x.string for x in tag.contents if x.string]
 
-	#whatever else happens with images, there are only two sets of classes allowed
 	for tag in soup.find_all("img"):
 		if 'profile-pic-20' not in tag.attrs.get("class",""):
 			tag.attrs['class']="in-comment-image rounded-sm my-2"
 
-	#table format
 	for tag in soup.find_all("table"):
 		tag.attrs['class']="table table-striped"
 
