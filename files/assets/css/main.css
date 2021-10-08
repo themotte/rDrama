@@ -11200,19 +11200,19 @@ ol > li::before {
 }
 
 .tooltip.bs-tooltip-right .arrow:before, .tooltip.bs-tooltip-auto[x-placement^=right] .arrow:before {
-  border-right-color: var(--white !important);
+  border-right-color: var(--white) !important;
 }
 
 .tooltip.bs-tooltip-left .arrow:before, .tooltip.bs-tooltip-auto[x-placement^=left] .arrow:before {
-  border-left-color: var(--white !important);
+  border-left-color: var(--white) !important;
 }
 
 .tooltip.bs-tooltip-bottom .arrow:before, .tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow:before {
-  border-bottom-color: var(--white !important);
+  border-bottom-color: var(--white) !important;
 }
 
 .tooltip.bs-tooltip-top .arrow:before, .tooltip.bs-tooltip-auto[x-placement^=top] .arrow:before {
-  border-top-color: var(--white !important);
+  border-top-color: var(--white) !important;
 }
 
 .alert {
@@ -11249,7 +11249,7 @@ ol > li::before {
 }
 
 .navbar-light {
-  background-color: var(--gray-500 !important);
+  background-color: var(--gray-500) !important;
   box-shadow: 0 0.1px 2px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -11773,11 +11773,11 @@ th {
 }
 
 .upvoted .arrow-mobile-up {
-  color: var(--upvote !important);
+  color: var(--upvote) !important;
 }
 
 .downvoted .arrow-mobile-down {
-  color: var(--downvote !important);
+  color: var(--downvote) !important;
 }
 
 .comment-actions .score {
@@ -11789,15 +11789,15 @@ th {
 }
 
 .score-up {
-  color: var(--upvote !important);
+  color: var(--upvote) !important;
 }
 
 .score-down {
-  color: var(--downvote !important);
+  color: var(--downvote) !important;
 }
 
 .banned .score {
-  color: var(--gray-300 !important);
+  color: var(--gray-300) !important;
 }
 
 a .link-arrow {
@@ -11855,7 +11855,7 @@ a:hover .link-arrow {
 }
 
 .pseudo-submit-form .card-header {
-  background-color: var(--gray-600 !important);
+  background-color: var(--gray-600) !important;
 }
 
 #frontpage .pseudo-submit-form.card, #search .search-results.card {
@@ -13063,7 +13063,7 @@ ul.comment-section {
 }
 
 #settings .bg-gray-300 {
-  background-color: var(--dark !important);
+  background-color: var(--dark) !important;
 }
 
 .settings .settings-section .title, .settings .settings-section .body, .settings .settings-section .footer {
@@ -14062,7 +14062,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .navbar.bg-primary {
-    background-color: var(--dark !important);
+    background-color: var(--dark) !important;
   }
 
   .navbar-nav {
@@ -14404,19 +14404,19 @@ textarea {
   }
 }
 .bg-white {
-  background-color: var(--gray-600 !important);
+  background-color: var(--gray-600) !important;
 }
 
 .text-muted {
-  color: var(--muted !important);
+  color: var(--muted) !important;
 }
 
 .text-primary {
-  color: var(--primary !important);
+  color: var(--primary) !important;
 }
 
 .text-gray-400, .text-gray-500 {
-  color: var(--gray-200 !important);
+  color: var(--gray-200) !important;
 }
 
 .white-overlay {
@@ -14451,11 +14451,11 @@ div.banned {
 }
 
 div.deleted {
-  background-color: var(--deleted !important);
+  background-color: var(--deleted) !important;
 }
 
 div.deleted.banned {
-  background-color: var(--deletedandbanned !important);
+  background-color: var(--deletedandbanned) !important;
 }
 
 .text-admin {
@@ -14539,7 +14539,7 @@ img.emoji {
 }
 
 .comment .comment-collapse-desktop:hover {
-  border-left-color: var(--white !important);
+  border-left-color: var(--white) !important;
 }
 
 .comment.collapsed .comment-collapse-desktop:hover {
@@ -14628,11 +14628,11 @@ img.emoji {
   border: 1px solid #007bff;
   padding: 10px;
   border-radius: 3px;
-  background-color: var(--gray-700 !important);
+  background-color: var(--gray-700) !important;
 }
 
 .text-info {
-  color: var(--primary !important);
+  color: var(--primary) !important;
 }
 
 * {
@@ -14647,12 +14647,12 @@ img.emoji {
 }
 
 .container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
-  background-color: var(--gray-700 !important);
+  background-color: var(--gray-700) !important;
   border-radius: 5px !important;
 }
 
 .btn {
-  background-color: var(--gray-700 !important);
+  background-color: var(--gray-700) !important;
 }
 
 .nobackground {
