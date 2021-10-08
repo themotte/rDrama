@@ -78,7 +78,7 @@ def check_for_alts(current_id):
 
 
 @app.post("/login")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @limiter.limit("6/minute")
 def login_post():
 
@@ -167,7 +167,7 @@ def me(v):
 
 
 @app.post("/logout")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def logout(v):
@@ -228,7 +228,7 @@ def sign_up_get(v):
 
 
 @app.post("/signup")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @limiter.limit("5/day")
 @auth_desired
 def sign_up_post(v):
@@ -380,7 +380,7 @@ def get_forgot():
 
 
 @app.post("/forgot")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 def post_forgot():
 
 	username = request.values.get("username").lstrip('@')
@@ -450,7 +450,7 @@ def get_reset():
 
 
 @app.post("/reset")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @auth_desired
 def post_reset(v):
 	if v:
@@ -503,7 +503,7 @@ def lost_2fa(v):
 		)
 
 @app.post("/request_2fa_disable")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @limiter.limit("6/minute")
 def request_2fa_disable():
 

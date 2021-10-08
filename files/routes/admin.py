@@ -28,7 +28,7 @@ def truescore(v):
 
 
 @app.post("/@<username>/revert_actions")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 def revert_actions(v, username):
 	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
@@ -52,7 +52,7 @@ def revert_actions(v, username):
 	return {"message": "Admin actions reverted!"}
 
 @app.post("/@<username>/club_allow")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 def club_allow(v, username):
 
@@ -83,7 +83,7 @@ def club_allow(v, username):
 	return {"message": f"@{username} has been allowed into the country club!"}
 
 @app.post("/@<username>/club_ban")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 def club_ban(v, username):
 
@@ -113,7 +113,7 @@ def club_ban(v, username):
 
 
 @app.post("/@<username>/make_admin")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 def make_admin(v, username):
 	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
@@ -126,7 +126,7 @@ def make_admin(v, username):
 
 
 @app.post("/@<username>/remove_admin")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 def remove_admin(v, username):
 	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
@@ -139,7 +139,7 @@ def remove_admin(v, username):
 
 
 @app.post("/@<username>/make_fake_admin")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 def make_fake_admin(v, username):
 	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
@@ -152,7 +152,7 @@ def make_fake_admin(v, username):
 
 
 @app.post("/@<username>/remove_fake_admin")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 def remove_fake_admin(v, username):
 	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
@@ -235,7 +235,7 @@ def get_rules(v):
 
 
 @app.post('/admin/rules')
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def post_rules(v):
@@ -372,7 +372,7 @@ def badge_grant_get(v):
 
 
 @app.post("/admin/badge_grant")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(4)
 @validate_formkey
 def badge_grant_post(v):
@@ -601,7 +601,7 @@ def alt_votes_get(v):
 
 
 @app.post("/admin/link_accounts")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(4)
 @validate_formkey
 def admin_link_accounts(v):
@@ -648,7 +648,7 @@ def admin_removed(v):
 
 
 @app.post("/admin/image_ban")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(4)
 @validate_formkey
 def admin_image_ban(v):
@@ -757,7 +757,7 @@ def agendaposter(user_id, v):
 
 
 @app.post("/shadowban/<user_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def shadowban(user_id, v):
@@ -783,7 +783,7 @@ def shadowban(user_id, v):
 
 
 @app.post("/unshadowban/<user_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def unshadowban(user_id, v):
@@ -808,7 +808,7 @@ def unshadowban(user_id, v):
 	return {"message": "User unshadowbanned!"}
 
 @app.post("/admin/verify/<user_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def verify(user_id, v):
@@ -819,7 +819,7 @@ def verify(user_id, v):
 	return {"message": "User verfied!"}
 
 @app.post("/admin/unverify/<user_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def unverify(user_id, v):
@@ -831,7 +831,7 @@ def unverify(user_id, v):
 
 
 @app.post("/admin/title_change/<user_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def admin_title_change(user_id, v):
@@ -865,7 +865,7 @@ def admin_title_change(user_id, v):
 	return redirect(user.url)
 
 @app.post("/ban_user/<user_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def ban_user(user_id, v):
@@ -941,7 +941,7 @@ def ban_user(user_id, v):
 
 
 @app.post("/unban_user/<user_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def unban_user(user_id, v):
@@ -979,7 +979,7 @@ def unban_user(user_id, v):
 
 
 @app.post("/ban_post/<post_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(3)
 @validate_formkey
 def ban_post(post_id, v):
@@ -1023,7 +1023,7 @@ def ban_post(post_id, v):
 
 
 @app.post("/unban_post/<post_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(3)
 @validate_formkey
 def unban_post(post_id, v):
@@ -1118,7 +1118,7 @@ def api_pin_post(post_id, v):
 		else: return {"message": "Post unpinned!"}
 
 @app.post("/ban_comment/<c_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(1)
 def api_ban_comment(c_id, v):
 
@@ -1142,7 +1142,7 @@ def api_ban_comment(c_id, v):
 
 
 @app.post("/unban_comment/<c_id>")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(1)
 def api_unban_comment(c_id, v):
 
@@ -1208,7 +1208,7 @@ def admin_banned_domains(v):
 	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
 @app.post("/admin/banned_domains")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(4)
 @validate_formkey
 def admin_toggle_ban_domain(v):
@@ -1230,7 +1230,7 @@ def admin_toggle_ban_domain(v):
 
 
 @app.post("/admin/nuke_user")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(4)
 @validate_formkey
 def admin_nuke_user(v):
@@ -1264,7 +1264,7 @@ def admin_nuke_user(v):
 
 
 @app.post("/admin/unnuke_user")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @admin_level_required(4)
 @validate_formkey
 def admin_nunuke_user(v):

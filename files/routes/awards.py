@@ -185,7 +185,7 @@ ALLOW_MULTIPLE = (
 )
 
 @app.post("/post/<pid>/awards")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @auth_required
 def award_post(pid, v):
 
@@ -249,7 +249,7 @@ def award_post(pid, v):
 
 
 @app.post("/comment/<cid>/awards")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @auth_required
 def award_comment(cid, v):
 
@@ -322,7 +322,7 @@ def admin_userawards_get(v):
 	return render_template("admin/user_award.html", awards=list(AWARDS.values()), v=v)
 
 @app.post("/admin/user_award")
-@limiter.limit("1/0.5second")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def admin_userawards_post(v):
