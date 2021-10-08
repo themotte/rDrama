@@ -1,13 +1,5 @@
 @charset "UTF-8";
 
-:root {
-  --success: #28a745;
-  --warning: #ffc107;
-  --danger: #dc3545;
-  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
-
 *,
 *::before,
 *::after {
@@ -12368,7 +12360,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .post-actions .removeDropdownItem.dropdown-item:hover, .post-actions .removeDropdownItem.dropdown-item:focus, .post-actions .removeDropdownItem.dropdown-item.active {
   color: var(--white);
   text-decoration: none;
-  background-color: var(--warning);
+  background-color: rgb(255, 193, 7);
 }
 
 .post-actions .removeDropdownItem.dropdown-item:hover .fas, .post-actions .removeDropdownItem.dropdown-item:focus .fas, .post-actions .removeDropdownItem.dropdown-item.active .fas, .post-actions .removeDropdownItem.dropdown-item:hover .far, .post-actions .removeDropdownItem.dropdown-item:focus .far, .post-actions .removeDropdownItem.dropdown-item.active .far .post-actions .removeDropdownItem.dropdown-item:hover .fa,
@@ -12483,7 +12475,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .dropdown-actions .removeDropdownItem.dropdown-item:hover, .dropdown-actions .removeDropdownItem.dropdown-item:focus, .dropdown-actions .removeDropdownItem.dropdown-item.active {
   color: var(--white);
   text-decoration: none;
-  background-color: var(--warning);
+  background-color: rgb(255, 193, 7);
 }
 
 .dropdown-actions .removeDropdownItem.dropdown-item:hover .fas, .dropdown-actions .removeDropdownItem.dropdown-item:focus .fas, .dropdown-actions .removeDropdownItem.dropdown-item.active .fas, .dropdown-actions .removeDropdownItem.dropdown-item:hover .far, .dropdown-actions .removeDropdownItem.dropdown-item:focus .far, .dropdown-actions .removeDropdownItem.dropdown-item.active .far .dropdown-actions .removeDropdownItem.dropdown-item:hover .fa,
@@ -12806,7 +12798,7 @@ blockquote p {
 .comment-actions .removeDropdownItem.dropdown-item:hover, .comment-actions .removeDropdownItem.dropdown-item:focus, .comment-actions .removeDropdownItem.dropdown-item.active {
   color: var(--white);
   text-decoration: none;
-  background-color: var(--warning);
+  background-color: rgb(255, 193, 7);
 }
 
 .comment-actions .removeDropdownItem.dropdown-item:hover .fas, .comment-actions .removeDropdownItem.dropdown-item:focus .fas, .comment-actions .removeDropdownItem.dropdown-item.active .fas, .comment-actions .removeDropdownItem.dropdown-item:hover .far, .comment-actions .removeDropdownItem.dropdown-item:focus .far, .comment-actions .removeDropdownItem.dropdown-item.active .far .comment-actions .removeDropdownItem.dropdown-item:hover .fa,
