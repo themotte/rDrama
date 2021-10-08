@@ -3,10 +3,10 @@
 {% if u and u.profilecss %}
 	{% block stylesheets %}
 		{% if v %}
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=60">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=60">{% endif %}
+			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=61">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=61">{% endif %}
 		{% else %}
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=60">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=61">
 		{% endif %}
 		{% if u and u.profilecss %}
 			<link rel="stylesheet" href="/@{{u.username}}/profilecss">
