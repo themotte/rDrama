@@ -120,7 +120,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 
 @app.post("/comment")
-@limiter.limit("1/0.5seconds")
+@limiter.limit("1/second")
 @limiter.limit("6/minute")
 @is_not_banned
 @validate_formkey
@@ -574,7 +574,7 @@ def api_comment(v):
 
 
 @app.post("/edit_comment/<cid>")
-@limiter.limit("1/0.5seconds")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def edit_comment(cid, v):
@@ -771,7 +771,7 @@ def edit_comment(cid, v):
 
 
 @app.post("/delete/comment/<cid>")
-@limiter.limit("1/0.5seconds")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def delete_comment(cid, v):
@@ -795,7 +795,7 @@ def delete_comment(cid, v):
 	return {"message": "Comment deleted!"}
 
 @app.post("/undelete/comment/<cid>")
-@limiter.limit("1/0.5seconds")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def undelete_comment(cid, v):
@@ -850,7 +850,7 @@ def toggle_pin_comment(cid, v):
 	
 	
 @app.post("/save_comment/<cid>")
-@limiter.limit("1/0.5seconds")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def save_comment(cid, v):
@@ -867,7 +867,7 @@ def save_comment(cid, v):
 	return {"message": "Comment saved!"}
 
 @app.post("/unsave_comment/<cid>")
-@limiter.limit("1/0.5seconds")
+@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def unsave_comment(cid, v):
