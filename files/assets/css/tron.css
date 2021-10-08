@@ -35,7 +35,7 @@
 
 @import 'https://fonts.googleapis.com/css?family=Roboto+Mono:400,600,700';
 
-@import "./main.scss";
+@import "https://rdrama.net/assets/css/main.scss";
 
 #frontpage .post-title a:visited {
 	color: var(--white);

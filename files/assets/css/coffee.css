@@ -35,7 +35,7 @@
 
 @import 'https://fonts.googleapis.com/css?family=Lato:400,600,700';
 
-@import "./main.scss";
+@import "https://rdrama.net/assets/css/main.scss";
 
 * {
     font-family: 'Lato';

@@ -34,7 +34,7 @@
 	--reddit: #ED4630;
 }
 
-@import "./main.scss";
+@import "https://rdrama.net/assets/css/main.scss";
 
 body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textarea {
 	background-color: var(--bg-dark) !important;

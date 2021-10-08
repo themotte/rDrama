@@ -33,7 +33,7 @@
 	--reddit: #ED4630;
 }
 
-@import "./main.scss";
+@import "https://rdrama.net/assets/css/main.scss";
 
 * {
 	box-shadow: none !important;
