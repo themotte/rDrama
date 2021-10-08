@@ -170,7 +170,8 @@ comment_edit=function(id){
 }
 
 post_comment=function(fullname){
-    document.getElementById('save-reply-to-'+fullname).classList.add('disabled');
+	const btn = document.getElementById('save-reply-to-'+fullname)
+    btn.classList.add('disabled');
 
 	var form = new FormData();
 
@@ -194,6 +195,7 @@ post_comment=function(fullname){
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 			myToast.show();
 			document.getElementById("comment-error-text").textContent = "Error. Please try again later.";
+			btn.classList.remove('disabled');
 		}
 	}
 	xhr.send(form)
