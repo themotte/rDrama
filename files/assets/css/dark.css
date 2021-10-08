@@ -33,7 +33,7 @@
 	--reddit: #ED4630;
 }
 
-@import url("https://rdrama.net/assets/css/main.scss");
+@import url("https://rdrama.net/assets/css/main.css");
 
 * {
 	border-color: var(--primary);
