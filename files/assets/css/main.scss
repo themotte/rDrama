@@ -3312,8 +3312,29 @@ div.deleted.banned {
 }
 
 .in-comment-image {
-	max-height: 100px !important;
-	max-width: 100px !important;
+	max-height: 150px !important;
+	max-width: 100% !important;
+	border-radius: 0.2rem !important;
+	margin-top: 0.5rem !important;
+	margin-bottom: 0.5rem !important;
+}
+
+.embedvid {
+	max-height: 200px !important;
+	max-width: 100% !important;
+}
+
+.emoji {
+	height: 30px !important;
+}
+
+.bigemoji {
+	height: 60px !important;
+}
+
+.spotify {
+	max-height: 80px !important;
+	max-width: 100% !important;
 }
 
 .onboarding-card {
