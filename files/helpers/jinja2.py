@@ -27,11 +27,10 @@ def favorite_emojis(x):
 	str = ""
 	emojis = sorted(x.items(), key=lambda x: x[1], reverse=True)[:25]
 	for k, v in emojis:
-		str += f'<button class="btn m-1 px-0 emoji" onclick="getEmoji(\'{k}\')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":{k}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/{k}.webp" alt="{k}-emoji"/></button>'
+		str += f'<button class="btn m-1 px-0 emoji2" onclick="getEmoji(\'{k}\')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":{k}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/{k}.webp" alt="{k}-emoji"/></button>'
 	return str
 
 @app.context_processor
 def inject_constants():
 	constants = [c for c in dir(const) if not c.startswith("_")]
 	return {c:getattr(const, c) for c in constants}
-
