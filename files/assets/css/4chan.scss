@@ -61,47 +61,47 @@ blockquote {
 }
 
 .dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active {
-    background-color: #bda78e !important;
+	background-color: #bda78e !important;
 }
 
 html * {
-    font-family: arial, helvetica, sans-serif;
-    color: #800000
-    }
+	font-family: arial, helvetica, sans-serif;
+	color: #800000
+	}
 body, #main-content-col {
-    background-color: $secondary !important;
-    }
+	background-color: $secondary !important;
+	}
 .border-right, .border-left, .border-top, .border-bottom, .border {
-    border-color: #D9BFB7 !important
-    }
+	border-color: #D9BFB7 !important
+	}
 .card-header {
-    border-color: #D9BFB7 !important
-    }
+	border-color: #D9BFB7 !important
+	}
 .post-title a {
-    color: #800000 !important;
-    }
+	color: #800000 !important;
+	}
 .comment, .card {
-    background-color: $secondary !important;
-    border-color: #D9BFB7 !important;
-    }
+	background-color: $secondary !important;
+	border-color: #D9BFB7 !important;
+	}
 .form-control {
-    border-color: #D9BFB7 !important;
-    }
+	border-color: #D9BFB7 !important;
+	}
 .comment .comment-collapse::before {
-    border-color: #D9BFB7 !important;
-    }
+	border-color: #D9BFB7 !important;
+	}
 .comment .comment-collapse:hover::before {
-    border-left-color: #800000 !important
-    }
+	border-left-color: #800000 !important
+	}
 .post-actions *:hover, .comment-actions *:hover, .comment-actions .copy-link:hover {
-    color: #F00 !important
-    }
+	color: #F00 !important
+	}
 a {
-    color: $primary;
+	color: $primary;
 }
 
 blockquote p {
-    color: green !important;
+	color: green !important;
 }
 
 .transparent {

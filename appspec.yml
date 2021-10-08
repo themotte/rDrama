@@ -2,12 +2,12 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: files
+	destination: files
 permissions:
   - object: files/*
-    mode: 4755
+	mode: 4755
 hooks:
   AfterInstall:
-    - location: scripts/install_pip
+	- location: scripts/install_pip
   ApplicationStart:
-    - location: scripts/start_files
+	- location: scripts/start_files

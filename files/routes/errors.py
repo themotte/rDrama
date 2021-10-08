@@ -67,7 +67,6 @@ def error_500(e, v):
 
 
 @app.post("/allow_nsfw")
-@limiter.limit("1/second")
 def allow_nsfw():
 
 	session["over_18"] = int(time.time()) + 3600
