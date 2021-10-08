@@ -339,7 +339,6 @@ def admin_home(v):
 		return render_template("admin/admin_home.html", v=v, x=x)
 
 @app.post("/admin/disablesignups")
-@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def disablesignups(v):
@@ -705,7 +704,6 @@ def admin_image_ban(v):
 
 
 @app.post("/agendaposter/<user_id>")
-@limiter.limit("1/second")
 @admin_level_required(6)
 @validate_formkey
 def agendaposter(user_id, v):
@@ -1059,7 +1057,6 @@ def unban_post(post_id, v):
 
 
 @app.post("/distinguish/<post_id>")
-@limiter.limit("1/second")
 @admin_level_required(1)
 @validate_formkey
 def api_distinguish_post(post_id, v):
@@ -1085,7 +1082,6 @@ def api_distinguish_post(post_id, v):
 
 
 @app.post("/sticky/<post_id>")
-@limiter.limit("1/second")
 @admin_level_required(3)
 def api_sticky_post(post_id, v):
 
@@ -1109,13 +1105,12 @@ def api_sticky_post(post_id, v):
 		else: return {"message": "Post unpinned!"}
 
 @app.post("/pin/<post_id>")
-@limiter.limit("1/second")
 @auth_required
 def api_pin_post(post_id, v):
 
 	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
 	if post:
-		post.is_pinned = not (post.is_pinned)
+		post.is_pinned = not post.is_pinned
 		g.db.add(post)
 		g.db.commit()
 
@@ -1173,7 +1168,6 @@ def api_unban_comment(c_id, v):
 
 
 @app.post("/distinguish_comment/<c_id>")
-@limiter.limit("1/second")
 @auth_required
 def admin_distinguish_comment(c_id, v):
 	

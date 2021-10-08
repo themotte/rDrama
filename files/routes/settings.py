@@ -251,7 +251,6 @@ def settings_profile_post(v):
 		return {"error": "You didn't change anything."}, 400
 
 @app.post("/changelogsub")
-@limiter.limit("1/second")
 @auth_required
 @validate_formkey
 def changelogsub(v):
@@ -735,19 +734,16 @@ def settings_name_change(v):
 
 	new_name=request.values.get("name").strip()
 
-	#make sure name is different
 	if new_name==v.username:
 		return render_template("settings_profile.html",
 						   v=v,
 						   error="You didn't change anything")
 
-	#verify acceptability
 	if not re.match(valid_username_regex, new_name):
 		return render_template("settings_profile.html",
 						   v=v,
 						   error=f"This isn't a valid username.")
 
-	#verify availability
 	name=new_name.replace('_','\_')
 
 	x= g.db.query(User).options(

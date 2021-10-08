@@ -85,7 +85,6 @@ def shop(v):
 
 
 @app.post("/buy/<award>")
-@limiter.limit("1/second")
 @auth_required
 def buy(v, award):
 	if site_name == "Drama":
