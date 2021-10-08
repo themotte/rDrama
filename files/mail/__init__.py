@@ -41,7 +41,7 @@ def send_verification_email(user, email=None):
 
 
 @app.post("/verify_email")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 def api_verify_email(v):
 

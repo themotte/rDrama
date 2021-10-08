@@ -31,7 +31,7 @@ tiers={
 	}
 
 @app.post("/settings/removebackground")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 def removebackground(v):
 	v.background = None
@@ -40,7 +40,7 @@ def removebackground(v):
 	return {"message": "Background removed!"}
 
 @app.post("/settings/profile")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_profile_post(v):
@@ -264,7 +264,7 @@ def changelogsub(v):
 	else: return {"message": "You have unsubscribed from the changelog!"}
 
 @app.post("/settings/namecolor")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def namecolor(v):
@@ -277,7 +277,7 @@ def namecolor(v):
 	return redirect("/settings/profile")
 	
 @app.post("/settings/themecolor")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def themecolor(v):
@@ -290,7 +290,7 @@ def themecolor(v):
 	return redirect("/settings/profile")
 
 @app.post("/settings/gumroad")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def gumroad(v):
@@ -365,7 +365,7 @@ def gumroad(v):
 	return {"message": f"{patron} rewards claimed!"}
 
 @app.post("/settings/titlecolor")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def titlecolor(v):
@@ -379,7 +379,7 @@ def titlecolor(v):
 	return redirect("/settings/profile")
 
 @app.post("/settings/security")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_security_post(v):
@@ -483,7 +483,7 @@ def settings_security_post(v):
 						escape("Two-factor authentication disabled."))
 
 @app.post("/settings/log_out_all_others")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_log_out_others(v):
@@ -506,7 +506,7 @@ def settings_log_out_others(v):
 
 
 @app.post("/settings/images/profile")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_images_profile(v):
@@ -538,7 +538,7 @@ def settings_images_profile(v):
 
 
 @app.post("/settings/images/banner")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_images_banner(v):
@@ -561,7 +561,7 @@ def settings_images_banner(v):
 
 
 @app.post("/settings/delete/profile")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_delete_profile(v):
@@ -573,7 +573,7 @@ def settings_delete_profile(v):
 						   msg="Profile picture successfully removed.")
 
 @app.post("/settings/delete/banner")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_delete_banner(v):
@@ -599,7 +599,7 @@ def settings_css_get(v):
 	return render_template("settings_css.html", v=v)
 
 @app.post("/settings/css")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 def settings_css(v):
 	css = request.values.get("css").replace('\\', '')[:50000]
@@ -621,7 +621,7 @@ def settings_profilecss_get(v):
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 def settings_profilecss(v):
 	if v.coins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
@@ -633,7 +633,7 @@ def settings_profilecss(v):
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/block")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_block_user(v):
@@ -671,7 +671,7 @@ def settings_block_user(v):
 
 
 @app.post("/settings/unblock")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_unblock_user(v):
@@ -706,7 +706,7 @@ def settings_apps(v):
 
 
 @app.post("/settings/remove_discord")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_remove_discord(v):
@@ -727,7 +727,7 @@ def settings_content_get(v):
 	return render_template("settings_filters.html", v=v)
 
 @app.post("/settings/name_change")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_name_change(v):
@@ -774,7 +774,7 @@ def settings_name_change(v):
 	return redirect("/settings/profile")
 
 @app.post("/settings/song_change")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_song_change(v):
@@ -856,7 +856,7 @@ def settings_song_change(v):
 	return redirect("/settings/profile")
 
 @app.post("/settings/title_change")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def settings_title_change(v):

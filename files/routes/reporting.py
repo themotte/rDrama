@@ -5,7 +5,7 @@ from files.__main__ import app, limiter
 from os import path
 
 @app.post("/flag/post/<pid>")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_desired
 def api_flag_post(pid, v):
 
@@ -37,7 +37,7 @@ def api_flag_post(pid, v):
 
 
 @app.post("/flag/comment/<cid>")
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_desired
 def api_flag_comment(cid, v):
 
@@ -68,7 +68,7 @@ def api_flag_comment(cid, v):
 
 
 @app.post('/del_report/<report_fn>')
-@limiter.limit("1/second")
+@limiter.limit("1/0.5seconds")
 @auth_required
 @validate_formkey
 def remove_report(report_fn, v):
