@@ -1,7 +1,5 @@
 @charset "UTF-8";
 
-@import "./main.css";
-
 :root {
 	--dark: #383838;
 	--secondary: #383838;
@@ -20,6 +18,8 @@
 	--gray-800: #000000;
 	--gray-900: #000000;
 }
+
+@import "./main.css";
 
 * {
 	border-color: var(--primary);
