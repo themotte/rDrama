@@ -260,7 +260,7 @@
 
 		{% endblock %}
 
-		<link href="/assets/css/fa.css?v=51" rel="stylesheet"> 
+		<link href="/assets/css/fa.css?v=52" rel="stylesheet"> 
 		{% block fixedMobileBarJS %}
 		{% endblock %}
 
@@ -270,7 +270,7 @@
 
 {% if "marsey.tech" not in request.host and '@' not in request.path %}
 	<a  rel="nofollow noopener noreferrer" href="{% if 'rama' in request.host %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}">
-		<img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.webp{% else %}cached.webp{% endif %}" width="100%">
+		<img loading="lazy" style="margin-top: -3px;" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.webp{% else %}cached.webp{% endif %}" width="100%">
 	</a>
 {% endif %}
 
