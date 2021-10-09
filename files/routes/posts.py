@@ -557,6 +557,7 @@ def submit_post(v):
 			if "/" in id: id = id.split("/")[0]
 			embed = id
 		else: embed = None
+	else: embed = None
 	
 	if not url and not request.values.get("body") and not request.files.get("file", None):
 		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
