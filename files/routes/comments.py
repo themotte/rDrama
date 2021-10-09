@@ -849,7 +849,8 @@ def save_comment(cid, v):
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, submission_id=comment.id, type=2)
 		g.db.add(new_save)
-		g.db.commit()
+		try: g.db.commit()
+		except: g.db.rollback()
 
 	return {"message": "Comment saved!"}
 
