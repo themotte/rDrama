@@ -103,7 +103,7 @@ def settings_profile_post(v):
 	if request.values.get("bio"):
 		bio = request.values.get("bio")[:1500]
 
-		for i in re.finditer('(^| )(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
 			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
 		bio = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', bio)
 
