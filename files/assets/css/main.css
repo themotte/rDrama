@@ -2546,6 +2546,7 @@ fieldset:disabled a.btn {
   background-color: #dc3545;
   border-color: #dc3545;
 }
+
 .btn-danger:hover {
   color: #fff;
   background-color: #c82333;
@@ -11246,7 +11247,7 @@ ol > li::before {
 }
 
 .navbar-brand, .navbar-light .navbar-brand {
-  color: var(--purple);
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -11459,7 +11460,7 @@ label.color-radio span {
 }
 
 .form-inline.search .form-control:hover, .form-inline.search .form-control:active, .form-inline.search .form-control:focus {
-  border-color: var(--purple);
+  border-color: var(--primary);
 }
 
 .form-inline.search .form-control:active, .form-inline.search .form-control:focus {
@@ -11693,7 +11694,7 @@ th {
 }
 
 .active.arrow-up::before {
-  color: var(--upvote);
+  color: var(--primary);
 }
 
 .arrow-up::before {
@@ -11706,12 +11707,12 @@ th {
 }
 
 .arrow-up:hover::before {
-  color: var(--upvote);
+  color: var(--primary);
   opacity: 0.5;
 }
 
 .active.arrow-down::before {
-  color: var(--downvote);
+  color: #38B2AC;
 }
 
 .arrow-down::before {
@@ -11724,7 +11725,7 @@ th {
 }
 
 .arrow-down:hover::before {
-  color: var(--downvote);
+  color: #38B2AC;
   opacity: 0.5;
 }
 
@@ -11737,11 +11738,11 @@ th {
 }
 
 .upvoted .arrow-mobile-up {
-  color: var(--upvote) !important;
+  color: var(--primary) !important;
 }
 
 .downvoted .arrow-mobile-down {
-  color: var(--downvote) !important;
+  color: #38B2AC !important;
 }
 
 .comment-actions .score {
@@ -11753,11 +11754,11 @@ th {
 }
 
 .score-up {
-  color: var(--upvote) !important;
+  color: var(--primary) !important;
 }
 
 .score-down {
-  color: var(--downvote) !important;
+  color: #38B2AC !important;
 }
 
 .banned .score {
@@ -12366,7 +12367,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .post-actions .approveDropdownItem.dropdown-item:hover, .post-actions .approveDropdownItem.dropdown-item:focus, .post-actions .approveDropdownItem.dropdown-item.active {
   color: var(--white);
   text-decoration: none;
-  background-color: var(--success);
+  background-color: var(--primary);
 }
 
 .post-actions .approveDropdownItem.dropdown-item:hover .fas, .post-actions .approveDropdownItem.dropdown-item:focus .fas, .post-actions .approveDropdownItem.dropdown-item.active .fas, .post-actions .approveDropdownItem.dropdown-item:hover .far, .post-actions .approveDropdownItem.dropdown-item:focus .far, .post-actions .approveDropdownItem.dropdown-item.active .far .post-actions .approveDropdownItem.dropdown-item:hover .fa,
@@ -12481,7 +12482,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .dropdown-actions .approveDropdownItem.dropdown-item:hover, .dropdown-actions .approveDropdownItem.dropdown-item:focus, .dropdown-actions .approveDropdownItem.dropdown-item.active {
   color: var(--white);
   text-decoration: none;
-  background-color: var(--success);
+  background-color: var(--primary);
 }
 
 .dropdown-actions .approveDropdownItem.dropdown-item:hover .fas, .dropdown-actions .approveDropdownItem.dropdown-item:focus .fas, .dropdown-actions .approveDropdownItem.dropdown-item.active .fas, .dropdown-actions .approveDropdownItem.dropdown-item:hover .far, .dropdown-actions .approveDropdownItem.dropdown-item:focus .far, .dropdown-actions .approveDropdownItem.dropdown-item.active .far .dropdown-actions .approveDropdownItem.dropdown-item:hover .fa,
@@ -12804,7 +12805,7 @@ blockquote p {
 .comment-actions .approveDropdownItem.dropdown-item:hover, .comment-actions .approveDropdownItem.dropdown-item:focus, .comment-actions .approveDropdownItem.dropdown-item.active {
   color: var(--white);
   text-decoration: none;
-  background-color: var(--success);
+  background-color: var(--primary);
 }
 
 .comment-actions .approveDropdownItem.dropdown-item:hover .fas, .comment-actions .approveDropdownItem.dropdown-item:focus .fas, .comment-actions .approveDropdownItem.dropdown-item.active .fas, .comment-actions .approveDropdownItem.dropdown-item:hover .far, .comment-actions .approveDropdownItem.dropdown-item:focus .far, .comment-actions .approveDropdownItem.dropdown-item.active .far .comment-actions .approveDropdownItem.dropdown-item:hover .fa,
@@ -12961,7 +12962,7 @@ ul.comment-section {
 }
 
 .reaction .reacted {
-  border-color: var(--purple);
+  border-color: var(--primary);
   background-color: rgba(60, 173, 243, 0.08);
   color: #6f42c1;
 }
@@ -13826,7 +13827,7 @@ ul.comment-section {
 }
 
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
-  background-color: var(--purple);
+  background-color: var(--primary);
   border: 0.1px solid #6f42c1;
 }
 
@@ -13843,7 +13844,7 @@ ul.comment-section {
 
 .custom-control-input:checked ~ .custom-control-label::before {
   opacity: 1;
-  background-color: var(--success);
+  background-color: var(--primary);
   border: #28a745 solid 0.1px;
 }
 
@@ -13892,7 +13893,7 @@ ul.comment-section {
 pre code {
   word-break: break-word;
   white-space: break-spaces;
-  color: var(--code);
+  color: var(--primary);
 }
 
 pre.prettyprint {
@@ -13931,11 +13932,11 @@ pre .lit, code .lit {
 }
 
 pre .kwd, code .kwd {
-  color: var(--green);
+  color: #38A169;
 }
 
 pre .str, code .str {
-  color: var(--green);
+  color: #38A169;
   opacity: 0.75;
 }
 
@@ -14051,7 +14052,7 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .navbar-light .navbar-nav .nav-link .fa, .navbar-light .navbar-nav .nav-link .fas, .navbar-light .navbar-nav .nav-link .far, .navbar-light .navbar-nav .nav-link .fab {
-    color: var(--purple);
+    color: var(--primary);
     font-size: 1.25rem;
   }
 
@@ -14205,11 +14206,11 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
   }
 
   .active.arrow-up::before, .active.arrow-up:hover::before {
-    color: var(--upvote);
+    color: var(--primary);
   }
 
   .active.arrow-down::before, .active.arrow-down:hover::before {
-    color: var(--downvote);
+    color: #38B2AC;
   }
 
   .dropdown-actions a {
@@ -14401,28 +14402,28 @@ textarea {
 }
 
 span.red {
-  color: var(--admin);
+  color: var(--primary);
 }
 
 span.green {
-  color: var(--green);
+  color: #38A169;
 }
 
 div.banned {
-  background-color: var(--banned);
+  background-color: #960000;
   border-left: 3px solid #ff0000 !important;
 }
 
 div.deleted {
-  background-color: var(--deleted) !important;
+  background-color: #969600 !important;
 }
 
 div.deleted.banned {
-  background-color: var(--deletedandbanned) !important;
+  background-color: #964000 !important;
 }
 
 .text-admin {
-  color: var(--admin);
+  color: var(--primary);
 }
 
 .in-comment-image {
