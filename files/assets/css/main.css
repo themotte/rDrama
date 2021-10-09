@@ -12191,7 +12191,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
   border-width: 0.1px 0.1px 0 0.1px;
-  border-color: var(--border-color);
+  border-color: #303030;
   border-style: solid;
   border-radius: 0;
   padding: 0.5rem;
