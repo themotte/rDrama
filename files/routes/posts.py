@@ -677,8 +677,6 @@ def submit_post(v):
 		if request.headers.get("Authorization"): return {"error": reason}, 403
 		else: return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 
-	domain = parsed_url.netloc
-
 	if v.paid_dues: club = bool(request.values.get("club",""))
 	else: club = False
 
