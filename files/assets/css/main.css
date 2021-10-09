@@ -12841,10 +12841,6 @@ ul.comment-section {
   min-height: 84px;
 }
 
-.comment-write textarea {
-  background: #f8f9fa;
-}
-
 .comment-write textarea:hover,
 .form-control[readonly]:hover {
   background: #6c757d;
