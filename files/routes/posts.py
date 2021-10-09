@@ -534,7 +534,7 @@ def submit_post(v):
 
 		if repost: return redirect(repost.permalink)
 	
-	if not (parsed_url.scheme and parsed_url.netloc) and not request.values.get("body") and not request.files.get("file", None):
+	if not url and not request.values.get("body") and not request.files.get("file", None):
 		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
 		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
 
