@@ -517,6 +517,7 @@ def submit_post(v):
 
 		qd = parse_qs(parsed_url.query)
 		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
+		print(filtered)
 		new_url = ParseResult(scheme="https",
 							netloc=parsed_url.netloc,
 							path=parsed_url.path,
@@ -524,7 +525,8 @@ def submit_post(v):
 							query=urlencode(filtered, doseq=True),
 							fragment=parsed_url.fragment)
 		url = urlunparse(new_url)
-
+		print(url)
+		
 		repost = g.db.query(Submission).options(lazyload('*')).filter(
 			Submission.url.ilike(f'{url}%'),
 			Submission.deleted_utc == 0,
