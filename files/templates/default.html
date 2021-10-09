@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<script src="/assets/js/lozad.js?v=50"></script>
+	<script src="/assets/js/lozad.js?v=51"></script>
 	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -69,7 +69,7 @@
 
 	{% if v %}
 		<script>function formkey() {return '{{v.formkey}}';}</script>
-		<script src="/assets/js/default.js?v=50"></script>
+		<script src="/assets/js/default.js?v=51"></script>
 	{% endif %}
 
 
@@ -250,17 +250,17 @@
 
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=60">
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=60">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=60">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=61">
+			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=61">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=61">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=60"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=60">
+			<link rel="stylesheet" href="/assets/css/main.css?v=61"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=61">
 		{% endif %}
 
 		{% endblock %}
 
-		<link href="/assets/css/fa.css" rel="stylesheet"> 
+		<link href="/assets/css/fa.css?v=51" rel="stylesheet"> 
 		{% block fixedMobileBarJS %}
 		{% endblock %}
 
