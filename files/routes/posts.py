@@ -227,7 +227,7 @@ def edit_post(pid, v):
 		p.body = body
 		p.body_html = body_html
 
-		if "rdrama" in request.host and "ivermectin" in body_html.lower():
+		if "rama" in request.host and "ivermectin" in body_html.lower():
 
 			p.is_banned = True
 			p.ban_reason = "ToS Violation"
@@ -795,7 +795,7 @@ def submit_post(v):
 	g.db.flush()
 
 
-	if "rdrama" in request.host and "ivermectin" in new_post.body_html.lower():
+	if "rama" in request.host and "ivermectin" in new_post.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "ToS Violation"
@@ -865,11 +865,11 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
+	if "rama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
 		new_post.comment_count = 1
 		g.db.add(new_post)
 
-		if "rdrama" in request.host:
+		if "rama" in request.host:
 			if v.id == 995:
 				if random.random() < 0.02: body = "i love you carp"
 				else: body = "fuck off carp"

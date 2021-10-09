@@ -429,7 +429,7 @@ class User(Base):
 	@lazy
 	def profile_url(self):
 		if self.profileurl: return self.profileurl
-		elif "rdrama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp"
+		elif "rama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp"
 		else: return f"https://{site}/assets/images/default-profile-pic.webp"
 
 	@property

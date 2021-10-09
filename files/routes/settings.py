@@ -288,7 +288,7 @@ def themecolor(v):
 @auth_required
 @validate_formkey
 def gumroad(v):
-	if 'rdrama' in request.host: patron = 'Paypig'
+	if 'rama' in request.host: patron = 'Paypig'
 	else: patron = 'Patron'
 
 	if not (v.email and v.is_activated): return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
