@@ -386,7 +386,7 @@
 						</div>
 
 						{% if p.embed_url %}
-							{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
+							{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["coffee", "4chan"]) %}
 								{% include "embeds/twitterlight.html" %}
 							{% elif "twitter.com" in p.domain %}
 								{% include "embeds/twitter.html" %}
