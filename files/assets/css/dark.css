@@ -19,8 +19,6 @@
 	--gray-900: #000000;
 }
 
-@import "./main.css";
-
 * {
 	border-color: var(--primary);
 }
