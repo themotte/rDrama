@@ -46,7 +46,7 @@ blockquote {
 }
 
 html * {
-	font-family: arial, helvetica, sans-serif;
+	font-family: arial, helvetica, sans-serif !important;
 	color: #800000
 	}
 body, #main-content-col {
