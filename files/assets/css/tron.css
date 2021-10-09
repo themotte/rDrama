@@ -1,5 +1,7 @@
 @charset "UTF-8";
 
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:400,600,700');
+
 :root {
 	--dark: #00001f;
 	--secondary: var(--primary);
@@ -18,9 +20,6 @@
 	--gray-800: #00001f;
 	--gray-900: #00001f;
 }
-
-@import 'https://fonts.googleapis.com/css?family=Roboto+Mono:400,600,700';
-
 
 
 #frontpage .post-title a:visited {

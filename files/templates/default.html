@@ -250,12 +250,12 @@
 
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=61">
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=61">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=61">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=62">
+			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=62">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=62">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=61"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=61">
+			<link rel="stylesheet" href="/assets/css/main.css?v=62"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=62">
 		{% endif %}
 
 		{% endblock %}
