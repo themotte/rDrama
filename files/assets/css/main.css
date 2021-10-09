@@ -14489,8 +14489,8 @@ img.emoji {
 
 @media (min-width: 768px) {
   .comment {
-    border-left: 0;
-    padding-left: 0;
+    border-left: 0 !important;
+    padding-left: 0 !important;
   }
 }
 .comment .comment-collapse-desktop {
