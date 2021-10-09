@@ -594,7 +594,7 @@ def settings_css_get(v):
 @limiter.limit("1/second")
 @auth_required
 def settings_css(v):
-	css = request.values.get("css").replace('\\', '')[:50000]
+	css = request.values.get("css").strip().replace('\\', '')[:4000]
 
 	if not v.agendaposter:
 		v.css = css
@@ -617,7 +617,7 @@ def settings_profilecss_get(v):
 @auth_required
 def settings_profilecss(v):
 	if v.coins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
-	profilecss = request.values.get("profilecss").replace('\\', '')[:50000]
+	profilecss = request.values.get("profilecss").strip().replace('\\', '')[:4000]
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()
