@@ -206,7 +206,7 @@ def edit_post(pid, v):
 		p.title_html = filter_title(title)
 
 	if body != p.body:
-		for i in re.finditer('(^| )(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
@@ -558,7 +558,7 @@ def submit_post(v):
 			embed = id
 		else: embed = None
 	else: embed = None
-	
+
 	if not url and not request.values.get("body") and not request.files.get("file", None):
 		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
 		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
@@ -648,7 +648,7 @@ def submit_post(v):
 		if request.headers.get("Authorization"): return {"error":"2048 character limit for URLs."}, 400
 		else: return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
 
-	for i in re.finditer('(^| )(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
+	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 
