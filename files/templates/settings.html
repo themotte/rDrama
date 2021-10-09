@@ -12,17 +12,6 @@
 				myToast.show();
 				console.log(e);
 		});
-
-
-		document.getElementById('new_email').addEventListener('input', function () {
-			var id = document.getElementById("email-password");
-			var id2 = document.getElementById("email-password-label");
-			var id3 = document.getElementById("emailpasswordRequired");
-
-			id.classList.remove("d-none");
-			id2.classList.remove("d-none");
-			id3.classList.remove("d-none");
-		});
 		
 		function emailVerifyText() {
 			document.getElementById("email-verify-text").innerHTML = "Verification email sent! Please check your inbox.";
