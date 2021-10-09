@@ -2358,6 +2358,7 @@ textarea.form-control {
   display: inline-block;
   font-weight: 400;
   text-align: center;
+  color: var(--primary);
   vertical-align: middle;
   cursor: pointer;
   user-select: none;
