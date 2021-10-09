@@ -1,5 +1,7 @@
 @charset "UTF-8";
 
+@import "./main.css";
+
 :root {
 	--dark: #383838;
 	--secondary: #383838;
