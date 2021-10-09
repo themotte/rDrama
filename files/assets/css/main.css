@@ -11695,7 +11695,7 @@ th {
   cursor: pointer;
   font-size: 1.3rem;
   color: var(--gray-200);
-  font-family: "Font Awesome 5 Pro";
+  font-family: "font awesome 5 pro" !important;
   font-weight: 900;
   content: "\f357";
 }
@@ -11713,7 +11713,7 @@ th {
   cursor: pointer;
   font-size: 1.3rem;
   color: var(--gray-200);
-  font-family: "Font Awesome 5 Pro";
+  font-family: "font awesome 5 pro" !important;
   font-weight: 900;
   content: "\f354";
 }
@@ -12858,7 +12858,7 @@ ul.comment-section {
 .comment .comment-collapse::before {
   content: "";
   position: absolute;
-  font-family: "Font Awesome 5 Pro";
+  font-family: "font awesome 5 pro" !important;
   border-left: 2px solid #f8f9fa;
   font-size: 1rem;
   color: var(--primary);
@@ -12874,7 +12874,7 @@ ul.comment-section {
 
 .comment.collapsed .comment-collapse::before {
   content: "\f055";
-  font-family: "Font Awesome 5 Pro";
+  font-family: "font awesome 5 pro" !important;
   font-weight: 900;
   border-left: none;
   color: var(--gray-500);
