@@ -206,7 +206,7 @@ def edit_post(pid, v):
 		p.title_html = filter_title(title)
 
 	if body != p.body:
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
+		for i in re.finditer('(^| )(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
@@ -227,7 +227,7 @@ def edit_post(pid, v):
 		p.body = body
 		p.body_html = body_html
 
-		if "rdrama" in request.host and "ivermectin" in body_html.lower():
+		if "rama" in request.host and "ivermectin" in body_html.lower():
 
 			p.is_banned = True
 			p.ban_reason = "ToS Violation"
@@ -655,7 +655,7 @@ def submit_post(v):
 		if request.headers.get("Authorization"): return {"error":"2048 character limit for URLs."}, 400
 		else: return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
 
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
+	for i in re.finditer('(^| )(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 
@@ -785,7 +785,7 @@ def submit_post(v):
 	g.db.flush()
 
 
-	if "rdrama" in request.host and "ivermectin" in new_post.body_html.lower():
+	if "rama" in request.host and "ivermectin" in new_post.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "ToS Violation"
@@ -855,11 +855,11 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
+	if "rama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
 		new_post.comment_count = 1
 		g.db.add(new_post)
 
-		if "rdrama" in request.host:
+		if "rama" in request.host:
 			if v.id == 995:
 				if random.random() < 0.02: body = "i love you carp"
 				else: body = "fuck off carp"

@@ -3,10 +3,12 @@
 {% if u and u.profilecss %}
 	{% block stylesheets %}
 		{% if v %}
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=61">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=61">{% endif %}
+			<style>:root{--primary:#{{v.themecolor}}}</style>
+			<link rel="stylesheet" href="/assets/css/main.css?v=60"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=60">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=60">{% endif %}
 		{% else %}
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=61">
+			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+			<link rel="stylesheet" href="/assets/css/main.css?v=60"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=60">
 		{% endif %}
 		{% if u and u.profilecss %}
 			<link rel="stylesheet" href="/@{{u.username}}/profilecss">
@@ -184,7 +186,7 @@
 							{% endif %}
 						{% endif %}
 
-						{% if 'rdrama' in request.host and v.id in [1,12,28,29,747,995,1480] %} 
+						{% if 'rama' in request.host and v.id in [1,12,28,29,747,995,1480] %} 
 							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -196,7 +198,7 @@
 							{% endif %}
 						{% endif %}
 
-						{% if 'rdrama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
+						{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
 							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -448,7 +450,7 @@
 						{% endif %}
 					{% endif %}
 
-					{% if 'rdrama' in request.host and v.id in [1,12,28,29,747,995,1480] %} 
+					{% if 'rama' in request.host and v.id in [1,12,28,29,747,995,1480] %} 
 						<a id="admin2" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
 						<a id="unadmin2" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
 
@@ -460,7 +462,7 @@
 						{% endif %}
 					{% endif %}
 
-					{% if 'rdrama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
+					{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
 						<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 						<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 

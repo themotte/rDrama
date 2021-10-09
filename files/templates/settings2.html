@@ -39,9 +39,11 @@
 
 	
 	{% if v %}
-	<link id="css-link" rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=61">
+		<style>:root{--primary:#{{v.themecolor}}}</style>
+		<link rel="stylesheet" href="/assets/css/main.css?v=60"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=60">
 	{% else %}
-	<link id="css-link" rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=61">
+		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+		<link rel="stylesheet" href="/assets/css/main.css?v=60"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=60">
 	{% endif %}
 
 		<link href="/assets/css/fa.css" rel="stylesheet"> 

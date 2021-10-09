@@ -103,7 +103,7 @@ def settings_profile_post(v):
 	if request.values.get("bio"):
 		bio = request.values.get("bio")[:1500]
 
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
+		for i in re.finditer('(^| )(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
 			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
 		bio = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', bio)
 
@@ -199,9 +199,7 @@ def settings_profile_post(v):
 	theme = request.values.get("theme")
 	if theme:
 		v.theme = theme
-		if theme == "coffee" or theme == "4chan": v.themecolor = "38a169"
-		elif theme == "tron": v.themecolor = "80ffff"
-		elif theme == "win98": v.themecolor = "30409f"
+		if theme == "win98": v.themecolor = "30409f"
 		updated = True
 
 	quadrant = request.values.get("quadrant")
@@ -291,7 +289,7 @@ def themecolor(v):
 @auth_required
 @validate_formkey
 def gumroad(v):
-	if 'rdrama' in request.host: patron = 'Paypig'
+	if 'rama' in request.host: patron = 'Paypig'
 	else: patron = 'Patron'
 
 	if not (v.email and v.is_activated): return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400

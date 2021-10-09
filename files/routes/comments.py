@@ -42,7 +42,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
-		elif "rdrama" in request.host: pid = 6489
+		elif "rama" in request.host: pid = 6489
 		elif 'pcmemes.net' in request.host: pid = 382
 		else: pid = 1
 	
@@ -148,7 +148,7 @@ def api_comment(v):
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
+	for i in re.finditer('(^| )(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 
@@ -307,7 +307,7 @@ def api_comment(v):
 		g.db.add(n)
 
 
-	if "rdrama" in request.host and "ivermectin" in c.body.lower():
+	if "rama" in request.host and "ivermectin" in c.body.lower():
 
 		c.is_banned = True
 		c.ban_reason = "ToS Violation"
@@ -384,7 +384,7 @@ def api_comment(v):
 		c.upvotes += 1
 		g.db.add(c)
 
-	if "rdrama" in request.host and len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
+	if "rama" in request.host and len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
 	
 		body = random.choice(LONGPOST_REPLIES)
 		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
@@ -416,7 +416,7 @@ def api_comment(v):
 
 
 
-	if "rdrama" in request.host and random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
+	if "rama" in request.host and random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
 	
 		body = "zoz"
 		body_md = CustomRenderer().render(mistletoe.Document(body))
@@ -579,7 +579,7 @@ def edit_comment(cid, v):
 	if c.is_banned or c.deleted_utc > 0: abort(403)
 
 	body = request.values.get("body", "")[:10000]
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
+	for i in re.finditer('(^| )(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
@@ -657,7 +657,7 @@ def edit_comment(cid, v):
 	c.body = body[:10000]
 	c.body_html = body_html
 
-	if "rdrama" in request.host and "ivermectin" in c.body_html.lower():
+	if "rama" in request.host and "ivermectin" in c.body_html.lower():
 
 		c.is_banned = True
 		c.ban_reason = "ToS Violation"

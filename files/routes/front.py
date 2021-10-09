@@ -154,7 +154,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = g.db.query(Submission.id).options(lazyload('*'))
 
-	if 'rdrama' in request.host and sort == "hot":
+	if 'rama' in request.host and sort == "hot":
 		cutoff = int(time.time()) - 86400
 		posts = posts.filter(Submission.created_utc >= cutoff)
 	elif t != 'all':
