@@ -12841,11 +12841,6 @@ ul.comment-section {
   min-height: 84px;
 }
 
-.comment-write textarea:hover,
-.form-control[readonly]:hover {
-  background: #6c757d;
-}
-
 .comment-format {
   display: flex;
   align-items: center;
