@@ -509,19 +509,33 @@ def submit_post(v):
 			url = url.replace(rd, "https://old.reddit.com/")
 				
 		url = url.replace("https://mobile.twitter.com", "https://twitter.com")
-		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
-			url = url.replace("https://streamable.com/", "https://streamable.com/e/")
+		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
+
+		parsed_url = urlparse(url)
+
+		domain = parsed_url.netloc
+
+		qd = parse_qs(parsed_url.query)
+		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
+		new_url = ParseResult(scheme="https",
+							netloc=parsed_url.netloc,
+							path=parsed_url.path,
+							params=parsed_url.params,
+							query=urlencode(filtered, doseq=True),
+							fragment=parsed_url.fragment)
+		url = urlunparse(new_url)
 
 		repost = g.db.query(Submission).options(lazyload('*')).filter(
 			Submission.url.ilike(f'{url}%'),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()
-	else:
-		repost = None
+
+		if repost: return redirect(repost.permalink)
 	
-	if repost:
-		return redirect(repost.permalink)
+	if not (parsed_url.scheme and parsed_url.netloc) and not request.values.get("body") and not request.files.get("file", None):
+		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
+		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if not title:
 		if request.headers.get("Authorization"): return {"error": "Please enter a better title"}, 400
@@ -531,29 +545,9 @@ def submit_post(v):
 	elif len(title) > 500:
 		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
-
-	parsed_url = urlparse(url)
-	if not (parsed_url.scheme and parsed_url.netloc) and not request.values.get("body") and not request.files.get("file", None):
-		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
-		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
-
-
-	if request.values.get("url"):
-		qd = parse_qs(parsed_url.query)
-		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
-		new_url = ParseResult(scheme="https",
-							  netloc=parsed_url.netloc,
-							  path=parsed_url.path,
-							  params=parsed_url.params,
-							  query=urlencode(filtered, doseq=True),
-							  fragment=parsed_url.fragment)
-		url = urlunparse(new_url)
-	else:
-		url = ""
 	
 	body = request.values.get("body", "")
 	dup = g.db.query(Submission).options(lazyload('*')).filter(
-
 		Submission.author_id == v.id,
 		Submission.deleted_utc == 0,
 		Submission.title == title,
@@ -564,11 +558,6 @@ def submit_post(v):
 	if dup:
 		return redirect(dup.permalink)
 
-
-
-	parsed_url = urlparse(url)
-
-	domain = parsed_url.netloc
 
 	domain_obj = get_domain(domain)
 	if domain_obj:		  
