@@ -556,38 +556,32 @@ def submit_post(v):
 		Submission.body == body
 	).first()
 
-	if dup:
-		return redirect(dup.permalink)
+	if dup: return redirect(dup.permalink)
 
+	if domain:
+		domain_obj = get_domain(domain)
+		if domain_obj:
+			if domain_obj.reason==4: v.ban(days=30, reason="Digitally malicious content")
+			elif domain_obj.reason==7: v.ban(reason="Sexualizing minors")
 
-	domain_obj = get_domain(domain)
-	if domain_obj:		  
-		if domain_obj.reason==4:
-			v.ban(days=30, reason="Digitally malicious content")
-		elif domain_obj.reason==7:
-			v.ban(reason="Sexualizing minors")
-
-		if request.headers.get("Authorization"): return {"error":"ToS violation"}, 400
-		else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.values.get("body", "")), 400
-
-	if "twitter.com" in domain:
-		try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
-		except: embed = None
-
-	elif "youtu" in domain:
-		try:
-			yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
-			params = parse_qs(urlparse(url).query)
-			t = params.get('t', params.get('start', [0]))[0]
-			if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
-			else: embed = f"https://youtube.com/embed/{yt_id}"
-		except: embed = None
-
-	elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
-		id = url.split("/post/")[1]
-		if "/" in id: id = id.split("/")[0]
-		embed = id
-
+			if request.headers.get("Authorization"): return {"error":"ToS violation"}, 400
+			else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.values.get("body", "")), 400
+		elif "twitter.com" in domain:
+			try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
+			except: embed = None
+		elif "youtu" in domain:
+			try:
+				yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+				params = parse_qs(urlparse(url).query)
+				t = params.get('t', params.get('start', [0]))[0]
+				if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
+				else: embed = f"https://youtube.com/embed/{yt_id}"
+			except: embed = None
+		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
+			id = url.split("/post/")[1]
+			if "/" in id: id = id.split("/")[0]
+			embed = id
+		else: embed = None
 	else: embed = None
 
 	now = int(time.time())
