@@ -731,8 +731,6 @@ def saved_comments(v, username):
 
 	ids=ids[:25]
 
-	print(ids)
-
 	listing = get_comments(ids, v=v)
 
 
