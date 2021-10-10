@@ -288,7 +288,7 @@
 									</label>
 									&nbsp;
 									<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-									<a id="save-reply-to-{{c.id}}" class="d-none d-md-block btn btn-primary text-white ml-2" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
+									<a id="save-reply-to-{{c.id}}" class="d-none d-md-block btn btn-primary text-muted ml-2" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
 								</div>
 								<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('d-none')" class="d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 								<a id="save-reply-to-{{c.id}}" class="d-md-none btn btn-primary text-white ml-2" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
@@ -472,7 +472,7 @@
 							<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.id}}').innerHTML='image';" hidden>
 						</label>
 						<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-						<a id="save-reply-to-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
+						<a id="save-reply-to-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-muted ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
 					</div>
 					<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 					<a id="save-reply-to-{{c.fullname}}" class="d-md-none btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
