@@ -266,7 +266,7 @@ class User(Base):
 		elif sort == "old":
 			posts = posts.order_by(Submission.created_utc.asc())
 		elif sort == "controversial":
-			posts = posts.order_by(-1 * Submission.upvotes * (Submission.downvotes+1))
+			posts = posts.order_by(-1 * Submission.upvotes * min(Submission.downvotes, 1))
 		elif sort == "top":
 			posts = posts.order_by(Submission.downvotes - Submission.upvotes)
 		elif sort == "bottom":

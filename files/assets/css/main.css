@@ -5202,8 +5202,7 @@ a.badge-dark:focus, a.badge-dark.focus {
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 1;
-  color: #000;
-  text-shadow: 0 1px 0 #fff;
+  color: #fff;
   opacity: 0.5;
 }
 .close:hover {
@@ -12685,7 +12684,11 @@ blockquote {
   font-weight: 400;
   background-color: #46444a;
   padding: 0.5rem 1rem;
-  margin: 0;
+  margin: 0.5rem 0rem 1rem 0;
+}
+
+blockquote + p {
+  margin-top: 10px;
 }
 
 blockquote p {
