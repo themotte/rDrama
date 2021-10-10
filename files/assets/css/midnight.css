@@ -30,5 +30,5 @@ body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textare
 }
 
 #frontpage .post-title a:visited {
-	color: #6e6e6e;
+	color: #6e6e6e !important;
 }

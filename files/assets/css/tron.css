@@ -22,10 +22,6 @@
 }
 
 
-#frontpage .post-title a:visited {
-	color: var(--white);
-}
-
 .comment-box {
     border: 2px solid var(--gray-200);
 }
@@ -75,7 +71,7 @@
 }
 
 #frontpage .post-title a:visited {
-	color: #b0b0b0;
+	color: #b0b0b0 !important;
 }
 
 .followsyou {

@@ -51,7 +51,7 @@ blockquote {
 }
 
 #frontpage .post-title a:visited {
-	color: #949494;
+	color: #949494 !important;
 }
 
 .btn {

@@ -78,5 +78,5 @@ pre {
 }
 
 #frontpage .post-title a:visited {
-	color: #7a7a7a;
+	color: #7a7a7a !important;
 }

@@ -535,6 +535,7 @@ class User(Base):
 
 		return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
 
+	@lazy
 	def saved_comment_idlist(self):
 
 		saved = [x[0] for x in g.db.query(SaveRelationship.comment_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]

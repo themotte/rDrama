@@ -129,7 +129,7 @@ blockquote {
 }
 
 #frontpage .post-title a:visited {
-	color: #5c5c5c;
+	color: #5c5c5c !important;
 }
 
 .post-actions a {

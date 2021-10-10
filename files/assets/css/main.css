@@ -14489,10 +14489,6 @@ img.emoji {
   color: var(--white) !important;
 }
 
-#frontpage .post-title a:visited {
-  color: var(--gray-200);
-}
-
 @media (max-width: 767.98px) {
   .settings-nav .nav-link {
     font-size: 0.9rem;
