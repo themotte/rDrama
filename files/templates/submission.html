@@ -717,10 +717,10 @@
 
 <script>
 	(() => {
-		const date = new Date('{{p.created_datetime}}');
+		const date = new Date({{p.created_utc*1000}});
 		document.getElementById('timestamp').title = date.toString();
 		{% if p.edited_utc %}
-			const dateEdited = new Date('{{p.edited_datetime}}');
+			const dateEdited = new Date({{p.edited_utc*1000}});
 			document.getElementById('edited_timestamp').title = dateEdited.toString();
 		{% endif %}
 
