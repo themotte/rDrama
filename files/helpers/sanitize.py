@@ -201,13 +201,13 @@ def sanitize(sanitized, noimages=False):
 	for i in re.finditer('" target="_blank">(https://youtube.com/watch\?v\=.*?)</a>', sanitized):
 		url = i.group(1)
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
-		htmlsource = f'<iframe loading="lazy" data-src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+		htmlsource = f'<iframe class="embedvid" loading="lazy" data-src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
 		sanitized = sanitized.replace(replacing, htmlsource.replace("watch?v=", "embed/"))
 
 	for i in re.finditer('<a href="(https://streamable.com/e/.*?)"', sanitized):
 		url = i.group(1)
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
-		htmlsource = f'<iframe loading="lazy" data-src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+		htmlsource = f'<iframe class="embedvid" loading="lazy" data-src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
 		sanitized = sanitized.replace(replacing, htmlsource)
 
 	for i in re.finditer('<p>(https:.*?\.mp4)</p>', sanitized):
