@@ -399,7 +399,8 @@ class SaveRelationship(Base):
 
 	__tablename__="save_relationship"
 
-	id=Column(Integer, primary_key=true)
-	user_id=Column(Integer, ForeignKey("users.id"))
-	submission_id=Column(Integer, ForeignKey("submissions.id"))
+	id=Column(Integer, primary_key=True)
+	user_id=Column(Integer)
+	submission_id=Column(Integer)
+	comment_id=Column(Integer)
 	type=Column(Integer)
