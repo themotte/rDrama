@@ -535,7 +535,6 @@ class User(Base):
 
 		return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
 
-	@lazy
 	def saved_comment_idlist(self, page=1):
 
 		comments = g.db.query(Comment.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
@@ -558,7 +557,11 @@ class User(Base):
 
 		comments = comments.order_by(Comment.created_utc.desc())
 
-		return [x[0] for x in comments.offset(25 * (page - 1)).limit(26).all()]
+		ids = [x[0] for x in comments.offset(25 * (page - 1)).limit(26).all()]
+
+		print(ids)
+
+		return ids
 
 	@property
 	@lazy
