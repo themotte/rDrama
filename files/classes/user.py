@@ -537,10 +537,8 @@ class User(Base):
 
 	def saved_comment_idlist(self, page=1):
 
-		comments = g.db.query(Comment.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
-
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
-		comments = comments.filter(Comment.id.in_(saved))
+		comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.id.in_(saved))
 
 		if self.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(
@@ -555,9 +553,7 @@ class User(Base):
 				Comment.author_id.notin_(blocked)
 			)
 
-		comments = comments.order_by(Comment.created_utc.desc())
-
-		ids = [x[0] for x in comments.offset(25 * (page - 1)).limit(26).all()]
+		ids = [x[0] for x in comments.order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()]
 
 		print(ids)
 
