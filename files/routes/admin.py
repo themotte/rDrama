@@ -626,9 +626,10 @@ def admin_link_accounts(v):
 def admin_removed(v):
 
 	page = int(request.values.get("page", 1))
+	
+	shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
 
-	ids = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).order_by(
-		Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Submission.id).options(lazyload('*')).filter(or_(Submission.is_banned==True, Submission.id.in_(shadowbanned))).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 
