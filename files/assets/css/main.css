@@ -14652,3 +14652,7 @@ textarea {
     padding: 0.5rem 3rem 0.3rem 0.5rem;
   }
 }
+
+blockquote>blockquote {
+  margin-top: 10px;
+}
