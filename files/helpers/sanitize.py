@@ -87,7 +87,7 @@ def sanitize(sanitized, noimages=False):
 	print('\n\n')
 	sanitized = sanitized.replace("\ufeff", "").replace("m.youtube.com", "youtube.com")
 	sanitized = re.sub("</blockquote>$", "</blockquote><pre></pre>", sanitized)
-	sanitized = re.sub("^</blockquote>", "<pre></pre></blockquote>", sanitized)
+	sanitized = re.sub("^<blockquote>", "<pre></pre><blockquote>", sanitized)
 	print(sanitized)
 
 	for i in re.finditer('https://i.imgur.com/(([^_]*?)\.(jpg|png|jpeg))', sanitized):
