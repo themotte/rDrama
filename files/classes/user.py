@@ -535,7 +535,7 @@ class User(Base):
 
 		return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
 
-	def saved_comment_idlist(self, page=1):
+	def saved_comment_idlist(self):
 
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
 		comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.id.in_(saved))
@@ -553,11 +553,7 @@ class User(Base):
 				Comment.author_id.notin_(blocked)
 			)
 
-		ids = [x[0] for x in comments.order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).limit(26).all()]
-
-		print(ids)
-
-		return ids
+		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).all()]
 
 	@property
 	@lazy
