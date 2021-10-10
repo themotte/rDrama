@@ -12687,8 +12687,8 @@ blockquote {
   margin: 0;
 }
 
-blockquote + p {
-  margin-top: 10px;
+blockquote:last-of-type {
+  margin-bottom: 10px;
 }
 
 blockquote p {

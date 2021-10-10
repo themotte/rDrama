@@ -250,12 +250,12 @@
 
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=68">
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=68">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=68">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=69">
+			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=69">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=69">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=68"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=68">
+			<link rel="stylesheet" href="/assets/css/main.css?v=69"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=69">
 		{% endif %}
 
 		{% endblock %}
