@@ -667,12 +667,7 @@
 					<div id="filename-show-reply-{{p.id}}"><i class="far fa-image"></i></div>
 					<input id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{p.id}}').innerHTML='image';" hidden>
 				</label>
-<!-- 			&nbsp;&nbsp;
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" id="nsfwCheck-{{p.fullname}}" name="over_18" form="reply-to-{{p.fullname}}">
-					<label class="custom-control-label" for="nsfwCheck">+18</label>
-				</div>
- -->				<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
+				<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
 			</div>
 		</form>
 	</div>
@@ -682,7 +677,7 @@
 		<textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
 	</div>
 	{% if p.comment_count >= 2 %}
-	<div class="card border-0 bg-light mt-4">
+	<div class="card border-0 mt-4">
 		<div class="card-body">
 			<h5 class="card-title">Jump in the discussion.</h5>
 			<p class="card-text">No email address required.</p>

@@ -100,7 +100,7 @@
 
 <script>
 	(() => {
-		const date = new Date('{{c.created_datetime}}');
+		const date = new Date({{c.created_utc*1000}});
 		document.getElementById('timestamp-{{c.id}}').title = date.toString();
 	})()
 </script>

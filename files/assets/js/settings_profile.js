@@ -4,8 +4,8 @@ function post(url) {
 	var form = new FormData()
 	form.append("formkey", formkey());
 	xhr.withCredentials=true;
+	xhr.onload = function() {window.location.reload(true);};
 	xhr.send(form);
-	window.location.reload(true)
 };
 
 function updatebgselection(){

@@ -185,7 +185,7 @@ def searchcomments(v):
 	try: page = max(1, int(request.values.get("page", 1)))
 	except: page = 1
 
-	sort = request.values.get("sort", "top").lower()
+	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
 
 	criteria=searchparse(query)
@@ -202,6 +202,10 @@ def searchcomments(v):
 		words=[Comment.body.ilike('%'+x+'%') for x in words]
 		words=tuple(words)
 		comments=comments.filter(*words)
+
+	if 'over18' in criteria: comments = comments.filter(Comment.over_18==True)
+
+	if 'author' in criteria: comments = comments.filter(Comment.author_id == get_user(criteria['author']).id)
 
 	if not(v and v.admin_level >= 3):
 		comments = comments.filter(
@@ -262,7 +266,7 @@ def searchusers(v):
 	query = request.values.get("q", '').strip()
 
 	page = max(1, int(request.values.get("page", 1)))
-	sort = request.values.get("sort", "top").lower()
+	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
 	term=query.lstrip('@')
 	term=term.replace('\\','')

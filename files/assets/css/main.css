@@ -12276,7 +12276,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   background-color: var(--gray-400);
   border-bottom-right-radius: 0.35rem;
   border-bottom-left-radius: 0.35rem;
-  background-image: linear-gradient(180deg, #ffffff00 25%, #ced4da 100%) !important;
 }
 
 .modal .post-actions .list-group-item {
