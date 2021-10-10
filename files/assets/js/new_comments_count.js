@@ -16,7 +16,7 @@ if (typeof showNewCommentCounts === 'undefined') {
 
 	const LAST_CACHE_CLEAN_ID = "last-cache-clean"
 	const EXPIRE_INTERVAL_MILLIS = 5 * 24 * 60 * 60 * 1000
-	const CACHE_CLEAN_INTERVAL = 60 * 60 * 1000 // 1 hour
+	const CACHE_CLEAN_INTERVAL = 60 * 60 * 1000
 
 	function cleanCache() {
 		const lastCacheClean = JSON.parse(localStorage.getItem(LAST_CACHE_CLEAN_ID)) || Date.now()

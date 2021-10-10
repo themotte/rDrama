@@ -728,10 +728,12 @@
 			showNewCommentCounts('{{p.id}}', {{p.comment_count}})
 		{% endif %}
 
-		const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
-		const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || { c: 0 }).c + 1)
-		comments['{{p.id}}'] = { c: newTotal, t: Date.now() }
-		window.localStorage.setItem("comment-counts", JSON.stringify(comments))
+		{% if "?context" not in request.full_path %}
+			const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+			const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || { c: 0 }).c + 1)
+			comments['{{p.id}}'] = { c: newTotal, t: Date.now() }
+			window.localStorage.setItem("comment-counts", JSON.stringify(comments))
+		{% endif %}
 	})()
 </script>
 
