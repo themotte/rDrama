@@ -629,6 +629,8 @@ def admin_removed(v):
 	
 	shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
 
+	print(shadowbanned)
+	
 	ids = g.db.query(Submission.id).options(lazyload('*')).filter(or_(Submission.is_banned==True, Submission.id.in_(shadowbanned))).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
