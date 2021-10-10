@@ -83,7 +83,10 @@ allowed_styles =['color', 'font-weight', 'transform', '-webkit-transform']
 
 def sanitize(sanitized, noimages=False):
 
+	print(sanitized)
+	print('\n\n')
 	sanitized = sanitized.replace("\ufeff", "").replace("m.youtube.com", "youtube.com").replace("</blockquote></div>", "</blockquote></div><pre></pre>")
+	print(sanitized)
 
 	for i in re.finditer('https://i.imgur.com/(([^_]*?)\.(jpg|png|jpeg))', sanitized):
 		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d." + i.group(3) + "?maxwidth=9999")
