@@ -12677,24 +12677,6 @@ div:hover .thumb-img-link-overlay {
   border: 0.1px solid var(--primary);
 }
 
-blockquote {
-  border-left: 2px solid var(--primary);
-  color: var(--black);
-  font-size: 1rem;
-  font-weight: 400;
-  background-color: #46444a;
-  padding: 0.5rem 1rem;
-  margin: 0;
-}
-
-blockquote:last-of-type {
-  margin-bottom: 10px;
-}
-
-blockquote p {
-  margin-bottom: 0;
-}
-
 .modal .comment-actions .list-group-item {
   border: none;
   border-radius: 0.35rem;
@@ -14653,6 +14635,24 @@ textarea {
   }
 }
 
-blockquote>blockquote {
+blockquote {
+  border-left: 2px solid var(--primary);
+  color: var(--black);
+  font-size: 1rem;
+  font-weight: 400;
+  background-color: #46444a;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0rem 0 0.0;
+}
+
+blockquote + blockquote {
+  margin-top: 0px;
+}
+
+blockquote:last-child {
+  margin-bottom: 10px;
+}
+
+blockquote + p {
   margin-top: 10px;
 }
