@@ -530,7 +530,7 @@ def api_comment(v):
 					  'notification': {
 							'title': f'New reply by @{v.username}',
 							'body': c.body,
-							'deep_link': f'https://{site}{c.permalink}?context=5#context',
+							'deep_link': f'https://{site}{c.permalink}?context=10#context',
 					  },
 					},
 				  },
