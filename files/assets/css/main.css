@@ -14514,11 +14514,6 @@ img.emoji {
   color: #000000;
 }
 
-#context, .context {
-  padding: 10px !important;
-  border: 2px solid var(--primary) !important;
-}
-
 .btn-lg, .btn-group-lg > .btn {
   border-color: transparent !important;
 }
