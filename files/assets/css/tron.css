@@ -82,3 +82,7 @@
 .badge-count {
 	color: var(--primary);
 }
+
+#frontpage .pseudo-submit-form.card, .form-inline.search .form-control, .form-control[readonly] {
+    border: 2px solid var(--gray-200) !important;
+}

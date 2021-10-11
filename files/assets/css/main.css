@@ -14654,7 +14654,7 @@ blockquote:last-child {
 }
 
 blockquote + p {
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 
 blockquote p {
