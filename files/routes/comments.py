@@ -9,7 +9,9 @@ from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
+from mistune import Markdown
 
+markdown = Markdown()
 
 site = environ.get("DOMAIN").strip()
 
@@ -158,7 +160,7 @@ def api_comment(v):
 		options.append(i.group(1))
 		body_md = body_md.replace(i.group(0), "")
 
-	body_md = CustomRenderer().render(mistletoe.Document(body_md))
+	body_md = markdown(body_md)
 	body_html = sanitize(body_md)
 
 	bans = filter_comment_html(body_html)
