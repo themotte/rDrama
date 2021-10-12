@@ -236,8 +236,7 @@ def sign_up_post(v):
 	form_formkey = request.values.get("formkey", "none")
 
 	submitted_token = session.get("signup_token", "")
-	if not submitted_token:
-		abort(400)
+	if not submitted_token: abort(400)
 
 	correct_formkey_hashstr = form_timestamp + submitted_token + agent
 

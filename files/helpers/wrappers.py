@@ -111,8 +111,7 @@ def auth_required(f):
 
 		v = get_logged_in_user()
 
-		if not v:
-			abort(401)
+		if not v: abort(401)
 			
 		check_ban_evade(v)
 
@@ -131,8 +130,7 @@ def is_not_banned(f):
 
 		v = get_logged_in_user()
 
-		if not v:
-			abort(401)
+		if not v: abort(401)
 			
 		check_ban_evade(v)
 
@@ -156,20 +154,16 @@ def admin_level_required(x):
 
 			v = get_logged_in_user()
 
-			if not v:
-				abort(401)
+			if not v: abort(401)
 
-			if v.admin_level < x:
-				abort(403)
+			if v.admin_level < x: abort(403)
 
 			g.v = v
 
 			response = f(*args, v=v, **kwargs)
 
-			if isinstance(response, tuple):
-				resp = make_response(response[0])
-			else:
-				resp = make_response(response)
+			if isinstance(response, tuple): resp = make_response(response[0])
+			else: resp = make_response(response)
 
 			return resp
 
@@ -186,9 +180,9 @@ def validate_formkey(f):
 
 			submitted_key = request.values.get("formkey", None)
 
-			# if not submitted_key: abort(401)
+			if not submitted_key: abort(401)
 
-			# elif not v.validate_formkey(submitted_key): abort(401)
+			elif not v.validate_formkey(submitted_key): abort(401)
 
 		return f(*args, v=v, **kwargs)
 
