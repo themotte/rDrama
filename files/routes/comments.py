@@ -166,13 +166,7 @@ def api_comment(v):
 	if bans:
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your comment and try again."
-		if ban.reason:
-			reason += f" {ban.reason}"
-			
-		if any([x.reason==4 for x in bans]):
-			v.ban(days=30, reason="Digitally malicious content")
-		if any([x.reason==7 for x in bans]):
-			v.ban( reason="Sexualizing minors")
+		if ban.reason: reason += f" {ban.reason}"
 		return {"error": reason}, 401
 
 	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
@@ -590,13 +584,8 @@ def edit_comment(cid, v):
 		
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your comment and try again."
-
-		if any([x.reason==4 for x in bans]):
-			v.ban(days=30, reason="Digitally malicious content is not allowed.")
-			return {"error":"Digitally malicious content is not allowed."}
 		
-		if ban.reason:
-			reason += f" {ban.reason}"	
+		if ban.reason: reason += f" {ban.reason}"	
 	
 		if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
 		else: return render_template("comment_failed.html",

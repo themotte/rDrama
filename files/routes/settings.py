@@ -135,8 +135,6 @@ def settings_profile_post(v):
 			if ban.reason:
 				reason += f" {ban.reason}"
 				
-			if any([x.reason==4 for x in bans]):
-				v.ban(days=30, reason="Digitally malicious content is not allowed.")
 			return {"error": reason}, 401
 
 		if len(bio_html) > 10000: abort(400)

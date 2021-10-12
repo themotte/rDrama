@@ -26,7 +26,7 @@
 
 {% if v %}
 	{% include "award_modal.html" %}
-	<script src="/assets/js/comments_v.js?v=53"></script>
+	<script src="/assets/js/comments_v.js?v=54"></script>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -592,17 +592,6 @@
 	{{single_comment(comment)}}
 
 {% endfor %}
-
-<div class="toast" id="toast-comment-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
-	<div class="toast-body bg-success text-center text-white">
-		<i class="fas fa-comment-alt-smile mr-2"></i>Comment posted!
-	</div>
-</div>
-<div class="toast" id="toast-comment-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
-	<div class="toast-body bg-danger text-center text-white">
-		<i class="fas fa-exclamation-circle mr-2"></i><span id="comment-error-text"></span>
-	</div>
-</div>
 
 {% if v %}
 	{% include "gif_modal.html" %}

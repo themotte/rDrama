@@ -143,7 +143,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes)
+			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
 			comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 		elif sort == "bottom":
@@ -168,7 +168,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes)
+			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
 			comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 		elif sort == "bottom":
@@ -217,11 +217,7 @@ def edit_post(pid, v):
 			reason = f"Remove the {ban.domain} link from your post and try again."
 			if ban.reason:
 				reason += f" {ban.reason}"
-				
-			if any([x.reason==4 for x in bans]):
-				v.ban(days=30, reason="Digitally malicious content is not allowed.")
-				abort(403)
-				
+								
 			return {"error": reason}, 403
 
 		p.body = body
@@ -536,9 +532,6 @@ def submit_post(v):
 
 		domain_obj = get_domain(domain)
 		if domain_obj:
-			if domain_obj.reason==4: v.ban(days=30, reason="Digitally malicious content")
-			elif domain_obj.reason==7: v.ban(reason="Sexualizing minors")
-
 			if request.headers.get("Authorization"): return {"error":"ToS violation"}, 400
 			else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.values.get("body", "")), 400
 		elif "twitter.com" in domain:
@@ -668,13 +661,7 @@ def submit_post(v):
 	if bans:
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your post and try again."
-		if ban.reason:
-			reason += f" {ban.reason}"
-			
-		if any([x.reason==4 for x in bans]):
-			v.ban(days=30, reason="Digitally malicious content is not allowed.")
-			abort(403)
-			
+		if ban.reason: reason += f" {ban.reason}"
 		if request.headers.get("Authorization"): return {"error": reason}, 403
 		else: return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 

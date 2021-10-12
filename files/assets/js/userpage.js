@@ -46,9 +46,7 @@ function post_toast_callback(url, data, callback) {
 					document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
 				}
 				return false
-			} catch(e) {
-				document.getElementById('toast-post-error-text').innerText = "Error. Please try again later.";
-			}
+			} catch(e) {}
 
 			return false;
 		}
