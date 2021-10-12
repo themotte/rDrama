@@ -14651,3 +14651,8 @@ blockquote + p {
 blockquote p {
   margin-bottom: 0;
 }
+
+.unread {
+  padding: 10px !important;
+  border: 2px solid $primary !important;
+}
