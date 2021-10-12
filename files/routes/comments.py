@@ -9,9 +9,7 @@ from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
-from mistune import Markdown
 
-markdown = Markdown()
 
 site = environ.get("DOMAIN").strip()
 
@@ -152,7 +150,7 @@ def api_comment(v):
 	
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
-	# body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
+	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 
 	body_md = body
 	options = []
@@ -160,8 +158,7 @@ def api_comment(v):
 		options.append(i.group(1))
 		body_md = body_md.replace(i.group(0), "")
 
-	body_md = markdown(body_md)
-	print('mistune')
+	body_md = CustomRenderer().render(mistletoe.Document(body_md))
 	body_html = sanitize(body_md)
 
 	bans = filter_comment_html(body_html)
