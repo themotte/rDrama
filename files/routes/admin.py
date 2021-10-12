@@ -240,7 +240,7 @@ def get_rules(v):
 @validate_formkey
 def post_rules(v):
 
-	text = request.values.get('rules', '')
+	text = request.values.get('rules', '').strip()
 
 	with open(f'./{SITE_NAME} rules.html', 'w+') as f:
 		f.write(text)
@@ -874,11 +874,11 @@ def ban_user(user_id, v):
 	if 'form' in request.values:
 		days = float(request.values.get("days")) if request.values.get('days') else 0
 		reason = sanitize(request.values.get("reason", ""))
-		message = request.values.get("reason", "")
+		message = request.values.get("reason", "").strip()
 	else:
 		days = float(request.values.get("days")) if request.values.get('days') else 0
 		reason = sanitize(request.values.get("reason", ""))
-		message = request.values.get("reason", "")
+		message = request.values.get("reason", "").strip()
 
 	if not user: abort(400)
 	

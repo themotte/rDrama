@@ -11,7 +11,7 @@ GIPHY_KEY = environ.get('GIPHY_KEY').rstrip()
 @app.get("/giphy<path>")
 def giphy(path=None):
 
-	searchTerm = request.values.get("searchTerm", "")
+	searchTerm = request.values.get("searchTerm", "").strip()
 	limit = int(request.values.get("limit", 48))
 	if searchTerm and limit:
 		url = f"https://api.giphy.com/v1/gifs/search?q={searchTerm}&api_key={GIPHY_KEY}&limit={limit}"

@@ -143,7 +143,7 @@ def api_comment(v):
 		level = parent.level + 1
 	else: abort(400)
 
-	body = request.values.get("body", "")[:10000]
+	body = request.values.get("body", "").strip()[:10000]
 	body = body.strip()
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
@@ -578,7 +578,7 @@ def edit_comment(cid, v):
 
 	if c.is_banned or c.deleted_utc > 0: abort(403)
 
-	body = request.values.get("body", "")[:10000]
+	body = request.values.get("body", "").strip()[:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body_md = CustomRenderer().render(mistletoe.Document(body))

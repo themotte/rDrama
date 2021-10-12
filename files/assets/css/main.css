@@ -14368,7 +14368,7 @@ span.green {
 }
 
 div.banned {
-  background-color: #960000;
+  background-color: #960000 !important;
   border-left: 3px solid #ff0000 !important;
 }
 

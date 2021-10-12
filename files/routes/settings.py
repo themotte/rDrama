@@ -482,7 +482,7 @@ def settings_security_post(v):
 @validate_formkey
 def settings_log_out_others(v):
 
-	submitted_password = request.values.get("password", "")
+	submitted_password = request.values.get("password", "").strip()
 
 	if not v.verifyPass(submitted_password): return render_template("settings_security.html", v=v, error="Incorrect Password"), 401
 
@@ -594,7 +594,7 @@ def settings_css_get(v):
 @limiter.limit("1/second")
 @auth_required
 def settings_css(v):
-	css = request.values.get("css").strip().replace('\\', '')[:4000]
+	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
 
 	if not v.agendaposter:
 		v.css = css
@@ -617,7 +617,7 @@ def settings_profilecss_get(v):
 @auth_required
 def settings_profilecss(v):
 	if v.coins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
-	profilecss = request.values.get("profilecss").strip().replace('\\', '')[:4000]
+	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()

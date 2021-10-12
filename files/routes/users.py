@@ -126,7 +126,7 @@ def transfer_coins(v, username):
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
 	if receiver.id != v.id:
-		amount = request.values.get("amount", "")
+		amount = request.values.get("amount", "").strip()
 		amount = int(amount) if amount.isdigit() else None
 
 		if amount is None or amount <= 0: return {"error": f"Invalid amount of {app.config['COINS_NAME']}."}, 400
@@ -232,7 +232,7 @@ def message2(v, username):
 	if v.admin_level <= 1:
 		if hasattr(user, 'is_blocked') and user.is_blocked: return {"error": "This user is blocking you."}, 403
 
-	message = request.values.get("message", "")[:1000].strip()
+	message = request.values.get("message", "").strip()[:1000].strip()
 
 	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
@@ -289,7 +289,7 @@ def message2(v, username):
 @auth_required
 def messagereply(v):
 
-	message = request.values.get("body", "")[:1000].strip()
+	message = request.values.get("body", "").strip()[:1000].strip()
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
 	user = parent.author

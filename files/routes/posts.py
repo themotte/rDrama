@@ -198,8 +198,8 @@ def edit_post(pid, v):
 
 	if not p.author_id == v.id: abort(403)
 
-	title = request.values.get("title")
-	body = request.values.get("body", "")
+	title = request.values.get("title", "").strip()
+	body = request.values.get("body", "").strip()
 
 	if title != p.title:
 		p.title = title
@@ -497,8 +497,8 @@ def thumbnail_thread(pid):
 def submit_post(v):
 	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
-	title = request.values.get("title", "")
-	url = request.values.get("url", "")
+	title = request.values.get("title", "").strip()
+	url = request.values.get("url", "").strip()
 
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
@@ -572,7 +572,7 @@ def submit_post(v):
 		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
 	
-	body = request.values.get("body", "")
+	body = request.values.get("body", "").strip()
 	dup = g.db.query(Submission).options(lazyload('*')).filter(
 		Submission.author_id == v.id,
 		Submission.deleted_utc == 0,

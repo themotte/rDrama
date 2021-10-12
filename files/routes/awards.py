@@ -191,7 +191,7 @@ def award_post(pid, v):
 
 	if v.is_suspended and v.unban_utc == 0: return {"error": "forbidden."}, 403
 
-	kind = request.values.get("kind", "")
+	kind = request.values.get("kind", "").strip()
 	
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
@@ -232,7 +232,7 @@ def award_post(pid, v):
 
 	msg = f"@{v.username} has given your [post]({post.permalink}) the {AWARDS[kind]['title']} Award!"
 
-	note = request.values.get("note", "")
+	note = request.values.get("note", "").strip()
 	if note:
 		msg += f"\n\n> {note}"
 
@@ -255,7 +255,7 @@ def award_comment(cid, v):
 
 	if v.is_suspended and v.unban_utc == 0: return {"error": "forbidden"}, 403
 
-	kind = request.values.get("kind", "")
+	kind = request.values.get("kind", "").strip()
 
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
@@ -296,7 +296,7 @@ def award_comment(cid, v):
 
 	msg = f"@{v.username} has given your [comment]({c.permalink}) the {AWARDS[kind]['title']} Award!"
 
-	note = request.values.get("note", "")
+	note = request.values.get("note", "").strip()
 	if note:
 		msg += f"\n\n> {note}"
 
