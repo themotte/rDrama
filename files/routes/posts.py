@@ -532,8 +532,8 @@ def submit_post(v):
 
 		domain_obj = get_domain(domain)
 		if domain_obj:
-			if request.headers.get("Authorization"): return {"error":"ToS violation"}, 400
-			else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.values.get("body", "")), 400
+			if request.headers.get("Authorization"): return {"error":domain_obj.reason}, 400
+			else: return render_template("submit.html", v=v, error=domain_obj.reason, title=title, url=url, body=request.values.get("body", "")), 400
 		elif "twitter.com" in domain:
 			try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
