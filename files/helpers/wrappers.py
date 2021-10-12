@@ -92,7 +92,6 @@ def check_ban_evade(v):
 
 
 
-# Wrappers
 def auth_desired(f):
 	def wrapper(*args, **kwargs):
 
@@ -149,7 +148,6 @@ def is_not_banned(f):
 	return wrapper
 
 
-# this wrapper takes args and is a bit more complicated
 def admin_level_required(x):
 
 	def wrapper_maker(f):
@@ -182,17 +180,15 @@ def admin_level_required(x):
 
 
 def validate_formkey(f):
-	"""Always use @auth_required or @admin_level_required above @validate_form"""
-
 	def wrapper(*args, v, **kwargs):
 
 		if not request.headers.get("Authorization"):
 
 			submitted_key = request.values.get("formkey", None)
 
-			if not submitted_key: abort(401)
+			# if not submitted_key: abort(401)
 
-			elif not v.validate_formkey(submitted_key): abort(401)
+			# elif not v.validate_formkey(submitted_key): abort(401)
 
 		return f(*args, v=v, **kwargs)
 
