@@ -14654,5 +14654,5 @@ blockquote p {
 
 .unread {
   padding: 10px !important;
-  border: 2px solid $primary !important;
+  border: 2px solid var(--primary) !important;
 }
