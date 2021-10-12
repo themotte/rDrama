@@ -222,7 +222,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
-		pins = pins.filter(Submission.author_id.notin_(blocking), Submission.author_id.notin_(blocked))
+		pins = pins.filter(Submission.author_id.notin_(blocking), Submission.author_id.notin_(blocked)).all()
 
 	if page == 1: posts = pins + posts
 
