@@ -48,7 +48,6 @@ function post_toast(url, reload, data) {
 				myToast.hide();
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				myToast.show();
-				document.getElementById('toast-post-error-text').innerText = "Error. Please try again later.";
 				return false
 			}
 		}
