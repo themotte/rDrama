@@ -161,6 +161,7 @@ def api_comment(v):
 		body_md = body_md.replace(i.group(0), "")
 
 	body_md = markdown(body_md)
+	print('mistune')
 	body_html = sanitize(body_md)
 
 	bans = filter_comment_html(body_html)
