@@ -648,58 +648,6 @@ def admin_removed(v):
 
 
 
-@app.post("/admin/image_ban")
-@limiter.limit("1/second")
-@admin_level_required(4)
-@validate_formkey
-def admin_image_ban(v):
-	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
-
-
-	i=request.files['file']
-
-
-	tempname = f"admin_image_ban_{v.username}_{int(time.time())}"
-
-	i.save(tempname)
-
-	h=imagehash.phash(IMAGE.open(tempname))
-
-	value = int(str(h), 16) 
-	bindigits = [] 
-	 
-	digit = (value % 2) 
-	value //= 2 
-	bindigits.append(digit) 
-	 
-	while value > 0: 
-		digit = (value % 2) 
-		value //= 2 
-		bindigits.append(digit) 
-		 
-	h = ''.join([str(d) for d in bindigits])
-
-	badpic = g.db.query(BadPic).options(lazyload('*')).filter_by(
-		phash=h
-		).first()
-
-	remove(tempname)
-
-	if badpic:
-		return render_template("admin/image_ban.html", v=v, existing=badpic)
-
-	new_bp=BadPic(
-		phash=h,
-		ban_reason=request.values.get("ban_reason"),
-		ban_time=int(request.values.get("ban_length",0))
-		)
-
-	g.db.add(new_bp)
-
-	g.db.commit()
-	return render_template("admin/image_ban.html", v=v, success=True)
-
-
 @app.post("/agendaposter/<user_id>")
 @admin_level_required(6)
 @validate_formkey
