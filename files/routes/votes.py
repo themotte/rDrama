@@ -25,27 +25,26 @@ def admin_vote_info_get(v):
 		ups = g.db.query(Vote
 						 ).options(joinedload(Vote.user)
 								   ).filter_by(submission_id=thing.id, vote_type=1
-											   ).all()
+											   ).order_by(Vote.id).all()
 
 		downs = g.db.query(Vote
 						   ).options(joinedload(Vote.user)
 									 ).filter_by(submission_id=thing.id, vote_type=-1
-												 ).all()
+												 ).order_by(Vote.id).all()
 
 	elif isinstance(thing, Comment):
 
 		ups = g.db.query(CommentVote
 						 ).options(joinedload(CommentVote.user)
 								   ).filter_by(comment_id=thing.id, vote_type=1
-											   ).all()
+											   ).order_by(CommentVote.id).all()
 
 		downs = g.db.query(CommentVote
 						   ).options(joinedload(CommentVote.user)
 									 ).filter_by(comment_id=thing.id, vote_type=-1
-												 ).all()
+												 ).order_by(CommentVote.id).all()
 
-	else:
-		abort(400)
+	else: abort(400)
 
 	return render_template("votes.html",
 						   v=v,
