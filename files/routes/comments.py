@@ -264,7 +264,7 @@ def api_comment(v):
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
-			body=filter_title(option)
+			body_html=filter_title(option)
 			)
 
 		g.db.add(c_option)

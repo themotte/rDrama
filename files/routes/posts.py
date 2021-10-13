@@ -690,7 +690,7 @@ def submit_post(v):
 		c = Comment(author_id=AUTOPOLLER_ACCOUNT,
 			parent_submission=new_post.id,
 			level=1,
-			body=filter_title(option),
+			body_html=filter_title(option),
 			)
 
 		g.db.add(c)
