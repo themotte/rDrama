@@ -38,7 +38,7 @@ def notifications(v):
 				x.read = True
 				c.unread = True
 				g.db.add(x)
-			listing.append(c.id)
+			listing.append(c)
 
 		g.db.commit()
 
