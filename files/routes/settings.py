@@ -310,27 +310,28 @@ def gumroad(v):
 	grant_awards = {}
 	if tier == 1:
 		if v.discord_id: add_role(v, "1")
-		grant_awards["shit"] = 1
-		grant_awards["fireflies"] = 1
+		grant_awards["shit"] = 2
+		grant_awards["fireflies"] = 2
 	elif tier == 2:
 		if v.discord_id: add_role(v, "2")
-		grant_awards["shit"] = 3
-		grant_awards["fireflies"] = 3
-	elif tier == 3:
-		if v.discord_id: add_role(v, "3")
 		grant_awards["shit"] = 5
 		grant_awards["fireflies"] = 5
 		grant_awards["ban"] = 1
-	elif tier == 4:
-		if v.discord_id: add_role(v, "4")
+	elif tier == 3:
+		if v.discord_id: add_role(v, "3")
 		grant_awards["shit"] = 10
 		grant_awards["fireflies"] = 10
-		grant_awards["ban"] = 3
+		grant_awards["ban"] = 2
+	elif tier == 4:
+		if v.discord_id: add_role(v, "4")
+		grant_awards["shit"] = 25
+		grant_awards["fireflies"] = 25
+		grant_awards["ban"] = 5
 	elif tier == 5 or tier == 8:
 		if v.discord_id: add_role(v, "5")
-		grant_awards["shit"] = 20
-		grant_awards["fireflies"] = 20
-		grant_awards["ban"] = 6
+		grant_awards["shit"] = 50
+		grant_awards["fireflies"] = 50
+		grant_awards["ban"] = 10
 
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
