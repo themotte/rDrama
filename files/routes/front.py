@@ -27,33 +27,29 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
-
-		next_exists = (len(notifications) > 100)
-		notifications = notifications[:100]
+		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id != AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
 
 		listing = []
 
-		for index, x in enumerate(notifications):
+		for index, x in enumerate(notifications[:100]):
 			c = x.comment
 			if x.read and index > 25: break
 			elif not x.read:
-				c.unread = True
 				x.read = True
+				c.unread = True
 				g.db.add(x)
-			listing.append(c)
+			listing.append(c.id)
 
 		g.db.commit()
+
+		next_exists = (len(notifications) > len(listing))
 
 	else:
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id != AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
 
-		next_exists = (len(notifications) > 100)
-		notifications = notifications[:100]
-
 		listing = []
 
-		for index, x in enumerate(notifications):
+		for index, x in enumerate(notifications[:100]):
 			c = x.comment
 			if x.read and index > 25: break
 			elif not x.read:
@@ -64,6 +60,7 @@ def notifications(v):
 		g.db.commit()
 
 		comments = get_comments(listing, v=v, load_parent=True)
+		next_exists = (len(notifications) > len(comments))
 
 	if not posts:
 		listing = []
