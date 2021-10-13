@@ -79,7 +79,7 @@ allowed_attributes = {'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'da
 
 allowed_protocols = ['http', 'https']
 
-allowed_styles =['color', 'font-weight', 'transform', '-webkit-transform']
+allowed_styles = ['color', 'font-weight', 'transform', '-webkit-transform']
 
 def sanitize(sanitized, noimages=False):
 
@@ -201,22 +201,22 @@ def sanitize(sanitized, noimages=False):
 	for i in re.finditer('" target="_blank">(https://youtube.com/watch\?v\=.*?)</a>', sanitized):
 		url = i.group(1)
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
-		htmlsource = f'<iframe class="embedvid" loading="lazy" data-src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+		htmlsource = f'<iframe class="embedvid" loading="lazy" src="/assets/images/default_thumb_link.webp" data-src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
 		sanitized = sanitized.replace(replacing, htmlsource.replace("watch?v=", "embed/"))
 
 	for i in re.finditer('<a href="(https://streamable.com/e/.*?)"', sanitized):
 		url = i.group(1)
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
-		htmlsource = f'<iframe class="embedvid" loading="lazy" data-src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+		htmlsource = f'<iframe class="embedvid" loading="lazy" src="/assets/images/default_thumb_link.webp" data-src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
 		sanitized = sanitized.replace(replacing, htmlsource)
 
 	for i in re.finditer('<p>(https:.*?\.mp4)</p>', sanitized):
-		sanitized = sanitized.replace(i.group(0), f'<p><video controls loop preload="metadata" class="embedvid"><source data-src="{i.group(1)}" type="video/mp4"></video>')
+		sanitized = sanitized.replace(i.group(0), f'<p><video controls loop preload="metadata" class="embedvid"><source src="/assets/images/default_thumb_link.webp" data-src="{i.group(1)}" type="video/mp4"></video>')
 
 	for i in re.finditer('<a href="(https://open.spotify.com/embed/.*?)"', sanitized):
 		url = i.group(1)
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
-		htmlsource = f'<iframe data-src="{url}" class="spotify" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>'
+		htmlsource = f'<iframe src="/assets/images/default_thumb_link.webp" data-src="{url}" class="spotify" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>'
 		sanitized = sanitized.replace(replacing, htmlsource)
 
 	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
