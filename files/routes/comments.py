@@ -9,6 +9,7 @@ from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
+from .posts import filter_title
 
 
 site = environ.get("DOMAIN").strip()
@@ -263,7 +264,7 @@ def api_comment(v):
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
-			body=option
+			body=filter_title(option)
 			)
 
 		g.db.add(c_option)
