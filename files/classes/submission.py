@@ -263,6 +263,7 @@ class Submission(Base):
 				'upvotes': self.upvotes,
 				'downvotes': self.downvotes,
 				'stickied': self.stickied,
+				'private' : self.private,
 				'distinguish_level': self.distinguish_level,
 				'voted': self.voted if hasattr(self, 'voted') else 0,
 				'flags': flags,
