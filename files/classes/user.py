@@ -538,7 +538,8 @@ class User(Base):
 	@lazy
 	def saved_comment_idlist(self):
 
-		saved = [x[0] for x in g.db.query(SaveRelationship.comment_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
+		try: saved = [x[0] for x in g.db.query(SaveRelationship.comment_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
+		except: return None
 		comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.id.in_(saved))
 
 		if self.admin_level == 0:
