@@ -192,7 +192,8 @@ def songs(id):
 	try: id = int(id)
 	except: return "", 400
 	user = g.db.query(User).options(lazyload('*')).filter_by(id=id).first()
-	return redirect(f"/song/{user.song}.mp3")
+	if user and user.song: return redirect(f"/song/{user.song}.mp3")
+	else: abort(404)
 
 @app.get("/song/<song>")
 def song(song):
