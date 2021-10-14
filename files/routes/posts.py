@@ -833,7 +833,7 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if "rama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
+	if "rama" in request.host or new_post.url:
 		new_post.comment_count = 1
 		g.db.add(new_post)
 

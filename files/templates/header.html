@@ -11,9 +11,7 @@
 			<div class="flex-grow-1">
 				<a {% if v %}href="/"{% else %}href="/logged_out"{% endif %} class="navbar-brand">
 					<img loading="lazy" height="30" src="/assets/images/{{'SITE_NAME' | app_config}}/headericon.webp">
-					{% if "marsey.tech" in request.host %}
-						<span style="font-weight: bold; font-size: 20px;">marsey.tech</span>
-					{% elif "gigachadlife" in request.host %}
+					{% if "gigachadlife" in request.host %}
 						<span style="font-weight: bold; font-size: 20px;">GigaChadLife</span>
 					{% else %}
 						<img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/logo.webp" height="20">
