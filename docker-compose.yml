@@ -9,7 +9,6 @@ services:
 	environment:
 	  - DATABASE_URL=postgresql://postgres@127.0.0.1:5432/postgres
 	  - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
-	  - REDIS_URL=redis://redis
 	  - DOMAIN=localhost
 	  - SITE_NAME=Drama
 	  - GIPHY_KEY=3435tdfsdudebussylmaoxxt43
