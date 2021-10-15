@@ -41,14 +41,14 @@
 			this.bug&&this.bug.style?{top:parseInt(this.bug.top,10),left:parseInt(this.bug.left,10)}:null}},SpawnBug=function(){var a={},b;for(b in Bug)Bug.hasOwnProperty(b)&&(a[b]=Bug[b]);return a},mergeOptions=function(a,b,c){"undefined"==typeof c&&(c=!0);a=c?cloneOf(a):a;for(var d in b)b.hasOwnProperty(d)&&(a[d]=b[d]);return a},cloneOf=function(a){if(null==a||"object"!=typeof a)return a;var b=a.constructor(),c;for(c in a)a.hasOwnProperty(c)&&(b[c]=cloneOf(a[c]));return b};
 			window.requestAnimFrame=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a,b){window.setTimeout(a,1E3/60)}}();
 			new BugController({
-				imageSprite: "/assets/images/fly-sprite.webp",
+				imageSprite: "/assets/images/fly-sprite.gif",
 				canDie: false,
 				minBugs: 5,
 				maxBugs: 30,
 				mouseOver: "fly"
 			});
 			new SpiderController({
-				imageSprite: "/assets/images/spider-sprite.webp",
+				imageSprite: "/assets/images/spider-sprite.gif",
 				canDie: false,
 				minBugs: 2,
 				maxBugs: 20,
@@ -76,16 +76,16 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<meta name="thumbnail" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.webp">
+	<meta name="thumbnail" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.gif">
 
-	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
+	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif">
 	{% block title %}
 	<title>{{'SITE_NAME' | app_config}}</title>
 
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" />
 	<meta property="og:site_name" content="{{request.host}}" />
-	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" />
+	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif" />
 	<meta property="og:url" content="{{request.path | full_link}}">
 	<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 	<meta property="og:author" name="author" content="@{{request.host_url}}" />
@@ -96,7 +96,7 @@
 	<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" />
 	<meta name="twitter:creator" content="@{{request.host_url}}">
 	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" />
-	<meta name="twitter:image" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" />
+	<meta name="twitter:image" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.gif" />
 	<meta name="twitter:url" content="{{request.path | full_link}}" />
 	{% endblock %}
 
@@ -105,12 +105,12 @@
 	<meta name="format-detection" content="telephone=no">
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 
-	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
-	<!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
-		<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">--->
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif">
+	<!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif">
+		<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif">--->
 		<link rel="manifest" href="/assets/manifest.json">
-		<link rel="mask-icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp" color="#{{'DEFAULT_COLOR' | app_config}}">
-		<link rel="shortcut icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
+		<link rel="mask-icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif" color="#{{'DEFAULT_COLOR' | app_config}}">
+		<link rel="shortcut icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif">
 		<meta name="apple-mobile-web-app-title" content="{{'SITE_NAME' | app_config}}">
 		<meta name="application-name" content="{{'SITE_NAME' | app_config}}">
 		<meta name="msapplication-TileColor" content="#{{'DEFAULT_COLOR' | app_config}}">
@@ -122,127 +122,127 @@
 		<link
 		rel="apple-touch-startup-image"
 		sizes="320x480"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="640x960"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-icon"
 		sizes="640x1136"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-icon"
 		sizes="750x1334"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="768x1004"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="768x1024"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="828x1792"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1024x748"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1024x768"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1125x2436"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1242x2208"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1242x2688"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1334x750"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1536x2008"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1536x2048"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1668x2224"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1792x828"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2048x1496"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2048x1536"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2048x2732"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2208x1242"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2224x1668"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2436x1125"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2668x1242"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2737x2048"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif"
 		/>
 
 
@@ -270,7 +270,7 @@
 
 {% if '@' not in request.path %}
 	<a  rel="nofollow noopener noreferrer" href="{% if 'rama' in request.host %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}">
-		<img loading="lazy" style="margin-top: -3px;" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.webp{% else %}cached.webp{% endif %}" width="100%">
+		<img loading="lazy" style="margin-top: -3px;" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.webp{% else %}cached.gif{% endif %}" width="100%">
 	</a>
 {% endif %}
 
