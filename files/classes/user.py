@@ -493,10 +493,12 @@ class User(Base):
 		g.db.add(self)
 
 
-
 	@property
 	@lazy
 	def is_suspended(self):
+		if self.unban_utc and self.unban_utc > time.time():
+			self.is_banned = 0
+			self.unban_utc = 0
 		return (self.is_banned and (not self.unban_utc or self.unban_utc > time.time()))
 
 
