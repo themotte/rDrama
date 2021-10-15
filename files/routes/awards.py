@@ -18,7 +18,7 @@ def shop(v):
 				"description": "Bans the author for a day.",
 				"icon": "fas fa-gavel",
 				"color": "text-danger",
-				"price": 1500
+				"price": 5000
 			},
 			"shit": {
 				"kind": "shit",
@@ -95,7 +95,7 @@ def buy(v, award):
 				"description": "Bans the author for a day.",
 				"icon": "fas fa-gavel",
 				"color": "text-danger",
-				"price": 1500
+				"price": 5000
 			},
 			"shit": {
 				"kind": "shit",
