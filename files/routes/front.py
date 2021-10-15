@@ -131,6 +131,8 @@ def front_all(v):
 					t=t,
 					v=v,
 					filter_words=v.filter_words if v else [],
+					gt=int(request.values.get("utc_greater_than", 0)),
+					lt=int(request.values.get("utc_less_than", 0)),
 					)
 
 	posts = get_posts(ids, v=v)
@@ -143,7 +145,7 @@ def front_all(v):
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words=''):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', gt=None, lt=None)):
 
 	posts = g.db.query(Submission.id).options(lazyload('*'))
 
@@ -179,6 +181,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	if v and filter_words:
 		for word in filter_words:
 			posts=posts.filter(not_(Submission.title.ilike(f'%{word}%')))
+
+	if gt: posts = posts.filter(Submission.created_utc > gt)
+	if lt: posts = posts.filter(Submission.created_utc < lt)
 
 	if not (v and v.shadowbanned):
 		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
