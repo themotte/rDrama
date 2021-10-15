@@ -840,7 +840,7 @@ def submit_post(v):
 		if "rama" in request.host:
 			if v.id == 995:
 				if random.random() < 0.02: body = "i love you carp"
-				else: body = "fuck off carp"
+				else: body = "![](https://rdrama.net/assets/images/emojis/fuckoffcarp.webp)"
 			elif v.id == 3833:
 				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 				else: body = "wow, a good lawlzpost for once!"
