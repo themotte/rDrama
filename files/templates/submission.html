@@ -132,7 +132,7 @@
 <title>{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}</title>
 
 
-<meta property="og:article:author" content="{{'@'+p.author.username}}" />
+{% if p.author %}<meta property="og:article:author" content="{{'@'+p.author.username}}"/>{% endif %}
 <meta property="article:published_time" content="{{p.created_datetime}}" />
 {% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}" />{% endif %}
 <meta property="og:description" name="description" content="{{p.plainbody(v)}}" />

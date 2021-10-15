@@ -18,7 +18,7 @@ def shop(v):
 				"description": "Bans the author for a day.",
 				"icon": "fas fa-gavel",
 				"color": "text-danger",
-				"price": 5000
+				"price": 1500
 			},
 			"shit": {
 				"kind": "shit",
@@ -26,7 +26,7 @@ def shop(v):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
-				"price": 1000
+				"price": 500
 			},
 			"fireflies": {
 				"kind": "fireflies",
@@ -34,7 +34,7 @@ def shop(v):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
-				"price": 1000
+				"price": 500
 			}
 		}
 	else:
@@ -45,7 +45,7 @@ def shop(v):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
-				"price": 1000
+				"price": 500
 			},
 			"fireflies": {
 				"kind": "fireflies",
@@ -53,7 +53,7 @@ def shop(v):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
-				"price": 1000
+				"price": 500
 			}
 		}
 
@@ -95,7 +95,7 @@ def buy(v, award):
 				"description": "Bans the author for a day.",
 				"icon": "fas fa-gavel",
 				"color": "text-danger",
-				"price": 5000
+				"price": 1500
 			},
 			"shit": {
 				"kind": "shit",
@@ -103,7 +103,7 @@ def buy(v, award):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
-				"price": 1000
+				"price": 500
 			},
 			"fireflies": {
 				"kind": "fireflies",
@@ -111,7 +111,7 @@ def buy(v, award):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
-				"price": 1000
+				"price": 500
 			}
 		}
 	else:
@@ -122,7 +122,7 @@ def buy(v, award):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
-				"price": 1000
+				"price": 500
 			},
 			"fireflies": {
 				"kind": "fireflies",
@@ -130,7 +130,7 @@ def buy(v, award):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
-				"price": 1000
+				"price": 500
 			}
 		}
 

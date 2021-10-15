@@ -14,7 +14,7 @@ if site_name == "Drama":
 			"description": "Bans the author for a day.",
 			"icon": "fas fa-gavel",
 			"color": "text-danger",
-			"price": 5000
+			"price": 1500
 		},
 		"shit": {
 			"kind": "shit",
@@ -22,7 +22,7 @@ if site_name == "Drama":
 			"description": "Makes flies swarm a post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
-			"price": 1000
+			"price": 500
 		},
 		"fireflies": {
 			"kind": "fireflies",
@@ -30,7 +30,7 @@ if site_name == "Drama":
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
-			"price": 1000
+			"price": 500
 		}
 	}
 else:
@@ -41,7 +41,7 @@ else:
 			"description": "Makes flies swarm a post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
-			"price": 1000
+			"price": 500
 		},
 		"fireflies": {
 			"kind": "fireflies",
@@ -49,7 +49,7 @@ else:
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
-			"price": 1000
+			"price": 500
 		}
 	}
 

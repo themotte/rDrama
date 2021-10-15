@@ -83,7 +83,6 @@ class Badge(Base):
 
 		return {'text': self.text,
 				'name': self.name,
-				'created_utc': self.created_utc,
 				'url': self.url,
 				'icon_url':f"https://{app.config['SERVER_NAME']}{self.path}"
 				}

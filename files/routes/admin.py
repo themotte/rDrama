@@ -174,26 +174,26 @@ def monthly(v):
 			grant_awards = {}
 
 			if u.id == 1376:
-				grant_awards["fireflies"] = 100
+				grant_awards["fireflies"] = 40
 				grant_awards["ban"] = 10
 			elif u.patron == 1:
+				grant_awards["shit"] = 1
+				grant_awards["fireflies"] = 1
+			elif u.patron == 2:
 				grant_awards["shit"] = 2
 				grant_awards["fireflies"] = 2
-			elif u.patron == 2:
-				grant_awards["shit"] = 5
-				grant_awards["fireflies"] = 5
 				grant_awards["ban"] = 1
 			elif u.patron == 3:
-				grant_awards["shit"] = 10
-				grant_awards["fireflies"] = 10
+				grant_awards["shit"] = 5
+				grant_awards["fireflies"] = 5
 				grant_awards["ban"] = 2
 			elif u.patron == 4:
-				grant_awards["shit"] = 25
-				grant_awards["fireflies"] = 25
+				grant_awards["shit"] = 10
+				grant_awards["fireflies"] = 10
 				grant_awards["ban"] = 5
 			elif u.patron == 5 or u.patron == 8:
-				grant_awards["shit"] = 50
-				grant_awards["fireflies"] = 50
+				grant_awards["shit"] = 20
+				grant_awards["fireflies"] = 20
 				grant_awards["ban"] = 10
 
 
@@ -416,27 +416,27 @@ def badge_grant_post(v):
 
 		if badge_id == 21:
 			if user.discord_id: add_role(user, "1")
-			grant_awards["shit"] = 2
-			grant_awards["fireflies"] = 2
+			grant_awards["shit"] = 1
+			grant_awards["fireflies"] = 1
 		elif badge_id == 22:
 			if user.discord_id: add_role(user, "2")
-			grant_awards["shit"] = 5
-			grant_awards["fireflies"] = 5
+			grant_awards["shit"] = 2
+			grant_awards["fireflies"] = 2
 			grant_awards["ban"] = 1
 		elif badge_id == 23:
 			if user.discord_id: add_role(user, "3")
-			grant_awards["shit"] = 10
-			grant_awards["fireflies"] = 10
+			grant_awards["shit"] = 5
+			grant_awards["fireflies"] = 5
 			grant_awards["ban"] = 2
 		elif badge_id in [24, 28]:
 			if user.discord_id: add_role(user, "4")
-			grant_awards["shit"] = 25
-			grant_awards["fireflies"] = 25
+			grant_awards["shit"] = 10
+			grant_awards["fireflies"] = 10
 			grant_awards["ban"] = 5
 		elif badge_id == 25:
 		 	if user.discord_id: add_role(user, "5")
-		 	grant_awards["shit"] = 50
-		 	grant_awards["fireflies"] = 50
+		 	grant_awards["shit"] = 20
+		 	grant_awards["fireflies"] = 20
 		 	grant_awards["ban"] = 10
 
 		if len(grant_awards):
@@ -787,7 +787,7 @@ def admin_title_change(user_id, v):
 
 	if user.admin_level != 0: abort(403)
 
-	new_name=request.values.get("title").strip()
+	new_name=request.values.get("title").strip()[:256]
 
 	user.customtitleplain=new_name
 	new_name = sanitize(new_name)
