@@ -147,6 +147,7 @@ def buy(v, award):
 	v.coins -= price
 	g.db.add(v)
 
+	g.db.flush()
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 	thing += 1
 
