@@ -26,7 +26,7 @@
 			f.append("formkey", formkey());
 			xhr.onload=function(){
 				if (xhr.status<300) {
-					window.location.reload(true);
+					location.reload(true);
 				}
 				else {
 					var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
