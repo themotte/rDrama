@@ -421,7 +421,7 @@
 							<a class="list-inline-item text-muted d-none d-md-inline-block" href="{{c.oauth_app.permalink}}/comments"><i class="fas fa-code fa-fw"></i>API App</a>
 						{% endif %}
 
-						<a class="list-inline-item d-inline-block d-md-none" href="#" data-bs-toggle="modal" data-bs-target="#actionsModal-{{c.id}}" data-bs-focus="false"><i class="fas fa-ellipsis-h"></i></a>
+						<a class="list-inline-item d-inline-block d-md-none" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#actionsModal-{{c.id}}" data-bs-focus="false"><i class="fas fa-ellipsis-h"></i></a>
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
 							{% if voted==1 %}<li class="list-inline-item arrow-up d-inline-block d-md-none mr-2 comment-{{c.id}}-up active"></li>{% endif %}
 						{% elif v %}
