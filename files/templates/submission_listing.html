@@ -77,7 +77,7 @@
 {% for p in listing %}
 
 <div style="display: none; color: var(--gray-600) !important;" id="popover-{{p.id}}">
-	<div class="popover-user-profile" role="tooltip">
+	<div class="popover-user-profile" style="color: var(--gray-600) !important;" role="tooltip">
 	  <img class="w-100 h-64 object-cover" src="{{p.author.banner_url}}">
 	  <div class="d-flex align-items-end px-3 mt-n6 mb-3">
 		<img class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
