@@ -108,9 +108,16 @@ function delete_commentModal(id) {
 
 		this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
 		this.disabled = true; 
-		post('/delete/comment/' + id)
+
+		var url = '/delete_comment/' + id
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		var form = new FormData()
+		form.append("formkey", formkey());
+		xhr.withCredentials=true;
 		xhr.onload = function() {location.reload(true);};
-	}
+		xhr.send(form);
+}
 
 };
 
