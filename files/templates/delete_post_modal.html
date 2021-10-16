@@ -12,8 +12,8 @@
 			var form = new FormData()
 			form.append("formkey", formkey());
 			xhr.withCredentials=true;
+			xhr.onload = function() {window.location.reload(true);};
 			xhr.send(form);
-			location.reload();
 		}
 
 		document.getElementById("deletePostButton-mobile").onclick = delete_post;

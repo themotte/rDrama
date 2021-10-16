@@ -109,7 +109,6 @@ function delete_commentModal(id) {
 		this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
 		this.disabled = true; 
 		post('/delete/comment/' + id)
-		location.reload();
 	}
 
 };

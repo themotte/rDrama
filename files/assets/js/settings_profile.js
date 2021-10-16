@@ -10,7 +10,6 @@ function post(url) {
 
 function updatebgselection(){
 	var bgselector = document.getElementById("backgroundSelector");
-	var selection = bgselector.options[bgselector.selectedIndex].text;
 	const backgrounds = [
 		{
 			folder: "fantasy",
