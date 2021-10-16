@@ -22,7 +22,7 @@
 
 
 body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textarea {
-	background-color: #21262d !important;
+	background-color: var(--gray-600) !important;
 }
 
 .transparent, #login {
