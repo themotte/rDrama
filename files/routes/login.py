@@ -12,7 +12,7 @@ valid_password_regex = re.compile("^.{8,100}$")
 @auth_desired
 def login_get(v):
 
-	redir = request.values.get("redirect", "/").replace("/logged_out", "")
+	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
 	if v:
 		return redirect(redir)
 
@@ -146,7 +146,7 @@ def login_post():
 	check_for_alts(account.id)
 
 
-	redir = request.values.get("redirect", "/").replace("/logged_out", "")
+	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
 
 	g.db.commit()
 
@@ -205,7 +205,7 @@ def sign_up_get(v):
 					   digestmod='md5'
 					   ).hexdigest()
 
-	redir = request.values.get("redirect", "/").replace("/logged_out", "")
+	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
 
 	error = request.values.get("error", None)
 
@@ -236,8 +236,7 @@ def sign_up_post(v):
 	form_formkey = request.values.get("formkey", "none")
 
 	submitted_token = session.get("signup_token", "")
-	if not submitted_token:
-		abort(400)
+	if not submitted_token: abort(400)
 
 	correct_formkey_hashstr = form_timestamp + submitted_token + agent
 
@@ -348,7 +347,7 @@ def sign_up_post(v):
 
 	if email: send_verification_email(new_user)
 
-	if "rdrama" in request.host: send_notification(NOTIFICATIONS_ACCOUNT, new_user, "Dude bussy lmao")
+	if "rama" in request.host: send_notification(NOTIFICATIONS_ACCOUNT, new_user, "Dude bussy lmao")
 
 	session["user_id"] = new_user.id
 	session["session_id"] = token_hex(16)

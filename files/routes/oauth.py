@@ -26,11 +26,7 @@ def authorize(v):
 	application = g.db.query(OauthApp).options(lazyload('*')).filter_by(client_id=client_id).first()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	access_token = secrets.token_urlsafe(128)[:128]
-	new_auth = ClientAuth(
-		oauth_client = application.id,
-		user_id = v.id,
-		access_token=access_token
-	)
+	new_auth = ClientAuth(oauth_client = application.id, user_id = v.id, access_token=access_token)
 
 	g.db.add(new_auth)
 
@@ -69,6 +65,8 @@ def delete_oauth_app(v, aid):
 	aid = int(aid)
 	app = g.db.query(OauthApp).options(lazyload('*')).filter_by(id=aid).first()
 
+	if app.author_id != v.id: abort(403)
+
 	for auth in g.db.query(ClientAuth).options(lazyload('*')).filter_by(oauth_client=app.id).all():
 		g.db.delete(auth)
 
@@ -87,6 +85,8 @@ def edit_oauth_app(v, aid):
 
 	aid = int(aid)
 	app = g.db.query(OauthApp).options(lazyload('*')).filter_by(id=aid).first()
+
+	if app.author_id != v.id: abort(403)
 
 	app.redirect_uri = request.values.get('redirect_uri')
 	app.app_name = request.values.get('name')

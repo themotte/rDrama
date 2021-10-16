@@ -4,7 +4,7 @@
 <head>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 
-		<script src="/assets/js/signup.js?v=50"></script>
+		<script src="/assets/js/signup.js?v=53"></script>
 
 		{% if hcaptcha %}
 			<script src="https://hcaptcha.com/1/api.js"></script>
@@ -17,7 +17,7 @@
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="{{'SITE_NAME' | app_config}}" />
 		<meta property="og:site_name" content="{{request.host}}" />
-		<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" />
+		<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif" />
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 		<meta property="og:author" name="author" content="{{request.host_url}}" />
@@ -28,14 +28,15 @@
 		<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" />
 		<meta name="twitter:creator" content="{{request.host_url}}">
 		<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" />
-		<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" />
+		<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif" />
 		<meta name="twitter:url" content="{{request.host}}" />
 
 		<title>{% if ref_user %}{{ref_user.username}} invites you to {{'SITE_NAME' | app_config}}{% else %}Sign up - {{'SITE_NAME' | app_config}}{% endif %}</title>
 
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
-				<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=61">
+		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+		<link rel="stylesheet" href="/assets/css/main.css?v=80"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=80">
 
 </head>
 
@@ -113,7 +114,7 @@
 														<input class="form-control" id="password_confirm"
 														aria-describedby="passwordConfirmHelp" type="password" name="password_confirm"
 														required="">
-														{% if "rdrama" in request.host %}
+														{% if "rama" in request.host %}
 															<div class="custom-control custom-checkbox mt-4">
 																	<input type="checkbox" class="custom-control-input" id="termsCheck" required>
 																	<label class="custom-control-label terms" for="termsCheck">I accept the <a
@@ -153,7 +154,7 @@
 
 								<div class="splash-overlay"></div>
 
-								<img loading="lazy" class="splash-img" src="/assets/images/{{'SITE_NAME' | app_config}}/cover.webp"></img>
+								<img loading="lazy" class="splash-img" src="/assets/images/{{'SITE_NAME' | app_config}}/cover.gif"></img>
 						</div>
 
 				</div>

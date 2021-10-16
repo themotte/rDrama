@@ -45,7 +45,6 @@ function post_toast3(url, button1, button2) {
 			myToast.hide();
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 			myToast.show();
-			document.getElementById('toast-post-error-text').innerText = "Error. Please try again later.";
 			return false
 		}
 	};
@@ -109,9 +108,16 @@ function delete_commentModal(id) {
 
 		this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
 		this.disabled = true; 
-		post('/delete/comment/' + id)
-		location.reload();
-	}
+
+		var url = '/delete_comment/' + id
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		var form = new FormData()
+		form.append("formkey", formkey());
+		xhr.withCredentials=true;
+		xhr.onload = function() {location.reload(true);};
+		xhr.send(form);
+}
 
 };
 
@@ -135,7 +141,6 @@ post_reply=function(id){
 			myToast.hide();
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 			myToast.show();
-			document.getElementById("comment-error-text").textContent = "Error. Please try again later.";
 		}
 	}
 	xhr.send(form)
@@ -163,7 +168,6 @@ comment_edit=function(id){
 			myToast.hide();
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 			myToast.show();
-			document.getElementById("comment-error-text").textContent = "Error. Please try again later.";
 		}
 	}
 	xhr.send(form)
@@ -194,7 +198,8 @@ post_comment=function(fullname){
 			myToast.hide();
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 			myToast.show();
-			document.getElementById("comment-error-text").textContent = "Error. Please try again later.";
+			try {document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];}
+			catch {}
 			btn.classList.remove('disabled');
 		}
 	}

@@ -31,7 +31,7 @@ def truescore(v):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def revert_actions(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 
@@ -116,7 +116,7 @@ def club_ban(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def make_admin(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 6
@@ -129,7 +129,7 @@ def make_admin(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def remove_admin(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -142,7 +142,7 @@ def remove_admin(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def make_fake_admin(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 1
@@ -155,7 +155,7 @@ def make_fake_admin(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def remove_fake_admin(v, username):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -168,32 +168,33 @@ def remove_fake_admin(v, username):
 @limiter.limit("1/day")
 @admin_level_required(6)
 def monthly(v):
-	if 'pcm' in request.host or ('rdrama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rdrama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
 			grant_awards = {}
 
 			if u.id == 1376:
 				grant_awards["fireflies"] = 40
-				grant_awards["ban"] = 6
+				grant_awards["ban"] = 10
 			elif u.patron == 1:
 				grant_awards["shit"] = 1
 				grant_awards["fireflies"] = 1
 			elif u.patron == 2:
-				grant_awards["shit"] = 3
-				grant_awards["fireflies"] = 3
+				grant_awards["shit"] = 2
+				grant_awards["fireflies"] = 2
+				grant_awards["ban"] = 1
 			elif u.patron == 3:
 				grant_awards["shit"] = 5
 				grant_awards["fireflies"] = 5
-				grant_awards["ban"] = 1
+				grant_awards["ban"] = 2
 			elif u.patron == 4:
 				grant_awards["shit"] = 10
 				grant_awards["fireflies"] = 10
-				grant_awards["ban"] = 3
+				grant_awards["ban"] = 5
 			elif u.patron == 5 or u.patron == 8:
 				grant_awards["shit"] = 20
 				grant_awards["fireflies"] = 20
-				grant_awards["ban"] = 6
+				grant_awards["ban"] = 10
 
 
 			for name in grant_awards:
@@ -240,7 +241,7 @@ def get_rules(v):
 @validate_formkey
 def post_rules(v):
 
-	text = request.values.get('rules', '')
+	text = request.values.get('rules', '').strip()
 
 	with open(f'./{SITE_NAME} rules.html', 'w+') as f:
 		f.write(text)
@@ -419,23 +420,24 @@ def badge_grant_post(v):
 			grant_awards["fireflies"] = 1
 		elif badge_id == 22:
 			if user.discord_id: add_role(user, "2")
-			grant_awards["shit"] = 3
-			grant_awards["fireflies"] = 3
+			grant_awards["shit"] = 2
+			grant_awards["fireflies"] = 2
+			grant_awards["ban"] = 1
 		elif badge_id == 23:
 			if user.discord_id: add_role(user, "3")
 			grant_awards["shit"] = 5
 			grant_awards["fireflies"] = 5
-			grant_awards["ban"] = 1
+			grant_awards["ban"] = 2
 		elif badge_id in [24, 28]:
 			if user.discord_id: add_role(user, "4")
 			grant_awards["shit"] = 10
 			grant_awards["fireflies"] = 10
-			grant_awards["ban"] = 3
+			grant_awards["ban"] = 5
 		elif badge_id == 25:
 		 	if user.discord_id: add_role(user, "5")
 		 	grant_awards["shit"] = 20
 		 	grant_awards["fireflies"] = 20
-		 	grant_awards["ban"] = 6
+		 	grant_awards["ban"] = 10
 
 		if len(grant_awards):
 
@@ -626,9 +628,10 @@ def admin_link_accounts(v):
 def admin_removed(v):
 
 	page = int(request.values.get("page", 1))
+	
+	shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
 
-	ids = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).order_by(
-		Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Submission.id).options(lazyload('*')).filter(or_(Submission.is_banned==True, Submission.author_id.in_(shadowbanned))).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 
@@ -645,58 +648,6 @@ def admin_removed(v):
 						   next_exists=next_exists
 						   )
 
-
-
-@app.post("/admin/image_ban")
-@limiter.limit("1/second")
-@admin_level_required(4)
-@validate_formkey
-def admin_image_ban(v):
-	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
-
-
-	i=request.files['file']
-
-
-	tempname = f"admin_image_ban_{v.username}_{int(time.time())}"
-
-	i.save(tempname)
-
-	h=imagehash.phash(IMAGE.open(tempname))
-
-	value = int(str(h), 16) 
-	bindigits = [] 
-	 
-	digit = (value % 2) 
-	value //= 2 
-	bindigits.append(digit) 
-	 
-	while value > 0: 
-		digit = (value % 2) 
-		value //= 2 
-		bindigits.append(digit) 
-		 
-	h = ''.join([str(d) for d in bindigits])
-
-	badpic = g.db.query(BadPic).options(lazyload('*')).filter_by(
-		phash=h
-		).first()
-
-	remove(tempname)
-
-	if badpic:
-		return render_template("admin/image_ban.html", v=v, existing=badpic)
-
-	new_bp=BadPic(
-		phash=h,
-		ban_reason=request.values.get("ban_reason"),
-		ban_time=int(request.values.get("ban_length",0))
-		)
-
-	g.db.add(new_bp)
-
-	g.db.commit()
-	return render_template("admin/image_ban.html", v=v, success=True)
 
 
 @app.post("/agendaposter/<user_id>")
@@ -836,7 +787,7 @@ def admin_title_change(user_id, v):
 
 	if user.admin_level != 0: abort(403)
 
-	new_name=request.values.get("title").strip()
+	new_name=request.values.get("title").strip()[:256]
 
 	user.customtitleplain=new_name
 	new_name = sanitize(new_name)
@@ -873,11 +824,11 @@ def ban_user(user_id, v):
 	if 'form' in request.values:
 		days = float(request.values.get("days")) if request.values.get('days') else 0
 		reason = sanitize(request.values.get("reason", ""))
-		message = request.values.get("reason", "")
+		message = request.values.get("reason", "").strip()
 	else:
 		days = float(request.values.get("days")) if request.values.get('days') else 0
 		reason = sanitize(request.values.get("reason", ""))
-		message = request.values.get("reason", "")
+		message = request.values.get("reason", "").strip()
 
 	if not user: abort(400)
 	
@@ -901,7 +852,7 @@ def ban_user(user_id, v):
 			if x.admin_level > 0: break
 			x.ban(admin=v, reason=reason)
 
-	send_notification(NOTIFICATIONS_ACCOUNT, user, text)
+	send_notification(NOTIFICATIONS_ACCOUNT, user, text[:128])
 	
 	if days == 0: duration = "permanent"
 	elif days == 1: duration = "1 day"

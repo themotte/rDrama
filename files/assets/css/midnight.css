@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+:root {
+	--dark: #8b949e;
+	--secondary: #8b949e;
+	--white: #c9d1d9;
+	--black: #c9d1d9;
+	--light: #b1bac4;
+	--muted: #c9d1d9;
+	--gray: #8b949e;
+	--gray-100: #c9d1d9;
+	--gray-200: #b1bac4;
+	--gray-300: #8b949e;
+	--gray-400: #6e7681;
+	--gray-500: #484f58;
+	--gray-600: #21262d;
+	--gray-700: #21262d;
+	--gray-800: #161b22;
+	--gray-900: #0d1117;
+}
+
+
+
+body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textarea {
+	background-color: #21262d !important;
+}
+
+.transparent, #login {
+	background: None !important;
+}
+
+#frontpage .post-title a:visited {
+	color: #6e6e6e !important;
+}

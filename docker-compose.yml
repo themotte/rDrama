@@ -7,10 +7,9 @@ services:
     volumes:
       - "./:/service"
     environment:
-      - DATABASE_URL=postgresql://postgres@postgres:5432/postgres
+      - DATABASE_URL=postgresql://postgres@127.0.0.1:5432/postgres
       - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
-      - REDIS_URL=redis://redis
-      - DOMAIN=localhost
+      -  DOMAIN=localhost
       - SITE_NAME=Drama
       - GIPHY_KEY=3435tdfsdudebussylmaoxxt43
       - FORCE_HTTPS=0
@@ -32,7 +31,7 @@ services:
       - BOT_DISABLE=0
       - COINS_NAME=Dramacoins
       - DEFAULT_TIME_FILTER=all
-      - DEFAULT_THEME=dark
+      - DEFAULT_THEME=midnight
       - DEFAULT_COLOR=ff66ac #YOU HAVE TO PICK ONE OF THOSE COLORS OR SHIT WILL BREAK: ff66ac, 805ad5, 62ca56, 38a169, 80ffff, 2a96f3, eb4963, ff0000, f39731, 30409f, 3e98a7, e4432d, 7b9ae4, ec72de, 7f8fa6, f8db58
       - SLOGAN=Dude bussy lmao
       - GUMROAD_TOKEN=3435tdfsdudebussylmaoxxt43

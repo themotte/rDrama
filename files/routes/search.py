@@ -41,7 +41,7 @@ def searchposts(v):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	sort = request.values.get("sort", "top").lower()
+	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
 
 	criteria=searchparse(query)
@@ -132,7 +132,7 @@ def searchposts(v):
 	elif sort == "old":
 		posts = posts.order_by(Submission.created_utc.asc())
 	elif sort == "controversial":
-		posts = posts.order_by(-1 * Submission.upvotes * (Submission.downvotes+1))
+		posts = posts.order_by(-1 * Submission.upvotes * Submission.downvotes * Submission.downvotes)
 	elif sort == "top":
 		posts = posts.order_by(Submission.downvotes - Submission.upvotes)
 	elif sort == "bottom":
@@ -185,7 +185,7 @@ def searchcomments(v):
 	try: page = max(1, int(request.values.get("page", 1)))
 	except: page = 1
 
-	sort = request.values.get("sort", "top").lower()
+	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
 
 	criteria=searchparse(query)
@@ -202,6 +202,10 @@ def searchcomments(v):
 		words=[Comment.body.ilike('%'+x+'%') for x in words]
 		words=tuple(words)
 		comments=comments.filter(*words)
+
+	if 'over18' in criteria: comments = comments.filter(Comment.over_18==True)
+
+	if 'author' in criteria: comments = comments.filter(Comment.author_id == get_user(criteria['author']).id)
 
 	if not(v and v.admin_level >= 3):
 		comments = comments.filter(
@@ -231,7 +235,7 @@ def searchcomments(v):
 	elif sort == "old":
 		comments = comments.order_by(Comment.created_utc.asc())
 	elif sort == "controversial":
-		comments = comments.order_by(-1 * Comment.upvotes * (Comment.downvotes+1))
+		comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 	elif sort == "top":
 		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 	elif sort == "bottom":
@@ -262,7 +266,7 @@ def searchusers(v):
 	query = request.values.get("q", '').strip()
 
 	page = max(1, int(request.values.get("page", 1)))
-	sort = request.values.get("sort", "top").lower()
+	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
 	term=query.lstrip('@')
 	term=term.replace('\\','')
@@ -275,7 +279,7 @@ def searchusers(v):
 	total=users.count()
 	
 	users=[x for x in users.offset(25 * (page-1)).limit(26)]
-	next_exists=(len(users)==26)
+	next_exists=(len(users)>25)
 	users=users[:25]
 	
 	

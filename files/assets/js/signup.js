@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		const API = '/is_available/' + userName;
 		if (userName.length >= 3) {
-				// response is {"<userName>": false} and if false it means it already exists
 			fetch(API)
 				.then(res => res.json())
 				.then(json => {

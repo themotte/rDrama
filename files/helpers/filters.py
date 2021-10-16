@@ -14,9 +14,8 @@ def filter_comment_html(html_text):
 
 	for link in links:
 
-		href=link.get("href", None)
-		if not href:
-			continue
+		href = link.get("href")
+		if not href: continue
 
 		domain = urlparse(href).netloc
 
@@ -30,7 +29,5 @@ def filter_comment_html(html_text):
 
 	bans = [x for x in g.db.query(BannedDomain).options(lazyload('*')).filter(BannedDomain.domain.in_(list(domain_list))).all()]
 
-	if bans:
-		return bans
-	else:
-		return []
+	if bans: return bans
+	else: return []

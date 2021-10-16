@@ -1,23 +1,13 @@
 {% extends "default.html" %}
 
-{% if u and u.profilecss %}
-	{% block stylesheets %}
-		{% if v %}
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=61">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=61">{% endif %}
-		{% else %}
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=61">
-		{% endif %}
-		{% if u and u.profilecss %}
-			<link rel="stylesheet" href="/@{{u.username}}/profilecss">
-		{% endif %}
-	{% endblock %}
-{% endif %}
-
 
 {% block pagetype %}userpage{% endblock %}
 
 {% block title %}
+
+{% if u and u.profilecss %}
+	<link rel="stylesheet" href="/@{{u.username}}/profilecss">
+{% endif %}
 
 <style>
 	.wtf {
@@ -25,7 +15,7 @@
 	}
 </style>
 
-<script src="/assets/js/userpage.js?v=50"></script>
+<script src="/assets/js/userpage.js?v=54"></script>
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
@@ -135,7 +125,7 @@
 					</div> 
 				</div>
 
-				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
+				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.gif">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
 				<div class="font-weight-bolder">
 					<span id="profile-coins-amount">{{u.coins}}</span>
 					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="20" src="/assets/images/emojis/marseycoin.webp">&nbsp;&nbsp;
@@ -184,7 +174,7 @@
 							{% endif %}
 						{% endif %}
 
-						{% if 'rdrama' in request.host and v.id in [1,12,28,29,747,995,1480] %} 
+						{% if 'rama' in request.host and v.id in [1,12,28,29,747,995,1480] %} 
 							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -196,7 +186,7 @@
 							{% endif %}
 						{% endif %}
 
-						{% if 'rdrama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
+						{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
 							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -239,7 +229,7 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
-										<small class="format"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji"></i></small>
+										<a class="format" href="javscript:void(0)"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji"></i></a>
 										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
 											<input type="checkbox" class="custom-control-input" id="locked" name="locked" {% if u.flairchanged %}checked{% endif %}>
@@ -391,7 +381,7 @@
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="followsyou text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
-				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
+				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.gif">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
 				<div class="font-weight-normal">
 					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span>
 
@@ -448,7 +438,7 @@
 						{% endif %}
 					{% endif %}
 
-					{% if 'rdrama' in request.host and v.id in [1,12,28,29,747,995,1480] %} 
+					{% if 'rama' in request.host and v.id in [1,12,28,29,747,995,1480] %} 
 						<a id="admin2" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
 						<a id="unadmin2" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
 
@@ -460,7 +450,7 @@
 						{% endif %}
 					{% endif %}
 
-					{% if 'rdrama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
+					{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
 						<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 						<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -503,7 +493,7 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
 									<div class="d-flex mt-2">
-										<small class="format"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji"></i></small>
+										<a class="format" href="javscript:void(0)"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji"></i></a>
 										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
 											<input type="checkbox" class="custom-control-input" id="locked-mobile" name="locked" {% if u.flairchanged %}checked{% endif %}>

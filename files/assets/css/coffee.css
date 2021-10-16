@@ -1,0 +1,63 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css?family=Lato:400,600,700');
+
+:root {
+	--dark: #3E2C18;
+	--secondary: #DDD2C4;
+	--white: #F1E7D0;
+	--black: #433434;
+	--light: #DDD2C4;
+	--muted: #AA9881;
+	--gray: #AA9881;
+	--gray-100: #817261;
+	--gray-200: #433434;
+	--gray-300: #433434;
+	--gray-400: #AA9881;
+	--gray-500: #DDD2C4;
+	--gray-600: #DDD2C4;
+	--gray-700: #DDD2C4;
+	--gray-800: #DDD2C4;
+	--gray-900: #DDD2C4;
+}
+
+
+* {
+    font-family: 'Lato' !important;
+}
+
+blockquote {
+	background-color: #c0c0c0;
+}
+
+.text-muted {
+	color: var(--black) !important;
+}
+
+.modal .comment-actions a {
+	color: var(--gray-500);
+}
+
+.navbar-light .navbar-nav .nav-link .fa, .navbar-light .navbar-nav .nav-link .fas, .navbar-light .navbar-nav .nav-link .far, .navbar-light .navbar-nav .nav-link .fab {
+	color: var(--black);
+}
+
+.dropdown-item:hover, .dropdown-item:focus, .dropdown-item.active {
+    background-color: #bda78e !important;
+}
+
+.transparent {
+	background: None !important;
+}
+
+#frontpage .post-title a:visited {
+	color: #949494 !important;
+}
+
+.btn {
+	color: var(--primary) !important;
+}
+
+.table {
+	color: #433434 !important;
+}

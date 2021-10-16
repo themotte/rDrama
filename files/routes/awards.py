@@ -26,7 +26,7 @@ def shop(v):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
-				"price": 1000
+				"price": 500
 			},
 			"fireflies": {
 				"kind": "fireflies",
@@ -34,7 +34,7 @@ def shop(v):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
-				"price": 1000
+				"price": 500
 			}
 		}
 	else:
@@ -45,7 +45,7 @@ def shop(v):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
-				"price": 1000
+				"price": 500
 			},
 			"fireflies": {
 				"kind": "fireflies",
@@ -53,7 +53,7 @@ def shop(v):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
-				"price": 1000
+				"price": 500
 			}
 		}
 
@@ -103,7 +103,7 @@ def buy(v, award):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
-				"price": 1000
+				"price": 500
 			},
 			"fireflies": {
 				"kind": "fireflies",
@@ -111,7 +111,7 @@ def buy(v, award):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
-				"price": 1000
+				"price": 500
 			}
 		}
 	else:
@@ -122,7 +122,7 @@ def buy(v, award):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
-				"price": 1000
+				"price": 500
 			},
 			"fireflies": {
 				"kind": "fireflies",
@@ -130,7 +130,7 @@ def buy(v, award):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
-				"price": 1000
+				"price": 500
 			}
 		}
 
@@ -147,6 +147,7 @@ def buy(v, award):
 	v.coins -= price
 	g.db.add(v)
 
+	g.db.flush()
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 	thing += 1
 
@@ -191,7 +192,7 @@ def award_post(pid, v):
 
 	if v.is_suspended and v.unban_utc == 0: return {"error": "forbidden."}, 403
 
-	kind = request.values.get("kind", "")
+	kind = request.values.get("kind", "").strip()
 	
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
@@ -232,7 +233,7 @@ def award_post(pid, v):
 
 	msg = f"@{v.username} has given your [post]({post.permalink}) the {AWARDS[kind]['title']} Award!"
 
-	note = request.values.get("note", "")
+	note = request.values.get("note", "").strip()
 	if note:
 		msg += f"\n\n> {note}"
 
@@ -255,7 +256,7 @@ def award_comment(cid, v):
 
 	if v.is_suspended and v.unban_utc == 0: return {"error": "forbidden"}, 403
 
-	kind = request.values.get("kind", "")
+	kind = request.values.get("kind", "").strip()
 
 	if kind not in AWARDS:
 		return {"error": "That award doesn't exist."}, 404
@@ -296,7 +297,7 @@ def award_comment(cid, v):
 
 	msg = f"@{v.username} has given your [comment]({c.permalink}) the {AWARDS[kind]['title']} Award!"
 
-	note = request.values.get("note", "")
+	note = request.values.get("note", "").strip()
 	if note:
 		msg += f"\n\n> {note}"
 

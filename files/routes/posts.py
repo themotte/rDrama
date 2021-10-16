@@ -143,7 +143,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * (Comment.downvotes+1))
+			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
 			comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 		elif sort == "bottom":
@@ -168,7 +168,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * (Comment.downvotes+1))
+			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
 			comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 		elif sort == "bottom":
@@ -198,8 +198,8 @@ def edit_post(pid, v):
 
 	if not p.author_id == v.id: abort(403)
 
-	title = request.values.get("title")
-	body = request.values.get("body", "")
+	title = request.values.get("title", "").strip()
+	body = request.values.get("body", "").strip()
 
 	if title != p.title:
 		p.title = title
@@ -217,17 +217,13 @@ def edit_post(pid, v):
 			reason = f"Remove the {ban.domain} link from your post and try again."
 			if ban.reason:
 				reason += f" {ban.reason}"
-				
-			if any([x.reason==4 for x in bans]):
-				v.ban(days=30, reason="Digitally malicious content is not allowed.")
-				abort(403)
-				
+								
 			return {"error": reason}, 403
 
 		p.body = body
 		p.body_html = body_html
 
-		if "rdrama" in request.host and "ivermectin" in body_html.lower():
+		if "rama" in request.host and "ivermectin" in body_html.lower():
 
 			p.is_banned = True
 			p.ban_reason = "ToS Violation"
@@ -497,8 +493,8 @@ def thumbnail_thread(pid):
 def submit_post(v):
 	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
-	title = request.values.get("title", "")
-	url = request.values.get("url", "")
+	title = request.values.get("title", "").strip()
+	url = request.values.get("url", "").strip()
 
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
@@ -509,19 +505,56 @@ def submit_post(v):
 			url = url.replace(rd, "https://old.reddit.com/")
 				
 		url = url.replace("https://mobile.twitter.com", "https://twitter.com")
-		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"):
-			url = url.replace("https://streamable.com/", "https://streamable.com/e/")
+		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
+
+		parsed_url = urlparse(url)
+
+		domain = parsed_url.netloc
+
+		qd = parse_qs(parsed_url.query)
+		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
+
+		new_url = ParseResult(scheme="https",
+							netloc=parsed_url.netloc,
+							path=parsed_url.path,
+							params=parsed_url.params,
+							query=urlencode(filtered, doseq=True),
+							fragment=parsed_url.fragment)
+		url = urlunparse(new_url)
 
 		repost = g.db.query(Submission).options(lazyload('*')).filter(
 			Submission.url.ilike(f'{url}%'),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()
-	else:
-		repost = None
-	
-	if repost:
-		return redirect(repost.permalink)
+
+		if repost: return redirect(repost.permalink)
+
+		domain_obj = get_domain(domain)
+		if domain_obj:
+			if request.headers.get("Authorization"): return {"error":domain_obj.reason}, 400
+			else: return render_template("submit.html", v=v, error=domain_obj.reason, title=title, url=url, body=request.values.get("body", "")), 400
+		elif "twitter.com" in domain:
+			try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
+			except: embed = None
+		elif "youtu" in domain:
+			try:
+				yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+				params = parse_qs(urlparse(url).query)
+				t = params.get('t', params.get('start', [0]))[0]
+				if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
+				else: embed = f"https://youtube.com/embed/{yt_id}"
+			except: embed = None
+		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
+			id = url.split("/post/")[1]
+			if "/" in id: id = id.split("/")[0]
+			embed = id
+		else: embed = None
+	else: embed = None
+
+	if not url and not request.values.get("body") and not request.files.get("file", None):
+		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
+		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if not title:
 		if request.headers.get("Authorization"): return {"error": "Please enter a better title"}, 400
@@ -531,29 +564,9 @@ def submit_post(v):
 	elif len(title) > 500:
 		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
-
-	parsed_url = urlparse(url)
-	if not (parsed_url.scheme and parsed_url.netloc) and not request.values.get("body") and not request.files.get("file", None):
-		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
-		else: return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
-
-
-	if request.values.get("url"):
-		qd = parse_qs(parsed_url.query)
-		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
-		new_url = ParseResult(scheme="https",
-							  netloc=parsed_url.netloc,
-							  path=parsed_url.path,
-							  params=parsed_url.params,
-							  query=urlencode(filtered, doseq=True),
-							  fragment=parsed_url.fragment)
-		url = urlunparse(new_url)
-	else:
-		url = ""
 	
-	body = request.values.get("body", "")
+	body = request.values.get("body", "").strip()
 	dup = g.db.query(Submission).options(lazyload('*')).filter(
-
 		Submission.author_id == v.id,
 		Submission.deleted_utc == 0,
 		Submission.title == title,
@@ -561,44 +574,7 @@ def submit_post(v):
 		Submission.body == body
 	).first()
 
-	if dup:
-		return redirect(dup.permalink)
-
-
-
-	parsed_url = urlparse(url)
-
-	domain = parsed_url.netloc
-
-	domain_obj = get_domain(domain)
-	if domain_obj:		  
-		if domain_obj.reason==4:
-			v.ban(days=30, reason="Digitally malicious content")
-		elif domain_obj.reason==7:
-			v.ban(reason="Sexualizing minors")
-
-		if request.headers.get("Authorization"): return {"error":"ToS violation"}, 400
-		else: return render_template("submit.html", v=v, error="ToS Violation", title=title, url=url, body=request.values.get("body", "")), 400
-
-	if "twitter.com" in domain:
-		try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
-		except: embed = None
-
-	elif "youtu" in domain:
-		try:
-			yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
-			params = parse_qs(urlparse(url).query)
-			t = params.get('t', params.get('start', [0]))[0]
-			if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
-			else: embed = f"https://youtube.com/embed/{yt_id}"
-		except: embed = None
-
-	elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
-		id = url.split("/post/")[1]
-		if "/" in id: id = id.split("/")[0]
-		embed = id
-
-	else: embed = None
+	if dup: return redirect(dup.permalink)
 
 	now = int(time.time())
 	cutoff = now - 60 * 60 * 24
@@ -685,17 +661,9 @@ def submit_post(v):
 	if bans:
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your post and try again."
-		if ban.reason:
-			reason += f" {ban.reason}"
-			
-		if any([x.reason==4 for x in bans]):
-			v.ban(days=30, reason="Digitally malicious content is not allowed.")
-			abort(403)
-			
+		if ban.reason: reason += f" {ban.reason}"
 		if request.headers.get("Authorization"): return {"error": reason}, 403
 		else: return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
-
-	domain = parsed_url.netloc
 
 	if v.paid_dues: club = bool(request.values.get("club",""))
 	else: club = False
@@ -722,7 +690,7 @@ def submit_post(v):
 		c = Comment(author_id=AUTOPOLLER_ACCOUNT,
 			parent_submission=new_post.id,
 			level=1,
-			body=option,
+			body_html=filter_title(option),
 			)
 
 		g.db.add(c)
@@ -795,7 +763,7 @@ def submit_post(v):
 	g.db.flush()
 
 
-	if "rdrama" in request.host and "ivermectin" in new_post.body_html.lower():
+	if "rama" in request.host and "ivermectin" in new_post.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "ToS Violation"
@@ -865,14 +833,14 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if "rdrama" in request.host or (new_post.url and not "weebzone" in request.host and not "marsey.tech" in request.host):
+	if "rama" in request.host or new_post.url:
 		new_post.comment_count = 1
 		g.db.add(new_post)
 
-		if "rdrama" in request.host:
+		if "rama" in request.host:
 			if v.id == 995:
 				if random.random() < 0.02: body = "i love you carp"
-				else: body = "fuck off carp"
+				else: body = "![](https://rdrama.net/assets/images/emojis/fuckoffcarp.webp)"
 			elif v.id == 3833:
 				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 				else: body = "wow, a good lawlzpost for once!"
@@ -886,7 +854,7 @@ def submit_post(v):
 		body_html = sanitize(body_md)
 
 
-		c = Comment(author_id=261,
+		c = Comment(author_id=SNAPPY_ACCOUNT,
 			distinguish_level=6,
 			parent_submission=new_post.id,
 			level=1,

@@ -348,16 +348,13 @@ class Comment(Base):
 	@lazy
 	def collapse_for_user(self, v):
 
-		if self.over_18 and not (v and v.over_18) and not self.post.over_18:
-			return True
+		if self.over_18 and not (v and v.over_18) and not self.post.over_18: return True
 
-		if not v:
-			return False
+		if not v: return False
 			
-		if any([x in self.body for x in v.filter_words]):
-			return True
+		if v.filter_words and any([x in self.body for x in v.filter_words]): return True
 		
-		if self.is_banned: return True
+		if self.is_banned or (self.author and self.author.shadowbanned): return True
 		
 		return False
 

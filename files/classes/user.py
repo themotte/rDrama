@@ -18,7 +18,7 @@ import random
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
-defaulttheme = environ.get("DEFAULT_THEME", "light").strip()
+defaulttheme = environ.get("DEFAULT_THEME", "midnight").strip()
 defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
@@ -39,7 +39,7 @@ if site_name == "Drama":
 			"description": "Makes flies swarm a post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
-			"price": 1000
+			"price": 500
 		},
 		"fireflies": {
 			"kind": "fireflies",
@@ -47,7 +47,7 @@ if site_name == "Drama":
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
-			"price": 1000
+			"price": 500
 		}
 	}
 else:
@@ -58,7 +58,7 @@ else:
 			"description": "Makes flies swarm a post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
-			"price": 1000
+			"price": 500
 		},
 		"fireflies": {
 			"kind": "fireflies",
@@ -66,7 +66,7 @@ else:
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
-			"price": 1000
+			"price": 500
 		}
 	}
 
@@ -266,7 +266,7 @@ class User(Base):
 		elif sort == "old":
 			posts = posts.order_by(Submission.created_utc.asc())
 		elif sort == "controversial":
-			posts = posts.order_by(-1 * Submission.upvotes * (Submission.downvotes+1))
+			posts = posts.order_by(-1 * Submission.upvotes * Submission.downvotes * Submission.downvotes)
 		elif sort == "top":
 			posts = posts.order_by(Submission.downvotes - Submission.upvotes)
 		elif sort == "bottom":
@@ -423,14 +423,14 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"https://{site}/assets/images/{site_name}/preview.webp"
+		else: return f"https://{site}/assets/images/{site_name}/preview.gif"
 
 	@property
 	@lazy
 	def profile_url(self):
 		if self.profileurl: return self.profileurl
-		elif "rdrama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp"
-		else: return f"https://{site}/assets/images/default-profile-pic.webp"
+		elif "rama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.gif"
+		else: return f"https://{site}/assets/images/default-profile-pic.gif"
 
 	@property
 	@lazy
@@ -493,10 +493,14 @@ class User(Base):
 		g.db.add(self)
 
 
-
 	@property
 	@lazy
 	def is_suspended(self):
+		if self.unban_utc and self.unban_utc < time.time():
+			self.is_banned = 0
+			self.unban_utc = 0
+			g.db.add(self)
+			g.db.commit()
 		return (self.is_banned and (not self.unban_utc or self.unban_utc > time.time()))
 
 
@@ -536,12 +540,11 @@ class User(Base):
 		return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
 
 	@lazy
-	def saved_comment_idlist(self, page=1):
+	def saved_comment_idlist(self):
 
-		comments = g.db.query(Comment.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
-
-		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
-		comments = comments.filter(Comment.id.in_(saved))
+		try: saved = [x[0] for x in g.db.query(SaveRelationship.comment_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
+		except: return []
+		comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.id.in_(saved))
 
 		if self.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(
@@ -556,9 +559,7 @@ class User(Base):
 				Comment.author_id.notin_(blocked)
 			)
 
-		comments = comments.order_by(Comment.created_utc.desc())
-
-		return [x[0] for x in comments.offset(25 * (page - 1)).limit(26).all()]
+		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).all()]
 
 	@property
 	@lazy

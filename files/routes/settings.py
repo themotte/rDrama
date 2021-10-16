@@ -135,8 +135,6 @@ def settings_profile_post(v):
 			if ban.reason:
 				reason += f" {ban.reason}"
 				
-			if any([x.reason==4 for x in bans]):
-				v.ban(days=30, reason="Digitally malicious content is not allowed.")
 			return {"error": reason}, 401
 
 		if len(bio_html) > 10000: abort(400)
@@ -148,22 +146,6 @@ def settings_profile_post(v):
 		return render_template("settings_profile.html",
 							   v=v,
 							   msg="Your bio has been updated.")
-
-	if request.values.get("filters"):
-
-		filters=request.values.get("filters")[:1000].strip()
-
-		if filters==v.custom_filter_list:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="You didn't change anything")
-
-		v.custom_filter_list=filters
-		g.db.add(v)
-		g.db.commit()
-		return render_template("settings_profile.html",
-							   v=v,
-							   msg="Your custom filters have been updated.")
 
 
 
@@ -199,9 +181,7 @@ def settings_profile_post(v):
 	theme = request.values.get("theme")
 	if theme:
 		v.theme = theme
-		if theme == "coffee" or theme == "4chan": v.themecolor = "38a169"
-		elif theme == "tron": v.themecolor = "80ffff"
-		elif theme == "win98": v.themecolor = "30409f"
+		if theme == "win98": v.themecolor = "30409f"
 		updated = True
 
 	quadrant = request.values.get("quadrant")
@@ -247,6 +227,19 @@ def settings_profile_post(v):
 	else:
 		return {"error": "You didn't change anything."}, 400
 
+
+@app.post("/settings/filters")
+@auth_required
+def filters(v):
+	filters=request.values.get("filters")[:1000].strip()
+
+	if filters == v.custom_filter_list: return render_template("settings_filters.html", v=v, error="You didn't change anything")
+
+	v.custom_filter_list=filters
+	g.db.add(v)
+	g.db.commit()
+	return render_template("settings_filters.html", v=v, msg="Your custom filters have been updated.")
+
 @app.post("/changelogsub")
 @auth_required
 @validate_formkey
@@ -291,7 +284,7 @@ def themecolor(v):
 @auth_required
 @validate_formkey
 def gumroad(v):
-	if 'rdrama' in request.host: patron = 'Paypig'
+	if 'rama' in request.host: patron = 'Paypig'
 	else: patron = 'Patron'
 
 	if not (v.email and v.is_activated): return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
@@ -318,23 +311,24 @@ def gumroad(v):
 		grant_awards["fireflies"] = 1
 	elif tier == 2:
 		if v.discord_id: add_role(v, "2")
-		grant_awards["shit"] = 3
-		grant_awards["fireflies"] = 3
+		grant_awards["shit"] = 2
+		grant_awards["fireflies"] = 2
+		grant_awards["ban"] = 1
 	elif tier == 3:
 		if v.discord_id: add_role(v, "3")
 		grant_awards["shit"] = 5
 		grant_awards["fireflies"] = 5
-		grant_awards["ban"] = 1
+		grant_awards["ban"] = 2
 	elif tier == 4:
 		if v.discord_id: add_role(v, "4")
 		grant_awards["shit"] = 10
 		grant_awards["fireflies"] = 10
-		grant_awards["ban"] = 3
+		grant_awards["ban"] = 5
 	elif tier == 5 or tier == 8:
 		if v.discord_id: add_role(v, "5")
 		grant_awards["shit"] = 20
 		grant_awards["fireflies"] = 20
-		grant_awards["ban"] = 6
+		grant_awards["ban"] = 10
 
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
@@ -484,7 +478,7 @@ def settings_security_post(v):
 @validate_formkey
 def settings_log_out_others(v):
 
-	submitted_password = request.values.get("password", "")
+	submitted_password = request.values.get("password", "").strip()
 
 	if not v.verifyPass(submitted_password): return render_template("settings_security.html", v=v, error="Incorrect Password"), 401
 
@@ -596,7 +590,7 @@ def settings_css_get(v):
 @limiter.limit("1/second")
 @auth_required
 def settings_css(v):
-	css = request.values.get("css").replace('\\', '')[:50000]
+	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
 
 	if not v.agendaposter:
 		v.css = css
@@ -619,7 +613,7 @@ def settings_profilecss_get(v):
 @auth_required
 def settings_profilecss(v):
 	if v.coins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
-	profilecss = request.values.get("profilecss").replace('\\', '')[:50000]
+	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
 	v.profilecss = profilecss
 	g.db.add(v)
 	g.db.commit()

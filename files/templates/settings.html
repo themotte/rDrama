@@ -12,17 +12,6 @@
 				myToast.show();
 				console.log(e);
 		});
-
-
-		document.getElementById('new_email').addEventListener('input', function () {
-			var id = document.getElementById("email-password");
-			var id2 = document.getElementById("email-password-label");
-			var id3 = document.getElementById("emailpasswordRequired");
-
-			id.classList.remove("d-none");
-			id2.classList.remove("d-none");
-			id3.classList.remove("d-none");
-		});
 		
 		function emailVerifyText() {
 			document.getElementById("email-verify-text").innerHTML = "Verification email sent! Please check your inbox.";
@@ -33,8 +22,8 @@
 
 	<style>
 		.navsettings {
-			padding-left: 0.6rem !important;
-			padding-right: 0.6rem !important;
+			padding-left: 0.75rem !important;
+			padding-right: 0.75rem !important;
 		}
 	</style>
 
@@ -43,13 +32,13 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
+	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.gif">
 
 	<title>{% block pagetitle %}Settings - {{'SITE_NAME' | app_config}}{% endblock %}</title>
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="{{'SITE_NAME' | app_config}}" />
 		<meta property="og:site_name" content="{{request.host}}" />
-		<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" />
+		<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif" />
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 		<meta property="og:author" name="author" content="@{{request.host_url}}" />
@@ -60,16 +49,16 @@
 		<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" />
 		<meta name="twitter:creator" content="@{{request.host_url}}">
 		<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" />
-		<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" />
+		<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif" />
 		<meta name="twitter:url" content="{{request.host}}" />
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
 
-	
-	<link rel="stylesheet" href="/assets/css/{{v.theme}}_{{v.themecolor}}.css?v=61">
-	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=61">{% endif %}
+	<style>:root{--primary:#{{v.themecolor}}}</style>
+	<link rel="stylesheet" href="/assets/css/main.css?v=80"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=80">
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=80">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 
-		<link href="/assets/css/fa.css" rel="stylesheet"> 
+		<link href="/assets/css/fa.css?v=52" rel="stylesheet"> 
 </head>
 
 <body id="settings" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
@@ -108,7 +97,7 @@
 
 			<h1 class="d-none d-md-block">Settings</h1>
 
-			<h2 class="h3 d-md-none">Settings</h2>
+			<h2 class="h3 mt-5 d-md-none">Settings</h2>
 
 		</div>
 
@@ -150,28 +139,28 @@
 
 			<ul class="nav settings-nav">
 				<li class="nav-item">
-					<a class="nav-link{% if request.path=='/settings/profile' %} active{% endif %} navsettings" href="/settings/profile"><i class="fas fa-cog text-lg mr-0"></i></a>
+					<a class="nav-link{% if request.path=='/settings/profile' %} active{% endif %} navsettings" href="/settings/profile"><i class="fas fa-cog text-base mr-0"></i></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link{% if request.path=='/settings/content' %} active{% endif %} navsettings" href="/settings/content"><i class="fas fa-filter text-lg mr-0"></i></a>
+					<a class="nav-link{% if request.path=='/settings/content' %} active{% endif %} navsettings" href="/settings/content"><i class="fas fa-filter text-base mr-0"></i></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link{% if request.path=='/settings/css' %} active{% endif %} navsettings" href="/settings/css"><i class="fas fa-palette text-lg mr-0"></i></a>
+					<a class="nav-link{% if request.path=='/settings/css' %} active{% endif %} navsettings" href="/settings/css"><i class="fas fa-palette text-base mr-0"></i></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link{% if request.path=='/settings/profilecss' %} active{% endif %} navsettings" href="/settings/profilecss"><i class="fas fa-palette text-lg mr-0"></i></a>
+					<a class="nav-link{% if request.path=='/settings/profilecss' %} active{% endif %} navsettings" href="/settings/profilecss"><i class="fas fa-palette text-base mr-0"></i></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link{% if request.path=='/settings/security' %} active{% endif %} navsettings" href="/settings/security"><i class="fas fa-lock-alt text-lg mr-0"></i></a>
+					<a class="nav-link{% if request.path=='/settings/security' %} active{% endif %} navsettings" href="/settings/security"><i class="fas fa-lock-alt text-base mr-0"></i></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link{% if request.path=='/settings/blocks' %} active{% endif %} navsettings" href="/settings/blocks"><i class="fas fa-user-minus text-lg mr-0"></i></a>
+					<a class="nav-link{% if request.path=='/settings/blocks' %} active{% endif %} navsettings" href="/settings/blocks"><i class="fas fa-user-minus text-base mr-0"></i></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link{% if request.path=='/settings/apps' %} active{% endif %} navsettings" href="/settings/apps"><i class="fas fa-code text-lg mr-0"></i></a>
+					<a class="nav-link{% if request.path=='/settings/apps' %} active{% endif %} navsettings" href="/settings/apps"><i class="fas fa-code text-base mr-0"></i></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link{% if 'shop' in request.path %} active{% endif %} navsettings" href="/settings/shop"><i class="fas fa-store text-lg mr-0"></i></a>
+					<a class="nav-link{% if 'shop' in request.path %} active{% endif %} navsettings" href="/settings/shop"><i class="fas fa-store text-base mr-0"></i></a>
 				</li>
 			</ul>
 
@@ -204,7 +193,7 @@
 								<span class="font-weight-bold">Step 1:</span> Scan this barcode (or enter the code) using a two-factor authentication app such as Google Authenticator or Authy.
 							</p>
 							<div class="text-center mb-3">
-								<img loading="lazy" class="img-fluid" style="width: 175px;" src="/2faqr/{{mfa_secret}}">
+								<img loading="lazy" class="img-fluid" width=175 src="/2faqr/{{mfa_secret}}">
 								<pre></pre>
 								<div class="text-small text-muted">Or enter this code: {{mfa_secret}}</div>
 							</div>
@@ -270,7 +259,7 @@
 </div>
 <div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
 	<div class="toast-body bg-danger text-center text-white">
-		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text"></span>
+		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text">Error, please try again later.</span>
 	</div>
 </div>
 

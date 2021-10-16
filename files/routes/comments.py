@@ -9,6 +9,7 @@ from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
+from .posts import filter_title
 
 
 site = environ.get("DOMAIN").strip()
@@ -42,7 +43,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
-		elif "rdrama" in request.host: pid = 6489
+		elif "rama" in request.host: pid = 6489
 		elif 'pcmemes.net' in request.host: pid = 382
 		else: pid = 1
 	
@@ -143,7 +144,7 @@ def api_comment(v):
 		level = parent.level + 1
 	else: abort(400)
 
-	body = request.values.get("body", "")[:10000]
+	body = request.values.get("body", "").strip()[:10000]
 	body = body.strip()
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
@@ -166,13 +167,7 @@ def api_comment(v):
 	if bans:
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your comment and try again."
-		if ban.reason:
-			reason += f" {ban.reason}"
-			
-		if any([x.reason==4 for x in bans]):
-			v.ban(days=30, reason="Digitally malicious content")
-		if any([x.reason==7 for x in bans]):
-			v.ban( reason="Sexualizing minors")
+		if ban.reason: reason += f" {ban.reason}"
 		return {"error": reason}, 401
 
 	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
@@ -269,7 +264,7 @@ def api_comment(v):
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
-			body=option
+			body_html=filter_title(option)
 			)
 
 		g.db.add(c_option)
@@ -307,7 +302,7 @@ def api_comment(v):
 		g.db.add(n)
 
 
-	if "rdrama" in request.host and "ivermectin" in c.body.lower():
+	if "rama" in request.host and "ivermectin" in c.body.lower():
 
 		c.is_banned = True
 		c.ban_reason = "ToS Violation"
@@ -384,7 +379,7 @@ def api_comment(v):
 		c.upvotes += 1
 		g.db.add(c)
 
-	if "rdrama" in request.host and len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
+	if "rama" in request.host and len(c.body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
 	
 		body = random.choice(LONGPOST_REPLIES)
 		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
@@ -416,7 +411,7 @@ def api_comment(v):
 
 
 
-	if "rdrama" in request.host and random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
+	if "rama" in request.host and random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
 	
 		body = "zoz"
 		body_md = CustomRenderer().render(mistletoe.Document(body))
@@ -425,7 +420,7 @@ def api_comment(v):
 
 
 
-		c2 = Comment(author_id=1833,
+		c2 = Comment(author_id=ZOZBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
@@ -452,7 +447,7 @@ def api_comment(v):
 
 
 
-		c3 = Comment(author_id=1833,
+		c3 = Comment(author_id=ZOZBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			parent_comment_id=c2.id,
 			level=level+2,
@@ -475,7 +470,7 @@ def api_comment(v):
 		body_html2 = sanitize(body_md)
 
 
-		c4 = Comment(author_id=1833,
+		c4 = Comment(author_id=ZOZBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			parent_comment_id=c3.id,
 			level=level+3,
@@ -530,7 +525,7 @@ def api_comment(v):
 					  'notification': {
 							'title': f'New reply by @{v.username}',
 							'body': c.body,
-							'deep_link': f'https://{site}{c.permalink}?context=5#context',
+							'deep_link': f'https://{site}{c.permalink}?context=10#context',
 					  },
 					},
 				  },
@@ -578,7 +573,7 @@ def edit_comment(cid, v):
 
 	if c.is_banned or c.deleted_utc > 0: abort(403)
 
-	body = request.values.get("body", "")[:10000]
+	body = request.values.get("body", "").strip()[:10000]
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body_md = CustomRenderer().render(mistletoe.Document(body))
@@ -590,13 +585,8 @@ def edit_comment(cid, v):
 		
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your comment and try again."
-
-		if any([x.reason==4 for x in bans]):
-			v.ban(days=30, reason="Digitally malicious content is not allowed.")
-			return {"error":"Digitally malicious content is not allowed."}
 		
-		if ban.reason:
-			reason += f" {ban.reason}"	
+		if ban.reason: reason += f" {ban.reason}"	
 	
 		if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
 		else: return render_template("comment_failed.html",
@@ -657,7 +647,7 @@ def edit_comment(cid, v):
 	c.body = body[:10000]
 	c.body_html = body_html
 
-	if "rdrama" in request.host and "ivermectin" in c.body_html.lower():
+	if "rama" in request.host and "ivermectin" in c.body_html.lower():
 
 		c.is_banned = True
 		c.ban_reason = "ToS Violation"
@@ -844,12 +834,13 @@ def save_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=comment.id, type=2).first()
+	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id, type=2).first()
 
 	if not save:
-		new_save=SaveRelationship(user_id=v.id, submission_id=comment.id, type=2)
+		new_save=SaveRelationship(user_id=v.id, comment_id=comment.id, type=2)
 		g.db.add(new_save)
-		g.db.commit()
+		try: g.db.commit()
+		except: g.db.rollback()
 
 	return {"message": "Comment saved!"}
 
@@ -861,7 +852,7 @@ def unsave_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=comment.id, type=2).first()
+	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id, type=2).first()
 
 	if save:
 		g.db.delete(save)

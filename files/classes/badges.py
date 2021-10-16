@@ -25,7 +25,7 @@ class BadgeDef(Base):
 	@lazy
 	def path(self):
 
-		return f"/assets/images/badges/{self.icon}"
+		return f"/assets/images/badges/{self.icon}.gif"
 
 	@property
 	@lazy
@@ -83,7 +83,6 @@ class Badge(Base):
 
 		return {'text': self.text,
 				'name': self.name,
-				'created_utc': self.created_utc,
 				'url': self.url,
 				'icon_url':f"https://{app.config['SERVER_NAME']}{self.path}"
 				}

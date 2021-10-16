@@ -126,7 +126,7 @@ def transfer_coins(v, username):
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
 	if receiver.id != v.id:
-		amount = request.values.get("amount", "")
+		amount = request.values.get("amount", "").strip()
 		amount = int(amount) if amount.isdigit() else None
 
 		if amount is None or amount <= 0: return {"error": f"Invalid amount of {app.config['COINS_NAME']}."}, 400
@@ -192,7 +192,8 @@ def songs(id):
 	try: id = int(id)
 	except: return "", 400
 	user = g.db.query(User).options(lazyload('*')).filter_by(id=id).first()
-	return redirect(f"/song/{user.song}.mp3")
+	if user and user.song: return redirect(f"/song/{user.song}.mp3")
+	else: abort(404)
 
 @app.get("/song/<song>")
 def song(song):
@@ -232,7 +233,7 @@ def message2(v, username):
 	if v.admin_level <= 1:
 		if hasattr(user, 'is_blocked') and user.is_blocked: return {"error": "This user is blocking you."}, 403
 
-	message = request.values.get("message", "")[:1000].strip()
+	message = request.values.get("message", "").strip()[:1000].strip()
 
 	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
@@ -289,7 +290,7 @@ def message2(v, username):
 @auth_required
 def messagereply(v):
 
-	message = request.values.get("body", "")[:1000].strip()
+	message = request.values.get("body", "").strip()[:1000].strip()
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
 	user = parent.author
@@ -572,7 +573,7 @@ def u_username_comments(username, v=None):
 	elif sort == "old":
 		comments = comments.order_by(Comment.created_utc.asc())
 	elif sort == "controversial":
-		comments = comments.order_by(-1 * Comment.upvotes * (Comment.downvotes+1))
+		comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 	elif sort == "top":
 		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 	elif sort == "bottom":
@@ -700,7 +701,7 @@ def saved_posts(v, username):
 
 	ids=v.saved_idlist(page=page)
 
-	next_exists=len(ids)==26
+	next_exists=len(ids)>25
 
 	ids=ids[:25]
 
@@ -722,9 +723,12 @@ def saved_comments(v, username):
 
 	page=int(request.values.get("page",1))
 
-	ids=v.saved_comment_idlist(page=page)
+	firstrange = 25 * (page - 1)
+	secondrange = firstrange+26
 
-	next_exists=len(ids)==26
+	ids=v.saved_comment_idlist()[firstrange:secondrange]
+
+	next_exists=len(ids) > 25
 
 	ids=ids[:25]
 
