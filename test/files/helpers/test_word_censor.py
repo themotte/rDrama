@@ -74,3 +74,18 @@ def test_censor_slurs():
     assert_that(censor_slurs(None, "LLM is a manlet hehe")).is_equal_to("LLM is a little king hehe")
     assert_that(censor_slurs(None, "LLM is :marseycapitalistmanlet: hehe")) \
         .is_equal_to("LLM is :marseycapitalistmanlet: hehe")
+
+
+@patch("files.helpers.word_censor.SLURS", {'retard': 'r-slur', 'manlet': 'little king'})
+def test_censor_slurs_does_not_censor_on_flag_disabled():
+    word_censor.REPLACE_MAP = create_replace_map()
+
+    class V:
+        def __init__(self, slurreplacer):
+            self.slurreplacer = slurreplacer
+
+    v = V(False)
+    assert_that(censor_slurs(v, "<p>retard</p>")).is_equal_to("<p>retard</p>")
+
+    v = V(True)
+    assert_that(censor_slurs(v, "<p>retard</p>")).is_equal_to("<p>r-slur</p>")

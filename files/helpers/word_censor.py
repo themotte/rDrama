@@ -37,6 +37,9 @@ def sub_matcher(match: Match):
 
 
 def censor_slurs(v, body):
+    if v and not v.slurreplacer:
+        return body
+
     for (slur, replace) in SLURS.items():
         for variation in create_variations_slur_regex(slur):
             try:

@@ -1,16 +1,18 @@
+from os import environ
 import re
+import time
 from urllib.parse import urlencode, urlparse, parse_qs
+
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred, lazyload
-from files.classes.votes import CommentVote
-from files.helpers.lazy import lazy
-from files.helpers.const import SLURS
+
 from files.__main__ import Base
-from .flags import CommentFlag
-from os import environ
-import time
+from files.classes.votes import CommentVote
 from files.helpers.const import AUTOPOLLER_ACCOUNT
+from files.helpers.lazy import lazy
+from .flags import CommentFlag
+from ..helpers.word_censor import censor_slurs
 
 site = environ.get("DOMAIN").strip()
 
@@ -298,8 +300,7 @@ class Comment(Base):
 
 		if not body: return ""
 
-		if not v or v.slurreplacer: 
-			for s, r in SLURS.items(): body = body.replace(s, r) 
+		body = censor_slurs(body)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
@@ -325,8 +326,7 @@ class Comment(Base):
 
 		if not body: return ""
 
-		if not v or v.slurreplacer: 
-			for s, r in SLURS.items(): body = body.replace(s, r) 
+		body = censor_slurs(body)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 

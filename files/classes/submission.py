@@ -1,21 +1,24 @@
-from flask import render_template, g
+from os import environ
+import random
+import re
+import time
+from urllib.parse import urlparse
+
+from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
-import re, random
-from urllib.parse import urlparse
-from files.helpers.lazy import lazy
-from files.helpers.const import SLURS, AUTOPOLLER_ACCOUNT
+
 from files.__main__ import Base
+from files.helpers.const import SLURS, AUTOPOLLER_ACCOUNT
+from files.helpers.lazy import lazy
 from .flags import Flag
-from os import environ
-import time
+from ..helpers.word_censor import censor_slurs
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
 
 
 class Submission(Base):
-
 	__tablename__ = "submissions"
 
 	id = Column(BigInteger, primary_key=True)
@@ -339,9 +342,7 @@ class Submission(Base):
 		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
 		body = self.body_html
 
-		if not v or v.slurreplacer: 
-			for s,r in SLURS.items(): 
-				body = body.replace(s, r) 
+		body = censor_slurs(body)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
@@ -351,9 +352,7 @@ class Submission(Base):
 		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
 		body = self.body
 
-		if not v or v.slurreplacer: 
-			for s,r in SLURS.items(): 
-				body = body.replace(s, r) 
+		body = censor_slurs(body)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
