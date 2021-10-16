@@ -854,7 +854,7 @@ def submit_post(v):
 		body_html = sanitize(body_md)
 
 
-		c = Comment(author_id=261,
+		c = Comment(author_id=SNAPPY_ACCOUNT,
 			distinguish_level=6,
 			parent_submission=new_post.id,
 			level=1,

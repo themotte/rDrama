@@ -51,6 +51,10 @@ INSERT INTO public.users (
 			0, 'zozbot', '', 'hot', 'top', 'day', '62ca56', 'e4432d', '', '',
 			'', 'dark', '30409f', false, false, '', '', 0, false, 0, 
 			0, 0, '', true, 0);
+		 (6, 'AutoPoller', '', 0, 0, true, true, '', '', 0, false, 
+			0, 'AutoPoller', '', 'hot', 'top', 'day', '62ca56', 'e4432d', '', '',
+			'', 'dark', '30409f', false, false, '', '', 0, false, 0, 
+			0, 0, '', true, 0);
 
 
-SELECT pg_catalog.setval('public.users_id_seq', 5, true);
+SELECT pg_catalog.setval('public.users_id_seq', 6, true);

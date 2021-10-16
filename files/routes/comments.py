@@ -420,7 +420,7 @@ def api_comment(v):
 
 
 
-		c2 = Comment(author_id=1833,
+		c2 = Comment(author_id=ZOZBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
@@ -447,7 +447,7 @@ def api_comment(v):
 
 
 
-		c3 = Comment(author_id=1833,
+		c3 = Comment(author_id=ZOZBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			parent_comment_id=c2.id,
 			level=level+2,
@@ -470,7 +470,7 @@ def api_comment(v):
 		body_html2 = sanitize(body_md)
 
 
-		c4 = Comment(author_id=1833,
+		c4 = Comment(author_id=ZOZBOT_ACCOUNT,
 			parent_submission=parent_submission,
 			parent_comment_id=c3.id,
 			level=level+3,
