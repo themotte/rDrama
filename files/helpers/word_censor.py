@@ -5,13 +5,42 @@ from re import Match
 from files.helpers.const import SLURS
 
 
-def create_replace_map():
-    dicts = [{
-        slur.strip(): replacer,
-        slur.strip().title(): replacer.title(),
-        slur.strip().capitalize(): replacer.capitalize(),
-        slur.strip().upper(): replacer.upper(),
-    } for (slur, replacer) in SLURS.items()]
+def first_upper(phrase: str) -> str:
+    """Converts the first character of the phrase to uppercase, not messing with the others"""
+    return phrase[0].upper() + phrase[1:]
+
+
+def first_all_upper(phrase: str) -> str:
+    """Converts the first character of each word to uppercase, not messing with the others"""
+    if " " not in phrase:
+        return first_upper(phrase)
+
+    return " ".join([first_upper(word) for word in phrase.split(" ")])
+
+
+def get_permutations_slur(slur: str, replacer: str = "_") -> dict[str, str]:
+    """
+    Given a slur and a replacer, it generates all the possible permutation on the original text and assigns them to the
+    corresponding substitution with case
+    """
+    stripped = slur.strip()
+    is_link = replacer.startswith("http")  # special case for the :marseymerchant:
+
+    # the order the things are added into the dict is important, so that the 'Correctest' version is written last
+    result = {
+        stripped.upper(): replacer.upper() if not is_link else replacer,
+        first_all_upper(stripped): first_all_upper(replacer) if not is_link else replacer,
+        stripped.lower(): replacer,
+        stripped: replacer,
+        first_upper(stripped): first_upper(replacer) if not is_link else replacer,
+    }
+
+    return result
+
+
+def create_replace_map() -> dict[str: str]:
+    """Creates the map that will be used to get the mathing replaced for the given slur"""
+    dicts = [get_permutations_slur(slur, replacer) for (slur, replacer) in SLURS.items()]
 
     # flattens the list of dict to a single dict
     return dict(ChainMap(*dicts))
@@ -20,21 +49,17 @@ def create_replace_map():
 REPLACE_MAP = create_replace_map()
 
 
-def create_variations_slur_regex(slur: str):
-    stripped = slur.strip()
-    variations = [stripped, stripped.upper(), stripped.capitalize()]
-
-    # capitalize multiple words if there are multiple words (just in case)
-    if " " in stripped:
-        variations.append(stripped.title())
+def create_variations_slur_regex(slur: str) -> list[str]:
+    """For a given match generates the corresponding replacer"""
+    permutations = get_permutations_slur(slur)
 
     if slur.startswith(" ") and slur.endswith(" "):
-        return [rf"(\s|>)({var})(\s|<)" for var in variations]
+        return [rf"(\s|>)({perm})(\s|<)" for perm in permutations.keys()]
     else:
-        return [rf"(\s|>)({var})|({var})(\s|<)" for var in variations]
+        return [rf"(\s|>)({perm})|({perm})(\s|<)" for perm in permutations.keys()]
 
 
-def sub_matcher(match: Match):
+def sub_matcher(match: Match) -> str:
     # special case when it should match exact word
     if len(match.groups()) is 3:
         found = match.group(2)
@@ -47,7 +72,7 @@ def sub_matcher(match: Match):
         return (match.group(1) or '') + replacer + (match.group(4) or '')
 
 
-def censor_slurs(body: str, logged_user):
+def censor_slurs(body: str, logged_user) -> str:
     if logged_user and not logged_user.slurreplacer:
         return body
 

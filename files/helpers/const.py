@@ -13,11 +13,10 @@ site = environ.get("DOMAIN", '').strip()
 #       - "superretard"
 #       But not "superretarded"
 #
-# If all letters are lowercase then it will match lowercase, all variations of first letter of words up and all letters up
+# If all letters are lowercase then it will match lowercase, first letter up in first or all the words and all letters up
 #    "dancing israelis" will match (with prefixes and suffixes omitted for brevity):
 #  	    - "dancing israelis"
 #  	    - "Dancing israelis"
-#       - "dancing Israelis"
 #       - "Dancing Israelis"
 #    	- "DANCING ISRAELIS"
 #
@@ -39,7 +38,6 @@ site = environ.get("DOMAIN", '').strip()
 #   "kill yourself" -> "keep yourself safe"
 #   "Kill yourself" -> "Keep yourself safe"
 #   "Kill Yourself" -> "Keep Yourself Safe"
-#   "kill Yourself" -> "Keep yourself safe" (this one is harder to keep the capitalizaion, so it defaults to first word upper and the others lower)
 #   "KILL YOURSELF" -> "KEEP YOURSELF SAFE"
 #
 # If the replacement side has some capitalization, then that capitalization will always be maintained
@@ -47,6 +45,8 @@ site = environ.get("DOMAIN", '').strip()
 #       "pajeet" -> "sexy Indian dude"
 #       "Pajeet" -> "Sexy Indian dude"
 #       "PAJEET" -> "SEXY INDIAN DUDE"
+#
+# There is a super special case that if the replacer starts with "http" then it never changes capitalization
 #
 #
 # TL;DR: Just read the above once, or don't, and try to guess!
@@ -74,7 +74,7 @@ SLURS = {
     "latina": "latinx",
     "hispanics": "latinx",
     "hispanic": "latinx",
-    "uss liberty incident": "tragic accident aboard the USS Liberty",
+    "USS liberty incident": "tragic accident aboard the USS Liberty",
     "lavon affair": "Lavon Misunderstanding",
     "shylock": "Israeli friend",
     "yid": "Israeli friend",
@@ -90,7 +90,7 @@ SLURS = {
     "i hate marsey": "i love marsey",
     "libertarian": "pedophile",
     "billie bilish": "Billie Eilish (fat cow)",
-    "dancing israelis": "i love Israel",
+    "dancing Israelis": "i love Israel",
     "sodomite": "total dreamboat",
     "pajeet": "sexy Indian dude",
     "female": "birthing person",
@@ -99,7 +99,7 @@ SLURS = {
     "renter": "rentoid",
     "autistic": "neurodivergent",
     "anime": "p-dophilic japanese cartoons",
-    "holohoax": "I tried to claim the Holocaust didn't happen because I am a pencil-dicked imbecile and the word filter caught me lol",
+    "holohoax": "i tried to claim the Holocaust didn't happen because I am a pencil-dicked imbecile and the word filter caught me lol",
     "groomercord": "discord (actually a pretty cool service)",
     "pedocord": "discord (actually a pretty cool service)",
     "i hate Carp": "i love Carp",
