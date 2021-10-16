@@ -147,22 +147,6 @@ def settings_profile_post(v):
 							   v=v,
 							   msg="Your bio has been updated.")
 
-	if request.values.get("filters"):
-
-		filters=request.values.get("filters")[:1000].strip()
-
-		if filters==v.custom_filter_list:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="You didn't change anything")
-
-		v.custom_filter_list=filters
-		g.db.add(v)
-		g.db.commit()
-		return render_template("settings_profile.html",
-							   v=v,
-							   msg="Your custom filters have been updated.")
-
 
 
 	frontsize = request.values.get("frontsize")
@@ -242,6 +226,19 @@ def settings_profile_post(v):
 
 	else:
 		return {"error": "You didn't change anything."}, 400
+
+
+@app.post("/settings/filters")
+@auth_required
+def filters(v):
+	filters=request.values.get("filters")[:1000].strip()
+
+	if filters == v.custom_filter_list: return render_template("settings_content.html", v=v, error="You didn't change anything")
+
+	v.custom_filter_list=filters
+	g.db.add(v)
+	g.db.commit()
+	return render_template("settings_content.html", v=v, msg="Your custom filters have been updated.")
 
 @app.post("/changelogsub")
 @auth_required
