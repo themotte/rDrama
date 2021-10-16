@@ -19,10 +19,91 @@
 			myToast.show();
 			console.log(e);
 	});
+
+	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+
+	const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
+		const contentEl = document.getElementById(popoverId).innerHTML;
+		return new bootstrap.Popover(popoverTriggerEl, {
+			content: contentEl,
+			html: true,
+		});
+	})
 </script>
 
+<style>
+	.popover {
+		max-width: 320px;
+		box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
+		border-color: #dadada;
+	}
+
+	.popover-arrow {
+		display: none !important;
+	}
+
+	.popover-user-profile {
+		display: flex;
+		flex-direction: column;
+		padding: 0;
+	}
+
+	.popover-body {
+		padding: 0;
+		border-radius: .25rem;
+		overflow: hidden;
+	}
+
+	.mt-n6 {
+		margin-top: -1.75rem !important;
+	}
+
+	.avatar-72 {
+		width: 72px;
+		height: 72px;
+		object-fit: cover;
+	}
+
+	.h-64 {
+		height: 64px;
+	}
+
+	.object-cover {
+		object-fit: cover;
+	}
+</style>
 
 {% for p in listing %}
+
+<div style="display: none;" id="popover-{{p.id}}">
+	<div class="popover-user-profile" role="tooltip">
+	  <img class="w-100 h-64 object-cover" src="{{p.author.bannerurl}}" />
+	  <div class="d-flex align-items-end px-3 mt-n6 mb-3">
+		<img class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}} />
+		<div class="px-3 text-truncate">
+		  <h5 class="text-truncate">{{p.author.username}}</h5>
+		</div>
+	  </div>
+	  <div class="px-3">
+		<span style="color:#ec72de">{{p.author.customtitle}}</span>
+	  </div>
+	  <div class="border-top d-flex align-items-center p-3 mt-3 gap-3 bg-light">
+		<span>
+		  <strong>{{p.author.post_count}}</strong>
+		  <span class="text-secondary">posts</span>
+		</span>
+		<span>
+		  <strong>{{p.author.comment_count}}</strong>
+		  <span class="text-secondary">comments</span>
+		</span>
+		<a href="{{p.author.url}}" target="_blank" class="ml-auto text-decoration-none">
+		  View
+		  <i class="fas fa-arrow-right fa-sm px-1"></i>
+		</a>
+	  </div>
+	</div>
+</div>
 
 <script>
 	(() => {
@@ -115,7 +196,8 @@
 
 
 		</div>
-
+		  
+		  
 		<div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
 			<div class="post-meta text-left x-scroll mb-md-2">
@@ -140,7 +222,7 @@
 				{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
 				{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.id == 541 %}#62ca56{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
 				{% endif %}
-				<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} style="color: #{{p.author.namecolor}};  font-weight: bold;" class="user-name"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
+				<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} style="color: #{{p.author.namecolor}};  font-weight: bold;" class="user-name"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/><span class="text-decoration-none" data-bs-position="auto" data-bs-toggle="popover" data-bs-trigger="hover" data-content-id="popover-{{p.id}}" href="#" tabindex="0" data-bs-delay="400" {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 				<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
 				&nbsp;
 				({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})
