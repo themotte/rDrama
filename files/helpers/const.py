@@ -1,6 +1,6 @@
 from os import environ
 
-site = environ.get("DOMAIN").strip()
+site = environ.get("DOMAIN", '').strip()
 
 SLURS = {
 		" faggot":" cute twink",
