@@ -58,10 +58,6 @@
 	color: var(--white);
 }
 
-.badge-count {
-	color: var(--light);
-}
-
 .transparent {
 	background: None !important;
 }
@@ -77,10 +73,6 @@
 .followsyou {
 	background-color: var(--dark) !important;
     border: 1px solid var(--primary) !important;
-}
-
-.badge-count {
-	color: var(--primary);
 }
 
 #frontpage .pseudo-submit-form.card, .form-inline.search .form-control, .form-control[readonly] {

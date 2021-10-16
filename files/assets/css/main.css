@@ -11336,20 +11336,6 @@ ol > li::before {
   color: var(--white);
 }
 
-.badge-count {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: #E53E3E;
-  position: absolute;
-  color: #cfcfcf;
-  font-size: 13px;
-  font-weight: 600;
-  top: -4px;
-  left: 8px;
-  padding: 0 2px 2px 2px;
-}
-
 .post-nav .nav-link {
   color: var(--muted);
   font-size: 1rem;

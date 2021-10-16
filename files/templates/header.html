@@ -1,6 +1,16 @@
 <script>function formkey() {return '{{v.formkey}}';}</script>
 <script src="/assets/js/header.js?v=54"></script>
 
+<style>
+	.notif-count {
+		background: red;
+		border-radius: 20%;
+		color: white;
+		padding: 2px 5px;
+		font-weight: 700;
+	}
+</style>
+
 <nav class="shadow shadow-md fixed-top">
 	{% if "rama" in request.host %}
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;">
@@ -42,7 +52,7 @@
 			aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon {% if v and v.notifications_count %}position-relative{% endif %}"><i class="fal fa-bars text-gray-500 black"></i>
 				{% if v and v.notifications_count %}
-					<span class="badge-count font-weight-bolder" style="right: -6px; font-size:18px;">{{v.notifications_count}}</span>
+					<span class="notif-count">{{v.notifications_count}}</span>
 				{% endif %}
 			</span>
 		</button>
@@ -64,7 +74,7 @@
 				{% if v.notifications_count %}
 
 				<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-					<a class="nav-link position-relative" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder">{{v.notifications_count}}</span></a>
+					<a class="nav-link position-relative" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Notifications"><i class="fas fa-bell text-danger"></i><span class="notif-count ml-1">{{v.notifications_count}}</span></a>
 				</li>
 
 				{% else %}
