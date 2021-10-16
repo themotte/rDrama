@@ -111,10 +111,8 @@ def front_all(v):
 
 	if v and request.path.startswith('/logged_out'): v = None
 
-	try: page = int(request.values.get("page") or 1)
+	try: page = max(int(request.values.get("page", 1), 1)
 	except: abort(400)
-
-	page = max(page, 1)
 
 	if v:
 		defaultsorting = v.defaultsorting
