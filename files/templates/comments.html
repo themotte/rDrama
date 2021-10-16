@@ -206,11 +206,6 @@
 
 				<span id="reddot-{{c.id}}"></span>
 
-				<!-- {% if c.awards %}
-					{% for a in c.awards %}
-						<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
-					{% endfor %}
-				{% endif %} -->
 
 				{% if c.bannedfor and c.author.banned_by %}
 					<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this comment by @{{c.author.banned_by.username}}"></i></a>
