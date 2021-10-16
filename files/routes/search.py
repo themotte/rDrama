@@ -41,7 +41,7 @@ def searchposts(v):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	sort = request.values.get("sort", "top").lower()
+	sort = request.values.get("sort", "new").lower()
 	t = request.values.get('t', 'all').lower()
 
 	criteria=searchparse(query)
