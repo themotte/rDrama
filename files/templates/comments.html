@@ -363,7 +363,7 @@
 						{% endif %}
 
 						<a class="list-inline-item text-muted d-none d-md-inline-block" {% if v %}href="{{c.permalink}}?context=10#context"{% else %}href="/logged_out{{c.permalink}}?context=10#context"{% endif %}><i class="fas fa-book-open"></i>Context</a>
-						<a class="list-inline-item text-muted d-none d-md-inline-block copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}/?context=10#context"><i class="fas fa-copy"></i>Copy link</a>
+						<a class="list-inline-item text-muted d-none d-md-inline-block copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=10#context"><i class="fas fa-copy"></i>Copy link</a>
 						{% if v %}
 							<a class="list-inline-item text-muted d-none d-md-inline-block" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)"><i class="fas fa-flag fa-fw"></i>Report</a>
 						{% endif %}
