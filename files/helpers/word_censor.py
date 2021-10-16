@@ -47,8 +47,8 @@ def sub_matcher(match: Match):
         return (match.group(1) or '') + replacer + (match.group(4) or '')
 
 
-def censor_slurs(v, body: str):
-    if v and not v.slurreplacer:
+def censor_slurs(body: str, logged_user):
+    if logged_user and not logged_user.slurreplacer:
         return body
 
     for (slur, replace) in SLURS.items():

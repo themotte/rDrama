@@ -83,25 +83,25 @@ def test_sub_matcher():
 def test_censor_slurs():
     word_censor.REPLACE_MAP = create_replace_map()
 
-    assert_that(censor_slurs(None, "<p>retard</p>")).is_equal_to("<p>r-slur</p>")
-    assert_that(censor_slurs(None, "<p>preretard</p>")).is_equal_to("<p>prer-slur</p>")
-    assert_that(censor_slurs(None, "that is Retarded like")).is_equal_to("that is R-slured like")
-    assert_that(censor_slurs(None, "that is SUPERRETARD like")).is_equal_to("that is SUPERR-SLUR like")
-    assert_that(censor_slurs(None, "<p>Manlets get out!</p>")).is_equal_to("<p>Little kings get out!</p>")
+    assert_that(censor_slurs("<p>retard</p>", None)).is_equal_to("<p>r-slur</p>")
+    assert_that(censor_slurs("<p>preretard</p>", None)).is_equal_to("<p>prer-slur</p>")
+    assert_that(censor_slurs("that is Retarded like", None)).is_equal_to("that is R-slured like")
+    assert_that(censor_slurs("that is SUPERRETARD like", None)).is_equal_to("that is SUPERR-SLUR like")
+    assert_that(censor_slurs("<p>Manlets get out!</p>", None)).is_equal_to("<p>Little kings get out!</p>")
 
-    assert_that(censor_slurs(None, '... "retard" ...')).is_equal_to('... "retard" ...')
-    assert_that(censor_slurs(None, '... ReTaRd ...')).is_equal_to('... ReTaRd ...')
-    assert_that(censor_slurs(None, '... xretardx ...')).is_equal_to('... xretardx ...')
+    assert_that(censor_slurs('... "retard" ...', None)).is_equal_to('... "retard" ...')
+    assert_that(censor_slurs('... ReTaRd ...', None)).is_equal_to('... ReTaRd ...')
+    assert_that(censor_slurs('... xretardx ...', None)).is_equal_to('... xretardx ...')
 
-    assert_that(censor_slurs(None, "LLM is a manlet hehe")).is_equal_to("LLM is a little king hehe")
-    assert_that(censor_slurs(None, "LLM is :marseycapitalistmanlet: hehe")) \
+    assert_that(censor_slurs("LLM is a manlet hehe", None)).is_equal_to("LLM is a little king hehe")
+    assert_that(censor_slurs("LLM is :marseycapitalistmanlet: hehe", None)) \
         .is_equal_to("LLM is :marseycapitalistmanlet: hehe")
 
-    assert_that(censor_slurs(None, '... Nig ...')).is_equal_to('... 🏀 ...')
-    assert_that(censor_slurs(None, '<p>NIG</p>')).is_equal_to('<p>🏀</p>')
-    assert_that(censor_slurs(None, '... nigeria ...')).is_equal_to('... nigeria ...')
+    assert_that(censor_slurs('... Nig ...', None)).is_equal_to('... 🏀 ...')
+    assert_that(censor_slurs('<p>NIG</p>', None)).is_equal_to('<p>🏀</p>')
+    assert_that(censor_slurs('... nigeria ...', None)).is_equal_to('... nigeria ...')
 
-    assert_that(censor_slurs(None, "<p>retarded SuperManlet NIG</p>")) \
+    assert_that(censor_slurs("<p>retarded SuperManlet NIG</p>", None)) \
         .is_equal_to("<p>r-slured SuperLittle king 🏀</p>")
 
 
@@ -110,19 +110,19 @@ def test_censor_slurs_does_not_error_out_on_exception():
     word_censor.REPLACE_MAP = create_replace_map()
     word_censor.REPLACE_MAP["Manlet"] = None
 
-    assert_that(censor_slurs(None, ">retarded SuperManlet NIG<")).is_equal_to(">r-slured SuperManlet 🏀<")
+    assert_that(censor_slurs(">retarded SuperManlet NIG<", None)).is_equal_to(">r-slured SuperManlet 🏀<")
 
 
 @patch("files.helpers.word_censor.SLURS", {'retard': 'r-slur', 'manlet': 'little king'})
 def test_censor_slurs_does_not_censor_on_flag_disabled():
     word_censor.REPLACE_MAP = create_replace_map()
 
-    class V:
+    class User:
         def __init__(self, slurreplacer):
             self.slurreplacer = slurreplacer
 
-    v = V(False)
-    assert_that(censor_slurs(v, "<p>retard</p>")).is_equal_to("<p>retard</p>")
+    logger_user = User(slurreplacer=False)
+    assert_that(censor_slurs("<p>retard</p>", logger_user)).is_equal_to("<p>retard</p>")
 
-    v = V(True)
-    assert_that(censor_slurs(v, "<p>retard</p>")).is_equal_to("<p>r-slur</p>")
+    logger_user = User(slurreplacer=True)
+    assert_that(censor_slurs("<p>retard</p>", logger_user)).is_equal_to("<p>r-slur</p>")

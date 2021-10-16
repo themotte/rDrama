@@ -300,7 +300,7 @@ class Comment(Base):
 
 		if not body: return ""
 
-		body = censor_slurs(body)
+		body = censor_slurs(body, v)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
@@ -326,7 +326,7 @@ class Comment(Base):
 
 		if not body: return ""
 
-		body = censor_slurs(body)
+		body = censor_slurs(body, v)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 

@@ -342,7 +342,7 @@ class Submission(Base):
 		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
 		body = self.body_html
 
-		body = censor_slurs(body)
+		body = censor_slurs(body, v)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
@@ -352,7 +352,7 @@ class Submission(Base):
 		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
 		body = self.body
 
-		body = censor_slurs(body)
+		body = censor_slurs(body, v)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
