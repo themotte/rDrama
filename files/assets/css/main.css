@@ -14415,7 +14415,7 @@ div.deleted.banned {
 }
 
 img.emoji {
-  width: 30px;
+  max-width: 100px;
   height: 30px;
   object-fit: contain;
 }
