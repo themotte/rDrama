@@ -1,6 +1,7 @@
 from collections import ChainMap
 import re
 from re import Match
+from typing import List, Dict
 
 from files.helpers.const import SLURS
 
@@ -18,7 +19,7 @@ def first_all_upper(phrase: str) -> str:
     return " ".join([first_upper(word) for word in phrase.split(" ")])
 
 
-def get_permutations_slur(slur: str, replacer: str = "_") -> dict[str, str]:
+def get_permutations_slur(slur: str, replacer: str = "_") -> Dict[str, str]:
     """
     Given a slur and a replacer, it generates all the possible permutation on the original text and assigns them to the
     corresponding substitution with case
@@ -38,7 +39,7 @@ def get_permutations_slur(slur: str, replacer: str = "_") -> dict[str, str]:
     return result
 
 
-def create_replace_map() -> dict[str: str]:
+def create_replace_map() -> Dict[str, str]:
     """Creates the map that will be used to get the mathing replaced for the given slur"""
     dicts = [get_permutations_slur(slur, replacer) for (slur, replacer) in SLURS.items()]
 
@@ -49,7 +50,7 @@ def create_replace_map() -> dict[str: str]:
 REPLACE_MAP = create_replace_map()
 
 
-def create_variations_slur_regex(slur: str) -> list[str]:
+def create_variations_slur_regex(slur: str) -> List[str]:
     """For a given match generates the corresponding replacer"""
     permutations = get_permutations_slur(slur)
 
@@ -61,7 +62,7 @@ def create_variations_slur_regex(slur: str) -> list[str]:
 
 def sub_matcher(match: Match) -> str:
     # special case when it should match exact word
-    if len(match.groups()) is 3:
+    if len(match.groups()) == 3:
         found = match.group(2)
         replacer = REPLACE_MAP[found]
         return match.group(1) + replacer + match.group(3)
