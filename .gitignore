@@ -5,3 +5,6 @@ cache/
 __pycache__/
 disablesignups
 *rules.html
+.idea/
+**/.pytest_cache/
+venv/
