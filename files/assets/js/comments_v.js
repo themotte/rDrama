@@ -106,7 +106,7 @@ function delete_comment(id) {
 	this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
 	this.disabled = true; 
 
-	var url = '/delete_comment/' + id
+	var url = '/delete/comment/' + id
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	var form = new FormData()
