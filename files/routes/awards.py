@@ -240,7 +240,7 @@ def award_post(pid, v):
 		link = f"[this post]({post.permalink})"
 
 		if not author.is_suspended:
-			author.ban(reason=f"one-day ban award used by @{v.username}", days=1)
+			author.ban(reason=f"one-day ban award used by @{v.username} on /post/{post.id}", days=1)
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
 			author.unban_utc += 24*60*60
@@ -249,7 +249,7 @@ def award_post(pid, v):
 	elif kind == "grass":
 		author = post.author
 		author.is_banned = AUTOJANNY_ACCOUNT
-		author.ban_reason = f"grass award used by @{v.username}"
+		author.ban_reason = f"grass award used by @{v.username} on /post/{post.id}"
 		g.db.add(author)
 		link = f"[this post]({post.permalink})"
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
@@ -321,7 +321,7 @@ def award_comment(cid, v):
 		link = f"[this comment]({comment.permalink})"
 
 		if not author.is_suspended:
-			author.ban(reason=f"one-day ban award used by @{v.username}", days=1)
+			author.ban(reason=f"one-day ban award used by @{v.username} on /comment/{comment.id}", days=1)
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
 			author.unban_utc += 24*60*60
@@ -330,7 +330,7 @@ def award_comment(cid, v):
 	elif kind == "grass":
 		author = comment.author
 		author.is_banned = AUTOJANNY_ACCOUNT
-		author.ban_reason = f"grass award used by @{v.username}"
+		author.ban_reason = f"grass award used by @{v.username} on /comment/{comment.id}"
 		g.db.add(author)
 		link = f"[this comment]({comment.permalink})"
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
