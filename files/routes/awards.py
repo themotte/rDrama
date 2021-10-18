@@ -181,7 +181,7 @@ def banaward_trigger(post=None, comment=None):
 	link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
 
 	if not author.is_suspended:
-		author.ban(reason="one-day ban award used", days=1)
+		author.ban(reason=f"one-day ban award used by @{v.username}", days=1)
 
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 	elif author.unban_utc > 0:
@@ -194,9 +194,12 @@ def banaward_trigger(post=None, comment=None):
 def grass_trigger(post=None, comment=None):
 
 	author = post.author if post else comment.author
-	link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
 
-	author.ban(reason="grass award used", discord=False)
+	author.is_banned = AUTOJANNY_ACCOUNT
+	author.ban_reason = f"grass award used by @{v.username}"
+	g.db.add(self)
+
+	link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
 	send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 
 ACTIONS = {

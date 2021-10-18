@@ -485,7 +485,7 @@ class User(Base):
 
 		return data
 
-	def ban(self, admin=None, reason=None, days=0, discord=True):
+	def ban(self, admin=None, reason=None, days=0):
 
 		if days > 0:
 			ban_time = int(time.time()) + (days * 86400)
@@ -493,7 +493,7 @@ class User(Base):
 		else:
 			self.bannerurl = None
 			self.profileurl = None
-			if self.discord_id and discord: remove_user(self)
+			if self.discord_id: remove_user(self)
 
 		self.is_banned = admin.id if admin else AUTOJANNY_ACCOUNT
 		if reason: self.ban_reason = reason
