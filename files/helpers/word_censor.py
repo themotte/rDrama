@@ -43,12 +43,13 @@ def create_slur_regex() -> Pattern[str]:
     # words that can have suffixes and prefixes
     words = "|".join([slur.lower() for slur in SLURS.keys() if not slur.startswith(" ")])
 
-    regex = rf"(\s|>)({words})|({words})(\s|<)"
+    # to understand the weird groups see: https://www.regular-expressions.info/lookaround.html
+    regex = rf"(?<=\s|>)({words})|({words})(?=\s|<)"
 
     # words that need to match exactly
     single_words = "|".join([slur.strip().lower() for slur in SLURS.keys() if slur.startswith(" ")])
 
-    return re.compile(rf"(?i){regex}|(\s|>)({single_words})(\s|<)")
+    return re.compile(rf"(?i){regex}|(?<=\s|>)({single_words})(?=\s|<)")
 
 
 def create_replace_map() -> Dict[str, str]:
@@ -65,23 +66,13 @@ REPLACE_MAP = create_replace_map()
 
 def sub_matcher(match: Match) -> str:
     """given a match returns the correct replacer string"""
-
-    # base regex: (?i)(\s|>)(words)|(words)(\s|<)|(\s|>)(words)(\s|<)
-    if match.group(2) is not None:
-        found = match.group(2)
-    elif match.group(3) is not None:
-        found = match.group(3)
-    else:
-        found = match.group(6)
-
-    # if it does not find the correct capitalization, it tries the all lower
-    replacer = REPLACE_MAP.get(found) or REPLACE_MAP.get(found.lower())
-
-    return (match.group(1) or match.group(5) or '') + replacer + (match.group(4) or match.group(7) or '')
+    found = match.group(0)
+    # if it does not find the correct capitalization, it tries the all lower, or return the original word
+    return REPLACE_MAP.get(found) or REPLACE_MAP.get(found.lower()) or found
 
 
 def censor_slurs(body: str, logged_user) -> str:
-    """Censors all the slurs in the body if the user is not logged in or if they have the slurreplacer active"""
+    """Censors all the slurs in the body if the user is not logged-in or if they have the slurreplacer active"""
 
     if not logged_user or logged_user.slurreplacer:
         try:
