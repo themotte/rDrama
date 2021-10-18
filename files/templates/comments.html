@@ -358,8 +358,8 @@
 						<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 						<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="d-md-none btn btn-primary ml-2" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
 					</form>
+					<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 				</div>
-				<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 				{% endif %}
 				<div id="comment-{{c.id}}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 					<ul class="list-inline text-right text-md-left">
