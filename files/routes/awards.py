@@ -236,8 +236,8 @@ def award_post(pid, v):
 	send_notification(NOTIFICATIONS_ACCOUNT, post.author, msg)
 
 	if kind == "ban":
-		author = post.author if post else comment.author
-		link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
+		author = post.author
+		link = f"[this post]({post.permalink})"
 
 		if not author.is_suspended:
 			author.ban(reason=f"one-day ban award used by @{v.username}", days=1)
@@ -247,11 +247,11 @@ def award_post(pid, v):
 			g.db.add(author)
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "grass":
-		author = post.author if post else comment.author
+		author = post.author
 		author.is_banned = AUTOJANNY_ACCOUNT
 		author.ban_reason = f"grass award used by @{v.username}"
 		g.db.add(self)
-		link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
+		link = f"[this post]({post.permalink})"
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 
 	post.author.received_award_count += 1
@@ -316,8 +316,24 @@ def award_comment(cid, v):
 
 	send_notification(NOTIFICATIONS_ACCOUNT, c.author, msg)
 
-	if kind in ACTIONS:
-		ACTIONS[kind](comment=c)
+	if kind == "ban":
+		author = comment.author
+		link = f"[this comment]({comment.permalink})"
+
+		if not author.is_suspended:
+			author.ban(reason=f"one-day ban award used by @{v.username}", days=1)
+			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
+		elif author.unban_utc > 0:
+			author.unban_utc += 24*60*60
+			g.db.add(author)
+			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for yet another day for {link}. Seriously man?")
+	elif kind == "grass":
+		author = comment.author
+		author.is_banned = AUTOJANNY_ACCOUNT
+		author.ban_reason = f"grass award used by @{v.username}"
+		g.db.add(self)
+		link = f"[this comment]({comment.permalink})"
+		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 
 	c.author.received_award_count += 1
 	g.db.add(c.author)
