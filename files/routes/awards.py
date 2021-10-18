@@ -196,7 +196,7 @@ def grass_trigger(post=None, comment=None):
 	author = post.author if post else comment.author
 	link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
 
-	author.ban(reason="grass award used")
+	author.ban(reason="grass award used", discord=False)
 	send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 
 ACTIONS = {
