@@ -159,8 +159,21 @@ def api_comment(v):
 		options.append(i.group(1))
 		body_md = body_md.replace(i.group(0), "")
 
-	body_md = CustomRenderer().render(mistletoe.Document(body_md))
-	body_html = sanitize(body_md)
+	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+		file=request.files["file"]
+		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
+
+		name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.gif'
+		file.save(name)
+		url = request.host_url[:-1] + process_image(name)
+		
+		body = request.values.get("body") + f"\n![]({url})"
+		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
+		body_md = CustomRenderer().render(mistletoe.Document(body))
+		body_html = sanitize(body_md)
+	else:
+		body_md = CustomRenderer().render(mistletoe.Document(body_md))
+		body_html = sanitize(body_md)
 
 	bans = filter_comment_html(body_html)
 
@@ -228,19 +241,6 @@ def api_comment(v):
 				g.db.add(ma)
 
 			return {"error": "Too much spam!"}, 403
-
-	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		file=request.files["file"]
-		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
-
-		name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.gif'
-		file.save(name)
-		url = request.host_url[:-1] + process_image(name)
-		
-		body = request.values.get("body") + f"\n![]({url})"
-		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html = sanitize(body_md)
 
 	if len(body_html) > 20000: abort(400)
 
