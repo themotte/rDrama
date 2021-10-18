@@ -20,6 +20,16 @@
 			console.log(e);
 	});
 
+	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+
+	const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
+		const contentEl = document.getElementById(popoverId).innerHTML;
+		return new bootstrap.Popover(popoverTriggerEl, {
+			content: contentEl,
+			html: true,
+		});
+	})
 </script>
 
 {% for p in listing %}
@@ -36,7 +46,7 @@
 	  <div class="px-3">
 		<span class="text-black">{% if p.author.bio_html %}{{p.author.bio_html | safe}}{% endif %}</span>
 	  </div>
-	  <div class="border-top d-flex align-items-center px-2 my-3 gap-3 smol">
+	  <div class="border-top d-flex align-items-center px-2 py-3 gap-3 smol">
 		<span>
 		  <strong class="text-black">{{p.author.post_count}}</strong>
 		  <span class="text-black">posts</span>
@@ -570,7 +580,7 @@
 
 <style>
 	.popover {
-		max-width: 320px;
+		max-width: 100%;
 		box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
 		border-color: #dadada;
 	}
@@ -623,9 +633,9 @@
 	}
 	
 	.smol {
-		font-size: 10px;
+		font-size: 11.5px;
 	}
-	
+
 	.mod:before {
 		content: '(((';
 	}
