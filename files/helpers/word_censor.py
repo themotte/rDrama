@@ -1,7 +1,7 @@
 from collections import ChainMap
 import re
 from re import Match
-from typing import List, Dict
+from typing import Dict, Pattern
 
 from files.helpers.const import SLURS
 
@@ -39,6 +39,18 @@ def get_permutations_slur(slur: str, replacer: str = "_") -> Dict[str, str]:
     return result
 
 
+def create_slur_regex() -> Pattern[str]:
+    # words that can have suffixes and prefixes
+    words = "|".join([slur.lower() for slur in SLURS.keys() if not slur.startswith(" ")])
+
+    regex = rf"(\s|>)({words})|({words})(\s|<)"
+
+    # words that need to match exactly
+    single_words = "|".join([slur.strip().lower() for slur in SLURS.keys() if slur.startswith(" ")])
+
+    return re.compile(rf"(?i){regex}|(\s|>)({single_words})(\s|<)")
+
+
 def create_replace_map() -> Dict[str, str]:
     """Creates the map that will be used to get the mathing replaced for the given slur"""
     dicts = [get_permutations_slur(slur, replacer) for (slur, replacer) in SLURS.items()]
@@ -47,41 +59,34 @@ def create_replace_map() -> Dict[str, str]:
     return dict(ChainMap(*dicts))
 
 
+SLUR_REGEX = create_slur_regex()
 REPLACE_MAP = create_replace_map()
 
 
-def create_variations_slur_regex(slur: str) -> List[str]:
-    """For a given match generates the corresponding replacer"""
-    permutations = get_permutations_slur(slur)
-
-    if slur.startswith(" ") and slur.endswith(" "):
-        return [rf"(\s|>)({perm})(\s|<)" for perm in permutations.keys()]
-    else:
-        return [rf"(\s|>)({perm})|({perm})(\s|<)" for perm in permutations.keys()]
-
-
 def sub_matcher(match: Match) -> str:
-    # special case when it should match exact word
-    if len(match.groups()) == 3:
-        found = match.group(2)
-        replacer = REPLACE_MAP[found]
-        return match.group(1) + replacer + match.group(3)
+    """given a match returns the correct replacer string"""
 
-    else:  # normal case with prefix or suffix
-        found = match.group(2) if (match.group(2) is not None) else match.group(3)
-        replacer = REPLACE_MAP[found]
-        return (match.group(1) or '') + replacer + (match.group(4) or '')
+    # base regex: (?i)(\s|>)(words)|(words)(\s|<)|(\s|>)(words)(\s|<)
+    if match.group(2) is not None:
+        found = match.group(2)
+    elif match.group(3) is not None:
+        found = match.group(3)
+    else:
+        found = match.group(6)
+
+    # if it does not find the correct capitalization, it tries the all lower
+    replacer = REPLACE_MAP.get(found) or REPLACE_MAP.get(found.lower())
+
+    return (match.group(1) or match.group(5) or '') + replacer + (match.group(4) or match.group(7) or '')
 
 
 def censor_slurs(body: str, logged_user) -> str:
-    if logged_user and not logged_user.slurreplacer:
-        return body
+    """Censors all the slurs in the body if the user is not logged in or if they have the slurreplacer active"""
 
-    for (slur, replace) in SLURS.items():
-        for variation in create_variations_slur_regex(slur):
-            try:
-                body = re.sub(variation, sub_matcher, body)
-            except Exception as e:
-                print(e)
+    if not logged_user or logged_user.slurreplacer:
+        try:
+            body = SLUR_REGEX.sub(sub_matcher, body)
+        except Exception as e:
+            print(e)
 
     return body

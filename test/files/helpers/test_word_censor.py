@@ -4,8 +4,8 @@ from unittest.mock import patch
 from assertpy import assert_that
 
 from files.helpers import word_censor
-from files.helpers.word_censor import create_variations_slur_regex, create_replace_map, censor_slurs, sub_matcher, \
-    get_permutations_slur, first_upper, first_all_upper
+from files.helpers.word_censor import create_replace_map, censor_slurs, sub_matcher, \
+    get_permutations_slur, first_upper, first_all_upper, create_slur_regex
 
 
 def test_first_upper():
@@ -45,34 +45,16 @@ def test_get_permutations_slur_wiht_link_replacer():
     assert_that(result).is_equal_to(expected)
 
 
-def test_create_variations_slur_regex_for_slur_with_spaces():
-    expected = [r"(\s|>)(retard)(\s|<)",
-                r"(\s|>)(Retard)(\s|<)",
-                r"(\s|>)(RETARD)(\s|<)"]
+@patch("files.helpers.word_censor.SLURS", {
+    "kill yourself": "keep yourself safe",
+    "faggot": "cute twink",
+    " nig ": "🏀",
+    " retard ": "r-slur",
+})
+def test_create_slur_regex():
+    expected = r"(?i)(\s|>)(kill yourself|faggot)|(kill yourself|faggot)(\s|<)|(\s|>)(nig|retard)(\s|<)"
 
-    result = create_variations_slur_regex(" retard ")
-
-    assert_that(result).is_length(3).contains_only(*expected)
-
-
-def test_create_variations_slur_regex_single_word():
-    expected = [r"(\s|>)(retard)|(retard)(\s|<)",
-                r"(\s|>)(Retard)|(Retard)(\s|<)",
-                r"(\s|>)(RETARD)|(RETARD)(\s|<)"]
-
-    result = create_variations_slur_regex("retard")
-
-    assert_that(result).is_length(3).contains_only(*expected)
-
-
-def test_create_variations_slur_regex_multiple_word():
-    expected = [r"(\s|>)(kill yourself)|(kill yourself)(\s|<)",
-                r"(\s|>)(Kill yourself)|(Kill yourself)(\s|<)",
-                r"(\s|>)(Kill Yourself)|(Kill Yourself)(\s|<)",
-                r"(\s|>)(KILL YOURSELF)|(KILL YOURSELF)(\s|<)"]
-    result = create_variations_slur_regex("kill yourself")
-
-    assert_that(result).is_length(4).contains_only(*expected)
+    assert_that(create_slur_regex()).is_equal_to(re.compile(expected))
 
 
 @patch("files.helpers.word_censor.SLURS", {
@@ -107,19 +89,24 @@ def test_create_replace_map():
     assert_that(result).is_equal_to(expected)
 
 
-@patch("files.helpers.word_censor.REPLACE_MAP", {'retard': 'r-slur', 'NIG': '🏀'})
+@patch("files.helpers.word_censor.REPLACE_MAP", {'retard': 'r-slur', 'Faggot': 'Cute twink', 'NIG': '🏀'})
 def test_sub_matcher():
-    match = re.search(r"(\s|>)(retard)|(retard)(\s|<)", "<p>retard</p>")
+    regex = re.compile(r"(?i)(\s|>)(kill yourself|retard)|(kill yourself|retard)(\s|<)|(\s|>)(nig|faggot)(\s|<)")
+
+    match = regex.search("<p>retard</p>")
     assert_that(sub_matcher(match)).is_equal_to(">r-slur")
 
-    match = re.search(r"(\s|>)(retard)|(retard)(\s|<)", "<p>noretard</p>")
+    match = regex.search("<p>noretard</p>")
     assert_that(sub_matcher(match)).is_equal_to("r-slur<")
 
-    match = re.search(r"(\s|>)(NIG)(\s|<)", "<p>NIG</p>")
+    match = regex.search("<p>ReTaRdEd</p>")
+    assert_that(sub_matcher(match)).is_equal_to(">r-slur")
+
+    match = regex.search("<p>NIG</p>")
     assert_that(sub_matcher(match)).is_equal_to(">🏀<")
 
-    match = re.search(r"(\s|>)(NIG)(\s|<)", "<p>NIG </p>")
-    assert_that(sub_matcher(match)).is_equal_to(">🏀 ")
+    match = regex.search("<p>Faggot </p>")
+    assert_that(sub_matcher(match)).is_equal_to(">Cute twink ")
 
 
 @patch("files.helpers.word_censor.SLURS", {
@@ -131,15 +118,16 @@ def test_sub_matcher():
 })
 def test_censor_slurs():
     word_censor.REPLACE_MAP = create_replace_map()
+    word_censor.SLUR_REGEX = create_slur_regex()
 
     assert_that(censor_slurs("<p>retard</p>", None)).is_equal_to("<p>r-slur</p>")
     assert_that(censor_slurs("<p>preretard</p>", None)).is_equal_to("<p>prer-slur</p>")
     assert_that(censor_slurs("that is Retarded like", None)).is_equal_to("that is R-slured like")
     assert_that(censor_slurs("that is SUPERRETARD like", None)).is_equal_to("that is SUPERR-SLUR like")
+    assert_that(censor_slurs('... ReTaRd ...', None)).is_equal_to('... r-slur ...')
     assert_that(censor_slurs("<p>Manlets get out!</p>", None)).is_equal_to("<p>Little kings get out!</p>")
 
     assert_that(censor_slurs('... "retard" ...', None)).is_equal_to('... "retard" ...')
-    assert_that(censor_slurs('... ReTaRd ...', None)).is_equal_to('... ReTaRd ...')
     assert_that(censor_slurs('... xretardx ...', None)).is_equal_to('... xretardx ...')
 
     assert_that(censor_slurs("LLM is a manlet hehe", None)).is_equal_to("LLM is a little king hehe")
@@ -155,11 +143,9 @@ def test_censor_slurs():
     assert_that(censor_slurs('... I hate Carp ...', None)).is_equal_to('... I love Carp ...')
     assert_that(censor_slurs('... I Hate Carp ...', None)).is_equal_to('... I Love Carp ...')
     assert_that(censor_slurs('... I HATE CARP ...', None)).is_equal_to('... I LOVE CARP ...')
-
-    # Not covered:
-    assert_that(censor_slurs('... I Hate carp ...', None)).is_equal_to('... I Hate carp ...')
-    assert_that(censor_slurs('... i Hate Carp ...', None)).is_equal_to('... i Hate Carp ...')
-    assert_that(censor_slurs('... i Hate carp ...', None)).is_equal_to('... i Hate carp ...')
+    assert_that(censor_slurs('... I Hate carp ...', None)).is_equal_to('... i love Carp ...')
+    assert_that(censor_slurs('... i Hate Carp ...', None)).is_equal_to('... i love Carp ...')
+    assert_that(censor_slurs('... i Hate carp ...', None)).is_equal_to('... i love Carp ...')
 
     assert_that(censor_slurs('... i hate a carp ...', None)).is_equal_to('... i hate a carp ...')
 
