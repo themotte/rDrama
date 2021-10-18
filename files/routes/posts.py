@@ -523,7 +523,7 @@ def submit_post(v):
 		# url = urlunparse(new_url)
 
 		repost = g.db.query(Submission).options(lazyload('*')).filter(
-			Submission.url.ilike(f'{url}%'),
+			Submission.url.ilike(url),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
 		).first()
