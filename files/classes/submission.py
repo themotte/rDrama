@@ -208,7 +208,6 @@ class Submission(Base):
 			if comment: self.__dict__["replies"] = [comment]
 			else: self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
 
-		g.db.commit()
 		return render_template(template,
 							   v=v,
 							   p=self,
