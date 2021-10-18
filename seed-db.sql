@@ -50,7 +50,7 @@ INSERT INTO public.users (
 		 (5, 'zozbot', '', 0, 0, true, true, '', '', 0, false, 
 			0, 'zozbot', '', 'hot', 'top', 'day', '62ca56', 'e4432d', '', '',
 			'', 'dark', '30409f', false, false, '', '', 0, false, 0, 
-			0, 0, '', true, 0);
+			0, 0, '', true, 0),
 		 (6, 'AutoPoller', '', 0, 0, true, true, '', '', 0, false, 
 			0, 'AutoPoller', '', 'hot', 'top', 'day', '62ca56', 'e4432d', '', '',
 			'', 'dark', '30409f', false, false, '', '', 0, false, 0, 
