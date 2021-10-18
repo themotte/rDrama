@@ -31,6 +31,14 @@ if site_name == "Drama":
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"price": 500
+		},
+		"grass": {
+			"kind": "grass",
+			"title": "Grass",
+			"description": "Ban the author permenantly (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+			"icon": "fas fa-seedling",
+			"color": "text-success",
+			"price": 500
 		}
 	}
 else:

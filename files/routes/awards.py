@@ -35,6 +35,14 @@ def shop(v):
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"price": 500
+			},
+			"grass": {
+				"kind": "grass",
+				"title": "Grass",
+				"description": "Ban the author permenantly (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"icon": "fas fa-seedling",
+				"color": "text-success",
+				"price": 500
 			}
 		}
 	else:
@@ -112,6 +120,14 @@ def buy(v, award):
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"price": 500
+			},
+			"grass": {
+				"kind": "grass",
+				"title": "Grass",
+				"description": "Ban the author permenantly (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"icon": "fas fa-seedling",
+				"color": "text-success",
+				"price": 500
 			}
 		}
 	else:
@@ -175,14 +191,24 @@ def banaward_trigger(post=None, comment=None):
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 
 
+def grass_trigger(post=None, comment=None):
+
+	author = post.author if post else comment.author
+	link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
+
+	author.ban(reason="grass award used")
+	send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permenantly for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+
 ACTIONS = {
-	"ban": banaward_trigger
+	"ban": banaward_trigger,
+	"grass": grass_trigger
 }
 
 ALLOW_MULTIPLE = (
 	"ban",
 	"shit",
-	"fireflies"
+	"fireflies",
+	"grass"
 )
 
 @app.post("/post/<pid>/awards")
