@@ -38,7 +38,7 @@ if site_name == "Drama":
 			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 			"icon": "fas fa-seedling",
 			"color": "text-success",
-			"price": 500
+			"price": 10000
 		}
 	}
 else:
