@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from files.__main__ import Base, app
 from os import environ
 from files.helpers.lazy import lazy
+from datetime import datetime
 
 site_name = environ.get("SITE_NAME").strip()
 
@@ -48,7 +49,9 @@ class Badge(Base):
 	badge_id = Column(Integer, ForeignKey("badge_defs.id"))
 	description = Column(String)
 	url = Column(String)
+
 	badge = relationship("BadgeDef", viewonly=True)
+	user = relationship("User", viewonly=True)
 
 	def __repr__(self):
 
@@ -57,10 +60,12 @@ class Badge(Base):
 	@property
 	@lazy
 	def text(self):
-		if self.description:
-			return self.description
-		else:
-			return self.badge.description
+		if self.name == "Agendaposter":
+			ti = self.user.agendaposter_expires_utc
+			if ti: return self.badge.description + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
+			else: return self.badge.description + " permenantly" 
+		elif self.description: return self.description
+		else: return self.badge.description
 
 	@property
 	@lazy
