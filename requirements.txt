@@ -1,3 +1,4 @@
+assertpy
 beautifulsoup4
 bleach
 Flask
@@ -20,6 +21,7 @@ requests
 SQLAlchemy
 psycopg2-binary
 pusher_push_notifications
+pytest
 youtube-dl
 yattag
 webptools
