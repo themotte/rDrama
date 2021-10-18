@@ -57,9 +57,9 @@ function post_toast3(url, button1, button2) {
 
 report_commentModal = function(id, author) {
 
-	document.getElementById("comment-author").textContent = author;
+document.getElementById("comment-author").textContent = author;
 
-	document.getElementById("reportCommentButton").onclick = function() {
+document.getElementById("reportCommentButton").onclick = function() {
 
 	this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Reporting comment';
 	this.disabled = true;
@@ -102,19 +102,24 @@ toggleEdit=function(id){
 };
 
 
-function delete_comment(id) {
-	this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
-	this.disabled = true; 
+function delete_commentModal(id) {
 
-	var url = '/delete/comment/' + id
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	var form = new FormData()
-	form.append("formkey", formkey());
-	xhr.withCredentials=true;
-	xhr.onload = function() {location.reload(true);};
-	xhr.send(form)
+	document.getElementById("deleteCommentButton").onclick = function() {	
+
+		this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Deleting comment';	
+		this.disabled = true; 
+
+		var url = '/delete/comment/' + id
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		var form = new FormData()
+		form.append("formkey", formkey());
+		xhr.withCredentials=true;
+		xhr.onload = function() {location.reload(true);};
+		xhr.send(form);
 }
+
+};
 
 post_reply=function(id){
 

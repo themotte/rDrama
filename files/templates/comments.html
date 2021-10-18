@@ -26,7 +26,7 @@
 
 {% if v %}
 	{% include "award_modal.html" %}
-	<script src="/assets/js/comments_v.js?v=59"></script>
+	<script src="/assets/js/comments_v.js?v=60"></script>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -376,7 +376,7 @@
 							{% if c.deleted_utc > 0 %}
 								<a class="list-inline-item text-muted d-none d-md-inline-block" href="javascript:void(0)" onclick="post_toast('/undelete/comment/{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</a>
 							{% else %}
-								<a class="list-inline-item text-muted d-none d-md-inline-block" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#deleteCommentModal"><i class="fas fa-trash-alt fa-fw"></i>Delete</a>
+								<a class="list-inline-item text-muted d-none d-md-inline-block" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_comment('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</a>
 							{% endif %}
 
 						{% endif %}
@@ -530,7 +530,7 @@
 						{% if c.deleted_utc > 0 %}
 							<a href="javascript:void(0)" onclick="post_toast('/undelete/comment/{{c.id}}')" data-bs-dismiss="modal" class="list-group-item"><i class="fas fa-trash-alt"></i>Undelete</a>
 						{% else %}
-							<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" class="list-group-item"><i class="fas fa-trash-alt"></i>Delete</a>
+							<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_comment('{{c.id}}')" class="list-group-item"><i class="fas fa-trash-alt"></i>Delete</a>
 						{% endif %}
 					{% endif %}
 
@@ -619,7 +619,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
-					<button id="deleteCommentButton" onclick="delete_comment('{{c.id}}')" class="btn btn-danger">Delete comment</button>
+					<button id="deleteCommentButton" class="btn btn-danger">Delete comment</button>
 				</div>
 			</div>
 		</div>
