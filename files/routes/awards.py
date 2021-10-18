@@ -250,7 +250,7 @@ def award_post(pid, v):
 		author = post.author
 		author.is_banned = AUTOJANNY_ACCOUNT
 		author.ban_reason = f"grass award used by @{v.username}"
-		g.db.add(self)
+		g.db.add(author)
 		link = f"[this post]({post.permalink})"
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 
@@ -331,7 +331,7 @@ def award_comment(cid, v):
 		author = comment.author
 		author.is_banned = AUTOJANNY_ACCOUNT
 		author.ban_reason = f"grass award used by @{v.username}"
-		g.db.add(self)
+		g.db.add(author)
 		link = f"[this comment]({comment.permalink})"
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 
