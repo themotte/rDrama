@@ -41,6 +41,10 @@
 		<img class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
 		<div class="px-3 text-truncate">
 		  <h5 class="text-truncate text-black">{{p.author.username}}</h5>
+		  {% if p.author.id != 995 %}<a id="button-unsub2" class="smolbtn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{p.author.username}}','button-unsub2','button-sub2')">Unfollow</a>{% endif %}
+		  <a id="button-sub2" class="smolbtn btn-primary {% if is_following or p.author.is_nofollow or p.author.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/follow/{{p.author.username}}','button-unsub2','button-sub2')">Follow</a>
+		  <button id="block-user-{{p.id}}" class="smolbtn btn-primary {% if p.is_blocking %}d-none{% endif %}" href="javascript:void(0)" onclick="alert('1')"><i class="fas fa-eye-slash"></i>Block</button>
+		  <a id="unblock-user-{{p.id}}" class="smolbtn btn-primary {% if not p.is_blocking %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block-user-{{p.id}}','unblock-user-{{p.id}}')"><i class="fas fa-eye"></i>Unblock</a>
 		</div>
 	  </div>
 	  <div class="px-3">
@@ -51,13 +55,13 @@
 		  <strong class="text-black">{{p.author.post_count}}</strong>
 		  <span class="text-black">posts</span>
 		</span>
-		<span class="ml-2">
+		<span class="ml-3">
 		  <strong class="text-black">{{p.author.comment_count}}</strong>
 		  <span class="text-black">comments</span>
 		</span>
-		<span class="ml-2">
+		<span class="ml-3">
 			<strong class="text-black">{{p.author.coins}}</strong>
-			<span class="text-black">dramacoins</span>
+			<span class="text-black">coins</span>
 		</span>  
 		&nbsp;&nbsp;&nbsp;&nbsp;
 	    <a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} target="_blank" class="ml-auto text-decoration-none">

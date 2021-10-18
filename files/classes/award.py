@@ -35,7 +35,7 @@ if site_name == "Drama":
 		"grass": {
 			"kind": "grass",
 			"title": "Grass",
-			"description": "Ban the author permenantly (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 			"icon": "fas fa-seedling",
 			"color": "text-success",
 			"price": 500

@@ -181,13 +181,13 @@
 		  <strong class="text-black">{{p.author.post_count}}</strong>
 		  <span class="text-black">posts</span>
 		</span>
-		<span class="ml-2">
+		<span class="ml-3">
 		  <strong class="text-black">{{p.author.comment_count}}</strong>
 		  <span class="text-black">comments</span>
 		</span>
-		<span class="ml-2">
+		<span class="ml-3">
 			<strong class="text-black">{{p.author.coins}}</strong>
-			<span class="text-black">dramacoins</span>
+			<span class="text-black">coins</span>
 		</span>  
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} target="_blank" class="ml-auto text-decoration-none">

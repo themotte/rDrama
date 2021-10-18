@@ -63,7 +63,7 @@ class Badge(Base):
 		if self.name == "Agendaposter":
 			ti = self.user.agendaposter_expires_utc
 			if ti: return self.badge.description + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
-			else: return self.badge.description + " permenantly" 
+			else: return self.badge.description + " permanently" 
 		elif self.description: return self.description
 		else: return self.badge.description
 

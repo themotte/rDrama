@@ -39,7 +39,7 @@ def shop(v):
 			"grass": {
 				"kind": "grass",
 				"title": "Grass",
-				"description": "Ban the author permenantly (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 				"icon": "fas fa-seedling",
 				"color": "text-success",
 				"price": 500
@@ -124,7 +124,7 @@ def buy(v, award):
 			"grass": {
 				"kind": "grass",
 				"title": "Grass",
-				"description": "Ban the author permenantly (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 				"icon": "fas fa-seedling",
 				"color": "text-success",
 				"price": 500
@@ -197,7 +197,7 @@ def grass_trigger(post=None, comment=None):
 	link = f"[this post]({post.permalink})" if post else f"[this comment]({comment.permalink})"
 
 	author.ban(reason="grass award used")
-	send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permenantly for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+	send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 
 ACTIONS = {
 	"ban": banaward_trigger,
