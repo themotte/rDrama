@@ -22,61 +22,6 @@
 
 </script>
 
-<style>
-	.popover {
-		max-width: 320px;
-		box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
-		border-color: #dadada;
-	}
-
-	.popover-arrow {
-		display: none !important;
-	}
-
-	.popover-user-profile {
-		display: flex;
-		flex-direction: column;
-		padding: 0;
-		background: var(--gray-600);
-	}
-
-	.popover-body {
-		padding: 0;
-		border-radius: .25rem;
-		overflow: hidden;
-	}
-
-	.mt-n6 {
-		margin-top: -1.75rem !important;
-	}
-
-	.avatar-72 {
-		width: 72px;
-		height: 72px;
-		object-fit: cover;
-	}
-
-	.h-64 {
-		height: 64px;
-	}
-
-	.object-cover {
-		object-fit: cover;
-	}
-
-	.text-black {
-		color: var(--black);
-	}
-
-	.smolbtn {
-		font-weight: 600;
-		font-size: .9rem;
-		border-radius: 0.2rem;
-		padding: 0.1rem 0.50rem 0rem 0.30rem;
-		background-color: var(--black) !important;
-	}
-</style>
-
 {% for p in listing %}
 
 <div style="display:none" id="popover-{{p.id}}">
@@ -91,7 +36,7 @@
 	  <div class="px-3">
 		<span class="text-black">{% if p.author.bio_html %}{{p.author.bio_html | safe}}{% endif %}</span>
 	  </div>
-	  <div class="border-top d-flex align-items-center px-2 my-3 gap-3" style="font-size:10px">
+	  <div class="border-top d-flex align-items-center px-2 my-3 gap-3 smol">
 		<span>
 		  <strong class="text-black">{{p.author.post_count}}</strong>
 		  <span class="text-black">posts</span>
@@ -624,6 +569,63 @@
 {% include "expanded_image_modal.html" %}
 
 <style>
+	.popover {
+		max-width: 320px;
+		box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
+		border-color: #dadada;
+	}
+
+	.popover-arrow {
+		display: none !important;
+	}
+
+	.popover-user-profile {
+		display: flex;
+		flex-direction: column;
+		padding: 0;
+		background: var(--gray-600);
+	}
+
+	.popover-body {
+		padding: 0;
+		border-radius: .25rem;
+		overflow: hidden;
+	}
+
+	.mt-n6 {
+		margin-top: -1.75rem !important;
+	}
+
+	.avatar-72 {
+		width: 72px;
+		height: 72px;
+		object-fit: cover;
+	}
+
+	.h-64 {
+		height: 64px;
+	}
+
+	.object-cover {
+		object-fit: cover;
+	}
+
+	.text-black {
+		color: var(--black);
+	}
+
+	.smolbtn {
+		font-weight: 600;
+		font-size: .9rem;
+		border-radius: 0.2rem;
+		padding: 0.1rem 0.50rem 0rem 0.30rem;
+		background-color: var(--black) !important;
+	}
+	
+	.smol {
+		font-size: 10px;
+	}
+	
 	.mod:before {
 		content: '(((';
 	}

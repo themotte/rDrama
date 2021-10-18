@@ -121,7 +121,7 @@
 	  <div class="px-3">
 		<span class="text-black">{% if c.author.bio_html %}{{c.author.bio_html | safe}}{% endif %}</span>
 	  </div>
-	  <div class="border-top d-flex align-items-center px-2 my-3 gap-3" style="font-size:10px">
+	  <div class="border-top d-flex align-items-center px-2 my-3 gap-3 smol">
 		<span>
 		  <strong class="text-black">{{c.author.post_count}}</strong>
 		  <span class="text-black">posts</span>
@@ -778,6 +778,10 @@
 		border-radius: 0.2rem;
 		padding: 0.1rem 0.50rem 0rem 0.30rem;
 		background-color: var(--black) !important;
+	}
+
+	.smol {
+		font-size: 10px;
 	}
 </style>
 
