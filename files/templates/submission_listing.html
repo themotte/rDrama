@@ -77,6 +77,14 @@
 	.text-black {
 		color: var(--black);
 	}
+
+	.smolbtn {
+		font-weight: 600;
+		font-size: .9rem;
+		border-radius: 0.2rem;
+		padding: 0.1rem 0.50rem 0rem 0.30rem;
+		background-color: var(--black) !important;
+	}
 </style>
 
 {% for p in listing %}
@@ -88,8 +96,10 @@
 		<img class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
 		<div class="px-3 text-truncate">
 		  <h5 class="text-truncate text-black">{{p.author.username}}</h5>
-		  <a id="block-user-{{p.id}}" class="text-black list-inline-item {% if p.is_blocking %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','block-user-{{p.id}}','unblock-user-{{p.id}}')"><i class="fas fa-eye-slash"></i>Block</a>
-		  <a id="unblock-user-{{p.id}}" class="text-black list-inline-item {% if not p.is_blocking %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block-user-{{p.id}}','unblock-user-{{p.id}}')"><i class="fas fa-eye"></i>Unblock</a>
+		  {% if p.author.id != 995 %}<a id="button-unsub2" class="smolbtn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">Unfollow</a>{% endif %}
+		  <a id="button-sub2" class="smolbtn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">Follow</a>						
+		  <a id="block-user-{{p.id}}" class="smolbtn btn-primary {% if p.is_blocking %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','block-user-{{p.id}}','unblock-user-{{p.id}}')"><i class="fas fa-eye-slash"></i>Block</a>
+		  <a id="unblock-user-{{p.id}}" class="smolbtn btn-primary {% if not p.is_blocking %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block-user-{{p.id}}','unblock-user-{{p.id}}')"><i class="fas fa-eye"></i>Unblock</a>
 		</div>
 	  </div>
 	  <div class="px-3">
