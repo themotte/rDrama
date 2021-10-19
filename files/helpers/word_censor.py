@@ -43,7 +43,7 @@ def create_slur_regex() -> Pattern[str]:
     """Creates the regex that will find the slurs"""
     single_words = "|".join([slur.lower() for slur in SLURS.keys()])
 
-    return re.compile(rf"(?i)(?<=\s|>)({single_words})([\s<,.])")
+    return re.compile(rf"(?i)(?<=\s|>)({single_words})(?=[\s<,.])")
 
 
 def create_replace_map() -> Dict[str, str]:
@@ -60,9 +60,9 @@ REPLACE_MAP = create_replace_map()
 
 def sub_matcher(match: Match) -> str:
     """given a match returns the correct replacer string"""
-    found = match.group(1)
+    found = match.group(0)
     # if it does not find the correct capitalization, it tries the all lower, or return the original word
-    return (REPLACE_MAP.get(found) or REPLACE_MAP.get(found.lower()) or found) + match.group(2)
+    return REPLACE_MAP.get(found) or REPLACE_MAP.get(found.lower()) or found
 
 
 def censor_slurs(body: str, logged_user) -> str:
