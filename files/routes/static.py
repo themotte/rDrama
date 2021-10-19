@@ -160,6 +160,7 @@ def patrons(v):
 	return render_template("patrons.html", v=v, result=result)
 
 @app.get("/admins")
+@app.get("/badmins")
 @auth_desired
 def admins(v):
 	admins = g.db.query(User).options(lazyload('*')).filter_by(admin_level=6).order_by(User.coins.desc()).all()
@@ -167,6 +168,7 @@ def admins(v):
 
 
 @app.get("/log")
+@app.get("/modlog")
 @auth_desired
 def log(v):
 
@@ -215,6 +217,8 @@ def api(v):
 	return render_template("api.html", v=v)
 
 @app.get("/contact")
+@app.get("/press")
+@app.get("/media")
 @auth_required
 def contact(v):
 
