@@ -300,7 +300,9 @@ class Comment(Base):
 
 		if not body: return ""
 
+    t = time.time()
 		body = censor_slurs(body, v)
+		print(time.time() - t)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
