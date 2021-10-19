@@ -52,7 +52,7 @@ def test_get_permutations_slur_wiht_link_replacer():
     "retard": "r-slur",
 })
 def test_create_slur_regex():
-    expected = r"(?i)(?<=\s|>)(kill yourself|faggot|nig|retard)(?=\s|<)"
+    expected = r"(?i)(?<=\s|>)(kill yourself|faggot|nig|retard)(?=[\s<,.])"
 
     assert_that(create_slur_regex()).is_equal_to(re.compile(expected))
 
@@ -91,8 +91,7 @@ def test_create_replace_map():
 
 @patch("files.helpers.word_censor.REPLACE_MAP", {'retard': 'r-slur', 'Faggot': 'Cute twink', 'NIG': '🏀'})
 def test_sub_matcher():
-    regex = re.compile(
-        r"(?i)(?<=\s|>)(kill yourself|retard)|(kill yourself|retard)(?=\s|<)|(?<=\s|>)(nig|faggot)(?=\s|<)")
+    regex = re.compile(r"(?i)(?<=\s|>)(kill yourself|retard|nig|faggot)(?=[\s<,.])")
 
     match = regex.search("<p>retard</p>")
     assert_that(sub_matcher(match)).is_equal_to("r-slur")
@@ -121,6 +120,8 @@ def test_censor_slurs():
     assert_that(censor_slurs("<p>retard</p>", None)).is_equal_to("<p>r-slur</p>")
     assert_that(censor_slurs('... ReTaRd ...', None)).is_equal_to('... r-slur ...')
     assert_that(censor_slurs("<p>Manlet get out!</p>", None)).is_equal_to("<p>Little king get out!</p>")
+    assert_that(censor_slurs("... retard. other", None)).is_equal_to("... r-slur. other")
+    assert_that(censor_slurs("... retard, other", None)).is_equal_to("... r-slur, other")
 
     # does not work:
     assert_that(censor_slurs("<p>preretard</p>", None)).is_equal_to("<p>preretard</p>")

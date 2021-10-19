@@ -43,7 +43,7 @@ def create_slur_regex() -> Pattern[str]:
     """Creates the regex that will find the slurs"""
     single_words = "|".join([slur.strip().lower() for slur in SLURS.keys()])
 
-    return re.compile(rf"(?i)(?<=\s|>)({single_words})(?=\s|<)")
+    return re.compile(rf"(?i)(?<=\s|>)({single_words})(?=[\s<,.])")
 
 
 def create_replace_map() -> Dict[str, str]:
