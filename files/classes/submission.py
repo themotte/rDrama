@@ -9,7 +9,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 
 from files.__main__ import Base
-from files.helpers.const import SLURS, AUTOPOLLER_ACCOUNT
+from files.helpers.const import AUTOPOLLER_ACCOUNT
 from files.helpers.lazy import lazy
 from .flags import Flag
 from ..helpers.word_censor import censor_slurs
@@ -365,8 +365,7 @@ class Submission(Base):
 		elif self.title_html: title = self.title_html
 		else: title = self.title
 
-		if not v or v.slurreplacer:
-			for s,r in SLURS.items(): title = title.replace(s, r) 
+		title = censor_slurs(title, v)
 
 		return title
 
@@ -375,8 +374,7 @@ class Submission(Base):
 		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6): return 'COUNTRY CLUB MEMBERS ONLY'
 		else: title = self.title
 
-		if not v or v.slurreplacer:
-			for s,r in SLURS.items(): title = title.replace(s, r) 
+		title = censor_slurs(title, v)
 
 		return title
 
