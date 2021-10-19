@@ -21,7 +21,7 @@ def api_flag_post(pid, v):
 
 		for i in re.finditer(':(.{1,30}?):', reason):
 			if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
-				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp">')
+				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="http://{site}/assets/images/emojis/{i.group(1)}.webp">')
 
 		flag = Flag(post_id=post.id,
 					user_id=v.id,
@@ -53,7 +53,7 @@ def api_flag_comment(cid, v):
 
 		for i in re.finditer(':(.{1,30}?):', reason):
 			if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
-				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp">')
+				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" title="{i.group(1)}" delay="0" height=20 src="http://{site}/assets/images/emojis/{i.group(1)}.webp">')
 
 		flag = CommentFlag(comment_id=comment.id,
 					user_id=v.id,

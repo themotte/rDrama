@@ -63,7 +63,7 @@ def publish(pid, v):
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
-		send_notification(AUTOJANNY_ACCOUNT, user, f"@{v.username} has made a new post: [{post.title}](https://{site}{post.permalink})")
+		send_notification(AUTOJANNY_ACCOUNT, user, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})")
 
 	g.db.commit()
 
@@ -297,7 +297,7 @@ def edit_post(pid, v):
 			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 			
-		message = f"@{v.username} has mentioned you: https://{site}{p.permalink}"
+		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
 		for x in notify_users:
 			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x.id).first()
 			if not existing: send_notification(NOTIFICATIONS_ACCOUNT, x, message)
@@ -349,10 +349,10 @@ def filter_title(title):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">', title)
+				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 src="http://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">', title)
 				
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp">', title)
+			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="http://{site}/assets/images/emojis/{emoji}.webp">', title)
 	
 	if len(title) > 1500: abort(400)
 	else: return title
@@ -752,12 +752,12 @@ def submit_post(v):
 		user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
-	for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: https://{site}{new_post.permalink}")
+	for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 		
 	if not new_post.private:
 		for follow in v.followers:
 			user = get_account(follow.user_id)
-			send_notification(AUTOJANNY_ACCOUNT, user, f"@{v.username} has made a new post: [{title}](https://{site}{new_post.permalink})")
+			send_notification(AUTOJANNY_ACCOUNT, user, f"@{v.username} has made a new post: [{title}](http://{site}{new_post.permalink})")
 
 	g.db.add(new_post)
 	g.db.flush()
@@ -879,7 +879,7 @@ def submit_post(v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 	if "[changelog]" in new_post.title or "(changelog)" in new_post.title:
-		send_message(f"https://{site}{new_post.permalink}")
+		send_message(f"http://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()

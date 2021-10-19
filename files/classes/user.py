@@ -431,14 +431,14 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"https://{site}/assets/images/{site_name}/preview.gif"
+		else: return f"http://{site}/assets/images/{site_name}/preview.gif"
 
 	@property
 	@lazy
 	def profile_url(self):
 		if self.profileurl: return self.profileurl
-		elif "rama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.gif"
-		else: return f"https://{site}/assets/images/default-profile-pic.gif"
+		elif "rama" in site: return f"http://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.gif"
+		else: return f"http://{site}/assets/images/default-profile-pic.gif"
 
 	@property
 	@lazy
