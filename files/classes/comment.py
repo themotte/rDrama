@@ -298,8 +298,10 @@ class Comment(Base):
 
 		if not body: return ""
 
+		t = time.time()
 		if not v or v.slurreplacer: 
 			for s, r in SLURS.items(): body = body.replace(s, r) 
+		print(time.time() - t)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
