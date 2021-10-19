@@ -853,16 +853,14 @@ def settings_title_change(v):
 	
 	new_name=request.values.get("title").strip()[:100].replace("𒐪","")
 
-	if new_name==v.customtitle:
-		return render_template("settings_profile.html",
-						   v=v,
-						   error="You didn't change anything")
+	if new_name==v.customtitle: return render_template("settings_profile.html", v=v, error="You didn't change anything")
 
 	v.customtitleplain = new_name
 
 	v.customtitle = filter_title(new_name)
 
-	g.db.add(v)
-	g.db.commit()
+	if len(v.customtitle) < 1000:
+		g.db.add(v)
+		g.db.commit()
 
 	return redirect("/settings/profile")
