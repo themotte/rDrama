@@ -40,20 +40,14 @@ def get_permutations_slur(slur: str, replacer: str = "_") -> Dict[str, str]:
 
 
 def create_slur_regex() -> Pattern[str]:
-    # words that can have suffixes and prefixes
-    words = "|".join([slur.lower() for slur in SLURS.keys() if not slur.startswith(" ")])
+    """Creates the regex that will find the slurs"""
+    single_words = "|".join([slur.strip().lower() for slur in SLURS.keys()])
 
-    # to understand the weird groups see: https://www.regular-expressions.info/lookaround.html
-    regex = rf"(?<=\s|>)({words})|({words})(?=\s|<)"
-
-    # words that need to match exactly
-    single_words = "|".join([slur.strip().lower() for slur in SLURS.keys() if slur.startswith(" ")])
-
-    return re.compile(rf"(?i){regex}|(?<=\s|>)({single_words})(?=\s|<)")
+    return re.compile(rf"(?i)(?<=\s|>)({single_words})(?=\s|<)")
 
 
 def create_replace_map() -> Dict[str, str]:
-    """Creates the map that will be used to get the mathing replaced for the given slur"""
+    """Creates the map that will be used to get the matching replaced for the given slur"""
     dicts = [get_permutations_slur(slur, replacer) for (slur, replacer) in SLURS.items()]
 
     # flattens the list of dict to a single dict
