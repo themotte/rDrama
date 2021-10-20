@@ -515,11 +515,11 @@ def submit_post(v):
 		# filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
 
 		# new_url = ParseResult(scheme="https",
-		# 					netloc=parsed_url.netloc,
-		# 					path=parsed_url.path,
-		# 					params=parsed_url.params,
-		# 					query=urlencode(filtered, doseq=True),
-		# 					fragment=parsed_url.fragment)
+		#					netloc=parsed_url.netloc,
+		#					path=parsed_url.path,
+		#					params=parsed_url.params,
+		#					query=urlencode(filtered, doseq=True),
+		#					fragment=parsed_url.fragment)
 		# url = urlunparse(new_url)
 
 		repost = g.db.query(Submission).options(lazyload('*')).filter(

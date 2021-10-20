@@ -69,6 +69,14 @@ def shop(v):
 				"color": "text-warning",
 				"price": 750
 			},
+			"unpin": {
+				"kind": "unpin",
+				"title": "1-Hour Unpin",
+				"description": "Removes 1 hour from the pin duration of the post.",
+				"icon": "fas fa-thumbtack",
+				"color": "text-black",
+				"price": 1000
+			},
 		}
 	else:
 		AWARDS = {
@@ -103,6 +111,14 @@ def shop(v):
 				"icon": "fas fa-thumbtack",
 				"color": "text-warning",
 				"price": 750
+			},
+			"unpin": {
+				"kind": "unpin",
+				"title": "1-Hour Unpin",
+				"description": "Removes 1 hour from the pin duration of the post.",
+				"icon": "fas fa-thumbtack",
+				"color": "text-black",
+				"price": 1000
 			},
 		}
 
@@ -194,6 +210,14 @@ def buy(v, award):
 				"color": "text-warning",
 				"price": 750
 			},
+			"unpin": {
+				"kind": "unpin",
+				"title": "1-Hour Unpin",
+				"description": "Removes 1 hour from the pin duration of the post.",
+				"icon": "fas fa-thumbtack",
+				"color": "text-black",
+				"price": 1000
+			},
 		}
 	else:
 		AWARDS = {
@@ -228,6 +252,14 @@ def buy(v, award):
 				"icon": "fas fa-thumbtack",
 				"color": "text-warning",
 				"price": 750
+			},
+			"unpin": {
+				"kind": "unpin",
+				"title": "1-Hour Unpin",
+				"description": "Removes 1 hour from the pin duration of the post.",
+				"icon": "fas fa-thumbtack",
+				"color": "text-black",
+				"price": 1000
 			},
 		}
 
@@ -337,6 +369,14 @@ def award_post(pid, v):
 		post.stickied = f"t:{t}"
 		g.db.add(post)
 		cache.delete_memoized(frontlist)
+	elif kind == "unpin":
+		if not (post.stickied and post.stickied.startswith("t:")): abort(403)
+		t = int(post.stickied[2:]) - 3600
+		if time.time() > t:
+			post.stickied = None
+			cache.delete_memoized(frontlist)
+		else: post.stickied = f"t:{t}"
+		g.db.add(post)
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)

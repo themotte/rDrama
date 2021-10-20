@@ -64,6 +64,14 @@ if site_name == "Drama":
 			"color": "text-warning",
 			"price": 750
 		},
+		"unpin": {
+			"kind": "unpin",
+			"title": "1-Hour Unpin",
+			"description": "Removes 1 hour from the pin duration of the post.",
+			"icon": "fas fa-thumbtack",
+			"color": "text-black",
+			"price": 1000
+		},
 	}
 else:
 	AWARDS = {
@@ -98,6 +106,14 @@ else:
 			"icon": "fas fa-thumbtack",
 			"color": "text-warning",
 			"price": 750
+		},
+		"unpin": {
+			"kind": "unpin",
+			"title": "1-Hour Unpin",
+			"description": "Removes 1 hour from the pin duration of the post.",
+			"icon": "fas fa-thumbtack",
+			"color": "text-black",
+			"price": 1000
 		},
 	}
 
