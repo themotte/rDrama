@@ -332,7 +332,7 @@ def award_post(pid, v):
 		link = f"[this post]({post.permalink})"
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 	elif kind == "pin":
-		if post.stickied and post.stickied.startswith("t:"): t = int(post.stickied[2:]) + 600
+		if post.stickied and post.stickied.startswith("t:"): t = int(post.stickied[2:]) + 3600
 		else: t = int(time.time()) + 3600
 		post.stickied = f"t:{t}"
 		g.db.add(post)
