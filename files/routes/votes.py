@@ -2,9 +2,9 @@ from files.helpers.wrappers import *
 from files.helpers.get import *
 from files.classes import *
 from flask import *
-from files.__main__ import app, limiter
+from files.__main__ import app, limiter, cache
 from sqlalchemy.orm import joinedload
-
+from .front import frontlist
 
 @app.get("/votes")
 @auth_desired
@@ -101,7 +101,6 @@ def api_vote_post(post_id, new, v):
 		post.stickied = None
 		g.db.add(post)
 		cache.delete_memoized(frontlist)
-
 	try:
 		g.db.flush()
 		post.upvotes = g.db.query(Vote.id).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
