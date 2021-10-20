@@ -43,7 +43,7 @@ SLURS = {
     "i hate marsey": "i love marsey",
     "libertarian": "pedophile",
     "billie eilish": "Billie Eilish (fat cow)",
-    "dancing Israelis": "i love Israel",
+    "dancing israelis": "i love Israel",
     "sodomite": "total dreamboat",
     "pajeet": "sexy Indian dude",
     "female": "birthing person",
