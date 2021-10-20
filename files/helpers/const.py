@@ -119,10 +119,9 @@ PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
 SLUR_REGEX = re.compile(rf"(?i)(?<=\s|>)({single_words})(?=[\s<,.])")
-REPLACE_MAP = SLURS.items()
 
 def sub_matcher(match: re.Match) -> str:
-    return REPLACE_MAP[match.group(0)]
+    return SLURS[match.group(0)]
 
 def censor_slurs(body: str, logged_user) -> str:
     if not logged_user or logged_user.slurreplacer:
