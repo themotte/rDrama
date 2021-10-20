@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<style>
+		.moving-van{
+			position: absolute;
+			width: 100px;
+			z-index: 10;
+			left: -18%;
+			top: 50%;
+			animation: moveBus 5s linear infinite !important;
+		}
+
+		@keyframes moveBus {
+			0% {
+				left: -18%;
+			}
+			100% {
+				left: 110%;
+			}
+		}
+	</style>
+
+	<div class="moving-van">
+		<img src="/assets/images/emojis/marseytrain.webp">
+	</div>
+  
 	<script src="/assets/js/lozad.js?v=53"></script>
 	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
