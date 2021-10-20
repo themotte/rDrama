@@ -236,9 +236,6 @@ def award_post(pid, v):
 	if not post or post.is_banned or post.deleted_utc > 0:
 		return {"error": "That post doesn't exist or has been deleted or removed."}, 404
 
-	if post.author_id == v.id:
-		return {"error": "You can't award yourself."}, 403
-
 	existing_award = g.db.query(AwardRelationship).options(lazyload('*')).filter(
 		and_(
 			AwardRelationship.submission_id == post.id,
@@ -312,9 +309,6 @@ def award_comment(cid, v):
 
 	if not c or c.is_banned or c.deleted_utc > 0:
 		return {"error": "That comment doesn't exist or has been deleted or removed."}, 404
-
-	if c.author_id == v.id:
-		return {"error": "You can't award yourself."}, 403
 
 	existing_award = g.db.query(AwardRelationship).options(lazyload('*')).filter(
 		and_(
