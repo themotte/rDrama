@@ -55,7 +55,7 @@ SLURS = {
     "holohoax": "i tried to claim the Holocaust didn't happen because I am a pencil-dicked imbecile and the word filter caught me lol",
     "groomercord": "discord (actually a pretty cool service)",
     "pedocord": "discord (actually a pretty cool service)",
-    "i hate Carp": "i love Carp",
+    "i hate carp": "i love Carp",
     "manlet": "little king",
     "gamer": "g*mer",
     "journalist": "journ*list",
