@@ -12159,12 +12159,6 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
   border-top-right-radius: 0.35rem;
 }
 
-#frontpage .posts .card:nth-last-of-type(2), #userpage .posts .card:nth-last-of-type(2), #search .posts .card:nth-last-of-type(2) {
-  border-bottom-left-radius: 0.35rem;
-  border-bottom-right-radius: 0.35rem;
-  border-bottom: 0.1px solid var(--gray-400);
-}
-
 #frontpage .posts .card, #userpage .posts .card, #search .posts .card {
   border-width: 0.1px 0.1px 0 0.1px;
   border-color: #303030;
@@ -14641,4 +14635,16 @@ blockquote p {
 .unread {
   padding: 10px !important;
   border: 2px solid var(--primary) !important;
+}
+
+@media (min-width: 576px)
+{
+  .modal-dialog {
+    max-width: 65% !important;
+    margin: 1.75rem auto !important;
+  }
+}
+
+.text-pink {
+  color: #ff66ac !important;
 }

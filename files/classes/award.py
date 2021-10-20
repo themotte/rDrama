@@ -10,7 +10,7 @@ if site_name == "Drama":
 	AWARDS = {
 		"ban": {
 			"kind": "ban",
-			"title": "One-Day Ban",
+			"title": "1-Day Ban",
 			"description": "Bans the author for a day.",
 			"icon": "fas fa-gavel",
 			"color": "text-danger",
@@ -39,7 +39,15 @@ if site_name == "Drama":
 			"icon": "fas fa-seedling",
 			"color": "text-success",
 			"price": 10000
-		}
+		},
+		"train": {
+			"kind": "train",
+			"title": "Train",
+			"description": "Summons a train on the post.",
+			"icon": "fas fa-train",
+			"color": "text-pink",
+			"price": 500
+		},
 	}
 else:
 	AWARDS = {
@@ -57,6 +65,14 @@ else:
 			"description": "Puts stars on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
+			"price": 500
+		},
+		"train": {
+			"kind": "train",
+			"title": "Train",
+			"description": "Summons a train on the post.",
+			"icon": "fas fa-train",
+			"color": "text-pink",
 			"price": 500
 		}
 	}

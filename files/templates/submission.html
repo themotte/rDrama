@@ -13,6 +13,54 @@
 
 {% block title %}
 
+{% if p.award_count("train") %}
+	<style>
+		@keyframes train {
+			0% {
+				left: -10%;
+			}
+			100% {
+				left: 110%;
+			}
+		}
+
+		@keyframes trainrev {
+			0% {
+				left: 110%;
+			}
+			100% {
+				left: -10%;
+			}
+		}
+		
+		.train {
+			position: absolute;
+			width: 100px;
+			z-index: 10;
+			animation: train 5s linear infinite !important;
+		}
+
+		.trainrev {
+			animation: trainrev 5s linear infinite !important;
+		}
+	</style>
+
+	<img class="train" style="top:10%" src="/assets/images/emojis/marseytrain.webp">
+{% endif %}
+
+{% if p.award_count("train") > 1 %}
+	<img class="train trainrev mirrored" style="top:35%" src="/assets/images/emojis/marseytrain.webp">
+{% endif %}
+
+{% if p.award_count("train") > 2 %}
+	<img class="train" style="top:60%" src="/assets/images/emojis/marseytrain.webp">
+{% endif %}
+
+{% if p.award_count("train") > 3 %}
+	<img class="train trainrev mirrored" style="top:85%" src="/assets/images/emojis/marseytrain.webp">
+{% endif %}
+
+
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="/assets/js/new_comments_count.js?v=53"></script>
 

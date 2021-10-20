@@ -14,7 +14,7 @@ def shop(v):
 		AWARDS = {
 			"ban": {
 				"kind": "ban",
-				"title": "One-Day Ban",
+				"title": "1-Day Ban",
 				"description": "Bans the author for a day.",
 				"icon": "fas fa-gavel",
 				"color": "text-danger",
@@ -43,6 +43,14 @@ def shop(v):
 				"icon": "fas fa-seedling",
 				"color": "text-success",
 				"price": 10000
+			},
+			"train": {
+				"kind": "train",
+				"title": "Train",
+				"description": "Summons a train on the post.",
+				"icon": "fas fa-train",
+				"color": "text-pink",
+				"price": 500
 			}
 		}
 	else:
@@ -61,6 +69,14 @@ def shop(v):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
+				"price": 500
+			},
+			"train": {
+				"kind": "train",
+				"title": "Train",
+				"description": "Summons a train on the post.",
+				"icon": "fas fa-train",
+				"color": "text-pink",
 				"price": 500
 			}
 		}
@@ -99,7 +115,7 @@ def buy(v, award):
 		AWARDS = {
 			"ban": {
 				"kind": "ban",
-				"title": "One-Day Ban",
+				"title": "1-Day Ban",
 				"description": "Bans the author for a day.",
 				"icon": "fas fa-gavel",
 				"color": "text-danger",
@@ -128,6 +144,14 @@ def buy(v, award):
 				"icon": "fas fa-seedling",
 				"color": "text-success",
 				"price": 10000
+			},
+			"train": {
+				"kind": "train",
+				"title": "Train",
+				"description": "Summons a train on the post.",
+				"icon": "fas fa-train",
+				"color": "text-pink",
+				"price": 500
 			}
 		}
 	else:
@@ -146,6 +170,14 @@ def buy(v, award):
 				"description": "Puts stars on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
+				"price": 500
+			},
+			"train": {
+				"kind": "train",
+				"title": "Train",
+				"description": "Summons a train on the post.",
+				"icon": "fas fa-train",
+				"color": "text-pink",
 				"price": 500
 			}
 		}
@@ -174,13 +206,6 @@ def buy(v, award):
 
 	return {"message": "Award bought!"}
 
-
-ALLOW_MULTIPLE = (
-	"ban",
-	"shit",
-	"fireflies",
-	"grass"
-)
 
 @app.post("/post/<pid>/awards")
 @limiter.limit("1/second")
@@ -222,9 +247,6 @@ def award_post(pid, v):
 		)
 	).first()
 
-	if existing_award and kind not in ALLOW_MULTIPLE:
-		return {"error": "You can't give that award multiple times to the same post."}, 409
-
 	post_award.submission_id = post.id
 	g.db.add(post_award)
 
@@ -240,7 +262,7 @@ def award_post(pid, v):
 		link = f"[this post]({post.permalink})"
 
 		if not author.is_suspended:
-			author.ban(reason=f"one-day ban award used by @{v.username} on /post/{post.id}", days=1)
+			author.ban(reason=f"1-Day ban award used by @{v.username} on /post/{post.id}", days=1)
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
 			author.unban_utc += 24*60*60
@@ -302,9 +324,6 @@ def award_comment(cid, v):
 		)
 	).first()
 
-	if existing_award and kind not in ALLOW_MULTIPLE:
-		return {"error": "You can't give that award multiple times to the same comment."}, 409
-
 	comment_award.comment_id = c.id
 	g.db.add(comment_award)
 
@@ -321,7 +340,7 @@ def award_comment(cid, v):
 		link = f"[this comment]({c.permalink})"
 
 		if not author.is_suspended:
-			author.ban(reason=f"one-day ban award used by @{v.username} on /comment/{c.id}", days=1)
+			author.ban(reason=f"1-Day ban award used by @{v.username} on /comment/{c.id}", days=1)
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
 			author.unban_utc += 24*60*60
