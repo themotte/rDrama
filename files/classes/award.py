@@ -14,7 +14,15 @@ if site_name == "Drama":
 			"description": "Bans the author for a day.",
 			"icon": "fas fa-gavel",
 			"color": "text-danger",
-			"price": 5000
+			"price": 3000
+		},
+		"unban": {
+			"kind": "unban",
+			"title": "1-Day Unban",
+			"description": "Removes 1 day from the ban duration of the recipient.",
+			"icon": "fas fa-gavel",
+			"color": "text-success",
+			"price": 3500
 		},
 		"shit": {
 			"kind": "shit",
