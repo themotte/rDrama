@@ -97,6 +97,10 @@ def api_vote_post(post_id, new, v):
 					)
 		g.db.add(vote)
 	
+	if post.stickied and post.stickied.startswith("t:") and int(time.time()) > int(post.stickied[2:]):
+		post.stickied = None
+		g.db.add(post)
+
 	try:
 		g.db.flush()
 		post.upvotes = g.db.query(Vote.id).options(lazyload('*')).filter_by(submission_id=post.id, vote_type=1).count()
@@ -104,10 +108,6 @@ def api_vote_post(post_id, new, v):
 		g.db.add(post)
 		g.db.commit()
 	except: g.db.rollback()
-
-	if post.stickied and post.stickied.startswith("t:") and int(time.time()) > int(post.stickied[2:]):
-		post.stickied = None
-		g.db.add(post)
 	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
