@@ -1,39 +1,8 @@
 from os import environ
+import re
 
 site = environ.get("DOMAIN", '').strip()
 
-#####################
-# Formatting rules: #
-#####################
-# If all letters are lowercase then it will match lowercase, first letter up in first or all the words and all letters up
-#    "dancing israelis" will match:
-#       - "dancing israelis"
-#       - "Dancing israelis"
-#       - "Dancing Israelis"
-#       - "DANCING ISRAELIS"
-#
-# If some letters are Uppercase, the same, but with the additional option of the original casing, and respecting already existing uppercase
-#    "NoNewNormal" will match:
-#       - "NoNewNormal"
-#       - "nonewnormal"
-#       - "Nonewnormal"
-#       - "NONEWNORMAL"
-#
-# Now on the replacement side, The replacement will have the same capitalization as the slur if the replacement is lowercase
-#   "kill yourself" -> "keep yourself safe"
-#   "Kill yourself" -> "Keep yourself safe"
-#   "Kill Yourself" -> "Keep Yourself Safe"
-#   "KILL YOURSELF" -> "KEEP YOURSELF SAFE"
-#
-# If the replacement side has some capitalization, then that capitalization will always be maintained
-#   for the pair: <"pajeet": "sexy Indian dude"> it will replace:
-#       "pajeet" -> "sexy Indian dude"
-#       "Pajeet" -> "Sexy Indian dude"
-#       "PAJEET" -> "SEXY INDIAN DUDE"
-#
-# There is a super special case that if the replacer starts with "http" then it never changes capitalization
-#
-# TL;DR: Just read the above once, or don't, and try to guess!
 SLURS = {
     "faggot": "cute twink",
     "fag": "cute twink",
@@ -147,3 +116,15 @@ else:
 
 PUSHER_INSTANCE_ID = '02ddcc80-b8db-42be-9022-44c546b4dce6'
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
+
+single_words = "|".join([slur.lower() for slur in SLURS.keys()])
+SLUR_REGEX = re.compile(rf"(?i)(?<=\s|>)({single_words})(?=[\s<,.])")
+REPLACE_MAP = SLURS.items()
+
+def sub_matcher(match: re.Match) -> str:
+    return REPLACE_MAP.get(match.group(0))
+
+def censor_slurs(body: str, logged_user) -> str:
+    if not logged_user or logged_user.slurreplacer:
+        body = SLUR_REGEX.sub(sub_matcher, body)
+    return body

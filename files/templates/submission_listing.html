@@ -140,19 +140,19 @@
 					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-img">
 				{% elif not p.url %}
 					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
-						<img loading="lazy" src="/assets/images/loading.gif" data-src="{{p.thumb_url}}" class="post-img">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif p.is_image %}
 					<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
-						<img loading="lazy" src="/assets/images/loading.gif" data-src="{{p.thumb_url}}" class="post-img">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif (p.url and p.url.lower().endswith('.mp4')) or (p.embed_url and "youtu" in p.domain) or (p.url and "streamable.com/e/" in p.url) %}
 					<a href="javascript:void(0)" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none')">
-						<img loading="lazy" src="/assets/images/loading.gif" data-src="{{p.thumb_url}}" class="post-img">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% else %}
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-						<img loading="lazy" src="/assets/images/loading.gif" data-src="{{p.thumb_url}}" class="post-img">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% endif %}
 			</div>

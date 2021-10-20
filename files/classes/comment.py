@@ -9,10 +9,9 @@ from sqlalchemy.orm import relationship, deferred, lazyload
 
 from files.__main__ import Base
 from files.classes.votes import CommentVote
-from files.helpers.const import AUTOPOLLER_ACCOUNT
+from files.helpers.const import AUTOPOLLER_ACCOUNT, censor_slurs
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
-from ..helpers.word_censor import censor_slurs
 
 site = environ.get("DOMAIN").strip()
 
@@ -53,8 +52,10 @@ class Comment(Base):
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
 	child_comments = relationship("Comment", remote_side=[parent_comment_id], viewonly=True)
-	awards = relationship("AwardRelationship", viewonly=True)
+	#awards = relationship("AwardRelationship", viewonly=True)
 
+	awards = None
+	
 	def __init__(self, *args, **kwargs):
 
 		if "created_utc" not in kwargs:
@@ -294,7 +295,9 @@ class Comment(Base):
 		return data
 
 	def realbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
+		if self.post and self.post.club and not (v and v.paid_dues):
+			if v: return f"<p>{v.username} dox/p>" 
+			return "<p>COUNTRY CLUB ONLY</p>"
 
 		body = self.body_html
 
@@ -320,7 +323,9 @@ class Comment(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
+		if self.post and self.post.club and not (v and v.paid_dues):
+			if v: return f"<p>{v.username} dox/p>" 
+			return "<p>COUNTRY CLUB ONLY</p>"
 
 		body = self.body
 

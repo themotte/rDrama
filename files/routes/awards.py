@@ -342,16 +342,13 @@ def award_comment(cid, v):
 	if request.referrer and len(request.referrer) > 1: return redirect(request.referrer)
 	else: return redirect("/")
 
-@app.get("/admin/user_award")
-@auth_required
+@app.get("/admin/awards")
+@admin_level_required(6)
 def admin_userawards_get(v):
 
-	if v.admin_level < 6:
-		abort(403)
+	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
 
-	return render_template("admin/user_award.html", awards=list(AWARDS.values()), v=v)
-
-@app.post("/admin/user_award")
+@app.post("/admin/awards")
 @limiter.limit("1/second")
 @auth_required
 @validate_formkey
@@ -399,4 +396,4 @@ def admin_userawards_post(v):
 
 	g.db.commit()
 
-	return render_template("admin/user_award.html", awards=list(AWARDS.values()), v=v)
+	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)

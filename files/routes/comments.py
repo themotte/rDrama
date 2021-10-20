@@ -37,6 +37,13 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	comment = get_comment(cid, v=v)
 	
+	if v and request.values.get("read"):
+		notif = g.db.query(Notification).options(lazyload('*')).filter_by(comment_id=cid, user_id=v.id, read=False).first()
+		if notif:
+			notif.read = True
+			g.db.add(notif)
+			g.db.commit()
+
 	if comment.post and comment.post.club and not (v and v.paid_dues): abort(403)
 
 	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level == 6) : abort(403)
@@ -525,7 +532,7 @@ def api_comment(v):
 					  'notification': {
 							'title': f'New reply by @{v.username}',
 							'body': c.body,
-							'deep_link': f'http://{site}{c.permalink}?context=10#context',
+							'deep_link': f'http://{site}{c.permalink}?context=10&read=true#context',
 					  },
 					},
 				  },

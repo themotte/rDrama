@@ -9,10 +9,9 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 
 from files.__main__ import Base
-from files.helpers.const import AUTOPOLLER_ACCOUNT
+from files.helpers.const import AUTOPOLLER_ACCOUNT, censor_slurs
 from files.helpers.lazy import lazy
 from .flags import Flag
-from ..helpers.word_censor import censor_slurs
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
@@ -340,9 +339,11 @@ class Submission(Base):
 		else: return ""
  
 	def realbody(self, v):
-		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
-		body = self.body_html
+		if self.club and not (v and v.paid_dues):
+			if v: return f"<p>{v.username} dox/p>" 
+			return "<p>COUNTRY CLUB ONLY</p>"
 
+		body = self.body_html
 		body = censor_slurs(body, v)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
@@ -350,9 +351,11 @@ class Submission(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.club and not (v and v.paid_dues): return "COUNTRY CLUB ONLY"
-		body = self.body
+		if self.club and not (v and v.paid_dues):
+			if v: return f"<p>{v.username} dox/p>" 
+			return "<p>COUNTRY CLUB ONLY</p>"
 
+		body = self.body
 		body = censor_slurs(body, v)
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
