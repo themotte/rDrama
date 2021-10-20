@@ -52,7 +52,7 @@ class Comment(Base):
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
 	child_comments = relationship("Comment", remote_side=[parent_comment_id], viewonly=True)
-	#awards = relationship("AwardRelationship", viewonly=True)
+	awards = relationship("AwardRelationship", viewonly=True)
 
 	awards = None
 	

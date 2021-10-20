@@ -175,22 +175,22 @@ ACTIONTYPES={
 	},
 	"pin_comment":{
 		"str":'pinned a {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
+		"icon":"fa-thumbtack",
 		"color": "bg-info",
 	},
 	"unpin_comment":{
 		"str":'un-pinned a {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
+		"icon":"fa-thumbtack",
 		"color": "bg-muted",
 	},
 	"pin_post":{
 		"str":'pinned post {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
+		"icon":"fa-thumbtack",
 		"color": "bg-success",
 	},
 	"unpin_post":{
 		"str":'un-pinned post {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
+		"icon":"fa-thumbtack",
 		"color": "bg-muted",
 	},
 	"set_nsfw":{

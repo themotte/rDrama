@@ -51,7 +51,15 @@ def shop(v):
 				"icon": "fas fa-train",
 				"color": "text-pink",
 				"price": 500
-			}
+			},
+			"pin": {
+				"kind": "pin",
+				"title": "1-Hour Pin",
+				"description": "Pins the post.",
+				"icon": "fas fa-thumbtack",
+				"color": "text-warning",
+				"price": 750
+			},
 		}
 	else:
 		AWARDS = {
@@ -77,8 +85,16 @@ def shop(v):
 				"description": "Summons a train on the post.",
 				"icon": "fas fa-train",
 				"color": "text-pink",
-				"price": 500
-			}
+				"price": 50
+			},
+			"pin": {
+				"kind": "pin",
+				"title": "1-Hour Pin",
+				"description": "Pins the post.",
+				"icon": "fas fa-thumbtack",
+				"color": "text-warning",
+				"price": 750
+			},
 		}
 
 	query = g.db.query(
@@ -152,7 +168,15 @@ def buy(v, award):
 				"icon": "fas fa-train",
 				"color": "text-pink",
 				"price": 500
-			}
+			},
+			"pin": {
+				"kind": "pin",
+				"title": "1-Hour Pin",
+				"description": "Pins the post.",
+				"icon": "fas fa-thumbtack",
+				"color": "text-warning",
+				"price": 750
+			},
 		}
 	else:
 		AWARDS = {
@@ -179,7 +203,15 @@ def buy(v, award):
 				"icon": "fas fa-train",
 				"color": "text-pink",
 				"price": 500
-			}
+			},
+			"pin": {
+				"kind": "pin",
+				"title": "1-Hour Pin",
+				"description": "Pins the post.",
+				"icon": "fas fa-thumbtack",
+				"color": "text-warning",
+				"price": 750
+			},
 		}
 
 	if award not in AWARDS: abort(400)
@@ -233,8 +265,8 @@ def award_post(pid, v):
 
 	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=pid).first()
 
-	if not post or post.is_banned or post.deleted_utc > 0:
-		return {"error": "That post doesn't exist or has been deleted or removed."}, 404
+	if not post:
+		return {"error": "That post doesn't exist."}, 404
 
 	existing_award = g.db.query(AwardRelationship).options(lazyload('*')).filter(
 		and_(
@@ -272,6 +304,11 @@ def award_post(pid, v):
 		g.db.add(author)
 		link = f"[this post]({post.permalink})"
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+	elif kind == "pin":
+		if post.stickied and post.stickied.startswith("t:"): t = int(post.stickied[2:]) + 600
+		else: t = int(time.time()) + 3600
+		post.stickied = f"t:{t}"
+		g.db.add(post)
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -307,8 +344,8 @@ def award_comment(cid, v):
 
 	c = g.db.query(Comment).options(lazyload('*')).filter_by(id=cid).first()
 
-	if not c or c.is_banned or c.deleted_utc > 0:
-		return {"error": "That comment doesn't exist or has been deleted or removed."}, 404
+	if not c:
+		return {"error": "That comment doesn't exist."}, 404
 
 	existing_award = g.db.query(AwardRelationship).options(lazyload('*')).filter(
 		and_(
@@ -324,8 +361,7 @@ def award_comment(cid, v):
 	msg = f"@{v.username} has given your [comment]({c.permalink}) the {AWARDS[kind]['title']} Award!"
 
 	note = request.values.get("note", "").strip()
-	if note:
-		msg += f"\n\n> {note}"
+	if note: msg += f"\n\n> {note}"
 
 	send_notification(NOTIFICATIONS_ACCOUNT, c.author, msg)
 

@@ -48,6 +48,14 @@ if site_name == "Drama":
 			"color": "text-pink",
 			"price": 500
 		},
+		"pin": {
+			"kind": "pin",
+			"title": "1-Hour Pin",
+			"description": "Pins the post.",
+			"icon": "fas fa-thumbtack",
+			"color": "text-warning",
+			"price": 750
+		},
 	}
 else:
 	AWARDS = {
@@ -74,7 +82,15 @@ else:
 			"icon": "fas fa-train",
 			"color": "text-pink",
 			"price": 500
-		}
+		},
+		"pin": {
+			"kind": "pin",
+			"title": "1-Hour Pin",
+			"description": "Pins the post.",
+			"icon": "fas fa-thumbtack",
+			"color": "text-warning",
+			"price": 750
+		},
 	}
 
 

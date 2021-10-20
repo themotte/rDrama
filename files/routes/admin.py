@@ -1040,7 +1040,9 @@ def api_sticky_post(post_id, v):
 
 	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
 	if post:
-		if post.stickied: post.stickied = None
+		if post.stickied:
+			if post.stickied.startswith("t:"): abort(403)
+			else: post.stickied = None
 		else: post.stickied = v.username
 		g.db.add(post)
 
