@@ -1,7 +1,7 @@
-INSERT INTO public.badge_defs VALUES (12, 'Gold Recruiter', 'Recruited 100 friends to join Drama', 'recruit-100', 1, 1, 'v.referral_count>=100 and v.referral_count <=999');
-INSERT INTO public.badge_defs VALUES (11, 'Silver Recruiter', 'Recruited 10 friends to join Drama', 'recruit-10', 1, 1, 'v.referral_count>=10 and v.referral_count <= 99');
-INSERT INTO public.badge_defs VALUES (10, 'Bronze Recruiter', 'Recruited 1 friend to join Drama', 'recruit-1', 1, 1, 'v.referral_count>=1 and v.referral_count<9');
-INSERT INTO public.badge_defs VALUES (58, 'Diamond Recruiter', 'Recruited 1000 friends to join Drama', 'recruit-1000', 1, 1, 'v.referral_count >= 1000');
+INSERT INTO public.badge_defs VALUES (12, 'Gold Recruiter', 'Recruited 100 friends to join Drama', 'recruit-100', 1, 1);
+INSERT INTO public.badge_defs VALUES (11, 'Silver Recruiter', 'Recruited 10 friends to join Drama', 'recruit-10', 1, 1);
+INSERT INTO public.badge_defs VALUES (10, 'Bronze Recruiter', 'Recruited 1 friend to join Drama', 'recruit-1', 1, 1);
+INSERT INTO public.badge_defs VALUES (58, 'Diamond Recruiter', 'Recruited 1000 friends to join Drama', 'recruit-1000', 1, 1);
 INSERT INTO public.badge_defs VALUES (25, 'Footpig', 'Contributed at least $100/month', 'patron-5', 3, 1);
 INSERT INTO public.badge_defs VALUES (61, 'Lab Rat', 'Helped test features in development', 'labrat', 3, 1);
 INSERT INTO public.badge_defs VALUES (63, 'Balls', 'I wrote carp on my balls as a sign of submission', 'carpballs', 3, 1);
