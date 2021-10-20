@@ -4,6 +4,7 @@ from files.helpers.alerts import *
 from files.helpers.get import *
 from files.helpers.const import *
 from files.classes.award import *
+from .front import frontlist
 from flask import g, request
 
 @app.get("/shop")
@@ -309,6 +310,7 @@ def award_post(pid, v):
 		else: t = int(time.time()) + 3600
 		post.stickied = f"t:{t}"
 		g.db.add(post)
+		cache.delete_memoized(frontlist)
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
