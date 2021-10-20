@@ -52,7 +52,7 @@ def test_get_permutations_slur_wiht_link_replacer():
     "retard": "r-slur",
 })
 def test_create_slur_regex():
-    expected = r"(?i)(?<=\s|>)(kill yourself|faggot|nig|retard)([\s<,.])"
+    expected = r"(?i)(?<=\s|>)(kill yourself|faggot|nig|retard)(?=[\s<,.])"
 
     assert_that(create_slur_regex()).is_equal_to(re.compile(expected))
 
@@ -91,19 +91,19 @@ def test_create_replace_map():
 
 @patch("files.helpers.word_censor.REPLACE_MAP", {'retard': 'r-slur', 'Faggot': 'Cute twink', 'NIG': '🏀'})
 def test_sub_matcher():
-    regex = re.compile(r"(?i)(?<=\s|>)(kill yourself|retard|nig|faggot)([\s<,.])")
+    regex = re.compile(r"(?i)(?<=\s|>)(kill yourself|retard|nig|faggot)(?=[\s<,.])")
 
     match = regex.search("<p>retard</p>")
-    assert_that(sub_matcher(match)).is_equal_to("r-slur<")
+    assert_that(sub_matcher(match)).is_equal_to("r-slur")
 
     match = regex.search("<p>ReTaRd</p>")
-    assert_that(sub_matcher(match)).is_equal_to("r-slur<")
+    assert_that(sub_matcher(match)).is_equal_to("r-slur")
 
     match = regex.search("<p>NIG</p>")
-    assert_that(sub_matcher(match)).is_equal_to("🏀<")
+    assert_that(sub_matcher(match)).is_equal_to("🏀")
 
     match = regex.search("<p>Faggot </p>")
-    assert_that(sub_matcher(match)).is_equal_to("Cute twink ")
+    assert_that(sub_matcher(match)).is_equal_to("Cute twink")
 
 
 @patch("files.helpers.word_censor.SLURS", {
@@ -149,11 +149,6 @@ def test_censor_slurs():
     assert_that(censor_slurs('... i Hate carp ...', None)).is_equal_to('... i love Carp ...')
 
     assert_that(censor_slurs('... i hate a carp ...', None)).is_equal_to('... i hate a carp ...')
-    assert_that(censor_slurs("""<h1 id="post-title" class="card-title post-title text-left mb-md-3">
-I had a dream about this site last night
-</h1>""", None)).is_equal_to("""<h1 id="post-title" class="card-title post-title text-left mb-md-3">
-I had a dream about this site last night
-</h1>""")
 
     assert_that(censor_slurs("<p>retard Manlet NIG</p>", None)).is_equal_to("<p>r-slur Little king 🏀</p>")
 
