@@ -121,7 +121,7 @@ single_words = "|".join([slur.lower() for slur in SLURS.keys()])
 SLUR_REGEX = re.compile(rf"(?i)(?<=\s|>)({single_words})(?=[\s<,.])")
 
 def sub_matcher(match: re.Match) -> str:
-    return SLURS[match.group(0)]
+    return SLURS[match.group(0).lower()]
 
 def censor_slurs(body: str, logged_user) -> str:
     if not logged_user or logged_user.slurreplacer:
