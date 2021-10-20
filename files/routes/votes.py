@@ -100,6 +100,7 @@ def api_vote_post(post_id, new, v):
 	if post.stickied and post.stickied.startswith("t:") and int(time.time()) > int(post.stickied[2:]):
 		post.stickied = None
 		g.db.add(post)
+		cache.delete_memoized(frontlist)
 
 	try:
 		g.db.flush()
