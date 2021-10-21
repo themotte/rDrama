@@ -26,7 +26,7 @@
 
 {% if v %}
 	{% include "award_modal.html" %}
-	<script src="/assets/js/comments_v.js?v=61"></script>
+	<script src="/assets/js/comments_v.js?v=62"></script>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -119,7 +119,7 @@
 		</div>
 	  </div>
 	  <div class="px-3">
-		<span class="text-black">{% if c.author.bio_html %}{{c.author.bio_html | safe}}{% endif %}</span>
+		<span class="text-black">{% if c.author.bio_html %}{{c.author.bio_html.replace('src="/assets/images/loading.gif" data-', '') | safe}}{% endif %}</span>
 	  </div>
 	  <div class="border-top d-flex align-items-center px-2 py-3 gap-3 smol">
 		<span>
@@ -263,14 +263,14 @@
 				{% if c.active_flags %}<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Reports</a>{% endif %}
 				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 				{% if v and v.admin_level==6 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
-				{% if c.is_pinned %}<i class="text-admin fas fa-thumbtack" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Pinned by @{{c.is_pinned}}"></i>{% endif %}
+				{% if c.is_pinned %}<i class="text-admin fas fa-thumbtack fa-rotate--45" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Pinned by @{{c.is_pinned}}"></i>{% endif %}
 				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}
 				{% if c.is_op %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="OP"></i>{% endif %}
 				{% if c.is_bot %}<i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bot"></i>{% endif %}
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{% if v and v.admin_level >= 2 %}You're blocking this user, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}.{% else %}Comment author is banned{% endif %}"></i>{% endif %}
 				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This user is blocking you, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}."></i>{% endif %}
 
-				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.id == 541 %}#62ca56{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
+				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.id == 541 %}#62ca56{% elif c.author.id == 2256 %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
 				{% endif %}
 
 				<a class="user-name text-decoration-none" data-bs-position="auto" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" href="javascript:void(0)" tabindex="0" style="color:#{{c.author.namecolor}};  font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{c.author.username}}</span></a>
@@ -435,9 +435,9 @@
 						{% endif %}
 
 						{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
-							<a id="unpin-{{c.id}}" class="{% if c.is_pinned %}d-md-inline-block{% endif %} list-inline-item text-muted d-none text-info"  href="javascript:void(0)" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack text-info fa-fw"></i>Unpin</a>
+							<a id="unpin-{{c.id}}" class="{% if c.is_pinned %}d-md-inline-block{% endif %} list-inline-item text-muted d-none text-info"  href="javascript:void(0)" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</a>
 
-							<a id="pin-{{c.id}}" class="{% if not c.is_pinned %}d-md-inline-block{% endif %} list-inline-item text-muted d-none text-info" href="javascript:void(0)" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack text-info fa-fw"></i>Pin</a>
+							<a id="pin-{{c.id}}" class="{% if not c.is_pinned %}d-md-inline-block{% endif %} list-inline-item text-muted d-none text-info" href="javascript:void(0)" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</a>
 						{% endif %}
 
 
@@ -579,8 +579,8 @@
 					{% endif %}
 
 					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
-						<a id="pin2-{{c.id}}" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" href="javascript:void(0)" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack text-info"></i>Pin</a>
-						<a id="unpin2-{{c.id}}" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" href="javascript:void(0)" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack text-info"></i>Unpin</a>
+						<a id="pin2-{{c.id}}" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" href="javascript:void(0)" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a>
+						<a id="unpin2-{{c.id}}" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" href="javascript:void(0)" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
 					{% endif %}
 
 					{% if v %}

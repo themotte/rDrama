@@ -1064,19 +1064,6 @@ def api_sticky_post(post_id, v):
 		if post.stickied: return {"message": "Post pinned!"}
 		else: return {"message": "Post unpinned!"}
 
-@app.post("/pin/<post_id>")
-@auth_required
-def api_pin_post(post_id, v):
-
-	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
-	if post:
-		post.is_pinned = not post.is_pinned
-		g.db.add(post)
-		g.db.commit()
-
-		if post.is_pinned: return {"message": "Post pinned!"}
-		else: return {"message": "Post unpinned!"}
-
 @app.post("/ban_comment/<c_id>")
 @limiter.limit("1/second")
 @admin_level_required(1)

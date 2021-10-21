@@ -191,7 +191,7 @@ post_comment=function(fullname){
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			commentForm=document.getElementById('comment-form-space-'+fullname);
-			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src');
+			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 		}
 		else {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));

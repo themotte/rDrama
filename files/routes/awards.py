@@ -29,6 +29,14 @@ def shop(v):
 				"color": "text-success",
 				"price": 3500
 			},
+			"grass": {
+				"kind": "grass",
+				"title": "Grass",
+				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"icon": "fas fa-seedling",
+				"color": "text-success",
+				"price": 10000
+			},
 			"shit": {
 				"kind": "shit",
 				"title": "Shit",
@@ -40,18 +48,10 @@ def shop(v):
 			"fireflies": {
 				"kind": "fireflies",
 				"title": "Fireflies",
-				"description": "Puts stars on the post.",
+				"description": "Puts fireflies on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"price": 500
-			},
-			"grass": {
-				"kind": "grass",
-				"title": "Grass",
-				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
-				"icon": "fas fa-seedling",
-				"color": "text-success",
-				"price": 10000
 			},
 			"train": {
 				"kind": "train",
@@ -65,7 +65,7 @@ def shop(v):
 				"kind": "pin",
 				"title": "1-Hour Pin",
 				"description": "Pins the post.",
-				"icon": "fas fa-thumbtack",
+				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
 				"price": 750
 			},
@@ -73,7 +73,7 @@ def shop(v):
 				"kind": "unpin",
 				"title": "1-Hour Unpin",
 				"description": "Removes 1 hour from the pin duration of the post.",
-				"icon": "fas fa-thumbtack",
+				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"price": 1000
 			},
@@ -91,7 +91,7 @@ def shop(v):
 			"fireflies": {
 				"kind": "fireflies",
 				"title": "Fireflies",
-				"description": "Puts stars on the post.",
+				"description": "Puts fireflies on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"price": 500
@@ -108,7 +108,7 @@ def shop(v):
 				"kind": "pin",
 				"title": "1-Hour Pin",
 				"description": "Pins the post.",
-				"icon": "fas fa-thumbtack",
+				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
 				"price": 750
 			},
@@ -116,11 +116,38 @@ def shop(v):
 				"kind": "unpin",
 				"title": "1-Hour Unpin",
 				"description": "Removes 1 hour from the pin duration of the post.",
-				"icon": "fas fa-thumbtack",
+				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"price": 1000
 			},
 		}
+
+	AWARDS2 = {
+		"ban": {
+			"kind": "ban",
+			"title": "1-Day Ban",
+			"description": "Bans the author for a day.",
+			"icon": "fas fa-gavel",
+			"color": "text-danger",
+			"price": 3000
+		},
+		"grass": {
+			"kind": "grass",
+			"title": "Grass",
+			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+			"icon": "fas fa-seedling",
+			"color": "text-success",
+			"price": 10000
+		},
+		"shit": {
+			"kind": "shit",
+			"title": "Shit",
+			"description": "Makes flies swarm a post.",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"price": 500
+		},
+	}
 
 	query = g.db.query(
 	User.id, User.username, User.patron, User.namecolor,
@@ -171,6 +198,14 @@ def buy(v, award):
 				"color": "text-success",
 				"price": 3500
 			},
+			"grass": {
+				"kind": "grass",
+				"title": "Grass",
+				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"icon": "fas fa-seedling",
+				"color": "text-success",
+				"price": 10000
+			},
 			"shit": {
 				"kind": "shit",
 				"title": "Shit",
@@ -182,18 +217,10 @@ def buy(v, award):
 			"fireflies": {
 				"kind": "fireflies",
 				"title": "Fireflies",
-				"description": "Puts stars on the post.",
+				"description": "Puts fireflies on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"price": 500
-			},
-			"grass": {
-				"kind": "grass",
-				"title": "Grass",
-				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
-				"icon": "fas fa-seedling",
-				"color": "text-success",
-				"price": 10000
 			},
 			"train": {
 				"kind": "train",
@@ -207,7 +234,7 @@ def buy(v, award):
 				"kind": "pin",
 				"title": "1-Hour Pin",
 				"description": "Pins the post.",
-				"icon": "fas fa-thumbtack",
+				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
 				"price": 750
 			},
@@ -215,7 +242,7 @@ def buy(v, award):
 				"kind": "unpin",
 				"title": "1-Hour Unpin",
 				"description": "Removes 1 hour from the pin duration of the post.",
-				"icon": "fas fa-thumbtack",
+				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"price": 1000
 			},
@@ -233,7 +260,7 @@ def buy(v, award):
 			"fireflies": {
 				"kind": "fireflies",
 				"title": "Fireflies",
-				"description": "Puts stars on the post.",
+				"description": "Puts fireflies on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"price": 500
@@ -250,7 +277,7 @@ def buy(v, award):
 				"kind": "pin",
 				"title": "1-Hour Pin",
 				"description": "Pins the post.",
-				"icon": "fas fa-thumbtack",
+				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
 				"price": 750
 			},
@@ -258,7 +285,7 @@ def buy(v, award):
 				"kind": "unpin",
 				"title": "1-Hour Unpin",
 				"description": "Removes 1 hour from the pin duration of the post.",
-				"icon": "fas fa-thumbtack",
+				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"price": 1000
 			},
@@ -357,7 +384,6 @@ def award_post(pid, v):
 			author.unban_utc = 0
 			author.is_banned = 0
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"You have been unbanned!")
-
 	elif kind == "grass":
 		author = post.author
 		author.is_banned = AUTOJANNY_ACCOUNT
@@ -461,6 +487,17 @@ def award_comment(cid, v):
 		author.ban_reason = f"grass award used by @{v.username} on /comment/{c.id}"
 		link = f"[this comment]({c.permalink})"
 		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+	elif kind == "pin":
+		if c.is_pinned and c.is_pinned.startswith("t:"): t = int(c.is_pinned[2:]) + 3600
+		else: t = int(time.time()) + 3600
+		c.is_pinned = f"t:{t}"
+		g.db.add(c)
+	elif kind == "unpin":
+		if not (c.is_pinned and c.is_pinned.startswith("t:")): abort(403)
+		t = int(c.is_pinned[2:]) - 3600
+		if time.time() > t: c.is_pinned = None
+		else: c.is_pinned = f"t:{t}"
+		g.db.add(c)
 
 	c.author.received_award_count += 1
 	g.db.add(c.author)
@@ -473,7 +510,7 @@ def award_comment(cid, v):
 @admin_level_required(6)
 def admin_userawards_get(v):
 
-	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
+	return render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
 
 @app.post("/admin/awards")
 @limiter.limit("1/second")
@@ -523,4 +560,4 @@ def admin_userawards_post(v):
 
 	g.db.commit()
 
-	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
+	return render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)

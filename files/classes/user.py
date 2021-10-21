@@ -41,6 +41,14 @@ if site_name == "Drama":
 			"color": "text-success",
 			"price": 3500
 		},
+		"grass": {
+			"kind": "grass",
+			"title": "Grass",
+			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+			"icon": "fas fa-seedling",
+			"color": "text-success",
+			"price": 10000
+		},
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",
@@ -52,18 +60,10 @@ if site_name == "Drama":
 		"fireflies": {
 			"kind": "fireflies",
 			"title": "Fireflies",
-			"description": "Puts stars on the post.",
+			"description": "Puts fireflies on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"price": 500
-		},
-		"grass": {
-			"kind": "grass",
-			"title": "Grass",
-			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
-			"icon": "fas fa-seedling",
-			"color": "text-success",
-			"price": 10000
 		},
 		"train": {
 			"kind": "train",
@@ -77,7 +77,7 @@ if site_name == "Drama":
 			"kind": "pin",
 			"title": "1-Hour Pin",
 			"description": "Pins the post.",
-			"icon": "fas fa-thumbtack",
+			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-warning",
 			"price": 750
 		},
@@ -85,7 +85,7 @@ if site_name == "Drama":
 			"kind": "unpin",
 			"title": "1-Hour Unpin",
 			"description": "Removes 1 hour from the pin duration of the post.",
-			"icon": "fas fa-thumbtack",
+			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-black",
 			"price": 1000
 		},
@@ -103,7 +103,7 @@ else:
 		"fireflies": {
 			"kind": "fireflies",
 			"title": "Fireflies",
-			"description": "Puts stars on the post.",
+			"description": "Puts fireflies on the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"price": 500
@@ -120,7 +120,7 @@ else:
 			"kind": "pin",
 			"title": "1-Hour Pin",
 			"description": "Pins the post.",
-			"icon": "fas fa-thumbtack",
+			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-warning",
 			"price": 750
 		},
@@ -128,7 +128,7 @@ else:
 			"kind": "unpin",
 			"title": "1-Hour Unpin",
 			"description": "Removes 1 hour from the pin duration of the post.",
-			"icon": "fas fa-thumbtack",
+			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-black",
 			"price": 1000
 		},

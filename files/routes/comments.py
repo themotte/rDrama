@@ -810,10 +810,11 @@ def toggle_pin_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
-	if v.admin_level < 1 and v.id != comment.post.author_id:
-		abort(403)
+	if v.admin_level < 1 and v.id != comment.post.author_id: abort(403)
 
-	if comment.is_pinned: comment.is_pinned = None
+	if comment.is_pinned:
+		if comment.is_pinned.startswith("t:"): abort(403)
+		else: comment.is_pinned = None
 	else: comment.is_pinned = v.username
 
 	g.db.add(comment)

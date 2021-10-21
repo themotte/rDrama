@@ -1003,3 +1003,16 @@ def unsave_post(pid, v):
 		g.db.commit()
 
 	return {"message": "Post unsaved!"}
+
+@app.post("/pin/<post_id>")
+@auth_required
+def api_pin_post(post_id, v):
+
+	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
+	if post:
+		post.is_pinned = not post.is_pinned
+		g.db.add(post)
+		g.db.commit()
+
+		if post.is_pinned: return {"message": "Post pinned!"}
+		else: return {"message": "Post unpinned!"}
