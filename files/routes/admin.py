@@ -166,7 +166,7 @@ def remove_fake_admin(v, username):
 
 
 @app.post("/admin/monthly")
-@limiter.limit("1/day")
+#@limiter.limit("1/day")
 @admin_level_required(6)
 def monthly(v):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
@@ -179,7 +179,7 @@ def monthly(v):
 			elif u.patron == 5 or u.patron == 8: procoins = 50000
 
 			u.procoins += procoins
-			send_notification(NOTIFICATIONS_ACCOUNT, u, f"You were given {procoins} Marseybux!")
+			send_notification(NOTIFICATIONS_ACCOUNT, u, f"You were given {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
 			g.db.add(u)
 
 		g.db.commit()
