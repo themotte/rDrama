@@ -318,6 +318,7 @@ def buy(v, award):
 
 	if v.coins < price: return {"error": "Not enough coins."}, 400
 	v.coins -= price
+	v.coins_spent += price
 	g.db.add(v)
 
 	g.db.flush()

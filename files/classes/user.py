@@ -61,6 +61,7 @@ class User(Base):
 	fail_utc = Column(Integer, default=0)
 	fail2_utc = Column(Integer, default=0)
 	admin_level = Column(Integer, default=0)
+	coins_spent = Column(Integer, default=0)
 	agendaposter = Column(Boolean, default=False)
 	agendaposter_expires_utc = Column(Integer, default=0)
 	changelogsub = Column(Boolean, default=False)

@@ -316,6 +316,7 @@
 							{% endfor %}
 						</ul>
 						True score: {{u.truecoins}}
+						Coins spent: {{u.coins_spent}}
 					{% endif %}
 					{% if u.is_suspended %}
 						<p>Banned by: <a href="{{u.banned_by.url}}">@{{u.banned_by.username}}</a></p>
@@ -582,6 +583,7 @@
 						{% endfor %}
 					</ul>
 					True score: {{u.truecoins}}
+					Coins spent: {{u.coins_spent}}
 				{% endif %}
 				{% if u.is_suspended %}
 					<p>Banned by: <a href="{{u.banned_by.url}}">@{{u.banned_by.username}}</a></p>
