@@ -452,6 +452,7 @@ class User(Base):
 		if self.unban_utc and self.unban_utc < time.time():
 			self.is_banned = 0
 			self.unban_utc = 0
+			self.ban_evade = 0
 			g.db.add(self)
 			g.db.commit()
 		return (self.is_banned and (not self.unban_utc or self.unban_utc > time.time()))

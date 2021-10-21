@@ -398,6 +398,7 @@ def award_post(pid, v):
 		else:
 			author.unban_utc = 0
 			author.is_banned = 0
+			author.ban_evade = 0
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"You have been unbanned!")
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ACCOUNT
@@ -501,6 +502,7 @@ def award_comment(cid, v):
 		else:
 			author.unban_utc = 0
 			author.is_banned = 0
+			author.ban_evade = 0
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"You have been unbanned!")
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ACCOUNT

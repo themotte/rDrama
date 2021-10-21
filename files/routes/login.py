@@ -136,6 +136,7 @@ def login_post():
 	if account.is_banned and account.unban_utc > 0 and time.time() > account.unban_utc:
 		account.is_banned = 0
 		account.unban_utc = 0
+		account.ban_evade = 0
 		g.db.add(account)
 
 	session["user_id"] = account.id

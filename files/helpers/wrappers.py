@@ -43,8 +43,7 @@ def get_logged_in_user():
 
 def check_ban_evade(v):
 
-	if not v or not v.ban_evade or v.admin_level > 0:
-		return
+	if not v or not v.ban_evade or v.admin_level > 0 or v.is_suspended: return
 	
 	if random.randint(0,30) < v.ban_evade:
 		v.ban(reason="permaban evasion")

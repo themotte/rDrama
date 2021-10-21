@@ -46,6 +46,7 @@ def revert_actions(v, username):
 		for user in users:
 			user.is_banned = 0
 			user.unban_utc = 0
+			user.ban_evade = 0
 			g.db.add(user)
 
 		g.db.commit()
@@ -910,6 +911,7 @@ def unban_user(user_id, v):
 
 	user.is_banned = 0
 	user.unban_utc = 0
+	user.ban_evade = 0
 	g.db.add(user)
 
 	if request.values.get("alts", ""):
@@ -917,6 +919,7 @@ def unban_user(user_id, v):
 			if x.admin_level == 0:
 				x.is_banned = 0
 				x.unban_utc = 0
+				x.ban_evade = 0
 				g.db.add(x)
 
 	send_notification(NOTIFICATIONS_ACCOUNT, user,
