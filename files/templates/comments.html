@@ -111,10 +111,10 @@
 
 {% if c.author.bio_html %}
 	{% set bio = c.author.bio_html.replace('src="/assets/images/loading.gif" data-', '') %}
+	<script>
+		console.log('{{bio}}');
+	</script>	
 {% endif %}
-<script>
-	console.log({{bio}});
-</script>
 
 <div style="display:none" id="popover-{{c.id}}">
 	<div class="popover-user-profile" role="tooltip">
