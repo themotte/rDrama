@@ -6,6 +6,7 @@ from files.helpers.const import *
 from files.classes.award import *
 from .front import frontlist
 from flask import g, request
+from files.helpers.sanitize import filter_title
 
 AWARDS2 = {
 	"ban": {
@@ -107,10 +108,18 @@ def shop(v):
 			"agendaposter": {
 				"kind": "agendaposter",
 				"title": "Agendaposter",
-				"description": "Force the agendaposter theme on the author for 24 hours.",
+				"description": "Forces the agendaposter theme on the author for 24 hours.",
 				"icon": "fas fa-snooze",
 				"color": "text-purple",
 				"price": 2000
+			},
+			"flairlock": {
+				"kind": "flairlock",
+				"title": "1-Day Flairlock",
+				"description": "Sets a flair for the author and locks it or 24 hours.",
+				"icon": "fas fa-lock",
+				"color": "text-black",
+				"price": 1250
 			},
 		}
 	else:
@@ -257,10 +266,18 @@ def buy(v, award):
 			"agendaposter": {
 				"kind": "agendaposter",
 				"title": "Agendaposter",
-				"description": "Force the agendaposter theme on the author for 24 hours.",
+				"description": "Forces the agendaposter theme on the author for 24 hours.",
 				"icon": "fas fa-snooze",
 				"color": "text-purple",
 				"price": 2000
+			},
+			"flairlock": {
+				"kind": "flairlock",
+				"title": "1-Day Flairlock",
+				"description": "Sets a flair for the author and locks it or 24 hours.",
+				"icon": "fas fa-lock",
+				"color": "text-black",
+				"price": 1250
 			},
 		}
 	else:
@@ -428,6 +445,12 @@ def award_post(pid, v):
 		if not author.has_badge(26):
 			badge = Badge(user_id=author.id, badge_id=26)
 			g.db.add(badge)
+	elif kind == "flairlock":
+		new_name = note[:100].replace("𒐪","")
+		author.customtitleplain = new_name
+		author.customtitle = filter_title(new_name)
+		if len(author.customtitle) > 1000: abort(403)
+		author.flairchanged = time.time() + 86400
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -529,7 +552,13 @@ def award_comment(cid, v):
 		if not author.has_badge(26):
 			badge = Badge(user_id=author.id, badge_id=26)
 			g.db.add(badge)
-
+	elif kind == "flairlock":
+		new_name = note[:100].replace("𒐪","")
+		author.customtitleplain = new_name
+		author.customtitle = filter_title(new_name)
+		if len(author.customtitle) > 1000: abort(403)
+		author.flairchanged = time.time() + 86400
+	
 	c.author.received_award_count += 1
 	g.db.add(c.author)
 

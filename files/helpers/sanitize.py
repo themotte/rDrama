@@ -227,3 +227,25 @@ def sanitize(sanitized, noimages=False):
 	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank"  rel="nofollow noopener noreferrer" href="\1">\1</a></p>', sanitized)
 
 	return sanitized
+
+def filter_title(title):
+	title = title.strip()
+	title = title.replace("\n", "")
+	title = title.replace("\r", "")
+	title = title.replace("\t", "")
+
+	title = bleach.clean(title, tags=[])
+
+	for i in re.finditer('(?<!"):([^ ]{1,30}?):', title):
+		emoji = i.group(1)
+
+		if emoji.startswith("!"):
+			emoji = emoji[1:]
+			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
+				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 src="http://{site}/assets/images/emojis/{emoji}.webp" class="mirrored">', title)
+				
+		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
+			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 src="http://{site}/assets/images/emojis/{emoji}.webp">', title)
+	
+	if len(title) > 1500: abort(400)
+	else: return title

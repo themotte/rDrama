@@ -196,10 +196,18 @@ if SITE_NAME == "Drama":
 		"agendaposter": {
 			"kind": "agendaposter",
 			"title": "Agendaposter",
-			"description": "Force the agendaposter theme on the author for 24 hours.",
+			"description": "Forces the agendaposter theme on the author for 24 hours.",
 			"icon": "fas fa-snooze",
 			"color": "text-purple",
 			"price": 2000
+		},
+		"flairlock": {
+			"kind": "flairlock",
+			"title": "!-Day Flairlock",
+			"description": "Sets a flair for the author and locks it or 24 hours.",
+			"icon": "fas fa-lock",
+			"color": "text-black",
+			"price": 1250
 		},
 	}
 else:

@@ -10,7 +10,7 @@ from files.__main__ import app, cache, limiter
 import youtube_dl
 from .front import frontlist
 import os
-from .posts import filter_title
+from files.helpers.sanitize import filter_title
 from files.helpers.discord import add_role
 from shutil import copyfile
 import requests

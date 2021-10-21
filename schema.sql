@@ -773,7 +773,7 @@ CREATE TABLE public.users (
     bannerurl character varying(65),
     hidevotedon boolean,
     newtab boolean,
-    flairchanged boolean,
+    flairchanged integer,
     defaultsortingcomments character varying(15),
     theme character varying(15),
     song character varying(50),

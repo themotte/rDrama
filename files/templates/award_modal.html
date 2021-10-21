@@ -1,4 +1,4 @@
-<script src="/assets/js/award_modal.js?v=53"></script>
+<script src="/assets/js/award_modal.js?v=57"></script>
 
 <div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="awardModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
@@ -23,18 +23,18 @@
 								<div class="text-muted">{{award.owned}} owned</div>
 							</a>
 						{% endfor %}
-						<a class="card disabled d-md-none">
+						<!-- <a class="card disabled d-md-none">
 <pre>
 
 
 
 
 </pre>
-						</a>
+						</a> -->
 					</div>
-					<label for="note" class="pt-4">Note (optional):</label>
+					<label id="notelabel" for="note" class="pt-4">Note (optional):</label>
 					<input id="kind" name="kind" value="" hidden>
-					<textarea id="note" name="note" class="form-control" placeholder="Note to include in award notification"></textarea>
+					<textarea id="note" name="note" class="form-control" placeholder="Note to include in award notification..."></textarea>
 					<input id="giveaward" class="btn btn-primary" style="float:right" type="submit" value="Give Award" disabled>
 				</form>
 			</div>
@@ -76,7 +76,7 @@
 
 	@media (min-width: 767.98px) {
 		.award-columns {
-			column-count: 9 !important;
+			column-count: 5 !important;
 		}
 	}
 </style>

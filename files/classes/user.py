@@ -71,7 +71,7 @@ class User(Base):
 	hidevotedon = Column(Boolean, default=False)
 	highlightcomments = Column(Boolean, default=True)
 	slurreplacer = Column(Boolean, default=True)
-	flairchanged = Column(Boolean, default=False)
+	flairchanged = Column(Integer)
 	newtab = Column(Boolean, default=False)
 	newtabexternal = Column(Boolean, default=True)
 	oldreddit = Column(Boolean, default=True)
