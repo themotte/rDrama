@@ -169,7 +169,7 @@ def remove_fake_admin(v, username):
 @limiter.limit("1/day")
 @admin_level_required(6)
 def monthly(v):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,995]) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
 			if u.patron == 1: procoins = 2000
