@@ -1,7 +1,7 @@
 from files.helpers.wrappers import *
 from files.helpers.get import *
 from files.helpers.const import NOTIFICATIONS_ACCOUNT
-from files.helpers.notifications import send_notification
+from files.helpers.alerts import send_notification
 from files.classes import *
 from flask import *
 from files.__main__ import app, limiter, cache

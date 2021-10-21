@@ -4,7 +4,7 @@ import pyotp
 from files.helpers.discord import remove_user
 from files.helpers.images import *
 from files.helpers.const import *
-from files.helpers.notifications import send_notification
+from files.helpers.alerts import send_notification
 from .alts import Alt
 from .submission import SaveRelationship
 from .comment import Notification
