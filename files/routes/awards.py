@@ -146,7 +146,8 @@ def shop(v):
 			elif v.patron == 4: val["price"] = int(val["price"]*0.75)
 			else: val["price"] = int(val["price"]*0.70)
 
-	return render_template("settings_shop.html", owned=owned, awards=list(AWARDS.values()), v=v)
+	sales = g.db.query(Vote.id).count() + g.db.query(CommentVote.id).count() - g.db.query(func.sum(User.coins)).scalar()
+	return render_template("shop.html", owned=owned, awards=list(AWARDS.values()), v=v, sales=sales)
 
 
 @app.post("/buy/<award>")
