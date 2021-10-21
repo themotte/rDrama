@@ -2,6 +2,10 @@
 <html lang="en">
 <head>  
 	<script src="/assets/js/lozad.js?v=53"></script>
+	<script>
+		const observer = lozad();
+		observer.observe();
+	</script>
 	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -69,7 +73,7 @@
 
 	{% if v %}
 		<script>function formkey() {return '{{v.formkey}}';}</script>
-		<script src="/assets/js/default.js?v=54"></script>
+		<script src="/assets/js/default.js?v=55"></script>
 	{% endif %}
 
 
