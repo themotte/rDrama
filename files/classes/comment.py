@@ -53,8 +53,6 @@ class Comment(Base):
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
 	child_comments = relationship("Comment", remote_side=[parent_comment_id], viewonly=True)
 	awards = relationship("AwardRelationship", viewonly=True)
-
-	awards = None
 	
 	def __init__(self, *args, **kwargs):
 

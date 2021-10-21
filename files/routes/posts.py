@@ -503,7 +503,9 @@ def submit_post(v):
 
 		for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 			url = url.replace(rd, "https://old.reddit.com/")
-				
+		
+		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery")
+
 		url = url.replace("https://mobile.twitter.com", "https://twitter.com")
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 

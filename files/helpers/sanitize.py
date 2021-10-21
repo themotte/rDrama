@@ -221,7 +221,8 @@ def sanitize(sanitized, noimages=False):
 
 	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")
-	
+
+	sanitized = sanitized.replace("old.reddit.com/gallery", "new.reddit.com/gallery")
 	sanitized = re.sub(' (https:\/\/[^ <>]*)', r' <a target="_blank"  rel="nofollow noopener noreferrer" href="\1">\1</a>', sanitized)
 	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank"  rel="nofollow noopener noreferrer" href="\1">\1</a></p>', sanitized)
 
