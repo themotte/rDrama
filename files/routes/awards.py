@@ -41,30 +41,6 @@ AWARDS2 = {
 def shop(v):
 	if site_name == "Drama":
 		AWARDS = {
-			"ban": {
-				"kind": "ban",
-				"title": "1-Day Ban",
-				"description": "Bans the author for a day.",
-				"icon": "fas fa-gavel",
-				"color": "text-danger",
-				"price": 3000
-			},
-			"unban": {
-				"kind": "unban",
-				"title": "1-Day Unban",
-				"description": "Removes 1 day from the ban duration of the recipient.",
-				"icon": "fas fa-gavel",
-				"color": "text-success",
-				"price": 3500
-			},
-			"grass": {
-				"kind": "grass",
-				"title": "Grass",
-				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
-				"icon": "fas fa-seedling",
-				"color": "text-success",
-				"price": 10000
-			},
 			"shit": {
 				"kind": "shit",
 				"title": "Shit",
@@ -105,6 +81,14 @@ def shop(v):
 				"color": "text-black",
 				"price": 1000
 			},
+			"flairlock": {
+				"kind": "flairlock",
+				"title": "1-Day Flairlock",
+				"description": "Sets a flair for the author and locks it or 24 hours.",
+				"icon": "fas fa-lock",
+				"color": "text-black",
+				"price": 1250
+			},
 			"agendaposter": {
 				"kind": "agendaposter",
 				"title": "Agendaposter",
@@ -113,13 +97,29 @@ def shop(v):
 				"color": "text-purple",
 				"price": 2000
 			},
-			"flairlock": {
-				"kind": "flairlock",
-				"title": "1-Day Flairlock",
-				"description": "Sets a flair for the author and locks it or 24 hours.",
-				"icon": "fas fa-lock",
-				"color": "text-black",
-				"price": 1250
+			"ban": {
+				"kind": "ban",
+				"title": "1-Day Ban",
+				"description": "Bans the author for a day.",
+				"icon": "fas fa-gavel",
+				"color": "text-danger",
+				"price": 3000
+			},
+			"unban": {
+				"kind": "unban",
+				"title": "1-Day Unban",
+				"description": "Removes 1 day from the ban duration of the recipient.",
+				"icon": "fas fa-gavel",
+				"color": "text-success",
+				"price": 3500
+			},
+			"grass": {
+				"kind": "grass",
+				"title": "Grass",
+				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"icon": "fas fa-seedling",
+				"color": "text-success",
+				"price": 10000
 			},
 		}
 	else:
@@ -199,30 +199,6 @@ def shop(v):
 def buy(v, award):
 	if site_name == "Drama":
 		AWARDS = {
-			"ban": {
-				"kind": "ban",
-				"title": "1-Day Ban",
-				"description": "Bans the author for a day.",
-				"icon": "fas fa-gavel",
-				"color": "text-danger",
-				"price": 3000
-			},
-			"unban": {
-				"kind": "unban",
-				"title": "1-Day Unban",
-				"description": "Removes 1 day from the ban duration of the recipient.",
-				"icon": "fas fa-gavel",
-				"color": "text-success",
-				"price": 3500
-			},
-			"grass": {
-				"kind": "grass",
-				"title": "Grass",
-				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
-				"icon": "fas fa-seedling",
-				"color": "text-success",
-				"price": 10000
-			},
 			"shit": {
 				"kind": "shit",
 				"title": "Shit",
@@ -263,14 +239,6 @@ def buy(v, award):
 				"color": "text-black",
 				"price": 1000
 			},
-			"agendaposter": {
-				"kind": "agendaposter",
-				"title": "Agendaposter",
-				"description": "Forces the agendaposter theme on the author for 24 hours.",
-				"icon": "fas fa-snooze",
-				"color": "text-purple",
-				"price": 2000
-			},
 			"flairlock": {
 				"kind": "flairlock",
 				"title": "1-Day Flairlock",
@@ -279,6 +247,39 @@ def buy(v, award):
 				"color": "text-black",
 				"price": 1250
 			},
+			"agendaposter": {
+				"kind": "agendaposter",
+				"title": "Agendaposter",
+				"description": "Forces the agendaposter theme on the author for 24 hours.",
+				"icon": "fas fa-snooze",
+				"color": "text-purple",
+				"price": 2000
+			},
+			"ban": {
+				"kind": "ban",
+				"title": "1-Day Ban",
+				"description": "Bans the author for a day.",
+				"icon": "fas fa-gavel",
+				"color": "text-danger",
+				"price": 3000
+			},
+			"unban": {
+				"kind": "unban",
+				"title": "1-Day Unban",
+				"description": "Removes 1 day from the ban duration of the recipient.",
+				"icon": "fas fa-gavel",
+				"color": "text-success",
+				"price": 3500
+			},
+			"grass": {
+				"kind": "grass",
+				"title": "Grass",
+				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"icon": "fas fa-seedling",
+				"color": "text-success",
+				"price": 10000
+			},
+
 		}
 	else:
 		AWARDS = {
