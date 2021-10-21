@@ -109,13 +109,6 @@
 	})()
 </script>
 
-{% if c.author.bio_html %}
-	{% set bio = c.author.bio_html.replace('data-src', 'src') %}
-	<script>
-		console.log('{{bio}}');
-	</script>	
-{% endif %}
-
 <div style="display:none" id="popover-{{c.id}}">
 	<div class="popover-user-profile" role="tooltip">
 	  <img class="w-100 h-64 object-cover" src="{{c.author.banner_url}}">
@@ -126,7 +119,7 @@
 		</div>
 	  </div>
 	  <div class="px-3">
-		<span class="text-black">{% if c.author.bio_html %}{{bio | safe}}{% endif %}</span>
+		<span class="text-black">{% if c.author.bio_html %}{{c.author.bio_html.replace('data-src', 'src') | safe}}{% endif %}</span>
 	  </div>
 	  <div class="border-top d-flex align-items-center px-2 py-3 gap-3 smol">
 		<span>
