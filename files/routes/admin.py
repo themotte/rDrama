@@ -178,7 +178,7 @@ def monthly(v):
 			elif u.patron == 4: procoins = 25000
 			elif u.patron == 5 or u.patron == 8: procoins = 50000
 
-			u.procoins += bc
+			u.procoins += procoins
 			send_notification(NOTIFICATIONS_ACCOUNT, u, f"You were given {procoins} Marseybux!")
 			g.db.add(u)
 

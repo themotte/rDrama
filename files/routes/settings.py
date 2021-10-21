@@ -311,7 +311,7 @@ def gumroad(v):
 	elif v.patron == 4: procoins = 25000
 	elif v.patron == 5 or v.patron == 8: procoins = 50000
 
-	v.procoins += bc
+	v.procoins += procoins
 	send_notification(NOTIFICATIONS_ACCOUNT, v, f"You were given {procoins} Marseybux!")
 	g.db.add(v)
 
