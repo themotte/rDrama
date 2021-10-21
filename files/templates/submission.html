@@ -32,12 +32,21 @@
 				left: 0%;
 			}
 		}
-		
-		.train {
-			position: fixed;
-			width: 100px;
-			z-index: 10;
-			animation: train 5s linear infinite !important;
+
+		@media (min-width: 768px) {
+			.train {
+				position: fixed;
+				width: 100px;
+				animation: train 5s linear infinite !important;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.train {
+				position: fixed;
+				width: 50px;
+				animation: train 5s linear infinite !important;
+			}
 		}
 
 		.trainrev {
