@@ -203,7 +203,7 @@ if SITE_NAME == "Drama":
 		},
 		"flairlock": {
 			"kind": "flairlock",
-			"title": "!-Day Flairlock",
+			"title": "1-Day Flairlock",
 			"description": "Sets a flair for the author and locks it or 24 hours.",
 			"icon": "fas fa-lock",
 			"color": "text-black",
