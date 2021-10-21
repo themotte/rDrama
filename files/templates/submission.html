@@ -35,9 +35,9 @@
 
 		@media (min-width: 768px) {
 			.train {
-				position: fixed;
+				position: absolute;
+				z-index: 10;
 				width: 100px;
-				z-index:10;
 				animation: train 5s linear infinite !important;
 			}
 			.trainrev {
@@ -48,8 +48,8 @@
 		@media (max-width: 768px) {
 			.train {
 				position: fixed;
+				z-index: 10;
 				width: 35px;
-				z-index:10;
 				animation: train 3s linear infinite !important;
 			}
 			.trainrev {
