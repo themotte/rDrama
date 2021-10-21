@@ -330,6 +330,8 @@ def gumroad(v):
 		grant_awards["train"] = 10
 		grant_awards["ban"] = 5
 		grant_awards["pin"] = 1
+		grant_awards["unpin"] = 1
+		grant_awards["flairlock"] = 1
 	elif tier == 5 or tier == 8:
 		if v.discord_id: add_role(v, "5")
 		grant_awards["shit"] = 20
@@ -337,7 +339,8 @@ def gumroad(v):
 		grant_awards["train"] = 20
 		grant_awards["ban"] = 10
 		grant_awards["pin"] = 2
-		grant_awards["unpin"] = 1
+		grant_awards["unpin"] = 2
+		grant_awards["flairlock"] = 2
 
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 

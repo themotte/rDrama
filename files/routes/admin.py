@@ -194,13 +194,16 @@ def monthly(v):
 				grant_awards["train"] = 10
 				grant_awards["ban"] = 5
 				grant_awards["pin"] = 1
+				grant_awards["unpin"] = 1
+				grant_awards["flairlock"] = 1
 			elif u.patron == 5 or u.patron == 8:
 				grant_awards["shit"] = 20
 				grant_awards["fireflies"] = 20
 				grant_awards["train"] = 20
 				grant_awards["ban"] = 10
 				grant_awards["pin"] = 2
-				grant_awards["unpin"] = 1
+				grant_awards["unpin"] = 2
+				grant_awards["flairlock"] = 2
 
 			for name in grant_awards:
 				for count in range(grant_awards[name]):
@@ -443,6 +446,8 @@ def badge_grant_post(v):
 			grant_awards["train"] = 10
 			grant_awards["ban"] = 5
 			grant_awards["pin"] = 1
+			grant_awards["unpin"] = 1
+			grant_awards["flairlock"] = 1
 		elif badge_id == 25:
 			if user.discord_id: add_role(user, "5")
 			grant_awards["shit"] = 20
@@ -450,7 +455,8 @@ def badge_grant_post(v):
 			grant_awards["train"] = 20
 			grant_awards["ban"] = 10
 			grant_awards["pin"] = 2
-			grant_awards["unpin"] = 1
+			grant_awards["unpin"] = 2
+			grant_awards["flairlock"] = 2
 
 		if len(grant_awards):
 
