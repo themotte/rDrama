@@ -87,7 +87,7 @@
 			{% set kind = a['kind'] %}
 			<td style="font-weight: bold">
 				<a class="btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}')">Buy</a>
-				{% if v.procoins and kind not in ["agendaposter","unban","grass"] %}<a class="btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}?mb=true')">Buy with Marseybux</a>{% endif %}
+				{% if v.procoins and kind not in ["agendaposter","grass"] %}<a class="btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}?mb=true')">Buy with Marseybux</a>{% endif %}
 			</td>
 		</tr>
 	{% endfor %}
