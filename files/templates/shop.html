@@ -74,7 +74,6 @@
 			<tr>
 				<th scope="col">Icon</th>
 				<th scope="col">Title</th>
-				<th scope="col">Description</th>
 				<th scope="col">Price</th>
 				<th scope="col">Buy</th>
 			</tr>
@@ -84,7 +83,6 @@
 		<tr>
 			<td><i class="{{a['icon']}} {{a['color']}}" style="font-size: 30px"></i></td>
 			<td style="font-weight: bold">{{a['title']}}</td>
-			<td style="font-weight: bold">{{a['description']}}</td>
 			<td style="font-weight: bold">{{a['price']}}</td>
 			{% set kind = a['kind'] %}
 			<td style="font-weight: bold"><a class="btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}')">Buy</a></td>
