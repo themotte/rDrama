@@ -100,7 +100,7 @@ def settings_profile_post(v):
 		updated = True
 		v.is_nofollow = request.values.get("nofollow", None) == 'true'
 
-	if request.values.get("bio"):
+	if request.values.get("bio") or request.files.get('file'):
 		bio = request.values.get("bio")[:1500]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):

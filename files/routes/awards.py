@@ -7,6 +7,33 @@ from files.classes.award import *
 from .front import frontlist
 from flask import g, request
 
+AWARDS2 = {
+	"ban": {
+		"kind": "ban",
+		"title": "1-Day Ban",
+		"description": "Bans the author for a day.",
+		"icon": "fas fa-gavel",
+		"color": "text-danger",
+		"price": 3000
+	},
+	"grass": {
+		"kind": "grass",
+		"title": "Grass",
+		"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+		"icon": "fas fa-seedling",
+		"color": "text-success",
+		"price": 10000
+	},
+	"shit": {
+		"kind": "shit",
+		"title": "Shit",
+		"description": "Makes flies swarm a post.",
+		"icon": "fas fa-poop",
+		"color": "text-black-50",
+		"price": 500
+	},
+}
+
 @app.get("/shop")
 @app.get("/settings/shop")
 @auth_required
@@ -121,33 +148,6 @@ def shop(v):
 				"price": 1000
 			},
 		}
-
-	AWARDS2 = {
-		"ban": {
-			"kind": "ban",
-			"title": "1-Day Ban",
-			"description": "Bans the author for a day.",
-			"icon": "fas fa-gavel",
-			"color": "text-danger",
-			"price": 3000
-		},
-		"grass": {
-			"kind": "grass",
-			"title": "Grass",
-			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
-			"icon": "fas fa-seedling",
-			"color": "text-success",
-			"price": 10000
-		},
-		"shit": {
-			"kind": "shit",
-			"title": "Shit",
-			"description": "Makes flies swarm a post.",
-			"icon": "fas fa-poop",
-			"color": "text-black-50",
-			"price": 500
-		},
-	}
 
 	query = g.db.query(
 	User.id, User.username, User.patron, User.namecolor,

@@ -109,6 +109,13 @@
 	})()
 </script>
 
+{% if c.author.bio_html %}
+	{% set bio = c.author.bio_html.replace('src="/assets/images/loading.gif" data-', '') %}
+{% endif %}
+<script>
+	console.log({{bio}})
+</script>
+
 <div style="display:none" id="popover-{{c.id}}">
 	<div class="popover-user-profile" role="tooltip">
 	  <img class="w-100 h-64 object-cover" src="{{c.author.banner_url}}">
@@ -119,7 +126,7 @@
 		</div>
 	  </div>
 	  <div class="px-3">
-		<span class="text-black">{% if c.author.bio_html %}{{c.author.bio_html.replace('src="/assets/images/loading.gif" data-', '') | safe}}{% endif %}</span>
+		<span class="text-black">{% if c.author.bio_html %}{{bio | safe}}{% endif %}</span>
 	  </div>
 	  <div class="border-top d-flex align-items-center px-2 py-3 gap-3 smol">
 		<span>
@@ -152,7 +159,6 @@
 {% else %}
 	{% set replies=c.replies %}
 {% endif %}
-
 
 {% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking or c.is_blocked) and not (v and v.admin_level>0) and not (v and v.id==c.author_id) %}
 
