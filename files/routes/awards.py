@@ -182,7 +182,7 @@ def shop(v):
 			award["owned_num"] = row['last_award_count']
 			owned.append(award)
 
-	print(owned)
+	owned = sorted(owned, key=lambda x: x['price'])
 	if v.patron:
 		for val in AWARDS.values():
 			if v.patron == 1: val["price"] = int(val["price"]*0.90)
