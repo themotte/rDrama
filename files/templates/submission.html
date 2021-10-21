@@ -37,7 +37,6 @@
 			.train {
 				position: fixed;
 				width: 100px;
-				z-index: 10;
 				animation: train 5s linear infinite !important;
 			}
 			.trainrev {
@@ -48,8 +47,7 @@
 		@media (max-width: 768px) {
 			.train {
 				position: fixed;
-				width: 50px;
-				z-index: -1;
+				width: 25px;
 				animation: train 3s linear infinite !important;
 			}
 			.trainrev {
@@ -451,7 +449,7 @@
 								</a>
 							{% endif %}
 						{% endif %}
-						<div id="post-text" style="z-index: -2">
+						<div id="post-text">
 							{% if p.is_image %}
 								<div class="row no-gutters">
 									<div class="col">
