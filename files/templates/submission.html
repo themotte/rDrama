@@ -40,20 +40,23 @@
 				z-index: 10;
 				animation: train 5s linear infinite !important;
 			}
+			.trainrev {
+				animation: trainrev 3s linear infinite !important;
+			}
 		}
 
 		@media (max-width: 768px) {
 			.train {
 				position: fixed;
 				width: 50px;
-				z-index: 1;
-				animation: train 5s linear infinite !important;
+				z-index: -1;
+				animation: train 3s linear infinite !important;
+			}
+			.trainrev {
+				animation: trainrev 3s linear infinite !important;
 			}
 		}
 
-		.trainrev {
-			animation: trainrev 5s linear infinite !important;
-		}
 	</style>
 
 	<img class="train" style="top:10%" src="/assets/images/emojis/marseytrain.webp">
@@ -448,7 +451,7 @@
 								</a>
 							{% endif %}
 						{% endif %}
-						<div id="post-text">
+						<div id="post-text" style="z-index: -2">
 							{% if p.is_image %}
 								<div class="row no-gutters">
 									<div class="col">
