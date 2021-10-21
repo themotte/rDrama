@@ -110,7 +110,7 @@
 </script>
 
 {% if c.author.bio_html %}
-	{% set bio = c.author.bio_html.replace('src="/assets/images/loading.gif" data-', '') %}
+	{% set bio = c.author.bio_html.replace('data-src', 'src') %}
 	<script>
 		console.log('{{bio}}');
 	</script>	
