@@ -4,7 +4,6 @@ import pyotp
 from files.helpers.discord import remove_user
 from files.helpers.images import *
 from files.helpers.const import *
-from files.helpers.alerts import send_notification
 from .alts import Alt
 from .submission import SaveRelationship
 from .comment import Notification
@@ -456,7 +455,6 @@ class User(Base):
 			self.unban_utc = 0
 			self.ban_evade = 0
 			g.db.add(self)
-			send_notification(NOTIFICATIONS_ACCOUNT, self, "Your ban has expired!")
 			g.db.commit()
 		return (self.is_banned and (not self.unban_utc or self.unban_utc > time.time()))
 
