@@ -303,64 +303,21 @@ def gumroad(v):
 	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
 
 	v.patron = tier
+	if v.discord_id: add_role(v, f"{tier}")
+
+	if v.patron == 1: procoins = 2000
+	elif v.patron == 2: procoins = 5000
+	elif v.patron == 3: procoins = 10000
+	elif v.patron == 4: procoins = 25000
+	elif v.patron == 5 or v.patron == 8: procoins = 50000
+
+	v.procoins += bc
+	send_notification(NOTIFICATIONS_ACCOUNT, v, f"You were given {procoins} Marseybux!")
 	g.db.add(v)
 
-	grant_awards = {}
-	if tier == 1:
-		if v.discord_id: add_role(v, "1")
-		grant_awards["shit"] = 1
-		grant_awards["fireflies"] = 1
-		grant_awards["train"] = 1
-	elif tier == 2:
-		if v.discord_id: add_role(v, "2")
-		grant_awards["shit"] = 2
-		grant_awards["fireflies"] = 2
-		grant_awards["train"] = 2
-		grant_awards["ban"] = 1
-	elif tier == 3:
-		if v.discord_id: add_role(v, "3")
-		grant_awards["shit"] = 5
-		grant_awards["fireflies"] = 5
-		grant_awards["train"] = 5
-		grant_awards["ban"] = 2
-	elif tier == 4:
-		if v.discord_id: add_role(v, "4")
-		grant_awards["shit"] = 10
-		grant_awards["fireflies"] = 10
-		grant_awards["train"] = 10
-		grant_awards["ban"] = 5
-		grant_awards["pin"] = 1
-		grant_awards["unpin"] = 1
-		grant_awards["flairlock"] = 1
-	elif tier == 5 or tier == 8:
-		if v.discord_id: add_role(v, "5")
-		grant_awards["shit"] = 20
-		grant_awards["fireflies"] = 20
-		grant_awards["train"] = 20
-		grant_awards["ban"] = 10
-		grant_awards["pin"] = 2
-		grant_awards["unpin"] = 2
-		grant_awards["flairlock"] = 2
-
-	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
-
-	for name in grant_awards:
-		for count in range(grant_awards[name]):
-
-			thing += 1
-
-			award = AwardRelationship(
-				id=thing,
-				user_id=v.id,
-				kind=name
-			)
-
-			g.db.add(award)
 
 	if not v.has_badge(20+tier):
-		new_badge = Badge(badge_id=20+tier,
-						user_id=v.id,
-						)
+		new_badge = Badge(badge_id=20+tier, user_id=v.id)
 		g.db.add(new_badge)
 
 	g.db.commit()

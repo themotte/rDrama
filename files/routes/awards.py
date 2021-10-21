@@ -335,11 +335,16 @@ def buy(v, award):
 		elif v.patron == 4: price = int(price*0.75)
 		else: price = int(price*0.70)
 
-	if v.coins < price: return {"error": "Not enough coins."}, 400
-	v.coins -= price
-	v.coins_spent += price
-	g.db.add(v)
+	if request.values.get("mb"):
+		if v.procoins < price: return {"error": "Not enough marseybux."}, 400
+		v.procoins -= price
+	else:
+		if v.coins < price: return {"error": "Not enough coins."}, 400
+		v.coins -= price
+		v.coins_spent += price
+		g.db.add(v)
 
+	g.db.add(v)
 	g.db.flush()
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 	thing += 1

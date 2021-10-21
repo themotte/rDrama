@@ -172,62 +172,18 @@ def monthly(v):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
-			grant_awards = {}
+			if u.patron == 1: procoins = 2000
+			elif u.patron == 2: procoins = 5000
+			elif u.patron == 3: procoins = 10000
+			elif u.patron == 4: procoins = 25000
+			elif u.patron == 5 or u.patron == 8: procoins = 50000
 
-			if u.patron == 1:
-				grant_awards["shit"] = 1
-				grant_awards["fireflies"] = 1
-				grant_awards["train"] = 1
-			elif u.patron == 2:
-				grant_awards["shit"] = 2
-				grant_awards["fireflies"] = 2
-				grant_awards["train"] = 2
-				grant_awards["ban"] = 1
-			elif u.patron == 3:
-				grant_awards["shit"] = 5
-				grant_awards["fireflies"] = 5
-				grant_awards["train"] = 5
-				grant_awards["ban"] = 2
-			elif u.patron == 4:
-				grant_awards["shit"] = 10
-				grant_awards["fireflies"] = 10
-				grant_awards["train"] = 10
-				grant_awards["ban"] = 5
-				grant_awards["pin"] = 1
-				grant_awards["unpin"] = 1
-				grant_awards["flairlock"] = 1
-			elif u.patron == 5 or u.patron == 8:
-				grant_awards["shit"] = 20
-				grant_awards["fireflies"] = 20
-				grant_awards["train"] = 20
-				grant_awards["ban"] = 10
-				grant_awards["pin"] = 2
-				grant_awards["unpin"] = 2
-				grant_awards["flairlock"] = 2
+			u.procoins += bc
+			send_notification(NOTIFICATIONS_ACCOUNT, u, f"You were given {procoins} Marseybux!")
+			g.db.add(u)
 
-			for name in grant_awards:
-				for count in range(grant_awards[name]):
-
-					thing += 1
-
-					award = AwardRelationship(
-						id=thing,
-						user_id=u.id,
-						kind=name
-					)
-
-					g.db.add(award)
-
-			text = "You were given the following awards:\n\n"
-
-			for key, value in grant_awards.items():
-				text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
-
-			send_notification(NOTIFICATIONS_ACCOUNT, u, text)
-
-
-	g.db.commit()
-	return {"message": "Monthly awards granted"}
+		g.db.commit()
+	return {"message": "Monthly coins granted"}
 
 
 @app.get('/admin/rules')
@@ -415,76 +371,7 @@ def badge_grant_post(v):
 	\n\n![]({new_badge.path})
 	\n\n{new_badge.name}
 	"""
-	send_notification(NOTIFICATIONS_ACCOUNT, user, text)
-
-	if badge_id in [21,22,23,24,25,28]:
-		user.patron = int(str(badge_id)[-1])
-
-		grant_awards = {}
-
-		if badge_id == 21:
-			if user.discord_id: add_role(user, "1")
-			grant_awards["shit"] = 1
-			grant_awards["fireflies"] = 1
-			grant_awards["train"] = 1
-		elif badge_id == 22:
-			if user.discord_id: add_role(user, "2")
-			grant_awards["shit"] = 2
-			grant_awards["fireflies"] = 2
-			grant_awards["train"] = 2
-			grant_awards["ban"] = 1
-		elif badge_id == 23:
-			if user.discord_id: add_role(user, "3")
-			grant_awards["shit"] = 5
-			grant_awards["fireflies"] = 5
-			grant_awards["train"] = 5
-			grant_awards["ban"] = 2
-		elif badge_id in [24, 28]:
-			if user.discord_id: add_role(user, "4")
-			grant_awards["shit"] = 10
-			grant_awards["fireflies"] = 10
-			grant_awards["train"] = 10
-			grant_awards["ban"] = 5
-			grant_awards["pin"] = 1
-			grant_awards["unpin"] = 1
-			grant_awards["flairlock"] = 1
-		elif badge_id == 25:
-			if user.discord_id: add_role(user, "5")
-			grant_awards["shit"] = 20
-			grant_awards["fireflies"] = 20
-			grant_awards["train"] = 20
-			grant_awards["ban"] = 10
-			grant_awards["pin"] = 2
-			grant_awards["unpin"] = 2
-			grant_awards["flairlock"] = 2
-
-		if len(grant_awards):
-
-			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
-
-			for name in grant_awards:
-				for count in range(grant_awards[name]):
-
-					thing += 1
-
-					award = AwardRelationship(
-						id=thing,
-						user_id=user.id,
-						kind=name
-					)
-
-					g.db.add(award)
-
-			text = "You were given the following awards:\n\n"
-
-			for key, value in grant_awards.items():
-				text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
-
-			send_notification(NOTIFICATIONS_ACCOUNT, user, text)
-
-
-		g.db.add(user)
-	
+	send_notification(NOTIFICATIONS_ACCOUNT, user, text)	
 	
 	g.db.commit()
 	return redirect("/admin/badge_grant")

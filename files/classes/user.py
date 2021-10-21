@@ -89,6 +89,7 @@ class User(Base):
 	reserved = Column(String)
 	coins = Column(Integer, default=0)
 	truecoins = Column(Integer, default=0)
+	procoins = Column(Integer, default=0)
 	mfa_secret = deferred(Column(String))
 	is_private = Column(Boolean, default=False)
 	stored_subscriber_count = Column(Integer, default=0)
