@@ -11,6 +11,7 @@ BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 WELCOME_CHANNEL="846509313941700618"
+SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.get("/discord")
 @auth_required
@@ -18,7 +19,7 @@ def join_discord(v):
 	
 	if v.is_suspended != 0 and v.admin_level == 0: return "Banned users cannot join the discord server!"
 	
-	if 'rama' in request.host and v.admin_level == 0 and v.patron == 0 and v.truecoins < 150: return f"You must earn 150 {COINS_NAME} before entering the Discord server. You earn {COINS_NAME} by making posts/comments and getting upvoted."
+	if SITE_NAME == 'Drama' and v.admin_level == 0 and v.patron == 0 and v.truecoins < 150: return f"You must earn 150 {COINS_NAME} before entering the Discord server. You earn {COINS_NAME} by making posts/comments and getting upvoted."
 	
 	if v.shadowbanned or v.agendaposter: return ""
 

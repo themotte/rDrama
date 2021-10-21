@@ -16,13 +16,13 @@ AWARDS2 = {
 		"color": "text-danger",
 		"price": 3000
 	},
-	"grass": {
-		"kind": "grass",
-		"title": "Grass",
-		"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
-		"icon": "fas fa-seedling",
-		"color": "text-success",
-		"price": 10000
+	"fireflies": {
+		"kind": "fireflies",
+		"title": "Fireflies",
+		"description": "Puts fireflies on the post.",
+		"icon": "fas fa-sparkles",
+		"color": "text-warning",
+		"price": 500
 	},
 	"shit": {
 		"kind": "shit",
@@ -103,6 +103,14 @@ def shop(v):
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"price": 1000
+			},
+			"agendaposter": {
+				"kind": "agendaposter",
+				"title": "Agendaposter",
+				"description": "Force the agendaposter theme on the author for 24 hours.",
+				"icon": "fas fa-snooze",
+				"color": "text-purple",
+				"price": 2000
 			},
 		}
 	else:
@@ -246,6 +254,14 @@ def buy(v, award):
 				"color": "text-black",
 				"price": 1000
 			},
+			"agendaposter": {
+				"kind": "agendaposter",
+				"title": "Agendaposter",
+				"description": "Force the agendaposter theme on the author for 24 hours.",
+				"icon": "fas fa-snooze",
+				"color": "text-purple",
+				"price": 2000
+			},
 		}
 	else:
 		AWARDS = {
@@ -363,8 +379,8 @@ def award_post(pid, v):
 
 	send_notification(NOTIFICATIONS_ACCOUNT, post.author, msg)
 
+	author = post.author
 	if kind == "ban":
-		author = post.author
 		link = f"[this post]({post.permalink})"
 
 		if not author.is_suspended:
@@ -374,7 +390,6 @@ def award_post(pid, v):
 			author.unban_utc += 24*60*60
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
-		author = post.author
 		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
 
 		if author.unban_utc - time.time() > 86400:
@@ -385,7 +400,6 @@ def award_post(pid, v):
 			author.is_banned = 0
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"You have been unbanned!")
 	elif kind == "grass":
-		author = post.author
 		author.is_banned = AUTOJANNY_ACCOUNT
 		author.ban_reason = f"grass award used by @{v.username} on /post/{post.id}"
 		link = f"[this post]({post.permalink})"
@@ -404,6 +418,14 @@ def award_post(pid, v):
 			cache.delete_memoized(frontlist)
 		else: post.stickied = f"t:{t}"
 		g.db.add(post)
+	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
+		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400
+		else: author.agendaposter_expires_utc = time.time() + 86400
+		
+		author.agendaposter = True
+		if not author.has_badge(26):
+			badge = Badge(user_id=author.id, badge_id=26)
+			g.db.add(badge)
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -459,9 +481,9 @@ def award_comment(cid, v):
 	if note: msg += f"\n\n> {note}"
 
 	send_notification(NOTIFICATIONS_ACCOUNT, c.author, msg)
+	author = c.author
 
 	if kind == "ban":
-		author = c.author
 		link = f"[this comment]({c.permalink})"
 
 		if not author.is_suspended:
@@ -471,7 +493,6 @@ def award_comment(cid, v):
 			author.unban_utc += 24*60*60
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
-		author = c.author
 		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
 
 		if author.unban_utc - time.time() > 86400:
@@ -482,7 +503,6 @@ def award_comment(cid, v):
 			author.is_banned = 0
 			send_notification(NOTIFICATIONS_ACCOUNT, author, f"You have been unbanned!")
 	elif kind == "grass":
-		author = c.author
 		author.is_banned = AUTOJANNY_ACCOUNT
 		author.ban_reason = f"grass award used by @{v.username} on /comment/{c.id}"
 		link = f"[this comment]({c.permalink})"
@@ -498,6 +518,14 @@ def award_comment(cid, v):
 		if time.time() > t: c.is_pinned = None
 		else: c.is_pinned = f"t:{t}"
 		g.db.add(c)
+	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
+		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400
+		else: author.agendaposter_expires_utc = time.time() + 86400
+		
+		author.agendaposter = True
+		if not author.has_badge(26):
+			badge = Badge(user_id=author.id, badge_id=26)
+			g.db.add(badge)
 
 	c.author.received_award_count += 1
 	g.db.add(c.author)
@@ -510,6 +538,7 @@ def award_comment(cid, v):
 @admin_level_required(6)
 def admin_userawards_get(v):
 
+	if v.username == "Aevann": return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
 	return render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
 
 @app.post("/admin/awards")
@@ -532,8 +561,7 @@ def admin_userawards_post(v):
 	thing = latest.id
 
 	for key, value in request.values.items():
-		if key not in AWARDS:
-			continue
+		if key not in AWARDS: continue
 
 		if value:
 
@@ -560,4 +588,5 @@ def admin_userawards_post(v):
 
 	g.db.commit()
 
+	if v.username == "Aevann": return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
 	return render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)

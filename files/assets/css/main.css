@@ -14029,10 +14029,6 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     background-color: var(--gray-600);
   }
 
-  #frontpage .posts .card:last-of-type, #search .posts .card:last-of-type {
-    border-bottom: 0.1px solid var(--gray-400);
-  }
-
   #frontpage .posts .card:hover .post-title a, #search .posts .card:hover .post-title a {
     color: var(--primary);
   }
@@ -14640,11 +14636,15 @@ blockquote p {
 @media (min-width: 576px)
 {
   .modal-dialog {
-    max-width: 65% !important;
+    max-width: 90% !important;
     margin: 1.75rem auto !important;
   }
 }
 
 .text-pink {
   color: #ff66ac !important;
+}
+
+.text-purple {
+  color: #805ad5 !important;
 }

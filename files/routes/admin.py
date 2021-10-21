@@ -31,7 +31,7 @@ def truescore(v):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def revert_actions(v, username):
-	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 
@@ -116,7 +116,7 @@ def club_ban(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def make_admin(v, username):
-	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 6
@@ -129,7 +129,7 @@ def make_admin(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def remove_admin(v, username):
-	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -142,7 +142,7 @@ def remove_admin(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def make_fake_admin(v, username):
-	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 1
@@ -155,7 +155,7 @@ def make_fake_admin(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def remove_fake_admin(v, username):
-	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -168,7 +168,7 @@ def remove_fake_admin(v, username):
 @limiter.limit("1/day")
 @admin_level_required(6)
 def monthly(v):
-	if 'pcm' in request.host or ('rama' in request.host and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,12,28,29,747,995,1480]) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
 			grant_awards = {}
@@ -672,8 +672,7 @@ def agendaposter(user_id, v):
 	if expiry:
 		expiry = int(expiry)
 		expiry = g.timestamp + expiry*60*60*24
-	else:
-		expiry = 0
+	else: expiry = 0
 
 	user.agendaposter = not user.agendaposter
 	user.agendaposter_expires_utc = expiry

@@ -1,7 +1,8 @@
 from os import environ
 import re
 
-site = environ.get("DOMAIN", '').strip()
+SITE = environ.get("DOMAIN", '').strip()
+SITE_NAME = environ.get("SITE_NAME", '').strip()
 
 SLURS = {
     "faggot": "cute twink",
@@ -17,7 +18,6 @@ SLURS = {
     "troon": "🚂🚃🚃",
     "nonewnormal": "HorseDewormerAddicts",
     "kike": "https://sciencedirect.com/science/article/abs/pii/S016028960600033X",
-    "retard": "r-slur",
     "janny": "j-slur",
     "jannie": "j-slur",
     "janny": "j-slur",
@@ -91,7 +91,7 @@ Thank you."""
 
 BASED_MSG = "@{username}'s Based Count has increased by 1. Their Based Count is now {basedcount}.\n\nPills: {pills}"
 
-if site == "pcmemes.net":
+if SITE == "pcmemes.net":
     BASEDBOT_ACCOUNT = 800
     NOTIFICATIONS_ACCOUNT = 1046
     AUTOJANNY_ACCOUNT = 1050
@@ -99,7 +99,7 @@ if site == "pcmemes.net":
     LONGPOSTBOT_ACCOUNT = 1832
     ZOZBOT_ACCOUNT = 1833
     AUTOPOLLER_ACCOUNT = 3369
-elif site == 'rdrama.net':
+elif SITE == 'rdrama.net':
     NOTIFICATIONS_ACCOUNT = 1046
     AUTOJANNY_ACCOUNT = 2360
     SNAPPY_ACCOUNT = 261
@@ -126,3 +126,122 @@ def sub_matcher(match: re.Match) -> str:
 def censor_slurs(body: str, logged_user) -> str:
     if not logged_user or logged_user.slurreplacer: body = SLUR_REGEX.sub(sub_matcher, body)
     return body
+
+if SITE_NAME == "Drama":
+	AWARDS = {
+		"ban": {
+			"kind": "ban",
+			"title": "1-Day Ban",
+			"description": "Bans the author for a day.",
+			"icon": "fas fa-gavel",
+			"color": "text-danger",
+			"price": 3000
+		},
+		"unban": {
+			"kind": "unban",
+			"title": "1-Day Unban",
+			"description": "Removes 1 day from the ban duration of the recipient.",
+			"icon": "fas fa-gavel",
+			"color": "text-success",
+			"price": 3500
+		},
+		"grass": {
+			"kind": "grass",
+			"title": "Grass",
+			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+			"icon": "fas fa-seedling",
+			"color": "text-success",
+			"price": 10000
+		},
+		"shit": {
+			"kind": "shit",
+			"title": "Shit",
+			"description": "Makes flies swarm a post.",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"price": 500
+		},
+		"fireflies": {
+			"kind": "fireflies",
+			"title": "Fireflies",
+			"description": "Puts fireflies on the post.",
+			"icon": "fas fa-sparkles",
+			"color": "text-warning",
+			"price": 500
+		},
+		"train": {
+			"kind": "train",
+			"title": "Train",
+			"description": "Summons a train on the post.",
+			"icon": "fas fa-train",
+			"color": "text-pink",
+			"price": 500
+		},
+		"pin": {
+			"kind": "pin",
+			"title": "1-Hour Pin",
+			"description": "Pins the post.",
+			"icon": "fas fa-thumbtack fa-rotate--45",
+			"color": "text-warning",
+			"price": 750
+		},
+		"unpin": {
+			"kind": "unpin",
+			"title": "1-Hour Unpin",
+			"description": "Removes 1 hour from the pin duration of the post.",
+			"icon": "fas fa-thumbtack fa-rotate--45",
+			"color": "text-black",
+			"price": 1000
+		},
+		"agendaposter": {
+			"kind": "agendaposter",
+			"title": "Agendaposter",
+			"description": "Force the agendaposter theme on the author for 24 hours.",
+			"icon": "fas fa-snooze",
+			"color": "text-purple",
+			"price": 2000
+		},
+	}
+else:
+	AWARDS = {
+		"shit": {
+			"kind": "shit",
+			"title": "Shit",
+			"description": "Makes flies swarm a post.",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"price": 500
+		},
+		"fireflies": {
+			"kind": "fireflies",
+			"title": "Fireflies",
+			"description": "Puts fireflies on the post.",
+			"icon": "fas fa-sparkles",
+			"color": "text-warning",
+			"price": 500
+		},
+		"train": {
+			"kind": "train",
+			"title": "Train",
+			"description": "Summons a train on the post.",
+			"icon": "fas fa-train",
+			"color": "text-pink",
+			"price": 500
+		},
+		"pin": {
+			"kind": "pin",
+			"title": "1-Hour Pin",
+			"description": "Pins the post.",
+			"icon": "fas fa-thumbtack fa-rotate--45",
+			"color": "text-warning",
+			"price": 750
+		},
+		"unpin": {
+			"kind": "unpin",
+			"title": "1-Hour Unpin",
+			"description": "Removes 1 hour from the pin duration of the post.",
+			"icon": "fas fa-thumbtack fa-rotate--45",
+			"color": "text-black",
+			"price": 1000
+		},
+	}

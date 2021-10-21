@@ -5,6 +5,7 @@ from files.__main__ import app, cache
 from files.classes.submission import Submission
 
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
+SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.get("/post/")
 def slash_post():
@@ -147,7 +148,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = g.db.query(Submission.id).options(lazyload('*'))
 
-	if 'rama' in request.host and sort == "hot":
+	if SITE_NAME == 'Drama' and sort == "hot":
 		cutoff = int(time.time()) - 86400
 		posts = posts.filter(Submission.created_utc >= cutoff)
 	elif t != 'all':

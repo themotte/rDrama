@@ -21,6 +21,7 @@ valid_password_regex = re.compile("^.{8,100}$")
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
+SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 tiers={
 	"(Paypig)": 1,
@@ -284,7 +285,7 @@ def themecolor(v):
 @auth_required
 @validate_formkey
 def gumroad(v):
-	if 'rama' in request.host: patron = 'Paypig'
+	if SITE_NAME == 'Drama': patron = 'Paypig'
 	else: patron = 'Patron'
 
 	if not (v.email and v.is_activated): return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400

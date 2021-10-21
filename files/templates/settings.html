@@ -55,8 +55,8 @@
 
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=82"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=82">
-	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=82">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+	<link rel="stylesheet" href="/assets/css/main.css?v=84"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=84">
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=84">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 
 		<link href="/assets/css/fa.css?v=52" rel="stylesheet"> 
 </head>
@@ -127,9 +127,6 @@
 				<li class="nav-item">
 					<a class="nav-link{% if request.path=='/settings/apps' %} active{% endif %}" href="/settings/apps">Apps</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link{% if 'shop' in request.path %} active{% endif %}" href="/shop">Shop</a>
-				</li>
 			</ul>
 
 		</div>
@@ -158,9 +155,6 @@
 				</li>
 				<li class="nav-item">
 					<a class="nav-link{% if request.path=='/settings/apps' %} active{% endif %} navsettings" href="/settings/apps"><i class="fas fa-code text-base mr-0"></i></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link{% if 'shop' in request.path %} active{% endif %} navsettings" href="/shop"><i class="fas fa-store text-base mr-0"></i></a>
 				</li>
 			</ul>
 
