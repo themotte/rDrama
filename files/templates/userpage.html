@@ -315,7 +315,7 @@
 								<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
 							{% endfor %}
 						</ul>
-						True score: {{u.truecoins}}
+						True score: {{u.truecoins}} &nbsp;
 						Coins spent: {{u.coins_spent}}
 					{% endif %}
 					{% if u.is_suspended %}
@@ -582,7 +582,7 @@
 						<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
 						{% endfor %}
 					</ul>
-					True score: {{u.truecoins}}
+					True score: {{u.truecoins}} &nbsp;
 					Coins spent: {{u.coins_spent}}
 				{% endif %}
 				{% if u.is_suspended %}
