@@ -189,36 +189,6 @@ class Submission(Base):
 
 		return f"/post/{self.id}/{output}"
 
-	@lazy
-	def rendered_page(self, sort=None, comment=None, comment_info=None, v=None):
-
-		if self.is_banned and not (v and (v.admin_level >= 3 or self.author_id == v.id)): template = "submission_banned.html"
-		else: template = "submission.html"
-
-		comments = self.__dict__.get('preloaded_comments', [])
-		if comments:
-			pinned_comment = []
-			index = {}
-			for c in comments:
-				if c.is_pinned and c.parent_fullname==self.fullname:
-					pinned_comment += [c]
-					continue
-				if c.parent_fullname in index: index[c.parent_fullname].append(c)
-				else: index[c.parent_fullname] = [c]
-
-			for c in comments: c.__dict__["replies"] = index.get(c.fullname, [])
-			if comment: self.__dict__["replies"] = [comment]
-			else: self.__dict__["replies"] = pinned_comment + index.get(self.fullname, [])
-
-		return render_template(template,
-							   v=v,
-							   p=self,
-							   sort=sort,
-							   linked_comment=comment,
-							   comment_info=comment_info,
-							   render_replies=True
-							   )
-
 	@property
 	@lazy
 	def domain(self):

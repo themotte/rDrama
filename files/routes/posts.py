@@ -157,7 +157,7 @@ def post_id(pid, anything=None, v=None):
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
 
-		post.preloaded_comments = output
+		post.replies = output
 
 	else:
 		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
@@ -174,7 +174,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		post.preloaded_comments = comments.all()
+		post.replies = comments.all()
 
 	post.views += 1
 	g.db.add(post)
@@ -185,7 +185,10 @@ def post_id(pid, anything=None, v=None):
 
 	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
-	else: return post.rendered_page(v=v, sort=sort)
+	else:
+		if post.is_banned and not (v and (v.admin_level >= 3 or post.author_id == v.id)): template = "submission_banned.html"
+		else: template = "submission.html"
+		return render_template(template, v=v, p=post, sort=sort, render_replies=True)
 
 
 @app.post("/edit_post/<pid>")

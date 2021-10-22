@@ -121,10 +121,13 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
 
-		post.preloaded_comments = output
+		post.replies = output
 			
 	if request.headers.get("Authorization"): return top_comment.json
-	else: return post.rendered_page(v=v, sort=sort, comment=top_comment, comment_info=comment_info)
+	else: 
+		if post.is_banned and not (v and (v.admin_level >= 3 or post.author_id == v.id)): template = "submission_banned.html"
+		else: template = "submission.html"
+		return render_template(template, v=v, p=post, sort=sort, linked_comment=comment, comment_info=comment_info, render_replies=True)
 
 
 @app.post("/comment")
