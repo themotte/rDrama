@@ -276,7 +276,7 @@
 				{% if c.is_op %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="OP"></i>{% endif %}
 				{% if c.is_bot %}<i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bot"></i>{% endif %}
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{% if v and v.admin_level >= 2 %}You're blocking this user, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}.{% else %}Comment author is banned{% endif %}"></i>{% endif %}
-				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This user is blocking you, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}."></i>{% endif %}
+				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This user is blocking you."></i>{% endif %}
 
 				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.id == 541 %}#62ca56{% elif c.author.id in [30,2256] %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
 				{% endif %}
