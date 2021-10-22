@@ -157,8 +157,7 @@ def post_id(pid, anything=None, v=None):
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
 
-		post.replies = output
-
+		post.replies = [x for x in output if x.level == 1]
 	else:
 		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
 		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT, Comment.author_id.notin_(shadowbanned))
@@ -174,7 +173,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		post.replies = comments.all()
+		post.replies = comments.filter_by(level=1).all()
 
 	post.views += 1
 	g.db.add(post)
