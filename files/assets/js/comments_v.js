@@ -134,7 +134,7 @@ post_reply=function(id){
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			commentForm=document.getElementById('comment-form-space-'+id);
-			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src');
+			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 		}
 		else {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
@@ -160,7 +160,7 @@ comment_edit=function(id){
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			commentForm=document.getElementById('comment-text-'+id);
-			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src');
+			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 			document.getElementById('cancel-edit-'+id).click()
 		}
 		else {
@@ -191,7 +191,7 @@ post_comment=function(fullname){
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			commentForm=document.getElementById('comment-form-space-'+fullname);
-			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
+			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 		}
 		else {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));

@@ -26,7 +26,7 @@
 
 {% if v %}
 	{% include "award_modal.html" %}
-	<script src="/assets/js/comments_v.js?v=62"></script>
+	<script src="/assets/js/comments_v.js?v=63"></script>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -162,7 +162,7 @@
 	{% set replies=c.replies %}
 {% endif %}
 
-{% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking or c.is_blocked) and not (v and v.admin_level>0) and not (v and v.id==c.author_id) %}
+{% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking) and not (v and v.admin_level>0) and not (v and v.id==c.author_id) %}
 
 <div id="comment-{{c.id}}" class="comment">
 
@@ -176,7 +176,7 @@
 						<div class="user-info">
 							<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
 							{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
-							[{% if c.is_banned %}Removed by admins{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% elif c.is_blocked %}This user has blocked you{% endif %}]
+							[{% if c.is_banned %}Removed by admins{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}]
 						</div>
 
 
@@ -278,7 +278,7 @@
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{% if v and v.admin_level >= 2 %}You're blocking this user, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}.{% else %}Comment author is banned{% endif %}"></i>{% endif %}
 				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This user is blocking you, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}."></i>{% endif %}
 
-				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.id == 541 %}#62ca56{% elif c.author.id == 2256 %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
+				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.id == 541 %}#62ca56{% elif c.author.id in [30,2256] %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
 				{% endif %}
 
 				<a class="user-name text-decoration-none" data-bs-position="auto" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" href="javascript:void(0)" tabindex="0" style="color:#{{c.author.namecolor}};  font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{c.author.username}}</span></a>

@@ -47,6 +47,7 @@ def shop(v):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
+				"owned": 0,
 				"price": 500
 			},
 			"fireflies": {
@@ -55,6 +56,7 @@ def shop(v):
 				"description": "Puts fireflies on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
+				"owned": 0,
 				"price": 500
 			},
 			"train": {
@@ -63,6 +65,7 @@ def shop(v):
 				"description": "Summons a train on the post.",
 				"icon": "fas fa-train",
 				"color": "text-pink",
+				"owned": 0,
 				"price": 500
 			},
 			"pin": {
@@ -71,6 +74,7 @@ def shop(v):
 				"description": "Pins the post.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
+				"owned": 0,
 				"price": 750
 			},
 			"unpin": {
@@ -79,6 +83,7 @@ def shop(v):
 				"description": "Removes 1 hour from the pin duration of the post.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
+				"owned": 0,
 				"price": 1000
 			},
 			"flairlock": {
@@ -87,6 +92,7 @@ def shop(v):
 				"description": "Sets a flair for the author and locks it or 24 hours.",
 				"icon": "fas fa-lock",
 				"color": "text-black",
+				"owned": 0,
 				"price": 1250
 			},
 			"agendaposter": {
@@ -95,6 +101,7 @@ def shop(v):
 				"description": "Forces the agendaposter theme on the author for 24 hours.",
 				"icon": "fas fa-snooze",
 				"color": "text-purple",
+				"owned": 0,
 				"price": 2000
 			},
 			"ban": {
@@ -103,6 +110,7 @@ def shop(v):
 				"description": "Bans the author for a day.",
 				"icon": "fas fa-gavel",
 				"color": "text-danger",
+				"owned": 0,
 				"price": 3000
 			},
 			"unban": {
@@ -111,6 +119,7 @@ def shop(v):
 				"description": "Removes 1 day from the ban duration of the recipient.",
 				"icon": "fas fa-gavel",
 				"color": "text-success",
+				"owned": 0,
 				"price": 3500
 			},
 			"grass": {
@@ -119,6 +128,7 @@ def shop(v):
 				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 				"icon": "fas fa-seedling",
 				"color": "text-success",
+				"owned": 0,
 				"price": 10000
 			},
 		}
@@ -130,6 +140,7 @@ def shop(v):
 				"description": "Makes flies swarm a post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
+				"owned": 0,
 				"price": 500
 			},
 			"fireflies": {
@@ -138,6 +149,7 @@ def shop(v):
 				"description": "Puts fireflies on the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
+				"owned": 0,
 				"price": 500
 			},
 			"train": {
@@ -146,6 +158,7 @@ def shop(v):
 				"description": "Summons a train on the post.",
 				"icon": "fas fa-train",
 				"color": "text-pink",
+				"owned": 0,
 				"price": 50
 			},
 			"pin": {
@@ -154,6 +167,7 @@ def shop(v):
 				"description": "Pins the post.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
+				"owned": 0,
 				"price": 750
 			},
 			"unpin": {
@@ -162,27 +176,13 @@ def shop(v):
 				"description": "Removes 1 hour from the pin duration of the post.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
+				"owned": 0,
 				"price": 1000
 			},
 		}
 
-	query = g.db.query(
-	User.id, User.username, User.patron, User.namecolor,
-	AwardRelationship.kind.label('last_award_kind'), func.count(AwardRelationship.id).label('last_award_count')
-	).filter(AwardRelationship.submission_id==None, AwardRelationship.comment_id==None, User.patron > 0) \
-	.group_by(User.username, User.patron, User.id, User.namecolor, AwardRelationship.kind) \
-	.order_by(User.patron.desc(), AwardRelationship.kind.desc()) \
-	.join(User).filter(User.id == v.id).all()
+	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all(): AWARDS[useraward.kind]["owned"] += 1
 
-	owned = []
-	for row in (r._asdict() for r in query):
-		kind = row['last_award_kind']
-		if kind in AWARDS.keys():
-			award = AWARDS[kind]
-			award["owned_num"] = row['last_award_count']
-			owned.append(award)
-
-	owned = sorted(owned, key=lambda x: x['price'])
 	if v.patron:
 		for val in AWARDS.values():
 			if v.patron == 1: val["price"] = int(val["price"]*0.90)
@@ -192,7 +192,7 @@ def shop(v):
 			else: val["price"] = int(val["price"]*0.70)
 
 	sales = g.db.query(Vote.id).count() + g.db.query(CommentVote.id).count() - g.db.query(func.sum(User.coins)).scalar()
-	return render_template("shop.html", owned=owned, awards=list(AWARDS.values()), v=v, sales=sales)
+	return render_template("shop.html", awards=list(AWARDS.values()), v=v, sales=sales)
 
 
 @app.post("/buy/<award>")

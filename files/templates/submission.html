@@ -143,7 +143,7 @@
 	</script>
 
 	{% if v %}
-		<script src="/assets/js/comments_v.js?v=62"></script>
+		<script src="/assets/js/comments_v.js?v=63"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -226,7 +226,7 @@
 <meta property="article:published_time" content="{{p.created_datetime}}" />
 {% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}" />{% endif %}
 <meta property="og:description" name="description" content="{{p.plainbody(v)}}" />
-<meta property="og:author" name="author" content="{{'@'+p.author.username}}" />
+{% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author.username}}" />{% endif %}
 <meta property="og:title" content="{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}" />
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
 {% if p.url and p.url.lower().endswith('.mp4') %}
@@ -238,7 +238,7 @@
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="{{request.host_url}}">
 <meta name="twitter:title" content="{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}" />
-<meta name="twitter:creator" content="{{'@'+p.author.username}}">
+{% if p.author %}<meta name="twitter:creator" content="{{'@'+p.author.username}}">{% endif %}
 <meta name="twitter:description" content="{{p.plainbody(v)}}" />
 <meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" />
 <meta name="twitter:url" content="{{p.permalink | full_link}}" />
@@ -424,7 +424,7 @@
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}
 						{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
-						{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.id == 541 %}#62ca56{% elif p.author.id == 2256 %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
+						{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.id == 541 %}#62ca56{% elif p.author.id in [30,2256] %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
 						{% endif %}
 						<a class="user-name text-decoration-none" data-bs-position="auto" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"/><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp">&nbsp;{{p.age_string}}</span>

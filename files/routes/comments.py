@@ -603,40 +603,41 @@ def edit_comment(cid, v):
 												body=body,
 												v=v
 												)
-	now = int(time.time())
-	cutoff = now - 60 * 60 * 24
+	if not body.lower().contains('trans lives matters'):
+		now = int(time.time())
+		cutoff = now - 60 * 60 * 24
 
-	similar_comments = g.db.query(Comment
-									).options(
-		lazyload('*')
-	).filter(
-		Comment.author_id == v.id,
-		Comment.body.op(
-			'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-		Comment.created_utc > cutoff
-	).all()
+		similar_comments = g.db.query(Comment
+										).options(
+			lazyload('*')
+		).filter(
+			Comment.author_id == v.id,
+			Comment.body.op(
+				'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+			Comment.created_utc > cutoff
+		).all()
 
-	threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-	if v.age >= (60 * 60 * 24 * 30):
-		threshold *= 4
-	elif v.age >= (60 * 60 * 24 * 7):
-		threshold *= 3
-	elif v.age >= (60 * 60 * 24):
-		threshold *= 2
+		threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+		if v.age >= (60 * 60 * 24 * 30):
+			threshold *= 4
+		elif v.age >= (60 * 60 * 24 * 7):
+			threshold *= 3
+		elif v.age >= (60 * 60 * 24):
+			threshold *= 2
 
-	if len(similar_comments) > threshold:
-		text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-		send_notification(NOTIFICATIONS_ACCOUNT, v, text)
+		if len(similar_comments) > threshold:
+			text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+			send_notification(NOTIFICATIONS_ACCOUNT, v, text)
 
-		v.ban(reason="Spamming.",
-				days=1)
+			v.ban(reason="Spamming.",
+					days=1)
 
-		for comment in similar_comments:
-			comment.is_banned = True
-			comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
-			g.db.add(comment)
+			for comment in similar_comments:
+				comment.is_banned = True
+				comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
+				g.db.add(comment)
 
-		return {"error": "Too much spam!"}, 403
+			return {"error": "Too much spam!"}, 403
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]

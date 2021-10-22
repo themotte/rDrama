@@ -5,6 +5,10 @@ SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 
 SLURS = {
+	"retarded": "r-slurred",
+	"retard": "r-slur",
+	"tard": "r-slur",
+	"faggot": "cute twink",
 	"faggot": "cute twink",
 	"fag": "cute twink",
 	"pedophile": "libertarian",
