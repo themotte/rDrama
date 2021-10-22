@@ -603,7 +603,7 @@ def edit_comment(cid, v):
 												body=body,
 												v=v
 												)
-	if not body.lower().contains('trans lives matters'):
+	if 'trans lives matters' not in body.lower():
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
