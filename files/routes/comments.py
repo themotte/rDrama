@@ -76,8 +76,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	else: defaultsortingcomments = "top"
 	sort=request.values.get("sort", defaultsortingcomments)
 
-	post.replies=[top_comment]
-
 	if v:
 		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
 
@@ -121,7 +119,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
 
-		post.replies = output
+	post.replies=[top_comment]
 			
 	if request.headers.get("Authorization"): return top_comment.json
 	else: 
