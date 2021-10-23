@@ -58,19 +58,6 @@ function post_toast_callback(url, data, callback) {
 
 const TRANSFER_TAX = 0.01;
 
-window.addEventListener( 'load', function() {
-	var userid = document.getElementById("userid").value;
-	if (userid != "nosong")
-	{
-		var audio = new Audio(`/songs/${userid}`);
-		audio.loop=true;
-		audio.play();
-		document.getElementById('userpage').addEventListener('click', () => {
-			if (audio.paused) audio.play(); 
-		}, {once : true});
-	}
-}, false );
-
 function updateTax(mobile=false) {
 	let suf = mobile ? "-mobile" : "";
 	let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);

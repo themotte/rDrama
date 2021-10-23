@@ -15,7 +15,7 @@
 	}
 </style>
 
-<script src="/assets/js/userpage.js?v=54"></script>
+<script src="/assets/js/userpage.js?v=57"></script>
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
@@ -43,28 +43,44 @@
 
 <script>
 	function transferCoins(mobile=false) {
-	let t = event.target;
-	t.disabled = true;
+		let t = event.target;
+		t.disabled = true;
 
-	let amount = parseInt(document.getElementById("coins-transfer-amount").value);
-	let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+		let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
 
-	post_toast_callback("/@{{u.username}}/transfer_coins",
-		{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
-		(xhr) => {
-		if(xhr.status == 200) {
-			document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
-			document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
-			document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
+		post_toast_callback("/@{{u.username}}/transfer_coins",
+			{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
+			(xhr) => {
+			if(xhr.status == 200) {
+				document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
+				document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
+				document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
+			}
+			}
+		);
+
+		setTimeout(_ => t.disabled = false, 2000);
+	}
+
+	{% if u.song %}
+		var audio = new Audio('/songs/{{u.id}}');
+		audio.loop=true;
+
+		window.addEventListener( 'load', function() {
+			audio.play();
+			document.getElementById('userpage').addEventListener('click', () => {
+				if (audio.paused) audio.play(); 
+			}, {once : true});
+
+		});
+
+		function pause() {
+			audio.pause();
 		}
-		}
-	);
-
-	setTimeout(_ => t.disabled = false, 2000);
-}
+	{% endif %}
 </script>
 
-<textarea id="userid" style="display: none;">{% if u.song %}{{u.id}}{% else %}nosong{% endif %}</textarea>
 <div class="row d-none d-md-block">
 	<div class="col px-0">
 		<div class="jumbotron jumbotron-fluid jumbotron-guild d-none d-md-block" style="background-image: url({{u.banner_url}})">
