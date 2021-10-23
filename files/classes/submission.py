@@ -309,9 +309,7 @@ class Submission(Base):
 		else: return ""
  
 	def realbody(self, v):
-		if self.club and not (v and v.paid_dues):
-			if v: return f"<p>{v.username} dox/p>" 
-			return "<p>COUNTRY CLUB ONLY</p>"
+		if self.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
 
 		body = self.body_html
 		body = censor_slurs(body, v)
@@ -321,9 +319,7 @@ class Submission(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.club and not (v and v.paid_dues):
-			if v: return f"<p>{v.username} dox/p>" 
-			return "<p>COUNTRY CLUB ONLY</p>"
+		if self.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
 
 		body = self.body
 		body = censor_slurs(body, v)
@@ -334,7 +330,9 @@ class Submission(Base):
 
 	@lazy
 	def realtitle(self, v):
-		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6): return 'COUNTRY CLUB MEMBERS ONLY'
+		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6):
+			if v: return f'{v.username} dox'
+			else: return 'COUNTRY CLUB MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
 		else: title = self.title
 
@@ -344,7 +342,9 @@ class Submission(Base):
 
 	@lazy
 	def plaintitle(self, v):
-		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6): return 'COUNTRY CLUB MEMBERS ONLY'
+		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6):
+			if v: return f'{v.username} dox'
+			else: return 'COUNTRY CLUB MEMBERS ONLY'
 		else: title = self.title
 
 		title = censor_slurs(title, v)

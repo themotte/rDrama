@@ -293,9 +293,7 @@ class Comment(Base):
 		return data
 
 	def realbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues):
-			if v: return f"<p>{v.username} dox/p>" 
-			return "<p>COUNTRY CLUB ONLY</p>"
+		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
 
 		body = self.body_html
 
@@ -321,9 +319,7 @@ class Comment(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues):
-			if v: return f"<p>{v.username} dox/p>" 
-			return "<p>COUNTRY CLUB ONLY</p>"
+		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
 
 		body = self.body
 

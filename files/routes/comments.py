@@ -385,7 +385,7 @@ def api_comment(v):
 		c.upvotes += 1
 		g.db.add(c)
 
-	if "rama" in request.host and len(c.body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
+	if "rama" in request.host and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
 	
 		body = random.choice(LONGPOST_REPLIES)
 		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
@@ -417,7 +417,7 @@ def api_comment(v):
 
 
 
-	if "rama" in request.host and random.random() < 0.001 and v.username != "Snappy" and v.username != "zozbot":
+	if "rama" in request.host and random.random() < 0.001:
 	
 		body = "zoz"
 		body_md = CustomRenderer().render(mistletoe.Document(body))
