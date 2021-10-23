@@ -19,7 +19,6 @@ beams_client = PushNotifications(
 		secret_key=PUSHER_KEY,
 )
 
-
 @app.post("/pay_rent")
 @limiter.limit("1/second")
 @auth_required
@@ -117,9 +116,6 @@ def get_coins(v, username):
 @is_not_banned
 @validate_formkey
 def transfer_coins(v, username):
-	TAX_RECEIVER_ID = 747
-	TAX_RATE = 0.01
-
 	receiver = g.db.query(User).filter_by(username=username).first()
 	tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
 
@@ -145,7 +141,7 @@ def transfer_coins(v, username):
 		send_notification(receiver.id, transfer_message)
 
 		log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
-		send_notification(TAX_RECEIVER_ID.id, log_message)
+		send_notification(TAX_RECEIVER_ID, log_message)
 
 		g.db.commit()
 
