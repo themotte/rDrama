@@ -75,13 +75,26 @@
 
 		});
 
-		function pause() {
-			audio.pause();
-		}
+		{% if not u.unmutable %}
+			function pause() {
+				audio.pause();
+				document.getElementById("pause").classList.toggle("d-none");
+				document.getElementById("play").classList.toggle("d-none");
+			}
+
+			function play() {
+				audio.play();
+				document.getElementById("pause").classList.toggle("d-none");
+				document.getElementById("play").classList.toggle("d-none");
+			}
+		{% endif %}
 	{% endif %}
 </script>
 
-<a class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause</a>
+{% if not u.unmutable %}
+	<a id="pause" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause</a>
+	<a id="play" class="btn btn-secondary d-none" href="javascript:void(0)" onclick="play()">Play</a>
+{% endif %}
 
 <div class="row d-none d-md-block">
 	<div class="col px-0">
