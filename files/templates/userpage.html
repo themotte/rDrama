@@ -66,6 +66,24 @@
 	{% if u.song %}
 		var audio = new Audio('/songs/{{u.id}}');
 		audio.loop=true;
+		
+		{% if not u.unmutable %}
+			function pause() {
+				audio.pause();
+				document.getElementById("pause1").classList.toggle("d-none");
+				document.getElementById("play1").classList.toggle("d-none");
+				document.getElementById("pause2").classList.toggle("d-none");
+				document.getElementById("play2").classList.toggle("d-none");
+			}
+
+			function play() {
+				audio.play();
+				document.getElementById("pause1").classList.toggle("d-none");
+				document.getElementById("play1").classList.toggle("d-none");
+				document.getElementById("pause2").classList.toggle("d-none");
+				document.getElementById("play2").classList.toggle("d-none");
+			}
+		{% endif %}
 
 		window.addEventListener( 'load', function() {
 			audio.play();
@@ -74,27 +92,8 @@
 			}, {once : true});
 
 		});
-
-		{% if not u.unmutable %}
-			function pause() {
-				audio.pause();
-				document.getElementById("pause").classList.toggle("d-none");
-				document.getElementById("play").classList.toggle("d-none");
-			}
-
-			function play() {
-				audio.play();
-				document.getElementById("pause").classList.toggle("d-none");
-				document.getElementById("play").classList.toggle("d-none");
-			}
-		{% endif %}
 	{% endif %}
 </script>
-
-{% if not u.unmutable %}
-	<a id="pause" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause</a>
-	<a id="play" class="btn btn-secondary d-none" href="javascript:void(0)" onclick="play()">Play</a>
-{% endif %}
 
 <div class="row d-none d-md-block">
 	<div class="col px-0">
@@ -256,6 +255,12 @@
 						<a href="/settings/profile" class="btn btn-secondary">Edit profile</a>
 						<a href="/views" class="btn btn-secondary">Profile views</a>
 					{% endif %}
+
+					{% if v and v.mute and not u.unmutable %}
+						<a id="pause1" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
+						<a id="play1" class="btn btn-secondary d-none" href="javascript:void(0)" onclick="play()">Play anthem</a>
+					{% endif %}
+
 					{% if v and v.id != u.id and v.admin_level > 1 %}
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
@@ -463,7 +468,13 @@
 				{% if v and v.id == u.id %}
 					<a href="/settings/profile" class="btn btn-secondary ">Edit profile</a>
 					<a href="/views" class="btn btn-secondary">Profile views</a>
-					{% endif %}
+				{% endif %}
+
+				{% if v and v.mute and not u.unmutable %}
+					<a id="pause2" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
+					<a id="play2" class="btn btn-secondary d-none" href="javascript:void(0)" onclick="play()">Play anthem</a>
+				{% endif %}
+
 				{% if v and v.id != u.id %}
 					{% if u.id != 995 %}<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">Unfollow</a>{% endif %}
 					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">Follow</a>						

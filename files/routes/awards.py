@@ -131,6 +131,24 @@ def shop(v):
 				"owned": 0,
 				"price": 10000
 			},
+			"pause": {
+				"kind": "pause",
+				"title": "Pause",
+				"description": "Gives the recipient the ability to pause profile anthems.",
+				"icon": "fas fa-volume-mute",
+				"color": "text-danger",
+				"owned": 0,
+				"price": 20000
+			},
+			"unpausable": {
+				"kind": "unpausable",
+				"title": "Unpausable",
+				"description": "Makes the profile anthem of the recipient unpausable.",
+				"icon": "fas fa-volume",
+				"color": "text-success",
+				"owned": 0,
+				"price": 40000
+			},
 		}
 	else:
 		AWARDS = {
@@ -178,6 +196,24 @@ def shop(v):
 				"color": "text-black",
 				"owned": 0,
 				"price": 1000
+			},
+			"pause": {
+				"kind": "pause",
+				"title": "Pause",
+				"description": "Gives the recipient the ability to pause profile anthems.",
+				"icon": "fas fa-volume-mute",
+				"color": "text-danger",
+				"owned": 0,
+				"price": 20000
+			},
+			"unpausable": {
+				"kind": "unpausable",
+				"title": "Unpausable",
+				"description": "Makes the profile anthem of the recipient unpausable.",
+				"icon": "fas fa-volume",
+				"color": "text-success",
+				"owned": 0,
+				"price": 40000
 			},
 		}
 
@@ -280,7 +316,22 @@ def buy(v, award):
 				"color": "text-success",
 				"price": 10000
 			},
-
+			"pause": {
+				"kind": "pause",
+				"title": "Pause",
+				"description": "Gives the recipient the ability to pause profile anthems.",
+				"icon": "fas fa-volume-mute",
+				"color": "text-danger",
+				"price": 20000
+			},
+			"unpausable": {
+				"kind": "unpausable",
+				"title": "Unpausable",
+				"description": "Makes the profile anthem of the recipient unpausable.",
+				"icon": "fas fa-volume",
+				"color": "text-success",
+				"price": 40000
+			},
 		}
 	else:
 		AWARDS = {
@@ -323,6 +374,22 @@ def buy(v, award):
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"price": 1000
+			},
+			"pause": {
+				"kind": "pause",
+				"title": "Pause",
+				"description": "Gives the recipient the ability to pause profile anthems.",
+				"icon": "fas fa-volume-mute",
+				"color": "text-danger",
+				"price": 20000
+			},
+			"unpausable": {
+				"kind": "unpausable",
+				"title": "Unpausable",
+				"description": "Makes the profile anthem of the recipient unpausable.",
+				"icon": "fas fa-volume",
+				"color": "text-success",
+				"price": 40000
 			},
 		}
 
@@ -458,6 +525,10 @@ def award_post(pid, v):
 		author.customtitle = filter_title(new_name)
 		if len(author.customtitle) > 1000: abort(403)
 		author.flairchanged = time.time() + 86400
+	elif kind == "pause":
+		author.mute = True
+	elif kind == "unpausable":
+		author.unmutable = True
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -565,7 +636,9 @@ def award_comment(cid, v):
 		author.customtitle = filter_title(new_name)
 		if len(author.customtitle) > 1000: abort(403)
 		author.flairchanged = time.time() + 86400
-	
+	elif kind == "pause": author.mute = True
+	elif kind == "unpausable": author.unmutable = True
+
 	c.author.received_award_count += 1
 	g.db.add(c.author)
 

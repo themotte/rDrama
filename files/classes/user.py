@@ -76,6 +76,8 @@ class User(Base):
 	newtabexternal = Column(Boolean, default=True)
 	oldreddit = Column(Boolean, default=True)
 	nitter = Column(Boolean)
+	mute = Column(Boolean)
+	unmutable = Column(Boolean)
 	frontsize = Column(Integer, default=25)
 	controversial = Column(Boolean, default=False)
 	bio = Column(String)

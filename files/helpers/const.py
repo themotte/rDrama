@@ -213,6 +213,22 @@ if SITE_NAME == "Drama":
 			"color": "text-success",
 			"price": 10000
 		},
+		"pause": {
+			"kind": "pause",
+			"title": "Pause",
+			"description": "Gives the recipient the ability to pause profile anthems.",
+			"icon": "fas fa-volume-mute",
+			"color": "text-danger",
+			"price": 20000
+		},
+		"unpausable": {
+			"kind": "unpausable",
+			"title": "Unpausable",
+			"description": "Makes the profile anthem of the recipient unpausable.",
+			"icon": "fas fa-volume",
+			"color": "text-success",
+			"price": 40000
+		},
 	}
 else:
 	AWARDS = {
@@ -255,5 +271,21 @@ else:
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-black",
 			"price": 1000
+		},
+		"pause": {
+			"kind": "pause",
+			"title": "Pause",
+			"description": "Gives the recipient the ability to pause profile anthems.",
+			"icon": "fas fa-volume-mute",
+			"color": "text-danger",
+			"price": 20000
+		},
+		"unpausable": {
+			"kind": "unpausable",
+			"title": "Unpausable",
+			"description": "Makes the profile anthem of the recipient unpausable.",
+			"icon": "fas fa-volume",
+			"color": "text-success",
+			"price": 40000
 		},
 	}
