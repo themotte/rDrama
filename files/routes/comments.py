@@ -197,7 +197,7 @@ def api_comment(v):
 															 Comment.parent_submission == parent_submission,
 															 Comment.body == body
 															 ).first()
-	if existing: return {"error": f"You already made that comment: {existing.permalink}"}, 409
+	if existing: \return {"error": f"You already made that comment: {existing.permalink}"}, 409
 
 	if parent.author.any_block_exists(v) and not v.admin_level>=3: return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
