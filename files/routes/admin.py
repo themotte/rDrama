@@ -352,10 +352,14 @@ def badge_grant_post(v):
 		g.db.query(Badge).options(lazyload('*')).filter_by(badge_id=badge_id, user_id=user.id,).delete()
 		g.db.commit()
 		return redirect("/admin/badge_grant")
+
+	if badge_id == 16:
+		badge = user.has_badge(17)
+		if badge: badge.delete()
+
+	elif badge_id == 17 and user.has_badge(16): abort(403)
 	
-	new_badge = Badge(badge_id=badge_id,
-					  user_id=user.id,
-					  )
+	new_badge = Badge(badge_id=badge_id, user_id=user.id)
 
 	desc = request.values.get("description")
 	if desc: new_badge.description = desc

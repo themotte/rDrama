@@ -301,6 +301,10 @@ def gumroad(v):
 	tier = tiers[response["variants_and_quantity"]]
 	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
 
+	if v.patron:
+		badge = v.has_badge(20+tier)
+		if badge: badge.delete()
+	
 	v.patron = tier
 	if v.discord_id: add_role(v, f"{tier}")
 
