@@ -225,7 +225,7 @@ def api_comment(v):
 
 		if len(similar_comments) > threshold:
 			text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-			send_notification(NOTIFICATIONS_ACCOUNT, v, text)
+			send_notification(v.id, text)
 
 			v.ban(reason="Spamming.",
 					days=1)
@@ -625,7 +625,7 @@ def edit_comment(cid, v):
 
 		if len(similar_comments) > threshold:
 			text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-			send_notification(NOTIFICATIONS_ACCOUNT, v, text)
+			send_notification(v.id, text)
 
 			v.ban(reason="Spamming.",
 					days=1)

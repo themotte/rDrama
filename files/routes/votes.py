@@ -1,6 +1,5 @@
 from files.helpers.wrappers import *
 from files.helpers.get import *
-from files.helpers.const import NOTIFICATIONS_ACCOUNT
 from files.helpers.alerts import send_notification
 from files.classes import *
 from flask import *
@@ -108,12 +107,12 @@ def api_vote_post(post_id, new, v):
 		v.agendaposter_expires_utc = 0
 		v.agendaposter = False
 		g.db.add(v)
-		send_notification(NOTIFICATIONS_ACCOUNT, v, "Your agendaposter theme has expired!")
+		send_notification(v.id, "Your agendaposter theme has expired!")
 
 	if v.flairchanged and v.flairchanged < time.time():
 		v.flairchanged = None
 		g.db.add(v)
-		send_notification(NOTIFICATIONS_ACCOUNT, v, "Your flair lock has expired. You can now change your flair!")
+		send_notification(v.id, "Your flair lock has expired. You can now change your flair!")
 
 	try:
 		g.db.flush()

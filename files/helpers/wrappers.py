@@ -41,7 +41,7 @@ def check_ban_evade(v):
 	
 	if random.randint(0,30) < v.ban_evade:
 		v.ban(reason="permaban evasion")
-		send_notification(NOTIFICATIONS_ACCOUNT, v, "Your account has been permanently suspended for the following reason:\n\n> permaban evasion")
+		send_notification(v.id, "Your account has been permanently suspended for the following reason:\n\n> permaban evasion")
 
 		for post in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=v.id).all():
 			if post.is_banned:

@@ -7,19 +7,14 @@ from .sanitize import *
 from .const import *
 
 
-def send_notification(vid, user, text):
-
-	if isinstance(user, int):
-		uid = user
-	else:
-		uid = user.id
+def send_notification(uid, text):
 
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
 	text_html = CustomRenderer().render(mistletoe.Document(text))
 
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=vid,
+	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
 							parent_submission=None,
 							distinguish_level=6,
 							body=text,

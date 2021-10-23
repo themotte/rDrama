@@ -179,7 +179,7 @@ def monthly(v):
 			elif u.patron == 5 or u.patron == 8: procoins = 50000
 
 			u.procoins += procoins
-			send_notification(NOTIFICATIONS_ACCOUNT, u, f"You were given {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
+			send_notification(u.id, f"You were given {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
 			g.db.add(u)
 
 		g.db.commit()
@@ -371,7 +371,7 @@ def badge_grant_post(v):
 	\n\n![]({new_badge.path})
 	\n\n{new_badge.name}
 	"""
-	send_notification(NOTIFICATIONS_ACCOUNT, user, text)	
+	send_notification(user.id, text)	
 	
 	g.db.commit()
 	return redirect("/admin/badge_grant")
@@ -600,8 +600,8 @@ def agendaposter(user_id, v):
 		badge = user.has_badge(26)
 		if badge: g.db.delete(badge)
 
-	if user.agendaposter: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been marked by an admin as an agendaposter ({note}).")
-	else: send_notification(NOTIFICATIONS_ACCOUNT, user, f"You have been unmarked by an admin as an agendaposter.")
+	if user.agendaposter: send_notification(user.id, f"You have been marked by an admin as an agendaposter ({note}).")
+	else: send_notification(user.id, f"You have been unmarked by an admin as an agendaposter.")
 
 	g.db.commit()
 	if user.agendaposter: return redirect(user.url)
@@ -757,7 +757,7 @@ def ban_user(user_id, v):
 			if x.admin_level > 0: break
 			x.ban(admin=v, reason=reason)
 
-	send_notification(NOTIFICATIONS_ACCOUNT, user, text[:128])
+	send_notification(user.id, text[:128])
 	
 	if days == 0: duration = "permanent"
 	elif days == 1: duration = "1 day"
@@ -815,7 +815,7 @@ def unban_user(user_id, v):
 				x.ban_evade = 0
 				g.db.add(x)
 
-	send_notification(NOTIFICATIONS_ACCOUNT, user,
+	send_notification(user.id,
 					  "Your account has been reinstated. Please carefully review and abide by the [rules](/post/2510) to ensure that you don't get suspended again.")
 
 	ma=ModAction(

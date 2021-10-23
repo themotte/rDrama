@@ -63,7 +63,7 @@ def publish(pid, v):
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
-		send_notification(AUTOJANNY_ACCOUNT, user, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})")
+		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})")
 
 	g.db.commit()
 
@@ -302,7 +302,7 @@ def edit_post(pid, v):
 		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
 		for x in notify_users:
 			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x.id).first()
-			if not existing: send_notification(NOTIFICATIONS_ACCOUNT, x, message)
+			if not existing: send_notification(x.id, message)
 
 
 	if title != p.title or body != p.body:
@@ -589,7 +589,7 @@ def submit_post(v):
 	if max(len(similar_urls), len(similar_posts)) >= threshold:
 
 		text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-		send_notification(NOTIFICATIONS_ACCOUNT, v, text)
+		send_notification(v.id, text)
 
 		v.ban(reason="Spamming.",
 			  days=1)
@@ -733,12 +733,12 @@ def submit_post(v):
 		user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
-	for x in notify_users: send_notification(NOTIFICATIONS_ACCOUNT, x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
+	for x in notify_users: send_notification(x.id, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 		
 	if not new_post.private:
 		for follow in v.followers:
 			user = get_account(follow.user_id)
-			send_notification(AUTOJANNY_ACCOUNT, user, f"@{v.username} has made a new post: [{title}](http://{site}{new_post.permalink})")
+			send_notification(user.id, f"@{v.username} has made a new post: [{title}](http://{site}{new_post.permalink})")
 
 	g.db.add(new_post)
 	g.db.flush()

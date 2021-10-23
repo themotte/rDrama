@@ -469,7 +469,7 @@ def award_post(pid, v):
 	note = request.values.get("note", "").strip()
 	if note: msg += f"\n\n> {note}"
 
-	send_notification(NOTIFICATIONS_ACCOUNT, post.author, msg)
+	send_notification(post.author.id, msg)
 
 	author = post.author
 	if kind == "ban":
@@ -477,26 +477,26 @@ def award_post(pid, v):
 
 		if not author.is_suspended:
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /post/{post.id}", days=1)
-			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
+			send_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
 			author.unban_utc += 24*60*60
-			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for yet another day for {link}. Seriously man?")
+			send_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
 		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
 
 		if author.unban_utc - time.time() > 86400:
 			author.unban_utc -= 86400
-			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your ban duration has been reduced by 1 day!")
+			send_notification(author.id, f"Your ban duration has been reduced by 1 day!")
 		else:
 			author.unban_utc = 0
 			author.is_banned = 0
 			author.ban_evade = 0
-			send_notification(NOTIFICATIONS_ACCOUNT, author, f"You have been unbanned!")
+			send_notification(author.id, f"You have been unbanned!")
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ACCOUNT
 		author.ban_reason = f"grass award used by @{v.username} on /post/{post.id}"
 		link = f"[this post]({post.permalink})"
-		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+		send_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 	elif kind == "pin":
 		if post.stickied and post.stickied.startswith("t:"): t = int(post.stickied[2:]) + 3600
 		else: t = int(time.time()) + 3600
@@ -527,8 +527,10 @@ def award_post(pid, v):
 		author.flairchanged = time.time() + 86400
 	elif kind == "pause":
 		author.mute = True
+		send_notification(995, f"@{v.username} bought {kind} award!")
 	elif kind == "unpausable":
 		author.unmutable = True
+		send_notification(995, f"@{v.username} bought {kind} award!")
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -583,7 +585,7 @@ def award_comment(cid, v):
 	note = request.values.get("note", "").strip()
 	if note: msg += f"\n\n> {note}"
 
-	send_notification(NOTIFICATIONS_ACCOUNT, c.author, msg)
+	send_notification(c.author.id, msg)
 	author = c.author
 
 	if kind == "ban":
@@ -591,26 +593,26 @@ def award_comment(cid, v):
 
 		if not author.is_suspended:
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /comment/{c.id}", days=1)
-			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
+			send_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
 			author.unban_utc += 24*60*60
-			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended for yet another day for {link}. Seriously man?")
+			send_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
 		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
 
 		if author.unban_utc - time.time() > 86400:
 			author.unban_utc -= 86400
-			send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your ban duration has been reduced by 1 day!")
+			send_notification(author.id, f"Your ban duration has been reduced by 1 day!")
 		else:
 			author.unban_utc = 0
 			author.is_banned = 0
 			author.ban_evade = 0
-			send_notification(NOTIFICATIONS_ACCOUNT, author, f"You have been unbanned!")
+			send_notification(author.id, f"You have been unbanned!")
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ACCOUNT
 		author.ban_reason = f"grass award used by @{v.username} on /comment/{c.id}"
 		link = f"[this comment]({c.permalink})"
-		send_notification(NOTIFICATIONS_ACCOUNT, author, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+		send_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 	elif kind == "pin":
 		if c.is_pinned and c.is_pinned.startswith("t:"): t = int(c.is_pinned[2:]) + 3600
 		else: t = int(time.time()) + 3600
@@ -636,8 +638,12 @@ def award_comment(cid, v):
 		author.customtitle = filter_title(new_name)
 		if len(author.customtitle) > 1000: abort(403)
 		author.flairchanged = time.time() + 86400
-	elif kind == "pause": author.mute = True
-	elif kind == "unpausable": author.unmutable = True
+	elif kind == "pause":
+		author.mute = True
+		send_notification(995, f"@{v.username} bought {kind} award!")
+	elif kind == "unpausable":
+		author.unmutable = True
+		send_notification(995, f"@{v.username} bought {kind} award!")
 
 	c.author.received_award_count += 1
 	g.db.add(c.author)
@@ -696,7 +702,7 @@ def admin_userawards_post(v):
 	for key, value in notify_awards.items():
 		text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
 
-	send_notification(NOTIFICATIONS_ACCOUNT, u, text)
+	send_notification(u.id, text)
 
 	g.db.commit()
 
