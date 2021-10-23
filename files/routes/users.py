@@ -117,7 +117,6 @@ def get_coins(v, username):
 @validate_formkey
 def transfer_coins(v, username):
 	receiver = g.db.query(User).filter_by(username=username).first()
-	tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
 
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
@@ -129,22 +128,24 @@ def transfer_coins(v, username):
 		if v.coins < amount: return {"error": f"You don't have enough {app.config['COINS_NAME']}"}, 400
 		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['COINS_NAME']}."}, 400
 
-		tax = math.ceil(amount*TAX_RATE)
 		v.coins -= amount
 		receiver.coins += amount-tax
-		tax_receiver.coins += tax
-		g.db.add(receiver)
-		g.db.add(tax_receiver)
-		g.db.add(v)
 
 		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
 		send_notification(receiver.id, transfer_message)
 
-		log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
-		send_notification(TAX_RECEIVER_ID, log_message)
+		g.db.add(receiver)
+		g.db.add(v)
+
+		if TAX_RATE and TAX_RECEIVER_ID:
+			tax = math.ceil(amount*TAX_RATE)
+			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
+			tax_receiver.coins += tax
+			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
+			send_notification(TAX_RECEIVER_ID, log_message)
+			g.db.add(tax_receiver)
 
 		g.db.commit()
-
 		return {"message": f"{amount-tax} {app.config['COINS_NAME']} transferred!"}, 200
 
 	return {"message": f"You can't transfer {app.config['COINS_NAME']} to yourself!"}, 400
@@ -423,7 +424,7 @@ def u_username(username, v=None):
 		
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
 		
-		if v and u.id == 253:
+		if v and u.id == LLM_ID:
 			if int(time.time()) - v.rent_utc > 600:
 				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
 				else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
@@ -516,7 +517,7 @@ def u_username_comments(username, v=None):
 
 
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
-		if v and u.id == 253:
+		if v and u.id == LLM_ID:
 			if int(time.time()) - v.rent_utc > 600:
 				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
 				else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
@@ -634,7 +635,7 @@ def unfollow_user(username, v):
 
 	target = get_user(username)
 
-	if target.id == 995: abort(403)
+	if target.id == CARP_ID: abort(403)
 
 	follow = g.db.query(Follow).options(lazyload('*')).filter_by(user_id=v.id, target_id=target.id).first()
 

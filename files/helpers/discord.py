@@ -9,7 +9,7 @@ BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN",'').strip()
 AUTH = environ.get("DISCORD_AUTH",'').strip()
 
 ROLES={
-	"shrigma": "864612849199480914",
+	"owner": "864612849199480914",
 	"admin": "879459632656048180" if environ.get("DOMAIN") == "pcmemes.net" else "846509661288267776",
 	"linked": "890342909390520382",
 	"1": "868129042346414132",

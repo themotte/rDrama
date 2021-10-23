@@ -7,14 +7,17 @@ from .sanitize import *
 from .const import *
 
 
-def send_notification(uid, text):
+def send_notification(uid, text, autojanny=False):
 
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
 	text_html = CustomRenderer().render(mistletoe.Document(text))
 
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
+	if autojanny: author_id = AUTOJANNY_ACCOUNT
+	else: author_id = NOTIFICATIONS_ACCOUNT
+
+	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
 							distinguish_level=6,
 							body=text,

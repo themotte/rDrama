@@ -63,7 +63,7 @@ def publish(pid, v):
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
-		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})")
+		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})", True)
 
 	g.db.commit()
 
@@ -738,7 +738,7 @@ def submit_post(v):
 	if not new_post.private:
 		for follow in v.followers:
 			user = get_account(follow.user_id)
-			send_notification(user.id, f"@{v.username} has made a new post: [{title}](http://{site}{new_post.permalink})")
+			send_notification(user.id, f"@{v.username} has made a new post: [{title}](http://{site}{new_post.permalink})", True)
 
 	g.db.add(new_post)
 	g.db.flush()
@@ -819,10 +819,10 @@ def submit_post(v):
 		g.db.add(new_post)
 
 		if "rama" in request.host:
-			if v.id == 995:
+			if v.id == CARP_ID:
 				if random.random() < 0.02: body = "i love you carp"
 				else: body = "![](https://rdrama.net/assets/images/emojis/fuckoffcarp.webp)"
-			elif v.id == 3833:
+			elif v.id == LAWLZ_ID:
 				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 				else: body = "wow, a good lawlzpost for once!"
 			else: body = random.choice(snappyquotes)
