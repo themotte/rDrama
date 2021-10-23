@@ -773,7 +773,7 @@ CREATE TABLE public.users (
     bannerurl character varying(65),
     hidevotedon boolean,
     newtab boolean,
-    flairchanged integer,
+    flairchanged boolean,
     defaultsortingcomments character varying(15),
     theme character varying(15),
     song character varying(50),
@@ -809,11 +809,7 @@ CREATE TABLE public.users (
     nitter boolean,
     truecoins integer,
     club_allowed boolean DEFAULT false,
-    frontsize integer,
-    coins_spent integer,
-    procoins integer,
-    mute boolean,
-    unmutable boolean
+    frontsize integer
 );
 
 
@@ -1838,8 +1834,7 @@ ALTER TABLE ONLY public.flags
 --
 
 ALTER TABLE ONLY public.notifications
-    ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
-
+    ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.commen
 
 --
 -- PostgreSQL database dump complete
