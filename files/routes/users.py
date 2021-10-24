@@ -128,15 +128,6 @@ def transfer_coins(v, username):
 		if v.coins < amount: return {"error": f"You don't have enough {app.config['COINS_NAME']}"}, 400
 		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['COINS_NAME']}."}, 400
 
-		v.coins -= amount
-		receiver.coins += amount-tax
-
-		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
-		send_notification(receiver.id, transfer_message)
-
-		g.db.add(receiver)
-		g.db.add(v)
-
 		if TAX_RATE and TAX_RECEIVER_ID:
 			tax = math.ceil(amount*TAX_RATE)
 			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
@@ -144,6 +135,15 @@ def transfer_coins(v, username):
 			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
 			send_notification(TAX_RECEIVER_ID, log_message)
 			g.db.add(tax_receiver)
+			receiver.coins += amount-tax
+
+		v.coins -= amount
+
+		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
+		send_notification(receiver.id, transfer_message)
+
+		g.db.add(receiver)
+		g.db.add(v)
 
 		g.db.commit()
 		return {"message": f"{amount-tax} {app.config['COINS_NAME']} transferred!"}, 200

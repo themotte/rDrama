@@ -409,6 +409,29 @@ def buy(v, award):
 		if v.coins < price: return {"error": "Not enough coins."}, 400
 		v.coins -= price
 		v.coins_spent += price
+		if v.coins_spent >= 1000000 and not v.has_badge(73):
+			new_badge = Badge(badge_id=73, user_id=v.id)
+			g.db.add(new_badge)
+			old_badge = v.has_badge(72)
+			if old_badge: old_badge.delete()
+		elif v.coins_spent >= 500000 and not v.has_badge(72):
+			new_badge = Badge(badge_id=72, user_id=v.id)
+			g.db.add(new_badge)
+			old_badge = v.has_badge(71)
+			if old_badge: old_badge.delete()
+		elif v.coins_spent >= 250000 and not v.has_badge(71):
+			new_badge = Badge(badge_id=71, user_id=v.id)
+			g.db.add(new_badge)
+			old_badge = v.has_badge(70)
+			if old_badge: old_badge.delete()
+		elif v.coins_spent >= 100000 and not v.has_badge(70):
+			new_badge = Badge(badge_id=70, user_id=v.id)
+			g.db.add(new_badge)
+			old_badge = v.has_badge(69)
+			if old_badge: old_badge.delete()
+		elif v.coins_spent >= 10000 and not v.has_badge(69):
+			new_badge = Badge(badge_id=69, user_id=v.id)
+			g.db.add(new_badge)
 		g.db.add(v)
 
 	g.db.add(v)
@@ -528,9 +551,13 @@ def award_post(pid, v):
 	elif kind == "pause":
 		author.mute = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
+		new_badge = Badge(badge_id=68, user_id=author.id)
+		g.db.add(new_badge)
 	elif kind == "unpausable":
 		author.unmutable = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
+		new_badge = Badge(badge_id=67, user_id=author.id)
+		g.db.add(new_badge)
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -641,9 +668,13 @@ def award_comment(cid, v):
 	elif kind == "pause":
 		author.mute = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
+		new_badge = Badge(badge_id=68, user_id=author.id)
+		g.db.add(new_badge)
 	elif kind == "unpausable":
 		author.unmutable = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
+		new_badge = Badge(badge_id=67, user_id=author.id)
+		g.db.add(new_badge)
 
 	c.author.received_award_count += 1
 	g.db.add(c.author)
