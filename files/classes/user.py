@@ -238,7 +238,7 @@ class User(Base):
 	@property
 	@lazy
 	def bio_html_eager(self):
-		return self.bio_html.replace('data-src', 'src')
+		return self.bio_html.replace('data-src', 'src').replace('src="/assets/images/loading.gif"', '')
 
 	@property
 	@lazy
