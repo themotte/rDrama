@@ -8,6 +8,22 @@
 
 <script src="/assets/js/settings_profile.js?v=56"></script>
 
+<script>
+	document.onpaste = function(event) {
+		var focused = document.activeElement;
+		if (focused.id == 'bio-text') {
+			f=document.getElementById('file-upload');
+			files = event.clipboardData.files
+			filename = files[0].name.toLowerCase()
+			if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+			{
+				f.files = files;
+				document.getElementById('filename-show').textContent = filename;
+			}
+		}
+	}
+</script>
+
 <div id="posts" class="row">
 
 	<div class="col col-lg-10">
@@ -491,12 +507,11 @@
 
 								<label class="text-black w-lg-25">Bio</label>
 
-								<div class="w-lg-100">
-
+								<div class="w-lg-100">						
 									<form id="profile-bio" action="/settings/profile" method="post" enctype="multipart/form-data">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
-											<textarea class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Tell the community a bit about yourself." rows="3" name="bio" form="profile-bio" maxlength="1500">{% if v.bio %}{{v.bio}}{% endif %}</textarea>
+											<textarea  id="bio-text" class="form-control rounded" aria-label="With textarea" placeholder="Tell the community a bit about yourself." rows="3" name="bio" form="profile-bio" maxlength="1500">{% if v.bio %}{{v.bio}}{% endif %}</textarea>
 										</div>
 										<div class="d-flex">
 											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></pre>

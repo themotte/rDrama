@@ -117,33 +117,6 @@ function autoSuggestTitle()	{
 
 };
 
-if (window.location.pathname=='/submit') {
-	window.onload = autoSuggestTitle();
-}
-
-document.addEventListener('paste', function (event) {
-
-	var nothingFocused = document.activeElement === document.body;
-
-	if (nothingFocused) {
-
-		var clipText = event.clipboardData.getData('Text');
-
-		var url = new RegExp('^(?:[a-z]+:)?//', 'i');
-
-		if (url.test(clipText) && window.location.pathname !== '/submit') {
-			window.location.href = '/submit?url=' + clipText;
-		}
-		else if (url.test(clipText) && window.location.pathname == '/submit') {
-
-			document.getElementById("post-URL").value = clipText;
-
-			autoSuggestTitle()
-
-		}
-	}
-});
-
 function checkForRequired() {
 
 	var title = document.getElementById("post-title");

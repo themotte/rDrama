@@ -205,3 +205,29 @@ post_comment=function(fullname){
 	}
 	xhr.send(form)
 }
+
+document.onpaste = function(event) {
+	var focused = document.activeElement;
+	if (focused.id.includes('reply-form-body-')) {
+		var fullname = focused.dataset.fullname;
+		f=document.getElementById('file-upload-reply-' + fullname);
+		files = event.clipboardData.files
+		filename = files[0].name.toLowerCase()
+		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+		{
+			f.files = files;
+			document.getElementById('filename-show-reply-' + fullname).textContent = filename;
+		}
+	}
+	else if (focused.id.includes('comment-edit-body-')) {
+		var id = focused.dataset.id;
+		f=document.getElementById('file-edit-reply-' + id);
+		files = event.clipboardData.files
+		filename = files[0].name.toLowerCase()
+		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+		{
+			f.files = files;
+			document.getElementById('filename-edit-reply-' + id).textContent = filename;
+		}
+	}
+}
