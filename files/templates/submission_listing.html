@@ -280,7 +280,7 @@
 							{% endif %}
 
 							{% if not v.id==p.author_id and not v.admin_level %}
-								<a id="block-user-{{p.id}}" class="list-inline-item {% if p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','block-user-{{p.id}}','unblock-user-{{p.id}}')"><i class="fas fa-eye-slash"></i>Block user</a>
+								<a id="block-user-{{p.id}}" class="blockuser list-inline-item {% if p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','block-user-{{p.id}}','unblock-user-{{p.id}}')"><i class="fas fa-eye-slash"></i>Block user</a>
 								<a id="unblock-user-{{p.id}}" class="list-inline-item {% if not p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block-user-{{p.id}}','unblock-user-{{p.id}}')"><i class="fas fa-eye"></i>Unblock user</a>
 							{% endif %}
 
@@ -441,7 +441,7 @@
 					{% endif %}
 
 					{% if v and v.id != p.author_id and not v.admin_level %}
-						<button id="block2-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-muted text-left{% if p.is_blocking %} d-none{% endif %}" data-bs-dismiss="modal" onclick="post_toast2('/settings/block?username={{p.author.username}}','block2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye-slash mr-3"></i>Block user</button>
+						<button id="block2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-muted text-left{% if p.is_blocking %} d-none{% endif %}" data-bs-dismiss="modal" onclick="post_toast2('/settings/block?username={{p.author.username}}','block2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye-slash mr-3"></i>Block user</button>
 						<button id="unblock2-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-muted text-left{% if not p.is_blocking %} d-none{% endif %}" data-bs-dismiss="modal" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye mr-3"></i>Unblock user</button>
 					{% endif %}
 
