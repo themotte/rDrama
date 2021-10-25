@@ -5632,3 +5632,15 @@ blockquote p {
   max-width: 100% !important;
   margin-top: 0.5rem !important;
 }
+
+.text-pink {
+  color: #ff66ac !important;
+}
+
+.text-purple {
+  color: #805ad5 !important;
+}
+
+.text-black-50 {
+  color: #808080 !important;
+}

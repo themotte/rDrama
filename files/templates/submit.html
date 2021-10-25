@@ -25,12 +25,12 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=88"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=88">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=88">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=89"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=89">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=89">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=88">
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=88">
+			<link rel="stylesheet" href="/assets/css/main.css?v=89">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=89">
 		{% endif %}
 		{% endblock %}
 
