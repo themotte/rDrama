@@ -203,7 +203,7 @@ class Submission(Base):
 	@lazy
 	def thumb_url(self):
 		if self.over_18: return f"http://{site}/assets/images/nsfw.gif"
-		elif not self.url: return f"http://{site}/assets/images/{site_name}/default_thumb_text.gif"
+		elif not self.url: return f"http://{site}/assets/images/{site_name}/default_text.gif"
 		elif self.thumburl: return self.thumburl
 		elif "youtu.be" in self.domain or "youtube.com" in self.domain: return f"http://{site}/assets/images/default_thumb_yt.gif"
 		else: return f"http://{site}/assets/images/default_thumb_link.gif"

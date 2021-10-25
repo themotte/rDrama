@@ -8,3 +8,4 @@ disablesignups
 .idea/
 **/.pytest_cache/
 venv/
+.vscode/
