@@ -191,8 +191,7 @@ def monthly(v):
 def get_rules(v):
 
 	try:
-		with open(f'./{SITE_NAME} rules.html', 'r') as f:
-			rules = f.read()
+		with open(f'./{SITE_NAME} rules.html', 'r') as f: rules = f.read()
 	except Exception:
 		rules = None
 
@@ -207,11 +206,17 @@ def post_rules(v):
 
 	text = request.values.get('rules', '').strip()
 
-	with open(f'./{SITE_NAME} rules.html', 'w+') as f:
-		f.write(text)
+	with open(f'./{SITE_NAME} rules.html', 'w+') as f: f.write(text)
 
-	with open(f'./{SITE_NAME} rules.html', 'r') as f:
-		rules = f.read()
+	with open(f'./{SITE_NAME} rules.html', 'r') as f: rules = f.read()
+
+	ma = ModAction(
+		kind="change_rules",
+		user_id=v.id,
+	)
+	g.db.add(ma)
+
+	g.db.commit()
 
 	return render_template('admin/rules.html', v=v, rules=rules)
 
@@ -671,6 +676,14 @@ def verify(user_id, v):
 	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 	user.verified = "Verified"
 	g.db.add(user)
+
+	ma = ModAction(
+		kind="check",
+		user_id=v.id,
+		target_user_id=user.id,
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 	return {"message": "User verfied!"}
 
@@ -682,6 +695,14 @@ def unverify(user_id, v):
 	user = g.db.query(User).options(lazyload('*')).filter_by(id=user_id).first()
 	user.verified = None
 	g.db.add(user)
+
+	ma = ModAction(
+		kind="uncheck",
+		user_id=v.id,
+		target_user_id=user.id,
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 	return {"message": "User unverified!"}
 
@@ -713,7 +734,7 @@ def admin_title_change(user_id, v):
 		kind=kind,
 		user_id=v.id,
 		target_user_id=user.id,
-		note=f'"{new_name}"'
+		_note=f'"{new_name}"'
 		)
 	g.db.add(ma)
 	g.db.commit()
@@ -770,7 +791,7 @@ def ban_user(user_id, v):
 		kind="ban_user",
 		user_id=v.id,
 		target_user_id=user.id,
-		note=f'reason: "{reason}", duration: {duration}'
+		_note=f'reason: "{reason}", duration: {duration}'
 		)
 	g.db.add(ma)
 
@@ -1065,10 +1086,24 @@ def admin_toggle_ban_domain(v):
 	reason=request.values.get("reason", "").strip()
 
 	d = g.db.query(BannedDomain).options(lazyload('*')).filter_by(domain=domain).first()
-	if d: g.db.delete(d)
+	if d:
+		g.db.delete(d)
+		ma = ModAction(
+			kind="unban_domain",
+			user_id=v.id,
+			_note=domain
+		)
+		g.db.add(ma)
+
 	else:
 		d = BannedDomain(domain=domain, reason=reason)
 		g.db.add(d)
+		ma = ModAction(
+			kind="ban_domain",
+			user_id=v.id,
+			_note=f'{domain}, reason: {reason}'
+		)
+		g.db.add(ma)
 
 	g.db.commit()
 

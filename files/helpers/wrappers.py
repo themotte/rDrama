@@ -55,7 +55,7 @@ def check_ban_evade(v):
 				kind="ban_post",
 				user_id=AUTOJANNY_ACCOUNT,
 				target_submission_id=post.id,
-				note="permaban evasion"
+				_note="permaban evasion"
 				)
 			g.db.add(ma)
 
@@ -72,7 +72,7 @@ def check_ban_evade(v):
 				kind="ban_comment",
 				user_id=AUTOJANNY_ACCOUNT,
 				target_comment_id=comment.id,
-				note="ban evasion"
+				_note="ban evasion"
 				)
 				g.db.add(ma)
 			except: pass

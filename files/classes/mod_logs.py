@@ -21,12 +21,7 @@ class ModAction(Base):
 	target_post = relationship("Submission", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
-		if "created_utc" not in kwargs:
-			kwargs["created_utc"] = int(time.time())
-
-		if "note" in kwargs:
-			kwargs["_note"]=kwargs["note"]
-
+		if "created_utc" not in kwargs: kwargs["created_utc"] = int(time.time())
 		super().__init__(*args, **kwargs)
 
 	def __repr__(self):
@@ -113,6 +108,47 @@ class ModAction(Base):
 
 
 ACTIONTYPES={
+	"check": {
+		"str": "gave {self.target_link} a checkmark",
+		"icon": "fa-user",
+		"color": "bg-muted",
+	},
+	"uncheck": {
+		"str": "removed checkmark from {self.target_link}",
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
+	},
+	"ban_domain": {
+		"str": "banned a domain",
+		"icon": "fa-globe",
+		"color": "bg-danger",
+	},
+	"unban_domain": {
+		"str": "unbanned a domain",
+		"icon": "fa-globe",
+		"color": "bg-muted",
+	},
+	"approve_app": {
+		"str": "approved an application by {self.target_link}",
+		"icon": "fa-robot",
+		"color": "bg-muted",
+	},
+	"revoke_app": {
+		"str": "revoked an application by {self.target_link}",
+		"icon": "fa-robot",
+		"color": "bg-danger",
+	},
+	"reject_app": {
+		"str": "rejected an application request by {self.target_link}",
+		"icon": "fa-robot",
+		"color": "bg-danger",
+	},
+	"change_rules": {
+		"str": "changed the <a href='/rules'>rules</a>",
+		"icon": "fa-balance-scale",
+		"color": "bg-muted",
+	},
+
 	"ban_user":{
 		"str":'banned user {self.target_link}',
 		"icon":"fa-user-slash",

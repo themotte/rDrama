@@ -616,7 +616,7 @@ def submit_post(v):
 					user_id=AUTOJANNY_ACCOUNT,
 					target_submission_id=post.id,
 					kind="ban_post",
-					note="spam"
+					_note="spam"
 					)
 			g.db.add(ma)
 		return redirect("/notifications")

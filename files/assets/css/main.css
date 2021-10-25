@@ -5041,12 +5041,6 @@ div.deleted.banned {
   color: var(--primary);
 }
 
-.spotify {
-  max-height: 80px !important;
-  max-width: 100% !important;
-  margin-top: 0.5rem !important;
-}
-
 .object-cover {
   object-fit: cover;
 }
@@ -5276,3 +5270,31 @@ blockquote p {
 	margin: 1.75rem auto !important;
   }
 }
+
+.in-comment-image {
+  max-height: 150px !important;
+  max-width: 100% !important;
+  border-radius: 0.2rem !important;
+  margin-top: 0.5rem !important;
+}
+
+.emoji {
+  height: 30px !important;
+}
+
+.bigemoji {
+  height: 60px !important;
+}
+
+.embedvid {
+  max-height: 300px !important;
+  max-width: 100% !important;
+  margin-top: 0.5rem !important;
+}
+
+.spotify {
+  max-height: 80px !important;
+  max-width: 100% !important;
+  margin-top: 0.5rem !important;
+}
+

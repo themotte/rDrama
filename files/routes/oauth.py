@@ -122,6 +122,13 @@ def admin_app_approve(v, aid):
 
 	send_notification(user.id, f"Your application `{app.app_name}` has been approved. Here's your access token: `{access_token}`\nPlease check the guide [here](/api) if you don't know what to do next.")
 
+	ma = ModAction(
+		kind="approve_app",
+		user_id=v.id,
+		target_user_id=user.id,
+	)
+	g.db.add(ma)
+
 	g.db.commit()
 
 	return {"message": f"{app.app_name} approved"}
@@ -141,6 +148,13 @@ def admin_app_revoke(v, aid):
 
 		g.db.delete(app)
 
+		ma = ModAction(
+			kind="revoke_app",
+			user_id=v.id,
+			target_user_id=app.author.id,
+		)
+		g.db.add(ma)
+
 		g.db.commit()
 
 	return {"message": f"App revoked"}
@@ -159,6 +173,13 @@ def admin_app_reject(v, aid):
 	send_notification(app.author.id, f"Your application `{app.app_name}` has been rejected.")
 
 	g.db.delete(app)
+
+	ma = ModAction(
+		kind="reject_app",
+		user_id=v.id,
+		target_user_id=app.author.id,
+	)
+	g.db.add(ma)
 
 	g.db.commit()
 

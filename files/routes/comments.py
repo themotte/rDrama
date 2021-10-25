@@ -242,7 +242,7 @@ def api_comment(v):
 					user_id=AUTOJANNY_ACCOUNT,
 					target_comment_id=comment.id,
 					kind="ban_comment",
-					note="spam"
+					_note="spam"
 					)
 				g.db.add(ma)
 
