@@ -59,11 +59,20 @@ def publish(pid, v):
 	post.private = False
 	g.db.add(post)
 	
-	cache.delete_memoized(frontlist)
+	notify_users = set()
+	soup = BeautifulSoup(post.body_html, features="html.parser")
+	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
+		username = mention["href"].split("@")[1]
+		user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
+		
+	for x in notify_users: send_notification(x.id, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
 		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})", True)
+
+	cache.delete_memoized(frontlist)
 
 	g.db.commit()
 
@@ -101,7 +110,7 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if post.club and not (v and v.paid_dues): abort(403)
+	if post.club and not (v and v.paid_dues) or post.is_private and not (v and v.id == post.author_id): abort(403)
 
 	if v:
 		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
@@ -725,17 +734,17 @@ def submit_post(v):
 	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
 		gevent.spawn( thumbnail_thread, new_post.id)
 
-	notify_users = set()
-	
-	soup = BeautifulSoup(body_html, features="html.parser")
-	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
-		username = mention["href"].split("@")[1]
-		user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
-		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
-		
-	for x in notify_users: send_notification(x.id, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
-		
 	if not new_post.private:
+
+		notify_users = set()
+		soup = BeautifulSoup(body_html, features="html.parser")
+		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
+			username = mention["href"].split("@")[1]
+			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
+			
+		for x in notify_users: send_notification(x.id, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
+		
 		for follow in v.followers:
 			user = get_account(follow.user_id)
 			send_notification(user.id, f"@{v.username} has made a new post: [{title}](http://{site}{new_post.permalink})", True)
