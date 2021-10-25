@@ -110,7 +110,7 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if post.club and not (v and v.paid_dues) or post.is_private and not (v and v.id == post.author_id): abort(403)
+	if post.club and not (v and v.paid_dues) or post.private and not (v and v.id == post.author_id): abort(403)
 
 	if v:
 		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
