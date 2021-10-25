@@ -237,6 +237,11 @@ class User(Base):
 
 	@property
 	@lazy
+	def bio_html_eager(self):
+		return self.bio_html.replace('data-src', 'src')
+
+	@property
+	@lazy
 	def fullname(self):
 		return f"t1_{self.id}"
 

@@ -176,6 +176,17 @@ def api_vote_comment(comment_id, new, v):
 		comment.is_pinned = None
 		g.db.add(comment)
 
+	if v.agendaposter_expires_utc and v.agendaposter_expires_utc < time.time():
+		v.agendaposter_expires_utc = 0
+		v.agendaposter = False
+		g.db.add(v)
+		send_notification(v.id, "Your agendaposter theme has expired!")
+
+	if v.flairchanged and v.flairchanged < time.time():
+		v.flairchanged = None
+		g.db.add(v)
+		send_notification(v.id, "Your flair lock has expired. You can now change your flair!")
+
 	try:
 		g.db.flush()
 		comment.upvotes = g.db.query(CommentVote.id).options(lazyload('*')).filter_by(comment_id=comment.id, vote_type=1).count()
