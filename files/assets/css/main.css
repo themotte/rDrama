@@ -5644,3 +5644,9 @@ blockquote p {
 .text-black-50 {
   color: #808080 !important;
 }
+
+.timeline-Widget {
+  max-height: 500px !important;
+  overflow-y: scroll !important;
+}
+	
