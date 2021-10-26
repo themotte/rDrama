@@ -88,7 +88,7 @@ function loadEmojis(form) {
 
 			for (let j = 0; j < arr.length; j++) {
 				if (arr[j].match(search_bar.value)) {
-					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"/></button>`;
+					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 				}
 			}
 
@@ -103,7 +103,7 @@ function loadEmojis(form) {
 			let container = document.getElementById(`EMOJIS_${EMOJIS_STRINGS[i].type}`)
 			for (let j = 0; j < arr.length; j++) {
 				if (arr[j].match(search_bar.value.toLowerCase())) {
-					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"/></button>`;
+					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 				}
 			}
 			container.innerHTML = ""

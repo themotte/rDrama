@@ -138,7 +138,7 @@
 							<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 							{% for themecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
-							<input type="radio" name="themecolor" id="themecolor-{{themecolor}}" value="{{themecolor}}" {% if v.themecolor == themecolor %}checked{% endif %} onclick="document.getElementById('themecolor-form').submit()"/>
+							<input type="radio" name="themecolor" id="themecolor-{{themecolor}}" value="{{themecolor}}" {% if v.themecolor == themecolor %}checked{% endif %} onclick="document.getElementById('themecolor-form').submit()">
 							<label class="color-radio" for="themecolor-{{themecolor}}">
 								<span style="background-color: #{{themecolor}}">
 								{% if v.themecolor.lower() == themecolor %}
@@ -418,7 +418,7 @@
 											<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 											{% for color in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
-											<input type="radio" name="color" id="color-{{color}}" value="{{color}}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+											<input type="radio" name="color" id="color-{{color}}" value="{{color}}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()">
 											<label class="color-radio" for="color-{{color}}">
 												<span style="background-color: #{{color}}">
 												{% if v.namecolor.lower() == color %}
@@ -476,7 +476,7 @@
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 										{% for titlecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
-										<input type="radio" name="titlecolor" id="titlecolor-{{titlecolor}}" value="{{titlecolor}}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()"/>
+										<input type="radio" name="titlecolor" id="titlecolor-{{titlecolor}}" value="{{titlecolor}}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()">
 										<label class="color-radio" for="titlecolor-{{titlecolor}}">
 											<span style="background-color: #{{titlecolor}}">
 											{% if v.titlecolor.lower() == titlecolor %}
