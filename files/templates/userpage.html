@@ -117,7 +117,7 @@
 									<i class="fad fa-user-tag text-info align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Original Username: @{{u.original_username}}"></i>
 								</span>
 								{% endif %}
-								{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:{% if 'rdrama.net' in request.host and u.id in [541,1387] %}#62ca56{% elif 'rdrama.net' in request.host and u.id in [30,2256] %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.verified}}"></i></span>{% endif %}
+								{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:{% if request.host == 'rdrama.net' and u.id in [541,1387] %}#62ca56{% elif request.host == 'rdrama.net' and u.id in [30,2256] %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.verified}}"></i></span>{% endif %}
 								{% if u.admin_level > 1 or (u.admin_level == 1 and (not v or v.admin_level < 2)) %}
 								<span>
 									<i class="fas fa-broom text-admin align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Admin"></i>
@@ -404,7 +404,7 @@
 					<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
 					{% if u.unban_utc %}<h5 style="color:#ff66ac;">{{u.unban_string}}</h5>{% endif %}
 				{% endif %}
-				{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:{% if 'rdrama.net' in request.host and u.id in [541,1387] %}#62ca56{% elif 'rdrama.net' in request.host and u.id in [30,2256] %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.verified}}"></i></span>&nbsp;{% endif %}
+				{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:{% if request.host == 'rdrama.net' and u.id in [541,1387] %}#62ca56{% elif request.host == 'rdrama.net' and u.id in [30,2256] %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.verified}}"></i></span>&nbsp;{% endif %}
 				<a class="text-black"><h1 class="h5 d-inline-block" style="color: #{{u.namecolor}}"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span></h1></a>
 				{% if u.username != u.original_username %}
 					<span>

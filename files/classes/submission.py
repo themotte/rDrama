@@ -9,7 +9,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship, deferred
 
 from files.__main__ import Base
-from files.helpers.const import AUTOPOLLER_ACCOUNT, censor_slurs
+from files.helpers.const import AUTOPOLLER_ACCOUNT, censor_slurs, TROLLTITLES
 from files.helpers.lazy import lazy
 from .flags import Flag
 
@@ -331,7 +331,7 @@ class Submission(Base):
 	@lazy
 	def realtitle(self, v):
 		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6):
-			if v: return f'{v.username} dox'
+			if v: return random.choice(TROLLTITLES).format(username=v.username)
 			else: return 'COUNTRY CLUB MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
 		else: title = self.title
@@ -343,7 +343,7 @@ class Submission(Base):
 	@lazy
 	def plaintitle(self, v):
 		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6):
-			if v: return f'{v.username} dox'
+			if v: return random.choice(TROLLTITLES).format(username=v.username)
 			else: return 'COUNTRY CLUB MEMBERS ONLY'
 		else: title = self.title
 

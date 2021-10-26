@@ -500,13 +500,13 @@ def api_comment(v):
 	if not v.shadowbanned:
 		notify_users = set()
 		
-		for x in g.db.query(Subscription.user_id).options(lazyload('*')).filter_by(submission_id=c.parent_submission).all():
-			notify_users.add(x[0])
+		for x in g.db.query(Subscription.user_id).options(lazyload('*')).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 		
 		if parent.author.id != v.id: notify_users.add(parent.author.id)
 
 		soup = BeautifulSoup(body_html, features="html.parser")
 		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
+
 		for mention in mentions:
 			username = mention["href"].split("@")[1]
 
@@ -517,6 +517,10 @@ def api_comment(v):
 					continue
 				if user.id != v.id:
 					notify_users.add(user.id)
+
+		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users:
+			notify_users.append(1)
+
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
 			g.db.add(n)
@@ -744,6 +748,8 @@ def edit_comment(cid, v):
 					continue
 				if user.id != v.id:
 					notify_users.add(user.id)
+
+		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.append(1)
 
 		for x in notify_users:
 			notif = notifs.filter_by(comment_id=c.id, user_id=x).first()

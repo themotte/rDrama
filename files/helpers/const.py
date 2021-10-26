@@ -303,3 +303,11 @@ else:
 			"price": 40000
 		},
 	}
+
+TROLLTITLES = [
+	"how will @{username} ever recover?",
+	"@{username} BTFO",
+	"[META] Getting really sick of @{username}’s shit",
+	"Pretty sure this is @{username}'s Reddit account",
+	"Hey jannies can you please ban @{username}",
+]

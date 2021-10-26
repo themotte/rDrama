@@ -71,7 +71,7 @@
 
 												<div id="urlblock">
 														<label for="URL" class="mt-3">URL</label>
-														<input class="form-control" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="Optional if you have text." value="{{request.values.get('url','')}}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
+														<input class="form-control" id="post-URL" aria-describedby="URLHelp" name="url" placeholder="Optional if you have text." value="{{request.values.get('url','')}}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
 														<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
 												</div>
 

@@ -1,4 +1,4 @@
-export DATABASE_URL="postgresql://postgres@127.0.0.1:5432"
+export DATABASE_URL="postgresql://postgres@0.0.0.0:5432"
 export MASTER_KEY="-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA="
 export DOMAIN="localhost"
 export SITE_NAME="Drama"
