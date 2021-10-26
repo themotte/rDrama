@@ -165,6 +165,8 @@ svg {
 }
 
 table {
+  display: inline-block;
+  overflow: auto;
   border-collapse: collapse;
 }
 
