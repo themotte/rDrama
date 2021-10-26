@@ -274,16 +274,19 @@
 
 {% block Banner %}
 	{% if '@' not in request.path %}
-	<style>
-		.banner {
-			margin-top: -3px;
-		}
-		@media (min-width: 992px) {
+		<style>
 			.banner {
-				margin-top: 10px !important;
+				margin-top: -3px;
 			}
-		}
-	</style>
+			@media (min-width: 992px) {
+				.banner {
+					margin-top: 10px !important;
+				}
+			}
+		</style>
+
+		TEST
+		
 		<a  rel="nofollow noopener noreferrer" href="{% if 'rama' in request.host %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}">
 			<img loading="lazy" class="banner" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.gif{% else %}cached.gif{% endif %}" width="100%">
 		</a>
