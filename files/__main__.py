@@ -131,3 +131,5 @@ def after_request(response):
 
 
 from files.routes import *
+
+print(jinja_env.auto_reload)
