@@ -201,7 +201,7 @@ def api_comment(v):
 
 	if parent.author.any_block_exists(v) and not v.admin_level>=3: return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
-	is_bot = request.headers.get("X-User-Type","")=="Bot"
+	is_bot = request.headers.get("Authorization")
 
 	if not is_bot and 'trans lives matters' not in body.lower():
 		now = int(time.time())

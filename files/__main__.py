@@ -92,7 +92,7 @@ def before_request():
 
 	if request.method.lower() != "get" and app.config["READ_ONLY"]: return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
 
-	if app.config["BOT_DISABLE"] and request.headers.get("X-User-Type")=="Bot": abort(503)
+	if app.config["BOT_DISABLE"] and request.headers.get("Authorization"): abort(503)
 
 	g.db = db_session()
 
