@@ -25,12 +25,12 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=89"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=89">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=89">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=90"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=90">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=90">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=89">
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=89">
+			<link rel="stylesheet" href="/assets/css/main.css?v=90">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=90">
 		{% endif %}
 		{% endblock %}
 
@@ -91,7 +91,7 @@
 												<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Uses markdown. Limited to 10000 characters."></i></label>
 
 												<div>
-													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="3" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
+													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
 
 													<div class="btn btn-secondary" onclick="document.getElementById('preview').classList.toggle('d-none');" style="float: right;">
 														Toggle preview

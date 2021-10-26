@@ -739,3 +739,132 @@ def admin_userawards_post(v):
 
 	if v.username == "Aevann": return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
 	return render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
+
+
+@app.get("/api/shop/items")
+@auth_required
+def items(v):
+	AWARDS = {
+		"shit": {
+			"kind": "shit",
+			"title": "Shit",
+			"description": "Makes flies swarm a post.",
+			"icon": "fas fa-poop",
+			"color": "text-black-50",
+			"owned": 0,
+			"price": 500
+		},
+		"fireflies": {
+			"kind": "fireflies",
+			"title": "Fireflies",
+			"description": "Puts fireflies on the post.",
+			"icon": "fas fa-sparkles",
+			"color": "text-warning",
+			"owned": 0,
+			"price": 500
+		},
+		"train": {
+			"kind": "train",
+			"title": "Train",
+			"description": "Summons a train on the post.",
+			"icon": "fas fa-train",
+			"color": "text-pink",
+			"owned": 0,
+			"price": 500
+		},
+		"pin": {
+			"kind": "pin",
+			"title": "1-Hour Pin",
+			"description": "Pins the post.",
+			"icon": "fas fa-thumbtack fa-rotate--45",
+			"color": "text-warning",
+			"owned": 0,
+			"price": 750
+		},
+		"unpin": {
+			"kind": "unpin",
+			"title": "1-Hour Unpin",
+			"description": "Removes 1 hour from the pin duration of the post.",
+			"icon": "fas fa-thumbtack fa-rotate--45",
+			"color": "text-black",
+			"owned": 0,
+			"price": 1000
+		},
+		"flairlock": {
+			"kind": "flairlock",
+			"title": "1-Day Flairlock",
+			"description": "Sets a flair for the author and locks it or 24 hours.",
+			"icon": "fas fa-lock",
+			"color": "text-black",
+			"owned": 0,
+			"price": 1250
+		},
+		"agendaposter": {
+			"kind": "agendaposter",
+			"title": "Agendaposter",
+			"description": "Forces the agendaposter theme on the author for 24 hours.",
+			"icon": "fas fa-snooze",
+			"color": "text-purple",
+			"owned": 0,
+			"price": 2000
+		},
+		"ban": {
+			"kind": "ban",
+			"title": "1-Day Ban",
+			"description": "Bans the author for a day.",
+			"icon": "fas fa-gavel",
+			"color": "text-danger",
+			"owned": 0,
+			"price": 3000
+		},
+		"unban": {
+			"kind": "unban",
+			"title": "1-Day Unban",
+			"description": "Removes 1 day from the ban duration of the recipient.",
+			"icon": "fas fa-gavel",
+			"color": "text-success",
+			"owned": 0,
+			"price": 3500
+		},
+		"grass": {
+			"kind": "grass",
+			"title": "Grass",
+			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+			"icon": "fas fa-seedling",
+			"color": "text-success",
+			"owned": 0,
+			"price": 10000
+		},
+		"pause": {
+			"kind": "pause",
+			"title": "Pause",
+			"description": "Gives the recipient the ability to pause profile anthems.",
+			"icon": "fas fa-volume-mute",
+			"color": "text-danger",
+			"owned": 0,
+			"price": 20000
+		},
+		"unpausable": {
+			"kind": "unpausable",
+			"title": "Unpausable",
+			"description": "Makes the profile anthem of the recipient unpausable.",
+			"icon": "fas fa-volume",
+			"color": "text-success",
+			"owned": 0,
+			"price": 40000
+		},
+	}
+
+	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all(): AWARDS[useraward.kind]["owned"] += 1
+
+	if v.patron:
+		for val in AWARDS.values():
+			if v.patron == 1: val["price"] = int(val["price"]*0.90)
+			elif v.patron == 2: val["price"] = int(val["price"]*0.85)
+			elif v.patron == 3: val["price"] = int(val["price"]*0.80)
+			elif v.patron == 4: val["price"] = int(val["price"]*0.75)
+			else: val["price"] = int(val["price"]*0.70)
+
+	sales = g.db.query(Vote.id).count() + g.db.query(CommentVote.id).count() - g.db.query(func.sum(User.coins)).scalar()
+	return render_template("shop.html", awards=list(AWARDS.values()), v=v, sales=sales)
+	
