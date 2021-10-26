@@ -67,8 +67,6 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = environ.get("MAIL_USERNAME", "").strip()
 app.config['MAIL_PASSWORD'] = environ.get("MAIL_PASSWORD", "").strip()
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config['DEBUG'] = True
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://0.0.0.0"),  decode_responses=True, ssl_cert_reqs=None)
 
