@@ -156,7 +156,7 @@ def api_comment(v):
 	body = body.strip()
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?mar\w+:\s*)+$", body))
+		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
@@ -590,7 +590,7 @@ def edit_comment(cid, v):
 	body = request.values.get("body", "").strip()[:10000]
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?mar\w+:\s*)+$", body))
+		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
 
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):

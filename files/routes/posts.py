@@ -215,8 +215,11 @@ def edit_post(pid, v):
 	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?mar\w+:\s*)+$", body))
+		title = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+		if body:
+			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+			if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
 
 	if title != p.title:
 		p.title = title
@@ -567,8 +570,11 @@ def submit_post(v):
 	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?mar\w+:\s*)+$", body))
+		title = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+		if body:
+			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+			if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
 
 	dup = g.db.query(Submission).options(lazyload('*')).filter(
 		Submission.author_id == v.id,
