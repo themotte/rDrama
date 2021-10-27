@@ -209,7 +209,7 @@
 							{% endif %}
 						{% endif %}
 
-						{% if 'rama' in request.host and v.id in [1,28,995] %} 
+						{% if 'rama' in request.host and v.id in [1,28,995,2513] %} 
 							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -491,7 +491,7 @@
 						{% endif %}
 					{% endif %}
 
-					{% if 'rama' in request.host and v.id in [1,28,995] %} 
+					{% if 'rama' in request.host and v.id in [1,28,995,2513] %} 
 						<a id="admin2" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
 						<a id="unadmin2" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
 

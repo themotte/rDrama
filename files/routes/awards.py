@@ -719,7 +719,7 @@ def award_comment(cid, v):
 @admin_level_required(6)
 def admin_userawards_get(v):
 
-	if request.host == 'rdrama.net' and v.id not in [1,28,995]: render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
+	if request.host == 'rdrama.net' and v.id not in [1,28,995,2513]: render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
 	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 
 
 @app.post("/admin/awards")
@@ -766,7 +766,7 @@ def admin_userawards_post(v):
 
 	g.db.commit()
 
-	if request.host == 'rdrama.net' and v.id not in [1,28,995]: render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
+	if request.host == 'rdrama.net' and v.id not in [1,28,995,2513]: render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
 	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 
 
 
