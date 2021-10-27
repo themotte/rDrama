@@ -865,9 +865,13 @@ def submit_post(v):
 
 			# archive other urls in post
 			url_regex = '<a href=\"(https?://[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">([^\"]+)</a>'
-			print(new_post.body_html)
-			for url_match in re.finditer(url_regex, new_post.body_html, flags=re.M|re.I):
+			_body = new_post.body_html
+			for url_match in re.finditer(url_regex, _body, flags=re.M|re.I):
 				href = url_match.group(1)
+
+				if not href:
+					continue
+
 				print(href)
 				title = url_match.group(2)
 				body += f'**[{title}]({href})**:\n\n'
