@@ -719,8 +719,8 @@ def award_comment(cid, v):
 @admin_level_required(6)
 def admin_userawards_get(v):
 
-	if request.host == 'rdrama.net' and v.id in [1,28,995]: return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
-	return render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
+	if request.host == 'rdrama.net' and v.id not in [1,28,995]: render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
+	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 
 
 @app.post("/admin/awards")
 @limiter.limit("1/second")
@@ -766,8 +766,8 @@ def admin_userawards_post(v):
 
 	g.db.commit()
 
-	if request.host == 'rdrama.net' and v.id in [1,28,995]: return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
-	return render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
+	if request.host == 'rdrama.net' and v.id not in [1,28,995]: render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
+	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 
 
 
 @app.get("/api/shop/items")
