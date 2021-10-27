@@ -799,6 +799,8 @@ CREATE TABLE public.users (
     controversial boolean,
     background character varying(20),
     verified character varying(20),
+    verifiedcolor character varying(6),
+    marseyawarded boolean,
     fail_utc integer,
     steal_utc integer,
     fail2_utc integer,

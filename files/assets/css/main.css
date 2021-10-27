@@ -122,7 +122,7 @@ a {
   text-decoration: none;
   background-color: transparent;
 }
-a:hover {
+a:hover:not(.disabled) {
   color: var(--primary);
   text-decoration: underline;
 }
@@ -165,8 +165,6 @@ svg {
 }
 
 table {
-  display: inline-block;
-  overflow: auto;
   border-collapse: collapse;
 }
 
@@ -889,11 +887,11 @@ fieldset:disabled a.btn {
   color: var(--primary);
   text-decoration: none;
 }
-.btn-link:hover {
+.btn-link:hover:not(.disabled) {
   color: var(--primary);
   text-decoration: underline;
 }
-.btn-link:focus, .btn-link.focus {
+.btn-link:focus:not(.disabled), .btn-link.focus:not(.disabled) {
   text-decoration: underline;
   box-shadow: none;
 }
@@ -3133,7 +3131,7 @@ a.text-danger:hover, a.text-danger:focus {
 	box-shadow: none !important;
   }
 
-  a:not(.btn) {
+  a:not(.btn):not(.disabled) {
 	text-decoration: underline;
   }
 
@@ -5647,8 +5645,11 @@ blockquote p {
   color: #808080 !important;
 }
 
+.text-orange {
+  color: orange !important;
+}
+
 .timeline-Widget {
   max-height: 500px !important;
   overflow-y: scroll !important;
 }
-	

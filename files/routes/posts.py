@@ -214,6 +214,10 @@ def edit_post(pid, v):
 	title = request.values.get("title", "").strip()
 	body = request.values.get("body", "").strip()
 
+	if v.marseyawarded:
+		marregex = list(re.finditer("^(:!?mar\w+:\s*)+$", body))
+		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+
 	if title != p.title:
 		p.title = title
 		p.title_html = filter_title(title)
@@ -561,6 +565,11 @@ def submit_post(v):
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
 	
 	body = request.values.get("body", "").strip()
+
+	if v.marseyawarded:
+		marregex = list(re.finditer("^(:!?mar\w+:\s*)+$", body))
+		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+
 	dup = g.db.query(Submission).options(lazyload('*')).filter(
 		Submission.author_id == v.id,
 		Submission.deleted_utc == 0,

@@ -468,40 +468,88 @@
 
 							<div class="body d-lg-flex border-bottom">
 
-							<label class="text-black w-lg-25">Flair Color</label>
+								<label class="text-black w-lg-25">Flair Color</label>
 
-							<div class="d-flex">
+								<div class="d-flex">
 
-								<form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
+									<form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
+											<input type="hidden" name="formkey" value="{{v.formkey}}">
 
-										{% for titlecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
-										<input type="radio" name="titlecolor" id="titlecolor-{{titlecolor}}" value="{{titlecolor}}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()">
-										<label class="color-radio" for="titlecolor-{{titlecolor}}">
-											<span style="background-color: #{{titlecolor}}">
-											{% if v.titlecolor.lower() == titlecolor %}
-												<i class="fas fa-check text-white"></i>
-											{% else %}
-												&nbsp;
-											{% endif %}
-											</span>
-										</label>
-										{% endfor %}
+											{% for titlecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
+											<input type="radio" name="titlecolor" id="titlecolor-{{titlecolor}}" value="{{titlecolor}}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()">
+											<label class="color-radio" for="titlecolor-{{titlecolor}}">
+												<span style="background-color: #{{titlecolor}}">
+												{% if v.titlecolor.lower() == titlecolor %}
+													<i class="fas fa-check text-white"></i>
+												{% else %}
+													&nbsp;
+												{% endif %}
+												</span>
+											</label>
+											{% endfor %}
 
+									</form>
+
+								</div>
+		
+									
+
+								<p class="text-small mb-2">Or type a color code:</p>
+								<div class="d-flex">
+								<form action="/settings/titlecolor" id="color-code-form" method="post">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									<input class="form-control" type="text" name="titlecolor" id="color-code" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
+									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 								</form>
+								</div>
 
 							</div>
 
-							<p class="text-small mb-2">Or type a color code:</p>
-							<div class="d-flex">
-							<form action="/settings/titlecolor" id="color-code-form" method="post">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
-								<input class="form-control" type="text" name="titlecolor" id="color-code" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
-								<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-							</form>
-							</div>
 
-							</div>
+
+
+
+							{% if v.verified %}
+
+								<div class="body d-lg-flex border-bottom">
+
+									<label class="text-black w-lg-25">Bluecheck Color</label>
+		
+									<div class="d-flex">
+		
+										<form action="/settings/verifiedcolor" id="verifiedcolor-form" method="post" class="color-picker" style="line-height: 0">
+												<input type="hidden" name="formkey" value="{{v.formkey}}">
+		
+											{% for verifiedcolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
+												<input type="radio" name="verifiedcolor" id="verifiedcolor-{{verifiedcolor}}" value="{{verifiedcolor}}" {% if v.verifiedcolor == verifiedcolor %}checked{% endif %} onclick="document.getElementById('verifiedcolor-form').submit()">
+												<label class="color-radio" for="verifiedcolor-{{verifiedcolor}}">
+													<span style="background-color: #{{verifiedcolor}}">
+													{% if v.verifiedcolor and v.verifiedcolor.lower() == verifiedcolor %}
+														<i class="fas fa-check text-white"></i>
+													{% else %}
+														&nbsp;
+													{% endif %}
+													</span>
+												</label>
+											{% endfor %}
+		
+										</form>
+		
+									</div>
+
+									<p class="text-small mb-2">Or type a color code:</p>
+									<div class="d-flex">
+									<form action="/settings/verifiedcolor" id="color-code-form" method="post">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										<input class="form-control" type="text" name="verifiedcolor" id="color-code" value="{% if v.verifiedcolor %}{{v.verifiedcolor}}{% endif %}">
+										<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
+									</form>
+									</div>
+	
+								</div>	
+							{% endif %}
+
+
 
 							<div class="body d-lg-flex border-bottom">
 

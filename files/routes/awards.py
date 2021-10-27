@@ -12,7 +12,7 @@ AWARDS2 = {
 	"ban": {
 		"kind": "ban",
 		"title": "1-Day Ban",
-		"description": "Bans the author for a day.",
+		"description": "Bans the recipient for a day.",
 		"icon": "fas fa-gavel",
 		"color": "text-danger",
 		"price": 3000
@@ -89,7 +89,7 @@ def shop(v):
 			"flairlock": {
 				"kind": "flairlock",
 				"title": "1-Day Flairlock",
-				"description": "Sets a flair for the author and locks it or 24 hours.",
+				"description": "Sets a flair for the recipient and locks it or 24 hours.",
 				"icon": "fas fa-lock",
 				"color": "text-black",
 				"owned": 0,
@@ -98,16 +98,25 @@ def shop(v):
 			"agendaposter": {
 				"kind": "agendaposter",
 				"title": "Agendaposter",
-				"description": "Forces the agendaposter theme on the author for 24 hours.",
+				"description": "Forces the agendaposter theme on the recipient for 24 hours.",
 				"icon": "fas fa-snooze",
 				"color": "text-purple",
 				"owned": 0,
 				"price": 2000
 			},
+			"marsey": {
+				"kind": "marsey",
+				"title": "Marsey",
+				"description": "Makes the recipient unable to post/comment anything but marsey emojis for 24 hours.",
+				"icon": "fas fa-cat",
+				"color": "text-orange",
+				"owned": 0,
+				"price": 3000
+			},
 			"ban": {
 				"kind": "ban",
 				"title": "1-Day Ban",
-				"description": "Bans the author for a day.",
+				"description": "Bans the recipient for a day.",
 				"icon": "fas fa-gavel",
 				"color": "text-danger",
 				"owned": 0,
@@ -125,7 +134,7 @@ def shop(v):
 			"grass": {
 				"kind": "grass",
 				"title": "Grass",
-				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 				"icon": "fas fa-seedling",
 				"color": "text-success",
 				"owned": 0,
@@ -284,7 +293,7 @@ def buy(v, award):
 			"flairlock": {
 				"kind": "flairlock",
 				"title": "1-Day Flairlock",
-				"description": "Sets a flair for the author and locks it or 24 hours.",
+				"description": "Sets a flair for the recipient and locks it or 24 hours.",
 				"icon": "fas fa-lock",
 				"color": "text-black",
 				"price": 1250
@@ -292,15 +301,23 @@ def buy(v, award):
 			"agendaposter": {
 				"kind": "agendaposter",
 				"title": "Agendaposter",
-				"description": "Forces the agendaposter theme on the author for 24 hours.",
+				"description": "Forces the agendaposter theme on the recipient for 24 hours.",
 				"icon": "fas fa-snooze",
 				"color": "text-purple",
 				"price": 2000
 			},
+			"marsey": {
+				"kind": "marsey",
+				"title": "Marsey",
+				"description": "Makes the recipient unable to post/comment anything but marsey emojis for 24 hours.",
+				"icon": "fas fa-cat",
+				"color": "text-orange",
+				"price": 3000
+			},
 			"ban": {
 				"kind": "ban",
 				"title": "1-Day Ban",
-				"description": "Bans the author for a day.",
+				"description": "Bans the recipient for a day.",
 				"icon": "fas fa-gavel",
 				"color": "text-danger",
 				"price": 3000
@@ -316,7 +333,7 @@ def buy(v, award):
 			"grass": {
 				"kind": "grass",
 				"title": "Grass",
-				"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+				"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 				"icon": "fas fa-seedling",
 				"color": "text-success",
 				"price": 10000
@@ -569,6 +586,8 @@ def award_post(pid, v):
 		send_notification(995, f"@{v.username} bought {kind} award!")
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
+	elif kind == "marsey":
+		author.marseyawarded = True
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -686,6 +705,8 @@ def award_comment(cid, v):
 		send_notification(995, f"@{v.username} bought {kind} award!")
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
+	elif kind == "marsey":
+		author.marseyawarded = True
 
 	c.author.received_award_count += 1
 	g.db.add(c.author)
@@ -804,7 +825,7 @@ def items(v):
 		"flairlock": {
 			"kind": "flairlock",
 			"title": "1-Day Flairlock",
-			"description": "Sets a flair for the author and locks it or 24 hours.",
+			"description": "Sets a flair for the recipient and locks it or 24 hours.",
 			"icon": "fas fa-lock",
 			"color": "text-black",
 			"owned": 0,
@@ -813,16 +834,25 @@ def items(v):
 		"agendaposter": {
 			"kind": "agendaposter",
 			"title": "Agendaposter",
-			"description": "Forces the agendaposter theme on the author for 24 hours.",
+			"description": "Forces the agendaposter theme on the recipient for 24 hours.",
 			"icon": "fas fa-snooze",
 			"color": "text-purple",
 			"owned": 0,
 			"price": 2000
 		},
+		"marsey": {
+			"kind": "marsey",
+			"title": "Marsey",
+			"description": "Makes the recipient unable to post/comment anything but marsey emojis for 24 hours.",
+			"icon": "fas fa-cat",
+			"color": "text-orange",
+			"owned": 0,
+			"price": 3000
+		},
 		"ban": {
 			"kind": "ban",
 			"title": "1-Day Ban",
-			"description": "Bans the author for a day.",
+			"description": "Bans the recipient for a day.",
 			"icon": "fas fa-gavel",
 			"color": "text-danger",
 			"owned": 0,
@@ -840,7 +870,7 @@ def items(v):
 		"grass": {
 			"kind": "grass",
 			"title": "Grass",
-			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+			"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 			"icon": "fas fa-seedling",
 			"color": "text-success",
 			"owned": 0,
@@ -868,17 +898,16 @@ def items(v):
 
 	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all(): AWARDS[useraward.kind]["owned"] += 1
 
-	if v.patron == 1: discount = 0.90
-	elif v.patron == 2: discount = 0.85
-	elif v.patron == 3: discount = 0.80
-	elif v.patron == 4: discount = 0.75
-	elif v.patron == 5: discount = 0.70
-	else: discount = 1
+	if v.patron == 1: discount = 0.10
+	elif v.patron == 2: discount = 0.15
+	elif v.patron == 3: discount = 0.20
+	elif v.patron == 4: discount = 0.25
+	elif v.patron == 5: discount = 0.30
+	else: discount = 0
 
 	for badge in [69,70,71,72,73]:
-		if v.has_badge(badge): discount -= 0.02
+		if v.has_badge(badge): discount += 0.02
 
-	for val in AWARDS.values():
-		val["price"] = int(val["price"]*discount)
+	for val in AWARDS.values(): val["discount"] = discount
 
 	return AWARDS

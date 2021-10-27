@@ -56,7 +56,7 @@
 			</thead>
 			<tbody>
 		{% for a in awards %}
-			<tr>
+			<tr data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{a['description']}}">
 				<td><i class="{{a['icon']}} {{a['color']}}" style="font-size: 30px"></i></td>
 				<td style="font-weight: bold">{{a['title']}}</td>
 				<td style="font-weight: bold">{{a['price']}}</td>
@@ -91,6 +91,11 @@
 			.marseybux {
 				font-size: 0.7rem !important;
 			}
+		}
+
+		.tooltip-inner {
+			font-size: 1.5rem;
+			max-width: 300px;
 		}
 	</style>
 {% endblock %}

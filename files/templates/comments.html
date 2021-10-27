@@ -241,7 +241,11 @@
 	{% elif c.author_id==NOTIFICATIONS_ACCOUNT or c.author_id==AUTOJANNY_ACCOUNT %}
 	<span class="font-weight-bold">{{'SITE_NAME' | app_config}} Notification</span>
 	{% else %}
-	<span class="font-weight-bold">Sent to @{{c.senttouser.username}}</span>
+		{% if c.sentto == 0 %}
+			<span class="font-weight-bold">Sent to admins</span>
+		{% else %}
+			<span class="font-weight-bold">Sent to @{{c.senttouser.username}}</span>
+		{% endif %}
 	{% endif %}
 </span>
 </div>
@@ -278,7 +282,7 @@
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{% if v and v.admin_level >= 2 %}You're blocking this user, but you can see this comment because {{'it\'s pinned' if c.is_pinned else 'you\'re an admin'}}.{% else %}Comment author is banned{% endif %}"></i>{% endif %}
 				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This user is blocking you."></i>{% endif %}
 
-				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if request.host == 'rdrama.net' and c.author.id in [541,1387] %}#62ca56{% elif request.host == 'rdrama.net' and c.author.id in [30,2256] %}#ff0000{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
+				{% if c.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
 				{% endif %}
 
 				<a class="user-name text-decoration-none" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" href="javascript:void(0)" tabindex="0" style="color:#{{c.author.namecolor}};  font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{c.author.username}}</span></a>

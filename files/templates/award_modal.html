@@ -23,14 +23,11 @@
 								<div class="text-muted">{{award.owned}} owned</div>
 							</a>
 						{% endfor %}
-						<!-- <a class="card disabled d-md-none">
-<pre>
-
-
-
-
-</pre>
-						</a> -->
+						<a class="card disabled d-md-none" style="border:none">
+							<i class="fas fa-volume-mute" style="opacity:0"></i>
+							<div class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">&nbsp;</div>
+							<div class="text-muted">&nbsp;</div>
+						</a>
 					</div>
 					<label id="notelabel" for="note" class="pt-4">Note (optional):</label>
 					<input id="kind" name="kind" value="" hidden>
@@ -62,7 +59,7 @@
 		opacity: 0.6;
 	}
 
-	.awards-wrapper a:hover, .awards-wrapper .picked {
+	.awards-wrapper a:hover:not(.disabled), .awards-wrapper .picked {
 		background-color: var(--primary)!important;
 	}
 
@@ -76,7 +73,7 @@
 
 	@media (min-width: 767.98px) {
 		.award-columns {
-			column-count: 6 !important;
+			column-count: 7 !important;
 		}
 	}
 </style>

@@ -155,6 +155,10 @@ def api_comment(v):
 	body = request.values.get("body", "").strip()[:10000]
 	body = body.strip()
 
+	if v.marseyawarded:
+		marregex = list(re.finditer("^(:!?mar\w+:\s*)+$", body))
+		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
@@ -584,6 +588,11 @@ def edit_comment(cid, v):
 	if c.is_banned or c.deleted_utc > 0: abort(403)
 
 	body = request.values.get("body", "").strip()[:10000]
+
+	if v.marseyawarded:
+		marregex = list(re.finditer("^(:!?mar\w+:\s*)+$", body))
+		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body_md = CustomRenderer().render(mistletoe.Document(body))

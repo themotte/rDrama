@@ -190,7 +190,7 @@ if SITE_NAME == "Drama":
 		"flairlock": {
 			"kind": "flairlock",
 			"title": "1-Day Flairlock",
-			"description": "Sets a flair for the author and locks it or 24 hours.",
+			"description": "Sets a flair for the recipient and locks it or 24 hours.",
 			"icon": "fas fa-lock",
 			"color": "text-black",
 			"price": 1250
@@ -198,15 +198,23 @@ if SITE_NAME == "Drama":
 		"agendaposter": {
 			"kind": "agendaposter",
 			"title": "Agendaposter",
-			"description": "Forces the agendaposter theme on the author for 24 hours.",
+			"description": "Forces the agendaposter theme on the recipient for 24 hours.",
 			"icon": "fas fa-snooze",
 			"color": "text-purple",
 			"price": 2000
 		},
+		"marsey": {
+			"kind": "marsey",
+			"title": "Marsey",
+			"description": "Makes the recipient unable to post/comment anything but marsey emojis for 24 hours.",
+			"icon": "fas fa-cat",
+			"color": "text-orange",
+			"price": 3000
+		},
 		"ban": {
 			"kind": "ban",
 			"title": "1-Day Ban",
-			"description": "Bans the author for a day.",
+			"description": "Bans the recipient for a day.",
 			"icon": "fas fa-gavel",
 			"color": "text-danger",
 			"price": 3000
@@ -222,7 +230,7 @@ if SITE_NAME == "Drama":
 		"grass": {
 			"kind": "grass",
 			"title": "Grass",
-			"description": "Ban the author permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+			"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 			"icon": "fas fa-seedling",
 			"color": "text-success",
 			"price": 10000

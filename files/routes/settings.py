@@ -334,11 +334,23 @@ def gumroad(v):
 def titlecolor(v):
 	titlecolor = str(request.values.get("titlecolor", "")).strip()
 	if titlecolor.startswith('#'): titlecolor = titlecolor[1:]
-	if len(titlecolor) != 6: return render_template("settings_security.html", v=v, error="Invalid color code")
+	if len(titlecolor) != 6: return render_template("settings_profile.html", v=v, error="Invalid color code")
 	v.titlecolor = titlecolor
 	g.db.add(v)
 	g.db.commit()
+	return redirect("/settings/profile")
 
+@app.post("/settings/verifiedcolor")
+@limiter.limit("1/second")
+@auth_required
+@validate_formkey
+def verifiedcolor(v):
+	verifiedcolor = str(request.values.get("verifiedcolor", "")).strip()
+	if verifiedcolor.startswith('#'): verifiedcolor = verifiedcolor[1:]
+	if len(verifiedcolor) != 6: return render_template("settings_profile.html", v=v, error="Invalid color code")
+	v.verifiedcolor = verifiedcolor
+	g.db.add(v)
+	g.db.commit()
 	return redirect("/settings/profile")
 
 @app.post("/settings/security")

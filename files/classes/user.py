@@ -47,6 +47,8 @@ class User(Base):
 	bannerurl = Column(String)
 	patron = Column(Integer, default=0)
 	verified = Column(String)
+	verifiedcolor = Column(String)
+	marseyawarded = Column(String)
 	email = Column(String)
 	css = deferred(Column(String))
 	profilecss = deferred(Column(String))
