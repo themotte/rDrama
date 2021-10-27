@@ -523,7 +523,7 @@ def api_comment(v):
 					notify_users.add(user.id)
 
 		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users:
-			notify_users.append(1)
+			notify_users.add(1)
 
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
@@ -758,7 +758,7 @@ def edit_comment(cid, v):
 				if user.id != v.id:
 					notify_users.add(user.id)
 
-		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.append(1)
+		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users:
 			notif = notifs.filter_by(comment_id=c.id, user_id=x).first()
