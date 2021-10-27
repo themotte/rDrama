@@ -530,7 +530,7 @@ def award_post(pid, v):
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /post/{post.id}", days=1)
 			send_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
-			author.unban_utc += 24*60*60
+			author.unban_utc += 86400
 			send_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
 		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
@@ -587,7 +587,7 @@ def award_post(pid, v):
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "marsey":
-		author.marseyawarded = True
+		author.marseyawarded = time.time() + 86400
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -652,7 +652,7 @@ def award_comment(cid, v):
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /comment/{c.id}", days=1)
 			send_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
-			author.unban_utc += 24*60*60
+			author.unban_utc += 86400
 			send_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
 		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
@@ -706,7 +706,7 @@ def award_comment(cid, v):
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "marsey":
-		author.marseyawarded = True
+		author.marseyawarded = time.time() + 86400
 
 	c.author.received_award_count += 1
 	g.db.add(c.author)
@@ -728,8 +728,7 @@ def admin_userawards_get(v):
 @validate_formkey
 def admin_userawards_post(v):
 
-	if v.admin_level < 6:
-		abort(403)
+	if v.admin_level < 6: abort(403)
 
 	try: u = request.values.get("username").strip()
 	except: abort(404)
@@ -746,8 +745,7 @@ def admin_userawards_post(v):
 
 		if value:
 
-			if int(value) > 0:
-				notify_awards[key] = int(value)
+			if int(value) > 0: notify_awards[key] = int(value)
 
 			for x in range(int(value)):
 				thing += 1
@@ -762,14 +760,13 @@ def admin_userawards_post(v):
 
 	text = "You were given the following awards:\n\n"
 
-	for key, value in notify_awards.items():
-		text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
+	for key, value in notify_awards.items(): text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
 
 	send_notification(u.id, text)
 
 	g.db.commit()
 
-	if v.username == "Aevann": return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
+	if request.host == 'rdrama.net' and v.id in [1,28,995]: return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v)
 	return render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
 
 

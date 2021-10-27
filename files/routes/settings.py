@@ -500,6 +500,8 @@ def settings_images_profile(v):
 
 	if not imageurl: abort(400)
 
+	if v.highres and '/images/' in v.highres : os.remove('/images/' + v.highres.split('/images/')[1])
+	if v.profileurl and '/images/' in v.profileurl : os.remove('/images/' + v.profileurl.split('/images/')[1])
 	v.highres = highres
 	v.profileurl = imageurl
 	g.db.add(v)
@@ -522,10 +524,11 @@ def settings_images_banner(v):
 
 	name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.gif'
 	file.save(name)
-	imageurl = request.host_url[:-1] + process_image(name)
+	bannerurl = request.host_url[:-1] + process_image(name)
 
-	if imageurl:
-		v.bannerurl = imageurl
+	if bannerurl:
+		if v.bannerurl and '/images/' in v.bannerurl : os.remove('/images/' + v.bannerurl.split('/images/')[1])
+		v.bannerurl = bannerurl
 		g.db.add(v)
 		g.db.commit()
 

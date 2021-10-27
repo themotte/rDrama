@@ -48,7 +48,7 @@ class User(Base):
 	patron = Column(Integer, default=0)
 	verified = Column(String)
 	verifiedcolor = Column(String)
-	marseyawarded = Column(String)
+	marseyawarded = Column(Integer)
 	email = Column(String)
 	css = deferred(Column(String))
 	profilecss = deferred(Column(String))

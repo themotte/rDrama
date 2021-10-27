@@ -215,15 +215,21 @@ def edit_post(pid, v):
 	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
-		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
-		if body:
-			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
-			if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+		if time.time() > v.marseyawarded:
+			v.marseyawarded = None
+			g.db.add(v)
+		else:
+			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
+			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+			if body:
+				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	if title != p.title:
+		title_html = filter_title(title)
+		if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
 		p.title = title
-		p.title_html = filter_title(title)
+		p.title_html = title_html
 
 	if body != p.body:
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
@@ -241,6 +247,7 @@ def edit_post(pid, v):
 			return {"error": reason}, 403
 
 		p.body = body
+		if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
 		p.body_html = body_html
 
 		if "rama" in request.host and "ivermectin" in body_html.lower():
@@ -405,7 +412,7 @@ def thumbnail_thread(pid):
 		thumb_candidate_urls=[]
 
 		meta_tags = [
-			"ruqqus:thumbnail",
+			"drama:thumbnail",
 			"twitter:image",
 			"og:image",
 			"thumbnail"
@@ -495,6 +502,8 @@ def submit_post(v):
 
 	title = request.values.get("title", "").strip()
 	url = request.values.get("url", "").strip()
+	title_html = filter_title(title)
+	if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
 
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
@@ -513,16 +522,16 @@ def submit_post(v):
 
 		domain = parsed_url.netloc
 
-		# qd = parse_qs(parsed_url.query)
-		# filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
+		qd = parse_qs(parsed_url.query)
+		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
 
-		# new_url = ParseResult(scheme="https",
-		#					netloc=parsed_url.netloc,
-		#					path=parsed_url.path,
-		#					params=parsed_url.params,
-		#					query=urlencode(filtered, doseq=True),
-		#					fragment=parsed_url.fragment)
-		# url = urlunparse(new_url)
+		new_url = ParseResult(scheme="https",
+							netloc=parsed_url.netloc,
+							path=parsed_url.path,
+							params=parsed_url.params,
+							query=urlencode(filtered, doseq=True),
+							fragment=parsed_url.fragment)
+		url = urlunparse(new_url)
 
 		repost = g.db.query(Submission).options(lazyload('*')).filter(
 			Submission.url.ilike(url),
@@ -570,11 +579,15 @@ def submit_post(v):
 	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
-		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
-		if body:
-			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
-			if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+		if time.time() > v.marseyawarded:
+			v.marseyawarded = None
+			g.db.add(v)
+		else:
+			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
+			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+			if body:
+				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	dup = g.db.query(Submission).options(lazyload('*')).filter(
 		Submission.author_id == v.id,
@@ -606,14 +619,11 @@ def submit_post(v):
 					Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
 					Submission.created_utc > cutoff
 		).all()
-	else:
-		similar_urls = []
+	else: similar_urls = []
 
 	threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-	if v.age >= (60 * 60 * 24 * 7):
-		threshold *= 3
-	elif v.age >= (60 * 60 * 24):
-		threshold *= 2
+	if v.age >= (60 * 60 * 24 * 7): threshold *= 3
+	elif v.age >= (60 * 60 * 24): threshold *= 2
 
 	if max(len(similar_urls), len(similar_posts)) >= threshold:
 
@@ -663,7 +673,7 @@ def submit_post(v):
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
-
+	if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
 
 	if len(body_html) > 20000: abort(400)
 
@@ -690,7 +700,7 @@ def submit_post(v):
 		body_html=body_html,
 		embed_url=embed,
 		title=title,
-		title_html=filter_title(title)
+		title_html=title_html
 	)
 
 	g.db.add(new_post)
@@ -859,32 +869,27 @@ def submit_post(v):
 			else: body = random.choice(snappyquotes)
 			body += "\n\n---\n\n"
 		else: body = ""
+
 		if new_post.url:
 			body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, new_post.url)
 
-			# archive other urls in post
-			url_regex = '<a (target=\"_blank\"  )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
-			_body = new_post.body_html
-			#print(_body)
-			for url_match in re.finditer(url_regex, _body, flags=re.M|re.I):
-				href = url_match.group(3)
+		url_regex = '<a (target=\"_blank\"  )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
+		for url_match in re.finditer(url_regex, new_post.body_html, flags=re.M|re.I):
+			href = url_match.group(3)
+			if not href: continue
 
-				if not href:
-					#print(f'{url_match.group(0)} skip')
-					continue
+			title = url_match.group(5)
+			if "Snapshots:\n\n"	 not in body: body += "Snapshots:\n\n"			
 
-				#print(href)
-				title = url_match.group(5)
-				body += f'**[{title}]({href})**:\n\n'
-				body += f'* [reveddit.com](https://reveddit.com/{href})\n'
-				body += f'* [archive.org](https://web.archive.org/{href})\n'
-				body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
-				gevent.spawn(archiveorg, href)
+			body += f'**[{title}]({href})**:\n\n'
+			body += f'* [reveddit.com](https://reveddit.com/{href})\n'
+			body += f'* [archive.org](https://web.archive.org/{href})\n'
+			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
+			gevent.spawn(archiveorg, href)
 
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
-
 
 		c = Comment(author_id=SNAPPY_ACCOUNT,
 			distinguish_level=6,

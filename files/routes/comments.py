@@ -156,8 +156,12 @@ def api_comment(v):
 	body = body.strip()
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
-		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+		if time.time() > v.marseyawarded:
+			v.marseyawarded = None
+			g.db.add(v)
+		else:
+			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
@@ -186,6 +190,8 @@ def api_comment(v):
 	else:
 		body_md = CustomRenderer().render(mistletoe.Document(body_md))
 		body_html = sanitize(body_md)
+
+	if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 
 	bans = filter_comment_html(body_html)
 
@@ -590,13 +596,19 @@ def edit_comment(cid, v):
 	body = request.values.get("body", "").strip()[:10000]
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
-		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
+		if time.time() > v.marseyawarded:
+			v.marseyawarded = None
+			g.db.add(v)
+		else:
+			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
+
+	if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 
 	bans = filter_comment_html(body_html)
 
