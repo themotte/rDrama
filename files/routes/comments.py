@@ -191,7 +191,7 @@ def api_comment(v):
 		body_md = CustomRenderer().render(mistletoe.Document(body_md))
 		body_html = sanitize(body_md)
 
-	if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 
 	bans = filter_comment_html(body_html)
 
@@ -618,7 +618,7 @@ def edit_comment(cid, v):
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
-	if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 
 	bans = filter_comment_html(body_html)
 

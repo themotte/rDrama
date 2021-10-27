@@ -227,7 +227,7 @@ def edit_post(pid, v):
 
 	if title != p.title:
 		title_html = filter_title(title)
-		if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
+		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
 		p.title = title
 		p.title_html = title_html
 
@@ -247,7 +247,7 @@ def edit_post(pid, v):
 			return {"error": reason}, 403
 
 		p.body = body
-		if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
+		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
 		p.body_html = body_html
 
 		if "rama" in request.host and "ivermectin" in body_html.lower():
@@ -503,7 +503,7 @@ def submit_post(v):
 	title = request.values.get("title", "").strip()
 	url = request.values.get("url", "").strip()
 	title_html = filter_title(title)
-	if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
 
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
@@ -673,7 +673,7 @@ def submit_post(v):
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
-	if v.marseyawarded and len(list(re.finditer('>[^<]|[^>]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
 
 	if len(body_html) > 20000: abort(400)
 
