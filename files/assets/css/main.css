@@ -122,7 +122,7 @@ a {
   text-decoration: none;
   background-color: transparent;
 }
-a:hover:not(.disabled) {
+a:hover {
   color: var(--primary);
   text-decoration: underline;
 }
@@ -887,11 +887,11 @@ fieldset:disabled a.btn {
   color: var(--primary);
   text-decoration: none;
 }
-.btn-link:hover:not(.disabled) {
+.btn-link:hover {
   color: var(--primary);
   text-decoration: underline;
 }
-.btn-link:focus:not(.disabled), .btn-link.focus:not(.disabled) {
+.btn-link:focus, .btn-link.focus {
   text-decoration: underline;
   box-shadow: none;
 }
@@ -3131,7 +3131,7 @@ a.text-danger:hover, a.text-danger:focus {
 	box-shadow: none !important;
   }
 
-  a:not(.btn):not(.disabled) {
+  a:not(.btn) {
 	text-decoration: underline;
   }
 
