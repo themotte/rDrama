@@ -864,7 +864,7 @@ def submit_post(v):
 			gevent.spawn(archiveorg, new_post.url)
 
 			# archive other urls in post
-			url_regex = '<a (target=\"_blank\" )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
+			url_regex = '<a (target=\"_blank\"  )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
 			_body = new_post.body_html
 			print(_body)
 			for url_match in re.finditer(url_regex, _body, flags=re.M|re.I):
