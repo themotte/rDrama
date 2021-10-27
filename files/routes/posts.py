@@ -860,8 +860,17 @@ def submit_post(v):
 			body += "\n\n---\n\n"
 		else: body = ""
 		if new_post.url:
-			body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)"
+			body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n"			
 			gevent.spawn(archiveorg, new_post.url)
+			# archive other urls in post
+			url_regex = '<a href=\"(https?://[a-z]{1,20}\.[^\"]+)\">(.+)</a>'
+			for url_match in re.finditer(url_regex, new_post.body_html):
+				href = url_match.group(1)
+				title = url_match.group(2)
+				body += f'**[{title}]({href})**:\n\n'
+				body += f'* [reveddit.com](https://reveddit.com/{href})\n'
+				body += f'* [archive.org](https://web.archive.org/{href})\n'
+				body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)'
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
