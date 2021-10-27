@@ -370,8 +370,16 @@
 		transform: scaleX(-1);-webkit-transform: scaleX(-1);
 	}
 
-	.popover-bio * {
-		font-size: 0.8rem !important;
+	@media (max-width: 768px) {
+		.popover-bio * {
+			font-size: 0.8rem !important;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.popover-bio * {
+			font-size: 1rem !important;
+		}
 	}
 </style>
 
