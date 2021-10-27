@@ -20,6 +20,18 @@ from files.helpers.discord import add_role
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
+
+@app.get("/justice")
+@admin_level_required(6)
+def justice(v):
+	for id in [261,1832,1833]:
+		u = g.db.query(User).options(lazyload('*')).filter_by(id = id).first()
+		u.comment_count = g.db.query(Comment).options(lazyload('*')).filter_by(author_id = id).count()
+		g.db.add(u)
+	g.db.commit()
+	return "sex"
+
+
 @app.get("/truescore")
 @admin_level_required(6)
 def truescore(v):

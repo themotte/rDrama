@@ -903,6 +903,10 @@ def submit_post(v):
 			)
 
 		g.db.add(c)
+
+		snappy = g.db.query(User).options(lazyload('*')).filter_by(id = SNAPPY_ACCOUNT).first().comment_count += 1
+		g.db.add(snappy)
+
 		g.db.flush()
 
 
