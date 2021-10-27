@@ -201,7 +201,7 @@ if SITE_NAME == "Drama":
 			"description": "Forces the agendaposter theme on the recipient for 24 hours.",
 			"icon": "fas fa-snooze",
 			"color": "text-purple",
-			"price": 2000
+			"price": 2500
 		},
 		"marsey": {
 			"kind": "marsey",
