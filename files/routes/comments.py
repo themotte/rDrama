@@ -415,7 +415,8 @@ def api_comment(v):
 
 		g.db.add(c2)
 
-		longpostbot = g.db.query(User).options(lazyload('*')).filter_by(id = LONGPOSTBOT_ACCOUNT).first().comment_count += 1
+		longpostbot = g.db.query(User).options(lazyload('*')).filter_by(id = LONGPOSTBOT_ACCOUNT).first()
+		longpostbot.comment_count += 1
 		g.db.add(longpostbot)
 		
 		g.db.flush()
@@ -501,7 +502,8 @@ def api_comment(v):
 
 		g.db.add(c4)
 
-		zozbot = g.db.query(User).options(lazyload('*')).filter_by(id = ZOZBOT_ACCOUNT).first().comment_count += 3
+		zozbot = g.db.query(User).options(lazyload('*')).filter_by(id = ZOZBOT_ACCOUNT).first()
+		zozbot.comment_count += 3
 		g.db.add(zozbot)
 
 		g.db.flush()
