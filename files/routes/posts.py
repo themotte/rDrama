@@ -865,6 +865,7 @@ def submit_post(v):
 
 			# archive other urls in post
 			url_regex = '<a href=\"(https?://[a-z]{1,20}\.[^\"]+)\">(.+)</a>'
+			print(new_post.body_html)
 			for url_match in re.finditer(url_regex, new_post.body_html):
 				href = url_match.group(1)
 				print(href)
