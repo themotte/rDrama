@@ -369,11 +369,16 @@ def redditor_moment_redirect(username):
 @app.get("/@<username>/followers")
 @auth_required
 def followers(username, v):
-
-
 	u = get_user(username, v=v)
 	users = [x.user for x in u.followers]
 	return render_template("followers.html", v=v, u=u, users=users)
+
+@app.get("/@<username>/following")
+@auth_required
+def following(username, v):
+	u = get_user(username, v=v)
+	users = [x.target for x in u.following]
+	return render_template("following.html", v=v, u=u, users=users)
 
 @app.get("/views")
 @auth_required
@@ -677,7 +682,6 @@ def remove_follow(username, v):
 	g.db.commit()
 
 	return {"message": "Follower removed!"}
-
 
 @app.get("/uid/<id>/pic/profile")
 @limiter.exempt
