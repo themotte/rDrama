@@ -215,7 +215,7 @@ def edit_post(pid, v):
 	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded:
-		title = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+		title = list(re.finditer("^(:!?m\w+:\s*)+$", title))
 		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
 		if body:
 			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
@@ -570,7 +570,7 @@ def submit_post(v):
 	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded:
-		title = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+		title = list(re.finditer("^(:!?m\w+:\s*)+$", title))
 		if len(marregex) == 0: return {"error":"You need to only type marseys!"}, 403
 		if body:
 			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
