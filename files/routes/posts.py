@@ -870,7 +870,8 @@ def submit_post(v):
 				body += f'**[{title}]({href})**:\n\n'
 				body += f'* [reveddit.com](https://reveddit.com/{href})\n'
 				body += f'* [archive.org](https://web.archive.org/{href})\n'
-				body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)'
+				body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n'
+				gevent.spawn(archiveorg, href)
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
