@@ -5,7 +5,7 @@ Flask
 Flask-Caching
 Flask-Compress
 Flask-Limiter==1.1.0
-Flask-Mail
+Flask-Mail==0.9.1
 gevent
 greenlet
 gunicorn
