@@ -602,188 +602,189 @@ def edit_comment(cid, v):
 
 	body = request.values.get("body", "").strip()[:10000]
 
-	if v.marseyawarded:
-		if time.time() > v.marseyawarded:
-			v.marseyawarded = None
-			g.db.add(v)
-		else:
-			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
-			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+	if body != c.body and body != "":
+		if v.marseyawarded:
+			if time.time() > v.marseyawarded:
+				v.marseyawarded = None
+				g.db.add(v)
+			else:
+				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
-	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
-		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
-	body_md = CustomRenderer().render(mistletoe.Document(body))
-	body_html = sanitize(body_md)
-
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
-
-	bans = filter_comment_html(body_html)
-
-	if bans:
-		
-		ban = bans[0]
-		reason = f"Remove the {ban.domain} link from your comment and try again."
-		
-		if ban.reason: reason += f" {ban.reason}"	
-	
-		if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
-		else: return render_template("comment_failed.html",
-												action=f"/edit_comment/{c.id}",
-												badlinks=[x.domain for x in bans],
-												body=body,
-												v=v
-												)
-	if 'trans lives matters' not in body.lower():
-		now = int(time.time())
-		cutoff = now - 60 * 60 * 24
-
-		similar_comments = g.db.query(Comment
-										).options(
-			lazyload('*')
-		).filter(
-			Comment.author_id == v.id,
-			Comment.body.op(
-				'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
-			Comment.created_utc > cutoff
-		).all()
-
-		threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
-		if v.age >= (60 * 60 * 24 * 30):
-			threshold *= 4
-		elif v.age >= (60 * 60 * 24 * 7):
-			threshold *= 3
-		elif v.age >= (60 * 60 * 24):
-			threshold *= 2
-
-		if len(similar_comments) > threshold:
-			text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-			send_notification(v.id, text)
-
-			v.ban(reason="Spamming.",
-					days=1)
-
-			for comment in similar_comments:
-				comment.is_banned = True
-				comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
-				g.db.add(comment)
-
-			return {"error": "Too much spam!"}, 403
-
-	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
-		file=request.files["file"]
-		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
-
-		name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.gif'
-		file.save(name)
-		url = request.host_url[:-1] + process_image(name)
-
-		body += f"\n![]({url})"
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
+			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
-	if len(body_html) > 20000: abort(400)
+		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 
-	c.body = body[:10000]
-	c.body_html = body_html
+		bans = filter_comment_html(body_html)
 
-	if "rama" in request.host and "ivermectin" in c.body_html.lower():
+		if bans:
+			
+			ban = bans[0]
+			reason = f"Remove the {ban.domain} link from your comment and try again."
+			
+			if ban.reason: reason += f" {ban.reason}"	
+		
+			if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
+			else: return render_template("comment_failed.html",
+													action=f"/edit_comment/{c.id}",
+													badlinks=[x.domain for x in bans],
+													body=body,
+													v=v
+													)
+		if 'trans lives matters' not in body.lower():
+			now = int(time.time())
+			cutoff = now - 60 * 60 * 24
 
-		c.is_banned = True
-		c.ban_reason = "ToS Violation"
+			similar_comments = g.db.query(Comment
+											).options(
+				lazyload('*')
+			).filter(
+				Comment.author_id == v.id,
+				Comment.body.op(
+					'<->')(body) < app.config["SPAM_SIMILARITY_THRESHOLD"],
+				Comment.created_utc > cutoff
+			).all()
+
+			threshold = app.config["SPAM_SIMILAR_COUNT_THRESHOLD"]
+			if v.age >= (60 * 60 * 24 * 30):
+				threshold *= 4
+			elif v.age >= (60 * 60 * 24 * 7):
+				threshold *= 3
+			elif v.age >= (60 * 60 * 24):
+				threshold *= 2
+
+			if len(similar_comments) > threshold:
+				text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+				send_notification(v.id, text)
+
+				v.ban(reason="Spamming.",
+						days=1)
+
+				for comment in similar_comments:
+					comment.is_banned = True
+					comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
+					g.db.add(comment)
+
+				return {"error": "Too much spam!"}, 403
+
+		if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+			file=request.files["file"]
+			if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
+
+			name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.gif'
+			file.save(name)
+			url = request.host_url[:-1] + process_image(name)
+
+			body += f"\n![]({url})"
+			body_md = CustomRenderer().render(mistletoe.Document(body))
+			body_html = sanitize(body_md)
+
+		if len(body_html) > 20000: abort(400)
+
+		c.body = body[:10000]
+		c.body_html = body_html
+
+		if "rama" in request.host and "ivermectin" in c.body_html.lower():
+
+			c.is_banned = True
+			c.ban_reason = "ToS Violation"
+
+			g.db.add(c)
+
+			body = VAXX_MSG.format(username=v.username)
+
+			body_md = CustomRenderer().render(mistletoe.Document(body))
+
+			body_jannied_html = sanitize(body_md)
+
+
+
+			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+				parent_submission=c.parent_submission,
+				distinguish_level=6,
+				parent_comment_id=c.id,
+				level=c.level+1,
+				is_bot=True,
+				body_html=body_jannied_html,
+				body=body
+				)
+
+			g.db.add(c_jannied)
+			g.db.flush()
+
+
+
+			n = Notification(comment_id=c_jannied.id, user_id=v.id)
+			g.db.add(n)
+
+
+		if v.agendaposter and "trans lives matter" not in c.body_html.lower():
+
+			c.is_banned = True
+			c.ban_reason = "ToS Violation"
+
+			g.db.add(c)
+
+
+			body = AGENDAPOSTER_MSG.format(username=v.username)
+
+			body_md = CustomRenderer().render(mistletoe.Document(body))
+
+			body_jannied_html = sanitize(body_md)
+
+
+
+			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+				parent_submission=c.parent_submission,
+				distinguish_level=6,
+				parent_comment_id=c.id,
+				level=c.level+1,
+				is_bot=True,
+				body_html=body_jannied_html,
+				body=body,
+				)
+
+			g.db.add(c_jannied)
+			g.db.flush()
+
+
+
+			n = Notification(comment_id=c_jannied.id, user_id=v.id)
+			g.db.add(n)
+
+		if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())
 
 		g.db.add(c)
 
-		body = VAXX_MSG.format(username=v.username)
-
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-
-		body_jannied_html = sanitize(body_md)
-
-
-
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
-			parent_submission=c.parent_submission,
-			distinguish_level=6,
-			parent_comment_id=c.id,
-			level=c.level+1,
-			is_bot=True,
-			body_html=body_jannied_html,
-			body=body
-			)
-
-		g.db.add(c_jannied)
 		g.db.flush()
+		
+		notify_users = set()
+		soup = BeautifulSoup(body_html, features="html.parser")
+		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
+		
+		if len(mentions) > 0:
+			notifs = g.db.query(Notification)
+			for mention in mentions:
+				username = mention["href"].split("@")[1]
 
+				user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 
+				if user:
+					if v.any_block_exists(user): continue
+					if user.id != v.id: notify_users.add(user.id)
 
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
+			if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
 
+			for x in notify_users:
+				notif = notifs.filter_by(comment_id=c.id, user_id=x).first()
+				if not notif:
+					n = Notification(comment_id=c.id, user_id=x)
+					g.db.add(n)
 
-	if v.agendaposter and "trans lives matter" not in c.body_html.lower():
-
-		c.is_banned = True
-		c.ban_reason = "ToS Violation"
-
-		g.db.add(c)
-
-
-		body = AGENDAPOSTER_MSG.format(username=v.username)
-
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-
-		body_jannied_html = sanitize(body_md)
-
-
-
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
-			parent_submission=c.parent_submission,
-			distinguish_level=6,
-			parent_comment_id=c.id,
-			level=c.level+1,
-			is_bot=True,
-			body_html=body_jannied_html,
-			body=body,
-			)
-
-		g.db.add(c_jannied)
-		g.db.flush()
-
-
-
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
-
-	if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())
-
-	g.db.add(c)
-
-	g.db.flush()
-	
-	notify_users = set()
-	soup = BeautifulSoup(body_html, features="html.parser")
-	mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
-	
-	if len(mentions) > 0:
-		notifs = g.db.query(Notification)
-		for mention in mentions:
-			username = mention["href"].split("@")[1]
-
-			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
-
-			if user:
-				if v.any_block_exists(user): continue
-				if user.id != v.id: notify_users.add(user.id)
-
-		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
-
-		for x in notify_users:
-			notif = notifs.filter_by(comment_id=c.id, user_id=x).first()
-			if not notif:
-				n = Notification(comment_id=c.id, user_id=x)
-				g.db.add(n)
-
-	g.db.commit()
+		g.db.commit()
 
 	return c.body_html
 
