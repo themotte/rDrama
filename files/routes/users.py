@@ -377,6 +377,7 @@ def followers(username, v):
 @auth_required
 def following(username, v):
 	u = get_user(username, v=v)
+	if request.host == 'rdrama.net' and u.id == 147: abort(404)
 	users = [x.target for x in u.following]
 	return render_template("following.html", v=v, u=u, users=users)
 
