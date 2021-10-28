@@ -533,13 +533,10 @@ def api_comment(v):
 			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 
 			if user:
-				if v.any_block_exists(user):
-					continue
-				if user.id != v.id:
-					notify_users.add(user.id)
+				if v.any_block_exists(user): continue
+				if user.id != v.id: notify_users.add(user.id)
 
-		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users:
-			notify_users.add(1)
+		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
@@ -775,10 +772,8 @@ def edit_comment(cid, v):
 			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 
 			if user:
-				if v.any_block_exists(user):
-					continue
-				if user.id != v.id:
-					notify_users.add(user.id)
+				if v.any_block_exists(user): continue
+				if user.id != v.id: notify_users.add(user.id)
 
 		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
 

@@ -64,15 +64,15 @@ def publish(pid, v):
 	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 		username = mention["href"].split("@")[1]
 		user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
-		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
+		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
 	if request.host == 'rdrama.net' and 'aevann' in post.body_html.lower() and 1 not in notify_users: notify_users.add(1)
 
-	for x in notify_users: send_notification(x.id, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
+	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
-		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})", True)
+		send_notification(user, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})", True)
 
 	cache.delete_memoized(frontlist)
 
@@ -322,15 +322,15 @@ def edit_post(pid, v):
 		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 			username = mention["href"].split("@")[1]
 			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
-			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
+			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
 		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
 
 		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users:
-			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x.id).first()
-			if not existing: send_notification(x.id, message)
+			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			if not existing: send_notification(x, message)
 
 
 	if title != p.title or body != p.body:
@@ -771,11 +771,11 @@ def submit_post(v):
 		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 			username = mention["href"].split("@")[1]
 			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
-			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
+			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
 		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
 
-		for x in notify_users: send_notification(x.id, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
+		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 		
 		for follow in v.followers:
 			user = get_account(follow.user_id)
