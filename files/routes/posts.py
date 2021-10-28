@@ -66,7 +66,7 @@ def publish(pid, v):
 		user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
-	if request.host == 'rdrama.net' and 'aevann' in post.body_html.lower() and 1 not in notify_users: notify_users.add(1)
+	if request.host == 'rdrama.net' and 'aevann' in f'{post.body_html}{post.title}'.lower() and 1 not in notify_users: notify_users.add(1)
 
 	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 
@@ -326,7 +326,7 @@ def edit_post(pid, v):
 			
 		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
 
-		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
+		if request.host == 'rdrama.net' and 'aevann' in f'{body_html}{title}'.lower() and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users:
 			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
@@ -773,7 +773,7 @@ def submit_post(v):
 			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
-		if request.host == 'rdrama.net' and 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
+		if request.host == 'rdrama.net' and 'aevann' in f'{body_html}{title}'.lower() and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 		
