@@ -309,12 +309,12 @@
 						{% endif %}
 						<pre></pre>
 
-						<form id="agendaposter" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
+						<form id="agendaposter1" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
 							<input type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
 							<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" >
 						</form>
-						<a id="unagendaposter" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter','unagendaposter')">Disable Agendaposter Theme</a>
+						<a id="unagendaposter" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter1','unagendaposter')">Disable Agendaposter Theme</a>
 
 						<pre></pre>
 
