@@ -38,8 +38,10 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	comment = get_comment(cid, v=v)
 	
 	if v and request.values.get("read"):
+		print(1)
 		notif = g.db.query(Notification).options(lazyload('*')).filter_by(comment_id=cid, user_id=v.id, read=False).first()
 		if notif:
+			print(2)
 			notif.read = True
 			g.db.add(notif)
 			g.db.commit()

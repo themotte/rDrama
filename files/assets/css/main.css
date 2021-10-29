@@ -4561,24 +4561,11 @@ ul.comment-section {
   color: var(--black);
 }
 
-.comment .comment-collapse::before {
-  content: "";
-  position: absolute;
-  font-family: "font awesome 5 pro" !important;
-  border-left: 2px solid #f8f9fa;
-  font-size: 1rem;
-  color: var(--primary);
-  display: inline-block;
-  height: 100%;
-  cursor: pointer;
-  width: 10px;
-}
-
-.comment .comment-collapse:hover::before {
+.comment .comment-collapse-icon:hover::before {
   border-left-color: var(--primary);
 }
 
-.comment.collapsed .comment-collapse::before {
+.comment.collapsed .comment-collapse-icon::before {
   content: "\f055";
   font-family: "font awesome 5 pro" !important;
   font-weight: 900;
@@ -4588,7 +4575,7 @@ ul.comment-section {
   font-size: 10px;
 }
 
-.comment.collapsed .comment-collapse:hover::before {
+.comment.collapsed .comment-collapse-icon:hover::before {
   color: var(--primary);
 }
 
@@ -5214,21 +5201,8 @@ pre .com, code .com {
 	margin-top: 1.5rem;
   }
 
-  .comment .comment-collapse {
-	padding-right: 10px;
-  }
-
   .comment.collapsed .user-info {
 	padding-top: 0.5rem;
-  }
-
-  .comment .comment-collapse::before {
-	content: "\f056";
-	position: static;
-	font-size: 10px;
-	font-weight: 900;
-	border: none;
-	margin-left: 0.25rem;
   }
 
   .comment.collapsed .comment-body:hover {
@@ -5655,4 +5629,23 @@ blockquote p {
 .timeline-Widget {
   max-height: 500px !important;
   overflow-y: scroll !important;
+}
+
+.comment .comment-collapse-icon {
+	padding-right: 10px;
+}
+
+.comment .comment-collapse-icon::before {
+  font-family: "font awesome 5 pro" !important;
+  color: var(--primary);
+  display: inline-block;
+  cursor: pointer;
+  height: 100%;
+  width: 10px;
+	content: "\f056";
+	position: static;
+	font-size: 10px;
+	font-weight: 900;
+	border: none;
+	margin-left: 0.25rem;
 }

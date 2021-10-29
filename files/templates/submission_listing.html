@@ -102,6 +102,17 @@
 	{% set voted=-2 %}
 {% endif %}
 
+{% if p.active_flags %}
+	<div id="flaggers-{{p.id}}" class="flaggers d-none">
+		<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+		<pre></pre>
+		<ul style="padding-left:20px; margin-bottom: 0;">
+			{% for f in p.ordered_flags %}
+				<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="post_toast('/del_report/p{{ f.id }}')">[remove]</a>{% endif %}</li>
+			{% endfor %}
+		</ul>
+	</div>
+{% endif %}
 
 <div id="post-{{p.id}}" class="card{% if p.is_banned %} banned{% endif %}{% if p.deleted_utc %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
 
@@ -467,18 +478,6 @@
 </div>
 
 </div>
-
-{% if p.active_flags %}
-	<div id="flaggers-{{p.id}}" class="flaggers d-none">
-		<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
-		<pre></pre>
-		<ul style="padding-left:20px; margin-bottom: 0;">
-			{% for f in p.ordered_flags %}
-				<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="post_toast('/del_report/p{{ f.id }}')">[remove]</a>{% endif %}</li>
-			{% endfor %}
-		</ul>
-	</div>
-{% endif %}
 
 {% if not p.club or v and v.paid_dues %}
 	{% if p.realbody(v) %}
