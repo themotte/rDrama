@@ -9,9 +9,10 @@ def get_logged_in_user():
 		token = request.headers.get("Authorization")
 		if not token: return None
 
-		client = g.db.query(ClientAuth).options(lazyload('*')).filter(ClientAuth.access_token == token).first()
-
-		x = (client.user, client) if client else (None, None)
+		try:
+			client = g.db.query(ClientAuth).options(lazyload('*')).filter(ClientAuth.access_token == token).first()
+			x = (client.user, client) if client else (None, None)
+		except: x = (None, None)
 
 
 	else:

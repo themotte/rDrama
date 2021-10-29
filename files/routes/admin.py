@@ -873,13 +873,7 @@ def ban_post(post_id, v):
 	post.stickied = None
 	post.is_pinned = False
 	post.removed_by = v.id
-
-	ban_reason=request.values.get("reason", "")
-	ban_reason = CustomRenderer().render(mistletoe.Document(ban_reason))
-	ban_reason = sanitize(ban_reason)
-
-	post.ban_reason = ban_reason
-
+	post.ban_reason = v.username
 	g.db.add(post)
 
 	
@@ -997,7 +991,7 @@ def api_ban_comment(c_id, v):
 	comment.is_banned = True
 	comment.is_approved = 0
 	comment.removed_by = v.id
-
+	comment.ban_reason = v.username
 	g.db.add(comment)
 	ma=ModAction(
 		kind="ban_comment",

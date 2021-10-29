@@ -176,13 +176,9 @@
 						<div class="user-info">
 							<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.id}}')"></span>
 							{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
-							[{% if c.is_banned %}Removed by admins{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}]
+							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
 						</div>
 
-
-						<div id="comment-banned-warning" class="comment-text text-danger text-small">
-								{% if c.is_banned and c.ban_reason %}Reason: {{c.ban_reason}}{% endif %}
-						</div>
 				</div>
 
 
@@ -309,7 +305,7 @@
 			{% endif %}
 
 			{% if c.is_banned and c.ban_reason %}
-				<div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">Reason: {{c.ban_reason}}</div>
+				<div id="comment-banned-warning" class="comment-text text-danger text-small mb-0">removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0">

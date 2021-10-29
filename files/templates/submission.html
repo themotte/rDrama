@@ -508,6 +508,12 @@
 								</div>
 							{% endfor %}
 
+							{% if p.is_banned and p.ban_reason %}
+								<div class="text-danger text-small mb-0">removed by @{{p.ban_reason}}</div>
+							{% endif %}
+			
+			
+
 
 						</div>
 
