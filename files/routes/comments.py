@@ -506,6 +506,7 @@ def api_comment(v):
 
 		zozbot = g.db.query(User).options(lazyload('*')).filter_by(id = ZOZBOT_ACCOUNT).first()
 		zozbot.comment_count += 3
+		zozbot.coins += 3
 		g.db.add(zozbot)
 
 		g.db.flush()
