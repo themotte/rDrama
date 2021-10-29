@@ -439,7 +439,9 @@
 
 						{% if v and not v.id==c.author_id and v.admin_level == 0 %}
 							<a id="unblock-{{c.id}}" class="{% if c.is_blocked %}d-md-inline-block{% endif %} list-inline-item text-muted d-none" href="javascript:void(0)" onclick="post_toast3('/settings/unblock?username={{c.author.username}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash fa-fw"></i>Unblock user</a>
-							<a id="block-{{c.id}}" class="blockuser {% if not c.is_blocked %}d-md-inline-block{% endif %} list-inline-item text-muted d-none" href="javascript:void(0)" onclick="post_toast3('/settings/block?username={{c.author.username}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash fa-fw"></i>Block user</a>
+							<a id="block-{{c.id}}" class="blockuser list-inline-item text-muted d-none" href="javascript:void(0)" onclick="post_toast3('/settings/block?username={{c.author.username}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash fa-fw"></i>Are you sure?</a>
+
+							<a class="{% if not c.is_blocked %}d-md-inline-block{% endif %} list-inline-item text-muted d-none" href="javascript:void(0)" onclick=""><i class="fas fa-eye-slash fa-fw"></i>Are you sure?</a>
 						{% endif %}
 
 						{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
