@@ -371,7 +371,7 @@ def redditor_moment_redirect(username):
 def followers(username, v):
 	u = get_user(username, v=v)
 	# if request.host == 'rdrama.net' and u.id == 147: abort(404)
-	ids = [x[0] for x in g.db.query(Follow.user_id).options(lazyload('*')).filter_by(target_id=v.id).all()]
+	ids = [x[0] for x in g.db.query(Follow.user_id).options(lazyload('*')).filter_by(target_id=u.id).all()]
 	users = g.db.query(User).options(lazyload('*')).filter(User.id.in_(ids)).all()
 	return render_template("followers.html", v=v, u=u, users=users)
 
@@ -380,7 +380,7 @@ def followers(username, v):
 def following(username, v):
 	u = get_user(username, v=v)
 	# if request.host == 'rdrama.net' and u.id == 147: abort(404)
-	ids = [x[0] for x in g.db.query(Follow.target_id).options(lazyload('*')).filter_by(user_id=v.id).all()]
+	ids = [x[0] for x in g.db.query(Follow.target_id).options(lazyload('*')).filter_by(user_id=u.id).all()]
 	users = g.db.query(User).options(lazyload('*')).filter(User.id.in_(ids)).all()
 	return render_template("following.html", v=v, u=u, users=users)
 
