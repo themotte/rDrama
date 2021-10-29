@@ -470,7 +470,7 @@
 								{% else %}
 									{% set streamurl=p.realurl(v).replace("spotify.com", "spotify.com/embed") %}
 								{% endif %}
-								<iframe loading="lazy" src="{{streamurl}}" width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+								<iframe loading="lazy" src="{{streamurl}}" width="100%" height="160" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
 								<pre></pre>
 
 							{% elif not p.embed_url and not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
