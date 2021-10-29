@@ -534,7 +534,7 @@
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input type="hidden" name="current_page" value="{{request.path}}">
 								<input name="title" required placeholder="title" value="{{p.title}}" >
-								<textarea name="body" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
+								<textarea name="body" maxlength="10000" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
 								<div class="comment-format"> 
 									<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></i></small> 
 									<a class="format" href="javascript:void(0)"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></i></a> 
@@ -782,7 +782,7 @@
 			<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
 			<input id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
 			{% if v %}
-			<textarea id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
+			<textarea maxlength="10000" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 			{% endif %}
 			<div class="comment-format">
 				<a class="btn btn-secondary format d-inline-block m-0" href="javascript:void(0)"><i class="fas fa-bold" onclick="makeBold('reply-form-body-{{p.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i></a>
@@ -810,7 +810,7 @@
 
 	{% if not v and not p.is_banned %}
 	<div class="comment-write mb-3">
-		<textarea class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
+		<textarea maxlength="10000" class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
 	</div>
 	{% if p.comment_count >= 2 %}
 	<div class="card border-0 mt-4">

@@ -214,6 +214,8 @@ def edit_post(pid, v):
 	title = request.values.get("title", "").strip()
 	body = request.values.get("body", "").strip()
 
+	if len(body) > 10000: return {"error":"Character limit is 10000!"}, 403
+
 	if v.marseyawarded:
 		if time.time() > v.marseyawarded:
 			v.marseyawarded = None

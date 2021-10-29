@@ -327,7 +327,7 @@
 						<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
 							<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
 								<input type="hidden" name="formkey" value="{{v.formkey}}"> 
-								<textarea name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3"></textarea> 
+								<textarea maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3"></textarea> 
 								<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
 									<label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.id}}">
 										<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></i>
@@ -349,7 +349,7 @@
 				<div id="comment-edit-{{c.id}}" class="d-none comment-write collapsed child">
 					<form id="comment-edit-form-{{c.id}}" action="/edit_comment/{{c.id}}" method="post" class="input-group" enctype="multipart/form-data"> 
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<textarea id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
+						<textarea maxlength="10000" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
 						<div class="comment-format"> 
 							<small class="btn btn-secondary format d-inline-block m-0"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add GIF">GIF</span></small>
 							&nbsp;
@@ -502,7 +502,7 @@
 					<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 					<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
 					<input id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}"> 
-					<textarea id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> 
+					<textarea maxlength="10000" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> 
 					<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
 						<label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.fullname}}">
 							<span id="gif-reply-btn-{{c.fullname}}" class="font-weight-bolder text-uppercase" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
