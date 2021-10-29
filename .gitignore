@@ -9,3 +9,4 @@ disablesignups
 **/.pytest_cache/
 venv/
 .vscode/
+disablesignups
