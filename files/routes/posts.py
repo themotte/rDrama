@@ -72,7 +72,7 @@ def publish(pid, v):
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
-		send_notification(user, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})", True)
+		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})", True)
 
 	cache.delete_memoized(frontlist)
 
