@@ -117,7 +117,7 @@ def discord_redirect(v):
 	if x.status_code in [201, 204]:
 
 		if v.id in [1,7]:
-			add_role(v, "shrigma")
+			add_role(v, "owner")
 			time.sleep(0.1)
 		
 		if v.admin_level > 0: add_role(v, "admin")
