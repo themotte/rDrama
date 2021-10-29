@@ -284,7 +284,7 @@ def edit_post(pid, v):
 			g.db.add(n)
 
 
-		if v.agendaposter and "trans lives matter" not in body_html.lower():
+		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in body_html.lower():
 
 			p.is_banned = True
 			p.ban_reason = "ToS Violation"
@@ -820,7 +820,7 @@ def submit_post(v):
 		g.db.add(n)
 
 
-	if v.agendaposter and "trans lives matter" not in new_post.body_html.lower():
+	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in new_post.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "ToS Violation"
