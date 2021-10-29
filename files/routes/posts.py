@@ -552,7 +552,7 @@ def submit_post(v):
 			try:
 				yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
 				params = parse_qs(urlparse(url).query)
-				t = params.get('t', params.get('start', [0]))[0]
+				t = params.get('t', params.get('start', [0]))[0].replace('s','')
 				if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
 				else: embed = f"https://youtube.com/embed/{yt_id}"
 			except: embed = None
