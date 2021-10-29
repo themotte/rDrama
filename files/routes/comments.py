@@ -280,7 +280,8 @@ def api_comment(v):
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
-			body_html=filter_title(option)
+			body_html=filter_title(option),
+			upvotes=0
 			)
 
 		g.db.add(c_option)
@@ -417,6 +418,7 @@ def api_comment(v):
 
 		longpostbot = g.db.query(User).options(lazyload('*')).filter_by(id = LONGPOSTBOT_ACCOUNT).first()
 		longpostbot.comment_count += 1
+		longpostbot.coins += 1
 		g.db.add(longpostbot)
 		
 		g.db.flush()

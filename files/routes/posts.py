@@ -711,6 +711,7 @@ def submit_post(v):
 			parent_submission=new_post.id,
 			level=1,
 			body_html=filter_title(option),
+			upvotes=0
 			)
 
 		g.db.add(c)
@@ -906,6 +907,7 @@ def submit_post(v):
 
 		snappy = g.db.query(User).options(lazyload('*')).filter_by(id = SNAPPY_ACCOUNT).first()
 		snappy.comment_count += 1
+		snappy.coins += 1
 		g.db.add(snappy)
 
 		g.db.flush()

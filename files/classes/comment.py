@@ -40,7 +40,7 @@ class Comment(Base):
 	notifiedto=Column(Integer)
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	oauth_app = relationship("OauthApp", viewonly=True)
-	upvotes = Column(Integer, default=0)
+	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
 	body = deferred(Column(String))
 	body_html = deferred(Column(String))
