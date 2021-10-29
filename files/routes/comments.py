@@ -850,8 +850,12 @@ def toggle_pin_comment(cid, v):
 
 	if comment.is_pinned:
 		if comment.is_pinned.startswith("t:"): abort(403)
-		else: comment.is_pinned = None
-	else: comment.is_pinned = v.username
+		else:
+			if v.admin_level == 6 or comment.is_pinned.endswith(" (OP)"): comment.is_pinned = None
+			else: abort(403)
+	else:
+		if v.admin_level == 6: comment.is_pinned = v.username
+		else: comment.is_pinned = v.username + " (OP)"
 
 	g.db.add(comment)
 	g.db.flush()
