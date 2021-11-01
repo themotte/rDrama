@@ -254,7 +254,6 @@ if SITE_NAME == "Drama":
 			"description": "???",
 			"icon": "fas fa-book-dead",
 			"color": "text-warning",
-			"owned": 0,
 			"price": 500
 		},
 		"upsidedown": {
@@ -263,7 +262,6 @@ if SITE_NAME == "Drama":
 			"description": "???",
 			"icon": "fad fa-lights-holiday",
 			"color": "",
-			"owned": 0,
 			"price": 400
 		},
 		"stab": {
@@ -272,7 +270,6 @@ if SITE_NAME == "Drama":
 			"description": "???",
 			"icon": "fas fa-knife-kitchen",
 			"color": "text-red",
-			"owned": 0,
 			"price": 300
 		},
 		"ghosts": {
@@ -281,7 +278,6 @@ if SITE_NAME == "Drama":
 			"description": "???",
 			"icon": "fas fa-ghost",
 			"color": "text-white",
-			"owned": 0,
 			"price": 200
 		},
 		"spiders": {
@@ -290,7 +286,6 @@ if SITE_NAME == "Drama":
 			"description": "???",
 			"icon": "fas fa-spider",
 			"color": "text-black",
-			"owned": 0,
 			"price": 200
 		},
 		"fog": {
@@ -299,7 +294,6 @@ if SITE_NAME == "Drama":
 			"description": "???",
 			"icon": "fas fa-smoke",
 			"color": "text-gray",
-			"owned": 0,
 			"price": 200
 		},
 		"lootbox": {
@@ -308,7 +302,6 @@ if SITE_NAME == "Drama":
 			"description": "???",
 			"icon": "fas fa-treasure-chest",
 			"color": "text-orange",
-			"owned": 0,
 			"price": 1000
 		},
 	}
