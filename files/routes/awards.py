@@ -234,7 +234,8 @@ def shop(v):
 			},
 		}
 
-	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all(): AWARDS[useraward.kind]["owned"] += 1
+	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all():
+		if useraward.kind in AWARDS: AWARDS[useraward.kind]["owned"] += 1
 
 	if v.patron == 1: discount = 0.90
 	elif v.patron == 2: discount = 0.85
