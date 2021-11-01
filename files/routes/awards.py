@@ -166,6 +166,69 @@ def shop(v):
 				"owned": 0,
 				"price": 40000
 			},
+			"haunt": {
+				"kind": "haunt",
+				"title": "Haunt",
+				"description": "???",
+				"icon": "fas fa-book-dead",
+				"color": "text-warning",
+				"owned": 0,
+				"price": 500
+			},
+			"upsidedown": {
+				"kind": "upsidedown",
+				"title": "The Upside Down",
+				"description": "???",
+				"icon": "fad fa-lights-holiday",
+				"color": "",
+				"owned": 0,
+				"price": 400
+			},
+			"stab": {
+				"kind": "stab",
+				"title": "Stab",
+				"description": "???",
+				"icon": "fas fa-knife-kitchen",
+				"color": "text-red",
+				"owned": 0,
+				"price": 300
+			},
+			"ghosts": {
+				"kind": "ghosts",
+				"title": "Ghosts",
+				"description": "???",
+				"icon": "fas fa-ghost",
+				"color": "text-white",
+				"owned": 0,
+				"price": 200
+			},
+			"spiders": {
+				"kind": "spiders",
+				"title": "Spiders",
+				"description": "???",
+				"icon": "fas fa-spider",
+				"color": "text-black",
+				"owned": 0,
+				"price": 200
+			},
+			"fog": {
+				"kind": "fog",
+				"title": "Fog",
+				"description": "???",
+				"icon": "fas fa-smoke",
+				"color": "text-gray",
+				"owned": 0,
+				"price": 200
+			},
+			"lootbox": {
+				"kind": "lootbox",
+				"title": "Homoween Lootbox",
+				"description": "???",
+				"icon": "fas fa-treasure-chest",
+				"color": "text-orange",
+				"owned": 0,
+				"price": 1000
+			},
 		}
 	else:
 		AWARDS = {
@@ -361,6 +424,69 @@ def buy(v, award):
 				"icon": "fas fa-volume",
 				"color": "text-success",
 				"price": 40000
+			},
+			"haunt": {
+				"kind": "haunt",
+				"title": "Haunt",
+				"description": "???",
+				"icon": "fas fa-book-dead",
+				"color": "text-warning",
+				"owned": 0,
+				"price": 500
+			},
+			"upsidedown": {
+				"kind": "upsidedown",
+				"title": "The Upside Down",
+				"description": "???",
+				"icon": "fad fa-lights-holiday",
+				"color": "",
+				"owned": 0,
+				"price": 400
+			},
+			"stab": {
+				"kind": "stab",
+				"title": "Stab",
+				"description": "???",
+				"icon": "fas fa-knife-kitchen",
+				"color": "text-red",
+				"owned": 0,
+				"price": 300
+			},
+			"ghosts": {
+				"kind": "ghosts",
+				"title": "Ghosts",
+				"description": "???",
+				"icon": "fas fa-ghost",
+				"color": "text-white",
+				"owned": 0,
+				"price": 200
+			},
+			"spiders": {
+				"kind": "spiders",
+				"title": "Spiders",
+				"description": "???",
+				"icon": "fas fa-spider",
+				"color": "text-black",
+				"owned": 0,
+				"price": 200
+			},
+			"fog": {
+				"kind": "fog",
+				"title": "Fog",
+				"description": "???",
+				"icon": "fas fa-smoke",
+				"color": "text-gray",
+				"owned": 0,
+				"price": 200
+			},
+			"lootbox": {
+				"kind": "lootbox",
+				"title": "Homoween Lootbox",
+				"description": "???",
+				"icon": "fas fa-treasure-chest",
+				"color": "text-orange",
+				"owned": 0,
+				"price": 1000
 			},
 		}
 	else:
