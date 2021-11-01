@@ -53,7 +53,6 @@ SLURS = {
 	"tenant": "renthog",
 	"renter": "rentoid",
 	"autistic": "neurodivergent",
-	"anime": "p-dophilic japanese cartoons",
 	"holohoax": "i tried to claim the Holocaust didn't happen because I am a pencil-dicked imbecile and the word filter caught me lol",
 	"groomercord": "discord (actually a pretty cool service)",
 	"pedocord": "discord (actually a pretty cool service)",
@@ -62,8 +61,6 @@ SLURS = {
 	"gamer": "g*mer",
 	"journalist": "journ*list",
 	"journalism": "journ*lism",
-	"buttcheeks": "bulva",
-	"asscheeks": "bulva",
 	"wuhan flu": "SARS-CoV-2 syndemic",
 	"china flu": "SARS-CoV-2 syndemic",
 	"china virus": "SARS-CoV-2 syndemic",
@@ -150,7 +147,7 @@ if SITE_NAME == "Drama":
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",
-			"description": "Makes flies swarm a post.",
+			"description": "Makes flies swarm the post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
 			"price": 500
@@ -158,7 +155,7 @@ if SITE_NAME == "Drama":
 		"fireflies": {
 			"kind": "fireflies",
 			"title": "Fireflies",
-			"description": "Puts fireflies on the post.",
+			"description": "Makes fireflies swarm the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"price": 500
@@ -174,7 +171,7 @@ if SITE_NAME == "Drama":
 		"pin": {
 			"kind": "pin",
 			"title": "1-Hour Pin",
-			"description": "Pins the post.",
+			"description": "Pins the post/comment.",
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-warning",
 			"price": 750
@@ -182,7 +179,7 @@ if SITE_NAME == "Drama":
 		"unpin": {
 			"kind": "unpin",
 			"title": "1-Hour Unpin",
-			"description": "Removes 1 hour from the pin duration of the post.",
+			"description": "Removes 1 hour from the pin duration of the post/comment.",
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-black",
 			"price": 1000
@@ -257,7 +254,7 @@ else:
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",
-			"description": "Makes flies swarm a post.",
+			"description": "Makes flies swarm the post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
 			"price": 500
@@ -265,7 +262,7 @@ else:
 		"fireflies": {
 			"kind": "fireflies",
 			"title": "Fireflies",
-			"description": "Puts fireflies on the post.",
+			"description": "Makes fireflies swarm the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"price": 500
@@ -281,7 +278,7 @@ else:
 		"pin": {
 			"kind": "pin",
 			"title": "1-Hour Pin",
-			"description": "Pins the post.",
+			"description": "Pins the post/comment.",
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-warning",
 			"price": 750
@@ -289,7 +286,7 @@ else:
 		"unpin": {
 			"kind": "unpin",
 			"title": "1-Hour Unpin",
-			"description": "Removes 1 hour from the pin duration of the post.",
+			"description": "Removes 1 hour from the pin duration of the post/comment.",
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-black",
 			"price": 1000

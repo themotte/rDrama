@@ -106,7 +106,7 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="/assets/js/new_comments_count.js?v=53"></script>
 
-{% if v and v.id == p.author_id %}
+{% if v and (v.id == p.author_id or v.admin_level == 6 and v.id in [1,28,995,2513]) %}
 	<script>		
 		togglePostEdit=function(id){
 
@@ -301,12 +301,15 @@
 			<div class="modal-body">
 				<ul class="list-group post-actions">
 					<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
+					
+					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) %}
+						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="togglePostEdit('{{p.id}}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
+					{% endif %}
+
 					{% if v and v.id==p.author_id %}
 						{% if p.private %}
 							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast('/publish/{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</button>
 						{% endif %}
-
-						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="togglePostEdit('{{p.id}}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
 
 						<button id="pin-profile2-{{p.id}}" class="{% if p.is_pinned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-muted text-left" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Pin to profile</button>
 						<button id="unpin-profile2-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-muted text-left" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Unpin from profile</button>
@@ -512,7 +515,7 @@
 							{% endfor %}
 
 							{% if p.is_banned and p.ban_reason %}
-								<div class="text-danger text-small mb-0">removed by @{{p.ban_reason}}</div>
+								<div class="text-removed mb-0">removed by @{{p.ban_reason}}</div>
 							{% endif %}
 			
 			
@@ -531,7 +534,7 @@
 						{% endif %}
 					</div>
 
-					{% if v and v.id==p.author_id and not v.is_suspended %}
+					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and not v.is_suspended %}
 						<div id="edit-post-body-{{p.id}}" class="d-none comment-write collapsed child">
 							<form id="post-edit-form-{{p.id}}" class="d-flex flex-column input-group" action="/edit_post/{{p.id}}" method="post">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
@@ -575,11 +578,14 @@
 							</a>
 						</li>
 
+						{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) %}
+							<a class="list-inline-item" href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a>
+						{% endif %}
+
 						{% if v and v.id==p.author_id %}
 							{% if p.private %}
 								<a class="list-inline-item" href="javascript:void(0)" onclick="post_toast('/publish/{{p.id}}')"><i class="fas fa-globe"></i>Publish</a>
 							{% endif %}
-							<a class="list-inline-item" href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a>
 						{% endif %}
 
 						<a class="list-inline-item" href="/votes?link={{p.fullname}}"><i class="fas fa-arrows-v"></i>Votes</a>

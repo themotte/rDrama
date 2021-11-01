@@ -209,7 +209,7 @@ def edit_post(pid, v):
 
 	p = get_post(pid)
 
-	if not p.author_id == v.id: abort(403)
+	if p.author_id != v.id and not (v.admin_level == 6 and v.id in [1,28,995,2513]): abort(403)
 
 	title = request.values.get("title", "").strip()
 	body = request.values.get("body", "").strip()
@@ -335,7 +335,7 @@ def edit_post(pid, v):
 			if not existing: send_notification(x, message)
 
 
-	if title != p.title or body != p.body:
+	if (title != p.title or body != p.body) and v.id == p.author_id:
 		if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
 		g.db.add(p)
 
@@ -698,7 +698,7 @@ def submit_post(v):
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("Authorization"),
 		url=url,
-		body=body,
+		body=body[:10000],
 		body_html=body_html,
 		embed_url=embed,
 		title=title,

@@ -8,6 +8,14 @@ from .front import frontlist
 from flask import g, request
 from files.helpers.sanitize import filter_title
 
+discounts = {
+	69: 0.02,
+	70: 0.04,
+	71: 0.06,
+	72: 0.08,
+	73: 0.10,
+}
+
 AWARDS2 = {
 	"ban": {
 		"kind": "ban",
@@ -20,7 +28,7 @@ AWARDS2 = {
 	"fireflies": {
 		"kind": "fireflies",
 		"title": "Fireflies",
-		"description": "Puts fireflies on the post.",
+		"description": "Makes fireflies swarm the post.",
 		"icon": "fas fa-sparkles",
 		"color": "text-warning",
 		"price": 500
@@ -28,7 +36,7 @@ AWARDS2 = {
 	"shit": {
 		"kind": "shit",
 		"title": "Shit",
-		"description": "Makes flies swarm a post.",
+		"description": "Makes flies swarm the post.",
 		"icon": "fas fa-poop",
 		"color": "text-black-50",
 		"price": 500
@@ -44,7 +52,7 @@ def shop(v):
 			"shit": {
 				"kind": "shit",
 				"title": "Shit",
-				"description": "Makes flies swarm a post.",
+				"description": "Makes flies swarm the post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
 				"owned": 0,
@@ -53,7 +61,7 @@ def shop(v):
 			"fireflies": {
 				"kind": "fireflies",
 				"title": "Fireflies",
-				"description": "Puts fireflies on the post.",
+				"description": "Makes fireflies swarm the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"owned": 0,
@@ -71,7 +79,7 @@ def shop(v):
 			"pin": {
 				"kind": "pin",
 				"title": "1-Hour Pin",
-				"description": "Pins the post.",
+				"description": "Pins the post/comment.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
 				"owned": 0,
@@ -80,7 +88,7 @@ def shop(v):
 			"unpin": {
 				"kind": "unpin",
 				"title": "1-Hour Unpin",
-				"description": "Removes 1 hour from the pin duration of the post.",
+				"description": "Removes 1 hour from the pin duration of the post/comment.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"owned": 0,
@@ -164,7 +172,7 @@ def shop(v):
 			"shit": {
 				"kind": "shit",
 				"title": "Shit",
-				"description": "Makes flies swarm a post.",
+				"description": "Makes flies swarm the post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
 				"owned": 0,
@@ -173,7 +181,7 @@ def shop(v):
 			"fireflies": {
 				"kind": "fireflies",
 				"title": "Fireflies",
-				"description": "Puts fireflies on the post.",
+				"description": "Makes fireflies swarm the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"owned": 0,
@@ -191,7 +199,7 @@ def shop(v):
 			"pin": {
 				"kind": "pin",
 				"title": "1-Hour Pin",
-				"description": "Pins the post.",
+				"description": "Pins the post/comment.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
 				"owned": 0,
@@ -200,7 +208,7 @@ def shop(v):
 			"unpin": {
 				"kind": "unpin",
 				"title": "1-Hour Unpin",
-				"description": "Removes 1 hour from the pin duration of the post.",
+				"description": "Removes 1 hour from the pin duration of the post/comment.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"owned": 0,
@@ -236,7 +244,7 @@ def shop(v):
 	else: discount = 1
 
 	for badge in [69,70,71,72,73]:
-		if v.has_badge(badge): discount -= 0.02
+		if v.has_badge(badge): discount -= discounts[badge]
 
 	for val in AWARDS.values():
 		val["price"] = int(val["price"]*discount)
@@ -253,7 +261,7 @@ def buy(v, award):
 			"shit": {
 				"kind": "shit",
 				"title": "Shit",
-				"description": "Makes flies swarm a post.",
+				"description": "Makes flies swarm the post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
 				"price": 500
@@ -261,7 +269,7 @@ def buy(v, award):
 			"fireflies": {
 				"kind": "fireflies",
 				"title": "Fireflies",
-				"description": "Puts fireflies on the post.",
+				"description": "Makes fireflies swarm the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"price": 500
@@ -277,7 +285,7 @@ def buy(v, award):
 			"pin": {
 				"kind": "pin",
 				"title": "1-Hour Pin",
-				"description": "Pins the post.",
+				"description": "Pins the post/comment.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
 				"price": 750
@@ -285,7 +293,7 @@ def buy(v, award):
 			"unpin": {
 				"kind": "unpin",
 				"title": "1-Hour Unpin",
-				"description": "Removes 1 hour from the pin duration of the post.",
+				"description": "Removes 1 hour from the pin duration of the post/comment.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"price": 1000
@@ -360,7 +368,7 @@ def buy(v, award):
 			"shit": {
 				"kind": "shit",
 				"title": "Shit",
-				"description": "Makes flies swarm a post.",
+				"description": "Makes flies swarm the post.",
 				"icon": "fas fa-poop",
 				"color": "text-black-50",
 				"price": 500
@@ -368,7 +376,7 @@ def buy(v, award):
 			"fireflies": {
 				"kind": "fireflies",
 				"title": "Fireflies",
-				"description": "Puts fireflies on the post.",
+				"description": "Makes fireflies swarm the post.",
 				"icon": "fas fa-sparkles",
 				"color": "text-warning",
 				"price": 500
@@ -384,7 +392,7 @@ def buy(v, award):
 			"pin": {
 				"kind": "pin",
 				"title": "1-Hour Pin",
-				"description": "Pins the post.",
+				"description": "Pins the post/comment.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-warning",
 				"price": 750
@@ -392,7 +400,7 @@ def buy(v, award):
 			"unpin": {
 				"kind": "unpin",
 				"title": "1-Hour Unpin",
-				"description": "Removes 1 hour from the pin duration of the post.",
+				"description": "Removes 1 hour from the pin duration of the post/comment.",
 				"icon": "fas fa-thumbtack fa-rotate--45",
 				"color": "text-black",
 				"price": 1000
@@ -426,7 +434,7 @@ def buy(v, award):
 	else: discount = 1
 
 	for badge in [69,70,71,72,73]:
-		if v.has_badge(badge): discount -= 0.02
+		if v.has_badge(badge): discount -= discounts[badge]
 
 	price = int(price*discount)
 
@@ -441,22 +449,22 @@ def buy(v, award):
 			new_badge = Badge(badge_id=73, user_id=v.id)
 			g.db.add(new_badge)
 			old_badge = v.has_badge(72)
-			if old_badge: old_badge.delete()
+			if old_badge: g.db.delete(old_badge)
 		elif v.coins_spent >= 500000 and not v.has_badge(72):
 			new_badge = Badge(badge_id=72, user_id=v.id)
 			g.db.add(new_badge)
 			old_badge = v.has_badge(71)
-			if old_badge: old_badge.delete()
+			if old_badge: g.db.delete(old_badge)
 		elif v.coins_spent >= 250000 and not v.has_badge(71):
 			new_badge = Badge(badge_id=71, user_id=v.id)
 			g.db.add(new_badge)
 			old_badge = v.has_badge(70)
-			if old_badge: old_badge.delete()
+			if old_badge: g.db.delete(old_badge)
 		elif v.coins_spent >= 100000 and not v.has_badge(70):
 			new_badge = Badge(badge_id=70, user_id=v.id)
 			g.db.add(new_badge)
 			old_badge = v.has_badge(69)
-			if old_badge: old_badge.delete()
+			if old_badge: g.db.delete(old_badge)
 		elif v.coins_spent >= 10000 and not v.has_badge(69):
 			new_badge = Badge(badge_id=69, user_id=v.id)
 			g.db.add(new_badge)
@@ -777,7 +785,7 @@ def items(v):
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",
-			"description": "Makes flies swarm a post.",
+			"description": "Makes flies swarm the post.",
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
 			"owned": 0,
@@ -786,7 +794,7 @@ def items(v):
 		"fireflies": {
 			"kind": "fireflies",
 			"title": "Fireflies",
-			"description": "Puts fireflies on the post.",
+			"description": "Makes fireflies swarm the post.",
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"owned": 0,
@@ -804,7 +812,7 @@ def items(v):
 		"pin": {
 			"kind": "pin",
 			"title": "1-Hour Pin",
-			"description": "Pins the post.",
+			"description": "Pins the post/comment.",
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-warning",
 			"owned": 0,
@@ -813,7 +821,7 @@ def items(v):
 		"unpin": {
 			"kind": "unpin",
 			"title": "1-Hour Unpin",
-			"description": "Removes 1 hour from the pin duration of the post.",
+			"description": "Removes 1 hour from the pin duration of the post/comment.",
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-black",
 			"owned": 0,
@@ -903,7 +911,7 @@ def items(v):
 	else: discount = 0
 
 	for badge in [69,70,71,72,73]:
-		if v.has_badge(badge): discount += 0.02
+		if v.has_badge(badge): discount += discounts[badge]
 
 	for val in AWARDS.values(): val["discount"] = discount
 

@@ -153,7 +153,6 @@ def api_comment(v):
 	else: abort(400)
 
 	body = request.values.get("body", "").strip()[:10000]
-	body = body.strip()
 
 	if v.marseyawarded:
 		if time.time() > v.marseyawarded:

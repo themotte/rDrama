@@ -357,13 +357,13 @@ def badge_grant_post(v):
 	except: abort(400)
 
 	if user.has_badge(badge_id):
-		g.db.query(Badge).options(lazyload('*')).filter_by(badge_id=badge_id, user_id=user.id,).delete()
+		g.db.delete(g.db.query(Badge).options(lazyload('*')).filter_by(badge_id=badge_id, user_id=user.id))
 		g.db.commit()
 		return redirect("/admin/badge_grant")
 
 	if badge_id == 16:
 		badge = user.has_badge(17)
-		if badge: badge.delete()
+		if badge: g.db.delete(badge)
 
 	elif badge_id == 17 and user.has_badge(16): abort(403)
 	

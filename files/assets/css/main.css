@@ -5649,3 +5649,7 @@ blockquote p {
 	border: none;
 	margin-left: 0.25rem;
 }
+
+.text-removed {
+  color: #ffabab !important;
+}

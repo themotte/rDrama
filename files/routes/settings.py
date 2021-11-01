@@ -303,7 +303,7 @@ def gumroad(v):
 
 	if v.patron:
 		badge = v.has_badge(20+tier)
-		if badge: badge.delete()
+		if badge: g.db.delete(badge)
 	
 	v.patron = tier
 	if v.discord_id: add_role(v, f"{tier}")
