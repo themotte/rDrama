@@ -250,8 +250,8 @@
 						<a class="list-inline-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')"><i class="fas fa-flag"></i>Report</a>
 
 						{% if v and v.id==p.author_id %}
-							<a id="pin-profile-{{p.id}}" class="{% if p.is_stickied %}d-none{% endif %} list-inline-item text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin to profile</a>
-							<a id="unpin-profile-{{p.id}}" class="{% if not p.is_stickied %}d-none{% endif %} list-inline-item text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin from profile</a>
+							<a id="pin-profile-{{p.id}}" class="{% if p.is_pinned %}d-none{% endif %} list-inline-item text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin to profile</a>
+							<a id="unpin-profile-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} list-inline-item text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin from profile</a>
 
 								{% if p.deleted_utc > 0 %}
 									<a class="list-inline-item" href="javascript:void(0)" onclick="post_toast('/undelete_post/{{p.id}}')"><i class="fas fa-trash-alt"></i>Undelete</a>
