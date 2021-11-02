@@ -142,7 +142,7 @@ class User(Base):
 	@lazy
 	def user_awards(v):
 
-		return_value = list(AWARDS.values())
+		return_value = list(AWARDS2.values())
 
 		user_awards = v.awards
 
