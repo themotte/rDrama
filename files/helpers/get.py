@@ -9,7 +9,7 @@ def get_user(username, v=None, graceful=False):
 
 	user = g.db.query(
 		User
-		).filter(
+		).options(lazyload('*')).filter(
 		or_(
 			User.username.ilike(username),
 			User.original_username.ilike(username)
@@ -80,7 +80,7 @@ def get_post(i, v=None, graceful=False):
 			Submission,
 			vt.c.vote_type,
 			blocking.c.id,
-		)
+		).options(lazyload('*'))
 
 		items=items.filter(Submission.id == i
 		).join(
@@ -103,7 +103,7 @@ def get_post(i, v=None, graceful=False):
 	else:
 		items = g.db.query(
 			Submission
-		).filter(Submission.id == i).first()
+		).options(lazyload('*')).filter(Submission.id == i).first()
 		if not items and not graceful:
 			abort(404)
 		x=items
@@ -132,7 +132,7 @@ def get_posts(pids, v=None):
 			vt.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).filter(
+		).options(lazyload('*')).filter(
 			Submission.id.in_(pids)
 		).join(
 			vt, vt.c.submission_id==Submission.id, isouter=True
@@ -207,7 +207,7 @@ def get_comments(cids, v=None, load_parent=False):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).filter(Comment.id.in_(cids))
+		).options(lazyload('*')).filter(Comment.id.in_(cids))
  
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
 			shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]

@@ -284,7 +284,7 @@ def reported_comments(v):
 	page = max(1, int(request.values.get("page", 1)))
 
 	posts = g.db.query(Comment
-					   ).filter_by(
+					   ).options(lazyload('*')).filter_by(
 		is_approved=0,
 		is_banned=False
 	).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
@@ -428,35 +428,35 @@ def alt_votes_get(v):
 	u2 = get_user(u2)
 
 	u1_post_ups = g.db.query(
-		Vote.submission_id).filter_by(
+		Vote.submission_id).options(lazyload('*')).filter_by(
 		user_id=u1.id,
 		vote_type=1).all()
 	u1_post_downs = g.db.query(
-		Vote.submission_id).filter_by(
+		Vote.submission_id).options(lazyload('*')).filter_by(
 		user_id=u1.id,
 		vote_type=-1).all()
 	u1_comment_ups = g.db.query(
-		CommentVote.comment_id).filter_by(
+		CommentVote.comment_id).options(lazyload('*')).filter_by(
 		user_id=u1.id,
 		vote_type=1).all()
 	u1_comment_downs = g.db.query(
-		CommentVote.comment_id).filter_by(
+		CommentVote.comment_id).options(lazyload('*')).filter_by(
 		user_id=u1.id,
 		vote_type=-1).all()
 	u2_post_ups = g.db.query(
-		Vote.submission_id).filter_by(
+		Vote.submission_id).options(lazyload('*')).filter_by(
 		user_id=u2.id,
 		vote_type=1).all()
 	u2_post_downs = g.db.query(
-		Vote.submission_id).filter_by(
+		Vote.submission_id).options(lazyload('*')).filter_by(
 		user_id=u2.id,
 		vote_type=-1).all()
 	u2_comment_ups = g.db.query(
-		CommentVote.comment_id).filter_by(
+		CommentVote.comment_id).options(lazyload('*')).filter_by(
 		user_id=u2.id,
 		vote_type=1).all()
 	u2_comment_downs = g.db.query(
-		CommentVote.comment_id).filter_by(
+		CommentVote.comment_id).options(lazyload('*')).filter_by(
 		user_id=u2.id,
 		vote_type=-1).all()
 

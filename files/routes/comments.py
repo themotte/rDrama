@@ -88,7 +88,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		)
+		).options(lazyload('*'))
 
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
 			shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]

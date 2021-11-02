@@ -141,7 +141,7 @@ def patrons(v):
 	query = g.db.query(
 			User.id, User.username, User.patron, User.namecolor,
 			AwardRelationship.kind.label('last_award_kind'), func.count(AwardRelationship.id).label('last_award_count')
-		).filter(AwardRelationship.submission_id==None, AwardRelationship.comment_id==None, User.patron > 0) \
+		).options(lazyload('*')).filter(AwardRelationship.submission_id==None, AwardRelationship.comment_id==None, User.patron > 0) \
 		.group_by(User.username, User.patron, User.id, User.namecolor, AwardRelationship.kind) \
 		.order_by(User.patron.desc(), AwardRelationship.kind.desc()) \
 		.join(User).all()

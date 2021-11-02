@@ -280,7 +280,7 @@ def sign_up_post(v):
 		return redirect(existing_account.url)
 
 	if existing_account or (email and g.db.query(
-			User).filter(User.email.ilike(email)).first()):
+			User).options(lazyload('*')).filter(User.email.ilike(email)).first()):
 		return new_signup(
 			"An account with that username or email already exists.")
 

@@ -100,10 +100,10 @@ def searchposts(v):
 		pass
 	elif v:
 		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).filter_by(
+			UserBlock.target_id).options(lazyload('*')).filter_by(
 			user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).filter_by(
+			UserBlock.user_id).options(lazyload('*')).filter_by(
 			target_id=v.id).all()]
 
 		posts = posts.filter(

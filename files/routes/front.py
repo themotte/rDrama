@@ -164,10 +164,10 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).filter_by(
+			UserBlock.target_id).options(lazyload('*')).filter_by(
 			user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).filter_by(
+			UserBlock.user_id).options(lazyload('*')).filter_by(
 			target_id=v.id).all()]
 		posts = posts.filter(
 			Submission.author_id.notin_(blocking),
@@ -260,10 +260,10 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).filter_by(
+			UserBlock.target_id).options(lazyload('*')).filter_by(
 			user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).filter_by(
+			UserBlock.user_id).options(lazyload('*')).filter_by(
 			target_id=v.id).all()]
 		posts = posts.filter(
 			Submission.author_id.notin_(blocking),
@@ -329,10 +329,10 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
 	if v and v.admin_level <= 3:
 		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).filter_by(
+			UserBlock.target_id).options(lazyload('*')).filter_by(
 			user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).filter_by(
+			UserBlock.user_id).options(lazyload('*')).filter_by(
 			target_id=v.id).all()]
 
 		comments = comments.filter(

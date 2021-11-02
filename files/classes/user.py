@@ -360,7 +360,7 @@ class User(Base):
 		data = g.db.query(
 			User,
 			aliased(Alt, alias=subq)
-		).join(
+		).options(lazyload('*')).join(
 			subq,
 			or_(
 				subq.c.user1 == User.id,
@@ -489,10 +489,10 @@ class User(Base):
 
 		if self.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(
-				UserBlock.target_id).filter_by(
+				UserBlock.target_id).options(lazyload('*')).filter_by(
 				user_id=self.id).all()]
 			blocked = [x[0] for x in g.db.query(
-				UserBlock.user_id).filter_by(
+				UserBlock.user_id).options(lazyload('*')).filter_by(
 				target_id=self.id).all()]
 
 			posts = posts.filter(
@@ -513,10 +513,10 @@ class User(Base):
 
 		if self.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(
-				UserBlock.target_id).filter_by(
+				UserBlock.target_id).options(lazyload('*')).filter_by(
 				user_id=self.id).all()]
 			blocked = [x[0] for x in g.db.query(
-				UserBlock.user_id).filter_by(
+				UserBlock.user_id).options(lazyload('*')).filter_by(
 				target_id=self.id).all()]
 
 			comments = comments.filter(
