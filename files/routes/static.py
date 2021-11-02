@@ -34,28 +34,28 @@ def participation_stats(v):
 
 	day = now - 86400
 
-	data = {"valid_users": g.db.query(User.id).count(),
+	data = {"valid_users": g.db.query(User.id).options(lazyload('*')).count(),
 			"private_users": g.db.query(User.id).options(lazyload('*')).filter_by(is_private=True).count(),
 			"banned_users": g.db.query(User.id).options(lazyload('*')).filter(User.is_banned > 0).count(),
 			"verified_email_users": g.db.query(User.id).options(lazyload('*')).filter_by(is_activated=True).count(),
-			"total_coins": g.db.query(func.sum(User.coins)).scalar(),
+			"total_coins": g.db.query(func.sum(User.coins).options(lazyload('*'))).scalar(),
 			"signups_last_24h": g.db.query(User.id).options(lazyload('*')).filter(User.created_utc > day).count(),
-			"total_posts": g.db.query(Submission.id).count(),
-			"posting_users": g.db.query(Submission.author_id).distinct().count(),
+			"total_posts": g.db.query(Submission.id).options(lazyload('*')).count(),
+			"posting_users": g.db.query(Submission.author_id).options(lazyload('*')).distinct().count(),
 			"listed_posts": g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
 			"removed_posts": g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=True).count(),
 			"deleted_posts": g.db.query(Submission.id).options(lazyload('*')).filter(Submission.deleted_utc > 0).count(),
 			"posts_last_24h": g.db.query(Submission.id).options(lazyload('*')).filter(Submission.created_utc > day).count(),
-			"total_comments": g.db.query(Comment.id).count(),
-			"commenting_users": g.db.query(Comment.author_id).distinct().count(),
+			"total_comments": g.db.query(Comment.id).options(lazyload('*')).count(),
+			"commenting_users": g.db.query(Comment.author_id).options(lazyload('*')).distinct().count(),
 			"removed_comments": g.db.query(Comment.id).options(lazyload('*')).filter_by(is_banned=True).count(),
 			"deleted_comments": g.db.query(Comment.id).options(lazyload('*')).filter(Comment.deleted_utc>0).count(),
 			"comments_last_24h": g.db.query(Comment.id).options(lazyload('*')).filter(Comment.created_utc > day).count(),
-			"post_votes": g.db.query(Vote.id).count(),
-			"post_voting_users": g.db.query(Vote.user_id).distinct().count(),
-			"comment_votes": g.db.query(CommentVote.id).count(),
-			"comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
-			"total_awards": g.db.query(AwardRelationship.id).count(),
+			"post_votes": g.db.query(Vote.id).options(lazyload('*')).count(),
+			"post_voting_users": g.db.query(Vote.user_id).options(lazyload('*')).distinct().count(),
+			"comment_votes": g.db.query(CommentVote.id).options(lazyload('*')).count(),
+			"comment_voting_users": g.db.query(CommentVote.user_id).options(lazyload('*')).distinct().count(),
+			"total_awards": g.db.query(AwardRelationship.id).options(lazyload('*')).count(),
 			"awards_given": g.db.query(AwardRelationship.id).options(lazyload('*')).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
 			}
 
@@ -174,8 +174,8 @@ def log(v):
 
 	page=int(request.args.get("page",1))
 
-	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
-	else: actions=g.db.query(ModAction).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub", ModAction.kind!="check").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
+	if v and v.admin_level == 6: actions = g.db.query(ModAction).options(lazyload('*')).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	else: actions=g.db.query(ModAction).options(lazyload('*')).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub", ModAction.kind!="check").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 
 	next_exists=len(actions)>25
 	actions=actions[:25]
@@ -287,7 +287,7 @@ def settings_profile(v):
 def badges(v):
 
 
-	badges = g.db.query(BadgeDef).all()
+	badges = g.db.query(BadgeDef).options(lazyload('*')).all()
 	return render_template("badges.html", v=v, badges=badges)
 
 @app.get("/blocks")
@@ -295,7 +295,7 @@ def badges(v):
 def blocks(v):
 
 
-	blocks=g.db.query(UserBlock).all()
+	blocks=g.db.query(UserBlock).options(lazyload('*')).all()
 	users = []
 	targets = []
 	for x in blocks:

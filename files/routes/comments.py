@@ -768,7 +768,7 @@ def edit_comment(cid, v):
 		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
 		
 		if len(mentions) > 0:
-			notifs = g.db.query(Notification)
+			notifs = g.db.query(Notification).options(lazyload('*'))
 			for mention in mentions:
 				username = mention["href"].split("@")[1]
 
