@@ -157,7 +157,7 @@ def sanitize(sanitized, noimages=False):
 	
 	for i in re.finditer("[^a]>\s*(:!?\w+:\s*)+<\/", sanitized):
 		old = i.group(0)
-		if 'marseylong1' in old or 'marseylong2' in old or 'marseyliama1' in old or 'marseyliama2' in old: new = old.lower().replace(">", " class='mb-0'>")
+		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
 		else: new = old.lower()
 		for i in re.finditer('(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
