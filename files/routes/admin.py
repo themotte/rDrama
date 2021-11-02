@@ -171,7 +171,7 @@ def remove_fake_admin(v, username):
 @admin_level_required(6)
 def monthly(v):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,995,2513]) or ('rama' not in request.host and 'pcm' not in request.host):
-		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+		thing = g.db.query(AwardRelationship).options(lazyload('*')).order_by(AwardRelationship.id.desc()).first().id
 		for u in g.db.query(User).options(lazyload('*')).filter(User.patron > 0).all():
 			if u.patron == 1: procoins = 2000
 			elif u.patron == 2: procoins = 5000
@@ -245,7 +245,7 @@ def image_posts_listing(v):
 	try: page = int(request.values.get('page', 1))
 	except: page = 1
 
-	posts = g.db.query(Submission).order_by(Submission.id.desc())
+	posts = g.db.query(Submission).options(lazyload('*')).order_by(Submission.id.desc())
 
 	firstrange = 25 * (page - 1)
 	secondrange = firstrange+26
@@ -327,7 +327,7 @@ def disablesignups(v):
 @admin_level_required(4)
 def badge_grant_get(v):
 
-	badge_types = g.db.query(BadgeDef).all()
+	badge_types = g.db.query(BadgeDef).options(lazyload('*')).all()
 
 	errors = {"already_owned": "That user already has that badge.",
 			  "no_user": "That user doesn't exist."
@@ -538,7 +538,7 @@ def admin_link_accounts(v):
 	g.db.add(new_alt)
 
 	g.db.commit()
-	return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
+	return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).options(lazyload('*')).get(u2).username}")
 
 
 @app.get("/admin/removed")
@@ -1068,7 +1068,7 @@ def admin_dump_cache(v):
 @admin_level_required(4)
 def admin_banned_domains(v):
 
-	banned_domains = g.db.query(BannedDomain).all()
+	banned_domains = g.db.query(BannedDomain).options(lazyload('*')).all()
 	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
 @app.post("/admin/banned_domains")

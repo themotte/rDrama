@@ -162,7 +162,7 @@ class Comment(Base):
 
 		if self.level == 1: return self.post
 
-		else: return g.db.query(Comment).get(self.parent_comment_id)
+		else: return g.db.query(Comment).options(lazyload('*')).get(self.parent_comment_id)
 
 	@property
 	@lazy

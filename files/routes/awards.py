@@ -234,7 +234,7 @@ def shop(v):
 			},
 		}
 
-	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all():
+	for useraward in g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all():
 		if useraward.kind in AWARDS: AWARDS[useraward.kind]["owned"] += 1
 
 	if v.patron == 1: discount = 0.90
@@ -250,7 +250,7 @@ def shop(v):
 	for val in AWARDS.values():
 		val["price"] = int(val["price"]*discount)
 
-	sales = g.db.query(Vote.id).count() + g.db.query(CommentVote.id).count() - g.db.query(func.sum(User.coins)).scalar()
+	sales = g.db.query(Vote.id).count() + g.db.query(CommentVote.id).count() - g.db.query(func.sum(User.coins).options(lazyload('*'))).scalar()
 	return render_template("shop.html", awards=list(AWARDS.values()), v=v, sales=sales)
 
 
@@ -473,7 +473,7 @@ def buy(v, award):
 
 	g.db.add(v)
 	g.db.flush()
-	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+	thing = g.db.query(AwardRelationship).options(lazyload('*')).order_by(AwardRelationship.id.desc()).first().id
 	thing += 1
 
 	award = AwardRelationship(id=thing, user_id=v.id, kind=award)
@@ -746,7 +746,7 @@ def admin_userawards_post(v):
 
 	notify_awards = {}
 
-	latest = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first()
+	latest = g.db.query(AwardRelationship).options(lazyload('*')).order_by(AwardRelationship.id.desc()).first()
 	thing = latest.id
 
 	for key, value in request.values.items():
@@ -902,7 +902,7 @@ def items(v):
 		},
 	}
 
-	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all(): AWARDS[useraward.kind]["owned"] += 1
+	for useraward in g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all(): AWARDS[useraward.kind]["owned"] += 1
 
 	if v.patron == 1: discount = 0.10
 	elif v.patron == 2: discount = 0.15

@@ -116,7 +116,7 @@ def get_coins(v, username):
 @is_not_banned
 @validate_formkey
 def transfer_coins(v, username):
-	receiver = g.db.query(User).filter_by(username=username).first()
+	receiver = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
@@ -130,7 +130,7 @@ def transfer_coins(v, username):
 
 		if TAX_RATE and TAX_RECEIVER_ID:
 			tax = math.ceil(amount*TAX_RATE)
-			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
+			tax_receiver = g.db.query(User).options(lazyload('*')).filter_by(id=TAX_RECEIVER_ID).first()
 			tax_receiver.coins += tax
 			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
 			send_notification(TAX_RECEIVER_ID, log_message)

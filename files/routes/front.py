@@ -20,11 +20,11 @@ def notifications(v):
 	modmail = request.values.get('modmail', False)
 	posts = request.values.get('posts', False)
 	if modmail and v.admin_level == 6:
-		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif messages:
-		comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).options(lazyload('*')).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif posts:
@@ -216,8 +216,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	pins = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.stickied != None, Submission.is_banned == False)
 	if v and v.admin_level == 0:
-		blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
-		blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
+		blocking = [x[0] for x in g.db.query(UserBlock.target_id).options(lazyload('*')).filter_by(user_id=v.id).all()]
+		blocked = [x[0] for x in g.db.query(UserBlock.user_id).options(lazyload('*')).filter_by(target_id=v.id).all()]
 		pins = pins.filter(Submission.author_id.notin_(blocking), Submission.author_id.notin_(blocked))
 
 	if page == 1 and not gt and not lt: posts = pins.all() + posts

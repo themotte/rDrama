@@ -171,7 +171,7 @@ def post_id(pid, anything=None, v=None):
 		post.replies = [x for x in output if x.is_pinned] + [x for x in output if x.level == 1 and not x.is_pinned]
 	else:
 		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
-		comments = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT, Comment.author_id.notin_(shadowbanned))
+		comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT, Comment.author_id.notin_(shadowbanned))
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -386,11 +386,11 @@ def thumbnail_thread(pid):
 
 	db = db_session()
 
-	post = db.query(Submission).filter_by(id=pid).first()
+	post = db.query(Submission).options(lazyload('*')).filter_by(id=pid).first()
 	
 	if not post:
 		time.sleep(5)
-		post = db.query(Submission).filter_by(id=pid).first()
+		post = db.query(Submission).options(lazyload('*')).filter_by(id=pid).first()
 
 	fetch_url=post.url
 

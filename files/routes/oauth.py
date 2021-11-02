@@ -245,7 +245,7 @@ def admin_app_id_comments(v, aid):
 @admin_level_required(3)
 def admin_apps_list(v):
 
-	apps = g.db.query(OauthApp).all()
+	apps = g.db.query(OauthApp).options(lazyload('*')).all()
 
 	return render_template("admin/apps.html", v=v, apps=apps)
 
