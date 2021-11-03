@@ -68,7 +68,7 @@ def publish(pid, v):
 		
 	if request.host == 'rdrama.net' and 'aevann' in f'{post.body_html}{post.title}'.lower() and 1 not in notify_users: notify_users.add(1)
 
-	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
+	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{post.permalink}")
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
