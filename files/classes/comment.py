@@ -347,7 +347,7 @@ class Comment(Base):
 	@lazy
 	def collapse_for_user(self, v):
 
-		if self.over_18 and not (v and v.over_18) and not self.post.over_18: return True
+		if self.over_18 and not (v and v.over_18) and not (self.post and self.post.over_18): return True
 
 		if not v: return False
 			
