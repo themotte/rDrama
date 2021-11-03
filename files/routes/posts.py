@@ -72,6 +72,7 @@ def publish(pid, v):
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
+		if post.club and not user.club_allowed: continue
 		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})", True)
 
 	cache.delete_memoized(frontlist)
@@ -782,6 +783,7 @@ def submit_post(v):
 		
 		for follow in v.followers:
 			user = get_account(follow.user_id)
+			if new_post.club and not user.club_allowed: continue
 			send_notification(user.id, f"@{v.username} has made a new post: [{title}](http://{site}{new_post.permalink})", True)
 
 	g.db.add(new_post)
