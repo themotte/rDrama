@@ -5547,16 +5547,12 @@ blockquote {
   font-size: 1rem;
   font-weight: 400;
   background-color: #46444a;
-  padding: 0.5rem 1rem;
-  margin: 0.5rem 0rem 0 0.0;
+  padding: 0 1rem;
+  margin: 0.5rem 0 0 0;
 }
 
-blockquote + blockquote {
-  margin-top: 0px;
-}
-
-blockquote:last-child {
-  margin-bottom: 10px;
+blockquote + blockquote, blockquote:last-child {
+  margin-top: 0 !important;
 }
 
 blockquote + p {
