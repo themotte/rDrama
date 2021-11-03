@@ -321,7 +321,7 @@ def api_comment(v):
 	if "rama" in request.host and "ivermectin" in c.body.lower():
 
 		c.is_banned = True
-		c.ban_reason = "ToS Violation"
+		c.ban_reason = "AutoJanny"
 
 		g.db.add(c)
 
@@ -354,7 +354,7 @@ def api_comment(v):
 	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body_html.lower():
 
 		c.is_banned = True
-		c.ban_reason = "ToS Violation"
+		c.ban_reason = "AutoJanny"
 
 		g.db.add(c)
 
@@ -692,7 +692,7 @@ def edit_comment(cid, v):
 		if "rama" in request.host and "ivermectin" in c.body_html.lower():
 
 			c.is_banned = True
-			c.ban_reason = "ToS Violation"
+			c.ban_reason = "AutoJanny"
 
 			g.db.add(c)
 
@@ -726,7 +726,7 @@ def edit_comment(cid, v):
 		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body_html.lower():
 
 			c.is_banned = True
-			c.ban_reason = "ToS Violation"
+			c.ban_reason = "AutoJanny"
 
 			g.db.add(c)
 

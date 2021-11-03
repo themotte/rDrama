@@ -256,7 +256,7 @@ def edit_post(pid, v):
 		if "rama" in request.host and "ivermectin" in body_html.lower():
 
 			p.is_banned = True
-			p.ban_reason = "ToS Violation"
+			p.ban_reason = "AutoJanny"
 
 			g.db.add(p)
 
@@ -290,7 +290,7 @@ def edit_post(pid, v):
 		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in body_html.lower():
 
 			p.is_banned = True
-			p.ban_reason = "ToS Violation"
+			p.ban_reason = "AutoJanny"
 
 			g.db.add(p)
 
@@ -793,7 +793,7 @@ def submit_post(v):
 	if "rama" in request.host and "ivermectin" in new_post.body_html.lower():
 
 		new_post.is_banned = True
-		new_post.ban_reason = "ToS Violation"
+		new_post.ban_reason = "AutoJanny"
 
 		g.db.add(new_post)
 
@@ -828,7 +828,7 @@ def submit_post(v):
 	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in new_post.body_html.lower():
 
 		new_post.is_banned = True
-		new_post.ban_reason = "ToS Violation"
+		new_post.ban_reason = "AutoJanny"
 
 		g.db.add(new_post)
 
