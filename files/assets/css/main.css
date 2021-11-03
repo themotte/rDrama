@@ -5551,6 +5551,10 @@ blockquote {
   margin: 0.5rem 0 0 0;
 }
 
+div > blockquote:last-child {
+  margin-bottom: 0.5rem !important;
+}
+
 blockquote + blockquote, blockquote:last-child {
   margin-top: 0 !important;
 }
