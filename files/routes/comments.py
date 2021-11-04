@@ -167,11 +167,10 @@ def api_comment(v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-	body_md = body
 	options = []
-	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body_md):
+	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):
 		options.append(i.group(1))
-		body_md = body_md.replace(i.group(0), "")
+		body = body.replace(i.group(0), "")
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
@@ -181,12 +180,9 @@ def api_comment(v):
 		file.save(name)
 		url = request.host_url[:-1] + process_image(name)
 		
-		body = request.values.get("body") + f"\n![]({url})"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html = sanitize(body_md)
-	else:
-		body_md = CustomRenderer().render(mistletoe.Document(body_md))
-		body_html = sanitize(body_md)
+		body += f"\n![]({url})"
+
+	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 
