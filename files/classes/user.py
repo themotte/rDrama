@@ -83,7 +83,7 @@ class User(Base):
 	frontsize = Column(Integer, default=25)
 	controversial = Column(Boolean, default=False)
 	bio = Column(String)
-	bio_html = Column(String)
+	bio_html = deferred(Column(String))
 	sig = Column(String)
 	sig_html = Column(String)
 	friends = Column(String)
