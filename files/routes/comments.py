@@ -166,7 +166,6 @@ def api_comment(v):
 	
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
-	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 
 	body_md = body
 	options = []
@@ -183,7 +182,6 @@ def api_comment(v):
 		url = request.host_url[:-1] + process_image(name)
 		
 		body = request.values.get("body") + f"\n![]({url})"
-		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 	else:
@@ -398,7 +396,6 @@ def api_comment(v):
 	if "rama" in request.host and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
 	
 		body = random.choice(LONGPOST_REPLIES)
-		body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
 

@@ -106,7 +106,6 @@ def settings_profile_post(v):
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
 			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
-		bio = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', bio)
 
 		if request.files.get('file'):
 			file = request.files['file']
@@ -124,11 +123,6 @@ def settings_profile_post(v):
 		bio_html = sanitize(bio_html)
 		bans = filter_comment_html(bio_html)
 
-		if len(bio_html) > 10000:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="Your bio is too long")
-
 		if bans:
 			ban = bans[0]
 			reason = f"Remove the {ban.domain} link from your bio and try again."
@@ -137,7 +131,10 @@ def settings_profile_post(v):
 				
 			return {"error": reason}, 401
 
-		if len(bio_html) > 10000: abort(400)
+		if len(bio_html) > 10000:
+			return render_template("settings_profile.html",
+								   v=v,
+								   error="Your bio is too long")
 
 		v.bio = bio[:1500]
 		v.bio_html=bio_html
@@ -149,20 +146,15 @@ def settings_profile_post(v):
 
 
 	if v.patron and request.values.get("sig"):
-		sig = request.values.get("sig")[:1500]
+		sig = request.values.get("sig")[:200]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', sig, re.MULTILINE):
 			if "wikipedia" not in i.group(1): sig = sig.replace(i.group(1), f'![]({i.group(1)})')
-		sig = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', sig)
-		
+
 		sig_html = CustomRenderer().render(mistletoe.Document(sig))
 		sig_html = sanitize(sig_html)
 		bans = filter_comment_html(sig_html)
 
-		if len(sig_html) > 10000:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="Your sig is too long")
 
 		if bans:
 			ban = bans[0]
@@ -172,9 +164,12 @@ def settings_profile_post(v):
 				
 			return {"error": reason}, 401
 
-		if len(sig_html) > 10000: abort(400)
+		if len(sig_html) > 1000:
+			return render_template("settings_profile.html",
+								   v=v,
+								   error="Your sig is too long")
 
-		v.sig = sig[:1500]
+		v.sig = sig[:200]
 		v.sig_html=sig_html
 		g.db.add(v)
 		g.db.commit()
@@ -188,7 +183,6 @@ def settings_profile_post(v):
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
 			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
-		bio = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', bio)
 
 		if request.files.get('file'):
 			file = request.files['file']

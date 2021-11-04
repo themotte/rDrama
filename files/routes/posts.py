@@ -666,7 +666,6 @@ def submit_post(v):
 
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
-	body = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', body)
 
 	options = []
 	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):

@@ -238,8 +238,6 @@ def message2(v, username):
 															).first()
 	if existing: return redirect('/notifications?messages=true')
 
-	text = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', message)
-
 	text_html = Renderer().render(mistletoe.Document(text))
 
 	text_html = sanitize(text_html, True)
@@ -291,7 +289,6 @@ def messagereply(v):
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
 	user = parent.author
-	message = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', message)
 
 	text_html = Renderer().render(mistletoe.Document(message))
 	text_html = sanitize(text_html, True)
