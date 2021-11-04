@@ -186,7 +186,7 @@ def searchcomments(v):
 	except: page = 1
 
 	sort = request.values.get("sort", "new").lower()
-	t = request.values.get('t', 'day').lower()
+	t = request.values.get('t', 'all').lower()
 
 	criteria=searchparse(query)
 
