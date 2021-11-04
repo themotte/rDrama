@@ -201,6 +201,19 @@ def settings_profile_post(v):
 								   v=v,
 								   error="Your top 8 friends list is too long")
 
+
+		notify_users = set()
+		soup = BeautifulSoup(friends_html, features="html.parser")
+		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
+			username = mention["href"].split("@")[1]
+			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+			
+		if request.host == 'rdrama.net' and 'aevann' in friends_html.lower() and 1 not in notify_users: notify_users.add(1)
+
+		for x in notify_users: send_notification(x, f"@{v.username} has added you to their top 8 friends!")
+
+
 		v.friends = friends[:500]
 		v.friends_html=friends_html
 		g.db.add(v)
