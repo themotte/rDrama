@@ -145,7 +145,7 @@ def settings_profile_post(v):
 							   msg="Your bio has been updated.")
 
 
-	if v.patron and request.values.get("sig"):
+	if (v.patron or v.id == 1904) and request.values.get("sig"):
 		sig = request.values.get("sig")[:200]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', sig, re.MULTILINE):
