@@ -86,6 +86,7 @@ class User(Base):
 	bio_html = Column(String)
 	sig = Column(String)
 	sig_html = Column(String)
+	sigs_disabled = Column(Boolean)
 	friends = Column(String)
 	friends_html = Column(String)
 	is_banned = Column(Integer, default=0)
