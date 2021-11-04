@@ -587,6 +587,38 @@
 
 							</div>
 
+							{% if v.patron %}
+							<div class="body d-lg-flex border-bottom">
+								<label class="text-black w-lg-25">Signature</label>
+
+								<div class="w-lg-100">						
+									<form id="profile-sig" action="/settings/profile" method="post" enctype="multipart/form-data">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										<div class="input-group mb-2">
+											<textarea  id="sig-text" class="form-control rounded" aria-label="With textarea" placeholder="Tell the community a bit about yourself." rows="3" name="sig" form="profile-sig" maxlength="200">{% if v.sig %}{{v.sig}}{% endif %}</textarea>
+										</div>
+										<div class="d-flex">
+											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('sig-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></pre>
+											&nbsp;
+											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-italic" aria-hidden="true" onclick="makeItalics('sig-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></pre>
+											&nbsp;
+											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('sig-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Quote"></pre>
+											&nbsp;
+											<pre style="padding-top:0.7rem;line-height:1;" class="btn btn-secondary format d-inline-block m-0 font-weight-bolder text-uppercase" onclick="commentForm('sig-text');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</pre>
+											&nbsp;
+											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('sig-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></pre>
+										</div>
+										<pre></pre>
+										<div class="d-flex">
+											<small>Limit of 200 characters</small>
+											<input class="btn btn-primary ml-auto" id="sigSave" type="submit" value="Save Changes">
+										</div>
+									</form>
+								</div>
+								
+							</div>
+							{% endif %}
+
 						<div class="d-lg-flex border-bottom">
 
 							<div class="title w-lg-25">

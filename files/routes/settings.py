@@ -148,6 +148,87 @@ def settings_profile_post(v):
 							   msg="Your bio has been updated.")
 
 
+	if v.patron and request.values.get("sig"):
+		sig = request.values.get("sig")[:1500]
+
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', sig, re.MULTILINE):
+			if "wikipedia" not in i.group(1): sig = sig.replace(i.group(1), f'![]({i.group(1)})')
+		sig = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', sig)
+		
+		sig_html = CustomRenderer().render(mistletoe.Document(sig))
+		sig_html = sanitize(sig_html)
+		bans = filter_comment_html(sig_html)
+
+		if len(sig_html) > 10000:
+			return render_template("settings_profile.html",
+								   v=v,
+								   error="Your sig is too long")
+
+		if bans:
+			ban = bans[0]
+			reason = f"Remove the {ban.domain} link from your sig and try again."
+			if ban.reason:
+				reason += f" {ban.reason}"
+				
+			return {"error": reason}, 401
+
+		if len(sig_html) > 10000: abort(400)
+
+		v.sig = sig[:1500]
+		v.sig_html=sig_html
+		g.db.add(v)
+		g.db.commit()
+		return render_template("settings_profile.html",
+							   v=v,
+							   msg="Your sig has been updated.")
+
+
+	if request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
+		bio = request.values.get("bio")[:1500]
+
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
+			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
+		bio = re.sub('([^\n])\n([^\n])', r'\1\n\n\2', bio)
+
+		if request.files.get('file'):
+			file = request.files['file']
+			if not file.content_type.startswith('image/'):
+				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
+				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
+
+			name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.gif'
+			file.save(name)
+			url = request.host_url[:-1] + process_image(name)
+
+			bio += f"\n\n![]({url})"
+		
+		bio_html = CustomRenderer().render(mistletoe.Document(bio))
+		bio_html = sanitize(bio_html)
+		bans = filter_comment_html(bio_html)
+
+		if len(bio_html) > 10000:
+			return render_template("settings_profile.html",
+								   v=v,
+								   error="Your bio is too long")
+
+		if bans:
+			ban = bans[0]
+			reason = f"Remove the {ban.domain} link from your bio and try again."
+			if ban.reason:
+				reason += f" {ban.reason}"
+				
+			return {"error": reason}, 401
+
+		if len(bio_html) > 10000: abort(400)
+
+		v.bio = bio[:1500]
+		v.bio_html=bio_html
+		g.db.add(v)
+		g.db.commit()
+		return render_template("settings_profile.html",
+							   v=v,
+							   msg="Your bio has been updated.")
+
 
 	frontsize = request.values.get("frontsize")
 	if frontsize:
