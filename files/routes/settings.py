@@ -149,7 +149,14 @@ def settings_profile_post(v):
 							   msg="Your bio has been updated.")
 
 
-	if (v.patron or v.id == 1904) and request.values.get("sig"):
+	if request.values.get("sig") = "":
+		v.sig = None
+		v.sig_html = None
+		g.db.add(v)
+		g.db.commit()
+		return render_template("settings_profile.html", v=v, msg="Your sig has been updated.")
+
+	elif (v.patron or v.id == 1904) and request.values.get("sig"):
 		sig = request.values.get("sig")[:200]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', sig, re.MULTILINE):
