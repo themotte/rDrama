@@ -178,6 +178,8 @@ def settings_profile_post(v):
 							   msg="Your sig has been updated.")
 
 
+
+
 	if request.values.get("friends"):
 		friends = request.values.get("friends")[:500]
 
@@ -194,7 +196,7 @@ def settings_profile_post(v):
 			if ban.reason: reason += f" {ban.reason}"
 			return {"error": reason}, 401
 
-		if len(friends_html) > 1000:
+		if len(friends_html) > 2000:
 			return render_template("settings_profile.html",
 								   v=v,
 								   error="Your top 8 friends list is too long")
@@ -206,6 +208,8 @@ def settings_profile_post(v):
 		return render_template("settings_profile.html",
 							   v=v,
 							   msg="Your top 8 friends have been updated.")
+
+
 
 
 	if request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
