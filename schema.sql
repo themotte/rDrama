@@ -646,7 +646,7 @@ CREATE TABLE public.submissions (
     url character varying(2083),
     body character varying(10000),
     body_html character varying(20000),
-    embed_url character varying(10000),
+    embed_url character varying(1500),
     ban_reason character varying(128),
     title_html character varying(1500)
 );
