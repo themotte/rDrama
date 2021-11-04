@@ -121,11 +121,9 @@
 							profile</a>
 								<a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw text-left mr-3"></i>Settings</a>
 							</div>
-							<hr class="my-2">
 							<div class="px-2">
 								<button class="dropdown-item copy-link" data-clipboard-text="/signup?ref={{v.username}}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
 							</div>
-							<hr class="my-2">
 							<div class="px-2">
 								<a class="dropdown-item" href="/assets/{{'SITE_NAME' | app_config}}_App.apk"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
 
@@ -142,7 +140,6 @@
 								{% if 'rama' in request.host %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw text-left mr-3"></i>Archives</a>{% endif %}
 								<a class="dropdown-item" href="/contact"><i class="fas fa-file-signature fa-fw text-left mr-3"></i>Contact us</a>
 							</div>
-							<hr class="my-2">
 							<div class="px-2">
 								<a class="dropdown-item" href="javascript:void(0)", onclick="post_toast('/logout', '1')"><i class="fas fa-sign-out fa-fw text-left mr-3"></i>Log out</a>
 							</div>
