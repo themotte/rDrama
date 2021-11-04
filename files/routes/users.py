@@ -246,7 +246,7 @@ def message2(v, username):
 						  parent_submission=None,
 						  level=1,
 						  sentto=user.id,
-						  body=text,
+						  body=message,
 						  body_html=text_html,
 						  )
 	g.db.add(new_comment)
