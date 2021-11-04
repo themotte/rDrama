@@ -3959,7 +3959,8 @@ th {
   height: 28px;
 }
 
-.profile-pic-20 {
+.profile-pic-20, .pp20 {
+  margin-right: 0.25rem !important;
   width: 20px;
   height: 20px;
   border-radius: 50%;

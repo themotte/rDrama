@@ -115,7 +115,7 @@ def sanitize(sanitized, noimages=False):
 
 	for tag in soup.find_all("img"):
 
-		if tag.get("src") and "profile-pic-20" not in tag.get("class", ""):
+		if tag.get("src") and "pp20" not in tag.get("class", ""):
 
 			tag["rel"] = "nofollow noopener noreferrer"
 			tag["class"] = "in-comment-image"
@@ -136,7 +136,7 @@ def sanitize(sanitized, noimages=False):
 	for tag in soup.find_all("a"):
 		if tag.get("href"):
 			tag["target"] = "_blank"
-			if site not in tag["href"]: tag["rel"] = "nofollow noopener noreferrer"
+			if site not in tag["href"] and not tag["href"].startswith('/'): tag["rel"] = "nofollow noopener noreferrer"
 
 			if re.match("https?://\S+", str(tag.string)):
 				try: tag.string = tag["href"]
