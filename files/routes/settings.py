@@ -178,6 +178,36 @@ def settings_profile_post(v):
 							   msg="Your sig has been updated.")
 
 
+	if request.values.get("friends"):
+		friends = request.values.get("friends")[:500]
+
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', friends, re.MULTILINE):
+			if "wikipedia" not in i.group(1): friends = friends.replace(i.group(1), f'![]({i.group(1)})')
+
+		friends_html = CustomRenderer().render(mistletoe.Document(friends))
+		friends_html = sanitize(friends_html)
+		bans = filter_comment_html(friends_html)
+
+		if bans:
+			ban = bans[0]
+			reason = f"Remove the {ban.domain} link from your top 8 friends list and try again."
+			if ban.reason: reason += f" {ban.reason}"
+			return {"error": reason}, 401
+
+		if len(friends_html) > 1000:
+			return render_template("settings_profile.html",
+								   v=v,
+								   error="Your top 8 friends list is too long")
+
+		v.friends = friends[:500]
+		v.friends_html=friends_html
+		g.db.add(v)
+		g.db.commit()
+		return render_template("settings_profile.html",
+							   v=v,
+							   msg="Your top 8 friends have been updated.")
+
+
 	if request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 		bio = request.values.get("bio")[:1500]
 

@@ -175,7 +175,10 @@
 				{% else %}
 				<p class="text-muted">No bio...</p>
 				{% endif %}
-				{% if u.bio_html and v %}
+
+				{% if u.friends_html %}
+					<p class="text-muted font-weight-bold">Top 8 friends:</p>
+					{{u.friends_html | safe}}
 				{% endif %}
 
 				{% if u.received_awards %}
@@ -441,7 +444,12 @@
 					<br>joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.created_datetime}}" class="font-weight-bold">{{u.created_date}}</span>
 				</div>
 				{% if u.bio_html %}
-				<p class="text-muted text-break">{{u.bio_html | safe}}</p>
+					<p class="text-muted text-break">{{u.bio_html | safe}}</p>
+				{% endif %}
+
+				{% if u.friends_html %}
+					<p class="text-muted font-weight-bold mt-3">Top 8 friends:</p>
+					{{u.friends_html | safe}}
 				{% endif %}
 
 				{% if u.received_awards %}
