@@ -79,7 +79,7 @@ allowed_attributes = {'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'da
 
 allowed_protocols = ['http', 'https']
 
-allowed_styles = ['color', 'font-weight', 'transform', '-webkit-transform']
+allowed_styles = ['color', 'background-color', 'font-weight', 'transform', '-webkit-transform']
 
 def sanitize(sanitized, noimages=False):
 
