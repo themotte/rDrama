@@ -238,7 +238,7 @@ def message2(v, username):
 															).first()
 	if existing: return redirect('/notifications?messages=true')
 
-	text_html = Renderer().render(mistletoe.Document(text))
+	text_html = Renderer().render(mistletoe.Document(message))
 
 	text_html = sanitize(text_html, True)
 
