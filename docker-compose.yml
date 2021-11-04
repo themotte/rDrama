@@ -60,7 +60,7 @@ services:
     image: postgres:12.3
     volumes:
       - "./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
-      - "./seed-db.sql:/docker-entrypoint-initdb.d/01-schema.sql"
+      - "./seed-db.sql:/docker-entrypoint-initdb.d/10-seed-db.sql"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
