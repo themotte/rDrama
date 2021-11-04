@@ -871,10 +871,10 @@ def submit_post(v):
 				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 				else: body = "wow, a good lawlzpost for once!"
 			else: body = random.choice(snappyquotes)
-			body += "\n\n---\n\n"
 		else: body = ""
 
 		if new_post.url:
+			if "rama" in request.host: body += "\n\n---\n\n"
 			body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, new_post.url)
 
