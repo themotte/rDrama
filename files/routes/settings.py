@@ -149,7 +149,7 @@ def settings_profile_post(v):
 							   msg="Your bio has been updated.")
 
 
-	if request.values.get("sig") = "":
+	if request.values.get("sig") == "":
 		v.sig = None
 		v.sig_html = None
 		g.db.add(v)
