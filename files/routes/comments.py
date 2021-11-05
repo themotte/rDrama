@@ -239,7 +239,7 @@ def api_comment(v):
 
 			for comment in similar_comments:
 				comment.is_banned = True
-				comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
+				comment.ban_reason = "AutoJanny"
 				g.db.add(comment)
 				ma=ModAction(
 					user_id=AUTOJANNY_ACCOUNT,
@@ -660,7 +660,7 @@ def edit_comment(cid, v):
 
 				for comment in similar_comments:
 					comment.is_banned = True
-					comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
+					comment.ban_reason = "AutoJanny"
 					g.db.add(comment)
 
 				return {"error": "Too much spam!"}, 403

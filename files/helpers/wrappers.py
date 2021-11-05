@@ -49,7 +49,7 @@ def check_ban_evade(v):
 				continue
 
 			post.is_banned=True
-			post.ban_reason="permaban evasion"
+			post.ban_reason="AutoJanny"
 			g.db.add(post)
 			
 			ma=ModAction(
@@ -65,7 +65,7 @@ def check_ban_evade(v):
 				continue
 
 			comment.is_banned=True
-			comment.ban_reason="permaban evasion"
+			comment.ban_reason="AutoJanny"
 			g.db.add(comment)
 
 			try:

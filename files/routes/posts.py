@@ -643,7 +643,7 @@ def submit_post(v):
 		for post in similar_posts + similar_urls:
 			post.is_banned = True
 			post.is_pinned = False
-			post.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
+			post.ban_reason = "AutoJanny"
 			g.db.add(post)
 			ma=ModAction(
 					user_id=AUTOJANNY_ACCOUNT,

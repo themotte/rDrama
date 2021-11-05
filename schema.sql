@@ -331,7 +331,7 @@ CREATE TABLE public.comments (
     is_pinned character varying(30),
     body character varying(10000),
     body_html character varying(40000),
-    ban_reason character varying(256),
+    ban_reason character varying(25),
     notifiedto integer
 );
 
@@ -647,7 +647,7 @@ CREATE TABLE public.submissions (
     body character varying(10000),
     body_html character varying(20000),
     embed_url character varying(1500),
-    ban_reason character varying(256),
+    ban_reason character varying(25),
     title_html character varying(1500)
 );
 
