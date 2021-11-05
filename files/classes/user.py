@@ -340,16 +340,19 @@ class User(Base):
 
 	@property
 	@lazy
-	def post_notifications_count(self):
-		return self.notifications.filter(Notification.read == False).join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).count()
+	def unread_notifications(self):
+		return g.db.query(Notification.id).options(lazyload('*')).filter(Notification.user_id == self.id, Notification.read == False)
 
 	@property
 	@lazy
 	def notifications_count(self):
+		return self.unread_notifications.count()
 
-		return self.notifications.join(Notification.comment).filter(Notification.read == False,
-																	Comment.is_banned == False,
-																	Comment.deleted_utc == 0).count()
+	@property
+	@lazy
+	def post_notifications_count(self):
+		return self.unread_notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).count()
+
 
 	@property
 	@lazy
