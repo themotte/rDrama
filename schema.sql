@@ -647,7 +647,7 @@ CREATE TABLE public.submissions (
     body character varying(10000),
     body_html character varying(20000),
     embed_url character varying(1500),
-    ban_reason character varying(128),
+    ban_reason character varying(256),
     title_html character varying(1500)
 );
 
@@ -752,7 +752,7 @@ CREATE TABLE public.users (
     bio_html character varying(10000),
     referred_by integer,
     is_banned integer,
-    ban_reason character varying(128),
+    ban_reason character varying(256),
     login_nonce integer,
     reserved character varying(256),
     mfa_secret character varying(32),

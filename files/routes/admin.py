@@ -785,7 +785,7 @@ def ban_user(user_id, v):
 			if x.admin_level > 0: break
 			x.ban(admin=v, reason=reason)
 
-	send_notification(user.id, text[:128])
+	send_notification(user.id, text[:254])
 	
 	if days == 0: duration = "permanent"
 	elif days == 1: duration = "1 day"
