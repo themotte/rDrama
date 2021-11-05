@@ -261,7 +261,7 @@ class User(Base):
 		return g.db.query(User).options(lazyload('*')).filter_by(id=self.is_banned).first()
 
 	def has_badge(self, badgedef_id):
-		return self.badges.filter_by(badge_id=badgedef_id).first()
+		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badgedef_id).first()
 
 	def hash_password(self, password):
 		return generate_password_hash(
