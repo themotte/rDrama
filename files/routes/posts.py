@@ -66,7 +66,10 @@ def publish(pid, v):
 		user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
-	if request.host == 'rdrama.net' and 'aevann' in f'{post.body_html}{post.title}'.lower() and 1 not in notify_users: notify_users.add(1)
+	if request.host == 'rdrama.net':
+		if 'aevann' in f'{post.body_html}{post.title}'.lower() and 1 not in notify_users: notify_users.add(1)
+		if 'joan' in f'{post.body_html}{post.title}'.lower() and 28 not in notify_users: notify_users.add(28)
+		if 'carp' in f'{post.body_html}{post.title}'.lower() and 995 not in notify_users: notify_users.add(995)
 
 	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{post.permalink}")
 
@@ -329,7 +332,10 @@ def edit_post(pid, v):
 			
 		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
 
-		if request.host == 'rdrama.net' and 'aevann' in f'{body_html}{title}'.lower() and 1 not in notify_users: notify_users.add(1)
+		if request.host == 'rdrama.net':
+			if 'aevann' in f'{body_html}{title}'.lower() and 1 not in notify_users: notify_users.add(1)
+			if 'joan' in f'{body_html}{title}'.lower() and 28 not in notify_users: notify_users.add(28)
+			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users: notify_users.add(995)
 
 		for x in notify_users:
 			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
@@ -776,7 +782,10 @@ def submit_post(v):
 			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
-		if request.host == 'rdrama.net' and 'aevann' in f'{body_html}{title}'.lower() and 1 not in notify_users: notify_users.add(1)
+		if request.host == 'rdrama.net':
+			if 'aevann' in f'{body_html}{title}'.lower() and 1 not in notify_users: notify_users.add(1)
+			if 'joan' in f'{body_html}{title}'.lower() and 28 not in notify_users: notify_users.add(28)
+			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users: notify_users.add(995)
 
 		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 		
