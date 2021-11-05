@@ -203,14 +203,14 @@ def settings_profile_post(v):
 
 		if bans:
 			ban = bans[0]
-			reason = f"Remove the {ban.domain} link from your top 8 friends list and try again."
+			reason = f"Remove the {ban.domain} link from your top friends list and try again."
 			if ban.reason: reason += f" {ban.reason}"
 			return {"error": reason}, 401
 
 		if len(friends_html) > 2000:
 			return render_template("settings_profile.html",
 								   v=v,
-								   error="Your top 8 friends list is too long")
+								   error="Your top friends list is too long")
 
 
 		notify_users = set()
@@ -222,8 +222,10 @@ def settings_profile_post(v):
 			
 		if request.host == 'rdrama.net' and 'aevann' in friends_html.lower() and 1 not in notify_users: notify_users.add(1)
 
-		for x in notify_users: send_notification(x, f"@{v.username} has added you to their top 8 friends!")
-
+		for x in notify_users:
+			message = f"@{v.username} has added you to their top friends!"
+			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			if not existing: send_notification(x, message)
 
 		v.friends = friends[:500]
 		v.friends_html=friends_html
@@ -231,7 +233,7 @@ def settings_profile_post(v):
 		g.db.commit()
 		return render_template("settings_profile.html",
 							   v=v,
-							   msg="Your top 8 friends have been updated.")
+							   msg="Your top friends have been updated.")
 
 
 

@@ -590,13 +590,13 @@
 
 							<div class="body d-lg-flex border-bottom">
 
-								<label class="text-black w-lg-25">Top 8 friends</label>
+								<label class="text-black w-lg-25">Top friends</label>
 							
 								<div class="w-lg-100">						
 									<form id="profile-friends" action="/settings/profile" method="post" enctype="multipart/form-data">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
-											<textarea  id="friends-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your top 8 friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
+											<textarea  id="friends-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your top friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
 										</div>
 										<pre></pre>
 										<div class="d-flex">
