@@ -6,12 +6,14 @@ from urllib.parse import urlparse
 
 from flask import render_template
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred
+from sqlalchemy.orm import relationship, deferred, lazyload
 
 from files.__main__ import Base
 from files.helpers.const import AUTOPOLLER_ACCOUNT, censor_slurs, TROLLTITLES
 from files.helpers.lazy import lazy
 from .flags import Flag
+from .comment import Comment
+from flask import g
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
@@ -51,8 +53,6 @@ class Submission(Base):
 	ban_reason = Column(String)
 	embed_url = Column(String)
 
-	comments = relationship("Comment", lazy="dynamic", primaryjoin="Comment.parent_submission==Submission.id", viewonly=True)
-	flags = relationship("Flag", lazy="dynamic", viewonly=True)
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
 	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)
@@ -75,8 +75,13 @@ class Submission(Base):
 
 	@property
 	@lazy
+	def flags(self):
+		return g.db.query(Flag).options(lazyload('*')).filter_by(post_id=self.id)
+
+	@property
+	@lazy
 	def options(self):
-		return self.comments.filter_by(author_id = AUTOPOLLER_ACCOUNT, level=1)
+		return g.db.query(Comment).options(lazyload('*')).filter_by(parent_submission = self.id, author_id = AUTOPOLLER_ACCOUNT, level=1)
 
 	def total_poll_voted(self, v):
 		if v:

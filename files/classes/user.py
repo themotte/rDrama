@@ -112,18 +112,15 @@ class User(Base):
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
 
-	submissions = relationship("Submission", lazy="dynamic", primaryjoin="Submission.author_id==User.id", viewonly=True)
-	badges = relationship("Badge", lazy="dynamic", viewonly=True)
-	notifications = relationship("Notification", lazy="dynamic", viewonly=True)
+	badges = relationship("Badge", viewonly=True)
 	subscriptions = relationship("Subscription", viewonly=True)
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
 	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id", viewonly=True)
 	viewers = relationship("ViewerRelationship", primaryjoin="User.id == ViewerRelationship.user_id", viewonly=True)
 	blocking = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.user_id", viewonly=True)
 	blocked = relationship("UserBlock", lazy="dynamic", primaryjoin="User.id==UserBlock.target_id", viewonly=True)
-	apps = relationship("OauthApp", lazy="dynamic", viewonly=True)
-	authorizations = relationship("ClientAuth", lazy="dynamic", viewonly=True)
-	awards = relationship("AwardRelationship", lazy="dynamic", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
+	authorizations = relationship("ClientAuth", viewonly=True)
+	awards = relationship("AwardRelationship", primaryjoin="User.id==AwardRelationship.user_id", viewonly=True)
 	referrals = relationship("User", viewonly=True)
 
 	def __init__(self, **kwargs):
@@ -139,17 +136,22 @@ class User(Base):
 
 	@property
 	@lazy
+	def notifications(self):
+		return g.db.query(Notification).options(lazyload('*')).filter_by(user_id=self.id)
+
+	@property
+	@lazy
 	def created_date(self):
 
 		return time.strftime("%d %b %Y", time.gmtime(self.created_utc))
 
 	@property
 	@lazy
-	def user_awards(v):
+	def user_awards(self):
 
 		return_value = list(AWARDS2.values())
 
-		user_awards = v.awards
+		user_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter_by(user_id=self.id)
 
 		for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
 
@@ -475,7 +477,7 @@ class User(Base):
 	@property
 	@lazy
 	def applications(self):
-		return [x for x in self.apps.order_by(OauthApp.id.asc()).all()]
+		return g.db.query(OauthApp).options(lazyload('*')).filter_by(author_id=self.id).order_by(OauthApp.id.asc()).all()
 
 	@lazy
 	def subscribed_idlist(self, page=1):

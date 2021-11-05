@@ -47,7 +47,6 @@ class Comment(Base):
 	ban_reason = Column(String)
 
 	post = relationship("Submission", viewonly=True)
-	flags = relationship("CommentFlag", lazy="dynamic", viewonly=True)
 	author = relationship("User", primaryjoin="User.id==Comment.author_id")
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
@@ -64,6 +63,11 @@ class Comment(Base):
 	def __repr__(self):
 
 		return f"<Comment(id={self.id})>"
+
+	@property
+	@lazy
+	def flags(self):
+		return g.db.query(CommentFlag).options(lazyload('*')).filter_by(comment_id=self.id)
 
 	@lazy
 	def poll_voted(self, v):

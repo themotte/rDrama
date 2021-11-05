@@ -929,7 +929,7 @@ def submit_post(v):
 		g.db.add(n)
 		g.db.flush()
 	
-	v.post_count = v.submissions.filter_by(is_banned=False, deleted_utc=0).count()
+	v.post_count = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
 	cache.delete_memoized(frontlist)
