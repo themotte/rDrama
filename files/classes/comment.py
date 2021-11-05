@@ -65,6 +65,7 @@ class Comment(Base):
 
 		return f"<Comment(id={self.id})>"
 
+	@lazy
 	def poll_voted(self, v):
 		if v:
 			vote = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=self.id).first()
@@ -76,6 +77,12 @@ class Comment(Base):
 	@lazy
 	def options(self):
 		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ACCOUNT]
+
+	def total_poll_voted(self, v):
+		if v:
+			for option in self.options:
+				if option.poll_voted(v): return True
+		return False
 
 	@property
 	@lazy

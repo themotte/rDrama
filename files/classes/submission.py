@@ -78,6 +78,12 @@ class Submission(Base):
 	def options(self):
 		return self.comments.filter_by(author_id = AUTOPOLLER_ACCOUNT, level=1)
 
+	def total_poll_voted(self, v):
+		if v:
+			for option in self.options:
+				if option.poll_voted(v): return True
+		return False
+
 	@property
 	@lazy
 	def created_datetime(self):

@@ -128,6 +128,9 @@
 	<script>
 		function poll_vote(cid) {
 			{% if v %}
+				for(let el of document.getElementsByClassName('presult')) {
+					el.classList.remove('d-none');
+				}
 				var type = document.getElementById(cid).checked;
 				var scoretext = document.getElementById('poll-' + cid);
 				var score = Number(scoretext.textContent);
@@ -510,7 +513,7 @@
 							{% for c in p.options %}
 								<div class="custom-control">								
 									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
-									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}}{% if c.poll_voted(v) %} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a>{% endif %}</label>
+									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}}<span class="presult {% if not p.total_poll_voted(v) %}d-none{% endif %}"> - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></span></label>
 								</div>
 							{% endfor %}
 

@@ -61,8 +61,11 @@
 
 
 <script>
-	function poll_vote(cid) {
+	function poll_vote(cid, parentid) {
 		{% if v %}
+			for(let el of document.getElementsByClassName('presult-'+parentid)) {
+				el.classList.remove('d-none');
+			}
 			var type = document.getElementById(cid).checked;
 			var scoretext = document.getElementById('poll-' + cid);
 			var score = Number(scoretext.textContent);
@@ -311,10 +314,10 @@
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
-					{% for c in c.options %}
+					{% for o in c.options %}
 						<div class="custom-control">								
-							<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
-							<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}}{% if c.poll_voted(v) %} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a>{% endif %}</label>
+							<input type="checkbox" class="custom-control-input" id="{{o.id}}" name="option" {% if o.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{o.id}}', '{{c.id}}')">
+							<label class="custom-control-label" for="{{o.id}}">{{o.body_html | safe}}<span class="presult-{{c.id}} {% if not c.total_poll_voted(v) %}d-none{% endif %}"> - <a href="/votes?link=t3_{{o.id}}"><span id="poll-{{o.id}}">{{o.upvotes}}</span> votes</a></span></label>
 						</div>
 					{% endfor %}
 					<pre></pre>
