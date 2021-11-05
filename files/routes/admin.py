@@ -756,12 +756,12 @@ def ban_user(user_id, v):
 
 	if 'form' in request.values:
 		days = float(request.values.get("days")) if request.values.get('days') else 0
-		reason = sanitize(request.values.get("reason", ""))[:254]
-		message = request.values.get("reason", "").strip()[:254]
+		reason = sanitize(request.values.get("reason", ""))[:256]
+		message = request.values.get("reason", "").strip()[:256]
 	else:
 		days = float(request.values.get("days")) if request.values.get('days') else 0
-		reason = sanitize(request.values.get("reason", ""))[:254]
-		message = request.values.get("reason", "").strip()[:254]
+		reason = sanitize(request.values.get("reason", ""))[:256]
+		message = request.values.get("reason", "").strip()[:256]
 
 	if not user: abort(400)
 	
