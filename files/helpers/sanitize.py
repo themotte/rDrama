@@ -125,7 +125,7 @@ def sanitize(sanitized, noimages=False):
 
 			link = soup.new_tag("a")
 			link["href"] = tag["data-src"]
-			if tag.get("href") and site not in tag["href"] and not tag["href"].startswith('/'): link["rel"] = "nofollow noopener noreferrer"
+			if site not in link["href"] and not link["href"].startswith('/'): link["rel"] = "nofollow noopener noreferrer"
 			link["target"] = "_blank"
 			link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
 			link["data-bs-toggle"] = "modal"
