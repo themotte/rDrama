@@ -36,6 +36,12 @@
 		<th style="font-weight:bold; text-align:right;">Coins</th>
 	</tr>
 </thead>
+<pre>
+
+
+</pre>
+<h5 style="font-weight:bold;text-align: center;">Top 10 by coins spent in shop</h5>
+
 {% for user in users7 %}
 	<tr>
 		<td style="font-weight:bold;">{{users7.index(user)+1}}</td>
@@ -149,12 +155,6 @@
 {% endfor %}
 </table>
 
-
-<pre>
-
-
-</pre>
-<h5 style="font-weight:bold;text-align: center;">Top 10 by coins spent in shop</h5>
 
 {% if "pcm" in request.host %}
 	<pre>
