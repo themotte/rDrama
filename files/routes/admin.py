@@ -21,6 +21,18 @@ from files.helpers.discord import add_role
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 
+@app.get("/name/<id>/<name>")
+@admin_level_required(6)
+def changename(v, id, name):
+	if request.host != 'pcmemes.net': abort(403)
+	user = g.db.query(User).filter_by(id=id).first()
+	if user:
+		user.username = name
+		g.db.add(user)
+		g.db.commit()
+		return "Username changed!"
+	return "User not found!"
+
 @app.get("/truescore")
 @admin_level_required(6)
 def truescore(v):
