@@ -48,8 +48,8 @@ class Submission(Base):
 	title = Column(String)
 	title_html = Column(String)
 	url = Column(String)
-	body = deferred(Column(String))
-	body_html = deferred(Column(String))
+	body = Column(String)
+	body_html = Column(String)
 	ban_reason = Column(String)
 	embed_url = Column(String)
 
