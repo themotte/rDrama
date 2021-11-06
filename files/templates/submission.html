@@ -517,6 +517,11 @@
 								</div>
 							{% endfor %}
 
+							{% if p.author.sig_html and (p.author_id == 1904 or not (v and v.sigs_disabled)) %}
+								<hr>
+								{{p.author.sig_html | safe}}
+							{% endif %}
+								
 							{% if p.is_banned and p.ban_reason %}
 								<div class="text-removed mb-0">removed by @{{p.ban_reason}}</div>
 							{% endif %}

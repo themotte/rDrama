@@ -75,7 +75,7 @@ no_images = ['b',
 						'span',
 						]
 
-allowed_attributes = {'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name', 'direction', 'behavior']}
+allowed_attributes = {'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name', 'direction', 'behavior', 'scrollamount']}
 
 allowed_protocols = ['http', 'https']
 

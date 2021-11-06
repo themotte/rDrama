@@ -737,7 +737,7 @@ def submit_post(v):
 			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
 			else: return render_template("submit.html", v=v, error=f"File type not allowed.", title=title, body=request.values.get("body", "")), 400
 
-		if file.content_type.startswith('video/') and v.coins < app.config["VIDEO_COIN_REQUIREMENT"] and v.admin_level < 1:
+		if file.content_type.startswith('video/') and v.truecoins < app.config["VIDEO_COIN_REQUIREMENT"] and v.admin_level < 1:
 			if request.headers.get("Authorization"):
 				return {
 					"error": f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos"
@@ -927,7 +927,7 @@ def submit_post(v):
 		g.db.add(n)
 		g.db.flush()
 	
-	v.post_count = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).count()
+	v.post_count = g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
 	cache.delete_memoized(frontlist)

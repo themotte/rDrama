@@ -20,6 +20,15 @@ from files.helpers.discord import add_role
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
+@app.get("/fix")
+@admin_level_required(6)
+def fix(v):
+	for u in g.db.query(User).options(lazyload('*')).all():
+		u.post_count = g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=u.id, is_banned=False, deleted_utc=0).count()
+		g.db.add(u)
+	g.db.commit()
+	return 'sex'
+
 @app.get("/truescore")
 @admin_level_required(6)
 def truescore(v):

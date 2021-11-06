@@ -820,6 +820,8 @@ CREATE TABLE public.users (
     sig_html character varying(1000),
     friends character varying(500),
     friends_html character varying(2000)
+    enemies character varying(500),
+    enemies_html character varying(2000)
 );
 
 

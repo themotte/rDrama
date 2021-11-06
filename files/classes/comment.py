@@ -326,8 +326,6 @@ class Comment(Base):
 
 				url_noquery = url.split('?')[0]
 				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
-
-		if self.author.sig_html and (self.author_id == 1904 or not (v and v.sigs_disabled)): return body + '<hr>' + self.author.sig_html
 		return body
 
 	def plainbody(self, v):

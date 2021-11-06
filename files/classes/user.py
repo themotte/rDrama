@@ -89,6 +89,8 @@ class User(Base):
 	sigs_disabled = Column(Boolean)
 	friends = Column(String)
 	friends_html = Column(String)
+	enemies = Column(String)
+	enemies_html = Column(String)
 	is_banned = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
 	ban_reason = Column(String)

@@ -327,7 +327,6 @@ class Submission(Base):
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
-		if self.author.sig_html and (self.author_id == 1904 or not (v and v.sigs_disabled)): return body + '<hr>' + self.author.sig_html
 		return body
 
 	def plainbody(self, v):

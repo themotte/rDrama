@@ -203,14 +203,14 @@ def settings_profile_post(v):
 
 		if bans:
 			ban = bans[0]
-			reason = f"Remove the {ban.domain} link from your top friends list and try again."
+			reason = f"Remove the {ban.domain} link from your friends list and try again."
 			if ban.reason: reason += f" {ban.reason}"
 			return {"error": reason}, 401
 
 		if len(friends_html) > 2000:
 			return render_template("settings_profile.html",
 								   v=v,
-								   error="Your top friends list is too long")
+								   error="Your friends list is too long")
 
 
 		notify_users = set()
@@ -223,7 +223,7 @@ def settings_profile_post(v):
 		if request.host == 'rdrama.net' and 'aevann' in friends_html.lower() and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users:
-			message = f"@{v.username} has added you to their top friends!"
+			message = f"@{v.username} has added you to their friends list!"
 			existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
@@ -233,9 +233,52 @@ def settings_profile_post(v):
 		g.db.commit()
 		return render_template("settings_profile.html",
 							   v=v,
-							   msg="Your top friends have been updated.")
+							   msg="Your friends list has been updated.")
 
 
+	if request.values.get("enemies"):
+		enemies = request.values.get("enemies")[:500]
+
+		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', enemies, re.MULTILINE):
+			if "wikipedia" not in i.group(1): enemies = enemies.replace(i.group(1), f'![]({i.group(1)})')
+
+		enemies_html = CustomRenderer().render(mistletoe.Document(enemies))
+		enemies_html = sanitize(enemies_html)
+		bans = filter_comment_html(enemies_html)
+
+		if bans:
+			ban = bans[0]
+			reason = f"Remove the {ban.domain} link from your enemies list and try again."
+			if ban.reason: reason += f" {ban.reason}"
+			return {"error": reason}, 401
+
+		if len(enemies_html) > 2000:
+			return render_template("settings_profile.html",
+								   v=v,
+								   error="Your enemies list is too long")
+
+
+		notify_users = set()
+		soup = BeautifulSoup(enemies_html, features="html.parser")
+		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
+			username = mention["href"].split("@")[1]
+			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+			
+		if request.host == 'rdrama.net' and 'aevann' in enemies_html.lower() and 1 not in notify_users: notify_users.add(1)
+
+		for x in notify_users:
+			message = f"@{v.username} has added you to their enemies list!"
+			existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			if not existing: send_notification(x, message)
+
+		v.enemies = enemies[:500]
+		v.enemies_html=enemies_html
+		g.db.add(v)
+		g.db.commit()
+		return render_template("settings_profile.html",
+							   v=v,
+							   msg="Your enemies list has been updated.")
 
 
 	if request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
@@ -728,14 +771,14 @@ def settings_css(v):
 @auth_required
 def settings_profilecss_get(v):
 
-	if v.coins < 1000 and not v.patron and v.admin_level < 6: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
+	if v.truecoins < 1000 and not v.patron and v.admin_level < 6: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
 @limiter.limit("1/second")
 @auth_required
 def settings_profilecss(v):
-	if v.coins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
+	if v.truecoins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
 	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
 	v.profilecss = profilecss
 	g.db.add(v)

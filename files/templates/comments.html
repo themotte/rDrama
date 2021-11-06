@@ -326,6 +326,12 @@
 					<pre></pre>
 				{% endif %}
 
+				{% if c.author.sig_html and (c.author_id == 1904 or not (v and v.sigs_disabled)) %}
+					<hr>
+					{{c.author.sig_html | safe}}
+				{% endif %}
+
+
 				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ACCOUNT and c.author_id!=AUTOJANNY_ACCOUNT and c.author_id!=v.id %}
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.toggle('d-none')">Reply</a>
 					<pre></pre>

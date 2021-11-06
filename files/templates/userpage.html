@@ -177,8 +177,13 @@
 				{% endif %}
 
 				{% if u.friends_html %}
-					<p class="text-muted font-weight-bold">Top friends:</p>
+					<p class="text-muted font-weight-bold">Friends:</p>
 					{{u.friends_html | safe}}
+				{% endif %}
+
+				{% if u.enemies_html %}
+					<p class="text-muted font-weight-bold">Enemies:</p>
+					{{u.enemies_html | safe}}
 				{% endif %}
 
 				{% if u.received_awards %}
@@ -448,8 +453,13 @@
 				{% endif %}
 
 				{% if u.friends_html %}
-					<p class="text-muted font-weight-bold mt-3">Top friends:</p>
+					<p class="text-muted font-weight-bold mt-3">Friends:</p>
 					{{u.friends_html | safe}}
+				{% endif %}
+
+				{% if u.enemies_html %}
+					<p class="text-muted font-weight-bold mt-3">Enemies:</p>
+					{{u.enemies_html | safe}}
 				{% endif %}
 
 				{% if u.received_awards %}
