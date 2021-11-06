@@ -91,8 +91,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		).options(lazyload('*'))
 
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
-			shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
-			comments = comments.filter(Comment.author_id.notin_(shadowbanned))
+			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 		 
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
@@ -194,7 +193,7 @@ def api_comment(v):
 		if ban.reason: reason += f" {ban.reason}"
 		return {"error": reason}, 401
 
-	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == v.id,
 															 Comment.deleted_utc == 0,
 															 Comment.parent_comment_id == parent_comment_id,
 															 Comment.parent_submission == parent_submission,

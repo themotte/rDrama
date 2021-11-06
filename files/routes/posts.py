@@ -133,8 +133,7 @@ def post_id(pid, anything=None, v=None):
 		).options(lazyload('*'))
 		
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
-			shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
-			comments = comments.filter(Comment.author_id.notin_(shadowbanned))
+			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
@@ -174,8 +173,7 @@ def post_id(pid, anything=None, v=None):
 
 		post.replies = [x for x in output if x.is_pinned] + [x for x in output if x.level == 1 and not x.is_pinned]
 	else:
-		shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
-		comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT, Comment.author_id.notin_(shadowbanned))
+		comments = g.db.query(Comment).options(lazyload('*')).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -338,7 +336,7 @@ def edit_post(pid, v):
 			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users: notify_users.add(995)
 
 		for x in notify_users:
-			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 

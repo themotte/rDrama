@@ -20,7 +20,6 @@ from files.helpers.discord import add_role
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
-
 @app.get("/truescore")
 @admin_level_required(6)
 def truescore(v):
@@ -547,9 +546,7 @@ def admin_removed(v):
 
 	page = int(request.values.get("page", 1))
 	
-	shadowbanned = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.shadowbanned != None).all()]
-
-	ids = g.db.query(Submission.id).options(lazyload('*')).filter(or_(Submission.is_banned==True, Submission.author_id.in_(shadowbanned))).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	ids = g.db.query(Submission.id).options(lazyload('*')).join(User, User.id == Submission.author_id).filter(or_(Submission.is_banned==True, User.shadowbanned != None)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	ids=[x[0] for x in ids]
 

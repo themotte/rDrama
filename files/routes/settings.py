@@ -224,7 +224,7 @@ def settings_profile_post(v):
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their top friends!"
-			existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 		v.friends = friends[:500]
@@ -527,7 +527,7 @@ def settings_security_post(v):
 		if new_email == v.email:
 			return redirect("/settings/security?error=That email is already yours!")
 
-		existing = g.db.query(User).options(lazyload('*')).filter(User.id != v.id,
+		existing = g.db.query(User.id).options(lazyload('*')).filter(User.id != v.id,
 										   func.lower(User.email) == new_email.lower()).first()
 		if existing:
 			return redirect("/settings/security?error=" +
@@ -770,7 +770,7 @@ def settings_block_user(v):
 
 	
 
-	existing = g.db.query(Notification).options(lazyload('*')).filter_by(blocksender=v.id, user_id=user.id).first()
+	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(blocksender=v.id, user_id=user.id).first()
 	if not existing: send_block_notif(v.id, user.id, f"@{v.username} has blocked you!")
 
 	cache.delete_memoized(frontlist)
@@ -797,7 +797,7 @@ def settings_unblock_user(v):
 
 	
 
-	existing = g.db.query(Notification).options(lazyload('*')).filter_by(unblocksender=v.id, user_id=user.id).first()
+	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(unblocksender=v.id, user_id=user.id).first()
 	if not existing: send_unblock_notif(v.id, user.id, f"@{v.username} has unblocked you!")
 
 	cache.delete_memoized(frontlist)

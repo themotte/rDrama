@@ -12,7 +12,7 @@ def api_flag_post(pid, v):
 	post = get_post(pid)
 
 	if v and not v.shadowbanned:
-		existing = g.db.query(Flag).options(lazyload('*')).filter_by(user_id=v.id, post_id=post.id).first()
+		existing = g.db.query(Flag.id).options(lazyload('*')).filter_by(user_id=v.id, post_id=post.id).first()
 
 		if existing: return "", 409
 
@@ -44,7 +44,7 @@ def api_flag_comment(cid, v):
 	comment = get_comment(cid)
 	
 	if v and not v.shadowbanned:
-		existing = g.db.query(CommentFlag).options(lazyload('*')).filter_by(
+		existing = g.db.query(CommentFlag.id).options(lazyload('*')).filter_by(
 			user_id=v.id, comment_id=comment.id).first()
 
 		if existing: return "", 409

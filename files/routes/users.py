@@ -232,7 +232,7 @@ def message2(v, username):
 
 	message = request.values.get("message", "").strip()[:1000].strip()
 
-	existing = g.db.query(Comment).options(lazyload('*')).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
 															Comment.body == message,
 															).first()
@@ -628,7 +628,7 @@ def follow_user(username, v):
 	target.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
-	existing = g.db.query(Notification).options(lazyload('*')).filter_by(followsender=v.id, user_id=target.id).first()
+	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(followsender=v.id, user_id=target.id).first()
 	if not existing: send_follow_notif(v.id, target.id, f"@{v.username} has followed you!")
 
 	g.db.commit()
@@ -654,7 +654,7 @@ def unfollow_user(username, v):
 	target.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
-	existing = g.db.query(Notification).options(lazyload('*')).filter_by(unfollowsender=v.id, user_id=target.id).first()
+	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(unfollowsender=v.id, user_id=target.id).first()
 	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has unfollowed you!")
 
 	g.db.commit()
@@ -677,7 +677,7 @@ def remove_follow(username, v):
 	v.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=v.id).count()
 	g.db.add(v)
 
-	existing = g.db.query(Notification).options(lazyload('*')).filter_by(removefollowsender=v.id, user_id=target.id).first()
+	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(removefollowsender=v.id, user_id=target.id).first()
 	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has removed your follow!")
 
 	g.db.commit()
