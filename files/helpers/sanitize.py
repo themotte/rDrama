@@ -117,7 +117,7 @@ def sanitize(sanitized, noimages=False):
 
 		if tag.get("src") and "pp20" not in tag.get("class", ""):
 
-			if site not in tag["src"] and not tag["src"].startswith('/'): tag["rel"] = "nofollow noopener noreferrer"
+			tag["rel"] = "nofollow noopener noreferrer"
 			tag["class"] = "in-comment-image"
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
@@ -125,7 +125,7 @@ def sanitize(sanitized, noimages=False):
 
 			link = soup.new_tag("a")
 			link["href"] = tag["data-src"]
-			if site not in tag["href"] and not tag["href"].startswith('/'): link["rel"] = "nofollow noopener noreferrer"
+			link["rel"] = "nofollow noopener noreferrer"
 			link["target"] = "_blank"
 			link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
 			link["data-bs-toggle"] = "modal"
@@ -225,8 +225,8 @@ def sanitize(sanitized, noimages=False):
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")
 
 	sanitized = sanitized.replace("old.reddit.com/gallery", "new.reddit.com/gallery")
-	sanitized = re.sub(' (https:\/\/[^ <>]*)', r' <a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a>', sanitized)
-	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a></p>', sanitized)
+	sanitized = re.sub(' (https:\/\/[^ <>]*)', r' <a target="_blank"  rel="nofollow noopener noreferrer" href="\1">\1</a>', sanitized)
+	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank"  rel="nofollow noopener noreferrer" href="\1">\1</a></p>', sanitized)
 
 	return sanitized
 
