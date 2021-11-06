@@ -193,13 +193,13 @@ def api_comment(v):
 		if ban.reason: reason += f" {ban.reason}"
 		return {"error": reason}, 401
 
-	existing = g.db.query(Comment).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 															 Comment.deleted_utc == 0,
 															 Comment.parent_comment_id == parent_comment_id,
 															 Comment.parent_submission == parent_submission,
 															 Comment.body == body
 															 ).first()
-	if existing: return {"error": f"You already made that comment: {existing.permalink}"}, 409
+	if existing: return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
 
 	if parent.author.any_block_exists(v) and not v.admin_level>=3: return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
