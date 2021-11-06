@@ -138,6 +138,11 @@ class User(Base):
 
 	@property
 	@lazy
+	def csslazy(self):
+		return self.css
+
+	@property
+	@lazy
 	def notifications(self):
 		return g.db.query(Notification).filter_by(user_id=self.id)
 
