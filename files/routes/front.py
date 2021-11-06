@@ -20,11 +20,11 @@ def notifications(v):
 	modmail = request.values.get('modmail', False)
 	posts = request.values.get('posts', False)
 	if modmail and v.admin_level == 6:
-		comments = g.db.query(Comment).options(lazyload('*')).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif messages:
-		comments = g.db.query(Comment).options(lazyload('*')).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None).order_by(Comment.created_utc.desc(), not_(Comment.child_comments.any())).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif posts:
@@ -146,7 +146,7 @@ def front_all(v):
 @cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', gt=None, lt=None):
 
-	posts = g.db.query(Submission.id).options(lazyload('*'))
+	posts = g.db.query(Submission.id)
 
 	if SITE_NAME == 'Drama' and sort == "hot":
 		cutoff = int(time.time()) - 86400
@@ -164,10 +164,10 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).options(lazyload('*')).filter_by(
+			UserBlock.target_id).filter_by(
 			user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).options(lazyload('*')).filter_by(
+			UserBlock.user_id).filter_by(
 			target_id=v.id).all()]
 		posts = posts.filter(
 			Submission.author_id.notin_(blocking),
@@ -213,10 +213,10 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts[:size]
 
-	pins = g.db.query(Submission.id).options(lazyload('*')).filter(Submission.stickied != None, Submission.is_banned == False)
+	pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False)
 	if v and v.admin_level == 0:
-		blocking = [x[0] for x in g.db.query(UserBlock.target_id).options(lazyload('*')).filter_by(user_id=v.id).all()]
-		blocked = [x[0] for x in g.db.query(UserBlock.user_id).options(lazyload('*')).filter_by(target_id=v.id).all()]
+		blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
+		blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
 		pins = pins.filter(Submission.author_id.notin_(blocking), Submission.author_id.notin_(blocked))
 
 	if page == 1 and not gt and not lt: posts = pins.all() + posts
@@ -255,21 +255,21 @@ def changelog(v):
 @cache.memoize(timeout=86400)
 def changeloglist(v=None, sort="new", page=1 ,t="all"):
 
-	posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
+	posts = g.db.query(Submission.id).filter_by(is_banned=False, private=False,).filter(Submission.deleted_utc == 0)
 
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).options(lazyload('*')).filter_by(
+			UserBlock.target_id).filter_by(
 			user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).options(lazyload('*')).filter_by(
+			UserBlock.user_id).filter_by(
 			target_id=v.id).all()]
 		posts = posts.filter(
 			Submission.author_id.notin_(blocking),
 			Submission.author_id.notin_(blocked)
 		)
 
-	admins = [x[0] for x in g.db.query(User.id).options(lazyload('*')).filter(User.admin_level == 6).all()]
+	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level == 6).all()]
 	posts = posts.filter(Submission.title.ilike('_changelog%'), Submission.author_id.in_(admins))
 
 	if t != 'all':
@@ -309,7 +309,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 @auth_desired
 def random_post(v):
 
-	x = g.db.query(Submission).options(lazyload('*')).filter(Submission.deleted_utc == 0, Submission.is_banned == False)
+	x = g.db.query(Submission).filter(Submission.deleted_utc == 0, Submission.is_banned == False)
 	total = x.count()
 	n = random.randint(1, total - 2)
 
@@ -319,19 +319,19 @@ def random_post(v):
 @cache.memoize(timeout=86400)
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
-	posts = g.db.query(Submission).options(lazyload('*'))
-	cc_idlist = [x[0] for x in g.db.query(Submission.id).options(lazyload('*')).filter(Submission.club == True).all()]
+	posts = g.db.query(Submission)
+	cc_idlist = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
 
 	posts = posts.subquery()
 
-	comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.parent_submission.notin_(cc_idlist))
+	comments = g.db.query(Comment.id).filter(Comment.parent_submission.notin_(cc_idlist))
 
 	if v and v.admin_level <= 3:
 		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).options(lazyload('*')).filter_by(
+			UserBlock.target_id).filter_by(
 			user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).options(lazyload('*')).filter_by(
+			UserBlock.user_id).filter_by(
 			target_id=v.id).all()]
 
 		comments = comments.filter(

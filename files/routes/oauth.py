@@ -11,7 +11,7 @@ from sqlalchemy.orm import joinedload
 @auth_required
 def authorize_prompt(v):
 	client_id = request.values.get("client_id")
-	application = g.db.query(OauthApp).options(lazyload('*')).filter_by(client_id=client_id).first()
+	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	return render_template("oauth.html", v=v, application=application)
 
@@ -23,7 +23,7 @@ def authorize_prompt(v):
 def authorize(v):
 
 	client_id = request.values.get("client_id")
-	application = g.db.query(OauthApp).options(lazyload('*')).filter_by(client_id=client_id).first()
+	application = g.db.query(OauthApp).filter_by(client_id=client_id).first()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
 	access_token = secrets.token_urlsafe(128)[:128]
 	new_auth = ClientAuth(oauth_client = application.id, user_id = v.id, access_token=access_token)
@@ -63,11 +63,11 @@ def request_api_keys(v):
 def delete_oauth_app(v, aid):
 
 	aid = int(aid)
-	app = g.db.query(OauthApp).options(lazyload('*')).filter_by(id=aid).first()
+	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
 	if app.author_id != v.id: abort(403)
 
-	for auth in g.db.query(ClientAuth).options(lazyload('*')).filter_by(oauth_client=app.id).all():
+	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all():
 		g.db.delete(auth)
 
 	g.db.delete(app)
@@ -84,7 +84,7 @@ def delete_oauth_app(v, aid):
 def edit_oauth_app(v, aid):
 
 	aid = int(aid)
-	app = g.db.query(OauthApp).options(lazyload('*')).filter_by(id=aid).first()
+	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
 	if app.author_id != v.id: abort(403)
 
@@ -105,7 +105,7 @@ def edit_oauth_app(v, aid):
 @validate_formkey
 def admin_app_approve(v, aid):
 
-	app = g.db.query(OauthApp).options(lazyload('*')).filter_by(id=aid).first()
+	app = g.db.query(OauthApp).filter_by(id=aid).first()
 	user = app.author
 
 	app.client_id = secrets.token_urlsafe(64)[:64]
@@ -140,9 +140,9 @@ def admin_app_approve(v, aid):
 @validate_formkey
 def admin_app_revoke(v, aid):
 
-	app = g.db.query(OauthApp).options(lazyload('*')).filter_by(id=aid).first()
+	app = g.db.query(OauthApp).filter_by(id=aid).first()
 	if app.id:
-		for auth in g.db.query(ClientAuth).options(lazyload('*')).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
+		for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
 		send_notification(app.author.id, f"Your application `{app.app_name}` has been revoked.")
 
@@ -166,9 +166,9 @@ def admin_app_revoke(v, aid):
 @validate_formkey
 def admin_app_reject(v, aid):
 
-	app = g.db.query(OauthApp).options(lazyload('*')).filter_by(id=aid).first()
+	app = g.db.query(OauthApp).filter_by(id=aid).first()
 
-	for auth in g.db.query(ClientAuth).options(lazyload('*')).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
+	for auth in g.db.query(ClientAuth).filter_by(oauth_client=app.id).all(): g.db.delete(auth)
 
 	send_notification(app.author.id, f"Your application `{app.app_name}` has been rejected.")
 
@@ -245,7 +245,7 @@ def admin_app_id_comments(v, aid):
 @admin_level_required(3)
 def admin_apps_list(v):
 
-	apps = g.db.query(OauthApp).options(lazyload('*')).all()
+	apps = g.db.query(OauthApp).all()
 
 	return render_template("admin/apps.html", v=v, apps=apps)
 
@@ -257,7 +257,7 @@ def reroll_oauth_tokens(aid, v):
 
 	aid = aid
 
-	a = g.db.query(OauthApp).options(lazyload('*')).filter_by(id=aid).first()
+	a = g.db.query(OauthApp).filter_by(id=aid).first()
 
 	if a.author_id != v.id: abort(403)
 

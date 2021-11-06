@@ -217,14 +217,14 @@ def settings_profile_post(v):
 		soup = BeautifulSoup(friends_html, features="html.parser")
 		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 			username = mention["href"].split("@")[1]
-			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
 		if request.host == 'rdrama.net' and 'aevann' in friends_html.lower() and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their friends list!"
-			existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 		v.friends = friends[:500]
@@ -262,14 +262,14 @@ def settings_profile_post(v):
 		soup = BeautifulSoup(enemies_html, features="html.parser")
 		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 			username = mention["href"].split("@")[1]
-			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
 		if request.host == 'rdrama.net' and 'aevann' in enemies_html.lower() and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their enemies list!"
-			existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 		v.enemies = enemies[:500]
@@ -570,7 +570,7 @@ def settings_security_post(v):
 		if new_email == v.email:
 			return redirect("/settings/security?error=That email is already yours!")
 
-		existing = g.db.query(User.id).options(lazyload('*')).filter(User.id != v.id,
+		existing = g.db.query(User.id).filter(User.id != v.id,
 										   func.lower(User.email) == new_email.lower()).first()
 		if existing:
 			return redirect("/settings/security?error=" +
@@ -813,7 +813,7 @@ def settings_block_user(v):
 
 	
 
-	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(blocksender=v.id, user_id=user.id).first()
+	existing = g.db.query(Notification.id).filter_by(blocksender=v.id, user_id=user.id).first()
 	if not existing: send_block_notif(v.id, user.id, f"@{v.username} has blocked you!")
 
 	cache.delete_memoized(frontlist)
@@ -840,7 +840,7 @@ def settings_unblock_user(v):
 
 	
 
-	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(unblocksender=v.id, user_id=user.id).first()
+	existing = g.db.query(Notification.id).filter_by(unblocksender=v.id, user_id=user.id).first()
 	if not existing: send_unblock_notif(v.id, user.id, f"@{v.username} has unblocked you!")
 
 	cache.delete_memoized(frontlist)
@@ -914,7 +914,7 @@ def settings_name_change(v):
 						   v=v,
 						   error=f"Username `{new_name}` is already in use.")
 
-	v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
+	v=g.db.query(User).with_for_update().filter_by(id=v.id).first()
 
 	v.username=new_name
 	v.name_changed_utc=int(time.time())
@@ -934,7 +934,7 @@ def settings_name_change(v):
 def settings_song_change(v):
 	song=request.values.get("song").strip()
 
-	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).options(lazyload('*')).filter_by(song=v.song).count() == 1:
+	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
 		os.remove(f"/songs/{v.song}.mp3")
 		v.song = None
 		g.db.add(v)
@@ -976,7 +976,7 @@ def settings_song_change(v):
 						error=f"Duration of the video must not exceed 10 minutes.")
 
 
-	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).options(lazyload('*')).filter_by(song=v.song).count() == 1:
+	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
 		os.remove(f"/songs/{v.song}.mp3")
 
 	ydl_opts = {

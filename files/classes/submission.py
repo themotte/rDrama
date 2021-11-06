@@ -76,12 +76,12 @@ class Submission(Base):
 	@property
 	@lazy
 	def flags(self):
-		return g.db.query(Flag).options(lazyload('*')).filter_by(post_id=self.id)
+		return g.db.query(Flag).filter_by(post_id=self.id)
 
 	@property
 	@lazy
 	def options(self):
-		return g.db.query(Comment).options(lazyload('*')).filter_by(parent_submission = self.id, author_id = AUTOPOLLER_ACCOUNT, level=1)
+		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOPOLLER_ACCOUNT, level=1)
 
 	def total_poll_voted(self, v):
 		if v:

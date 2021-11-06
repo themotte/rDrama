@@ -115,6 +115,7 @@ class User(Base):
 	referred_by = Column(Integer, ForeignKey("users.id"))
 
 	badges = relationship("Badge", viewonly=True)
+
 	subscriptions = relationship("Subscription", viewonly=True)
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
 	followers = relationship("Follow", primaryjoin="Follow.target_id==User.id", viewonly=True)
@@ -139,7 +140,7 @@ class User(Base):
 	@property
 	@lazy
 	def notifications(self):
-		return g.db.query(Notification).options(lazyload('*')).filter_by(user_id=self.id)
+		return g.db.query(Notification).filter_by(user_id=self.id)
 
 	@property
 	@lazy
@@ -153,7 +154,7 @@ class User(Base):
 
 		return_value = list(AWARDS2.values())
 
-		user_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter_by(user_id=self.id)
+		user_awards = g.db.query(AwardRelationship).filter_by(user_id=self.id)
 
 		for val in return_value: val['owned'] = user_awards.filter_by(kind=val['kind'], submission_id=None, comment_id=None).count()
 
@@ -166,7 +167,7 @@ class User(Base):
 
 	def has_block(self, target):
 
-		return g.db.query(UserBlock).options(lazyload('*')).filter_by(
+		return g.db.query(UserBlock).filter_by(
 			user_id=self.id, target_id=target.id).first()
 
 	@property
@@ -176,7 +177,7 @@ class User(Base):
 
 	def any_block_exists(self, other):
 
-		return g.db.query(UserBlock).options(lazyload('*')).filter(
+		return g.db.query(UserBlock).filter(
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
 				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
 
@@ -209,7 +210,7 @@ class User(Base):
 		if self.shadowbanned and not (v and (v.admin_level >= 3 or v.id == self.id)):
 			return []
 
-		posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id, is_pinned=False)
+		posts = g.db.query(Submission.id).filter_by(author_id=self.id, is_pinned=False)
 
 		if not (v and (v.admin_level >= 3 or v.id == self.id)):
 			posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False)
@@ -260,7 +261,7 @@ class User(Base):
 	@lazy
 	def banned_by(self):
 		if not self.is_suspended: return None
-		return g.db.query(User).options(lazyload('*')).filter_by(id=self.is_banned).first()
+		return g.db.query(User).filter_by(id=self.is_banned).first()
 
 	def has_badge(self, badgedef_id):
 		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badgedef_id).first()
@@ -325,11 +326,11 @@ class User(Base):
 
 		awards = {}
 
-		posts_idlist = [x[0] for x in g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=self.id).all()]
-		comments_idlist = [x[0] for x in g.db.query(Comment.id).options(lazyload('*')).filter_by(author_id=self.id).all()]
+		posts_idlist = [x[0] for x in g.db.query(Submission.id).filter_by(author_id=self.id).all()]
+		comments_idlist = [x[0] for x in g.db.query(Comment.id).filter_by(author_id=self.id).all()]
 
-		post_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
-		comment_awards = g.db.query(AwardRelationship).options(lazyload('*')).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
+		post_awards = g.db.query(AwardRelationship).filter(AwardRelationship.submission_id.in_(posts_idlist)).all()
+		comment_awards = g.db.query(AwardRelationship).filter(AwardRelationship.comment_id.in_(comments_idlist)).all()
 
 		total_awards = post_awards + comment_awards
 
@@ -345,19 +346,19 @@ class User(Base):
 	@property
 	@lazy
 	def notifications_count(self):
-		return g.db.query(Notification.id).options(lazyload('*')).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0).count()
+		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.is_banned == False, Comment.deleted_utc == 0).count()
 
 	@property
 	@lazy
 	def post_notifications_count(self):
-		return g.db.query(Notification.id).options(lazyload('*')).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ACCOUNT).count()
+		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ACCOUNT).count()
 
 
 	@property
 	@lazy
 	def alts(self):
 
-		subq = g.db.query(Alt).options(lazyload('*')).filter(
+		subq = g.db.query(Alt).filter(
 			or_(
 				Alt.user1 == self.id,
 				Alt.user2 == self.id
@@ -367,7 +368,7 @@ class User(Base):
 		data = g.db.query(
 			User,
 			aliased(Alt, alias=subq)
-		).options(lazyload('*')).join(
+		).join(
 			subq,
 			or_(
 				subq.c.user1 == User.id,
@@ -388,7 +389,7 @@ class User(Base):
 
 	def has_follower(self, user):
 
-		return g.db.query(Follow).options(lazyload('*')).filter_by(target_id=self.id, user_id=user.id).first()
+		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).first()
 
 	@property
 	@lazy
@@ -479,27 +480,27 @@ class User(Base):
 	@property
 	@lazy
 	def applications(self):
-		return g.db.query(OauthApp).options(lazyload('*')).filter_by(author_id=self.id).order_by(OauthApp.id.asc()).all()
+		return g.db.query(OauthApp).filter_by(author_id=self.id).order_by(OauthApp.id.asc()).all()
 
 	@lazy
 	def subscribed_idlist(self, page=1):
-		posts = g.db.query(Subscription.submission_id).options(lazyload('*')).filter_by(user_id=self.id).all()
+		posts = g.db.query(Subscription.submission_id).filter_by(user_id=self.id).all()
 		return [x[0] for x in posts]
 
 	@lazy
 	def saved_idlist(self, page=1):
 
-		posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0)
+		posts = g.db.query(Submission.id).filter_by(is_banned=False, deleted_utc=0)
 
-		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
+		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id == self.id).all()]
 		posts = posts.filter(Submission.id.in_(saved))
 
 		if self.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(
-				UserBlock.target_id).options(lazyload('*')).filter_by(
+				UserBlock.target_id).filter_by(
 				user_id=self.id).all()]
 			blocked = [x[0] for x in g.db.query(
-				UserBlock.user_id).options(lazyload('*')).filter_by(
+				UserBlock.user_id).filter_by(
 				target_id=self.id).all()]
 
 			posts = posts.filter(
@@ -514,16 +515,16 @@ class User(Base):
 	@lazy
 	def saved_comment_idlist(self):
 
-		try: saved = [x[0] for x in g.db.query(SaveRelationship.comment_id).options(lazyload('*')).filter(SaveRelationship.user_id == self.id).all()]
+		try: saved = [x[0] for x in g.db.query(SaveRelationship.comment_id).filter(SaveRelationship.user_id == self.id).all()]
 		except: return []
-		comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.id.in_(saved))
+		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved))
 
 		if self.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(
-				UserBlock.target_id).options(lazyload('*')).filter_by(
+				UserBlock.target_id).filter_by(
 				user_id=self.id).all()]
 			blocked = [x[0] for x in g.db.query(
-				UserBlock.user_id).options(lazyload('*')).filter_by(
+				UserBlock.user_id).filter_by(
 				target_id=self.id).all()]
 
 			comments = comments.filter(

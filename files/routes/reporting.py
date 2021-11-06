@@ -12,7 +12,7 @@ def api_flag_post(pid, v):
 	post = get_post(pid)
 
 	if v and not v.shadowbanned:
-		existing = g.db.query(Flag.id).options(lazyload('*')).filter_by(user_id=v.id, post_id=post.id).first()
+		existing = g.db.query(Flag.id).filter_by(user_id=v.id, post_id=post.id).first()
 
 		if existing: return "", 409
 
@@ -44,7 +44,7 @@ def api_flag_comment(cid, v):
 	comment = get_comment(cid)
 	
 	if v and not v.shadowbanned:
-		existing = g.db.query(CommentFlag.id).options(lazyload('*')).filter_by(
+		existing = g.db.query(CommentFlag.id).filter_by(
 			user_id=v.id, comment_id=comment.id).first()
 
 		if existing: return "", 409
@@ -77,9 +77,9 @@ def remove_report(report_fn, v):
 		return {"error": "go outside"}, 403
 
 	if report_fn.startswith('c'):
-		report = g.db.query(CommentFlag).options(lazyload('*')).filter_by(id=int(report_fn.lstrip('c'))).first()
+		report = g.db.query(CommentFlag).filter_by(id=int(report_fn.lstrip('c'))).first()
 	elif report_fn.startswith('p'):
-		report = g.db.query(Flag).options(lazyload('*')).filter_by(id=int(report_fn.lstrip('p'))).first()
+		report = g.db.query(Flag).filter_by(id=int(report_fn.lstrip('p'))).first()
 	else:
 		return {"error": "Invalid report ID"}, 400
 

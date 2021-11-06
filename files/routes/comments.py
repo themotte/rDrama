@@ -38,7 +38,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	comment = get_comment(cid, v=v)
 	
 	if v and request.values.get("read"):
-		notif = g.db.query(Notification).options(lazyload('*')).filter_by(comment_id=cid, user_id=v.id, read=False).first()
+		notif = g.db.query(Notification).filter_by(comment_id=cid, user_id=v.id, read=False).first()
 		if notif:
 			notif.read = True
 			g.db.add(notif)
@@ -77,7 +77,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	sort=request.values.get("sort", defaultsortingcomments)
 
 	if v:
-		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
+		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
 		blocking = v.blocking.subquery()
 
@@ -88,7 +88,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).options(lazyload('*'))
+		)
 
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
@@ -193,7 +193,7 @@ def api_comment(v):
 		if ban.reason: reason += f" {ban.reason}"
 		return {"error": reason}, 401
 
-	existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 															 Comment.deleted_utc == 0,
 															 Comment.parent_comment_id == parent_comment_id,
 															 Comment.parent_submission == parent_submission,
@@ -407,7 +407,7 @@ def api_comment(v):
 
 		g.db.add(c2)
 
-		longpostbot = g.db.query(User).options(lazyload('*')).filter_by(id = LONGPOSTBOT_ACCOUNT).first()
+		longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ACCOUNT).first()
 		longpostbot.comment_count += 1
 		longpostbot.coins += 1
 		g.db.add(longpostbot)
@@ -495,7 +495,7 @@ def api_comment(v):
 
 		g.db.add(c4)
 
-		zozbot = g.db.query(User).options(lazyload('*')).filter_by(id = ZOZBOT_ACCOUNT).first()
+		zozbot = g.db.query(User).filter_by(id = ZOZBOT_ACCOUNT).first()
 		zozbot.comment_count += 3
 		zozbot.coins += 3
 		g.db.add(zozbot)
@@ -514,7 +514,7 @@ def api_comment(v):
 	if not v.shadowbanned:
 		notify_users = set()
 		
-		for x in g.db.query(Subscription.user_id).options(lazyload('*')).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
+		for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 		
 		if parent.author.id != v.id: notify_users.add(parent.author.id)
 
@@ -524,7 +524,7 @@ def api_comment(v):
 		for mention in mentions:
 			username = mention["href"].split("@")[1]
 
-			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+			user = g.db.query(User).filter_by(username=username).first()
 
 			if user:
 				if v.any_block_exists(user): continue
@@ -569,7 +569,7 @@ def api_comment(v):
 
 	cache.delete_memoized(comment_idlist)
 
-	v.comment_count = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == v.id, Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
+	v.comment_count = g.db.query(Comment.id).filter(Comment.author_id == v.id, Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
 	parent_post.comment_count += 1
@@ -763,11 +763,11 @@ def edit_comment(cid, v):
 		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
 		
 		if len(mentions) > 0:
-			notifs = g.db.query(Notification).options(lazyload('*'))
+			notifs = g.db.query(Notification)
 			for mention in mentions:
 				username = mention["href"].split("@")[1]
 
-				user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+				user = g.db.query(User).filter_by(username=username).first()
 
 				if user:
 					if v.any_block_exists(user): continue
@@ -796,7 +796,7 @@ def edit_comment(cid, v):
 @validate_formkey
 def delete_comment(cid, v):
 
-	c = g.db.query(Comment).options(lazyload('*')).filter_by(id=cid).first()
+	c = g.db.query(Comment).filter_by(id=cid).first()
 
 	if not c: abort(404)
 
@@ -818,7 +818,7 @@ def delete_comment(cid, v):
 @validate_formkey
 def undelete_comment(cid, v):
 
-	c = g.db.query(Comment).options(lazyload('*')).filter_by(id=cid).first()
+	c = g.db.query(Comment).filter_by(id=cid).first()
 
 	if not c:
 		abort(404)
@@ -880,7 +880,7 @@ def save_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id, type=2).first()
+	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id, type=2).first()
 
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, comment_id=comment.id, type=2)
@@ -898,7 +898,7 @@ def unsave_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	save=g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id, type=2).first()
+	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id, type=2).first()
 
 	if save:
 		g.db.delete(save)

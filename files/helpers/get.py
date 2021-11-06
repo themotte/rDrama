@@ -9,7 +9,7 @@ def get_user(username, v=None, graceful=False):
 
 	user = g.db.query(
 		User
-		).options(lazyload('*')).filter(
+		).filter(
 		or_(
 			User.username.ilike(username),
 			User.original_username.ilike(username)
@@ -23,7 +23,7 @@ def get_user(username, v=None, graceful=False):
 			return None
 
 	if v:
-		block = g.db.query(UserBlock).options(lazyload('*')).filter(
+		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -42,16 +42,16 @@ def get_user(username, v=None, graceful=False):
 
 def get_account(id, v=None):
 
-	user = g.db.query(User).options(lazyload('*')).filter_by(id = id).first()
+	user = g.db.query(User).filter_by(id = id).first()
 				
 	if not user:
 		try: id = int(str(id), 36)
 		except: abort(404)
-		user = g.db.query(User).options(lazyload('*')).filter_by(id = id).first()
+		user = g.db.query(User).filter_by(id = id).first()
 		if not user: abort(404)
 
 	if v:
-		block = g.db.query(UserBlock).options(lazyload('*')).filter(
+		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -72,7 +72,7 @@ def get_account(id, v=None):
 def get_post(i, v=None, graceful=False):
 
 	if v:
-		vt = g.db.query(Vote).options(lazyload('*')).filter_by(
+		vt = g.db.query(Vote).filter_by(
 			user_id=v.id, submission_id=i).subquery()
 		blocking = v.blocking.subquery()
 
@@ -80,7 +80,7 @@ def get_post(i, v=None, graceful=False):
 			Submission,
 			vt.c.vote_type,
 			blocking.c.id,
-		).options(lazyload('*'))
+		)
 
 		items=items.filter(Submission.id == i
 		).join(
@@ -103,7 +103,7 @@ def get_post(i, v=None, graceful=False):
 	else:
 		items = g.db.query(
 			Submission
-		).options(lazyload('*')).filter(Submission.id == i).first()
+		).filter(Submission.id == i).first()
 		if not items and not graceful:
 			abort(404)
 		x=items
@@ -119,7 +119,7 @@ def get_posts(pids, v=None):
 	pids=tuple(pids)
 
 	if v:
-		vt = g.db.query(Vote).options(lazyload('*')).filter(
+		vt = g.db.query(Vote).filter(
 			Vote.submission_id.in_(pids), 
 			Vote.user_id==v.id
 			).subquery()
@@ -132,7 +132,7 @@ def get_posts(pids, v=None):
 			vt.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).options(lazyload('*')).filter(
+		).filter(
 			Submission.id.in_(pids)
 		).join(
 			vt, vt.c.submission_id==Submission.id, isouter=True
@@ -152,7 +152,7 @@ def get_posts(pids, v=None):
 			output[i].is_blocking = query[i][2] or 0
 			output[i].is_blocked = query[i][3] or 0
 	else:
-		output = g.db.query(Submission,).options(lazyload('*')).filter(Submission.id.in_(pids)).all()
+		output = g.db.query(Submission,).filter(Submission.id.in_(pids)).all()
 
 	return sorted(output, key=lambda x: pids.index(x.id))
 
@@ -160,11 +160,11 @@ def get_comment(i, v=None, graceful=False):
 
 	if v:
 
-		comment=g.db.query(Comment).options(lazyload('*')).filter(Comment.id == i).first()
+		comment=g.db.query(Comment).filter(Comment.id == i).first()
 
 		if not comment and not graceful: abort(404)
 
-		block = g.db.query(UserBlock).options(lazyload('*')).filter(
+		block = g.db.query(UserBlock).filter(
 			or_(
 				and_(
 					UserBlock.user_id == v.id,
@@ -176,14 +176,14 @@ def get_comment(i, v=None, graceful=False):
 			)
 		).first()
 
-		vts = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id)
-		vt = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=comment.id).first()
+		vts = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id)
+		vt = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
 		comment.is_blocking = block and block.user_id == v.id
 		comment.is_blocked = block and block.target_id == v.id
 		comment.voted = vt.vote_type if vt else 0
 
 	else:
-		comment = g.db.query(Comment).options(lazyload('*')).filter(Comment.id == i).first()
+		comment = g.db.query(Comment).filter(Comment.id == i).first()
 		if not comment and not graceful:abort(404)
 
 	return comment
@@ -196,7 +196,7 @@ def get_comments(cids, v=None, load_parent=False):
 	cids=tuple(cids)
 
 	if v:
-		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
+		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
 		blocking = v.blocking.subquery()
 
@@ -207,7 +207,7 @@ def get_comments(cids, v=None, load_parent=False):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).options(lazyload('*')).filter(Comment.id.in_(cids))
+		).filter(Comment.id.in_(cids))
  
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
@@ -235,7 +235,7 @@ def get_comments(cids, v=None, load_parent=False):
 			output.append(comment)
 
 	else:
-		output = g.db.query(Comment).options(lazyload('*')).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.id.in_(cids)).all()
+		output = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.id.in_(cids)).all()
 
 	if load_parent:
 		parents = [x.parent_comment_id for x in output if x.parent_comment_id]
@@ -259,7 +259,7 @@ def get_domain(s):
 
 	domain_list = tuple(list(domain_list))
 
-	doms = [x for x in g.db.query(BannedDomain).options(lazyload('*')).filter(BannedDomain.domain.in_(domain_list)).all()]
+	doms = [x for x in g.db.query(BannedDomain).filter(BannedDomain.domain.in_(domain_list)).all()]
 
 	if not doms:
 		return None

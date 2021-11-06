@@ -27,7 +27,7 @@ def filter_comment_html(html_text):
 
 				domain_list.add(new_domain)
 
-	bans = [x for x in g.db.query(BannedDomain).options(lazyload('*')).filter(BannedDomain.domain.in_(list(domain_list))).all()]
+	bans = [x for x in g.db.query(BannedDomain).filter(BannedDomain.domain.in_(list(domain_list))).all()]
 
 	if bans: return bans
 	else: return []

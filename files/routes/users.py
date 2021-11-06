@@ -76,16 +76,16 @@ def steal(v):
 @app.get("/rentoids")
 @auth_desired
 def rentoids(v):
-	users = g.db.query(User).options(lazyload('*')).filter(User.rent_utc > 0).all()
+	users = g.db.query(User).filter(User.rent_utc > 0).all()
 	return render_template("rentoids.html", v=v, users=users)
 
 
 @app.get("/thiefs")
 @auth_desired
 def thiefs(v):
-	successful = g.db.query(User).options(lazyload('*')).filter(User.steal_utc > 0).all()
-	failed = g.db.query(User).options(lazyload('*')).filter(User.fail_utc > 0).all()
-	failed2 = g.db.query(User).options(lazyload('*')).filter(User.fail2_utc > 0).all()
+	successful = g.db.query(User).filter(User.steal_utc > 0).all()
+	failed = g.db.query(User).filter(User.fail_utc > 0).all()
+	failed2 = g.db.query(User).filter(User.fail2_utc > 0).all()
 	return render_template("thiefs.html", v=v, successful=successful, failed=failed, failed2=failed2)
 
 
@@ -116,7 +116,7 @@ def get_coins(v, username):
 @is_not_banned
 @validate_formkey
 def transfer_coins(v, username):
-	receiver = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+	receiver = g.db.query(User).filter_by(username=username).first()
 
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
@@ -130,7 +130,7 @@ def transfer_coins(v, username):
 
 		if TAX_RATE and TAX_RECEIVER_ID:
 			tax = math.ceil(amount*TAX_RATE)
-			tax_receiver = g.db.query(User).options(lazyload('*')).filter_by(id=TAX_RECEIVER_ID).first()
+			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
 			tax_receiver.coins += tax
 			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
 			send_notification(TAX_RECEIVER_ID, log_message)
@@ -154,7 +154,7 @@ def transfer_coins(v, username):
 @app.get("/leaderboard")
 @auth_desired
 def leaderboard(v):
-	users = g.db.query(User).options(lazyload('*'))
+	users = g.db.query(User)
 	users1 = users.order_by(User.coins.desc()).limit(25).all()
 	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(10).all()
 	users3 = users.order_by(User.post_count.desc()).limit(10).all()
@@ -189,7 +189,7 @@ def get_profilecss(username):
 def songs(id):
 	try: id = int(id)
 	except: return "", 400
-	user = g.db.query(User).options(lazyload('*')).filter_by(id=id).first()
+	user = g.db.query(User).filter_by(id=id).first()
 	if user and user.song: return redirect(f"/song/{user.song}.mp3")
 	else: abort(404)
 
@@ -213,7 +213,7 @@ def subscribe(v, post_id):
 @limiter.limit("1/second")
 @auth_required
 def unsubscribe(v, post_id):
-	sub=g.db.query(Subscription).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post_id).first()
+	sub=g.db.query(Subscription).filter_by(user_id=v.id, submission_id=post_id).first()
 	if sub:
 		g.db.delete(sub)
 		g.db.commit()
@@ -232,7 +232,7 @@ def message2(v, username):
 
 	message = request.values.get("message", "").strip()[:1000].strip()
 
-	existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
 															Comment.body == message,
 															).first()
@@ -368,8 +368,8 @@ def redditor_moment_redirect(username):
 def followers(username, v):
 	u = get_user(username, v=v)
 	# if request.host == 'rdrama.net' and u.id == 147: abort(404)
-	ids = [x[0] for x in g.db.query(Follow.user_id).options(lazyload('*')).filter_by(target_id=u.id).all()]
-	users = g.db.query(User).options(lazyload('*')).filter(User.id.in_(ids)).all()
+	ids = [x[0] for x in g.db.query(Follow.user_id).filter_by(target_id=u.id).all()]
+	users = g.db.query(User).filter(User.id.in_(ids)).all()
 	return render_template("followers.html", v=v, u=u, users=users)
 
 @app.get("/@<username>/following")
@@ -377,8 +377,8 @@ def followers(username, v):
 def following(username, v):
 	u = get_user(username, v=v)
 	# if request.host == 'rdrama.net' and u.id == 147: abort(404)
-	ids = [x[0] for x in g.db.query(Follow.target_id).options(lazyload('*')).filter_by(user_id=u.id).all()]
-	users = g.db.query(User).options(lazyload('*')).filter(User.id.in_(ids)).all()
+	ids = [x[0] for x in g.db.query(Follow.target_id).filter_by(user_id=u.id).all()]
+	users = g.db.query(User).filter(User.id.in_(ids)).all()
 	return render_template("following.html", v=v, u=u, users=users)
 
 @app.get("/views")
@@ -412,7 +412,7 @@ def u_username(username, v=None):
 		else: return render_template("userpage_reserved.html", u=u, v=v)
 
 	if v and u.id != v.id:
-		view = g.db.query(ViewerRelationship).options(lazyload('*')).filter(
+		view = g.db.query(ViewerRelationship).filter(
 			and_(
 				ViewerRelationship.viewer_id == v.id,
 				ViewerRelationship.user_id == u.id
@@ -463,7 +463,7 @@ def u_username(username, v=None):
    # If page 1, check for sticky
 	if page == 1:
 		sticky = []
-		sticky = g.db.query(Submission).options(lazyload('*')).filter_by(is_pinned=True, author_id=u.id).all()
+		sticky = g.db.query(Submission).filter_by(is_pinned=True, author_id=u.id).all()
 		if sticky:
 			for p in sticky:
 				ids = [p.id] + ids
@@ -550,7 +550,7 @@ def u_username_comments(username, v=None):
 	t=request.values.get("t","all")
 
 
-	comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == u.id, Comment.parent_submission != None)
+	comments = g.db.query(Comment.id).filter(Comment.author_id == u.id, Comment.parent_submission != None)
 
 	if (not v) or (v.id != u.id and v.admin_level == 0):
 		comments = comments.filter(Comment.deleted_utc == 0)
@@ -619,16 +619,16 @@ def follow_user(username, v):
 
 	if target.id==v.id: return {"error": "You can't follow yourself!"}, 400
 
-	if g.db.query(Follow).options(lazyload('*')).filter_by(user_id=v.id, target_id=target.id).first(): return {"message": "User followed!"}
+	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first(): return {"message": "User followed!"}
 
 	new_follow = Follow(user_id=v.id, target_id=target.id)
 	g.db.add(new_follow)
 
 	g.db.flush()
-	target.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=target.id).count()
+	target.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
-	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(followsender=v.id, user_id=target.id).first()
+	existing = g.db.query(Notification.id).filter_by(followsender=v.id, user_id=target.id).first()
 	if not existing: send_follow_notif(v.id, target.id, f"@{v.username} has followed you!")
 
 	g.db.commit()
@@ -644,17 +644,17 @@ def unfollow_user(username, v):
 
 	if target.id == CARP_ID: abort(403)
 
-	follow = g.db.query(Follow).options(lazyload('*')).filter_by(user_id=v.id, target_id=target.id).first()
+	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
 
 	if not follow: return {"message": "User unfollowed!"}
 
 	g.db.delete(follow)
 	
 	g.db.flush()
-	target.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=target.id).count()
+	target.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
-	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(unfollowsender=v.id, user_id=target.id).first()
+	existing = g.db.query(Notification.id).filter_by(unfollowsender=v.id, user_id=target.id).first()
 	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has unfollowed you!")
 
 	g.db.commit()
@@ -667,17 +667,17 @@ def unfollow_user(username, v):
 def remove_follow(username, v):
 	target = get_user(username)
 
-	follow = g.db.query(Follow).options(lazyload('*')).filter_by(user_id=target.id, target_id=v.id).first()
+	follow = g.db.query(Follow).filter_by(user_id=target.id, target_id=v.id).first()
 
 	if not follow: return {"message": "Follower removed!"}
 
 	g.db.delete(follow)
 	
 	g.db.flush()
-	v.stored_subscriber_count = g.db.query(Follow.id).options(lazyload('*')).filter_by(target_id=v.id).count()
+	v.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=v.id).count()
 	g.db.add(v)
 
-	existing = g.db.query(Notification.id).options(lazyload('*')).filter_by(removefollowsender=v.id, user_id=target.id).first()
+	existing = g.db.query(Notification.id).filter_by(removefollowsender=v.id, user_id=target.id).first()
 	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has removed your follow!")
 
 	g.db.commit()

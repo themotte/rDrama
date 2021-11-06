@@ -63,7 +63,7 @@ def publish(pid, v):
 	soup = BeautifulSoup(post.body_html, features="html.parser")
 	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 		username = mention["href"].split("@")[1]
-		user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
 	if request.host == 'rdrama.net':
@@ -119,7 +119,7 @@ def post_id(pid, anything=None, v=None):
 	if post.club and not (v and v.paid_dues) or post.private and not (v and (v.id == post.author_id or v.admin_level == 6)): abort(403)
 
 	if v:
-		votes = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id).subquery()
+		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
 		blocking = v.blocking.subquery()
 
@@ -130,7 +130,7 @@ def post_id(pid, anything=None, v=None):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).options(lazyload('*'))
+		)
 		
 		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
@@ -173,7 +173,7 @@ def post_id(pid, anything=None, v=None):
 
 		post.replies = [x for x in output if x.is_pinned] + [x for x in output if x.level == 1 and not x.is_pinned]
 	else:
-		comments = g.db.query(Comment).options(lazyload('*')).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT)
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -325,7 +325,7 @@ def edit_post(pid, v):
 		soup = BeautifulSoup(body_html, features="html.parser")
 		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 			username = mention["href"].split("@")[1]
-			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
 		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
@@ -336,7 +336,7 @@ def edit_post(pid, v):
 			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users: notify_users.add(995)
 
 		for x in notify_users:
-			existing = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 
@@ -391,11 +391,11 @@ def thumbnail_thread(pid):
 
 	db = db_session()
 
-	post = db.query(Submission).options(lazyload('*')).filter_by(id=pid).first()
+	post = db.query(Submission).filter_by(id=pid).first()
 	
 	if not post:
 		time.sleep(5)
-		post = db.query(Submission).options(lazyload('*')).filter_by(id=pid).first()
+		post = db.query(Submission).filter_by(id=pid).first()
 
 	fetch_url=post.url
 
@@ -540,7 +540,7 @@ def submit_post(v):
 							fragment=parsed_url.fragment)
 		url = urlunparse(new_url)
 
-		repost = g.db.query(Submission).options(lazyload('*')).filter(
+		repost = g.db.query(Submission).filter(
 			Submission.url.ilike(url),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
@@ -596,7 +596,7 @@ def submit_post(v):
 				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
-	dup = g.db.query(Submission).options(lazyload('*')).filter(
+	dup = g.db.query(Submission).filter(
 		Submission.author_id == v.id,
 		Submission.deleted_utc == 0,
 		Submission.title == title,
@@ -777,7 +777,7 @@ def submit_post(v):
 		soup = BeautifulSoup(body_html, features="html.parser")
 		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 			username = mention["href"].split("@")[1]
-			user = g.db.query(User).options(lazyload('*')).filter_by(username=username).first()
+			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
 		if request.host == 'rdrama.net':
@@ -915,7 +915,7 @@ def submit_post(v):
 
 		g.db.add(c)
 
-		snappy = g.db.query(User).options(lazyload('*')).filter_by(id = SNAPPY_ACCOUNT).first()
+		snappy = g.db.query(User).filter_by(id = SNAPPY_ACCOUNT).first()
 		snappy.comment_count += 1
 		snappy.coins += 1
 		g.db.add(snappy)
@@ -927,7 +927,7 @@ def submit_post(v):
 		g.db.add(n)
 		g.db.flush()
 	
-	v.post_count = g.db.query(Submission.id).options(lazyload('*')).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
+	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
 	cache.delete_memoized(frontlist)
@@ -986,7 +986,7 @@ def undelete_post_pid(pid, v):
 @validate_formkey
 def toggle_comment_nsfw(cid, v):
 
-	comment = g.db.query(Comment).options(lazyload('*')).filter_by(id=cid).first()
+	comment = g.db.query(Comment).filter_by(id=cid).first()
 	if not comment.author_id == v.id and not v.admin_level >= 3: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
@@ -1031,7 +1031,7 @@ def save_post(pid, v):
 
 	post=get_post(pid)
 
-	save = g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
+	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
 
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, submission_id=post.id, type=1)
@@ -1048,7 +1048,7 @@ def unsave_post(pid, v):
 
 	post=get_post(pid)
 
-	save = g.db.query(SaveRelationship).options(lazyload('*')).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
+	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
 
 	if save:
 		g.db.delete(save)
@@ -1060,7 +1060,7 @@ def unsave_post(pid, v):
 @auth_required
 def api_pin_post(post_id, v):
 
-	post = g.db.query(Submission).options(lazyload('*')).filter_by(id=post_id).first()
+	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if post:
 		post.is_pinned = not post.is_pinned
 		g.db.add(post)

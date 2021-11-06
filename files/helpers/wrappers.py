@@ -10,7 +10,7 @@ def get_logged_in_user():
 		if not token: return None
 
 		try:
-			client = g.db.query(ClientAuth).options(lazyload('*')).filter(ClientAuth.access_token == token).first()
+			client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).first()
 			x = (client.user, client) if client else (None, None)
 		except: x = (None, None)
 
@@ -21,7 +21,7 @@ def get_logged_in_user():
 		nonce = session.get("login_nonce", 0)
 		if not uid: x= (None, None)
 		try:
-			if g.db: v = g.db.query(User).options(lazyload('*')).filter_by(id=uid).first()
+			if g.db: v = g.db.query(User).filter_by(id=uid).first()
 			else: v = None
 		except: v = None
 
@@ -44,7 +44,7 @@ def check_ban_evade(v):
 		v.ban(reason="permaban evasion")
 		send_notification(v.id, "Your account has been permanently suspended for the following reason:\n\n> permaban evasion")
 
-		for post in g.db.query(Submission).options(lazyload('*')).filter_by(author_id=v.id).all():
+		for post in g.db.query(Submission).filter_by(author_id=v.id).all():
 			if post.is_banned:
 				continue
 
@@ -60,7 +60,7 @@ def check_ban_evade(v):
 				)
 			g.db.add(ma)
 
-		for comment in g.db.query(Comment).options(lazyload('*')).filter_by(author_id=v.id).all():
+		for comment in g.db.query(Comment).filter_by(author_id=v.id).all():
 			if comment.is_banned:
 				continue
 

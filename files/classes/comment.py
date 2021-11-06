@@ -67,12 +67,12 @@ class Comment(Base):
 	@property
 	@lazy
 	def flags(self):
-		return g.db.query(CommentFlag).options(lazyload('*')).filter_by(comment_id=self.id)
+		return g.db.query(CommentFlag).filter_by(comment_id=self.id)
 
 	@lazy
 	def poll_voted(self, v):
 		if v:
-			vote = g.db.query(CommentVote).options(lazyload('*')).filter_by(user_id=v.id, comment_id=self.id).first()
+			vote = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=self.id).first()
 			if vote: return vote.vote_type
 			else: return None
 		else: return None
@@ -173,7 +173,7 @@ class Comment(Base):
 
 		if self.level == 1: return self.post
 
-		else: return g.db.query(Comment).options(lazyload('*')).get(self.parent_comment_id)
+		else: return g.db.query(Comment).get(self.parent_comment_id)
 
 	@property
 	@lazy

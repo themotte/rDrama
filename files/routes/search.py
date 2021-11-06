@@ -57,7 +57,7 @@ def searchposts(v):
 
 
 
-	posts = g.db.query(Submission.id).options(lazyload('*'))
+	posts = g.db.query(Submission.id)
 	
 	if not (v and v.admin_level == 6): posts = posts.filter(Submission.private == False)
 	
@@ -100,10 +100,10 @@ def searchposts(v):
 		pass
 	elif v:
 		blocking = [x[0] for x in g.db.query(
-			UserBlock.target_id).options(lazyload('*')).filter_by(
+			UserBlock.target_id).filter_by(
 			user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(
-			UserBlock.user_id).options(lazyload('*')).filter_by(
+			UserBlock.user_id).filter_by(
 			target_id=v.id).all()]
 
 		posts = posts.filter(
@@ -195,7 +195,7 @@ def searchcomments(v):
 
 
 
-	comments = g.db.query(Comment.id).options(lazyload('*')).filter(Comment.parent_submission != None)
+	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None)
 
 	if 'q' in criteria:
 		words=criteria['q'].split()
@@ -272,7 +272,7 @@ def searchusers(v):
 	term=term.replace('\\','')
 	term=term.replace('_','\_')
 	
-	users=g.db.query(User).options(lazyload('*')).filter(User.username.ilike(f'%{term}%'))
+	users=g.db.query(User).filter(User.username.ilike(f'%{term}%'))
 	
 	users=users.order_by(User.username.ilike(term).desc(), User.stored_subscriber_count.desc())
 	
