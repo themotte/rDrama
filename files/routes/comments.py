@@ -193,7 +193,7 @@ def api_comment(v):
 		if ban.reason: reason += f" {ban.reason}"
 		return {"error": reason}, 401
 
-	existing = g.db.query(Comment.permalink).filter(Comment.author_id == v.id,
+	existing = g.db.query(Comment).filter(Comment.author_id == v.id,
 															 Comment.deleted_utc == 0,
 															 Comment.parent_comment_id == parent_comment_id,
 															 Comment.parent_submission == parent_submission,
