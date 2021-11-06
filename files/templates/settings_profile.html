@@ -596,7 +596,7 @@
 									<form id="profile-friends" action="/settings/profile" method="post" enctype="multipart/form-data">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
-											<textarea  id="friends-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your top friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
+											<textarea  id="friends-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
 										</div>
 										<pre></pre>
 										<div class="d-flex">
@@ -617,7 +617,7 @@
 									<form id="profile-enemies" action="/settings/profile" method="post" enctype="multipart/form-data">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
-											<textarea  id="enemies-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your top enemies on the site..." rows="3" name="enemies" form="profile-enemies" maxlength="1500">{% if v.enemies %}{{v.enemies}}{% endif %}</textarea>
+											<textarea  id="enemies-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your enemies on the site..." rows="3" name="enemies" form="profile-enemies" maxlength="1500">{% if v.enemies %}{{v.enemies}}{% endif %}</textarea>
 										</div>
 										<pre></pre>
 										<div class="d-flex">
