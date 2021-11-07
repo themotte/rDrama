@@ -24,12 +24,25 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @admin_level_required(6)
 def changename(v, id, name):
 	if request.host != 'pcmemes.net': abort(403)
-	user = g.db.query(User).filter_by(id=id).first()
+	user = g.db.query(User).filter_by(id=int(id)).first()
 	if user:
 		user.username = name
 		g.db.add(user)
 		g.db.commit()
 		return "Username changed!"
+	return "User not found!"
+
+
+@app.get("/coins/<id>/<coins>")
+@admin_level_required(6)
+def addcoins(v, id, coins):
+	if request.host != 'pcmemes.net': abort(403)
+	user = g.db.query(User).filter_by(id=int(id)).first()
+	if user:
+		user.coins += int(coins)
+		g.db.add(user)
+		g.db.commit()
+		return "Coins added!"
 	return "User not found!"
 
 @app.get("/truescore")
