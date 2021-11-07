@@ -182,8 +182,7 @@ function markdown() {
 		}
 	}
 
-	// document.getElementById('preview').innerHTML = marked(input)
-	document.getElementById('preview').innerHTML = input;
+	document.getElementById('preview').innerHTML = marked(input)
 }
 
 document.onpaste = function(event) {
