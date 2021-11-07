@@ -1,4 +1,4 @@
-from sqlalchemy.orm import deferred
+from sqlalchemy.orm import deferred, aliased
 from secrets import token_hex
 import pyotp
 from files.helpers.discord import remove_user
@@ -372,12 +372,12 @@ class User(Base):
 
 		data = g.db.query(
 			User,
-			Alt
+			aliased(Alt, alias=subq)
 		).join(
 			subq,
 			or_(
-				Alt.c.user1 == User.id,
-				Alt.c.user2 == User.id
+				subq.c.user1 == User.id,
+				subq.c.user2 == User.id
 			)
 		).filter(
 			User.id != self.id
