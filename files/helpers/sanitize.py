@@ -81,7 +81,7 @@ def sanitize_marquee(tag, name, value):
 	if name in ['width', 'height']:
 		try: value = int(value)
 		except: return False
-		if 0 < value <= 200: return True
+		if 0 < value <= 500: return True
 
 	return False
 
