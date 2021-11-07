@@ -53,59 +53,59 @@ def settings_profile_post(v):
 		updated = True
 		v.background = request.values.get("background", None)
 
-	if request.values.get("slurreplacer", v.slurreplacer) != v.slurreplacer:
+	elif request.values.get("slurreplacer", v.slurreplacer) != v.slurreplacer:
 		updated = True
 		v.slurreplacer = request.values.get("slurreplacer", None) == 'true'
 
-	if request.values.get("hidevotedon", v.hidevotedon) != v.hidevotedon:
+	elif request.values.get("hidevotedon", v.hidevotedon) != v.hidevotedon:
 		updated = True
 		v.hidevotedon = request.values.get("hidevotedon", None) == 'true'
 
-	if request.values.get("cardview", v.cardview) != v.cardview:
+	elif request.values.get("cardview", v.cardview) != v.cardview:
 		updated = True
 		v.cardview = request.values.get("cardview", None) == 'true'
 
-	if request.values.get("highlightcomments", v.highlightcomments) != v.highlightcomments:
+	elif request.values.get("highlightcomments", v.highlightcomments) != v.highlightcomments:
 		updated = True
 		v.highlightcomments = request.values.get("highlightcomments", None) == 'true'
 
-	if request.values.get("newtab", v.newtab) != v.newtab:
+	elif request.values.get("newtab", v.newtab) != v.newtab:
 		updated = True
 		v.newtab = request.values.get("newtab", None) == 'true'
 
-	if request.values.get("newtabexternal", v.newtabexternal) != v.newtabexternal:
+	elif request.values.get("newtabexternal", v.newtabexternal) != v.newtabexternal:
 		updated = True
 		v.newtabexternal = request.values.get("newtabexternal", None) == 'true'
 
-	if request.values.get("oldreddit", v.oldreddit) != v.oldreddit:
+	elif request.values.get("oldreddit", v.oldreddit) != v.oldreddit:
 		updated = True
 		v.oldreddit = request.values.get("oldreddit", None) == 'true'
 
-	if request.values.get("nitter", v.nitter) != v.nitter:
+	elif request.values.get("nitter", v.nitter) != v.nitter:
 		updated = True
 		v.nitter = request.values.get("nitter", None) == 'true'
 
-	if request.values.get("controversial", v.controversial) != v.controversial:
+	elif request.values.get("controversial", v.controversial) != v.controversial:
 		updated = True
 		v.controversial = request.values.get("controversial", None) == 'true'
 
-	if request.values.get("sigs_disabled", v.sigs_disabled) != v.sigs_disabled:
+	elif request.values.get("sigs_disabled", v.sigs_disabled) != v.sigs_disabled:
 		updated = True
 		v.sigs_disabled = request.values.get("sigs_disabled", None) == 'true'
 
-	if request.values.get("over18", v.over_18) != v.over_18:
+	elif request.values.get("over18", v.over_18) != v.over_18:
 		updated = True
 		v.over_18 = request.values.get("over18", None) == 'true'
 		
-	if request.values.get("private", v.is_private) != v.is_private:
+	elif request.values.get("private", v.is_private) != v.is_private:
 		updated = True
 		v.is_private = request.values.get("private", None) == 'true'
 
-	if request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
+	elif request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
 		updated = True
 		v.is_nofollow = request.values.get("nofollow", None) == 'true'
 
-	if request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
+	elif request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 		bio = request.values.get("bio")[:1500]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
@@ -149,12 +149,26 @@ def settings_profile_post(v):
 							   msg="Your bio has been updated.")
 
 
-	if request.values.get("sig") == "":
+	elif request.values.get("sig") == "":
 		v.sig = None
 		v.sig_html = None
 		g.db.add(v)
 		g.db.commit()
 		return render_template("settings_profile.html", v=v, msg="Your sig has been updated.")
+
+	elif request.values.get("friends") == "":
+		v.friends = None
+		v.friends_html = None
+		g.db.add(v)
+		g.db.commit()
+		return render_template("settings_profile.html", v=v, msg="Your friends list has been updated.")
+
+	elif request.values.get("enemies") == "":
+		v.enemies = None
+		v.enemies_html = None
+		g.db.add(v)
+		g.db.commit()
+		return render_template("settings_profile.html", v=v, msg="Your enemies list has been updated.")
 
 	elif (v.patron or v.id == 1904) and request.values.get("sig"):
 		sig = request.values.get("sig")[:200]
@@ -191,7 +205,7 @@ def settings_profile_post(v):
 
 
 
-	if request.values.get("friends"):
+	elif request.values.get("friends"):
 		friends = request.values.get("friends")[:500]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', friends, re.MULTILINE):
@@ -236,7 +250,7 @@ def settings_profile_post(v):
 							   msg="Your friends list has been updated.")
 
 
-	if request.values.get("enemies"):
+	elif request.values.get("enemies"):
 		enemies = request.values.get("enemies")[:500]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', enemies, re.MULTILINE):
@@ -281,7 +295,7 @@ def settings_profile_post(v):
 							   msg="Your enemies list has been updated.")
 
 
-	if request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
+	elif request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
 		bio = request.values.get("bio")[:1500]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
