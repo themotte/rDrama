@@ -914,9 +914,7 @@ def settings_name_change(v):
 
 	name=new_name.replace('_','\_')
 
-	x= g.db.query(User).options(
-		lazyload('*')
-		).filter(
+	x= g.db.query(User).filter(
 		or_(
 			User.username.ilike(name),
 			User.original_username.ilike(name)

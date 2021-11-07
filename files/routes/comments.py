@@ -209,10 +209,7 @@ def api_comment(v):
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
-		similar_comments = g.db.query(Comment
-										).options(
-			lazyload('*')
-		).filter(
+		similar_comments = g.db.query(Comment).filter(
 			Comment.author_id == v.id,
 			Comment.body.op(
 				'<->')(body) < app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"],
@@ -636,8 +633,6 @@ def edit_comment(cid, v):
 			cutoff = now - 60 * 60 * 24
 
 			similar_comments = g.db.query(Comment
-											).options(
-				lazyload('*')
 			).filter(
 				Comment.author_id == v.id,
 				Comment.body.op(

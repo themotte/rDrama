@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 from flask import *
 from urllib.parse import urlparse
 from files.classes import BannedDomain
-from sqlalchemy.orm import lazyload
 
 def filter_comment_html(html_text):
 

@@ -5,7 +5,7 @@ from urllib.parse import urlencode, urlparse, parse_qs
 
 from flask import *
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, deferred, lazyload
+from sqlalchemy.orm import relationship
 
 from files.__main__ import Base
 from files.classes.votes import CommentVote

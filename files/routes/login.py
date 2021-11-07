@@ -304,8 +304,7 @@ def sign_up_post(v):
 	ref_id = int(request.values.get("referred_by", 0))
 
 	if ref_id:
-		ref_user = g.db.query(User).options(
-			lazyload('*')).filter_by(id=ref_id).first()
+		ref_user = g.db.query(User).filter_by(id=ref_id).first()
 
 		if ref_user:
 			badge_types = g.db.query(BadgeDef).filter(BadgeDef.qualification_expr.isnot(None)).all()

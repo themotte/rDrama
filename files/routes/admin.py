@@ -1,5 +1,4 @@
 import time
-from sqlalchemy.orm import lazyload
 import imagehash
 from os import remove
 from PIL import Image as IMAGE

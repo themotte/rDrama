@@ -1,6 +1,6 @@
 from flask import *
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, lazyload
+from sqlalchemy.orm import relationship
 from .submission import Submission
 from .comment import Comment
 from files.__main__ import Base

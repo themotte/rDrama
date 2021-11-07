@@ -610,18 +610,14 @@ def submit_post(v):
 	cutoff = now - 60 * 60 * 24
 
 
-	similar_posts = g.db.query(Submission).options(
-		lazyload('*')
-		).filter(
+	similar_posts = g.db.query(Submission).filter(
 					Submission.author_id == v.id,
 					Submission.title.op('<->')(title) < app.config["SPAM_SIMILARITY_THRESHOLD"],
 					Submission.created_utc > cutoff
 	).all()
 
 	if url:
-		similar_urls = g.db.query(Submission).options(
-			lazyload('*')
-		).filter(
+		similar_urls = g.db.query(Submission).filter(
 					Submission.author_id == v.id,
 					Submission.url.op('<->')(url) < app.config["SPAM_URL_SIMILARITY_THRESHOLD"],
 					Submission.created_utc > cutoff
