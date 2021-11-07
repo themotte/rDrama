@@ -882,7 +882,9 @@ def submit_post(v):
 		else: body = ""
 
 		if new_post.url:
-			body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{new_post.url})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
+			if new_post.url.startswith('https://old.reddit.com/r/'):
+				rev = new_post.url.replace('https://old.reddit.com/', '')
+				body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{rev})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, new_post.url)
 
 		url_regex = '<a (target=\"_blank\"  )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
