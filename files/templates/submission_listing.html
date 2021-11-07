@@ -47,7 +47,7 @@
 			<span class="popover-bio text-black">{% if p.author.bio_html %}{{p.author.bio_html_eager | safe}}{% endif %}</span>
 		</div>
 
-		<div class="ml-3 mb-2">
+		<div class="mx-3 mb-2">
 			{% for b in p.author.badges %}
 				{% if p.author.url %}
 					<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
