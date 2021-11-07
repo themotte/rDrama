@@ -146,7 +146,7 @@
 	</script>
 
 	{% if v %}
-		<script src="/assets/js/comments_v.js?v=64"></script>
+		<script src="/assets/js/comments_v.js?v=65"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -559,7 +559,7 @@
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input type="hidden" name="current_page" value="{{request.path}}">
 								<input name="title" required placeholder="title" value="{{p.title}}" >
-								<textarea name="body" maxlength="10000" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
+								<textarea name="body" maxlength="10000" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
 								<div class="comment-format"> 
 									<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></i></small> 
 									<a class="format" href="javascript:void(0)"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></i></a> 
@@ -571,6 +571,7 @@
 									<button form="post-edit-form-{{p.id}}" class="btn btn-primary ml-2">Save Edit</button>
 								</div>
 							</form>
+							<div id="post-edit-{{p.id}}" class="my-3"></div>
 							<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 						</div>
 					{% endif %}
@@ -813,7 +814,7 @@
 			<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
 			<input id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
 			{% if v %}
-			<textarea maxlength="10000" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
+			<textarea maxlength="10000" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 			{% endif %}
 			<div class="comment-format">
 				<a class="btn btn-secondary format d-inline-block m-0" href="javascript:void(0)"><i class="fas fa-bold" onclick="makeBold('reply-form-body-{{p.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i></a>
@@ -836,6 +837,7 @@
 				<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
 			</div>
 		</form>
+		<div id="form-preview-{{p.id}}" class="my-3"></div>
 		<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 	</div>
 

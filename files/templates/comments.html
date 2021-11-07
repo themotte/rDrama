@@ -26,7 +26,8 @@
 
 {% if v %}
 	{% include "award_modal.html" %}
-	<script src="/assets/js/comments_v.js?v=64"></script>
+	<script src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
+	<script src="/assets/js/comments_v.js?v=65"></script>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -93,7 +94,6 @@
 		});
 	})
 </script>
-
 
 
 {% macro single_comment(c, level=1) %}
@@ -372,7 +372,7 @@
 				<div id="comment-edit-{{c.id}}" class="d-none comment-write collapsed child">
 					<form id="comment-edit-form-{{c.id}}" action="/edit_comment/{{c.id}}" method="post" class="input-group" enctype="multipart/form-data"> 
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<textarea maxlength="10000" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
+						<textarea maxlength="10000" oninput="markdown('comment-edit-body-{{c.id}}', 'preview-edit-{{c.id}}')" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
 						<div class="comment-format"> 
 							<small class="btn btn-secondary format d-inline-block m-0"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add GIF">GIF</span></small>
 							&nbsp;
@@ -389,6 +389,7 @@
 						<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 						<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="d-md-none btn btn-primary ml-2" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
 					</form>
+					<div id="preview-edit-{{c.id}}" class="my-3"></div>
 					<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 				</div>
 				{% endif %}
@@ -528,7 +529,7 @@
 					<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 					<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
 					<input id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}"> 
-					<textarea maxlength="10000" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> 
+					<textarea maxlength="10000" oninput="markdown('reply-form-body-{{c.fullname}}', 'reply-edit-{{c.id}}')" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> 
 					<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
 						<label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.fullname}}">
 							<span id="gif-reply-btn-{{c.fullname}}" class="font-weight-bolder text-uppercase" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
@@ -548,6 +549,7 @@
 					<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 					<a id="save-reply-to-{{c.fullname}}" class="d-md-none btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
 				</form>
+				<div id="reply-edit-{{c.id}}" class="my-3"></div>
 				<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 			</div>
 		</div>
