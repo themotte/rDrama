@@ -103,17 +103,6 @@ def api_vote_post(post_id, new, v):
 		g.db.add(post)
 		cache.delete_memoized(frontlist)
 
-	if v.agendaposter_expires_utc and v.agendaposter_expires_utc < time.time():
-		v.agendaposter_expires_utc = 0
-		v.agendaposter = False
-		g.db.add(v)
-		send_notification(v.id, "Your agendaposter theme has expired!")
-
-	if v.flairchanged and v.flairchanged < time.time():
-		v.flairchanged = None
-		g.db.add(v)
-		send_notification(v.id, "Your flair lock has expired. You can now change your flair!")
-
 	try:
 		g.db.flush()
 		post.upvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1).count()
@@ -175,17 +164,6 @@ def api_vote_comment(comment_id, new, v):
 	if comment.is_pinned and comment.is_pinned.startswith("t:") and int(time.time()) > int(comment.is_pinned[2:]):
 		comment.is_pinned = None
 		g.db.add(comment)
-
-	if v.agendaposter_expires_utc and v.agendaposter_expires_utc < time.time():
-		v.agendaposter_expires_utc = 0
-		v.agendaposter = False
-		g.db.add(v)
-		send_notification(v.id, "Your agendaposter theme has expired!")
-
-	if v.flairchanged and v.flairchanged < time.time():
-		v.flairchanged = None
-		g.db.add(v)
-		send_notification(v.id, "Your flair lock has expired. You can now change your flair!")
 
 	try:
 		g.db.flush()
