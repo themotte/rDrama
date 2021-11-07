@@ -23,6 +23,8 @@ CATBOX_KEY = environ.get("CATBOX_KEY").strip()
 
 with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
 
+if site == 'pcmemes.net':
+	snappyquotes = [x for x in snappyquotes if 'drama' not in x]
 
 @app.post("/toggle_club/<pid>")
 @auth_required
@@ -866,7 +868,7 @@ def submit_post(v):
 		new_post.comment_count = 1
 		g.db.add(new_post)
 
-		if "rama" in request.host:
+		if "rama" in request.host or "pcmemes.net" in request.host:
 			if v.id == CARP_ID:
 				if random.random() < 0.02: body = "i love you carp"
 				else: body = "![](https://rdrama.net/assets/images/emojis/fuckoffcarp.webp)"
