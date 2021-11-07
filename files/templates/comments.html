@@ -139,7 +139,7 @@
 
 	<div class="ml-3 mr-3 my-2">
 		{% for b in c.author.badges %}
-			{% if c.author.url %}
+			{% if b.url %}
 				<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
 			{% else %}
 				<img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{b.name}} - {{b.text}}">
