@@ -34,7 +34,7 @@ def notifications(v):
 
 		for index, x in enumerate(notifications[:100]):
 			c = x.comment
-			if x.read and index > 25: break
+			if x.read and index > 24: break
 			elif not x.read:
 				x.read = True
 				c.unread = True
@@ -52,7 +52,7 @@ def notifications(v):
 
 		for index, x in enumerate(notifications[:100]):
 			c = x.comment
-			if x.read and index > 25: break
+			if x.read and index > 24: break
 			elif not x.read:
 				x.read = True
 				g.db.add(x)
