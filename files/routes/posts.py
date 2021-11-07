@@ -31,7 +31,7 @@ def toggle_club(pid, v):
 
 	post = get_post(pid)
 
-	if post.author_id != v.id or v.admin_level == 0: abort(403)
+	if post.author_id != v.id and v.admin_level == 0: abort(403)
 
 	post.club = not post.club
 	g.db.add(post)
