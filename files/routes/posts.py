@@ -906,7 +906,7 @@ def submit_post(v):
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
-			is_bot=True,
+			is_bot=request.host!='pcmemes.net',
 			app_id=None,
 			body_html=body_html,
 			body=body,
