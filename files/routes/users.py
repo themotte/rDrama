@@ -135,18 +135,19 @@ def transfer_coins(v, username):
 			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
 			send_notification(TAX_RECEIVER_ID, log_message)
 			g.db.add(tax_receiver)
-			receiver.coins += amount-tax
+			taxed = amount-tax
+			receiver.coins += taxed
+		else: taxed = amount
 
 		v.coins -= amount
 
-		transfer_message = f"🤑 [@{v.username}]({v.url}) has gifted you {amount} {app.config['COINS_NAME']}!"
-		send_notification(receiver.id, transfer_message)
+		send_notification(receiver.id, f"🤑 [@{v.username}]({v.url}) has gifted you {taxed} {app.config['COINS_NAME']}!")
 
 		g.db.add(receiver)
 		g.db.add(v)
 
 		g.db.commit()
-		return {"message": f"{amount-tax} {app.config['COINS_NAME']} transferred!"}, 200
+		return {"message": f"{taxed} {app.config['COINS_NAME']} transferred!"}, 200
 
 	return {"message": f"You can't transfer {app.config['COINS_NAME']} to yourself!"}, 400
 
@@ -338,9 +339,7 @@ def api_is_available(name, v):
 		
 	name=name.replace('_','\_')
 
-	x= g.db.query(User).options(
-		lazyload('*')
-		).filter(
+	x= g.db.query(User).filter(
 		or_(
 			User.username.ilike(name),
 			User.original_username.ilike(name)
