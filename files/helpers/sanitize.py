@@ -75,7 +75,19 @@ no_images = ['b',
 						'span',
 						]
 
-allowed_attributes = {'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name', 'direction', 'behavior', 'scrollamount']}
+def sanitize_marquee(tag, name, value):
+	if name in allowed_attributes['*'] or name in ['direction', 'behavior', 'scrollamount']: return True
+
+	if name in ['width', 'height']:
+		try: value = int(value)
+		except: return False
+		if 0 < value <= 200: return True
+
+	return False
+
+allowed_attributes = {
+		'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name'],
+		'marquee': sanitize_marquee}
 
 allowed_protocols = ['http', 'https']
 
