@@ -136,20 +136,21 @@ def front_all(v):
 
 	posts = get_posts(ids, v=v)
 
-	if v and v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
+	if v:
+		if v.hidevotedon: posts = [x for x in posts if not hasattr(x, 'voted') or not x.voted]
 
-	if v.agendaposter_expires_utc and v.agendaposter_expires_utc < time.time():
-		v.agendaposter_expires_utc = 0
-		v.agendaposter = False
-		send_notification(v.id, "Your agendaposter theme has expired!")
-		g.db.add(v)
-		g.db.commit()
+		if v.agendaposter_expires_utc and v.agendaposter_expires_utc < time.time():
+			v.agendaposter_expires_utc = 0
+			v.agendaposter = False
+			send_notification(v.id, "Your agendaposter theme has expired!")
+			g.db.add(v)
+			g.db.commit()
 
-	if v.flairchanged and v.flairchanged < time.time():
-		v.flairchanged = None
-		send_notification(v.id, "Your flair lock has expired. You can now change your flair!")
-		g.db.add(v)
-		g.db.commit()
+		if v.flairchanged and v.flairchanged < time.time():
+			v.flairchanged = None
+			send_notification(v.id, "Your flair lock has expired. You can now change your flair!")
+			g.db.add(v)
+			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
