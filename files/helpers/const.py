@@ -98,6 +98,7 @@ if SITE == 'rdrama.net':
 	TAX_RECEIVER_ID = 747
 	PIZZA_SHILL_ID = 2424
 	CARP_ID = 995
+	RED_ID = 1577
 	LAWLZ_ID = 3833
 	LLM_ID = 253
 elif SITE == "pcmemes.net":
@@ -111,6 +112,7 @@ elif SITE == "pcmemes.net":
 	TAX_RECEIVER_ID = 1577
 	PIZZA_SHILL_ID = 0
 	CARP_ID = 0
+	RED_ID = 1577
 	LAWLZ_ID = 0
 	LLM_ID = 0
 else:
@@ -123,6 +125,7 @@ else:
 	TAX_RECEIVER_ID = 7
 	PIZZA_SHILL_ID = 0
 	CARP_ID = 0
+	RED_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0
 

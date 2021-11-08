@@ -868,9 +868,10 @@ def submit_post(v):
 		g.db.add(new_post)
 
 		if "rama" in request.host or "pcmemes.net" in request.host:
+			if v.id == RED_ID: body = "fuck off red"
 			if v.id == CARP_ID:
 				if random.random() < 0.02: body = "i love you carp"
-				else: body = "![](https://rdrama.net/assets/images/emojis/fuckoffcarp.webp)"
+				else: body = "![](/assets/images/emojis/fuckoffcarp.webp)"
 			elif v.id == LAWLZ_ID:
 				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 				else: body = "wow, a good lawlzpost for once!"
