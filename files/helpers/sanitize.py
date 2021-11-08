@@ -78,7 +78,7 @@ no_images = ['b',
 def sanitize_marquee(tag, name, value):
 	if name in allowed_attributes['*'] or name in ['direction', 'behavior', 'scrollamount']: return True
 
-	if name in ['width', 'height']:
+	if name == 'height':
 		try: value = int(value.replace('px', ''))
 		except: return False
 		if 0 < value <= 500: return True
