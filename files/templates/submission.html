@@ -616,7 +616,7 @@
 							<a class="list-inline-item text-muted d-none d-md-inline-block" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw"></i>Give Award</a>
 						{% endif %}
 
-						<a class="list-inline-item copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
+						<a class="list-inline-item copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://freejanitors.cleaning{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
 
 						{% if v %}
 							<a id="subscribe-{{p.id}}" class="{% if p.id in v.subscribed_idlist() %}d-none{% endif %} list-inline-item" href="javascript:void(0)" onclick="post_toast2('/subscribe/{{p.id}}','subscribe-{{p.id}}','unsubscribe-{{p.id}}')"><i class="fas fa-eye"></i>Subscribe</a>
@@ -749,7 +749,7 @@
 					</a>
 				</li>
 
-				<a class="list-inline-item copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}"><i class="fas fa-link"></i>Copy link</a>
+				<a class="list-inline-item copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://freejanitors.cleaning{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}"><i class="fas fa-link"></i>Copy link</a>
 				{% if v %}
 				<li class="list-inline-item">
 					<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#actionsModal">

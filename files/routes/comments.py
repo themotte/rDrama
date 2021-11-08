@@ -282,11 +282,14 @@ def api_comment(v):
 		if level == 1: basedguy = get_account(c.post.author_id)
 		else: basedguy = get_account(c.parent_comment.author_id)
 		basedguy.basedcount += 1
-		if pill: basedguy.pills += f"{pill.group(1)}, "
+		if pill:
+			if basedguy.pills: basedguy.pills += f", {pill.group(1)}"
+			else: basedguy.pills += f"{pill.group(1)}"
 		g.db.add(basedguy)
 
-		body2 = BASED_MSG.format(username=basedguy.username, basedcount=basedguy.basedcount, pills=basedguy.pills)
-
+		body2 = f"@{basedguy.username}'s Based Count has increased by 1. Their Based Count is now {basedguy.basedcount}."
+		if basedguy.pills: body2 += f"\n\nPills: {basedguy.pills}""
+		
 		body_md = CustomRenderer().render(mistletoe.Document(body2))
 
 		body_based_html = sanitize(body_md)
