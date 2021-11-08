@@ -288,7 +288,7 @@ def api_comment(v):
 		g.db.add(basedguy)
 
 		body2 = f"@{basedguy.username}'s Based Count has increased by 1. Their Based Count is now {basedguy.basedcount}."
-		if basedguy.pills: body2 += f"\n\nPills: {basedguy.pills}""
+		if basedguy.pills: body2 += f"\n\nPills: {basedguy.pills}"
 		
 		body_md = CustomRenderer().render(mistletoe.Document(body2))
 
