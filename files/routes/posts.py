@@ -881,7 +881,9 @@ def submit_post(v):
 		if new_post.url:
 			if new_post.url.startswith('https://old.reddit.com/r/'):
 				rev = new_post.url.replace('https://old.reddit.com/', '')
-				body += f"Snapshots:\n\n* [reveddit.com](https://reveddit.com/{rev})\n* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
+				rev = "* [reveddit.com](https://reveddit.com/{rev})\n"
+			else: rev = ''
+			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, new_post.url)
 
 		url_regex = '<a (target=\"_blank\"  )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
@@ -931,7 +933,7 @@ def submit_post(v):
 
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
-	if "[changelog]" in new_post.title or "(changelog)" in new_post.title:
+	if v.admin_level == 6 and "[changelog]" in new_post.title or "(changelog)" in new_post.title:
 		send_message(f"http://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
