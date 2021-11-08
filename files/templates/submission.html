@@ -527,11 +527,6 @@
 									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}}<span class="presult {% if not p.total_poll_voted(v) %}d-none{% endif %}"> - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></span></label>
 								</div>
 							{% endfor %}
-
-							{% if p.author.sig_html and (p.author_id == 1904 or not (v and v.sigs_disabled)) %}
-								<hr>
-								{{p.author.sig_html | safe}}
-							{% endif %}
 								
 							{% if p.is_banned and p.ban_reason %}
 								<div class="text-removed mb-0">removed by @{{p.ban_reason}}</div>
@@ -551,6 +546,13 @@
 								{% include "embeds/youtube.html" %}
 							{% endif %}
 						{% endif %}
+
+
+						{% if p.author.sig_html and (p.author_id == 1904 or not (v and v.sigs_disabled)) %}
+							<hr>
+							{{p.author.sig_html | safe}}
+						{% endif %}
+
 					</div>
 
 					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and not v.is_suspended %}
