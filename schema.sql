@@ -485,7 +485,7 @@ CREATE TABLE public.modactions (
     target_comment_id integer,
     created_utc integer DEFAULT 0,
     kind character varying(32) DEFAULT NULL::character varying,
-    _note character varying(1000) DEFAULT NULL::character varying
+    _note character varying(256) DEFAULT NULL::character varying
 );
 
 
@@ -819,7 +819,8 @@ CREATE TABLE public.users (
     sig character varying(200),
     sig_html character varying(1000),
     friends character varying(500),
-    friends_html character varying(2000)
+    friends_html character varying(2000),
+    sigs_disabled boolean,
     enemies character varying(500),
     enemies_html character varying(2000)
 );
@@ -1847,7 +1848,6 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
-
 
 --
 -- PostgreSQL database dump complete
