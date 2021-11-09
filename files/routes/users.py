@@ -128,7 +128,7 @@ def transfer_coins(v, username):
 		if v.coins < amount: return {"error": f"You don't have enough {app.config['COINS_NAME']}"}, 400
 		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['COINS_NAME']}."}, 400
 
-		tax = math.ceil(amount*0.01)
+		tax = math.ceil(amount*0.015)
 		tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
 		tax_receiver.coins += tax
 		log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"

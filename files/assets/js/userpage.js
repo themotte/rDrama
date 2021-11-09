@@ -56,7 +56,7 @@ function post_toast_callback(url, data, callback) {
 
 }
 
-const TRANSFER_TAX = 0.01;
+const TRANSFER_TAX = 0.015;
 
 function updateTax(mobile=false) {
 	let suf = mobile ? "-mobile" : "";
