@@ -385,12 +385,6 @@ def badge_grant_post(v):
 		g.db.delete(existing)
 		g.db.commit()
 		return redirect("/admin/badge_grant")
-
-	if badge_id == 16:
-		existing = user.has_badge(17)
-		if existing: g.db.delete(existing)
-
-	elif badge_id == 17 and user.has_badge(16): abort(403)
 	
 	new_badge = Badge(badge_id=badge_id, user_id=user.id)
 
