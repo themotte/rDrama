@@ -250,7 +250,7 @@ function markdown(first, second) {
 		}
 	}
 
-	if (!input.includes('edit'))
+	if (!first.includes('edit'))
 	{
 		var options = Array.from(input.matchAll(/\s*\$\$([^\$\n]+)\$\$\s*/gi))
 		if(options != null){
