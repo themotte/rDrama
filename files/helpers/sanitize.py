@@ -133,7 +133,7 @@ def sanitize(sanitized, noimages=False):
 			tag["class"] = "in-comment-image"
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
-			tag["src"] = "/assets/images/loading.gif"
+			tag["src"] = "/assets/images/loading.webp"
 
 			link = soup.new_tag("a")
 			link["href"] = tag["data-src"]

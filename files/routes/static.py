@@ -209,7 +209,7 @@ def log_item(id, v):
 
 @app.get("/assets/favicon.ico")
 def favicon():
-	return send_file(f"./assets/images/{site_name}/icon.gif")
+	return send_file(f"./assets/images/{site_name}/icon.webp")
 
 @app.get("/api")
 @auth_desired
@@ -251,6 +251,10 @@ def static_service(path):
 		resp.headers.remove("Cache-Control")
 		resp.headers.add("Cache-Control", "public, max-age=2628000")
 
+	if request.path.endswith('.webp'):
+		resp.headers.remove("Content-Type")
+		resp.headers.add("Content-Type", "image/webp")
+
 	return resp
 
 @app.get('/images/<path:path>')
@@ -260,6 +264,9 @@ def images(path):
 	resp = make_response(send_from_directory('/images', path))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")
+	if request.path.endswith('.webp'):
+		resp.headers.remove("Content-Type")
+		resp.headers.add("Content-Type", "image/webp")
 	return resp
 
 @app.get("/robots.txt")

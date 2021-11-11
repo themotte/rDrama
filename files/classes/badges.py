@@ -26,7 +26,7 @@ class BadgeDef(Base):
 	@lazy
 	def path(self):
 
-		return f"/assets/images/badges/{self.icon}.gif"
+		return f"/assets/images/badges/{self.icon}.webp"
 
 	@property
 	@lazy
