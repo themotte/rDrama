@@ -11,6 +11,7 @@ from .front import frontlist
 @auth_desired
 def admin_vote_info_get(v):
 
+	if v and v.shadowbanned: return render_template('errors/500.html', v=v), 500
 
 	link = request.values.get("link")
 	if not link: return render_template("votes.html", v=v)
