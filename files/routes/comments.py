@@ -179,7 +179,7 @@ def api_comment(v):
 		file.save(name)
 		url = request.host_url[:-1] + process_image(name)
 		
-		body += f"\n![]({url})"
+		body += f"\n\n![]({url})"
 
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
@@ -673,7 +673,7 @@ def edit_comment(cid, v):
 			file.save(name)
 			url = request.host_url[:-1] + process_image(name)
 
-			body += f"\n![]({url})"
+			body += f"\n\n![]({url})"
 			body_md = CustomRenderer().render(mistletoe.Document(body))
 			body_html = sanitize(body_md)
 

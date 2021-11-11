@@ -626,6 +626,8 @@ def admin_userawards_post(v):
 		if key not in AWARDS: continue
 
 		if value:
+			
+			if int(value) > 10: abort(403)
 
 			if int(value) > 0: notify_awards[key] = int(value)
 
