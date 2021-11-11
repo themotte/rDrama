@@ -363,7 +363,7 @@ class Comment(Base):
 			
 		if v.filter_words and self.body and any([x in self.body for x in v.filter_words]): return True
 		
-		if self.is_banned or (self.author and self.author.shadowbanned): return True
+		if self.is_banned or (self.author and self.author.shadowbanned and not v.shadowbanned): return True
 		
 		return False
 
