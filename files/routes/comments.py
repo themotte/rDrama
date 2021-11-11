@@ -133,7 +133,9 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 @is_not_banned
 @validate_formkey
 def api_comment(v):
-	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
+	if v and v.patron:
+		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
+	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
 	parent_submission = request.values.get("submission").strip()
 	parent_fullname = request.values.get("parent_fullname").strip()
@@ -589,7 +591,9 @@ def api_comment(v):
 @auth_required
 @validate_formkey
 def edit_comment(cid, v):
-	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
+	if v and v.patron:
+		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
+	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
 	c = get_comment(cid, v=v)
 

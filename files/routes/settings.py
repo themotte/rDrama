@@ -45,7 +45,9 @@ def removebackground(v):
 @auth_required
 @validate_formkey
 def settings_profile_post(v):
-	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
+	if v and v.patron:
+		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
+	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
 	updated = False
 
@@ -677,7 +679,9 @@ def settings_log_out_others(v):
 @auth_required
 @validate_formkey
 def settings_images_profile(v):
-	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
+	if v and v.patron:
+		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
+	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
@@ -711,7 +715,9 @@ def settings_images_profile(v):
 @auth_required
 @validate_formkey
 def settings_images_banner(v):
-	if request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
+	if v and v.patron:
+		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
+	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
 	if request.headers.get("cf-ipcountry") == "T1": return "Image uploads are not allowed through TOR.", 403
 
