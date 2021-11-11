@@ -243,7 +243,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 				rand = random.randint(5,20)
 				if post.score < rand: post.upvotes += 1
 				g.db.add(post)
-				g.db.commit()
+		g.db.commit()
 
 	pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 	if v and v.admin_level == 0:
