@@ -11,6 +11,15 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 def slash_post():
 	return redirect("/")
 
+@app.post("/clear")
+@auth_required
+def clear(v):
+	for n in v.notifications.filter_by(read=False).all():
+		n.read = True
+		g.db.add(n)
+	g.db.commit()
+	return {"message": "Notifications cleared!"}
+
 @app.get("/notifications")
 @auth_required
 def notifications(v):
