@@ -169,7 +169,7 @@ def front_all(v):
 @cache.memoize(timeout=86400)
 def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', gt=None, lt=None):
 
-	posts = g.db.query(Submission.id)
+	posts = g.db.query(Submission)
 
 	if SITE_NAME == 'Drama' and sort == "hot":
 		cutoff = int(time.time()) - 86400
@@ -183,15 +183,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		else: cutoff = now - 86400
 		posts = posts.filter(Submission.created_utc >= cutoff)
 	else: cutoff = 0
-
-	if random.random() < 0.02:
-		p2 = g.db.query(Submission).filter(Submission.created_utc >= cutoff).all()
-		for post in p2:
-			if post.author and post.author.shadowbanned:
-				rand = random.randint(5,20)
-				if post.score < rand: post.upvotes += 1
-				g.db.add(post)
-				g.db.commit()
 
 	posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
 
@@ -246,7 +237,15 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts[:size]
 
-	pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False)
+	if random.random() < 0.02:
+		for post in posts:
+			if post.author and post.author.shadowbanned:
+				rand = random.randint(5,20)
+				if post.score < rand: post.upvotes += 1
+				g.db.add(post)
+				g.db.commit()
+
+	pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
 		blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
@@ -254,7 +253,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	if page == 1 and not gt and not lt: posts = pins.all() + posts
 
-	if ids_only: posts = [x[0] for x in posts]
+	if ids_only: posts = [x.id for x in posts]
 
 	return posts, next_exists
 
