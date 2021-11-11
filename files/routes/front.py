@@ -182,6 +182,16 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		elif t == 'year': cutoff = now - 31536000
 		else: cutoff = now - 86400
 		posts = posts.filter(Submission.created_utc >= cutoff)
+	else: cutoff = 0
+
+	if random.random() < 0.02:
+		p2 = g.db.query(Submission).filter(Submission.created_utc >= cutoff).all()
+		for post in p2:
+			if post.author and post.author.shadowbanned:
+				rand = random.randint(5,20)
+				if post.score < rand: post.upvotes += 1
+				g.db.add(post)
+				g.db.commit()
 
 	posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
 

@@ -189,6 +189,13 @@ def post_id(pid, anything=None, v=None):
 
 		post.replies = comments.filter(Comment.is_pinned != None).all() + comments.filter(Comment.level == 1, Comment.is_pinned == None).all()
 
+		if random.random() < 0.02:
+			for comment in post.replies:
+				if comment.author and comment.author.shadowbanned:
+					rand = random.randint(5,20)
+					if comment.score < rand: comment.upvotes += 1
+					g.db.add(comment)
+
 	post.views += 1
 	g.db.add(post)
 	if isinstance(session.get('over_18', 0), dict): session["over_18"] = 0
