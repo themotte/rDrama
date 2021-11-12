@@ -208,7 +208,7 @@
 				{% endfor %}
 			</div>
 		{% elif replies %}
-			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
+			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
 				<a {% if v %}href="{{c.permalink}}?context=10#context"{% else %}href="/logged_out{{c.permalink}}?context=10#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
@@ -558,7 +558,7 @@
 				{% endfor %}
 			</div>
 		{% elif replies %}
-			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
+			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
 				<a {% if v %}href="{{c.permalink}}#context"{% else %}href="/logged_out{{c.permalink}}#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
