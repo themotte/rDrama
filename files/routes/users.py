@@ -453,7 +453,6 @@ def u_username(username, v=None):
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
 
-   # If page 1, check for sticky
 	if page == 1:
 		sticky = []
 		sticky = g.db.query(Submission).filter_by(is_pinned=True, author_id=u.id).all()
@@ -462,6 +461,14 @@ def u_username(username, v=None):
 				ids = [p.id] + ids
 
 	listing = get_posts(ids, v=v)
+
+	if v and v.shadowbanned:
+		for post in listing:
+			if post.author and post.author.shadowbanned and 86400 > time.time() - post.created_utc > 600:
+				rand = random.randint(5,20)
+				if post.upvotes < rand: post.upvotes = rand
+				g.db.add(post)
+		g.db.commit()
 
 	if u.unban_utc:
 		if request.headers.get("Authorization"): {"data": [x.json for x in listing]}

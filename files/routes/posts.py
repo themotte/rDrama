@@ -173,6 +173,13 @@ def post_id(pid, anything=None, v=None):
 			output.append(comment)
 
 		post.replies = [x for x in output if x.is_pinned] + [x for x in output if x.level == 1 and not x.is_pinned]
+
+		if v.shadowbanned:
+			for comment in post.replies:
+				if comment.author and comment.author.shadowbanned and 86400 > time.time() - comment.created_utc > 600:
+					rand = random.randint(5,20)
+					if comment.upvotes < rand: comment.upvotes = rand
+					g.db.add(comment)
 	else:
 		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT)
 
@@ -188,13 +195,6 @@ def post_id(pid, anything=None, v=None):
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
 		post.replies = comments.filter(Comment.is_pinned != None).all() + comments.filter(Comment.level == 1, Comment.is_pinned == None).all()
-
-		if random.random() < 0.02:
-			for comment in post.replies:
-				if comment.author and comment.author.shadowbanned:
-					rand = random.randint(5,20)
-					if comment.score < rand: comment.upvotes += 1
-					g.db.add(comment)
 
 	post.views += 1
 	g.db.add(post)
@@ -685,9 +685,9 @@ def submit_post(v):
 	body_md = CustomRenderer().render(mistletoe.Document(body))
 	body_html = sanitize(body_md)
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 400
 
-	if len(body_html) > 20000: abort(400)
+	if len(body_html) > 20000: return {"error":"Submission body too long!"}, 400
 
 	bans = filter_comment_html(body_html)
 	if bans:

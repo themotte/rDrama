@@ -237,11 +237,11 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts[:size]
 
-	if random.random() < 0.02:
+	if v and v.shadowbanned:
 		for post in posts:
-			if post.author and post.author.shadowbanned:
+			if post.author and post.author.shadowbanned and 86400 > time.time() - post.created_utc > 600:
 				rand = random.randint(5,20)
-				if post.score < rand: post.upvotes += 1
+				if post.upvotes < rand: post.upvotes = rand
 				g.db.add(post)
 		g.db.commit()
 
