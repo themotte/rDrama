@@ -208,12 +208,6 @@
 				{% endfor %}
 			</div>
 		{% elif replies %}
-			<div id="replies-of-{{c.id}}" class="d-none d-md-block">
-				{% set standalone=False %}
-				{% for reply in replies %}
-					{{single_comment(reply, level=level+1)}}
-				{% endfor %}
-			</div>
 			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
 				<a {% if v %}href="{{c.permalink}}?context=10#context"{% else %}href="/logged_out{{c.permalink}}?context=10#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
@@ -378,12 +372,11 @@
 							&nbsp;
 							<small class="btn btn-secondary format d-inline-block m-0"><i class="fas fa-smile-beam" aria-hidden="true" onclick="loadEmojis('comment-edit-body-{{c.id}}')" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji"></i></small>
 							&nbsp;
-							{% if request.headers.get('cf-ipcountry')!="T1" %}
-								<label class="btn btn-secondary format d-inline-block m-0" for="file-edit-reply-{{c.id}}">
-									<div id="filename-edit-reply-{{c.id}}"><i class="far fa-image"></i></div>
-									<input id="file-edit-reply-{{c.id}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-edit-reply-{{c.id}}').innerHTML='image';" hidden>
-								</label>
-							{% endif %}
+							
+							<label class="btn btn-secondary format d-inline-block m-0" for="file-edit-reply-{{c.id}}">
+								<div id="filename-edit-reply-{{c.id}}"><i class="far fa-image"></i></div>
+								<input id="file-edit-reply-{{c.id}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-edit-reply-{{c.id}}').innerHTML='image';" hidden>
+							</label>
 
 							<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 							<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="d-none d-md-block btn btn-primary ml-2" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
@@ -541,12 +534,10 @@
 							<i id="emoji-reply-btn-{{c.fullname}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></i>
 						</label>
 						&nbsp;
-						{% if request.headers.get('cf-ipcountry')!="T1" %}
-							<label class="btn btn-secondary format d-inline-block m-0" for="file-upload-reply-{{c.fullname}}">
-								<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
-								<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
-							</label>
-						{% endif %}
+						<label class="btn btn-secondary format d-inline-block m-0" for="file-upload-reply-{{c.fullname}}">
+							<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
+							<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
+						</label>
 						<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 						<a id="save-reply-to-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-muted ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
 					</div>
@@ -567,11 +558,6 @@
 				{% endfor %}
 			</div>
 		{% elif replies %}
-			<div id="replies-of-{{c.id}}" class="d-none d-md-block">
-				{% for reply in replies %}
-					{{single_comment(reply, level=level+1)}}
-				{% endfor %}
-			</div>
 			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
 				<a {% if v %}href="{{c.permalink}}#context"{% else %}href="/logged_out{{c.permalink}}#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>

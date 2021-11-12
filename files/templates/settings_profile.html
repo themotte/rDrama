@@ -205,18 +205,15 @@
 
 						<div class="d-flex">
 
-							{% if request.headers.get('cf-ipcountry')!="T1" %}
-								<div>
+							<div>
+								<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
+										Update<input type="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} hidden name="profile" onchange="form.submit()">
+									</label>
+								</form>
 
-									<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<label class="btn btn-secondary text-capitalize mr-2 mb-0">
-											Update<input type="file" hidden name="profile" onchange="form.submit()">
-										</label>
-									</form>
-
-								</div>
-							{% endif %}
+							</div>
 
 							{% if v.profileurl %}
 							<div>
@@ -250,18 +247,15 @@
 
 						<div class="d-flex">
 
-							{% if request.headers.get('cf-ipcountry')!="T1" %}
-								<div>
+							<div>
+								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
+										Update<input type="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" hidden name="banner" onchange="form.submit()">
+									</label>
+								</form>
 
-									<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<label class="btn btn-secondary text-capitalize mr-2 mb-0">
-											Update<input type="file" hidden name="banner" onchange="form.submit()">
-										</label>
-									</form>
-
-								</div>
-							{% endif %}
+							</div>
 
 							<div>
 
@@ -576,12 +570,10 @@
 											&nbsp;
 											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('bio-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></pre>
 											&nbsp;
-											{% if request.headers.get('cf-ipcountry')!="T1" %}
-												<label class="btn btn-secondary format d-inline-block m-0">
-													<div id="filename-show"><i class="far fa-image"></i></div>
-													<input id="file-upload" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show').innerHTML='image';" hidden>
-												</label>
-											{% endif %}
+											<label class="btn btn-secondary format d-inline-block m-0">
+												<div id="filename-show"><i class="far fa-image"></i></div>
+												<input id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" onchange="document.getElementById('filename-show').innerHTML='image';" hidden>
+											</label>
 										</div>
 										<pre></pre>
 										<div class="d-flex">
