@@ -280,7 +280,6 @@ def edit_post(pid, v):
 				is_pinned=True,
 				distinguish_level=6,
 				body_html=body_jannied_html,
-				body=body
 				)
 
 			g.db.add(c_jannied)
@@ -313,7 +312,6 @@ def edit_post(pid, v):
 				is_pinned=True,
 				distinguish_level=6,
 				body_html=body_jannied_html,
-				body=body
 				)
 
 			g.db.add(c_jannied)
@@ -823,7 +821,6 @@ def submit_post(v):
 			is_pinned=True,
 			distinguish_level=6,
 			body_html=body_jannied_html,
-			body=body,
 		)
 
 		g.db.add(c_jannied)
@@ -858,7 +855,6 @@ def submit_post(v):
 			is_pinned=True,
 			distinguish_level=6,
 			body_html=body_jannied_html,
-			body=body,
 		)
 
 		g.db.add(c_jannied)
@@ -910,30 +906,30 @@ def submit_post(v):
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
-		c = Comment(author_id=SNAPPY_ACCOUNT,
-			distinguish_level=6,
-			parent_submission=new_post.id,
-			level=1,
-			over_18=False,
-			is_bot=request.host!='pcmemes.net',
-			app_id=None,
-			body_html=body_html,
-			body=body,
-			)
+		if len(body_html) < 20000
+			c = Comment(author_id=SNAPPY_ACCOUNT,
+				distinguish_level=6,
+				parent_submission=new_post.id,
+				level=1,
+				over_18=False,
+				is_bot=request.host!='pcmemes.net',
+				app_id=None,
+				body_html=body_html,
+				)
 
-		g.db.add(c)
+			g.db.add(c)
 
-		snappy = g.db.query(User).filter_by(id = SNAPPY_ACCOUNT).first()
-		snappy.comment_count += 1
-		snappy.coins += 1
-		g.db.add(snappy)
+			snappy = g.db.query(User).filter_by(id = SNAPPY_ACCOUNT).first()
+			snappy.comment_count += 1
+			snappy.coins += 1
+			g.db.add(snappy)
 
-		g.db.flush()
+			g.db.flush()
 
 
-		n = Notification(comment_id=c.id, user_id=v.id)
-		g.db.add(n)
-		g.db.flush()
+			n = Notification(comment_id=c.id, user_id=v.id)
+			g.db.add(n)
+			g.db.flush()
 	
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
