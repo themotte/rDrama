@@ -3,11 +3,9 @@ import random
 import re
 import time
 from urllib.parse import urlparse
-
 from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-
 from files.__main__ import Base
 from files.helpers.const import AUTOPOLLER_ACCOUNT, censor_slurs, TROLLTITLES
 from files.helpers.lazy import lazy
@@ -17,7 +15,6 @@ from flask import g
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
-
 
 class Submission(Base):
 	__tablename__ = "submissions"

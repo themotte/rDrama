@@ -2,19 +2,17 @@ from os import environ
 import re
 import time
 from urllib.parse import urlencode, urlparse, parse_qs
-
 from flask import *
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-
 from files.__main__ import Base
 from files.classes.votes import CommentVote
 from files.helpers.const import AUTOPOLLER_ACCOUNT, censor_slurs
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
+from random import randint
 
 site = environ.get("DOMAIN").strip()
-
 
 class Comment(Base):
 
@@ -328,7 +326,7 @@ class Comment(Base):
 				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 600:
-			rand = random.randint(5,20)
+			rand = randint(5,20)
 			if self.upvotes < rand:
 				self.upvotes = rand
 				g.db.add(self)
