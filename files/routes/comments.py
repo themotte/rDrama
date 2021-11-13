@@ -536,6 +536,7 @@ def api_comment(v):
 				if 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
 				if 'joan' in body_html.lower() and 28 not in notify_users: notify_users.add(28)
 				if 'carp' in body_html.lower() and 995 not in notify_users: notify_users.add(995)
+				if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
@@ -779,7 +780,7 @@ def edit_comment(cid, v):
 				if 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
 				if 'joan' in body_html.lower() and 28 not in notify_users: notify_users.add(28)
 				if 'carp' in body_html.lower() and 995 not in notify_users: notify_users.add(995)
-
+				if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users: notify_users.add(30)
 
 			for x in notify_users:
 				notif = notifs.filter_by(comment_id=c.id, user_id=x).first()
