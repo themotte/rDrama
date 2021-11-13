@@ -326,7 +326,7 @@ class Comment(Base):
 				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 600:
-			rand = randint(5,20)
+			rand = randint(1,16)
 			if self.upvotes < rand:
 				self.upvotes = rand
 				g.db.add(self)
