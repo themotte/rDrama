@@ -511,7 +511,7 @@ def gumroad(v):
 	v.procoins += procoins
 	send_notification(v.id, f"You were given {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
 
-	if v.truecoins > 150 and v.patron > 0 or v.patron > 2: v.cluballowed = True
+	if v.truecoins > 150 and v.patron > 0: v.cluballowed = True
 	if v.patron > 3 and v.verified == None: v.verified = "Verified"
 
 	g.db.add(v)
