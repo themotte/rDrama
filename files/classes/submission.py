@@ -327,6 +327,14 @@ class Submission(Base):
 
 		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+
+		if v and v.shadowbanned and self.author and self.author.shadowbanned and 86400 > time.time() - self.created_utc > 600:
+			rand = random.randint(5,20)
+			if self.upvotes < rand:
+				self.upvotes = rand
+				g.db.add(self)
+				g.db.commit()
+
 		return body
 
 	def plainbody(self, v):

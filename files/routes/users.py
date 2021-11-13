@@ -462,14 +462,6 @@ def u_username(username, v=None):
 
 	listing = get_posts(ids, v=v)
 
-	if v and v.shadowbanned:
-		for post in listing:
-			if post.author and post.author.shadowbanned and 86400 > time.time() - post.created_utc > 600:
-				rand = random.randint(5,20)
-				if post.upvotes < rand: post.upvotes = rand
-				g.db.add(post)
-		g.db.commit()
-
 	if u.unban_utc:
 		if request.headers.get("Authorization"): {"data": [x.json for x in listing]}
 		else: return render_template("userpage.html",

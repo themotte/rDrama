@@ -326,6 +326,14 @@ class Comment(Base):
 
 				url_noquery = url.split('?')[0]
 				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
+
+		if v and v.shadowbanned and self.author and self.author.shadowbanned and 86400 > time.time() - self.created_utc > 600:
+			rand = random.randint(5,20)
+			if self.upvotes < rand:
+				self.upvotes = rand
+				g.db.add(self)
+				g.db.commit()
+
 		return body
 
 	def plainbody(self, v):

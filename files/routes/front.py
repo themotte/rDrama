@@ -237,14 +237,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts[:size]
 
-	if v and v.shadowbanned:
-		for post in posts:
-			if post.author and post.author.shadowbanned and 86400 > time.time() - post.created_utc > 600:
-				rand = random.randint(5,20)
-				if post.upvotes < rand: post.upvotes = rand
-				g.db.add(post)
-		g.db.commit()
-
 	pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]

@@ -175,12 +175,6 @@ def post_id(pid, anything=None, v=None):
 
 		post.replies = [x for x in output if x.is_pinned] + [x for x in output if x.level == 1 and not x.is_pinned]
 
-		if v.shadowbanned:
-			for comment in post.replies:
-				if comment.author and comment.author.shadowbanned and 86400 > time.time() - comment.created_utc > 600:
-					rand = random.randint(5,20)
-					if comment.upvotes < rand: comment.upvotes = rand
-					g.db.add(comment)
 	else:
 		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT)
 
