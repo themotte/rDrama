@@ -906,7 +906,7 @@ def submit_post(v):
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
-		if len(body_html) < 20000
+		if len(body_html) < 20000:
 			c = Comment(author_id=SNAPPY_ACCOUNT,
 				distinguish_level=6,
 				parent_submission=new_post.id,
