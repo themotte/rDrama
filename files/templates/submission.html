@@ -106,7 +106,7 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="/assets/js/new_comments_count.js?v=53"></script>
 
-{% if v and (v.id == p.author_id or v.admin_level == 6 and v.id in [1,28,995,2513]) %}
+{% if v and (v.id == p.author_id or v.admin_level == 6 and v.id in [1,28,30,995,2513,3333]) %}
 	<script>		
 		togglePostEdit=function(id){
 
@@ -316,7 +316,7 @@
 				<ul class="list-group post-actions">
 					<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')"><i class="far fa-flag text-center text-muted mr-3"></i>Report</button>
 					
-					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) %}
+					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,30,995,2513,3333]) %}
 						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="togglePostEdit('{{p.id}}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
 					{% endif %}
 
@@ -555,7 +555,7 @@
 
 					</div>
 
-					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and not v.is_suspended %}
+					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,30,995,2513,3333]) and not v.is_suspended %}
 						<div id="edit-post-body-{{p.id}}" class="d-none comment-write collapsed child">
 							<form id="post-edit-form-{{p.id}}" class="d-flex flex-column input-group" action="/edit_post/{{p.id}}" method="post">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
@@ -600,7 +600,7 @@
 							</a>
 						</li>
 
-						{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) %}
+						{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,30,995,2513,3333]) %}
 							<a class="list-inline-item" href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')"><i class="fas fa-edit"></i>Edit</a>
 						{% endif %}
 

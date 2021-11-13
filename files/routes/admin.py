@@ -56,7 +56,7 @@ def truescore(v):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def revert_actions(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,995,2513]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 
@@ -142,7 +142,7 @@ def club_ban(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def make_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,995,2513]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 6
@@ -155,7 +155,7 @@ def make_admin(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def remove_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,995,2513]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -168,7 +168,7 @@ def remove_admin(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def make_fake_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,995,2513]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 1
@@ -181,7 +181,7 @@ def make_fake_admin(v, username):
 @limiter.limit("1/second")
 @admin_level_required(6)
 def remove_fake_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,995,2513]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -194,7 +194,7 @@ def remove_fake_admin(v, username):
 @limiter.limit("1/day")
 @admin_level_required(6)
 def monthly(v):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,995,2513]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		for u in g.db.query(User).filter(User.patron > 0).all():
 			if u.patron == 1: procoins = 2000
