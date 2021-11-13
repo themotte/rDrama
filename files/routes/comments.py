@@ -766,7 +766,6 @@ def edit_comment(cid, v):
 		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
 		
 		if len(mentions) > 0:
-			notifs = g.db.query(Notification)
 			for mention in mentions:
 				username = mention["href"].split("@")[1]
 
@@ -783,7 +782,7 @@ def edit_comment(cid, v):
 			if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users:
-			notif = notifs.filter_by(comment_id=c.id, user_id=x).first()
+			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).first()
 			if not notif:
 				n = Notification(comment_id=c.id, user_id=x)
 				g.db.add(n)
