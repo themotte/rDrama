@@ -14,6 +14,7 @@ SLURS = {
 	"pedophile": "libertarian",
 	"pedo": "libertarian",
 	"kill yourself": "keep yourself safe",
+	"kys": "keep yourself safe",
 	"nigger": "🏀",
 	"rapist": "male feminist",
 	"steve akins": "penny verity oaken",
