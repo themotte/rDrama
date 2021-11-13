@@ -51,7 +51,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
 		elif "rama" in request.host: pid = 6489
-		elif 'pcmemes.net' in request.host: pid = 382
+		elif 'pcmemes.net' in request.host: pid = 2487
 		else: pid = 1
 	
 	try: pid = int(pid)

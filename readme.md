@@ -28,7 +28,7 @@ docker-compose up
 
 ---
 
-# Linux (Debian-based)
+# Ubuntu
 
 1- Download Drama into your machine by running this command.
 
