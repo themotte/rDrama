@@ -3,6 +3,8 @@ sudo apt update
 sudo apt -y upgrade
 sudo apt -y install postgresql postgresql-contrib
 sudo apt -y install redis-server
+cp pg_hba.conf /etc/postgresql/13/main/pg_hba.conf
+sudo service postgresql restart
 sudo psql -U postgres -f schema.sql postgres
 sudo psql -U postgres -f seed-db.sql postgres
 sudo apt -y install python3-pip
@@ -12,4 +14,4 @@ sudo apt -y install ffmpeg
 mkdir /songs
 cp ./env /env
 . /env
-gunicorn files.__main__:app -k gevent -w 1 --reload -b 127.0.0.1:80 --max-requests 1000 --max-requests-jitter 500
+gunicorn files.__main__:app -k gevent -w 2 --reload -b 127.0.0.1:80 --max-requests 1000 --max-requests-jitter 500
