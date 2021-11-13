@@ -119,6 +119,8 @@ def front_all(v):
 
 	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
+	if v and v.is_banned and not v.unban_utc: return render_template('errors/500.html', v=v), 500
+
 	if v and request.path.startswith('/logged_out'): v = None
 
 	try: page = max(int(request.values.get("page", 1)), 1)
