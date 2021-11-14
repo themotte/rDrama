@@ -211,7 +211,7 @@
 						{% if 'pcm' in request.host and v.admin_level == 6 %} 
 							{% if u.admin_level == 0 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-							{% elif v.id in [10,1577] %}
+							{% elif v.id in [10,1551,1552,1577,1592] %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
@@ -503,7 +503,7 @@
 					{% if 'pcm' in request.host and v.admin_level == 6 %} 
 						{% if u.admin_level == 0 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-						{% elif v.id in [10,1577] %}
+						{% elif v.id in [10,1551,1552,1577,1592] %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
