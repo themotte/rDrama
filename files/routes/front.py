@@ -57,7 +57,7 @@ def notifications(v):
 	else:
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id != AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
 
-		listing = []
+		comments = []
 
 		for index, x in enumerate(notifications[:100]):
 			c = x.comment
@@ -66,11 +66,10 @@ def notifications(v):
 				x.read = True
 				c.unread = True
 				g.db.add(x)
-			listing.append(c.id)
+			comments.append(c)
 
 		g.db.commit()
 
-		comments = get_comments(listing, v=v, load_parent=True)
 		next_exists = (len(notifications) > len(comments))
 
 	if not posts:
