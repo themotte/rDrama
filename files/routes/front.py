@@ -64,6 +64,7 @@ def notifications(v):
 			if x.read and index > 24: break
 			elif not x.read:
 				x.read = True
+				c.unread = True
 				g.db.add(x)
 			listing.append(c.id)
 
