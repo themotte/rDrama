@@ -20,7 +20,7 @@ const EMOJIS_STRINGS = [
 	},
 	{
 		type: 'tay',
-		emojis: ['tayaaa', 'tayadmire', 'taycat', 'taycelebrate', 'taychefkiss', 'taychristmas', 'tayclap', 'taycold', 'taycrown', 'tayflex', 'tayflirt', 'taygrimacing', 'tayhappy', 'tayheart', 'tayhmm', 'tayhuh', 'tayhyperdab', 'tayjammin', 'taylaugh', 'taymindblown', 'tayno', 'taynod', 'taypeace', 'taypray', 'tayrun', 'tayscrunch', 'tayshake', 'tayshrug', 'taysilly', 'tayslide', 'taysmart', 'taystop', 'taytantrum', 'taytea', 'taythink', 'tayvibin', 'taywhat', 'taywine', 'taywine2', 'taywink', 'tayyes']
+		emojis: ['taylove','tayaaa', 'tayadmire', 'taycat', 'taycelebrate', 'taychefkiss', 'taychristmas', 'tayclap', 'taycold', 'taycrown', 'tayflex', 'tayflirt', 'taygrimacing', 'tayhappy', 'tayheart', 'tayhmm', 'tayhuh', 'tayhyperdab', 'tayjammin', 'taylaugh', 'taymindblown', 'tayno', 'taynod', 'taypeace', 'taypray', 'tayrun', 'tayscrunch', 'tayshake', 'tayshrug', 'taysilly', 'tayslide', 'taysmart', 'taystop', 'taytantrum', 'taytea', 'taythink', 'tayvibin', 'taywhat', 'taywine', 'taywine2', 'taywink', 'tayyes']
 	},
 	{
 		type: 'classic',
