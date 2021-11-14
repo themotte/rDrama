@@ -215,11 +215,11 @@
 				{% endfor %}
 			</div>
 			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
-				<a {% if v %}href="{{c.permalink}}?context=10#context"{% else %}href="/logged_out{{c.permalink}}?context=10#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a {% if v %}href="{{c.permalink}}?context=9#context"{% else %}href="/logged_out{{c.permalink}}?context=9#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
-				<a {% if v %}href="{{c.permalink}}?context=10#context"{% else %}href="/logged_out{{c.permalink}}?context=10#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a {% if v %}href="{{c.permalink}}?context=9#context"{% else %}href="/logged_out{{c.permalink}}?context=9#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
@@ -443,8 +443,8 @@
 							<a class="list-inline-item text-muted" href="javascript:void(0)" onclick="openReplyBox('{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i><span class="d-none d-md-inline-block">Reply</span></a>
 						{% endif %}
 
-						<a class="list-inline-item text-muted d-none d-md-inline-block" {% if v %}href="{{c.permalink}}?context=10#context"{% else %}href="/logged_out{{c.permalink}}?context=10#context"{% endif %}><i class="fas fa-book-open"></i>Context</a>
-						<a class="list-inline-item text-muted d-none d-md-inline-block copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://freeghettohoes.biz{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=10#context"><i class="fas fa-copy"></i>Copy link</a>
+						<a class="list-inline-item text-muted d-none d-md-inline-block" {% if v %}href="{{c.permalink}}?context=9#context"{% else %}href="/logged_out{{c.permalink}}?context=9#context"{% endif %}><i class="fas fa-book-open"></i>Context</a>
+						<a class="list-inline-item text-muted d-none d-md-inline-block copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://freeghettohoes.biz{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=9#context"><i class="fas fa-copy"></i>Copy link</a>
 						{% if v %}
 							<a class="list-inline-item text-muted d-none d-md-inline-block" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)"><i class="fas fa-flag fa-fw"></i>Report</a>
 						{% endif %}
@@ -575,7 +575,7 @@
 				{% endfor %}
 			</div>
 			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
-				<a {% if v %}href="{{c.permalink}}?context=10#context"{% else %}href="/logged_out{{c.permalink}}?context=10#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a {% if v %}href="{{c.permalink}}?context=9#context"{% else %}href="/logged_out{{c.permalink}}?context=9#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
@@ -608,9 +608,9 @@
 						<a id="unsave2-{{c.id}}" class="list-group-item {% if c.id not in v.saved_comment_idlist() %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-save"></i>Unsave</a>
 					{% endif %}
 
-					<a href="javascript:void(0);" role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if 'rama' in request.host %}https://freeghettohoes.biz{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=10#context"><i class="fas fa-copy"></i>Copy link</a>
+					<a href="javascript:void(0);" role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if 'rama' in request.host %}https://freeghettohoes.biz{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=9#context"><i class="fas fa-copy"></i>Copy link</a>
 
-					<a class="list-group-item" {% if v %} href="{{c.permalink}}?context=10#context" {% else %} href="/logged_out{{c.permalink}}?context=10#context" {% endif %}><i class="fas fa-dna"></i>Context</a>
+					<a class="list-group-item" {% if v %} href="{{c.permalink}}?context=9#context" {% else %} href="/logged_out{{c.permalink}}?context=9#context" {% endif %}><i class="fas fa-dna"></i>Context</a>
 
 					<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')" class="list-group-item"><i class="fas fa-flag"></i>Report</a>
 
