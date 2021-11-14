@@ -869,7 +869,7 @@ def submit_post(v):
 		new_post.comment_count = 1
 		g.db.add(new_post)
 
-		if "rama" in request.host or "pcmemes.net" in request.host:
+		if "rama" in request.host or "pcmemes.net" in request.host or "shithole" in request.host:
 			if v.id == RED_ID: body = "fuck off red"
 			if v.id == CARP_ID:
 				if random.random() < 0.02: body = "i love you carp"
