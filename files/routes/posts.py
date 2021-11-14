@@ -404,7 +404,7 @@ def thumbnail_thread(pid):
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
 	try:
-		x=requests.get(fetch_url, headers=headers)
+		x=requests.get(fetch_url, headers=headers, timeout=5)
 	except:
 		db.close()
 		return
@@ -455,7 +455,7 @@ def thumbnail_thread(pid):
 		for url in thumb_candidate_urls:
 
 			try:
-				image_req=requests.get(url, headers=headers)
+				image_req=requests.get(url, headers=headers, timeout=5)
 			except:
 				continue
 
@@ -557,7 +557,7 @@ def submit_post(v):
 			if request.headers.get("Authorization"): return {"error":domain_obj.reason}, 400
 			else: return render_template("submit.html", v=v, error=domain_obj.reason, title=title, url=url, body=request.values.get("body", "")), 400
 		elif "twitter.com" in domain:
-			try: embed = requests.get("https://publish.twitter.com/oembed", params={"url":url, "omit_script":"t"}).json()["html"]
+			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
 		elif "youtu" in domain:
 			try:
@@ -759,7 +759,7 @@ def submit_post(v):
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				new_post.url = requests.post('https://catbox.moe/user/api.php', data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f}).text
+				new_post.url = requests.post('https://catbox.moe/user/api.php', timeout=5, data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f}).text
 
 		g.db.add(new_post)
 	

@@ -487,7 +487,7 @@ def gumroad(v):
 		'access_token': GUMROAD_TOKEN,
 		'email': v.email
 	}
-	response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
+	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"]
 
 	if len(response) == 0: return {"error": "Email not found"}, 404
 
@@ -981,7 +981,7 @@ def settings_song_change(v):
 		return redirect("/settings/profile")
 		
 	
-	req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={id}&key={YOUTUBE_KEY}&part=contentDetails").json()
+	req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
 	duration = req['items'][0]['contentDetails']['duration']
 	if "H" in duration:
 		return render_template("settings_profile.html",

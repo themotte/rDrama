@@ -294,7 +294,7 @@ def sign_up_post(v):
 				"sitekey": app.config["HCAPTCHA_SITEKEY"]}
 		url = "https://hcaptcha.com/siteverify"
 
-		x = requests.post(url, data=data)
+		x = requests.post(url, data=data, timeout=5)
 
 		if not x.json()["success"]:
 			return new_signup("Unable to verify captcha [2].")

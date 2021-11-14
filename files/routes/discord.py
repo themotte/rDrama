@@ -67,7 +67,7 @@ def discord_redirect(v):
 	}
 	url="https://discord.com/api/oauth2/token"
 
-	x=requests.post(url, headers=headers, data=data)
+	x=requests.post(url, headers=headers, data=data, timeout=5)
 
 	x=x.json()
 
@@ -82,7 +82,7 @@ def discord_redirect(v):
 	headers={
 		'Authorization': f"Bearer {token}"
 	}
-	x=requests.get(url, headers=headers)
+	x=requests.get(url, headers=headers, timeout=5)
 
 	x=x.json()
 
@@ -95,7 +95,7 @@ def discord_redirect(v):
 
 	if v.discord_id and v.discord_id != x['id']:
 		url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{v.discord_id}"
-		requests.delete(url, headers=headers)
+		requests.delete(url, headers=headers, timeout=5)
 
 	if g.db.query(User).filter(User.id!=v.id, User.discord_id==x["id"]).first():
 		return render_template("message.html", title="Discord account already linked.", error="That Discord account is already in use by another user.", v=v)
@@ -112,7 +112,7 @@ def discord_redirect(v):
 		"nick":name,
 	}
 
-	x=requests.put(url, headers=headers, json=data)
+	x=requests.put(url, headers=headers, json=data, timeout=5)
 
 	if x.status_code in [201, 204]:
 
@@ -140,7 +140,7 @@ def discord_redirect(v):
 			"nick": name
 		}
 
-		requests.patch(url, headers=headers, json=data)
+		requests.patch(url, headers=headers, json=data, timeout=5)
 
 	g.db.commit()
 

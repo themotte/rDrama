@@ -42,23 +42,23 @@ def add_role(user, role_name):
 	role_id = ROLES[role_name]
 	url = f"https://discordapp.com/api/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{role_id}"
 	headers = {"Authorization": f"Bot {BOT_TOKEN}"}
-	requests.put(url, headers=headers)
+	requests.put(url, headers=headers, timeout=5)
 
 @discord_wrap
 def remove_user(user):
 	url=f"https://discordapp.com/api/guilds/{SERVER_ID}/members/{user.discord_id}"
 	headers = {"Authorization": f"Bot {BOT_TOKEN}"}
-	requests.delete(url, headers=headers)
+	requests.delete(url, headers=headers, timeout=5)
 
 @discord_wrap
 def set_nick(user, nick):
 	url=f"https://discordapp.com/api/guilds/{SERVER_ID}/members/{user.discord_id}"
 	headers = {"Authorization": f"Bot {BOT_TOKEN}"}
 	data={"nick": nick}
-	requests.patch(url, headers=headers, json=data)
+	requests.patch(url, headers=headers, json=data, timeout=5)
 
 def send_message(message):
 	url=f"https://discordapp.com/api/channels/851846904283267094/messages"
 	headers = {"Authorization": f"Bot {BOT_TOKEN}"}
 	data={"content": message}
-	requests.post(url, headers=headers, data=data)
+	requests.post(url, headers=headers, data=data, timeout=5)
