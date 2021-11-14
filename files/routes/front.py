@@ -74,7 +74,8 @@ def notifications(v):
 			x.read = True
 			g.db.add(x)
 			i += 1
-
+		g.db.commit()
+		
 	if not posts:
 		listing = []
 		for c in comments:
