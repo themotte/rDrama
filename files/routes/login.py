@@ -320,7 +320,7 @@ def sign_up_post(v):
 			g.db.add(ref_user)
 
 	id_1 = g.db.query(User.id).filter_by(id=7).count()
-	users_count = g.db.query(User.id).count() #paranoid
+	users_count = g.db.query(User.id).count()
 	if id_1 == 0 and users_count < 7: admin_level=6
 	else: admin_level=0
 

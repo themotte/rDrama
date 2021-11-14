@@ -4119,7 +4119,6 @@ th {
 
 .modal-header {
   border-bottom: none;
-  background-color: var(--gray-400);
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
   padding: 0.5rem 1rem;

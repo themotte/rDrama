@@ -36,3 +36,7 @@ body, .navbar-light, .navbar-dark, .card, .modal-content, .comment-write textare
 .tooltip-inner {
 	color: #383838 !important;
 }
+
+.modal .comment-actions .list-group-item {
+    background-color: var(--gray-600)!important;	
+}
