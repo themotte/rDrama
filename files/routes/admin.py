@@ -28,7 +28,6 @@ def votes2(v, id):
 	return(str(votes))
 
 
-
 @app.get("/name/<id>/<name>")
 @admin_level_required(6)
 def changename(v, id, name):
