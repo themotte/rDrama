@@ -19,14 +19,13 @@ from files.helpers.discord import add_role
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
-@app.get("/votes2")
+@app.get("/upvoters/<id>")
 @admin_level_required(6)
-def votes2(v):
-	votes = g.db.query(Votes).join(Submission, Vote.submission_id==Submission.id).filter(Submission.author_id==7)all()
-	li = []
-	for v in votes:
-		li.append(v.user_id)
-	return(str(li))
+def votes2(v, id):
+	try: id = int(id)
+	except: abort(400)
+	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).all()
+	return(str(votes))
 
 
 
