@@ -166,7 +166,6 @@ class User(Base):
 		return return_value
 
 	@property
-	@lazy
 	def referral_count(self):
 		return len(self.referrals)
 
