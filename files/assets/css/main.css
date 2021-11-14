@@ -4138,7 +4138,6 @@ th {
 
 .modal-footer {
   border: none;
-  background-color: var(--gray-400);
   border-bottom-right-radius: 0.35rem;
   border-bottom-left-radius: 0.35rem;
 }
