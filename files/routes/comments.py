@@ -878,6 +878,11 @@ def save_comment(cid, v):
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, comment_id=comment.id, type=2)
 		g.db.add(new_save)
+
+		# message = f"@{v.username} has saved your [comment](/comment/{cid})!"
+		# existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+		# if not existing: send_notification(comment.author_id, message)
+
 		try: g.db.commit()
 		except: g.db.rollback()
 
@@ -895,6 +900,11 @@ def unsave_comment(cid, v):
 
 	if save:
 		g.db.delete(save)
+
+		# message = f"@{v.username} has unsaved your [comment](/comment/{cid})!"
+		# existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+		# if not existing: send_notification(comment.author_id, message)
+
 		g.db.commit()
 
 	return {"message": "Comment unsaved!"}

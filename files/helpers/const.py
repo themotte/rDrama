@@ -8,6 +8,8 @@ SLURS = {
 	"retarded": "r-slurred",
 	"retard": "r-slur",
 	"tard": "r-slur",
+	"newfag": "newstrag",
+	"oldfag": "oldstrag",
 	"faggot": "cute twink",
 	"faggot": "cute twink",
 	"fag": "cute twink",

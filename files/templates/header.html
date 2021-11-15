@@ -21,10 +21,10 @@
 		<div class="container-fluid" style="padding:0;">
 			<div class="flex-grow-1">
 				<a {% if v %}href="/"{% else %}href="/logged_out"{% endif %} class="navbar-brand mr-auto">
-					<img loading="lazy" height="30" src="/assets/images/{{'SITE_NAME' | app_config}}/headericon.webp">
+					<img loading="lazy" height="30" src="/assets/images/{{'SITE_NAME' | app_config}}/headericon.webp?v=1">
 					{% if "gigachadlife" in request.host %}
 						<span style="font-weight: bold; font-size: 1.2rem;">GigaChadLife</span>
-					{% elif "shithole" not in request.host %}
+					{% elif "shithole" not in request.host and 'pcm' not in request.host %}
 						<img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/logo.webp" height="20">
 					{% endif %}
 				</a>
