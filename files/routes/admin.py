@@ -24,8 +24,12 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 def votes2(v, id):
 	try: id = int(id)
 	except: abort(400)
-	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
-	return(str(votes))
+	votes = g.db.query(Vote.user_id).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+
+	voters=[x[0] for x in votes]
+	users = g.db.query(User.id, User.username).filter(User.id.in_(voters)).all()
+	users = [x[1] for x in sorted(users, key=lambda x: voters.index(x[0]))]
+	return render_template("upvoters.html", users=users)
 
 
 @app.get("/name/<id>/<name>")

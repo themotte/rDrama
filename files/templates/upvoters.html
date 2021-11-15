@@ -1,0 +1,19 @@
+{% extends "default.html" %}
+{% block content %}
+	
+<table class="table table-striped mb-5">
+<thead class="bg-primary text-white">
+	<tr>
+		<th style="font-weight: bold">Name</th>
+	</tr>
+</thead>
+<tbody id="followers-table">
+{% for user in users %}
+	<tr>
+		<td style="font-weight: bold">{{user}}</td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}
