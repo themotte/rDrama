@@ -993,9 +993,18 @@ def api_sticky_post(post_id, v):
 
 		cache.delete_memoized(frontlist)
 
-		g.db.commit()
-		if post.stickied: return {"message": "Post pinned!"}
-		else: return {"message": "Post unpinned!"}
+		if post.stickied:
+			message = f"@{v.username} has pinned your [post](/post/{post_id})!"
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+			if not existing: send_notification(post.author_id, message)
+			g.db.commit()
+			return {"message": "Post pinned!"}
+		else:
+			message = f"@{v.username} has unpinned your [post](/post/{post_id})!"
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+			if not existing: send_notification(post.author_id, message)
+			g.db.commit()
+			return {"message": "Post unpinned!"}
 
 @app.post("/ban_comment/<c_id>")
 @limiter.limit("1/second")

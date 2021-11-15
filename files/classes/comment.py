@@ -212,10 +212,10 @@ class Comment(Base):
 	@property
 	@lazy
 	def permalink(self):
-		if self.post and self.post.club: return f"/comment/{self.id}/"
+		if self.post and self.post.club: return f"/comment/{self.id}?context=9#context"
 
-		if self.post: return f"{self.post.permalink}/{self.id}/"
-		else: return f"/comment/{self.id}/"
+		if self.post: return f"{self.post.permalink}/{self.id}?context=9#context"
+		else: return f"/comment/{self.id}?context=9#context"
 
 	@property
 	@lazy

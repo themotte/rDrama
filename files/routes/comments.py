@@ -861,8 +861,18 @@ def toggle_pin_comment(cid, v):
 
 	g.db.commit()
 
-	if comment.is_pinned: return {"message": "Comment pinned!"}
-	else: return {"message": "Comment unpinned!"}
+	if comment.is_pinned:
+		message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
+		existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+		if not existing: send_notification(comment.author_id, message)
+		g.db.commit()
+		return {"message": "Comment pinned!"}
+	else:
+		message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
+		existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+		if not existing: send_notification(comment.author_id, message)
+		g.db.commit()
+		return {"message": "Comment unpinned!"}
 	
 	
 @app.post("/save_comment/<cid>")
@@ -878,10 +888,6 @@ def save_comment(cid, v):
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, comment_id=comment.id, type=2)
 		g.db.add(new_save)
-
-		# message = f"@{v.username} has saved your [comment](/comment/{cid})!"
-		# existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
-		# if not existing: send_notification(comment.author_id, message)
 
 		try: g.db.commit()
 		except: g.db.rollback()
@@ -900,11 +906,6 @@ def unsave_comment(cid, v):
 
 	if save:
 		g.db.delete(save)
-
-		# message = f"@{v.username} has unsaved your [comment](/comment/{cid})!"
-		# existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
-		# if not existing: send_notification(comment.author_id, message)
-
 		g.db.commit()
 
 	return {"message": "Comment unsaved!"}
