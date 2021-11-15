@@ -34,7 +34,7 @@ def upvoters(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
 
-	return render_template("voters.html", v=v, users=users, username=username, name='Up', name2='@{v.username} biggest simps')
+	return render_template("voters.html", v=v, users=users, name='Up', name2='@{username} biggest simps')
 
 @app.get("/@<username>/downvoters")
 @auth_desired
@@ -53,7 +53,7 @@ def downvoters(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
 
-	return render_template("voters.html", v=v, users=users, username=username, name='Down', name2='@{v.username} biggest haters')
+	return render_template("voters.html", v=v, users=users, name='Down', name2='@{username} biggest haters')
 
 @app.get("/@<username>/upvoting")
 @auth_desired
@@ -72,7 +72,7 @@ def upvoting(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
 
-	return render_template("voters.html", v=v, users=users, username=username, name='Up', name2=f'Who @{v.username} simps for')
+	return render_template("voters.html", v=v, users=users, name='Up', name2=f'Who @{username} simps for')
 
 @app.get("/@<username>/downvoting")
 @auth_desired
@@ -91,7 +91,7 @@ def downvoting(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
 
-	return render_template("voters.html", v=v, users=users, username=username, name='Down', name2=f'Who @{v.username} hates')
+	return render_template("voters.html", v=v, users=users, name='Down', name2=f'Who @{username} hates')
 
 @app.post("/pay_rent")
 @limiter.limit("1/second")
