@@ -55,7 +55,7 @@ def downvoters(v, username):
 	users2 = []
 	for user in users: users2.append((user, votes[user.id]))
 
-	users = sorted(users2, key=lambda x: x[1], reverse=True)
+	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
 
 	return render_template("upvoters.html", v=v, users=users, username=username, name='Down', name2='haters')
 
