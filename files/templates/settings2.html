@@ -55,7 +55,7 @@
 
 {% block subNav %}
 
-{% set mod = (v.admin_level > 1) %}
+{% set mod = (v and v.admin_level > 1) %}
 <div class="container-fluid bg-white sticky d-none d-md-block" style="padding-top: 50px; padding-bottom: 0 !important;">
 	<div class="row box-shadow-bottom">
 			<div class="col">
