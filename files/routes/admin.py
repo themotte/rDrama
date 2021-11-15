@@ -28,8 +28,8 @@ def votes2(v, id):
 
 	voters=[x[0] for x in votes]
 	counts=[x[1] for x in votes]
-	users = g.db.query(User.id, User.username).filter(User.id.in_(voters)).all()
-	users = [x[1] for x in sorted(users, key=lambda x: voters.index(x[0]))]
+	users = g.db.query(User).filter(User.id.in_(voters)).all()
+	users = sorted(users, key=lambda x: voters.index(x.id))
 	users2 = []
 	for idx, user in enumerate(users): users2.append((user, counts[idx]))
 
