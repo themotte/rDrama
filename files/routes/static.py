@@ -163,7 +163,7 @@ def patrons(v):
 @app.get("/badmins")
 @auth_desired
 def admins(v):
-	admins = g.db.query(User).filter_by(admin_level=6).order_by(User.coins.desc()).all()
+	admins = g.db.query(User).filter(User.admin_level>1).order_by(User.coins.desc()).all()
 	return render_template("admins.html", v=v, admins=admins)
 
 

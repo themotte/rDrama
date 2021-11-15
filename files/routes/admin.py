@@ -144,7 +144,7 @@ def make_admin(v, username):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
-		user.admin_level = 6
+		user.admin_level = 2
 		g.db.add(user)
 		g.db.commit()
 	return {"message": "User has been made admin!"}
