@@ -23,8 +23,6 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @app.get("/@<username>/upvoters")
 @admin_level_required(6)
 def upvoters(v, username):
-	try: id = int(id)
-	except: abort(400)
 	id = g.db.query(User.id).filter(User.username==username).first()[0]
 
 	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).limit(25).all()
@@ -39,13 +37,11 @@ def upvoters(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)
 
-	return render_template("upvoters.html", v=v, users=users, username=username)
+	return render_template("upvoters.html", v=v, users=users, username=username, name='Up', name2='simps')
 
 @app.get("/@<username>/downvoters")
 @admin_level_required(6)
 def downvoters(v, username):
-	try: id = int(id)
-	except: abort(400)
 	id = g.db.query(User.id).filter(User.username==username).first()[0]
 
 	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).limit(25).all()
@@ -60,7 +56,7 @@ def downvoters(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)
 
-	return render_template("upvoters.html", v=v, users=users, username=username)
+	return render_template("upvoters.html", v=v, users=users, username=username, name='Down', name2='haters')
 
 
 @app.get("/name/<id>/<name>")
