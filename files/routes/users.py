@@ -20,7 +20,9 @@ beams_client = PushNotifications(instance_id=PUSHER_INSTANCE_ID, secret_key=PUSH
 @app.get("/@<username>/upvoters")
 @auth_desired
 def upvoters(v, username):
-	id = g.db.query(User.id).filter(User.username==username).first()[0]
+	id = g.db.query(User.id).filter(User.username==username).first()
+	if not id: abort(400)
+	id = id[0]
 
 	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).limit(25).all()
 
@@ -39,7 +41,9 @@ def upvoters(v, username):
 @app.get("/@<username>/downvoters")
 @auth_desired
 def downvoters(v, username):
-	id = g.db.query(User.id).filter(User.username==username).first()[0]
+	id = g.db.query(User.id).filter(User.username==username).first()
+	if not id: abort(400)
+	id = id[0]
 
 	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).limit(25).all()
 
