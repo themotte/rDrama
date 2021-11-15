@@ -20,16 +20,37 @@ from collections import Counter
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
-@app.get("/upvoters/<id>")
+@app.get("/@<username>/upvoters")
 @admin_level_required(6)
-def votes2(v, id):
+def upvoters(v, username):
 	try: id = int(id)
 	except: abort(400)
-	username = g.db.query(User.username).filter(User.id==7).first()[0]
+	id = g.db.query(User.id).filter(User.username==username).first()[0]
 
 	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).limit(25).all()
 
 	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).limit(25).all()
+
+	votes = Counter(dict(votes)) + Counter(dict(votes2))
+
+	users = g.db.query(User).filter(User.id.in_(votes.keys())).all()
+	users2 = []
+	for user in users: users2.append((user, votes[user.id]))
+
+	users = sorted(users2, key=lambda x: x[1], reverse=True)
+
+	return render_template("upvoters.html", v=v, users=users, username=username)
+
+@app.get("/@<username>/downvoters")
+@admin_level_required(6)
+def downvoters(v, username):
+	try: id = int(id)
+	except: abort(400)
+	id = g.db.query(User.id).filter(User.username==username).first()[0]
+
+	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).limit(25).all()
+
+	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).limit(25).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
