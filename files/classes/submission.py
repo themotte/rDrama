@@ -346,7 +346,7 @@ class Submission(Base):
 
 	@lazy
 	def realtitle(self, v):
-		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6):
+		if self.club and not (v and v.paid_dues) and not (v and v.admin_level > 1):
 			if v: return random.choice(TROLLTITLES).format(username=v.username)
 			else: return 'COUNTRY CLUB MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
@@ -358,7 +358,7 @@ class Submission(Base):
 
 	@lazy
 	def plaintitle(self, v):
-		if self.club and not (v and v.paid_dues) and not (v and v.admin_level == 6):
+		if self.club and not (v and v.paid_dues) and not (v and v.admin_level > 1):
 			if v: return random.choice(TROLLTITLES).format(username=v.username)
 			else: return 'COUNTRY CLUB MEMBERS ONLY'
 		else: title = self.title

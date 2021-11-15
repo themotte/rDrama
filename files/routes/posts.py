@@ -118,7 +118,7 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if post.club and not (v and v.paid_dues) or post.private and not (v and (v.id == post.author_id or v.admin_level == 6)): abort(403)
+	if post.club and not (v and v.paid_dues) or post.private and not (v and (v.id == post.author_id or v.admin_level > 1)): abort(403)
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -134,7 +134,7 @@ def post_id(pid, anything=None, v=None):
 			blocked.c.id,
 		)
 		
-		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
+		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
 		comments=comments.filter(
@@ -214,7 +214,7 @@ def edit_post(pid, v):
 
 	p = get_post(pid)
 
-	if p.author_id != v.id and not (v.admin_level == 6 and v.id in [1,28,30,995,2513,3333]): abort(403)
+	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
 	title = request.values.get("title", "").strip()
 	body = request.values.get("body", "").strip()
@@ -936,7 +936,7 @@ def submit_post(v):
 
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
-	if v.admin_level == 6 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title):
+	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title):
 		send_message(f"http://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 

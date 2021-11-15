@@ -63,7 +63,7 @@
 					<a class="nav-link" href="/random/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Random post"><i class="fas fa-random"></i></a>
 				</li>
 
-				{% if v and v.admin_level==6 %}
+				{% if v and v.admin_level> 1 %}
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
 					<a class="nav-link" href="/admin/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Admin tools"><i class="fas fa-crown{% if v.has_report_queue %} text-success{% endif %}"></i></a>
 				</li>

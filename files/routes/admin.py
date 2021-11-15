@@ -21,7 +21,7 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 
 @app.get("/name/<id>/<name>")
-@admin_level_required(6)
+@admin_level_required(2)
 def changename(v, id, name):
 	if request.host != 'pcmemes.net': abort(403)
 	user = g.db.query(User).filter_by(id=int(id)).first()
@@ -33,7 +33,7 @@ def changename(v, id, name):
 	return "User not found!"
 
 @app.get("/coins/<id>/<coins>")
-@admin_level_required(6)
+@admin_level_required(2)
 def addcoins(v, id, coins):
 	if request.host != 'pcmemes.net': abort(403)
 	user = g.db.query(User).filter_by(id=int(id)).first()
@@ -45,7 +45,7 @@ def addcoins(v, id, coins):
 	return "User not found!"
 
 @app.get("/truescore")
-@admin_level_required(6)
+@admin_level_required(2)
 def truescore(v):
 	users = g.db.query(User).order_by(User.truecoins.desc()).limit(25).all()
 	return render_template("truescore.html", v=v, users=users)
@@ -53,9 +53,9 @@ def truescore(v):
 
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 def revert_actions(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 
@@ -78,7 +78,7 @@ def revert_actions(v, username):
 
 @app.post("/@<username>/club_allow")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 def club_allow(v, username):
 
 	u = get_user(username, v=v)
@@ -109,7 +109,7 @@ def club_allow(v, username):
 
 @app.post("/@<username>/club_ban")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 def club_ban(v, username):
 
 	u = get_user(username, v=v)
@@ -139,9 +139,9 @@ def club_ban(v, username):
 
 @app.post("/@<username>/make_admin")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 def make_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 6
@@ -152,9 +152,9 @@ def make_admin(v, username):
 
 @app.post("/@<username>/remove_admin")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 def remove_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -165,9 +165,9 @@ def remove_admin(v, username):
 
 @app.post("/@<username>/make_fake_admin")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 def make_fake_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 1
@@ -178,9 +178,9 @@ def make_fake_admin(v, username):
 
 @app.post("/@<username>/remove_fake_admin")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 def remove_fake_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -191,9 +191,9 @@ def remove_fake_admin(v, username):
 
 @app.post("/admin/monthly")
 @limiter.limit("1/day")
-@admin_level_required(6)
+@admin_level_required(2)
 def monthly(v):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.id in [1,28,30,995,2513,3333]) or ('rama' not in request.host and 'pcm' not in request.host):
+	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		for u in g.db.query(User).filter(User.patron > 0).all():
 			if u.patron == 1: procoins = 2000
@@ -211,7 +211,7 @@ def monthly(v):
 
 
 @app.get('/admin/rules')
-@admin_level_required(6)
+@admin_level_required(2)
 def get_rules(v):
 
 	try:
@@ -224,7 +224,7 @@ def get_rules(v):
 
 @app.post('/admin/rules')
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def post_rules(v):
 
@@ -248,7 +248,7 @@ def post_rules(v):
 @app.get("/admin/shadowbanned")
 @auth_required
 def shadowbanned(v):
-	if not (v and v.admin_level == 6): abort(404)
+	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).all()]
 	return render_template("banned.html", v=v, users=users)
 
@@ -256,7 +256,7 @@ def shadowbanned(v):
 @app.get("/admin/agendaposters")
 @auth_required
 def agendaposters(v):
-	if not (v and v.admin_level == 6): abort(404)
+	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter_by(agendaposter = True).all()]
 	return render_template("banned.html", v=v, users=users)
 
@@ -333,7 +333,7 @@ def admin_home(v):
 		return render_template("admin/admin_home.html", v=v, x=x)
 
 @app.post("/admin/disablesignups")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def disablesignups(v):
 	with open('./disablesignups', 'r') as f: content = f.read()
@@ -585,7 +585,7 @@ def admin_removed(v):
 
 
 @app.post("/agendaposter/<user_id>")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def agendaposter(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
@@ -638,7 +638,7 @@ def agendaposter(user_id, v):
 
 @app.post("/shadowban/<user_id>")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def shadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
@@ -664,7 +664,7 @@ def shadowban(user_id, v):
 
 @app.post("/unshadowban/<user_id>")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def unshadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
@@ -689,7 +689,7 @@ def unshadowban(user_id, v):
 
 @app.post("/admin/verify/<user_id>")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def verify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
@@ -708,7 +708,7 @@ def verify(user_id, v):
 
 @app.post("/admin/unverify/<user_id>")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def unverify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
@@ -728,7 +728,7 @@ def unverify(user_id, v):
 
 @app.post("/admin/title_change/<user_id>")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def admin_title_change(user_id, v):
 
@@ -762,7 +762,7 @@ def admin_title_change(user_id, v):
 
 @app.post("/ban_user/<user_id>")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def ban_user(user_id, v):
 	
@@ -837,7 +837,7 @@ def ban_user(user_id, v):
 
 @app.post("/unban_user/<user_id>")
 @limiter.limit("1/second")
-@admin_level_required(6)
+@admin_level_required(2)
 @validate_formkey
 def unban_user(user_id, v):
 
@@ -1074,7 +1074,7 @@ def admin_distinguish_comment(c_id, v):
 	return html
 
 @app.get("/admin/dump_cache")
-@admin_level_required(6)
+@admin_level_required(2)
 def admin_dump_cache(v):
 	cache.clear()
 	return {"message": "Internal cache cleared."}

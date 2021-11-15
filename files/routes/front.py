@@ -28,7 +28,7 @@ def notifications(v):
 	messages = request.values.get('messages', False)
 	modmail = request.values.get('modmail', False)
 	posts = request.values.get('posts', False)
-	if modmail and v.admin_level == 6:
+	if modmail and v.admin_level > 1:
 		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
@@ -299,7 +299,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 			Submission.author_id.notin_(blocked)
 		)
 
-	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level == 6).all()]
+	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level > 1).all()]
 	posts = posts.filter(Submission.title.ilike('_changelog%'), Submission.author_id.in_(admins))
 
 	if t != 'all':

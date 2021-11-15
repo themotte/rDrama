@@ -46,7 +46,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	if comment.post and comment.post.club and not (v and v.paid_dues): abort(403)
 
-	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level == 6) : abort(403)
+	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level > 1) : abort(403)
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
@@ -90,7 +90,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			blocked.c.id,
 		)
 
-		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
+		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 		 
 		comments=comments.filter(
@@ -842,16 +842,16 @@ def toggle_pin_comment(cid, v):
 	if comment.is_pinned:
 		if comment.is_pinned.startswith("t:"): abort(403)
 		else:
-			if v.admin_level == 6 or comment.is_pinned.endswith(" (OP)"): comment.is_pinned = None
+			if v.admin_level > 1 or comment.is_pinned.endswith(" (OP)"): comment.is_pinned = None
 			else: abort(403)
 	else:
-		if v.admin_level == 6: comment.is_pinned = v.username
+		if v.admin_level > 1: comment.is_pinned = v.username
 		else: comment.is_pinned = v.username + " (OP)"
 
 	g.db.add(comment)
 	g.db.flush()
 
-	if v.admin_level == 6:
+	if v.admin_level > 1:
 		ma=ModAction(
 			kind="pin_comment" if comment.is_pinned else "unpin_comment",
 			user_id=v.id,

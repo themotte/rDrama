@@ -59,7 +59,7 @@ def searchposts(v):
 
 	posts = g.db.query(Submission.id)
 	
-	if not (v and v.admin_level == 6): posts = posts.filter(Submission.private == False)
+	if not (v and v.admin_level > 1): posts = posts.filter(Submission.private == False)
 	
 	if 'q' in criteria:
 		words=criteria['q'].split()

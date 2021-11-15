@@ -15,7 +15,7 @@ site_name = environ.get("SITE_NAME").strip()
 def static_rules(v):
 
 	if not path.exists(f'./{site_name} rules.html'):
-		if v and v.admin_level == 6:
+		if v and v.admin_level > 1:
 			return render_template('norules.html', v=v)
 		else:
 			abort(404)
@@ -174,7 +174,7 @@ def log(v):
 
 	page=int(request.args.get("page",1))
 
-	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	if v and v.admin_level > 1: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
 	else: actions=g.db.query(ModAction).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub", ModAction.kind!="check").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 
 	next_exists=len(actions)>25
