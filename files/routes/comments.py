@@ -122,7 +122,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			
 	if request.headers.get("Authorization"): return top_comment.json
 	else: 
-		if post.is_banned and not (v and (v.admin_level >= 3 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, sort=sort, linked_comment=comment, comment_info=comment_info, render_replies=True)
 
@@ -203,7 +203,7 @@ def api_comment(v):
 															 ).first()
 	if existing: return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
 
-	if parent.author.any_block_exists(v) and not v.admin_level>=3: return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
+	if parent.author.any_block_exists(v) and v.admin_level < 2: return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
 	is_bot = request.headers.get("Authorization")
 

@@ -90,13 +90,13 @@ def searchposts(v):
 				)
 			)
 
-	if not(v and v.admin_level >= 3):
+	if not(v and v.admin_level > 1):
 		posts = posts.filter(
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False,
 			)
 
-	if v and v.admin_level >= 4:
+	if v and v.admin_level > 1:
 		pass
 	elif v:
 		blocking = [x[0] for x in g.db.query(
@@ -207,7 +207,7 @@ def searchcomments(v):
 
 	if 'author' in criteria: comments = comments.filter(Comment.author_id == get_user(criteria['author']).id)
 
-	if not(v and v.admin_level >= 3):
+	if not(v and v.admin_level > 1):
 		comments = comments.filter(
 			Comment.deleted_utc == 0,
 			Comment.is_banned == False)

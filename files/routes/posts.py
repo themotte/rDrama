@@ -201,7 +201,7 @@ def post_id(pid, anything=None, v=None):
 	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
 	else:
-		if post.is_banned and not (v and (v.admin_level >= 3 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, sort=sort, render_replies=True)
 
@@ -991,7 +991,7 @@ def undelete_post_pid(pid, v):
 def toggle_comment_nsfw(cid, v):
 
 	comment = g.db.query(Comment).filter_by(id=cid).first()
-	if not comment.author_id == v.id and not v.admin_level >= 3: abort(403)
+	if not comment.author_id == v.id and not v.admin_level > 1: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
 	g.db.flush()
@@ -1008,7 +1008,7 @@ def toggle_post_nsfw(pid, v):
 
 	post = get_post(pid)
 
-	if not post.author_id == v.id and not v.admin_level >= 3:
+	if not post.author_id == v.id and not v.admin_level > 1:
 		abort(403)
 
 	post.over_18 = not post.over_18

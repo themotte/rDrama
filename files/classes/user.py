@@ -211,12 +211,12 @@ class User(Base):
 	@cache.memoize(timeout=86400)
 	def userpagelisting(self, v=None, page=1, sort="new", t="all"):
 
-		if self.shadowbanned and not (v and (v.admin_level >= 3 or v.id == self.id)):
+		if self.shadowbanned and not (v and (v.admin_level > 1 or v.id == self.id)):
 			return []
 
 		posts = g.db.query(Submission.id).filter_by(author_id=self.id, is_pinned=False)
 
-		if not (v and (v.admin_level >= 3 or v.id == self.id)):
+		if not (v and (v.admin_level > 1 or v.id == self.id)):
 			posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False)
 
 		now = int(time.time())

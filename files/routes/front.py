@@ -369,7 +369,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 			Comment.author_id.notin_(blocked)
 		)
 
-	if not v or not v.admin_level >= 3:
+	if not v or not v.admin_level > 1:
 		comments = comments.filter_by(is_banned=False).filter(Comment.deleted_utc == 0)
 
 	now = int(time.time())
