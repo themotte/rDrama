@@ -13,12 +13,6 @@
 
 {% block title %}
 
-{% if request.host == 'pcmemes.net' %}
-	{% set cc='SPLASH MOUNTAIN' %}
-{% else %}
-	{% set cc='COUNTRY CLUB' %}
-{% endif %}
-
 {% if p.award_count("train") %}
 	<style>
 		@keyframes train {
@@ -416,6 +410,11 @@
 
 {% block content %}
 
+{% if request.host == 'pcmemes.net' %}
+	{% set cc='SPLASH MOUNTAIN' %}
+{% else %}
+	{% set cc='COUNTRY CLUB' %}
+{% endif %}
 
 <div class="row mb-3">
 
