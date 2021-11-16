@@ -261,7 +261,7 @@ def agendaposters(v):
 
 
 @app.get("/admin/image_posts")
-@admin_level_required(3)
+@admin_level_required(2)
 def image_posts_listing(v):
 
 	try: page = int(request.values.get('page', 1))
@@ -279,7 +279,7 @@ def image_posts_listing(v):
 
 
 @app.get("/admin/reported/posts")
-@admin_level_required(3)
+@admin_level_required(2)
 def reported_posts(v):
 
 	page = max(1, int(request.values.get("page", 1)))
@@ -300,7 +300,7 @@ def reported_posts(v):
 
 
 @app.get("/admin/reported/comments")
-@admin_level_required(3)
+@admin_level_required(2)
 def reported_comments(v):
 
 	page = max(1, int(request.values.get("page", 1)))
@@ -325,7 +325,7 @@ def reported_comments(v):
 						   standalone=True)
 
 @app.get("/admin")
-@admin_level_required(3)
+@admin_level_required(2)
 def admin_home(v):
 	with open('./disablesignups', 'r') as f:
 		x = f.read()
@@ -346,7 +346,7 @@ def disablesignups(v):
 			return {"message": "Signups disabled!"}
 
 @app.get("/admin/badge_grant")
-@admin_level_required(4)
+@admin_level_required(2)
 def badge_grant_get(v):
 
 	badge_types = g.db.query(BadgeDef).all()
@@ -368,7 +368,7 @@ def badge_grant_get(v):
 
 @app.post("/admin/badge_grant")
 @limiter.limit("1/second")
-@admin_level_required(4)
+@admin_level_required(2)
 @validate_formkey
 def badge_grant_post(v):
 
@@ -429,7 +429,7 @@ def users_list(v):
 						   )
 
 @app.get("/admin/alt_votes")
-@admin_level_required(4)
+@admin_level_required(2)
 def alt_votes_get(v):
 
 	if not request.values.get("u1") or not request.values.get("u2"):
@@ -539,7 +539,7 @@ def alt_votes_get(v):
 
 @app.post("/admin/link_accounts")
 @limiter.limit("1/second")
-@admin_level_required(4)
+@admin_level_required(2)
 @validate_formkey
 def admin_link_accounts(v):
 
@@ -559,7 +559,7 @@ def admin_link_accounts(v):
 
 
 @app.get("/admin/removed")
-@admin_level_required(3)
+@admin_level_required(2)
 def admin_removed(v):
 
 	page = int(request.values.get("page", 1))
@@ -876,7 +876,7 @@ def unban_user(user_id, v):
 
 @app.post("/ban_post/<post_id>")
 @limiter.limit("1/second")
-@admin_level_required(3)
+@admin_level_required(2)
 @validate_formkey
 def ban_post(post_id, v):
 
@@ -914,7 +914,7 @@ def ban_post(post_id, v):
 
 @app.post("/unban_post/<post_id>")
 @limiter.limit("1/second")
-@admin_level_required(3)
+@admin_level_required(2)
 @validate_formkey
 def unban_post(post_id, v):
 
@@ -972,7 +972,7 @@ def api_distinguish_post(post_id, v):
 
 
 @app.post("/sticky/<post_id>")
-@admin_level_required(3)
+@admin_level_required(2)
 def api_sticky_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).first()
@@ -1089,7 +1089,7 @@ def admin_dump_cache(v):
 
 
 @app.get("/admin/banned_domains/")
-@admin_level_required(4)
+@admin_level_required(2)
 def admin_banned_domains(v):
 
 	banned_domains = g.db.query(BannedDomain).all()
@@ -1097,7 +1097,7 @@ def admin_banned_domains(v):
 
 @app.post("/admin/banned_domains")
 @limiter.limit("1/second")
-@admin_level_required(4)
+@admin_level_required(2)
 @validate_formkey
 def admin_toggle_ban_domain(v):
 
@@ -1133,7 +1133,7 @@ def admin_toggle_ban_domain(v):
 
 @app.post("/admin/nuke_user")
 @limiter.limit("1/second")
-@admin_level_required(4)
+@admin_level_required(2)
 @validate_formkey
 def admin_nuke_user(v):
 
@@ -1167,7 +1167,7 @@ def admin_nuke_user(v):
 
 @app.post("/admin/unnuke_user")
 @limiter.limit("1/second")
-@admin_level_required(4)
+@admin_level_required(2)
 @validate_formkey
 def admin_nunuke_user(v):
 
