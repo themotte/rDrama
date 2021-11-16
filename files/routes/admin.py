@@ -27,8 +27,6 @@ def delete(v):
 	votes = g.db.query(Vote).join(Submission, Vote.submission_id==Submission.id).filter(Submission.author_id.in_(shadowbanned)).all()
 	votes2 = g.db.query(CommentVote).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.author_id.in_(shadowbanned)).all()
 	votes = votes + votes2
-	for vote in votes: g.db.delete(vote)
-	g.db.commit()
 	return (str(len(votes)))
 
 @app.get("/name/<id>/<name>")
