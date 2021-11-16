@@ -362,7 +362,7 @@ def buy(v, award):
 @auth_required
 def award_post(pid, v):
 
-	if v.is_suspended and v.unban_utc == 0: return {"error": "forbidden."}, 403
+	if v.is_banned and not v.unban_utc: return {"error": "forbidden."}, 403
 
 	kind = request.values.get("kind", "").strip()
 	

@@ -904,9 +904,11 @@ def settings_content_get(v):
 
 @app.post("/settings/name_change")
 @limiter.limit("1/second")
-@is_not_banned
+@auth_required
 @validate_formkey
 def settings_name_change(v):
+
+	if v.is_banned and not v.unban_utc: return {"error": "forbidden."}, 403
 
 	new_name=request.values.get("name").strip()
 
