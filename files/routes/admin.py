@@ -18,6 +18,8 @@ from .front import frontlist
 from files.helpers.discord import add_role
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
+if SITE_NAME == 'PCM': cc = "splash mountain"
+else: cc = "country club"
 
 @app.get("/name/<id>/<name>")
 @admin_level_required(2)
@@ -104,7 +106,7 @@ def club_allow(v, username):
 	g.db.add(ma)
 
 	g.db.commit()
-	return {"message": f"@{username} has been allowed into the country club!"}
+	return {"message": f"@{username} has been allowed into the {cc}!"}
 
 @app.post("/@<username>/club_ban")
 @limiter.limit("1/second")
@@ -133,7 +135,7 @@ def club_ban(v, username):
 	g.db.add(ma)
 
 	g.db.commit()
-	return {"message": f"@{username} has been kicked from the country club. Deserved."}
+	return {"message": f"@{username} has been kicked from the {cc}. Deserved."}
 
 
 @app.post("/@<username>/make_admin")
@@ -993,15 +995,17 @@ def api_sticky_post(post_id, v):
 		cache.delete_memoized(frontlist)
 
 		if post.stickied:
-			message = f"@{v.username} has pinned your [post](/post/{post_id})!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
-			if not existing: send_notification(post.author_id, message)
+			if v.id != post.author_id:
+				message = f"@{v.username} has pinned your [post](/post/{post_id})!"
+				existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+				if not existing: send_notification(post.author_id, message)
 			g.db.commit()
 			return {"message": "Post pinned!"}
 		else:
-			message = f"@{v.username} has unpinned your [post](/post/{post_id})!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
-			if not existing: send_notification(post.author_id, message)
+			if v.id != post.author_id:
+				message = f"@{v.username} has unpinned your [post](/post/{post_id})!"
+				existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+				if not existing: send_notification(post.author_id, message)
 			g.db.commit()
 			return {"message": "Post unpinned!"}
 

@@ -207,7 +207,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def shortlink(self):
-		return f"http://{site}/comment/{self.id}"
+		return f"http://{site}/comment/{self.id}#context"
 
 	@property
 	@lazy
@@ -302,7 +302,7 @@ class Comment(Base):
 		return data
 
 	def realbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
+		if self.post and self.post.club and not (v and v.paid_dues): return f"<p>{cc} ONLY</p>"
 
 		body = self.body_html
 
@@ -335,7 +335,7 @@ class Comment(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
+		if self.post and self.post.club and not (v and v.paid_dues): return f"<p>{cc} ONLY</p>"
 
 		body = self.body
 

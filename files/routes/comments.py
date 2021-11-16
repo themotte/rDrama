@@ -11,8 +11,9 @@ from flask import *
 from files.__main__ import app, limiter
 from files.helpers.sanitize import filter_title
 
-
 site = environ.get("DOMAIN").strip()
+if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
+else: cc = "COUNTRY CLUB"
 
 beams_client = PushNotifications(
 		instance_id=PUSHER_INSTANCE_ID,
@@ -862,15 +863,17 @@ def toggle_pin_comment(cid, v):
 	g.db.commit()
 
 	if comment.is_pinned:
-		message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
-		existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
-		if not existing: send_notification(comment.author_id, message)
+		if v.id != comment.author_id:
+			message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+			if not existing: send_notification(comment.author_id, message)
 		g.db.commit()
 		return {"message": "Comment pinned!"}
 	else:
-		message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
-		existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
-		if not existing: send_notification(comment.author_id, message)
+		if v.id != comment.author_id:
+			message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+			if not existing: send_notification(comment.author_id, message)
 		g.db.commit()
 		return {"message": "Comment unpinned!"}
 	

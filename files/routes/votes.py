@@ -22,6 +22,8 @@ def admin_vote_info_get(v):
 		else: abort(400)
 	except: abort(400)
 
+	if thing.author.shadowbanned and not (v and v.admin_level): return render_template('errors/500.html', v=v), 500
+
 	if isinstance(thing, Submission):
 
 		ups = g.db.query(Vote

@@ -12,6 +12,12 @@
 		<meta name="author" content="">
 		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">
 
+		{% if request.host == 'pcmemes.net' %}
+			{% set cc='Splash Mountain' %}
+		{% else %}
+			{% set cc='Country Club' %}
+		{% endif %}
+
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 
@@ -135,7 +141,7 @@
 												{% if v.paid_dues %}
 													<div class="custom-control custom-checkbox">
 														<input type="checkbox" class="custom-control-input" id="clubCheck" name="club">
-														<label class="custom-control-label" for="clubCheck">Country Club thread</label>
+														<label class="custom-control-label" for="clubCheck">{{cc}} thread</label>
 													</div>
 												{% endif %}
 												<pre>
