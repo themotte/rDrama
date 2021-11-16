@@ -904,7 +904,7 @@ def settings_content_get(v):
 
 @app.post("/settings/name_change")
 @limiter.limit("1/second")
-@auth_required
+@is_not_banned
 @validate_formkey
 def settings_name_change(v):
 
