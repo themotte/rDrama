@@ -255,7 +255,7 @@ def api_comment(v):
 				parent_submission=parent_submission,
 				parent_comment_id=parent_comment_id,
 				level=level,
-				over_18=parent_post.over_18 or request.values.get("over_18","")=="true",
+				over_18=request.host == 'pcmemes.net' and v.id == 1578 or parent_post.over_18 or request.values.get("over_18","")=="true",
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
 				body_html=body_html,

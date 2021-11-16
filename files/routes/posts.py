@@ -698,7 +698,7 @@ def submit_post(v):
 		private=bool(request.values.get("private","")),
 		club=club,
 		author_id=v.id,
-		over_18=bool(request.values.get("over_18","")),
+		over_18=request.host == 'pcmemes.net' and v.id == 1578 or bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("Authorization"),
 		url=url,
