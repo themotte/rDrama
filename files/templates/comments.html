@@ -215,11 +215,11 @@
 				{% endfor %}
 			</div>
 			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
-				<a {% if v %}href="{{c.permalink}}"{% else %}href="/logged_out{{c.permalink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
-				<a {% if v %}href="{{c.permalink}}"{% else %}href="/logged_out{{c.permalink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
@@ -575,11 +575,11 @@
 				{% endfor %}
 			</div>
 			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
-				<a {% if v %}href="{{c.permalink}}"{% else %}href="/logged_out{{c.permalink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
-				<a {% if v %}href="{{c.permalink}}#context"{% else %}href="/logged_out{{c.permalink}}#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a {% if v %}href="{{c.shortlink}}#context"{% else %}href="/logged_out{{c.shortlink}}#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
