@@ -19,6 +19,17 @@ from files.helpers.discord import add_role
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
+@app.get("/admin/delete")
+@admin_level_required(3)
+def delete(v):
+	shadowbanned = [x[0] for x in g.db.query(User.id).filter(User.shadowbanned != None).all()]
+
+	votes = g.db.query(Vote).join(Submission, Vote.submission_id==Submission.id).filter(Submission.author_id.in_(shadowbanned)).all()
+	votes2 = g.db.query(CommentVote).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.author_id.in_(shadowbanned)).all()
+	votes = votes + votes2
+	for vote in votes: g.db.delete(vote)
+	g.db.commit()
+	return (str(len(votes)))
 
 @app.get("/name/<id>/<name>")
 @admin_level_required(2)
