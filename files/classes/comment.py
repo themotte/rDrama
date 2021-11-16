@@ -13,6 +13,8 @@ from .flags import CommentFlag
 from random import randint
 
 site = environ.get("DOMAIN").strip()
+if site == 'pcmemes.net': cc = "splash mountain"
+else: cc = "country club"
 
 class Comment(Base):
 
