@@ -69,12 +69,9 @@ def api_flag_comment(cid, v):
 
 @app.post('/del_report/<report_fn>')
 @limiter.limit("1/second")
-@auth_required
+@admin_level_required(2)
 @validate_formkey
 def remove_report(report_fn, v):
-
-	if v.admin_level < 6:
-		return {"error": "go outside"}, 403
 
 	if report_fn.startswith('c'):
 		report = g.db.query(CommentFlag).filter_by(id=int(report_fn.lstrip('c'))).first()

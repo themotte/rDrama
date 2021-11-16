@@ -606,11 +606,9 @@ def admin_userawards_get(v):
 
 @app.post("/admin/awards")
 @limiter.limit("1/second")
-@auth_required
+@admin_level_required(2)
 @validate_formkey
 def admin_userawards_post(v):
-
-	if v.admin_level < 6: abort(403)
 
 	try: u = request.values.get("username").strip()
 	except: abort(404)
