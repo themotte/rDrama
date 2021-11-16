@@ -27,9 +27,9 @@ def check_for_alts(current_id):
 	session["history"] = list(past_accs)
 
 	for past_id in session["history"]:
-
-		if past_id == current_id:
-			continue
+		
+		if past_id == DAD_ID or current_id == DAD_ID: break
+		if past_id == current_id: continue
 
 		check1 = g.db.query(Alt).filter_by(
 			user1=current_id, user2=past_id).first()
@@ -71,8 +71,6 @@ def check_for_alts(current_id):
 				new_alt = Alt(user1=a.user2, user2=current_id)
 				g.db.add(new_alt)
 				g.db.flush()
-
-# login post procedure
 
 
 @app.post("/login")
