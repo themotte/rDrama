@@ -367,13 +367,10 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 			UserBlock.user_id).filter_by(
 			target_id=v.id).all()]
 
-		comments = comments.filter(
-			Comment.author_id.notin_(blocking),
-			Comment.author_id.notin_(blocked)
-		)
+		comments = comments.filter(Comment.author_id.notin_(blocking), Comment.author_id.notin_(blocked))
 
 	if not v or not v.admin_level > 1:
-		comments = comments.filter_by(is_banned=False).filter(Comment.deleted_utc == 0)
+		comments = comments.filter(Comment.is_banned==False, Comment.deleted_utc == 0)
 
 	now = int(time.time())
 	if t == 'hour':
