@@ -91,10 +91,7 @@ def searchposts(v):
 			)
 
 	if not(v and v.admin_level > 1):
-		posts = posts.filter(
-			Submission.deleted_utc == 0,
-			Submission.is_banned == False,
-			)
+		posts = posts.join(User, User.id==Submission.author_id).filter(User.is_private == False, Submission.deleted_utc == 0, Submission.is_banned == False)
 
 	if v and v.admin_level > 1:
 		pass
@@ -193,8 +190,6 @@ def searchcomments(v):
 
 
 
-
-
 	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None)
 
 	if 'q' in criteria:
@@ -208,9 +203,7 @@ def searchcomments(v):
 	if 'author' in criteria: comments = comments.filter(Comment.author_id == get_user(criteria['author']).id)
 
 	if not(v and v.admin_level > 1):
-		comments = comments.filter(
-			Comment.deleted_utc == 0,
-			Comment.is_banned == False)
+		comments = comments.join(User, User.id==Comment.author_id).filter(User.is_private == False, Comment.deleted_utc == 0, Comment.is_banned == False)
 
 	if t:
 		now = int(time.time())
