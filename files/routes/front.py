@@ -356,6 +356,9 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
 	comments = g.db.query(Comment.id).filter(Comment.parent_submission.notin_(cc_idlist))
 
+	if not (v and v.shadowbanned):
+		comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
+
 	if v and v.admin_level <= 3:
 		blocking = [x[0] for x in g.db.query(
 			UserBlock.target_id).filter_by(
