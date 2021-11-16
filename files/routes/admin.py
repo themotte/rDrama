@@ -22,12 +22,14 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @app.get("/admin/delete")
 @admin_level_required(3)
 def delete(v):
-	shadowbanned = [x[0] for x in g.db.query(User.id).filter(User.shadowbanned != None).all()]
+	shadowbanned = [x[0] for x in g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(User.shadowbanned != None).all()]
+	return(str(shadowbanned))
 
-	votes = g.db.query(Vote).join(Submission, Vote.submission_id==Submission.id).filter(Submission.author_id.in_(shadowbanned)).all()
-	votes2 = g.db.query(CommentVote).join(Comment, CommentVote.comment_id==Comment.id).filter(Comment.author_id.in_(shadowbanned)).all()
-	votes = votes + votes2
-	return (str(len(votes)))
+@app.get("/admin/delete2")
+@admin_level_required(3)
+def delete2(v):
+	shadowbanned = [x[0] for x in g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(User.shadowbanned != None).all()]
+	return(str(shadowbanned))
 
 @app.get("/name/<id>/<name>")
 @admin_level_required(2)
