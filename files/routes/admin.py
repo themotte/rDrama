@@ -19,18 +19,6 @@ from files.helpers.discord import add_role
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
-@app.get("/admin/delete")
-@admin_level_required(3)
-def delete(v):
-	shadowbanned = [x[0] for x in g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(User.shadowbanned != None).all()]
-	return(str(shadowbanned))
-
-@app.get("/admin/delete2")
-@admin_level_required(3)
-def delete2(v):
-	shadowbanned = [x[0] for x in g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(User.shadowbanned != None).all()]
-	return(str(shadowbanned))
-
 @app.get("/name/<id>/<name>")
 @admin_level_required(2)
 def changename(v, id, name):
