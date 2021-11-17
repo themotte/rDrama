@@ -57,7 +57,9 @@ def searchposts(v):
 
 
 
-	posts = g.db.query(Submission.id).filter(Submission.club == False)
+	posts = g.db.query(Submission.id)
+	
+	if not (v and v.paid_dues): posts = posts.filter(Submission.club == False)
 	
 	if not (v and v.admin_level > 1): posts = posts.filter(Submission.private == False)
 	
