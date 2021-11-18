@@ -15,7 +15,7 @@
 	}
 </style>
 
-<script src="/assets/js/userpage.js?v=69"></script>
+<script src="/assets/js/userpage.js?v=70"></script>
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
@@ -42,6 +42,17 @@
 {% block desktopUserBanner %}
 
 <script>
+	const TRANSFER_TAX = 0.01;
+
+	function updateTax(mobile=false) {
+		let suf = mobile ? "-mobile" : "";
+		let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
+		if(isNaN(amount) || amount < 0) {
+		amount = 0;
+		}
+		document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+	}
+
 	function transferCoins(mobile=false) {
 		let t = event.target;
 		t.disabled = true;
