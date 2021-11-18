@@ -15,7 +15,9 @@
 	}
 </style>
 
-<script src="/assets/js/userpage.js?v=60"></script>
+{% if v %}
+	<script src="/assets/js/userpage.js?v=61"></script>
+{% endif %}
 
 {% if v and not v.patron %}
 	<script>
@@ -28,16 +30,6 @@
 			amount = 0;
 			}
 			document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
-		}
-
-		function toggleElement(group, id) {
-			for(let el of document.getElementsByClassName(group)) {
-				if(el.id != id) {
-					el.classList.add('d-none');
-				}
-			}
-
-			document.getElementById(id).classList.toggle('d-none');
 		}
 	</script>
 {% endif %}
@@ -294,7 +286,7 @@
 						</form>
 
 						<div class="d-none mt-3 profile-toggleable" id="coin-transfer">
-							<input autocomplete="off" id="coins-transfer-amount" class="form-control" name="amount" type="number" oninput="updateTax()">
+							<input autocomplete="off" id="coins-transfer-amount" class="form-control" name="amount" type="number" {% if not v.patron %}oninput="updateTax()"{% endif %}>
 							<div>{{u.username}} will receive <span id="coins-transfer-taxed">0</span> {{'COINS_NAME' | app_config}}</div>
 							<button class="btn btn-primary mt-3" onclick="transferCoins()">Gift</button>
 						</div>
@@ -594,7 +586,7 @@
 					</form>
 
 					<div class="d-none mt-3 profile-toggleable-mobile" id="coin-transfer-mobile">
-						<input autocomplete="off" id="coins-transfer-amount-mobile" class="form-control" name="amount" type="number" oninput="updateTax(true)">
+						<input autocomplete="off" id="coins-transfer-amount-mobile" class="form-control" name="amount" type="number" {% if not v.patron %}oninput="updateTax(true)"{% endif %}>
 						<div>{{u.username}} will receive <span id="coins-transfer-taxed-mobile">0</span> {{'COINS_NAME' | app_config}}</div>
 						<button class="btn btn-primary mt-3" onclick="transferCoins(true)">Gift</button>
 					</div>
