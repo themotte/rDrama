@@ -536,9 +536,11 @@ def award_post(pid, v):
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "marsey":
-		author.marseyawarded = time.time() + 86400
+		if author.marseyawarded: author.marseyawarded += 86400
+		else: author.marseyawarded = time.time() + 86400
 	elif kind == "longpost":
-		author.longpost = time.time() + 86400
+		if author.longpost: author.longpost += 86400
+		else: author.longpost = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
@@ -667,9 +669,11 @@ def award_comment(cid, v):
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "marsey":
-		author.marseyawarded = time.time() + 86400
+		if author.marseyawarded: author.marseyawarded += 86400
+		else: author.marseyawarded = time.time() + 86400
 	elif kind == "longpost":
-		author.longpost = time.time() + 86400
+		if author.longpost: author.longpost += 86400
+		else: author.longpost = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
