@@ -18,15 +18,19 @@
 {% if v %}
 	<script src="/assets/js/userpage.js?v=61"></script>
 	<script>
-		const TRANSFER_TAX = {% if v.patron %}0{% else %}0.03{% endif %};
+		const TRANSFER_TAX = 0.03;
 
 		function updateTax(mobile=false) {
 			let suf = mobile ? "-mobile" : "";
 			let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
 			if(isNaN(amount) || amount < 0) {
-			amount = 0;
+				amount = 0;
 			}
-			document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+			{% if v.patron %}
+				document.getElementById("coins-transfer-taxed" + suf).innerText = amount
+			{% else %}
+				document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+			{% endif %}
 		}
 
 		function transferCoins(mobile=false) {
@@ -34,7 +38,11 @@
 			t.disabled = true;
 
 			let amount = parseInt(document.getElementById("coins-transfer-amount").value);
-			let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+			{% if v.patron %}
+				let transferred = amount
+			{% else %}
+				let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+			{% endif %}				
 
 			post_toast_callback("/@{{u.username}}/transfer_coins",
 				{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
