@@ -16,47 +16,7 @@
 </style>
 
 {% if v %}
-	<script src="/assets/js/userpage.js?v=61"></script>
-	<script>
-		const TRANSFER_TAX = 0.03;
-
-		function updateTax(mobile=false) {
-			let suf = mobile ? "-mobile" : "";
-			let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
-			if(isNaN(amount) || amount < 0) {
-				amount = 0;
-			}
-			{% if v.patron or u.patron %}
-				document.getElementById("coins-transfer-taxed" + suf).innerText = amount
-			{% else %}
-				document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
-			{% endif %}
-		}
-
-		function transferCoins(mobile=false) {
-			let t = event.target;
-			t.disabled = true;
-
-			let amount = parseInt(document.getElementById("coins-transfer-amount").value);
-			{% if v.patron or u.patron %}
-				let transferred = amount
-			{% else %}
-				let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
-			{% endif %}				
-
-			post_toast_callback("/@{{u.username}}/transfer_coins",
-				{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
-				(xhr) => {
-				if(xhr.status == 200) {
-					document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
-					document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
-					document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
-				}
-				}
-			);
-			setTimeout(_ => t.disabled = false, 2000);
-		}
-	</script>
+	<script src="/assets/js/userpage.js?v=62"></script>
 {% endif %}
 
 
@@ -86,6 +46,38 @@
 {% block desktopUserBanner %}
 
 <script>
+	const TRANSFER_TAX = 0.03;
+
+	function updateTax(mobile=false) {
+		let suf = mobile ? "-mobile" : "";
+		let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
+		if(isNaN(amount) || amount < 0) {
+		amount = 0;
+		}
+		document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+	}
+
+	function transferCoins(mobile=false) {
+		let t = event.target;
+		t.disabled = true;
+
+		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+		let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+
+		post_toast_callback("/@{{u.username}}/transfer_coins",
+			{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
+			(xhr) => {
+			if(xhr.status == 200) {
+				document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
+				document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
+				document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
+			}
+			}
+		);
+
+		setTimeout(_ => t.disabled = false, 2000);
+	}
+
 	{% if u.song %}
 		var audio = new Audio('/songs/{{u.id}}');
 		audio.loop=true;

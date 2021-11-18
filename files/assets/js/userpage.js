@@ -1,13 +1,3 @@
-function toggleElement(group, id) {
-	for(let el of document.getElementsByClassName(group)) {
-		if(el.id != id) {
-			el.classList.add('d-none');
-		}
-	}
-
-	document.getElementById(id).classList.toggle('d-none');
-}
-
 function post_toast_callback(url, data, callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
@@ -64,4 +54,14 @@ function post_toast_callback(url, data, callback) {
 
 	xhr.send(form);
 
+}
+
+function toggleElement(group, id) {
+	for(let el of document.getElementsByClassName(group)) {
+		if(el.id != id) {
+			el.classList.add('d-none');
+		}
+	}
+
+	document.getElementById(id).classList.toggle('d-none');
 }
