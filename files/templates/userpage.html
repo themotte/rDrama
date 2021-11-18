@@ -15,11 +15,7 @@
 	}
 </style>
 
-{% if v %}
-	<script src="/assets/js/userpage.js?v=62"></script>
-{% endif %}
-
-
+<script src="/assets/js/userpage.js?v=69"></script>
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
@@ -46,17 +42,6 @@
 {% block desktopUserBanner %}
 
 <script>
-	const TRANSFER_TAX = 0.03;
-
-	function updateTax(mobile=false) {
-		let suf = mobile ? "-mobile" : "";
-		let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
-		if(isNaN(amount) || amount < 0) {
-		amount = 0;
-		}
-		document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
-	}
-
 	function transferCoins(mobile=false) {
 		let t = event.target;
 		t.disabled = true;
@@ -189,25 +174,16 @@
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
 				{% if "pcm" in request.host %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
-
 				{% if u.bio_html %}
-					<pre></pre>
-					{% if request.host == 'rdrama.net' and u.id == 2050 %}
-						<div class="text-muted font-weight-bolder">{{u.friends_html | safe}}</div>
-					{% else %}
-						<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
-					{% endif %}
+				<pre></pre>
+				<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
 				{% else %}
-					<p class="text-muted">No bio...</p>
+				<p class="text-muted">No bio...</p>
 				{% endif %}
 
 				{% if u.friends_html %}
 					<p class="text-muted font-weight-bold">Friends:</p>
-					{% if request.host == 'rdrama.net' and u.id == 2050 %}
-						{{u.bio_html | safe}}
-					{% else %}
-						{{u.friends_html | safe}}
-					{% endif %}
+					{{u.friends_html | safe}}
 				{% endif %}
 
 				{% if u.enemies_html %}
@@ -240,7 +216,7 @@
 						{% if 'pcm' in request.host and v.admin_level > 1 %} 
 							{% if u.admin_level == 0 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-							{% elif v.admin_level > 2 %}
+							{% elif v.id in [10,1551,1552,1577,1592] %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
@@ -283,7 +259,7 @@
 						</form>
 
 						<div class="d-none mt-3 profile-toggleable" id="coin-transfer">
-							<input autocomplete="off" id="coins-transfer-amount" class="form-control" name="amount" type="number" {% if not v.patron %}oninput="updateTax()"{% endif %}>
+							<input autocomplete="off" id="coins-transfer-amount" class="form-control" name="amount" type="number" oninput="updateTax()">
 							<div>{{u.username}} will receive <span id="coins-transfer-taxed">0</span> {{'COINS_NAME' | app_config}}</div>
 							<button class="btn btn-primary mt-3" onclick="transferCoins()">Gift</button>
 						</div>
@@ -383,20 +359,18 @@
 						{% endif %}
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
-					<p>Coins spent: {{u.coins_spent}}</p>
 					{% if v and v.admin_level > 1 %}
-						<p>True score: {{u.truecoins}}</p>
 						{% if u.is_private %}
 							<p>User has private mode enabled.</p>
 						{% endif %}
-					{% endif %}
-					{% if v and (v.admin_level > 1 or v.alt) %}
 						<span>Alts:</span>
 						<ul>
 							{% for account in u.alts_unique %}
 								<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
 							{% endfor %}
 						</ul>
+						True score: {{u.truecoins}} &nbsp;
+						Coins spent: {{u.coins_spent}}
 					{% endif %}
 					{% if u.is_suspended %}
 						<p>Banned by: <a href="{{u.banned_by.url}}">@{{u.banned_by.username}}</a></p>
@@ -540,7 +514,7 @@
 					{% if 'pcm' in request.host and v.admin_level > 1 %} 
 						{% if u.admin_level == 0 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-						{% elif v.admin_level > 2 %}
+						{% elif v.id in [10,1551,1552,1577,1592] %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
@@ -583,7 +557,7 @@
 					</form>
 
 					<div class="d-none mt-3 profile-toggleable-mobile" id="coin-transfer-mobile">
-						<input autocomplete="off" id="coins-transfer-amount-mobile" class="form-control" name="amount" type="number" {% if not v.patron %}oninput="updateTax(true)"{% endif %}>
+						<input autocomplete="off" id="coins-transfer-amount-mobile" class="form-control" name="amount" type="number" oninput="updateTax(true)">
 						<div>{{u.username}} will receive <span id="coins-transfer-taxed-mobile">0</span> {{'COINS_NAME' | app_config}}</div>
 						<button class="btn btn-primary mt-3" onclick="transferCoins(true)">Gift</button>
 					</div>
@@ -679,24 +653,23 @@
 				{% endif %}
 				<pre></pre>
 				<p>User ID: {{u.id}}</p>
-				<p>Coins spent: {{u.coins_spent}}</p>
 				{% if v and v.admin_level > 1 %}
-					<p>True score: {{u.truecoins}}</p>
 					{% if u.is_private %}
 						<p>User has private mode enabled.</p>
 					{% endif %}
-				{% endif %}
-				{% if v and (v.admin_level > 1 or v.alt) %}
 					<span>Alts:</span>
 					<ul>
 						{% for account in u.alts_unique %}
-							<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
+						<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
 						{% endfor %}
 					</ul>
+					True score: {{u.truecoins}} &nbsp;
+					Coins spent: {{u.coins_spent}}
 				{% endif %}
 				{% if u.is_suspended %}
 					<p>Banned by: <a href="{{u.banned_by.url}}">@{{u.banned_by.username}}</a></p>
 				{% endif %}
+
 			</div>
 		</div>
 	</div>
