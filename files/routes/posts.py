@@ -577,13 +577,11 @@ def submit_post(v):
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
 		elif "youtu" in domain:
-			try:
-				yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
-				params = parse_qs(urlparse(url).query)
-				t = params.get('t', params.get('start', [0]))[0].replace('s','')
-				if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
-				else: embed = f"https://youtube.com/embed/{yt_id}"
-			except: embed = None
+			yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+			params = parse_qs(urlparse(url).query)
+			t = params.get('t', params.get('start', [0]))[0].replace('s','')
+			if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
+			else: embed = f"https://youtube.com/embed/{yt_id}"
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 			id = url.split("/post/")[1]
 			if "/" in id: id = id.split("/")[0]
