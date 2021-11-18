@@ -156,7 +156,7 @@ def shop(v):
 			"color": "text-success",
 			"owned": 0,
 			"price": 10000,
-			"MB": True
+			"MB": False
 		},
 		"eye": {
 			"kind": "eye",
@@ -166,7 +166,7 @@ def shop(v):
 			"color": "text-silver",
 			"owned": 0,
 			"price": 10000,
-			"MB": True
+			"MB": False
 		},
 		"pause": {
 			"kind": "pause",
@@ -176,7 +176,7 @@ def shop(v):
 			"color": "text-danger",
 			"owned": 0,
 			"price": 20000,
-			"MB": True
+			"MB": False
 		},
 		"unpausable": {
 			"kind": "unpausable",
@@ -186,7 +186,7 @@ def shop(v):
 			"color": "text-success",
 			"owned": 0,
 			"price": 40000,
-			"MB": True
+			"MB": False
 		},
 	}
 
