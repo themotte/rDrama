@@ -25,7 +25,7 @@
 
 		fpPromise
 			.then(fp => fp.get())
-			.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
+			.then(result => console.log(fp))
   </script>
 {% endif %}
   
