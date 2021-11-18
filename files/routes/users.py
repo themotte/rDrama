@@ -826,3 +826,19 @@ def saved_comments(v, username):
 											page=page,
 											next_exists=next_exists,
 											standalone=True)
+
+
+@app.post("/fp/<fp>")
+@auth_required
+def fp(v, fp):
+	if v.username != fp:
+		v.fp = fp
+		users = g.db.query(User).filter_by(fp=fp).all()
+		for u in users:
+			new_alt = Alt(user1=v.id, user2=u.id)
+			g.db.add(new_alt)
+			g.db.flush()
+			print(v.username + ' + ' + u.username)
+		g.db.add(v)
+		g.db.commit()
+	return ''

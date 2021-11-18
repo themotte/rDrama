@@ -87,6 +87,7 @@ class User(Base):
 	bio_html = Column(String)
 	sig = deferred(Column(String))
 	sig_html = Column(String)
+	fp = Column(String)
 	sigs_disabled = Column(Boolean)
 	friends = deferred(Column(String))
 	friends_html = deferred(Column(String))
