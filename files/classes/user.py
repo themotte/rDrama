@@ -355,7 +355,7 @@ class User(Base):
 	@property
 	@lazy
 	def post_notifications_count(self):
-		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ACCOUNT).count()
+		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ID).count()
 
 
 	@property
@@ -463,7 +463,7 @@ class User(Base):
 			self.profileurl = None
 			if self.discord_id: remove_user(self)
 
-		self.is_banned = admin.id if admin else AUTOJANNY_ACCOUNT
+		self.is_banned = admin.id if admin else AUTOJANNY_ID
 		if reason: self.ban_reason = reason
 
 		g.db.add(self)

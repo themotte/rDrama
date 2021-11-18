@@ -49,7 +49,7 @@ def request_api_keys(v):
 
 	g.db.add(new_app)
 
-	send_admin(NOTIFICATIONS_ACCOUNT, f"{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps).")
+	send_admin(NOTIFICATIONS_ID, f"{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps).")
 
 	g.db.commit()
 

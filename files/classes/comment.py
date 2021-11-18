@@ -7,7 +7,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
 from files.classes.votes import CommentVote
-from files.helpers.const import AUTOPOLLER_ACCOUNT, censor_slurs
+from files.helpers.const import AUTOPOLLER_ID, censor_slurs
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
 from random import randint
@@ -80,7 +80,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def options(self):
-		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ACCOUNT]
+		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ID]
 
 	def total_poll_voted(self, v):
 		if v:
@@ -185,7 +185,7 @@ class Comment(Base):
 	def replies(self):
 		r = self.__dict__.get("replies", None)
 		if r: r = [x for x in r if not x.author.shadowbanned]
-		if not r and r != []: r = sorted([x for x in self.child_comments if not x.author.shadowbanned and x.author_id != AUTOPOLLER_ACCOUNT], key=lambda x: x.score, reverse=True)
+		if not r and r != []: r = sorted([x for x in self.child_comments if not x.author.shadowbanned and x.author_id != AUTOPOLLER_ID], key=lambda x: x.score, reverse=True)
 		return r
 
 	@replies.setter
@@ -203,7 +203,7 @@ class Comment(Base):
 	@property
 	def replies3(self):
 		r = self.__dict__.get("replies", None)
-		if not r and r != []: r = sorted([x for x in self.child_comments if x.author_id != AUTOPOLLER_ACCOUNT], key=lambda x: x.score, reverse=True)
+		if not r and r != []: r = sorted([x for x in self.child_comments if x.author_id != AUTOPOLLER_ID], key=lambda x: x.score, reverse=True)
 		return r
 
 	@property

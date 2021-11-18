@@ -96,7 +96,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		 
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
-			Comment.author_id != AUTOPOLLER_ACCOUNT
+			Comment.author_id != AUTOPOLLER_ID
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -241,7 +241,7 @@ def api_comment(v):
 				comment.ban_reason = "AutoJanny"
 				g.db.add(comment)
 				ma=ModAction(
-					user_id=AUTOJANNY_ACCOUNT,
+					user_id=AUTOJANNY_ID,
 					target_comment_id=comment.id,
 					kind="ban_comment",
 					_note="spam"
@@ -268,7 +268,7 @@ def api_comment(v):
 	g.db.flush()
 
 	for option in options:
-		c_option = Comment(author_id=AUTOPOLLER_ACCOUNT,
+		c_option = Comment(author_id=AUTOPOLLER_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
@@ -297,7 +297,7 @@ def api_comment(v):
 
 		body_based_html = sanitize(body_md)
 
-		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
+		c_based = Comment(author_id=BASEDBOT_ID,
 			parent_submission=parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,
@@ -328,7 +328,7 @@ def api_comment(v):
 
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+		c_jannied = Comment(author_id=AUTOJANNY_ID,
 			parent_submission=parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,
@@ -361,7 +361,7 @@ def api_comment(v):
 
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+		c_jannied = Comment(author_id=AUTOJANNY_ID,
 			parent_submission=parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,
@@ -396,7 +396,7 @@ def api_comment(v):
 
 
 
-		c2 = Comment(author_id=LONGPOSTBOT_ACCOUNT,
+		c2 = Comment(author_id=LONGPOSTBOT_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
@@ -406,7 +406,7 @@ def api_comment(v):
 
 		g.db.add(c2)
 
-		longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ACCOUNT).first()
+		longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ID).first()
 		longpostbot.comment_count += 1
 		longpostbot.coins += 1
 		g.db.add(longpostbot)
@@ -433,7 +433,7 @@ def api_comment(v):
 
 
 
-		c2 = Comment(author_id=ZOZBOT_ACCOUNT,
+		c2 = Comment(author_id=ZOZBOT_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
@@ -459,7 +459,7 @@ def api_comment(v):
 
 
 
-		c3 = Comment(author_id=ZOZBOT_ACCOUNT,
+		c3 = Comment(author_id=ZOZBOT_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c2.id,
 			level=level+2,
@@ -481,7 +481,7 @@ def api_comment(v):
 		body_html2 = sanitize(body_md)
 
 
-		c4 = Comment(author_id=ZOZBOT_ACCOUNT,
+		c4 = Comment(author_id=ZOZBOT_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c3.id,
 			level=level+3,
@@ -491,7 +491,7 @@ def api_comment(v):
 
 		g.db.add(c4)
 
-		zozbot = g.db.query(User).filter_by(id = ZOZBOT_ACCOUNT).first()
+		zozbot = g.db.query(User).filter_by(id = ZOZBOT_ID).first()
 		zozbot.comment_count += 3
 		zozbot.coins += 3
 		g.db.add(zozbot)
@@ -512,7 +512,7 @@ def api_comment(v):
 		
 		for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 		
-		if parent.author.id != v.id: notify_users.add(parent.author.id)
+		if parent.author.id not in [v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID]: notify_users.add(parent.author.id)
 
 		soup = BeautifulSoup(body_html, features="html.parser")
 		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
@@ -546,7 +546,7 @@ def api_comment(v):
 					  'notification': {
 							'title': f'New reply by @{v.username}',
 							'body': c.body,
-							'deep_link': f'http://{site}{c.permalink}?context=9&read=true#context',
+							'deep_link': f'http://{site}/comment/{c.id}?context=9&read=true#context',
 					  },
 					},
 				  },
@@ -696,7 +696,7 @@ def edit_comment(cid, v):
 
 
 
-			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			c_jannied = Comment(author_id=AUTOJANNY_ID,
 				parent_submission=c.parent_submission,
 				distinguish_level=6,
 				parent_comment_id=c.id,
@@ -730,7 +730,7 @@ def edit_comment(cid, v):
 
 
 
-			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			c_jannied = Comment(author_id=AUTOJANNY_ID,
 				parent_submission=c.parent_submission,
 				distinguish_level=6,
 				parent_comment_id=c.id,
@@ -865,14 +865,14 @@ def toggle_pin_comment(cid, v):
 	if comment.is_pinned:
 		if v.id != comment.author_id:
 			message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message).first()
 			if not existing: send_notification(comment.author_id, message)
 		g.db.commit()
 		return {"message": "Comment pinned!"}
 	else:
 		if v.id != comment.author_id:
 			message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message).first()
 			if not existing: send_notification(comment.author_id, message)
 		g.db.commit()
 		return {"message": "Comment unpinned!"}

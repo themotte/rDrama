@@ -139,7 +139,7 @@ def post_id(pid, anything=None, v=None):
  
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
-			Comment.author_id != AUTOPOLLER_ACCOUNT,
+			Comment.author_id != AUTOPOLLER_ID,
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -176,7 +176,7 @@ def post_id(pid, anything=None, v=None):
 		post.replies = [x for x in output if x.is_pinned] + [x for x in output if x.level == 1 and not x.is_pinned]
 
 	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT)
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -271,7 +271,7 @@ def edit_post(pid, v):
 			body_jannied_html = sanitize(body_md)
 
 
-			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			c_jannied = Comment(author_id=AUTOJANNY_ID,
 				parent_submission=p.id,
 				level=1,
 				over_18=False,
@@ -303,7 +303,7 @@ def edit_post(pid, v):
 
 			body_jannied_html = sanitize(body_md)
 
-			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			c_jannied = Comment(author_id=AUTOJANNY_ID,
 				parent_submission=p.id,
 				level=1,
 				over_18=False,
@@ -338,7 +338,7 @@ def edit_post(pid, v):
 			if ('idio3' in f'{body_html}{title}'.lower() or 'idio ' in f'{body_html}{title}'.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users:
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 
@@ -650,7 +650,7 @@ def submit_post(v):
 			post.ban_reason = "AutoJanny"
 			g.db.add(post)
 			ma=ModAction(
-					user_id=AUTOJANNY_ACCOUNT,
+					user_id=AUTOJANNY_ID,
 					target_submission_id=post.id,
 					kind="ban_post",
 					_note="spam"
@@ -713,7 +713,7 @@ def submit_post(v):
 	g.db.flush()
 	
 	for option in options:
-		c = Comment(author_id=AUTOPOLLER_ACCOUNT,
+		c = Comment(author_id=AUTOPOLLER_ID,
 			parent_submission=new_post.id,
 			level=1,
 			body_html=filter_title(option),
@@ -812,7 +812,7 @@ def submit_post(v):
 		body_jannied_html = sanitize(body_md)
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+		c_jannied = Comment(author_id=AUTOJANNY_ID,
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
@@ -846,7 +846,7 @@ def submit_post(v):
 
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+		c_jannied = Comment(author_id=AUTOJANNY_ID,
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
@@ -884,7 +884,7 @@ def submit_post(v):
 		if new_post.url:
 			if new_post.url.startswith('https://old.reddit.com/r/'):
 				rev = new_post.url.replace('https://old.reddit.com/', '')
-				rev = "* [reveddit.com](https://reveddit.com/{rev})\n"
+				rev = f"* [reveddit.com](https://reveddit.com/{rev})\n"
 			else: rev = ''
 			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, new_post.url)
@@ -898,7 +898,7 @@ def submit_post(v):
 			if "Snapshots:\n\n"	 not in body: body += "Snapshots:\n\n"			
 
 			body += f'**[{title}]({href})**:\n\n'
-			body += f'* [reveddit.com](https://reveddit.com/{href})\n'
+			body += f'* [reveddit.com](https://reveddit.com/{href.replace("https://old.reddit.com/", "")})\n'
 			body += f'* [archive.org](https://web.archive.org/{href})\n'
 			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
 			gevent.spawn(archiveorg, href)
@@ -907,7 +907,7 @@ def submit_post(v):
 		body_html = sanitize(body_md)
 
 		if len(body_html) < 20000:
-			c = Comment(author_id=SNAPPY_ACCOUNT,
+			c = Comment(author_id=SNAPPY_ID,
 				distinguish_level=6,
 				parent_submission=new_post.id,
 				level=1,
@@ -919,7 +919,7 @@ def submit_post(v):
 
 			g.db.add(c)
 
-			snappy = g.db.query(User).filter_by(id = SNAPPY_ACCOUNT).first()
+			snappy = g.db.query(User).filter_by(id = SNAPPY_ID).first()
 			snappy.comment_count += 1
 			snappy.coins += 1
 			g.db.add(snappy)

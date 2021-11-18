@@ -240,7 +240,7 @@ def settings_profile_post(v):
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their friends list!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 		v.friends = friends[:500]
@@ -285,7 +285,7 @@ def settings_profile_post(v):
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their enemies list!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 		v.enemies = enemies[:500]
@@ -825,7 +825,7 @@ def settings_block_user(v):
 	if v.has_block(user):
 		return {"error": f"You have already blocked @{user.username}."}, 409
 
-	if user.id == NOTIFICATIONS_ACCOUNT:
+	if user.id == NOTIFICATIONS_ID:
 		return {"error": "You can't block this user."}, 409
 
 	new_block = UserBlock(user_id=v.id,

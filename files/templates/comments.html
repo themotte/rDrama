@@ -255,7 +255,7 @@
 		{% else %}
 			<span class="font-weight-bold"><a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% endif %}
-	{% elif c.author_id==NOTIFICATIONS_ACCOUNT or c.author_id==AUTOJANNY_ACCOUNT %}
+	{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
 	<span class="font-weight-bold">{{'SITE_NAME' | app_config}} Notification</span>
 	{% else %}
 		{% if c.sentto == 0 %}
@@ -347,7 +347,7 @@
 				{% endif %}
 
 
-				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ACCOUNT and c.author_id!=AUTOJANNY_ACCOUNT and c.author_id!=v.id %}
+				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ID and c.author_id!=AUTOJANNY_ID and c.author_id!=v.id %}
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.toggle('d-none')">Reply</a>
 					<pre></pre>
 					<div id="reply-m-{{c.id}}" class="d-none">
@@ -579,7 +579,7 @@
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
-				<a {% if v %}href="{{c.shortlink}}#context"{% else %}href="/logged_out{{c.shortlink}}#context"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
