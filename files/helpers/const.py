@@ -201,7 +201,7 @@ AWARDS = {
 		"kind": "pizzashill",
 		"title": "Longpost",
 		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-		"icon": "fas fa-pizza",
+		"icon": "fas fa-pizza-slice",
 		"color": "text-orange",
 		"price": 1000
 	},
@@ -389,7 +389,7 @@ AWARDS2 = {
 		"kind": "pizzashill",
 		"title": "Longpost",
 		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-		"icon": "fas fa-pizza",
+		"icon": "fas fa-pizza-slice",
 		"color": "text-orange",
 		"price": 1000
 	},
