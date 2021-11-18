@@ -18,7 +18,7 @@
 {% if v %}
 	<script src="/assets/js/userpage.js?v=61"></script>
 	<script>
-		const TRANSFER_TAX = {% if v.patron}0{% else %}0.03{% endif %};
+		const TRANSFER_TAX = {% if v.patron %}0{% else %}0.03{% endif %};
 
 		function updateTax(mobile=false) {
 			let suf = mobile ? "-mobile" : "";
