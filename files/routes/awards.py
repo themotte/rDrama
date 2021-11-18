@@ -98,6 +98,16 @@ def shop(v):
 			"price": 1000,
 			"MB": True
 		},
+		"longpost": {
+			"kind": "longpost",
+			"title": "Longpost",
+			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+			"icon": "fas fa-book",
+			"color": "text-green",
+			"owned": 0,
+			"price": 1000,
+			"MB": True
+		},
 		"flairlock": {
 			"kind": "flairlock",
 			"title": "1-Day Flairlock",
@@ -263,6 +273,14 @@ def buy(v, award):
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-black",
 			"price": 1000
+		},
+		"longpost": {
+			"kind": "longpost",
+			"title": "Longpost",
+			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+			"icon": "fas fa-book",
+			"color": "text-green",
+			"price": 1000,
 		},
 		"flairlock": {
 			"kind": "flairlock",
@@ -519,6 +537,8 @@ def award_post(pid, v):
 		g.db.add(new_badge)
 	elif kind == "marsey":
 		author.marseyawarded = time.time() + 86400
+	elif kind == "longpost":
+		author.longpost = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
@@ -648,6 +668,8 @@ def award_comment(cid, v):
 		g.db.add(new_badge)
 	elif kind == "marsey":
 		author.marseyawarded = time.time() + 86400
+	elif kind == "longpost":
+		author.longpost = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_notification(995, f"@{v.username} bought {kind} award!")

@@ -194,6 +194,14 @@ AWARDS = {
 		"color": "text-black",
 		"price": 1000
 	},
+	"longpost": {
+		"kind": "longpost",
+		"title": "Longpost",
+		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+		"icon": "fas fa-book",
+		"color": "text-green",
+		"price": 1000
+	},
 	"flairlock": {
 		"kind": "flairlock",
 		"title": "1-Day Flairlock",
@@ -372,6 +380,14 @@ AWARDS2 = {
 		"description": "Removes 1 hour from the pin duration of the post/comment.",
 		"icon": "fas fa-thumbtack fa-rotate--45",
 		"color": "text-black",
+		"price": 1000
+	},
+	"longpost": {
+		"kind": "longpost",
+		"title": "Longpost",
+		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+		"icon": "fas fa-book",
+		"color": "text-green",
 		"price": 1000
 	},
 	"flairlock": {

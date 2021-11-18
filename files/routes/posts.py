@@ -234,6 +234,12 @@ def edit_post(pid, v):
 				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
+	if v.longpost:
+		if time.time() > v.longpost:
+			v.longpost = None
+			g.db.add(v)
+		elif len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
+
 	if title != p.title:
 		title_html = filter_title(title)
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
@@ -257,6 +263,9 @@ def edit_post(pid, v):
 
 		p.body = body
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
+
+		if v.longpost and len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
+
 		p.body_html = body_html
 
 		if "rama" in request.host and "ivermectin" in body_html.lower():
@@ -518,7 +527,11 @@ def submit_post(v):
 	title = request.values.get("title", "").strip()
 	url = request.values.get("url", "").strip()
 	title_html = filter_title(title)
+	body = request.values.get("body", "").strip()
+
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
+
+	if v.longpost and len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
 
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
@@ -590,8 +603,6 @@ def submit_post(v):
 	elif len(title) > 500:
 		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
-	
-	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded:
 		if time.time() > v.marseyawarded:
@@ -603,6 +614,12 @@ def submit_post(v):
 			if body:
 				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+
+	if v.longpost:
+		if time.time() > v.longpost:
+			v.longpost = None
+			g.db.add(v)
+		elif len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
 
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == v.id,
@@ -684,6 +701,8 @@ def submit_post(v):
 	body_html = sanitize(body_md)
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 400
+
+	if v.longpost and len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
 
 	if len(body_html) > 20000: return {"error":"Submission body too long!"}, 400
 

@@ -50,6 +50,7 @@ class User(Base):
 	verified = Column(String)
 	verifiedcolor = Column(String)
 	marseyawarded = Column(Integer)
+	longpost = Column(Integer)
 	email = deferred(Column(String))
 	css = deferred(Column(String))
 	profilecss = deferred(Column(String))
