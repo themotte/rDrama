@@ -100,7 +100,7 @@ def shop(v):
 		},
 		"pizzashill": {
 			"kind": "pizzashill",
-			"title": "Longpost",
+			"title": "Pizzashill",
 			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
 			"icon": "fas fa-pizza-slice",
 			"color": "text-orange",
@@ -276,7 +276,7 @@ def buy(v, award):
 		},
 		"pizzashill": {
 			"kind": "pizzashill",
-			"title": "Longpost",
+			"title": "Pizzashill",
 			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
 			"icon": "fas fa-pizza-slice",
 			"color": "text-orange",
