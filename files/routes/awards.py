@@ -98,12 +98,12 @@ def shop(v):
 			"price": 1000,
 			"MB": True
 		},
-		"longpost": {
-			"kind": "longpost",
+		"pizzashill": {
+			"kind": "pizzashill",
 			"title": "Longpost",
 			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-			"icon": "fas fa-book",
-			"color": "text-green",
+			"icon": "fas fa-pizza",
+			"color": "text-orange",
 			"owned": 0,
 			"price": 1000,
 			"MB": True
@@ -274,12 +274,12 @@ def buy(v, award):
 			"color": "text-black",
 			"price": 1000
 		},
-		"longpost": {
-			"kind": "longpost",
+		"pizzashill": {
+			"kind": "pizzashill",
 			"title": "Longpost",
 			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-			"icon": "fas fa-book",
-			"color": "text-green",
+			"icon": "fas fa-pizza",
+			"color": "text-orange",
 			"price": 1000,
 		},
 		"flairlock": {
@@ -538,7 +538,7 @@ def award_post(pid, v):
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = time.time() + 86400
-	elif kind == "longpost":
+	elif kind == "pizzashill":
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
 	elif kind == "eye":
@@ -671,7 +671,7 @@ def award_comment(cid, v):
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = time.time() + 86400
-	elif kind == "longpost":
+	elif kind == "pizzashill":
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
 	elif kind == "eye":

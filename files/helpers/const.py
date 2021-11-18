@@ -197,12 +197,12 @@ AWARDS = {
 		"color": "text-black",
 		"price": 1000
 	},
-	"longpost": {
-		"kind": "longpost",
+	"pizzashill": {
+		"kind": "pizzashill",
 		"title": "Longpost",
 		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-		"icon": "fas fa-book",
-		"color": "text-green",
+		"icon": "fas fa-pizza",
+		"color": "text-orange",
 		"price": 1000
 	},
 	"flairlock": {
@@ -385,12 +385,12 @@ AWARDS2 = {
 		"color": "text-black",
 		"price": 1000
 	},
-	"longpost": {
-		"kind": "longpost",
+	"pizzashill": {
+		"kind": "pizzashill",
 		"title": "Longpost",
 		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-		"icon": "fas fa-book",
-		"color": "text-green",
+		"icon": "fas fa-pizza",
+		"color": "text-orange",
 		"price": 1000
 	},
 	"flairlock": {
