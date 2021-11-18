@@ -5,7 +5,6 @@
 {% if v %}
 	<script>
 		function fp(fp) {
-			console.log(fp)
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
 			var form = new FormData()
