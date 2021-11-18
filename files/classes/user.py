@@ -399,7 +399,7 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"http://{site}/assets/images/{site_name}/preview.webp"
+		else: return f"http://{site}/assets/images/{site_name}/preview.webp?v=2"
 
 	@property
 	@lazy
