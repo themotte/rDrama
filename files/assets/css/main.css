@@ -4437,7 +4437,7 @@ th {
 }
 
 .modal .comment-actions .list-group-item:focus, .modal .comment-actions .list-group-item:hover {
-  background-color: var(--gray-300);
+  background-color: var(--gray-300) !important;
 }
 
 .modal .comment-actions a {

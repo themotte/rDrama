@@ -17,11 +17,11 @@
 
 {% if v %}
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=114"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=114">
-	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=114">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+	<link rel="stylesheet" href="/assets/css/main.css?v=115"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=115">
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=115">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 {% else %}
 	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=114"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=114">
+	<link rel="stylesheet" href="/assets/css/main.css?v=115"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=115">
 {% endif %}
 
 <div class="row justify-content-around">
