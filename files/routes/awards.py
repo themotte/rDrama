@@ -623,6 +623,11 @@ def award_comment(cid, v):
 		send_notification(995, f"@{v.username} bought {kind} award!")
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
+	elif kind == "eye":
+		author.eye = True
+		send_notification(995, f"@{v.username} bought {kind} award!")
+		new_badge = Badge(badge_id=83, user_id=author.id)
+		g.db.add(new_badge)
 	elif kind == "marsey":
 		author.marseyawarded = time.time() + 86400
 
