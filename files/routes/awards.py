@@ -188,6 +188,16 @@ def shop(v):
 			"price": 40000,
 			"MB": False
 		},
+		"alt": {
+			"kind": "alt",
+			"title": "Alt-Seeing Eye",
+			"description": "Gives the recipient the ability to view alts.",
+			"icon": "fas fa-eye",
+			"color": "text-gold",
+			"owned": 0,
+			"price": 50000,
+			"MB": False
+		},
 	}
 
 	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all():
@@ -325,6 +335,14 @@ def buy(v, award):
 			"icon": "fas fa-volume",
 			"color": "text-success",
 			"price": 40000
+		},
+		"alt": {
+			"kind": "alt",
+			"title": "Alt-Seeing Eye",
+			"description": "Gives the recipient the ability to view alts.",
+			"icon": "fas fa-eye",
+			"color": "text-gold",
+			"price": 50000
 		},
 	}
 
@@ -499,13 +517,18 @@ def award_post(pid, v):
 		send_notification(995, f"@{v.username} bought {kind} award!")
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
+	elif kind == "marsey":
+		author.marseyawarded = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
 		new_badge = Badge(badge_id=83, user_id=author.id)
 		g.db.add(new_badge)
-	elif kind == "marsey":
-		author.marseyawarded = time.time() + 86400
+	elif kind == "alt":
+		author.alt = True
+		send_notification(995, f"@{v.username} bought {kind} award!")
+		new_badge = Badge(badge_id=84, user_id=author.id)
+		g.db.add(new_badge)
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -623,13 +646,18 @@ def award_comment(cid, v):
 		send_notification(995, f"@{v.username} bought {kind} award!")
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
+	elif kind == "marsey":
+		author.marseyawarded = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
 		new_badge = Badge(badge_id=83, user_id=author.id)
 		g.db.add(new_badge)
-	elif kind == "marsey":
-		author.marseyawarded = time.time() + 86400
+	elif kind == "alt":
+		author.alt = True
+		send_notification(995, f"@{v.username} bought {kind} award!")
+		new_badge = Badge(badge_id=84, user_id=author.id)
+		g.db.add(new_badge)
 
 	c.author.received_award_count += 1
 	g.db.add(c.author)
@@ -691,152 +719,3 @@ def admin_userawards_post(v):
 
 	if request.host == 'rdrama.net' and v.admin_level != 3: render_template("admin/awards.html", awards=list(AWARDS2.values()), v=v)
 	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 
-
-
-@app.get("/api/shop/items")
-@auth_required
-def items(v):
-	AWARDS = {
-		"shit": {
-			"kind": "shit",
-			"title": "Shit",
-			"description": "Makes flies swarm the post.",
-			"icon": "fas fa-poop",
-			"color": "text-black-50",
-			"owned": 0,
-			"price": 500
-		},
-		"fireflies": {
-			"kind": "fireflies",
-			"title": "Fireflies",
-			"description": "Makes fireflies swarm the post.",
-			"icon": "fas fa-sparkles",
-			"color": "text-warning",
-			"owned": 0,
-			"price": 500
-		},
-		"train": {
-			"kind": "train",
-			"title": "Train",
-			"description": "Summons a train on the post.",
-			"icon": "fas fa-train",
-			"color": "text-pink",
-			"owned": 0,
-			"price": 500
-		},
-		"pin": {
-			"kind": "pin",
-			"title": "1-Hour Pin",
-			"description": "Pins the post/comment.",
-			"icon": "fas fa-thumbtack fa-rotate--45",
-			"color": "text-warning",
-			"owned": 0,
-			"price": 750
-		},
-		"unpin": {
-			"kind": "unpin",
-			"title": "1-Hour Unpin",
-			"description": "Removes 1 hour from the pin duration of the post/comment.",
-			"icon": "fas fa-thumbtack fa-rotate--45",
-			"color": "text-black",
-			"owned": 0,
-			"price": 1000
-		},
-		"flairlock": {
-			"kind": "flairlock",
-			"title": "1-Day Flairlock",
-			"description": "Sets a flair for the recipient and locks it or 24 hours.",
-			"icon": "fas fa-lock",
-			"color": "text-black",
-			"owned": 0,
-			"price": 1250
-		},
-		"agendaposter": {
-			"kind": "agendaposter",
-			"title": "Agendaposter",
-			"description": "Forces the agendaposter theme on the recipient for 24 hours.",
-			"icon": "fas fa-snooze",
-			"color": "text-purple",
-			"owned": 0,
-			"price": 2500
-		},
-		"marsey": {
-			"kind": "marsey",
-			"title": "Marsey",
-			"description": "Makes the recipient unable to post/comment anything but marsey emojis for 24 hours.",
-			"icon": "fas fa-cat",
-			"color": "text-orange",
-			"owned": 0,
-			"price": 3000
-		},
-		"ban": {
-			"kind": "ban",
-			"title": "1-Day Ban",
-			"description": "Bans the recipient for a day.",
-			"icon": "fas fa-gavel",
-			"color": "text-danger",
-			"owned": 0,
-			"price": 3000
-		},
-		"unban": {
-			"kind": "unban",
-			"title": "1-Day Unban",
-			"description": "Removes 1 day from the ban duration of the recipient.",
-			"icon": "fas fa-gavel",
-			"color": "text-success",
-			"owned": 0,
-			"price": 3500
-		},
-		"grass": {
-			"kind": "grass",
-			"title": "Grass",
-			"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
-			"icon": "fas fa-seedling",
-			"color": "text-success",
-			"owned": 0,
-			"price": 10000
-		},
-		"eye": {
-			"kind": "eye",
-			"title": "All-Seeing Eye",
-			"description": "Gives the recipient the ability to view private profiles.",
-			"icon": "fas fa-eye",
-			"color": "text-silver",
-			"owned": 0,
-			"price": 10000
-		},
-		"pause": {
-			"kind": "pause",
-			"title": "Pause",
-			"description": "Gives the recipient the ability to pause profile anthems.",
-			"icon": "fas fa-volume-mute",
-			"color": "text-danger",
-			"owned": 0,
-			"price": 20000
-		},
-		"unpausable": {
-			"kind": "unpausable",
-			"title": "Unpausable",
-			"description": "Makes the profile anthem of the recipient unpausable.",
-			"icon": "fas fa-volume",
-			"color": "text-success",
-			"owned": 0,
-			"price": 40000
-		},
-	}
-
-	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all(): AWARDS[useraward.kind]["owned"] += 1
-
-	if v.patron == 1: discount = 0.10
-	elif v.patron == 2: discount = 0.15
-	elif v.patron == 3: discount = 0.20
-	elif v.patron == 4: discount = 0.25
-	elif v.patron == 5: discount = 0.30
-	else: discount = 0
-
-	for badge in [69,70,71,72,73]:
-		if v.has_badge(badge): discount += discounts[badge]
-
-	for val in AWARDS.values(): val["discount"] = discount
-
-	return AWARDS

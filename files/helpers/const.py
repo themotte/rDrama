@@ -322,6 +322,15 @@ AWARDS = {
 		"color": "text-silver",
 		"price": 10000
 	},
+	"alt": {
+		"kind": "alt",
+		"title": "Alt-Seeing Eye",
+		"description": "Gives the recipient the ability to view alts.",
+		"icon": "fas fa-eye",
+		"color": "text-gold",
+		"price": 50000
+	},
+
 }
 
 AWARDS2 = {
@@ -436,6 +445,14 @@ AWARDS2 = {
 		"icon": "fas fa-volume",
 		"color": "text-success",
 		"price": 40000
+	},
+	"alt": {
+		"kind": "alt",
+		"title": "Alt-Seeing Eye",
+		"description": "Gives the recipient the ability to view alts.",
+		"icon": "fas fa-eye",
+		"color": "text-gold",
+		"price": 50000
 	},
 }
 

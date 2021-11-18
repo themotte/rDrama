@@ -82,6 +82,7 @@ class User(Base):
 	mute = Column(Boolean)
 	unmutable = Column(Boolean)
 	eye = Column(Boolean)
+	alt = Column(Boolean)
 	frontsize = Column(Integer, default=25)
 	controversial = Column(Boolean, default=False)
 	bio = deferred(Column(String))
