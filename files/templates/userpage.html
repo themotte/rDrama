@@ -174,16 +174,25 @@
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
 				{% if "pcm" in request.host %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
+
 				{% if u.bio_html %}
-				<pre></pre>
-				<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
+					<pre></pre>
+					{% if request.host == 'rdrama.net' and u.id == 2050 %}
+						<div class="text-muted font-weight-bolder">{{u.friends_html | safe}}</div>
+					{% else %}
+						<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
+					{% endif %}
 				{% else %}
-				<p class="text-muted">No bio...</p>
+					<p class="text-muted">No bio...</p>
 				{% endif %}
 
 				{% if u.friends_html %}
 					<p class="text-muted font-weight-bold">Friends:</p>
-					{{u.friends_html | safe}}
+					{% if request.host == 'rdrama.net' and u.id == 2050 %}
+						{{u.bio_html | safe}}
+					{% else %}
+						{{u.friends_html | safe}}
+					{% endif %}
 				{% endif %}
 
 				{% if u.enemies_html %}
