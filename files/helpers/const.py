@@ -314,6 +314,14 @@ AWARDS = {
 		"color": "text-orange",
 		"price": 1000
 	},
+	"eye": {
+		"kind": "eye",
+		"title": "All-Seeing Eye",
+		"description": "Gives the recipient the ability to view private profiles.",
+		"icon": "fas fa-eye",
+		"color": "text-silver",
+		"price": 10000
+	},
 }
 
 AWARDS2 = {
@@ -403,6 +411,14 @@ AWARDS2 = {
 		"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 		"icon": "fas fa-seedling",
 		"color": "text-success",
+		"price": 10000
+	},
+	"eye": {
+		"kind": "eye",
+		"title": "All-Seeing Eye",
+		"description": "Gives the recipient the ability to view private profiles.",
+		"icon": "fas fa-eye",
+		"color": "text-silver",
 		"price": 10000
 	},
 	"pause": {

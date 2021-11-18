@@ -5627,6 +5627,10 @@ blockquote p {
   color: orange !important;
 }
 
+.text-silver {
+  color: silver !important;
+}
+
 .timeline-Widget {
   max-height: 500px !important;
   overflow-y: scroll !important;

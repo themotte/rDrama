@@ -81,6 +81,7 @@ class User(Base):
 	nitter = Column(Boolean)
 	mute = Column(Boolean)
 	unmutable = Column(Boolean)
+	eye = Column(Boolean)
 	frontsize = Column(Integer, default=25)
 	controversial = Column(Boolean, default=False)
 	bio = deferred(Column(String))

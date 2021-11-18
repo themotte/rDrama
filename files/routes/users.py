@@ -512,7 +512,7 @@ def u_username(username, v=None):
 		g.db.commit()
 
 		
-	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
+	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
 		
 		if v and u.id == LLM_ID:
 			if int(time.time()) - v.rent_utc > 600:
@@ -523,12 +523,12 @@ def u_username(username, v=None):
 			else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	
-	if hasattr(u, 'is_blocking') and u.is_blocking and (not v or v.admin_level < 3):
+	if hasattr(u, 'is_blocking') and u.is_blocking and (not v or v.admin_level < 2):
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
 		else: return render_template("userpage_blocking.html", u=u, v=v)
 
 
-	if hasattr(u, 'is_blocked') and u.is_blocked and (not v or v.admin_level < 3):
+	if hasattr(u, 'is_blocked') and u.is_blocked and (not v or v.admin_level < 2):
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
 		else: return render_template("userpage_blocked.html", u=u, v=v)
 
@@ -605,7 +605,7 @@ def u_username_comments(username, v=None):
 												v=v)
 
 
-	if u.is_private and (not v or (v.id != u.id and v.admin_level < 3)):
+	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
 		if v and u.id == LLM_ID:
 			if int(time.time()) - v.rent_utc > 600:
 				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
@@ -614,13 +614,13 @@ def u_username_comments(username, v=None):
 			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
 			else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
-	if hasattr(u, 'is_blocking') and u.is_blocking and (not v or v.admin_level < 3):
+	if hasattr(u, 'is_blocking') and u.is_blocking and (not v or v.admin_level < 2):
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
 		else: return render_template("userpage_blocking.html",
 													u=u,
 													v=v)
 
-	if hasattr(u, 'is_blocked') and u.is_blocked and (not v or v.admin_level < 3):
+	if hasattr(u, 'is_blocked') and u.is_blocked and (not v or v.admin_level < 2):
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
 		else: return render_template("userpage_blocked.html",
 													u=u,

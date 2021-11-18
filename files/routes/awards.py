@@ -55,7 +55,8 @@ def shop(v):
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
 			"owned": 0,
-			"price": 500
+			"price": 500,
+			"MB": True
 		},
 		"fireflies": {
 			"kind": "fireflies",
@@ -64,7 +65,8 @@ def shop(v):
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"owned": 0,
-			"price": 500
+			"price": 500,
+			"MB": True
 		},
 		"train": {
 			"kind": "train",
@@ -73,7 +75,8 @@ def shop(v):
 			"icon": "fas fa-train",
 			"color": "text-pink",
 			"owned": 0,
-			"price": 500
+			"price": 500,
+			"MB": True
 		},
 		"pin": {
 			"kind": "pin",
@@ -82,7 +85,8 @@ def shop(v):
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-warning",
 			"owned": 0,
-			"price": 750
+			"price": 750,
+			"MB": True
 		},
 		"unpin": {
 			"kind": "unpin",
@@ -91,7 +95,8 @@ def shop(v):
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-black",
 			"owned": 0,
-			"price": 1000
+			"price": 1000,
+			"MB": True
 		},
 		"flairlock": {
 			"kind": "flairlock",
@@ -100,7 +105,8 @@ def shop(v):
 			"icon": "fas fa-lock",
 			"color": "text-black",
 			"owned": 0,
-			"price": 1250
+			"price": 1250,
+			"MB": True
 		},
 		"agendaposter": {
 			"kind": "agendaposter",
@@ -109,7 +115,8 @@ def shop(v):
 			"icon": "fas fa-snooze",
 			"color": "text-purple",
 			"owned": 0,
-			"price": 2500
+			"price": 2500,
+			"MB": True
 		},
 		"marsey": {
 			"kind": "marsey",
@@ -118,7 +125,8 @@ def shop(v):
 			"icon": "fas fa-cat",
 			"color": "text-orange",
 			"owned": 0,
-			"price": 3000
+			"price": 3000,
+			"MB": True
 		},
 		"ban": {
 			"kind": "ban",
@@ -127,7 +135,8 @@ def shop(v):
 			"icon": "fas fa-gavel",
 			"color": "text-danger",
 			"owned": 0,
-			"price": 3000
+			"price": 3000,
+			"MB": True
 		},
 		"unban": {
 			"kind": "unban",
@@ -136,7 +145,8 @@ def shop(v):
 			"icon": "fas fa-gavel",
 			"color": "text-success",
 			"owned": 0,
-			"price": 3500
+			"price": 3500,
+			"MB": True
 		},
 		"grass": {
 			"kind": "grass",
@@ -145,7 +155,18 @@ def shop(v):
 			"icon": "fas fa-seedling",
 			"color": "text-success",
 			"owned": 0,
-			"price": 10000
+			"price": 10000,
+			"MB": True
+		},
+		"eye": {
+			"kind": "eye",
+			"title": "All-Seeing Eye",
+			"description": "Gives the recipient the ability to view private profiles.",
+			"icon": "fas fa-eye",
+			"color": "text-silver",
+			"owned": 0,
+			"price": 10000,
+			"MB": True
 		},
 		"pause": {
 			"kind": "pause",
@@ -154,7 +175,8 @@ def shop(v):
 			"icon": "fas fa-volume-mute",
 			"color": "text-danger",
 			"owned": 0,
-			"price": 20000
+			"price": 20000,
+			"MB": True
 		},
 		"unpausable": {
 			"kind": "unpausable",
@@ -163,7 +185,8 @@ def shop(v):
 			"icon": "fas fa-volume",
 			"color": "text-success",
 			"owned": 0,
-			"price": 40000
+			"price": 40000,
+			"MB": True
 		},
 	}
 
@@ -277,6 +300,14 @@ def buy(v, award):
 			"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 			"icon": "fas fa-seedling",
 			"color": "text-success",
+			"price": 10000
+		},
+		"eye": {
+			"kind": "eye",
+			"title": "All-Seeing Eye",
+			"description": "Gives the recipient the ability to view private profiles.",
+			"icon": "fas fa-eye",
+			"color": "text-silver",
 			"price": 10000
 		},
 		"pause": {
@@ -467,6 +498,11 @@ def award_post(pid, v):
 		author.unmutable = True
 		send_notification(995, f"@{v.username} bought {kind} award!")
 		new_badge = Badge(badge_id=67, user_id=author.id)
+		g.db.add(new_badge)
+	elif kind == "eye":
+		author.eye = True
+		send_notification(995, f"@{v.username} bought {kind} award!")
+		new_badge = Badge(badge_id=83, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "marsey":
 		author.marseyawarded = time.time() + 86400
@@ -752,6 +788,15 @@ def items(v):
 			"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
 			"icon": "fas fa-seedling",
 			"color": "text-success",
+			"owned": 0,
+			"price": 10000
+		},
+		"eye": {
+			"kind": "eye",
+			"title": "All-Seeing Eye",
+			"description": "Gives the recipient the ability to view private profiles.",
+			"icon": "fas fa-eye",
+			"color": "text-silver",
 			"owned": 0,
 			"price": 10000
 		},
