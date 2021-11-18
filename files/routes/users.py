@@ -837,9 +837,8 @@ def fp(v, fp):
 		v.fp = fp
 		users = g.db.query(User).filter(User.fp == fp, User.id != v.id).all()
 		for u in users:
-			existing = g.db.query(User).filter_by(user1=v.id, user2=u.id)
-			if existing: continue
-			existing = g.db.query(User).filter_by(user1=u.id, user2=v.id)
+			li = [v.id, u.id]
+			existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).first()
 			if existing: continue
 			new_alt = Alt(user1=v.id, user2=u.id)
 			g.db.add(new_alt)
