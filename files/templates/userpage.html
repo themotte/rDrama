@@ -26,7 +26,7 @@
 			if(isNaN(amount) || amount < 0) {
 				amount = 0;
 			}
-			{% if v.patron %}
+			{% if v.patron or u.patron %}
 				document.getElementById("coins-transfer-taxed" + suf).innerText = amount
 			{% else %}
 				document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
@@ -38,7 +38,7 @@
 			t.disabled = true;
 
 			let amount = parseInt(document.getElementById("coins-transfer-amount").value);
-			{% if v.patron %}
+			{% if v.patron or u.patron %}
 				let transferred = amount
 			{% else %}
 				let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
