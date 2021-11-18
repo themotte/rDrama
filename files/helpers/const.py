@@ -109,6 +109,7 @@ if SITE == 'rdrama.net':
 	LAWLZ_ID = 3833
 	LLM_ID = 253
 	DAD_ID = 2513
+	MOM_ID = 4588
 elif SITE == "pcmemes.net":
 	BASEDBOT_ID = 800
 	NOTIFICATIONS_ID = 1046
@@ -124,6 +125,7 @@ elif SITE == "pcmemes.net":
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0
+	MOM_ID = 0
 else:
 	BASEDBOT_ID = 0
 	NOTIFICATIONS_ID = 1
@@ -139,6 +141,7 @@ else:
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0
+	MOM_ID = 0
 
 PUSHER_INSTANCE_ID = '02ddcc80-b8db-42be-9022-44c546b4dce6'
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()

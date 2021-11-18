@@ -28,7 +28,7 @@ def check_for_alts(current_id):
 
 	for past_id in session["history"]:
 		
-		if past_id == DAD_ID or current_id == DAD_ID: break
+		if past_id == MOM_ID or current_id == MOM_ID: break
 		if past_id == current_id: continue
 
 		check1 = g.db.query(Alt).filter_by(
