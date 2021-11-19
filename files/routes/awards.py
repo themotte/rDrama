@@ -98,16 +98,6 @@ def shop(v):
 			"price": 1000,
 			"MB": True
 		},
-		"pizzashill": {
-			"kind": "pizzashill",
-			"title": "Pizzashill",
-			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-			"icon": "fas fa-pizza-slice",
-			"color": "text-orange",
-			"owned": 0,
-			"price": 1000,
-			"MB": True
-		},
 		"flairlock": {
 			"kind": "flairlock",
 			"title": "1-Day Flairlock",
@@ -116,6 +106,16 @@ def shop(v):
 			"color": "text-black",
 			"owned": 0,
 			"price": 1250,
+			"MB": True
+		},
+		"pizzashill": {
+			"kind": "pizzashill",
+			"title": "Pizzashill",
+			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+			"icon": "fas fa-pizza-slice",
+			"color": "text-orange",
+			"owned": 0,
+			"price": 1500,
 			"MB": True
 		},
 		"agendaposter": {
@@ -274,14 +274,6 @@ def buy(v, award):
 			"color": "text-black",
 			"price": 1000
 		},
-		"pizzashill": {
-			"kind": "pizzashill",
-			"title": "Pizzashill",
-			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-			"icon": "fas fa-pizza-slice",
-			"color": "text-orange",
-			"price": 1000,
-		},
 		"flairlock": {
 			"kind": "flairlock",
 			"title": "1-Day Flairlock",
@@ -289,6 +281,14 @@ def buy(v, award):
 			"icon": "fas fa-lock",
 			"color": "text-black",
 			"price": 1250
+		},
+		"pizzashill": {
+			"kind": "pizzashill",
+			"title": "Pizzashill",
+			"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+			"icon": "fas fa-pizza-slice",
+			"color": "text-orange",
+			"price": 1500,
 		},
 		"agendaposter": {
 			"kind": "agendaposter",

@@ -200,14 +200,6 @@ AWARDS = {
 		"color": "text-black",
 		"price": 1000
 	},
-	"pizzashill": {
-		"kind": "pizzashill",
-		"title": "Pizzashill",
-		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-		"icon": "fas fa-pizza-slice",
-		"color": "text-orange",
-		"price": 1000
-	},
 	"flairlock": {
 		"kind": "flairlock",
 		"title": "1-Day Flairlock",
@@ -215,6 +207,14 @@ AWARDS = {
 		"icon": "fas fa-lock",
 		"color": "text-black",
 		"price": 1250
+	},
+	"pizzashill": {
+		"kind": "pizzashill",
+		"title": "Pizzashill",
+		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+		"icon": "fas fa-pizza-slice",
+		"color": "text-orange",
+		"price": 1500
 	},
 	"agendaposter": {
 		"kind": "agendaposter",
@@ -388,14 +388,6 @@ AWARDS2 = {
 		"color": "text-black",
 		"price": 1000
 	},
-	"pizzashill": {
-		"kind": "pizzashill",
-		"title": "Pizzashill",
-		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
-		"icon": "fas fa-pizza-slice",
-		"color": "text-orange",
-		"price": 1000
-	},
 	"flairlock": {
 		"kind": "flairlock",
 		"title": "1-Day Flairlock",
@@ -403,6 +395,14 @@ AWARDS2 = {
 		"icon": "fas fa-lock",
 		"color": "text-black",
 		"price": 1250
+	},
+	"pizzashill": {
+		"kind": "pizzashill",
+		"title": "Pizzashill",
+		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+		"icon": "fas fa-pizza-slice",
+		"color": "text-orange",
+		"price": 1500
 	},
 	"agendaposter": {
 		"kind": "agendaposter",
