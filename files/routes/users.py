@@ -205,7 +205,8 @@ def transfer_coins(v, username):
 		if not v.patron and not receiver.patron:
 			tax = math.ceil(amount*0.03)
 			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
-			tax_receiver.coins += tax/3
+			if request.host == 'rdrama.net': tax_receiver.coins += tax/3
+			else: tax_receiver.coins += tax
 			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
 			send_notification(TAX_RECEIVER_ID, log_message)
 			g.db.add(tax_receiver)
