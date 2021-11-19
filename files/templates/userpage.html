@@ -5,7 +5,7 @@
 
 {% block title %}
 
-{% if u and u.profilecss and not (v and v.admin_level) %}
+{% if u and u.profilecss and (v.id == u.id or not (v and v.admin_level)) %}
 	<link rel="stylesheet" href="/@{{u.username}}/profilecss">
 {% endif %}
 
