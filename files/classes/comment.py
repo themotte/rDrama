@@ -312,9 +312,11 @@ class Comment(Base):
 
 		body = censor_slurs(body, v)
 
-		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+		if v:
+			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
+			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
 
-		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		if v and v.controversial:
 			for i in re.finditer('(/comments/.*?)"', body):

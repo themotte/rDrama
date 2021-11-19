@@ -83,6 +83,10 @@ def settings_profile_post(v):
 		updated = True
 		v.oldreddit = request.values.get("oldreddit", None) == 'true'
 
+	elif request.values.get("teddit", v.teddit) != v.teddit:
+		updated = True
+		v.teddit = request.values.get("teddit", None) == 'true'
+
 	elif request.values.get("nitter", v.nitter) != v.nitter:
 		updated = True
 		v.nitter = request.values.get("nitter", None) == 'true'

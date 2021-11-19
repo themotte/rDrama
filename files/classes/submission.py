@@ -308,7 +308,8 @@ class Submission(Base):
 			return 'https://secure.actblue.com/donate/ms_blm_homepage_2019'
 		elif v and self.url and self.url.startswith("https://old.reddit.com/"):
 			url = self.url
-			if not v.oldreddit: url = self.url.replace("old.reddit.com", "reddit.com")
+			if v.teddit: url = self.url.replace("old.reddit.com", "teddit.net")
+			elif not v.oldreddit: url = self.url.replace("old.reddit.com", "reddit.com")
 			if v.controversial and '/comments/' in url and "sort=" not in url:
 				if "?" in url: url += "&sort=controversial" 
 				else: url += "?sort=controversial"
@@ -324,8 +325,11 @@ class Submission(Base):
 		body = self.body_html
 		body = censor_slurs(body, v)
 
-		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
-		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+		if v:
+			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
+			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+
+			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 600:
 			rand = random.randint(1,16)
@@ -342,8 +346,12 @@ class Submission(Base):
 		body = self.body
 		body = censor_slurs(body, v)
 
-		if v and not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
-		if v and v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+		if v:
+			if v.teddit: body = body.replace("old.reddit.com", "teddit.net")
+			elif not v.oldreddit: body = body.replace("old.reddit.com", "reddit.com")
+
+			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
+
 		return body
 
 	@lazy

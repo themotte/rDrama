@@ -179,6 +179,25 @@
 				<div class="d-lg-flex border-bottom">
 
 					<div class="title w-lg-25">
+						<label for="oldreddit">Use Teddit.net</label>
+					</div>
+
+					<div class="body w-lg-100">
+
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input" id="teddit" name="teddit"{% if v.teddit %} checked{% endif %} onchange="post_toast('/settings/profile?teddit='+document.getElementById('teddit').checked);">
+							<label class="custom-control-label" for="teddit"></label>
+						</div>
+
+						<span class="text-small-extra text-muted">Enable if you would like to automatically convert reddit.com links to teddit.net links.</span>
+
+					</div>
+
+				</div>
+
+				<div class="d-lg-flex border-bottom">
+
+					<div class="title w-lg-25">
 						<label for="oldreddit">Use Old Reddit</label>
 					</div>
 
