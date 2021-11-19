@@ -21,6 +21,24 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 
+@app.get("/alpha")
+@admin_level_required(3)
+def alpha(v):
+	for u in g.db.query(User).filter(User.id < 2408).all():
+		if not u.has_badge(1):
+			new_badge = Badge(badge_id=1, user_id=u.id)
+			g.db.add(new_badge)
+			g.db.flush()
+			text = f"""
+			@carpathianflorist has given you the following profile badge:
+			\n\n![]({new_badge.path})
+			\n\n{new_badge.name}
+			"""
+			send_notification(u.id, text)	
+	
+	g.db.commit()
+	return "sex"
+
 @app.get("/name/<id>/<name>")
 @admin_level_required(2)
 def changename(v, id, name):
