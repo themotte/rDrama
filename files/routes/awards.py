@@ -527,12 +527,12 @@ def award_post(pid, v):
 		author.flairchanged = time.time() + 86400
 	elif kind == "pause":
 		author.mute = True
-		send_notification(995, f"@{v.username} bought {kind} award!")
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=68, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "unpausable":
 		author.unmutable = True
-		send_notification(995, f"@{v.username} bought {kind} award!")
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "marsey":
@@ -541,14 +541,15 @@ def award_post(pid, v):
 	elif kind == "pizzashill":
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
+		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {post.shortlink}")
 	elif kind == "eye":
 		author.eye = True
-		send_notification(995, f"@{v.username} bought {kind} award!")
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=83, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "alt":
 		author.alt = True
-		send_notification(995, f"@{v.username} bought {kind} award!")
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=84, user_id=author.id)
 		g.db.add(new_badge)
 
@@ -660,12 +661,12 @@ def award_comment(cid, v):
 		author.flairchanged = time.time() + 86400
 	elif kind == "pause":
 		author.mute = True
-		send_notification(995, f"@{v.username} bought {kind} award!")
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=68, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "unpausable":
 		author.unmutable = True
-		send_notification(995, f"@{v.username} bought {kind} award!")
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=67, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "marsey":
@@ -674,14 +675,15 @@ def award_comment(cid, v):
 	elif kind == "pizzashill":
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
+		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {c.shortlink}")
 	elif kind == "eye":
 		author.eye = True
-		send_notification(995, f"@{v.username} bought {kind} award!")
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=83, user_id=author.id)
 		g.db.add(new_badge)
 	elif kind == "alt":
 		author.alt = True
-		send_notification(995, f"@{v.username} bought {kind} award!")
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=84, user_id=author.id)
 		g.db.add(new_badge)
 
