@@ -822,7 +822,12 @@ CREATE TABLE public.users (
     friends_html character varying(2000),
     sigs_disabled boolean,
     enemies character varying(500),
-    enemies_html character varying(2000)
+    enemies_html character varying(2000),
+    fp character varying(21),
+    eye boolean,
+    alt boolean,
+    longpost integer,
+    unblockable boolean
 );
 
 
@@ -1848,6 +1853,7 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
+
 
 --
 -- PostgreSQL database dump complete
