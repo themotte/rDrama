@@ -35,56 +35,12 @@ def get_logged_in_user():
 
 	return x[0]
 
-
 def check_ban_evade(v):
-
-	if not v or not v.ban_evade or v.admin_level > 0 or v.is_suspended: return
-	
-	if random.randint(0,30) < v.ban_evade:
-		v.ban(reason="permaban evasion")
-		send_notification(v.id, "Your account has been permanently suspended for the following reason:\n\n> permaban evasion")
-
-		for post in g.db.query(Submission).filter_by(author_id=v.id).all():
-			if post.is_banned:
-				continue
-
-			post.is_banned=True
-			post.ban_reason="AutoJanny"
-			g.db.add(post)
-			
-			ma=ModAction(
-				kind="ban_post",
-				user_id=AUTOJANNY_ACCOUNT,
-				target_submission_id=post.id,
-				_note="permaban evasion"
-				)
-			g.db.add(ma)
-
-		for comment in g.db.query(Comment).filter_by(author_id=v.id).all():
-			if comment.is_banned:
-				continue
-
-			comment.is_banned=True
-			comment.ban_reason="AutoJanny"
-			g.db.add(comment)
-
-			try:
-				ma=ModAction(
-				kind="ban_comment",
-				user_id=AUTOJANNY_ACCOUNT,
-				target_comment_id=comment.id,
-				_note="ban evasion"
-				)
-				g.db.add(ma)
-			except: pass
-
-	else:
-		v.ban_evade +=1
+	if v and v.ban_evade and v.admin_level == 0 and not v.is_suspended:
+		if random.randint(0,30) < v.ban_evade: v.shadowbanned = "AutoJanny"
+		else: v.ban_evade +=1
 		g.db.add(v)
-
-	g.db.commit()
-
-
+		g.db.commit()
 
 def auth_desired(f):
 	def wrapper(*args, **kwargs):
@@ -128,8 +84,7 @@ def is_not_banned(f):
 			
 		check_ban_evade(v)
 
-		if v.is_suspended:
-			abort(403)
+		if v.is_suspended: abort(403)
 
 		g.v = v
 

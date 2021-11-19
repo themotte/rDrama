@@ -15,7 +15,7 @@ site_name = environ.get("SITE_NAME").strip()
 def static_rules(v):
 
 	if not path.exists(f'./{site_name} rules.html'):
-		if v and v.admin_level == 6:
+		if v and v.admin_level > 1:
 			return render_template('norules.html', v=v)
 		else:
 			abort(404)
@@ -87,18 +87,20 @@ def cached_chart():
 											 )
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
-	day = 3600 * 24
+	day = 3600 * 200
 
 	day_cutoffs = [today_cutoff - day * i for i in range(days)]
 	day_cutoffs.insert(0, calendar.timegm(now))
 
-	daily_times = [time.strftime("%d", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	daily_times = [time.strftime("%d/%m", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	daily_signups = [g.db.query(User.id).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	post_stats = [g.db.query(Submission.id).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
 
 	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+
+	plt.rcParams["figure.figsize"] = (20,20)
 
 	signup_chart = plt.subplot2grid((20, 4), (0, 0), rowspan=5, colspan=4)
 	posts_chart = plt.subplot2grid((20, 4), (7, 0), rowspan=5, colspan=4)
@@ -163,7 +165,7 @@ def patrons(v):
 @app.get("/badmins")
 @auth_desired
 def admins(v):
-	admins = g.db.query(User).filter_by(admin_level=6).order_by(User.coins.desc()).all()
+	admins = g.db.query(User).filter(User.admin_level>1).order_by(User.coins.desc()).all()
 	return render_template("admins.html", v=v, admins=admins)
 
 
@@ -174,7 +176,7 @@ def log(v):
 
 	page=int(request.args.get("page",1))
 
-	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	if v and v.admin_level > 1: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
 	else: actions=g.db.query(ModAction).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub", ModAction.kind!="check").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 
 	next_exists=len(actions)>25

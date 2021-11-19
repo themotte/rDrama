@@ -50,6 +50,7 @@ class User(Base):
 	verified = Column(String)
 	verifiedcolor = Column(String)
 	marseyawarded = Column(Integer)
+	longpost = Column(Integer)
 	email = deferred(Column(String))
 	css = deferred(Column(String))
 	profilecss = deferred(Column(String))
@@ -81,12 +82,15 @@ class User(Base):
 	nitter = Column(Boolean)
 	mute = Column(Boolean)
 	unmutable = Column(Boolean)
+	eye = Column(Boolean)
+	alt = Column(Boolean)
 	frontsize = Column(Integer, default=25)
 	controversial = Column(Boolean, default=False)
 	bio = deferred(Column(String))
 	bio_html = Column(String)
 	sig = deferred(Column(String))
 	sig_html = Column(String)
+	fp = Column(String)
 	sigs_disabled = Column(Boolean)
 	friends = deferred(Column(String))
 	friends_html = deferred(Column(String))
@@ -166,7 +170,6 @@ class User(Base):
 		return return_value
 
 	@property
-	@lazy
 	def referral_count(self):
 		return len(self.referrals)
 
@@ -178,7 +181,7 @@ class User(Base):
 	@property
 	@lazy
 	def paid_dues(self):
-		return self.admin_level == 6 or self.club_allowed or (self.truecoins > int(environ.get("DUES").strip()) and not self.club_banned)
+		return self.admin_level > 1 or self.club_allowed or (self.truecoins > int(environ.get("DUES").strip()) and not self.club_banned)
 
 	def any_block_exists(self, other):
 
@@ -212,12 +215,12 @@ class User(Base):
 	@cache.memoize(timeout=86400)
 	def userpagelisting(self, v=None, page=1, sort="new", t="all"):
 
-		if self.shadowbanned and not (v and (v.admin_level >= 3 or v.id == self.id)):
+		if self.shadowbanned and not (v and (v.admin_level > 1 or v.id == self.id)):
 			return []
 
 		posts = g.db.query(Submission.id).filter_by(author_id=self.id, is_pinned=False)
 
-		if not (v and (v.admin_level >= 3 or v.id == self.id)):
+		if not (v and (v.admin_level > 1 or v.id == self.id)):
 			posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False)
 
 		now = int(time.time())
@@ -356,7 +359,7 @@ class User(Base):
 	@property
 	@lazy
 	def post_notifications_count(self):
-		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ACCOUNT).count()
+		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ID).count()
 
 
 	@property
@@ -400,13 +403,13 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"http://{site}/assets/images/{site_name}/preview.webp"
+		else: return f"http://{site}/assets/images/{site_name}/preview.webp?v=2"
 
 	@property
 	@lazy
 	def profile_url(self):
 		if self.profileurl: return self.profileurl
-		elif "rama" in site: return f"http://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp"
+		elif "rama" in site: return f"http://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=1"
 		else: return f"http://{site}/assets/images/default-profile-pic.webp"
 
 	@property
@@ -464,7 +467,7 @@ class User(Base):
 			self.profileurl = None
 			if self.discord_id: remove_user(self)
 
-		self.is_banned = admin.id if admin else AUTOJANNY_ACCOUNT
+		self.is_banned = admin.id if admin else AUTOJANNY_ID
 		if reason: self.ban_reason = reason
 
 		g.db.add(self)

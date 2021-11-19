@@ -4119,7 +4119,6 @@ th {
 
 .modal-header {
   border-bottom: none;
-  background-color: var(--gray-400);
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
   padding: 0.5rem 1rem;
@@ -4139,7 +4138,6 @@ th {
 
 .modal-footer {
   border: none;
-  background-color: var(--gray-400);
   border-bottom-right-radius: 0.35rem;
   border-bottom-left-radius: 0.35rem;
 }
@@ -4439,7 +4437,7 @@ th {
 }
 
 .modal .comment-actions .list-group-item:focus, .modal .comment-actions .list-group-item:hover {
-  background-color: var(--gray-300);
+  background-color: var(--gray-300) !important;
 }
 
 .modal .comment-actions a {
@@ -5627,6 +5625,18 @@ blockquote p {
 
 .text-orange {
   color: orange !important;
+}
+
+.text-silver {
+  color: silver !important;
+}
+
+.text-gold {
+  color: gold !important;
+}
+
+.text-green {
+  color: green !important;
 }
 
 .timeline-Widget {

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>  
+<head>
 	<script src="/assets/js/lozad.js?v=53"></script>
 	<script>
 		const observer = lozad();
@@ -80,16 +80,16 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<meta name="thumbnail" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.webp">
+	<meta name="thumbnail" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=2">
 
-	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
+	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">
 	{% block title %}
 	<title>{{'SITE_NAME' | app_config}}</title>
 
 	<meta property="og:type" content="article" >
 	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta property="og:site_name" content="{{request.host}}" >
-	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" >
+	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=2" >
 	<meta property="og:url" content="{{request.path | full_link}}">
 	<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 	<meta property="og:author" name="author" content="@{{request.host_url}}" >
@@ -100,7 +100,7 @@
 	<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta name="twitter:creator" content="@{{request.host_url}}">
 	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-	<meta name="twitter:image" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" >
+	<meta name="twitter:image" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=2" >
 	<meta name="twitter:url" content="{{request.path | full_link}}" >
 	{% endblock %}
 
@@ -109,12 +109,12 @@
 	<meta name="format-detection" content="telephone=no">
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 
-	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
-	<!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
-		<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">--->
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">
+	<!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">
+		<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">--->
 		<link rel="manifest" href="/assets/manifest.json">
 		<link rel="mask-icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp" color="#{{'DEFAULT_COLOR' | app_config}}">
-		<link rel="shortcut icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
+		<link rel="shortcut icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">
 		<meta name="apple-mobile-web-app-title" content="{{'SITE_NAME' | app_config}}">
 		<meta name="application-name" content="{{'SITE_NAME' | app_config}}">
 		<meta name="msapplication-TileColor" content="#{{'DEFAULT_COLOR' | app_config}}">
@@ -254,12 +254,12 @@
 
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=112">
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=97">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=97">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=118">
+			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=117">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=117">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=112"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=97">
+			<link rel="stylesheet" href="/assets/css/main.css?v=118"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=117">
 		{% endif %}
 
 		{% endblock %}
@@ -286,7 +286,7 @@
 		</style>
 		
 		<a  rel="nofollow noopener noreferrer" href="{% if 'rama' in request.host %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}">
-			<img loading="lazy" class="banner" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.webp{% else %}cached.webp{% endif %}" width="100%">
+			<img loading="lazy" class="banner" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.webp{% else %}cached.webp{% endif %}?v=2" width="100%">
 		</a>
 	{% endif %}
 {% endblock %}

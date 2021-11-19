@@ -7,12 +7,14 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
 from files.classes.votes import CommentVote
-from files.helpers.const import AUTOPOLLER_ACCOUNT, censor_slurs
+from files.helpers.const import AUTOPOLLER_ID, censor_slurs
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
 from random import randint
 
 site = environ.get("DOMAIN").strip()
+if site == 'pcmemes.net': cc = "splash mountain"
+else: cc = "country club"
 
 class Comment(Base):
 
@@ -78,7 +80,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def options(self):
-		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ACCOUNT]
+		return [x for x in self.child_comments if x.author_id == AUTOPOLLER_ID]
 
 	def total_poll_voted(self, v):
 		if v:
@@ -183,7 +185,7 @@ class Comment(Base):
 	def replies(self):
 		r = self.__dict__.get("replies", None)
 		if r: r = [x for x in r if not x.author.shadowbanned]
-		if not r and r != []: r = sorted([x for x in self.child_comments if not x.author.shadowbanned and x.author_id != AUTOPOLLER_ACCOUNT], key=lambda x: x.score, reverse=True)
+		if not r and r != []: r = sorted([x for x in self.child_comments if not x.author.shadowbanned and x.author_id != AUTOPOLLER_ID], key=lambda x: x.score, reverse=True)
 		return r
 
 	@replies.setter
@@ -201,21 +203,21 @@ class Comment(Base):
 	@property
 	def replies3(self):
 		r = self.__dict__.get("replies", None)
-		if not r and r != []: r = sorted([x for x in self.child_comments if x.author_id != AUTOPOLLER_ACCOUNT], key=lambda x: x.score, reverse=True)
+		if not r and r != []: r = sorted([x for x in self.child_comments if x.author_id != AUTOPOLLER_ID], key=lambda x: x.score, reverse=True)
 		return r
 
 	@property
 	@lazy
 	def shortlink(self):
-		return f"http://{site}/comment/{self.id}"
+		return f"http://{site}/comment/{self.id}#context"
 
 	@property
 	@lazy
 	def permalink(self):
-		if self.post and self.post.club: return f"/comment/{self.id}/"
+		if self.post and self.post.club: return f"/comment/{self.id}?context=9#context"
 
-		if self.post: return f"{self.post.permalink}/{self.id}/"
-		else: return f"/comment/{self.id}/"
+		if self.post: return f"{self.post.permalink}/{self.id}?context=9#context"
+		else: return f"/comment/{self.id}?context=9#context"
 
 	@property
 	@lazy
@@ -302,7 +304,7 @@ class Comment(Base):
 		return data
 
 	def realbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
+		if self.post and self.post.club and not (v and v.paid_dues): return f"<p>{cc} ONLY</p>"
 
 		body = self.body_html
 
@@ -335,7 +337,7 @@ class Comment(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues): return "<p>COUNTRY CLUB ONLY</p>"
+		if self.post and self.post.club and not (v and v.paid_dues): return f"<p>{cc} ONLY</p>"
 
 		body = self.body
 

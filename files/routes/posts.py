@@ -68,9 +68,11 @@ def publish(pid, v):
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
 	if request.host == 'rdrama.net':
-		if 'aevann' in f'{post.body_html}{post.title}'.lower() and 1 not in notify_users: notify_users.add(1)
-		if 'joan' in f'{post.body_html}{post.title}'.lower() and 28 not in notify_users: notify_users.add(28)
-		if 'carp' in f'{post.body_html}{post.title}'.lower() and 995 not in notify_users: notify_users.add(995)
+		if ('aevan' in f'{post.body_html}{post.title}'.lower() or 'avean' in f'{post.body_html}{post.title}'.lower()) and 1 not in notify_users: notify_users.add(1)
+		if ('joan' in f'{post.body_html}{post.title}'.lower() or 'pewkie' in f'{post.body_html}{post.title}'.lower()) and 28 not in notify_users: notify_users.add(28)
+		if 'carp' in f'{post.body_html}{post.title}'.lower() and 995 not in notify_users:
+			notify_users.add(995)
+			notify_users.add(541)
 		if ('idio3' in f'{post.body_html}{post.title}'.lower() or 'idio ' in f'{post.body_html}{post.title}'.lower()) and 30 not in notify_users: notify_users.add(30)
 
 	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{post.permalink}")
@@ -118,7 +120,7 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if post.club and not (v and v.paid_dues) or post.private and not (v and (v.id == post.author_id or v.admin_level == 6)): abort(403)
+	if post.club and not (v and v.paid_dues) or post.private and not (v and (v.id == post.author_id or v.admin_level > 1)): abort(403)
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -134,12 +136,12 @@ def post_id(pid, anything=None, v=None):
 			blocked.c.id,
 		)
 		
-		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
+		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
-			Comment.author_id != AUTOPOLLER_ACCOUNT,
+			Comment.author_id != AUTOPOLLER_ID,
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -176,7 +178,7 @@ def post_id(pid, anything=None, v=None):
 		post.replies = [x for x in output if x.is_pinned] + [x for x in output if x.level == 1 and not x.is_pinned]
 
 	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ACCOUNT)
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -201,7 +203,7 @@ def post_id(pid, anything=None, v=None):
 	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
 	else:
-		if post.is_banned and not (v and (v.admin_level >= 3 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, sort=sort, render_replies=True)
 
@@ -214,7 +216,7 @@ def edit_post(pid, v):
 
 	p = get_post(pid)
 
-	if p.author_id != v.id and not (v.admin_level == 6 and v.id in [1,28,30,995,2513,3333]): abort(403)
+	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
 	title = request.values.get("title", "").strip()
 	body = request.values.get("body", "").strip()
@@ -231,6 +233,12 @@ def edit_post(pid, v):
 			if body:
 				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+
+	if v.longpost:
+		if time.time() > v.longpost:
+			v.longpost = None
+			g.db.add(v)
+		elif len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
 
 	if title != p.title:
 		title_html = filter_title(title)
@@ -255,6 +263,9 @@ def edit_post(pid, v):
 
 		p.body = body
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
+
+		if v.longpost and len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
+
 		p.body_html = body_html
 
 		if "rama" in request.host and "ivermectin" in body_html.lower():
@@ -271,7 +282,7 @@ def edit_post(pid, v):
 			body_jannied_html = sanitize(body_md)
 
 
-			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			c_jannied = Comment(author_id=AUTOJANNY_ID,
 				parent_submission=p.id,
 				level=1,
 				over_18=False,
@@ -303,7 +314,7 @@ def edit_post(pid, v):
 
 			body_jannied_html = sanitize(body_md)
 
-			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			c_jannied = Comment(author_id=AUTOJANNY_ID,
 				parent_submission=p.id,
 				level=1,
 				over_18=False,
@@ -332,13 +343,15 @@ def edit_post(pid, v):
 		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
 
 		if request.host == 'rdrama.net':
-			if 'aevann' in f'{body_html}{title}'.lower() and 1 not in notify_users: notify_users.add(1)
-			if 'joan' in f'{body_html}{title}'.lower() and 28 not in notify_users: notify_users.add(28)
-			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users: notify_users.add(995)
+			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
+			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
+			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
+				notify_users.add(995)
+				notify_users.add(541)
 			if ('idio3' in f'{body_html}{title}'.lower() or 'idio ' in f'{body_html}{title}'.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users:
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 
@@ -514,7 +527,11 @@ def submit_post(v):
 	title = request.values.get("title", "").strip()
 	url = request.values.get("url", "").strip()
 	title_html = filter_title(title)
+	body = request.values.get("body", "").strip()
+
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
+
+	if v.longpost and len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
 
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
@@ -560,13 +577,12 @@ def submit_post(v):
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
 		elif "youtu" in domain:
-			try:
-				yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
-				params = parse_qs(urlparse(url).query)
-				t = params.get('t', params.get('start', [0]))[0].replace('s','')
-				if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
-				else: embed = f"https://youtube.com/embed/{yt_id}"
-			except: embed = None
+			yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+			params = parse_qs(urlparse(url).query)
+			t = params.get('t', params.get('start', [0]))[0]
+			if isinstance(t, str): t = t.replace('s','')
+			if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
+			else: embed = f"https://youtube.com/embed/{yt_id}"
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 			id = url.split("/post/")[1]
 			if "/" in id: id = id.split("/")[0]
@@ -586,8 +602,6 @@ def submit_post(v):
 	elif len(title) > 500:
 		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
-	
-	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded:
 		if time.time() > v.marseyawarded:
@@ -599,6 +613,12 @@ def submit_post(v):
 			if body:
 				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+
+	if v.longpost:
+		if time.time() > v.longpost:
+			v.longpost = None
+			g.db.add(v)
+		elif len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
 
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == v.id,
@@ -650,7 +670,7 @@ def submit_post(v):
 			post.ban_reason = "AutoJanny"
 			g.db.add(post)
 			ma=ModAction(
-					user_id=AUTOJANNY_ACCOUNT,
+					user_id=AUTOJANNY_ID,
 					target_submission_id=post.id,
 					kind="ban_post",
 					_note="spam"
@@ -681,6 +701,8 @@ def submit_post(v):
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 400
 
+	if v.longpost and len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
+
 	if len(body_html) > 20000: return {"error":"Submission body too long!"}, 400
 
 	bans = filter_comment_html(body_html)
@@ -698,7 +720,7 @@ def submit_post(v):
 		private=bool(request.values.get("private","")),
 		club=club,
 		author_id=v.id,
-		over_18=bool(request.values.get("over_18","")),
+		over_18=request.host == 'pcmemes.net' and v.id == 1578 or bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("Authorization"),
 		url=url,
@@ -713,7 +735,7 @@ def submit_post(v):
 	g.db.flush()
 	
 	for option in options:
-		c = Comment(author_id=AUTOPOLLER_ACCOUNT,
+		c = Comment(author_id=AUTOPOLLER_ID,
 			parent_submission=new_post.id,
 			level=1,
 			body_html=filter_title(option),
@@ -781,9 +803,11 @@ def submit_post(v):
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
 		if request.host == 'rdrama.net':
-			if 'aevann' in f'{body_html}{title}'.lower() and 1 not in notify_users: notify_users.add(1)
-			if 'joan' in f'{body_html}{title}'.lower() and 28 not in notify_users: notify_users.add(28)
-			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users: notify_users.add(995)
+			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
+			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
+			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
+				notify_users.add(995)
+				notify_users.add(541)
 			if ('idio3' in f'{body_html}{title}'.lower() or 'idio ' in f'{body_html}{title}'.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
@@ -812,7 +836,7 @@ def submit_post(v):
 		body_jannied_html = sanitize(body_md)
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+		c_jannied = Comment(author_id=AUTOJANNY_ID,
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
@@ -846,7 +870,7 @@ def submit_post(v):
 
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+		c_jannied = Comment(author_id=AUTOJANNY_ID,
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
@@ -884,7 +908,7 @@ def submit_post(v):
 		if new_post.url:
 			if new_post.url.startswith('https://old.reddit.com/r/'):
 				rev = new_post.url.replace('https://old.reddit.com/', '')
-				rev = "* [reveddit.com](https://reveddit.com/{rev})\n"
+				rev = f"* [reveddit.com](https://reveddit.com/{rev})\n"
 			else: rev = ''
 			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, new_post.url)
@@ -898,7 +922,7 @@ def submit_post(v):
 			if "Snapshots:\n\n"	 not in body: body += "Snapshots:\n\n"			
 
 			body += f'**[{title}]({href})**:\n\n'
-			body += f'* [reveddit.com](https://reveddit.com/{href})\n'
+			body += f'* [reveddit.com](https://reveddit.com/{href.replace("https://old.reddit.com/", "")})\n'
 			body += f'* [archive.org](https://web.archive.org/{href})\n'
 			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
 			gevent.spawn(archiveorg, href)
@@ -907,7 +931,7 @@ def submit_post(v):
 		body_html = sanitize(body_md)
 
 		if len(body_html) < 20000:
-			c = Comment(author_id=SNAPPY_ACCOUNT,
+			c = Comment(author_id=SNAPPY_ID,
 				distinguish_level=6,
 				parent_submission=new_post.id,
 				level=1,
@@ -919,7 +943,7 @@ def submit_post(v):
 
 			g.db.add(c)
 
-			snappy = g.db.query(User).filter_by(id = SNAPPY_ACCOUNT).first()
+			snappy = g.db.query(User).filter_by(id = SNAPPY_ID).first()
 			snappy.comment_count += 1
 			snappy.coins += 1
 			g.db.add(snappy)
@@ -936,7 +960,7 @@ def submit_post(v):
 
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
-	if v.admin_level == 6 and "[changelog]" in new_post.title or "(changelog)" in new_post.title:
+	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title):
 		send_message(f"http://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
@@ -991,7 +1015,7 @@ def undelete_post_pid(pid, v):
 def toggle_comment_nsfw(cid, v):
 
 	comment = g.db.query(Comment).filter_by(id=cid).first()
-	if not comment.author_id == v.id and not v.admin_level >= 3: abort(403)
+	if not comment.author_id == v.id and not v.admin_level > 1: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
 	g.db.flush()
@@ -1008,7 +1032,7 @@ def toggle_post_nsfw(pid, v):
 
 	post = get_post(pid)
 
-	if not post.author_id == v.id and not v.admin_level >= 3:
+	if not post.author_id == v.id and not v.admin_level > 1:
 		abort(403)
 
 	post.over_18 = not post.over_18

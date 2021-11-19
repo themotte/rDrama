@@ -63,7 +63,7 @@
 	</form>
 
 	<pre></pre>
-	{% if 'rdrama.net' not in request.host or v.id in [1,995,2513] %}
+	{% if 'rdrama.net' not in request.host or v.admin_level > 2 %}
 		<div><a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/admin/monthly')">Grant Monthly Marseybux</a></div>
 	{% endif %}
 {% endblock %}

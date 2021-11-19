@@ -236,11 +236,11 @@ def settings_profile_post(v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
-		if request.host == 'rdrama.net' and 'aevann' in friends_html.lower() and 1 not in notify_users: notify_users.add(1)
+		if request.host == 'rdrama.net' and ('aevan' in friends_html.lower() or 'avean' in friends_html.lower()) and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their friends list!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 		v.friends = friends[:500]
@@ -281,11 +281,11 @@ def settings_profile_post(v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
-		if request.host == 'rdrama.net' and 'aevann' in enemies_html.lower() and 1 not in notify_users: notify_users.add(1)
+		if request.host == 'rdrama.net' and ('aevan' in enemies_html.lower() or 'avean' in enemies_html.lower()) and 1 not in notify_users: notify_users.add(1)
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their enemies list!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ACCOUNT, Comment.body == message, Comment.notifiedto == x).first()
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message, Comment.notifiedto == x).first()
 			if not existing: send_notification(x, message)
 
 		v.enemies = enemies[:500]
@@ -793,7 +793,7 @@ def settings_css(v):
 @auth_required
 def settings_profilecss_get(v):
 
-	if v.truecoins < 1000 and not v.patron and v.admin_level < 6: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
+	if v.truecoins < 1000 and not v.patron and v.admin_level == 0 : return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
@@ -825,7 +825,7 @@ def settings_block_user(v):
 	if v.has_block(user):
 		return {"error": f"You have already blocked @{user.username}."}, 409
 
-	if user.id == NOTIFICATIONS_ACCOUNT:
+	if user.id == NOTIFICATIONS_ID:
 		return {"error": "You can't block this user."}, 409
 
 	new_block = UserBlock(user_id=v.id,
@@ -907,6 +907,8 @@ def settings_content_get(v):
 @auth_required
 @validate_formkey
 def settings_name_change(v):
+
+	if v.is_banned and not v.unban_utc: return {"error": "forbidden."}, 403
 
 	new_name=request.values.get("name").strip()
 

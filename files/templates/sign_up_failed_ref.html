@@ -12,7 +12,7 @@
 		<meta property="og:type" content="article" >
 		<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
 		<meta property="og:site_name" content="{{request.host}}" >
-		<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" >
+		<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=2" >
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 		<meta property="og:author" name="author" content="{{request.host_url}}" >
@@ -23,7 +23,7 @@
 		<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
 		<meta name="twitter:creator" content="{{request.host_url}}">
 		<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-		<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp" >
+		<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=2" >
 		<meta name="twitter:url" content="{{request.host}}" >
 
 		<title>{% if ref_user %}{{ref_user.username}} invites you to {{'SITE_NAME' | app_config}}{% else %}{{'SITE_NAME' | app_config}}{% endif %}</title>
@@ -31,7 +31,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=112"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=97">
+		<link rel="stylesheet" href="/assets/css/main.css?v=118"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=117">
 
 </head>
 
@@ -83,7 +83,7 @@
 
 										<div class="splash-overlay"></div>
 
-										<img loading="lazy" class="splash-img" src="/assets/images/{{'SITE_NAME' | app_config}}/cover.webp"></img>
+										<img loading="lazy" class="splash-img" src="/assets/images/{{'SITE_NAME' | app_config}}/cover.webp?v=1"></img>
 								</div>
 
 						</div>

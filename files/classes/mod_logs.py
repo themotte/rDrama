@@ -3,6 +3,11 @@ from sqlalchemy.orm import relationship
 from files.__main__ import Base
 import time
 from files.helpers.lazy import lazy
+from os import environ
+
+site = environ.get("DOMAIN").strip()
+if site == 'pcmemes.net': cc = "splash mountain"
+else: cc = "country club"
 
 class ModAction(Base):
 	__tablename__ = "modactions"
@@ -77,7 +82,7 @@ class ModAction(Base):
 	@lazy
 	def string(self):
 
-		output =  ACTIONTYPES[self.kind]["str"].format(self=self)
+		output =  ACTIONTYPES[self.kind]["str"].format(self=self, cc=cc)
 
 		if self.note: output += f" <i>({self.note})</i>"
 
@@ -160,12 +165,12 @@ ACTIONTYPES={
 		"color": "bg-muted",
 	},
 	"club_allow":{
-		"str":'allowed user {self.target_link} into the country club',
+		"str":'allowed user {self.target_link} into the {cc}',
 		"icon":"fa-user-slash",
 		"color": "bg-danger",
 	},
 	"club_ban":{
-		"str":'disallowed user {self.target_link} from the country club',
+		"str":'disallowed user {self.target_link} from the {cc}',
 		"icon": "fa-user-slash",
 		"color": "bg-muted",
 	},

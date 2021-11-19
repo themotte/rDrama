@@ -5,7 +5,7 @@
 
 {% block title %}
 
-{% if u and u.profilecss %}
+{% if u and u.profilecss and (u.admin_level or not (v and v.admin_level)) %}
 	<link rel="stylesheet" href="/@{{u.username}}/profilecss">
 {% endif %}
 
@@ -15,7 +15,7 @@
 	}
 </style>
 
-<script src="/assets/js/userpage.js?v=58"></script>
+<script src="/assets/js/userpage.js?v=72"></script>
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
@@ -41,29 +41,44 @@
 
 {% block desktopUserBanner %}
 
-<script>
-	function transferCoins(mobile=false) {
-		let t = event.target;
-		t.disabled = true;
+{% if v %}
+	<script>
+		const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
 
-		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
-		let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
-
-		post_toast_callback("/@{{u.username}}/transfer_coins",
-			{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
-			(xhr) => {
-			if(xhr.status == 200) {
-				document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
-				document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
-				document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
+		function updateTax(mobile=false) {
+			let suf = mobile ? "-mobile" : "";
+			let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
+			if(isNaN(amount) || amount < 0) {
+			amount = 0;
 			}
-			}
-		);
+			document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+		}
 
-		setTimeout(_ => t.disabled = false, 2000);
-	}
+		function transferCoins(mobile=false) {
+			let t = event.target;
+			t.disabled = true;
 
-	{% if u.song %}
+			let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+			let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+
+			post_toast_callback("/@{{u.username}}/transfer_coins",
+				{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
+				(xhr) => {
+				if(xhr.status == 200) {
+					document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
+					document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
+					document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
+				}
+				}
+			);
+
+			setTimeout(_ => t.disabled = false, 2000);
+		}
+	</script>
+{% endif %}
+
+{% if u.song %}
+	<script>
 		var audio = new Audio('/songs/{{u.id}}');
 		audio.loop=true;
 		
@@ -92,8 +107,8 @@
 			}, {once : true});
 
 		});
-	{% endif %}
-</script>
+	</script>
+{% endif %}
 
 <div class="row d-none d-md-block">
 	<div class="col px-0">
@@ -155,30 +170,44 @@
 					</div> 
 				</div>
 
-				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
+				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
+				{% else %}<pre></pre>
+				{% endif %}
+
+				<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Simps</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Haters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Simps for</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Hates</a></div>
+
 				<div class="font-weight-bolder">
 					<span id="profile-coins-amount">{{u.coins}}</span>
-					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="20" src="/assets/images/emojis/marseycoin.webp">&nbsp;&nbsp;
+					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="20" src="/assets/images/emojis/marseycoin.webp?v=1">&nbsp;&nbsp;
 
 					{% if u.procoins %}
 						<span>{{u.procoins}}</span>
-						<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Marseybux" height="20" src="/assets/images/emojis/marseybux.webp">&nbsp;&nbsp;
+						<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Marseybux" height="20" src="/assets/images/emojis/marseybux.webp?v=1">&nbsp;&nbsp;
 					{% endif %}
 
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
 				{% if "pcm" in request.host %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
+
 				{% if u.bio_html %}
-				<pre></pre>
-				<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
+					<pre></pre>
+					{% if request.host == 'rdrama.net' and u.id == 2050 %}
+						<div class="text-muted font-weight-bolder">{{u.friends_html | safe}}</div>
+					{% else %}
+						<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
+					{% endif %}
 				{% else %}
-				<p class="text-muted">No bio...</p>
+					<p class="text-muted">No bio...</p>
 				{% endif %}
 
 				{% if u.friends_html %}
 					<p class="text-muted font-weight-bold">Friends:</p>
-					{{u.friends_html | safe}}
+					{% if request.host == 'rdrama.net' and u.id == 2050 %}
+						{{u.bio_html | safe}}
+					{% else %}
+						{{u.friends_html | safe}}
+					{% endif %}
 				{% endif %}
 
 				{% if u.enemies_html %}
@@ -208,28 +237,28 @@
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'coin-transfer')">Gift {{'COINS_NAME' | app_config}}</a>
 
-						{% if 'pcm' in request.host and v.admin_level == 6 %} 
+						{% if 'pcm' in request.host and v.admin_level > 1 %} 
 							{% if u.admin_level == 0 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-							{% elif v.id in [10,1551,1552,1577,1592] %}
+							{% elif v.admin_level > 2 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
 						{% endif %}
 
-						{% if 'rama' in request.host and v.id in [1,28,30,995,2513,3333] %} 
+						{% if 'rama' in request.host and v.admin_level > 2 %} 
 							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
 							<a id="fakeadmin" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_fake_admin','fakeadmin','unfakeadmin')">Make fake admin</a>
 							<a id="unfakeadmin" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_fake_admin','fakeadmin','unfakeadmin')">Remove fake admin</a>
 
-							{% if u.admin_level == 6 %}
+							{% if u.admin_level > 1 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
 						{% endif %}
 
-						{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
+						{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level > 1 %}
 							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -354,18 +383,20 @@
 						{% endif %}
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
-					{% if v and v.admin_level >=4 %}
+					<p>Coins spent: {{u.coins_spent}}</p>
+					{% if v and v.admin_level > 1 %}
+						<p>True score: {{u.truecoins}}</p>
 						{% if u.is_private %}
 							<p>User has private mode enabled.</p>
 						{% endif %}
+					{% endif %}
+					{% if v and (v.admin_level > 1 or v.alt) %}
 						<span>Alts:</span>
 						<ul>
 							{% for account in u.alts_unique %}
 								<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
 							{% endfor %}
 						</ul>
-						True score: {{u.truecoins}} &nbsp;
-						Coins spent: {{u.coins_spent}}
 					{% endif %}
 					{% if u.is_suspended %}
 						<p>Banned by: <a href="{{u.banned_by.url}}">@{{u.banned_by.username}}</a></p>
@@ -431,14 +462,20 @@
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="followsyou text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
-				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp">{% endif %}{{u.customtitle | safe}}</p>{% endif %}
+				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
+				{% else %}
+					<pre></pre>
+				{% endif %}
+
+				<div class="font-weight-bolder mb-2"><a class="mr-1" href="/@{{u.username}}/upvoters">Simps</a> | <a class="mx-1" href="/@{{u.username}}/downvoters">Haters</a> | <a class="mx-1" href="/@{{u.username}}/upvoting">Simps for</a> | <a class="ml-1" href="/@{{u.username}}/downvoting">Hates</a></div>
+				
 				<div class="font-weight-normal">
 					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span>
-					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="15" src="/assets/images/emojis/marseycoin.webp">&nbsp;&nbsp;
+					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="15" src="/assets/images/emojis/marseycoin.webp?v=1">&nbsp;&nbsp;
 
 					{% if u.procoins %}
 						<span class="font-weight-bold">{{u.procoins}}</span>
-						<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Marseybux" height="15" src="/assets/images/emojis/marseybux.webp">&nbsp;&nbsp;
+						<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Marseybux" height="15" src="/assets/images/emojis/marseybux.webp?v=1">&nbsp;&nbsp;
 					{% endif %}
 
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
@@ -500,28 +537,28 @@
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'coin-transfer-mobile')">Gift {{'COINS_NAME' | app_config}}</a>
 
-					{% if 'pcm' in request.host and v.admin_level == 6 %} 
+					{% if 'pcm' in request.host and v.admin_level > 1 %} 
 						{% if u.admin_level == 0 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-						{% elif v.id in [10,1551,1552,1577,1592] %}
+						{% elif v.admin_level > 2 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
 					{% endif %}
 
-					{% if 'rama' in request.host and v.id in [1,28,30,995,2513,3333] %} 
+					{% if 'rama' in request.host and v.admin_level > 2 %} 
 						<a id="admin2" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
 						<a id="unadmin2" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
 
 						<a id="fakeadmin2" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_fake_admin','fakeadmin2','unfakeadmin2')">Make fake admin</a>
 						<a id="unfakeadmin2" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_fake_admin','fakeadmin2','unfakeadmin2')">Remove fake admin</a>
 
-						{% if u.admin_level == 6 %}
+						{% if u.admin_level > 1 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
 					{% endif %}
 
-					{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level == 6 %}
+					{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level > 1 %}
 						<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 						<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -642,23 +679,24 @@
 				{% endif %}
 				<pre></pre>
 				<p>User ID: {{u.id}}</p>
+				<p>Coins spent: {{u.coins_spent}}</p>
 				{% if v and v.admin_level > 1 %}
+					<p>True score: {{u.truecoins}}</p>
 					{% if u.is_private %}
 						<p>User has private mode enabled.</p>
 					{% endif %}
+				{% endif %}
+				{% if v and (v.admin_level > 1 or v.alt) %}
 					<span>Alts:</span>
 					<ul>
 						{% for account in u.alts_unique %}
-						<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
+							<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
 						{% endfor %}
 					</ul>
-					True score: {{u.truecoins}} &nbsp;
-					Coins spent: {{u.coins_spent}}
 				{% endif %}
 				{% if u.is_suspended %}
 					<p>Banned by: <a href="{{u.banned_by.url}}">@{{u.banned_by.username}}</a></p>
 				{% endif %}
-
 			</div>
 		</div>
 	</div>

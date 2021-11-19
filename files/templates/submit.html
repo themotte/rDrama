@@ -10,7 +10,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp">
+		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">
+
+		{% if request.host == 'pcmemes.net' %}
+			{% set cc='Splash Mountain' %}
+		{% else %}
+			{% set cc='Country Club' %}
+		{% endif %}
 
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -25,12 +31,12 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=112"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=97">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=97">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=118"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=117">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=117">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=112">
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=97">
+			<link rel="stylesheet" href="/assets/css/main.css?v=118">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=117">
 		{% endif %}
 		{% endblock %}
 
@@ -135,7 +141,7 @@
 												{% if v.paid_dues %}
 													<div class="custom-control custom-checkbox">
 														<input type="checkbox" class="custom-control-input" id="clubCheck" name="club">
-														<label class="custom-control-label" for="clubCheck">Country Club thread</label>
+														<label class="custom-control-label" for="clubCheck">{{cc}} thread</label>
 													</div>
 												{% endif %}
 												<pre>

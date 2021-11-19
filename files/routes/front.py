@@ -28,7 +28,7 @@ def notifications(v):
 	messages = request.values.get('messages', False)
 	modmail = request.values.get('modmail', False)
 	posts = request.values.get('posts', False)
-	if modmail and v.admin_level == 6:
+	if modmail and v.admin_level > 1:
 		comments = g.db.query(Comment).filter(Comment.sentto==0).order_by(Comment.created_utc.desc()).offset(25*(page-1)).limit(26).all()
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
@@ -37,7 +37,7 @@ def notifications(v):
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
 	elif posts:
-		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ACCOUNT).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
+		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ID).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
 
 		listing = []
 
@@ -58,7 +58,7 @@ def notifications(v):
 		notifications = v.notifications.join(Notification.comment).filter(
 			Comment.is_banned == False,
 			Comment.deleted_utc == 0,
-			Comment.author_id != AUTOJANNY_ACCOUNT,
+			Comment.author_id != AUTOJANNY_ID,
 		).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 		next_exists = (len(notifications) > 25)
@@ -299,7 +299,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 			Submission.author_id.notin_(blocked)
 		)
 
-	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level == 6).all()]
+	admins = [x[0] for x in g.db.query(User.id).filter(User.admin_level > 1).all()]
 	posts = posts.filter(Submission.title.ilike('_changelog%'), Submission.author_id.in_(admins))
 
 	if t != 'all':
@@ -364,13 +364,10 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 			UserBlock.user_id).filter_by(
 			target_id=v.id).all()]
 
-		comments = comments.filter(
-			Comment.author_id.notin_(blocking),
-			Comment.author_id.notin_(blocked)
-		)
+		comments = comments.filter(Comment.author_id.notin_(blocking), Comment.author_id.notin_(blocked))
 
-	if not v or not v.admin_level >= 3:
-		comments = comments.filter_by(is_banned=False).filter(Comment.deleted_utc == 0)
+	if not v or not v.admin_level > 1:
+		comments = comments.filter(Comment.is_banned==False, Comment.deleted_utc == 0)
 
 	now = int(time.time())
 	if t == 'hour':

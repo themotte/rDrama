@@ -11,8 +11,9 @@ from flask import *
 from files.__main__ import app, limiter
 from files.helpers.sanitize import filter_title
 
-
 site = environ.get("DOMAIN").strip()
+if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
+else: cc = "COUNTRY CLUB"
 
 beams_client = PushNotifications(
 		instance_id=PUSHER_INSTANCE_ID,
@@ -46,7 +47,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	if comment.post and comment.post.club and not (v and v.paid_dues): abort(403)
 
-	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level == 6) : abort(403)
+	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level > 1) : abort(403)
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
@@ -90,12 +91,12 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			blocked.c.id,
 		)
 
-		if not (v and v.shadowbanned) and not (v and v.admin_level == 6):
+		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
 		 
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
-			Comment.author_id != AUTOPOLLER_ACCOUNT
+			Comment.author_id != AUTOPOLLER_ID
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
@@ -122,7 +123,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			
 	if request.headers.get("Authorization"): return top_comment.json
 	else: 
-		if post.is_banned and not (v and (v.admin_level >= 3 or post.author_id == v.id)): template = "submission_banned.html"
+		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, sort=sort, linked_comment=comment, comment_info=comment_info, render_replies=True)
 
@@ -163,6 +164,12 @@ def api_comment(v):
 			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
+	if v.longpost:
+		if time.time() > v.longpost:
+			v.longpost = None
+			g.db.add(v)
+		elif len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
+
 	if not body and not request.files.get('file'): return {"error":"You need to actually write something!"}, 400
 	
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
@@ -187,6 +194,8 @@ def api_comment(v):
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 
+	if v.longpost and len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
+
 	bans = filter_comment_html(body_html)
 
 	if bans:
@@ -203,7 +212,7 @@ def api_comment(v):
 															 ).first()
 	if existing: return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
 
-	if parent.author.any_block_exists(v) and not v.admin_level>=3: return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
+	if parent.author.any_block_exists(v) and v.admin_level < 2: return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
 
 	is_bot = request.headers.get("Authorization")
 
@@ -240,7 +249,7 @@ def api_comment(v):
 				comment.ban_reason = "AutoJanny"
 				g.db.add(comment)
 				ma=ModAction(
-					user_id=AUTOJANNY_ACCOUNT,
+					user_id=AUTOJANNY_ID,
 					target_comment_id=comment.id,
 					kind="ban_comment",
 					_note="spam"
@@ -255,7 +264,7 @@ def api_comment(v):
 				parent_submission=parent_submission,
 				parent_comment_id=parent_comment_id,
 				level=level,
-				over_18=parent_post.over_18 or request.values.get("over_18","")=="true",
+				over_18=request.host == 'pcmemes.net' and v.id == 1578 or parent_post.over_18 or request.values.get("over_18","")=="true",
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
 				body_html=body_html,
@@ -267,7 +276,7 @@ def api_comment(v):
 	g.db.flush()
 
 	for option in options:
-		c_option = Comment(author_id=AUTOPOLLER_ACCOUNT,
+		c_option = Comment(author_id=AUTOPOLLER_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
@@ -296,7 +305,7 @@ def api_comment(v):
 
 		body_based_html = sanitize(body_md)
 
-		c_based = Comment(author_id=BASEDBOT_ACCOUNT,
+		c_based = Comment(author_id=BASEDBOT_ID,
 			parent_submission=parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,
@@ -327,7 +336,7 @@ def api_comment(v):
 
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+		c_jannied = Comment(author_id=AUTOJANNY_ID,
 			parent_submission=parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,
@@ -360,7 +369,7 @@ def api_comment(v):
 
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+		c_jannied = Comment(author_id=AUTOJANNY_ID,
 			parent_submission=parent_submission,
 			distinguish_level=6,
 			parent_comment_id=c.id,
@@ -395,7 +404,7 @@ def api_comment(v):
 
 
 
-		c2 = Comment(author_id=LONGPOSTBOT_ACCOUNT,
+		c2 = Comment(author_id=LONGPOSTBOT_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
@@ -405,7 +414,7 @@ def api_comment(v):
 
 		g.db.add(c2)
 
-		longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ACCOUNT).first()
+		longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ID).first()
 		longpostbot.comment_count += 1
 		longpostbot.coins += 1
 		g.db.add(longpostbot)
@@ -432,7 +441,7 @@ def api_comment(v):
 
 
 
-		c2 = Comment(author_id=ZOZBOT_ACCOUNT,
+		c2 = Comment(author_id=ZOZBOT_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
@@ -458,7 +467,7 @@ def api_comment(v):
 
 
 
-		c3 = Comment(author_id=ZOZBOT_ACCOUNT,
+		c3 = Comment(author_id=ZOZBOT_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c2.id,
 			level=level+2,
@@ -480,7 +489,7 @@ def api_comment(v):
 		body_html2 = sanitize(body_md)
 
 
-		c4 = Comment(author_id=ZOZBOT_ACCOUNT,
+		c4 = Comment(author_id=ZOZBOT_ID,
 			parent_submission=parent_submission,
 			parent_comment_id=c3.id,
 			level=level+3,
@@ -490,7 +499,7 @@ def api_comment(v):
 
 		g.db.add(c4)
 
-		zozbot = g.db.query(User).filter_by(id = ZOZBOT_ACCOUNT).first()
+		zozbot = g.db.query(User).filter_by(id = ZOZBOT_ID).first()
 		zozbot.comment_count += 3
 		zozbot.coins += 3
 		g.db.add(zozbot)
@@ -511,7 +520,7 @@ def api_comment(v):
 		
 		for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 		
-		if parent.author.id != v.id: notify_users.add(parent.author.id)
+		if parent.author.id not in [v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID]: notify_users.add(parent.author.id)
 
 		soup = BeautifulSoup(body_html, features="html.parser")
 		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
@@ -526,9 +535,11 @@ def api_comment(v):
 				if user.id != v.id: notify_users.add(user.id)
 
 		if request.host == 'rdrama.net':
-			if 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
-			if 'joan' in body_html.lower() and 28 not in notify_users: notify_users.add(28)
-			if 'carp' in body_html.lower() and 995 not in notify_users: notify_users.add(995)
+			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users: notify_users.add(1)
+			if ('joan' in body_html.lower() or 'pewkie' in body_html.lower()) and 28 not in notify_users: notify_users.add(28)
+			if 'carp' in body_html.lower() and 995 not in notify_users:
+				notify_users.add(995)
+				notify_users.add(541)
 			if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users:
@@ -545,7 +556,7 @@ def api_comment(v):
 					  'notification': {
 							'title': f'New reply by @{v.username}',
 							'body': c.body,
-							'deep_link': f'http://{site}{c.permalink}?context=10&read=true#context',
+							'deep_link': f'http://{site}/comment/{c.id}?context=9&read=true#context',
 					  },
 					},
 				  },
@@ -606,12 +617,20 @@ def edit_comment(cid, v):
 				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
+		if v.longpost:
+			if time.time() > v.longpost:
+				v.longpost = None
+				g.db.add(v)
+			elif len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
+
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html = sanitize(body_md)
 
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
+
+		if v.longpost and len(body) < 280: return {"error":"You have to type more than 280 characters!"}, 403
 
 		bans = filter_comment_html(body_html)
 
@@ -695,7 +714,7 @@ def edit_comment(cid, v):
 
 
 
-			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			c_jannied = Comment(author_id=AUTOJANNY_ID,
 				parent_submission=c.parent_submission,
 				distinguish_level=6,
 				parent_comment_id=c.id,
@@ -729,7 +748,7 @@ def edit_comment(cid, v):
 
 
 
-			c_jannied = Comment(author_id=AUTOJANNY_ACCOUNT,
+			c_jannied = Comment(author_id=AUTOJANNY_ID,
 				parent_submission=c.parent_submission,
 				distinguish_level=6,
 				parent_comment_id=c.id,
@@ -767,9 +786,11 @@ def edit_comment(cid, v):
 					if user.id != v.id: notify_users.add(user.id)
 
 		if request.host == 'rdrama.net':
-			if 'aevann' in body_html.lower() and 1 not in notify_users: notify_users.add(1)
-			if 'joan' in body_html.lower() and 28 not in notify_users: notify_users.add(28)
-			if 'carp' in body_html.lower() and 995 not in notify_users: notify_users.add(995)
+			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users: notify_users.add(1)
+			if ('joan' in body_html.lower() or 'pewkie' in body_html.lower()) and 28 not in notify_users: notify_users.add(28)
+			if 'carp' in body_html.lower() and 995 not in notify_users:
+				notify_users.add(995)
+				notify_users.add(541)
 			if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users:
@@ -842,16 +863,16 @@ def toggle_pin_comment(cid, v):
 	if comment.is_pinned:
 		if comment.is_pinned.startswith("t:"): abort(403)
 		else:
-			if v.admin_level == 6 or comment.is_pinned.endswith(" (OP)"): comment.is_pinned = None
+			if v.admin_level > 1 or comment.is_pinned.endswith(" (OP)"): comment.is_pinned = None
 			else: abort(403)
 	else:
-		if v.admin_level == 6: comment.is_pinned = v.username
+		if v.admin_level > 1: comment.is_pinned = v.username
 		else: comment.is_pinned = v.username + " (OP)"
 
 	g.db.add(comment)
 	g.db.flush()
 
-	if v.admin_level == 6:
+	if v.admin_level > 1:
 		ma=ModAction(
 			kind="pin_comment" if comment.is_pinned else "unpin_comment",
 			user_id=v.id,
@@ -861,8 +882,20 @@ def toggle_pin_comment(cid, v):
 
 	g.db.commit()
 
-	if comment.is_pinned: return {"message": "Comment pinned!"}
-	else: return {"message": "Comment unpinned!"}
+	if comment.is_pinned:
+		if v.id != comment.author_id:
+			message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message).first()
+			if not existing: send_notification(comment.author_id, message)
+		g.db.commit()
+		return {"message": "Comment pinned!"}
+	else:
+		if v.id != comment.author_id:
+			message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
+			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message).first()
+			if not existing: send_notification(comment.author_id, message)
+		g.db.commit()
+		return {"message": "Comment unpinned!"}
 	
 	
 @app.post("/save_comment/<cid>")
@@ -878,6 +911,7 @@ def save_comment(cid, v):
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, comment_id=comment.id, type=2)
 		g.db.add(new_save)
+
 		try: g.db.commit()
 		except: g.db.rollback()
 

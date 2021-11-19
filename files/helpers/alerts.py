@@ -14,8 +14,8 @@ def send_notification(uid, text, autojanny=False):
 
 	text_html = sanitize(text_html)
 	
-	if autojanny: author_id = AUTOJANNY_ACCOUNT
-	else: author_id = NOTIFICATIONS_ACCOUNT
+	if autojanny: author_id = AUTOJANNY_ID
+	else: author_id = NOTIFICATIONS_ID
 
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
@@ -38,7 +38,7 @@ def send_follow_notif(vid, user, text):
 	text_html = CustomRenderer().render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
+	new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
 							distinguish_level=6,
 							body=text,
@@ -57,7 +57,7 @@ def send_unfollow_notif(vid, user, text):
 	text_html = CustomRenderer().render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
+	new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
 							distinguish_level=6,
 							body=text,
@@ -76,7 +76,7 @@ def send_block_notif(vid, user, text):
 	text_html = CustomRenderer().render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
+	new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
 							distinguish_level=6,
 							body=text,
@@ -95,7 +95,7 @@ def send_unblock_notif(vid, user, text):
 	text_html = CustomRenderer().render(mistletoe.Document(text))
 	text_html = sanitize(text_html)
 	
-	new_comment = Comment(author_id=NOTIFICATIONS_ACCOUNT,
+	new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
 							distinguish_level=6,
 							body=text,

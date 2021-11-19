@@ -8,6 +8,8 @@ SLURS = {
 	"retarded": "r-slurred",
 	"retard": "r-slur",
 	"tard": "r-slur",
+	"newfag": "newstrag",
+	"oldfag": "oldstrag",
 	"faggot": "cute twink",
 	"faggot": "cute twink",
 	"fag": "cute twink",
@@ -93,45 +95,56 @@ Thank you."""
 WELCOME_MSG = "Hi there! It's me, your soon-to-be favorite rDrama user @carpathianflorist here to give you a brief rundown on some of the sick features we have here. You'll probably want to start by following me, though. So go ahead and click my name and then smash that Follow button. This is actually really important, so go on. Hurry.\n\nThanks!\n\nNext up: If you're a member of the media, similarly just shoot me a DM and I'll set about verifying you and then we can take care of your sad journalism stuff.\n\n**FOR EVERYONE ELSE**\n\n Begin by navigating to [the settings page](https://rdrama.net/settings/profile) (we'll be prettying this up so it's less convoluted soon, don't worry) and getting some basic customization done.\n\n### Themes\n\nDefinitely change your theme right away, the default one (Midnight) is pretty enough, but why not use something *exotic* like Win98, or *flashy* like Tron? Even Coffee is super tasteful and way more fun than the default. More themes to come when we get around to it!\n\n### Avatar/pfp\n\nYou'll want to set this pretty soon; without uploading one, I put together a randomly-assigned selection of 180ish pictures of furries, ugly goths, mujahideen, anime girls, and My Little Ponys which are used by everyone who was too lazy to set a pfp. Set the banner too while you're at it. Your profile is important!\n\n### Flairs\n\nSince you're already on the settings page, you may as well set a flair, too. As with your username, you can - obviously - choose the color of this, either with a hex value or just from the preset colors. And also like your username, you can change this at any time. [Paypigs](https://marsey1.gumroad.com/l/tfcvri) can even further relive the glory days of 90s-00s internet and set obnoxious signatures.\n\n### PROFILE ANTHEMS\n\nSpeaking of profiles, hey, remember MySpace? Do you miss autoplaying music assaulting your ears every time you visited a friend's page? Yeah, we brought that back. Enter a YouTube URL, wait a few seconds for it to process, and then BAM! you've got a profile anthem which people cannot mute. Unless they spend 20,000 dramacoin in the shop for a mute button. Which you can then remove from your profile by spending 40,000 dramacoin on an unmuteable anthem. Get fucked poors!\n\n### Dramacoin?\n\nDramacoin is basically our take on the karma system. Except unlike the karma system, it's not gay and boring and stupid and useless. Dramacoin can be spent at [Marsey's Dramacoin Emporium](https://rdrama.net/shop) on upgrades to your user experience (many more coming than what's already listed there), and best of all on tremendously annoying awards to fuck with your fellow dramautists. We're always adding more, so check back regularly in case you happen to miss one of the announcement posts. Holiday-themed awards are currently unavailable while we resolve an internal dispute, but they **will** return, no matter what some other janitors insist.\n\nLike karma, dramacoin is obtained by getting upvotes on your threads and comments. *Unlike* karma, it's also obtained by getting downvotes on your threads and comments. Downvotes don't really do anything here - they pay the same amount of dramacoin and they increase thread/comment ranking just the same as an upvote. You just use them to express petty disapproval and hopefully start a fight. Because all votes are visible here. To hell with your anonymity.\n\nDramacoin can also be traded amongst users from their profiles. Note that there is a 1.5% transaction fee.\n\n**Dramacoin and shop items cannot be purchased with real money and this will not change.** Though we are notoriously susceptible to bribes, so definitely shoot your shot. It'll probably go well, honestly.\n\n### Badges\n\nRemember all those neat little metallic icons you saw on my profile when you were following me? If not, scroll back up and go have a look. And doublecheck to make sure you pressed the Follow button. Anyway, those are badges. You earn them by doing a variety of things. Some of them even offer benefits, like discounts at the shop. A [complete list of badges and their requirements can be found here](https://rdrama.net/badges), though I add more pretty regularly, so keep an eye on the changelog.\n\n### Other stuff\n\nWe're always adding new features, and we take a fun-first approach to development. If you have a suggestion for something that would be fun, funny, annoying - or best of all, some combination of all three - definitely make a thread about it. Or just DM me if you're shy. Weirdo. Anyway there's also the [leaderboards](https://rdrama.net/leaderboard), boring stuff like two-factor authentication you can toggle on somewhere in the settings page (psycho), the ability to save posts and comments, close to a thousand emojis already (several hundred of which are rDrama originals), and on and on and on and on. This is just the basics, mostly to help you get acquainted with some of the things you can do here to make it more easy on the eyes, customizable, and enjoyable. If you don't enjoy it, just go away! We're not changing things to suit you! Get out of here loser! And no, you can't delete your account :na:\n\nI love you.<BR>*xoxo Carp* 💋"
 
 if SITE == 'rdrama.net':
-	NOTIFICATIONS_ACCOUNT = 1046
-	AUTOJANNY_ACCOUNT = 2360
-	SNAPPY_ACCOUNT = 261
-	LONGPOSTBOT_ACCOUNT = 1832
-	ZOZBOT_ACCOUNT = 1833
-	AUTOPOLLER_ACCOUNT = 6176
+	BASEDBOT_ID = 0
+	NOTIFICATIONS_ID = 1046
+	AUTOJANNY_ID = 2360
+	SNAPPY_ID = 261
+	LONGPOSTBOT_ID = 1832
+	ZOZBOT_ID = 1833
+	AUTOPOLLER_ID = 6176
 	TAX_RECEIVER_ID = 747
 	PIZZA_SHILL_ID = 2424
+	IDIO_ID = 30
 	CARP_ID = 995
 	RED_ID = 1577
 	LAWLZ_ID = 3833
 	LLM_ID = 253
+	DAD_ID = 2513
+	MOM_ID = 4588
 elif SITE == "pcmemes.net":
-	BASEDBOT_ACCOUNT = 800
-	NOTIFICATIONS_ACCOUNT = 1046
-	AUTOJANNY_ACCOUNT = 1050
-	SNAPPY_ACCOUNT = 261
-	LONGPOSTBOT_ACCOUNT = 1832
-	ZOZBOT_ACCOUNT = 1833
-	AUTOPOLLER_ACCOUNT = 3369
+	BASEDBOT_ID = 800
+	NOTIFICATIONS_ID = 1046
+	AUTOJANNY_ID = 1050
+	SNAPPY_ID = 261
+	LONGPOSTBOT_ID = 1832
+	ZOZBOT_ID = 1833
+	AUTOPOLLER_ID = 3369
 	TAX_RECEIVER_ID = 1577
 	PIZZA_SHILL_ID = 0
+	IDIO_ID = 0
 	CARP_ID = 0
 	RED_ID = 1577
 	LAWLZ_ID = 0
 	LLM_ID = 0
+	DAD_ID = 0
+	MOM_ID = 0
 else:
-	NOTIFICATIONS_ACCOUNT = 1
-	AUTOJANNY_ACCOUNT = 2
-	SNAPPY_ACCOUNT = 3
-	LONGPOSTBOT_ACCOUNT = 4
-	ZOZBOT_ACCOUNT = 5
-	AUTOPOLLER_ACCOUNT = 6
+	BASEDBOT_ID = 0
+	NOTIFICATIONS_ID = 1
+	AUTOJANNY_ID = 2
+	SNAPPY_ID = 3
+	LONGPOSTBOT_ID = 4
+	ZOZBOT_ID = 5
+	AUTOPOLLER_ID = 6
 	TAX_RECEIVER_ID = 7
 	PIZZA_SHILL_ID = 0
+	IDIO_ID = 0
 	CARP_ID = 0
 	RED_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0
+	DAD_ID = 0
+	MOM_ID = 0
 
 PUSHER_INSTANCE_ID = '02ddcc80-b8db-42be-9022-44c546b4dce6'
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
@@ -185,6 +198,14 @@ AWARDS = {
 		"description": "Removes 1 hour from the pin duration of the post/comment.",
 		"icon": "fas fa-thumbtack fa-rotate--45",
 		"color": "text-black",
+		"price": 1000
+	},
+	"pizzashill": {
+		"kind": "pizzashill",
+		"title": "Pizzashill",
+		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+		"icon": "fas fa-pizza-slice",
+		"color": "text-orange",
 		"price": 1000
 	},
 	"flairlock": {
@@ -307,6 +328,23 @@ AWARDS = {
 		"color": "text-orange",
 		"price": 1000
 	},
+	"eye": {
+		"kind": "eye",
+		"title": "All-Seeing Eye",
+		"description": "Gives the recipient the ability to view private profiles.",
+		"icon": "fas fa-eye",
+		"color": "text-silver",
+		"price": 10000
+	},
+	"alt": {
+		"kind": "alt",
+		"title": "Alt-Seeing Eye",
+		"description": "Gives the recipient the ability to view alts.",
+		"icon": "fas fa-eye",
+		"color": "text-gold",
+		"price": 50000
+	},
+
 }
 
 AWARDS2 = {
@@ -348,6 +386,14 @@ AWARDS2 = {
 		"description": "Removes 1 hour from the pin duration of the post/comment.",
 		"icon": "fas fa-thumbtack fa-rotate--45",
 		"color": "text-black",
+		"price": 1000
+	},
+	"pizzashill": {
+		"kind": "pizzashill",
+		"title": "Pizzashill",
+		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+		"icon": "fas fa-pizza-slice",
+		"color": "text-orange",
 		"price": 1000
 	},
 	"flairlock": {
@@ -398,6 +444,14 @@ AWARDS2 = {
 		"color": "text-success",
 		"price": 10000
 	},
+	"eye": {
+		"kind": "eye",
+		"title": "All-Seeing Eye",
+		"description": "Gives the recipient the ability to view private profiles.",
+		"icon": "fas fa-eye",
+		"color": "text-silver",
+		"price": 10000
+	},
 	"pause": {
 		"kind": "pause",
 		"title": "Pause",
@@ -413,6 +467,14 @@ AWARDS2 = {
 		"icon": "fas fa-volume",
 		"color": "text-success",
 		"price": 40000
+	},
+	"alt": {
+		"kind": "alt",
+		"title": "Alt-Seeing Eye",
+		"description": "Gives the recipient the ability to view alts.",
+		"icon": "fas fa-eye",
+		"color": "text-gold",
+		"price": 50000
 	},
 }
 
