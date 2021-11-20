@@ -79,7 +79,7 @@ class User(Base):
 	newtab = Column(Boolean, default=False)
 	newtabexternal = Column(Boolean, default=True)
 	oldreddit = Column(Boolean, default=True)
-	teddit = Column(Boolean, default=False)
+	teddit = Column(Boolean)
 	nitter = Column(Boolean)
 	mute = Column(Boolean)
 	unmutable = Column(Boolean)
