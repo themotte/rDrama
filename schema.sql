@@ -827,7 +827,8 @@ CREATE TABLE public.users (
     eye boolean,
     alt boolean,
     longpost integer,
-    unblockable boolean
+    unblockable boolean,
+    teddit boolean
 );
 
 
