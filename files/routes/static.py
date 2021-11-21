@@ -139,7 +139,7 @@ def cached_chart():
 
 @app.get("/patrons")
 @app.get("/paypigs")
-@auth_desired
+@admin_level_required(3)
 def patrons(v):
 	query = g.db.query(
 			User.id, User.username, User.patron, User.namecolor,

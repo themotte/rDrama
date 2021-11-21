@@ -55,7 +55,7 @@
 {% for k, v in badge_types.items() %}
 <tr>
 	<td><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}"></td>
-	<td><label for="badge-{{k}}"><img loading="lazy" src="/assets/images/badges/{{v['name']}}.webp" width="70px" height="70px"></label></td>
+	<td><label for="badge-{{k}}"><img loading="lazy" src="/assets/images/badges/{{v['name'].replace(' ','%20')}}.webp" width="70px" height="70px"></label></td>
 	<td>{{v['name']}}</td>
 	<td>{{v['description']}}</td>
 </tr>
