@@ -352,7 +352,6 @@ BADGES = {
 		'name': 'Alt-Seeing Eye',
 		'description': 'Can see alts'
 	},
-	},
 	85: {
 		'name': 'Sigma User',
 		'description': ''
