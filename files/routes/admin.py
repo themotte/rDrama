@@ -351,15 +351,13 @@ def disablesignups(v):
 @admin_level_required(2)
 def badge_grant_get(v):
 
-	badge_types = g.db.query(BadgeDef).all()
-
 	errors = {"already_owned": "That user already has that badge.",
 			  "no_user": "That user doesn't exist."
 			  }
 
 	return render_template("admin/badge_grant.html",
 						   v=v,
-						   badge_types=badge_types,
+						   badge_types=BADGES,
 						   error=errors.get(
 							   request.values.get("error"),
 							   None) if request.values.get('error') else None,

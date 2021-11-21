@@ -272,8 +272,8 @@ class User(Base):
 		if not self.is_suspended: return None
 		return g.db.query(User).filter_by(id=self.is_banned).first()
 
-	def has_badge(self, badgedef_id):
-		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badgedef_id).first()
+	def has_badge(self, badge_id):
+		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).first()
 
 	def hash_password(self, password):
 		return generate_password_hash(

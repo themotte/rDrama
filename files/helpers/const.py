@@ -163,6 +163,197 @@ def censor_slurs(body: str, logged_user) -> str:
 	if not logged_user or logged_user.slurreplacer: body = SLUR_REGEX.sub(sub_matcher, body)
 	return body
 
+BADGES = {
+	1: {
+		'name': 'Alpha User',
+		'description': 'Joined during open alpha'
+	},
+	2: {
+		'name': 'Verified Email',
+		'description': 'Verified Email'
+	},
+	3: {
+		'name': 'Code Contributor',
+		'description': 'Contributed to Drama source code'
+	},
+	4: {
+		'name': 'White Hat',
+		'description': 'Responsibly reported a security issue'
+	},
+	6: {
+		'name': 'Beta User',
+		'description': 'Joined during open beta'
+	},
+	7: {
+		'name': 'Bug Finder',
+		'description': 'Found a bug'
+	},
+	10: {
+		'name': 'Bronze Recruiter',
+		'description': 'Recruited 1 friend to join Drama'
+	},
+	11: {
+		'name': 'Silver Recruiter',
+		'description': 'Recruited 10 friends to join Drama'
+	},
+	12: {
+		'name': 'Gold Recruiter',
+		'description': 'Recruited 100 friends to join Drama'
+	},
+	15: {
+		'name': 'Idea Maker',
+		'description': 'Had a good idea for Drama which was implemented by the developers'
+	},
+	16: {
+		'name': 'Marsey Master',
+		'description': 'Contributed 10 (or more!!!!) Marsey emojis ✨'
+	},
+	17: {
+		'name': 'Marsey Artisan',
+		'description': 'Contributed a Marsey emoji ✨'
+	},
+	18: {
+		'name': 'Artisan',
+		'description': 'Contributed to Drama artwork'
+	},
+	21: {
+		'name': 'Paypig',
+		'description': 'Contributed at least $5/month'
+	},
+	22: {
+		'name': 'Renthog',
+		'description': 'Contributed at least $10/month'
+	},
+	23: {
+		'name': 'Landchad',
+		'description': 'Contributed at least $20/month'
+	},
+	24: {
+		'name': 'Terminally online turboautist',
+		'description': 'Contributed at least $50/month'
+	},
+	25: {
+		'name': 'Footpig',
+		'description': 'Contributed at least $100/month'
+	},
+	26: {
+		'name': 'Agendaposter',
+		'description': 'Forced to use the agendaposter theme'
+	},
+	27: {
+		'name': 'Lolcow',
+		'description': 'Beautiful and valid milk provider'
+	},
+	28: {
+		'name': 'Rich Bich',
+		'description': 'Contributed $500'
+	},
+	58: {
+		'name': 'Diamond Recruiter',
+		'description': 'Recruited 1000 friends to join Drama'
+	},
+	60: {
+		'name': 'Unironically Retarded',
+		'description': 'Demonstrated a wholesale inability to read the room'
+	},
+	61: {
+		'name': 'Lab Rat',
+		'description': 'Helped test features in development'
+	},
+	62: {
+		'name': 'Master Baiter',
+		'description': 'For outstanding achievement in the field of catching fish'
+	},
+	63: {
+		'name': 'Balls',
+		'description': 'I wrote carp on my balls as a sign of submission'
+	},
+	64: {
+		'name': 'The Other Kind Of Good Journalist',
+		'description': 'Contributed positive media attention to rDrama'
+	},
+	65: {
+		'name': '2021 Spooooooky Marsey Artist',
+		'description': 'Contributed a VERY SCARY Marsey for Halloween 2021!'
+	},
+	66: {
+		'name': 'Sk8r Boi',
+		'description': 'Certifies that this user is NOT a poser'
+	},
+	67: {
+		'name': 'Unpausable',
+		'description': 'Spent 40,000 dramacoins on an unpausable profile anthem'
+	},
+	68: {
+		'name': 'Pause Button',
+		'description': 'Spent 20,000 dramacoins on a profile anthem pause button'
+	},
+	69: {
+		'name': 'Little Big Spender',
+		'description': 'Dropped 10,000 dramacoins at the shop'
+	},
+	70: {
+		'name': 'Big Spender',
+		'description': 'Dropped 100,000 dramacoins at the shop'
+	},
+	71: {
+		'name': 'Big Big Spender',
+		'description': 'Dropped 250,000 dramacoins at the shop'
+	},
+	72: {
+		'name': 'Big Big Big Spender',
+		'description': 'Dropped 500,000 dramacoins at the shop'
+	},
+	73: {
+		'name': 'Le Rich Gentlesir',
+		'description': 'Spent a fucking million dramacoins at the shop'
+	},
+	74: {
+		'name': 'Grass Toucher',
+		'description': 'Awarded for molesting plant life'
+	},
+	75: {
+		'name': 'Halloween 21',
+		'description': 'Awarded for surviving Homoween 2021'
+	},
+	76: {
+		'name': 'Low Roller',
+		'description': 'Bought 10 lootboxes'
+	},
+	77: {
+		'name': 'Middle Roller',
+		'description': 'Bought 50 lootboxes'
+	},
+	78: {
+		'name': 'High Roller',
+		'description': 'Bought 150 lootboxes'
+	},
+	79: {
+		'name': 'Merchant',
+		'description': "Contributed a new line of product to Marsey's Coin Emporium"
+	},
+	80: {
+		'name': 'Artist Laureate',
+		'description': ''
+	},
+	81: {
+		'name': 'Patron of the Arts',
+		'description': 'Sponsored the creation of an approved Marsey'
+	},
+	82: {
+		'name': 'Background',
+		'description': 'Bought a profile background from the shop'
+	},
+	83: {
+		'name': 'All-Seeing Eye',
+		'description': 'Can view private profiles'
+	},
+	84: {
+		'name': 'Alt-Seeing Eye',
+		'description': 'Can see alts'
+	}
+}
+
 AWARDS = {
 	"shit": {
 		"kind": "shit",

@@ -6,11 +6,10 @@
 </pre>
 <h1>User Badges</h1>
 <div>This page describes the requirements for obtaining all profile badges.</div>
-<div>Badges are sorted into bronze, silver, gold, and diamond tiers, based on the relative difficulty of obtaining them.</div>
+<pre>
 
-<h2 class="mt-3">Unlockable Badges</h2>
-<div>These badges are automatically granted through different kinds of activity on {{'SITE_NAME' | app_config}}.</div>
-<pre></pre>
+
+</pre>
 <table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
@@ -19,52 +18,11 @@
 		<th>Description</th>
 	</tr>
 </thead>
-{% for badge in badges if badge.kind==1 %}
+{% for k,v in badges.items() %}
 	<tr>
-		<td>{{badge.name}}</td>
-		<td><img loading="lazy" src="{{badge.path}}" width=50 height=50>
-		<td>{{badge.description}}</td>
-	</tr>
-{% endfor %}
-</table>
-
-
-<h2 class="mt-3">Granted Badges</h2>
-<div>These badges can be granted by admins.</div>
-<pre></pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th>Name</th>
-		<th>Image</th>
-		<th>Description</th>
-	</tr>
-</thead>
-{% for badge in badges if badge.kind==3 %}
-	<tr>
-		<td>{{badge.name}}</td>
-		<td><img loading="lazy" src="{{badge.path}}" width=50 height=50>
-		<td>{{badge.description}}</td>
-	</tr>
-{% endfor %}
-</table>
-
-<h2 class="mt-3">Unobtainable Badges</h2>
-<div>There is no way to acquire these badges if you don't already have them.</div>
-<pre></pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th>Name</th>
-		<th>Image</th>
-		<th>Description</th>
-	</tr>
-</thead>
-{% for badge in badges if badge.kind==4 %}
-	<tr>
-		<td>{{badge.name}}</td>
-		<td><img loading="lazy" src="{{badge.path}}" width=50 height=50>
-		<td>{{badge.description}}</td>
+		<td>{{v['name']}}</td>
+		<td><img loading="lazy" src="/assets/images/badges/{{v['name']}}.webp" width=50 height=50>
+		<td>{{v['description']}}</td>
 	</tr>
 {% endfor %}
 </table>

@@ -128,20 +128,6 @@ ALTER SEQUENCE public.award_relationships_id_seq OWNED BY public.award_relations
 
 
 --
--- Name: badge_defs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.badge_defs (
-    id integer NOT NULL,
-    name character varying(64),
-    description character varying(256),
-    icon character varying(64),
-    kind integer,
-    qualification_expr character varying(128)
-);
-
-
---
 -- Name: badge_list_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -152,13 +138,6 @@ CREATE SEQUENCE public.badge_list_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-
---
--- Name: badge_list_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.badge_list_id_seq OWNED BY public.badge_defs.id;
 
 
 --
@@ -899,12 +878,6 @@ ALTER TABLE ONLY public.alts ALTER COLUMN id SET DEFAULT nextval('public.alts_id
 ALTER TABLE ONLY public.award_relationships ALTER COLUMN id SET DEFAULT nextval('public.award_relationships_id_seq'::regclass);
 
 
---
--- Name: badge_defs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badge_defs ALTER COLUMN id SET DEFAULT nextval('public.badge_list_id_seq'::regclass);
-
 
 --
 -- Name: badges id; Type: DEFAULT; Schema: public; Owner: -
@@ -1054,22 +1027,6 @@ ALTER TABLE ONLY public.award_relationships
 
 ALTER TABLE ONLY public.award_relationships
     ADD CONSTRAINT award_relationships_pkey PRIMARY KEY (id);
-
-
---
--- Name: badge_defs badge_defs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badge_defs
-    ADD CONSTRAINT badge_defs_pkey PRIMARY KEY (id);
-
-
---
--- Name: badge_defs badge_list_icon_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badge_defs
-    ADD CONSTRAINT badge_list_icon_key UNIQUE (icon);
 
 
 --
@@ -1361,13 +1318,6 @@ CREATE INDEX award_post_idx ON public.award_relationships USING btree (submissio
 --
 
 CREATE INDEX award_user_idx ON public.award_relationships USING btree (user_id);
-
-
---
--- Name: badgedef_qual_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX badgedef_qual_idx ON public.badge_defs USING btree (qualification_expr);
 
 
 --
@@ -1753,14 +1703,6 @@ CREATE INDEX votes_submission_id_index ON public.votes USING btree (submission_i
 --
 
 CREATE INDEX votes_type_index ON public.votes USING btree (vote_type);
-
-
---
--- Name: badges badges_badge_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badges
-    ADD CONSTRAINT badges_badge_id_fkey FOREIGN KEY (badge_id) REFERENCES public.badge_defs(id);
 
 
 --

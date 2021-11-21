@@ -93,7 +93,7 @@ def searchposts(v):
 			)
 
 	if not (v and v.admin_level > 1):
-		posts.filter(Submission.deleted_utc == 0, Submission.is_banned == False)
+		posts = posts.filter(Submission.deleted_utc == 0, Submission.is_banned == False)
 		if not (v and v.eye): posts = posts.join(User, User.id==Submission.author_id).filter(User.is_private == False)
 
 	if v and v.admin_level > 1: pass

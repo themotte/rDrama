@@ -1,6 +1,7 @@
 from files.mail import *
 from files.__main__ import app, limiter, mail
 from files.helpers.alerts import *
+from files.helpers.const import BADGES
 from files.classes.award import AWARDS
 from sqlalchemy import func
 from os import path
@@ -294,10 +295,7 @@ def settings_profile(v):
 @app.get("/badges")
 @auth_desired
 def badges(v):
-
-
-	badges = g.db.query(BadgeDef).all()
-	return render_template("badges.html", v=v, badges=badges)
+	return render_template("badges.html", v=v, badges=BADGES)
 
 @app.get("/blocks")
 @auth_desired

@@ -52,12 +52,12 @@
 		</tr>
 	</thead>
 	<tbody>
-{% for badge in badge_types %}
+{% for k, v in badge_types.items() %}
 <tr>
-	<td><input type="radio" id="badge-{{badge.id}}" name="badge_id" value="{{badge.id}}"></td>
-	<td><label for="badge-{{badge.id}}"><img loading="lazy" src="{{badge.path}}" width="70px" height="70px"></label></td>
-	<td>{{badge.name}}</td>
-	<td>{{badge.description}}</td>
+	<td><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}"></td>
+	<td><label for="badge-{{k}}"><img loading="lazy" src="/assets/images/badges/{{v['name']}}.webp" width="70px" height="70px"></label></td>
+	<td>{{v['name']}}</td>
+	<td>{{v['description']}}</td>
 </tr>
 {% endfor %}
 </table>
