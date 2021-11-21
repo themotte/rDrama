@@ -195,39 +195,6 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 
 --
--- Name: badpics; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.badpics (
-    id integer NOT NULL,
-    description character varying(255),
-    phash character varying(64),
-    ban_reason character varying(64),
-    ban_time integer DEFAULT 0 NOT NULL
-);
-
-
---
--- Name: badpics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.badpics_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: badpics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.badpics_id_seq OWNED BY public.badpics.id;
-
-
---
 -- Name: banneddomains; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -947,13 +914,6 @@ ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badge
 
 
 --
--- Name: badpics id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badpics ALTER COLUMN id SET DEFAULT nextval('public.badpics_id_seq'::regclass);
-
-
---
 -- Name: banneddomains id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1118,14 +1078,6 @@ ALTER TABLE ONLY public.badge_defs
 
 ALTER TABLE ONLY public.badges
     ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
-
-
---
--- Name: badpics badpics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.badpics
-    ADD CONSTRAINT badpics_pkey PRIMARY KEY (id);
 
 
 --
@@ -1430,27 +1382,6 @@ CREATE INDEX badges_badge_id_idx ON public.badges USING btree (badge_id);
 --
 
 CREATE INDEX badges_user_index ON public.badges USING btree (user_id);
-
-
---
--- Name: badpic_phash_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX badpic_phash_idx ON public.badpics USING btree (phash);
-
-
---
--- Name: badpic_phash_trgm_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX badpic_phash_trgm_idx ON public.badpics USING gin (phash public.gin_trgm_ops);
-
-
---
--- Name: badpics_phash_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX badpics_phash_index ON public.badpics USING gin (phash public.gin_trgm_ops);
 
 
 --
