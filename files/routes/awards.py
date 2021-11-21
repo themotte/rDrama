@@ -541,7 +541,7 @@ def award_post(pid, v):
 	elif kind == "pizzashill":
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
-		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {post.shortlink}")
+		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {request.host_url}{post.shortlink}")
 	elif kind == "eye":
 		author.eye = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
@@ -675,7 +675,7 @@ def award_comment(cid, v):
 	elif kind == "pizzashill":
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
-		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {c.shortlink}")
+		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {request.host_url}{c.shortlink}")
 	elif kind == "eye":
 		author.eye = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")

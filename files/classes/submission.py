@@ -179,7 +179,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def shortlink(self):
-		return f"http://{site}/post/{self.id}"
+		return f"/post/{self.id}"
 
 	@property
 	@lazy
