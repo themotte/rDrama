@@ -351,7 +351,7 @@ BADGES = {
 	84: {
 		'name': 'Alt-Seeing Eye',
 		'description': 'Can see alts'
-	}
+	},
 	},
 	85: {
 		'name': 'Sigma User',
@@ -360,7 +360,7 @@ BADGES = {
 	86: {
 		'name': 'Holly Jolly Marsey Artist',
 		'description': 'Contributed a VERY JOLLY Marsey for Christmas 2021!'
-	}
+	},
 }
 
 AWARDS = {
