@@ -318,15 +318,17 @@ def message2(v, username):
 
 	message = request.values.get("message", "").strip()[:1000].strip()
 
-	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
-															Comment.sentto == user.id,
-															Comment.body == message,
-															).first()
-	if existing: return redirect('/notifications?messages=true')
+	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
 
 	text_html = Renderer().render(mistletoe.Document(message))
 
 	text_html = sanitize(text_html, True)
+
+	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
+															Comment.sentto == user.id,
+															Comment.body_html == text_html,
+															).first()
+	if existing: return redirect('/notifications?messages=true')
 
 	new_comment = Comment(author_id=v.id,
 						  parent_submission=None,
@@ -371,12 +373,16 @@ def message2(v, username):
 def messagereply(v):
 
 	message = request.values.get("body", "").strip()[:1000].strip()
+
+	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
+
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
 	user = parent.author
 
 	text_html = Renderer().render(mistletoe.Document(message))
 	text_html = sanitize(text_html, True)
+
 	new_comment = Comment(author_id=v.id,
 							parent_submission=None,
 							parent_comment_id=id,

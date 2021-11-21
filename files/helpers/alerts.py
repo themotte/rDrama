@@ -19,7 +19,7 @@ def send_notification(uid, text, autojanny=False):
 
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
-							distinguish_level=6,
+							distinguish_level=6,body=text,
 							body_html=text_html,
 							notifiedto=uid
 						  )
