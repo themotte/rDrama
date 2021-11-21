@@ -332,7 +332,6 @@ def message2(v, username):
 						  parent_submission=None,
 						  level=1,
 						  sentto=user.id,
-						  body=message,
 						  body_html=text_html,
 						  )
 	g.db.add(new_comment)
@@ -383,7 +382,6 @@ def messagereply(v):
 							parent_comment_id=id,
 							level=parent.level + 1,
 							sentto=user.id,
-							body=message,
 							body_html=text_html,
 							)
 	g.db.add(new_comment)

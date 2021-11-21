@@ -20,7 +20,6 @@ def send_notification(uid, text, autojanny=False):
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
 							distinguish_level=6,
-							body=text,
 							body_html=text_html,
 							notifiedto=uid
 						  )
@@ -41,7 +40,6 @@ def send_follow_notif(vid, user, text):
 	new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
 							distinguish_level=6,
-							body=text,
 							body_html=text_html,
 						  )
 	g.db.add(new_comment)
@@ -60,7 +58,6 @@ def send_unfollow_notif(vid, user, text):
 	new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
 							distinguish_level=6,
-							body=text,
 							body_html=text_html,
 						  )
 	g.db.add(new_comment)
@@ -79,7 +76,6 @@ def send_block_notif(vid, user, text):
 	new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
 							distinguish_level=6,
-							body=text,
 							body_html=text_html,
 						  )
 	g.db.add(new_comment)
@@ -98,7 +94,6 @@ def send_unblock_notif(vid, user, text):
 	new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
 							distinguish_level=6,
-							body=text,
 							body_html=text_html,
 						  )
 	g.db.add(new_comment)
@@ -121,7 +116,6 @@ def send_admin(vid, text):
 						  parent_submission=None,
 						  level=1,
 						  sentto=0,
-						  body=text,
 						  body_html=text_html,
 						  )
 	g.db.add(new_comment)
