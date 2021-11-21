@@ -922,7 +922,8 @@ def submit_post(v):
 			if "Snapshots:\n\n"	 not in body: body += "Snapshots:\n\n"			
 
 			body += f'**[{title}]({href})**:\n\n'
-			body += f'* [reveddit.com](https://reveddit.com/{href.replace("https://old.reddit.com/", "")})\n'
+			if href.startswith('https://old.reddit.com'):
+				body += f'* [reveddit.com](https://reveddit.com/{href.replace("https://old.reddit.com/", "")})\n'
 			body += f'* [archive.org](https://web.archive.org/{href})\n'
 			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
 			gevent.spawn(archiveorg, href)

@@ -40,7 +40,7 @@ const EMOJIS_STRINGS = [
 	},
 	{
 		type: 'misc',
-		emojis: ['kyleface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox', 'gigachad', 'gigachad2', 'gigachad3']
+		emojis: ['kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox', 'gigachad', 'gigachad2', 'gigachad3']
 	},
 ]
 
