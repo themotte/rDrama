@@ -310,38 +310,40 @@
 
 					</div>
 
+					
+					{% if 'pcm' not in request.host %}
+						<h2 class="h5" name="referral">Linked Accounts</h2>
 
-					<h2 class="h5" name="referral">Linked Accounts</h2>
+						<p class="text-small text-muted">Manage your connections to other services.</p>
 
-					<p class="text-small text-muted">Manage your connections to other services.</p>
+						<div class="settings-section rounded">
 
-					<div class="settings-section rounded">
+							<div class="d-lg-flex">
 
-						<div class="d-lg-flex">
+							<div class="title w-lg-25">
+								<label>Discord</label>
+							</div>
 
-						<div class="title w-lg-25">
-							<label>Discord</label>
+							<div class="body w-lg-100">
+
+								{% if v.discord_id %}
+								<form action="/settings/remove_discord" method="post">
+								<input type="hidden" name="formkey" value="{{v.formkey}}">
+								<input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
+								</form>
+
+								<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{'SITE_NAME' | app_config}} Discord server.</div>
+								{% else %}
+								<a href="/discord" class="btn btn-primary">Link Discord</a>
+								<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{'SITE_NAME' | app_config}} Discord server.</div>
+								{% endif %}
+
+							</div>
+
+							</div>
+
 						</div>
-
-						<div class="body w-lg-100">
-
-							{% if v.discord_id %}
-							<form action="/settings/remove_discord" method="post">
-							<input type="hidden" name="formkey" value="{{v.formkey}}">
-							<input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
-							</form>
-
-							<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{'SITE_NAME' | app_config}} Discord server.</div>
-							{% else %}
-							<a href="/discord" class="btn btn-primary">Link Discord</a>
-							<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{'SITE_NAME' | app_config}} Discord server.</div>
-							{% endif %}
-
-						</div>
-
-						</div>
-
-					</div>
+					{% endif %}
 
 
 					<h2 class="h5" name="referral">RSS Feed</h2>
