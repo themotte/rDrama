@@ -543,7 +543,8 @@ def submit_post(v):
 		
 		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery")
 
-		url = url.replace("https://mobile.twitter.com", "https://twitter.com")
+		url = url.replace("https://mobile.twitter.com", "https://twitter.com").replace("https://m.facebook", "https://facebook").replace("https://m.wikipedia", "https://wikipedia").replace("https://m.youtube", "https://youtube")
+		
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
 		parsed_url = urlparse(url)
