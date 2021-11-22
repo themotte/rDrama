@@ -332,7 +332,7 @@ class Comment(Base):
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
 			ti = int(time.time() - self.created_utc)/10
 			maxupvotes = min(ti, 31)
-			rand = random.randint(1, maxupvotes)
+			rand = randint(1, maxupvotes)
 			if self.upvotes < rand:
 				self.upvotes += randint(0, 5)
 				g.db.add(self)
