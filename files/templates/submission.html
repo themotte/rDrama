@@ -124,7 +124,7 @@
 {% endif %}
 
 
-{% if 'rama' not in request.host and 'shithole' not in request.host %}
+{% if p.comment_count == 0 %}
 	<script>
 		function poll_vote(cid) {
 			{% if v %}
