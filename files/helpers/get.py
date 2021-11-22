@@ -1,6 +1,31 @@
 from files.classes import *
 from flask import g
 
+
+def get_id(username, v=None, graceful=False):
+
+	username = username.replace('\\', '')
+	username = username.replace('_', '\_')
+	username = username.replace('%', '')
+
+	user = g.db.query(
+		User.id
+		).filter(
+		or_(
+			User.username.ilike(username),
+			User.original_username.ilike(username)
+			)
+		).first()
+
+	if not user:
+		if not graceful:
+			abort(404)
+		else:
+			return None
+
+	return user[0]
+
+
 def get_user(username, v=None, graceful=False):
 
 	username = username.replace('\\', '')

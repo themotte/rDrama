@@ -175,15 +175,20 @@ def admins(v):
 @auth_desired
 def log(v):
 
-	page=int(request.args.get("page",1))
-	admin=int(request.args.get("admin",0))
+	page = int(request.args.get("page",1))
+	admin = request.args.get("admin")
+	if admin: admin = get_id(admin)
 
-	if v and v.admin_level > 1: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26)
-	else: actions=g.db.query(ModAction).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub", ModAction.kind!="check").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26)
+	kind = request.args.get("kind")
 
-	if admin: actions = actions.filter_by(user_id=admin)
+	actions = g.db.query(ModAction)
+	if not (v and v.admin_level > 1): 
+		actions = actions.filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub", ModAction.kind!="check")
 	
-	actions = actions.all()
+	if admin: actions = actions.filter_by(user_id=admin)
+	if kind: actions = actions.filter_by(kind=kind)
+
+	actions = actions.order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 	next_exists=len(actions)>25
 	actions=actions[:25]
 
