@@ -331,10 +331,12 @@ class Submission(Base):
 
 			if v.nitter: body = body.replace("www.twitter.com", "nitter.net").replace("twitter.com", "nitter.net")
 
-		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 600:
-			rand = random.randint(1,16)
+		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 20:
+			ti = int(time.time() - self.created_utc)/10
+			maxupvotes = min(ti, 27)
+			rand = random.randint(1, maxupvotes)
 			if self.upvotes < rand:
-				self.upvotes = rand
+				self.upvotes += random.randint(0,5)
 				g.db.add(self)
 				g.db.commit()
 

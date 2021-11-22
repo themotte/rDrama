@@ -329,10 +329,11 @@ class Comment(Base):
 				url_noquery = url.split('?')[0]
 				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
-		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 600:
-			rand = randint(1,16)
-			if self.upvotes < rand:
-				self.upvotes = rand
+		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
+			ti = int(time.time() - self.created_utc)/10
+			maxupvotes = min(ti, 31)
+			if self.upvotes < maxupvotes:
+				self.upvotes += randint(0, 5)
 				g.db.add(self)
 				g.db.commit()
 
