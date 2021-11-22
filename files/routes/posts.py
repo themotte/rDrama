@@ -23,8 +23,6 @@ CATBOX_KEY = environ.get("CATBOX_KEY").strip()
 
 with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
 
-if site == 'pcmemes.net' or site == 'ashithole.com': snappyquotes = [x for x in snappyquotes if 'drama' not in x.lower()]
-
 @app.post("/toggle_club/<pid>")
 @auth_required
 def toggle_club(pid, v):
@@ -935,7 +933,7 @@ def submit_post(v):
 				parent_submission=new_post.id,
 				level=1,
 				over_18=False,
-				is_bot=request.host!='pcmemes.net',
+				is_bot=True,
 				app_id=None,
 				body_html=body_html,
 				)
