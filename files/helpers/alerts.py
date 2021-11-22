@@ -11,15 +11,17 @@ def send_notification(uid, text, autojanny=False):
 
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
 	text_html = CustomRenderer().render(mistletoe.Document(text))
-
 	text_html = sanitize(text_html)
 	
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 
+	existing = g.db.query(Comment.id).filter(Comment.author_id == author_id, Comment.body_html == text_html, Comment.notifiedto == uid).first()
+	if existing: return
+
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
-							distinguish_level=6,body=text,
+							distinguish_level=6,
 							body_html=text_html,
 							notifiedto=uid
 						  )

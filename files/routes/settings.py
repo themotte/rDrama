@@ -244,8 +244,7 @@ def settings_profile_post(v):
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their friends list!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message, Comment.notifiedto == x).first()
-			if not existing: send_notification(x, message)
+			send_notification(x, message)
 
 		v.friends = friends[:500]
 		v.friends_html=friends_html
@@ -289,8 +288,7 @@ def settings_profile_post(v):
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their enemies list!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message, Comment.notifiedto == x).first()
-			if not existing: send_notification(x, message)
+			send_notification(x, message)
 
 		v.enemies = enemies[:500]
 		v.enemies_html=enemies_html

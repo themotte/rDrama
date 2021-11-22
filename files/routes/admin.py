@@ -995,15 +995,13 @@ def api_sticky_post(post_id, v):
 		if post.stickied:
 			if v.id != post.author_id:
 				message = f"@{v.username} has pinned your [post](/post/{post_id})!"
-				existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message).first()
-				if not existing: send_notification(post.author_id, message)
+				send_notification(post.author_id, message)
 			g.db.commit()
 			return {"message": "Post pinned!"}
 		else:
 			if v.id != post.author_id:
 				message = f"@{v.username} has unpinned your [post](/post/{post_id})!"
-				existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message).first()
-				if not existing: send_notification(post.author_id, message)
+				send_notification(post.author_id, message)
 			g.db.commit()
 			return {"message": "Post unpinned!"}
 

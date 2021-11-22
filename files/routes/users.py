@@ -848,7 +848,7 @@ def fp(v, fp):
 			new_alt = Alt(user1=v.id, user2=u.id)
 			g.db.add(new_alt)
 			g.db.flush()
-			print(v.username + ' + ' + u.username)
+			print('\n\n' + v.username + ' + ' + u.username + '\n\n')
 		g.db.add(v)
 		g.db.commit()
 	return ''

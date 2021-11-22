@@ -208,7 +208,7 @@ def api_comment(v):
 															 Comment.deleted_utc == 0,
 															 Comment.parent_comment_id == parent_comment_id,
 															 Comment.parent_submission == parent_submission,
-															 Comment.body == body
+															 Comment.body_html == body_html
 															 ).first()
 	if existing: return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
 
@@ -885,15 +885,13 @@ def toggle_pin_comment(cid, v):
 	if comment.is_pinned:
 		if v.id != comment.author_id:
 			message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message).first()
-			if not existing: send_notification(comment.author_id, message)
+			send_notification(comment.author_id, message)
 		g.db.commit()
 		return {"message": "Comment pinned!"}
 	else:
 		if v.id != comment.author_id:
 			message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
-			existing = g.db.query(Comment.id).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.body == message).first()
-			if not existing: send_notification(comment.author_id, message)
+			send_notification(comment.author_id, message)
 		g.db.commit()
 		return {"message": "Comment unpinned!"}
 	

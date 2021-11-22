@@ -293,7 +293,7 @@
 						<a href="/views" class="btn btn-secondary">Profile views</a>
 					{% endif %}
 
-					{% if v and v.mute and not u.unmutable %}
+					{% if u.song and v and v.mute and not u.unmutable %}
 						<a id="pause1" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
 						<a id="play1" class="btn btn-secondary d-none" href="javascript:void(0)" onclick="play()">Play anthem</a>
 					{% endif %}
@@ -425,7 +425,7 @@
 {% endblock %}
 
 {% block mobileUserBanner %}
-<div class="container-fluid text-center bg-white d-md-none" style="margin-top:-3px; border-radius:0!important;">
+<div class="container-fluid text-center bg-white d-md-none" style="margin-top:-4px;border-radius:0!important;">
 	<div class="row">
 		<div class="col px-0">
 			<a rel="nofollow noopener noreferrer" href="{{u.banner_url}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
@@ -525,7 +525,7 @@
 					<a href="/views" class="btn btn-secondary">Profile views</a>
 				{% endif %}
 
-				{% if v and v.mute and not u.unmutable %}
+				{% if u.song and v and v.mute and not u.unmutable %}
 					<a id="pause2" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
 					<a id="play2" class="btn btn-secondary d-none" href="javascript:void(0)" onclick="play()">Play anthem</a>
 				{% endif %}
