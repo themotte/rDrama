@@ -196,7 +196,15 @@ def log(v):
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 	
-	return render_template("log.html", v=v, admins=admins, types=ACTIONTYPES, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
+	types = ACTIONTYPES
+	if not (v and v.admin_level):
+		del types["shadowban"]
+		del types["unshadowban"]
+		del types["club"]
+		del types["unclub"]
+		del types["check"]
+
+	return render_template("log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
 
 @app.get("/log/<id>")
 @auth_desired
