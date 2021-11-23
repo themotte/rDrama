@@ -331,14 +331,12 @@ def blocks(v):
 @auth_desired
 def banned(v):
 
-
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
 	return render_template("banned.html", v=v, users=users)
 
 @app.get("/formatting")
 @auth_desired
 def formatting(v):
-
 
 	return render_template("formatting.html", v=v)
 
