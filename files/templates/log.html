@@ -65,9 +65,11 @@
 							</button>
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 								<a class="dropdown-item" href="/log{% if admin %}?admin={{admin}}{% endif %}"><i class="fas fa-broom mr-2"></i>All</a>
-								{% for t, v in types.items() %}
-									<a class="dropdown-item" href="?{% if admin %}admin={{admin}}&{% endif %}kind={{t}}"><i class="fas {{v['icon']}} mr-2"></i>{{t}}</a>
-								{% endfor %}
+								{% if types %}
+									{% for t, v in types.items() %}
+										<a class="dropdown-item" href="?{% if admin %}admin={{admin}}&{% endif %}kind={{t}}"><i class="fas {{v['icon']}} mr-2"></i>{{t}}</a>
+									{% endfor %}
+								{% endif %}
 							</div>
 						</div>
 					</div>
