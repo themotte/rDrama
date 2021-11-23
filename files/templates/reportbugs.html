@@ -1,0 +1,19 @@
+{% extends "default.html" %}
+
+{% block content %}
+	<h3 class="mt-4 mx-2">Report a bug</h3>
+	<form class="mx-2 profile-toggleable-mobile" id='message-mobile' action="/@Aevann/message" method="post">
+		<pre></pre>
+		<textarea id="input-message-mobile" form="message-mobile" name="message" rows="9" maxlength="1000" class="form-control" required></textarea>
+		<pre></pre>
+		<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></pre>
+		&nbsp;
+		<pre class="btn btn-secondary format d-inline-block m-0 fas fa-italic" aria-hidden="true" onclick="makeItalics('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></pre>
+		&nbsp;
+		<pre class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Quote"></pre>
+		&nbsp;
+		<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></pre>
+		&nbsp;
+		<input type="submit" value="Submit" class="btn btn-primary mt-3">
+	</form>
+{% endblock %}
