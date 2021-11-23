@@ -7,7 +7,7 @@ from sqlalchemy import func
 from os import path
 import calendar
 import matplotlib.pyplot as plt
-from files.classes.mod_logs import ACTIONTYPES2
+from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()

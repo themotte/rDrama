@@ -109,10 +109,154 @@ class ModAction(Base):
 	@lazy
 	def permalink(self):
 		return f"/log/{self.id}"	
-	
 
 
 ACTIONTYPES={
+	"check": {
+		"str": "gave {self.target_link} a checkmark",
+		"icon": "fa-user",
+		"color": "bg-muted",
+	},
+	"uncheck": {
+		"str": "removed checkmark from {self.target_link}",
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
+	},
+	"ban_domain": {
+		"str": "banned a domain",
+		"icon": "fa-globe",
+		"color": "bg-danger",
+	},
+	"unban_domain": {
+		"str": "unbanned a domain",
+		"icon": "fa-globe",
+		"color": "bg-muted",
+	},
+	"approve_app": {
+		"str": "approved an application by {self.target_link}",
+		"icon": "fa-robot",
+		"color": "bg-muted",
+	},
+	"revoke_app": {
+		"str": "revoked an application by {self.target_link}",
+		"icon": "fa-robot",
+		"color": "bg-danger",
+	},
+	"reject_app": {
+		"str": "rejected an application request by {self.target_link}",
+		"icon": "fa-robot",
+		"color": "bg-danger",
+	},
+	"change_rules": {
+		"str": "changed the <a href='/rules'>rules</a>",
+		"icon": "fa-balance-scale",
+		"color": "bg-muted",
+	},
+	"ban_user":{
+		"str":'banned user {self.target_link}',
+		"icon":"fa-user-slash",
+		"color": "bg-danger",
+	},
+	"unban_user":{
+		"str":'unbanned user {self.target_link}',
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
+	},
+	"club_allow":{
+		"str":'allowed user {self.target_link} into the {cc}',
+		"icon":"fa-user-slash",
+		"color": "bg-danger",
+	},
+	"club_ban":{
+		"str":'disallowed user {self.target_link} from the {cc}',
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
+	},
+	"nuke_user":{
+		"str":'removed all content of {self.target_link}',
+		"icon":"fa-user-slash",
+		"color": "bg-danger",
+	},
+	"unnuke_user":{
+		"str":'approved all content of {self.target_link}',
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
+	},
+	"agendaposter": {
+		"str": "set agendaposter theme on {self.target_link}",
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
+	},
+	"unagendaposter": {
+		"str": "removed agendaposter theme from {self.target_link}",
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
+	},
+	"set_flair_locked":{
+		"str":"set {self.target_link}'s flair (locked)",
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
+	},
+	"set_flair_notlocked":{
+		"str":"set {self.target_link}'s flair (not locked)",
+		"icon": "fa-user-slash",
+		"color": "bg-muted",
+	},
+	"pin_comment":{
+		"str":'pinned a {self.target_link}',
+		"icon":"fa-thumbtack fa-rotate--45",
+		"color": "bg-info",
+	},
+	"unpin_comment":{
+		"str":'un-pinned a {self.target_link}',
+		"icon":"fa-thumbtack fa-rotate--45",
+		"color": "bg-muted",
+	},
+	"pin_post":{
+		"str":'pinned post {self.target_link}',
+		"icon":"fa-thumbtack fa-rotate--45",
+		"color": "bg-success",
+	},
+	"unpin_post":{
+		"str":'un-pinned post {self.target_link}',
+		"icon":"fa-thumbtack fa-rotate--45",
+		"color": "bg-muted",
+	},
+	"set_nsfw":{
+		"str":'set nsfw on post {self.target_link}',
+		"icon":"fa-eye-evil",
+		"color": "bg-danger",
+	},
+	"unset_nsfw":{
+		"str":'un-set nsfw on post {self.target_link}',
+		"icon":"fa-eye-evil",
+		"color": "bg-muted",
+	},
+	"ban_post":{
+		"str": 'removed post {self.target_link}',
+		"icon":"fa-feather-alt",
+		"color": "bg-danger",
+	},
+	"unban_post":{
+		"str": 'reinstated post {self.target_link}',
+		"icon":"fa-feather-alt",
+		"color": "bg-muted",
+	},
+	"ban_comment":{
+		"str": 'removed {self.target_link}',
+		"icon":"fa-comment",
+		"color": "bg-danger",
+	},
+	"unban_comment":{
+		"str": 'reinstated {self.target_link}',
+		"icon":"fa-comment",
+		"color": "bg-muted",
+	},
+}
+
+
+
+ACTIONTYPES2={
 	"uncheck": {
 		"str": "removed checkmark from {self.target_link}",
 		"icon": "fa-user-slash",
@@ -257,150 +401,6 @@ ACTIONTYPES={
 	"unclub":{
 		"str": 'unmarked post {self.target_link} as club-only',
 		"icon":"fa-eye",
-		"color": "bg-muted",
-	},
-	"ban_comment":{
-		"str": 'removed {self.target_link}',
-		"icon":"fa-comment",
-		"color": "bg-danger",
-	},
-	"unban_comment":{
-		"str": 'reinstated {self.target_link}',
-		"icon":"fa-comment",
-		"color": "bg-muted",
-	},
-}
-
-
-ACTIONTYPES2={
-	"check": {
-		"str": "gave {self.target_link} a checkmark",
-		"icon": "fa-user",
-		"color": "bg-muted",
-	},
-	"uncheck": {
-		"str": "removed checkmark from {self.target_link}",
-		"icon": "fa-user-slash",
-		"color": "bg-muted",
-	},
-	"ban_domain": {
-		"str": "banned a domain",
-		"icon": "fa-globe",
-		"color": "bg-danger",
-	},
-	"unban_domain": {
-		"str": "unbanned a domain",
-		"icon": "fa-globe",
-		"color": "bg-muted",
-	},
-	"approve_app": {
-		"str": "approved an application by {self.target_link}",
-		"icon": "fa-robot",
-		"color": "bg-muted",
-	},
-	"revoke_app": {
-		"str": "revoked an application by {self.target_link}",
-		"icon": "fa-robot",
-		"color": "bg-danger",
-	},
-	"reject_app": {
-		"str": "rejected an application request by {self.target_link}",
-		"icon": "fa-robot",
-		"color": "bg-danger",
-	},
-	"change_rules": {
-		"str": "changed the <a href='/rules'>rules</a>",
-		"icon": "fa-balance-scale",
-		"color": "bg-muted",
-	},
-	"ban_user":{
-		"str":'banned user {self.target_link}',
-		"icon":"fa-user-slash",
-		"color": "bg-danger",
-	},
-	"unban_user":{
-		"str":'unbanned user {self.target_link}',
-		"icon": "fa-user-slash",
-		"color": "bg-muted",
-	},
-	"club_allow":{
-		"str":'allowed user {self.target_link} into the {cc}',
-		"icon":"fa-user-slash",
-		"color": "bg-danger",
-	},
-	"club_ban":{
-		"str":'disallowed user {self.target_link} from the {cc}',
-		"icon": "fa-user-slash",
-		"color": "bg-muted",
-	},
-	"nuke_user":{
-		"str":'removed all content of {self.target_link}',
-		"icon":"fa-user-slash",
-		"color": "bg-danger",
-	},
-	"unnuke_user":{
-		"str":'approved all content of {self.target_link}',
-		"icon": "fa-user-slash",
-		"color": "bg-muted",
-	},
-	"agendaposter": {
-		"str": "set agendaposter theme on {self.target_link}",
-		"icon": "fa-user-slash",
-		"color": "bg-muted",
-	},
-	"unagendaposter": {
-		"str": "removed agendaposter theme from {self.target_link}",
-		"icon": "fa-user-slash",
-		"color": "bg-muted",
-	},
-	"set_flair_locked":{
-		"str":"set {self.target_link}'s flair (locked)",
-		"icon": "fa-user-slash",
-		"color": "bg-muted",
-	},
-	"set_flair_notlocked":{
-		"str":"set {self.target_link}'s flair (not locked)",
-		"icon": "fa-user-slash",
-		"color": "bg-muted",
-	},
-	"pin_comment":{
-		"str":'pinned a {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-info",
-	},
-	"unpin_comment":{
-		"str":'un-pinned a {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-muted",
-	},
-	"pin_post":{
-		"str":'pinned post {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-success",
-	},
-	"unpin_post":{
-		"str":'un-pinned post {self.target_link}',
-		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-muted",
-	},
-	"set_nsfw":{
-		"str":'set nsfw on post {self.target_link}',
-		"icon":"fa-eye-evil",
-		"color": "bg-danger",
-	},
-	"unset_nsfw":{
-		"str":'un-set nsfw on post {self.target_link}',
-		"icon":"fa-eye-evil",
-		"color": "bg-muted",
-	},
-	"ban_post":{
-		"str": 'removed post {self.target_link}',
-		"icon":"fa-feather-alt",
-		"color": "bg-danger",
-	},
-	"unban_post":{
-		"str": 'reinstated post {self.target_link}',
-		"icon":"fa-feather-alt",
 		"color": "bg-muted",
 	},
 	"ban_comment":{
