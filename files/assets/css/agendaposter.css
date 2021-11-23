@@ -1,3 +1,7 @@
+html {
+  cursor:url('https://i.ibb.co/4VZB08S/Image.webp'), auto;
+}
+
 .nav-item .text-small.font-weight-bold::before {
 	content: "((("
 }
