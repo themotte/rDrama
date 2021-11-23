@@ -319,16 +319,6 @@ ACTIONTYPES2={
 		"icon": "fa-user-slash",
 		"color": "bg-muted",
 	},
-	"club_allow":{
-		"str":'allowed user {self.target_link} into the {cc}',
-		"icon":"fa-user-slash",
-		"color": "bg-danger",
-	},
-	"club_ban":{
-		"str":'disallowed user {self.target_link} from the {cc}',
-		"icon": "fa-user-slash",
-		"color": "bg-muted",
-	},
 	"nuke_user":{
 		"str":'removed all content of {self.target_link}',
 		"icon":"fa-user-slash",
@@ -397,6 +387,16 @@ ACTIONTYPES2={
 	"unban_post":{
 		"str": 'reinstated post {self.target_link}',
 		"icon":"fa-feather-alt",
+		"color": "bg-muted",
+	},
+	"club":{
+		"str": 'marked post {self.target_link} as club-only',
+		"icon":"fa-eye-slash",
+		"color": "bg-danger",
+	},
+	"unclub":{
+		"str": 'unmarked post {self.target_link} as club-only',
+		"icon":"fa-eye",
 		"color": "bg-muted",
 	},
 	"ban_comment":{

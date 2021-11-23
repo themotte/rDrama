@@ -190,9 +190,10 @@ def log(v):
 
 	actions = g.db.query(ModAction)
 	if not (v and v.admin_level > 1): 
-		actions = actions.filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub", ModAction.kind!="check")
+		actions = actions.filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club_allow", ModAction.kind!="club_ban", ModAction.kind!="check")
 	
 	if admin_id: actions = actions.filter_by(user_id=admin_id)
+	if kind: actions = actions.filter_by(kind=kind)
 
 	actions = actions.order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 	next_exists=len(actions)>25
