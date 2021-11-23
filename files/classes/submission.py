@@ -304,11 +304,7 @@ class Submission(Base):
 
 	@lazy
 	def realurl(self, v):
-		if v and v.agendaposter and random.randint(1, 10) < 4:
-			if site == 'rdrama.net':
-				return random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to'])
-			return 'https://secure.actblue.com/donate/ms_blm_homepage_2019'
-		elif v and self.url and self.url.startswith("https://old.reddit.com/"):
+		if v and self.url and self.url.startswith("https://old.reddit.com/"):
 			url = self.url
 			if v.teddit: url = self.url.replace("old.reddit.com", "teddit.net")
 			elif not v.oldreddit: url = self.url.replace("old.reddit.com", "reddit.com")

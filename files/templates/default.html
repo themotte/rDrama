@@ -44,18 +44,11 @@
 			this.random(50,300)},bug_near_window_edge:function(){this.near_edge=0;this.bug.top<this.options.edge_resistance?this.near_edge|=this.NEAR_TOP_EDGE:this.bug.top>document.documentElement.clientHeight-this.options.edge_resistance&&(this.near_edge|=this.NEAR_BOTTOM_EDGE);this.bug.left<this.options.edge_resistance?this.near_edge|=this.NEAR_LEFT_EDGE:this.bug.left>document.documentElement.clientWidth-this.options.edge_resistance&&(this.near_edge|=this.NEAR_RIGHT_EDGE);return this.near_edge},getPos:function(){return this.inserted&&
 			this.bug&&this.bug.style?{top:parseInt(this.bug.top,10),left:parseInt(this.bug.left,10)}:null}},SpawnBug=function(){var a={},b;for(b in Bug)Bug.hasOwnProperty(b)&&(a[b]=Bug[b]);return a},mergeOptions=function(a,b,c){"undefined"==typeof c&&(c=!0);a=c?cloneOf(a):a;for(var d in b)b.hasOwnProperty(d)&&(a[d]=b[d]);return a},cloneOf=function(a){if(null==a||"object"!=typeof a)return a;var b=a.constructor(),c;for(c in a)a.hasOwnProperty(c)&&(b[c]=cloneOf(a[c]));return b};
 			window.requestAnimFrame=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a,b){window.setTimeout(a,1E3/60)}}();
-			new BugController({
-				imageSprite: "/assets/images/fly-sprite.webp",
-				canDie: false,
-				minBugs: 5,
-				maxBugs: 30,
-				mouseOver: "fly"
-			});
 			new SpiderController({
 				imageSprite: "/assets/images/spider-sprite.webp",
 				canDie: false,
-				minBugs: 2,
-				maxBugs: 20,
+				minBugs: 1,
+				maxBugs: 1,
 				mouseOver: "fly"
 			});
 		</script>
@@ -110,8 +103,6 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">
-	<!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">
-		<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">--->
 		<link rel="manifest" href="/assets/manifest.json">
 		<link rel="mask-icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp" color="#{{'DEFAULT_COLOR' | app_config}}">
 		<link rel="shortcut icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=1">
@@ -256,7 +247,7 @@
 			<style>:root{--primary:#{{v.themecolor}}}</style>
 			<link rel="stylesheet" href="/assets/css/main.css?v=119">
 			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=117">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=117">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=118">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
 			<link rel="stylesheet" href="/assets/css/main.css?v=119"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=117">
