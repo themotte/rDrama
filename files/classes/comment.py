@@ -330,9 +330,9 @@ class Comment(Base):
 				body = body.replace(url, f"{url_noquery}?{urlencode(p, True)}")
 
 		if v and v.shadowbanned and v.id == self.author_id and 86400 > time.time() - self.created_utc > 60:
-			ti = int((time.time() - self.created_utc)/60)
+			ti = max(int((time.time() - self.created_utc)/60), 1)
 			maxupvotes = min(ti, 31)
-			rand = randint(1, maxupvotes)
+			rand = randint(0, maxupvotes)
 			if self.upvotes < rand:
 				self.upvotes += randint(0, 5)
 				g.db.add(self)
