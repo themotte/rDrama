@@ -190,7 +190,7 @@ def log(v):
 
 	actions = g.db.query(ModAction)
 	if not (v and v.admin_level > 1): 
-		actions = actions.filter(ModAction.kind.notin_(["shadowban","unshadowban","club","unclub","club_allow","club_ban","check"])
+		actions = actions.filter(ModAction.kind.notin_(["shadowban","unshadowban","club","unclub","club_allow","club_ban","check"]))
 	
 	if admin_id: actions = actions.filter_by(user_id=admin_id)
 	if kind: actions = actions.filter_by(kind=kind)
