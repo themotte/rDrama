@@ -6,7 +6,7 @@
 {% include "emoji_modal.html" %}
 {% include "gif_modal.html" %}
 
-<script src="/assets/js/settings_profile.js?v=57"></script>
+<script src="/assets/js/settings_profile.js?v=58"></script>
 
 <script>
 	document.onpaste = function(event) {
@@ -154,16 +154,6 @@
 
 				</div>
 
-				<!-- <p class="text-small mb-2">Or type a color code:</p>
-				<div class="d-flex">
-				<form action="/settings/themecolor" id="color-code-form" method="post">
-					<input type="hidden" name="formkey" value="{{v.formkey}}">
-  
-					<input class="form-control" type="text" name="themecolor" id="color-code" maxlength="6" value="{% if v.themecolor %}{{v.themecolor}}{% endif %}">
-					<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-				</form>
-				</div> -->
-
 			</div>
 			<div class="d-lg-flex border-bottom">
 			<div class="title w-lg-25">
@@ -198,7 +188,7 @@
 				<div class="d-flex">
 
 					<div class="title w-lg-25 text-md-center">
-						<img loading="lazy" src="{{v.profile_url}}" class="profile-pic-75">
+						<img src="{{v.profile_url}}" class="profile-pic-75">
 					</div>
 
 					<div class="body w-lg-100 my-auto">
@@ -240,7 +230,7 @@
 				<div class="d-flex">
 
 					<div class="title w-lg-75 text-md-center">
-						<img loading="lazy" src="{{v.banner_url}}" class="banner-pic-135">
+						<img src="{{v.banner_url}}" class="banner-pic-135">
 					</div>
 
 					<div class="body w-lg-100 my-auto">
