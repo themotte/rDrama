@@ -183,13 +183,16 @@ def log(v):
 
 	kind = request.args.get("kind")
 
-	actions = g.db.query(ModAction)
-	
-	if admin_id: actions = actions.filter_by(user_id=admin_id)
-	if kind: actions = actions.filter_by(kind=kind)
+	if v and v.admin_level > 1: types = ACTIONTYPES
+	else: types = ACTIONTYPES2
 
+	if kind not in types: kind = None
+
+	actions = g.db.query(ModAction)
 	if not (v and v.admin_level > 1): 
 		actions = actions.filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub", ModAction.kind!="check")
+	
+	if admin_id: actions = actions.filter_by(user_id=admin_id)
 
 	actions = actions.order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
 	next_exists=len(actions)>25
@@ -197,7 +200,7 @@ def log(v):
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 
-	return render_template("log.html", v=v, admins=admins, types=ACTIONTYPES2, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
+	return render_template("log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
 
 @app.get("/log/<id>")
 @auth_desired
@@ -218,7 +221,10 @@ def log_item(id, v):
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 
-	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=ACTIONTYPES2)
+	if v and v.admin_level > 1: types = ACTIONTYPES
+	else: types = ACTIONTYPES2
+
+	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
 @app.get("/assets/favicon.ico")
 def favicon():
