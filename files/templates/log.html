@@ -36,6 +36,48 @@
 
 		</div>
 
+		<div class="row" style="overflow: visible;padding-top:5px;">
+			<div class="col">
+				<div class="d-flex justify-content-between align-items-center mr-2">
+		
+					{% block navbar %}
+					<div class="font-weight-bold py-3">‎</div>
+		
+					<div class="d-flex align-items-center sortingbarmargin">
+						<div class="text-small font-weight-bold mr-2">‎</div>
+						<div class="dropdown dropdown-actions">
+
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{% if admin %}<img loading="lazy" src="/@{{admin}}/pic" alt="avatar" width=20 height=20 class="rounded-circle mr-2">{{admin}}{% else %}<img loading="lazy" src="/assets/images/emojis/marseyjanny.webp" alt="avatar" width=20 height=20 class="rounded-circle mr-2">All{% endif %}
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+								<a class="dropdown-item" href="/log{% if type %}?kind={{type}}{% endif %}"><img loading="lazy" src="/assets/images/emojis/marseyjanny.webp" alt="avatar" width=20 height=20 class="rounded-circle mr-2">All</a>
+								{% for a in admins %}
+									<a class="dropdown-item" href="?admin={{a}}{% if type %}&kind={{type}}{% endif %}"><img loading="lazy" src="/@{{a}}/pic" alt="avatar" width=20 height=20 class="rounded-circle mr-2">{{a}}</a>
+								{% endfor %}
+							</div>
+						</div>
+		
+						<div class="text-small font-weight-bold mr-2">‎</div>
+						<div class="dropdown dropdown-actions">
+
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{% if type %}<i class="fas {{types[type]['icon']}} mr-2"></i>{{type}}{% else %}<i class="fas fa-broom mr-2"></i>All{% endif %}
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+								<a class="dropdown-item" href="/log{% if admin %}?admin={{admin}}{% endif %}"><i class="fas fa-broom mr-2"></i>All</a>
+								{% for t, v in types.items() %}
+									<a class="dropdown-item" href="?{% if admin %}admin={{admin}}&{% endif %}kind={{t}}"><i class="fas {{v['icon']}} mr-2"></i>{{t}}</a>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+
+
 		<div class="rounded border bg-white mx-auto">
 			{% for ma in actions %}
 

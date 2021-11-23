@@ -782,6 +782,11 @@ def user_profile_uid(id):
 	x=get_account(id)
 	return redirect(x.profile_url)
 
+@app.get("/@<username>/pic")
+@limiter.exempt
+def user_profile_name(username):
+	x = get_user(username)
+	return redirect(x.profile_url)
 
 @app.get("/@<username>/saved/posts")
 @auth_required
