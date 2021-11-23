@@ -51,9 +51,10 @@
 }
 
 .nav-link:focus, .btn:focus, .btn-secondary:focus, .col.px-0.pl-2.btn.btn-dead.my-0.mx-2,
-.nav-link:active, .btn:active, .btn-secondary:active,{
+.nav-link:active, .btn:active, .btn-secondary:active {
 	border: 2px inset white !important;
 }
+
 .card, .card-blank, .comment-section.post-top, .dropdown-menu {
 	border: 2px outset white !important;
 	border-bottom: 2px solid #a7a5a1 !important;
@@ -82,9 +83,6 @@
 blockquote {
 	background-color: #e0e0e0 !important;
 	border-bottom: 2px solid var(--black);
-}
-
-.container {
 }
 
 #frontpage .pseudo-submit-form.card .card-body .form-control {
