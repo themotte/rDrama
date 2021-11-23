@@ -317,15 +317,15 @@
 							<div class="body w-lg-100">
 
 								{% if v.discord_id %}
-								<form action="/settings/remove_discord" method="post">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
-								<input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
-								</form>
+									<form action="/settings/remove_discord" method="post">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									<input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
+									</form>
 
-								<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{'SITE_NAME' | app_config}} Discord server.</div>
+									<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{'SITE_NAME' | app_config}} Discord server.</div>
 								{% else %}
-								<a href="/discord" class="btn btn-primary">Link Discord</a>
-								<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{'SITE_NAME' | app_config}} Discord server.</div>
+									<a href="/discord" class="btn btn-primary">Link Discord</a>
+									<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{'SITE_NAME' | app_config}} Discord server.</div>
 								{% endif %}
 
 							</div>
