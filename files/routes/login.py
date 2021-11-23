@@ -275,7 +275,7 @@ def sign_up_post(v):
 	if email.endswith("@gmail.com"):
 		email=email.split('@')[0]
 		email=email.split('+')[0]
-		email=email.replace('.','')
+		email=email.replace('.','').replace('_','')
 		email=f"{email}@gmail.com"
 
 	if not email: email = None
@@ -383,7 +383,7 @@ def post_forgot():
 	if not user and email.endswith("@gmail.com"):
 		email=email.split('@')[0]
 		email=email.split('+')[0]
-		email=email.replace('.','')
+		email=email.replace('.','').replace('_','')
 		email=f"{email}@gmail.com"
 		user = g.db.query(User).filter(
 			User.username.ilike(username),
@@ -506,7 +506,7 @@ def request_2fa_disable():
 	if email != user.email and email.endswith("@gmail.com"):
 		email=email.split('@')[0]
 		email=email.split('+')[0]
-		email=email.replace('.','')
+		email=email.replace('.','').replace('_','')
 		email=f"{email}@gmail.com"
 		if email != user.email:
 			return render_template("message.html",

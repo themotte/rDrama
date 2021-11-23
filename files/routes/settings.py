@@ -591,7 +591,7 @@ def settings_security_post(v):
 		if new_email.endswith("@gmail.com"):
 			new_email=new_email.split('@')[0]
 			new_email=new_email.split('+')[0]
-			new_email=new_email.replace('.','')
+			new_email=new_email.replace('.','').replace('_','')
 			new_email=f"{new_email}@gmail.com"
 
 		if new_email == v.email:
