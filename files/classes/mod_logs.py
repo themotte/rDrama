@@ -389,16 +389,6 @@ ACTIONTYPES2={
 		"icon":"fa-feather-alt",
 		"color": "bg-muted",
 	},
-	"club":{
-		"str": 'marked post {self.target_link} as club-only',
-		"icon":"fa-eye-slash",
-		"color": "bg-danger",
-	},
-	"unclub":{
-		"str": 'unmarked post {self.target_link} as club-only',
-		"icon":"fa-eye",
-		"color": "bg-muted",
-	},
 	"ban_comment":{
 		"str": 'removed {self.target_link}',
 		"icon":"fa-comment",
