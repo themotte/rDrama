@@ -271,6 +271,13 @@ def sign_up_post(v):
 
 	email = request.values.get("email")
 	email = email.strip()
+
+	if email.endswith("@gmail.com"):
+		email=email.split('@')[0]
+		email=email.split('+')[0]
+		email=email.replace('.','')
+		email=f"{email}@gmail.com"
+
 	if not email: email = None
 
 	existing_account = get_user(username, graceful=True)

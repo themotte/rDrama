@@ -587,6 +587,13 @@ def settings_security_post(v):
 							escape("Invalid password."))
 
 		new_email = request.values.get("new_email","").strip()
+
+		if new_email.endswith("@gmail.com"):
+			new_email=new_email.split('@')[0]
+			new_email=new_email.split('+')[0]
+			new_email=new_email.replace('.','')
+			new_email=f"{new_email}@gmail.com"
+
 		if new_email == v.email:
 			return redirect("/settings/security?error=That email is already yours!")
 
