@@ -5645,6 +5645,14 @@ blockquote p {
   color: green !important;
 }
 
+.text-lightgreen {
+  color: lightgreen !important;
+}
+
+.text-blue {
+  color: #1D9BF0 !important;
+}
+
 .timeline-Widget {
   max-height: 500px !important;
   overflow-y: scroll !important;

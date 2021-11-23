@@ -242,6 +242,11 @@ def edit_post(pid, v):
 			v.longpost = None
 			g.db.add(v)
 		elif len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
+	elif v.bird:
+		if time.time() > v.bird:
+			v.bird = None
+			g.db.add(v)
+		elif len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
 		title_html = filter_title(title)
@@ -267,7 +272,10 @@ def edit_post(pid, v):
 		p.body = body
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
 
-		if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')): return {"error":"You have to type more than 280 characters!"}, 403
+		if v.longpost:
+			if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
+		elif v.bird:
+			if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
 		p.body_html = body_html
 
@@ -532,7 +540,10 @@ def submit_post(v):
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
 
-	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')): return {"error":"You have to type more than 280 characters!"}, 403
+	if v.longpost:
+		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
+	elif v.bird:
+		if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
 	if url:
 		if "/i.imgur.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp")
@@ -621,6 +632,11 @@ def submit_post(v):
 			v.longpost = None
 			g.db.add(v)
 		elif len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
+	elif v.bird:
+		if time.time() > v.bird:
+			v.bird = None
+			g.db.add(v)
+		elif len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == v.id,
@@ -703,7 +719,10 @@ def submit_post(v):
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 400
 
-	if v.longpost and (len(body) < 280 or ' [](' in body or body.startswith('[](')): return {"error":"You have to type more than 280 characters!"}, 403
+	if v.longpost:
+		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
+	elif v.bird:
+		if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
 	if len(body_html) > 20000: return {"error":"Submission body too long!"}, 400
 

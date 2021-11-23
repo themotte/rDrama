@@ -825,6 +825,8 @@ def settings_block_user(v):
 
 	user = get_user(request.values.get("username"), graceful=True)
 
+	if user.unblockable: return {"error": "This user is unblockable."}, 403
+
 	if not user:
 		return {"error": "That user doesn't exist."}, 404
 
@@ -868,8 +870,6 @@ def settings_unblock_user(v):
 	if not x: abort(409)
 
 	g.db.delete(x)
-
-	
 
 	existing = g.db.query(Notification.id).filter_by(unblocksender=v.id, user_id=user.id).first()
 	if not existing: send_unblock_notif(v.id, user.id, f"@{v.username} has unblocked you!")

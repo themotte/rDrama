@@ -55,8 +55,7 @@ def shop(v):
 			"icon": "fas fa-poop",
 			"color": "text-black-50",
 			"owned": 0,
-			"price": 500,
-			"MB": True
+			"price": 500
 		},
 		"fireflies": {
 			"kind": "fireflies",
@@ -65,8 +64,7 @@ def shop(v):
 			"icon": "fas fa-sparkles",
 			"color": "text-warning",
 			"owned": 0,
-			"price": 500,
-			"MB": True
+			"price": 500
 		},
 		"train": {
 			"kind": "train",
@@ -75,8 +73,7 @@ def shop(v):
 			"icon": "fas fa-train",
 			"color": "text-pink",
 			"owned": 0,
-			"price": 500,
-			"MB": True
+			"price": 500
 		},
 		"pin": {
 			"kind": "pin",
@@ -85,8 +82,7 @@ def shop(v):
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-warning",
 			"owned": 0,
-			"price": 750,
-			"MB": True
+			"price": 750
 		},
 		"unpin": {
 			"kind": "unpin",
@@ -95,8 +91,7 @@ def shop(v):
 			"icon": "fas fa-thumbtack fa-rotate--45",
 			"color": "text-black",
 			"owned": 0,
-			"price": 1000,
-			"MB": True
+			"price": 1000
 		},
 		"flairlock": {
 			"kind": "flairlock",
@@ -105,8 +100,7 @@ def shop(v):
 			"icon": "fas fa-lock",
 			"color": "text-black",
 			"owned": 0,
-			"price": 1250,
-			"MB": True
+			"price": 1250
 		},
 		"pizzashill": {
 			"kind": "pizzashill",
@@ -115,8 +109,16 @@ def shop(v):
 			"icon": "fas fa-pizza-slice",
 			"color": "text-orange",
 			"owned": 0,
-			"price": 1500,
-			"MB": True
+			"price": 1500
+		},
+		"bird": {
+			"kind": "bird",
+			"title": "Bird Site",
+			"description": "Forces the recipient to make all posts/comments < 140 characters for 24 hours.",
+			"icon": "fab fa-twitter",
+			"color": "text-blue",
+			"owned": 0,
+			"price": 1500
 		},
 		"agendaposter": {
 			"kind": "agendaposter",
@@ -125,8 +127,7 @@ def shop(v):
 			"icon": "fas fa-snooze",
 			"color": "text-purple",
 			"owned": 0,
-			"price": 2500,
-			"MB": True
+			"price": 2500
 		},
 		"marsey": {
 			"kind": "marsey",
@@ -135,8 +136,7 @@ def shop(v):
 			"icon": "fas fa-cat",
 			"color": "text-orange",
 			"owned": 0,
-			"price": 3000,
-			"MB": True
+			"price": 3000
 		},
 		"ban": {
 			"kind": "ban",
@@ -145,8 +145,7 @@ def shop(v):
 			"icon": "fas fa-gavel",
 			"color": "text-danger",
 			"owned": 0,
-			"price": 3000,
-			"MB": True
+			"price": 3000
 		},
 		"unban": {
 			"kind": "unban",
@@ -155,8 +154,7 @@ def shop(v):
 			"icon": "fas fa-gavel",
 			"color": "text-success",
 			"owned": 0,
-			"price": 3500,
-			"MB": True
+			"price": 3500
 		},
 		"grass": {
 			"kind": "grass",
@@ -165,8 +163,7 @@ def shop(v):
 			"icon": "fas fa-seedling",
 			"color": "text-success",
 			"owned": 0,
-			"price": 10000,
-			"MB": False
+			"price": 10000
 		},
 		"eye": {
 			"kind": "eye",
@@ -175,8 +172,7 @@ def shop(v):
 			"icon": "fas fa-eye",
 			"color": "text-silver",
 			"owned": 0,
-			"price": 10000,
-			"MB": False
+			"price": 10000
 		},
 		"pause": {
 			"kind": "pause",
@@ -185,8 +181,16 @@ def shop(v):
 			"icon": "fas fa-volume-mute",
 			"color": "text-danger",
 			"owned": 0,
-			"price": 20000,
-			"MB": False
+			"price": 20000
+		},
+		"unblockable": {
+			"kind": "unblockable",
+			"title": "Unblockable",
+			"description": "Makes the recipient unblockable and removes all blocks on them.",
+			"icon": "far fa-laugh-squint",
+			"color": "text-lightgreen",
+			"owned": 0,
+			"price": 25000
 		},
 		"unpausable": {
 			"kind": "unpausable",
@@ -195,8 +199,7 @@ def shop(v):
 			"icon": "fas fa-volume",
 			"color": "text-success",
 			"owned": 0,
-			"price": 40000,
-			"MB": False
+			"price": 40000
 		},
 		"alt": {
 			"kind": "alt",
@@ -205,8 +208,7 @@ def shop(v):
 			"icon": "fas fa-eye",
 			"color": "text-gold",
 			"owned": 0,
-			"price": 50000,
-			"MB": False
+			"price": 50000
 		},
 	}
 
@@ -290,6 +292,14 @@ def buy(v, award):
 			"color": "text-orange",
 			"price": 1500,
 		},
+		"bird": {
+			"kind": "bird",
+			"title": "Bird Site",
+			"description": "Forces the recipient to make all posts/comments < 140 characters for 24 hours.",
+			"icon": "fab fa-twitter",
+			"color": "text-blue",
+			"price": 1500
+		},
 		"agendaposter": {
 			"kind": "agendaposter",
 			"title": "Agendaposter",
@@ -345,6 +355,14 @@ def buy(v, award):
 			"icon": "fas fa-volume-mute",
 			"color": "text-danger",
 			"price": 20000
+		},
+		"unblockable": {
+			"kind": "unblockable",
+			"title": "Unblockable",
+			"description": "Makes the recipient unblockable and removes all blocks on them.",
+			"icon": "far fa-laugh-squint",
+			"color": "text-lightgreen",
+			"price": 25000
 		},
 		"unpausable": {
 			"kind": "unpausable",
@@ -542,6 +560,9 @@ def award_post(pid, v):
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
 		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {request.host_url}{post.shortlink}")
+	elif kind == "bird":
+		if author.bird: author.bird += 86400
+		else: author.bird = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
@@ -552,6 +573,12 @@ def award_post(pid, v):
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=84, user_id=author.id)
 		g.db.add(new_badge)
+	elif kind == "unblockable":
+		author.unblockable = True
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		new_badge = Badge(badge_id=87, user_id=author.id)
+		g.db.add(new_badge)
+		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 
 	post.author.received_award_count += 1
 	g.db.add(post.author)
@@ -676,6 +703,9 @@ def award_comment(cid, v):
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
 		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {request.host_url}{c.shortlink}")
+	elif kind == "bird":
+		if author.bird: author.bird += 86400
+		else: author.bird = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
@@ -686,6 +716,12 @@ def award_comment(cid, v):
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		new_badge = Badge(badge_id=84, user_id=author.id)
 		g.db.add(new_badge)
+	elif kind == "unblockable":
+		author.unblockable = True
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		new_badge = Badge(badge_id=87, user_id=author.id)
+		g.db.add(new_badge)
+		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 
 	c.author.received_award_count += 1
 	g.db.add(c.author)

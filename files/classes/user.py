@@ -51,6 +51,8 @@ class User(Base):
 	verifiedcolor = Column(String)
 	marseyawarded = Column(Integer)
 	longpost = Column(Integer)
+	unblockable = Column(Boolean)
+	bird = Column(Integer)
 	email = deferred(Column(String))
 	css = deferred(Column(String))
 	profilecss = deferred(Column(String))
