@@ -124,7 +124,7 @@
 {% endif %}
 
 
-{% if p.comment_count == 0 %}
+{% if not p.comment_count %}
 	<script>
 		function poll_vote(cid) {
 			{% if v %}
