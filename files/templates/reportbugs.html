@@ -1,7 +1,7 @@
 {% extends "default.html" %}
 
 {% block content %}
-	<script src="/assets/js/emoji_modal.js?v=78"></script>
+	{% include "emoji_modal.html" %}
 	<h3 class="mt-4 mx-2">Report a bug</h3>
 	<form class="mx-2 profile-toggleable-mobile" id='message-mobile' action="/@Aevann/message" method="post">
 		<pre></pre>
