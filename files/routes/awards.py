@@ -557,6 +557,8 @@ def award_post(pid, v):
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = time.time() + 86400
 	elif kind == "pizzashill":
+		if author.bird:
+			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
 		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {request.host_url}{post.shortlink}")
@@ -702,6 +704,8 @@ def award_comment(cid, v):
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = time.time() + 86400
 	elif kind == "pizzashill":
+		if author.bird:
+			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
 		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {request.host_url}{c.shortlink}")
