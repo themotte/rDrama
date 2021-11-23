@@ -7,7 +7,7 @@ from sqlalchemy import func
 from os import path
 import calendar
 import matplotlib.pyplot as plt
-from files.classes.mod_logs import ACTIONTYPES
+from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
@@ -196,13 +196,8 @@ def log(v):
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 	
-	types = ACTIONTYPES
-	if not (v and v.admin_level):
-		del types["shadowban"]
-		del types["unshadowban"]
-		del types["club"]
-		del types["unclub"]
-		del types["check"]
+	if v and v.admin_level: types = ACTIONTYPES
+	else: types = ACTIONTYPES2
 
 	return render_template("log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
 
