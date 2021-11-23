@@ -251,7 +251,7 @@ def post_rules(v):
 def shadowbanned(v):
 	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).all()]
-	return render_template("banned.html", v=v, users=users)
+	return render_template("shadowbanned.html", v=v, users=users)
 
 
 @app.get("/admin/agendaposters")
