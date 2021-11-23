@@ -117,14 +117,14 @@
 			<ul class="pagination pagination-sm mb-0">
 				{% if page>1 %}
 					<li class="page-item">
-						<small><a class="page-link" href="?page={{page-1}}" tabindex="-1">Prev</a></small>
+						<small><a class="page-link" href="{{request.full_path}}&page={{page-1}}" tabindex="-1">Prev</a></small>
 					</li>
 				{% else %}
 					<li class="page-item disabled"><span class="page-link">Prev</span></li>
 				{% endif %}
 				{% if next_exists %}
 				<li class="page-item">
-					<small><a class="page-link" href="?page={{page+1}}">Next</a></small>
+					<small><a class="page-link" href="{{request.full_path}}&page={{page+1}}">Next</a></small>
 				</li>
 				{% else %}
 					<li class="page-item disabled"><span class="page-link">Next</span></li>

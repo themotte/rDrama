@@ -525,11 +525,6 @@ def submit_post(v):
 		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
 	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
-	if v.agendaposter and random.randint(1, 10) < 7:
-		if request.host == 'rdrama.net':
-			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
-		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
-
 	title = request.values.get("title", "").strip()
 	url = request.values.get("url", "").strip()
 	title_html = filter_title(title)
@@ -972,6 +967,11 @@ def submit_post(v):
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()
+
+	if v.agendaposter and random.randint(1, 10) < 7:
+		if request.host == 'rdrama.net':
+			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
+		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
 
 	if request.headers.get("Authorization"): return new_post.json
 	else: return redirect(new_post.permalink)
