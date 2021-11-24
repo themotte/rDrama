@@ -3,239 +3,94 @@
 {% block pagetitle %}Profile Settings - {{'SITE_NAME' | app_config}}{% endblock %}
 
 {% block content %}
-{% include "emoji_modal.html" %}
-{% include "gif_modal.html" %}
+		<div class="flex flex-col space-y-4 sm:py-4 my-2.5 sm:my-0">
 
-<script src="/assets/js/settings_profile.js?v=58"></script>
-
-<script>
-	document.onpaste = function(event) {
-		var focused = document.activeElement;
-		if (focused.id == 'bio-text') {
-			f=document.getElementById('file-upload');
-			files = event.clipboardData.files
-			filename = files[0].name.toLowerCase()
-			if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
-			{
-				f.files = files;
-				document.getElementById('filename-show').textContent = filename;
-			}
-		}
-	}
-</script>
-
-<div id="posts" class="row">
-
-	<div class="col col-lg-10">
-
-		<div class="settings">
-
-			{% if "pcm" in request.host.lower() %}
-
-			<h2 class="h5" name="referral">Quadrant</h2>
-
-			<div class="settings-section rounded">
-
-					<div class="d-lg-flex border-bottom">
-						<div class="title w-lg-25">
-							<label for="quadrant">Quadrant</label>
-						</div>
-
-						<div class="body w-lg-100">
-							<p>Choose your quadrant.</p>
-							<div class="input-group mb2">
-								<select id='quadrant' class="form-control" form="profile-settings" name="quadrant" onchange="post_toast('/settings/profile?quadrant='+document.getElementById('quadrant').value, '1')">
-								{% for entry in ["Centrist", "LibLeft", "LibRight", "AuthLeft", "AuthRight", "LibCenter", "AuthCenter", "Left", "Right"] %}
-									<option value="{{entry}}" {% if v.quadrant==entry %} selected {% endif %}>
-										{{entry}}
-									</option>
-								{% endfor %}
-							</select>
-							</div>
-
-						</div>
-
-				</div>
-			</div>
-			{% endif %}
-
-			<h2 class="h5" name="referral">Theme</h2>
-
-			<div class="settings-section rounded">
-
-					<div class="d-lg-flex border-bottom">
-
-						<div class="title w-lg-25">
-							<label for="cardview">Card View</label>
-						</div>
-
-						<div class="body w-lg-100">
-
-							<div class="custom-control custom-switch">
-								<input type="checkbox" class="custom-control-input" id="cardview" name="cardview"{% if v.cardview %} checked{% endif %} onchange="post_toast('/settings/profile?cardview='+document.getElementById('cardview').checked);">
-								<label class="custom-control-label" for="cardview"></label>
-							</div>
-
-							<span class="text-small-extra text-muted">Enable if you would like to display images and videos in full size on the frontpage.</span>
-
-						</div>
-
-					</div>
-
-
-					<div class="d-lg-flex border-bottom">
-
-						<div class="title w-lg-25">
-							<label for="highlightcomments">Highlight New Comments</label>
-						</div>
-
-						<div class="body w-lg-100">
-
-							<div class="custom-control custom-switch">
-								<input type="checkbox" class="custom-control-input" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="post_toast('/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
-								<label class="custom-control-label" for="highlightcomments"></label>
-							</div>
-
-							<span class="text-small-extra text-muted">Enable if you would like to have a red dot on comments made after the last time you visited a thread.</span>
-
-						</div>
-
-					</div>
-
-
-					<div class="d-lg-flex border-bottom">
-						<div class="title w-lg-25">
-							<label for="theme">Website Theme</label>
-						</div>
-
-						<div class="body w-lg-100">
-							<p>Change the theme for the website.</p>
-							<div class="input-group mb2">
-								<select id='theme' class="form-control" form="profile-settings" name="theme" onchange="post_toast('/settings/profile?theme='+document.getElementById('theme').value, '1')">
-								{% if v.background %}
-									{% set entries = ["transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
-								{% else %}
-									{% set entries = ["dark", "light", "win98", "coffee", "tron", "4chan", "midnight"] %}
-								{% endif %}
-								{% for entry in entries %}
-									<option value="{{entry}}" {% if v.theme==entry %} selected {% endif %}>
-										{{entry}}
-									</option>
-								{% endfor %}
-							</select>
-							</div>
-
-						</div>
-
-				</div>
-				<div class="body d-lg-flex border-bottom">
-
-				<label class="text-black w-lg-25">Theme Color</label>
-
-				<div class="d-flex">
-
-					<form action="/settings/themecolor" id="themecolor-form" method="post" class="color-picker" style="line-height: 0">
-							<input type="hidden" name="formkey" value="{{v.formkey}}">
-
-							{% for themecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
-							<input type="radio" name="themecolor" id="themecolor-{{themecolor}}" value="{{themecolor}}" {% if v.themecolor == themecolor %}checked{% endif %} onclick="document.getElementById('themecolor-form').submit()">
-							<label class="color-radio" for="themecolor-{{themecolor}}">
-								<span style="background-color: #{{themecolor}}">
-								{% if v.themecolor.lower() == themecolor %}
-									<i class="fas fa-check text-white"></i>
-								{% else %}
-									&nbsp;
-								{% endif %}
-								</span>
-							</label>
-							{% endfor %}
-
-					</form>
-
-				</div>
-
-			</div>
-			<div class="d-lg-flex border-bottom">
-			<div class="title w-lg-25">
-				<label for="theme">Website Backgrounds</label>
-			</div>
-				<div class="body w-lg-100">
-					<p>Change the background for the website.</p>
-					<div class="input-group mb2">
-							<select id='backgroundSelector' class="form-control" form="profile-settings" name="background" onchange="updatebgselection();">
-							{% for entry in ["fantasy", "solarpunk", "pixelart"] %}
-								<option value="{{entry}}">
-									{{entry}}
-								</option>
-							{% endfor %}
-						</select>
-					</div>
-					{% if v.background %}
-						<div class="d-flex mt-2">
-							<a class="btn btn-primary ml-auto" href="javascript:void(0)" onclick="post_toast('/settings/removebackground','1')">Remove Background</a>
-							<pre></pre>
-						</div>
-					{% endif %}
-					<div id="bgcontainer"></div>
-				</div>
-				</div>
-			</div>
-
-			<h2 class="h5">Profile Picture</h2>
-
-			<div class="settings-section rounded">
-
-				<div class="d-flex">
-
-					<div class="title w-lg-25 text-md-center">
-						<img src="{{v.profile_url}}" class="profile-pic-75">
-					</div>
-
-					<div class="body w-lg-100 my-auto">
-
-						<div class="d-flex">
-
-							<div>
+			<!-- Avatar section -->
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Avatar</h2>
+					<div class="flex flex-col md:flex-row gap-3">
+						<!-- Avatar -->
+						<img loading="lazy" src="{{v.profile_url}}" class="flex-shrink-0 w-14 h-14 rounded object-cover">
+						<!-- Form -->
+						<div>
+							<div class="flex space-x-3">
+								<!-- Buttons -->
 								<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
-										Update<input type="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} hidden name="profile" onchange="form.submit()">
+									<label class="block px-4 py-2 bg-gradient-to-t from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+										Change avatar
+										<input {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} type="file" accept="image/*" hidden name="profile" onchange="form.submit()">
 									</label>
 								</form>
-
+								{% if v.profileurl %}
+								<div>
+									<form action="/settings/delete/profile" method="post">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										<button type="submit" value="Delete" class="block px-4 py-2 bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-red-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+											<i class="fas fa-trash-alt fa-fw mr-1"></i>
+											Delete
+										</button>
+									</form>
+								</div>
+								{% endif %}
 							</div>
-
-							{% if v.profileurl %}
-							<div>
-								<form action="/settings/delete/profile" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
-								</form>
-							</div>
-							{% endif %}
-
+							<!-- Help text -->
+							<p class="mt-2 text-xs text-gray-400 mt-3">
+								JPG, PNG, GIF files are supported. Max file size is {% if v and v.patron %}8{% else %}4{% endif %} MB.
+							</p>
 						</div>
-
-						<div class="text-small-extra text-muted mt-3">JPG, PNG, GIF files are supported. Max file size is {% if v and v.patron %}8{% else %}4{% endif %} MB.</div>
-
 					</div>
-
 				</div>
-
+				<!-- Banner section -->
+				<div class="px-4 py-4 shadow-inset-t-white-10">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Banner</h2>
+					<div class="flex flex-col md:flex-row gap-3">
+						<!-- Avatar -->
+						<img loading="lazy" src="{{v.profile_url}}" class="flex-shrink-0 w-48 h-20 rounded object-cover">
+						<!-- Form -->
+						<div>
+							<div class="flex space-x-3">
+								<!-- Buttons -->
+								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									<label class="block px-4 py-2 bg-gradient-to-t from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+										Change banner
+										<input {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} type="file" accept="image/*" hidden name="banner" onchange="form.submit()">
+									</label>
+								</form>
+								{% if v.bannerurl %}
+								<div>
+									<form action="/settings/delete/banner" method="post">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										<button type="submit" value="Delete" class="block px-4 py-2 bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-red-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+											<i class="fas fa-trash-alt fa-fw mr-1"></i>
+											Delete
+										</button>
+									</form>
+								</div>
+								{% endif %}
+							</div>
+							<!-- Help text -->
+							<p class="mt-2 text-xs text-gray-400 mt-3">
+								JPG, PNG, GIF files are supported. Max file size is {% if v and v.patron %}8{% else %}4{% endif %} MB.
+							</p>
+						</div>
+					</div>
+				</div>
 			</div>
-			<h2 class="h5">Profile Banner</h2>
 
-			<div class="settings-section rounded">
+<!-- 			<div class="settings-section rounded">
 
-				<div class="d-flex">
+				<div class="flex">
 
 					<div class="title w-lg-75 text-md-center">
-						<img src="{{v.banner_url}}" class="banner-pic-135">
+						<img loading="lazy" src="{{v.banner_url}}" class="banner-pic-135">
 					</div>
 
 					<div class="body w-lg-100 my-auto">
 
-						<div class="d-flex">
+						<div class="flex">
 
 							<div>
 								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
@@ -265,322 +120,229 @@
 
 				</div>
 
+			</div> -->
+
+			<div class="rounded-lg px-4 py-4 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<h2 class="font-bold text-lg font-heading leading-normal mb-2">Linked accounts</h2>
+				<div class="flex flex-col space-y-2 divide-y divide-y-800">
+					<div>
+						{% if v.discord_id %}
+						<form action="/settings/remove_discord" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="submit" class="px-4 py-2 bg-gradient-to-t from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none" value="Disconnect Discord">
+						</form>
+						<p class="mt-2 text-xs text-gray-400 mt-3">
+							Disconnecting your Discord account will remove you from the {{'SITE_NAME' | app_config}} Discord server.
+						</p>
+						{% else %}
+						<a href="/discord" class="inline-block px-4 py-2 bg-gradient-to-t from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+							<i class="fab fa-discord fa-fw mr-1"></i>
+							Link Discord
+						</a>
+						<p class="mt-2 text-xs text-gray-400 mt-3">
+							Link your Discord account to join the {{'SITE_NAME' | app_config}} Discord server.
+						</p>
+						{% endif %}
+					</div>
+				</div>
 			</div>
 
-			<h2 class="h5" id="referral" name="referral">Referrals</h2>
+			<!-- Referral & RSS -->
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Referral code</h2>
+					<input type="text" onclick="this.select()" value="{{request.host_url}}signup?ref={{v.username}}" class="p-0.5 bg-gray-900 border border-gray-900 text-xs text-gray-300 rounded-sm w-72">
+					<small class="block mt-1 text-gray-400">
+						You have referred <strong>{{v.referral_count}}</strong> members.
+						<a href="/badges" class="text-pink-500">Learn more</a>.
+					</small>
+				</div>
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">RSS Feed</h2>
+					<input type="text" onclick="this.select()" value="{{('/rss/hot/all') | full_link}}" class="p-0.5 bg-gray-900 border border-gray-900 text-xs text-gray-300 rounded-sm w-44">
+					<small class="block mt-1 text-gray-400">
+						You can change the feed by replacing <strong>hot</strong> with whatever sorting you want and <strong>all</strong> with whatever time filter you want.
+					</small>
+				</div>
+			</div>
 
-			<p class="text-small text-muted">Invite a friend.</p>
-
-			<div class="settings-section rounded">
-
-				<div class="d-lg-flex">
-
-					<div class="title w-lg-25">
-						<label for="referral_code">Referral code</label>
-					</div>
-
-					<div class="body w-lg-100">
-
-						<div class="input-group">
-
-							<input type="text" readonly="" class="form-control copy-link" id="referral_code" value="{{request.host_url}}signup?ref={{v.username}}" data-clipboard-text="{{request.host_url}}signup?ref={{v.username}}">
-
-							<span class="input-group-append" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="You have referred {{v.referral_count}} user{{'s' if v.referral_count != 1 else ''}} so far. {% if v.referral_count==0 %}¯\_(ツ)_/¯{% elif v.referral_count>10%}Wow!{% endif %}">
-								<span class="input-group-text text-primary border-0">
-									<i class="far fa-user mr-1" aria-hidden="true"></i>{{v.referral_count}}</span>
-								</span>
-
-							</div>
-
-							<div class="text-small-extra text-muted mt-3">Share this link with a friend. {% if v.referral_count==0 %} When they sign up, you'll get the bronze recruitment badge. <a href="/badges">Learn more.</a>{% elif v.referral_count<10 %} When you refer 10 friends, you'll receive the silver recruitment badge. <a href="/badges">Learn more.</a>{% elif v.referral_count<100 %} When you refer 100 friends, you'll receive the gold recruitment badge. <a href="/badges">Learn more</a>.{% endif %}</div>
-
-							</div>
-
+			<!-- Profile Username -->
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Username</h2>
+					<form action="/settings/name_change" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="text" name="name" class="block rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" value="{{v.username}}">
+						<small class="block mt-2 text-gray-400">3-25 characters, including letters, numbers, _ , and -</small>
+						<small class="block mt-1 text-gray-400">
+							Your original username will always stay reserved for you: <strong>{{v.original_username}}</strong>
+						</small>
+						<div class="mt-4">
+							<input class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none" type="submit" value="Change display name">
 						</div>
+					</form>
+				</div>
+			</div>
 
-					</div>
-
-					
-					{% if 'pcm' not in request.host %}
-						<h2 class="h5" name="referral">Linked Accounts</h2>
-
-						<p class="text-small text-muted">Manage your connections to other services.</p>
-
-						<div class="settings-section rounded">
-
-							<div class="d-lg-flex">
-
-							<div class="title w-lg-25">
-								<label>Discord</label>
-							</div>
-
-							<div class="body w-lg-100">
-
-								{% if v.discord_id %}
-									<form action="/settings/remove_discord" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
-									</form>
-
-									<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{'SITE_NAME' | app_config}} Discord server.</div>
-								{% else %}
-									<a href="/discord" class="btn btn-primary">Link Discord</a>
-									<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{'SITE_NAME' | app_config}} Discord server.</div>
-								{% endif %}
-
-							</div>
-
-							</div>
-
+			<!-- Profile Anthem -->
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Profile Anthem</h2>
+					<form action="/settings/song_change" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input type="text" name="song" class="block rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" value="{% if v.song %}https://youtu.be/{{v.song}}{% endif %}" placeholder='Enter a youtube video link here'>
+						<small class="block mt-2 text-gray-400">Must be a youtube video link</small>
+						<div class="mt-4">
+							<input class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none" type="submit" value="Change profile anthem">
 						</div>
-					{% endif %}
+					</form>
+				</div>
+			</div>
 
-
-					<h2 class="h5" name="referral">RSS Feed</h2>
-
-					<p class="text-small text-muted">Subscribe to the {{'SITE_NAME' | app_config}} RSS feed.</p>
-
-					<div class="settings-section rounded">
-
-						<div class="d-lg-flex">
-
-							<div class="body w-lg-100">
-
-								<input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{('/rss/hot/all') | full_link}}" data-clipboard-text="{{('/rss/hot/all') | full_link}}">
-
-								<div class="text-small-extra text-muted mt-3">You can change the feed by replacing "hot" with whatever sorting you want and "all" with whatever time filter you want.</div>
-
-							</div>
-
+			<!-- Username Color -->
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Username Color</h2>
+					<form action="/settings/namecolor" id="color-code-form" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input class="block rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" type="text" name="color" id="color-code" maxlength="6" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
+						<div class="mt-4">
+							<input class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none" type="submit" value="Change username color">
 						</div>
+					</form>
+				</div>
+			</div>
 
+			{% if not v.flairchanged %}
+			<!-- Flair -->
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Flair</h2>
+					<form id="profile-settings" action="/settings/title_change" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input id="customtitlebody" type="text" name="title" class="rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" placeholder='Enter a flair here' value="{% if v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
+						<button type="button" class="inline-block ml-2 text-gray-500 hover:text-gray-200" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji">
+								<i class="fas fa-smile-beam"></i>
+						</button>
+						<small class="block mt-2 text-gray-400">Limit of 100 characters</small>
+						<div class="mt-4">
+							<input class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none" type="submit" value="Change flair">
+						</div>
+					</form>
+				</div>
+			</div>
+			{% endif %}
+
+			<!-- Title Color -->
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Flair Color</h2>
+					<form action="/settings/titlecolor" id="color-code-form" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input class="block rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" type="text" name="color" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
+						<div class="mt-4">
+							<input class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none" type="submit" value="Change flair color">
+						</div>
+					</form>
+				</div>
+			</div>
+
+			{% if v.verified %}
+			<!-- Bluecheck Color -->
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Bluecheck Color</h2>
+					<form action="/settings/titlecolor" id="color-code-form" method="post">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<input class="block rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" type="text" name="color" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
+						<div class="mt-4">
+							<input class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none" type="submit" value="Change flair color">
+						</div>
+					</form>
+				</div>
+			</div>
+			{% endif %}
+
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Bio</h2>
+					<form id="profile-bio" action="/settings/profile" method="post" enctype="multipart/form-data">
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+						<div class="input-group mb-2">
+							<textarea  id="bio-text" class="form-control rounded" aria-label="With textarea" placeholder="Tell the community a bit about yourself." rows="3" name="bio" form="profile-bio" maxlength="1500">{% if v.bio %}{{v.bio}}{% endif %}</textarea>
+						</div>
+						<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-white border-opacity-10">
+							<li>
+								<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold">
+									<i class="fas fa-bold fa-fw fa-sm"></i>
+								</button>
+							</li>
+							<li>
+								<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeItalics('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize">
+									<i class="fas fa-italic fa-fw fa-sm"></i>
+								</button>
+							</li>
+							<li>
+								<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeQuote('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote">
+									<i class="fas fa-quote-right fa-fw fa-sm"></i>
+								</button>
+							</li>
+							<li>
+								<button type="button" class="text-gray-500 hover:text-gray-400" onclick="commentForm('bio-text');getGif()">
+									<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
+								</button>
+							</li>
+							<li>
+								<button type="button" class="text-gray-500 hover:text-gray-400" onclick="loadEmojis('bio-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">
+									<i class="fas fa-smile-beam fa-fw fa-sm"></i>
+								</button>
+							</li>
+						</ul>
+						<!-- <div class="hidden">
+							<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></pre>
+							&nbsp;
+							<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-italic" aria-hidden="true" onclick="makeItalics('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></pre>
+							&nbsp;
+							<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Quote"></pre>
+							&nbsp;
+							<pre style="padding-top:0.7rem;line-height:1;" class="btn btn-secondary format d-inline-block m-0 font-weight-bolder text-uppercase" onclick="commentForm('bio-text');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</pre>
+							&nbsp;
+							<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('bio-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></pre>
+							&nbsp;
+							<label class="inline-block ml-2 text-gray-500 hover:text-gray-200">
+								<div id="filename-show"><i class="far fa-image"></i></div>
+								<input id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" onchange="document.getElementById('filename-show').innerHTML='image';" hidden>
+							</label>
+						</div> -->
+						<small class="block mt-2 text-gray-400">Limit of 1500 characters</small>
+						<div class="mt-4">
+							<input class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none" type="submit" value="Save bio">
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<!-- Privacy -->
+			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+				<div class="px-4 py-4">
+					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Privacy</h2>
+					<div class="mb-4">
+						<input type="checkbox" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast('/settings/profile?private='+document.getElementById('privateswitch').checked)">
+						<label for="privateswitch" class="inline-block pl-2 text-gray-400">Hide my posts and comments from others and search engines.</label>
 					</div>
+					<div>
+						<input type="checkbox" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="post_toast('/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
+						<label for="nofollowswitch" class="inline-block pl-2 text-gray-400">Prevent other users from following you.</label>
+					</div>
+				</div>
+			</div>
 
-						<h2 class="h5" id="bio" name="bio">Your Profile</h2>
-
-						<p class="text-small text-muted">Edit how others see you on {{'SITE_NAME' | app_config}}.</p>
 
 						<div class="settings-section rounded mb-0">
 
-							<div class="body d-lg-flex border-bottom">
+							<!-- <div class="body d-lg-flex border-bottom">
 
-								<label class="text-black w-lg-25">Username</label>
-
-								<div class="w-lg-100">
-									<p>Your original username will always stay reserved for you: <code>{{v.original_username}}</code></p>
-
-									<form action="/settings/name_change" method="post">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<input type="text" name="name" class="form-control" value="{{v.username}}">
-										<small>3-25 characters, including letters, numbers, _ , and -</small>
-										<div class="d-flex mt-2">
-											<input class="btn btn-primary ml-auto" type="submit" value="Change Display Name">
-										</div>
-									</form>
-								</div>
-
-							</div>
-							<div class="body d-lg-flex border-bottom">
-
-								<label class="text-black w-lg-25">Profile Anthem</label>
-
-								<div class="w-lg-100">
-									<p>Must be a youtube video link.</p>
-
-									<form action="/settings/song_change" method="post">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<input type="text" name="song" class="form-control" value="{% if v.song %}https://youtu.be/{{v.song}}{% endif %}" placeholder='Enter a youtube video link here' >
-										<br><small>In some browsers, users have to click at least once anywhere in the profile page for the anthem to play.</small>
-										<div class="d-flex mt-2">
-											<input class="btn btn-primary ml-auto" type="submit" value="Change Profile Anthem">
-										</div>
-									</form>
-								</div>
-
-							</div>
-							<div class="body d-lg-flex border-bottom">
-
-								<label class="text-black w-lg-25">Name Color</label>
-
-								<div class="d-flex">
-
-									<form action="/settings/namecolor" id="color-form" method="post" class="color-picker" style="line-height: 0">
-											<input type="hidden" name="formkey" value="{{v.formkey}}">
-
-											{% for color in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
-											<input type="radio" name="color" id="color-{{color}}" value="{{color}}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()">
-											<label class="color-radio" for="color-{{color}}">
-												<span style="background-color: #{{color}}">
-												{% if v.namecolor.lower() == color %}
-													<i class="fas fa-check text-white"></i>
-												{% else %}
-													&nbsp;
-												{% endif %}
-												</span>
-											</label>
-											{% endfor %}
-
-									</form>
-
-								</div>
-
-								<p class="text-small mb-2">Or type a color code:</p>
-								<div class="d-flex">
-								<form action="/settings/namecolor" id="color-code-form" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<input class="form-control" type="text" name="color" id="color-code" maxlength="6" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
-									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-								</form>
-								</div>
-							</div>							
-
-							{% if not v.flairchanged %}
-							<div class="body d-lg-flex border-bottom">
-
-								<label class="text-black w-lg-25">Flair</label>
-
-								<div class="w-lg-100">
-
-									<form id="profile-settings" action="/settings/title_change" method="post">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<input id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
-										<div class="d-flex mt-2">
-											<a class="format" href="javascript:void(0)"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji"></i></a>
-											&nbsp;&nbsp;&nbsp;
-											<small>Limit of 100 characters</small>
-											<input class="btn btn-primary ml-auto" id="titleSave" type="submit" value="Change Flair">
-										</div>
-									</form>
-								</div>
-
-							</div>
-							{% endif %}
-
-							<div class="body d-lg-flex border-bottom">
-
-								<label class="text-black w-lg-25">Flair Color</label>
-
-								<div class="d-flex">
-
-									<form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
-											<input type="hidden" name="formkey" value="{{v.formkey}}">
-
-											{% for titlecolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
-											<input type="radio" name="titlecolor" id="titlecolor-{{titlecolor}}" value="{{titlecolor}}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()">
-											<label class="color-radio" for="titlecolor-{{titlecolor}}">
-												<span style="background-color: #{{titlecolor}}">
-												{% if v.titlecolor.lower() == titlecolor %}
-													<i class="fas fa-check text-white"></i>
-												{% else %}
-													&nbsp;
-												{% endif %}
-												</span>
-											</label>
-											{% endfor %}
-
-									</form>
-
-								</div>
-		
-									
-
-								<p class="text-small mb-2">Or type a color code:</p>
-								<div class="d-flex">
-								<form action="/settings/titlecolor" id="color-code-form" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<input class="form-control" type="text" name="titlecolor" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
-									<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-								</form>
-								</div>
-
-							</div>
-
-
-
-
-
-							{% if v.verified %}
-
-								<div class="body d-lg-flex border-bottom">
-
-									<label class="text-black w-lg-25">Bluecheck Color</label>
-		
-									<div class="d-flex">
-		
-										<form action="/settings/verifiedcolor" id="verifiedcolor-form" method="post" class="color-picker" style="line-height: 0">
-												<input type="hidden" name="formkey" value="{{v.formkey}}">
-		
-											{% for verifiedcolor in ['ff66ac','805ad5','62ca56','38a169','80ffff','2a96f3','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6', 'f8db58'] %}
-												<input type="radio" name="verifiedcolor" id="verifiedcolor-{{verifiedcolor}}" value="{{verifiedcolor}}" {% if v.verifiedcolor == verifiedcolor %}checked{% endif %} onclick="document.getElementById('verifiedcolor-form').submit()">
-												<label class="color-radio" for="verifiedcolor-{{verifiedcolor}}">
-													<span style="background-color: #{{verifiedcolor}}">
-													{% if v.verifiedcolor and v.verifiedcolor.lower() == verifiedcolor %}
-														<i class="fas fa-check text-white"></i>
-													{% else %}
-														&nbsp;
-													{% endif %}
-													</span>
-												</label>
-											{% endfor %}
-		
-										</form>
-		
-									</div>
-
-									<p class="text-small mb-2">Or type a color code:</p>
-									<div class="d-flex">
-									<form action="/settings/verifiedcolor" id="color-code-form" method="post">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<input class="form-control" type="text" name="verifiedcolor" id="color-code" maxlength="6" value="{% if v.verifiedcolor %}{{v.verifiedcolor}}{% endif %}">
-										<label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
-									</form>
-									</div>
-	
-								</div>	
-							{% endif %}
-
-
-
-							<div class="body d-lg-flex border-bottom">
-								
-								<label class="text-black w-lg-25">{% if request.host == 'rdrama.net' and v.id == 2050 %}Friends{% else %}Bio{% endif %}</label>
-
-								<div class="w-lg-100">						
-									<form id="profile-bio" action="/settings/profile" method="post" enctype="multipart/form-data">
-										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<div class="input-group mb-2">
-											<textarea  id="bio-text" class="form-control rounded" aria-label="With textarea" placeholder="Tell the community a bit about yourself." rows="3" name="bio" form="profile-bio" maxlength="1500">{% if v.bio %}{{v.bio}}{% endif %}</textarea>
-										</div>
-										<div class="d-flex">
-											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></pre>
-											&nbsp;
-											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-italic" aria-hidden="true" onclick="makeItalics('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></pre>
-											&nbsp;
-											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-quote-right" aria-hidden="true" onclick="makeQuote('bio-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Quote"></pre>
-											&nbsp;
-											<pre style="padding-top:0.7rem;line-height:1;" class="btn btn-secondary format d-inline-block m-0 font-weight-bolder text-uppercase" onclick="commentForm('bio-text');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</pre>
-											&nbsp;
-											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('bio-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></pre>
-											&nbsp;
-											<label class="btn btn-secondary format d-inline-block m-0">
-												<div id="filename-show"><i class="far fa-image"></i></div>
-												<input id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" onchange="document.getElementById('filename-show').innerHTML='image';" hidden>
-											</label>
-										</div>
-										<pre></pre>
-										<div class="d-flex">
-											<small>Limit of 1500 characters</small>
-											<input class="btn btn-primary ml-auto" id="bioSave" type="submit" value="Save Changes">
-										</div>
-									</form>
-								</div>
-
-							</div>
-
-
-							<div class="body d-lg-flex border-bottom">
-
-								<label class="text-black w-lg-25">{% if request.host == 'rdrama.net' and v.id == 2050 %}Bio{% else %}Friends{% endif %}</label>
+								<label class="text-black w-lg-25">Friends</label>
 							
 								<div class="w-lg-100">						
 									<form id="profile-friends" action="/settings/profile" method="post" enctype="multipart/form-data">
@@ -589,17 +351,17 @@
 											<textarea  id="friends-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
 										</div>
 										<pre></pre>
-										<div class="d-flex">
+										<div class="flex">
 											<small>Limit of 500 characters</small>
 											<input class="btn btn-primary ml-auto" id="friendsSave" type="submit" value="Save Changes">
 										</div>
 									</form>
 								</div>
 							
-							</div>
+							</div> -->
 							
 
-							<div class="body d-lg-flex border-bottom">
+							<!-- <div class="body d-lg-flex border-bottom">
 
 								<label class="text-black w-lg-25">Enemies</label>
 							
@@ -610,14 +372,14 @@
 											<textarea  id="enemies-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your enemies on the site..." rows="3" name="enemies" form="profile-enemies" maxlength="1500">{% if v.enemies %}{{v.enemies}}{% endif %}</textarea>
 										</div>
 										<pre></pre>
-										<div class="d-flex">
+										<div class="flex">
 											<small>Limit of 500 characters</small>
 											<input class="btn btn-primary ml-auto" id="enemiesSave" type="submit" value="Save Changes">
 										</div>
 									</form>
 								</div>
 							
-							</div>
+							</div> -->
 
 
 							{% if v.patron or v.id == 1904 %}
@@ -630,7 +392,7 @@
 										<div class="input-group mb-2">
 											<textarea  id="sig-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter a signature..." rows="3" name="sig" form="profile-sig" maxlength="200">{% if v.sig %}{{v.sig}}{% endif %}</textarea>
 										</div>
-										<div class="d-flex">
+										<div class="flex">
 											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('sig-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></pre>
 											&nbsp;
 											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-italic" aria-hidden="true" onclick="makeItalics('sig-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></pre>
@@ -642,7 +404,7 @@
 											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('sig-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></pre>
 										</div>
 										<pre></pre>
-										<div class="d-flex">
+										<div class="flex">
 											<small>Limit of 200 characters</small>
 											<input class="btn btn-primary ml-auto" id="sigSave" type="submit" value="Save Changes">
 										</div>
@@ -652,53 +414,32 @@
 							</div>
 							{% endif %}
 
-						<div class="d-lg-flex border-bottom">
-
-							<div class="title w-lg-25">
-								<label for="privateswitch">Private Mode</label>
-							</div>
-
-							<div class="body w-lg-100">
-
-								<div class="custom-control custom-switch">
-									<input type="checkbox" class="custom-control-input" id="privateswitch" name="private"{% if v.is_private%} checked{% endif %} onchange="post_toast('/settings/profile?private='+document.getElementById('privateswitch').checked)">
-									<label class="custom-control-label" for="privateswitch"></label>
-								</div>
-
-								<span class="text-small-extra text-muted">This will hide your post and comment history from others. We will also ask search engines to not index your profile page. (Your content will still be accessible via direct link.)</span>
-
-							</div>
-
-						</div>
-						<div class="d-lg-flex border-bottom">
-
-							<div class="title w-lg-25">
-								<label for="nofollowswitch">Disable Subscriptions</label>
-							</div>
-
-							<div class="body w-lg-100">
-
-								<div class="custom-control custom-switch">
-									<input type="checkbox" class="custom-control-input" id="nofollowswitch" name="nofollow"{% if v.is_nofollow%} checked{% endif %} onchange="post_toast('/settings/profile?nofollow='+document.getElementById('nofollowswitch').checked)">
-									<label class="custom-control-label" for="nofollowswitch"></label>
-								</div>
-
-								<span class="text-small-extra text-muted">Prevent other users from following you.</span>
-
-							</div>
-
-						</div>
 					</div>
 					</div>
+{% endblock %}
 
-				</div>
+{% block modals %}
+{% include "emoji_modal.html" %}
+{% include "gif_modal.html" %}
+{% endblock %}
 
-		</div>
 
-	</div>
+{% block scripts %}
+<script src="/assets/js/settings_profile.js?v=57"></script>
 
-</div>
-
-</div>
-
+<script>
+	document.onpaste = function(event) {
+		var focused = document.activeElement;
+		if (focused.id == 'bio-text') {
+			f=document.getElementById('file-upload');
+			files = event.clipboardData.files
+			filename = files[0].name.toLowerCase()
+			if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+			{
+				f.files = files;
+				document.getElementById('filename-show').textContent = filename;
+			}
+		}
+	}
+</script>
 {% endblock %}
