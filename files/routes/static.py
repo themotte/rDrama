@@ -142,26 +142,9 @@ def cached_chart():
 @app.get("/paypigs")
 @admin_level_required(3)
 def patrons(v):
-	query = g.db.query(
-			User.id, User.username, User.patron, User.namecolor,
-			AwardRelationship.kind.label('last_award_kind'), func.count(AwardRelationship.id).label('last_award_count')
-		).filter(AwardRelationship.submission_id==None, AwardRelationship.comment_id==None, User.patron > 0) \
-		.group_by(User.username, User.patron, User.id, User.namecolor, AwardRelationship.kind) \
-		.order_by(User.patron.desc(), AwardRelationship.kind.desc()) \
-		.join(User).all()
+	users = g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc()).all()
 
-	result = {}
-	for row in (r._asdict() for r in query):
-		user_id = row['id']
-		if user_id not in result:
-			result[user_id] = row
-			result[user_id]['awards'] = {}
-
-		kind = row['last_award_kind']
-		if kind in AWARDS.keys():
-			result[user_id]['awards'][kind] = (AWARDS[kind], row['last_award_count'])
-
-	return render_template("patrons.html", v=v, result=result)
+	return render_template("patrons.html", v=v, users=users)
 
 @app.get("/admins")
 @app.get("/badmins")
