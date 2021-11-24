@@ -174,7 +174,7 @@
 					</div> 
 				</div>
 
-				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
 				{% else %}<pre></pre>
 				{% endif %}
 
@@ -192,7 +192,7 @@
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
-				{% if "pcm" in request.host %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
+				{% if u.basedcount %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
 
 				{% if u.bio_html %}
 					<pre></pre>
@@ -241,16 +241,7 @@
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'coin-transfer')">Gift {{'COINS_NAME' | app_config}}</a>
 
-						{% if 'pcm' in request.host and v.admin_level > 1 %} 
-							{% if u.admin_level == 0 %}
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-							{% elif v.admin_level > 2 %}
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
-							{% endif %}
-						{% endif %}
-
-						{% if 'rama' in request.host and v.admin_level > 2 %} 
+						{% if v.admin_level > 2 %} 
 							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -258,15 +249,6 @@
 							<a id="unfakeadmin" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_fake_admin','fakeadmin','unfakeadmin')">Remove fake admin</a>
 
 							{% if u.admin_level > 1 %}
-								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
-							{% endif %}
-						{% endif %}
-
-						{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level > 1 %}
-							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
-							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
-
-							{% if u.admin_level %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
 						{% endif %}
@@ -466,7 +448,7 @@
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="followsyou text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
-				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
 				{% else %}
 					<pre></pre>
 				{% endif %}
@@ -483,7 +465,7 @@
 					{% endif %}
 
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
-					{% if "pcm" in request.host %}
+					{% if u.basedcount %}
 						<br>Based count: {{u.basedcount}}
 					{% endif %}
 
@@ -541,16 +523,7 @@
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'coin-transfer-mobile')">Gift {{'COINS_NAME' | app_config}}</a>
 
-					{% if 'pcm' in request.host and v.admin_level > 1 %} 
-						{% if u.admin_level == 0 %}
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/make_admin')">Make admin</a>
-						{% elif v.admin_level > 2 %}
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
-						{% endif %}
-					{% endif %}
-
-					{% if 'rama' in request.host and v.admin_level > 2 %} 
+					{% if v.admin_level > 2 %} 
 						<a id="admin2" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
 						<a id="unadmin2" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
 
@@ -558,15 +531,6 @@
 						<a id="unfakeadmin2" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_fake_admin','fakeadmin2','unfakeadmin2')">Remove fake admin</a>
 
 						{% if u.admin_level > 1 %}
-							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
-						{% endif %}
-					{% endif %}
-
-					{% if 'rama' not in request.host and 'pcm' not in request.host and v.admin_level > 1 %}
-						<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
-						<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
-
-						{% if u.admin_level %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
 					{% endif %}
