@@ -207,7 +207,7 @@ class User(Base):
 	def ban_reason_link(self):
 		if self.ban_reason:
 			if self.ban_reason.startswith("/post/"): return self.ban_reason.split(" ", 1)[0]
-			if self.ban_reason.startswith("/comment/")): return self.ban_reason.split(" ", 1)[0] + "?context=9#context"
+			if self.ban_reason.startswith("/comment/"): return self.ban_reason.split(" ", 1)[0] + "?context=9#context"
 
 	@property
 	@lazy
