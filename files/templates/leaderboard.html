@@ -1,186 +1,99 @@
-{% extends "settings2.html" %}
+{% extends "default.html" %}
 
 {% block pagetitle %}Leaderboard{% endblock %}
 
-{% block content %}
-<pre class="d-none d-md-inline-block"></pre>
-<h5 style="font-weight:bold;text-align: center;">Top 25 by {{'COINS_NAME' | app_config}}</h5>
-<pre></pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th style="font-weight:bold;">#</th>
-		<th style="font-weight:bold;">Name</th>
-		<th style="font-weight:bold; text-align:right;">Coins</th>
-	</tr>
-</thead>
-{% for user in users1 %}
-	<tr>
-		<td style="font-weight:bold;">{{users1.index(user)+1}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold; text-align:right;">{{user.coins}}</td>
-	</tr>
-{% endfor %}
-</table>
-
-
-<pre>
-
-
-</pre>
-<h5 style="font-weight:bold;text-align: center;">Top 20 by coins spent in shop</h5>
-<pre>
-
-
-</pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th style="font-weight:bold;">#</th>
-		<th style="font-weight:bold;">Name</th>
-		<th style="font-weight:bold; text-align:right;">Coins</th>
-	</tr>
-</thead>
-
-{% for user in users7 %}
-	<tr>
-		<td style="font-weight:bold;">{{users7.index(user)+1}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold; text-align:right;">{{user.coins_spent}}</td>
-	</tr>
-{% endfor %}
-</table>
-
-
-<pre>
-
-
-</pre>
-<h5 style="font-weight:bold;text-align: center;">Top 15 by followers</h5>
-<pre>
-
-
-</pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th style="font-weight:bold;">#</th>
-		<th style="font-weight:bold;">Name</th>
-		<th style="font-weight:bold; text-align:right;">Followers</th>
-	</tr>
-</thead>
-{% for user in users2 %}
-	<tr>
-		<td style="font-weight:bold;">{{users2.index(user)+1}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold; text-align:right;">{{user.stored_subscriber_count}}</td>
-	</tr>
-{% endfor %}
-</table>
-<pre>
-
-
-</pre>
-<h5 style="font-weight:bold;text-align: center;">Top 10 by post count</h5>
-<pre>
-
-
-</pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th style="font-weight:bold;">#</th>
-		<th style="font-weight:bold;">Name</th>
-		<th style="font-weight:bold; text-align:right;">Posts</th>
-	</tr>
-</thead>
-{% for user in users3 %}
-	<tr>
-		<td style="font-weight:bold;">{{users3.index(user)+1}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold; text-align:right;">{{user.post_count}}</td>
-	</tr>
-{% endfor %}
-</table>
-<pre>
-
-
-</pre>
-<h5 style="font-weight:bold;text-align: center;">Top 10 by comment count</h5>
-<pre>
-
-
-</pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th style="font-weight:bold;">#</th>
-		<th style="font-weight:bold;">Name</th>
-		<th style="font-weight:bold; text-align:right;">Comments</th>
-	</tr>
-</thead>
-{% for user in users4 %}
-	<tr>
-		<td style="font-weight:bold;">{{users4.index(user)+1}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold; text-align:right;">{{user.comment_count}}</td>
-	</tr>
-{% endfor %}
-</table>
-
-
-<pre>
-
-
-</pre>
-<h5 style="font-weight:bold;text-align: center;">Top 10 by received awards</h5>
-<pre>
-
-
-</pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th style="font-weight:bold;">#</th>
-		<th style="font-weight:bold;">Name</th>
-		<th style="font-weight:bold; text-align:right;">Awards</th>
-	</tr>
-</thead>
-{% for user in users5 %}
-	<tr>
-		<td style="font-weight:bold;">{{users5.index(user)+1}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
-		<td style="font-weight:bold; text-align:right;">{{user.received_award_count}}</td>
-	</tr>
-{% endfor %}
-</table>
-
-
-{% if "pcm" in request.host %}
-	<pre>
-
-
-	</pre>
-	<h5 style="font-weight:bold;text-align: center;">Top 10 by based count</h5>
-	<pre>
-
-
-	</pre>
-	<table class="table table-striped mb-5">
-	<thead class="bg-primary text-white">
-		<tr>
-			<th style="font-weight:bold;">#</th>
-			<th style="font-weight:bold;">Name</th>
-			<th style="font-weight:bold; text-align:right;">Based count</th>
-		</tr>
-	</thead>
-	{% for user in users6 %}
-		<tr>
-			<td style="font-weight:bold;">{{users6.index(user)+1}}</td>
-			<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
-			<td style="font-weight:bold; text-align:right;">{{user.basedcount}}</td>
-		</tr>
-	{% endfor %}
-	</table>
-{% endif %}
+{% block subHeader %}
+	<div class="max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t-md bg-gradient-to-t from-gray-800 to-gray-700 sub-header-shadow">
+		<div class="col-span-full flex items-center">
+			<div>
+				<h1 class="font-bold text-xl font-heading leading-normal">
+					Leaderboards
+				</h1>
+				<ul class="mt-1 text-gray-400 text-sm flex items-center space-x-3">
+					<li>
+						<a class="{% if not '=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications">
+							Wealthiest
+						</a>
+					</li>
+					<li>
+						<a class="{% if '/notifications?posts=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications?posts=true">
+							Spenders
+						</a>
+					</li>
+					<li>
+						<a class="{% if '/notifications?messages=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications?messages=true">
+							Followers
+						</a>
+					</li>
+					<li>
+						<a class="{% if '/notifications?messages=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications?messages=true">
+							Posts
+						</a>
+					</li>
+					<li>
+						<a class="{% if '/notifications?messages=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications?messages=true">
+							Comments
+						</a>
+					</li>
+					<li>
+						<a class="{% if '/notifications?messages=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications?messages=true">
+							Awards
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 {% endblock %}
+
+{% block content %}
+<div class="col-span-full">
+	<div class="flex items-center px-4 py-4 bg-gray-800 sticky top-0">
+		<h1 class="text-2xl font-heading font-bold">
+			rDrama's 100 Greediest Users
+		</h1>
+	</div>
+	<div class="mb-4 flex flex-col bg-gray-900 rounded-lg overflow-hidden">
+		{% for user in users1 %}
+		<div class="flex items-center border-b border-gray-900 shadow-inset-t-white-05 odd:bg-gray-700 px-5 py-3 {% if v.username == user.username %}text-pink-900 text-shadow-light bg-pink-600{% elif users1.index(user) % 2 != 0 %}bg-gray-700 bg-opacity-20{% endif %}">
+			<!-- Rank -->
+			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 {{ 'text-pink-900' if v.username == user.username else 'text-gray-700' }}">
+				{{users1.index(user)+1}}
+			</h2>
+			<div class="relative">
+				<img src="{{user.profile_url}}" class="p-1 rounded border w-12 h-12 object-cover shadow-md {{ 'bg-pink-800 border-pink-900' if v.username == user.username else 'bg-white border-gray-900' }}" alt="{{ user.username }} avatar"/>
+				{% if users1.index(user)+1 == 1 %}
+				<img src="https://i.ibb.co/xFgG6yf/Coinfixed.gif" width="20px" height="12px" class="absolute -top-1 -right-2.5 object-contain"/>
+				{% endif %}
+			</div>
+			<!-- User Details -->
+			<div class="ml-3">
+				<a class="block font-heading font-bold text-xl" href="/@{{user.username}}">
+					{{user.username}}
+				</a>
+				{% if user.customtitle %}
+				<p class="text-sm" style="#{{user.namecolor}}">
+					{{user.customtitle | safe}}
+				</p>
+				{% endif %}
+			</div>
+			<div class="ml-auto mr-4">
+				<span class="text-xl font-heading {{ 'text-pink-900' if v.username == user.username else 'text-gray-300' }}">
+					{{user.coins}}
+				</span>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}
+
+<!-- user7 {{user.coins_spent}} -->
+
+<!-- user2 {{user.stored_subscriber_count}} -->
+
+<!-- user3 {{user.post_count}} -->
+
+<!-- user4 {{user.comment_count}} -->
+
+<!-- user5 {{user.received_award_count}} -->
