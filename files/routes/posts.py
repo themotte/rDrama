@@ -251,8 +251,8 @@ def edit_post(pid, v):
 	if title != p.title:
 		if v.agendaposter:
 			for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
-			title = title.replace('I ', f'@{v.username}')
-			title = censor_slurs2(title).upper().replace(' ME ', f'@{v.username}')
+			title = title.replace('I ', f'@{v.username} ')
+			title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
 
 		title_html = filter_title(title)
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
@@ -265,8 +265,8 @@ def edit_post(pid, v):
 
 		if v.agendaposter:
 			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-			body = body.replace('I ', f'@{v.username}')
-			body = censor_slurs2(body).upper().replace(' ME ', f'@{v.username}')
+			body = body.replace('I ', f'@{v.username} ')
+			body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
 
 		body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
@@ -548,8 +548,8 @@ def submit_post(v):
 
 	if v.agendaposter:
 		for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
-		title = title.replace('I ', f'@{v.username}')
-		title = censor_slurs2(title).upper().replace(' ME ', f'@{v.username}')
+		title = title.replace('I ', f'@{v.username} ')
+		title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
 
 	title_html = filter_title(title)
 	body = request.values.get("body", "").strip()
@@ -732,8 +732,8 @@ def submit_post(v):
 
 	if v.agendaposter:
 		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-		body = body.replace('I ', f'@{v.username}')
-		body = censor_slurs2(body).upper().replace(' ME ', f'@{v.username}')
+		body = body.replace('I ', f'@{v.username} ')
+		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
 
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
