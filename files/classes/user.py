@@ -204,6 +204,12 @@ class User(Base):
 
 	@property
 	@lazy
+	def ban_reason_link(self):
+		if self.ban_reason and (self.ban_reason.startswith("/post/") or self.ban_reason.startswith("/comment/")):
+			return self.ban_reason.split(" ", 1)[0]
+
+	@property
+	@lazy
 	def alts_unique(self):
 		alts = []
 		for u in self.alts:

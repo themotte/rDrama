@@ -122,7 +122,11 @@
 						</div>
 						<div class="ml-3 w-100">
 							{% if u.is_suspended %}
-								<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
+								<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}:
+									{% if u.ban_reason_link %}<a href="{{ u.ban_reason_link }}"><i class="fas fa-link"></i>{% endif %}
+										{{ u.ban_reason }}
+									{% if u.ban_reason_link %}</a>{% endif %}
+								{% endif %}</h5>
 								{% if u.unban_utc %}<h5 style="color:#ff66ac;">{{u.unban_string}}</h5>{% endif %}
 							{% endif %}
 							<div class="d-flex align-items-center mt-1 mb-2">
