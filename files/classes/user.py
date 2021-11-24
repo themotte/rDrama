@@ -202,10 +202,7 @@ class User(Base):
 	@property
 	@lazy
 	def ban_reason_link(self):
-		if not self.ban_reason:
-			return self.ban_reason
-
-		if self.ban_reason.startswith("/post/") or self.ban_reason.startswith("/comment/"):
+		if self.ban_reason and (self.ban_reason.startswith("/post/") or self.ban_reason.startswith("/comment/")):
 			return self.ban_reason.split(" ", 1)[0]
 
 	@property
