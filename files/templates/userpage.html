@@ -174,7 +174,7 @@
 					</div> 
 				</div>
 
-				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
 				{% else %}<pre></pre>
 				{% endif %}
 
@@ -192,7 +192,7 @@
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
-				{% if "pcm" in request.host %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
+				{% if u.basedcount %}<p class="text-muted">Based Count: {{u.basedcount}}</p>{% endif %}
 
 				{% if u.bio_html %}
 					<pre></pre>
@@ -448,7 +448,7 @@
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="followsyou text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
-				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
 				{% else %}
 					<pre></pre>
 				{% endif %}
@@ -465,7 +465,7 @@
 					{% endif %}
 
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
-					{% if "pcm" in request.host %}
+					{% if u.basedcount %}
 						<br>Based count: {{u.basedcount}}
 					{% endif %}
 
