@@ -195,8 +195,11 @@ def api_comment(v):
 		
 		body += f"\n\n![]({url})"
 
-	for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-	body = body.upper()
+	if v.agendaposter:
+		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
+		body = body.replace('I ', f'@{v.username}')
+		body = censor_slurs2(body).upper().replace(' ME ', f'@{v.username}')
+
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
@@ -646,8 +649,11 @@ def edit_comment(cid, v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-		body = body.upper()
+		if v.agendaposter:
+			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
+			body = body.replace('I ', f'@{v.username}')
+			body = censor_slurs2(body).upper().replace(' ME ', f'@{v.username}')
+
 		body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
