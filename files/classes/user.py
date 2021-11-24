@@ -411,9 +411,10 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
+		if self.agendaposter: return f"http://{site}/assets/images/chuds/{random.randint(1, 10)}.webp?v=1"
 		if self.profileurl: return self.profileurl
-		elif "rama" in site: return f"http://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=1"
-		else: return f"http://{site}/assets/images/default-profile-pic.webp"
+		if "rama" in site: return f"http://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=1"
+		return f"http://{site}/assets/images/default-profile-pic.webp"
 
 	@property
 	@lazy
