@@ -25,7 +25,7 @@ def feeds_user(sort='hot', t='all'):
 
 	doc, tag, text = Doc().tagtext()
 
-	with tag("feed", ("xmlns:media","http://search.yahoo.com/mrss/"), xmlns="http://www.w3.org/2005/Atom",):
+	with tag("feed", ("xmlns:media","https://search.yahoo.com/mrss/"), xmlns="https://www.w3.org/2005/Atom",):
 		with tag("title", type="text"):
 			text(f"{sort} posts from {domain}")
 
