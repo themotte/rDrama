@@ -16,8 +16,8 @@ report_postModal = function(id) {
 		xhr.withCredentials=true;
 
 		xhr.onload=function() {
-			document.getElementById("reportPostFormBefore").classList.add('d-none');
-			document.getElementById("reportPostFormAfter").classList.remove('d-none');
+			document.getElementById("reportPostFormBefore").classList.add('hidden');
+			document.getElementById("reportPostFormAfter").classList.remove('hidden');
 		};
 
 		xhr.onerror=function(){alert(errortext)};

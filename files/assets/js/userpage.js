@@ -59,9 +59,9 @@ function post_toast_callback(url, data, callback) {
 function toggleElement(group, id) {
 	for(let el of document.getElementsByClassName(group)) {
 		if(el.id != id) {
-			el.classList.add('d-none');
+			el.classList.add('hidden');
 		}
 	}
 
-	document.getElementById(id).classList.toggle('d-none');
+	document.getElementById(id).classList.toggle('hidden');
 }

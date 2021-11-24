@@ -72,8 +72,8 @@ document.getElementById("reportCommentButton").onclick = function() {
 	xhr.withCredentials=true;
 
 	xhr.onload=function() {
-		document.getElementById("reportCommentFormBefore").classList.add('d-none');
-		document.getElementById("reportCommentFormAfter").classList.remove('d-none');
+		document.getElementById("reportCommentFormBefore").classList.add('hidden');
+		document.getElementById("reportCommentFormAfter").classList.remove('hidden');
 	};
 
 	xhr.onerror=function(){alert(errortext)};
@@ -84,7 +84,7 @@ document.getElementById("reportCommentButton").onclick = function() {
 
 function openReplyBox(id) {
 	const element = document.getElementById(`reply-to-${id}`);
-	element.classList.remove('d-none')
+	element.classList.remove('hidden')
 
 	element.getElementsByTagName('textarea')[0].focus()
 }
@@ -95,9 +95,9 @@ toggleEdit=function(id){
 	box=document.getElementById('comment-edit-body-'+id);
 	actions = document.getElementById('comment-' + id +'-actions');
 
-	comment.classList.toggle("d-none");
-	form.classList.toggle("d-none");
-	actions.classList.toggle("d-none");
+	comment.classList.toggle("hidden");
+	form.classList.toggle("hidden");
+	actions.classList.toggle("hidden");
 	autoExpand(box);
 };
 
