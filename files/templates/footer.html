@@ -1,0 +1,98 @@
+<div class="w-full px-4">
+	<div class="w-full max-w-screen-2xl mx-auto flex flex-col py-4 items-start bg-gray-800 rounded-t-xl">
+		<div class="grid grid-cols-4 divide-x divide-gray-900">
+			<div class="col-span-full md:col-span-1 px-4 py-2 shadow-inset-r-white-05">
+				<h2 class="font-bold text-gray-500 text-xl font-heading leading-normal mb-2">
+					Noteworthy Threads
+				</h2>
+			</div>
+			<div class="col-span-full md:col-span-1 px-4 py-2 shadow-inset-r-white-05">
+				<h2 class="font-bold text-gray-500 text-xl font-heading leading-normal mb-2">
+					Quote of the Week
+				</h2>
+				<div class="flex flex-col gap-2">
+					<div class="bg-gray-700 shadow-inner border border-gray-900 rounded-md overflow-hidden">
+						<p class="p-2 text-sm font-serif italic">
+							"Not like anything that happens on this niche website will ever matter so it's not worth caring about but is it just me or has the 1984 shit really stepped up in the past few weeks?"
+						</p>
+						<div class="p-2 bg-gray-700 border-t border-gray-800 shadow-inset-t-white-05">
+							<img src="https://i.imgur.com/47oAlsK.jpg" class="inline-block flex-shrink-0 object-cover h-9 w-9 p-[3px] bg-white border border-gray-800" alt="avatar"/>
+							<strong class="pl-1 font-heading text-sm">
+								<a href="/post/24615/not-like-anything-that-happens-on" class="text-gray-300 hover:text-gray-200">@turkey_privilege</a>
+							</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-span-full md:col-span-1 px-4 py-2 shadow-inset-r-white-05">
+				<h2 class="font-bold text-gray-500 text-xl font-heading leading-normal mb-2">
+					Newest Members
+				</h2>
+				<ul class="flex flex-wrap gap-x-3 gap-y-2 mb-3">
+					{% for user in kek %}
+					<li class="w-10 flex-shrink-0 overflow-hidden">
+						<img src="{{ user.profile_url }}" class="object-cover h-10 w-10 rounded bg-white inner-shadow" alt="avatar"/>
+						<small class="block">{{ user.username }}</small>
+					</li>
+					{% endfor %}
+				</ul>
+				{% if not v %}
+				<div class="leading-none">
+					<a href="/signup" class="text-pink-500 font-bold text-xs">Become an rdramanaut</a>
+				</div>
+				<div class="leading-none mt-1">
+					<a href="/login" class="text-gray-500 font-bold text-xs">or log in</a>
+				</div>
+				{% endif %}
+			</div>
+			<div class="col-span-full md:col-span-1 px-4 py-2 shadow-inset-r-white-05">
+				<h2 class="font-bold text-gray-500 text-xl font-heading leading-normal mb-2">
+					rdrama
+				</h2>
+				<p class="mt-1 text-xs text-gray-500">
+					rdrama caters to drama in all forms such as: Real life, videos, images, gossip, rumors, news sites, Reddit, and Beyond™. There is no drama we won't touch, and we want it all.
+				</p>
+			</div>
+		</div>
+		<div class="mt-4 w-full">
+			<ul class="mx-auto max-w-2xl flex flex-col md:flex-row md:items-center md:justify-center md:space-x-3 md:divide-x md:divide-gray-700 text-xs font-medium leading-none">
+				<li>
+					<a href="#" class="text-gray-500 hover:text-gray-400">
+						About
+					</a>
+				</li>
+				<li class="mt-2 md:mt-0 md:pl-3">
+					<a href="/contact" class="text-gray-500 hover:text-gray-400">
+						Contact
+					</a>
+				</li>
+				<li class="mt-2 md:mt-0 md:pl-3">
+					<a href="#" class="text-gray-500 hover:text-gray-400">
+						Welcome Guide
+					</a>
+				</li>
+				<li class="mt-2 md:mt-0 md:pl-3">
+					<a href="/rules" class="text-gray-500 hover:text-gray-400">
+						Community Etiquette
+					</a>
+				</li>
+				<li class="mt-2 md:mt-0 md:pl-3">
+					<a href="/changelog" class="text-gray-500 hover:text-gray-400">
+						Changelog
+					</a>
+				</li>
+				<li class="mt-2 md:mt-0 md:pl-3">
+					<a href="https://github.com/Aevann1/Drama" class="text-gray-500 hover:text-gray-400">
+						GitHub
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="w-full mt-4 px-4 text-sm text-gray-600">
+			<div class="flex flex-col md:flex-row justify-between pt-4 shadow-inset-t-white-05 border-t border-gray-900 leading-none">
+				<small>©2021 Copyright rdrama.net</small>
+				<small class="hidden md:block">Deus, rex, et bussy</small>
+			</div>
+		</div>
+	</div>
+</div>

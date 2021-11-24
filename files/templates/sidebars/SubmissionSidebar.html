@@ -1,0 +1,152 @@
+<div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex flex-col flex-shrink-0 py-4">
+	<div v-cloak class="flex flex-col rounded-md border border-gray-900 overflow-hidden mb-4">
+		{% if v %}
+		<button @click="store.vote(1)" class="group flex justify-between w-full px-4 py-3 bg-gradient-to-t hover:from-yellow-500 hover:to-yellow-600 border-b border-gray-900 rounded-t-md text-shadow-t shadow-inset-t-white-10 text-base font-medium text-gray-300 active:text-yellow-500 active:shadow-inner active:outline-none" v-bind:class="[[ store.voteType === 1 ? 'from-yellow-600 to-yellow-500' : 'from-gray-700 to-gray-700']]">
+			<span>
+				🕋 Halal
+			</span>
+			<span class="leading-none ml-3 px-2 py-1 border rounded text-sm font-bold group-hover:bg-yellow-700 group-hover:border-yellow-700" style="border-top-color: rgba(0, 0, 0, 0.07);" v-bind:class="[[ store.voteType === 1 ? 'bg-yellow-700 border-yellow-700' : 'border-gray-800 bg-gray-800']]">
+				[[ store.voteType === 1 ? store.ups + 1 : store.ups ]]
+			</span>
+		</button>
+		{% if environ.get('DISABLE_DOWNVOTES') != '1' %}
+		<button v-cloak @click="store.vote(-1)" class="group flex justify-between w-full px-4 py-3 bg-gradient-to-t hover:from-pink-700 hover:to-pink-800 rounded-b-md text-shadow-t shadow-inset-t-white-10 text-base font-medium text-gray-300 active:text-pink-500 active:shadow-inner active:outline-none" v-bind:class="[[ store.voteType === -1 ? 'from-pink-800 to-pink-700' : 'from-gray-800 to-gray-700']]">
+			<span>
+				🐷 Haram
+			</span>
+			<span class="leading-none ml-3 px-2 py-1 border rounded text-sm font-bold group-hover:bg-pink-800 group-hover:border-pink-800" style="border-top-color: rgba(0, 0, 0, 0.07);" v-bind:class="[[ store.voteType === -1 ? 'bg-pink-800 border-pink-800' : 'border-gray-800 bg-gray-800']]">
+				[[ store.voteType === -1 ? store.downs + 1 : store.downs ]]
+			</span>
+		</button>
+		{% endif %}
+		{% endif %}
+	</div>
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-900 shadow-inset-t-white-05"/>
+	<div>
+		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
+			Accolades
+		</h2>
+		<!-- Give awards if none -->
+		{% if not p.awards %}
+		<p class="text-sm text-gray-500">No awards earned yet...</p>
+		<button class="text-sm text-pink-600 hover:text-pink-500" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')">
+				Give award
+		</button>
+		{% endif %}
+		<!-- Icons -->
+		<ul class="flex flex-wrap gap-3 items-center">
+			<!-- Awards -->
+			{% if p.awards %}
+			{% for a in p.awards %}
+			<li>
+				<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
+			</li>
+			{% endfor %}
+			{% endif %}
+			<!-- Banned -->
+			{% if p.bannedfor and p.author.banned_by %}
+			<li>
+				<i class="fad fa-gavel fa-sm fa-fw text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i>
+			</li>
+			{% endif %}	
+			<!-- Stickied -->
+			{% if p.stickied %}
+			<li>
+				<i id="pinned-{{p.id}}" class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom"></i>
+				<span class="font-heading text-xs text-pink-500">
+					Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
+				</span>
+			</li>
+			{% endif %}
+			<!-- Pinned -->
+			{% if p.is_pinned %}
+			<li>
+				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned to profile"></i>
+			</li>
+			{% endif %}
+			<!-- NSFW -->
+			{% if p.over_18 %}
+			<li>
+				<span class="px-2 py-1 rounded-sm bg-gradient-to-t from-red-700 to-red-500 shadow-inner text-xs text-white">+18</span>
+			</li>
+			{% endif %}
+			<!-- Private -->
+			{% if p.private %}
+			<li>
+				<span class="badge border-warning border-1 text-small-extra">Draft</span>
+			</li>
+			{% endif %}
+		</ul>
+	</div>
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-900 shadow-inset-t-white-05"/>
+	<div>
+		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
+			Link
+		</h2>
+		<input type="text" onclick="this.select()" value="https://rdrama.net/post/{{ p.id }}" class="m-0.5 p-0.5 bg-gray-900 border border-gray-900 text-xs text-gray-400 rounded-sm w-44">
+	</div>
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-900 shadow-inset-t-white-05"/>
+	<div>
+		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
+			Share Post
+		</h2>
+		<div class="flex flex-wrap items-center space-x-2">
+			<a class="leading-4 text-gray-400 hover:text-gray-300" href="">
+				<img src="/assets/images/icons/reddit.gif" class="w-7 h-7 object-contain" alt="Share this post on Reddit"/>
+			</a>
+			<a class="leading-4 text-gray-400 hover:text-gray-300" href="">
+				<img src="/assets/images/icons/twitter.gif" class="w-7 h-7 object-contain" alt="Share this post on Twitter"/>
+			</a>
+		</div>
+	</div>
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-900 shadow-inset-t-white-05"/>
+	<div>
+		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
+			DramaMetric™
+		</h2>
+		<ul class="flex flex-col space-y-1 text-gray-500">
+			<li>
+				<p class="text-sm">
+					<strong>{{ p.views }}</strong> {{ 'view' if p.views == 1 else 'views' }} on this post
+				</p>
+			</li>
+			<li>
+				<p class="text-sm">
+					<strong class="text-pink-600">{{ ups + downs }}</strong> {{ 'vote' if ups + downs == 1 else 'votes' }} on this post
+				</p>
+			</li>
+			<li>
+				<p class="text-sm">
+					<strong class="text-pink-600">{{ p.views }} {{ 'member' if p.views == 1 else 'members' }}</strong>  following this post
+				</p>
+			</li>
+		</ul>
+	</div>
+</div>
+
+{% block scripts %}
+
+<script type="module">
+	import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'
+	const store = reactive({
+		ups: {{ ups }},
+		downs: {{ downs }},
+		voteType: {{ voted }},
+		count: {{ score }},
+		vote(type) {
+			this.voteType = this.voteType === type ? 0 : type;
+			const xhr = new XMLHttpRequest();
+			xhr.open("POST", "/vote/post/" + {{ p.id }} + "/" + this.voteType, true);
+			const form = new FormData()
+			form.append("formkey", formkey());
+			xhr.withCredentials=true;
+			xhr.send(form);
+		}
+	})
+	createApp({
+		store,
+		$delimiters: ['[[', ']]']
+	}).mount()
+</script>
+
+{% endblock %}

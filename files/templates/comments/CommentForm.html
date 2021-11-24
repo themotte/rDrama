@@ -1,0 +1,54 @@
+{% if v %}
+<form id="reply-to-{{p.fullname}}" class="flex flex-wrap w-full" action="/comment" method="post">
+	<input type="hidden" name="formkey" value="{{v.formkey}}">
+	<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
+	<input id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
+	<div class="comment-box rounded-lg border border-gray-900 bg-gray-900 shadow-inner w-full">
+		<textarea maxlength="10000" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="w-full rounded-t-md p-3 text-gray-200 focus:text-gray-900 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
+		<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-white border-opacity-10">
+			<li>
+				<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('reply-form-body-{{p.fullname}}')">
+					<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
+				</button>
+			</li>
+			<li>
+				<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeItalics('reply-form-body-{{p.fullname}}')">
+					<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
+				</button>
+			</li>
+			<li>
+				<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeQuote('reply-form-body-{{p.fullname}}')">
+					<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
+				</button>
+			</li>
+			<li>
+				<button type="button" id="gif-reply-btn-{{p.fullname}}" class="text-gray-500 hover:text-gray-400" onclick="commentForm('reply-form-body-{{p.fullname}}');getGif()">
+					<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
+				</button>
+			</li>
+			<li>
+				<button type="button" id="emoji-reply-btn-{{p.fullname}}" class="text-gray-500 hover:text-gray-400" onclick="loadEmojis('reply-form-body-{{p.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
+				</button>
+			</li>
+			{% if v %}
+			<li>
+				<button type="button" class="text-gray-500 hover:text-gray-400">
+					<div id="filename-show-reply-{{p.fullname}}">
+						<i class="fas fa-camera fa-fw fa-sm"></i>
+					</div>
+					<input id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{p.fullname}}').innerHTML='image';" hidden>
+				</button>
+			</li>
+			{% endif %}
+		</ul>
+	</div>
+	<div class="flex w-full justify-between mt-2">
+		<a href="/formatting" target="_blank" class="inline-block text-sm text-gray-600">
+			Formatting help
+		</a>
+		<button type="button" id="save-reply-to-{{p.fullname}}" form="reply-to-{{p.fullname}}" class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">
+			Comment
+		</button>
+	</div>
+</form>
+{% endif %}

@@ -1,0 +1,47 @@
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Delete your {{'SITE_NAME' | app_config}} account</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"><i class="far fa-times"></i></span>
+				</button>
+			</div>
+			<div class="" id="deleteFormContainer">
+				<form id="deleteAccountForm" method="post" action="/settings/delete_account">
+					<input type="hidden" name="formkey" value="{{v.formkey}}">
+					<div class="modal-body body">
+
+						<div class="d-lg-flex">
+
+							<label for="delete-password" class="w-lg-25" id="email-password-label">Password</label>
+
+							<div class="w-lg-100">
+
+								<input autocomplete="new-password" type="password" class="form-control mb-2" id="delete-password" name="password" required>
+
+							</div>
+
+						</div>
+
+						{% if v.mfa_secret %}
+						<div class="d-lg-flex mt-3">
+
+							<label for="delete-mfa" class="w-lg-25" id="email-password-label">Two-Factor Code</label>
+
+							<div class="w-lg-100">
+
+								<input autocomplete="new-password" type="text" class="form-control mb-2" id="delete-mfa" name="twofactor" required>
+
+							</div>
+
+						</div>
+						{% endif %}
+
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+</div>

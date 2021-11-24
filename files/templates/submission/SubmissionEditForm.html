@@ -1,0 +1,49 @@
+<div id="edit-post-body-{{p.id}}" class="hidden">
+	<form id="post-edit-form-{{p.id}}" class="flex flex-col w-full" action="/edit_post/{{p.id}}" method="post">
+		<input type="hidden" name="formkey" value="{{v.formkey}}">
+		<input type="hidden" name="current_page" value="{{request.path}}">
+		<input name="title" class="shadow-inner rounded-lg p-2 bg-gray-900 focus:bg-white border border-gray-700 border-dashed text-gray-200 focus:text-gray-900 mb-2" required placeholder="title" value="{{p.title}}">
+		<div class="rounded-lg border border-gray-700 border-dashed bg-gray-900 shadow-inner w-full">
+			<textarea name="body" maxlength="10000" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="w-full rounded-t-md p-3 text-gray-200 focus:text-gray-900 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea>
+			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-white border-opacity-10">
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('post-edit-box-{{p.id}}')">
+						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
+					</button>
+				</li>
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeItalics('post-edit-box-{{p.id}}')">
+						<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
+					</button>
+				</li>
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeQuote('post-edit-box-{{p.id}}')">
+						<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
+					</button>
+				</li>
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="commentForm('post-edit-box-{{p.id}}');getGif()">
+						<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
+					</button>
+				</li>
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="loadEmojis('post-edit-box-{{p.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
+					</button>
+				</li>
+			</ul>
+		</div>
+		<div class="flex w-full justify-between mt-2">
+			<a href="/formatting" target="_blank" class="inline-block text-sm text-gray-600">
+				Formatting help
+			</a>
+			<div class="ml-auto flex">
+				<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" onclick="togglePostEdit('{{p.id}}')">
+					Cancel
+				</button>
+				<button form="post-edit-form-{{p.id}}" class="ml-2 block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none">
+					Save edit
+				</button>
+			</div>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,78 @@
+<div id="comment-form-space-{{c.fullname}}" class="flex flex-wrap w-full">
+	<form id="reply-to-t3_{{c.id}}" action="/comment" method="post" class="input-group" enctype="multipart/form-data"> 
+		<input type="hidden" name="formkey" value="{{v.formkey}}"> 
+		<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
+		<input id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}">
+		<div class="comment-box rounded-lg border border-gray-900 bg-gray-900 shadow-inner w-full"> 
+			<textarea maxlength="10000" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="w-full rounded-t-md p-3 text-gray-200 focus:text-gray-900 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Add your reply..." rows="3"></textarea>
+			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-white border-opacity-10">
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('reply-form-body-{{c.fullname}}')">
+						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
+					</button>
+				</li>
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeItalics('reply-form-body-{{c.fullname}}')">
+						<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
+					</button>
+				</li>
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeQuote('reply-form-body-{{c.fullname}}')">
+						<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
+					</button>
+				</li>
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()">
+						<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
+					</button>
+				</li>
+				<li>
+					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="loadEmojis('reply-form-body-{{c.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
+					</button>
+				</li>
+				{% if v %}
+				<li>
+					<label for="file-upload-reply-{{c.fullname}}" class="text-gray-500 hover:text-gray-400">
+						<div id="filename-show-reply-{{c.fullname}}">
+							<i class="fas fa-camera fa-fw fa-sm"></i>
+						</div>
+						<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
+					</label>
+				</li>
+				{% endif %}
+			</ul>
+		</div>
+		<div class="flex w-full justify-between mt-2">
+			<a href="/formatting" target="_blank" class="inline-block text-sm text-gray-600">
+				Formatting help
+			</a>
+			<div class="ml-auto flex">
+				<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('hidden')">
+					Cancel
+				</button>
+				<button type="button" id="save-reply-to-{{c.fullname}}" class="ml-2 block px-4 py-2 bg-gradient-to-t from-pink-800 to-pink-700 hover:from-pink-700 hover:to-pink-800 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');">
+					Comment
+				</button>
+			</div>
+		</div>
+		<!-- <div class="comment-format" id="comment-format-bar-{{c.id}}"> 
+			<label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.fullname}}">
+				<span id="gif-reply-btn-{{c.fullname}}" class="font-weight-bolder text-uppercase" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
+			</label> 
+			&nbsp;
+			<label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.fullname}}">
+				<i id="emoji-reply-btn-{{c.fullname}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></i>
+			</label>
+			&nbsp;
+			<label class="btn btn-secondary format d-inline-block m-0" for="file-upload-reply-{{c.fullname}}">
+				<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
+				<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
+			</label>
+			<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('hidden')" class="hidden d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
+			<a id="save-reply-to-{{c.fullname}}" class="hidden d-md-block btn btn-primary text-muted ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
+		</div>
+		</div>
+		<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('hidden')" class="md:hidden btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
+		<a id="save-reply-to-{{c.fullname}}" class="md:hidden btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a> -->
+	</form>
+</div>

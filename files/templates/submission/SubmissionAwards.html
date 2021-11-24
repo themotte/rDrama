@@ -1,0 +1,10 @@
+<!-- // Import Special Event Awards Template -->
+<!-- {% if specialEvent %} -->
+	<!-- {% include "/{{ event.name }}/Awards.html" %} -->
+<!-- {% endif %} -->
+
+<!-- // Static Awards -->
+
+{% if p.award_count("train") %}
+	<!-- {% include "/awards/Trains.html" %} -->
+{% endif %}

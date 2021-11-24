@@ -1,0 +1,255 @@
+<ul class="flex items-center space-x-5 text-sm text-gray-500">
+
+	{% if v and request.path.startswith('/@') and v.admin_level == 0%}
+	{% if voted==1 %}
+	<li class="list-inline-item arrow-up hidden md:block px-2 mx-0 comment-{{c.id}}-up active"></li>
+	{% endif %}
+	{% elif v %}
+
+	<li id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="list-inline-item arrow-up upvote-button hidden md:block px-2 mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></li>
+
+	{% else %}
+	<li id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="list-inline-item arrow-up hidden md:block mr-2" onclick="location.href='/login';">
+	</li>
+
+	{% endif %}
+
+	<li class="list-inline-item hidden md:block m-0">
+		<span class="points" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="+{{ups}} | -{{downs}}"><span id="comment-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{score}}</span></span>
+	</li>
+
+	{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
+	{% if voted==-1 %}
+	<li class="list-inline-item arrow-down hidden md:block px-2 mx-0 comment-{{c.id}}-down active"></li>
+	{% endif %}
+	{% elif v %}
+	<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '-1')" class="list-inline-item arrow-down downvote-button hidden md:block px-2 mx-0 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></li>
+
+	{% else %}
+
+	{% if environ.get('DISABLE_DOWNVOTES') != '1' %}
+	<li id="comment-{{c.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '-1')" class="list-inline-item arrow-down hidden md:block" onclick="location.href='/login';">
+	</li>
+	{% endif %}
+
+	{% endif %}
+
+	{% if v %}
+	<li class="list-inline-item text-muted hidden md:block">
+		<button href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')">
+			<i class="fas fa-gift fa-fw mr-2" aria-hidden="true"></i>Give Award
+		</button>
+	</li>
+	<li id="unsave-{{c.id}}" class="hidden {% if c.id in v.saved_comment_idlist() %}md:block{% endif %}">
+		<button onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')">
+			<i class="fas fa-bookmark fa-fw mr-2"></i>Unsave
+		</button>
+	</li>
+	<li id="save-{{c.id}}" class="hidden {% if c.id not in v.saved_comment_idlist() %}md:block{% endif %}">
+		<button onclick="post_toast3('/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')">
+			<i class="far fa-bookmark fa-fw mr-2"></i>Save
+		</button>
+	</li>
+	<li>
+		<button onclick="openReplyBox('{{c.id}}')">
+			<i class="fas fa-reply fa-fw mr-2"></i>Reply
+		</button>
+	</li>
+	<li class="hidden md:block">
+		<button class="copy-link hover:text-gray-400" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=10#context">
+			<i class="fas fa-link fa-fw mr-2"></i>Copy link
+		</button>
+	</li>
+	{% endif %}
+
+	<li class="hidden md:block">
+		<div class="dropdown">
+			<button type="button" id="dropdownComment-{{c.id}}Actions" data-bs-toggle="dropdown" aria-expanded="false">
+				<i class="fas fa-ellipsis-h fa-fw"></i>
+			</button>
+			<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownComment-{{c.id}}Actions">
+				<li class="hidden md:block">
+					<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" href="/votes?link={{c.fullname}}">
+						<i class="fas fa-arrows-v fa-sm fa-fw mr-4"></i>Votes
+					</a>
+				</li>
+				<li class="hidden md:block">
+					<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" {% if v %}href="{{c.permalink}}?context=10#context"{% else %}href="/logged_out{{c.permalink}}?context=10#context"{% endif %}>
+						<i class="fas fa-book-open fa-sm fa-fw mr-4"></i>Context
+					</a>
+				</li>
+				{% if v %}
+				<li class="hidden md:block">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)">
+						<i class="fas fa-flag fa-sm fa-fw mr-4"></i>Report
+					</button>
+				</li>
+				{% endif %}
+				{% if v and c.parent_submission and c.author_id==v.id %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
+				<li class="hidden md:block">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="toggleEdit('{{c.id}}')">
+						<i class="fas fa-edit fa-sm fa-fw mr-4"></i>Edit
+					</button>
+				</li>
+
+				{% if c.deleted_utc > 0 %}
+				<li class="hidden md:block">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="post_toast('/undelete/comment/{{c.id}}')">
+						<i class="fas fa-trash-alt fa-sm fa-fw mr-4"></i>Undelete
+					</button>
+				</li>
+				{% else %}
+				<li class="hidden md:block">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')">
+						<i class="fas fa-trash-alt fa-sm fa-fw mr-4"></i>Delete
+					</button>
+				</li>
+				{% endif %}
+
+				{% endif %}
+				{% if v and v.admin_level==6 and v.id==c.author_id %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
+				<li id="undistinguish-{{c.id}}" class="hidden {% if c.distinguish_level %}md:block{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')">
+						<i class="fas fa-id-badge text-info fa-sm fa-fw mr-4"></i>Undistinguish
+					</button>
+				</li>
+				<li id="distinguish-{{c.id}}" class="hidden {% if not c.distinguish_level %}md:block{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')">
+						<i class="fas fa-id-badge text-info fa-sm fa-fw mr-4"></i>Distinguish
+					</button>
+				</li>
+				{% endif %}
+
+				{% if v and not v.id==c.author_id and not (c.post and c.post.award_count("ghosts")) %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
+				<li class="hidden {% if c.is_blocking %}md:block{% endif %} text-green-600">
+					<button id="unblock-{{c.id}}" class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="post_toast3('/settings/unblock?username={{c.author.username}}','block-{{c.id}}','unblock-{{c.id}}')">
+						<i class="fas fa-eye-slash fa-sm fa-fw mr-4"></i>Unblock user
+					</button>
+				</li>
+				<li id="prompt-{{c.id}}" class="hidden text-red-600">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="post_toast3('/settings/block?username={{c.author.username}}','prompt-{{c.id}}','unblock-{{c.id}}')">
+						<i class="fas fa-eye-slash fa-sm fa-fw mr-4"></i>Are you sure?
+					</button>
+				</li>
+				<li class="hidden {% if not c.is_blocking %}md:block{% endif %} text-red-600">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" id="block-{{c.id}}" onclick="document.getElementById('block-{{c.id}}').classList.toggle('md:block');document.getElementById('prompt-{{c.id}}').classList.toggle('md:block');">
+						<i class="fas fa-eye-slash fa-sm fa-fw mr-4"></i>Block user
+					</button>
+				</li>
+				{% endif %}
+
+				{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
+				<li id="unpin-{{c.id}}" class="hidden {% if c.is_pinned %}md:block{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
+						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Unpin
+					</button>
+				</li>
+				<li id="pin-{{c.id}}" class="hidden {% if not c.is_pinned %}md:block{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
+						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Pin
+					</button>
+				</li>
+				{% endif %}
+
+				{% if v and v.admin_level>=3 %}
+				{% if "/reported/" in request.path %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
+				<li class="hidden md:block">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-green-600 fa-sm fa-fw mr-4"></i>Approve</button>
+				</li>
+				<li class="hidden md:block">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-red-600 fa-sm fa-fw mr-4"></i>Remove</button>
+				</li>
+				{% else %}
+				<li id="approve-{{c.id}}" class="hidden {% if c.is_banned %}md:block{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')">
+						<i class="fas fa-check text-green-600 fa-sm fa-fw mr-4"></i>Approve
+					</button>
+				</li>
+				<li id="remove-{{c.id}}" class="hidden {% if not c.is_banned %}md:block{% endif %}"> 
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')">
+						<i class="fas fa-ban text-red-600 fa-sm fa-fw mr-4"></i>Remove
+					</button>
+				</li>
+				{% endif %}
+				{% endif %}
+
+				{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
+				<li id="unmark-{{c.id}}" class="hidden {% if c.over_18 %}md:block{% endif %} text-red-600">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="post_toast3('/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')">
+						<i class="fas fa-eye-evil text-red-600 fa-sm fa-fw mr-4"></i>Unmark +18
+					</button>
+				</li>
+				<li id="mark-{{c.id}}" class="hidden {% if not c.over_18 %}md:block{% endif %} text-red-600">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="post_toast3('/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')">
+						<i class="fas fa-eye-evil fa-sm fa-fw mr-4"></i>Mark +18
+					</button>
+				</li>
+				{% endif %}
+
+				{% if v and v.admin_level==6 and v.id != c.author_id %}
+				<li id="unban-{{c.id}}" class="hidden {% if c.author.is_suspended %}md:block{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="post_toast3('/unban_user/{{c.author_id}}','ban-{{c.id}}','unban-{{c.id}}')">
+						<i class="fas fa-user-slash text-green-600 fa-sm fa-fw mr-4"></i>Unban user
+					</button>
+				</li>
+				<li id="ban-{{c.id}}" class="hidden {% if not c.author.is_suspended %}md:block{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{ c.author.id }}', '{{c.author.username}}')">
+						<i class="fas fa-user-slash text-red-600 fa-sm fa-fw mr-4"></i>Ban user
+					</button>
+				</li>
+				{% endif %}
+
+				{% if v and v.admin_level >=4 and c.oauth_app %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
+				<li class="hidden md:block">
+					<a href="{{c.oauth_app.permalink}}/comments" class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700">
+						<i class="fas fa-code fa-sm fa-fw mr-4"></i>API App
+					</a>
+				</li>
+				{% endif %}
+			</ul>
+		</div>
+	</li>
+
+	<li class="block md:hidden">
+		<button data-bs-toggle="modal" data-bs-target="#actionsModal-{{c.id}}" data-bs-focus="false">
+			<i class="fas fa-ellipsis-h fa-fw mr-2"></i>
+		</button>
+	</li>
+	{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
+	{% if voted==1 %}
+	<li class="list-inline-item arrow-up d-inline-block md:hidden mr-2 comment-{{c.id}}-up active"></li>
+	{% endif %}
+	{% elif v %}
+	<li id="comment-mobile-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment-mobile', '{{c.id}}', '1')" class="list-inline-item arrow-up upvote-button d-inline-block md:hidden mx-0 pr-1 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></li>
+	{% else %}
+	<li id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="list-inline-item arrow-up d-inline-block md:hidden mx-0 pr-1" onclick="location.href='/login';"></li>
+	{% endif %}
+	<li class="list-inline-item d-inline-block md:hidden mx-0"><span class="points" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="+{{ups}} | -{{downs}}"><span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{score}}</span></span></li>
+	{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
+	{% if voted==-1 %}
+	<li class="list-inline-item arrow-down d-inline-block md:hidden mr-2 comment-{{c.id}}-up active"></li>
+	{% endif %}
+	{% elif v %}
+	<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-mobile-{{c.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('comment-mobile', '{{c.id}}', '-1')" class="list-inline-item arrow-down downvote-button d-inline-block md:hidden mx-0 pl-1 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></li>
+	{% else %}
+	<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '-1')" class="list-inline-item arrow-down mx-0 pl-1 d-inline-block md:hidden" onclick="location.href='/login';"></li>
+	{% endif %}
+</ul>
