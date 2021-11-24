@@ -201,7 +201,7 @@ def monthly(v):
 			elif u.patron == 2: procoins = 5000
 			elif u.patron == 3: procoins = 10000
 			elif u.patron == 4: procoins = 25000
-			elif u.patron == 5 or u.patron == 8: procoins = 50000
+			elif u.patron == 5: procoins = 50000
 
 			u.procoins += procoins
 			send_notification(u.id, f"You were given {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")

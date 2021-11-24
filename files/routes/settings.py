@@ -28,7 +28,7 @@ tiers={
 	"(Renthog)": 2,
 	"(Landchad)": 3,
 	"(Terminally online turboautist)": 4,
-	"(Footpig)": 5,
+	"(Rich Bich)": 5,
 	}
 
 @app.post("/settings/removebackground")
@@ -508,7 +508,7 @@ def gumroad(v):
 	elif v.patron == 2: procoins = 5000
 	elif v.patron == 3: procoins = 10000
 	elif v.patron == 4: procoins = 25000
-	elif v.patron == 5 or v.patron == 8: procoins = 50000
+	elif v.patron == 5: procoins = 50000
 
 	v.procoins += procoins
 	send_notification(v.id, f"You were given {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")

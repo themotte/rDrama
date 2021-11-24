@@ -214,23 +214,23 @@ BADGES = {
 	},
 	21: {
 		'name': 'Paypig',
-		'description': 'Contributed at least $5/month'
+		'description': 'Contributed at least $5'
 	},
 	22: {
 		'name': 'Renthog',
-		'description': 'Contributed at least $10/month'
+		'description': 'Contributed at least $10'
 	},
 	23: {
 		'name': 'Landchad',
-		'description': 'Contributed at least $20/month'
+		'description': 'Contributed at least $20'
 	},
 	24: {
 		'name': 'Terminally online turboautist',
-		'description': 'Contributed at least $50/month'
+		'description': 'Contributed at least $50'
 	},
 	25: {
-		'name': 'Footpig',
-		'description': 'Contributed at least $100/month'
+		'name': 'Rich Bich',
+		'description': 'Contributed at least $100'
 	},
 	26: {
 		'name': 'Agendaposter',
@@ -239,10 +239,6 @@ BADGES = {
 	27: {
 		'name': 'Lolcow',
 		'description': 'Beautiful and valid milk provider'
-	},
-	28: {
-		'name': 'Rich Bich',
-		'description': 'Contributed $500'
 	},
 	58: {
 		'name': 'Diamond Recruiter',
