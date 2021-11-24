@@ -142,7 +142,7 @@ def cached_chart():
 @app.get("/paypigs")
 @admin_level_required(3)
 def patrons(v):
-	users = g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc()).all()
+	users = g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc(), User.id).all()
 
 	return render_template("patrons.html", v=v, users=users)
 
