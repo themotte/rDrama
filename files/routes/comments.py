@@ -195,6 +195,8 @@ def api_comment(v):
 		
 		body += f"\n\n![]({url})"
 
+	for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
+	body = body.upper()
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
@@ -594,7 +596,7 @@ def api_comment(v):
 	
 	g.db.commit()
 
-	if v.agendaposter and random.randint(1, 10) < 7:
+	if v.agendaposter and random.randint(1, 10) < 4:
 		if request.host == 'rdrama.net':
 			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
 		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
@@ -643,8 +645,10 @@ def edit_comment(cid, v):
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html = sanitize(body_md)
+
+		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
+		body = body.upper()
+		body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 

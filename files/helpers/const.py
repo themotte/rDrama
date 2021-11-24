@@ -4,6 +4,28 @@ import re
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 
+AJ_REPLACEMENTS = {
+	':': '',
+	"'": '',
+	'-': '',
+	'.': '',
+	'!': '',
+	'"': '',
+	';': '',
+
+	'their': '$#3$1',
+	'there': 'their',
+	'$#3$1': 'there',
+
+	"you're": '$#3$2',
+	'your': "you're",
+	'$#3$2': 'your',
+
+	"too": '$#3$3',
+	'to': "too",
+	'$#3$3': 'to',
+}
+
 SLURS = {
 	"retarded": "r-slurred",
 	"retard": "r-slur",
