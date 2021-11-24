@@ -8,18 +8,21 @@
 	.comment .comment-body {
 		padding: 3px 0;
 	}
-	.comment-anchor {
-		margin-top: -75px;
-		padding: 1px;
-	}
-	.comment-anchor::before {
-		content: '';
-		display: block;
-		padding-top: 75px;
-	}
 	.comment-anchor:target {
-		background: rgba(255,255,255,0.2);
-		padding: 12px;
+		transition:all 0.5s ease-in-out;
+		animation: blink normal 1s ease-in-out;
+	}
+
+	@keyframes blink {
+		0% {
+			background-color: rgba(255,255,255,0.1)
+		}
+		50% {
+			background-color: rgba(255,255,255,0.2)
+		}
+		100% {
+			background-color: rgba(255,255,255,0.1)
+		}
 	}
 </style>
 
