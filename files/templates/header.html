@@ -24,8 +24,8 @@
 					<img loading="lazy" height="30" src="/assets/images/{{'SITE_NAME' | app_config}}/headericon.webp?v=3">
 					{% if "gigachadlife" in request.host %}
 						<span style="font-weight: bold; font-size: 1.2rem;">GigaChadLife</span>
-					{% elif 'pcm' not in request.host %}
-						<img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/logo.webp" height="20">
+					{% else %}
+						<img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/logo.webp?v=1" height="20">
 					{% endif %}
 				</a>
 			</div>
