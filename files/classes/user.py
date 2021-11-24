@@ -418,7 +418,7 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
-		if self.agendaposter: return f"http://{site}/assets/images/defaultpictures/agendaposter/{random.randint(1, 15)}.webp?v=1"
+		if self.agendaposter: return f"http://{site}/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?v=1"
 		if self.profileurl: return self.profileurl
 		if "rama" in site: return f"http://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=1"
 		return f"http://{site}/assets/images/default-profile-pic.webp"
