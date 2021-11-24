@@ -4,6 +4,37 @@ import re
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 
+AJ_REPLACEMENTS = {
+	':': '',
+	"'": '',
+	'-': '',
+	'.': '',
+	'!': '',
+	'"': '',
+	';': '',
+
+	'their': '$#3$1',
+	'there': 'their',
+	'$#3$1': 'there',
+
+	"you're": '$#3$2',
+	'your': "you're",
+	'$#3$2': 'your',
+
+	"too": '$#3$3',
+	'to': "too",
+	'$#3$3': 'to',
+
+	'$#3$3': 'to',
+	'$#3$3': 'to',
+	'$#3$3': 'to',
+
+	'she': 'they',
+	'her': 'they',
+	'he': 'they',
+	'him': 'they',
+}
+
 SLURS = {
 	"retarded": "r-slurred",
 	"retard": "r-slur",
@@ -21,8 +52,8 @@ SLURS = {
 	"kill yourself": "keep yourself safe",
 	"kys": "keep yourself safe",
 	"kyle": "Kylie",
-	"nig": "I LOVE BIG BLACK COCK IN MY BUSSY",
-	"nigger": "I LOVE BIG BLACK COCK IN MY BUSSY",
+	"nig": "🏀",
+	"nigger": "🏀",
 	"rapist": "male feminist",
 	"steve akins": "penny verity oaken",
 	"trannie": "🚂🚃🚃",
@@ -158,6 +189,9 @@ def sub_matcher(match: re.Match) -> str:
 def censor_slurs(body: str, logged_user) -> str:
 	if not logged_user or logged_user.slurreplacer: body = SLUR_REGEX.sub(sub_matcher, body)
 	return body
+
+def censor_slurs2(body: str) -> str:
+	return SLUR_REGEX.sub(sub_matcher, body)
 
 BADGES = {
 	1: {

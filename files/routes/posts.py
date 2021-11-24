@@ -104,7 +104,7 @@ def post_id(pid, anything=None, v=None):
 
 	if v and request.path.startswith('/logged_out'): v = None
 
-	if v and v.agendaposter and random.randint(1, 10) < 3:
+	if v and v.agendaposter and random.randint(1, 20) == 1:
 		if request.host == 'rdrama.net':
 			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
 		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
@@ -249,6 +249,11 @@ def edit_post(pid, v):
 		elif len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
+		if v.agendaposter:
+			for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
+			title = title.replace('I ', f'@{v.username}')
+			title = censor_slurs2(title).upper().replace(' ME ', f'@{v.username}')
+
 		title_html = filter_title(title)
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
 		p.title = title
@@ -257,8 +262,13 @@ def edit_post(pid, v):
 	if body != p.body:
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html = sanitize(body_md)
+
+		if v.agendaposter:
+			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
+			body = body.replace('I ', f'@{v.username}')
+			body = censor_slurs2(body).upper().replace(' ME ', f'@{v.username}')
+
+		body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
 		bans = filter_comment_html(body_html)
 		if bans:
@@ -535,6 +545,12 @@ def submit_post(v):
 
 	title = request.values.get("title", "").strip()
 	url = request.values.get("url", "").strip()
+
+	if v.agendaposter:
+		for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
+		title = title.replace('I ', f'@{v.username}')
+		title = censor_slurs2(title).upper().replace(' ME ', f'@{v.username}')
+
 	title_html = filter_title(title)
 	body = request.values.get("body", "").strip()
 
@@ -714,8 +730,12 @@ def submit_post(v):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
-	body_md = CustomRenderer().render(mistletoe.Document(body))
-	body_html = sanitize(body_md)
+	if v.agendaposter:
+		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
+		body = body.replace('I ', f'@{v.username}')
+		body = censor_slurs2(body).upper().replace(' ME ', f'@{v.username}')
+
+	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 400
 
@@ -987,7 +1007,7 @@ def submit_post(v):
 
 	g.db.commit()
 
-	if v.agendaposter and random.randint(1, 10) < 7:
+	if v.agendaposter and random.randint(1, 10) < 4:
 		if request.host == 'rdrama.net':
 			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
 		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
