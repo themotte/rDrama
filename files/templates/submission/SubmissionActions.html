@@ -94,11 +94,6 @@
 						<i class="fas fa-heart fa-sm fa-fw mr-4"></i>Votes
 					</a>
 				</li>
-				<li>
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700"data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')">
-						<i class="fas fa-flag fa-sm fa-fw mr-4"></i>Report
-					</button>
-				</li>
 				<!-- Requires author -->
 				{% if v and v.id==p.author_id %}
 				<li>
@@ -224,6 +219,14 @@
 					</a>
 				</li>
 				{% endif %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
+				<li>
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700"data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')">
+						<i class="fas fa-flag fa-sm fa-fw mr-4"></i>Report
+					</button>
+				</li>
 			</ul>
 		</div>
 	</li>
