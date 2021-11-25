@@ -102,7 +102,7 @@
 									<div class="text-sm text-gray-400">{{a['description']}}</div>
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap">
-									<span class="inline-flex px-1 py-0.5 text-xs text-blue-900 text-shadow-light bg-blue-400 font-bold leading-5 rounded">
+									<span class="inline-flex px-1 py-0.5 text-xs text-green-900 text-shadow-light bg-green-400 font-bold leading-5 rounded">
 										{{a['price']}}
 									</span>
 								</td>
@@ -111,7 +111,7 @@
 								</td>
 								{% set kind = a['kind'] %}
 								<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-									<button class="ml-auto block px-4 py-2 bg-gradient-to-t from-green-700 to-green-600 hover:from-green-600 hover:to-green-700 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-100 focus:text-green-500 focus:outline-none {% if v.coins < a['price'] %}disabled{% endif %}" onclick="post_toast('/buy/{{kind}}')">
+									<button class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-700 to-pink-600 hover:from-pink-600 hover:to-pink-700 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none {% if v.coins < a['price'] %}disabled{% endif %}" onclick="post_toast('/buy/{{kind}}')">
 										Buy
 									</button>
 									{% if v.procoins and a['price'] < 3600 %}
