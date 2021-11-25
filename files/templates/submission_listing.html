@@ -114,12 +114,12 @@
 				<span>{{p.views}} views</span>
 
 				{% if p.private %}
-				<span class="px-1 py-0.5 text-xs text-yellow-900 text-shadow-light bg-yellow-400 font-bold border border-yellow-500 rounded">
+				<span class="px-1 py-0.5 text-xs text-yellow-900 text-shadow-light bg-yellow-400 font-bold leading-normal rounded">
 					Draft
 				</span>
 				{% endif %}
 				{% if p.active_flags %}
-				<button class="px-1 py-0.5 text-xs text-red-900 text-shadow-light bg-red-400 font-bold border border-red-500 rounded" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">{{p.active_flags}} Reports
+				<button class="px-1 py-0.5 text-xs text-red-900 text-shadow-light bg-red-400 font-bold leading-normal rounded" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">{{p.active_flags}} Reports
 				</button>
 				{% endif %}
 
