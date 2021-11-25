@@ -5,6 +5,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.test {
+  @apply text-red-700 font-3xl;
+}
+
 *,
 *::before,
 *::after {
