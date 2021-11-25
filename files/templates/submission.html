@@ -306,6 +306,11 @@
 
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp">{{p.age_string}}</span>
 
+						{% if p.edited_utc %}
+						Edited
+						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp">{{p.edited_string}}</span>
+						{% endif %}
+
 						{% if p.realurl(v) %}
 						<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>({{p.domain}})
 						</a>
@@ -313,10 +318,6 @@
 						<span>(text post)</span>
 						{% endif %}
 
-						{% if p.edited_utc %}
-						Edited
-						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp">{{p.edited_string}}</span>
-						{% endif %}
 						<span>{{p.views}} views</span>
 					</div>
 

@@ -94,19 +94,29 @@
 					{% endif %}
 				</button>
 				{% if p.author.customtitle %}
-				<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;
-					{% if p.author.quadrant %}
-						<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">
-					{% endif %}
-					{{p.author.customtitle | safe}}
-				</bdi>
+					<bdi style="color: #{{p.author.titlecolor}}">
+						{% if p.author.quadrant %}
+							<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">
+						{% endif %}
+						{{p.author.customtitle | safe}}
+					</bdi>
 				{% endif %}
 				{% endif %}
-				<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
-				&nbsp;
-				({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})
-				{% if p.edited_utc %}&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}">{{p.edited_string}}</span>{% endif %}
-				&nbsp;&nbsp;{{p.views}} views
+				<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp-{{p.id}}">{{p.age_string}}</span>
+
+				{% if p.edited_utc %}
+					Edited
+					<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}">{{p.edited_string}}</span>
+				{% endif %}
+				
+				{% if p.realurl(v) %}
+					<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>({{p.domain}})
+					</a>
+					{% else %}
+					<span>(text post)</span>
+				{% endif %}
+
+				<span>{{p.views}} views</span>
 			</div>
 
 			<div class="hidden md:block pt-4">
