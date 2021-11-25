@@ -87,6 +87,9 @@
 						<i class="{{a.class_list}} px-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
 					{% endfor %}
 				{% endif %}
+
+				<img loading="lazy" src="{{ p.author.profile_url }}" class="md:hidden w-9 h-9 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ p.author.username }} avatar"/>
+
 				{% if v and v.admin_level==6 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>{% endif %}
 				{% if p.stickied %}<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}"></i>{% endif %}
 				{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}
