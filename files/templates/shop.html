@@ -82,7 +82,7 @@
 								</th>
 							</tr>
 						</thead>
-						<tbody class="bg-gray-900 divide-y divide-gray-800">
+						<tbody class="bg-gray-800 divide-y divide-gray-700">
 							{% for a in awards %}
 							<tr>
 								<td class="px-6 py-4 whitespace-nowrap">
@@ -91,18 +91,18 @@
 											<i class="{{a['icon']}} {{a['color']}} fa-fw text-2xl"></i>
 										</div>
 										<div class="ml-4">
-											<div class="text-base font-bold text-gray-900">
+											<div class="text-base font-bold">
 												{{a['title']}}
 											</div>
 										</div>
 									</div>
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap">
-									<div class="text-sm text-gray-900">{{a['description']}}</div>
+									<div class="text-sm">{{a['description']}}</div>
 									<div class="text-sm text-gray-500 capitalize">{{a['kind']}}</div>
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap">
-									<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+									<span class="px-2 inline-flex text-xs leading-5 font-bold rounded bg-pink-100 text-pink-800">
 										{{a['price']}}
 									</span>
 								</td>
