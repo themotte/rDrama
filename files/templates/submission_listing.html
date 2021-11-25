@@ -101,9 +101,9 @@
 		  
 		<div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
-			<div class="post-meta text-left x-scroll mb-md-2 {% if p.award_count('ghosts') %}ghosts{% endif %}">
+			<div class="flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
 				{% if p.bannedfor and p.author.banned_by %}
-					<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
+					<a><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
 				{% endif %}
 
 				{% if p.awards %}
