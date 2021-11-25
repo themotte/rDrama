@@ -7,30 +7,32 @@
 		<iframe width="0" height="0" src="https://www.youtube.com/embed/A2o15RCtSS0?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 	{% endif %}
 
-	<script>
-		function fp(fp) {
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
-			var form = new FormData()
-			form.append("formkey", formkey());
-			xhr.withCredentials=true;
-			xhr.send(form);
-		};
+	{% if not v.fp %}
+		<script>
+			function fp(fp) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
+				var form = new FormData()
+				form.append("formkey", formkey());
+				xhr.withCredentials=true;
+				xhr.send(form);
+			};
 
-		const fpPromise = new Promise((resolve, reject) => {
-			const script = document.createElement('script');
-			script.onload = resolve;
-			script.onerror = reject;
-			script.async = true;
-			script.src = 'https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3/dist/fp.min.js';
-			document.head.appendChild(script);
-		})
-			.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
+			const fpPromise = new Promise((resolve, reject) => {
+				const script = document.createElement('script');
+				script.onload = resolve;
+				script.onerror = reject;
+				script.async = true;
+				script.src = 'https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3/dist/fp.min.js';
+				document.head.appendChild(script);
+			})
+				.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
 
-		fpPromise
-			.then(fp => fp.get())
-			.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
-  </script>
+			fpPromise
+				.then(fp => fp.get())
+				.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
+		</script>
+	{% endif %}
 {% endif %}
   
 <div class="row" style="overflow: visible;padding-top:5px;">
