@@ -42,16 +42,6 @@
 		  
 		<div class="x-scroll-parent w-100">
 
-			<h5 class="post-title font-bold font-heading text-lg md:text-xl leading-normal">
-				<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"
-				{% endif %}>
-				{% if p.club %}
-					<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:10px; line-height:2;">COUNTRY CLUB</span>
-				{% endif %}
-				{{p.realtitle(v) | safe}}
-				</a>
-			</h5>
-
 			<div class="flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
 				{% if p.bannedfor and p.author.banned_by %}
 					<a><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
@@ -118,6 +108,16 @@
 
 				<span>{{p.views}} views</span>
 			</div>
+
+			<h5 class="post-title font-bold font-heading text-lg md:text-xl leading-normal">
+				<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"
+				{% endif %}>
+				{% if p.club %}
+					<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:10px; line-height:2;">COUNTRY CLUB</span>
+				{% endif %}
+				{{p.realtitle(v) | safe}}
+				</a>
+			</h5>
 
 			<div class="hidden md:block pt-4">
 				{% include "/submission/SubmissionActions.html" %}
