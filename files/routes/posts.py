@@ -65,8 +65,10 @@ def publish(pid, v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
-	if request.host == 'rdrama.net':
+	if request.host in ['rdrama.net','pcmemes.net']:
 		if ('aevan' in f'{post.body_html}{post.title}'.lower() or 'avean' in f'{post.body_html}{post.title}'.lower()) and 1 not in notify_users: notify_users.add(1)
+
+	if request.host == 'rdrama.net':
 		if ('joan' in f'{post.body_html}{post.title}'.lower() or 'pewkie' in f'{post.body_html}{post.title}'.lower()) and 28 not in notify_users: notify_users.add(28)
 		if 'carp' in f'{post.body_html}{post.title}'.lower() and 995 not in notify_users:
 			notify_users.add(995)
@@ -363,8 +365,10 @@ def edit_post(pid, v):
 			
 		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
 
-		if request.host == 'rdrama.net':
+		if request.host in ['rdrama.net','pcmemes.net']:
 			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
+
+		if request.host == 'rdrama.net':
 			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
 			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
 				notify_users.add(995)
@@ -842,9 +846,11 @@ def submit_post(v):
 			username = mention["href"].split("@")[1]
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
-		
-		if request.host == 'rdrama.net':
+
+		if request.host in ['rdrama.net','pcmemes.net']:
 			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
+
+		if request.host == 'rdrama.net':
 			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
 			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
 				notify_users.add(995)
