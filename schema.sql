@@ -128,19 +128,6 @@ ALTER SEQUENCE public.award_relationships_id_seq OWNED BY public.award_relations
 
 
 --
--- Name: badge_list_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.badge_list_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
 -- Name: badges; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -735,7 +722,6 @@ CREATE TABLE public.users (
     coins integer,
     agendaposter boolean,
     agendaposter_expires_utc integer DEFAULT 0,
-    resized boolean,
     suicide_utc integer,
     post_count integer,
     comment_count integer,
@@ -774,7 +760,8 @@ CREATE TABLE public.users (
     alt boolean,
     longpost integer,
     unblockable boolean,
-    teddit boolean
+    teddit boolean,
+    bird integer
 );
 
 
@@ -876,7 +863,6 @@ ALTER TABLE ONLY public.alts ALTER COLUMN id SET DEFAULT nextval('public.alts_id
 --
 
 ALTER TABLE ONLY public.award_relationships ALTER COLUMN id SET DEFAULT nextval('public.award_relationships_id_seq'::regclass);
-
 
 
 --
