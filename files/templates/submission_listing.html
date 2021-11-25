@@ -223,11 +223,11 @@
 {% include "/modals/ModalSubmissionListingActions.html" %}
 
 {% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
-	<div style="text-align: center" class="mt-3 mb-4">
-		<a target="_blank" rel="nofollow noopener noreferrer" href="{{p.url}}">
-			<img loading="lazy" src="/assets/images/loading.gif" data-src="{{p.url}}" class="shadow-md p-1 bg-white w-full md:w-64" style="max-height:500px;" alt="Unable to load image">
-		</a>
-	</div>
+<div class="mt-4">
+	<a target="_blank" rel="nofollow noopener noreferrer" href="{{p.url}}">
+		<img loading="lazy" src="/assets/images/loading.gif" data-src="{{p.url}}" class="shadow-md p-1 bg-white w-full md:w-64" alt="Post preview">
+	</a>
+</div>
 {% endif %}
 
 </li>
