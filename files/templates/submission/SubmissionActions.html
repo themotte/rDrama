@@ -8,14 +8,14 @@
 
 	{% if p.realbody(v) and '/post/' not in request.full_path  %}
 	<li>
-		<button onclick="expandText('{{p.id}}')">
+		<button class="hover:text-gray-400" onclick="expandText('{{p.id}}')">
 			<i class="fas fa-expand-alt fa-fw mr-2 text-expand-icon-{{p.id}}"></i>Expand
 		</button>
 	</li>
 	{% endif %}
 
 	<li>
-		<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+		<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="hover:text-gray-400">
 			<i class="fas fa-comment-dots fa-fw mr-2"></i>{{ p.comment_count }} comment{{ '' if p.comment_count == 1 else 's' }}
 			<span class="text-info hidden new-comments"></span>
 		</a>
@@ -29,7 +29,7 @@
 
 	{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and '/post/' in request.full_path %}
 	<li>
-		<button onclick="togglePostEdit('{{p.id}}')">
+		<button class="hover:text-gray-400" onclick="togglePostEdit('{{p.id}}')">
 			<i class="fas fa-edit fa-fw mr-2"></i>Edit
 		</button>
 	</li>
@@ -38,9 +38,8 @@
 	{% if v and v.id==p.author_id %}
 	{% if p.private %}
 	<li>
-		<button onclick="post_toast('/publish/{{p.id}}')">
-			<i class="fas fa-globe fa-fw mr-2"></i>
-			Publish
+		<button class="hover:text-gray-400" onclick="post_toast('/publish/{{p.id}}')">
+			<i class="fas fa-globe fa-fw mr-2"></i>Publish
 		</button>
 	<li>
 	{% endif %}
