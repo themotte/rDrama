@@ -34,7 +34,7 @@
 
 <li id="post-{{p.id}}" class="mb-4 pb-4 border-b border-gray-700 {% if p.is_banned %} banned{% endif %}{% if p.deleted_utc %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
 
-	<div class="flex flex-row-reverse md:flex-row flex-nowrap">
+	<div class="flex md:flex-row flex-nowrap">
 
 		{% if not postembed %}
 			<div class="voting my-2 hidden md:block pr-2">
@@ -97,7 +97,10 @@
 
 
 		</div>
-		  
+
+		<div class="flex flex-col flex-shrink-0 items-center mr-4">
+			<img loading="lazy" src="{{ p.author.profile_url }}" class="hidden md:block flex-shrink-0 w-16 h-16 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ p.author.username }} avatar"/>
+		</div>
 		  
 		<div class="card-block text-left x-scroll-parent my-md-auto w-100">
 
