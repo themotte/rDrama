@@ -40,7 +40,7 @@
 			<img loading="lazy" src="{{ p.author.profile_url }}" class="hidden md:block flex-shrink-0 w-16 h-16 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ p.author.username }} avatar"/>
 
 			{% if not postembed %}
-			<div class="voting my-2 hidden md:block pr-2">
+			<div class="voting hidden md:block">
 				{% if v and request.path.startswith('/@') and not v.admin_level %}
 
 					{% if voted==1 %}
