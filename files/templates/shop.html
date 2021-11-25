@@ -6,16 +6,32 @@
 
 {% block pagetype %}message{% endblock %}
 
-{% block Banner %}
-	<header class="container pb-1 text-center">
-		<img src="/assets/images/shop.webp" width="50%">
-		<h3 class="mt-4">Stir drama. Earn coins.</h3>
-		<h5 class="mt-4">Total sales: {{sales}} coins</h3>
-		<h5 class="mt-4">Dramacoins spent by you: {{v.coins_spent}} coins</h3>
-	</header>
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t-md">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-800 to-gray-700 rounded-t-md sub-header-shadow"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal">
+				Shop
+			</h1>
+			<small class="block text-gray-400">
+				Stir drama. Earn coins.
+			</small>
+		</div>
+		<ul class="ml-auto flex space-x-2 text-sm">
+			<li>
+				<strong class="text-gray-500">Total sales:</strong> {{sales}}
+			</li>
+			<li>
+				<strong class="text-gray-500">Spent by you:</strong> {{v.coins_spent}}
+			</li>
+		</ul>
+	</div>
+</div>
 {% endblock %}
 
 {% block content %}
+<div class="col-span-full">
 	{% if error %}
 	<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 		<i class="fas fa-exclamation-circle my-auto"></i>
@@ -39,63 +55,97 @@
 	</div>
 	{% endif %}
 
-	<pre>
+	<!-- <img src="/assets/images/shop.webp" width="50%"/> -->
 
+	<!-- This example requires Tailwind CSS v2.0+ -->
+	<div class="flex flex-col">
+		<div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+			<div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+				<div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+					<table class="min-w-full divide-y divide-gray-200">
+						<thead class="bg-gray-50">
+							<tr>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Item
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Description
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Price
+								</th>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Owned
+								</th>
+								<th scope="col" class="relative px-6 py-3">
+									<span class="sr-only">Buy</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody class="bg-white divide-y divide-gray-200">
+							{% for a in awards %}
+							<tr>
+								<td class="px-6 py-4 whitespace-nowrap">
+									<div class="flex items-center">
+										<div class="flex items-center justify-center flex-shrink-0 h-10 w-10">
+											<i class="{{a['icon']}} {{a['color']}} fa-fw text-2xl"></i>
+										</div>
+										<div class="ml-4">
+											<div class="text-base font-bold text-gray-900">
+												{{a['title']}}
+											</div>
+										</div>
+									</div>
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap">
+									<div class="text-sm text-gray-900">{{a['description']}}</div>
+									<div class="text-sm text-gray-500 capitalize">{{a['kind']}}</div>
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap">
+									<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+										{{a['price']}}
+									</span>
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+									{{a['owned']}}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+									<a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+								</td>
+							</tr>
+							{% endfor %}
 
-	</pre>
+							<!-- More people... -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<table class="table table-striped shop">
-		<thead class="bg-primary text-white">
-				<tr>
-					<th scope="col">Icon</th>
-					<th scope="col">Title</th>
-					<th scope="col">Price</th>
-					<th scope="col">Owned</th>
-					<th scope="col">Buy</th>
-				</tr>
-			</thead>
-			<tbody>
-		{% for a in awards %}
-			<tr data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{a['description']}}">
-				<td><i class="{{a['icon']}} {{a['color']}}" style="font-size: 30px"></i></td>
-				<td style="font-weight: bold">{{a['title']}}</td>
-				<td style="font-weight: bold">{{a['price']}}</td>
-				<td style="font-weight: bold">{{a['owned']}}</td>
-				{% set kind = a['kind'] %}
-				<td style="font-weight: bold">
-					<a class="d-flex btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}')"><span class="m-auto">Buy</span></a>
-					{% if v.procoins and a['price'] < 3600 %}<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}?mb=true')"><span class="m-auto">Buy with Marseybux</span></a>{% endif %}
-				</td>
-			</tr>
-		{% endfor %}
-	</table>
-	<pre>
+</div>
+{% endblock %}
 
-
-
-
-
-	</pre>
-
-	<style>
-		@media (max-width: 768px) {
-			.table th {
-				padding-left: 0.3rem !important;
-				padding-right: 0.3rem !important;
-			}
-			.table td {
-				padding-left: 0.3rem !important;
-				padding-right: 0.3rem !important;
-				font-size: 0.9rem;
-			}
-			.marseybux {
-				font-size: 0.7rem !important;
-			}
+{% block scripts %}
+<style>
+	@media (max-width: 768px) {
+		.table th {
+			padding-left: 0.3rem !important;
+			padding-right: 0.3rem !important;
 		}
-
-		.tooltip-inner {
-			font-size: 1.5rem;
-			max-width: 300px;
+		.table td {
+			padding-left: 0.3rem !important;
+			padding-right: 0.3rem !important;
+			font-size: 0.9rem;
 		}
-	</style>
+		.marseybux {
+			font-size: 0.7rem !important;
+		}
+	}
+
+	.tooltip-inner {
+		font-size: 1.5rem;
+		max-width: 300px;
+	}
+</style>
 {% endblock %}
