@@ -6,7 +6,6 @@ module.exports = {
     //    '../../templates/**/*.html',
     //    '../../templates/*.html'
     //],*/
-    prefix: 'z-',
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     colors: {
@@ -18,7 +17,8 @@ module.exports = {
       pink: colors.pink,
       green: colors.green,
       red: colors.rose,
-      yellow: colors.amber
+      yellow: colors.amber,
+      blue: colors.blue
     },
     extend: {},
   },
