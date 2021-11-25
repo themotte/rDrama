@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 .test {
-  @apply text-red-700 font-3xl;
+  @apply text-red-700 font-bold text-3xl;
 }
 
 *,
