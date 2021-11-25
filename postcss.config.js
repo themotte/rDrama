@@ -6,7 +6,8 @@ module.exports = (ctx) => ({
     require('autoprefixer'),
     require('@fullhuman/postcss-purgecss')({
       content: [
-        path.resolve(__dirname, 'templates/**/*.html')
+        path.resolve(__dirname, 'templates/**/*.html'),
+        path.resolve(__dirname, 'templates/*.html')
       ],
       defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
     })
