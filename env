@@ -1,6 +1,6 @@
-export DATABASE_URL="postgresql://postgres@127.0.0.1:5432"
+export DATABASE_URL="postgresql://postgres@0.0.0.0:5432"
 export MASTER_KEY="XuxGqp5NyygJrM24b5gt3YgyvFVGdQnwVDwLzLwpu3eQwY"
-export DOMAIN="127.0.0.1"
+export DOMAIN="0.0.0.0"
 export SITE_NAME="Drama"
 export GIPHY_KEY="3435tdfsdudebussylmaoxxt43"
 export FORCE_HTTPS="0"

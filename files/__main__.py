@@ -42,7 +42,7 @@ app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 app.config["SLOGAN"] = environ.get("SLOGAN", "").strip()
 app.config["DEFAULT_COLOR"] = environ.get("DEFAULT_COLOR", "ff0000").strip()
 app.config["DEFAULT_THEME"] = environ.get("DEFAULT_THEME", "midnight").strip()
-app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1)) if ("127.0.0.1" not in app.config["SERVER_NAME"] and "127.0.0.1" not in app.config["SERVER_NAME"]) else 0
+app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1)) if ("0.0.0.0" not in app.config["SERVER_NAME"] and "0.0.0.0" not in app.config["SERVER_NAME"]) else 0
 app.config["UserAgent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
 app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","").strip()
 app.config["HCAPTCHA_SECRET"] = environ.get("HCAPTCHA_SECRET","").strip()
@@ -61,14 +61,14 @@ app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
 app.config["RATELIMIT_HEADERS_ENABLED"]=True
 app.config["CACHE_TYPE"] = "filesystem"
 app.config["CACHE_DIR"] = "cache"
-app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL", "redis://127.0.0.1")
+app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL", "redis://0.0.0.0")
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = environ.get("MAIL_USERNAME", "").strip()
 app.config['MAIL_PASSWORD'] = environ.get("MAIL_PASSWORD", "").strip()
 
-r=redis.Redis(host=environ.get("REDIS_URL", "redis://127.0.0.1"),  decode_responses=True, ssl_cert_reqs=None)
+r=redis.Redis(host=environ.get("REDIS_URL", "redis://0.0.0.0"),  decode_responses=True, ssl_cert_reqs=None)
 
 limiter = Limiter(
 	app,
@@ -103,7 +103,7 @@ def before_request():
 		session.permanent = True
 		if not session.get("session_id"): session["session_id"] = secrets.token_hex(16)
 
-	if app.config["FORCE_HTTPS"] and request.url.startswith("http://") and "127.0.0.1" not in app.config["SERVER_NAME"]:
+	if app.config["FORCE_HTTPS"] and request.url.startswith("http://") and "0.0.0.0" not in app.config["SERVER_NAME"]:
 		url = request.url.replace("http://", "https://", 1)
 		return redirect(url, code=301)
 
