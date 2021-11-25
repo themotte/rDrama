@@ -111,9 +111,9 @@
 								</td>
 								{% set kind = a['kind'] %}
 								<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-									<a class="d-flex btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}')">
-										<span class="m-auto">Buy</span>
-									</a>
+									<button class="ml-auto block px-4 py-2 bg-gradient-to-t from-green-700 to-green-600 hover:from-green-600 hover:to-green-700 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-green-300 focus:text-green-500 focus:outline-none {% if v.coins < a['price'] %}disabled{% endif %}" onclick="post_toast('/buy/{{kind}}')">
+										Buy
+									</button>
 									{% if v.procoins and a['price'] < 3600 %}
 									<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}?mb=true')">
 										<span class="m-auto">Buy with Marseybux</span>
