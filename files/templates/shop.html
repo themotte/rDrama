@@ -6,15 +6,6 @@
 
 {% block pagetype %}message{% endblock %}
 
-{% block Banner %}
-	<header class="container pb-1 text-center">
-		<img src="/assets/images/shop.webp" width="50%">
-		<h3 class="mt-4">Stir drama. Earn coins.</h3>
-		<h5 class="mt-4">Total sales: {{sales}} coins</h3>
-		<h5 class="mt-4">Dramacoins spent by you: {{v.coins_spent}} coins</h3>
-	</header>
-{% endblock %}
-
 {% block subHeader %}
 	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t-md">
 		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-800 to-gray-700 rounded-t-md sub-header-shadow"></div>
@@ -63,10 +54,7 @@
 	</div>
 	{% endif %}
 
-	<pre>
-
-
-	</pre>
+	<img src="/assets/images/shop.webp" width="50%"/>
 
 	<table class="table table-striped shop">
 		<thead class="bg-primary text-white">
