@@ -109,8 +109,16 @@
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 									{{a['owned']}}
 								</td>
+								{% set kind = a['kind'] %}
 								<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-									<a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+									<a class="d-flex btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}')">
+										<span class="m-auto">Buy</span>
+									</a>
+									{% if v.procoins and a['price'] < 3600 %}
+									<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}?mb=true')">
+										<span class="m-auto">Buy with Marseybux</span>
+									</a>
+									{% endif %}
 								</td>
 							</tr>
 							{% endfor %}
