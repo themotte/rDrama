@@ -78,12 +78,12 @@
 				<!-- Requies auth -->
 				{% if v %}
 				<li id="subscribe-{{p.id}}" class="{% if p.id in v.subscribed_idlist() %}hidden{% endif %}">
-					<button class="hover:text-gray-400" onclick="post_toast2('/subscribe/{{p.id}}','subscribe-{{p.id}}','unsubscribe-{{p.id}}')">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700"" onclick="post_toast2('/subscribe/{{p.id}}','subscribe-{{p.id}}','unsubscribe-{{p.id}}')">
 						<i class="fas fa-bell fa-fw mr-2"></i>Subscribe
 					</button>
 				</li>
 				<li id="unsubscribe-{{p.id}}" class="{% if p.id not in v.subscribed_idlist() %}hidden{% endif %}">
-					<button class="hover:text-gray-400" onclick="post_toast2('/unsubscribe/{{p.id}}','subscribe-{{p.id}}','unsubscribe-{{p.id}}')">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700"" onclick="post_toast2('/unsubscribe/{{p.id}}','subscribe-{{p.id}}','unsubscribe-{{p.id}}')">
 						<i class="fas fa-bell-slash fa-fw mr-2"></i>Unsubscribe
 					</button>
 				</li>
