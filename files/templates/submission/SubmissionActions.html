@@ -30,7 +30,7 @@
 	{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and '/post/' in request.full_path %}
 	<li>
 		<button class="hover:text-gray-400" onclick="togglePostEdit('{{p.id}}')">
-			<i class="fas fa-edit fa-fw mr-2"></i>Edit
+			<i class="fas fa-pencil fa-fw mr-2"></i>Edit
 		</button>
 	</li>
 	{% endif %}
