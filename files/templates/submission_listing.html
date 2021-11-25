@@ -38,41 +38,6 @@
 
 		<div class="flex flex-col flex-shrink-0 items-center mr-4">
 			<img loading="lazy" src="{{ p.author.profile_url }}" class="hidden md:block flex-shrink-0 w-16 h-16 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ p.author.username }} avatar"/>
-
-			{% if not postembed %}
-			<div class="voting hidden md:block">
-				{% if v and request.path.startswith('/@') and not v.admin_level %}
-
-					{% if voted==1 %}
-					<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
-					{% endif %}
-
-					<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
-
-					{% if voted==-1 %}
-						<div class="text-muted mx-auto arrow-down post-{{p.id}}-down active"></div>
-					{% endif %}
-
-					{% elif v %}
-
-					<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
-
-					<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
-
-					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
-
-					{% else %}
-
-					<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up" onclick="location.href='/login';"></div>
-
-					<span id="post-{{p.id}}-score-none" class="score"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
-
-					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
-
-					{% endif %}
-
-			</div>
-			{% endif %}
 		</div>
 		  
 		<div class="x-scroll-parent w-100">
@@ -122,8 +87,7 @@
 			</div>
 	</div>
 
-			<div class="card-header bg-transparent border-0 flex flex-row flex-nowrap pl-2 pl-md-0 p-0 mr-md-2">
-
+		<div class="card-header bg-transparent border-0 flex flex-row flex-nowrap pl-2 pl-md-0 p-0 mr-md-2">
 			<div style="z-index: 3;">
 				{% if p.club and not (v and v.paid_dues) %}
 					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-md p-1 w-32 h-20 object-cover object-cover bg-white border border-gray-900">
@@ -145,9 +109,42 @@
 					</a>
 				{% endif %}
 			</div>
-
-
 		</div>
+
+		{% if not postembed %}
+			<div class="voting hidden md:block">
+				{% if v and request.path.startswith('/@') and not v.admin_level %}
+
+					{% if voted==1 %}
+					<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
+					{% endif %}
+
+					<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+
+					{% if voted==-1 %}
+						<div class="text-muted mx-auto arrow-down post-{{p.id}}-down active"></div>
+					{% endif %}
+
+					{% elif v %}
+
+					<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
+
+					<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+
+					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+
+					{% else %}
+
+					<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up" onclick="location.href='/login';"></div>
+
+					<span id="post-{{p.id}}-score-none" class="score"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+
+					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="text-muted mx-auto arrow-down" onclick="location.href='/login';"></div>
+
+					{% endif %}
+
+			</div>
+			{% endif %}
 </div>
 
 <!-- <div class="card-footer md:hidden mt-2 {% if request.path == '/changelog' %}px-0{% endif %}">
