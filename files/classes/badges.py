@@ -18,6 +18,7 @@ class Badge(Base):
 	badge_id = Column(Integer)
 	description = Column(String)
 	url = Column(String)
+	user = relationship("User", viewonly=True)
 
 	def __repr__(self):
 		return f"<Badge(user_id={self.user_id}, badge_id={self.badge_id})>"
