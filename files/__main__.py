@@ -123,6 +123,10 @@ def before_request():
 	elif "Mobile/" in ua: g.system="ios/webview"
 	else: g.system="other/other"
 
+@app.get('/tw')
+def get_tailwind():
+	return render_template('tailwind.html')
+
 @app.teardown_appcontext
 def teardown_request(error):
 	if hasattr(g, 'db') and g.db:
