@@ -117,12 +117,12 @@
 									{{a['owned']}}
 								</td>
 								{% set kind = a['kind'] %}
-								<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-									<button class="ml-auto block px-4 py-2 bg-gradient-to-t from-pink-700 to-pink-600 hover:from-pink-600 hover:to-pink-700 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none {% if v.coins < a['price'] %}disabled{% endif %}" onclick="post_toast('/buy/{{kind}}')">
+								<td class="px-6 py-4 whitespace-nowrap flex justify-end text-sm">
+									<button class="block px-4 py-2 bg-gradient-to-t from-pink-700 to-pink-600 hover:from-pink-600 hover:to-pink-700 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:outline-none {% if v.coins < a['price'] %}disabled{% endif %}" onclick="post_toast('/buy/{{kind}}')">
 										Buy
 									</button>
 									{% if v.procoins and a['price'] < 3600 %}
-									<button class="block px-4 py-2 bg-gradient-to-t from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-yellow-900 focus:text-yellow-500 focus:outline-none {% if v.procoins < a['price'] %}disabled{% endif %}" onclick="post_toast('/buy/{{kind}}?mb=true')">
+									<button class="ml-2 block px-4 py-2 bg-gradient-to-t from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-yellow-900 focus:text-yellow-500 focus:outline-none {% if v.procoins < a['price'] %}disabled{% endif %}" onclick="post_toast('/buy/{{kind}}?mb=true')">
 										Buy with Marseybux
 									</button>
 									{% endif %}
