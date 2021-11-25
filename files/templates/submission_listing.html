@@ -69,13 +69,6 @@
 				{% if p.is_blocked %}
 				<i class="fas fa-user-minus fa-fw fa-sm text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This user is blocking you."></i>
 				{% endif %}
-				{% if p.private %}
-				<span class="p-1 text-xs uppercase font-bold leading-tight bg-yellow-600">Draft</span>
-				{% endif %}
-				{% if p.active_flags %}
-				<button class="p-1 text-xs text-red-600 border border-red-600" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">{{p.active_flags}} Reports
-				</button>
-				{% endif %}
 				{% if p.author.verified %}
 				<i class="fas fa-badge-check fa-fw fa-sm" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
 				{% endif %}
@@ -119,6 +112,16 @@
 				{% endif %}
 
 				<span>{{p.views}} views</span>
+
+				{% if p.private %}
+				<span class="px-1 py-0.5 text-xs text-yellow-900 text-shadow-light bg-yellow-400 font-bold border border-yellow-500 rounded">
+					Draft
+				</span>
+				{% endif %}
+				{% if p.active_flags %}
+				<button class="px-1 py-0.5 text-xs text-red-900 text-shadow-light bg-red-400 font-bold border border-red-500 rounded" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">{{p.active_flags}} Reports
+				</button>
+				{% endif %}
 
 				{% if p.bannedfor and p.author.banned_by %}
 					<a><i class="fad fa-gavel fa-fw fa-sm text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
