@@ -249,7 +249,7 @@ def edit_post(pid, v):
 		elif len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
-		if v.agendaposter:
+		if v.agendaposter and not v.marseyawarded:
 			for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
 			title = title.replace('I ', f'@{v.username} ')
 			title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
@@ -263,7 +263,7 @@ def edit_post(pid, v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-		if v.agendaposter:
+		if v.agendaposter and not v.marseyawarded:
 			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
 			body = body.replace('I ', f'@{v.username} ')
 			body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
@@ -546,7 +546,7 @@ def submit_post(v):
 	title = request.values.get("title", "").strip()
 	url = request.values.get("url", "").strip()
 
-	if v.agendaposter:
+	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
 		title = title.replace('I ', f'@{v.username} ')
 		title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
@@ -730,7 +730,7 @@ def submit_post(v):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
-	if v.agendaposter:
+	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
 		body = body.replace('I ', f'@{v.username} ')
 		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
