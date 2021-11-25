@@ -37,12 +37,12 @@
 	<div class="flex md:flex-row flex-nowrap">
 
 		<div class="flex flex-col flex-shrink-0 items-center mr-4">
-			<img loading="lazy" src="{{ p.author.profile_url }}" class="hidden md:block flex-shrink-0 w-16 h-16 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ p.author.username }} avatar"/>
+			<img loading="lazy" src="{{ p.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ p.author.username }} avatar"/>
 		</div>
 		  
 		<div class="x-scroll-parent w-100">
 
-			<h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1">
+			<h5 class="post-title font-bold font-heading text-lg md:text-xl leading-normal">
 				<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"
 				{% endif %}>
 				{% if p.club %}
