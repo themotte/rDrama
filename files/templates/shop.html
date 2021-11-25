@@ -122,9 +122,9 @@
 										Buy
 									</button>
 									{% if v.procoins and a['price'] < 3600 %}
-									<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" href="javascript:void(0)" onclick="post_toast('/buy/{{kind}}?mb=true')">
-										<span class="m-auto">Buy with Marseybux</span>
-									</a>
+									<button class="block px-4 py-2 bg-gradient-to-t from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-yellow-900 focus:text-yellow-500 focus:outline-none {% if v.procoins < a['price'] %}disabled{% endif %}" onclick="post_toast('/buy/{{kind}}?mb=true')">
+										Buy with Marseybux
+									</button>
 									{% endif %}
 								</td>
 							</tr>
