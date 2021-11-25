@@ -142,7 +142,11 @@
 				</a>
 			</h5>
 
-			<div class="hidden md:block pt-4">
+			<div class="py-2">
+				<br>
+			</div>
+
+			<div class="hidden md:block pt-3">
 				{% include "/submission/SubmissionActions.html" %}
 			</div>
 	</div>
@@ -287,11 +291,9 @@
 </div>
 {% endif %}
 
-</li>
-
 {% if not p.club or v and v.paid_dues %}
 	{% if p.realbody(v) %}
-		<div class="hidden bg-gray-900 rounded-bottom shadow-inner p-3 mb-3" id="post-text-{{p.id}}">
+		<div class="rounded-lg shadow-md hidden bg-gray-900 p-3 mb-3" id="post-text-{{p.id}}">
 			{{p.realbody(v) | safe}}
 		</div>
 	{% endif %}
@@ -312,6 +314,8 @@
 		</div>
 	{% endif %}
 {% endif %}
+
+</li>
 
 {% else %}
 
