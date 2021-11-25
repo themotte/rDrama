@@ -222,20 +222,20 @@
 
 {% include "/modals/ModalSubmissionListingActions.html" %}
 
+{% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
+	<div style="text-align: center" class="mt-3 mb-4">
+		<a target="_blank" rel="nofollow noopener noreferrer" href="{{p.url}}">
+			<img loading="lazy" src="/assets/images/loading.gif" data-src="{{p.url}}" class="shadow-md p-1 bg-white w-full md:w-3/4" style="max-height:500px;" alt="Unable to load image">
+		</a>
+	</div>
+{% endif %}
+
 </li>
 
 {% if not p.club or v and v.paid_dues %}
 	{% if p.realbody(v) %}
 		<div class="hidden bg-gray-900 rounded-bottom shadow-inner p-3 mb-3" id="post-text-{{p.id}}">
 			{{p.realbody(v) | safe}}
-		</div>
-	{% endif %}
-
-	{% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
-		<div style="text-align: center" class="mt-3 mb-4">
-			<a target="_blank" rel="nofollow noopener noreferrer" href="{{p.url}}">
-				<img loading="lazy" src="/assets/images/loading.gif" data-src="{{p.url}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
-			</a>
 		</div>
 	{% endif %}
 
