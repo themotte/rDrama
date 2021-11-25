@@ -277,7 +277,7 @@
 
 	<div class="flex flex-col flex-shrink-0 items-center {{ 'mr-4' if not c.parent_comment_id or standalone else 'mr-3' }}">
 		{% if standalone or level==1 %}
-		<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-16 h-16 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ c.author.username }} avatar"/>
+		<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ c.author.username }} avatar"/>
 		{% else %}
 		<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-9 h-9 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ c.author.username }} avatar"/>
 		{% endif %}
