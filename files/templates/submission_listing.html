@@ -78,7 +78,17 @@
 				{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
 				{% endif %}
 				{% if not p.award_count('ghosts') %}
-				<a class="user-name text-decoration-none" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};  font-weight: bold;"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
+				<button class="flex items-center font-heading" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" tabindex="0" style="color: #{{p.author.namecolor}};">
+					<span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span>
+				</button>
+				{% if p.author.customtitle %}
+				<bdi style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;
+					{% if p.author.quadrant %}
+						<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">
+					{% endif %}
+					{{p.author.customtitle | safe}}
+				</bdi>
+				{% endif %}
 				{% endif %}
 				<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
 				&nbsp;
