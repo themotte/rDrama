@@ -178,7 +178,7 @@
 
 			<div class="py-2">
 				{% if p.plainbody %}
-				{{ p.plainbody|truncate(280, True) }}
+				<p>{{ p.plainbody|truncate(280, True) }}</p>
 				{% else %}
 				<br/>
 				{% endif }
