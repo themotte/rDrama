@@ -114,8 +114,10 @@ def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
-	if v: defaultsortingcomments = v.defaultsortingcomments
+	if request.host == 'rdrama.net' and [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
+	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
+
 	sort=request.values.get("sort", defaultsortingcomments)
 
 	try: pid = int(pid)
@@ -127,7 +129,6 @@ def post_id(pid, anything=None, v=None):
 
 	if post.club and not (v and v.paid_dues) or post.private and not (v and (v.id == post.author_id or v.admin_level > 1)): abort(403)
 
-	if request.host == 'rdrama.net' and [BUG_THREAD, EMOJI_THREAD]: sort = 'new'
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
