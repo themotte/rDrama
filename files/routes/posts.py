@@ -34,7 +34,7 @@ def toggle_club(pid, v):
 	post.club = not post.club
 	g.db.add(post)
 
-W	g.db.commit()
+	g.db.commit()
 
 	if post.club: return {"message": "Post has been marked as club-only!"}
 	else: return {"message": "Post has been unmarked as club-only!"}
