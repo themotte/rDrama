@@ -114,7 +114,7 @@ def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
-	if request.host == 'rdrama.net' and [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
+	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
 	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 
