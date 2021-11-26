@@ -137,13 +137,13 @@
 								</span>
 								{% endif %}
 								{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{u.verified}}"></i></span>{% endif %}
-								{% if u.admin_level > 1 or (u.admin_level == 1 and (not v or v.admin_level < 2)) %}
+								{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
 								<span>
 									<i class="fas fa-broom text-admin align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Admin"></i>
 								</span>
-								{% elif u.admin_level == 1 %}
+								{% elif u.admin_level == 1 and v and v.admin_level > 1 %}
 								<span>
-									<i class="fas fa-broom align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Fake Admin"></i>
+									<i class="fas fa-broom align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Meme Admin"></i>
 								</span>
 								{% endif %}
 								{% if v and v.has_follower(u) %}
@@ -245,8 +245,8 @@
 							<a id="admin" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 							<a id="unadmin" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
-							<a id="fakeadmin" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_fake_admin','fakeadmin','unfakeadmin')">Make fake admin</a>
-							<a id="unfakeadmin" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_fake_admin','fakeadmin','unfakeadmin')">Remove fake admin</a>
+							<a id="memeadmin" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_meme_admin','memeadmin','unmemeadmin')">Make meme admin</a>
+							<a id="unmemeadmin" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','memeadmin','unmemeadmin')">Remove meme admin</a>
 
 							{% if u.admin_level > 1 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
@@ -436,13 +436,13 @@
 						<i class="fad fa-user-tag text-info align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Original Username: @{{u.original_username}}"></i>
 					</span>
 				{% endif %}
-				{% if u.admin_level > 1 or (u.admin_level == 1 and (not v or v.admin_level < 2)) %}
+				{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
 				<span>
 					<i class="fas fa-broom text-admin align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Admin"></i>
 				</span>
-				{% elif u.admin_level == 1 %}
+				{% elif u.admin_level == 1 and v and v.admin_level > 1 %}
 				<span>
-					<i class="fas fa-broom align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Fake Admin"></i>
+					<i class="fas fa-broom align-middle ml-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Meme Admin"></i>
 				</span>
 				{% endif %}
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
@@ -527,8 +527,8 @@
 						<a id="admin2" class="{% if u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
 						<a id="unadmin2" class="{% if not u.admin_level %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
 
-						<a id="fakeadmin2" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_fake_admin','fakeadmin2','unfakeadmin2')">Make fake admin</a>
-						<a id="unfakeadmin2" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_fake_admin','fakeadmin2','unfakeadmin2')">Remove fake admin</a>
+						<a id="memeadmin2" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_meme_admin','memeadmin2','unmemeadmin2')">Make meme admin</a>
+						<a id="unmemeadmin2" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','memeadmin2','unmemeadmin2')">Remove meme admin</a>
 
 						{% if u.admin_level > 1 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>

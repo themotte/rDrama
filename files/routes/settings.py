@@ -853,8 +853,7 @@ def settings_block_user(v):
 
 	g.db.commit()
 
-	if v.admin_level == 1: return {"message": f"@{user.username} banned!"}
-	else: return {"message": f"@{user.username} blocked."}
+	return {"message": f"@{user.username} blocked."}
 
 
 @app.post("/settings/unblock")
@@ -877,8 +876,6 @@ def settings_unblock_user(v):
 	cache.delete_memoized(frontlist)
 
 	g.db.commit()
-
-	if v.admin_level == 1: return {"message": f"@{user.username} unbanned!"}
 
 	return {"message": f"@{user.username} unblocked."}
 
