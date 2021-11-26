@@ -146,7 +146,7 @@
 	</script>
 
 	{% if v %}
-		<script src="/assets/js/comments_v.js?v=70"></script>
+		<script src="/assets/js/comments_v.js?v=73"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -557,11 +557,14 @@
 
 					{% if v and (v.id==p.author_id or v.admin_level > 2) and not v.is_suspended %}
 						<div id="edit-post-body-{{p.id}}" class="d-none comment-write collapsed child">
-							<form id="post-edit-form-{{p.id}}" class="d-flex flex-column input-group" action="/edit_post/{{p.id}}" method="post">
+							<form id="post-edit-form-{{p.id}}" class="d-flex flex-column" action="/edit_post/{{p.id}}" method="post">
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<input type="hidden" name="current_page" value="{{request.path}}">
 								<input name="title" required placeholder="title" value="{{p.title}}" >
-								<textarea name="body" maxlength="10000" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
+								<textarea name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
+								
+								<div class="text-small font-weight-bold" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+
 								<div class="comment-format"> 
 									<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></i></small> 
 									<a class="format" href="javascript:void(0)"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></i></a> 
@@ -806,13 +809,16 @@
 		</div>
 
 	<div id="comment-form-space-{{p.fullname}}" class="comment-write mb-3">
-		<form id="reply-to-{{p.fullname}}" class="input-group" action="/comment" method="post">
+		<form id="reply-to-{{p.fullname}}" action="/comment" method="post">
 			<input type="hidden" name="formkey" value="{{v.formkey}}">
 			<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
 			<input id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
 			{% if v %}
-			<textarea maxlength="10000" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
+			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 			{% endif %}
+
+			<div class="text-small font-weight-bold" id="charcount-reply" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+
 			<div class="comment-format">
 				<a class="btn btn-secondary format d-inline-block m-0" href="javascript:void(0)"><i class="fas fa-bold" onclick="makeBold('reply-form-body-{{p.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i></a>
 				&nbsp;

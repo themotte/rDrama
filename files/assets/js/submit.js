@@ -74,7 +74,7 @@ function charLimit(form, text) {
 		text.style.color = "#A0AEC0";
 	}
 
-	text.innerText = maxLength - length;
+	text.innerText = length + ' / ' + maxLength;
 
 }
 
