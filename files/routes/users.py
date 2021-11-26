@@ -252,15 +252,15 @@ def leaderboard(v):
 
 
 
-	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).limit(100).all()
+	votes1 = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).limit(100).all()
 
 	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).limit(100).all()
 
-	votes = Counter(dict(votes)) + Counter(dict(votes2))
+	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
 
-	users8 = g.db.query(User).filter(User.id.in_(votes.keys())).all()
+	users8 = g.db.query(User).filter(User.id.in_(votes3.keys())).all()
 	users9 = []
-	for user in users8: users9.append((user, votes[user.id]))
+	for user in users8: users9.append((user, votes3[user.id]))
 
 	users9 = sorted(users9, key=lambda x: x[1], reverse=True)[:25]
 
