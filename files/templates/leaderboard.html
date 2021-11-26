@@ -61,7 +61,7 @@
 				{{users1.index(user)+1}}
 			</h2>
 			<div class="relative">
-				<img src="{{user.profile_url}}" class="p-1 rounded border w-12 h-12 object-cover shadow-md {{ 'bg-pink-800 border-pink-900' if v.username == user.username else 'bg-white border-gray-900' }}" alt="{{ user.username }} avatar"/>
+				<img src="{{user.profile_url}}" class="p-[3px] border w-12 h-12 object-cover {{ 'bg-pink-800 border-pink-900' if v.username == user.username else 'bg-white border-gray-900' }}" alt="{{ user.username }} avatar"/>
 				{% if users1.index(user)+1 == 1 %}
 				<img src="https://i.ibb.co/xFgG6yf/Coinfixed.gif" width="20px" height="12px" class="absolute -top-1 -right-2.5 object-contain"/>
 				{% endif %}
