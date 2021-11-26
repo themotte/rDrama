@@ -20,6 +20,7 @@ from urllib.parse import ParseResult, urlunparse, urlparse, quote
 
 site = environ.get("DOMAIN").strip()
 CATBOX_KEY = environ.get("CATBOX_KEY").strip()
+titleheaders = {"User-Agent": f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
 with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
 
@@ -391,17 +392,11 @@ def get_post_title(v):
 	url = request.values.get("url", None)
 	if not url: return abort(400)
 
-	headers = {"User-Agent": f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
-	try: x = requests.get(url, headers=headers, timeout=5)
-	except BaseException: return {"error": "Could not reach page"}, 400
+	x = requests.get(url, headers=titleheaders, timeout=5)
 
-	if not x.status_code == 200: return {"error": f"Page returned {x.status_code}"}, x.status_code
+	soup = BeautifulSoup(x.content, 'html.parser')
+	return {"url": url, "title": soup.find('title').string}
 
-	try:
-		soup = BeautifulSoup(x.content, 'html.parser')
-		return {"url": url, "title": soup.find('title').string}
-	except BaseException:
-		return {"error": f"Could not find a title"}, 400
 
 def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
