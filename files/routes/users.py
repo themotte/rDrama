@@ -308,6 +308,7 @@ def unsubscribe(v, post_id):
 @app.get("/report_bugs")
 @auth_required
 def reportbugs(v):
+	if request.host == 'rdrama.net': return redirect('https://rdrama.net/post/18459')
 	return render_template("reportbugs.html", v=v)
 
 @app.post("/@<username>/message")

@@ -749,3 +749,6 @@ TROLLTITLES = [
 	"Pretty sure this is @{username}'s Reddit account",
 	"Hey jannies can you please ban @{username}",
 ]
+
+BUG_THREAD = 18459
+EMOJI_THREAD = 22479
