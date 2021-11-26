@@ -177,8 +177,8 @@
 			</h5>
 
 			<div class="py-2">
-				{% if p.body %}
-				<p>{{ p.body|truncate(280, True) }}</p>
+				{% if p.realbody %}
+				<p>{{ p.realbody|truncate(280, True) }}</p>
 				{% else %}
 				<br/>
 				{% endif %}
