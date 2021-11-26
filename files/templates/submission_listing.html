@@ -177,11 +177,7 @@
 			</h5>
 
 			<div class="py-2">
-				{% if p.realbody %}
-				<p>{{ p.realbody|truncate(280, True) }}</p>
-				{% else %}
-				<br/>
-				{% endif %}
+				{{p.realbody(v) | safe}}
 			</div>
 
 			<div class="hidden md:block pt-3">
