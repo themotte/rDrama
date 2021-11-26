@@ -398,8 +398,8 @@ def get_post_title(v):
 
 	title = soup.find('title')
 	if not title: abort(400)
-	
-	return {"url": url, "title": soup.find('title').string}
+
+	return {"url": url, "title": title.string}
 
 
 def archiveorg(url):
