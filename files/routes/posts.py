@@ -390,11 +390,15 @@ def edit_post(pid, v):
 def get_post_title(v):
 
 	url = request.values.get("url", None)
-	if not url: return abort(400)
+	if not url: abort(400)
 
 	x = requests.get(url, headers=titleheaders, timeout=5)
 
 	soup = BeautifulSoup(x.content, 'html.parser')
+
+	title = soup.find('title')
+	if not title: abort(400)
+	
 	return {"url": url, "title": soup.find('title').string}
 
 
