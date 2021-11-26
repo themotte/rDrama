@@ -199,10 +199,15 @@
 
 		{% block stylesheets %}
 
+		{% assets 'css' %}
+      		<link rel="stylesheet" href="{{ ASSET_URL }}">
+    	{% endassets %}
+
+
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/default.css?v=1025">
 			<link rel="stylesheet" href="/assets/css/main.css?v=120">
+			<link rel="stylesheet" href="/assets/css/default.css?v=1025">
 			<!-- <link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=118"> -->
 			{% if v.agendaposter %}
 			<link rel="stylesheet" href="/assets/css/agendaposter.css?v=120">
@@ -211,15 +216,11 @@
 			{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/default.css?v=1025">
 			<link rel="stylesheet" href="/assets/css/main.css?v=120">
 			<!-- <link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=118"> -->
 			<!-- <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"> -->
+			<link rel="stylesheet" href="/assets/css/default.css?v=1025">
 		{% endif %}
-
-		{% assets 'css' %}
-      		<link rel="stylesheet" href="{{ ASSET_URL }}">
-    	{% endassets %}
 
 		{% endblock %}
 
