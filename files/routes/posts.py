@@ -127,6 +127,8 @@ def post_id(pid, anything=None, v=None):
 
 	if post.club and not (v and v.paid_dues) or post.private and not (v and (v.id == post.author_id or v.admin_level > 1)): abort(403)
 
+	if request.host == 'rdrama.net' and pid == 22479: sort = 'new'
+
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
@@ -197,6 +199,8 @@ def post_id(pid, anything=None, v=None):
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
 		post.replies = comments.filter(Comment.is_pinned != None).all() + comments.filter(Comment.level == 1, Comment.is_pinned == None).all()
+
+	if request.host == 'rdrama.net' and pid == 22479: post.replies = post.replies[:20]
 
 	post.views += 1
 	g.db.add(post)
