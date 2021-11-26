@@ -118,7 +118,7 @@ def post_id(pid, anything=None, v=None):
 	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 
-	sort=request.values.get("sort", defaultsortingcomments)
+	sort = request.values.get("sort", defaultsortingcomments)
 
 	try: pid = int(pid)
 	except:
@@ -201,7 +201,7 @@ def post_id(pid, anything=None, v=None):
 
 		post.replies = comments.filter(Comment.is_pinned != None).all() + comments.filter(Comment.level == 1, Comment.is_pinned == None).all()
 
-	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD] and sort == 'new': post.replies = post.replies[:10]
+	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD] and not request.values.get("sort"): post.replies = post.replies[:10]
 
 	post.views += 1
 	g.db.add(post)
