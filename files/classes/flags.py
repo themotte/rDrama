@@ -2,6 +2,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
 from files.helpers.lazy import lazy
+from files.helpers.const import censor_slurs
 import time
 
 class Flag(Base):
@@ -29,6 +30,10 @@ class Flag(Base):
 	def created_datetime(self):
 		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
 
+	@lazy
+	def realreason(self, v):
+		return censor_slurs(self.reason, v)
+
 
 class CommentFlag(Base):
 
@@ -54,3 +59,7 @@ class CommentFlag(Base):
 	@lazy
 	def created_datetime(self):
 		return str(time.strftime("%d/%B/%Y %H:%M:%S UTC", time.gmtime(self.created_utc)))
+
+	@lazy
+	def realreason(self, v):
+		return censor_slurs(self.reason, v)

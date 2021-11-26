@@ -17,6 +17,26 @@ site = environ.get("DOMAIN").strip()
 
 beams_client = PushNotifications(instance_id=PUSHER_INSTANCE_ID, secret_key=PUSHER_KEY)
 
+
+
+@app.get("/most_downvoted")
+@auth_desired
+def most_downvoted(v):
+	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).limit(25).all()
+
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).limit(25).all()
+
+	votes = Counter(dict(votes)) + Counter(dict(votes2))
+
+	users = g.db.query(User).filter(User.id.in_(votes.keys())).all()
+	users2 = []
+	for user in users: users2.append((user, votes[user.id]))
+
+	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
+
+	return render_template("most_downvoted.html", v=v, users=users)
+
+
 @app.get("/@<username>/upvoters")
 @auth_desired
 def upvoters(v, username):
