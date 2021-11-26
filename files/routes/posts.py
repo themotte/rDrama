@@ -34,15 +34,7 @@ def toggle_club(pid, v):
 	post.club = not post.club
 	g.db.add(post)
 
-	if post.author_id!=v.id:
-		ma=ModAction(
-			kind="club" if post.club else "unclub",
-			user_id=v.id,
-			target_submission_id=post.id,
-			)
-		g.db.add(ma)
-
-	g.db.commit()
+W	g.db.commit()
 
 	if post.club: return {"message": "Post has been marked as club-only!"}
 	else: return {"message": "Post has been unmarked as club-only!"}
