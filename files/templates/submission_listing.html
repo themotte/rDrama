@@ -177,7 +177,11 @@
 			</h5>
 
 			<div class="py-2">
-				<br>
+				{% if p.plainbody %}
+				{{ p.plainbody|truncate(280, True) }}
+				{% else %}
+				<br/>
+				{% endif }
 			</div>
 
 			<div class="hidden md:block pt-3">
