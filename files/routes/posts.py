@@ -757,6 +757,8 @@ def submit_post(v):
 	if v.paid_dues: club = bool(request.values.get("club",""))
 	else: club = False
 
+	if embed and len(embed) > 1500: embed = None
+
 	new_post = Submission(
 		private=bool(request.values.get("private","")),
 		club=club,
