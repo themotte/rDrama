@@ -133,10 +133,12 @@
 
 								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw text-left mr-3"></i>Source code</a>
 
-								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw text-left mr-3"></i>Report bugs or suggestions</a>
-								
+								{% if request.host in ['rdrama.net', 'pcmemes.net'] %}
+									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw text-left mr-3"></i>Report bugs or suggestions</a>
+								{% endif %}
+
 								{% if 'pcm' not in request.host %}
-									<a class="nav-item nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
+									<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw text-left mr-3"></i>Discord</a>
 								{% endif %}
 								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw text-left mr-3"></i>Donate</a>
 								{% if 'rama' in request.host %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw text-left mr-3"></i>Archives</a>{% endif %}
@@ -193,7 +195,9 @@
 
 			<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 
-			<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw mr-3"></i>Report bugs or suggestions</a>
+			{% if request.host in ['rdrama.net', 'pcmemes.net'] %}
+				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw mr-3"></i>Report bugs or suggestions</a>
+			{% endif %}
 
 			{% if 'pcm' not in request.host %}
 				<a class="nav-item nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>

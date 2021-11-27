@@ -65,8 +65,10 @@ def publish(pid, v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
-	if request.host == 'rdrama.net':
+	if request.host in ['rdrama.net','pcmemes.net']:
 		if ('aevan' in f'{post.body_html}{post.title}'.lower() or 'avean' in f'{post.body_html}{post.title}'.lower()) and 1 not in notify_users: notify_users.add(1)
+
+	if request.host == 'rdrama.net':
 		if ('joan' in f'{post.body_html}{post.title}'.lower() or 'pewkie' in f'{post.body_html}{post.title}'.lower()) and 28 not in notify_users: notify_users.add(28)
 		if 'carp' in f'{post.body_html}{post.title}'.lower() and 995 not in notify_users:
 			notify_users.add(995)
@@ -112,9 +114,11 @@ def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
-	if v: defaultsortingcomments = v.defaultsortingcomments
+	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
+	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
-	sort=request.values.get("sort", defaultsortingcomments)
+
+	sort = request.values.get("sort", defaultsortingcomments)
 
 	try: pid = int(pid)
 	except:
@@ -124,6 +128,7 @@ def post_id(pid, anything=None, v=None):
 	post = get_post(pid, v=v)
 
 	if post.club and not (v and v.paid_dues) or post.private and not (v and (v.id == post.author_id or v.admin_level > 1)): abort(403)
+
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -196,6 +201,8 @@ def post_id(pid, anything=None, v=None):
 
 		post.replies = comments.filter(Comment.is_pinned != None).all() + comments.filter(Comment.level == 1, Comment.is_pinned == None).all()
 
+	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD] and not request.values.get("sort"): post.replies = post.replies[:10]
+
 	post.views += 1
 	g.db.add(post)
 	if isinstance(session.get('over_18', 0), dict): session["over_18"] = 0
@@ -249,7 +256,7 @@ def edit_post(pid, v):
 		elif len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
-		if v.agendaposter:
+		if v.agendaposter and not v.marseyawarded:
 			for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
 			title = title.replace('I ', f'@{v.username} ')
 			title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
@@ -263,7 +270,7 @@ def edit_post(pid, v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-		if v.agendaposter:
+		if v.agendaposter and not v.marseyawarded:
 			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
 			body = body.replace('I ', f'@{v.username} ')
 			body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
@@ -363,8 +370,10 @@ def edit_post(pid, v):
 			
 		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
 
-		if request.host == 'rdrama.net':
+		if request.host in ['rdrama.net','pcmemes.net']:
 			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
+
+		if request.host == 'rdrama.net':
 			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
 			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
 				notify_users.add(995)
@@ -546,7 +555,7 @@ def submit_post(v):
 	title = request.values.get("title", "").strip()
 	url = request.values.get("url", "").strip()
 
-	if v.agendaposter:
+	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
 		title = title.replace('I ', f'@{v.username} ')
 		title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
@@ -730,7 +739,7 @@ def submit_post(v):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
-	if v.agendaposter:
+	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
 		body = body.replace('I ', f'@{v.username} ')
 		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
@@ -842,9 +851,11 @@ def submit_post(v):
 			username = mention["href"].split("@")[1]
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
-		
-		if request.host == 'rdrama.net':
+
+		if request.host in ['rdrama.net','pcmemes.net']:
 			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
+
+		if request.host == 'rdrama.net':
 			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
 			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
 				notify_users.add(995)

@@ -154,3 +154,7 @@ blockquote {
 #thread {
 	background: var(--white) !important;
 }
+
+#profilestuff > * {
+	color: #cfcfcf !important;
+}

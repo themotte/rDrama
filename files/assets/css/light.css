@@ -74,3 +74,7 @@ pre {
 blockquote {
 	color: var(--gray-400);
 }
+
+#profilestuff > * {
+	color: var(--gray-400) !important;
+}

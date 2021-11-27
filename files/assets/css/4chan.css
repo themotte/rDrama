@@ -90,3 +90,7 @@ blockquote p {
 .btn {
 	color: var(--primary) !important;
 }
+
+#profilestuff > * {
+	color: #cfcfcf !important;
+}
