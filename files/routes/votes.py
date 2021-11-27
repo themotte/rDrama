@@ -8,6 +8,7 @@ from sqlalchemy.orm import joinedload
 from .front import frontlist
 
 @app.get("/votes")
+@limiter.limit("5/second;60/minute;200/hour")
 @auth_desired
 def admin_vote_info_get(v):
 
@@ -59,6 +60,7 @@ def admin_vote_info_get(v):
 
 
 @app.post("/vote/post/<post_id>/<new>")
+@limiter.limit("5/second;60/minute;200/hour")
 @auth_required
 @validate_formkey
 def api_vote_post(post_id, new, v):
