@@ -360,8 +360,6 @@
 										<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></i>
 									</label>
 								</div>
-								<a id="save-reply-to-{{c.id}}" class="d-none d-md-block btn btn-primary text-muted ml-2 fl-r" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
-								<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 								<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('d-none')" class="d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 								<a id="save-reply-to-{{c.id}}" class="d-md-none btn btn-primary text-white ml-2" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
 							</form>
