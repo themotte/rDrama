@@ -389,6 +389,14 @@ BADGES = {
 		'name': 'Unblockable',
 		'description': 'This user is unblockable'
 	},
+        88: {
+		'name': 'Provider',
+		'description': 'This user provided a bountiful feast for Thanksgiving'
+	},
+        89: {
+		'name': 'Dinner',
+		'description': 'Yes, it is edible'
+	},
 }
 
 AWARDS = {
