@@ -378,7 +378,7 @@
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
 						<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('comment-edit-body-{{c.id}}', 'preview-edit-{{c.id}}');charLimit('comment-edit-body-{{c.id}}','charcount-edit-{{c.id}}')" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
 						
-						<div class="text-small font-weight-bold" id="charcount-edit-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+						<div class="text-small font-weight-bold mt-1" id="charcount-edit-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
 						<div class="comment-format"> 
 							<a class="btn btn-secondary format d-inline-block m-0" href="javascript:void(0)"><i class="fas fa-bold" onclick="makeBold('comment-edit-body-{{c.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i></a>
@@ -546,7 +546,7 @@
 					<input id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}"> 
 					<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('reply-form-body-{{c.fullname}}', 'reply-edit-{{c.id}}');charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> 
 					
-					<div class="text-small font-weight-bold" id="charcount-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+					<div class="text-small font-weight-bold mt-1" id="charcount-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
 					<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
 						<a class="btn btn-secondary format d-inline-block m-0" href="javascript:void(0)"><i class="fas fa-bold" onclick="makeBold('reply-form-body-{{c.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i></a>
@@ -793,7 +793,7 @@
 	}
 
 	.popover {
-		max-width: 80%;
+		max-width: 90%;
 		box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
 		border-color: #dadada;
 	}

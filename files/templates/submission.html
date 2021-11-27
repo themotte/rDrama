@@ -563,7 +563,7 @@
 								<input name="title" required placeholder="title" value="{{p.title}}" >
 								<textarea name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
 								
-								<div class="text-small font-weight-bold" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+								<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
 								<div class="comment-format"> 
 									<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></i></small> 
@@ -817,7 +817,7 @@
 			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 			{% endif %}
 
-			<div class="text-small font-weight-bold" id="charcount-reply" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+			<div class="text-small font-weight-bold mt-1" id="charcount-reply" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
 			<div class="comment-format">
 				<a class="btn btn-secondary format d-inline-block m-0" href="javascript:void(0)"><i class="fas fa-bold" onclick="makeBold('reply-form-body-{{p.fullname}}')" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i></a>
