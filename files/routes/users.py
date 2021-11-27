@@ -331,7 +331,7 @@ def unsubscribe(v, post_id):
 @app.get("/report_bugs")
 @auth_required
 def reportbugs(v):
-	return redirect(f'https://rdrama.net/post/{BUG_THREAD}')
+	return redirect(f'/post/{BUG_THREAD}')
 
 @app.post("/@<username>/message")
 @limiter.limit("1/second")
