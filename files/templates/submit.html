@@ -31,11 +31,11 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=124"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
+			<link rel="stylesheet" href="/assets/css/main.css?v=127"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
 			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=124">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=124">
+			<link rel="stylesheet" href="/assets/css/main.css?v=127">
 			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
 		{% endif %}
 		{% endblock %}
@@ -98,7 +98,7 @@
 												<div>
 													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" required></textarea>
 
-													<div class="btn btn-secondary" onclick="document.getElementById('preview').classList.toggle('d-none');" style="float: right;">
+													<div class="btn btn-secondary fl-r mt-3" onclick="document.getElementById('preview').classList.toggle('d-none');">
 														Toggle preview
 													</div>
 

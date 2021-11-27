@@ -5700,3 +5700,7 @@ blockquote p {
 .b2 {
   border: 2px solid !important;
 }
+
+.fl-r {
+  float: right !important;
+}

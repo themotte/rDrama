@@ -359,10 +359,9 @@
 									<label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.id}}">
 										<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></i>
 									</label>
-									&nbsp;
-									<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-									<a id="save-reply-to-{{c.id}}" class="d-none d-md-block btn btn-primary text-muted ml-2" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
 								</div>
+								<a id="save-reply-to-{{c.id}}" class="d-none d-md-block btn btn-primary text-muted ml-2 fl-r" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
+								<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 								<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('d-none')" class="d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 								<a id="save-reply-to-{{c.id}}" class="d-md-none btn btn-primary text-white ml-2" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
 							</form>
@@ -397,12 +396,9 @@
 								<div id="filename-edit-reply-{{c.id}}"><i class="far fa-image"></i></div>
 								<input id="file-edit-reply-{{c.id}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-edit-reply-{{c.id}}').innerHTML='image';" hidden>
 							</label>
-
-							<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-							<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="d-none d-md-block btn btn-primary ml-2" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
 						</div>
-						<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-						<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="d-md-none btn btn-primary ml-2" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
+						<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
+						<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 					</form>
 					<div id="preview-edit-{{c.id}}" class="my-3"></div>
 					<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
@@ -568,11 +564,9 @@
 							<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
 							<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
 						</label>
-						<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-none d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-						<a id="save-reply-to-{{c.fullname}}" class="d-none d-md-block btn btn-primary text-muted ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
 					</div>
-					<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="d-md-none btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-					<a id="save-reply-to-{{c.fullname}}" class="d-md-none btn btn-primary text-white ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
+					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary text-white ml-2 fl-r" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
+					<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 				</form>
 				<div id="reply-edit-{{c.id}}" class="my-3"></div>
 				<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>

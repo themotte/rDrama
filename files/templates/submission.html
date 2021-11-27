@@ -557,24 +557,26 @@
 
 					{% if v and (v.id==p.author_id or v.admin_level > 2) and not v.is_suspended %}
 						<div id="edit-post-body-{{p.id}}" class="d-none comment-write collapsed child">
-							<form id="post-edit-form-{{p.id}}" class="d-flex flex-column" action="/edit_post/{{p.id}}" method="post">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
-								<input type="hidden" name="current_page" value="{{request.path}}">
-								<input name="title" required placeholder="title" value="{{p.title}}" >
-								<textarea name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
-								
-								<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+							<form id="post-edit-form-{{p.id}}" action="/edit_post/{{p.id}}" method="post">
+								<div class="d-flex flex-column">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
+									<input type="hidden" name="current_page" value="{{request.path}}">
+									<input name="title" required placeholder="title" value="{{p.title}}" >
+									<textarea name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
+									
+									<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
-								<div class="comment-format"> 
-									<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></i></small> 
-									<a class="format" href="javascript:void(0)"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></i></a> 
-									<a class="format" href="javascript:void(0)"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Quote"></i></a>
-									<a class="format" href="javascript:void(0)"><span class="font-weight-bolder text-uppercase" onclick="commentForm('post-edit-box-{{p.id}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add GIF">GIF</span></a>
-									<a class="format" href="javascript:void(0)"><i class="fas fa-smile-beam" onclick="loadEmojis('post-edit-box-{{p.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji"></i></a>
-									<small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
-									<a href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-									<button form="post-edit-form-{{p.id}}" class="btn btn-primary ml-2">Save Edit</button>
+									<div class="comment-format">
+										<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></i></small> 
+										<a class="format" href="javascript:void(0)"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Italicize"></i></a> 
+										<a class="format" href="javascript:void(0)"><i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('post-edit-box-{{p.id}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Quote"></i></a>
+										<a class="format" href="javascript:void(0)"><span class="font-weight-bolder text-uppercase" onclick="commentForm('post-edit-box-{{p.id}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add GIF">GIF</span></a>
+										<a class="format" href="javascript:void(0)"><i class="fas fa-smile-beam" onclick="loadEmojis('post-edit-box-{{p.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji"></i></a>
+										<small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
+									</div>
 								</div>
+								<button form="post-edit-form-{{p.id}}" class="btn btn-primary ml-2 fl-r">Save Edit</button>
+								<a href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 							</form>
 							<div id="post-edit-{{p.id}}" class="my-3"></div>
 							<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
@@ -837,8 +839,8 @@
 					<div id="filename-show-reply-{{p.fullname}}"><i class="far fa-image"></i></div>
 					<input id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{p.fullname}}').innerHTML='image';" hidden>
 				</label>
-				<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
 			</div>
+			<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto fl-r" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
 		</form>
 		<div id="form-preview-{{p.id}}" class="my-3"></div>
 		<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
