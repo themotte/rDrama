@@ -392,7 +392,8 @@ def get_post_title(v):
 	url = request.values.get("url", None)
 	if not url: abort(400)
 
-	x = requests.get(url, headers=titleheaders, timeout=5)
+	try: x = requests.get(url, headers=titleheaders, timeout=5)
+	except: abort(400)
 
 	soup = BeautifulSoup(x.content, 'html.parser')
 
