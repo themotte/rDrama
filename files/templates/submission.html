@@ -561,32 +561,32 @@
 			</div> -->
 
 			<div class="flex justify-between mb-1">
-				<div class="ml-20 text-gray-700 font-bold font-heading">
+				<div class="ml-20 text-gray-900 font-bold font-heading">
 					{{ p.comment_count }} {{ 'Response' if p.comment_count == 1 else 'Responses' }}
 				</div>
 				<ul class="flex space-x-3 text-sm text-gray-500 leading-normal">
 					<li>
-						<a href="?sort=top" class="{% if sort == 'top' %}font-bold text-gray-900{% endif %}">
+						<a href="?sort=top" class="{% if sort == 'top' %}font-bold text-red-600{% endif %}">
 							Top
 						</a>
 					</li>
 					<li>
-						<a href="?sort=new" class="{% if sort == 'new' %}font-bold text-gray-900{% endif %}">
+						<a href="?sort=new" class="{% if sort == 'new' %}font-bold text-red-600{% endif %}">
 							Latest
 						</a>
 					</li>
 					<li>
-						<a href="?sort=old" class="{% if sort == 'old' %}font-bold text-gray-900{% endif %}">
+						<a href="?sort=old" class="{% if sort == 'old' %}font-bold text-red-600{% endif %}">
 							Oldest
 						</a>
 					</li>
 					<li>
-						<a href="?sort=controversial" class="{% if sort == 'controversial' %}font-bold text-gray-900{% endif %}">
+						<a href="?sort=controversial" class="{% if sort == 'controversial' %}font-bold text-red-600{% endif %}">
 							Controversial
 						</a>
 					</li>
 					<li>
-						<a href="?sort=bottom" class="{% if sort == 'bottom' %}font-bold text-gray-900{% endif %}">
+						<a href="?sort=bottom" class="{% if sort == 'bottom' %}font-bold text-red-600{% endif %}">
 							Worst
 						</a>
 					</li>
