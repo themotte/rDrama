@@ -441,7 +441,7 @@
 
 					<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover mb-2" alt="author avatar"/>
 
-					<div class="text-center font-bold hidden md:block">
+					<div class="text-sm text-center font-bold hidden md:block">
 					{% if v and request.path.startswith('/@') and not v.admin_level %}
 						{% if voted==1 %}
 						<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
