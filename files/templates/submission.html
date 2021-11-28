@@ -265,7 +265,7 @@
 					<!-- Meta information -->
 					<div class="flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
 
-						<img loading="lazy" src="{{ p.author.profile_url }}" class="md:hidden w-9 h-9 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ p.author.username }} avatar"/>
+						<img loading="lazy" src="{{ p.author.profile_url }}" class="md:hidden w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
 
 						{% if v and v.admin_level==6 and p.author.shadowbanned %}
 						<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
@@ -439,7 +439,7 @@
 				<!-- Author avatar, post score, and voting buttons -->
 				<div class="flex flex-col flex-shrink-0 items-center mr-4">
 
-					<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-900 object-cover mb-2" alt="author avatar"/>
+					<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover mb-2" alt="author avatar"/>
 
 					<!-- {% if v %}
 					<div id="voting" class="shadow-inner shadow-md rounded-md flex flex-col mb-1 py-2 items-center w-16 border-opacity-40 border border-gray-700 bg-gray-700 text-gray-500">
@@ -561,27 +561,27 @@
 			</div> -->
 
 			<div class="flex justify-between mb-1">
-				<div class="ml-20 text-gray-200 font-bold font-heading">
+				<div class="ml-20 text-gray-700 font-bold font-heading">
 					{{ p.comment_count }} {{ 'Response' if p.comment_count == 1 else 'Responses' }}
 				</div>
 				<ul class="flex space-x-3 text-sm text-gray-500 leading-normal">
 					<li>
-						<a href="?sort=top" class="{% if sort == 'top' %}font-bold text-gray-200{% endif %}">
+						<a href="?sort=top" class="{% if sort == 'top' %}font-bold text-gray-800{% endif %}">
 							Top
 						</a>
 					</li>
 					<li>
-						<a href="?sort=new" class="{% if sort == 'new' %}font-bold text-gray-200{% endif %}">
+						<a href="?sort=new" class="{% if sort == 'new' %}font-bold text-gray-800{% endif %}">
 							Latest
 						</a>
 					</li>
 					<li>
-						<a href="?sort=old" class="{% if sort == 'old' %}font-bold text-gray-200{% endif %}">
+						<a href="?sort=old" class="{% if sort == 'old' %}font-bold text-gray-800{% endif %}">
 							Oldest
 						</a>
 					</li>
 					<li>
-						<a href="?sort=controversial" class="{% if sort == 'controversial' %}font-bold text-gray-200{% endif %}">
+						<a href="?sort=controversial" class="{% if sort == 'controversial' %}font-bold text-gray-800{% endif %}">
 							Controversial
 						</a>
 					</li>
@@ -594,7 +594,7 @@
 			</div>
 
 			<div id="comment-form-space-{{p.fullname}}" class="comment-write flex">
-				<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-900 object-cover mr-4" alt="my avatar"/>
+				<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover mr-4" alt="my avatar"/>
 				{% include "/comments/CommentForm.html" %}
 			</div>
 
