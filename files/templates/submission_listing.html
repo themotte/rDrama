@@ -188,7 +188,7 @@
 		<div class="flex flex-row flex-nowrap pl-5 md:pl-8">
 			<div style="z-index: 3;">
 				{% if p.club and not (v and v.paid_dues) %}
-					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-md p-1 w-32 h-20 object-cover object-cover bg-white border border-gray-900">
+					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-md p-1 w-32 h-20 object-cover object-cover bg-white border border-gray-300">
 				{% elif not p.url %}
 					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-md p-1 w-32 h-20 object-cover object-cover bg-white border border-gray-900">
