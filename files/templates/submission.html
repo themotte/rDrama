@@ -646,7 +646,7 @@
 						{% endif %}
 						{% if v and v.admin_level > 1 %}
 							<a id="pin-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} list-inline-item text-info" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin</a>
-							<a id="unpin-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} list-inline-item text-info" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin</a>
+							<a id="unpin-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} list-inline-item text-info" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin</a>
 							{% if v==p.author %}
 								<a id="distinguish-{{p.id}}" class="{% if p.distinguish_level %}d-none{% endif %} list-inline-item text-info" href="javascript:void(0)" onclick="post_toast2('/distinguish/{{p.id}}','distinguish-{{p.id}}','undistinguish-{{p.id}}')"><i class="fas fa-crown"></i>Distinguish</a>
 								<a id="undistinguish-{{p.id}}" class="{% if not p.distinguish_level %}d-none{% endif %} list-inline-item text-info" href="javascript:void(0)" onclick="post_toast2('/distinguish/{{p.id}}','distinguish-{{p.id}}','undistinguish-{{p.id}}')"><i class="fas fa-crown"></i>Undistinguish</a>
