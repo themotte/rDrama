@@ -6,12 +6,12 @@
 	</button>
 	<ul class="dropdown-menu w-56 bg-gray-900 rounded-md rounded-t-none shadow-lg" aria-labelledby="dropdownProfileMenuButton" x-placement="bottom-start">
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" href="/shop">
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/shop">
 				<i class="fas fa-user fa-sm fa-fw mr-4"></i>Profile
 			</a>
 		</li>
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}">
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}">
 				<i class="fas fa-envelope fa-sm fa-fw mr-4"></i>Inbox
 				{% if v.notifications_count %}<span class="text-red-500">{{ v.notifications_count }}</span>{% endif %}
 			</a>
@@ -20,12 +20,12 @@
 			<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 		</li>
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" href="/@{{ v.username }}">
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/@{{ v.username }}">
 				<i class="fas fa-pen fa-sm fa-fw mr-4"></i>Posts
 			</a>
 		</li>
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" href="/@{{ v.username }}/comments">
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/@{{ v.username }}/comments">
 				<i class="fas fa-comments-alt fa-sm fa-fw mr-4"></i>Comments
 			</a>
 		</li>
@@ -33,12 +33,12 @@
 			<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 		</li>
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" href="https://marsey1.gumroad.com/l/tfcvri">
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="https://marsey1.gumroad.com/l/tfcvri">
 				<i class="fas fa-arrow-alt-up fa-sm fa-fw mr-4"></i>Upgrade account
 			</a>
 		</li>
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" href="/settings">
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/settings">
 				<i class="fas fa-cog fa-sm fa-fw mr-4"></i>Settings
 			</a>
 		</li>
@@ -46,7 +46,7 @@
 			<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 		</li>
 		<li>
-			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-pink-800 hover:to-pink-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-pink-800 focus:to-pink-700" onclick="post_toast('/logout', '1')">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/logout', '1')">
 				<i class="fas fa-power-off fa-sm fa-fw mr-4"></i>Logout
 			</button>
 		</li>
