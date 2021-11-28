@@ -439,9 +439,9 @@
 				<!-- Author avatar, post score, and voting buttons -->
 				<div class="flex flex-col flex-shrink-0 items-center mr-4">
 
-					<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover mb-2" alt="author avatar"/>
+					<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="author avatar"/>
 
-					<div class="text-sm text-center font-bold hidden md:block">
+					<div class="py-2 text-sm text-center font-bold hidden md:block">
 					{% if v and request.path.startswith('/@') and not v.admin_level %}
 						{% if voted==1 %}
 						<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
