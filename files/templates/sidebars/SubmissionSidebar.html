@@ -1,7 +1,7 @@
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex flex-col flex-shrink-0 py-4">
-	<div v-cloak class="flex flex-col rounded-md border border-gray-900 overflow-hidden mb-4">
+	<div v-cloak class="flex flex-col rounded-md border border-gray-300 overflow-hidden mb-4">
 		{% if v %}
-		<button @click="store.vote(1)" class="group flex justify-between w-full px-4 py-3 bg-gradient-to-t hover:from-yellow-500 hover:to-yellow-600 border-b border-gray-900 rounded-t-md text-shadow-t shadow-inset-t-white-10 text-base font-medium text-gray-300 active:text-yellow-500 active:shadow-inner active:outline-none" v-bind:class="[[ store.voteType === 1 ? 'from-yellow-600 to-yellow-500' : 'from-gray-700 to-gray-700']]">
+		<button @click="store.vote(1)" class="group flex justify-between w-full px-4 py-3 bg-gradient-to-t hover:from-yellow-500 hover:to-yellow-600 border-b border-gray-300 rounded-t-md text-shadow-t shadow-inset-t-white-10 text-base font-medium text-gray-300 active:text-yellow-500 active:shadow-inner active:outline-none" v-bind:class="[[ store.voteType === 1 ? 'from-yellow-600 to-yellow-500' : 'from-gray-700 to-gray-700']]">
 			<span>
 				🕋 Halal
 			</span>
@@ -21,7 +21,7 @@
 		{% endif %}
 		{% endif %}
 	</div>
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-900 shadow-inset-t-white-05"/>
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
 	<div>
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			Accolades
@@ -78,14 +78,14 @@
 			{% endif %}
 		</ul>
 	</div>
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-900 shadow-inset-t-white-05"/>
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
 	<div>
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			Link
 		</h2>
-		<input type="text" onclick="this.select()" value="https://rdrama.net/post/{{ p.id }}" class="m-0.5 p-0.5 bg-gray-900 border border-gray-900 text-xs text-gray-400 rounded-sm w-44">
+		<input type="text" onclick="this.select()" value="https://rdrama.net/post/{{ p.id }}" class="m-0.5 p-0.5 bg-gray-900 border border-gray-300 text-xs text-gray-400 rounded-sm w-44">
 	</div>
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-900 shadow-inset-t-white-05"/>
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
 	<div>
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			Share Post
@@ -99,7 +99,7 @@
 			</a>
 		</div>
 	</div>
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-900 shadow-inset-t-white-05"/>
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
 	<div>
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			DramaMetric™
