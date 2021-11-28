@@ -32,7 +32,7 @@
 	</div>
 {% endif %}
 
-<li id="post-{{p.id}}" class="mb-4 pb-4 border-b border-gray-700 {% if p.is_banned %} banned{% endif %}{% if p.deleted_utc %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
+<li id="post-{{p.id}}" class="mb-4 pb-4 border-b border-gray-300 {% if p.is_banned %} banned{% endif %}{% if p.deleted_utc %} deleted{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %}">
 
 	<div class="flex md:flex-row flex-nowrap">
 
