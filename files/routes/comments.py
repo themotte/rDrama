@@ -547,6 +547,8 @@ def api_comment(v):
 				if v.any_block_exists(user): continue
 				if user.id != v.id: notify_users.add(user.id)
 
+		if request.host == 'pcmemes.net':
+			if 'kippy' in body_html.lower() and 1592 not in notify_users: notify_users.add(1592)
 		if request.host in ['rdrama.net','pcmemes.net']:
 			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users: notify_users.add(1)
 		if request.host == 'rdrama.net':
@@ -817,6 +819,8 @@ def edit_comment(cid, v):
 					if v.any_block_exists(user): continue
 					if user.id != v.id: notify_users.add(user.id)
 
+		if request.host == 'pcmemes.net':
+			if 'kippy' in body_html.lower() and 1592 not in notify_users: notify_users.add(1592)
 		if request.host in ['rdrama.net','pcmemes.net']:
 			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users: notify_users.add(1)
 		if request.host == 'rdrama.net':
