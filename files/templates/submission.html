@@ -241,7 +241,7 @@
 			{% if not p.is_image and p.thumb_url and not p.embed_url %}
 			<div class="hidden md:block pl-3">
 				<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
-					<img loading="lazy" src="{{p.thumb_url}}" class="shadow-md w-36 h-20 object-cover p-1 w-36 h-20 object-cover bg-white border border-gray-900" alt="post thumbnail">
+					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-1 w-32 h-20 object-cover object-cover bg-white border border-gray-300" alt="post thumbnail">
 				</a>
 			</div>
 			{% endif %}
