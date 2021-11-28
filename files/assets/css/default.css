@@ -20,7 +20,7 @@ p:last-of-type {
 }
 
 .sub-header-shadow {
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.10) inset, -1px -1px 0.5px rgba(17, 40, 19, 0.36) inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.10) inset, -1px -1px 0.5px rgba(17, 40, 19, 0.1) inset;
 }
 .shadow-inset-b-white-07 {
     box-shadow: -1px -1px 1px rgba(255, 255, 255, 0.07) inset;
