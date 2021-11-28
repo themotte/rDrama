@@ -277,9 +277,9 @@
 
 	<div class="flex flex-col flex-shrink-0 items-center {{ 'mr-4' if not c.parent_comment_id or standalone else 'mr-3' }}">
 		{% if standalone or level==1 %}
-		<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ c.author.username }} avatar"/>
+		<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 mb-2 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ c.author.username }} avatar"/>
 		{% else %}
-		<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-9 h-9 mb-2 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ c.author.username }} avatar"/>
+		<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-9 h-9 mb-2 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ c.author.username }} avatar"/>
 		{% endif %}
 		{% if replies %}
 		<div class="w-0.5 h-full border-l border-gray-700 mb-2"></div>
@@ -307,7 +307,7 @@
 				{% else %}
 				<div class="flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
 
-				<img loading="lazy" src="{{ c.author.profile_url }}" class="md:hidden w-9 h-9 p-[3px] bg-white border border-gray-900 object-cover" alt="{{ c.author.username }} avatar"/>
+				<img loading="lazy" src="{{ c.author.profile_url }}" class="md:hidden w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ c.author.username }} avatar"/>
 
 				<a class="text-sm font-bold font-heading" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" tabindex="0" style="color:#{{c.author.namecolor}};">
 					{% if c.author.patron and not c.distinguish_level %}
