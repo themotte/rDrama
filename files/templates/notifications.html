@@ -6,20 +6,20 @@
 
 {% block subHeader %}
 	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t-md">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-800 to-gray-700 rounded-t-md sub-header-shadow"></div>
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-200 to-gray-100 rounded-t-md sub-header-shadow"></div>
 		<div class="relative col-span-full flex items-center">
 			<div>
 				<h1 class="font-bold text-xl font-heading leading-normal">
 					Inbox
 				</h1>
-				<ul class="text-gray-400 text-sm flex items-center space-x-3 leading-normal">
+				<ul class="text-gray-700 text-sm flex items-center space-x-3 leading-normal">
 					<li>
-						<a class="{% if not '=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications">
+						<a class="{% if not '=true' in request.full_path %}font-bold text-red-600{% endif %}" href="/notifications">
 							All
 						</a>
 					</li>
 					<li>
-						<a class="{% if '/notifications?posts=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications?posts=true">
+						<a class="{% if '/notifications?posts=true' in request.full_path %}font-bold text-red-600{% endif %}" href="/notifications?posts=true">
 							Posts
 							{% if v.post_notifications_count %}
 							<span class="text-gray-600">({{v.post_notifications_count}})</span>
@@ -27,13 +27,13 @@
 						</a>
 					</li>
 					<li>
-						<a class="{% if '/notifications?messages=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications?messages=true">
+						<a class="{% if '/notifications?messages=true' in request.full_path %}font-bold text-red-600{% endif %}" href="/notifications?messages=true">
 							Messages
 						</a>
 					</li>
 					{% if v.admin_level > 1 %}
 					<li>
-						<a class="{% if '/notifications?modmail=true' in request.full_path %}font-bold text-pink-600{% endif %}" href="/notifications?modmail=true">
+						<a class="{% if '/notifications?modmail=true' in request.full_path %}font-bold text-red-600{% endif %}" href="/notifications?modmail=true">
 							Mod Mail
 						</a>
 					</li>
@@ -65,7 +65,7 @@
 		<p class="text-gray-500 text-sm">
 			When someone comments or replies, it will show up here.
 		</p>
-		<a href="/notifications" class="block mt-3 px-4 py-2 bg-gradient-to-t from-pink-700 to-pink-600 focus:from-pink-600 focus:to-pink-700 border border-gray-900 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:shadow-inner focus:outline-none">
+		<a href="/notifications" class="block mt-3 px-4 py-2 bg-gradient-to-t from-red-700 to-red-600 focus:from-red-600 focus:to-red-700 border border-gray-900 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:shadow-inner focus:outline-none">
 			View entire inbox
 		</a>
 	</div>
@@ -86,9 +86,9 @@
 				{% set path = request.full_path %}
 			{% endif %}
 			{% if request.full_path == "/notifications" %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-pink-600 bg-gray-900" href="{{path}}?page={{page-1}}">Previous</a></small>
+				<small><a class="block px-2 py-1 text-sm font-bold text-red-600 bg-gray-900" href="{{path}}?page={{page-1}}">Previous</a></small>
 			{% else %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-pink-600 bg-gray-900" href="{{path}}&page={{page-1}}">Previous</a></small>
+				<small><a class="block px-2 py-1 text-sm font-bold text-red-600 bg-gray-900" href="{{path}}&page={{page-1}}">Previous</a></small>
 			{% endif %}
 		</li>
 		{% else %}
@@ -105,9 +105,9 @@
 				{% set path = request.full_path %}
 			{% endif %}
 			{% if request.full_path == "/notifications" %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-pink-600 bg-gray-900" href="{{path}}?page={{page+1}}">Next</a></small>
+				<small><a class="block px-2 py-1 text-sm font-bold text-red-600 bg-gray-900" href="{{path}}?page={{page+1}}">Next</a></small>
 			{% else %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-pink-600 bg-gray-900" href="{{path}}&page={{page+1}}">Next</a></small>
+				<small><a class="block px-2 py-1 text-sm font-bold text-red-600 bg-gray-900" href="{{path}}&page={{page+1}}">Next</a></small>
 			{% endif %}
 		</li>
 		{% else %}
