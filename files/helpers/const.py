@@ -143,6 +143,8 @@ if SITE == 'rdrama.net':
 	LLM_ID = 253
 	DAD_ID = 2513
 	MOM_ID = 4588
+	BUG_THREAD = 18459
+	EMOJI_THREAD = 22479
 elif SITE == "pcmemes.net":
 	BASEDBOT_ID = 800
 	NOTIFICATIONS_ID = 1046
@@ -159,6 +161,8 @@ elif SITE == "pcmemes.net":
 	LLM_ID = 0
 	DAD_ID = 0
 	MOM_ID = 0
+	BUG_THREAD = 4103
+	EMOJI_THREAD = 0
 else:
 	BASEDBOT_ID = 0
 	NOTIFICATIONS_ID = 1
@@ -175,12 +179,14 @@ else:
 	LLM_ID = 0
 	DAD_ID = 0
 	MOM_ID = 0
+	BUG_THREAD = 0
+	EMOJI_THREAD = 0
 
 PUSHER_INSTANCE_ID = '02ddcc80-b8db-42be-9022-44c546b4dce6'
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 
 single_words = "|".join([slur.lower() for slur in SLURS.keys()])
-SLUR_REGEX = re.compile(rf"(?i)((?<=\s|>)|^)(nigger)((?=[\s<,.]|s[\s<,.])|$)")
+SLUR_REGEX = re.compile(rf"(?i)((?<=\s|>)|^)({single_words})((?=[\s<,.]|s[\s<,.])|$)")
 
 def sub_matcher(match: re.Match) -> str:
 	return SLURS[match.group(0).lower()]
@@ -388,6 +394,14 @@ BADGES = {
 	87: {
 		'name': 'Unblockable',
 		'description': 'This user is unblockable'
+	},
+        88: {
+		'name': 'Provider',
+		'description': 'This user provided a bountiful feast for Thanksgiving'
+	},
+        89: {
+		'name': 'Dinner',
+		'description': 'Yes, it is edible'
 	},
 }
 
@@ -749,6 +763,3 @@ TROLLTITLES = [
 	"Pretty sure this is @{username}'s Reddit account",
 	"Hey jannies can you please ban @{username}",
 ]
-
-BUG_THREAD = 18459
-EMOJI_THREAD = 22479

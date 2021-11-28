@@ -269,3 +269,27 @@ function markdown(first, second) {
 	
 	document.getElementById(second).innerHTML = marked(input)
 }
+
+function charLimit(form, text) {
+
+	var input = document.getElementById(form);
+
+	var text = document.getElementById(text);
+
+	var length = input.value.length;
+
+	var maxLength = input.getAttribute("maxlength");
+
+	if (length >= maxLength) {
+		text.style.color = "#E53E3E";
+	}
+	else if (length >= maxLength * .72){
+		text.style.color = "#FFC107";
+	}
+	else {
+		text.style.color = "#A0AEC0";
+	}
+
+	text.innerText = length + ' / ' + maxLength;
+
+}

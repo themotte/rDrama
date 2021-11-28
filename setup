@@ -15,4 +15,4 @@ mkdir /songs
 mkdir /images
 cp ./env /env
 . /env
-gunicorn files.__main__:app -k gevent -w 2 --reload -b 0.0.0.0:80 --max-requests 1000 --max-requests-jitter 500
+gunicorn files.__main__:app -k gevent -w 2 --reload -b localhost:80 --max-requests 1000 --max-requests-jitter 500

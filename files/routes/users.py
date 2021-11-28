@@ -17,14 +17,15 @@ site = environ.get("DOMAIN").strip()
 
 beams_client = PushNotifications(instance_id=PUSHER_INSTANCE_ID, secret_key=PUSHER_KEY)
 
+
 @app.get("/@<username>/upvoters")
 @auth_desired
 def upvoters(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).limit(25).all()
+	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
-	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).limit(25).all()
+	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -41,9 +42,9 @@ def upvoters(v, username):
 def downvoters(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).limit(25).all()
+	votes = g.db.query(Vote.user_id, func.count(Vote.user_id)).join(Submission, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1, Submission.author_id==id).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 
-	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).limit(25).all()
+	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).join(Comment, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1, Comment.author_id==id).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -60,9 +61,9 @@ def downvoters(v, username):
 def upvoting(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).limit(25).all()
+	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
-	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).limit(25).all()
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -79,9 +80,9 @@ def upvoting(v, username):
 def downvoting(v, username):
 	id = get_user(username).id
 
-	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).limit(25).all()
+	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
-	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).limit(25).all()
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
 
 	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
@@ -247,10 +248,32 @@ def leaderboard(v):
 	users4 = users.order_by(User.comment_count.desc()).limit(10).all()
 	users5 = users.order_by(User.received_award_count.desc()).limit(10).all()
 	users7 = users.order_by(User.coins_spent.desc()).limit(20).all()
+
+
+
+
+	votes1 = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
+
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+
+	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
+
+	users8 = g.db.query(User).filter(User.id.in_(votes3.keys())).all()
+	users9 = []
+	for user in users8: users9.append((user, votes3[user.id]))
+
+	users9 = sorted(users9, key=lambda x: x[1], reverse=True)[:25]
+
+
+
+
+
+
+
 	if 'pcmemes.net' in request.host:
 		users6 = users.order_by(User.basedcount.desc()).limit(10).all()
-		return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7)
-	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users7=users7)
+		return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9)
+	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users7=users7, users9=users9)
 
 
 @app.get("/@<username>/css")
@@ -308,8 +331,7 @@ def unsubscribe(v, post_id):
 @app.get("/report_bugs")
 @auth_required
 def reportbugs(v):
-	if request.host == 'rdrama.net': return redirect('https://rdrama.net/post/18459')
-	return render_template("reportbugs.html", v=v)
+	return redirect(f'/post/{BUG_THREAD}')
 
 @app.post("/@<username>/message")
 @limiter.limit("1/second")

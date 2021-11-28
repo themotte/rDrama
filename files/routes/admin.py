@@ -97,14 +97,6 @@ def club_allow(v, username):
 		x.club_banned = False
 		g.db.add(x)
 
-
-	ma=ModAction(
-		kind="club_allow",
-		user_id=v.id,
-		target_user_id=u.id,
-		)
-	g.db.add(ma)
-
 	g.db.commit()
 	return {"message": f"@{username} has been allowed into the {cc}!"}
 
@@ -126,13 +118,6 @@ def club_ban(v, username):
 		x.club_banned = True
 		u.club_allowed = False
 		g.db.add(x)
-
-	ma=ModAction(
-		kind="club_ban",
-		user_id=v.id,
-		target_user_id=u.id,
-		)
-	g.db.add(ma)
 
 	g.db.commit()
 	return {"message": f"@{username} has been kicked from the {cc}. Deserved."}
@@ -164,30 +149,30 @@ def remove_admin(v, username):
 	return {"message": "Admin removed!"}
 
 
-@app.post("/@<username>/make_fake_admin")
+@app.post("/@<username>/make_meme_admin")
 @limiter.limit("1/second")
 @admin_level_required(2)
-def make_fake_admin(v, username):
+def make_meme_admin(v, username):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 1
 		g.db.add(user)
 		g.db.commit()
-	return {"message": "User has been made fake admin!"}
+	return {"message": "User has been made meme admin!"}
 
 
-@app.post("/@<username>/remove_fake_admin")
+@app.post("/@<username>/remove_meme_admin")
 @limiter.limit("1/second")
 @admin_level_required(2)
-def remove_fake_admin(v, username):
+def remove_meme_admin(v, username):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
 		g.db.add(user)
 		g.db.commit()
-	return {"message": "Fake admin removed!"}
+	return {"message": "Meme admin removed!"}
 
 
 @app.post("/admin/monthly")

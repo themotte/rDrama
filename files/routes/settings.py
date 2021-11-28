@@ -825,10 +825,9 @@ def settings_block_user(v):
 
 	user = get_user(request.values.get("username"), graceful=True)
 
+	if not user: return {"error": "That user doesn't exist."}, 404
+	
 	if user.unblockable: return {"error": "This user is unblockable."}, 403
-
-	if not user:
-		return {"error": "That user doesn't exist."}, 404
 
 	if user.id == v.id:
 		return {"error": "You can't block yourself."}, 409
@@ -853,8 +852,7 @@ def settings_block_user(v):
 
 	g.db.commit()
 
-	if v.admin_level == 1: return {"message": f"@{user.username} banned!"}
-	else: return {"message": f"@{user.username} blocked."}
+	return {"message": f"@{user.username} blocked."}
 
 
 @app.post("/settings/unblock")
@@ -877,8 +875,6 @@ def settings_unblock_user(v):
 	cache.delete_memoized(frontlist)
 
 	g.db.commit()
-
-	if v.admin_level == 1: return {"message": f"@{user.username} unbanned!"}
 
 	return {"message": f"@{user.username} unblocked."}
 

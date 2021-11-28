@@ -4,13 +4,13 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
 
-		<script src="/assets/js/submit.js?v=68"></script>
+		<script src="/assets/js/submit.js?v=72"></script>
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=3">
+		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=4">
 
 		{% if request.host == 'pcmemes.net' %}
 			{% set cc='Splash Mountain' %}
@@ -31,12 +31,12 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=123"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=122">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=122">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=127"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=124">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=123">
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=122">
+			<link rel="stylesheet" href="/assets/css/main.css?v=127">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
 		{% endif %}
 		{% endblock %}
 
@@ -96,14 +96,15 @@
 												<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Uses markdown. Limited to 10000 characters."></i></label>
 
 												<div>
-													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
+													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" required></textarea>
 
-													<div class="btn btn-secondary" onclick="document.getElementById('preview').classList.toggle('d-none');" style="float: right;">
+													<div class="btn btn-secondary fl-r mt-3" onclick="document.getElementById('preview').classList.toggle('d-none');">
 														Toggle preview
 													</div>
-													<div id="preview" class="my-3"></div>
 
-													<span class="position-absolute text-small font-weight-bold" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></span>
+													<div class="text-small font-weight-bold mt-1" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+
+													<div id="preview" class="my-3"></div>
 												</div>
 
 												<p></p>

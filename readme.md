@@ -22,9 +22,9 @@ git clone https://github.com/Aevann1/Drama/
 docker-compose up
 ```
 
-4- That's it! Visit `0.0.0.0` in your browser.
+4- That's it! Visit `localhost` in your browser.
 
-5- Optional: to change the domain from "0.0.0.0" to something else and configure the site settings, as well as integrate it with the external services the website uses, please edit the variables in the docker-compose.yml file and then restart the docker container from inside the docker app.
+5- Optional: to change the domain from "localhost" to something else and configure the site settings, as well as integrate it with the external services the website uses, please edit the variables in the docker-compose.yml file and then restart the docker container from inside the docker app.
 
 ---
 
@@ -48,10 +48,10 @@ cd /drama
 source setup
 ```
 
-4- That's it. Visit `0.0.0.0` in your browser.
+4- That's it. Visit `localhost` in your browser.
 
 
-5- Optional: to change the domain from "0.0.0.0" to something else and configure the site settings, as well as integrate it with the external services the website uses, please run this command and edit the variables:
+5- Optional: to change the domain from "localhost" to something else and configure the site settings, as well as integrate it with the external services the website uses, please run this command and edit the variables:
 
 ```
 nano /env
