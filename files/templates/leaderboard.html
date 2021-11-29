@@ -10,7 +10,7 @@
 				<h1 class="font-bold text-xl font-heading leading-normal">
 					Leaderboards
 				</h1>
-				<ul class="text-gray-700 text-sm flex items-center space-x-3 leading-normal">
+				<ul class="text-gray-600 text-sm flex items-center space-x-3 leading-normal">
 					<li>
 						<a class="{% if not '=true' in request.full_path %}font-bold text-red-600{% endif %}" href="/notifications">
 							Wealthiest
@@ -79,7 +79,7 @@
 				{% endif %}
 			</div>
 			<div class="ml-auto mr-4">
-				<span class="text-xl font-heading font-bold {{ 'text-red-900' if v.username == user.username else 'text-gray-700' }}">
+				<span class="text-xl font-heading font-bold {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
 					{{user.coins}}
 				</span>
 			</div>
