@@ -56,7 +56,7 @@
 	</div>
 	<div class="mb-4 flex flex-col bg-gray-100 rounded-lg overflow-hidden">
 		{% for user in users1 %}
-		<div class="flex items-center border-b last:border-b-none border-gray-300 shadow-inset-t-white-05 odd:bg-gray-200 px-5 py-3 {% if v.username == user.username %}text-pink-900 text-shadow-light bg-pink-600{% elif users1.index(user) % 2 != 0 %}bg-gray-200{% endif %}">
+		<div class="flex items-center border-b last:border-b-none border-gray-300 shadow-inset-t-white-05 px-5 py-3 {% if v.username == user.username %}text-pink-900 text-shadow-light bg-pink-600{% elif users1.index(user) % 2 != 0 %}bg-gray-200{% endif %}">
 			<!-- Rank -->
 			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 {{ 'text-pink-900' if v.username == user.username else 'text-gray-600' }}">
 				{{users1.index(user)+1}}
