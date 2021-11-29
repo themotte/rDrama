@@ -17,12 +17,16 @@ from files.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage
 from .front import frontlist, changeloglist
 from urllib.parse import ParseResult, urlunparse, urlparse, quote
+from os import path
 
 site = environ.get("DOMAIN").strip()
+site_name = environ.get("SITE_NAME").strip()
 CATBOX_KEY = environ.get("CATBOX_KEY").strip()
 titleheaders = {"User-Agent": f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
-with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
+if path.exists(f'snappy_{site_name}.txt'):
+	with open(f'snappy_{site_name}.txt', "r") as f:
+		snappyquotes = f.read().split("{[para]}")
 
 @app.post("/toggle_club/<pid>")
 @auth_required
@@ -938,11 +942,11 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if "rama" in request.host or new_post.url:
+	if "rama" in request.host or "pcm" in request.host or new_post.url:
 		new_post.comment_count = 1
 		g.db.add(new_post)
 
-		if "rama" in request.host:
+		if "rama" in request.host or "pcm" in request.host:
 			if v.id == CARP_ID:
 				if random.random() < 0.02: body = "i love you carp"
 				else: body = "![](/assets/images/emojis/fuckoffcarp.webp)"

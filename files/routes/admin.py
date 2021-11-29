@@ -201,7 +201,7 @@ def monthly(v):
 def get_rules(v):
 
 	try:
-		with open(f'./{SITE_NAME} rules.html', 'r') as f: rules = f.read()
+		with open(f'./rules_{SITE_NAME}.html', 'r') as f: rules = f.read()
 	except Exception:
 		rules = None
 
@@ -216,9 +216,9 @@ def post_rules(v):
 
 	text = request.values.get('rules', '').strip()
 
-	with open(f'./{SITE_NAME} rules.html', 'w+') as f: f.write(text)
+	with open(f'./rules_{SITE_NAME}.html', 'w+') as f: f.write(text)
 
-	with open(f'./{SITE_NAME} rules.html', 'r') as f: rules = f.read()
+	with open(f'./rules_{SITE_NAME}.html', 'r') as f: rules = f.read()
 
 	ma = ModAction(
 		kind="change_rules",
