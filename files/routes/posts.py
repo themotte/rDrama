@@ -999,10 +999,10 @@ def submit_post(v):
 
 			g.db.flush()
 
-
-			n = Notification(comment_id=c.id, user_id=v.id)
-			g.db.add(n)
-			g.db.flush()
+			if not v.is_blocking(snappy):
+				n = Notification(comment_id=c.id, user_id=v.id)
+				g.db.add(n)
+				g.db.flush()
 	
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)

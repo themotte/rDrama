@@ -832,7 +832,7 @@ def settings_block_user(v):
 	if user.id == v.id:
 		return {"error": "You can't block yourself."}, 409
 
-	if v.has_block(user):
+	if v.is_blocking(user):
 		return {"error": f"You have already blocked @{user.username}."}, 409
 
 	if user.id == NOTIFICATIONS_ID:
@@ -863,7 +863,7 @@ def settings_unblock_user(v):
 
 	user = get_user(request.values.get("username"))
 
-	x = v.has_block(user)
+	x = v.is_blocking(user)
 	
 	if not x: abort(409)
 

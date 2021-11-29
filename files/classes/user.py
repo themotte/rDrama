@@ -176,10 +176,8 @@ class User(Base):
 	def referral_count(self):
 		return len(self.referrals)
 
-	def has_block(self, target):
-
-		return g.db.query(UserBlock).filter_by(
-			user_id=self.id, target_id=target.id).first()
+	def is_blocking(self, target):
+		return g.db.query(UserBlock).filter_by(user_id=self.id, target_id=target.id).first()
 
 	@property
 	@lazy
