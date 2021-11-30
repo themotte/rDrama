@@ -4,8 +4,6 @@
 	{% set cc='COUNTRY CLUB' %}
 {% endif %}
 
-{% include "expanded_image_modal.html" %}
-
 <script defer src="/assets/js/new_comments_count.js?v=53"></script>
 
 {% for p in listing %}
@@ -580,6 +578,7 @@ window.addEventListener('DOMContentLoaded', function() {
 		{% include "ban_modal.html" %}
 	{% endif %}
 {% endif %}
+{% include "expanded_image_modal.html" %}
 
 <style>
 	.popover {

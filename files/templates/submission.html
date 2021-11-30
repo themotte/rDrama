@@ -15,8 +15,6 @@
 
 <script defer src="/assets/js/new_comments_count.js?v=53"></script>
 
-{% include "expanded_image_modal.html" %}
-
 {% if p.award_count("train") %}
 	<style>
 		@keyframes train {
@@ -913,6 +911,7 @@ window.addEventListener('DOMContentLoaded', function() {
 			{% include "ban_modal.html" %}
 		{% endif %}
 	{% endif %}
+	{% include "expanded_image_modal.html" %}
 {% endif %}
 
 {% if p.award_count("shit") %}
