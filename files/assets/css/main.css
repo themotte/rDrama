@@ -2339,10 +2339,6 @@ button.bg-light:focus {
   background-color: #dae0e5 !important;
 }
 
-.bg-realwhite {
-  background-color: #fff !important;
-}
-
 .bg-transparent {
   background-color: transparent !important;
 }
@@ -5703,4 +5699,9 @@ blockquote p {
 
 .fl-r {
   float: right !important;
+}
+
+.edit-title {
+  background-color: #fff !important;
+  color: #000 !important
 }
