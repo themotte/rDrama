@@ -102,6 +102,7 @@ def api_vote_post(post_id, new, v):
 		post.author.truecoins += 1
 		g.db.add(post.author)
 		real = v.profileurl or v.namecolor != defaultcolor or v.customtitle
+		if real == None: real = False
 		vote = Vote(user_id=v.id,
 					vote_type=new,
 					submission_id=post_id,
@@ -169,8 +170,8 @@ def api_vote_comment(comment_id, new, v):
 		comment.author.coins += 1
 		comment.author.truecoins += 1
 		g.db.add(comment.author)
-		real = (v.profileurl or v.customtitle)
-		print(real)
+		real = v.profileurl or v.namecolor != defaultcolor or v.customtitle
+		if real == None: real = False
 		vote = CommentVote(user_id=v.id,
 						vote_type=new,
 						comment_id=comment_id,
