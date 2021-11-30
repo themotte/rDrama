@@ -829,7 +829,7 @@
 </div>
 
 <script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 	(() => {
 		const date = new Date({{p.created_utc*1000}});
 		document.getElementById('timestamp').title = date.toString();
@@ -876,7 +876,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 {% if not p.comment_count %}
 	<script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 		function poll_vote(cid) {
 			{% if v %}
 				for(let el of document.getElementsByClassName('presult')) {
@@ -915,7 +915,7 @@ window.addEventListener('DOMContentLoaded', function() {
 	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
 	{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
 	<script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 		new BugController({
 			imageSprite: "/assets/images/fly-sprite.webp",
 			canDie: false,
@@ -934,7 +934,7 @@ window.addEventListener('DOMContentLoaded', function() {
 	{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
 	{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
 	<script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 		new BugController({
 			imageSprite: "/assets/images/fireflies.webp",
 			canDie: false,

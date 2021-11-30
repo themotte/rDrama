@@ -1,7 +1,7 @@
 {% extends "default.html" %}
 {% block content %}
 <script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 	function removeFollower(event, username) {
 		post_toast('/remove_follow/' + username); 
 		let table = document.getElementById("followers-table");

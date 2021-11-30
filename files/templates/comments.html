@@ -28,7 +28,7 @@
 
 {% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
 	<script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 		comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 		lastCount = comments['{{p.id}}']
 		if (lastCount && {{c.created_utc*1000}} > lastCount.t) {
@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', function() {
 {% endif %}
 
 <script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 	(() => {
 		const date = new Date({{c.created_utc*1000}});
 		document.getElementById('timestamp-{{c.id}}').title = date.toString();
@@ -817,7 +817,7 @@ window.addEventListener('DOMContentLoaded', function() {
 {% include "expanded_image_modal.html" %}
 
 <script>
-	window.addEventListener('DOMContentLoaded', function() {
+	window.onload = function() {
 		function poll_vote(cid, parentid) {
 			{% if v %}
 				for(let el of document.getElementsByClassName('presult-'+parentid)) {
@@ -852,6 +852,6 @@ window.addEventListener('DOMContentLoaded', function() {
 	})
 </script>
 
-<script defer src="/assets/js/popover.js?v=6"></script>
+<script defer src="/assets/js/popover.js?v=7"></script>
 
 </body>
