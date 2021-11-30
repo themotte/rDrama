@@ -117,7 +117,12 @@
 												<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn">
 													<div id="emoji-reply-btn" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
 												</label>
-																							
+																
+												<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
+													<div id="filename-show-submit"><i class="far fa-image"></i></div>
+													<input id="file-upload-submit" type="file" name="file2" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-submit').innerHTML='image';" hidden>
+												</label>		
+
 												<pre></pre>
 												<div class="form-text text-small"><a href="/formatting" target="_blank">Formatting help</a></div>
 												<pre></pre>

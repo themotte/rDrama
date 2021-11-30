@@ -755,6 +755,16 @@ def submit_post(v):
 		body = body.replace('I ', f'@{v.username} ')
 		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
 
+	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
+		file=request.files["file2"]
+		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
+
+		name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.webp'
+		file.save(name)
+		url = request.host_url[:-1] + process_image(name)
+		
+		body += f"\n\n![]({url})"
+
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 400
