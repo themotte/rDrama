@@ -221,6 +221,9 @@ def post_id(pid, anything=None, v=None):
 @auth_required
 @validate_formkey
 def edit_post(pid, v):
+	if v and v.patron:
+		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
+	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
 	p = get_post(pid)
 
@@ -263,6 +266,16 @@ def edit_post(pid, v):
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
 		p.title = title
 		p.title_html = title_html
+
+	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+		file=request.files["file"]
+		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
+
+		name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.webp'
+		file.save(name)
+		url = request.host_url[:-1] + process_image(name)
+		
+		body += f"\n\n![]({url})"
 
 	if body != p.body:
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
@@ -587,7 +600,7 @@ def submit_post(v):
 		domain = parsed_url.netloc
 
 		qd = parse_qs(parsed_url.query)
-		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_'))
+		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_') and not k.startswith('ref_'))
 
 		new_url = ParseResult(scheme="https",
 							netloc=parsed_url.netloc,
@@ -741,6 +754,16 @@ def submit_post(v):
 		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
 		body = body.replace('I ', f'@{v.username} ')
 		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
+
+	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
+		file=request.files["file2"]
+		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
+
+		name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.webp'
+		file.save(name)
+		url = request.host_url[:-1] + process_image(name)
+		
+		body += f"\n\n![]({url})"
 
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 

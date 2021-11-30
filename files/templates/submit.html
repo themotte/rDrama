@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
-
-		<script src="/assets/js/submit.js?v=72"></script>
-
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
@@ -17,9 +12,6 @@
 		{% else %}
 			{% set cc='Country Club' %}
 		{% endif %}
-
-		{% include "emoji_modal.html" %}
-		{% include "gif_modal.html" %}
 
 		{% block title %}
 		<title>Create a post - {{'SITE_NAME' | app_config}}</title>
@@ -125,7 +117,12 @@
 												<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn">
 													<div id="emoji-reply-btn" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
 												</label>
-																							
+																
+												<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
+													<div id="filename-show-submit"><i class="far fa-image"></i></div>
+													<input id="file-upload-submit" type="file" name="file2" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-submit').innerHTML='image';" hidden>
+												</label>		
+
 												<pre></pre>
 												<div class="form-text text-small"><a href="/formatting" target="_blank">Formatting help</a></div>
 												<pre></pre>
@@ -175,6 +172,16 @@
 
 		</div>
 		{% endblock %}
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
+
+		<script defer src="/assets/js/submit.js?v=72"></script>
+
+
+		{% include "emoji_modal.html" %}
+		{% include "gif_modal.html" %}
+
 </body>
 
 </html>
