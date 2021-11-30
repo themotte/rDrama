@@ -584,7 +584,7 @@ def api_comment(v):
 
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,
-						 vote_type=1
+						 vote_type=1,
 						 )
 
 	g.db.add(vote)

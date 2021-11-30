@@ -265,7 +265,8 @@ CREATE TABLE public.comments (
     body character varying(10000),
     body_html character varying(40000),
     ban_reason character varying(25),
-    notifiedto integer
+    notifiedto integer,
+    realupvotes integer
 );
 
 
@@ -299,7 +300,8 @@ CREATE TABLE public.commentvotes (
     vote_type integer,
     user_id integer,
     creation_ip character(64),
-    app_id integer
+    app_id integer,
+    "real" boolean
 );
 
 
@@ -581,7 +583,8 @@ CREATE TABLE public.submissions (
     body_html character varying(20000),
     embed_url character varying(1500),
     ban_reason character varying(25),
-    title_html character varying(1500)
+    title_html character varying(1500),
+    realupvotes integer
 );
 
 
@@ -827,7 +830,8 @@ CREATE TABLE public.votes (
     submission_id integer,
     vote_type integer,
     creation_ip character(64),
-    app_id integer
+    app_id integer,
+    "real" boolean
 );
 
 
@@ -1221,14 +1225,6 @@ ALTER TABLE ONLY public.userblocks
 
 ALTER TABLE ONLY public.alts
     ADD CONSTRAINT userpair UNIQUE (user1, user2);
-
-
---
--- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_email_key UNIQUE (email);
 
 
 --
@@ -1713,7 +1709,6 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
-
 
 --
 -- PostgreSQL database dump complete

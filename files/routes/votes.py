@@ -6,6 +6,9 @@ from flask import *
 from files.__main__ import app, limiter, cache
 from sqlalchemy.orm import joinedload
 from .front import frontlist
+from os import environ
+
+defaultcolor = environ.get("DEFAULT_COLOR").strip()
 
 @app.get("/votes")
 @limiter.limit("5/second;60/minute;200/hour")
@@ -98,10 +101,12 @@ def api_vote_post(post_id, new, v):
 		post.author.coins += 1
 		post.author.truecoins += 1
 		g.db.add(post.author)
+		real = bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor
 		vote = Vote(user_id=v.id,
 					vote_type=new,
 					submission_id=post_id,
-					app_id=v.client.application.id if v.client else None
+					app_id=v.client.application.id if v.client else None,
+					real = real
 					)
 		g.db.add(vote)
 	
@@ -114,12 +119,14 @@ def api_vote_post(post_id, new, v):
 		g.db.flush()
 		post.upvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1).count()
 		post.downvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1).count()
+		post.realupvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1, real=True).count()
 		g.db.add(post)
 		g.db.commit()
 	except: g.db.rollback()
 	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
+@limiter.limit("5/second;60/minute;200/hour")
 @auth_required
 @validate_formkey
 def api_vote_comment(comment_id, new, v):
@@ -162,10 +169,12 @@ def api_vote_comment(comment_id, new, v):
 		comment.author.coins += 1
 		comment.author.truecoins += 1
 		g.db.add(comment.author)
+		real = bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor
 		vote = CommentVote(user_id=v.id,
 						vote_type=new,
 						comment_id=comment_id,
-						app_id=v.client.application.id if v.client else None
+						app_id=v.client.application.id if v.client else None,
+						real=real
 						)
 
 		g.db.add(vote)
@@ -178,6 +187,7 @@ def api_vote_comment(comment_id, new, v):
 		g.db.flush()
 		comment.upvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=1).count()
 		comment.downvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=-1).count()
+		comment.realupvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=1, real=True).count()
 		g.db.add(comment)
 		g.db.commit()
 	except: g.db.rollback()

@@ -95,7 +95,7 @@ class ModAction(Base):
 		elif self.target_post:
 			if self.target_post.club: return f'<a href="{self.target_post.permalink}">{cc.upper()} ONLY</a>'
 			return f'<a href="{self.target_post.permalink}">{self.target_post.title.replace("<","").replace(">","")}</a>'
-		elif self.target_comment_id: return f'<a href="/comment/{self.target_comment_id}">comment</a>'
+		elif self.target_comment_id: return f'<a href="/comment/{self.target_comment_id}?context=9#context">comment</a>'
 
 	@property
 	@lazy

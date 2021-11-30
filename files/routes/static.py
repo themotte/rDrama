@@ -16,13 +16,13 @@ site_name = environ.get("SITE_NAME").strip()
 @auth_desired
 def static_rules(v):
 
-	if not path.exists(f'./{site_name} rules.html'):
+	if not path.exists(f'./rules_{site_name}.html'):
 		if v and v.admin_level > 1:
 			return render_template('norules.html', v=v)
 		else:
 			abort(404)
 
-	with open(f'./{site_name} rules.html', 'r') as f:
+	with open(f'./rules_{site_name}.html', 'r') as f:
 		rules = f.read()
 
 	return render_template('rules.html', rules=rules, v=v)
@@ -150,7 +150,7 @@ def patrons(v):
 @app.get("/badmins")
 @auth_desired
 def admins(v):
-	admins = g.db.query(User).filter(User.admin_level>1).order_by(User.coins.desc()).all()
+	admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truecoins.desc()).all()
 	return render_template("admins.html", v=v, admins=admins)
 
 

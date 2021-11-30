@@ -176,10 +176,8 @@ class User(Base):
 	def referral_count(self):
 		return len(self.referrals)
 
-	def has_block(self, target):
-
-		return g.db.query(UserBlock).filter_by(
-			user_id=self.id, target_id=target.id).first()
+	def is_blocking(self, target):
+		return g.db.query(UserBlock).filter_by(user_id=self.id, target_id=target.id).first()
 
 	@property
 	@lazy
@@ -253,11 +251,11 @@ class User(Base):
 		elif sort == "old":
 			posts = posts.order_by(Submission.created_utc.asc())
 		elif sort == "controversial":
-			posts = posts.order_by(-1 * Submission.upvotes * Submission.downvotes * Submission.downvotes)
+			posts = posts.order_by(-1 * Submission.realupvotes * Submission.downvotes * Submission.downvotes)
 		elif sort == "top":
-			posts = posts.order_by(Submission.downvotes - Submission.upvotes)
+			posts = posts.order_by(Submission.downvotes - Submission.realupvotes)
 		elif sort == "bottom":
-			posts = posts.order_by(Submission.upvotes - Submission.downvotes)
+			posts = posts.order_by(Submission.realupvotes - Submission.downvotes)
 		elif sort == "comments":
 			posts = posts.order_by(Submission.comment_count.desc())
 

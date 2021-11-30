@@ -17,12 +17,16 @@ from files.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage
 from .front import frontlist, changeloglist
 from urllib.parse import ParseResult, urlunparse, urlparse, quote
+from os import path
 
 site = environ.get("DOMAIN").strip()
+site_name = environ.get("SITE_NAME").strip()
 CATBOX_KEY = environ.get("CATBOX_KEY").strip()
 titleheaders = {"User-Agent": f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
-with open("snappy.txt", "r") as f: snappyquotes = f.read().split("{[para]}")
+if path.exists(f'snappy_{site_name}.txt'):
+	with open(f'snappy_{site_name}.txt', "r") as f:
+		snappyquotes = f.read().split("{[para]}")
 
 @app.post("/toggle_club/<pid>")
 @auth_required
@@ -163,11 +167,11 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+			comments = comments.order_by(-1 * Comment.realupvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
-			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(-Comment.realupvotes - Comment.downvotes)
 		elif sort == "bottom":
-			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(Comment.realupvotes - Comment.downvotes)
 
 		output = []
 		for c in comments.all():
@@ -187,11 +191,11 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+			comments = comments.order_by(-1 * Comment.realupvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
-			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(-Comment.realupvotes - Comment.downvotes)
 		elif sort == "bottom":
-			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(Comment.realupvotes - Comment.downvotes)
 
 		post.replies = comments.filter(Comment.is_pinned != None).all() + comments.filter(Comment.level == 1, Comment.is_pinned == None).all()
 
@@ -938,11 +942,11 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if "rama" in request.host or new_post.url:
+	if "rama" in request.host or "pcm" in request.host or new_post.url:
 		new_post.comment_count = 1
 		g.db.add(new_post)
 
-		if "rama" in request.host:
+		if "rama" in request.host or "pcm" in request.host:
 			if v.id == CARP_ID:
 				if random.random() < 0.02: body = "i love you carp"
 				else: body = "![](/assets/images/emojis/fuckoffcarp.webp)"
@@ -956,7 +960,7 @@ def submit_post(v):
 		if new_post.url:
 			if new_post.url.startswith('https://old.reddit.com/r/'):
 				rev = new_post.url.replace('https://old.reddit.com/', '')
-				rev = f"* [reveddit.com](https://reveddit.com/{rev})\n"
+				rev = f"* [unddit.com](https://unddit.com/{rev})\n"
 			else: rev = ''
 			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, new_post.url)
@@ -971,7 +975,7 @@ def submit_post(v):
 
 			body += f'**[{title}]({href})**:\n\n'
 			if href.startswith('https://old.reddit.com'):
-				body += f'* [reveddit.com](https://reveddit.com/{href.replace("https://old.reddit.com/", "")})\n'
+				body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
 			body += f'* [archive.org](https://web.archive.org/{href})\n'
 			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
 			gevent.spawn(archiveorg, href)
@@ -999,10 +1003,10 @@ def submit_post(v):
 
 			g.db.flush()
 
-
-			n = Notification(comment_id=c.id, user_id=v.id)
-			g.db.add(n)
-			g.db.flush()
+			if not v.is_blocking(snappy):
+				n = Notification(comment_id=c.id, user_id=v.id)
+				g.db.add(n)
+				g.db.flush()
 	
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)

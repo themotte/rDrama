@@ -454,12 +454,12 @@ def api_is_available(name, v):
 	if len(name)<3 or len(name)>25:
 		return {name:False}
 		
-	name=name.replace('_','\_')
+	name2 = name.replace('_','\_')
 
 	x= g.db.query(User).filter(
 		or_(
-			User.username.ilike(name),
-			User.original_username.ilike(name)
+			User.username.ilike(name2),
+			User.original_username.ilike(name2)
 			)
 		).first()
 
@@ -467,7 +467,6 @@ def api_is_available(name, v):
 		return {name: False}
 	else:
 		return {name: True}
-
 
 @app.get("/id/<id>")
 def user_id(id):
@@ -556,12 +555,12 @@ def u_username(username, v=None):
 			else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	
-	if hasattr(u, 'is_blocking') and u.is_blocking and (not v or v.admin_level < 2):
+	if v and hasattr(u, 'is_blocking') and u.is_blocking:
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
 		else: return render_template("userpage_blocking.html", u=u, v=v)
 
 
-	if hasattr(u, 'is_blocked') and u.is_blocked and (not v or v.admin_level < 2):
+	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
 		else: return render_template("userpage_blocked.html", u=u, v=v)
 
@@ -691,11 +690,11 @@ def u_username_comments(username, v=None):
 	elif sort == "old":
 		comments = comments.order_by(Comment.created_utc.asc())
 	elif sort == "controversial":
-		comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+		comments = comments.order_by(-1 * Comment.realupvotes * Comment.downvotes * Comment.downvotes)
 	elif sort == "top":
-		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
+		comments = comments.order_by(Comment.downvotes - Comment.realupvotes)
 	elif sort == "bottom":
-		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+		comments = comments.order_by(Comment.realupvotes - Comment.downvotes)
 
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	ids = [x.id for x in comments]
