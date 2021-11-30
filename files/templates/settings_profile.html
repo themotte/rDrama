@@ -6,7 +6,7 @@
 		<div class="flex flex-col space-y-4 sm:py-4 my-2.5 sm:my-0">
 
 			<!-- Avatar section -->
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Avatar</h2>
 					<div class="flex flex-col md:flex-row gap-3">
@@ -148,7 +148,7 @@
 			</div>
 
 			<!-- Referral & RSS -->
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Referral code</h2>
 					<input type="text" onclick="this.select()" value="{{request.host_url}}signup?ref={{v.username}}" class="p-0.5 bg-gray-900 border border-gray-900 text-xs text-gray-300 rounded-sm w-72">
@@ -167,7 +167,7 @@
 			</div>
 
 			<!-- Profile Username -->
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Username</h2>
 					<form action="/settings/name_change" method="post">
@@ -185,7 +185,7 @@
 			</div>
 
 			<!-- Profile Anthem -->
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Profile Anthem</h2>
 					<form action="/settings/song_change" method="post">
@@ -200,7 +200,7 @@
 			</div>
 
 			<!-- Username Color -->
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Username Color</h2>
 					<form action="/settings/namecolor" id="color-code-form" method="post">
@@ -215,7 +215,7 @@
 
 			{% if not v.flairchanged %}
 			<!-- Flair -->
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Flair</h2>
 					<form id="profile-settings" action="/settings/title_change" method="post">
@@ -234,7 +234,7 @@
 			{% endif %}
 
 			<!-- Title Color -->
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Flair Color</h2>
 					<form action="/settings/titlecolor" id="color-code-form" method="post">
@@ -249,7 +249,7 @@
 
 			{% if v.verified %}
 			<!-- Bluecheck Color -->
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Bluecheck Color</h2>
 					<form action="/settings/titlecolor" id="color-code-form" method="post">
@@ -263,7 +263,7 @@
 			</div>
 			{% endif %}
 
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Bio</h2>
 					<form id="profile-bio" action="/settings/profile" method="post" enctype="multipart/form-data">
@@ -323,7 +323,7 @@
 			</div>
 
 			<!-- Privacy -->
-			<div class="rounded-lg divide-y divide-gray-800 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-400 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Privacy</h2>
 					<div class="mb-4">
