@@ -2,4 +2,4 @@ git pull
 git add .
 git commit -m "sneed"
 git push
-. /media/a/Files/1
+. 'D:\1.sh'
