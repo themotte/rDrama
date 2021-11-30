@@ -69,18 +69,18 @@
 			<div class="align-middle inline-block min-w-full">
 				<div class="flex flex-col bg-gray-900 rounded-b-xl overflow-hidden">
 					<table class="min-w-full">
-						<thead class="bg-gradient-to-t from-gray-800 to-gray-700">
+						<thead class="bg-gradient-to-t from-gray-200 to-gray-100">
 							<tr>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
 									Item
 								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
 									Description
 								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
 									Price
 								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
 									Owned
 								</th>
 								<th scope="col" class="relative px-6 py-3">
@@ -88,9 +88,9 @@
 								</th>
 							</tr>
 						</thead>
-						<tbody class="bg-gray-900 divide-y divide-gray-900">
+						<tbody class="bg-gray-200 divide-y divide-gray-400">
 							{% for a in awards %}
-							<tr class="shadow-inset-t-white-05 {% if awards.index(a) % 2 != 0 %}bg-gray-700 bg-opacity-20{% endif %}">
+							<tr class="shadow-inset-t-white-05 {% if awards.index(a) % 2 != 0 %}bg-gray-200{% endif %}">
 								<td class="px-6 py-4 whitespace-nowrap">
 									<div class="flex items-center">
 										<div class="flex items-center justify-center flex-shrink-0 h-10 w-10">
@@ -105,7 +105,7 @@
 									</div>
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap">
-									<div class="text-sm text-gray-400">{{a['description']}}</div>
+									<div class="text-sm text-gray-700">{{a['description']}}</div>
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap">
 									<span class="inline-flex items-center px-1 py-0.5 text-xs text-yellow-900 text-shadow-light bg-yellow-400 font-bold leading-5 rounded">
