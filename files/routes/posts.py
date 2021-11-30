@@ -960,7 +960,7 @@ def submit_post(v):
 		if new_post.url:
 			if new_post.url.startswith('https://old.reddit.com/r/'):
 				rev = new_post.url.replace('https://old.reddit.com/', '')
-				rev = f"* [reveddit.com](https://reveddit.com/{rev})\n"
+				rev = f"* [unddit.com](https://unddit.com/{rev})\n"
 			else: rev = ''
 			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
 			gevent.spawn(archiveorg, new_post.url)
@@ -975,7 +975,7 @@ def submit_post(v):
 
 			body += f'**[{title}]({href})**:\n\n'
 			if href.startswith('https://old.reddit.com'):
-				body += f'* [reveddit.com](https://reveddit.com/{href.replace("https://old.reddit.com/", "")})\n'
+				body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
 			body += f'* [archive.org](https://web.archive.org/{href})\n'
 			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
 			gevent.spawn(archiveorg, href)
