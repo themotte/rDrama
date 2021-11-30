@@ -11,11 +11,11 @@ const EMOJIS_STRINGS = [
 	{
 		type:'marsey',
 		tagged: {
-			marseycry: ['sob','crying','tear'],
-			marseycrying: ['sob','cry','tear'],
-			marseysob: ['cry','crying','tear'],
-			marseytears: ['cry','crying','sob'],
-			marseycarpcrying: ['carp','fish','sob','cry','tear'],
+			marseycry: ['sob','tear'],
+			marseycrying: ['sob','tear'],
+			marseysob: ['cry','tear'],
+			marseytears: ['cry','sob'],
+			marseycarpcrying: ['fish','sob','tear'],
 		},
 
 		emojis: ['marseylaugh','marseyblowkiss','marseyshook','marseythumbsup','marseylove','marseyreading','marseywave','marseyjamming','marseyready','marseyscarf','marseymad','marseycry','marseyinabox','marseysad','marseyexcited','marseysleep','marseyangel','marseydead','marseyparty','marseyrain','marseyagree','marseydisagree','marseyjam','marseygasp','marseytwerking','marseysipping','marseyshrug','marseyglow','marseycope','marseyseethe','marseymerchant','marseyno','marseywalking','marseyhearts','marseybegging','marseytrans2','marseygigaretard','marseysneed','marseybaited','marseyeyeroll','marseydepressed','marseypat','marseyking','marseylong1','marseylong2','marseylong3',
