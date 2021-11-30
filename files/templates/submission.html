@@ -578,7 +578,7 @@
 								<button form="post-edit-form-{{p.id}}" class="btn btn-primary ml-2 fl-r">Save Edit</button>
 								<a href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 							</form>
-							<div id="post-edit-{{p.id}}" class="my-3"></div>
+							<div id="post-edit-{{p.id}}" class="mb-3 mt-5"></div>
 							<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 						</div>
 					{% endif %}
@@ -842,7 +842,7 @@
 			</div>
 			<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto fl-r" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
 		</form>
-		<div id="form-preview-{{p.id}}" class="my-3"></div>
+		<div id="form-preview-{{p.id}}" class="mb-3 mt-5"></div>
 		<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 	</div>
 

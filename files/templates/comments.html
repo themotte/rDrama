@@ -398,7 +398,7 @@
 						<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
 						<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 					</form>
-					<div id="preview-edit-{{c.id}}" class="my-3"></div>
+					<div id="preview-edit-{{c.id}}" class="mb-3 mt-5"></div>
 					<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 				</div>
 				{% endif %}
@@ -566,7 +566,7 @@
 					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary text-white ml-2 fl-r" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
 					<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 				</form>
-				<div id="reply-edit-{{c.id}}" class="my-3"></div>
+				<div id="reply-edit-{{c.id}}" class="mb-3 mt-5"></div>
 				<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
 			</div>
 		</div>
