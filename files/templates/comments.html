@@ -818,27 +818,28 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
 <script>
-window.addEventListener('DOMContentLoaded', function() {
-	function poll_vote(cid, parentid) {
-		{% if v %}
-			for(let el of document.getElementsByClassName('presult-'+parentid)) {
-				el.classList.remove('d-none');
-			}
-			for(let el of document.getElementsByClassName('presult')) {
-				el.classList.remove('d-none');
-			}
-			var type = document.getElementById(cid).checked;
-			var scoretext = document.getElementById('poll-' + cid);
-			var score = Number(scoretext.textContent);
-			if (type == true) scoretext.textContent = score + 1;
-			else scoretext.textContent = score - 1;
-			post('/vote/poll/' + cid + '?vote=' + type);
-		{% else %}
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-			myToast.show();
-			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-		{% endif %}
-	}
+	window.addEventListener('DOMContentLoaded', function() {
+		function poll_vote(cid, parentid) {
+			{% if v %}
+				for(let el of document.getElementsByClassName('presult-'+parentid)) {
+					el.classList.remove('d-none');
+				}
+				for(let el of document.getElementsByClassName('presult')) {
+					el.classList.remove('d-none');
+				}
+				var type = document.getElementById(cid).checked;
+				var scoretext = document.getElementById('poll-' + cid);
+				var score = Number(scoretext.textContent);
+				if (type == true) scoretext.textContent = score + 1;
+				else scoretext.textContent = score - 1;
+				post('/vote/poll/' + cid + '?vote=' + type);
+			{% else %}
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.show();
+				document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
+			{% endif %}
+		}
+	});
 
 	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
 
@@ -850,8 +851,6 @@ window.addEventListener('DOMContentLoaded', function() {
 			html: true,
 		});
 	})
-
-});
 </script>
 
 </body>
