@@ -362,7 +362,7 @@
 						</a>
 						{% endif %}
 						{% endif %}
-						<div id="post-text">
+						<div id="post-text text-black">
 							{% if p.is_image %}
 							<div class="row no-gutters">
 								<div class="col">
@@ -382,6 +382,7 @@
 								</div>
 								<pre></pre>
 								{% endif %}
+
 								{{p.realbody(v) | safe}}
 
 								{% for c in p.options %}
