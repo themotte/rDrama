@@ -216,7 +216,7 @@ def api_vote_poll(comment_id, v):
 			g.db.add(existing)
 		else: g.db.delete(existing)
 	elif new == 1:
-		vote = CommentVote(user_id=v.id, vote_type=new, comment_id=comment.id, real=True)
+		vote = CommentVote(user_id=v.id, vote_type=new, comment_id=comment.id)
 		g.db.add(vote)
 
 	try:

@@ -167,7 +167,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.realupvotes * Comment.realdownvotes * Comment.downvotes)
+			comments = comments.order_by(-1 * Comment.realupvotes * Comment.realdownvotes * Comment.realdownvotes)
 		elif sort == "top":
 			comments = comments.order_by(-Comment.realupvotes - Comment.realdownvotes)
 		elif sort == "bottom":
@@ -191,7 +191,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.realupvotes * Comment.realdownvotes * Comment.downvotes)
+			comments = comments.order_by(-1 * Comment.realupvotes * Comment.realdownvotes * Comment.realdownvotes)
 		elif sort == "top":
 			comments = comments.order_by(-Comment.realupvotes - Comment.realdownvotes)
 		elif sort == "bottom":
