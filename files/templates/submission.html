@@ -13,6 +13,23 @@
 
 {% block title %}
 
+{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
+	<script>
+		togglePostEdit=function(id){
+
+			body=document.getElementById("post-body");
+			title=document.getElementById("post-title");
+			form=document.getElementById("edit-post-body-"+id);
+			box=document.getElementById("post-edit-box-"+id);
+
+			body.classList.toggle("d-none");
+			title.classList.toggle("d-none");
+			form.classList.toggle("d-none");
+			autoExpand(box);
+		};
+	</script>
+{% endif %}
+
 <script defer src="/assets/js/new_comments_count.js?v=53"></script>
 
 {% if p.award_count("train") %}
@@ -856,27 +873,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
-
-{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-	<script>
-window.addEventListener('DOMContentLoaded', function() {		
-		togglePostEdit=function(id){
-
-			body=document.getElementById("post-body");
-			title=document.getElementById("post-title");
-			form=document.getElementById("edit-post-body-"+id);
-			box=document.getElementById("post-edit-box-"+id);
-
-			body.classList.toggle("d-none");
-			title.classList.toggle("d-none");
-			form.classList.toggle("d-none");
-			autoExpand(box);
-		};
-	
-});
-</script>
-{% endif %}
-
 
 {% if not p.comment_count %}
 	<script>
