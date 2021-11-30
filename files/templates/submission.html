@@ -13,7 +13,7 @@
 
 {% block title %}
 
-<script src="/assets/js/new_comments_count.js?v=53"></script>
+<script defer src="/assets/js/new_comments_count.js?v=53"></script>
 
 {% if p.award_count("train") %}
 	<style>
@@ -897,7 +897,7 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 
 	{% if v %}
-		<script src="/assets/js/comments_v.js?v=73"></script>
+		<script defer src="/assets/js/comments_v.js?v=73"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -909,7 +909,7 @@ window.addEventListener('DOMContentLoaded', function() {
 {% endif %}
 
 {% if p.award_count("shit") %}
-	<script src="/assets/js/bugs.js?v=55"></script>
+	<script defer src="/assets/js/bugs.js?v=55"></script>
 	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
 	{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
 	<script>
@@ -928,7 +928,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
 {% if p.award_count("fireflies") %}
-	<script src="/assets/js/fireflies.js?v=55"></script>
+	<script defer src="/assets/js/fireflies.js?v=55"></script>
 	{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
 	{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
 	<script>

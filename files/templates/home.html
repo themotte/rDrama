@@ -193,7 +193,7 @@ window.addEventListener('DOMContentLoaded', function() {
 {% endif %}
 
 {% if v %}
-	<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+	<script defer src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 	<script>
 window.addEventListener('DOMContentLoaded', function() {
 		const beamsClient = new PusherPushNotifications.Client({

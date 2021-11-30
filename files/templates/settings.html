@@ -242,7 +242,6 @@
 <script>
 function formkey() {return '{{v.formkey}}';}
 
-window.addEventListener('DOMContentLoaded', function() {
 	var clipboard = new ClipboardJS('.copy-link');
 	clipboard.on('success', function(e) {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
@@ -252,7 +251,6 @@ window.addEventListener('DOMContentLoaded', function() {
 	function emailVerifyText() {
 		document.getElementById("email-verify-text").innerHTML = "Verification email sent! Please check your inbox.";
 	}
-});
 </script>
 
 <style>

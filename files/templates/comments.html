@@ -784,20 +784,19 @@ window.addEventListener('DOMContentLoaded', function() {
 
 {% if v %}
 	{% include "award_modal.html" %}
-	<script src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
-	<script src="/assets/js/comments_v.js?v=73"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
+	<script defer src="/assets/js/comments_v.js?v=73"></script>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
-<script src="/assets/js/popover.js?v=2"></script>
+<script defer src="/assets/js/popover.js?v=2"></script>
 
 {% if v and v.admin_level > 1 %}
-	<script src="/assets/js/comments_admin.js?v=53"></script>
+	<script defer src="/assets/js/comments_admin.js?v=54"></script>
 {% endif %}
 
 <script>
-window.addEventListener('DOMContentLoaded', function() {
 	function collapse_comment(comment_id) {
 		const comment = "comment-" + comment_id
 		const element = document.getElementById(comment)
@@ -812,11 +811,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
 	var clipboard = new ClipboardJS('.copy-link');
 	clipboard.on('success', function(e) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-			myToast.show();
+		var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
+		myToast.show();
 	});
-
-});
 </script>
 
 {% include "expanded_image_modal.html" %}

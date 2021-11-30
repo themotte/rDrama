@@ -4,7 +4,7 @@
 	{% set cc='COUNTRY CLUB' %}
 {% endif %}
 
-<script src="/assets/js/new_comments_count.js?v=53"></script>
+<script defer src="/assets/js/new_comments_count.js?v=53"></script>
 
 {% for p in listing %}
 
@@ -659,10 +659,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
-<script src="/assets/js/popover.js?v=2"></script>
+<script defer src="/assets/js/popover.js?v=2"></script>
 
 <script>
-window.addEventListener('DOMContentLoaded', function() {
 	function expandText(id) {
 		document.getElementById('post-text-'+id).classList.toggle('d-none');
 		document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
@@ -685,8 +684,6 @@ window.addEventListener('DOMContentLoaded', function() {
 			html: true,
 		});
 	})
-
-});
 </script>
 
 {% if v %}
