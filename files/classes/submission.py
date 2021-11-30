@@ -43,6 +43,8 @@ class Submission(Base):
 	is_bot = Column(Boolean, default=False)
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
+	realupvotes = Column(Integer, default=1)
+	realdownvotes = Column(Integer, default=0)
 	app_id=Column(Integer, ForeignKey("oauth_apps.id"))
 	title = Column(String)
 	title_html = Column(String)

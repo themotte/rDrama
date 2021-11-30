@@ -251,11 +251,11 @@ class User(Base):
 		elif sort == "old":
 			posts = posts.order_by(Submission.created_utc.asc())
 		elif sort == "controversial":
-			posts = posts.order_by(-1 * Submission.upvotes * Submission.downvotes * Submission.downvotes)
+			posts = posts.order_by(-1 * Submission.realupvotes * Submission.realdownvotes * Submission.downvotes)
 		elif sort == "top":
-			posts = posts.order_by(Submission.downvotes - Submission.upvotes)
+			posts = posts.order_by(Submission.realdownvotes - Submission.realupvotes)
 		elif sort == "bottom":
-			posts = posts.order_by(Submission.upvotes - Submission.downvotes)
+			posts = posts.order_by(Submission.realupvotes - Submission.realdownvotes)
 		elif sort == "comments":
 			posts = posts.order_by(Submission.comment_count.desc())
 

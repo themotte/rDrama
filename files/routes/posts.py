@@ -167,11 +167,11 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+			comments = comments.order_by(-1 * Comment.realupvotes * Comment.realdownvotes * Comment.downvotes)
 		elif sort == "top":
-			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(-Comment.realupvotes - Comment.realdownvotes)
 		elif sort == "bottom":
-			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(Comment.realupvotes - Comment.realdownvotes)
 
 		output = []
 		for c in comments.all():
@@ -191,11 +191,11 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "old":
 			comments = comments.order_by(Comment.created_utc.asc())
 		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+			comments = comments.order_by(-1 * Comment.realupvotes * Comment.realdownvotes * Comment.downvotes)
 		elif sort == "top":
-			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(-Comment.realupvotes - Comment.realdownvotes)
 		elif sort == "bottom":
-			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(Comment.realupvotes - Comment.realdownvotes)
 
 		post.replies = comments.filter(Comment.is_pinned != None).all() + comments.filter(Comment.level == 1, Comment.is_pinned == None).all()
 

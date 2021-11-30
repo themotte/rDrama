@@ -13,6 +13,7 @@ class Vote(Base):
 	vote_type = Column(Integer)
 	submission_id = Column(Integer, ForeignKey("submissions.id"))
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
+	real = Column(Boolean)
 
 	user = relationship("User", lazy="subquery", viewonly=True)
 	post = relationship("Submission", lazy="subquery", viewonly=True)
@@ -53,6 +54,7 @@ class CommentVote(Base):
 	vote_type = Column(Integer)
 	comment_id = Column(Integer, ForeignKey("comments.id"))
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
+	real = Column(Boolean)
 
 	user = relationship("User", lazy="subquery", viewonly=True)
 	comment = relationship("Comment", lazy="subquery", viewonly=True)

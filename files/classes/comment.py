@@ -42,6 +42,8 @@ class Comment(Base):
 	oauth_app = relationship("OauthApp", viewonly=True)
 	upvotes = Column(Integer, default=1)
 	downvotes = Column(Integer, default=0)
+	realupvotes = Column(Integer, default=1)
+	realdownvotes = Column(Integer, default=0)
 	body = Column(String)
 	body_html = Column(String)
 	ban_reason = Column(String)

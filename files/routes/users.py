@@ -690,11 +690,11 @@ def u_username_comments(username, v=None):
 	elif sort == "old":
 		comments = comments.order_by(Comment.created_utc.asc())
 	elif sort == "controversial":
-		comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+		comments = comments.order_by(-1 * Comment.realupvotes * Comment.realdownvotes * Comment.downvotes)
 	elif sort == "top":
-		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
+		comments = comments.order_by(Comment.realdownvotes - Comment.realupvotes)
 	elif sort == "bottom":
-		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+		comments = comments.order_by(Comment.realupvotes - Comment.realdownvotes)
 
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	ids = [x.id for x in comments]
