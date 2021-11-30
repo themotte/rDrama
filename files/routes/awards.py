@@ -546,13 +546,15 @@ def award_post(pid, v):
 	elif kind == "pause":
 		author.mute = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=68, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(68):
+			new_badge = Badge(badge_id=68, user_id=author.id)
+			g.db.add(new_badge)
 	elif kind == "unpausable":
 		author.unmutable = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=67, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(67):
+			new_badge = Badge(badge_id=67, user_id=author.id)
+			g.db.add(new_badge)
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = time.time() + 86400
@@ -570,18 +572,21 @@ def award_post(pid, v):
 	elif kind == "eye":
 		author.eye = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=83, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(83):
+			new_badge = Badge(badge_id=83, user_id=author.id)
+			g.db.add(new_badge)
 	elif kind == "alt":
 		author.alt = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=84, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(84):
+			new_badge = Badge(badge_id=84, user_id=author.id)
+			g.db.add(new_badge)
 	elif kind == "unblockable":
 		author.unblockable = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=87, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(87):
+			new_badge = Badge(badge_id=87, user_id=author.id)
+			g.db.add(new_badge)
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 
 	post.author.received_award_count += 1
@@ -693,13 +698,15 @@ def award_comment(cid, v):
 	elif kind == "pause":
 		author.mute = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=68, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(68):
+			new_badge = Badge(badge_id=68, user_id=author.id)
+			g.db.add(new_badge)
 	elif kind == "unpausable":
 		author.unmutable = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=67, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(67):
+			new_badge = Badge(badge_id=67, user_id=author.id)
+			g.db.add(new_badge)
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = time.time() + 86400
@@ -717,18 +724,21 @@ def award_comment(cid, v):
 	elif kind == "eye":
 		author.eye = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=83, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(83):
+			new_badge = Badge(badge_id=83, user_id=author.id)
+			g.db.add(new_badge)
 	elif kind == "alt":
 		author.alt = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=84, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(84):
+			new_badge = Badge(badge_id=84, user_id=author.id)
+			g.db.add(new_badge)
 	elif kind == "unblockable":
 		author.unblockable = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
-		new_badge = Badge(badge_id=87, user_id=author.id)
-		g.db.add(new_badge)
+		if not v.has_badge(87):
+			new_badge = Badge(badge_id=87, user_id=author.id)
+			g.db.add(new_badge)
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 
 	c.author.received_award_count += 1
