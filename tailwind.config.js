@@ -20,7 +20,7 @@ module.exports = {
       blue: colors.sky
     },
     fontFamily: {
-      'font-heading': ['Arial']
+      'heading': ['Delius Swash Caps']
     },
     extend: {
       colors: {
