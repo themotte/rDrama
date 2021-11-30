@@ -1,5 +1,6 @@
 {% extends "default.html" %}
 {% block title %}
+{% include "expanded_image_modal.html" %}
 <title>{{'SITE_NAME' | app_config}} - Formatting</title>
 <meta name="description" content="{{'SITE_NAME' | app_config}} Formatting">
 {% endblock %}
@@ -527,8 +528,6 @@ line breaks
 		</tr>
 	</tbody>
 </table>
-
-{% include "expanded_image_modal.html" %}
 
 <style>
 	@media (max-width: 767.98px) {
