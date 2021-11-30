@@ -1,44 +1,10 @@
-{% if v %}
-	{% include "award_modal.html" %}
-{% endif %}
-
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
-
-<script src="/assets/js/new_comments_count.js?v=53"></script>
-
-<script src="/assets/js/popover.js?v=2"></script>
-
-<script>
-	function expandText(id) {
-		document.getElementById('post-text-'+id).classList.toggle('d-none');
-		document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
-		document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
-	};
-
-	var clipboard = new ClipboardJS('.copy-link');
-	clipboard.on('success', function(e) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-			myToast.show();
-			console.log(e);
-	});
-
-	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-
-	const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
-		const contentEl = document.getElementById(popoverId).innerHTML;
-		return new bootstrap.Popover(popoverTriggerEl, {
-			content: contentEl,
-			html: true,
-		});
-	})
-</script>
-
 {% if request.host == 'pcmemes.net' %}
 	{% set cc='SPLASH MOUNTAIN' %}
 {% else %}
 	{% set cc='COUNTRY CLUB' %}
 {% endif %}
+
+<script src="/assets/js/new_comments_count.js?v=53"></script>
 
 {% for p in listing %}
 
@@ -686,3 +652,37 @@
 		text-shadow:-1px -1px 0 black,1px -1px 0 black,-1px 1px 0 black,1px 1px 0 black;
 	}
 </style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+
+<script src="/assets/js/popover.js?v=2"></script>
+
+<script>
+	function expandText(id) {
+		document.getElementById('post-text-'+id).classList.toggle('d-none');
+		document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
+		document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
+	};
+
+	var clipboard = new ClipboardJS('.copy-link');
+	clipboard.on('success', function(e) {
+			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
+			myToast.show();
+	});
+
+	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+
+	const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
+		const contentEl = document.getElementById(popoverId).innerHTML;
+		return new bootstrap.Popover(popoverTriggerEl, {
+			content: contentEl,
+			html: true,
+		});
+	})
+</script>
+
+{% if v %}
+	{% include "award_modal.html" %}
+{% endif %}

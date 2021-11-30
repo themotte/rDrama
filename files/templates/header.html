@@ -1,16 +1,3 @@
-{% if v %}<script>function formkey() {return '{{v.formkey}}';}</script>{% endif %}
-<script src="/assets/js/header.js?v=54"></script>
-
-<style>
-	.notif-count {
-		background: red;
-		border-radius: 20%;
-		color: white;
-		padding: 2px 5px;
-		font-weight: 700;
-	}
-</style>
-
 <nav class="shadow shadow-md fixed-top">
 	{% if "rama" in request.host %}
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;">
@@ -225,3 +212,16 @@
 	</div>
 	</div>
 </nav>
+
+{% if v %}<script>function formkey() {return '{{v.formkey}}';}</script>{% endif %}
+<script src="/assets/js/header.js?v=54"></script>
+
+<style>
+	.notif-count {
+		background: red;
+		border-radius: 20%;
+		color: white;
+		padding: 2px 5px;
+		font-weight: 700;
+	}
+</style>

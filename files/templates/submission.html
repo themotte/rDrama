@@ -13,6 +13,8 @@
 
 {% block title %}
 
+<script src="/assets/js/new_comments_count.js?v=53"></script>
+
 {% if p.award_count("train") %}
 	<style>
 		@keyframes train {
@@ -100,92 +102,6 @@
 
 {% if p.award_count("train") > 3 %}
 	<img class="train4" src="/assets/images/emojis/marseytrain.webp?v=1">
-{% endif %}
-
-
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
-<script src="/assets/js/new_comments_count.js?v=53"></script>
-
-{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-	<script>		
-		togglePostEdit=function(id){
-
-			body=document.getElementById("post-body");
-			title=document.getElementById("post-title");
-			form=document.getElementById("edit-post-body-"+id);
-			box=document.getElementById("post-edit-box-"+id);
-
-			body.classList.toggle("d-none");
-			title.classList.toggle("d-none");
-			form.classList.toggle("d-none");
-			autoExpand(box);
-		};
-	</script>
-{% endif %}
-
-
-{% if not p.comment_count %}
-	<script>
-		function poll_vote(cid) {
-			{% if v %}
-				for(let el of document.getElementsByClassName('presult')) {
-					el.classList.remove('d-none');
-				}
-				var type = document.getElementById(cid).checked;
-				var scoretext = document.getElementById('poll-' + cid);
-				var score = Number(scoretext.textContent);
-				if (type == true) scoretext.textContent = score + 1;
-				else scoretext.textContent = score - 1;
-				post('/vote/poll/' + cid + '?vote=' + type);
-			{% else %}
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.show();
-				document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-			{% endif %}
-		}
-	</script>
-
-	{% if v %}
-		<script src="/assets/js/comments_v.js?v=73"></script>
-		{% include "award_modal.html" %}
-		{% include "emoji_modal.html" %}
-		{% include "gif_modal.html" %}
-		{% if v.admin_level > 1 %}
-			{% include "ban_modal.html" %}
-		{% endif %}
-	{% endif %}
-	{% include "expanded_image_modal.html" %}
-{% endif %}
-
-{% if p.award_count("shit") %}
-	<script src="/assets/js/bugs.js?v=55"></script>
-	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
-	{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
-	<script>
-		new BugController({
-			imageSprite: "/assets/images/fly-sprite.webp",
-			canDie: false,
-			minBugs: {{minbugs}},
-			maxBugs: {{maxbugs}},
-			mouseOver: "multiply"
-		});
-	</script>
-{% endif %}
-
-
-{% if p.award_count("fireflies") %}
-	<script src="/assets/js/fireflies.js?v=55"></script>
-	{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
-	{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
-	<script>
-		new BugController({
-			imageSprite: "/assets/images/fireflies.webp",
-			canDie: false,
-			minBugs: {{minbugs}},
-			maxBugs: {{maxbugs}},
-			mouseOver: "multiply"
-		});
-	</script>
 {% endif %}
 
 
@@ -927,5 +843,92 @@
 {% if v %}
 	{% include "report_post_modal.html" %}
 {% endif %}
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+
+{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
+	<script>		
+		togglePostEdit=function(id){
+
+			body=document.getElementById("post-body");
+			title=document.getElementById("post-title");
+			form=document.getElementById("edit-post-body-"+id);
+			box=document.getElementById("post-edit-box-"+id);
+
+			body.classList.toggle("d-none");
+			title.classList.toggle("d-none");
+			form.classList.toggle("d-none");
+			autoExpand(box);
+		};
+	</script>
+{% endif %}
+
+
+{% if not p.comment_count %}
+	<script>
+		function poll_vote(cid) {
+			{% if v %}
+				for(let el of document.getElementsByClassName('presult')) {
+					el.classList.remove('d-none');
+				}
+				var type = document.getElementById(cid).checked;
+				var scoretext = document.getElementById('poll-' + cid);
+				var score = Number(scoretext.textContent);
+				if (type == true) scoretext.textContent = score + 1;
+				else scoretext.textContent = score - 1;
+				post('/vote/poll/' + cid + '?vote=' + type);
+			{% else %}
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.show();
+				document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
+			{% endif %}
+		}
+	</script>
+
+	{% if v %}
+		<script src="/assets/js/comments_v.js?v=73"></script>
+		{% include "award_modal.html" %}
+		{% include "emoji_modal.html" %}
+		{% include "gif_modal.html" %}
+		{% if v.admin_level > 1 %}
+			{% include "ban_modal.html" %}
+		{% endif %}
+	{% endif %}
+	{% include "expanded_image_modal.html" %}
+{% endif %}
+
+{% if p.award_count("shit") %}
+	<script src="/assets/js/bugs.js?v=55"></script>
+	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
+	{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
+	<script>
+		new BugController({
+			imageSprite: "/assets/images/fly-sprite.webp",
+			canDie: false,
+			minBugs: {{minbugs}},
+			maxBugs: {{maxbugs}},
+			mouseOver: "multiply"
+		});
+	</script>
+{% endif %}
+
+
+{% if p.award_count("fireflies") %}
+	<script src="/assets/js/fireflies.js?v=55"></script>
+	{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
+	{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
+	<script>
+		new BugController({
+			imageSprite: "/assets/images/fireflies.webp",
+			canDie: false,
+			minBugs: {{minbugs}},
+			maxBugs: {{maxbugs}},
+			mouseOver: "multiply"
+		});
+	</script>
+{% endif %}
+
 
 {% endblock %}
