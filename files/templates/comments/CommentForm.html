@@ -3,7 +3,7 @@
 	<input type="hidden" name="formkey" value="{{v.formkey}}">
 	<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
 	<input id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
-	<div class="comment-box rounded-lg border border-gray-300 bg-gray-200 shadow-inner w-full">
+	<div class="relative comment-box rounded-lg border border-gray-300 bg-gray-200 shadow-inner w-full">
 		<textarea maxlength="10000" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 		<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400">
 			<li>
@@ -41,6 +41,7 @@
 			</li>
 			{% endif %}
 		</ul>
+		<span id="charcount-reply" class="absolute bottom-3 right-3 text-xs text-gray-400 font-bold"></span>
 	</div>
 	<div class="flex w-full justify-between mt-2">
 		<a href="/formatting" target="_blank" class="inline-block text-sm text-gray-600">
