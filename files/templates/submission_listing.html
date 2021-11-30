@@ -107,7 +107,7 @@
 				<i class="fas fa-badge-check fa-fw fa-sm" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
 				{% endif %}
 				{% if not p.award_count('ghosts') %}
-				<button class="flex items-center font-heading font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" tabindex="0" style="color: #{{p.author.namecolor}};">
+				<button class="flex items-center font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" tabindex="0" style="color: #{{p.author.namecolor}};">
 					{% if p.author.patron and not p.distinguish_level %}
 					<span class="patron" style="background-color:#{{p.author.namecolor}};">
 						{{p.author.username}}
