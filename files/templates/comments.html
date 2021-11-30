@@ -207,7 +207,7 @@
 					{{single_comment(reply, level=level+1)}}
 				{% endfor %}
 			</div>
-		{% elif "notifications" in request.path %}
+		{% elif replies and "notifications" in request.path %}
 			<div id="replies-of-{{c.id}}" class="d-none d-md-block">
 				{% set standalone=False %}
 				{% for reply in replies %}
@@ -579,7 +579,7 @@
 					{{single_comment(reply, level=level+1)}}
 				{% endfor %}
 			</div>
-		{% elif "notifications" in request.path %}
+		{% elif replies and "notifications" in request.path %}
 			<div id="replies-of-{{c.id}}" class="d-none d-md-block">
 				{% set standalone=False %}
 				{% for reply in replies %}

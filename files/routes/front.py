@@ -167,6 +167,24 @@ def front_all(v):
 			g.db.add(v)
 			g.db.commit()
 
+		if v.marseyawarded and v.marseyawarded < time.time():
+			v.marseyawarded = None
+			send_notification(v.id, "Your marsey award has expired!")
+			g.db.add(v)
+			g.db.commit()
+
+		if v.longpost and v.longpost < time.time():
+			v.longpost = None
+			send_notification(v.id, "Your pizzashill award has expired!")
+			g.db.add(v)
+			g.db.commit()
+
+		if v.bird and v.bird < time.time():
+			v.bird = None
+			send_notification(v.id, "Your bird site award has expired!")
+			g.db.add(v)
+			g.db.commit()
+
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 

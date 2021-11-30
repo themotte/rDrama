@@ -20,18 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		const userName = document.getElementById("username-register").value;
 		const id = document.getElementById("usernameHelpRegister");
 
-		const API = '/is_available/' + userName;
-		if (userName.length >= 3) {
-			fetch(API)
-				.then(res => res.json())
-				.then(json => {
-					if (!json[userName]) {
-						id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username already taken :(</span>';
-					}
-				})
-		}
-
-		if (!/[^a-zA-Z0-9_\-$]/.test(userName)) {
+		if (/[^a-zA-Z0-9_\-$]/.test(userName)) {
+			id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">No special characters or spaces allowed.</span>';
+		} else {
 			id.innerHTML = '<span class="form-text font-weight-bold text-success mt-1">Username is a-okay!</span>';
 
 			if (userName.length < 3) {
@@ -39,10 +30,16 @@ document.addEventListener("DOMContentLoaded", function () {
 			} else if (userName.length > 25) {
 				id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username must be 25 characters or less.</span>';
 			}
-		} else {
-			id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">No special characters or spaces allowed.</span>';
+			else {
+				fetch('/is_available/' + userName)
+				.then(res => res.json())
+				.then(json => {
+					if (!json[userName]) {
+						id.innerHTML = '<span class="form-text font-weight-bold text-danger mt-1">Username already taken :(</span>';
+					}
+				})
+			}
 		}
-
 	});
 
 });

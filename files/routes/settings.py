@@ -155,6 +155,13 @@ def settings_profile_post(v):
 							   msg="Your bio has been updated.")
 
 
+	elif request.values.get("bio") == "":
+		v.bio = None
+		v.bio_html = None
+		g.db.add(v)
+		g.db.commit()
+		return render_template("settings_profile.html", v=v, msg="Your bio has been updated.")
+
 	elif request.values.get("sig") == "":
 		v.sig = None
 		v.sig_html = None

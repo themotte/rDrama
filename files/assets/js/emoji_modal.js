@@ -16,6 +16,9 @@ const EMOJIS_STRINGS = [
 			marseysob: ['cry','tear'],
 			marseytears: ['cry','sob'],
 			marseycarpcrying: ['fish','sob','tear'],
+			marseyfeelsgood:[ 'happy','pepe'],
+			marseyhomofascist: ['kiss'],
+			marseycapy: ['happy','aevann','rodent']
 		},
 
 		emojis: ['marseylaugh','marseyblowkiss','marseyshook','marseythumbsup','marseylove','marseyreading','marseywave','marseyjamming','marseyready','marseyscarf','marseymad','marseycry','marseyinabox','marseysad','marseyexcited','marseysleep','marseyangel','marseydead','marseyparty','marseyrain','marseyagree','marseydisagree','marseyjam','marseygasp','marseytwerking','marseysipping','marseyshrug','marseyglow','marseycope','marseyseethe','marseymerchant','marseyno','marseywalking','marseyhearts','marseybegging','marseytrans2','marseygigaretard','marseysneed','marseybaited','marseyeyeroll','marseydepressed','marseypat','marseyking','marseylong1','marseylong2','marseylong3',

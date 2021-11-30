@@ -454,12 +454,12 @@ def api_is_available(name, v):
 	if len(name)<3 or len(name)>25:
 		return {name:False}
 		
-	name=name.replace('_','\_')
+	name2 = name.replace('_','\_')
 
 	x= g.db.query(User).filter(
 		or_(
-			User.username.ilike(name),
-			User.original_username.ilike(name)
+			User.username.ilike(name2),
+			User.original_username.ilike(name2)
 			)
 		).first()
 
@@ -467,7 +467,6 @@ def api_is_available(name, v):
 		return {name: False}
 	else:
 		return {name: True}
-
 
 @app.get("/id/<id>")
 def user_id(id):
@@ -556,12 +555,12 @@ def u_username(username, v=None):
 			else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	
-	if hasattr(u, 'is_blocking') and u.is_blocking and (not v or v.admin_level < 2):
+	if v and hasattr(u, 'is_blocking') and u.is_blocking:
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
 		else: return render_template("userpage_blocking.html", u=u, v=v)
 
 
-	if hasattr(u, 'is_blocked') and u.is_blocked and (not v or v.admin_level < 2):
+	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
 		else: return render_template("userpage_blocked.html", u=u, v=v)
 

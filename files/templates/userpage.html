@@ -147,7 +147,7 @@
 								</span>
 								{% endif %}
 								{% if v and v.has_follower(u) %}
-									<span class="followsyou text-primary badge badge-secondary text-small align-middle ml-2">Follows you</span>
+									<span class="followsyou badge badge-secondary text-small align-middle ml-2">Follows you</span>
 								{% endif %}
 								<div class="profile-actions align-middle d-none ml-2">
 								{% if v and v.id != u.id %}
@@ -446,7 +446,7 @@
 				</span>
 				{% endif %}
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
-					<span class="followsyou text-primary badge badge-secondary text-small align-middle mx-1">Follows you</span>
+					<span class="followsyou badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
 				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}</p>
 				{% else %}
