@@ -3,7 +3,7 @@ from flask import g
 
 
 def get_id(username, v=None, graceful=False):
-
+	
 	username = username.replace('\\', '')
 	username = username.replace('_', '\_')
 	username = username.replace('%', '')
@@ -28,6 +28,10 @@ def get_id(username, v=None, graceful=False):
 
 def get_user(username, v=None, graceful=False):
 
+	if not username:
+		if not graceful: abort(404)
+		else: return None
+
 	username = username.replace('\\', '')
 	username = username.replace('_', '\_')
 	username = username.replace('%', '')
@@ -42,10 +46,8 @@ def get_user(username, v=None, graceful=False):
 		).first()
 
 	if not user:
-		if not graceful:
-			abort(404)
-		else:
-			return None
+		if not graceful: abort(404)
+		else: return None
 
 	if v:
 		block = g.db.query(UserBlock).filter(
