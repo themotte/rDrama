@@ -84,7 +84,7 @@ def is_not_banned(f):
 			
 		check_ban_evade(v)
 
-		if v.is_suspended: abort(403)
+		if v.is_suspended: return {"error": "You can't perform this action while being banned."}, 403
 
 		g.v = v
 

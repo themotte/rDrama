@@ -873,6 +873,8 @@ def fp(v, fp):
 	if v.username != fp:
 		v.fp = fp
 		users = g.db.query(User).filter(User.fp == fp, User.id != v.id).all()
+		if v.email and v.is_activated:
+			users += g.db.query(User).filter(User.email == email, User.is_activated, User.id != v.id).all()
 		for u in users:
 			li = [v.id, u.id]
 			existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).first()
