@@ -7,14 +7,14 @@
 {% block pagetype %}message{% endblock %}
 
 {% block subHeader %}
-<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t-md">
-	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-800 to-gray-700 rounded-t-md sub-header-shadow"></div>
-	<div class="relative col-span-full flex items-center">
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="relative col-span-full flex items-center">
 		<div>
 			<h1 class="font-bold text-xl font-heading leading-normal">
 				Shop
 			</h1>
-			<small class="block text-gray-400">
+			<small class="block text-gray-700">
 				Stir drama. Earn coins.
 			</small>
 		</div>
@@ -23,13 +23,13 @@
 				<strong class="text-lg md:text-2xl">
 					{{sales}}
 				</strong>
-				<small class="text-gray-400">total sales</small>
+				<small class="text-gray-700">total sales</small>
 			</li>
 			<li>
 				<strong class="text-lg md:text-2xl">
 					{{v.coins_spent}}
 				</strong>
-				<small class="text-gray-400">spent by you</small>
+				<small class="text-gray-700">spent by you</small>
 			</li>
 		</ul>
 	</div>
