@@ -6,8 +6,9 @@ from flask import *
 from files.__main__ import app, limiter, cache
 from sqlalchemy.orm import joinedload
 from .front import frontlist
+from os import environ
 
-defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
+defaultcolor = environ.get("DEFAULT_COLOR").strip()
 
 @app.get("/votes")
 @limiter.limit("5/second;60/minute;200/hour")
@@ -168,7 +169,8 @@ def api_vote_comment(comment_id, new, v):
 		comment.author.coins += 1
 		comment.author.truecoins += 1
 		g.db.add(comment.author)
-		real = v.profileurl or v.namecolor != defaultcolor or v.customtitle
+		real = (v.profileurl or v.customtitle)
+		print(real)
 		vote = CommentVote(user_id=v.id,
 						vote_type=new,
 						comment_id=comment_id,
