@@ -859,7 +859,7 @@ window.onload = function() {
 		{%endif%}
 	})()
 
-});
+};
 </script>
 
 {% if v and v.id==p.author_id %}
@@ -895,7 +895,7 @@ window.onload = function() {
 			{% endif %}
 		}
 	
-});
+};
 </script>
 
 	{% if v %}
@@ -915,7 +915,7 @@ window.onload = function() {
 	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
 	{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
 	<script>
-window.onload = function() {
+		window.onload = function() {
 		new BugController({
 			imageSprite: "/assets/images/fly-sprite.webp",
 			canDie: false,
@@ -924,7 +924,7 @@ window.onload = function() {
 			mouseOver: "multiply"
 		});
 	
-});
+};
 </script>
 {% endif %}
 
@@ -943,7 +943,7 @@ window.onload = function() {
 			mouseOver: "multiply"
 		});
 	
-});
+};
 </script>
 {% endif %}
 

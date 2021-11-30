@@ -9,7 +9,7 @@
 
 	{% if not v.fp %}
 		<script>
-window.onload = function() {
+		window.onload = function() {
 			function fp(fp) {
 				var xhr = new XMLHttpRequest();
 				xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
@@ -33,7 +33,7 @@ window.onload = function() {
 				.then(fp => fp.get())
 				.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
 		
-});
+};
 </script>
 	{% endif %}
 {% endif %}
@@ -174,7 +174,7 @@ window.onload = function() {
 	</div>
 
 	<script>
-window.onload = function() {
+	window.onload = function() {
 		if (!("standalone" in window.navigator) && window.navigator.standalone) {
 			if (window.innerWidth <= 737) {
 				document.getElementById('mobile-prompt').show()
@@ -188,14 +188,14 @@ window.onload = function() {
 			}
 		}
 	
-});
+};
 </script>
 {% endif %}
 
 {% if v %}
 	<script defer src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 	<script>
-window.onload = function() {
+	window.onload = function() {
 		const beamsClient = new PusherPushNotifications.Client({
 			instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6',
 		});		
@@ -205,7 +205,7 @@ window.onload = function() {
 		.then(() => beamsClient.getDeviceInterests())
 		.catch(console.error);
 	
-});
+};
 </script>
 {% endif %}
 

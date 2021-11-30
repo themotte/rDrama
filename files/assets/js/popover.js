@@ -33,4 +33,4 @@ window.onload = function() {
     usernames.forEach(eventasdf);
     
     document.addEventListener("click", function(e){dfgh(e)});
-  });
+  };

@@ -35,7 +35,7 @@ window.onload = function() {
 			document.getElementById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Unread"></i>'
 		}
 	
-});
+};
 </script>
 {% endif %}
 
@@ -55,7 +55,7 @@ window.onload = function() {
 		{%endif%}
 	})()
 
-});
+};
 </script>
 
 <div style="display:none" id="popover-{{c.id}}">
@@ -838,7 +838,7 @@ window.onload = function() {
 				document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
 			{% endif %}
 		}
-	});
+	};
 
 	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
 
@@ -852,6 +852,6 @@ window.onload = function() {
 	})
 </script>
 
-<script defer src="/assets/js/popover.js?v=7"></script>
+<script defer src="/assets/js/popover.js?v=8"></script>
 
 </body>
