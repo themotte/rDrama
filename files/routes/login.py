@@ -284,10 +284,7 @@ def sign_up_post(v):
 	if existing_account and existing_account.reserved:
 		return redirect(existing_account.url)
 
-	if existing_account or (email and g.db.query(
-			User).filter(User.email.ilike(email)).first()):
-		return new_signup(
-			"An account with that username or email already exists.")
+	if existing_account: return new_signup("An account with that username already exists.")
 
 	if app.config.get("HCAPTCHA_SITEKEY"):
 		token = request.values.get("h-captcha-response")
