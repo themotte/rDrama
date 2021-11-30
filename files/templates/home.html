@@ -9,6 +9,7 @@
 
 	{% if not v.fp %}
 		<script>
+window.addEventListener('DOMContentLoaded', function() {
 			function fp(fp) {
 				var xhr = new XMLHttpRequest();
 				xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
@@ -31,7 +32,9 @@
 			fpPromise
 				.then(fp => fp.get())
 				.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
-		</script>
+		
+});
+</script>
 	{% endif %}
 {% endif %}
   
@@ -171,6 +174,7 @@
 	</div>
 
 	<script>
+window.addEventListener('DOMContentLoaded', function() {
 		if (!("standalone" in window.navigator) && window.navigator.standalone) {
 			if (window.innerWidth <= 737) {
 				document.getElementById('mobile-prompt').show()
@@ -183,12 +187,15 @@
 				}
 			}
 		}
-	</script>
+	
+});
+</script>
 {% endif %}
 
 {% if v %}
 	<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 	<script>
+window.addEventListener('DOMContentLoaded', function() {
 		const beamsClient = new PusherPushNotifications.Client({
 			instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6',
 		});		
@@ -197,7 +204,9 @@
 		.then(() => beamsClient.addDeviceInterest('{{v.strid}}'))
 		.then(() => beamsClient.getDeviceInterests())
 		.catch(console.error);
-	</script>
+	
+});
+</script>
 {% endif %}
 
 {% endblock %}

@@ -28,15 +28,19 @@
 
 {% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
 	<script>
+window.addEventListener('DOMContentLoaded', function() {
 		comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 		lastCount = comments['{{p.id}}']
 		if (lastCount && {{c.created_utc*1000}} > lastCount.t) {
 			document.getElementById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Unread"></i>'
 		}
-	</script>
+	
+});
+</script>
 {% endif %}
 
 <script>
+window.addEventListener('DOMContentLoaded', function() {
 	(() => {
 		const date = new Date({{c.created_utc*1000}});
 		document.getElementById('timestamp-{{c.id}}').title = date.toString();
@@ -50,6 +54,8 @@
 			{%endif%}
 		{%endif%}
 	})()
+
+});
 </script>
 
 <div style="display:none" id="popover-{{c.id}}">
@@ -791,6 +797,7 @@
 {% endif %}
 
 <script>
+window.addEventListener('DOMContentLoaded', function() {
 	function collapse_comment(comment_id) {
 		const comment = "comment-" + comment_id
 		const element = document.getElementById(comment)
@@ -808,12 +815,15 @@
 			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
 			myToast.show();
 	});
+
+});
 </script>
 
 {% include "expanded_image_modal.html" %}
 
 
 <script>
+window.addEventListener('DOMContentLoaded', function() {
 	function poll_vote(cid, parentid) {
 		{% if v %}
 			for(let el of document.getElementsByClassName('presult-'+parentid)) {
@@ -845,6 +855,8 @@
 			html: true,
 		});
 	})
+
+});
 </script>
 
 </body>

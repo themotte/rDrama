@@ -125,11 +125,14 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 <script>
+window.addEventListener('DOMContentLoaded', function() {
 	var clipboard = new ClipboardJS('.copy-link');
 	clipboard.on('success', function(e) {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
 			myToast.show();
 	});
+
+});
 </script>
 
 {% endblock %}

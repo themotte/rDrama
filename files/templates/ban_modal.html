@@ -1,5 +1,6 @@
 
 <script>
+window.addEventListener('DOMContentLoaded', function() {
 		const banModal = function(link, id, name) {
 			document.getElementById("banModalTitle").innerHTML = `Ban @${name}`;
 			document.getElementById("ban-modal-link").value = link;
@@ -22,6 +23,8 @@
 				xhr.send(fd);
 			}
 		};
+
+});
 </script>
 
 <div class="modal fade" id="banModal" tabindex="-1" role="dialog" aria-labelledby="banModalTitle" aria-hidden="true">

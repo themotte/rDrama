@@ -240,6 +240,9 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 <script>
+function formkey() {return '{{v.formkey}}';}
+
+window.addEventListener('DOMContentLoaded', function() {
 	var clipboard = new ClipboardJS('.copy-link');
 	clipboard.on('success', function(e) {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
@@ -249,8 +252,7 @@
 	function emailVerifyText() {
 		document.getElementById("email-verify-text").innerHTML = "Verification email sent! Please check your inbox.";
 	}
-
-	function formkey() {return '{{v.formkey}}';}
+});
 </script>
 
 <style>
