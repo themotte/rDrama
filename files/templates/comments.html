@@ -564,8 +564,8 @@
 							<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
 						</label>
 					</div>
-					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary text-white ml-2 fl-r" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
-					<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
+					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary text-white ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
+					<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 				</form>
 				<div id="reply-edit-{{c.id}}" class="mb-3 mt-5"></div>
 				<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
@@ -840,6 +840,12 @@
 
 	.smol {
 		font-size: 11.5px;
+	}
+
+	@media (max-width: 768px) {
+		.commentmob {
+			margin-top: 0.5rem !important;
+		}
 	}
 </style>
 
