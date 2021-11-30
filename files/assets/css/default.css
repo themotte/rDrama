@@ -10,10 +10,10 @@ p:last-of-type {
     display: none;
 }
 
-.font-heading {
+/* .font-heading {
 	font-family: 'Helvetica Neue';
-	/*letter-spacing: -0.05rem;*/
 }
+*/
 
 .font-serif {
     font-family: 'Georgia';

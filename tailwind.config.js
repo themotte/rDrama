@@ -19,6 +19,9 @@ module.exports = {
       yellow: colors.amber,
       blue: colors.sky
     },
+    fontFamily: {
+      'font-heading': 'Delius Swash Caps'
+    },
     extend: {
       colors: {
         gray: {
