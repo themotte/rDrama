@@ -815,7 +815,6 @@
 {% include "expanded_image_modal.html" %}
 
 <script>
-	window.addEventListener("load",function(event) {
 		function poll_vote(cid, parentid) {
 			{% if v %}
 				for(let el of document.getElementsByClassName('presult-'+parentid)) {
@@ -837,6 +836,7 @@
 			{% endif %}
 		}
 
+	window.addEventListener("load",function(event) {
 		const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
 
 		const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
