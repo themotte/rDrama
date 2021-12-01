@@ -7,3 +7,7 @@
 .test {
   @apply text-red-700 font-bold text-3xl;
 }
+
+.form-control {
+	@apply block w-full rounded border border-gray-300 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 
+}
