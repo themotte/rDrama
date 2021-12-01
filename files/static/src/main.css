@@ -27,7 +27,7 @@
 }
 
 /* -------------------- BASE STYLING -------------------- */
-@components {
+@base {
 	/* Headings */
 	h1, .h1 {
 		@apply text-5xl font-bold leading-10 mb-2;
