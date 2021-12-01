@@ -10,7 +10,7 @@
 					<a href="/" class="text-decoration-none" role="button">
 						<div class="text-center {% if request.path=='/' and request.full_path!='/?sort=hot&t=all' and request.full_path!='/?sort=new&t=all' %}text-primary{% else %}text-muted{% endif %}">
 							<i class="fas fa-home-alt fa-fw text-lg"></i>
-							<div class="text-small">Home</div>
+							<div class="text-sm font-bold">Home</div>
 						</div>
 					</a>
 				</button>
@@ -21,7 +21,7 @@
 					<a href="/?sort=hot&t=all" class="text-decoration-none" role="button">
 						<div class="text-center {% if request.full_path=='/?sort=hot&t=all' %}text-primary{% else %}text-muted{% endif %}">
 							<i class="fas fa-fire fa-fw text-lg"></i>
-							<div class="text-small">Hot</div>
+							<div class="text-sm font-bold">Hot</div>
 						</div>
 					</a>
 				</button>
@@ -32,7 +32,7 @@
 					<a href="/?sort=new&t=all" class="text-decoration-none" role="button">
 						<div class="text-center {% if request.full_path=='/?sort=new&t=all' %}text-primary{% else %}text-muted{% endif %}">
 							<i class="fas fa-sparkles fa-fw text-lg"></i>
-							<div class="text-small">New</div>
+							<div class="text-sm font-bold">New</div>
 						</div>
 					</a>
 				</button>
@@ -43,7 +43,7 @@
 					<a href="/comments" class="text-decoration-none" role="button">
 						<div class="text-center {% if request.path=='/comments' %}text-primary{% else %}text-muted{% endif %}">
 							<i class="fas fa-comment-dots fa-fw text-lg"></i>
-							<div class="text-small">Comments</div>
+							<div class="text-sm font-bold">Comments</div>
 						</div>
 					</a>
 				</button>
@@ -53,7 +53,7 @@
 					<a href="/leaderboard" class="text-decoration-none" role="button">
 						<div class="text-center {% if request.path=='/leaderboard' %}text-primary{% else %}text-muted{% endif %}">
 							<i class="fas fa-trophy fa-fw text-lg"></i>
-							<div class="text-small">Users</div>
+							<div class="text-sm font-bold">Users</div>
 						</div>
 					</a>
 				</button>
@@ -64,7 +64,7 @@
 					<a href="/shop" class="text-decoration-none" role="button">
 						<div class="text-center {% if request.path=='/shop' %}text-primary{% else %}text-muted{% endif %}">
 							<i class="fas fa-store fa-fw text-lg"></i>
-							<div class="text-small">Shop</div>
+							<div class="text-sm font-bold">Shop</div>
 						</div>
 					</a>
 				</button>
@@ -75,7 +75,7 @@
 					<a href="/signup" class="text-decoration-none" role="button">
 						<div class="text-center text-muted">
 							<i class="fas fa-user-plus fa-fw text-lg"></i>
-							<div class="text-small">Sign Up</div>
+							<div class="text-sm font-bold">Sign Up</div>
 						</div>
 					</a>
 				</button>
