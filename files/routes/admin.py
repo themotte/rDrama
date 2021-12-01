@@ -1016,8 +1016,7 @@ def api_ban_comment(c_id, v):
 def api_unban_comment(c_id, v):
 
 	comment = g.db.query(Comment).filter_by(id=c_id).first()
-	if not comment:
-		abort(404)
+	if not comment: abort(404)
 	g.db.add(comment)
 
 	if comment.is_banned:
@@ -1037,26 +1036,20 @@ def api_unban_comment(c_id, v):
 
 
 @app.post("/distinguish_comment/<c_id>")
-@auth_required
+@admin_level_required(1)
 def admin_distinguish_comment(c_id, v):
 	
-	if v.admin_level == 0: abort(403)
 	
 	comment = get_comment(c_id, v=v)
 
-	if comment.author_id != v.id:
-		abort(403)
+	if comment.author_id != v.id: abort(403)
 
 	comment.distinguish_level = 0 if comment.distinguish_level else v.admin_level
 
 	g.db.add(comment)
-	html=render_template(
-				"comments.html",
-				v=v,
-				comments=[comment],
-				)
+	html = render_template("comments.html", v=v, comments=[comment])
 
-	html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
+	html = str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
 
 	g.db.commit()
 

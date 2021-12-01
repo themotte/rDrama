@@ -6,8 +6,8 @@ from files.helpers.lazy import lazy
 from os import environ
 
 site = environ.get("DOMAIN").strip()
-if site == 'pcmemes.net': cc = "splash mountain"
-else: cc = "country club"
+if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
+else: cc = "COUNTRY CLUB"
 
 class ModAction(Base):
 	__tablename__ = "modactions"
@@ -82,7 +82,7 @@ class ModAction(Base):
 	@lazy
 	def string(self):
 
-		output =  ACTIONTYPES[self.kind]["str"].format(self=self, cc=cc)
+		output =  ACTIONTYPES[self.kind]["str"].format(self=self)
 
 		if self.note: output += f" <i>({self.note})</i>"
 
@@ -93,7 +93,7 @@ class ModAction(Base):
 	def target_link(self):
 		if self.target_user: return f'<a href="{self.target_user.url}">{self.target_user.username}</a>'
 		elif self.target_post:
-			if self.target_post.club: return f'<a href="{self.target_post.permalink}">{cc.upper()} ONLY</a>'
+			if self.target_post.club: return f'<a href="{self.target_post.permalink}">{cc} ONLY</a>'
 			return f'<a href="{self.target_post.permalink}">{self.target_post.title.replace("<","").replace(">","")}</a>'
 		elif self.target_comment_id: return f'<a href="/comment/{self.target_comment_id}?context=9#context">comment</a>'
 

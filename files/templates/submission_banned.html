@@ -25,7 +25,7 @@
 <input type="submit" value="{% if p.stickied %}Un-sticky{% else %}Pin{% endif %}">
 </form>
 {% endif %}
-{% if v.admin_level > 1 and v.id==p.author_id %}
+{% if v.admin_level > 0 and v.id==p.author_id %}
 <form action="/distinguish/{{p.id}}" method="post">
 <input type="hidden" name="formkey", value="{{v.formkey}}">
 <input type="submit" value="{% if p.distinguish_level %}Un-distinguish{% else %}Distinguish{% endif %}">

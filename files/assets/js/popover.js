@@ -1,4 +1,4 @@
-window.onload = function() {
+window.addEventListener("load",function(event) {
   function eventasdf(value){
       var content_id = value.getAttributeNode("data-content-id").value;
       value.addEventListener("click", function(){jhkj(content_id)});
@@ -29,8 +29,9 @@ window.onload = function() {
       document.body.removeChild(popover_shit);
     }
     
+    
     var usernames = document.querySelectorAll("a.user-name");
     usernames.forEach(eventasdf);
     
     document.addEventListener("click", function(e){dfgh(e)});
-  };
+});

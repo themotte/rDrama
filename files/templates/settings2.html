@@ -36,10 +36,10 @@
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=131"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
+		<link rel="stylesheet" href="/assets/css/main.css?v=132"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=131"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
+		<link rel="stylesheet" href="/assets/css/main.css?v=132"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
 	{% endif %}
 
 		<link href="/assets/css/fa.css?v=52" rel="stylesheet"> 
@@ -168,7 +168,7 @@
 {% block scripts %}
 {% endblock %}
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 	function formkey() {return '{{v.formkey}}';}
