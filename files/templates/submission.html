@@ -548,7 +548,7 @@
 				</button>
 			</li>
 			{% endif %}
-			<li id="voting-{{p.id}}-mobile" class="voting list-inline-item md:hidden{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+			<li id="voting-{{p.id}}-mobile" class="voting {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 				{% if v %}
 				<span id="post-mobile-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post-mobile', '{{p.id}}', '1')" class="mx-0 pr-1 arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}">
 				</span>
