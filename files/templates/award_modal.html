@@ -13,9 +13,9 @@
 						{% for award in v.user_awards %}
 						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
 							{% if award.owned %}
-								<button type="button" id="{{award.kind}}" onclick="bruh('{{award.kind}}')" class="hover:bg-gray-300 rounded">
+								<button type="button" id="{{award.kind}}" onclick="bruh('{{award.kind}}')" class="w-full h-full p-2 hover:bg-gray-300 rounded">
 							{% else %}
-								<button type="button" id="{{award.kind}}" disabled class="cursor-not-allowed opacity-50 hover:bg-gray-300 rounded">
+								<button type="button" id="{{award.kind}}" disabled class="cursor-not-allowed opacity-50 w-full h-full p-2 hover:bg-gray-300 rounded">
 							{% endif %}
 									<i class="{{award.icon}} {{award.color}}"></i>
 									<div class="mt-2 font-bold text-base text-gray-700">{{award.title}}</div>
