@@ -1,4 +1,4 @@
-window.onload = function () {
+window.addEventListener("load",function(event) {
 	var prevScrollpos = window.pageYOffset;
 	window.onscroll = function () {
 		var currentScrollPos = window.pageYOffset;
@@ -43,4 +43,4 @@ window.onload = function () {
 		}
 		prevScrollpos = currentScrollPos;
 	}
-}
+})

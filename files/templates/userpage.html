@@ -71,38 +71,34 @@
 
 {% if u.song %}
 	<script>
-window.onload = function() {
-		var audio = new Audio('/songs/{{u.id}}');
-		audio.loop=true;
-		
-		{% if not u.unmutable %}
-			function pause() {
-				audio.pause();
-				document.getElementById("pause1").classList.toggle("d-none");
-				document.getElementById("play1").classList.toggle("d-none");
-				document.getElementById("pause2").classList.toggle("d-none");
-				document.getElementById("play2").classList.toggle("d-none");
-			}
+		window.addEventListener("load",function(event) {
+			var audio = new Audio('/songs/{{u.id}}');
+			audio.loop=true;
+			
+			{% if not u.unmutable %}
+				function pause() {
+					audio.pause();
+					document.getElementById("pause1").classList.toggle("d-none");
+					document.getElementById("play1").classList.toggle("d-none");
+					document.getElementById("pause2").classList.toggle("d-none");
+					document.getElementById("play2").classList.toggle("d-none");
+				}
 
-			function play() {
-				audio.play();
-				document.getElementById("pause1").classList.toggle("d-none");
-				document.getElementById("play1").classList.toggle("d-none");
-				document.getElementById("pause2").classList.toggle("d-none");
-				document.getElementById("play2").classList.toggle("d-none");
-			}
-		{% endif %}
+				function play() {
+					audio.play();
+					document.getElementById("pause1").classList.toggle("d-none");
+					document.getElementById("play1").classList.toggle("d-none");
+					document.getElementById("pause2").classList.toggle("d-none");
+					document.getElementById("play2").classList.toggle("d-none");
+				}
+			{% endif %}
 
-		window.addEventListener( 'load', function() {
 			audio.play();
 			document.getElementById('userpage').addEventListener('click', () => {
 				if (audio.paused) audio.play(); 
 			}, {once : true});
-
-		});
-	
-};
-</script>
+		};
+	</script>
 {% endif %}
 
 <div class="row d-none d-md-block">
