@@ -13,5 +13,5 @@
 }
 
 label {
-	@apply font-bold text-black text-sm leading-normal mb-2;
+	@apply block font-bold text-gray-700 text-sm leading-normal mb-1;
 }
