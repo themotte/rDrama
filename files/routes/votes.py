@@ -63,7 +63,7 @@ def admin_vote_info_get(v):
 
 
 @app.post("/vote/post/<post_id>/<new>")
-@limiter.limit("5/second;60/minute;200/hour")
+@limiter.limit("5/second;60/minute;600/hour")
 @auth_required
 @validate_formkey
 def api_vote_post(post_id, new, v):
@@ -126,7 +126,7 @@ def api_vote_post(post_id, new, v):
 	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
-@limiter.limit("5/second;60/minute;200/hour")
+@limiter.limit("5/second;60/minute;600/hour")
 @auth_required
 @validate_formkey
 def api_vote_comment(comment_id, new, v):
