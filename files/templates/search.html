@@ -31,13 +31,11 @@
 
 {% block content %}
 
-<div class="col-span-full">
-	<div class="pl-md-3">
-		<div class="text-gray-500 text-sm mb-1">
-			Advanced search parameters (with examples): "author:quadnarca", "domain:reddit.com", "over18:true"
-		</div>
-		<!-- <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div> -->
-	</div>
+<div class="col-span-full mt-8">
+	<p class="text-gray-500 text-sm mb-1">
+		Advanced search parameters (with examples): "author:quadnarca", "domain:reddit.com", "over18:true"
+	</p>
+	<!-- <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div> -->
 </div>
 
 {% if not '/users/' in request.path %}
