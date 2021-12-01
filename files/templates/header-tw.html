@@ -109,14 +109,17 @@
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-      <form action="/search/posts/" method="get" class="mb-0">
-            <input placeholder="Search" class="form-input py-1.5 pr-7" aria-label="Search" name="q" value="{{request.args.get('q', '')}}">
-            <i class="fas fa-search text-gray-600 absolute top-3 right-2"></i>
-          </form>
+      <!-- Search box -->
+      <form action="/search/posts/" method="get" class="mb-4">
+        <input placeholder="Search" class="form-input py-1.5 pr-7" aria-label="Search" name="q" value="{{request.args.get('q', '')}}">
+        <i class="fas fa-search text-gray-600 absolute top-3 right-2"></i>
+      </form>
+      <!-- Submit post link -->
       <button class="w-full btn btn-red">
         <i class="fas fa-pen fa-sm fa-fw mr-2"></i>
         Create post
       </button>
+      <!-- Meta links -->
       <ul class="navbar-nav justify-end flex-grow-1 pe-3">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
