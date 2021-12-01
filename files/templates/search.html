@@ -15,19 +15,19 @@
 				Search Results: "{{query}}"
 			</h1>
 			<div class="flex space-x-3 divide-x divide-gray-400 text-xs">
-				<ul class="text-gray-700 flex items-center space-x-3 leading-normal mb-0">
+				<ul class="flex items-center space-x-3 leading-normal mb-0">
 					<li>
-						<a class="{% if '/posts/' in request.path %}font-bold text-red-600{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
+						<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-700' }}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
 							Posts
 						</a>
 					</li>
 					<li>
-						<a class="{% if '/comments/' in request.path %}font-bold text-red-600{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
+						<a class="{{ 'font-bold text-red-600' if '/comments/' in request.path else 'text-gray-700' }}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
 							Comments
 						</a>
 					</li>
 					<li>
-						<a class="{% if '/users/' in request.path %}font-bold text-red-600{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
+						<a class="{{ 'font-bold text-red-600' if '/users/' in request.path else 'text-gray-700' }}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
 							Users
 						</a>
 					</li>
