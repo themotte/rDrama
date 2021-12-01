@@ -9,17 +9,19 @@
 			</div>
 			<div id="awardModalBody" class="modal-body">
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
-					<div class="card-columns award-columns awards-wrapper">
+					<div class="flex flex-wrap -mx-2 overflow-hidden">
 						{% for award in v.user_awards %}
+						<div class="my-2 px-2 w-1/2 overflow-hidden lg:w-1/4">
 							{% if award.owned %}
-								<a href="javascript:void(0)" id="{{award.kind}}" class="card" onclick="bruh('{{award.kind}}')">
+								<button id="{{award.kind}}" onclick="bruh('{{award.kind}}')">
 							{% else %}
-								<a href="javascript:void(0)" id="{{award.kind}}" class="card disabled">
+								<button id="{{award.kind}}" class="disabled">
 							{% endif %}
-								<i class="{{award.icon}} {{award.color}}"></i>
-								<div class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</div>
-								<div class="text-muted">{{award.owned}} owned</div>
-							</a>
+									<i class="{{award.icon}} {{award.color}}"></i>
+									<div class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</div>
+									<div class="text-muted">{{award.owned}} owned</div>
+								</button>
+						</div>
 						{% endfor %}
 					</div>
 					<label id="notelabel" for="note" class="pt-4">Note (optional):</label>
