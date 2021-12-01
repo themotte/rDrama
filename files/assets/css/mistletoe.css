@@ -31,7 +31,7 @@
     background: url(https://i.imgur.com/BdGY6tH.png);
     animation: lights 1s infinite steps(2);
     position: absolute;
-	top: -4px;
+	top: 0;
 	left: 0;
 	right: 0;
 	height: 69px;
