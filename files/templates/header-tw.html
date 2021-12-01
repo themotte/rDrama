@@ -137,13 +137,13 @@
           </a>
         </li>
         <li>
-          <a class="text-gray-700 hover:text-gray-900" href="#">
+          <a class="text-gray-700 hover:text-gray-900" href="/@me">
             <i class="fas fa-user fa-fw mr-2"></i>
             My Profile
           </a>
         </li>
         <li>
-          <a class="text-gray-700 hover:text-gray-900" href="#">
+          <a class="text-gray-700 hover:text-gray-900" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}">
             <i class="fas fa-envelope fa-fw mr-2"></i>
             Inbox
             {% if v.notifications_count %}
@@ -152,7 +152,7 @@
           </a>
         </li>
         <li>
-          <a class="text-gray-700 hover:text-gray-900" href="#">
+          <a class="text-gray-700 hover:text-gray-900" href="/settings">
             <i class="fas fa-cog fa-fw mr-2"></i>
             Settings
           </a>
