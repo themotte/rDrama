@@ -2,21 +2,21 @@
 
 <div class="modal fade" id="reportPostModal" tabindex="-1" role="dialog" aria-labelledby="reportPostModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered mx-auto max-w-xl" role="document">
-		<div class="modal-content mx-auto max-w-xl bg-gray-800 rounded-xl shadow-lg">
+		<div class="modal-content mx-auto max-w-xl bg-gray-100 rounded-md shadow-lg">
 			<div class="modal-header">
-				<h5 class="font-bold text-xl font-heading leading-normal">Report post</h5>
+				<h5 class="font-bold text-xl text-black font-heading leading-normal">Report post</h5>
 				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
 			</div>
 			<div id="reportPostFormBefore">
 				<div class="modal-body">
-					<div class="font-bold text-lg font-heading leading-normal">We're sorry something here is wrong.</div>
-					<small class="text-gray-500">Please enter a reason for reporting below.</small>
-					<input maxlength="100" id="reason" class="mt-3 block w-full rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" placeholder="e.g. this post violates community standards">
+					<div class="font-bold text-lg leading-normal">We're sorry something here is wrong.</div>
+					<small class="text-gray-700">Please enter a reason for reporting below.</small>
+					<input maxlength="100" id="reason" class="mt-3 block w-full rounded shadow-inner px-2 py-1.5 text-gray-700 bg-white border border-gray-300 focus:bg-white focus:text-black" placeholder="e.g. this post violates community standards">
 				</div>
-				<div class="flex justify-end space-x-2 border-t border-gray-700 p-4">
-					<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" data-bs-dismiss="modal">
+				<div class="flex justify-end space-x-2 border-t border-gray-300 p-4">
+					<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700" data-bs-dismiss="modal">
 						Cancel
 					</button>
 					<button type="button" id="reportPostButton" class="block px-4 py-2 bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-red-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
@@ -26,10 +26,10 @@
 			</div>
 			<div class="hidden" id="reportPostFormAfter">
 				<div class="modal-body">
-					<div class="font-bold text-lg font-heading leading-normal">Thank you for reporting this post!</div>
+					<div class="font-bold text-lg leading-normal">Thank you for reporting this post!</div>
 					<small class="text-gray-500">By the power of the mop, our internet janitors will take it from here.</small>
 				</div>
-				<div class="flex justify-end space-x-2 border-t border-gray-700 p-4">
+				<div class="flex justify-end space-x-2 border-t border-gray-400 p-4">
 					<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" data-bs-dismiss="modal">
 						Close
 					</button>
