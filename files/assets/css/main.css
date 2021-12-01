@@ -5886,7 +5886,7 @@ blockquote p {
   opacity: 0;
 }
 .offcanvas-backdrop.show {
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 .offcanvas-header {
