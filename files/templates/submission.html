@@ -601,17 +601,17 @@
 				</div>
 				<ul class="flex space-x-3 text-sm text-gray-500 leading-normal">
 					<li>
-						<a href="?sort=top" class="{% if sort == 'top' %}font-bold text-red-600{% endif %}">
+						<a href="?sort=top" class="{{ 'font-bold text-red-600' if sort == 'top' else 'text-gray-500 hover:text-gray-700'}}">
 							Top
 						</a>
 					</li>
 					<li>
-						<a href="?sort=new" class="{% if sort == 'new' %}font-bold text-red-600{% endif %}">
+						<a href="?sort=new" class="{{ 'font-bold text-red-600' if sort == 'new' else 'text-gray-500 hover:text-gray-700'}}">
 							Latest
 						</a>
 					</li>
 					<li>
-						<a href="?sort=old" class="{% if sort == 'old' %}font-bold text-red-600{% endif %}">
+						<a href="?sort=old" class="{{ 'font-bold text-red-600' if sort == 'old' else 'text-gray-500 hover:text-gray-700'}}">
 							Oldest
 						</a>
 					</li>
@@ -621,7 +621,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="?sort=bottom" class="{% if sort == 'bottom' %}font-bold text-red-600{% endif %}">
+						<a href="?sort=bottom" class="{{ 'font-bold text-red-600' if sort == 'bottom' else 'text-gray-500 hover:text-gray-700'}}">
 							Worst
 						</a>
 					</li>
