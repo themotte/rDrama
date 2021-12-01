@@ -270,7 +270,7 @@ def leaderboard(v):
 
 
 
-	if 'pcmemes.net' in request.host:
+	if 'pcmemes.net' == request.host:
 		users6 = users.order_by(User.basedcount.desc()).limit(10).all()
 		return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9)
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users7=users7, users9=users9)
