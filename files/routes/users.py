@@ -652,11 +652,9 @@ def u_username_comments(username, v=None):
 													u=u,
 													v=v)
 
-	if hasattr(u, 'is_blocked') and u.is_blocked and (not v or v.admin_level < 2):
+	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
-		else: return render_template("userpage_blocked.html",
-													u=u,
-													v=v)
+		else: return render_template("userpage_blocked.html", u=u, v=v)
 
 
 	page = int(request.values.get("page", "1"))
