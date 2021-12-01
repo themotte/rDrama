@@ -668,8 +668,8 @@
 
 		var clipboard = new ClipboardJS('.copy-link');
 		clipboard.on('success', function(e) {
-				var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-				myToast.show();
+			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
+			myToast.show();
 		});
 
 		const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
