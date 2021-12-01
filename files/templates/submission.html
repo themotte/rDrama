@@ -530,22 +530,22 @@
 		<ul class="flex items-center space-x-5 text-sm text-gray-500 mb-0">
 
 			<li class="mr-auto">
-				<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
-					<i class="fas fa-comment-dots"></i>{{p.comment_count}}
+				<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="text-gray-500 hover:text-gray-400">
+					<i class="fas fa-comment-dots fa-fw mr-2"></i>{{ p.comment_count }} comment{{ '' if p.comment_count == 1 else 's' }}
 					<span class="text-info hidden new-comments"></span>
 				</a>
 			</li>
 
 			<li>
-			<button class="copy-link" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}">
-				<i class="fas fa-link"></i>Copy link
-			</button>
+				<button class="copy-link" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}">
+					<i class="fas fa-link fa-fw mr-2"></i>Copy link
+				</button>
 			</li>
 			{% if v %}
 			<li class="list-inline-item">
-				<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#actionsModal">
-					<i class="fas fa-ellipsis-h"></i>
-				</a>
+				<button data-bs-toggle="modal" data-bs-target="#actionsModal">
+					<i class="fas fa-ellipsis-h fa-fw"></i>
+				</button>
 			</li>
 			{% endif %}
 			<li id="voting-{{p.id}}-mobile" class="voting list-inline-item md:hidden{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
