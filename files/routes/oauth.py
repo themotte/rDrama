@@ -41,7 +41,7 @@ def authorize(v):
 def request_api_keys(v):
 
 	new_app = OauthApp(
-		app_name=request.values.get('name'),
+		app_name=request.values.get('name').replace('<',''),
 		redirect_uri=request.values.get('redirect_uri'),
 		author_id=v.id,
 		description=request.values.get("description")[:256]
@@ -131,7 +131,7 @@ def admin_app_approve(v, aid):
 
 	g.db.commit()
 
-	return {"message": f"{app.app_name} approved"}
+	return {"message": f"Application approved"}
 
 
 @app.post("/admin/app/revoke/<aid>")
