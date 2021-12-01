@@ -1,5 +1,5 @@
 <div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="awardModalTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
 		<div class="modal-content mx-auto max-w-2xl bg-gray-100 rounded-md shadow-lg">
 			<div class="modal-header">
 				<h5 class="font-bold text-xl text-black font-heading leading-normal">Give Award</h5>
@@ -9,7 +9,7 @@
 			</div>
 			<div id="awardModalBody" class="modal-body">
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
-					<div class="flex flex-wrap -mx-4 overflow-hidden overflow-y-scroll">
+					<div class="flex flex-wrap -mx-4 overflow-hidden">
 						{% for award in v.user_awards %}
 						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
 							{% if award.owned %}
