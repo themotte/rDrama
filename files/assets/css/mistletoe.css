@@ -1,15 +1,17 @@
 /* Santa Hats */
 
 .avatar::before {
-	display: block;
 	content: '';
 	pointer-events: none;
 	background: url("https://i.ibb.co/54JCcPC/hat1.png");
 	position: absolute;
-	bottom: -4px;
-	left: 0;
+	top: -10px;
+	left: -5px;
 	right: 0;
-	height: 20px;
+	height: 16px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 /* Snow caps */
