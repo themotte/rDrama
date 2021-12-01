@@ -14,7 +14,7 @@
 			<h1 class="font-bold text-xl font-heading leading-normal">
 				Search Results: "{{query}}"
 			</h1>
-			<div class="mt-1 flex space-x-3 divide-x divide-gray-400 text-sm">
+			<div class="flex space-x-3 divide-x divide-gray-400 text-sm">
 				<ul class="text-gray-700 flex items-center space-x-3 leading-normal">
 					<li>
 						<a class="{% if '/posts/' in request.path %}font-bold text-red-600{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
