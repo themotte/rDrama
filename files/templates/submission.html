@@ -314,7 +314,7 @@
 						{% endif %}
 
 						{% if p.realurl(v) %}
-						<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>({{p.domain}})
+						<a class="text-gray-500 hover:underline" href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>({{p.domain}})
 						</a>
 						{% else %}
 						<span>(text post)</span>
