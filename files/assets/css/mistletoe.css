@@ -14,7 +14,7 @@
 	background-position: center;
 }
 
-.santahat::before {
+.santa::before {
 	content: '';
 	pointer-events: none;
 	background: url("https://i.ibb.co/54JCcPC/hat1.png");

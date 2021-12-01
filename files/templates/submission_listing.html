@@ -37,7 +37,7 @@
 	<div class="flex md:flex-row flex-nowrap">
 
 		<div class="flex flex-col flex-shrink-0 items-center mr-4">
-			<div class="relative avatar">
+			<div class="relative {{ 'santa' if p.author.patron else 'cap' }}">
 				<img loading="lazy" src="{{ p.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
 			</div>
 
@@ -80,7 +80,7 @@
 
 			<div class="flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
 
-				<div class="relative avatar md:hidden">
+				<div class="relative md:hidden {{ 'santa' if p.author.patron else 'cap' }}">
 					<img loading="lazy" src="{{ p.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
 				</div>
 
