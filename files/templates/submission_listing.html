@@ -659,13 +659,13 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 <script>
-	window.addEventListener("load",function(event) {
-		function expandText(id) {
-			document.getElementById('post-text-'+id).classList.toggle('d-none');
-			document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
-			document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
-		};
+	function expandText(id) {
+		document.getElementById('post-text-'+id).classList.toggle('d-none');
+		document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
+		document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
+	};
 
+	window.addEventListener("load",function(event) {
 		var clipboard = new ClipboardJS('.copy-link');
 		clipboard.on('success', function(e) {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
