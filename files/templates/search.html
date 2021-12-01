@@ -14,8 +14,8 @@
 			<h1 class="font-bold text-xl font-heading leading-normal">
 				Search Results: "{{query}}"
 			</h1>
-			<div class="mt-1 flex space-x-3 divide-x divide-gray-400">
-				<ul class="text-gray-700 text-xs flex items-center space-x-3 leading-normal">
+			<div class="mt-1 flex space-x-3 divide-x divide-gray-400 text-sm">
+				<ul class="text-gray-700 flex items-center space-x-3 leading-normal">
 					<li>
 						<a class="{% if '/posts/' in request.path %}font-bold text-red-600{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
 							Posts
@@ -32,12 +32,12 @@
 						</a>
 					</li>
 				</ul>
-				<small class="pl-3 block text-gray-500">
+				<div class="pl-3 block text-gray-500">
 					<strong>{{ total }}</strong>
 					{{ sort }} result{{ '' if total == 1 else 's' }} matching
 					<strong>"{{query}}"</strong> {{ 'from all time' if t=='all' else 'in the last' }}
 					{% if t != 'all' %}<span class="font-bold">{{ t }}</span>{% endif %}
-				</small>
+				</div>
 			</div>
 		</div>
 		{% if not '/users/' in request.path %}
