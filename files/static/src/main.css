@@ -2,12 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ----------------------- VARIABLES --------------------- */
 :root {
 	--color-primary: 220, 38, 38;
 }
 
+/* ------------------------- FONTS ----------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&display=swap');
 
+/* ---------------- RESPONSIVE UTILITIES ----------------- */
 @responsive {
 	.text-shadow {
 		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.12)
@@ -23,6 +26,7 @@
 	}
 }
 
+/* -------------------- BASE STYLING -------------------- */
 @base {
 	/* Headings */
 	h1, .h1 {
@@ -85,22 +89,15 @@
 	}
 }
 
-.test {
-  @apply text-red-700 font-bold text-3xl;
-}
-
+/* ----------------------- INPUTS ----------------------- */
 .form-input {
 	@apply block w-full rounded shadow-inner p-2 bg-white border border-gray-300 hover:border-gray-400 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 
 }
 
-label {
-	@apply block font-bold text-gray-700 text-sm leading-normal mb-1;
-}
-
+/* ---------------------- BUTTONS ----------------------- */
 .btn {
 	@apply block px-4 py-2 active:shadow-inner border rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold focus:outline-none disabled:opacity-50;
 }
-
 .btn-red {
 	@apply bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 border-red-900 text-gray-100 focus:text-gray-200;
 }
