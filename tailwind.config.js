@@ -30,7 +30,8 @@ module.exports = {
     },
     fontFamily: {
       'heading': ['Delius Swash Caps'],
-      'serif': ['Georgia']
+      'serif': ['Georgia'],
+      'mono': 'SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace'
     },
     extend: {
       boxShadow: {
