@@ -1700,7 +1700,7 @@ a.badge:hover, a.badge:focus {
 }
 a.badge-secondary:hover, a.badge-secondary:focus {
   color: #fff;
-  background-color: #545b62;
+  background-color: var(--primary);
 }
 a.badge-secondary:focus, a.badge-secondary.focus {
   outline: 0;
