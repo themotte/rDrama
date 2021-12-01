@@ -38,7 +38,8 @@
 	bottom: -15px;
 	left: 0;
 	right: 0;
-	height: 25px;
+	height: 23px;
+	border-radius: 9999px;
 	background-size: contain;
 }
 
