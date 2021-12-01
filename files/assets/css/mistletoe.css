@@ -1,4 +1,4 @@
-.post-thumbnail::after {
+.post-thumbnail-wrapper::after {
 	background: url("https://i.ibb.co/LN79rp9/Image.png");
 	position: absolute;
 	bottom: -15px;
