@@ -13,9 +13,9 @@
 						{% for award in v.user_awards %}
 						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
 							{% if award.owned %}
-								<button id="{{award.kind}}" onclick="bruh('{{award.kind}}')">
+								<button type="button" id="{{award.kind}}" onclick="bruh('{{award.kind}}')">
 							{% else %}
-								<button id="{{award.kind}}" class="disabled">
+								<button type="button" id="{{award.kind}}" class="disabled">
 							{% endif %}
 									<i class="{{award.icon}} {{award.color}}"></i>
 									<div class="mt-2 font-bold text-base text-gray-700">{{award.title}}</div>
