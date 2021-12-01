@@ -9,9 +9,9 @@
 			</div>
 			<div id="awardModalBody" class="modal-body">
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
-					<div class="flex flex-wrap -mx-2 overflow-hidden">
+					<div class="flex flex-wrap -mx-4 overflow-hidden">
 						{% for award in v.user_awards %}
-						<div class="my-2 px-2 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
+						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
 							{% if award.owned %}
 								<button id="{{award.kind}}" onclick="bruh('{{award.kind}}')">
 							{% else %}
