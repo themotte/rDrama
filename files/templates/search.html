@@ -58,66 +58,11 @@
 	<!-- <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div> -->
 </div>
 
-{% if not '/users/' in request.path %}
-
-<div class="flex-row tab-bar sticky d-none">
-
-	<ul class="nav post-nav mr-auto">
-		<li class="nav-item">
-			<a class="nav-link{% if sort=='top' %} active{% endif %}" href="?sort=top&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link{% if sort=='bottom' %} active{% endif %}" href="?sort=bottom&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-down"></i>Bottom</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link{% if sort=='new' %} active{% endif %}" href="?sort=new&q={{query | urlencode}}&t={{t}}"><i class="fas fa-sparkles"></i>New</a> 
-		</li>
-		<li class="nav-item">
-			<a class="nav-link{% if sort=='old' %} active{% endif %}" href="?sort=old&q={{query | urlencode}}&t={{t}}"><i class="fas fa-book"></i>Old</a> 
-		</li>
-		<li class="nav-item">
-			<a class="nav-link{% if sort=='fiery' %} active{% endif %}" href="?sort=fiery&q={{query | urlencode}}&t={{t}}"><i class="fas fa-bullhorn"></i>Controversial</a>
-		</li>
-		<li class="nav-item ">
-			<a class="nav-link {% if sort=='comments' %} active{% endif %}" href="/?sort=comments&q={{query | urlencode}}&t={{t}}"><i class="fas fa-comments"></i>Comments</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link{% if sort=='random' %} active{% endif %}" href="?sort=random&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-down"></i>Random</a>
-		</li>
-	</ul>
-
-</div>
-{% endif %}
-
-<div class="row no-gutters">
-	<div class="col">
-		<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
-			<ul class="nav settings-nav">
-				<li class="nav-item">
-					<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link{% if  '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link{% if  '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
-
-<div class="row no-gutters">
-
-	<div class="col-12">
-
-		<div class="posts" id="posts">
-
-			{% block listing_template %}
-			{% include "submission_listing.html" %}
-			{% endblock %}
-
-		</div>
+<div class="col-span-full">
+	<div class="posts" id="posts">
+		{% block listing_template %}
+		{% include "submission_listing.html" %}
+		{% endblock %}
 	</div>
 </div>
 {% endblock %}
