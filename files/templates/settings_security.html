@@ -7,9 +7,9 @@
 <script>
 	window.addEventListener("load",function(event) {
 		document.getElementById('new_email').addEventListener('input', function () {
-			document.getElementById("email-password").classList.remove("d-none");
-			document.getElementById("email-password-label").classList.remove("d-none");
-			document.getElementById("emailpasswordRequired").classList.remove("d-none");
+			document.getElementById("email-password").classList.remove("hidden");
+			document.getElementById("email-password-label").classList.remove("hidden");
+			document.getElementById("emailpasswordRequired").classList.remove("hidden");
 		});
 	});
 	const twoStepModal = new bootstrap.Modal(document.getElementById('2faModal'))
@@ -43,13 +43,13 @@
 									</div>
 								</div>
 								<div class="d-lg-flex mt-3">
-								<label for="email-password" class="w-lg-25 d-none" id="email-password-label">Password</label>
+								<label for="email-password" class="w-lg-25 hidden" id="email-password-label">Password</label>
 								<div class="w-lg-100">
-									<input autocomplete="new-password" type="password" class="form-control mb-2 d-none" id="email-password" name="password" autocomplete="off" required>
-									<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger d-none mt-1">Password required to update your email.</small>
+									<input autocomplete="new-password" type="password" class="form-control mb-2 hidden" id="email-password" name="password" autocomplete="off" required>
+									<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger hidden mt-1">Password required to update your email.</small>
 								</div>
 							</div>
-							<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger d-none mt-1">Password required to update your email.</small>
+							<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger hidden mt-1">Password required to update your email.</small>
 						</div>
 						<div class="footer">
 							<div class="d-flex">
@@ -87,11 +87,11 @@
 									aria-describedby="new_password" type="password" name="new_password" autocomplete="off"
 									required>
 									<small id="passwordHelpChange"
-									class="form-text font-weight-bold text-muted d-none mt-1 w-lg-100">Minimum of 8
+									class="form-text font-weight-bold text-muted hidden mt-1 w-lg-100">Minimum of 8
 									characters
 									required.</small>
 									<small id="passwordHelpChangeSuccess"
-									class="form-text font-weight-bold text-success d-none mt-1 w-lg-100">Your password
+									class="form-text font-weight-bold text-success hidden mt-1 w-lg-100">Your password
 									meets the
 									requirements.
 								</small>
@@ -107,10 +107,10 @@
 								required>
 
 								<small id="passwordHelpCnf"
-								class="form-text font-weight-bold text-muted d-none mt-1 w-lg-100">Passwords do not
+								class="form-text font-weight-bold text-muted hidden mt-1 w-lg-100">Passwords do not
 								match.</small>
 								<small id="passwordHelpCnfSuccess"
-								class="form-text font-weight-bold text-success d-none mt-1 w-lg-100">Passwords match.
+								class="form-text font-weight-bold text-success hidden mt-1 w-lg-100">Passwords match.
 							</small>
 
 						</div>
