@@ -128,13 +128,13 @@
       </button>
       <!-- Meta links -->
       <ul class="flex flex-col font-bold text-base text-gray-600">
-        <li class="flex">
-          <a class="nav-link active" aria-current="page" href="/me">
+        <li>
+          <a class="inline-flex items-center" aria-current="page" href="/me">
             <img src="{{ v.profile_url }}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover"/>
+            <div class="font-semibold text-base text-black leading-5">
+              {{ v.username }}
+            </div>
           </a>
-          <div class="font-semibold text-base text-black">
-            {{ v.username }}
-          </div>
         </li>
         <li>
           <a class="nav-link" href="#">Link</a>
