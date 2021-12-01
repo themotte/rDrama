@@ -35,7 +35,6 @@
 
 {% if v %}
 	<script>
-window.onload = function() {
 		const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
 
 		function updateTax(mobile=false) {
@@ -67,9 +66,7 @@ window.onload = function() {
 
 			setTimeout(_ => t.disabled = false, 2000);
 		}
-	
-};
-</script>
+	</script>
 {% endif %}
 
 {% if u.song %}
