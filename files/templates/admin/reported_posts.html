@@ -40,7 +40,7 @@
 
 {% block fixedMobileBarJS %}
 <script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 	var prevScrollpos = window.pageYOffset;
 	window.onscroll = function () {
 		var currentScrollPos = window.pageYOffset;
@@ -61,7 +61,7 @@ window.addEventListener('DOMContentLoaded', function() {
 		prevScrollpos = currentScrollPos;
 	}
 
-});
+};
 </script>
 {% endblock %}
 

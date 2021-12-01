@@ -35,7 +35,7 @@
 
 {% if v %}
 	<script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 		const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
 
 		function updateTax(mobile=false) {
@@ -68,13 +68,13 @@ window.addEventListener('DOMContentLoaded', function() {
 			setTimeout(_ => t.disabled = false, 2000);
 		}
 	
-});
+};
 </script>
 {% endif %}
 
 {% if u.song %}
 	<script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 		var audio = new Audio('/songs/{{u.id}}');
 		audio.loop=true;
 		
@@ -104,7 +104,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 		});
 	
-});
+};
 </script>
 {% endif %}
 

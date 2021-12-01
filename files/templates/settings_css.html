@@ -38,7 +38,7 @@
 </div>
 {% if v.agendaposter %}
 <script>
-window.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
 	const flip = (e) => {
 		e.preventDefault();
 		document.getElementsByTagName("body")[0].setAttribute("style", "-moz-transform: scale(-1, -1);-o-transform: scale(-1, -1);-webkit-transform: scale(-1, -1);transform: scale(-1, -1);");
@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 	document.getElementById("submit-btn").onclick = flip;
 
-});
+};
 </script>
 {% endif %}
 </div>
