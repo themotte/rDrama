@@ -115,14 +115,12 @@ def api_vote_post(post_id, new, v):
 		g.db.add(post)
 		cache.delete_memoized(frontlist)
 
-	try:
-		g.db.flush()
-		post.upvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1).count()
-		post.downvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1).count()
-		post.realupvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1, real=True).count() - g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1, real=False).count() - g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1, real=True).count() + g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1, real=False).count()
-		g.db.add(post)
-		g.db.commit()
-	except: g.db.rollback()
+	g.db.flush()
+	post.upvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1).count()
+	post.downvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1).count()
+	post.realupvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1, real=True).count() - g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1, real=False).count() - g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1, real=True).count() + g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1, real=False).count()
+	g.db.add(post)
+	g.db.commit()
 	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
@@ -183,14 +181,12 @@ def api_vote_comment(comment_id, new, v):
 		comment.is_pinned = None
 		g.db.add(comment)
 
-	try:
-		g.db.flush()
-		comment.upvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=1).count()
-		comment.downvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=-1).count()
-		comment.realupvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, CommentVote_type=1, real=True).count() - g.db.query(CommentVote.id).filter_by(comment_id=comment.id, CommentVote_type=1, real=False).count() - g.db.query(CommentVote.id).filter_by(comment_id=comment.id, CommentVote_type=-1, real=True).count() + g.db.query(CommentVote.id).filter_by(comment_id=comment.id, CommentVote_type=-1, real=False).count()
-		g.db.add(comment)
-		g.db.commit()
-	except: g.db.rollback()
+	g.db.flush()
+	comment.upvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=1).count()
+	comment.downvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=-1).count()
+	comment.realupvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, CommentVote_type=1, real=True).count() - g.db.query(CommentVote.id).filter_by(comment_id=comment.id, CommentVote_type=1, real=False).count() - g.db.query(CommentVote.id).filter_by(comment_id=comment.id, CommentVote_type=-1, real=True).count() + g.db.query(CommentVote.id).filter_by(comment_id=comment.id, CommentVote_type=-1, real=False).count()
+	g.db.add(comment)
+	g.db.commit()
 	return "", 204
 
 
