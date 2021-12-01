@@ -7,58 +7,38 @@
 {% endblock %}
 
 {% block subHeader %}
-	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
-		<div class="relative col-span-full flex items-center">
-			<div>
-				<h1 class="font-bold text-xl font-heading leading-normal">
-					Search Results: "{{query}}"
-				</h1>
-				<small class="block mt-1 text-gray-700">
-					<strong>{{ total }}</strong>
-					{{ sort }} posts matching <strong>"{{query}}"</strong> {{ 'from all time' if t=='all' else 'in the last' }}
-					{% if t != 'all' %}<span class="font-bold">{{ t }}{% endif %}
-				</small>
-			</div>
-			{% if not '/users/' in request.path %}
-			<div class="ml-auto">
-				{% include "/dropdowns/SearchSorts.html" %}
-			</div>
-			{% endif %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal">
+				Search Results: "{{query}}"
+			</h1>
+			<small class="block mt-1 text-gray-700">
+				<strong>{{ total }}</strong>
+				{{ sort }} posts matching <strong>"{{query}}"</strong> {{ 'from all time' if t=='all' else 'in the last' }}
+				{% if t != 'all' %}<span class="font-bold">{{ t }}</span>{% endif %}
+			</small>
 		</div>
+		{% if not '/users/' in request.path %}
+		<div class="ml-auto">
+			{% include "/dropdowns/SearchSorts.html" %}
+		</div>
+		{% endif %}
 	</div>
+</div>
 {% endblock %}
 
 {% block content %}
 
 <div class="col-span-full">
-
-	<div class="col">
-
-		<div class="card search-results">
-
-			<div class="card-header bg-white d-none">
-				<ul class="list-inline no-bullets mb-0">
-					<li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
-					<li class="list-inline-item"><i class="fas fa-link text-gray-400"></i></li>
-				</ul>
-			</div>
-			<div class="card-body">
-				<div class="pl-md-3">
-					<div class="text-muted text-small mb-1">
-						Advanced search parameters (with examples): "author:quadnarca", "domain:reddit.com", "over18:true"
-					</div>
-					<br>
-					<!-- <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div> -->
-					<h1 class="h4 mb-0">{{query}}</h1>
-
-				</div>
-			</div>
+	<div class="pl-md-3">
+		<div class="text-gray-500 text-sm mb-1">
+			Advanced search parameters (with examples): "author:quadnarca", "domain:reddit.com", "over18:true"
 		</div>
+		<!-- <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div> -->
 	</div>
-
 </div>
-
 
 {% if not '/users/' in request.path %}
 
@@ -88,54 +68,54 @@
 		</li>
 	</ul>
 
-	</div>
-	{% endif %}
+</div>
+{% endif %}
 
-	<div class="row no-gutters">
-		<div class="col">
-			<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
-				<ul class="nav settings-nav">
-					<li class="nav-item">
-						<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link{% if  '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link{% if  '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-
-	<div class="row no-gutters">
-
-		<div class="col-12">
-
-			<div class="posts" id="posts">
-
-				{% block listing_template %}
-					{% include "submission_listing.html" %}
-				{% endblock %}
-
-			</div>
-		</div>
-	</div>
-	{% endblock %}
-
-	{% block pagenav %}
-		<nav aria-label="Page navigation">
-			<ul class="pagination pagination-sm mb-0">
-				<li class="page-item{% if page==1 %} disabled{% endif %}">
-
-					<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+<div class="row no-gutters">
+	<div class="col">
+		<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
+			<ul class="nav settings-nav">
+				<li class="nav-item">
+					<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
 				</li>
-				<li class="page-item{% if not next_exists %} disabled{% endif %}">
-					<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a></small>
-
+				<li class="nav-item">
+					<a class="nav-link{% if  '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link{% if  '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
 				</li>
 			</ul>
-		</nav>
+		</div>
+	</div>
+</div>
 
-	{% endblock %}
+<div class="row no-gutters">
+
+	<div class="col-12">
+
+		<div class="posts" id="posts">
+
+			{% block listing_template %}
+			{% include "submission_listing.html" %}
+			{% endblock %}
+
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+	<ul class="pagination pagination-sm mb-0">
+		<li class="page-item{% if page==1 %} disabled{% endif %}">
+
+			<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+		</li>
+		<li class="page-item{% if not next_exists %} disabled{% endif %}">
+			<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a></small>
+
+		</li>
+	</ul>
+</nav>
+
+{% endblock %}
