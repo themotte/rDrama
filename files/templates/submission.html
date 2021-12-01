@@ -528,16 +528,20 @@
 
 	<div class="col-span-full md:hidden">
 		<div class="post-actions">
-			<ul class="list-inline text-right d-flex mb-0">
+			<ul class="flex items-center space-x-5 text-sm text-gray-500 mb-0">
 
-				<li class="list-inline-item mr-auto">
+				<li class="mr-auto">
 					<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
 						<i class="fas fa-comment-dots"></i>{{p.comment_count}}
 						<span class="text-info hidden new-comments"></span>
 					</a>
 				</li>
 
-				<a class="list-inline-item copy-link" href="javascript:void(0);" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}"><i class="fas fa-link"></i>Copy link</a>
+				<li>
+				<button class="copy-link" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}">
+					<i class="fas fa-link"></i>Copy link
+				</button>
+				</li>
 				{% if v %}
 				<li class="list-inline-item">
 					<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#actionsModal">
