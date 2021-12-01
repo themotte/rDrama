@@ -14,11 +14,30 @@
 			<h1 class="font-bold text-xl font-heading leading-normal">
 				Search Results: "{{query}}"
 			</h1>
-			<small class="block mt-1 text-gray-700">
-				<strong>{{ total }}</strong>
-				{{ sort }} posts matching <strong>"{{query}}"</strong> {{ 'from all time' if t=='all' else 'in the last' }}
-				{% if t != 'all' %}<span class="font-bold">{{ t }}</span>{% endif %}
-			</small>
+			<div class="flex space-x-2 divide-x divide-gray-400">
+				<ul class="text-gray-700 text-sm flex items-center space-x-3 leading-normal">
+					<li>
+						<a class="{% if '/posts/' in request.path %}font-bold text-red-600{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
+							Posts
+						</a>
+					</li>
+					<li>
+						<a class="{% if '/comments/' in request.path %}font-bold text-red-600{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
+							Comments
+						</a>
+					</li>
+					<li>
+						<a class="{% if '/users/' in request.path %}font-bold text-red-600{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
+							Users
+						</a>
+					</li>
+				</ul>
+				<small class="block mt-1 text-gray-700">
+					<strong>{{ total }}</strong>
+					{{ sort }} posts matching <strong>"{{query}}"</strong> {{ 'from all time' if t=='all' else 'in the last' }}
+					{% if t != 'all' %}<span class="font-bold">{{ t }}</span>{% endif %}
+				</small>
+			</div>
 		</div>
 		{% if not '/users/' in request.path %}
 		<div class="ml-auto">
