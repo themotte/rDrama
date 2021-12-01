@@ -163,7 +163,7 @@ const twoStepModal = new bootstrap.Modal(document.getElementById('2faModal'))
 				<div class="body w-lg-100">
 
 					<div class="custom-control custom-switch">
-					<input type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" onchange="document.getElementById('2faModal').modal('toggle')" {% if not mfa_secret %}checked=""{% endif %}>
+					<input type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" onchange="twoStepModal.show()" {% if not mfa_secret %}checked=""{% endif %}>
 					<label class="custom-control-label" for="2faToggle"></label>
 					</div>
 
