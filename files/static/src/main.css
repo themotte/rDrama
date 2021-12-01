@@ -11,3 +11,7 @@
 .form-control {
 	@apply block w-full rounded p-2 border border-gray-300 hover:border-gray-400 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 
 }
+
+label {
+	@apply font-bold text-gray-700 text-sm leading-normal mb-2;
+}
