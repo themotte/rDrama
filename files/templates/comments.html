@@ -397,7 +397,7 @@
 							{% endif %}
 
 						{% endif %}
-						{% if v and v.admin_level > 1 and v.id==c.author_id %}
+						{% if v and v.admin_level > 0 and v.id==c.author_id %}
 							<a id="undistinguish-{{c.id}}" class="list-inline-item d-none {% if c.distinguish_level %}d-md-inline-block{% endif %} text-info"  href="javascript:void(0)" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')"><i class="fas fa-id-badge text-info fa-fw"></i>Undistinguish</a>
 							<a id="distinguish-{{c.id}}" class="list-inline-item d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %} text-info" href="javascript:void(0)" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</a>
 						{% endif %}
@@ -574,7 +574,7 @@
 					{% endif %}
 
 					{% if v %}
-						{% if v.admin_level > 1 and v.id==c.author_id %}
+						{% if v.admin_level > 0 and v.id==c.author_id %}
 							<a id="distinguish2-{{c.id}}" class="list-group-item {% if c.distinguish_level %}d-none{% endif %} text-info" href="javascript:void(0)" onclick="post_toast2('/distinguish_comment/{{c.id}}','distinguish2-{{c.id}}','undistinguish2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-id-badge text-info"></i>Distinguish</a>
 							<a id="undistinguish2-{{c.id}}" class="list-group-item {% if not c.distinguish_level %}d-none{% endif %} text-info" href="javascript:void(0)" onclick="post_toast2('/distinguish_comment/{{c.id}}','distinguish2-{{c.id}}','undistinguish2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-id-badge text-info"></i>Undistinguish</a>
 						{% endif %}
