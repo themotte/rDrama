@@ -15,7 +15,7 @@
 				Search Results: "{{query}}"
 			</h1>
 			<div class="flex space-x-3 divide-x divide-gray-400 text-xs">
-				<ul class="text-gray-700 flex items-center space-x-3 leading-normal">
+				<ul class="text-gray-700 flex items-center space-x-3 leading-normal mb-0">
 					<li>
 						<a class="{% if '/posts/' in request.path %}font-bold text-red-600{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
 							Posts
