@@ -265,7 +265,9 @@
 					<!-- Meta information -->
 					<div class="flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
 
-						<img loading="lazy" src="{{ p.author.profile_url }}" class="md:hidden w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
+						<div class="relative avatar">
+							<img loading="lazy" src="{{ p.author.profile_url }}" class="md:hidden w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
+						</div>
 
 						{% if v and v.admin_level==6 and p.author.shadowbanned %}
 						<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
@@ -440,7 +442,9 @@
 				<!-- Author avatar, post score, and voting buttons -->
 				<div class="flex flex-col flex-shrink-0 items-center mr-4">
 
-					<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="author avatar"/>
+					<div class="relative avatar">
+						<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="author avatar"/>
+					</div>
 
 					<div class="py-2 text-sm text-center font-bold hidden md:block">
 					{% if v and request.path.startswith('/@') and not v.admin_level %}
@@ -625,7 +629,9 @@
 			</div>
 
 			<div id="comment-form-space-{{p.fullname}}" class="comment-write flex">
-				<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover mr-4" alt="my avatar"/>
+				<div class="relative avatar">
+					<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover mr-4" alt="my avatar"/>
+				</div>
 				{% include "/comments/CommentForm.html" %}
 			</div>
 
