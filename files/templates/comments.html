@@ -276,11 +276,13 @@
 	<span class="comment-collapse-desktop hidden d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 
 	<div class="flex flex-col flex-shrink-0 items-center {{ 'mr-4' if not c.parent_comment_id or standalone else 'mr-3' }}">
-		{% if standalone or level==1 %}
-		<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 mb-2 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ c.author.username }} avatar"/>
-		{% else %}
-		<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-9 h-9 mb-2 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ c.author.username }} avatar"/>
-		{% endif %}
+		<div class="relative avatar">
+			{% if standalone or level==1 %}
+			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 mb-2 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ c.author.username }} avatar"/>
+			{% else %}
+			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-9 h-9 mb-2 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ c.author.username }} avatar"/>
+			{% endif %}
+		</div>
 		<button onclick="collapse_comment('{{c.id}}')" class="ml-4 mb-2 w-4 h-full border-l border-gray-400"></button>
 	</div>
 
