@@ -1,4 +1,4 @@
-<ul class="flex items-center space-x-5 text-sm text-gray-500">
+<ul class="flex items-center space-x-5 text-sm text-gray-500 mb-0">
 
 	<!-- <li class="flex">
 		<button id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></button>
@@ -15,7 +15,7 @@
 	{% endif %}
 
 	<li>
-		<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="hover:text-gray-400">
+		<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="text-gray-500 hover:text-gray-400">
 			<i class="fas fa-comment-dots fa-fw mr-2"></i>{{ p.comment_count }} comment{{ '' if p.comment_count == 1 else 's' }}
 			<span class="text-info hidden new-comments"></span>
 		</a>
