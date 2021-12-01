@@ -88,7 +88,7 @@
             <i class="fas fa-envelope fa-fw"></i>
             <!-- Counter -->
             {% if v.notifications_count %}
-            <div class="absolute -top-1.5 -right-3 {{ 'w-10' if v.notifications_count > 99 else 'w-6' }} h-6 rounded-full border-2 border-gray-800 flex items-center justify-center bg-red-600">
+            <div class="absolute -top-1.5 -right-3 {{ 'w-10' if v.notifications_count > 99 else 'w-6' }} h-6 rounded-full border-2 border-gray-700 flex items-center justify-center bg-red-600">
               <span class="text-xs text-gray-100 font-bold leading-none">{{ v.notifications_count }}</span>
             </div>
             {% endif %}
@@ -106,7 +106,7 @@
 
   <!-- Mobile menu, show/hide based on menu state. -->
   <div class="offcanvas offcanvas-end bg-gray-200" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-    <div class="relative flex w-full bg-gray-800 h-16 px-4 items-center snowcaps">
+    <div class="relative flex w-full bg-gray-700 h-16 px-4 items-center snowcaps">
       <a class="block" href="{{ '/' if v else '/logged_out'}}">
           <img class="block lg:hidden w-32 object-contain" src="/assets/images/logos/winter/logo-{{ random }}.png" alt="logo">
           <img class="hidden lg:block w-32 object-contain" src="/assets/images/logos/winter/logo-{{ random }}.png" alt="logo">
