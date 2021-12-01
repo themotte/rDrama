@@ -11,7 +11,7 @@
 				<form id="awardTarget" action="" method="post">
 					<div class="flex flex-wrap -mx-4 overflow-hidden">
 						{% for award in v.user_awards %}
-						<div class="my-2 px-2 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
+						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
 							{% if award.owned %}
 								<button type="button" id="{{award.kind}}" onclick="bruh('{{award.kind}}')" class="w-full h-full p-2 hover:bg-gray-300 rounded">
 							{% else %}
