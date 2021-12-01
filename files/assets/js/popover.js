@@ -29,6 +29,7 @@ window.addEventListener("load",function(event) {
       document.body.removeChild(popover_shit);
     }
     
+    
     var usernames = document.querySelectorAll("a.user-name");
     usernames.forEach(eventasdf);
     
