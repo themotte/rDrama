@@ -144,8 +144,11 @@
         </li>
         <li>
           <a class="text-gray-700 hover:text-gray-900" href="#">
-            <i class="fas fa-cog fa-fw mr-2"></i>
+            <i class="fas fa-envelop fa-fw mr-2"></i>
             Inbox
+            {% if v.notifications_count %}
+            <span class="text-red-600">{{ v.notifications_count }}</span>
+            {% endif %}
           </a>
         </li>
         <li>
