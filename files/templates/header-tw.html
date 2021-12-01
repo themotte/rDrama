@@ -37,7 +37,7 @@
         </div>
         <div class="relative hidden sm:flex flex-shrink-0 sm:ml-6">
           <form action="/search/posts/" method="get" class="mb-0">
-            <input placeholder="Search" class="w-full text-gray-500 focus:text-gray-900 rounded border border-gray-800 bg-black focus:bg-opacity-100 focus:bg-white hover:bg-opacity-30 shadow-inner w-full px-2 py-1.5 pr-7" aria-label="Search" name="q" value="{{request.args.get('q', '')}}">
+            <input placeholder="Search" class="w-full text-gray-500 focus:text-black rounded border border-gray-800 bg-black/30 focus:bg-white hover:bg-black/40 shadow-inner w-full px-2 py-1.5 pr-7" aria-label="Search" name="q" value="{{request.args.get('q', '')}}">
             <i class="fas fa-search text-gray-600 absolute top-3 right-2"></i>
           </form>
         </div>
