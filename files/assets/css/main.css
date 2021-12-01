@@ -5705,3 +5705,7 @@ blockquote p {
   background-color: #fff !important;
   color: #000 !important
 }
+
+.color-black {
+  color: var(--black);
+}
