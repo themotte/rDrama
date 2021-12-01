@@ -28,11 +28,13 @@
 
 {% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
 	<script>
-		comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
-		lastCount = comments['{{p.id}}']
-		if (lastCount && {{c.created_utc*1000}} > lastCount.t) {
-			document.getElementById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Unread"></i>'
-		}
+		window.addEventListener("load",function(event) {
+			comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+			lastCount = comments['{{p.id}}']
+			if (lastCount && {{c.created_utc*1000}} > lastCount.t) {
+				document.getElementById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Unread"></i>'
+			}
+		});
 	</script>
 {% endif %}
 
