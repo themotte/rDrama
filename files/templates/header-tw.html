@@ -105,7 +105,10 @@
   <!-- Mobile menu, show/hide based on menu state. -->
   <div class="offcanvas offcanvas-end bg-gray-200" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+       <a href="{{ '/' if v else '/logged_out'}}">
+          <img class="block lg:hidden w-32 object-contain" src="/assets/images/logos/winter/logo-{{ range(1, 13)|random() }}.png" alt="logo">
+          <img class="hidden lg:block w-32 object-contain" src="/assets/images/logos/winter/logo-{{ range(1, 13)|random() }}.png" alt="logo">
+      </a>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
