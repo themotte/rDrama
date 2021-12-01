@@ -107,11 +107,13 @@
   <!-- Mobile menu, show/hide based on menu state. -->
   <div class="offcanvas offcanvas-end bg-gray-200" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="offcanvas-header">
-       <a href="{{ '/' if v else '/logged_out'}}">
+      <a class="ml-auto block" href="{{ '/' if v else '/logged_out'}}">
           <img class="block lg:hidden w-32 object-contain" src="/assets/images/logos/winter/logo-{{ random }}.png" alt="logo">
           <img class="hidden lg:block w-32 object-contain" src="/assets/images/logos/winter/logo-{{ random }}.png" alt="logo">
       </a>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <button type="button" class="close"  data-bs-dismiss="offcanvas" aria-label="Close">
+        <span aria-hidden="true"><i class="far fa-times"></i></span>
+      </button>
     </div>
     <div class="offcanvas-body">
       <!-- Search box -->
