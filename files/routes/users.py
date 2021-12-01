@@ -646,11 +646,9 @@ def u_username_comments(username, v=None):
 			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
 			else: return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
-	if hasattr(u, 'is_blocking') and u.is_blocking and (not v or v.admin_level < 2):
+	if v and hasattr(u, 'is_blocking') and u.is_blocking:
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
-		else: return render_template("userpage_blocking.html",
-													u=u,
-													v=v)
+		else: return render_template("userpage_blocking.html", u=u, v=v)
 
 	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
