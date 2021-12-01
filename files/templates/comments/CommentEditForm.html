@@ -3,7 +3,7 @@
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<div class="comment-box rounded-lg border border-gray-700 border-dashed bg-gray-900 shadow-inner w-full">
 			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="w-full rounded-t-md p-3 text-gray-200 focus:text-gray-900 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
-			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-white border-opacity-10">
+			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-white border-opacity-10 mb-0">
 				<li>
 					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('comment-edit-body-{{c.id}}')">
 						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
