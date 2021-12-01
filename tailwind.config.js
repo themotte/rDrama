@@ -40,6 +40,9 @@ module.exports = {
         'inset-t-white-10': '0 1px 0 rgba(255, 255, 255, 0.10) inset',
         'inset-r-white-05': '1px 0 0 rgba(255, 255, 255, 0.05) inset'
       },
+      zIndex: {
+        '100': 100
+      },
       colors: {
         gray: {
           '100': '#f4f6f4',
