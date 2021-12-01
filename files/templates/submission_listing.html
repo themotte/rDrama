@@ -156,7 +156,7 @@
 				</span>
 				{% endif %}
 				{% if p.active_flags %}
-				<button class="px-1 py-0.5 text-xs text-red-900 text-shadow-light bg-red-400 font-bold leading-normal rounded" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">{{p.active_flags}} Reports
+				<button class="badge badge-red" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">{{p.active_flags}} Reports
 				</button>
 				{% endif %}
 

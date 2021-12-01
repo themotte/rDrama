@@ -101,3 +101,13 @@
 .btn-red {
 	@apply bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 border-red-900 text-gray-100 focus:text-gray-200;
 }
+
+/* ----------------------- BADGES ----------------------- */
+.badge {
+	@apply px-1 py-0.5 text-xs text-shadow-light font-bold leading-normal rounded
+}
+.badge-red {
+	@apply bg-red-400 text-red-900
+}
+
+

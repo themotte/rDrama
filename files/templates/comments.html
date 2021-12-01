@@ -243,31 +243,43 @@
 {% endif %}
 
 {% if standalone and level==1 %}
-<div class="post-info mt-5 mb-1 mr-2">
-	{% if c.post and c.post.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
-	<span class="align-top">
-	{% if c.post %}
-		{% if c.author_id==v.id and c.child_comments and is_notification_page%}
-			<span class="font-weight-bold">Comment {{'Replies' if (c.child_comments | length)>1 else 'Reply'}}: <a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
-		{% elif c.post.author_id==v.id and c.level == 1 and is_notification_page%}
-			<span class="font-weight-bold">Post Reply: <a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
-		{% elif is_notification_page and c.parent_submission in v.subscribed_idlist() %}
-			<span class="font-weight-bold">Subscribed Thread: <a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
-		{% elif is_notification_page %}
-			<span class="font-weight-bold">Username Mention: <a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
-		{% else %}
-			<span class="font-weight-bold"><a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
-		{% endif %}
-	{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
-	<span class="font-weight-bold">{{'SITE_NAME' | app_config}} Notification</span>
-	{% else %}
-		{% if c.sentto == 0 %}
-			<span class="font-weight-bold">Sent to admins</span>
-		{% else %}
-			<span class="font-weight-bold">Sent to @{{c.senttouser.username}}</span>
-		{% endif %}
+<div class="post-info font-bold mt-5 mb-1">
+	{% if c.post and c.post.over_18 %}
+	<span class="badge badge-red">+18</span>
 	{% endif %}
-</span>
+	<div>
+		{% if c.post %}
+			{% if c.author_id==v.id and c.child_comments and is_notification_page%}
+			<span>
+				Comment {{'Replies' if (c.child_comments | length)>1 else 'Reply'}}:
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a>
+			</span>
+			{% elif c.post.author_id==v.id and c.level == 1 and is_notification_page%}
+			<span>Post Reply:
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a>
+			</span>
+			{% elif is_notification_page and c.parent_submission in v.subscribed_idlist() %}
+			<span>Subscribed Thread:
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a></span>
+			{% elif is_notification_page %}
+			<span>Username Mention:
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a>
+			</span>
+			{% else %}
+			<span>
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a>
+			</span>
+			{% endif %}
+			{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
+			<span>{{'SITE_NAME' | app_config}} Notification</span>
+			{% else %}
+			{% if c.sentto == 0 %}
+			<span>Sent to admins</span>
+			{% else %}
+			<span>Sent to @{{c.senttouser.username}}</span>
+			{% endif %}
+		{% endif %}
+	</div>
 </div>
 {% endif %}
 
