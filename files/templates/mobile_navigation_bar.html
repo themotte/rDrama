@@ -8,7 +8,7 @@
 			<li>
 				<button type="button" class="px-2">
 					<a href="/" class="text-decoration-none" role="button">
-						<div class="text-center {% if request.path=='/' and request.full_path!='/?sort=hot&t=all' and request.full_path!='/?sort=new&t=all' %}text-primary{% else %}text-muted{% endif %}">
+						<div class="text-center {% if request.path=='/' and request.full_path!='/?sort=hot&t=all' and request.full_path!='/?sort=new&t=all' %}text-gray-700{% else %}text-gray-500{% endif %}">
 							<i class="fas fa-home-alt fa-fw text-lg"></i>
 							<div class="text-sm font-bold">Home</div>
 						</div>
@@ -19,7 +19,7 @@
 			<li>
 				<button type="button" class="px-2">
 					<a href="/?sort=hot&t=all" class="text-decoration-none" role="button">
-						<div class="text-center {% if request.full_path=='/?sort=hot&t=all' %}text-primary{% else %}text-muted{% endif %}">
+						<div class="text-center {% if request.full_path=='/?sort=hot&t=all' %}text-gray-700{% else %}text-gray-500{% endif %}">
 							<i class="fas fa-fire fa-fw text-lg"></i>
 							<div class="text-sm font-bold">Hot</div>
 						</div>
@@ -30,7 +30,7 @@
 			<li>
 				<button type="button" class="px-2">
 					<a href="/?sort=new&t=all" class="text-decoration-none" role="button">
-						<div class="text-center {% if request.full_path=='/?sort=new&t=all' %}text-primary{% else %}text-muted{% endif %}">
+						<div class="text-center {% if request.full_path=='/?sort=new&t=all' %}text-gray-700{% else %}text-gray-500{% endif %}">
 							<i class="fas fa-sparkles fa-fw text-lg"></i>
 							<div class="text-sm font-bold">New</div>
 						</div>
@@ -39,9 +39,9 @@
 			</li>
 			{% endif %}
 			<li>
-				<button type="button" class="col px-2 btn btn-dead m-0">
+				<button type="button" class="px-2">
 					<a href="/comments" class="text-decoration-none" role="button">
-						<div class="text-center {% if request.path=='/comments' %}text-primary{% else %}text-muted{% endif %}">
+						<div class="text-center {% if request.path=='/comments' %}text-gray-900{% else %}text-gray-500{% endif %}">
 							<i class="fas fa-comment-dots fa-fw text-lg"></i>
 							<div class="text-sm font-bold">Comments</div>
 						</div>
@@ -51,7 +51,7 @@
 			<li>
 				<button type="button" class="px-2">
 					<a href="/leaderboard" class="text-decoration-none" role="button">
-						<div class="text-center {% if request.path=='/leaderboard' %}text-primary{% else %}text-muted{% endif %}">
+						<div class="text-center {% if request.path=='/leaderboard' %}text-gray-700{% else %}text-gray-500{% endif %}">
 							<i class="fas fa-trophy fa-fw text-lg"></i>
 							<div class="text-sm font-bold">Users</div>
 						</div>
@@ -62,7 +62,7 @@
 			<li>
 				<button type="button" class="col px-0 mr-3 btn btn-dead m-0">
 					<a href="/shop" class="text-decoration-none" role="button">
-						<div class="text-center {% if request.path=='/shop' %}text-primary{% else %}text-muted{% endif %}">
+						<div class="text-center {% if request.path=='/shop' %}text-gray-700{% else %}text-gray-500{% endif %}">
 							<i class="fas fa-store fa-fw text-lg"></i>
 							<div class="text-sm font-bold">Shop</div>
 						</div>
@@ -73,7 +73,7 @@
 			<li>
 				<button type="button" class="col px-0 mr-3 btn btn-dead m-0">
 					<a href="/signup" class="text-decoration-none" role="button">
-						<div class="text-center text-muted">
+						<div class="text-center text-gray-500">
 							<i class="fas fa-user-plus fa-fw text-lg"></i>
 							<div class="text-sm font-bold">Sign Up</div>
 						</div>
