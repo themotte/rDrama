@@ -563,7 +563,7 @@ def submit_post(v):
 		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
 	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
-	title = request.values.get("title", "").strip()
+	title = request.values.get("title", "").strip()[:500]
 	url = request.values.get("url", "").strip()
 
 	if v.agendaposter and not v.marseyawarded:
@@ -800,7 +800,7 @@ def submit_post(v):
 		body=body[:10000],
 		body_html=body_html,
 		embed_url=embed,
-		title=title,
+		title=title[:500],
 		title_html=title_html
 	)
 
