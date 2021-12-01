@@ -19,6 +19,68 @@
 	}
 }
 
+@base {
+	/* Headings */
+	h1, .h1 {
+		@apply text-5xl font-bold leading-10 mb-2;
+	}
+	h2, .h2 {
+		@apply text-4xl font-bold leading-8 mb-2;
+	}
+	h3, .h3 {
+		@apply text-3xl font-bold leading-7 mb-2;
+	}
+	h4, .h4 {
+		@apply text-2xl font-bold leading-6 mb-2;
+	}
+	h5, .h5 {
+		@apply text-lg font-bold leading-5 mb-2;
+	}
+	h6, .h6 {
+		@apply text-base font-bold leading-4 mb-2;
+	}
+	/* Typography */
+	p {
+		@apply mb-3 last:mb-0;
+	}
+	a {
+		@apply text-primary break-all
+	}
+	hr {
+		@apply my-3
+	}
+	ul {
+		@apply mb-3
+	}
+	strong {
+		@apply font-bold
+	}
+	code {
+		@apply text-pink-600 dark:text-pink-300 font-mono;
+	}
+	pre {
+		white-space: pre-wrap;       /* Since CSS 2.1 */
+		white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+		white-space: -pre-wrap;      /* Opera 4-6 */
+		white-space: -o-pre-wrap;    /* Opera 7 */
+		word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	}
+	/* Images */
+	img[lazy=loading] {
+		@apply animate-pulse;
+	}
+	/*Inputs*/
+	input[type], select, textarea, input::-webkit-datetime-edit {
+		@apply text-lg sm:text-base leading-5;
+	}
+	[multiple], [type=date], [type=datetime-local], [type=email], [type=month], [type=number], [type=password], [type=search], [type=tel], [type=text], [type=time], [type=url], [type=week], select, textarea {
+		@apply text-lg sm:text-base leading-5 appearance-none;
+	}
+	.label {
+		@apply block font-bold text-gray-700 text-sm leading-normal mb-1
+	}
+}
+
 .test {
   @apply text-red-700 font-bold text-3xl;
 }
