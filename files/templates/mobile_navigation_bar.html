@@ -1,77 +1,70 @@
 <script defer src="/assets/js/mobile_navigation_bar.js?v=53"></script>
 
-<style>
-	.btn-dead:hover, .active.btn-dead:hover, .active.btn-dead {
-		border: 1px solid var(--primary)!important;
-	}
-</style>
-
 <div class="container inline-flex sm:hidden">
 
-		<div class="row fixed-bottom bg-white border-top p-2" id="mobile-bottom-navigation-bar"
-		style="z-index: 100; bottom: 0px; transition: bottom cubic-bezier(0, 0, 0.2, 1) 220ms;">
+	<div class="fixed bg-white border-top p-2 bottom-0 z-100" id="mobile-bottom-navigation-bar" style="transition: bottom cubic-bezier(0, 0, 0.2, 1) 220ms;">
 
-				<button type="button" class="col px-0 ml-3 btn btn-dead m-0" style="background: None !important; border: None;">
-						<a href="/" class="text-decoration-none" role="button">
-								<div class="text-center {% if request.path=='/' and request.full_path!='/?sort=hot&t=all' and request.full_path!='/?sort=new&t=all' %}text-primary{% else %}text-muted{% endif %}">
-										<i class="fas fa-home-alt text-lg"></i>
-										<div class="text-small">Home</div>
-								</div>
-						</a>
-				</button>
-{% if v and v.defaultsorting == 'new' %}
-				<button type="button" class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
-						<a href="/?sort=hot&t=all" class="text-decoration-none" role="button">
-								<div class="text-center {% if request.full_path=='/?sort=hot&t=all' %}text-primary{% else %}text-muted{% endif %}">
-										<i class="fas fa-fire text-lg"></i>
-										<div class="text-small">Hot</div>
-								</div>
-						</a>
-				</button>
-{% else %}
-				<button type="button" class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
-						<a href="/?sort=new&t=all" class="text-decoration-none" role="button">
-								<div class="text-center {% if request.full_path=='/?sort=new&t=all' %}text-primary{% else %}text-muted{% endif %}">
-										<i class="fas fa-sparkles text-lg"></i>
-										<div class="text-small">New</div>
-								</div>
-						</a>
-				</button>
-{% endif %}
-				<button type="button" class="col px-2 btn btn-dead m-0" style="background: None !important; border: None;">
-						<a href="/comments" class="text-decoration-none" role="button">
-								<div class="text-center {% if request.path=='/comments' %}text-primary{% else %}text-muted{% endif %}">
-										<i class="fas fa-comment-dots text-lg"></i>
-										<div class="text-small">Comments</div>
-								</div>
-						</a>
-				</button>
-				<button type="button" class="col px-0 btn btn-dead m-0" style="background: None !important; border: None;">
-						<a href="/leaderboard" class="text-decoration-none" role="button">
-								<div class="text-center {% if request.path=='/leaderboard' %}text-primary{% else %}text-muted{% endif %}">
-										<i class="fas fa-trophy text-lg"></i>
-										<div class="text-small">Users</div>
-								</div>
-						</a>
-				</button>
-{% if v %}
-				<button type="button" class="col px-0 mr-3 btn btn-dead m-0" style="background: None !important; border: None;">
-						<a href="/shop" class="text-decoration-none" role="button">
-								<div class="text-center {% if request.path=='/shop' %}text-primary{% else %}text-muted{% endif %}">
-										<i class="fas fa-store text-lg"></i>
-										<div class="text-small">Shop</div>
-								</div>
-						</a>
-				</button>
-{% else %}
-				<button type="button" class="col px-0 mr-3 btn btn-dead m-0" style="background: None !important; border: None;">
-						<a href="/signup" class="text-decoration-none" role="button">
-								<div class="text-center text-muted">
-										<i class="fas fa-user-plus text-lg"></i>
-										<div class="text-small">Sign Up</div>
-								</div>
-						</a>
-				</button>
-{% endif %}
-		</div>
+		<button type="button" class="col px-0 ml-3 btn btn-dead m-0">
+			<a href="/" class="text-decoration-none" role="button">
+				<div class="text-center {% if request.path=='/' and request.full_path!='/?sort=hot&t=all' and request.full_path!='/?sort=new&t=all' %}text-primary{% else %}text-muted{% endif %}">
+					<i class="fas fa-home-alt text-lg"></i>
+					<div class="text-small">Home</div>
+				</div>
+			</a>
+		</button>
+		{% if v and v.defaultsorting == 'new' %}
+		<button type="button" class="col px-0 btn btn-dead m-0">
+			<a href="/?sort=hot&t=all" class="text-decoration-none" role="button">
+				<div class="text-center {% if request.full_path=='/?sort=hot&t=all' %}text-primary{% else %}text-muted{% endif %}">
+					<i class="fas fa-fire text-lg"></i>
+					<div class="text-small">Hot</div>
+				</div>
+			</a>
+		</button>
+		{% else %}
+		<button type="button" class="col px-0 btn btn-dead m-0">
+			<a href="/?sort=new&t=all" class="text-decoration-none" role="button">
+				<div class="text-center {% if request.full_path=='/?sort=new&t=all' %}text-primary{% else %}text-muted{% endif %}">
+					<i class="fas fa-sparkles text-lg"></i>
+					<div class="text-small">New</div>
+				</div>
+			</a>
+		</button>
+		{% endif %}
+		<button type="button" class="col px-2 btn btn-dead m-0">
+			<a href="/comments" class="text-decoration-none" role="button">
+				<div class="text-center {% if request.path=='/comments' %}text-primary{% else %}text-muted{% endif %}">
+					<i class="fas fa-comment-dots text-lg"></i>
+					<div class="text-small">Comments</div>
+				</div>
+			</a>
+		</button>
+		<button type="button" class="col px-0 btn btn-dead m-0">
+			<a href="/leaderboard" class="text-decoration-none" role="button">
+				<div class="text-center {% if request.path=='/leaderboard' %}text-primary{% else %}text-muted{% endif %}">
+					<i class="fas fa-trophy text-lg"></i>
+					<div class="text-small">Users</div>
+				</div>
+			</a>
+		</button>
+		{% if v %}
+		<button type="button" class="col px-0 mr-3 btn btn-dead m-0">
+			<a href="/shop" class="text-decoration-none" role="button">
+				<div class="text-center {% if request.path=='/shop' %}text-primary{% else %}text-muted{% endif %}">
+					<i class="fas fa-store text-lg"></i>
+					<div class="text-small">Shop</div>
+				</div>
+			</a>
+		</button>
+		{% else %}
+		<button type="button" class="col px-0 mr-3 btn btn-dead m-0">
+			<a href="/signup" class="text-decoration-none" role="button">
+				<div class="text-center text-muted">
+					<i class="fas fa-user-plus text-lg"></i>
+					<div class="text-small">Sign Up</div>
+				</div>
+			</a>
+		</button>
+		{% endif %}
+	</div>
 </div>
