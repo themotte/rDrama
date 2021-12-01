@@ -27,7 +27,7 @@ cardview = bool(int(environ.get("CARD_VIEW", 1)))
 class User(Base):
 	__tablename__ = "users"
 
-	if "pcmemes.net" in site:
+	if site == "pcmemes.net":
 		quadrant = Column(String)
 		basedcount = Column(Integer, default=0)
 		pills = deferred(Column(String, default=""))
