@@ -15,7 +15,7 @@
 							{% if award.owned %}
 								<button type="button" id="{{award.kind}}" onclick="bruh('{{award.kind}}')">
 							{% else %}
-								<button type="button" id="{{award.kind}}" class="disabled">
+								<button type="button" id="{{award.kind}}" disabled class="cursor-not-allowed opacity-50">
 							{% endif %}
 									<i class="{{award.icon}} {{award.color}}"></i>
 									<div class="mt-2 font-bold text-base text-gray-700">{{award.title}}</div>
