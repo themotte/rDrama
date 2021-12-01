@@ -31,6 +31,10 @@ label {
 	@apply block font-bold text-gray-700 text-sm leading-normal mb-1;
 }
 
-.btn.btn-red {
-	@apply block px-4 py-2 bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-red-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-100 focus:text-gray-200 focus:outline-none disabled:opacity-50;
+.btn {
+	@apply block px-4 py-2 active:shadow-inner border rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold focus:outline-none disabled:opacity-50;
+}
+
+.btn-red {
+	@apply bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 border-red-900 text-gray-100 focus:text-gray-200;
 }
