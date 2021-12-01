@@ -8,7 +8,7 @@
   @apply text-red-700 font-bold text-3xl;
 }
 
-.form-control {
+.form-input {
 	@apply block w-full rounded shadow-inner p-2 bg-white border border-gray-300 hover:border-gray-400 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 
 }
 
