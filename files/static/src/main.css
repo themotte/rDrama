@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	--color-primary: 220, 38, 38;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&display=swap');
 
 @responsive {

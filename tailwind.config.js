@@ -9,6 +9,15 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     colors: {
+      primary: ({ opacityVariable, opacityValue }) => {
+        if (opacityValue !== undefined) {
+          return `rgba(var(--color-primary), ${opacityValue})`
+        }
+        if (opacityVariable !== undefined) {
+          return `rgba(var(--color-primary), var(${opacityVariable}, 1))`
+        }
+        return `rgb(var(--color-primary))`
+      },
       transparent: 'transparent',
       current: 'currentColor',
       black: colors.black,
@@ -20,7 +29,8 @@ module.exports = {
       blue: colors.sky
     },
     fontFamily: {
-      'heading': ['Delius Swash Caps']
+      'heading': ['Delius Swash Caps'],
+      'serif': ['Georgia']
     },
     extend: {
       boxShadow: {

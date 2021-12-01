@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&display=swap');
 
-p {
+/*p {
     margin-bottom: 1rem;
 }
 
 p:last-of-type {
     margin-bottom: 0;
-}
+}*/
 
 [v-cloak] {
     display: none;
@@ -17,9 +17,9 @@ p:last-of-type {
 }
 */
 
-.font-serif {
+/*.font-serif {
     font-family: 'Georgia';
-}
+}*/
 
 .sub-header-shadow {
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.10) inset, -1px -1px 0.5px rgba(17, 40, 19, 0.1) inset;
