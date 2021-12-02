@@ -129,9 +129,6 @@ class Comment(Base):
 	@lazy
 	def edited_string(self):
 
-		if not self.edited_utc:
-			return "never"
-
 		age = int(time.time()) - self.edited_utc
 
 		if age < 60:
@@ -148,12 +145,15 @@ class Comment(Base):
 
 		now = time.gmtime()
 		ctd = time.gmtime(self.edited_utc)
+
 		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
+		if now.tm_mday < ctd.tm_mday:
+			months -= 1
 
 		if months < 12:
 			return f"{months}mo ago"
 		else:
-			years = now.tm_year - ctd.tm_year
+			years = int(months / 12)
 			return f"{years}yr ago"
 
 	@property
