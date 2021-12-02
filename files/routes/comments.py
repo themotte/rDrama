@@ -557,7 +557,7 @@ def api_comment(v):
 				notify_users.add(995)
 				notify_users.add(541)
 			if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users: notify_users.add(30)
-			if (x in body_html.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')) and 253 not in notify_users: notify_users.add(253)
+			if [x in body_html.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')] and 253 not in notify_users: notify_users.add(253)
 
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
@@ -830,7 +830,7 @@ def edit_comment(cid, v):
 				notify_users.add(995)
 				notify_users.add(541)
 			if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users: notify_users.add(30)
-			if (x in body_html.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')) and 253 not in notify_users: notify_users.add(253)
+			if [x in body_html.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')] and 253 not in notify_users: notify_users.add(253)
 
 		for x in notify_users:
 			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).first()
