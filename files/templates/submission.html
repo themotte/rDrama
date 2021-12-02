@@ -631,7 +631,7 @@
 			</div>
 
 			<div id="comment-form-space-{{p.fullname}}" class="comment-write flex">
-				<div class="relative flex-shrink-0 avatar mr-4">
+				<div class="hidden md:block relative flex-shrink-0 mr-4 {{ 'santa' if p.author.patron else 'cap' }}">
 					<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="my avatar"/>
 				</div>
 				{% include "/comments/CommentForm.html" %}
