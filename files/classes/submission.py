@@ -335,7 +335,7 @@ class Submission(Base):
 			maxupvotes = min(ti, 27)
 			rand = random.randint(0, maxupvotes)
 			if self.upvotes < rand:
-				self.upvotes += random.randint(0, 5)
+				self.upvotes += random.randint(0, 3)
 				g.db.add(self)
 				g.db.commit()
 

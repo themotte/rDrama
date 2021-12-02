@@ -335,7 +335,7 @@ class Comment(Base):
 			maxupvotes = min(ti, 31)
 			rand = randint(0, maxupvotes)
 			if self.upvotes < rand:
-				self.upvotes += randint(0, 5)
+				self.upvotes += randint(0, 3)
 				g.db.add(self)
 				g.db.commit()
 
