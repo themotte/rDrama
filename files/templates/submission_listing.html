@@ -76,9 +76,9 @@
 			{% endif %}
 		</div>
 		  
-		<div class="overflow-x-auto w-100">
+		<div class="w-full">
 
-			<div class="flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
+			<div class="overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
 
 				<div class="relative md:hidden {{ 'santa' if p.author.patron else 'cap' }}">
 					<img loading="lazy" src="{{ p.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
@@ -397,7 +397,7 @@
 {% for p in listing %}
 <div style="display:none" id="popover-{{p.id}}">
 	<div class="popover-user-profile" role="tooltip">
-	  <img class="w-100 h-64 object-cover" src="{{p.author.banner_url}}">
+	  <img class="w-full h-64 object-cover" src="{{p.author.banner_url}}">
 	  <div class="flex align-items-end px-3 mt-n6 mb-3">
 		<img class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
 		<div class="px-3 text-truncate">
