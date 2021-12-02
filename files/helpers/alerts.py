@@ -127,3 +127,11 @@ def send_admin(vid, text):
 	for admin in admins:
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 		g.db.add(notif)
+
+def NOTIFY_USERS(text, vid):
+	text = text.lower()
+	notify_users = set()
+	for word, id in NOTIFIED_USERS:
+		if id == 0: continue
+		if word in text and id not in notify_users and vid != id: notify_users.add(id)
+	return notify_users

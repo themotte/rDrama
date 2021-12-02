@@ -529,7 +529,7 @@ def api_comment(v):
 
 
 	if not v.shadowbanned:
-		notify_users = set()
+		notify_users = NOTIFY_USERS(body_html, v.id)
 		
 		for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 		
@@ -546,18 +546,6 @@ def api_comment(v):
 			if user:
 				if v.any_block_exists(user): continue
 				if user.id != v.id: notify_users.add(user.id)
-
-		if request.host == 'pcmemes.net':
-			if 'kippy' in body_html.lower() and 1592 not in notify_users and v.id != 1592: notify_users.add(1592)
-			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users and v.id != 1: notify_users.add(1)
-		if request.host == 'rdrama.net':
-			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users and v.id != 1: notify_users.add(1)
-			if ('joan' in body_html.lower() or 'pewkie' in body_html.lower()) and 28 not in notify_users and v.id != 28: notify_users.add(28)
-			if 'carp' in body_html.lower() and 995 not in notify_users and v.id != 995:
-				notify_users.add(995)
-				notify_users.add(541)
-			if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users and v.id != 30: notify_users.add(30)
-			if any(x in body_html.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')) and 253 not in notify_users and v.id != 253: notify_users.add(253)
 
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
@@ -806,7 +794,7 @@ def edit_comment(cid, v):
 
 		g.db.flush()
 		
-		notify_users = set()
+		notify_users = NOTIFY_USERS(body_html, v.id)
 		soup = BeautifulSoup(body_html, features="html.parser")
 		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
 		
@@ -819,18 +807,6 @@ def edit_comment(cid, v):
 				if user:
 					if v.any_block_exists(user): continue
 					if user.id != v.id: notify_users.add(user.id)
-
-		if request.host == 'pcmemes.net':
-			if 'kippy' in body_html.lower() and 1592 not in notify_users and v.id != 1592: notify_users.add(1592)
-			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users and v.id != 1: notify_users.add(1)
-		if request.host == 'rdrama.net':
-			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users and v.id != 1: notify_users.add(1)
-			if ('joan' in body_html.lower() or 'pewkie' in body_html.lower()) and 28 not in notify_users and v.id != 28: notify_users.add(28)
-			if 'carp' in body_html.lower() and 995 not in notify_users and v.id != 995:
-				notify_users.add(995)
-				notify_users.add(541)
-			if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users and v.id != 30: notify_users.add(30)
-			if any(x in body_html.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')) and 253 not in notify_users and v.id != 253: notify_users.add(253)
 
 		for x in notify_users:
 			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).first()

@@ -130,6 +130,7 @@ WELCOME_MSG = "Hi there! It's me, your soon-to-be favorite rDrama user @carpathi
 
 if SITE == 'rdrama.net':
 	BASEDBOT_ID = 0
+	KIPPY_ID = 7150
 	NOTIFICATIONS_ID = 1046
 	AUTOJANNY_ID = 2360
 	SNAPPY_ID = 261
@@ -140,6 +141,8 @@ if SITE == 'rdrama.net':
 	PIZZA_SHILL_ID = 2424
 	IDIO_ID = 30
 	CARP_ID = 995
+	JOAN_ID = 28
+	AEVANN_ID = 1
 	LAWLZ_ID = 3833
 	LLM_ID = 253
 	DAD_ID = 2513
@@ -148,6 +151,7 @@ if SITE == 'rdrama.net':
 	EMOJI_THREAD = 22479
 elif SITE == "pcmemes.net":
 	BASEDBOT_ID = 800
+	KIPPY_ID = 1592
 	NOTIFICATIONS_ID = 1046
 	AUTOJANNY_ID = 1050
 	SNAPPY_ID = 261
@@ -158,6 +162,8 @@ elif SITE == "pcmemes.net":
 	PIZZA_SHILL_ID = 0
 	IDIO_ID = 0
 	CARP_ID = 0
+	JOAN_ID = 0
+	AEVANN_ID = 1
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0
@@ -166,6 +172,7 @@ elif SITE == "pcmemes.net":
 	EMOJI_THREAD = 0
 else:
 	BASEDBOT_ID = 0
+	KIPPY_ID = 0
 	NOTIFICATIONS_ID = 1
 	AUTOJANNY_ID = 2
 	SNAPPY_ID = 3
@@ -176,6 +183,8 @@ else:
 	PIZZA_SHILL_ID = 0
 	IDIO_ID = 0
 	CARP_ID = 0
+	JOAN_ID = 0
+	AEVANN_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0
@@ -764,3 +773,17 @@ TROLLTITLES = [
 	"Pretty sure this is @{username}'s Reddit account",
 	"Hey jannies can you please ban @{username}",
 ]
+
+NOTIFIED_USERS = {
+	'aevan': AEVANN_ID,
+	'avean': AEVANN_ID,
+	'joan': JOAN_ID,
+	'pewkie': JOAN_ID,
+	'carp': CARP_ID,
+	'idio3': IDIO_ID,
+	'idio ': IDIO_ID,
+	'landlord_messiah': LLM_ID,
+	'landlordmessiah': LLM_ID,
+	' llm ': LLM_ID,
+	'landlet': LLM_ID,
+}
