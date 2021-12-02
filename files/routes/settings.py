@@ -511,7 +511,7 @@ def gumroad(v):
 	v.patron = tier
 	if v.discord_id: add_role(v, f"{tier}")
 
-	if v.patron == 1: procoins = 2000
+	if v.patron == 1: procoins = 2500
 	elif v.patron == 2: procoins = 5000
 	elif v.patron == 3: procoins = 10000
 	elif v.patron == 4: procoins = 25000
