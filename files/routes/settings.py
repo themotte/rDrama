@@ -247,7 +247,7 @@ def settings_profile_post(v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
-		if request.host == 'rdrama.net' and ('aevan' in friends_html.lower() or 'avean' in friends_html.lower()) and 1 not in notify_users: notify_users.add(1)
+		if request.host == 'rdrama.net' and ('aevan' in friends_html.lower() or 'avean' in friends_html.lower()) and 1 not in notify_users and v.id != 1: notify_users.add(1)
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their friends list!"
@@ -291,7 +291,7 @@ def settings_profile_post(v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
-		if request.host == 'rdrama.net' and ('aevan' in enemies_html.lower() or 'avean' in enemies_html.lower()) and 1 not in notify_users: notify_users.add(1)
+		if request.host == 'rdrama.net' and ('aevan' in enemies_html.lower() or 'avean' in enemies_html.lower()) and 1 not in notify_users and v.id != 1: notify_users.add(1)
 
 		for x in notify_users:
 			message = f"@{v.username} has added you to their enemies list!"
