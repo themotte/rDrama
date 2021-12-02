@@ -72,7 +72,7 @@ def publish(pid, v):
 			notify_users.add(995)
 			notify_users.add(541)
 		if ('idio3' in f'{post.body_html}{post.title}'.lower() or 'idio ' in f'{post.body_html}{post.title}'.lower()) and 30 not in notify_users: notify_users.add(30)
-		if [x in f'{post.body_html}{post.title}'.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')] and 253 not in notify_users: notify_users.add(253)
+		# if [x in f'{post.body_html}{post.title}'.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')] and 253 not in notify_users: notify_users.add(253)
 
 	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{post.permalink}")
 
@@ -392,7 +392,7 @@ def edit_post(pid, v):
 				notify_users.add(995)
 				notify_users.add(541)
 			if ('idio3' in f'{body_html}{title}'.lower() or 'idio ' in f'{body_html}{title}'.lower()) and 30 not in notify_users: notify_users.add(30)
-			if [x in f'{body_html}{title}'.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')] and 253 not in notify_users: notify_users.add(253)
+			# if [x in f'{body_html}{title}'.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')] and 253 not in notify_users: notify_users.add(253)
 
 		for x in notify_users: send_notification(x, message)
 
@@ -887,7 +887,7 @@ def submit_post(v):
 				notify_users.add(995)
 				notify_users.add(541)
 			if ('idio3' in f'{body_html}{title}'.lower() or 'idio ' in f'{body_html}{title}'.lower()) and 30 not in notify_users: notify_users.add(30)
-			if [x in f'{body_html}{title}'.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')] and 253 not in notify_users: notify_users.add(253)
+			# if [x in f'{body_html}{title}'.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')] and 253 not in notify_users: notify_users.add(253)
 
 		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 		
