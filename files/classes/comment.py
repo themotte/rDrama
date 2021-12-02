@@ -305,7 +305,7 @@ class Comment(Base):
 		return data
 
 	def realbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues) and not (v and v.id == self.author_id): return f"<p>{cc} ONLY</p>"
+		if self.post and self.post.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{cc} ONLY</p>"
 
 		body = self.body_html
 
@@ -342,7 +342,7 @@ class Comment(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues) and not (v and v.id == self.author_id): return f"<p>{cc} ONLY</p>"
+		if self.post and self.post.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{cc} ONLY</p>"
 
 		body = self.body
 

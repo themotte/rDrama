@@ -319,7 +319,7 @@ class Submission(Base):
 		else: return ""
  
 	def realbody(self, v):
-		if self.club and not (v and v.paid_dues): return f"<p>{cc} ONLY</p>"
+		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{cc} ONLY</p>"
 
 		body = self.body_html
 		body = censor_slurs(body, v)
@@ -342,7 +342,7 @@ class Submission(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.club and not (v and v.paid_dues): return f"<p>{cc} ONLY</p>"
+		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{cc} ONLY</p>"
 
 		body = self.body
 		body = censor_slurs(body, v)
@@ -357,7 +357,7 @@ class Submission(Base):
 
 	@lazy
 	def realtitle(self, v):
-		if self.club and not (v and v.paid_dues) and not (v and v.admin_level > 1):
+		if self.club and not (v and (v.paid_dues or v.id == self.author_id)):
 			if v: return random.choice(TROLLTITLES).format(username=v.username)
 			else: return f'{cc} MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
@@ -369,7 +369,7 @@ class Submission(Base):
 
 	@lazy
 	def plaintitle(self, v):
-		if self.club and not (v and v.paid_dues) and not (v and v.admin_level > 1):
+		if self.club and not (v and (v.paid_dues or v.id == self.author_id)):
 			if v: return random.choice(TROLLTITLES).format(username=v.username)
 			else: return f'{cc} MEMBERS ONLY'
 		else: title = self.title

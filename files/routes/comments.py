@@ -45,7 +45,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			g.db.add(notif)
 			g.db.commit()
 
-	if comment.post and comment.post.club and not (v and v.paid_dues): abort(403)
+	if comment.post and comment.post.club and not (v and (v.paid_dues or v.id in [post.author_id, comment.post.author_id])): abort(403)
 
 	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level > 1) : abort(403)
 	
@@ -142,7 +142,7 @@ def api_comment(v):
 	parent_fullname = request.values.get("parent_fullname").strip()
 
 	parent_post = get_post(parent_submission, v=v)
-	if parent_post.club and not (v and v.paid_dues): abort(403)
+	if parent_post.club and not (v and (v.paid_dues or v.id == parent_post.author_id)): abort(403)
 
 	if parent_fullname.startswith("t2_"):
 		parent = parent_post
