@@ -64,14 +64,15 @@ def publish(pid, v):
 
 	if request.host == 'pcmemes.net':
 		if 'kippy' in f'{post.body_html}{post.title}'.lower() and 1592 not in notify_users: notify_users.add(1592)
-	if request.host in ['rdrama.net','pcmemes.net']:
 		if ('aevan' in f'{post.body_html}{post.title}'.lower() or 'avean' in f'{post.body_html}{post.title}'.lower()) and 1 not in notify_users: notify_users.add(1)
 	if request.host == 'rdrama.net':
+		if ('aevan' in f'{post.body_html}{post.title}'.lower() or 'avean' in f'{post.body_html}{post.title}'.lower()) and 1 not in notify_users: notify_users.add(1)
 		if ('joan' in f'{post.body_html}{post.title}'.lower() or 'pewkie' in f'{post.body_html}{post.title}'.lower()) and 28 not in notify_users: notify_users.add(28)
 		if 'carp' in f'{post.body_html}{post.title}'.lower() and 995 not in notify_users:
 			notify_users.add(995)
 			notify_users.add(541)
 		if ('idio3' in f'{post.body_html}{post.title}'.lower() or 'idio ' in f'{post.body_html}{post.title}'.lower()) and 30 not in notify_users: notify_users.add(30)
+		if (x in f'{post.body_html}{post.title}'.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')) and 253 not in notify_users: notify_users.add(253)
 
 	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{post.permalink}")
 
@@ -383,14 +384,15 @@ def edit_post(pid, v):
 
 		if request.host == 'pcmemes.net':
 			if 'kippy' in f'{body_html}{title}'.lower() and 1592 not in notify_users: notify_users.add(1592)
-		if request.host in ['rdrama.net','pcmemes.net']:
 			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
 		if request.host == 'rdrama.net':
+			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
 			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
 			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
 				notify_users.add(995)
 				notify_users.add(541)
 			if ('idio3' in f'{body_html}{title}'.lower() or 'idio ' in f'{body_html}{title}'.lower()) and 30 not in notify_users: notify_users.add(30)
+			if (x in f'{body_html}{title}'.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')) and 253 not in notify_users: notify_users.add(253)
 
 		for x in notify_users: send_notification(x, message)
 
@@ -877,14 +879,15 @@ def submit_post(v):
 
 		if request.host == 'pcmemes.net':
 			if 'kippy' in f'{body_html}{title}'.lower() and 1592 not in notify_users: notify_users.add(1592)
-		if request.host in ['rdrama.net','pcmemes.net']:
 			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
 		if request.host == 'rdrama.net':
+			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
 			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
 			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
 				notify_users.add(995)
 				notify_users.add(541)
 			if ('idio3' in f'{body_html}{title}'.lower() or 'idio ' in f'{body_html}{title}'.lower()) and 30 not in notify_users: notify_users.add(30)
+			if (x in f'{body_html}{title}'.lower() for x in ('landlord_messiah', 'landlordmessiah', ' llm ', 'landlet')) and 253 not in notify_users: notify_users.add(253)
 
 		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 		
