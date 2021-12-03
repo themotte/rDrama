@@ -221,6 +221,27 @@
 					</a>
 				</li>
 				{% endif %}
+				<!-- Requires not author -->
+				{% if not v.id==p.author_id and not p.award_count('ghosts') %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>		
+				<li id="unblock-{{p.id}}" class="{% if not p.is_blocking %} hidden{% endif %} text-green-600">						
+					<button class="text-success list-inline-item" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block-{{p.id}}','unblock-{{p.id}}')">
+						<i class="fas fa-eye text-success fa-fw mr-4"></i>Unblock user
+					</button>
+				</li>
+				<li id="prompt-{{p.id}}" class="blockuser hidden text-red-600">
+					<button onclick="post_toast2('/settings/block?username={{p.author.username}}','prompt-{{p.id}}','unblock-{{p.id}}')">
+						<i class="fas fa-eye-slash fa-fw mr-4"></i>Are you sure?
+					</button>
+				</li>
+				<li id="block-{{p.id}}" class="text-red-600 blockuser{% if p.is_blocking %} hidden{% endif %}">
+					<button onclick="document.getElementById('block-{{p.id}}').classList.toggle('hidden');document.getElementById('prompt-{{p.id}}').classList.toggle('hidden');">
+						<i class="fas fa-eye-slash fa-fw mr-4"></i>Block user
+					</button>
+				</li>
+				{% endif %}
 				<li>
 					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 				</li>
@@ -232,15 +253,6 @@
 			</ul>
 		</div>
 	</li>
-
-	<!-- Requires not author -->
-	{% if not v.id==p.author_id and not p.award_count('ghosts') %}								
-	<a id="unblock-{{p.id}}" class="text-success list-inline-item {% if not p.is_blocking %} hidden{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye text-success"></i>Unblock user</a>
-
-	<a id="prompt-{{p.id}}" class="text-red-500 blockuser list-inline-item hidden" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','prompt-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye-slash text-red-500"></i>Are you sure?</a>
-
-	<a id="block-{{p.id}}" class="text-red-500 blockuser list-inline-item {% if p.is_blocking %} hidden{% endif %}" href="javascript:void(0)" onclick="document.getElementById('block-{{p.id}}').classList.toggle('hidden');document.getElementById('prompt-{{p.id}}').classList.toggle('hidden');"><i class="fas fa-eye-slash fa-fw mr-2 text-red-500"></i>Block user</a>
-	{% endif %}
 
 	{% if not v.id==p.author_id and v.admin_level == 1 %}
 	<a id="sex-user-{{p.id}}" class="list-inline-item{% if p.is_blocking %} hidden{% endif %} text-red-500" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')"><i class="fas fa-user-slash text-red-500"></i>Ban user</a>
