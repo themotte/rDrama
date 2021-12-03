@@ -296,7 +296,7 @@
 </div>
 {% endif %}
 
-{% if not p.club or v and v.paid_dues %}
+{% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
 	{% if p.realbody(v) %}
 		<div class="rounded-lg hidden bg-gray-900 mt-3 p-3" id="post-text-{{p.id}}">
 			{{p.realbody(v) | safe}}
