@@ -305,7 +305,7 @@ const EMOJIS_STRINGS = [
 	},
 	{
 		type: 'misc',
-		emojis: ['autism','doot','kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
+		emojis: ['bruh','autism','doot','kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
 	},
 ]
 
