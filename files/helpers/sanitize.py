@@ -165,26 +165,28 @@ def sanitize(sanitized, noimages=False):
 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	for i in re.finditer("[^a]>\s*(:!?\w+:\s*)+<\/", sanitized):
+	for i in re.finditer("[^a]>\s*(:[!#]?\w+:\s*)+<\/", sanitized):
 		old = i.group(0)
 		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
 		else: new = old.lower()
 		for i in re.finditer('(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("!"):
-				emoji = emoji[1:]
-				if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-					new = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="bigemoji mirrored" src="http://{site}/assets/images/emojis/{emoji}.webp" >', new)
-			
-					if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-					else: session["favorite_emojis"][emoji] = 1
+				classes = "bigemoji mirrored"
+				remoji = emoji[1:]
+			elif emoji.startswith("#"):
+				classes = ""
+				remoji = emoji[1:]
+			else:
+				classes = "bigemoji"
+				remoji = emoji
 
-			elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="bigemoji" src="http://{site}/assets/images/emojis/{emoji}.webp" >', new)
-					
+			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="http://{site}/assets/images/emojis/{remoji}.webp" >', new)
+
 				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 				else: session["favorite_emojis"][emoji] = 1
-
+					
 		sanitized = sanitized.replace(old, new)
 
 
