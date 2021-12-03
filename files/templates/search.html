@@ -47,35 +47,6 @@
 		{% endif %}
 	</div>
 </div>
-<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-	<div class="md:hidden col-span-full bg-gradient-to-t from-gray-200 to-gray-100">
-		<div class="flex space-x-3 divide-x divide-gray-400 text-xs">
-			<ul class="flex items-center space-x-3 leading-normal mb-0">
-				<li>
-					<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-700' }}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
-						Posts
-					</a>
-				</li>
-				<li>
-					<a class="{{ 'font-bold text-red-600' if '/comments/' in request.path else 'text-gray-700' }}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
-						Comments
-					</a>
-				</li>
-				<li>
-					<a class="{{ 'font-bold text-red-600' if '/users/' in request.path else 'text-gray-700' }}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
-						Users
-					</a>
-				</li>
-			</ul>
-			<div class="hidden md:block pl-3 block text-gray-500">
-				<strong>{{ total }}</strong>
-				{{ sort }} result{{ '' if total == 1 else 's' }} matching
-				<strong>"{{query}}"</strong> {{ 'from all time' if t=='all' else 'in the last' }}
-				{% if t != 'all' %}<span class="font-bold">{{ t }}</span>{% endif %}
-			</div>
-		</div>
-	</div>
-</div>
 {% endblock %}
 
 {% block content %}
