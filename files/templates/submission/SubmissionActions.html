@@ -23,11 +23,13 @@
 	</li>
 	{% endif %}
 	
+	{% if '/post/' not in request.full_path  %}
 	<li>
 		<span>
 			<i class="fas fa-eye fa-fw mr-2"></i>{{ p.views }}
 		</span>
 	</li>
+	{% endif %}
 
 	{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and '/post/' in request.full_path %}
 	<li>
