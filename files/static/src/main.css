@@ -74,6 +74,9 @@
 		word-wrap: break-word;       /* Internet Explorer 5.5+ */
 	}
 	/* Images */
+	img {
+		@apply inline
+	}
 	img[lazy=loading] {
 		@apply animate-pulse;
 	}
