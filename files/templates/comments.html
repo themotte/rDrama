@@ -382,7 +382,7 @@
 				{% if c.parent_comment_id and not standalone and level<=7 %}
 				<a href="#comment-{{ c.parent_comment_id }}-only" class="text-gray-500 hover:text-gray-400 user-name-reply">
 					<i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal"></i>
-					<span class="hidden md:inline-block">replying to</span>
+					<span class="hidden sm:inline-block">replying to</span>
 					<span class="font-bold">
 						{% if c.post and c.post.award_count("ghosts") %}
 							👻
