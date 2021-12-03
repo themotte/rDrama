@@ -1,0 +1,1 @@
+const randomElement = array[Math.floor(Math.random() * array.length)];
