@@ -14,7 +14,7 @@
 			<h1 class="font-bold text-xl font-heading leading-normal mb-0 truncate ellipsis">
 				<span class="hidden md:inline-block">Search Results:</span> "{{query}}"
 			</h1>
-			<div class="flex space-x-3 divide-x divide-gray-400 text-xs">
+			<div class="flex space-x-3 divide-x divide-gray-300 text-xs">
 				<ul class="flex items-center space-x-3 leading-normal mb-0">
 					<li>
 						<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-700' }}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
@@ -32,7 +32,7 @@
 						</a>
 					</li>
 				</ul>
-				<div class="hidden md:block pl-3 text-gray-500">
+				<div class="hidden md:block pl-3 text-gray-500 leading-normal">
 					<strong>{{ total }}</strong>
 					{{ sort }} result{{ '' if total == 1 else 's' }} matching
 					<strong>"{{query}}"</strong> {{ 'from all time' if t=='all' else 'in the last' }}
