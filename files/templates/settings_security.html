@@ -4,176 +4,176 @@
 
 {% block content %}
 
-		<div class="row">
+<div class="row">
 
-			<div class="col col-lg-8">
+	<div class="col col-lg-8">
 
-				<div class="settings">
+		<div class="settings">
 
 
 
-					<h2 class="h5">Email</h2>
+			<h2 class="h5">Email</h2>
 
-					<p class="text-small text-muted">Change the email address used to sign in to your account.</p>
-					<div class="settings-section rounded">
-						<form	action="/settings/security" method="post">
-							<input type="hidden" name="formkey" value="{{v.formkey}}">
-							<div class="body">
-								<div class="d-lg-flex">
-									<label for="new-email" class="w-lg-25">Email</label>
-									<div class="w-lg-100">
-										<input class="form-control" id="new_email" {% if v.email %}placeholder="{{v.email}}"{% else %}placeholder="Your email"{% endif %}
-										aria-describedby="new_email" type="email" name="new_email" required>
-										{% if v.email and not v.is_activated %}
-											<div class="text-danger text-small-extra mt-1" id="email-verify-text">Email not verified. You will not be able to recover your account with this email until you verify it. <u><a href="javascript:void(0)" onclick="post_toast('/verify_email');emailVerifyText();" class="text-danger">Verify now.</a></u></div>
-										{% elif not v.email %}
-											<div class="text-danger text-small-extra mt-1" id="email-verify-text">Add an email to secure your account in case you forget your password.</div>
-										{% endif %}
-									</div>
-								</div>
-								<div class="d-lg-flex mt-3">
-								<label for="email-password" class="w-lg-25 hidden" id="email-password-label">Password</label>
-								<div class="w-lg-100">
-									<input autocomplete="new-password" type="password" class="form-control mb-2 hidden" id="email-password" name="password" autocomplete="off" required>
-									<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger hidden mt-1">Password required to update your email.</small>
-								</div>
-							</div>
-							<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger hidden mt-1">Password required to update your email.</small>
-						</div>
-						<div class="footer">
-							<div class="d-flex">
-								<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/settings/gumroad')">Claim paypig rewards</a>
-								{% if v.email %}
-								<input class="btn btn-primary ml-auto"
-								type="submit" value="Update email">
-								{% else %}
-								<input class="btn btn-primary ml-auto"
-								type="submit" value="Add email">
+			<p class="text-small text-muted">Change the email address used to sign in to your account.</p>
+			<div class="settings-section rounded">
+				<form	action="/settings/security" method="post">
+					<input type="hidden" name="formkey" value="{{v.formkey}}">
+					<div class="body">
+						<div class="d-lg-flex">
+							<label for="new-email" class="w-lg-25">Email</label>
+							<div class="w-lg-100">
+								<input class="form-control" id="new_email" {% if v.email %}placeholder="{{v.email}}"{% else %}placeholder="Your email"{% endif %}
+								aria-describedby="new_email" type="email" name="new_email" required>
+								{% if v.email and not v.is_activated %}
+								<div class="text-danger text-small-extra mt-1" id="email-verify-text">Email not verified. You will not be able to recover your account with this email until you verify it. <u><a href="javascript:void(0)" onclick="post_toast('/verify_email');emailVerifyText();" class="text-danger">Verify now.</a></u></div>
+								{% elif not v.email %}
+								<div class="text-danger text-small-extra mt-1" id="email-verify-text">Add an email to secure your account in case you forget your password.</div>
 								{% endif %}
 							</div>
-							<span class="text-small-extra text-muted pl-1">Must be same email as gumroad</span>
 						</div>
-					</form>
-				</div>
-
-
-
-					<h2 class="h5">Password</h2>
-
-					<p class="text-small text-muted">Change your account password.</p>
-
-					<div class="settings-section rounded">
-
-						<form action="/settings/security" method="post">
-
-							<div class="body">
-
-								<div class="d-lg-flex">
-
-									<label for="new_password" class="mb-0 w-lg-25">New Password</label>
-
-									<input class="form-control w-lg-100" id="new_password"
-									aria-describedby="new_password" type="password" name="new_password" autocomplete="off"
-									required>
-									<small id="passwordHelpChange"
-									class="form-text font-weight-bold text-muted hidden mt-1 w-lg-100">Minimum of 8
-									characters
-									required.</small>
-									<small id="passwordHelpChangeSuccess"
-									class="form-text font-weight-bold text-success hidden mt-1 w-lg-100">Your password
-									meets the
-									requirements.
-								</small>
-
+						<div class="d-lg-flex mt-3">
+							<label for="email-password" class="w-lg-25 hidden" id="email-password-label">Password</label>
+							<div class="w-lg-100">
+								<input autocomplete="new-password" type="password" class="form-control mb-2 hidden" id="email-password" name="password" autocomplete="off" required>
+								<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger hidden mt-1">Password required to update your email.</small>
 							</div>
-
-							<div class="d-lg-flex mt-3">
-
-								<label for="cnf_password" class="mb-0 w-lg-25">Confirm New Password</label>
-
-								<input class="form-control w-lg-100" id="cnf_password"
-								aria-describedby="cnf_password" type="password" name="cnf_password" autocomplete="off"
-								required>
-
-								<small id="passwordHelpCnf"
-								class="form-text font-weight-bold text-muted hidden mt-1 w-lg-100">Passwords do not
-								match.</small>
-								<small id="passwordHelpCnfSuccess"
-								class="form-text font-weight-bold text-success hidden mt-1 w-lg-100">Passwords match.
-							</small>
-
 						</div>
-
-						<div class="d-lg-flex mt-5">
-
-							<label for="old_password" class="mb-0 w-lg-25">Old Password</label>
-
-							<input class="form-control mb-2 w-lg-100" id="old_password" autocomplete="off"
-							aria-describedby="old_password" type="password" name="old_password"
-							required>
-
-						</div>
-
+						<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger hidden mt-1">Password required to update your email.</small>
 					</div>
-
 					<div class="footer">
-
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<input type="hidden" name="now" value="1563891643">
-
 						<div class="d-flex">
-
+							<a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/settings/gumroad')">Claim paypig rewards</a>
+							{% if v.email %}
 							<input class="btn btn-primary ml-auto"
-							type="submit" value="Change Password">
-
+							type="submit" value="Update email">
+							{% else %}
+							<input class="btn btn-primary ml-auto"
+							type="submit" value="Add email">
+							{% endif %}
 						</div>
-
+						<span class="text-small-extra text-muted pl-1">Must be same email as gumroad</span>
 					</div>
-
 				</form>
-
 			</div>
 
 
-		<h2 class="h5">Two-Factor Authentication</h2>
 
-		<p class="text-small text-muted">Change the two-factor settings for your account.</p>
+			<h2 class="h5">Password</h2>
 
-		<div class="settings-section rounded">
+			<p class="text-small text-muted">Change your account password.</p>
 
-			<div class="d-lg-flex">
+			<div class="settings-section rounded">
 
-				<div class="title w-lg-25">
-					<label for="2faToggle">Use 2-step login</label>
+				<form action="/settings/security" method="post">
+
+					<div class="body">
+
+						<div class="d-lg-flex">
+
+							<label for="new_password" class="mb-0 w-lg-25">New Password</label>
+
+							<input class="form-control w-lg-100" id="new_password"
+							aria-describedby="new_password" type="password" name="new_password" autocomplete="off"
+							required>
+							<small id="passwordHelpChange"
+							class="form-text font-weight-bold text-muted hidden mt-1 w-lg-100">Minimum of 8
+							characters
+						required.</small>
+						<small id="passwordHelpChangeSuccess"
+						class="form-text font-weight-bold text-success hidden mt-1 w-lg-100">Your password
+						meets the
+						requirements.
+					</small>
+
 				</div>
 
-				<div class="body w-lg-100">
+				<div class="d-lg-flex mt-3">
 
-					<div class="custom-control custom-switch">
-					<input type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" onchange="twoStepModal.show()" {% if not mfa_secret %}checked=""{% endif %}>
-					<label class="custom-control-label" for="2faToggle"></label>
-					</div>
+					<label for="cnf_password" class="mb-0 w-lg-25">Confirm New Password</label>
 
-					<span class="text-small-extra text-muted">This requires entering a randomly-generated, 6-digit code and your password to login. See <a href="javascript:void(0)">Google Authenticator</a> or <a href="javascript:void(0)">Authy</a> for more details.</span>
+					<input class="form-control w-lg-100" id="cnf_password"
+					aria-describedby="cnf_password" type="password" name="cnf_password" autocomplete="off"
+					required>
 
-				</div>
-
-			</div>
+					<small id="passwordHelpCnf"
+					class="form-text font-weight-bold text-muted hidden mt-1 w-lg-100">Passwords do not
+				match.</small>
+				<small id="passwordHelpCnfSuccess"
+				class="form-text font-weight-bold text-success hidden mt-1 w-lg-100">Passwords match.
+			</small>
 
 		</div>
 
-	<h2 class="h5">Log Out Everywhere</h2>
+		<div class="d-lg-flex mt-5">
 
-	<p class="text-small text-muted">Log all other devices out of your {{'SITE_NAME' | app_config}} account.</p>
+			<label for="old_password" class="mb-0 w-lg-25">Old Password</label>
 
-	<div class="settings-section rounded">
+			<input class="form-control mb-2 w-lg-100" id="old_password" autocomplete="off"
+			aria-describedby="old_password" type="password" name="old_password"
+			required>
 
-		<form	action="/settings/log_out_all_others" method="post">
-			<input type="hidden" name="formkey" value="{{v.formkey}}">
+		</div>
 
-			<div class="body">
+	</div>
 
-				<div class="d-lg-flex">
+	<div class="footer">
+
+		<input type="hidden" name="formkey" value="{{v.formkey}}">
+		<input type="hidden" name="now" value="1563891643">
+
+		<div class="d-flex">
+
+			<input class="btn btn-primary ml-auto"
+			type="submit" value="Change Password">
+
+		</div>
+
+	</div>
+
+</form>
+
+</div>
+
+
+<h2 class="h5">Two-Factor Authentication</h2>
+
+<p class="text-small text-muted">Change the two-factor settings for your account.</p>
+
+<div class="settings-section rounded">
+
+	<div class="d-lg-flex">
+
+		<div class="title w-lg-25">
+			<label for="2faToggle">Use 2-step login</label>
+		</div>
+
+		<div class="body w-lg-100">
+
+			<div class="custom-control custom-switch">
+				<input type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" onchange="twoStepModal.show()" {% if not mfa_secret %}checked=""{% endif %}>
+				<label class="custom-control-label" for="2faToggle"></label>
+			</div>
+
+			<span class="text-small-extra text-muted">This requires entering a randomly-generated, 6-digit code and your password to login. See <a href="javascript:void(0)">Google Authenticator</a> or <a href="javascript:void(0)">Authy</a> for more details.</span>
+
+		</div>
+
+	</div>
+
+</div>
+
+<h2 class="h5">Log Out Everywhere</h2>
+
+<p class="text-small text-muted">Log all other devices out of your {{'SITE_NAME' | app_config}} account.</p>
+
+<div class="settings-section rounded">
+
+	<form	action="/settings/log_out_all_others" method="post">
+		<input type="hidden" name="formkey" value="{{v.formkey}}">
+
+		<div class="body">
+
+			<div class="d-lg-flex">
 
 				<label for="forcelog-password" class="w-lg-25" id="email-password-label">Password</label>
 
@@ -210,11 +210,6 @@
 
 </div>
 
-</div>
-
-</div>
-
-
 <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModal" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -235,7 +230,7 @@
 
 							<div class="w-lg-100">
 
-									<input autocomplete="new-password" type="password" class="form-control mb-2" id="delete-password" name="password" required>
+								<input autocomplete="new-password" type="password" class="form-control mb-2" id="delete-password" name="password" required>
 
 							</div>
 
@@ -248,7 +243,7 @@
 
 							<div class="w-lg-100">
 
-									<input autocomplete="new-password" type="text" class="form-control mb-2" id="delete-mfa" name="twofactor" required>
+								<input autocomplete="new-password" type="text" class="form-control mb-2" id="delete-mfa" name="twofactor" required>
 
 							</div>
 
@@ -258,7 +253,9 @@
 					</div>
 				</form>
 			</div>
-					</div>
+		</div>
+	</div>
+</div>
 
 {% endblock %}
 
