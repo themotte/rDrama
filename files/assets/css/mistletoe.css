@@ -67,3 +67,30 @@
 	right: 0;
 	height: 69px;
 }
+
+/* Candy Cane */
+
+.candycane p {
+  --color1: #DC2626;
+  --color2: #059669;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color1),
+    var(--color1) 30px,
+    var(--color2) 30px,
+    var(--color2) 60px
+  );
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  animation: 40s linear 0s infinite move;
+}
+
+@keyframes move {
+  from {
+    background-position: 0px;
+  }
+  to {
+    background-position: 1000px;
+  }
+}
