@@ -2,30 +2,6 @@
 <html lang="en">
 <head>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
-
-	<script>
-		var clipboard = new ClipboardJS('.copy-link');
-		clipboard.on('success', function(e) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-			myToast.show();
-			console.log(e);
-		});
-		
-		function emailVerifyText() {
-			document.getElementById("email-verify-text").innerHTML = "Verification email sent! Please check your inbox.";
-		}
-
-		function formkey() {return '{{v.formkey}}';}
-	</script>
-
-	<style>
-		.navsettings {
-			padding-left: 0.75rem !important;
-			padding-right: 0.75rem !important;
-		}
-	</style>
-
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
@@ -50,8 +26,6 @@
 	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
 	<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif" >
 	<meta name="twitter:url" content="{{request.host}}" >
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
-
 
 	{% block stylesheets %}
 
@@ -178,5 +152,22 @@
 
 	<script src="/assets/js/default.js"></script>
 	<script src="/assets/js/header.js?v=54"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+
+	<script>
+		var clipboard = new ClipboardJS('.copy-link');
+		clipboard.on('success', function(e) {
+			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
+			myToast.show();
+			console.log(e);
+		});
+		
+		function emailVerifyText() {
+			document.getElementById("email-verify-text").innerHTML = "Verification email sent! Please check your inbox.";
+		}
+
+		function formkey() {return '{{v.formkey}}';}
+	</script>
 </body>
 </html>
