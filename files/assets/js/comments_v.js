@@ -51,8 +51,8 @@ function post_toast3(url, button1, button2) {
 
 	xhr.send(form);
 
-	document.getElementById(button1).classList.toggle("d-md-inline-block");
-	document.getElementById(button2).classList.toggle("d-md-inline-block");
+	document.getElementById(button1).classList.toggle("md:block");
+	document.getElementById(button2).classList.toggle("md:block");
 }
 
 report_commentModal = function(id, author) {

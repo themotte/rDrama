@@ -14,8 +14,8 @@ function removeComment(post_id,button1,button2) {
 	button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
 
 	if (typeof button1 !== 'undefined') {
-		document.getElementById(button1).classList.toggle("d-md-inline-block");
-		document.getElementById(button2).classList.toggle("d-md-inline-block");
+		document.getElementById(button1).classList.toggle("md:block");
+		document.getElementById(button2).classList.toggle("md:block");
 	}
 };
 
@@ -35,8 +35,8 @@ function approveComment(post_id,button1,button2) {
 	button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 
 	if (typeof button1 !== 'undefined') {
-		document.getElementById(button1).classList.toggle("d-md-inline-block");
-		document.getElementById(button2).classList.toggle("d-md-inline-block");
+		document.getElementById(button1).classList.toggle("md:block");
+		document.getElementById(button2).classList.toggle("md:block");
 	}
 }
 
