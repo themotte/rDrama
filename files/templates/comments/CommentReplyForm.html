@@ -51,7 +51,7 @@
 				<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('hidden')">
 					Cancel
 				</button>
-				<button type="button" id="save-reply-to-{{c.fullname}}" class="ml-2 block px-4 py-2 bg-gradient-to-t from-red-800 to-red-700 hover:from-red-700 hover:to-red-800 active:shadow-inner border border-red-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-100 focus:text-gray-300 focus:outline-none" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');">
+				<button type="button" id="save-reply-to-{{c.fullname}}" class="ml-2 btn btn-green" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');">
 					Comment
 				</button>
 			</div>

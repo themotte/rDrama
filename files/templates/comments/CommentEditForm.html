@@ -1,9 +1,9 @@
 <div id="comment-edit-{{c.id}}" class="hidden flex flex-wrap w-full">
 	<form id="comment-edit-form-{{c.id}}" action="/edit_comment/{{c.id}}" method="post" class="input-group" enctype="multipart/form-data"> 
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
-		<div class="comment-box rounded-lg border border-gray-700 border-dashed bg-gray-900 shadow-inner w-full">
-			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="w-full rounded-t-md p-3 text-gray-200 focus:text-gray-900 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
-			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-white border-opacity-10 mb-0">
+		<div class="relative comment-box rounded-lg border border-gray-300 bg-gray-100 shadow-inner w-full"> 
+			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
+			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
 				<li>
 					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('comment-edit-body-{{c.id}}')">
 						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
@@ -48,7 +48,7 @@
 				<button type="button" id="cancel-edit-{{c.id}}" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" onclick="toggleEdit('{{c.id}}')">
 					Cancel
 				</button>
-				<button type="button" form="comment-edit-form-{{c.id}}" class="ml-2 block px-4 py-2 bg-gradient-to-t from-pink-700 to-pink-600 hover:from-pink-600 hover:to-pink-700 active:shadow-inner border border-gray-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-100 focus:text-gray-500 focus:outline-none" onclick="comment_edit('{{c.id}}')">
+				<button type="button" form="comment-edit-form-{{c.id}}" class="ml-2 btn btn-green" onclick="comment_edit('{{c.id}}')">
 					Save edit
 				</button>
 			</div>
