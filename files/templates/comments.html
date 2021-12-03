@@ -314,13 +314,7 @@
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
-					{% for o in c.options %}
-						<div class="custom-control">								
-							<input type="checkbox" class="custom-control-input" id="{{o.id}}" name="option" {% if o.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{o.id}}', '{{c.id}}')">
-							<label class="custom-control-label" for="{{o.id}}">{{o.body_html | safe}}<span class="presult-{{c.id}} {% if not c.total_poll_voted(v) %}d-none{% endif %}"> - <a href="/votes?link=t3_{{o.id}}"><span id="poll-{{o.id}}">{{o.upvotes}}</span> votes</a></span></label>
-						</div>
-					{% endfor %}
-					<pre></pre>
+					{{c.options_html(v) | safe}}
 				{% endif %}
 
 				{% if c.author.sig_html and (c.author_id == 1904 or not (v and v.sigs_disabled)) %}
@@ -844,7 +838,6 @@
 
 {% include "expanded_image_modal.html" %}
 
-{% set commtimes = []}
 <script defer src="/assets/js/popover.js?v=9"></script>
 
 <script>

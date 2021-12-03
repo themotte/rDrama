@@ -275,6 +275,17 @@ def edit_post(pid, v):
 			body = body.replace('I ', f'@{v.username} ')
 			body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
 
+		if not p.options.count():
+			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):
+				body = body.replace(i.group(0), "")
+				c = Comment(author_id=AUTOPOLLER_ID,
+					parent_submission=p.id,
+					level=1,
+					body_html=filter_title(i.group(1)),
+					upvotes=0
+					)
+				g.db.add(c)
+
 		body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
 		bans = filter_comment_html(body_html)
