@@ -504,7 +504,7 @@ def gumroad(v):
 
 	if v.email not in emails: return {"error": "Email not found"}, 404
 
-	response = response[0]
+	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"][0]
 	tier = tiers[response["variants_and_quantity"]]
 	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
 
