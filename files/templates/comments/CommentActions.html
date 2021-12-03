@@ -189,6 +189,9 @@
 				{% endif %}
 
 				{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
 				<li id="unmark-{{c.id}}" class="hidden {% if c.over_18 %}md:block{% endif %} text-red-600">
 					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')">
 						<i class="fas fa-eye-evil text-red-600 fa-sm fa-fw mr-4"></i>Unmark +18
@@ -202,6 +205,9 @@
 				{% endif %}
 
 				{% if v and v.admin_level==6 and v.id != c.author_id %}
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
 				<li id="unban-{{c.id}}" class="hidden {% if c.author.is_suspended %}md:block{% endif %}">
 					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/unban_user/{{c.author_id}}','ban-{{c.id}}','unban-{{c.id}}')">
 						<i class="fas fa-user-slash text-green-600 fa-sm fa-fw mr-4"></i>Unban user
