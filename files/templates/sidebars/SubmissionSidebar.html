@@ -43,39 +43,6 @@
 			</li>
 			{% endfor %}
 			{% endif %}
-			<!-- Banned -->
-			{% if p.bannedfor and p.author.banned_by %}
-			<li>
-				<i class="fad fa-gavel fa-sm fa-fw text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i>
-			</li>
-			{% endif %}	
-			<!-- Stickied -->
-			{% if p.stickied %}
-			<li>
-				<i id="pinned-{{p.id}}" class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom"></i>
-				<span class="font-heading text-xs text-red-500">
-					Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
-				</span>
-			</li>
-			{% endif %}
-			<!-- Pinned -->
-			{% if p.is_pinned %}
-			<li>
-				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned to profile"></i>
-			</li>
-			{% endif %}
-			<!-- NSFW -->
-			{% if p.over_18 %}
-			<li>
-				<span class="px-2 py-1 rounded-sm bg-gradient-to-t from-red-700 to-red-500 shadow-inner text-xs text-white">+18</span>
-			</li>
-			{% endif %}
-			<!-- Private -->
-			{% if p.private %}
-			<li>
-				<span class="badge border-warning border-1 text-small-extra">Draft</span>
-			</li>
-			{% endif %}
 		</ul>
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
@@ -120,6 +87,41 @@
 					<strong class="text-red-600">{{ p.views }} {{ 'member' if p.views == 1 else 'members' }}</strong>  following this post
 				</p>
 			</li>
+		</ul>
+		<!-- Banned -->
+		<ul class="flex flex-col mb-0">
+			{% if p.bannedfor and p.author.banned_by %}
+			<li>
+				<i class="fad fa-gavel fa-sm fa-fw text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i>
+			</li>
+			{% endif %}	
+			<!-- Stickied -->
+			{% if p.stickied %}
+			<li>
+				<i id="pinned-{{p.id}}" class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom"></i>
+				<span class="font-heading text-xs text-red-500">
+					Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
+				</span>
+			</li>
+			{% endif %}
+			<!-- Pinned -->
+			{% if p.is_pinned %}
+			<li>
+				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned to profile"></i>
+			</li>
+			{% endif %}
+			<!-- NSFW -->
+			{% if p.over_18 %}
+			<li>
+				<span class="px-2 py-1 rounded-sm bg-gradient-to-t from-red-700 to-red-500 shadow-inner text-xs text-white">+18</span>
+			</li>
+			{% endif %}
+			<!-- Private -->
+			{% if p.private %}
+			<li>
+				<span class="badge border-warning border-1 text-small-extra">Draft</span>
+			</li>
+			{% endif %}
 		</ul>
 	</div>
 </div>
