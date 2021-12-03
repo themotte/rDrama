@@ -298,7 +298,7 @@
 
 {% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
 	{% if p.realbody(v) %}
-		<div class="hidden rounded-md bg-gray-300/40 border border-gray-400/40 mt-3 p-3" id="post-text-{{p.id}}">
+		<div class="hidden rounded-md bg-gray-300/40 border border-gray-400/40 mt-3 md:ml-[4.5rem] p-3" id="post-text-{{p.id}}">
 			{{p.realbody(v) | safe}}
 		</div>
 	{% endif %}
