@@ -194,7 +194,7 @@
 				</li>
 				<li id="unmark-{{c.id}}" class="hidden {% if c.over_18 %}md:block{% endif %}">
 					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-red-600 hover:text-white bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')">
-						<i class="fas fa-eye-evil text-red-600 fa-sm fa-fw mr-4"></i>Unmark 18+
+						<i class="fas fa-eye-evil fa-sm fa-fw mr-4"></i>Unmark 18+
 					</button>
 				</li>
 				<li id="mark-{{c.id}}" class="hidden {% if not c.over_18 %}md:block{% endif %}">
