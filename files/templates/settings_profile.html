@@ -269,7 +269,7 @@
 					<form id="profile-bio" action="/settings/profile" method="post" enctype="multipart/form-data">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
 						<div class="input-group mb-2">
-							<textarea  id="bio-text" class="form-control rounded" aria-label="With textarea" placeholder="Tell the community a bit about yourself." rows="3" name="bio" form="profile-bio" maxlength="1500">{% if v.bio %}{{v.bio}}{% endif %}</textarea>
+							<textarea  id="bio-text" class="form-input rounded" aria-label="With textarea" placeholder="Tell the community a bit about yourself." rows="3" name="bio" form="profile-bio" maxlength="1500">{% if v.bio %}{{v.bio}}{% endif %}</textarea>
 						</div>
 						<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-white border-opacity-10">
 							<li>
@@ -348,7 +348,7 @@
 									<form id="profile-friends" action="/settings/profile" method="post" enctype="multipart/form-data">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
-											<textarea  id="friends-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
+											<textarea  id="friends-text" class="form-input rounded" aria-label="With textarea" placeholder="Enter your friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
 										</div>
 										<pre></pre>
 										<div class="flex">
@@ -369,7 +369,7 @@
 									<form id="profile-enemies" action="/settings/profile" method="post" enctype="multipart/form-data">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
-											<textarea  id="enemies-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter your enemies on the site..." rows="3" name="enemies" form="profile-enemies" maxlength="1500">{% if v.enemies %}{{v.enemies}}{% endif %}</textarea>
+											<textarea  id="enemies-text" class="form-input rounded" aria-label="With textarea" placeholder="Enter your enemies on the site..." rows="3" name="enemies" form="profile-enemies" maxlength="1500">{% if v.enemies %}{{v.enemies}}{% endif %}</textarea>
 										</div>
 										<pre></pre>
 										<div class="flex">
@@ -390,7 +390,7 @@
 									<form id="profile-sig" action="/settings/profile" method="post" enctype="multipart/form-data">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
-											<textarea  id="sig-text" class="form-control rounded" aria-label="With textarea" placeholder="Enter a signature..." rows="3" name="sig" form="profile-sig" maxlength="200">{% if v.sig %}{{v.sig}}{% endif %}</textarea>
+											<textarea  id="sig-text" class="form-input rounded" aria-label="With textarea" placeholder="Enter a signature..." rows="3" name="sig" form="profile-sig" maxlength="200">{% if v.sig %}{{v.sig}}{% endif %}</textarea>
 										</div>
 										<div class="flex">
 											<pre style="padding-top:0.7rem" class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('sig-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Bold"></pre>

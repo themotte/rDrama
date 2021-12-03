@@ -19,7 +19,7 @@
 						<div class="d-lg-flex">
 							<label for="new-email" class="w-lg-25">Email</label>
 							<div class="w-lg-100">
-								<input class="form-control" id="new_email" {% if v.email %}placeholder="{{v.email}}"{% else %}placeholder="Your email"{% endif %}
+								<input class="form-input" id="new_email" {% if v.email %}placeholder="{{v.email}}"{% else %}placeholder="Your email"{% endif %}
 								aria-describedby="new_email" type="email" name="new_email" required>
 								{% if v.email and not v.is_activated %}
 								<div class="text-danger text-small-extra mt-1" id="email-verify-text">Email not verified. You will not be able to recover your account with this email until you verify it. <u><a href="javascript:void(0)" onclick="post_toast('/verify_email');emailVerifyText();" class="text-danger">Verify now.</a></u></div>
@@ -31,7 +31,7 @@
 						<div class="d-lg-flex mt-3">
 							<label for="email-password" class="w-lg-25 hidden" id="email-password-label">Password</label>
 							<div class="w-lg-100">
-								<input autocomplete="new-password" type="password" class="form-control mb-2 hidden" id="email-password" name="password" autocomplete="off" required>
+								<input autocomplete="new-password" type="password" class="form-input mb-2 hidden" id="email-password" name="password" autocomplete="off" required>
 								<small id="emailpasswordRequired" class="form-text font-weight-bold text-danger hidden mt-1">Password required to update your email.</small>
 							</div>
 						</div>
@@ -69,7 +69,7 @@
 
 							<label for="new_password" class="mb-0 w-lg-25">New Password</label>
 
-							<input class="form-control w-lg-100" id="new_password"
+							<input class="form-input w-lg-100" id="new_password"
 							aria-describedby="new_password" type="password" name="new_password" autocomplete="off"
 							required>
 							<small id="passwordHelpChange"
@@ -88,7 +88,7 @@
 
 					<label for="cnf_password" class="mb-0 w-lg-25">Confirm New Password</label>
 
-					<input class="form-control w-lg-100" id="cnf_password"
+					<input class="form-input w-lg-100" id="cnf_password"
 					aria-describedby="cnf_password" type="password" name="cnf_password" autocomplete="off"
 					required>
 
@@ -105,7 +105,7 @@
 
 			<label for="old_password" class="mb-0 w-lg-25">Old Password</label>
 
-			<input class="form-control mb-2 w-lg-100" id="old_password" autocomplete="off"
+			<input class="form-input mb-2 w-lg-100" id="old_password" autocomplete="off"
 			aria-describedby="old_password" type="password" name="old_password"
 			required>
 
@@ -176,7 +176,7 @@
 
 				<div class="w-lg-100">
 
-					<input autocomplete="new-password" type="password" class="form-control mb-2" id="forcelog-password" name="password" autocomplete="off" required>
+					<input autocomplete="new-password" type="password" class="form-input mb-2" id="forcelog-password" name="password" autocomplete="off" required>
 
 				</div>
 
@@ -227,7 +227,7 @@
 
 							<div class="w-lg-100">
 
-								<input autocomplete="new-password" type="password" class="form-control mb-2" id="delete-password" name="password" required>
+								<input autocomplete="new-password" type="password" class="form-input mb-2" id="delete-password" name="password" required>
 
 							</div>
 
@@ -240,7 +240,7 @@
 
 							<div class="w-lg-100">
 
-								<input autocomplete="new-password" type="text" class="form-control mb-2" id="delete-mfa" name="twofactor" required>
+								<input autocomplete="new-password" type="text" class="form-input mb-2" id="delete-mfa" name="twofactor" required>
 
 							</div>
 
