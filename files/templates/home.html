@@ -169,7 +169,7 @@
 
 {% if request.path == '/' and g.system and g.timestamp > session.get('tooltip_last_dismissed',0)+60*60*24 and (not g.system.endswith('/chrome') and not g.system.endswith('/other')) and not g.system.endswith('/webview') %}
 	<div id="mobile-prompt-container" class="fixed-bottom">
-		<div id="mobile-prompt" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-container="#mobile-prompt-container" data-bs-placement="top" data-bs-trigger="click" title="" data-bs-original-title="Install the {{'SITE_NAME' | app_config}} webapp by saving this page to your home screen!"></div>
+		<div id="mobile-prompt" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-container="#mobile-prompt-container" data-bs-placement="top" data-bs-trigger="click" data-bs-original-title="Install the {{'SITE_NAME' | app_config}} webapp by saving this page to your home screen!"></div>
 	</div>
 
 	<script>

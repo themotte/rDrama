@@ -172,17 +172,17 @@ def sanitize(sanitized, noimages=False):
 		for i in re.finditer('(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("!"):
-				classes = "bigemoji mirrored"
+				classes = 'class="bigemoji mirrored" '
 				remoji = emoji[1:]
 			elif emoji.startswith("#"):
 				classes = ""
 				remoji = emoji[1:]
 			else:
-				classes = "bigemoji"
+				classes = 'class="bigemoji" '
 				remoji = emoji
 
 			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="http://{site}/assets/images/emojis/{remoji}.webp" >', new)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" {classes}src="http://{site}/assets/images/emojis/{remoji}.webp" >', new)
 
 				if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
 				else: session["favorite_emojis"][remoji] = 1
