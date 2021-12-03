@@ -761,6 +761,10 @@ def settings_images_banner(v):
 @auth_required
 @validate_formkey
 def settings_delete_profile(v):
+
+	if v.highres and '/images/' in v.highres: os.remove('/images/' + v.highres.split('/images/')[1])
+	if v.profileurl and '/images/' in v.profileurl: os.remove('/images/' + v.profileurl.split('/images/')[1])
+
 	v.highres = None
 	v.profileurl = None
 	g.db.add(v)
@@ -774,12 +778,13 @@ def settings_delete_profile(v):
 @validate_formkey
 def settings_delete_banner(v):
 
-	v.bannerurl = None
-	g.db.add(v)
-	g.db.commit()
+	if v.bannerurl:
+		if '/images/' in v.bannerurl: os.remove('/images/' + v.bannerurl.split('/images/')[1])
+		v.bannerurl = None
+		g.db.add(v)
+		g.db.commit()
 
-	return render_template("settings_profile.html", v=v,
-						   msg="Banner successfully removed.")
+	return render_template("settings_profile.html", v=v,  msg="Banner successfully removed.")
 
 
 @app.get("/settings/blocks")

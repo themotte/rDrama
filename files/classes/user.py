@@ -15,7 +15,7 @@ from .clients import *
 from files.__main__ import Base, cache
 from files.helpers.security import *
 import random
-from os import environ
+from os import environ, remove
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
@@ -472,6 +472,10 @@ class User(Base):
 			ban_time = int(time.time()) + (days * 86400)
 			self.unban_utc = ban_time
 		else:
+			if self.highres and '/images/' in self.highres: remove('/images/' + self.highres.split('/images/')[1])
+			if self.profileurl and '/images/' in self.profileurl: remove('/images/' + self.profileurl.split('/images/')[1])
+			if self.bannerurl and '/images/' in self.bannerurl: remove('/images/' + self.bannerurl.split('/images/')[1])
+
 			self.bannerurl = None
 			self.profileurl = None
 			if self.discord_id: remove_user(self)
