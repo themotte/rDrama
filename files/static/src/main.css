@@ -96,7 +96,7 @@
 	@apply block px-4 py-2 active:shadow-inner border rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold focus:outline-none disabled:opacity-50;
 }
 .btn-red {
-	@apply bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 border-red-900 text-gray-100 focus:text-gray-200;
+	@apply bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 border-red-900 text-gray-100 focus:text-white;
 }
 .btn-green {
 	@apply bg-gradient-to-t from-green-700 to-green-600 hover:from-green-600 hover:to-green-700 border-green-900 text-gray-100 focus:text-gray-200;
