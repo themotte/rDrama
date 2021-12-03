@@ -21,7 +21,7 @@
 					<div class="body w-lg-100">
 						<p>Change how many posts appear on every page.</p>
 						<div class="input-group mb2">
-							<select id='frontsize' class="form-input" form="profile-settings" name="frontsize" onchange="post_toast('/settings/profile?frontsize='+document.getElementById('frontsize').value)">
+							<select id='frontsize' form="profile-settings" name="frontsize" onchange="post_toast('/settings/profile?frontsize='+document.getElementById('frontsize').value)">
 							{% for entry in [25, 50, 100] %}
 								<option value="{{entry}}"{{' selected' if v.frontsize==entry}}>{{entry}}</option>
 							{% endfor %}
@@ -46,7 +46,7 @@
 						<div class="body w-lg-100">
 							<p>Change the default sorting for comments.</p>
 							<div class="input-group mb2">
-								<select id='defaultsortingcomments' class="form-input" form="profile-settings" name="defaultsortingcomments" onchange="post_toast('/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
+								<select id='defaultsortingcomments' form="profile-settings" name="defaultsortingcomments" onchange="post_toast('/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
 								{% for entry in ["new", "old", "top", "bottom", "controversial"] %}
 									<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry}}>{{entry}}</option>
 								{% endfor %}
@@ -65,7 +65,7 @@
 						<div class="body w-lg-100">
 							<p>Change the default sorting for posts.</p>
 							<div class="input-group mb2">
-								<select id='defaultsorting' class="form-input" form="profile-settings" name="defaultsorting" onchange="post_toast('/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
+								<select id='defaultsorting' form="profile-settings" name="defaultsorting" onchange="post_toast('/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
 								{% for entry in ["hot", "new", "old", "top", "bottom", "controversial", "comments"] %}
 								<option value="{{entry}}"{{' selected' if v.defaultsorting==entry}}>{{entry}}</option>
 								{% endfor %}
@@ -84,7 +84,7 @@
 						<div class="body w-lg-100">
 							<p>Change the default time filter for posts.</p>
 							<div class="input-group mb2">
-								<select id='defaulttime' class="form-input" form="profile-settings" name="defaulttime" onchange="post_toast('/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
+								<select id='defaulttime' form="profile-settings" name="defaulttime" onchange="post_toast('/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
 								{% for entry in ["hour", "day", "week", "month", "year", "all"] %}
 									<option value="{{entry}}"{{' selected' if v.defaulttime==entry}}>{{entry}}</option>
 								{% endfor %}
