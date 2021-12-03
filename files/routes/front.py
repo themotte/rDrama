@@ -156,9 +156,11 @@ def front_all(v):
 
 		if v.agendaposter_expires_utc and v.agendaposter_expires_utc < time.time():
 			v.agendaposter_expires_utc = 0
-			v.agendaposter = False
+			v.agendaposter = None
 			send_notification(v.id, "Your agendaposter theme has expired!")
 			g.db.add(v)
+			badge = v.has_badge(26)
+			if badge: g.db.delete(badge)
 			g.db.commit()
 
 		if v.flairchanged and v.flairchanged < time.time():

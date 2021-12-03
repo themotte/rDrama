@@ -1,3 +1,83 @@
+{% if v %}
+	<script>
+		function vote(type, id, dir) {
+			var upvote = document.getElementById(type + '-' + id + '-up');
+			var downvote = document.getElementById(type + '-' + id + '-down');
+			var scoretext = document.getElementById(type + '-score-' + id);
+
+			var score = Number(scoretext.textContent);
+
+			if (dir == "1") {
+				if (upvote.classList.contains('active')) {
+					upvote.classList.remove('active')
+					scoretext.textContent = score - 1
+					votedirection = "0"
+				} else if (downvote.classList.contains('active')) {
+					upvote.classList.add('active')
+					downvote.classList.remove('active')
+					scoretext.textContent = score + 2
+					votedirection = "1"
+				} else {
+					upvote.classList.add('active')
+					scoretext.textContent = score + 1
+					votedirection = "1"
+				}
+
+				if (upvote.classList.contains('active')) {
+					scoretext.classList.add('score-up')
+					scoretext.classList.remove('score-down')
+					scoretext.classList.remove('score')
+				} else if (downvote.classList.contains('active')) {
+					scoretext.classList.add('score-down')
+					scoretext.classList.remove('score-up')
+					scoretext.classList.remove('score')
+				} else {
+					scoretext.classList.add('score')
+					scoretext.classList.remove('score-up')
+					scoretext.classList.remove('score-down')
+				}
+			}
+			else {
+				if (downvote.classList.contains('active')) {
+					downvote.classList.remove('active')
+					scoretext.textContent = score + 1
+					votedirection = "0"
+				} else if (upvote.classList.contains('active')) {
+					downvote.classList.add('active')
+					upvote.classList.remove('active')
+					scoretext.textContent = score - 2
+					votedirection = "-1"
+				} else {
+					downvote.classList.add('active')
+					scoretext.textContent = score - 1
+					votedirection = "-1"
+				}
+
+				if (upvote.classList.contains('active')) {
+					scoretext.classList.add('score-up')
+					scoretext.classList.remove('score-down')
+					scoretext.classList.remove('score')
+				} else if (downvote.classList.contains('active')) {
+					scoretext.classList.add('score-down')
+					scoretext.classList.remove('score-up')
+					scoretext.classList.remove('score')
+				} else {
+					scoretext.classList.add('score')
+					scoretext.classList.remove('score-up')
+					scoretext.classList.remove('score-down')
+				}
+			}
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/vote/" + type.replace('-mobile','') + "/" + id + "/" + votedirection, true);
+			var form = new FormData()
+			form.append("formkey", formkey());
+			xhr.withCredentials=true;
+			xhr.send(form);
+		}
+	</script>
+{% endif %}
+
 <style>
 	html {
 		scroll-padding-top: 75px;
@@ -327,8 +407,8 @@
 								<input id="file-edit-reply-{{c.id}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-edit-reply-{{c.id}}').innerHTML='image';" hidden>
 							</label>
 						</div>
-						<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
-						<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
+						<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
+						<a id="cancel-edit-{{c.id}}" href="javascript:void(0)" onclick="toggleEdit('{{c.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 					</form>
 					<div id="preview-edit-{{c.id}}" class="mb-3 mt-5"></div>
 					<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
