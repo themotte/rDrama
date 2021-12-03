@@ -504,7 +504,7 @@ def gumroad(v):
 
 	if v.email not in emails: return {"error": "Email not found"}, 404
 
-	response = response[0]
+	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"][0]
 	tier = tiers[response["variants_and_quantity"]]
 	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
 
@@ -762,13 +762,11 @@ def settings_images_banner(v):
 @validate_formkey
 def settings_delete_profile(v):
 
-	if v.highres and '/images/' in v.highres: os.remove('/images/' + v.highres.split('/images/')[1])
-	if v.profileurl and '/images/' in v.profileurl: os.remove('/images/' + v.profileurl.split('/images/')[1])
+	if v.profileurl or v.highres:
+		v.deletepfp()
+		g.db.add(v)
+		g.db.commit()
 
-	v.highres = None
-	v.profileurl = None
-	g.db.add(v)
-	g.db.commit()
 	return render_template("settings_profile.html", v=v,
 						   msg="Profile picture successfully removed.")
 
@@ -779,8 +777,7 @@ def settings_delete_profile(v):
 def settings_delete_banner(v):
 
 	if v.bannerurl:
-		if '/images/' in v.bannerurl: os.remove('/images/' + v.bannerurl.split('/images/')[1])
-		v.bannerurl = None
+		v.deletebanner()
 		g.db.add(v)
 		g.db.commit()
 

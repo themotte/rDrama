@@ -47,12 +47,12 @@
 			<ul class="navbar-nav ml-auto d-none d-md-flex">
 
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/random/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Random post"><i class="fas fa-random"></i></a>
+					<a class="nav-link" href="/random/" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Random post"><i class="fas fa-random"></i></a>
 				</li>
 
 				{% if v and v.admin_level > 1 %}
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/admin/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Admin tools"><i class="fas fa-crown{% if v.has_report_queue %} text-success{% endif %}"></i></a>
+					<a class="nav-link" href="/admin/" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Admin tools"><i class="fas fa-crown{% if v.has_report_queue %} text-success{% endif %}"></i></a>
 				</li>
 				{% endif %}
 
@@ -61,31 +61,31 @@
 				{% if v.notifications_count %}
 
 				<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-					<a class="nav-link position-relative" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Notifications"><i class="fas fa-bell text-danger"></i><span class="notif-count ml-1" style="padding-left: 4.5px;">{{v.notifications_count}}</span></a>
+					<a class="nav-link position-relative" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Notifications"><i class="fas fa-bell text-danger"></i><span class="notif-count ml-1" style="padding-left: 4.5px;">{{v.notifications_count}}</span></a>
 				</li>
 
 				{% else %}
 
 				<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-					<a class="nav-link" href="/notifications" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Notifications"><i class="fas fa-bell"></i></a>
+					<a class="nav-link" href="/notifications" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Notifications"><i class="fas fa-bell"></i></a>
 				</li>
 
 				{% endif %}
 
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/submit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Create post"><i class="fas fa-feather-alt"></i></a>
+					<a class="nav-link" href="/submit" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Create post"><i class="fas fa-feather-alt"></i></a>
 				</li>
 
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/comments" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Comments"><i class="fas fa-comment-dots"></i></a>
+					<a class="nav-link" href="/comments" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Comments"><i class="fas fa-comment-dots"></i></a>
 				</li>
 
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/leaderboard" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Users"><i class="fas fa-trophy"></i></a>
+					<a class="nav-link" href="/leaderboard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Users"><i class="fas fa-trophy"></i></a>
 				</li>
 
 				<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-					<a class="nav-link" href="/shop" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shop"><i class="fas fa-store"></i></a>
+					<a class="nav-link" href="/shop" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Shop"><i class="fas fa-store"></i></a>
 				</li>
 
 				<li class="nav-item d-flex align-items-center justify-content-center text-center">
@@ -96,8 +96,8 @@
 							<div><img loading="lazy" src="{{v.profile_url}}" class="profile-pic-35"></div>
 							<div class="text-left pl-2">
 								<div style="color: #{{v.namecolor}}" class="text-small font-weight-bold {% if v.patron %}patron{% endif %}"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}};"{% endif %}>{{v.username}}</span></div>
-								<div class="text-small-extra text-primary"><img class="mr-1 ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" height="13" src="/assets/images/emojis/marseycoin.webp" title="" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}"><span id="user-coins-amount">{{v.coins}}</span> {{'COINS_NAME' | app_config}}</div>
-								{% if v.procoins %}<div class="text-small-extra text-primary"><img class="mr-1 ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" height="13" src="/assets/images/emojis/marseybux.webp" title="" data-bs-original-title="Marseybux" aria-label="Marseybux"><span>{{v.procoins}}</span> Marseybux</div>{% endif %}
+								<div class="text-small-extra text-primary"><img class="mr-1 ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" height="13" src="/assets/images/emojis/marseycoin.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}"><span id="user-coins-amount">{{v.coins}}</span> {{'COINS_NAME' | app_config}}</div>
+								{% if v.procoins %}<div class="text-small-extra text-primary"><img class="mr-1 ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" height="13" src="/assets/images/emojis/marseybux.webp" data-bs-original-title="Marseybux" aria-label="Marseybux"><span>{{v.procoins}}</span> Marseybux</div>{% endif %}
 							</div>
 						</div>
 					</a>

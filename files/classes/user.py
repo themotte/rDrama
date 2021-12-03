@@ -15,7 +15,7 @@ from .clients import *
 from files.__main__ import Base, cache
 from files.helpers.security import *
 import random
-from os import environ, remove
+from os import environ, remove, path
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
@@ -466,18 +466,29 @@ class User(Base):
 
 		return data
 
-	def ban(self, admin=None, reason=None, days=0):
+	def deletepfp(self):
+		if self.highres and '/images/' in self.highres:
+			image = '/images/' + self.highres.split('/images/')[1]
+			if path.exists(image): remove(image)
+		if self.profileurl and '/images/' in self.profileurl:
+			image = '/images/' + self.profileurl.split('/images/')[1]
+			if path.exists(image): remove(image)
+		self.highres = None
+		self.profileurl = None
 
+	def deletebanner(self):
+		if self.bannerurl and '/images/' in self.bannerurl:
+			image = '/images/' + self.bannerurl.split('/images/')[1]
+			if path.exists(image): remove(image)
+		self.bannerurl = None
+
+	def ban(self, admin=None, reason=None, days=0):
 		if days > 0:
 			ban_time = int(time.time()) + (days * 86400)
 			self.unban_utc = ban_time
 		else:
-			if self.highres and '/images/' in self.highres: remove('/images/' + self.highres.split('/images/')[1])
-			if self.profileurl and '/images/' in self.profileurl: remove('/images/' + self.profileurl.split('/images/')[1])
-			if self.bannerurl and '/images/' in self.bannerurl: remove('/images/' + self.bannerurl.split('/images/')[1])
-
-			self.bannerurl = None
-			self.profileurl = None
+			self.deletepfp()
+			self.deletebanner()
 			if self.discord_id: remove_user(self)
 
 		self.is_banned = admin.id if admin else AUTOJANNY_ID
