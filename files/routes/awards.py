@@ -210,6 +210,33 @@ def shop(v):
 			"owned": 0,
 			"price": 50000
 		},
+		"snow": {
+			"kind": "snow",
+			"title": "Snow",
+			"description": "???",
+			"icon": "fas fa-snowflake",
+			"color": "text-gray",
+			"owned": 0,
+			"price": 300
+		},
+		"mistletoe": {
+			"kind": "mistletoe",
+			"title": "Mistletoe",
+			"description": "???",
+			"icon": "fas fa-mistletoe",
+			"color": "text-gray",
+			"owned": 0,
+			"price": 600
+		},
+		"mariah": {
+			"kind": "mariah",
+			"title": "Mariah",
+			"description": "???",
+			"icon": "fas fa-music",
+			"color": "text-gray",
+			"owned": 0,
+			"price": 800
+		},
 	}
 
 	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all():
@@ -379,6 +406,30 @@ def buy(v, award):
 			"icon": "fas fa-eye",
 			"color": "text-gold",
 			"price": 50000
+		},
+		"snow": {
+			"kind": "snow",
+			"title": "Snow",
+			"description": "???",
+			"icon": "fas fa-snowflake",
+			"color": "text-gray",
+			"price": 300
+		},
+		"mistletoe": {
+			"kind": "mistletoe",
+			"title": "Mistletoe",
+			"description": "???",
+			"icon": "fas fa-mistletoe",
+			"color": "text-gray",
+			"price": 600
+		},
+		"mariah": {
+			"kind": "mariah",
+			"title": "Mariah",
+			"description": "???",
+			"icon": "fas fa-music",
+			"color": "text-gray",
+			"price": 800
 		},
 	}
 

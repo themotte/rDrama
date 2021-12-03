@@ -616,7 +616,30 @@ AWARDS = {
 		"color": "text-gold",
 		"price": 50000
 	},
-
+	"snow": {
+		"kind": "snow",
+		"title": "Snow",
+		"description": "???",
+		"icon": "fas fa-snowflake",
+		"color": "text-gray",
+		"price": 300
+	},
+	"mistletoe": {
+		"kind": "mistletoe",
+		"title": "Mistletoe",
+		"description": "???",
+		"icon": "fas fa-mistletoe",
+		"color": "text-gray",
+		"price": 600
+	},
+	"mariah": {
+		"kind": "mariah",
+		"title": "Mariah",
+		"description": "???",
+		"icon": "fas fa-music",
+		"color": "text-gray",
+		"price": 800
+	},
 }
 
 AWARDS2 = {
@@ -763,6 +786,30 @@ AWARDS2 = {
 		"icon": "fas fa-eye",
 		"color": "text-gold",
 		"price": 50000
+	},
+	"snow": {
+		"kind": "snow",
+		"title": "Snow",
+		"description": "???",
+		"icon": "fas fa-snowflake",
+		"color": "text-gray",
+		"price": 300
+	},
+	"mistletoe": {
+		"kind": "mistletoe",
+		"title": "Mistletoe",
+		"description": "???",
+		"icon": "fas fa-mistletoe",
+		"color": "text-gray",
+		"price": 600
+	},
+	"mariah": {
+		"kind": "mariah",
+		"title": "Mariah",
+		"description": "???",
+		"icon": "fas fa-music",
+		"color": "text-gray",
+		"price": 800
 	},
 }
 
