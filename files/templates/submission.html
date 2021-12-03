@@ -13,8 +13,6 @@
 
 {% block title %}
 
-{% include "/submission/SubmissionAwards.html" %}
-
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 <script src="/assets/js/new_comments_count.js?v=53"></script>
 
@@ -697,6 +695,8 @@
 	{% endif %}
 {% endblock %}
 
+{% include "/submission/SubmissionAwards.html" %}
+
 {% block scripts %}
 	<script>
 		(() => {
@@ -728,4 +728,6 @@
 				{%endif%}
 			})()
 		</script>
+
+		<!-- {% include "/assets/js/christmas/awards.js" %} -->
 {% endblock %}
