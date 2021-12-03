@@ -51,14 +51,14 @@
 
 {% block content %}
 
-<div class="col-span-full py-4">
+<div class="col-span-full px-4 md:px-0 py-4">
 	<p class="text-gray-500 text-sm">
 		Advanced search parameters (with examples): "author:quadnarca", "domain:reddit.com", "over18:true"
 	</p>
 	<!-- <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div> -->
 </div>
 
-<div class="col-span-full">
+<div class="col-span-full px-4 md:px-0">
 	<div class="posts" id="posts">
 		{% block listing_template %}
 		{% include "submission_listing.html" %}
@@ -68,7 +68,7 @@
 {% endblock %}
 
 {% block pagenav %}
-<nav aria-label="Page navigation">
+<nav aria-label="Page navigation" class="px-4 md:px-0">
 	<ul class="pagination pagination-sm mb-0">
 		<li class="page-item{% if page==1 %} disabled{% endif %}">
 
