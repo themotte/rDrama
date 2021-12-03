@@ -10,11 +10,11 @@
 			</span>
 		</button>
 		{% if environ.get('DISABLE_DOWNVOTES') != '1' %}
-		<button v-cloak @click="store.vote(-1)" class="group flex justify-between w-full px-4 py-3 bg-gradient-to-t hover:from-pink-700 hover:to-pink-800 rounded-b-md text-shadow-t shadow-inset-t-white-10 text-base font-medium text-gray-300 active:text-pink-500 active:shadow-inner active:outline-none" v-bind:class="[[ store.voteType === -1 ? 'from-pink-800 to-pink-700' : 'from-gray-800 to-gray-700']]">
+		<button v-cloak @click="store.vote(-1)" class="group flex justify-between w-full px-4 py-3 bg-gradient-to-t hover:from-red-700 hover:to-red-800 rounded-b-md text-shadow-t shadow-inset-t-white-10 text-base font-medium text-gray-300 active:text-red-500 active:shadow-inner active:outline-none" v-bind:class="[[ store.voteType === -1 ? 'from-red-800 to-red-700' : 'from-gray-800 to-gray-700']]">
 			<span>
 				🐷 Haram
 			</span>
-			<span class="leading-none ml-3 px-2 py-1 border rounded text-sm font-bold group-hover:bg-pink-800 group-hover:border-pink-800" style="border-top-color: rgba(0, 0, 0, 0.07);" v-bind:class="[[ store.voteType === -1 ? 'bg-pink-800 border-pink-800' : 'border-gray-800 bg-gray-800']]">
+			<span class="leading-none ml-3 px-2 py-1 border rounded text-sm font-bold group-hover:bg-red-800 group-hover:border-red-800" style="border-top-color: rgba(0, 0, 0, 0.07);" v-bind:class="[[ store.voteType === -1 ? 'bg-red-800 border-red-800' : 'border-gray-800 bg-gray-800']]">
 				[[ store.voteType === -1 ? store.downs + 1 : store.downs ]]
 			</span>
 		</button>
@@ -29,7 +29,7 @@
 		<!-- Give awards if none -->
 		{% if not p.awards %}
 		<p class="text-sm text-gray-500">No awards earned yet...</p>
-		<button class="text-sm text-pink-600 hover:text-pink-500" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')">
+		<button class="text-sm text-red-600 hover:text-red-500" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')">
 				Give award
 		</button>
 		{% endif %}
@@ -53,7 +53,7 @@
 			{% if p.stickied %}
 			<li>
 				<i id="pinned-{{p.id}}" class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom"></i>
-				<span class="font-heading text-xs text-pink-500">
+				<span class="font-heading text-xs text-red-500">
 					Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
 				</span>
 			</li>
@@ -112,12 +112,12 @@
 			</li>
 			<li>
 				<p class="text-sm">
-					<strong class="text-pink-600">{{ ups + downs }}</strong> {{ 'vote' if ups + downs == 1 else 'votes' }} on this post
+					<strong class="text-red-600">{{ ups + downs }}</strong> {{ 'vote' if ups + downs == 1 else 'votes' }} on this post
 				</p>
 			</li>
 			<li>
 				<p class="text-sm">
-					<strong class="text-pink-600">{{ p.views }} {{ 'member' if p.views == 1 else 'members' }}</strong>  following this post
+					<strong class="text-red-600">{{ p.views }} {{ 'member' if p.views == 1 else 'members' }}</strong>  following this post
 				</p>
 			</li>
 		</ul>
