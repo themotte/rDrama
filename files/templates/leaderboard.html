@@ -7,7 +7,7 @@
 		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
 		<div class="relative col-span-full flex items-center">
 			<div>
-				<h1 class="font-bold text-xl font-heading leading-normal">
+				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
 					Leaderboards
 				</h1>
 				<small class="block text-gray-700 leading-normal">
@@ -61,7 +61,7 @@
 		{% for user in users1 %}
 		<div class="flex items-center border-b last:border-b-none border-gray-300 shadow-inset-t-white-05 px-5 py-3 {% if v.username == user.username %}text-red-900 text-shadow-light bg-red-600{% elif users1.index(user) % 2 != 0 %}bg-gray-200{% endif %}">
 			<!-- Rank -->
-			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
+			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 mb-0 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
 				{{users1.index(user)+1}}
 			</h2>
 			<div class="relative">
@@ -100,7 +100,7 @@
 		{% for user in users7 %}
 		<div class="flex items-center border-b last:border-b-none border-gray-300 shadow-inset-t-white-05 px-5 py-3 {% if v.username == user.username %}text-red-900 text-shadow-light bg-red-600{% elif users7.index(user) % 2 != 0 %}bg-gray-200{% endif %}">
 			<!-- Rank -->
-			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
+			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 mb-0 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
 				{{users7.index(user)+1}}
 			</h2>
 			<div class="relative">
@@ -139,7 +139,7 @@
 		{% for user in users2 %}
 		<div class="flex items-center border-b last:border-b-none border-gray-300 shadow-inset-t-white-05 px-5 py-3 {% if v.username == user.username %}text-red-900 text-shadow-light bg-red-600{% elif users2.index(user) % 2 != 0 %}bg-gray-200{% endif %}">
 			<!-- Rank -->
-			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
+			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 mb-0 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
 				{{users2.index(user)+1}}
 			</h2>
 			<div class="relative">
@@ -178,7 +178,7 @@
 		{% for user in users3 %}
 		<div class="flex items-center border-b last:border-b-none border-gray-300 shadow-inset-t-white-05 px-5 py-3 {% if v.username == user.username %}text-red-900 text-shadow-light bg-red-600{% elif users3.index(user) % 2 != 0 %}bg-gray-200{% endif %}">
 			<!-- Rank -->
-			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
+			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 mb-0 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
 				{{users3.index(user)+1}}
 			</h2>
 			<div class="relative">
@@ -217,7 +217,7 @@
 		{% for user in users4 %}
 		<div class="flex items-center border-b last:border-b-none border-gray-300 shadow-inset-t-white-05 px-5 py-3 {% if v.username == user.username %}text-red-900 text-shadow-light bg-red-600{% elif users4.index(user) % 2 != 0 %}bg-gray-200{% endif %}">
 			<!-- Rank -->
-			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
+			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 mb-0 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
 				{{users4.index(user)+1}}
 			</h2>
 			<div class="relative">
@@ -256,7 +256,7 @@
 		{% for user in users5 %}
 		<div class="flex items-center border-b last:border-b-none border-gray-300 shadow-inset-t-white-05 px-5 py-3 {% if v.username == user.username %}text-red-900 text-shadow-light bg-red-600{% elif users5.index(user) % 2 != 0 %}bg-gray-200{% endif %}">
 			<!-- Rank -->
-			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
+			<h2 class="text-2xl font-bold font-heading text-center w-16 -ml-5 mb-0 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
 				{{users5.index(user)+1}}
 			</h2>
 			<div class="relative">
