@@ -489,11 +489,20 @@ def gumroad(v):
 
 	data = {
 		'access_token': GUMROAD_TOKEN,
-		'email': v.email
 	}
-	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"]
 
-	if len(response) == 0: return {"error": "Email not found"}, 404
+	response = [x['email'] for x in requests.get('https://api.gumroad.com/v2/products/tfcvri/subscribers', data=data, timeout=5).json()["subscribers"]]
+	emails = []
+
+	for email in response:
+		if email.endswith("@gmail.com"):
+			email=email.split('@')[0]
+			email=email.split('+')[0]
+			email=email.replace('.','').replace('_','')
+			email=f"{email}@gmail.com"
+		emails.append(email)
+
+	if v.email not in emails: return {"error": "Email not found"}, 404
 
 	response = response[0]
 	tier = tiers[response["variants_and_quantity"]]
