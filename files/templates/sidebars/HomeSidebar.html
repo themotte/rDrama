@@ -8,7 +8,13 @@
 		{% else %}
 		<a class="btn btn-gray text-center w-full" href="/login?redirect={{request.path | urlencode}}">
 			Login to post
-			<i class="fas fa-user fa-fw fa-sm ml-1"></i>
+			<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
+		</a>
+		<small class="text-gray-500 font-semibold text-shadow text-center">
+			or
+		</small>
+		<a class="px-4 py-2 text-gray-700 hover:text-gray-900" href="/signup?redirect={{request.path | urlencode}}">
+			Create an account
 		</a>
 		{% endif %}
 	</div>
