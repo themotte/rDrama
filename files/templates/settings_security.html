@@ -4,17 +4,6 @@
 
 {% block content %}
 
-<script>
-	window.addEventListener("load",function(event) {
-		document.getElementById('new_email').addEventListener('input', function () {
-			document.getElementById("email-password").classList.remove("hidden");
-			document.getElementById("email-password-label").classList.remove("hidden");
-			document.getElementById("emailpasswordRequired").classList.remove("hidden");
-		});
-	});
-	const twoStepModal = new bootstrap.Modal(document.getElementById('2faModal'))
-</script>
-
 		<div class="row">
 
 			<div class="col col-lg-8">
@@ -271,4 +260,17 @@
 			</div>
 					</div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+	window.addEventListener("load",function(event) {
+		document.getElementById('new_email').addEventListener('input', function () {
+			document.getElementById("email-password").classList.remove("hidden");
+			document.getElementById("email-password-label").classList.remove("hidden");
+			document.getElementById("emailpasswordRequired").classList.remove("hidden");
+		});
+	});
+	const twoStepModal = new bootstrap.Modal(document.getElementById('2faModal'))
+</script>
 {% endblock %}
