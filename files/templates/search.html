@@ -17,17 +17,17 @@
 			<div class="flex space-x-3 divide-x divide-gray-300 text-xs">
 				<ul class="flex items-center space-x-3 leading-normal mb-0">
 					<li>
-						<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-700' }}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
+						<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-500' }}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
 							Posts
 						</a>
 					</li>
 					<li>
-						<a class="{{ 'font-bold text-red-600' if '/comments/' in request.path else 'text-gray-700' }}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
+						<a class="{{ 'font-bold text-red-600' if '/comments/' in request.path else 'text-gray-500' }}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
 							Comments
 						</a>
 					</li>
 					<li>
-						<a class="{{ 'font-bold text-red-600' if '/users/' in request.path else 'text-gray-700' }}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
+						<a class="{{ 'font-bold text-red-600' if '/users/' in request.path else 'text-gray-500' }}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
 							Users
 						</a>
 					</li>

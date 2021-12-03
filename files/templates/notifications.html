@@ -19,7 +19,7 @@
 						</a>
 					</li>
 					<li>
-						<a class="{{ 'font-bold text-red-600' if '/notifications?posts=true' in request.full_path else 'text-gray-700' }}" href="/notifications?posts=true">
+						<a class="{{ 'font-bold text-red-600' if '/notifications?posts=true' in request.full_path else 'text-gray-500' }}" href="/notifications?posts=true">
 							Posts
 							{% if v.post_notifications_count %}
 							<span class="text-gray-600">({{v.post_notifications_count}})</span>
@@ -27,13 +27,13 @@
 						</a>
 					</li>
 					<li>
-						<a class="{{ 'font-bold text-red-600' if '/notifications?messages=true' in request.full_path else 'text-gray-700' }}" href="/notifications?messages=true">
+						<a class="{{ 'font-bold text-red-600' if '/notifications?messages=true' in request.full_path else 'text-gray-500' }}" href="/notifications?messages=true">
 							Messages
 						</a>
 					</li>
 					{% if v.admin_level > 1 %}
 					<li>
-						<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-700' }}" href="/notifications?modmail=true">
+						<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
 							Mod Mail
 						</a>
 					</li>
