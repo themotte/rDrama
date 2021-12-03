@@ -100,10 +100,10 @@
         {% endif %}
 
         {% if not v %}
-        <a class="btn btn-red" href="/login?redirect={{request.path | urlencode}}">
+        <a class="btn btn-gray" href="/login?redirect={{request.path | urlencode}}">
           Login
         </a>
-        <a class="btn border border-red-600 hover:bg-gradient-to-t hover:from-red-600 hover:to-red-700 hover:border-red-900 text-red-600 hover:text-white focus:text-white;" href="/signup?redirect={{request.path | urlencode}}">
+        <a class="btn hover:bg-gradient-to-t hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-500 focus:text-gray-400" href="/signup?redirect={{request.path | urlencode}}">
           Sign up
         </a>
         {% endif %}
