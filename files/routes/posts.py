@@ -7,7 +7,7 @@ from files.helpers.sanitize import *
 from files.helpers.filters import *
 from files.helpers.markdown import *
 from files.helpers.session import *
-from files.helpers.alerts import send_notification
+from files.helpers.alerts import send_notification, NOTIFY_USERS
 from files.helpers.discord import send_message
 from files.helpers.const import *
 from files.classes import *
@@ -55,23 +55,12 @@ def publish(pid, v):
 	post.private = False
 	g.db.add(post)
 	
-	notify_users = set()
+	notify_users = NOTIFY_USERS(f'{post.body_html}{post.title}', v.id)
 	soup = BeautifulSoup(post.body_html, features="html.parser")
 	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 		username = mention["href"].split("@")[1]
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
-
-	if request.host == 'pcmemes.net':
-		if 'kippy' in f'{post.body_html}{post.title}'.lower() and 1592 not in notify_users: notify_users.add(1592)
-	if request.host in ['rdrama.net','pcmemes.net']:
-		if ('aevan' in f'{post.body_html}{post.title}'.lower() or 'avean' in f'{post.body_html}{post.title}'.lower()) and 1 not in notify_users: notify_users.add(1)
-	if request.host == 'rdrama.net':
-		if ('joan' in f'{post.body_html}{post.title}'.lower() or 'pewkie' in f'{post.body_html}{post.title}'.lower()) and 28 not in notify_users: notify_users.add(28)
-		if 'carp' in f'{post.body_html}{post.title}'.lower() and 995 not in notify_users:
-			notify_users.add(995)
-			notify_users.add(541)
-		if ('idio3' in f'{post.body_html}{post.title}'.lower() or 'idio ' in f'{post.body_html}{post.title}'.lower()) and 30 not in notify_users: notify_users.add(30)
 
 	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{post.permalink}")
 
@@ -125,7 +114,7 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if post.club and not (v and v.paid_dues) or post.private and not (v and (v.id == post.author_id or v.admin_level > 1)): abort(403)
+	if post.club and not (v and (v.paid_dues or v.id == post.author_id)) or post.private and not (v and v.id == post.author_id): abort(403)
 
 
 	if v:
@@ -371,7 +360,7 @@ def edit_post(pid, v):
 			g.db.add(n)
 		
 
-		notify_users = set()
+		notify_users = NOTIFY_USERS(f'{body_html}{title}', v.id)
 		
 		soup = BeautifulSoup(body_html, features="html.parser")
 		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
@@ -380,17 +369,6 @@ def edit_post(pid, v):
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
 		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
-
-		if request.host == 'pcmemes.net':
-			if 'kippy' in f'{body_html}{title}'.lower() and 1592 not in notify_users: notify_users.add(1592)
-		if request.host in ['rdrama.net','pcmemes.net']:
-			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
-		if request.host == 'rdrama.net':
-			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
-			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
-				notify_users.add(995)
-				notify_users.add(541)
-			if ('idio3' in f'{body_html}{title}'.lower() or 'idio ' in f'{body_html}{title}'.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users: send_notification(x, message)
 
@@ -868,23 +846,12 @@ def submit_post(v):
 
 	if not new_post.private:
 
-		notify_users = set()
+		notify_users = NOTIFY_USERS(f'{body_html}{title}', v.id)
 		soup = BeautifulSoup(body_html, features="html.parser")
 		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 			username = mention["href"].split("@")[1]
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
-
-		if request.host == 'pcmemes.net':
-			if 'kippy' in f'{body_html}{title}'.lower() and 1592 not in notify_users: notify_users.add(1592)
-		if request.host in ['rdrama.net','pcmemes.net']:
-			if ('aevan' in f'{body_html}{title}'.lower() or 'avean' in f'{body_html}{title}'.lower()) and 1 not in notify_users: notify_users.add(1)
-		if request.host == 'rdrama.net':
-			if ('joan' in f'{body_html}{title}'.lower() or 'pewkie' in f'{body_html}{title}'.lower()) and 28 not in notify_users: notify_users.add(28)
-			if 'carp' in f'{body_html}{title}'.lower() and 995 not in notify_users:
-				notify_users.add(995)
-				notify_users.add(541)
-			if ('idio3' in f'{body_html}{title}'.lower() or 'idio ' in f'{body_html}{title}'.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
 		

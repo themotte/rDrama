@@ -45,7 +45,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 			g.db.add(notif)
 			g.db.commit()
 
-	if comment.post and comment.post.club and not (v and v.paid_dues): abort(403)
+	if comment.post and comment.post.club and not (v and (v.paid_dues or v.id in [post.author_id, comment.post.author_id])): abort(403)
 
 	if not comment.parent_submission and not (v and (comment.author.id == v.id or comment.sentto == v.id)) and not (v and v.admin_level > 1) : abort(403)
 	
@@ -142,7 +142,7 @@ def api_comment(v):
 	parent_fullname = request.values.get("parent_fullname").strip()
 
 	parent_post = get_post(parent_submission, v=v)
-	if parent_post.club and not (v and v.paid_dues): abort(403)
+	if parent_post.club and not (v and (v.paid_dues or v.id == parent_post.author_id)): abort(403)
 
 	if parent_fullname.startswith("t2_"):
 		parent = parent_post
@@ -529,7 +529,7 @@ def api_comment(v):
 
 
 	if not v.shadowbanned:
-		notify_users = set()
+		notify_users = NOTIFY_USERS(body_html, v.id)
 		
 		for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 		
@@ -546,17 +546,6 @@ def api_comment(v):
 			if user:
 				if v.any_block_exists(user): continue
 				if user.id != v.id: notify_users.add(user.id)
-
-		if request.host == 'pcmemes.net':
-			if 'kippy' in body_html.lower() and 1592 not in notify_users: notify_users.add(1592)
-		if request.host in ['rdrama.net','pcmemes.net']:
-			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users: notify_users.add(1)
-		if request.host == 'rdrama.net':
-			if ('joan' in body_html.lower() or 'pewkie' in body_html.lower()) and 28 not in notify_users: notify_users.add(28)
-			if 'carp' in body_html.lower() and 995 not in notify_users:
-				notify_users.add(995)
-				notify_users.add(541)
-			if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
@@ -805,7 +794,7 @@ def edit_comment(cid, v):
 
 		g.db.flush()
 		
-		notify_users = set()
+		notify_users = NOTIFY_USERS(body_html, v.id)
 		soup = BeautifulSoup(body_html, features="html.parser")
 		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
 		
@@ -818,17 +807,6 @@ def edit_comment(cid, v):
 				if user:
 					if v.any_block_exists(user): continue
 					if user.id != v.id: notify_users.add(user.id)
-
-		if request.host == 'pcmemes.net':
-			if 'kippy' in body_html.lower() and 1592 not in notify_users: notify_users.add(1592)
-		if request.host in ['rdrama.net','pcmemes.net']:
-			if ('aevan' in body_html.lower() or 'avean' in body_html.lower()) and 1 not in notify_users: notify_users.add(1)
-		if request.host == 'rdrama.net':
-			if ('joan' in body_html.lower() or 'pewkie' in body_html.lower()) and 28 not in notify_users: notify_users.add(28)
-			if 'carp' in body_html.lower() and 995 not in notify_users:
-				notify_users.add(995)
-				notify_users.add(541)
-			if ('idio3' in body_html.lower() or 'idio ' in body_html.lower()) and 30 not in notify_users: notify_users.add(30)
 
 		for x in notify_users:
 			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).first()

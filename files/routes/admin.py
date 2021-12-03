@@ -182,7 +182,7 @@ def monthly(v):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		for u in g.db.query(User).filter(User.patron > 0).all():
-			if u.patron == 1: procoins = 2000
+			if u.patron == 1: procoins = 2500
 			elif u.patron == 2: procoins = 5000
 			elif u.patron == 3: procoins = 10000
 			elif u.patron == 4: procoins = 25000

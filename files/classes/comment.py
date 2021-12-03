@@ -129,9 +129,6 @@ class Comment(Base):
 	@lazy
 	def edited_string(self):
 
-		if not self.edited_utc:
-			return "never"
-
 		age = int(time.time()) - self.edited_utc
 
 		if age < 60:
@@ -148,12 +145,15 @@ class Comment(Base):
 
 		now = time.gmtime()
 		ctd = time.gmtime(self.edited_utc)
+
 		months = now.tm_mon - ctd.tm_mon + 12 * (now.tm_year - ctd.tm_year)
+		if now.tm_mday < ctd.tm_mday:
+			months -= 1
 
 		if months < 12:
 			return f"{months}mo ago"
 		else:
-			years = now.tm_year - ctd.tm_year
+			years = int(months / 12)
 			return f"{years}yr ago"
 
 	@property
@@ -305,7 +305,7 @@ class Comment(Base):
 		return data
 
 	def realbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues) and not (v and v.id == self.author_id): return f"<p>{cc} ONLY</p>"
+		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{cc} ONLY</p>"
 
 		body = self.body_html
 
@@ -335,14 +335,14 @@ class Comment(Base):
 			maxupvotes = min(ti, 31)
 			rand = randint(0, maxupvotes)
 			if self.upvotes < rand:
-				self.upvotes += randint(0, 5)
+				self.upvotes += randint(0, 3)
 				g.db.add(self)
 				g.db.commit()
 
 		return body
 
 	def plainbody(self, v):
-		if self.post and self.post.club and not (v and v.paid_dues) and not (v and v.id == self.author_id): return f"<p>{cc} ONLY</p>"
+		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{cc} ONLY</p>"
 
 		body = self.body
 
