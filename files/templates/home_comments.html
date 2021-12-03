@@ -33,7 +33,7 @@
 		<ul class="flex flex-wrap items-center mb-4">
 			{% if page>1 %}
 			<li>
-				<a class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-300" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
+				<a class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
 					Prev
 				</a>
 			</li>
@@ -42,7 +42,7 @@
 			{% endif %}
 			{% if next_exists %}
 			<li class="page-item">
-				<a class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-300" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
+				<a class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
 			</li>
 			{% else %}
 			<li><span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Next</span></li>
