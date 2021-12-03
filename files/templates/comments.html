@@ -195,7 +195,7 @@
 
 						<div class="user-info">
 							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
-							{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
+							{% if standalone and c.over_18 %}<span class="badge badge-red">+18</span>{% endif %}
 							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
 						</div>
 
