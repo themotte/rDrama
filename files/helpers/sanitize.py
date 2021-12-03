@@ -184,8 +184,8 @@ def sanitize(sanitized, noimages=False):
 			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
 				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="http://{site}/assets/images/emojis/{remoji}.webp" >', new)
 
-				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-				else: session["favorite_emojis"][emoji] = 1
+				if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
+				else: session["favorite_emojis"][remoji] = 1
 					
 		sanitized = sanitized.replace(old, new)
 
