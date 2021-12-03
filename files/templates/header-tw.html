@@ -70,21 +70,18 @@
         </div>
       </div>
       <div class="absolute inset-y-0 right-0 flex items-center space-x-3 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <!-- Logged in -->
         {% if v %}
         <!-- Profile dropdown -->
         <div class="ml-3 relative hidden sm:block">
           {% include "/dropdowns/NavbarProfile.html" %}
         </div>
-        {% endif %}
-
         <!-- Post Creation -->
         <a href="{{ '/submit' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">Submit post</span>
           <i class="fas fa-plus fa-fw"></i>
         </a>
-
         <!-- Notifications -->
-        {% if v %}
         <a href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" class="block bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">View notifications</span>
           <div class="relative">
@@ -97,12 +94,13 @@
             {% endif %}
           </div>
         </a>
-        {% endif %}
-
-        {% if not v %}
+        <!-- Not logged in -->
+        {% else %}
+        <!-- Login button -->
         <a class="btn btn-gray" href="/login?redirect={{request.path | urlencode}}">
           Login
         </a>
+        <!-- Register button -->
         <a class="btn hover:bg-gradient-to-t hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-500 hover:text-gray-700 focus:text-gray-900" href="/signup?redirect={{request.path | urlencode}}">
           Sign up
         </a>
