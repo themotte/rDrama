@@ -4,8 +4,6 @@
 <title>Shop</title>
 {% endblock %}
 
-{% block pagetype %}message{% endblock %}
-
 {% block subHeader %}
 <div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
 		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
@@ -139,7 +137,13 @@
 </div>
 {% endblock %}
 
+{% block modals %}
+<div class="frost"></div>
+{% include '/awards/Christmas/Snow.html' %}
+{% endblock %}
+
 {% block scripts %}
+<script defer src="/assets/js/christmas/snow.js?v=1"></script>
 <style>
 	@media (max-width: 768px) {
 		.table th {
