@@ -447,7 +447,7 @@
 <script>
 	window.addEventListener("load",function(event) {
 		(() => {
-			{% if (not v or v.highlightcomments) %}
+			{% if (not v) %}
 				showNewCommentCounts('{{p.id}}', {{p.comment_count}})
 			{% endif %}
 
