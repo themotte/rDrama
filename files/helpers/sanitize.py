@@ -172,13 +172,13 @@ def sanitize(sanitized, noimages=False):
 		for i in re.finditer('(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("!"):
-				classes = 'class="bigemoji mirrored lozad" '
+				classes = 'class="mirrored lozad" '
 				remoji = emoji[1:]
 			elif emoji.startswith("#"):
 				classes = ""
 				remoji = emoji[1:]
 			else:
-				classes = 'class="bigemoji lozad" '
+				classes = 'class="lozad" '
 				remoji = emoji
 
 			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
