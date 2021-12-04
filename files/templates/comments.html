@@ -125,9 +125,9 @@
 
 <div style="display:none" id="popover-{{c.id}}">
 	<div class="popover-user-profile" role="tooltip">
-	<img class="w-100 h-64 object-cover" src="{{c.author.banner_url}}">
+	<img class="w-100 h-64 object-cover lozad" src="{{c.author.banner_url}}">
 	<div class="d-flex align-items-end px-3 mt-n6 mb-3">
-		<img class="avatar-72 rounded img-thumbnail shadow-sm" src="{{c.author.profile_url}}">
+		<img class="avatar-72 rounded img-thumbnail shadow-sm lozad" src="{{c.author.profile_url}}">
 		<div class="px-3 text-truncate">
 		<h5 class="text-truncate text-black">{{c.author.username}}</h5>
 		</div>
@@ -139,9 +139,11 @@
 	<div class="ml-3 mr-3 my-2">
 		{% for b in c.author.badges %}
 			{% if b.url %}
-				<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
+				<a rel="nofollow noopener noreferrer" href="{{b.url}}">
+					<img width="32" loading="lazy" class="lozad" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{b.name}} - {{b.text}}">
+				</a>
 			{% else %}
-				<img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{b.name}} - {{b.text}}">
+				<img width="32" loading="lazy" class="lozad" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{b.name}} - {{b.text}}">
 			{% endif %}
 		{% endfor %}
 	</div>
