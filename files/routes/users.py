@@ -346,6 +346,8 @@ def message2(v, username):
 
 	message = request.values.get("message", "").strip()[:1000].strip()
 
+	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
+
 	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
 
 	text_html = Renderer().render(mistletoe.Document(message))
@@ -401,6 +403,8 @@ def message2(v, username):
 def messagereply(v):
 
 	message = request.values.get("body", "").strip()[:1000].strip()
+
+	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
 
 	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
 
