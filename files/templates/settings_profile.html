@@ -190,7 +190,7 @@
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Profile Anthem</h2>
 					<form action="/settings/song_change" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<div class="w-44">
+						<div class="w-full md:w-80">
 							<input type="text" name="song" class="form-input" value="{% if v.song %}https://youtu.be/{{v.song}}{% endif %}" placeholder='Enter a youtube video link here'>
 						</div>
 						<small class="block mt-2 text-gray-400">Must be a youtube video link</small>
@@ -207,7 +207,7 @@
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Username Color</h2>
 					<form action="/settings/namecolor" id="color-code-form" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<div class="w-44">
+						<div class="w-full md:w-44">
 							<input class="form-input" type="text" name="color" id="color-code" maxlength="6" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
 						</div>
 						<div class="mt-4">
