@@ -79,12 +79,15 @@
 			</li>
 			<li>
 				<p class="text-sm">
-					<strong class="text-red-600">{{ ups + downs }}</strong> {{ 'vote' if ups + downs == 1 else 'votes' }} on this post
+					<a href="/votes?link={{p.fullname}}" class="font-bold text-red-600 hover:text-red-600">
+						{{ ups + downs }}
+					</a>
+					{{ 'vote' if ups + downs == 1 else 'votes' }} on this post
 				</p>
 			</li>
 			<li>
 				<p class="text-sm">
-					<strong class="text-red-600">{{ p.views }} {{ 'member' if p.views == 1 else 'members' }}</strong>  following this post
+					<strong>{{ p.awards.length }} {{ 'award' if p.awards.length == 1 else 'awards' }}</strong> gifted
 				</p>
 			</li>
 		</ul>
