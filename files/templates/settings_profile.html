@@ -205,7 +205,7 @@
 					<h2 class="font-bold text-lg font-heading leading-normal mb-2">Username Color</h2>
 					<form action="/settings/namecolor" id="color-code-form" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<input class="block rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" type="text" name="color" id="color-code" maxlength="6" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
+						<input class="form-input" type="text" name="color" id="color-code" maxlength="6" value="{% if v.namecolor %}{{v.namecolor}}{% endif %}">
 						<div class="mt-4">
 							<input class="ml-auto btn btn-gray" type="submit" value="Change username color">
 						</div>
