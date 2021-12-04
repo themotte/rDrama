@@ -225,6 +225,7 @@ def shop(v):
 			"description": "???",
 			"icon": "fas fa-candy-cane",
 			"color": "text-gray",
+			"owned": 0,
 			"price": 500
 		},
 		"mistletoe": {
