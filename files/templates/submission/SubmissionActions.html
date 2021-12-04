@@ -55,24 +55,18 @@
 			<i class="fas fa-gift fa-fw mr-2"></i>Give Award
 		</button>
 	</li>
-	<li id="save-{{p.id}}" class="{% if p.id in v.saved_idlist() %}hidden{% endif %}">
-		<button class="hover:text-gray-400" onclick="post_toast2('/save_post/{{p.id}}','save-{{p.id}}','unsave-{{p.id}}')">
-			<i class="far fa-bookmark fa-fw mr-2"></i>Save
-		</button>
-	</li>
-	<li id="unsave-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}hidden{% endif %}">
-		<button class="hover:text-gray-400" onclick="post_toast2('/unsave_post/{{p.id}}','save-{{p.id}}','unsave-{{p.id}}')">
-			<i class="fas fa-bookmark fa-fw mr-2"></i>Unsave
-		</button>
-	</li>
 	{% endif %}
-
+	<!-- Does not require auth -->
 	<li>
 		<button class="copy-link" role="button" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}">
 			<i class="fas fa-link fa-fw mr-2"></i>Copy link
 		</button>
 	</li>
-
+	<li>
+		<a href="/votes?link={{p.fullname}}" class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700">
+			<i class="fas fa-heart fa-sm fa-fw mr-4"></i>Votes
+		</a>
+	</li>
 	<li>
 		<div class="dropdown">
 			<button type="button" id="dropdownPostActions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
@@ -91,13 +85,17 @@
 						<i class="fas fa-bell-slash fa-sm fa-fw mr-4"></i>Unsubscribe
 					</button>
 				</li>
-				{% endif %}
-				<!-- Does not require auth -->
-				<li>
-					<a href="/votes?link={{p.fullname}}" class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700">
-						<i class="fas fa-heart fa-sm fa-fw mr-4"></i>Votes
-					</a>
+				<li id="save-{{p.id}}" class="{% if p.id in v.saved_idlist() %}hidden{% endif %}">
+					<button class="hover:text-gray-400" onclick="post_toast2('/save_post/{{p.id}}','save-{{p.id}}','unsave-{{p.id}}')">
+						<i class="far fa-bookmark fa-fw mr-2"></i>Save
+					</button>
 				</li>
+				<li id="unsave-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}hidden{% endif %}">
+					<button class="hover:text-gray-400" onclick="post_toast2('/unsave_post/{{p.id}}','save-{{p.id}}','unsave-{{p.id}}')">
+						<i class="fas fa-bookmark fa-fw mr-2"></i>Unsave
+					</button>
+				</li>
+				{% endif %}
 				<!-- Requires author -->
 				{% if v and v.id==p.author_id %}
 				<li>
