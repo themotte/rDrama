@@ -18,7 +18,7 @@
 								<!-- Buttons -->
 								<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<label class="block px-4 py-2 bg-gradient-to-t from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+									<label class="btn btn-gray">
 										Change avatar
 										<input {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} type="file" accept="image/*" hidden name="profile" onchange="form.submit()">
 									</label>
@@ -54,7 +54,7 @@
 								<!-- Buttons -->
 								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<label class="block px-4 py-2 bg-gradient-to-t from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+									<label class="btn btn-gray">
 										Change banner
 										<input {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} type="file" accept="image/*" hidden name="banner" onchange="form.submit()">
 									</label>
