@@ -5,18 +5,17 @@
 {% extends "default.html" %}
 
 {% block subHeader %}
-<div class="max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t-md bg-gradient-to-t from-gray-800 to-gray-700 sub-header-shadow">
-	<div class="col-span-full flex items-center">
-		<div>
-			<h1 class="font-bold text-xl font-heading leading-normal">
-				Create a post
+	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="relative col-span-full flex items-center">
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Submit
 			</h1>
-			<small class="block mt-1 text-gray-400">
-				Share text, hyperlinks, or image macros with the community.
+			<small class="block text-gray-700">
+				Share drama with the community.
 			</small>
 		</div>
 	</div>
-</div>
 {% endblock %}
 
 {% block content %}
@@ -97,7 +96,7 @@
 					<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn">
 						<div id="emoji-reply-btn" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
 					</label>
-					
+
 					<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
 						<div id="filename-show-submit"><i class="far fa-image"></i></div>
 						<input id="file-upload-submit" type="file" name="file2" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-submit').innerHTML='image';" hidden>
