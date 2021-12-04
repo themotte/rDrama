@@ -115,5 +115,7 @@
 .badge-yellow {
 	@apply from-yellow-600 to-yellow-500 text-yellow-900;
 }
-
+.badge-blue {
+	@apply from-blue-600 to-blue-500 text-white;
+}
 
