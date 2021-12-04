@@ -7,13 +7,19 @@
 {% block subHeader %}
 	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
 		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
-		<div class="relative col-span-full">
-			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
-				Create post
-			</h1>
-			<small class="block text-gray-700">
-				Share drama with the community.
-			</small>
+		<div class="relative col-span-full flex items-center">
+			<div>
+				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+					Create post
+				</h1>
+				<small class="block text-gray-700">
+					Share drama with the community.
+				</small>
+			</div>
+			<div class="ml-auto">
+				{% if error %}<span class="text-danger mr-2">{{error}}</span>{% endif %}
+				<button class="btn btn-green" id="create_button" type="submit" disabled>Post</button>
+			</div>
 		</div>
 	</div>
 {% endblock %}
@@ -61,7 +67,7 @@
 
 		<!-- Attachment field section -->
 		<div class="flex flex-col">
-			<label for="file-upload" class="label text-black">
+			<label for="file" class="label text-black">
 				Image or Video
 				<span class="italic text-sm font-normal text-gray-500">(optional)</span>
 			</label>
@@ -127,9 +133,6 @@
 			Toggle preview
 		</div>
 		<div id="preview" class="my-3"></div>
-
-		{% if error %}<span class="text-danger mr-2">{{error}}</span>{% endif %}
-		<button class="btn btn-green" id="create_button" type="submit" disabled>Post</button>
 	</form>
 
 </div>
