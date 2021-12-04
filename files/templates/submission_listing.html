@@ -444,16 +444,8 @@
 <script defer src="/assets/js/popover.js?v=9"></script>
 <script defer src="/assets/js/submission_listing.js?v=2"></script>
 
-{% for p in listing %}
-<script>
+<script defer>
 	(() => {
-		const date = new Date({{p.created_utc*1000}});
-		document.getElementById('timestamp-{{p.id}}').title = date.toString();
-		{% if p.edited_utc %}
-			const dateEdited = new Date({{p.edited_utc*1000}});
-			document.getElementById('edited_timestamp-{{p.id}}').title = dateEdited.toString();
-		{% endif %}
-
 		{% if (not v or v.highlightcomments) %}
 			showNewCommentCounts('{{p.id}}', {{p.comment_count}})
 		{% endif %}
@@ -468,7 +460,6 @@
 		{%endif%}
 	})()
 </script>
-{% endfor %}
 
 <style>
 	.mod:before {
