@@ -419,6 +419,38 @@ BADGES = {
 }
 
 AWARDS = {
+	"snow": {
+		"kind": "snow",
+		"title": "Snow",
+		"description": "???",
+		"icon": "fas fa-snowflake",
+		"color": "text-gray",
+		"price": 300
+	},
+	"candycane": {
+		"kind": "candycane",
+		"title": "Candy Cane",
+		"description": "???",
+		"icon": "fas fa-candy-cane",
+		"color": "text-gray",
+		"price": 500
+	},
+	"mistletoe": {
+		"kind": "mistletoe",
+		"title": "Mistletoe",
+		"description": "???",
+		"icon": "fas fa-mistletoe",
+		"color": "text-gray",
+		"price": 600
+	},
+	"mariah": {
+		"kind": "mariah",
+		"title": "Mariah",
+		"description": "???",
+		"icon": "fas fa-music",
+		"color": "text-gray",
+		"price": 800
+	},
 	"haunt": {
 		"kind": "haunt",
 		"title": "Haunt",
