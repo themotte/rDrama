@@ -29,7 +29,7 @@
 
 	<div class="flex items-center mb-4">
 		<img src="{{ v.profile_url }}" class="w-8 h-8 object-cover rounded" alt="My avatar"/>
-		<div class="text-lg text-pink-600 font-bold font-heading pl-2">{{ v.username }}</div>
+		<div class="text-lg text-black font-semibold pl-2">{{ v.username }}</div>
 	</div>
 
 	<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" class="flex flex-col space-y-6">
@@ -131,7 +131,7 @@
 		</div>
 		<div id="preview" class="my-3"></div>
 
-		
+
 		<!-- User form key (required) -->
 		<input type="hidden" name="formkey" value="{{v.formkey}}" class="hidden">
 	</form>
