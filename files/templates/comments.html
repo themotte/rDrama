@@ -108,7 +108,7 @@
 	</script>
 {% endif %}
 
-<script defer>
+<!-- <script defer>
 	(() => {
 		const date = new Date({{c.created_utc*1000}});
 		document.getElementById('timestamp-{{c.id}}').title = date.toString();
@@ -122,7 +122,7 @@
 			{%endif%}
 		{%endif%}
 	})()
-</script>
+</script> -->
 
 <div style="display:none" id="popover-{{c.id}}">
 	<div class="popover-user-profile" role="tooltip">
