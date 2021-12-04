@@ -37,7 +37,7 @@
 	<script defer src="/assets/js/comments_admin.js?v=54"></script>
 {% endif %}
 
-<script defer>
+<!-- <script defer>
 	function collapse_comment(comment_id) {
 		const comment = "comment-" + comment_id
 		const element = document.getElementById(comment)
@@ -56,12 +56,12 @@
 			myToast.show();
 			console.log(e);
 	});
-</script>
+</script> -->
 
 {% include "expanded_image_modal.html" %}
 
 
-<script defer>
+<!-- <script defer>
 	function poll_vote(cid, parentid) {
 		{% if v %}
 			for(let el of document.getElementsByClassName('presult-'+parentid)) {
@@ -93,7 +93,7 @@
 			html: true,
 		});
 	})
-</script>
+</script> -->
 
 
 {% macro single_comment(c, level=1) %}
