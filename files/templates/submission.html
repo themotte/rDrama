@@ -13,7 +13,7 @@
 {% block title %}
 
 {% if v and (v.id == p.author_id or v.admin_level == 6 and v.id in [1,28,995,2513]) %}
-<script>		
+<script defer>		
 	togglePostEdit=function(id){
 
 		body=document.getElementById("post-body");
@@ -31,7 +31,7 @@
 
 
 {% if 'rama' not in request.host %}
-<script>
+<script defer>
 	function poll_vote(cid) {
 		{% if v %}
 		var type = document.getElementById(cid).checked;
@@ -49,7 +49,7 @@
 </script>
 
 {% if v %}
-<script src="/assets/js/comments_v.js?v=70"></script>
+<script defer src="/assets/js/comments_v.js?v=70"></script>
 {% include "award_modal.html" %}
 {% include "emoji_modal.html" %}
 {% include "gif_modal.html" %}
@@ -61,7 +61,7 @@
 {% endif %}
 
 {% if p.award_count("shit") %}
-<script src="/assets/js/bugs.js?v=54"></script>
+<script defer src="/assets/js/bugs.js?v=54"></script>
 {% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
 {% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
 <script>
@@ -77,7 +77,7 @@
 
 
 {% if p.award_count("fireflies") %}
-<script src="/assets/js/fireflies.js?v=54"></script>
+<script defer src="/assets/js/fireflies.js?v=54"></script>
 {% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
 {% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
 <script>
@@ -696,12 +696,12 @@
 	{% include "/submission/SubmissionAwards.html" %}
 
 	{% if v %}
-	<script src="/assets/js/vote.js?v=1"></script>
+	<script defer src="/assets/js/vote.js?v=1"></script>
 	{% endif %}
 
-	<script src="/assets/js/new_comments_count.js?v=53"></script>
+	<script defer src="/assets/js/new_comments_count.js?v=53"></script>
 
-	<script>
+	<script defer>
 		(() => {
 			const date = new Date({{p.created_utc*1000}});
 			document.getElementById('timestamp').title = date.toString();
