@@ -226,7 +226,7 @@
 					<h2 class="label text-black">Flair</h2>
 					<form id="profile-settings" action="/settings/title_change" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<div class="w-full md:w-80">
+						<div class="inline-block w-full md:w-80">
 							<input id="customtitlebody" type="text" name="title" class="form-input" placeholder='Enter a flair here' value="{% if v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
 						</div>
 						<button type="button" class="inline-block ml-2 text-gray-500 hover:text-gray-200" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji">
