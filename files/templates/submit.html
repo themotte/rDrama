@@ -9,7 +9,7 @@
 		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
 		<div class="relative col-span-full">
 			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
-				Submit
+				Create post
 			</h1>
 			<small class="block text-gray-700">
 				Share drama with the community.
@@ -19,9 +19,14 @@
 {% endblock %}
 
 {% block content %}
+<div class="col-span-full xl:col-span-9 sm:py-4 my-2.5 sm:my-0">
 
-<div class="submit-grid-view">
-	<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" style="grid-column: 2">
+	<div class="flex items-center mb-4">
+		<img src="{{ v.profile_url }}" class="w-8 h-8 object-cover rounded" alt="My avatar"/>
+		<div class="text-lg text-pink-600 font-bold font-heading pl-2">{{ v.username }}</div>
+	</div>
+	
+	<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" class="flex flex-col space-y-6">
 
 		<div class="container">
 
