@@ -371,7 +371,7 @@
 					</span>
 				</a>
 				{% endif %}
-				<span id="timestamp-{{c.id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">
+				<span onmouseover="timestamp('timestamp-{{c.id}}','{{c.created_utc}}')" id="timestamp-{{c.id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">
 					{{c.age_string}}
 				</span>
 				{% if c.edited_utc %}
