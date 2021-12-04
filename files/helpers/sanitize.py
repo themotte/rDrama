@@ -172,17 +172,17 @@ def sanitize(sanitized, noimages=False):
 		for i in re.finditer('(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("!"):
-				classes = 'class="bigemoji mirrored" '
+				classes = 'class="bigemoji mirrored lozad" '
 				remoji = emoji[1:]
 			elif emoji.startswith("#"):
 				classes = ""
 				remoji = emoji[1:]
 			else:
-				classes = 'class="bigemoji" '
+				classes = 'class="bigemoji lozad" '
 				remoji = emoji
 
 			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" {classes}src="http://{site}/assets/images/emojis/{remoji}.webp" >', new)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" {classes}src="http://{site}/assets/images/emojis/{remoji}.webp" width="48px" height="48px">', new)
 
 				if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
 				else: session["favorite_emojis"][remoji] = 1
@@ -195,13 +195,13 @@ def sanitize(sanitized, noimages=False):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="emoji mirrored" src="http://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
+				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="emoji mirrored lozad" src="http://{site}/assets/images/emojis/{emoji}.webp" width="28px" height="28px">', sanitized)
 		
 				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 				else: session["favorite_emojis"][emoji] = 1
 
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="emoji" src="http://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
+			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="emoji lozad" src="http://{site}/assets/images/emojis/{emoji}.webp" width="28px" height="28px">', sanitized)
 				
 			if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 			else: session["favorite_emojis"][emoji] = 1
