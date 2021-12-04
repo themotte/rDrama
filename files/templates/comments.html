@@ -29,18 +29,15 @@
 
 {% if v %}
 	{% include "award_modal.html" %}
-	<script src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
-	<script src="/assets/js/comments_v.js?v=73"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
+	<script defer src="/assets/js/comments_v.js?v=73"></script>
 {% endif %}
-
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
-
 
 {% if v and v.admin_level > 1 %}
 	<script src="/assets/js/comments_admin.js?v=54"></script>
 {% endif %}
 
-<script>
+<script defer>
 	function collapse_comment(comment_id) {
 		const comment = "comment-" + comment_id
 		const element = document.getElementById(comment)
@@ -64,7 +61,7 @@
 {% include "expanded_image_modal.html" %}
 
 
-<script>
+<script defer>
 	function poll_vote(cid, parentid) {
 		{% if v %}
 			for(let el of document.getElementsByClassName('presult-'+parentid)) {
@@ -102,7 +99,7 @@
 {% macro single_comment(c, level=1) %}
 
 {% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
-	<script>
+	<script defer>
 		comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 		lastCount = comments['{{p.id}}']
 		if (lastCount && {{c.created_utc*1000}} > lastCount.t) {
@@ -111,7 +108,7 @@
 	</script>
 {% endif %}
 
-<script>
+<script defer>
 	(() => {
 		const date = new Date({{c.created_utc*1000}});
 		document.getElementById('timestamp-{{c.id}}').title = date.toString();
