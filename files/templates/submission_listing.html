@@ -144,7 +144,7 @@
 					</bdi>
 				{% endif %}
 				{% endif %}
-				<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp-{{p.id}}">{{p.age_string}}</span>
+				<span onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp-{{p.id}}">{{p.age_string}}</span>
 
 				{% if p.edited_utc %}
 					Edited
