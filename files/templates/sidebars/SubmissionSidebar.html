@@ -85,11 +85,13 @@
 					{{ 'vote' if ups + downs == 1 else 'votes' }} on this post
 				</p>
 			</li>
+			{% if p.awards.length %}
 			<li>
 				<p class="text-sm">
 					<strong>{{ p.awards.length }} {{ 'award' if p.awards.length == 1 else 'awards' }}</strong> gifted
 				</p>
 			</li>
+			{% endif %}
 		</ul>
 		<!-- Banned -->
 		<ul class="flex flex-col mb-0">
