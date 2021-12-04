@@ -27,7 +27,7 @@
 								<div>
 									<form action="/settings/delete/profile" method="post">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<button type="submit" value="Delete" class="block px-4 py-2 bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-red-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+										<button type="submit" value="Delete" class="btn btn-red">
 											<i class="fas fa-trash-alt fa-fw mr-1"></i>
 											Delete
 										</button>
@@ -63,7 +63,7 @@
 								<div>
 									<form action="/settings/delete/banner" method="post">
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
-										<button type="submit" value="Delete" class="block px-4 py-2 bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-red-900 rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+										<button type="submit" value="Delete" class="btn btn-red">
 											<i class="fas fa-trash-alt fa-fw mr-1"></i>
 											Delete
 										</button>
@@ -122,20 +122,20 @@
 
 			</div> -->
 
-			<div class="rounded-lg px-4 py-4 bg-gray-700 border border-gray-900 shadow-inset-t-white-10">
+			<div class="rounded-lg divide-y divide-gray-300 bg-gray-100 border border-gray-300 shadow-inset-t-white-10">
 				<h2 class="font-bold text-lg font-heading leading-normal mb-2">Linked accounts</h2>
 				<div class="flex flex-col space-y-2 divide-y divide-y-800">
 					<div>
 						{% if v.discord_id %}
 						<form action="/settings/remove_discord" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<input type="submit" class="px-4 py-2 bg-gradient-to-t from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none" value="Disconnect Discord">
+						<input type="submit" class="btn btn-red" value="Disconnect Discord">
 						</form>
 						<p class="mt-2 text-xs text-gray-400 mt-3">
 							Disconnecting your Discord account will remove you from the {{'SITE_NAME' | app_config}} Discord server.
 						</p>
 						{% else %}
-						<a href="/discord" class="inline-block px-4 py-2 bg-gradient-to-t from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none">
+						<a href="/discord" class="btn btn-gray">
 							<i class="fab fa-discord fa-fw mr-1"></i>
 							Link Discord
 						</a>
