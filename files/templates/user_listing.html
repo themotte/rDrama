@@ -3,12 +3,13 @@
 	<div id="user-{{u.id}}" class="shadow-sm rounded bg-gray-200 border border-gray-300 h-full">
 		<div class="relative">
 			<img loading="lazy" src="{{u.banner_url}}" class="object-cover" alt="@{{u.username}} user banner" height=175>
-
-			<img loading="lazy" src="{{u.profile_url}}" class="profile-pic-50 border-3 border-white" style="position: absolute; left: 15px; bottom: 15px; box-sizing: content-box;">
+			<div class="absolute bottom-3 left-0">
+				<img loading="lazy" src="{{u.profile_url}}" class="h-9 w-9 bg-white p-[3px] border border-gray-300">
+			</div>
 		</div>
 
 		<div class="break-word">
-			<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+			<div class="flex flex-wrap justify-between items-center mb-3">
 
 				<a class="card-title text-break h5 mb-0" href="{{u.url}}">@{{u.username}}</a>
 
