@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>  
-	<script src="/assets/js/lozad.js?v=54"></script>
-	<script>
-		const observer = lozad();
-		observer.observe();
-	</script>
-	
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
-
 	{% if v and v.agendaposter %}
 		<script src="/assets/js/agendaposter.js"></script>
 		<noscript>
@@ -225,6 +217,10 @@
 		<link rel="preload" href="/assets/css/fa.css?v=52" as="style" onload="this.onload=null;this.rel='stylesheet'">
 		<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=52"></noscript>
 
+		<link rel="preconnect" href="https://fonts.googleapis.com"> 
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+		<link href="https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&display=swap" rel="stylesheet">
+
  </head>
 
  <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="overflow-hidden antialiased bg-cover bg-center bg-gray-200 text-gray-900" style="{% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}){% endif %}">
@@ -350,6 +346,14 @@
 {% endif %}
 
 <script src="/assets/js/header.js?v=54"></script>
+
+<script src="/assets/js/lozad.js?v=54"></script>
+<script>
+	const observer = lozad();
+	observer.observe();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

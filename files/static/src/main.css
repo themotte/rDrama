@@ -7,9 +7,6 @@
 	--color-primary: 220, 38, 38;
 }
 
-/* ------------------------- FONTS ----------------------- */
-@import url('https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&display=swap');
-
 /* ---------------- RESPONSIVE UTILITIES ----------------- */
 @responsive {
 	.text-shadow {
