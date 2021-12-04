@@ -870,7 +870,7 @@
 
 {% if not p.comment_count %}
 	{% if v %}
-		<script defer src="/assets/js/comments_v.js?v=77"></script>
+		<script defer src="/assets/js/comments_v.js?v=78"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -878,7 +878,7 @@
 			{% include "ban_modal.html" %}
 		{% endif %}
 	{% endif %}
-	<script defer src="/assets/js/comments.js?v=4"></script>
+	<script defer src="/assets/js/comments.js?v=5"></script>
 	{% include "expanded_image_modal.html" %}
 {% endif %}
 
@@ -896,7 +896,14 @@
 				mouseOver: "multiply"
 			});
 		});
-</script>
+		{% if not v %}
+			function poll_vote(cid, parentid) {
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.show();
+				document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
+			}
+		{% endif %}
+	</script>
 {% endif %}
 
 

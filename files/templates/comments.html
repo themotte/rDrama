@@ -749,7 +749,7 @@
 
 {% if v %}
 	<script defer src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
-	<script defer src="/assets/js/comments_v.js?v=77"></script>
+	<script defer src="/assets/js/comments_v.js?v=78"></script>
 {% endif %}
 
 <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -761,7 +761,7 @@
 {% include "expanded_image_modal.html" %}
 
 <script defer src="/assets/js/popover.js?v=9"></script>
-<script defer src="/assets/js/comments.js?v=4"></script>
+<script defer src="/assets/js/comments.js?v=5"></script>
 
 <script>
 	window.addEventListener("load",function(event) {
@@ -793,6 +793,14 @@
 			{% endfor %}
 		})()
 	});
+
+	{% if not v %}
+		function poll_vote(cid, parentid) {
+			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+			myToast.show();
+			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
+		}
+	{% endif %}
 </script>
 
 </body>

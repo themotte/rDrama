@@ -15,12 +15,6 @@ function collapse_comment(comment_id) {
     }
 };
 
-function poll_vote(cid, parentid) {
-    var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-    myToast.show();
-    document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-}
-
 window.addEventListener("load",function(event) {
     var clipboard = new ClipboardJS('.copy-link');
     clipboard.on('success', function(e) {
