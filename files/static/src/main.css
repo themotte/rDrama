@@ -107,10 +107,13 @@
 
 /* ----------------------- BADGES ----------------------- */
 .badge {
-	@apply px-1 py-0.5 text-xs text-shadow-light font-bold leading-normal rounded
+	@apply px-1 py-0.5 text-xs text-shadow-light font-bold leading-normal rounded bg-gradient-to-t 
 }
 .badge-red {
-	@apply bg-red-400 text-red-900
+	@apply from-red-600 to-red-500 text-red-900
+}
+.badge-yellow {
+	@apply from-yellow-600 to-yellow-500 text-yellow-900
 }
 
 
