@@ -34,9 +34,6 @@
 
 	<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" class="flex flex-col space-y-6">
 
-		<!-- User form key (required) -->
-		<input type="hidden" name="formkey" value="{{v.formkey}}" class="hidden">
-
 		<!-- Post title field section -->
 		<div class="flex flex-col">
 			<label for="post-title" class="label text-black">Title</label>
@@ -133,6 +130,10 @@
 			Toggle preview
 		</div>
 		<div id="preview" class="my-3"></div>
+
+		
+		<!-- User form key (required) -->
+		<input type="hidden" name="formkey" value="{{v.formkey}}" class="hidden">
 	</form>
 
 </div>
