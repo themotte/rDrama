@@ -12,9 +12,6 @@
 
 {% block title %}
 
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
-<script src="/assets/js/new_comments_count.js?v=53"></script>
-
 {% if v and (v.id == p.author_id or v.admin_level == 6 and v.id in [1,28,995,2513]) %}
 <script>		
 	togglePostEdit=function(id){
@@ -697,6 +694,12 @@
 {% block scripts %}
 	<!-- This file contains minimal html and javascript required for awards, needs to be near </body> closing tag -->
 	{% include "/submission/SubmissionAwards.html" %}
+
+	{% if v %}
+	<script src="/assets/js/vote.js?v=1"></script>
+	{% endif %}
+
+	<script src="/assets/js/new_comments_count.js?v=53"></script>
 
 	<script>
 		(() => {
