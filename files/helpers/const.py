@@ -795,6 +795,24 @@ AWARDS2 = {
 		"color": "text-gray",
 		"price": 300
 	},
+	"fireplace": {
+		"kind": "fireplace",
+		"title": "Fire Place",
+		"description": "???",
+		"icon": "fas fa-fireplace",
+		"color": "text-yellow-600",
+		"owned": 0,
+		"price": 300
+	},
+	"candycane": {
+		"kind": "candycane",
+		"title": "Candy Cane",
+		"description": "???",
+		"icon": "fas fa-candy-cane",
+		"color": "text-red-600",
+		"owned": 0,
+		"price": 500
+	},
 	"mistletoe": {
 		"kind": "mistletoe",
 		"title": "Mistletoe",
