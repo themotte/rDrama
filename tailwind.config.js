@@ -62,7 +62,8 @@ module.exports = {
   variants: {
     extend: {
       backgroundColor: ['checked'],
-      boxShadow: ['checked']
+      boxShadow: ['checked'],
+      color: ['checked']
     },
   },
   plugins: [],
