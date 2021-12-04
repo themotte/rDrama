@@ -90,6 +90,11 @@
 		</ul>
 		<!-- Banned -->
 		<ul class="flex flex-col mb-0">
+			{% if p.club %}
+			<li>
+				<span class="badge badge-red">Country Club</span>
+			<li>
+			{% endif %}
 			{% if p.bannedfor and p.author.banned_by %}
 			<li>
 				<i class="fad fa-gavel fa-sm fa-fw text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i>

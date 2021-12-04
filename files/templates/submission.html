@@ -321,15 +321,11 @@
 					{% if p.realurl(v) %}
 					<h1 id="post-title" class="post-title text-black font-bold font-heading text-lg md:text-3xl leading-normal mb-2">
 						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-							{% if p.club %}
-								<span class="mr-1 badge badge-red uppercase">Country Club</span>
-							{% endif %}
 							{{p.realtitle(v) | safe}}
 						</a>
 					</h1>					
 					{% else %}
 					<h1 id="post-title" class="post-title text-black font-bold font-heading text-lg md:text-3xl leading-normal mb-2">
-						{% if p.club %}<span class="mr-1 badge badge-red uppercase">Country Club</span>{% endif %}
 						{{p.realtitle(v) | safe}}
 					</h1>
 					{% endif %}
