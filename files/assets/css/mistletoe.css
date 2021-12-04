@@ -96,7 +96,11 @@
   background-clip: text;
   color: transparent;
   -webkit-background-clip: text;
-  /*animation: 40s linear 0s infinite move;*/
+  /*animation: 30s linear 0s infinite move;*/
+}
+
+.candycane:hover {
+	animation: 30s linear 0s infinite move;
 }
 
 @keyframes move {
