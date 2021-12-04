@@ -224,10 +224,8 @@
 
 		{% endblock %}
 
-		<link href="/assets/css/fa.css?v=52" rel="stylesheet"> 
-		{% block fixedMobileBarJS %}
-
-		{% endblock %}
+		<link rel="preload" href="/assets/css/fa.css?v=52" as="style" onload="this.onload=null;this.rel='stylesheet'">
+		<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=52"></noscript>
 
  </head>
 
@@ -306,6 +304,9 @@
 {% endblock %}
 
 {% block popovers %}
+{% endblock %}
+
+{% block fixedMobileBarJS %}
 {% endblock %}
 
 {% block scripts %}
