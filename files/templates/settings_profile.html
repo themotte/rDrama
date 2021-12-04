@@ -151,7 +151,7 @@
 			<div class="rounded-lg divide-y divide-gray-300 bg-gray-100 border border-gray-300 shadow-inset-t-white-10">
 				<div class="px-4 py-4">
 					<h2 class="label text-black">Referral code</h2>
-					<input type="text" onclick="this.select()" value="{{request.host_url}}signup?ref={{v.username}}" class="m-0.5 p-0.5 bg-white border border-gray-300 text-xs text-black w-44">
+					<input type="text" onclick="this.select()" value="{{request.host_url}}signup?ref={{v.username}}" class="m-0.5 p-0.5 bg-white border border-gray-300 text-xs text-black w-80">
 					<small class="block mt-1 text-gray-400">
 						You have referred <strong>{{v.referral_count}}</strong> members.
 						<a href="/badges" class="text-red-500">Learn more</a>.
@@ -159,7 +159,7 @@
 				</div>
 				<div class="px-4 py-4">
 					<h2 class="label text-black">RSS Feed</h2>
-					<input type="text" onclick="this.select()" value="{{('/rss/hot/all') | full_link}}" class="m-0.5 p-0.5 bg-white border border-gray-300 text-xs text-black w-44">
+					<input type="text" onclick="this.select()" value="{{('/rss/hot/all') | full_link}}" class="m-0.5 p-0.5 bg-white border border-gray-300 text-xs text-black w-80">
 					<small class="block mt-1 text-gray-400">
 						You can change the feed by replacing <strong>hot</strong> with whatever sorting you want and <strong>all</strong> with whatever time filter you want.
 					</small>
