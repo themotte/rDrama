@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	{% if v %}
+		<style>:root{--primary:#{{v.themecolor}}}</style>
+		<link rel="stylesheet" href="/assets/css/main.css?v=133">
+		<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
+		{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=124">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+	{% else %}
+		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+		<link rel="stylesheet" href="/assets/css/main.css?v=133"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
+	{% endif %}
+
+	<link href="/assets/css/fa.css?v=52" rel="stylesheet"> 
+
 	<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 
 	<meta charset="utf-8">
@@ -173,22 +185,6 @@
 		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=4"
 		>
 
-
-		{% block stylesheets %}
-
-		{% if v %}
-			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=133">
-			<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=124">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
-		{% else %}
-			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=133"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
-		{% endif %}
-
-		{% endblock %}
-
-		<link href="/assets/css/fa.css?v=52" rel="stylesheet"> 
 		{% block fixedMobileBarJS %}
 		{% endblock %}
 
