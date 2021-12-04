@@ -81,9 +81,9 @@ function awardModal(link) {
 
 function bruh(kind) {
 	document.getElementById('giveaward').disabled=false;
-	document.getElementById('kind').value=kind;
-	try {document.getElementsByClassName('bg-green-400')[0].classList.toggle('bg-green-400');} catch(e) {}
-	document.getElementById(kind).classList.toggle('bg-green-400')
+	// document.getElementById('kind').value=kind;
+	// try {document.getElementsByClassName('bg-green-400')[0].classList.toggle('bg-green-400');} catch(e) {}
+	// document.getElementById(kind).classList.toggle('bg-green-400')
 	if (kind == "flairlock") {
 		document.getElementById('notelabel').innerHTML = "New flair:";
 		document.getElementById('note').placeholder = "Insert new flair here...";
