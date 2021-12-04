@@ -749,7 +749,7 @@
 
 {% if v %}
 	<script defer src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
-	<script defer src="/assets/js/comments_v.js?v=76"></script>
+	<script defer src="/assets/js/comments_v.js?v=77"></script>
 {% endif %}
 
 <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -763,19 +763,7 @@
 <script defer src="/assets/js/popover.js?v=9"></script>
 <script defer src="/assets/js/comments.js?v=3"></script>
 
-<a onclick="sex()" class="btn btn-primary">Reports</a>
-
-<button ></button>
 <script>
-	function sex() {
-		var perfEntries = performance.getEntriesByType("navigation");
-
-		for (var i=0; i < perfEntries.length; i++) {
-			var p = perfEntries[i];
-			console.log("DOM interactive = " + p.domInteractive);
-		}
-	}
-
 	window.addEventListener("load",function(event) {
 
 		{% if p and (not v or v.highlightcomments) %}

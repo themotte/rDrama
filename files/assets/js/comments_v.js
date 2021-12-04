@@ -294,11 +294,6 @@ function charLimit(form, text) {
 
 }
 
-function timestamp(str, ti) {
-	date = new Date(ti*1000);
-	document.getElementById(str).title = date.toString();
-};
-
 function poll_vote(cid, parentid) {
 	for(let el of document.getElementsByClassName('presult-'+parentid)) {
 		el.classList.remove('d-none');
