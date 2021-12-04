@@ -241,12 +241,14 @@
 <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 <script>
-function formkey() {return '{{v.formkey}}';}
+	function formkey() {return '{{v.formkey}}';}
 
-	var clipboard = new ClipboardJS('.copy-link');
-	clipboard.on('success', function(e) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-			myToast.show();
+	window.addEventListener("load",function(event) {
+		var clipboard = new ClipboardJS('.copy-link');
+		clipboard.on('success', function(e) {
+				var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
+				myToast.show();
+		});
 	});
 	
 	function emailVerifyText() {
