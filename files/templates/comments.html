@@ -32,9 +32,9 @@
 
 <div style="display:none" id="popover-{{c.id}}">
 	<div class="popover-user-profile" role="tooltip">
-	<img loading="lazy" class="w-100 h-64 object-cover" src="/assets/images/loading.webp" data-src="{{c.author.banner_url}}">
+	<img loading="lazy" class="w-100 h-64 object-cover" -src="{{c.author.banner_url}}">
 	<div class="d-flex align-items-end px-3 mt-n6 mb-3">
-		<img loading="lazy" class="avatar-72 rounded img-thumbnail shadow-sm" src="/assets/images/loading.webp" data-src="{{c.author.profile_url}}">
+		<img loading="lazy" class="avatar-72 rounded img-thumbnail shadow-sm" src="{{c.author.profile_url}}">
 		<div class="px-3 text-truncate">
 		<h5 class="text-truncate text-black">{{c.author.username}}</h5>
 		</div>
