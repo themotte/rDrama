@@ -15,14 +15,15 @@
 						{% for award in v.user_awards %}
 						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
 							{% if award.owned %}
-								<input name="award" value="{{award.kind}}" type="radio" id="{{award.kind}}-award" onclick="bruh('{{award.kind}}-award')" class="w-full h-full p-2 hover:bg-gray-300 rounded">
+								<input hidden name="award" value="{{award.kind}}" type="radio" id="{{award.kind}}-award">
 							{% else %}
-								<input name="award" value="{{award.kind}}" type="radio" id="{{award.kind}}-award" disabled class="cursor-not-allowed opacity-50 w-full h-full p-2 hover:bg-gray-300 rounded">
+								<input hidden name="award" value="{{award.kind}}" type="radio" id="{{award.kind}}-award" disabled class="cursor-not-allowed opacity-50 w-full h-full p-2 hover:bg-gray-300 rounded">
 							{% endif %}
+								<label for="{{award.kind}}-award" onclick="bruh('{{award.kind}}-award')" class="w-full h-full p-2 hover:bg-gray-300 rounded">
 									<i class="{{award.icon}} {{award.color}}"></i>
 									<div class="mt-2 font-bold text-base text-gray-700">{{award.title}}</div>
 									<div class="text-sm text-gray-500">{{award.owned}} owned</div>
-								</button>
+								</label>
 						</div>
 						{% endfor %}
 					</div>
