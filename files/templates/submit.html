@@ -53,7 +53,7 @@
 			<div>
 				<!-- Input field -->
 				<input class="form-input" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="https://www.youtube.com/watch?v=iik25wqIuFo" value="{{request.values.get('url','')}}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
-				<small class="block mt-1 text-gray-400">
+				<small class="block mt-1 text-gray-500">
 					To post an image, use a direct image link such as i.imgur.com
 				</small>
 			</div>
@@ -72,7 +72,7 @@
 					<span id="filename-show">Select file</span>
 					<input id="file-upload" type="file" name="file" accept="image/*, video/*" hidden>
 				</label>
-				<small class="block mt-1 text-gray-400">
+				<small class="block mt-1 text-gray-500">
 					You may upload videos up to 1 minute long.
 				</small>
 			</div>
