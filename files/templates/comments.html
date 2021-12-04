@@ -279,7 +279,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}">
+<div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %} lozad">
 
 	<span class="comment-collapse-desktop hidden d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 
