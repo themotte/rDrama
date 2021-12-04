@@ -5,32 +5,32 @@
 			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
 			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('comment-edit-body-{{c.id}}')">
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="makeBold('comment-edit-body-{{c.id}}')">
 						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeItalics('comment-edit-body-{{c.id}}')">
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="makeItalics('comment-edit-body-{{c.id}}')">
 						<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeQuote('comment-edit-body-{{c.id}}')">
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="makeQuote('comment-edit-body-{{c.id}}')">
 						<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()">
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="commentForm('comment-edit-body-{{c.id}}');getGif()">
 						<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="loadEmojis('comment-edit-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="loadEmojis('comment-edit-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
 					</button>
 				</li>
 				{% if v %}
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400">
+					<button type="button" class="text-gray-500 hover:text-gray-600">
 						<div id="filename-edit-reply-{{c.id}}">
 							<i class="fas fa-camera fa-fw fa-sm"></i>
 						</div>
@@ -45,7 +45,7 @@
 				Formatting help
 			</a>
 			<div class="ml-auto flex">
-				<button type="button" id="cancel-edit-{{c.id}}" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" onclick="toggleEdit('{{c.id}}')">
+				<button type="button" id="cancel-edit-{{c.id}}" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-600" onclick="toggleEdit('{{c.id}}')">
 					Cancel
 				</button>
 				<button type="button" form="comment-edit-form-{{c.id}}" class="ml-2 btn btn-green" onclick="comment_edit('{{c.id}}')">

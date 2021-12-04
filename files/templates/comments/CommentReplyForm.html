@@ -7,32 +7,32 @@
 			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Add your reply..." rows="3" oninput="charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')"></textarea>
 			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('reply-form-body-{{c.fullname}}')">
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="makeBold('reply-form-body-{{c.fullname}}')">
 						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeItalics('reply-form-body-{{c.fullname}}')">
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="makeItalics('reply-form-body-{{c.fullname}}')">
 						<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeQuote('reply-form-body-{{c.fullname}}')">
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="makeQuote('reply-form-body-{{c.fullname}}')">
 						<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()">
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="commentForm('reply-form-body-{{c.fullname}}');getGif()">
 						<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="loadEmojis('reply-form-body-{{c.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
+					<button type="button" class="text-gray-500 hover:text-gray-600" onclick="loadEmojis('reply-form-body-{{c.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
 					</button>
 				</li>
 				{% if v %}
 				<li>
-					<label for="file-upload-reply-{{c.fullname}}" class="text-gray-500 hover:text-gray-400">
+					<label for="file-upload-reply-{{c.fullname}}" class="text-gray-500 hover:text-gray-600">
 						<div id="filename-show-reply-{{c.fullname}}">
 							<i class="fas fa-camera fa-fw fa-sm"></i>
 						</div>
@@ -48,7 +48,7 @@
 				Formatting help
 			</a>
 			<div class="ml-auto flex">
-				<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('hidden')">
+				<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-600" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('hidden')">
 					Cancel
 				</button>
 				<button type="button" id="save-reply-to-{{c.fullname}}" class="ml-2 btn btn-green" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');">
