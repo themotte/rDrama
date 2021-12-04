@@ -138,7 +138,8 @@ def sanitize(sanitized, noimages=False):
 			link["href"] = tag["src"]
 			if site not in link["href"] and not link["href"].startswith('/'): link["rel"] = "nofollow noopener noreferrer"
 			link["target"] = "_blank"
-			link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
+			# link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
+			link["onclick"] = f"expandDesktopImage('{tag['src']}');"
 			link["data-bs-toggle"] = "modal"
 			link["data-bs-target"] = "#expandImageModal"
 
