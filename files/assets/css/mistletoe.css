@@ -99,7 +99,7 @@
   /*animation: 30s linear 0s infinite move;*/
 }
 
-.candycane:hover p {
+.candycane p:hover {
 	animation: 30s linear 0s infinite move;
 }
 
