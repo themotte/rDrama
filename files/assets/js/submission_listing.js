@@ -1,6 +1,6 @@
 function timestamp(str, ti) {
     date = new Date(ti*1000);
-    document.getElementById(str).title = date.toString();
+    document.getElementById(str).setAttribute("data-bs-original-title", date.toString());
 };
 
 function expandText(id) {

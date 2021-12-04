@@ -384,7 +384,7 @@
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
 
 						{% if p.edited_utc %}
-							&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom"  onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">{{p.edited_string}}</span>
+							&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">{{p.edited_string}}</span>
 						{% endif %}
 						&nbsp;&nbsp;{{p.views}} views
 					</div>
@@ -878,7 +878,7 @@
 			{% include "ban_modal.html" %}
 		{% endif %}
 	{% endif %}
-	<script defer src="/assets/js/comments.js?v=5"></script>
+	<script defer src="/assets/js/comments.js?v=7"></script>
 	{% include "expanded_image_modal.html" %}
 {% endif %}
 
