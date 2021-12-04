@@ -33,12 +33,12 @@
 
 		<!-- Post title field section -->
 		<div class="flex flex-col">
-			<label for="post-title" class="font-bold text-lg font-heading leading-normal mb-2">Title</label>
+			<label for="post-title" class="label text-black">Title</label>
 			<div>
 				<!-- Input field -->
-				<input class="rounded shadow-inner w-full px-2 py-1.5 text-gray-700 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="rdrama.net is one of the most malevolent, cruel, coldhearted online communities you'll ever find" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
+				<input class="form-input" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="rdrama.net is one of the most malevolent, cruel, coldhearted online communities you'll ever find" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
 				<!-- Add emoji button -->
-				<button type="button" class="mt-1 text-sm text-gray-500 hover:text-gray-200" onclick="loadEmojis('post-title')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">
+				<button type="button" class="mt-1 text-sm text-gray-500 hover:text-gray-600" onclick="loadEmojis('post-title')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">
 					Add emoji
 				</button>
 			</div>
@@ -46,13 +46,13 @@
 
 		<!-- Link field section -->
 		<div id="urlblock" class="flex flex-col">
-			<label for="post-URL" class="font-bold text-lg font-heading leading-normal mb-2">
+			<label for="url" class="label text-black">
 				Link
 				<span class="italic text-sm font-normal text-gray-500">(optional if you have text)</span>
 			</label>
 			<div>
 				<!-- Input field -->
-				<input class="rounded shadow-inner w-full px-2 py-1.5 text-gray-700 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" id="post-URL" aria-describedby="URLHelp" name="url" placeholder="https://www.youtube.com/watch?v=iik25wqIuFo" value="{{request.values.get('url','')}}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
+				<input class="form-input" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="https://www.youtube.com/watch?v=iik25wqIuFo" value="{{request.values.get('url','')}}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
 				<small class="block mt-1 text-gray-400">
 					To post an image, use a direct image link such as i.imgur.com
 				</small>
@@ -61,13 +61,13 @@
 
 		<!-- Attachment field section -->
 		<div class="flex flex-col">
-			<label for="file-upload" class="font-bold text-lg font-heading leading-normal mb-2">
+			<label for="file-upload" class="label text-black">
 				Image or Video
 				<span class="italic text-sm font-normal text-gray-500">(optional)</span>
 			</label>
 			<div>
 				<!-- Input field -->
-				<label class="inline-block px-4 py-2 bg-gradient-to-t from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-700 active:shadow-inner border border-gray-800 rounded-lg text-shadow-t shadow-inset-t-white-10 text-sm font-bold text-gray-200 focus:text-gray-400 focus:outline-none" for="file-upload">
+				<label class="btn btn-gray" for="file-upload">
 					<i class="fas fa-file fa-fw fa-sm mr-1"></i>
 					<span id="filename-show">Select file</span>
 					<input id="file-upload" type="file" name="file" accept="image/*, video/*" hidden>
@@ -85,13 +85,13 @@
 
 		<!-- Link field section -->
 		<div class="flex flex-col">
-			<label for="body" class="font-bold text-lg font-heading leading-normal mb-2">
+			<label for="body" class="label text-black">
 				Post
 				<span class="italic text-sm font-normal text-gray-500">(optional if you have a link)</span>
 			</label>
 			<!-- Input field -->
 			<div class="relative rounded-lg border border-gray-900 bg-gray-900 shadow-inner w-full">
-				<textarea form="submitform" id="post-text" class="w-full rounded-t-md p-3 text-gray-200 focus:text-gray-900 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
+				<textarea form="submitform" id="post-text" class="form-input" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
 				<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-800">
 					<li>
 						<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('post-text')">
@@ -129,7 +129,7 @@
 		<div id="preview" class="my-3"></div>
 
 		{% if error %}<span class="text-danger mr-2">{{error}}</span>{% endif %}
-		<button class="btn btn-outline-purple" id="create_button" type="submit" disabled>Post</button>
+		<button class="btn btn-green" id="create_button" type="submit" disabled>Post</button>
 	</form>
 
 </div>
