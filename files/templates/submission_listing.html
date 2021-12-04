@@ -58,22 +58,20 @@
 </div>
 
 <script>
-	window.addEventListener("load",function(event) {
-		(() => {
-			{% if (not v or v.highlightcomments) %}
-				showNewCommentCounts('{{p.id}}', {{p.comment_count}})
-			{% endif %}
+	(() => {
+		{% if (not v or v.highlightcomments) %}
+			showNewCommentCounts('{{p.id}}', {{p.comment_count}})
+		{% endif %}
 
-			{% if p.stickied %}
-			const pinned_info = document.getElementById('pinned-{{p.id}}')
-			{% if p.stickied.startswith('t:') %}
-				pinned_info.setAttribute("data-bs-original-title", `Pinned until ${new Date({{p.stickied[2:]}} * 1000).toString()}`)
-			{% else %}
-				pinned_info.setAttribute("data-bs-original-title", "Pinned by @{{p.stickied}}")
-			{%endif%}
-			{%endif%}
-		})()
-	});
+		{% if p.stickied %}
+		const pinned_info = document.getElementById('pinned-{{p.id}}')
+		{% if p.stickied.startswith('t:') %}
+			pinned_info.setAttribute("data-bs-original-title", `Pinned until ${new Date({{p.stickied[2:]}} * 1000).toString()}`)
+		{% else %}
+			pinned_info.setAttribute("data-bs-original-title", "Pinned by @{{p.stickied}}")
+		{%endif%}
+		{%endif%}
+	})()
 </script>
 
 {% set ups=p.upvotes %}
@@ -657,5 +655,5 @@
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
-<script src="/assets/js/popover.js?v=9"></script>
-<script src="/assets/js/submission_listing.js?v=4"></script>
+<script src="/assets/js/popover.js?v=10"></script>
+<script src="/assets/js/submission_listing.js?v=5"></script>

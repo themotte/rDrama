@@ -685,21 +685,19 @@
 <script src="/assets/js/settings_profile.js?v=58"></script>
 
 <script>
-	window.addEventListener("load",function(event) {
-		document.onpaste = function(event) {
-			var focused = document.activeElement;
-			if (focused.id == 'bio-text') {
-				f=document.getElementById('file-upload');
-				files = event.clipboardData.files
-				filename = files[0].name.toLowerCase()
-				if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
-				{
-					f.files = files;
-					document.getElementById('filename-show').textContent = filename;
-				}
+	document.onpaste = function(event) {
+		var focused = document.activeElement;
+		if (focused.id == 'bio-text') {
+			f=document.getElementById('file-upload');
+			files = event.clipboardData.files
+			filename = files[0].name.toLowerCase()
+			if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+			{
+				f.files = files;
+				document.getElementById('filename-show').textContent = filename;
 			}
 		}
-	});
+	}
 </script>
 
 {% include "emoji_modal.html" %}

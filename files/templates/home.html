@@ -9,30 +9,28 @@
 
 	{% if not v.fp %}
 		<script>
-			window.addEventListener("load",function(event) {
-				function fp(fp) {
-					var xhr = new XMLHttpRequest();
-					xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
-					var form = new FormData()
-					form.append("formkey", formkey());
-					xhr.withCredentials=true;
-					xhr.send(form);
-				};
+			function fp(fp) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
+				var form = new FormData()
+				form.append("formkey", formkey());
+				xhr.withCredentials=true;
+				xhr.send(form);
+			};
 
-				const fpPromise = new Promise((resolve, reject) => {
-					const script = document.createElement('script');
-					script.onload = resolve;
-					script.onerror = reject;
-					script.async = true;
-					script.src = 'https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3/dist/fp.min.js';
-					document.head.appendChild(script);
-				})
-					.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
+			const fpPromise = new Promise((resolve, reject) => {
+				const script = document.createElement('script');
+				script.onload = resolve;
+				script.onerror = reject;
+				script.async = true;
+				script.src = 'https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3/dist/fp.min.js';
+				document.head.appendChild(script);
+			})
+				.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
 
-				fpPromise
-					.then(fp => fp.get())
-					.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
-			});
+			fpPromise
+				.then(fp => fp.get())
+				.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
 		</script>
 	{% endif %}
 {% endif %}
@@ -173,36 +171,32 @@
 	</div>
 
 	<script>
-		window.addEventListener("load",function(event) {
-			if (!("standalone" in window.navigator) && window.navigator.standalone) {
-				if (window.innerWidth <= 737) {
-					document.getElementById('mobile-prompt').show()
-					document.getElementsByClassName('tooltip')[0].onclick = function(event){
-						document.getElementById('mobile-prompt').hide()
-						var xhr = new XMLHttpRequest();
-						xhr.withCredentials=true;
-						xhr.open("POST", '/dismiss_mobile_tip', true);
-						xhr.send();
-					}
+		if (!("standalone" in window.navigator) && window.navigator.standalone) {
+			if (window.innerWidth <= 737) {
+				document.getElementById('mobile-prompt').show()
+				document.getElementsByClassName('tooltip')[0].onclick = function(event){
+					document.getElementById('mobile-prompt').hide()
+					var xhr = new XMLHttpRequest();
+					xhr.withCredentials=true;
+					xhr.open("POST", '/dismiss_mobile_tip', true);
+					xhr.send();
 				}
 			}
-		});
+		}
 	</script>
 {% endif %}
 
 {% if v %}
 	<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 	<script>
-		window.addEventListener("load",function(event) {
-			const beamsClient = new PusherPushNotifications.Client({
-				instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6',
-			});		
-			beamsClient.start()
-			.then((beamsClient) => beamsClient.getDeviceId())
-			.then(() => beamsClient.addDeviceInterest('{{v.strid}}'))
-			.then(() => beamsClient.getDeviceInterests())
-			.catch(console.error);
-		});
+		const beamsClient = new PusherPushNotifications.Client({
+			instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6',
+		});		
+		beamsClient.start()
+		.then((beamsClient) => beamsClient.getDeviceId())
+		.then(() => beamsClient.addDeviceInterest('{{v.strid}}'))
+		.then(() => beamsClient.getDeviceInterests())
+		.catch(console.error);
 	</script>
 {% endif %}
 
