@@ -7,32 +7,32 @@
 		<textarea maxlength="10000" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3" oninput="charLimit('reply-form-body-{{p.fullname}}','charcount-reply')"></textarea>
 		<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
 			<li>
-				<button type="button" class="text-gray-500 hover:text-gray-600" onclick="makeBold('reply-form-body-{{p.fullname}}')">
+				<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('reply-form-body-{{p.fullname}}')">
 					<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
 				</button>
 			</li>
 			<li>
-				<button type="button" class="text-gray-500 hover:text-gray-600" onclick="makeItalics('reply-form-body-{{p.fullname}}')">
+				<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('reply-form-body-{{p.fullname}}')">
 					<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
 				</button>
 			</li>
 			<li>
-				<button type="button" class="text-gray-500 hover:text-gray-600" onclick="makeQuote('reply-form-body-{{p.fullname}}')">
+				<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('reply-form-body-{{p.fullname}}')">
 					<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
 				</button>
 			</li>
 			<li>
-				<button type="button" id="gif-reply-btn-{{p.fullname}}" class="text-gray-500 hover:text-gray-600" onclick="commentForm('reply-form-body-{{p.fullname}}');getGif()">
+				<button type="button" id="gif-reply-btn-{{p.fullname}}" class="text-gray-400 hover:text-gray-500" onclick="commentForm('reply-form-body-{{p.fullname}}');getGif()">
 					<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
 				</button>
 			</li>
 			<li>
-				<button type="button" id="emoji-reply-btn-{{p.fullname}}" class="text-gray-500 hover:text-gray-600" onclick="loadEmojis('reply-form-body-{{p.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
+				<button type="button" id="emoji-reply-btn-{{p.fullname}}" class="text-gray-400 hover:text-gray-500" onclick="loadEmojis('reply-form-body-{{p.fullname}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
 				</button>
 			</li>
 			{% if v %}
 			<li>
-				<label for="file-upload-reply-{{p.fullname}}" class="text-gray-500 hover:text-gray-600">
+				<label for="file-upload-reply-{{p.fullname}}" class="text-gray-400 hover:text-gray-500">
 					<div id="filename-show-reply-{{p.fullname}}">
 						<i class="fas fa-camera fa-fw fa-sm"></i>
 					</div>

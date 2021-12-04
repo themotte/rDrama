@@ -7,27 +7,27 @@
 			<textarea name="body" maxlength="10000" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea>
 			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-300 mb-0">
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('post-edit-box-{{p.id}}')">
+					<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('post-edit-box-{{p.id}}')">
 						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeItalics('post-edit-box-{{p.id}}')">
+					<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('post-edit-box-{{p.id}}')">
 						<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeQuote('post-edit-box-{{p.id}}')">
+					<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('post-edit-box-{{p.id}}')">
 						<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="commentForm('post-edit-box-{{p.id}}');getGif()">
+					<button type="button" class="text-gray-400 hover:text-gray-500" onclick="commentForm('post-edit-box-{{p.id}}');getGif()">
 						<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
 					</button>
 				</li>
 				<li>
-					<button type="button" class="text-gray-500 hover:text-gray-400" onclick="loadEmojis('post-edit-box-{{p.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
+					<button type="button" class="text-gray-400 hover:text-gray-500" onclick="loadEmojis('post-edit-box-{{p.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
 					</button>
 				</li>
 			</ul>
@@ -37,7 +37,7 @@
 				Formatting help
 			</a>
 			<div class="ml-auto flex">
-				<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" onclick="togglePostEdit('{{p.id}}')">
+				<button type="button" class="px-4 py-2 text-sm font-bold text-gray-400 hover:text-gray-500" onclick="togglePostEdit('{{p.id}}')">
 					Cancel
 				</button>
 				<button form="post-edit-form-{{p.id}}" class="ml-2 btn btn-green">
