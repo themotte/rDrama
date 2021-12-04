@@ -375,7 +375,7 @@
 					{{c.age_string}}
 				</span>
 				{% if c.edited_utc %}
-				<span class="time-edited italic">
+				<span onmouseover="timestamp('time-edit-{{c.id}}','{{c.edited_utc}}')" id="time-edit-{{c.id}}" class="time-edited italic">
 					Edited {{c.edited_string}}
 				</span>
 				{% endif %}
