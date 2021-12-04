@@ -33,9 +33,9 @@
 
 {% block desktopUserBanner %}
 
-<div class="row d-none d-md-block">
+<div class="row hidden d-md-block">
 	<div class="col px-0">
-		<div class="jumbotron jumbotron-fluid jumbotron-guild d-none d-md-block" style="background-image: url({{u.banner_url}})">
+		<div class="jumbotron jumbotron-fluid jumbotron-guild hidden d-md-block" style="background-image: url({{u.banner_url}})">
 			<div class="jumbotron-overlay"></div>
 			<div class="w-100 my-3">
 				<div class="container-fluid nobackground">
@@ -72,9 +72,9 @@
 								{% if v and v.has_follower(u) %}
 									<span class="followsyou badge badge-secondary text-small align-middle ml-2">Follows you</span>
 								{% endif %}
-								<div class="profile-actions align-middle d-none ml-2">
+								<div class="profile-actions align-middle hidden ml-2">
 								{% if v and v.id != u.id %}
-								<div class="dropdown show d-none">
+								<div class="dropdown show hidden">
 									<a href="javascript:void(0)" role="button" data-bs-toggle="dropdown"
 									aria-haspopup="true" aria-expanded="false">
 									<i class="far fa-ellipsis-h text-lg align-middle text-gray-600"></i>
@@ -82,7 +82,7 @@
 							</div>
 							{% endif %}
 							{% if v and v.id == u.id %}
-							<div class="dropdown show d-none">
+							<div class="dropdown show hidden">
 								<a href="javascript:void(0)" role="button" id="dropdownProfileActionsLink" data-bs-toggle="dropdown"
 								aria-haspopup="true" aria-expanded="false">
 								<i class="far fa-ellipsis-h text-lg align-middle text-gray-600"></i>
@@ -157,26 +157,26 @@
 				<div class="d-flex justify-content-between align-items-center">
 					<div>
 					{% if v and v.id != u.id %}
-						{% if u.id != 995 %}<a id="button-unsub" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub','button-sub')">Unfollow</a>{% endif %}
-						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/follow/{{u.username}}','button-unsub','button-sub')">Follow</a>						
+						{% if u.id != 995 %}<a id="button-unsub" class="btn btn-secondary {% if not is_following %}hidden{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub','button-sub')">Unfollow</a>{% endif %}
+						<a id="button-sub" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}hidden{% endif %}" href="javascript:void(0)" onclick="post_toast2('/follow/{{u.username}}','button-unsub','button-sub')">Follow</a>						
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'message')">Message</a>
 
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'coin-transfer')">Gift {{'COINS_NAME' | app_config}}</a>
 
 						{% if v.admin_level > 2 %} 
-							<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
-							<a id="unadmin" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
+							<a id="admin" class="{% if u.admin_level > 1 %}hidden{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
+							<a id="unadmin" class="{% if u.admin_level < 2 %}hidden{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
-							<a id="memeadmin" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_meme_admin','memeadmin','unmemeadmin')">Make meme admin</a>
-							<a id="unmemeadmin" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','memeadmin','unmemeadmin')">Remove meme admin</a>
+							<a id="memeadmin" class="{% if u.admin_level == 1%}hidden{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_meme_admin','memeadmin','unmemeadmin')">Make meme admin</a>
+							<a id="unmemeadmin" class="{% if u.admin_level != 1 %}hidden{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','memeadmin','unmemeadmin')">Remove meme admin</a>
 
 							{% if u.admin_level > 1 %}
 								<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
 						{% endif %}
 
-						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message" method="post">
+						<form class="hidden profile-toggleable" id="message" action="/@{{u.username}}/message" method="post">
 							<pre></pre>
 							<textarea id="input-message" form="message" name="message" rows="3" maxlength="1000" class="form-control b2" required></textarea>
 							<pre></pre>
@@ -191,7 +191,7 @@
 							<input type="submit" value="Submit" class="btn btn-primary mt-3">
 						</form>
 
-						<div class="d-none mt-3 profile-toggleable" id="coin-transfer">
+						<div class="hidden mt-3 profile-toggleable" id="coin-transfer">
 							<input autocomplete="off" id="coins-transfer-amount" class="form-control" name="amount" type="number" oninput="updateTax()">
 							<div>{{u.username}} will receive <span id="coins-transfer-taxed">0</span> {{'COINS_NAME' | app_config}}</div>
 							<button class="btn btn-primary mt-3" onclick="transferCoins()">Gift</button>
@@ -204,7 +204,7 @@
 
 					{% if u.song and v and v.mute and not u.unmutable %}
 						<a id="pause1" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
-						<a id="play1" class="btn btn-secondary d-none" href="javascript:void(0)" onclick="play()">Play anthem</a>
+						<a id="play1" class="btn btn-secondary hidden" href="javascript:void(0)" onclick="play()">Play anthem</a>
 					{% endif %}
 
 					{% if v and v.id != u.id and v.admin_level > 1 %}
@@ -255,24 +255,24 @@
 						{% endif %}
 						<pre></pre>
 
-						<form id="agendaposter1" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
+						<form id="agendaposter1" class="{% if u.agendaposter %}hidden{% endif %}" action="/agendaposter/{{u.id}}" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
 							<input type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
 							<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" >
 						</form>
-						<a id="unagendaposter" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter1','unagendaposter')">Disable Agendaposter Theme</a>
+						<a id="unagendaposter" class="{% if not u.agendaposter %}hidden{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter1','unagendaposter')">Disable Agendaposter Theme</a>
 
 						<pre></pre>
 
-						<a id="shadowban" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" href="javascript:void(0)" onclick="post_toast2('/shadowban/{{u.id}}','shadowban','unshadowban')">Shadowban</a>
+						<a id="shadowban" class="{% if u.shadowbanned %}hidden{% endif %} btn btn-danger" href="javascript:void(0)" onclick="post_toast2('/shadowban/{{u.id}}','shadowban','unshadowban')">Shadowban</a>
 
-						<a id="unshadowban" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/unshadowban/{{u.id}}','shadowban','unshadowban')">Unshadowban</a>
+						<a id="unshadowban" class="{% if not u.shadowbanned %}hidden{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/unshadowban/{{u.id}}','shadowban','unshadowban')">Unshadowban</a>
 
 
 						<pre></pre>
 
-						<a id="verify" class="{% if u.verified %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/verify/{{u.id}}','verify','unverify')">Verify</a>
-						<a id="unverify" class="{% if not u.verified %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/unverify/{{u.id}}','verify','unverify')">Unverify</a>
+						<a id="verify" class="{% if u.verified %}hidden{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/verify/{{u.id}}','verify','unverify')">Verify</a>
+						<a id="unverify" class="{% if not u.verified %}hidden{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/unverify/{{u.id}}','verify','unverify')">Unverify</a>
 
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
@@ -287,8 +287,8 @@
 							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
 
-						<button id="grant2" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_allow','grant2','bar2')">Grant club access</button>
-						<button id="bar2" class="{% if u.club_banned %}d-none{% endif %} btn btn-danger" onclick="post_toast2('/@{{u.username}}/club_ban','grant2','bar2')">Bar from club</button>
+						<button id="grant2" class="{% if u.paid_dues %}hidden{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_allow','grant2','bar2')">Grant club access</button>
+						<button id="bar2" class="{% if u.club_banned %}hidden{% endif %} btn btn-danger" onclick="post_toast2('/@{{u.username}}/club_ban','grant2','bar2')">Bar from club</button>
 						{% endif %}
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
@@ -334,7 +334,7 @@
 {% endblock %}
 
 {% block mobileUserBanner %}
-<div class="container-fluid text-center bg-white d-md-none" style="margin-top:-4px;border-radius:0!important;">
+<div class="container-fluid text-center bg-white d-mhidden" style="margin-top:-4px;border-radius:0!important;">
 	<div class="row">
 		<div class="col px-0">
 			<a rel="nofollow noopener noreferrer" href="{{u.banner_url}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
@@ -436,29 +436,29 @@
 
 				{% if u.song and v and v.mute and not u.unmutable %}
 					<a id="pause2" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
-					<a id="play2" class="btn btn-secondary d-none" href="javascript:void(0)" onclick="play()">Play anthem</a>
+					<a id="play2" class="btn btn-secondary hidden" href="javascript:void(0)" onclick="play()">Play anthem</a>
 				{% endif %}
 
 				{% if v and v.id != u.id %}
-					{% if u.id != 995 %}<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">Unfollow</a>{% endif %}
-					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">Follow</a>						
+					{% if u.id != 995 %}<a id="button-unsub2" class="btn btn-secondary {% if not is_following %}hidden{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">Unfollow</a>{% endif %}
+					<a id="button-sub2" class="btn btn-primary {% if is_following or u.is_nofollow or u.is_blocked %}hidden{% endif %}" href="javascript:void(0)" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">Follow</a>						
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">Message</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'coin-transfer-mobile')">Gift {{'COINS_NAME' | app_config}}</a>
 
 					{% if v.admin_level > 2 %} 
-						<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
-						<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
+						<a id="admin2" class="{% if u.admin_level > 1 %}hidden{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
+						<a id="unadmin2" class="{% if u.admin_level < 2 %}hidden{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
 
-						<a id="memeadmin2" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_meme_admin','memeadmin2','unmemeadmin2')">Make meme admin</a>
-						<a id="unmemeadmin2" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','memeadmin2','unmemeadmin2')">Remove meme admin</a>
+						<a id="memeadmin2" class="{% if u.admin_level == 1%}hidden{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_meme_admin','memeadmin2','unmemeadmin2')">Make meme admin</a>
+						<a id="unmemeadmin2" class="{% if u.admin_level != 1 %}hidden{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','memeadmin2','unmemeadmin2')">Remove meme admin</a>
 
 						{% if u.admin_level > 1 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 						{% endif %}
 					{% endif %}
 
-					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message" method="post">
+					<form class="hidden profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message" method="post">
 						<pre></pre>
 						<textarea id="input-message-mobile" form="message-mobile" name="message" rows="3" maxlength="1000" class="form-control" required></textarea>
 						<pre></pre>
@@ -473,15 +473,15 @@
 						<input type="submit" value="Submit" class="btn btn-primary mt-3">
 					</form>
 
-					<div class="d-none mt-3 profile-toggleable-mobile" id="coin-transfer-mobile">
+					<div class="hidden mt-3 profile-toggleable-mobile" id="coin-transfer-mobile">
 						<input autocomplete="off" id="coins-transfer-amount-mobile" class="form-control" name="amount" type="number" oninput="updateTax(true)">
 						<div>{{u.username}} will receive <span id="coins-transfer-taxed-mobile">0</span> {{'COINS_NAME' | app_config}}</div>
 						<button class="btn btn-primary mt-3" onclick="transferCoins(true)">Gift</button>
 					</div>
 					{% if v.admin_level > 1 %}
 
-					<button id="grant" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_allow','grant','bar')">Grant club access</button>
-					<button id="bar" class="{% if u.club_banned %}d-none{% endif %} btn btn-danger" onclick="post_toast2('/@{{u.username}}/club_ban','grant','bar')">Bar from club</button>
+					<button id="grant" class="{% if u.paid_dues %}hidden{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_allow','grant','bar')">Grant club access</button>
+					<button id="bar" class="{% if u.club_banned %}hidden{% endif %} btn btn-danger" onclick="post_toast2('/@{{u.username}}/club_ban','grant','bar')">Bar from club</button>
 
 						<br><br>
 						<div class="body d-lg-flex border-bottom">
@@ -535,24 +535,24 @@
 						{% endif %}
 						<pre></pre>
 
-						<form id="agendaposter2" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
+						<form id="agendaposter2" class="{% if u.agendaposter %}hidden{% endif %}" action="/agendaposter/{{u.id}}" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
 							<input type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
 							<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" >
 						</form>
-						<a id="unagendaposter2" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Agendaposter Theme</a>
+						<a id="unagendaposter2" class="{% if not u.agendaposter %}hidden{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Agendaposter Theme</a>
 
 						<pre></pre>
 
-						<a id="shadowban2" class="{% if u.shadowbanned %}d-none{% endif %} btn btn-danger" href="javascript:void(0)" onclick="post_toast2('/shadowban/{{u.id}}','shadowban2','unshadowban2')">Shadowban</a>
+						<a id="shadowban2" class="{% if u.shadowbanned %}hidden{% endif %} btn btn-danger" href="javascript:void(0)" onclick="post_toast2('/shadowban/{{u.id}}','shadowban2','unshadowban2')">Shadowban</a>
 
-						<a id="unshadowban2" class="{% if not u.shadowbanned %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/unshadowban/{{u.id}}','shadowban2','unshadowban2')">Unshadowban</a>
+						<a id="unshadowban2" class="{% if not u.shadowbanned %}hidden{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/unshadowban/{{u.id}}','shadowban2','unshadowban2')">Unshadowban</a>
 
 
 						<pre></pre>
 
-						<a id="verify2" class="{% if u.verified %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/verify/{{u.id}}','verify2','unverify2')">Verify</a>
-						<a id="unverify2" class="{% if not u.verified %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/unverify/{{u.id}}','verify2','unverify2')">Unverify</a>
+						<a id="verify2" class="{% if u.verified %}hidden{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/verify/{{u.id}}','verify2','unverify2')">Verify</a>
+						<a id="unverify2" class="{% if not u.verified %}hidden{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/admin/unverify/{{u.id}}','verify2','unverify2')">Unverify</a>
 
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
@@ -763,18 +763,18 @@
 			{% if not u.unmutable %}
 				function pause() {
 					audio.pause();
-					document.getElementById("pause1").classList.toggle("d-none");
-					document.getElementById("play1").classList.toggle("d-none");
-					document.getElementById("pause2").classList.toggle("d-none");
-					document.getElementById("play2").classList.toggle("d-none");
+					document.getElementById("pause1").classList.toggle("hidden");
+					document.getElementById("play1").classList.toggle("hidden");
+					document.getElementById("pause2").classList.toggle("hidden");
+					document.getElementById("play2").classList.toggle("hidden");
 				}
 
 				function play() {
 					audio.play();
-					document.getElementById("pause1").classList.toggle("d-none");
-					document.getElementById("play1").classList.toggle("d-none");
-					document.getElementById("pause2").classList.toggle("d-none");
-					document.getElementById("play2").classList.toggle("d-none");
+					document.getElementById("pause1").classList.toggle("hidden");
+					document.getElementById("play1").classList.toggle("hidden");
+					document.getElementById("pause2").classList.toggle("hidden");
+					document.getElementById("play2").classList.toggle("hidden");
 				}
 			{% endif %}
 
@@ -786,5 +786,5 @@
 	</script>
 {% endif %}
 
-<script defer src="/assets/js/userpage.js?v=72"></script>
+<script defer src="/assets/js/userpage.js?v=73"></script>
 {% endblock %}
