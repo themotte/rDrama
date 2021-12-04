@@ -1,17 +1,17 @@
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 my-4 p-4 rounded-md bg-gray-300/40 shadow-inner">
 	<div class="flex flex-col space-y-4 mb-3">
 		<div class="flex items-center">
-			<input type="checkbox" class="w-5 h-5" id="nsfwCheck" name="over_18">
-			<label class="-mt-0.5 pl-1 select-none" for="nsfwCheck">+18</label>
+			<input type="checkbox" id="nsfwCheck" name="over_18">
+			<label class="inline-block pl-2 text-red-600 select-none" for="nsfwCheck">+18</label>
 		</div>
 		<div class="flex items-center">
-			<input type="checkbox" class="w-5 h-5" id="privateCheck" name="private">
-			<label class="-mt-0.5 pl-1 select-none" for="privateCheck">Draft</label>
+			<input type="checkbox" id="privateCheck" name="private">
+			<label class="inline-block pl-2 text-yellow-600 select-none" for="privateCheck">Draft</label>
 		</div>
 		{% if v.paid_dues %}
 		<div class="flex items-center">
-			<input type="checkbox" class="w-5 h-5" id="clubCheck" name="club">
-			<label class="-mt-0.5 pl-1 select-none" for="clubCheck">{{cc}} thread</label>
+			<input type="checkbox" id="clubCheck" name="club">
+			<label class="inline-block pl-2 text-gray-500 select-none" for="clubCheck">Country Club Thread</label>
 		</div>
 		{% endif %}
 	</div>
