@@ -172,7 +172,9 @@
 					<h2 class="label text-black">Username</h2>
 					<form action="/settings/name_change" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<input type="text" name="name" class="block rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" value="{{v.username}}">
+						<div class="w-full md:w-80">
+							<input type="text" name="name" class="form-input" value="{{v.username}}">
+						</div>
 						<small class="block mt-2 text-gray-400">3-25 characters, including letters, numbers, _ , and -</small>
 						<small class="block mt-1 text-gray-400">
 							Your original username will always stay reserved for you: <strong>{{v.original_username}}</strong>
@@ -224,7 +226,9 @@
 					<h2 class="label text-black">Flair</h2>
 					<form id="profile-settings" action="/settings/title_change" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<input id="customtitlebody" type="text" name="title" class="rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" placeholder='Enter a flair here' value="{% if v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
+						<div class="w-full md:w-80">
+							<input id="customtitlebody" type="text" name="title" class="form-input" placeholder='Enter a flair here' value="{% if v.customtitleplain %}{{v.customtitleplain}}{% endif %}">
+						</div>
 						<button type="button" class="inline-block ml-2 text-gray-500 hover:text-gray-200" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Add Emoji">
 								<i class="fas fa-smile-beam"></i>
 						</button>
@@ -243,7 +247,9 @@
 					<h2 class="label text-black">Flair Color</h2>
 					<form action="/settings/titlecolor" id="color-code-form" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<input class="block rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" type="text" name="color" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
+						<div class="w-full md:w-44">
+							<input class="form-input" type="text" name="color" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
+						</div>
 						<div class="mt-4">
 							<input class="ml-auto btn btn-gray" type="submit" value="Change flair color">
 						</div>
@@ -258,7 +264,9 @@
 					<h2 class="label text-black">Bluecheck Color</h2>
 					<form action="/settings/titlecolor" id="color-code-form" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<input class="block rounded shadow-inner px-2 py-1.5 text-gray-500 bg-gray-900 border border-gray-900 focus:bg-white focus:text-gray-900" type="text" name="color" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
+						<div class="w-full md:w-44">
+							<input class="form-input" type="text" name="color" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
+						</div>
 						<div class="mt-4">
 							<input class="ml-auto btn btn-gray" type="submit" value="Change flair color">
 						</div>
