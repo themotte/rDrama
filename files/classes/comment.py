@@ -335,8 +335,11 @@ class Comment(Base):
 			maxupvotes = min(ti, 31)
 			rand = randint(0, maxupvotes)
 			if self.upvotes < rand:
-				self.upvotes += randint(0, 3)
+				amount = randint(0, 3)
+				self.upvotes += amount
 				g.db.add(self)
+				self.author.coins += amount
+				g.db.add(self.author)
 				g.db.commit()
 
 		return body

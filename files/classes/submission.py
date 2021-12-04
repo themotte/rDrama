@@ -335,8 +335,11 @@ class Submission(Base):
 			maxupvotes = min(ti, 27)
 			rand = random.randint(0, maxupvotes)
 			if self.upvotes < rand:
-				self.upvotes += random.randint(0, 3)
+				amount = random.randint(0, 3)
+				self.upvotes += amount
 				g.db.add(self)
+				self.author.coins += amount
+				g.db.add(self.author)
 				g.db.commit()
 
 		return body
