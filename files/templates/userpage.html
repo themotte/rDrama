@@ -5,9 +5,9 @@
 
 {% block title %}
 
-{% if u and u.profilecss and (u.admin_level or not (v and v.admin_level)) %}
-	<link rel="stylesheet" href="/@{{u.username}}/profilecss">
-{% endif %}
+<!-- {% if u and u.profilecss and (u.admin_level or not (v and v.admin_level)) %}
+<link rel="stylesheet" href="/@{{u.username}}/profilecss">
+{% endif %} -->
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
@@ -32,74 +32,6 @@
 {% endblock %}
 
 {% block desktopUserBanner %}
-
-{% if v %}
-	<script>
-		const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
-
-		function updateTax(mobile=false) {
-			let suf = mobile ? "-mobile" : "";
-			let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
-			if(isNaN(amount) || amount < 0) {
-			amount = 0;
-			}
-			document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
-		}
-
-		function transferCoins(mobile=false) {
-			let t = event.target;
-			t.disabled = true;
-
-			let amount = parseInt(document.getElementById("coins-transfer-amount").value);
-			let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
-
-			post_toast_callback("/@{{u.username}}/transfer_coins",
-				{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
-				(xhr) => {
-				if(xhr.status == 200) {
-					document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
-					document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
-					document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
-				}
-				}
-			);
-
-			setTimeout(_ => t.disabled = false, 2000);
-		}
-	</script>
-{% endif %}
-
-{% if u.song %}
-	<script>
-		window.addEventListener("load",function(event) {
-			var audio = new Audio('/songs/{{u.id}}');
-			audio.loop=true;
-			
-			{% if not u.unmutable %}
-				function pause() {
-					audio.pause();
-					document.getElementById("pause1").classList.toggle("d-none");
-					document.getElementById("play1").classList.toggle("d-none");
-					document.getElementById("pause2").classList.toggle("d-none");
-					document.getElementById("play2").classList.toggle("d-none");
-				}
-
-				function play() {
-					audio.play();
-					document.getElementById("pause1").classList.toggle("d-none");
-					document.getElementById("play1").classList.toggle("d-none");
-					document.getElementById("pause2").classList.toggle("d-none");
-					document.getElementById("play2").classList.toggle("d-none");
-				}
-			{% endif %}
-
-			audio.play();
-			document.getElementById('userpage').addEventListener('click', () => {
-				if (audio.paused) audio.play(); 
-			}, {once : true});
-		});
-	</script>
-{% endif %}
 
 <div class="row d-none d-md-block">
 	<div class="col px-0">
@@ -776,14 +708,83 @@
 		object-fit: cover !important;
 	}
 </style>
+{% endblock %}
 
-
+{% block modals %}
 {% if v %}
 	{% include "emoji_modal.html" %}
+	{% include "gif_modal.html" %}
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if v %}
+	<script>
+		const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
+
+		function updateTax(mobile=false) {
+			let suf = mobile ? "-mobile" : "";
+			let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
+			if(isNaN(amount) || amount < 0) {
+			amount = 0;
+			}
+			document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+		}
+
+		function transferCoins(mobile=false) {
+			let t = event.target;
+			t.disabled = true;
+
+			let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+			let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+
+			post_toast_callback("/@{{u.username}}/transfer_coins",
+				{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
+				(xhr) => {
+				if(xhr.status == 200) {
+					document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
+					document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
+					document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
+				}
+				}
+			);
+
+			setTimeout(_ => t.disabled = false, 2000);
+		}
+	</script>
+{% endif %}
+
+{% if u.song %}
+	<script>
+		window.addEventListener("load",function(event) {
+			var audio = new Audio('/songs/{{u.id}}');
+			audio.loop=true;
+			
+			{% if not u.unmutable %}
+				function pause() {
+					audio.pause();
+					document.getElementById("pause1").classList.toggle("d-none");
+					document.getElementById("play1").classList.toggle("d-none");
+					document.getElementById("pause2").classList.toggle("d-none");
+					document.getElementById("play2").classList.toggle("d-none");
+				}
+
+				function play() {
+					audio.play();
+					document.getElementById("pause1").classList.toggle("d-none");
+					document.getElementById("play1").classList.toggle("d-none");
+					document.getElementById("pause2").classList.toggle("d-none");
+					document.getElementById("play2").classList.toggle("d-none");
+				}
+			{% endif %}
+
+			audio.play();
+			document.getElementById('userpage').addEventListener('click', () => {
+				if (audio.paused) audio.play(); 
+			}, {once : true});
+		});
+	</script>
 {% endif %}
 
 <script defer src="/assets/js/userpage.js?v=72"></script>
-{% endblock %}
-
-{% block GIFpicker %}
 {% endblock %}
