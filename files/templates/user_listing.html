@@ -11,7 +11,7 @@
 		<div class="break-word">
 			<div class="flex flex-wrap justify-between items-center p-2.5 md:p-3 truncate">
 
-				<a class="block text-base text-black hover:text-primary truncate ellipsis" href="{{u.url}}">@{{u.username}}</a>
+				<a class="block font-bold text-base text-black hover:text-primary truncate ellipsis" href="{{u.url}}">@{{u.username}}</a>
 
 				{% if v %}
 					{% if v.id!=u.id and not u.is_private and not u.is_nofollow %}
