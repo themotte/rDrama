@@ -35,7 +35,7 @@
 				<div class="hidden md:block pl-3 text-gray-500 leading-normal">
 					<strong>{{ total }}</strong>
 					{% if '/users/' in request.path %}
-					users found
+					user{{ '' if total == 1 else 's' }} found
 					{% else %}
 					{{ sort }} result{{ '' if total == 1 else 's' }} matching
 					<strong>"{{query}}"</strong> {{ 'from all time' if t=='all' else 'in the last' }}
