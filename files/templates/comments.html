@@ -48,13 +48,6 @@
 			window.scrollBy(0, - 100)
 		}
 	};
-
-	var clipboard = new ClipboardJS('.copy-link');
-	clipboard.on('success', function(e) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-			myToast.show();
-			console.log(e);
-	});
 </script>
 
 {% include "expanded_image_modal.html" %}
@@ -81,17 +74,6 @@
 			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
 		{% endif %}
 	}
-
-	const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-
-	const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-		const popoverId = popoverTriggerEl.getAttribute('data-content-id');
-		const contentEl = document.getElementById(popoverId).innerHTML;
-		return new bootstrap.Popover(popoverTriggerEl, {
-			content: contentEl,
-			html: true,
-		});
-	})
 </script>
 
 
