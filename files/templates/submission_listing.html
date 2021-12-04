@@ -185,7 +185,7 @@
 				<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"
 				{% endif %}>
 				{% if p.club %}
-					<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:10px; line-height:2;">COUNTRY CLUB</span>
+					<span class="badge badge-yellow">COUNTRY CLUB</span>
 				{% endif %}
 				{{p.realtitle(v) | safe}}
 				</a>
