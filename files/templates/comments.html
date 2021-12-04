@@ -749,7 +749,7 @@
 
 {% if v %}
 	<script defer src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
-	<script defer src="/assets/js/comments_v.js?v=75"></script>
+	<script defer src="/assets/js/comments_v.js?v=76"></script>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
@@ -761,30 +761,9 @@
 {% include "expanded_image_modal.html" %}
 
 <script defer src="/assets/js/popover.js?v=9"></script>
-<script defer src="/assets/js/comments.js?v=1"></script>
+<script defer src="/assets/js/comments.js?v=3"></script>
 
 <script>
-	function poll_vote(cid, parentid) {
-		{% if v %}
-			for(let el of document.getElementsByClassName('presult-'+parentid)) {
-				el.classList.remove('d-none');
-			}
-			for(let el of document.getElementsByClassName('presult')) {
-				el.classList.remove('d-none');
-			}
-			var type = document.getElementById(cid).checked;
-			var scoretext = document.getElementById('poll-' + cid);
-			var score = Number(scoretext.textContent);
-			if (type == true) scoretext.textContent = score + 1;
-			else scoretext.textContent = score - 1;
-			post('/vote/poll/' + cid + '?vote=' + type);
-		{% else %}
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-			myToast.show();
-			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-		{% endif %}
-	}
-
 	window.addEventListener("load",function(event) {
 		{% if p and (not v or v.highlightcomments) %}
 			comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
@@ -812,17 +791,6 @@
 				{%endif%}
 			{% endfor %}
 		})()
-
-		const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-
-		const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-			const popoverId = popoverTriggerEl.getAttribute('data-content-id');
-			const contentEl = document.getElementById(popoverId).innerHTML;
-			return new bootstrap.Popover(popoverTriggerEl, {
-				content: contentEl,
-				html: true,
-			});
-		})
 	});
 
   var perfEntries = performance.getEntriesByType("navigation");
@@ -831,7 +799,6 @@
     var p = perfEntries[i];
     console.log("DOM interactive = " + p.domInteractive);
   }
-}
 </script>
 
 </body>

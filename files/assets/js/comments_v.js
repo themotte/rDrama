@@ -298,3 +298,18 @@ function timestamp(str, ti) {
 	date = new Date(ti*1000);
 	document.getElementById(str).title = date.toString();
 };
+
+function poll_vote(cid, parentid) {
+	for(let el of document.getElementsByClassName('presult-'+parentid)) {
+		el.classList.remove('d-none');
+	}
+	for(let el of document.getElementsByClassName('presult')) {
+		el.classList.remove('d-none');
+	}
+	var type = document.getElementById(cid).checked;
+	var scoretext = document.getElementById('poll-' + cid);
+	var score = Number(scoretext.textContent);
+	if (type == true) scoretext.textContent = score + 1;
+	else scoretext.textContent = score - 1;
+	post('/vote/poll/' + cid + '?vote=' + type);
+}

@@ -383,7 +383,9 @@
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp" onmouseover="timestamp('timestamp','{{p.created_utc}}')">&nbsp;{{p.age_string}}</span>
 						({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
 
-						{% if p.edited_utc %}&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom"  onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">{{p.edited_string}}</span>{% endif %}
+						{% if p.edited_utc %}
+							&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom"  onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">{{p.edited_string}}</span>
+						{% endif %}
 						&nbsp;&nbsp;{{p.views}} views
 					</div>
 					{% if p.active_flags %}
@@ -867,28 +869,8 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
 
 {% if not p.comment_count %}
-	<script>
-		function poll_vote(cid) {
-			{% if v %}
-				for(let el of document.getElementsByClassName('presult')) {
-					el.classList.remove('d-none');
-				}
-				var type = document.getElementById(cid).checked;
-				var scoretext = document.getElementById('poll-' + cid);
-				var score = Number(scoretext.textContent);
-				if (type == true) scoretext.textContent = score + 1;
-				else scoretext.textContent = score - 1;
-				post('/vote/poll/' + cid + '?vote=' + type);
-			{% else %}
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.show();
-				document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-			{% endif %}
-		}
-	</script>
-
 	{% if v %}
-		<script defer src="/assets/js/comments_v.js?v=75"></script>
+		<script defer src="/assets/js/comments_v.js?v=76"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
@@ -896,6 +878,7 @@
 			{% include "ban_modal.html" %}
 		{% endif %}
 	{% endif %}
+	<script defer src="/assets/js/comments.js?v=3"></script>
 	{% include "expanded_image_modal.html" %}
 {% endif %}
 
