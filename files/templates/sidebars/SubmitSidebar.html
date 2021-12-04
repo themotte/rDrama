@@ -3,16 +3,16 @@
 	<div class="flex flex-col space-y-4 mb-3">
 		<div class="flex items-center">
 			<input type="checkbox" id="nsfwCheck" name="over_18">
-			<label class="leading-4 inline-block bagde badge-red select-none" for="nsfwCheck">18+</label>
+			<label class="leading-4 inline-block badge badge-red select-none" for="nsfwCheck">18+</label>
 		</div>
 		<div class="flex items-center">
 			<input type="checkbox" id="privateCheck" name="private">
-			<label class="leading-4 inline-blue bagde badge-yellow select-nonee" for="privateCheck">Draft</label>
+			<label class="leading-4 inline-blue badge badge-yellow select-nonee" for="privateCheck">Draft</label>
 		</div>
 		{% if v.paid_dues %}
 		<div class="flex items-center">
 			<input type="checkbox" id="clubCheck" name="club">
-			<label class="leading-4 inline-block bagde badge-yellow select-none" for="clubCheck">Country Club Thread</label>
+			<label class="leading-4 inline-block badge badge-yellow select-none" for="clubCheck">Country Club Thread</label>
 		</div>
 		{% endif %}
 	</div>
