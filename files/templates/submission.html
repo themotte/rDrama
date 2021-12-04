@@ -831,29 +831,27 @@
 </div>
 
 <script>
-	window.addEventListener("load",function(event) {
-		(() => {
-			{% if (not v or v.highlightcomments) %}
-				showNewCommentCounts('{{p.id}}', {{p.comment_count}})
-			{% endif %}
+	(() => {
+		{% if (not v or v.highlightcomments) %}
+			showNewCommentCounts('{{p.id}}', {{p.comment_count}})
+		{% endif %}
 
-			{% if "?context" not in request.full_path %}
-				const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
-				const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || { c: 0 }).c + 1)
-				comments['{{p.id}}'] = { c: newTotal, t: Date.now() }
-				window.localStorage.setItem("comment-counts", JSON.stringify(comments))
-			{% endif %}
+		{% if "?context" not in request.full_path %}
+			const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+			const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || { c: 0 }).c + 1)
+			comments['{{p.id}}'] = { c: newTotal, t: Date.now() }
+			window.localStorage.setItem("comment-counts", JSON.stringify(comments))
+		{% endif %}
 
-			{% if p.stickied %}
-			const pinned_info = document.getElementById('pinned-{{p.id}}')
-			{% if p.stickied.startswith('t:') %}
-				pinned_info.setAttribute("data-bs-original-title", `Pinned until ${new Date({{p.stickied[2:]}} * 1000).toString()}`)
-			{% else %}
-				pinned_info.setAttribute("data-bs-original-title", "Pinned by @{{p.stickied}}")
-			{%endif%}
-			{%endif%}
-		})()
-	});
+		{% if p.stickied %}
+		const pinned_info = document.getElementById('pinned-{{p.id}}')
+		{% if p.stickied.startswith('t:') %}
+			pinned_info.setAttribute("data-bs-original-title", `Pinned until ${new Date({{p.stickied[2:]}} * 1000).toString()}`)
+		{% else %}
+			pinned_info.setAttribute("data-bs-original-title", "Pinned by @{{p.stickied}}")
+		{%endif%}
+		{%endif%}
+	})()
 </script>
 
 {% if v and v.id==p.author_id %}
@@ -878,7 +876,7 @@
 			{% include "ban_modal.html" %}
 		{% endif %}
 	{% endif %}
-	<script src="/assets/js/comments.js?v=7"></script>
+	<script src="/assets/js/comments.js?v=8"></script>
 	{% include "expanded_image_modal.html" %}
 {% endif %}
 
@@ -887,14 +885,12 @@
 	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
 	{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
 	<script>
-		window.addEventListener("load",function(event) {
-			new BugController({
-				imageSprite: "/assets/images/fly-sprite.webp",
-				canDie: false,
-				minBugs: {{minbugs}},
-				maxBugs: {{maxbugs}},
-				mouseOver: "multiply"
-			});
+		new BugController({
+			imageSprite: "/assets/images/fly-sprite.webp",
+			canDie: false,
+			minBugs: {{minbugs}},
+			maxBugs: {{maxbugs}},
+			mouseOver: "multiply"
 		});
 		{% if not v %}
 			function poll_vote(cid, parentid) {
@@ -912,16 +908,14 @@
 	{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
 	{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
 	<script>
-		window.addEventListener("load",function(event) {
-			new BugController({
-				imageSprite: "/assets/images/fireflies.webp",
-				canDie: false,
-				minBugs: {{minbugs}},
-				maxBugs: {{maxbugs}},
-				mouseOver: "multiply"
-			});
+		new BugController({
+			imageSprite: "/assets/images/fireflies.webp",
+			canDie: false,
+			minBugs: {{minbugs}},
+			maxBugs: {{maxbugs}},
+			mouseOver: "multiply"
 		});
-</script>
+	</script>
 {% endif %}
 
 
