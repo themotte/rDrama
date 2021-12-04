@@ -40,16 +40,6 @@
 			<i class="fas fa-gift fa-fw mr-2" aria-hidden="true"></i>Give Award
 		</button>
 	</li>
-	<li id="unsave-{{c.id}}" class="hidden {% if c.id in v.saved_comment_idlist() %}md:block{% endif %}">
-		<button onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')">
-			<i class="fas fa-bookmark fa-fw mr-2"></i>Unsave
-		</button>
-	</li>
-	<li id="save-{{c.id}}" class="hidden {% if c.id not in v.saved_comment_idlist() %}md:block{% endif %}">
-		<button onclick="post_toast3('/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')">
-			<i class="far fa-bookmark fa-fw mr-2"></i>Save
-		</button>
-	</li>
 	<li>
 		<button onclick="openReplyBox('{{c.id}}')">
 			<i class="fas fa-reply fa-fw mr-2"></i>Reply
@@ -70,7 +60,7 @@
 			<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownComment-{{c.id}}Actions">
 				<li class="hidden md:block">
 					<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/votes?link={{c.fullname}}">
-						<i class="fas fa-arrows-v fa-sm fa-fw mr-4"></i>Votes
+						<i class="fas fa-poll fa-sm fa-fw mr-4"></i>Votes
 					</a>
 				</li>
 				<li class="hidden md:block">
@@ -79,6 +69,19 @@
 					</a>
 				</li>
 				{% if v %}
+				<li id="unsave-{{c.id}}" class="hidden {% if c.id in v.saved_comment_idlist() %}md:block{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')">
+						<i class="fas fa-bookmark fa-sm fa-fw mr-4"></i>Unsave
+					</button>
+				</li>
+				<li id="save-{{c.id}}" class="hidden {% if c.id not in v.saved_comment_idlist() %}md:block{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')">
+						<i class="far fa-bookmark fa-sm fa-fw mr-4"></i>Save
+					</button>
+				</li>
+				<li>
+					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+				</li>
 				<li class="hidden md:block">
 					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)">
 						<i class="fas fa-flag fa-sm fa-fw mr-4"></i>Report
