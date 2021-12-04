@@ -93,9 +93,9 @@
 				<span class="italic text-sm font-normal text-gray-500">(optional if you have a link)</span>
 			</label>
 			<!-- Input field -->
-			<div class="relative rounded-lg border border-gray-900 bg-gray-900 shadow-inner w-full">
-				<textarea form="submitform" id="post-text" class="form-input" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
-				<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-800">
+			<div class="relative rounded border border-gray-300 bg-white w-full">
+				<textarea form="submitform" id="post-text" class="p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown();charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
+				<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-300 mb-0">
 					<li>
 						<button type="button" class="text-gray-500 hover:text-gray-400" onclick="makeBold('post-text')">
 							<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
