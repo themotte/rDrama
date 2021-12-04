@@ -293,3 +293,8 @@ function charLimit(form, text) {
 	text.innerText = length + ' / ' + maxLength;
 
 }
+
+function timestamp(str, ti) {
+	date = new Date(ti*1000);
+	document.getElementById(str).title = date.toString();
+};
