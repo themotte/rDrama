@@ -38,9 +38,20 @@
 
 					<div class="body">
 
+						<input type="hidden" name="formkey" value="{{v.formkey}}">
+
+						<!-- <label for="title">Post Title</label>
+
+
+						<input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
+
+						<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn-2">
+							<div id="emoji-reply-btn-2" onclick="loadEmojis('post-title')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
+						</label> -->
+
 						<!-- Post title field section -->
 						<div class="flex flex-col">
-							<label for="post-title" class="font-bold text-lg font-heading leading-normal mb-2">Title</label>
+							<label for="title" class="font-bold text-lg font-heading leading-normal mb-2">Title</label>
 							<div>
 								<!-- Input field -->
 								<input class="form-input" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="rdrama.net is one of the most malevolent, cruel, coldhearted online communities you'll ever find" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
