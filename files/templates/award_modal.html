@@ -19,7 +19,7 @@
 							{% else %}
 								<input hidden name="award" value="{{award.kind}}" type="radio" id="{{award.kind}}-award" disabled class="cursor-not-allowed opacity-50 w-full h-full p-2 hover:bg-gray-300 rounded">
 							{% endif %}
-								<label for="{{award.kind}}-award" onclick="bruh('{{award.kind}}')" class="w-full h-full p-2 hover:bg-gray-300 rounded">
+								<label for="{{award.kind}}-award" onclick="bruh('{{award.kind}}')" class="w-full h-full p-2 text-center hover:bg-gray-300 checked:shadow-inner checked:bg-green-300 rounded">
 									<i class="{{award.icon}} {{award.color}}"></i>
 									<div class="mt-2 font-bold text-base text-gray-700">{{award.title}}</div>
 									<div class="text-sm text-gray-500">{{award.owned}} owned</div>
