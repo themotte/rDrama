@@ -36,22 +36,7 @@
 	<script defer src="/assets/js/comments_admin.js?v=54"></script>
 {% endif %}
 
-<script defer>
-	function collapse_comment(comment_id) {
-		const comment = "comment-" + comment_id
-		const element = document.getElementById(comment)
-		const closed = element.classList.toggle("collapsed")
-		const top = element.getBoundingClientRect().y
-
-		if (closed && top < 0) {
-			element.scrollIntoView()
-			window.scrollBy(0, - 100)
-		}
-	};
-</script>
-
 {% include "expanded_image_modal.html" %}
-
 
 <script defer>
 	function poll_vote(cid, parentid) {
@@ -342,7 +327,7 @@
 				<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{c.author.shadowbanned}}"></i>
 				{% endif %}
 				{% if c.is_pinned %}
-				<i id='pinned-{{c.id}}' onmouseover="timeStamp({{c.created_utc}})" class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Pinned {% if c.is_pinned.startswith('t:') %}until {{c.is_pinned[2:]}}{% else %}by @{{c.is_pinned}}{%endif%}"></i>
+				<i id='pinned-{{c.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Pinned {% if c.is_pinned.startswith('t:') %}until {{c.is_pinned[2:]}}{% else %}by @{{c.is_pinned}}{%endif%}"></i>
 				{% endif %}
 				{% if c.distinguish_level %}
 				<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>
