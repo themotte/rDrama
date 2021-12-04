@@ -3,10 +3,16 @@ function timestamp(str, ti) {
     document.getElementById(str).title = date.toString();
 };
 
-function expandText(id) {
-    document.getElementById('post-text-'+id).classList.toggle('d-none');
-    document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
-    document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
+function collapse_comment(comment_id) {
+    const comment = "comment-" + comment_id
+    const element = document.getElementById(comment)
+    const closed = element.classList.toggle("collapsed")
+    const top = element.getBoundingClientRect().y
+
+    if (closed && top < 0) {
+        element.scrollIntoView()
+        window.scrollBy(0, - 100)
+    }
 };
 
 window.addEventListener("load",function(event) {
