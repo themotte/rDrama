@@ -219,6 +219,14 @@ def shop(v):
 			"owned": 0,
 			"price": 300
 		},
+		"candycane": {
+			"kind": "candycane",
+			"title": "Candy Cane",
+			"description": "???",
+			"icon": "fas fa-candy-cane",
+			"color": "text-gray",
+			"price": 500
+		},
 		"mistletoe": {
 			"kind": "mistletoe",
 			"title": "Mistletoe",
@@ -414,6 +422,14 @@ def buy(v, award):
 			"icon": "fas fa-snowflake",
 			"color": "text-gray",
 			"price": 300
+		},
+		"candycane": {
+			"kind": "candycane",
+			"title": "Candy Cane",
+			"description": "???",
+			"icon": "fas fa-candy-cane",
+			"color": "text-gray",
+			"price": 500
 		},
 		"mistletoe": {
 			"kind": "mistletoe",
