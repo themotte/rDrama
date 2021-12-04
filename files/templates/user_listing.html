@@ -1,6 +1,6 @@
 {% for u in users %}
 <div class="my-2 px-2 w-1/2 overflow-hidden lg:w-1/3 xl:w-1/5">
-	<div id="user-{{u.id}}" class="shadow-sm rounded bg-gray-200 border border-gray-300 h-full">
+	<div id="user-{{u.id}}" class="shadow-sm rounded-md bg-gray-100 border border-gray-300 h-full overflow-hidden">
 		<div class="relative">
 			<img loading="lazy" src="{{u.banner_url}}" class="object-cover" alt="@{{u.username}} user banner" height=175>
 			<div class="absolute bottom-3 left-3">
