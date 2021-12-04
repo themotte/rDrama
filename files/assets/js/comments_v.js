@@ -237,13 +237,13 @@ document.onpaste = function(event) {
 }
 
 function markdown(first, second) {
-	let input = document.getElementById(first).value;
+	var input = document.getElementById(first).value;
 
-	const emojis = Array.from(input.matchAll(/:(.{1,30}?):/gi))
+	var emojis = Array.from(input.matchAll(/:(.{1,30}?):/gi))
 	if(emojis != null){
 		for(i = 0; i < emojis.length; i++){
-			const emoji = emojis[i][0]
-			const remoji = emoji.replace(/:/g,'');
+			var emoji = emojis[i][0]
+			var remoji = emoji.replace(/:/g,'');
 			if (remoji.startsWith("!"))
 			{
 				input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji.substring(1) + ".webp' class='mirrored'>")
@@ -256,11 +256,11 @@ function markdown(first, second) {
 
 	if (!first.includes('edit'))
 	{
-		let options = Array.from(input.matchAll(/\s*\$\$([^\$\n]+)\$\$\s*/gi))
+		var options = Array.from(input.matchAll(/\s*\$\$([^\$\n]+)\$\$\s*/gi))
 		if(options != null){
 			for(i = 0; i < options.length; i++){
-				const option = options[i][0];
-				const option2 = option.replace(/\$\$/g, '').replace(/\n/g, '')
+				var option = options[i][0];
+				var option2 = option.replace(/\$\$/g, '').replace(/\n/g, '')
 				input = input.replace(option, '');
 				input += '<div class="custom-control"><input type="checkbox" class="custom-control-input" id="' + option2 + '"><label class="custom-control-label" for="' + option2 + '">' + option2 + ' - <a>0 votes</a></label></div>';
 			}
@@ -272,12 +272,13 @@ function markdown(first, second) {
 
 function charLimit(form, text) {
 
-	const input = document.getElementById(form);
-	const text = document.getElementById(text);
+	var input = document.getElementById(form);
 
-	const length = input.value.length;
+	var text = document.getElementById(text);
 
-	const maxLength = input.getAttribute("maxlength");
+	var length = input.value.length;
+
+	var maxLength = input.getAttribute("maxlength");
 
 	if (length >= maxLength) {
 		text.style.color = "#E53E3E";
