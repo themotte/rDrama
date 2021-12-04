@@ -65,3 +65,4 @@ function toggleElement(group, id) {
 
 	document.getElementById(id).classList.toggle('hidden');
 }
+
