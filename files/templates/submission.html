@@ -476,9 +476,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+									<script src="https://platform.twitter.com/widgets.js"></script>
 								{% else %}
-									<script src="/assets/js/twitter.js" charset="utf-8"></script>
+									<script src="/assets/js/twitter.js"></script>
 								{% endif %}
 								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
 							{% elif "youtu" in p.domain %}
