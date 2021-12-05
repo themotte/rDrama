@@ -147,11 +147,14 @@ def api_comment(v):
 	if parent_fullname.startswith("t2_"):
 		parent = parent_post
 		parent_comment_id = None
+		top_comment_id = None
 		level = 1
 	elif parent_fullname.startswith("t3_"):
 		parent = get_comment(parent_fullname.split("_")[1], v=v)
 		parent_comment_id = parent.id
 		level = parent.level + 1
+		if level == 2: top_comment_id = parent.id
+		else: top_comment_id = parent.top_comment_id
 	else: abort(400)
 
 	body = request.values.get("body", "").strip()[:10000]
@@ -276,6 +279,7 @@ def api_comment(v):
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
 				parent_comment_id=parent_comment_id,
+				top_comment_id=top_comment_id,
 				level=level,
 				over_18=request.host == 'pcmemes.net' and v.id == 1578 or parent_post.over_18 or request.values.get("over_18","")=="true",
 				is_bot=is_bot,

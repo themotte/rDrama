@@ -116,6 +116,7 @@ def post_id(pid, anything=None, v=None):
 
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)) or post.private and not (v and v.id == post.author_id): abort(403)
 
+	pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -134,10 +135,7 @@ def post_id(pid, anything=None, v=None):
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
-		comments=comments.filter(
-			Comment.parent_submission == post.id,
-			Comment.author_id != AUTOPOLLER_ID,
-		).join(
+		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.is_pinned == None).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -151,17 +149,6 @@ def post_id(pid, anything=None, v=None):
 			isouter=True
 		)
 
-		if sort == "new":
-			comments = comments.order_by(Comment.created_utc.desc())
-		elif sort == "old":
-			comments = comments.order_by(Comment.created_utc.asc())
-		elif sort == "controversial":
-			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
-		elif sort == "top":
-			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
-		elif sort == "bottom":
-			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
-
 		output = []
 		for c in comments.all():
 			comment = c[0]
@@ -169,11 +156,8 @@ def post_id(pid, anything=None, v=None):
 			comment.is_blocking = c[2] or 0
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
-
-		post.replies = [x for x in output if x.is_pinned] + [x for x in output if x.level == 1 and not x.is_pinned]
-
-	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID)
+		
+		comments = comments.filter(Comment.level == 1)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -186,7 +170,42 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		post.replies = comments.filter(Comment.is_pinned != None).all() + comments.filter(Comment.level == 1, Comment.is_pinned == None).all()
+		offset = int(request.values.get("offset", 0))
+		if offset: comments = comments.offset(offset)
+
+		comments = [c[0] for c in comments.all()]
+	else:
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.level == 1, Comment.is_pinned == None)
+
+		if sort == "new":
+			comments = comments.order_by(Comment.created_utc.desc())
+		elif sort == "old":
+			comments = comments.order_by(Comment.created_utc.asc())
+		elif sort == "controversial":
+			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+		elif sort == "top":
+			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+		elif sort == "bottom":
+			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+
+		offset = int(request.values.get("offset", 0))
+		if offset: comments = comments.offset(offset)
+
+		comments = comments.all()
+
+	if post.created_utc > 1638672040:
+		comments2 = []
+		count = 0
+		for comment in comments:
+			comments2.append(comment)
+			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
+			offset += 1
+			if count > 50: break
+
+		if len(comments) == len(comments2): offset = None
+		comments = comments2
+
+	post.replies = pinned + comments
 
 	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD] and not request.values.get("sort"): post.replies = post.replies[:10]
 
@@ -202,7 +221,7 @@ def post_id(pid, anything=None, v=None):
 	else:
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, sort=sort, render_replies=True)
+		return render_template(template, v=v, p=post, sort=sort, render_replies=True, offset=offset)
 
 
 @app.post("/edit_post/<pid>")
