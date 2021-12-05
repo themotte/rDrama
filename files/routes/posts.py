@@ -169,9 +169,6 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		offset = int(request.values.get("offset", 0))
-		if offset: comments = comments.offset(offset)
-
 		comments = [c[0] for c in comments.all()]
 	else:
 		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
@@ -189,27 +186,28 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		offset = 0
-
 		comments = comments.all()
 
-	comments2 = []
-	count = 0
-	if post.created_utc > 1638672040:
-		for comment in comments:
-			comments2.append(comment)
-			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-			offset += 1
-			if count > 50: break
-	else:
-		for comment in comments:
-			comments2.append(comment)
-			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-			offset += 1
-			if count > 10: break
+	offset = 0
 
-	if len(comments) == len(comments2): offset = None
-	comments = comments2
+	if post.comment_count > 60:
+		comments2 = []
+		count = 0
+		if post.created_utc > 1638672040:
+			for comment in comments:
+				comments2.append(comment)
+				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
+				offset += 1
+				if count > 50: break
+		else:
+			for comment in comments:
+				comments2.append(comment)
+				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
+				offset += 1
+				if count > 10: break
+
+		if len(comments) == len(comments2): offset = None
+		comments = comments2
 
 	post.replies = pinned + comments
 
