@@ -814,11 +814,7 @@
  
 {% if offset %}
  	<br>
-	{% if sort %}
-		 <a class="pt-2" href="{{request.path}}?sort={{sort}}&offset={{offset}}">VIEW MORE</a>
-	{% else %}
-		<a class="pt-2" href="{{request.path}}?offset={{offset}}">VIEW MORE</a>
-	{% endif %}
+	<a class="pt-2" href="{{request.path}}?offset={{offset}}">VIEW MORE</a>
 {% endif %}
 
  {% elif not p.replies and p.deleted_utc == 0 %}
