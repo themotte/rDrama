@@ -75,8 +75,9 @@
 					</div>
 
 					<div>
-						<label for="email-register" class="label text-black">Email Address</label>
-						<small class="text-xs text-gray-500 pl-1">(optional)</small>
+						<label for="email-register" class="label text-black">
+							Email Address <span class="text-xs text-gray-500 font-normal pl-1">(optional)</span>
+						</label>
 						<input class="form-input" id="email-register" aria-describedby="emailHelpRegister" type="email" name="email">
 					</div>
 
@@ -107,15 +108,16 @@
 					<div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
 					{% endif %}
 
-					<button class="btn btn-green login" id="register_button">
+					<button class="btn btn-green" id="register_button">
 						Create account
 					</button>
 
-					<div class="text-center text-muted text-small mt-2 mb-0">
-						Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login">Log in</a>
-					</div>
-
 				</form>
+
+				<div class="mx-auto text-gray-700 text-xs mt-3">
+					Already have an account?
+					<a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-bold">Log in</a>
+				</div>
 
 			</div>
 
