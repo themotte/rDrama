@@ -676,19 +676,19 @@
 {% endblock %}
 
 {% block modals %}
-	{% if v and v.id==p.author_id %}
-		{% include "delete_post_modal.html" %}
-	{% endif %}
-
 	{% if v %}
+		{% if v.id == p.author_id %}
+			{% include "delete_post_modal.html" %}
+		{% endif %}
+
 		{% include "report_post_modal.html" %}
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
-	{% endif %}
 
-	{% if v.admin_level == 6 %}
-		{% include "ban_modal.html" %}
+		{% if v.admin_level == 6 %}
+			{% include "ban_modal.html" %}
+		{% endif %}
 	{% endif %}
 
 	{% include "/modals/ModalSubmissionActions.html" %}
