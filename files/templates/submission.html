@@ -698,7 +698,7 @@
 					const form = new FormData();
 					const xhr = new XMLHttpRequest();
 
-					btn.classList.toggle('animate-pulse')
+					btn.classList.toggle('animate-pulse');
 
 					xhr.open("post", "/viewmore/{{p.id}}/{{sort}}/{{offset}}");
 					xhr.withCredentials=true;
