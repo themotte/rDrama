@@ -135,7 +135,7 @@ def post_id(pid, anything=None, v=None):
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
-		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.level == 1, Comment.is_pinned == None).join(
+		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.is_pinned == None).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -148,6 +148,16 @@ def post_id(pid, anything=None, v=None):
 			blocked.c.user_id == Comment.author_id,
 			isouter=True
 		)
+
+		output = []
+		for c in comments.all():
+			comment = c[0]
+			comment.voted = c[1] or 0
+			comment.is_blocking = c[2] or 0
+			comment.is_blocked = c[3] or 0
+			output.append(comment)
+		
+		comments = comments.filter(Comment.level == 1)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -163,15 +173,7 @@ def post_id(pid, anything=None, v=None):
 		offset = int(request.values.get("offset", 0))
 		if offset: comments = comments.offset(offset)
 
-		output = []
-		for c in comments.all():
-			comment = c[0]
-			comment.voted = c[1] or 0
-			comment.is_blocking = c[2] or 0
-			comment.is_blocked = c[3] or 0
-			output.append(comment)
-
-		comments2 = output
+		comments2 = [c[0] for c in comments.all()]
 	else:
 		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.level == 1, Comment.is_pinned == None)
 
