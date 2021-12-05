@@ -35,7 +35,7 @@
 
 <body id="login">
 
-	<div class="flex h-screen pt-2 lg:pt-16 bg-gray-500">
+	<div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-t from-gray-700 to-gray-600">
 
 		<div class="mb-3">
 			<a href="/" class="text-decoration-none">
@@ -51,61 +51,65 @@
 		<p class="text-muted mb-md-2">No email address required.</p>
 		{% endif %}
 
-		<form action="/signup" method="post" class="mt-md-3" id="signup">
+		<div class="max-w-md w-full space-y-8">
 
-			{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
+			<form action="/signup" method="post" class="mt-md-3" id="signup">
 
-			<input type="hidden" name="formkey" value="{{formkey}}">
-			<input type="hidden" name="now" value="{{now}}">
+				{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
 
-			{% if redirect %}<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
-			{% if ref_user %}
-			<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
+				<input type="hidden" name="formkey" value="{{formkey}}">
+				<input type="hidden" name="now" value="{{now}}">
 
-			<label for="username-register" class="mt-3">Username</label>
+				{% if redirect %}<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
+				{% if ref_user %}
+				<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
 
-			<input class="form-control" id="username-register"
-			aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
-			<small id="usernameHelpRegister"></small>
+				<label for="username-register" class="mt-3">Username</label>
 
-			<label for="email-register" class="mt-3">Email Address</label>
+				<input class="form-control" id="username-register"
+				aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
+				<small id="usernameHelpRegister"></small>
 
-			<small class="d-inline-block text-muted ml-1">(optional)</small>
+				<label for="email-register" class="mt-3">Email Address</label>
 
-			<input class="form-control" id="email-register"
-			aria-describedby="emailHelpRegister" type="text" name="email">
+				<small class="d-inline-block text-muted ml-1">(optional)</small>
 
-			<label for="password-register" class="mt-3">Password</label>
+				<input class="form-control" id="email-register"
+				aria-describedby="emailHelpRegister" type="text" name="email">
 
-			<input class="form-control" id="password-register"
-			aria-describedby="passwordHelpReigster" type="password" name="password" required="">
-			<small id="passwordHelpRegister" class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8
-				characters
-			required.</small>
-			<small id="passwordHelpSuccess" class="form-text font-weight-bold text-success d-none mt-1">Your password meets the requirements.
-			</small>
+				<label for="password-register" class="mt-3">Password</label>
 
-			<label for="password_confirm" class="mt-3">Confirm Password</label>
+				<input class="form-control" id="password-register"
+				aria-describedby="passwordHelpReigster" type="password" name="password" required="">
+				<small id="passwordHelpRegister" class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8
+					characters
+				required.</small>
+				<small id="passwordHelpSuccess" class="form-text font-weight-bold text-success d-none mt-1">Your password meets the requirements.
+				</small>
 
-			<input class="form-control" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required="">
-			<div class="custom-control custom-checkbox mt-4">
-				<input type="checkbox" class="custom-control-input" id="termsCheck" required>
-				<label class="custom-control-label terms" for="termsCheck">I accept the
-					<a href="/rules" target="_blank">terms and conditions</a>
-				</label>
-			</div>
+				<label for="password_confirm" class="mt-3">Confirm Password</label>
 
-			{% if hcaptcha %}
-			<div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
-			{% endif %}
+				<input class="form-control" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required="">
+				<div class="custom-control custom-checkbox mt-4">
+					<input type="checkbox" class="custom-control-input" id="termsCheck" required>
+					<label class="custom-control-label terms" for="termsCheck">I accept the
+						<a href="/rules" target="_blank">terms and conditions</a>
+					</label>
+				</div>
 
-			<button class="btn btn-primary login w-100 mt-3" id="register_button">Register</button>
+				{% if hcaptcha %}
+				<div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
+				{% endif %}
 
-			<div class="text-center text-muted text-small mt-2 mb-0">
-				Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login">Log in</a>
-			</div>
+				<button class="btn btn-primary login w-100 mt-3" id="register_button">Register</button>
 
-		</form>
+				<div class="text-center text-muted text-small mt-2 mb-0">
+					Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login">Log in</a>
+				</div>
+
+			</form>
+
+		</div>
 
 	</div>
 
