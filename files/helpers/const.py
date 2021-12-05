@@ -143,6 +143,7 @@ if SITE == 'rdrama.net':
 	CARP_ID = 995
 	JOAN_ID = 28
 	AEVANN_ID = 1
+	KLEN_ID = 2050
 	LAWLZ_ID = 3833
 	LLM_ID = 253
 	DAD_ID = 2513
@@ -164,6 +165,7 @@ elif SITE == "pcmemes.net":
 	CARP_ID = 0
 	JOAN_ID = 0
 	AEVANN_ID = 1
+	KLEN_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0
@@ -185,6 +187,7 @@ else:
 	CARP_ID = 0
 	JOAN_ID = 0
 	AEVANN_ID = 0
+	KLEN_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0
@@ -416,6 +419,38 @@ BADGES = {
 }
 
 AWARDS = {
+	"snow": {
+		"kind": "snow",
+		"title": "Snow",
+		"description": "???",
+		"icon": "fas fa-snowflake",
+		"color": "text-gray",
+		"price": 300
+	},
+	"candycane": {
+		"kind": "candycane",
+		"title": "Candy Cane",
+		"description": "???",
+		"icon": "fas fa-candy-cane",
+		"color": "text-gray",
+		"price": 500
+	},
+	"mistletoe": {
+		"kind": "mistletoe",
+		"title": "Mistletoe",
+		"description": "???",
+		"icon": "fas fa-mistletoe",
+		"color": "text-gray",
+		"price": 600
+	},
+	"mariah": {
+		"kind": "mariah",
+		"title": "Mariah",
+		"description": "???",
+		"icon": "fas fa-music",
+		"color": "text-gray",
+		"price": 800
+	},
 	"haunt": {
 		"kind": "haunt",
 		"title": "Haunt",

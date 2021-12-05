@@ -130,14 +130,16 @@ def sanitize(sanitized, noimages=False):
 			if site not in tag["src"] and not tag["src"].startswith('/'): tag["rel"] = "nofollow noopener noreferrer"
 			tag["class"] = "in-comment-image"
 			tag["loading"] = "lazy"
-			tag["data-src"] = tag["src"]
-			tag["src"] = "/assets/images/loading.webp"
+			# tag["data-src"] = tag["src"]
+			# tag["src"] = "/assets/images/loading.webp"
 
 			link = soup.new_tag("a")
-			link["href"] = tag["data-src"]
+			# link["href"] = tag["data-src"]
+			link["href"] = tag["src"]
 			if site not in link["href"] and not link["href"].startswith('/'): link["rel"] = "nofollow noopener noreferrer"
 			link["target"] = "_blank"
-			link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
+			# link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
+			link["onclick"] = f"expandDesktopImage('{tag['src']}');"
 			link["data-bs-toggle"] = "modal"
 			link["data-bs-target"] = "#expandImageModal"
 

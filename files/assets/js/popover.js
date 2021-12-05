@@ -1,4 +1,3 @@
-window.addEventListener("load",function(event) {
   function eventasdf(value){
       var content_id = value.getAttributeNode("data-content-id").value;
       value.addEventListener("click", function(){jhkj(content_id)});
@@ -34,4 +33,3 @@ window.addEventListener("load",function(event) {
     usernames.forEach(eventasdf);
     
     document.addEventListener("click", function(e){dfgh(e)});
-});
