@@ -670,7 +670,7 @@
 			{% endif %}
 
 			{% if p.replies %}
-			<div class="comment-section px-2.5 md:px-0">
+			<div class="comment-section px-2.5 md:px-0" id="comment-section">
 				{% with comments=p.replies %}
 				{% include "comments.html" %}
 				{% endwith %}
@@ -691,7 +691,24 @@
 			{% endif %}
 
 			{% if offset %}
-				<a class="pt-2" href="{{request.path}}?sort={{sort}}&offset={{offset}}">View more</a>
+		 	<script defer>
+				function loadMore(id) {
+					const el = document.getElementById(id)
+					const form = new FormData();
+					const xhr = new XMLHttpRequest();
+					xhr.open("post", "/viewmore/{{p.id}}/{{sort}}/{{offset}}");
+					xhr.withCredentials=true;
+					xhr.onload=function(){
+						if (xhr.status==200) {
+							el.innerHTML = xhr.response;
+						}
+					}
+					xhr.send(form)
+				}
+			</script>
+			<button class="btn btn-gray w-full" onclick="loadMore('comment-section')">
+				Load more comments
+			</button>
 			{% endif %}
 
 	</div>
