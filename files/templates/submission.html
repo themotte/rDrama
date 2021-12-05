@@ -692,8 +692,8 @@
 
 			{% if offset %}
 		 	<script defer>
-				function loadMore(id, btn) {
-					const btn = document.getElementById(btn)
+				function loadMore(id, trigger) {
+					const btn = document.getElementById(trigger)
 					const el = document.getElementById(id)
 					const form = new FormData();
 					const xhr = new XMLHttpRequest();
