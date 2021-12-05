@@ -64,29 +64,26 @@
 
 					<div class="space-y-4">
 
-
-						<h2 class="font-medium text-xl md:text-2xl">
-							Create an Account
-						</h2>
+						<h2 class="text-sm label text-black">Create an Account</label>
 
 						<div>
-							<label for="username-register" class="label text-black">Username</label>
+							<label for="username-register" class="hidden">Username</label>
 							<input class="form-input" id="username-register"
-							aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
+							aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required placeholder="Username">
 							<small id="usernameHelpRegister"></small>
 						</div>
 
 						<div>
-							<label for="email-register" class="label text-black">
+							<label for="email-register" class="hidden">
 								Email Address <span class="text-xs text-gray-500 font-normal pl-1">(optional)</span>
 							</label>
-							<input class="form-input" id="email-register" aria-describedby="emailHelpRegister" type="email" name="email">
+							<input class="form-input" id="email-register" aria-describedby="emailHelpRegister" type="email" name="email" placeholder="Email address">
 						</div>
 
 						<div>
-							<label for="password-register" class="label text-black">Password</label>
+							<label for="password-register" class="hidden">Password</label>
 							<input class="form-input" id="password-register"
-							aria-describedby="passwordHelpReigster" type="password" name="password" required="">
+							aria-describedby="passwordHelpReigster" type="password" name="password" required placeholder="Password">
 							<small id="passwordHelpRegister" class="block mt-1 text-gray-500 hidden">
 								Minimum of 8 characters required.
 							</small>
@@ -96,8 +93,8 @@
 						</div>
 
 						<div>
-							<label for="password_confirm" class="label text-black">Confirm Password</label>
-							<input class="form-input" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required="">
+							<label for="password_confirm" class="hidden">Confirm Password</label>
+							<input class="form-input" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required placeholder="Confirm password">
 							<div class="mt-4">
 								<input type="checkbox" id="termsCheck" required>
 								<label class="text-gray-700 text-xs pl-1" for="termsCheck">
