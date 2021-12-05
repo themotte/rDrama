@@ -101,8 +101,7 @@ def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
-	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
-	elif v: defaultsortingcomments = v.defaultsortingcomments
+	if v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 
 	sort = request.values.get("sort", defaultsortingcomments)
@@ -115,8 +114,6 @@ def post_id(pid, anything=None, v=None):
 	post = get_post(pid, v=v)
 
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)) or post.private and not (v and v.id == post.author_id): abort(403)
-
-	pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -135,7 +132,7 @@ def post_id(pid, anything=None, v=None):
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
-		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.is_pinned == None).join(
+		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -157,7 +154,9 @@ def post_id(pid, anything=None, v=None):
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
 		
-		comments = comments.filter(Comment.level == 1)
+		pinned = [c[0] for c in comments.filter(Comment.is_pinned != None).all()]
+		
+		comments = comments.filter(Comment.level == 1, Comment.is_pinned == None)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -175,6 +174,8 @@ def post_id(pid, anything=None, v=None):
 
 		comments = [c[0] for c in comments.all()]
 	else:
+		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
+
 		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.level == 1, Comment.is_pinned == None)
 
 		if sort == "new":
@@ -206,8 +207,6 @@ def post_id(pid, anything=None, v=None):
 		comments = comments2
 
 	post.replies = pinned + comments
-
-	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD] and not request.values.get("sort"): post.replies = post.replies[:10]
 
 	post.views += 1
 	g.db.add(post)
@@ -638,8 +637,10 @@ def submit_post(v):
 			params = parse_qs(urlparse(url).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if isinstance(t, str): t = t.replace('s','')
-			if t: embed = f"https://youtube.com/embed/{yt_id}?start={t}"
-			else: embed = f"https://youtube.com/embed/{yt_id}"
+			embed = f'<lite-youtube videoid="{yt_id}" params="controls=0&modestbranding=1'
+			if t: embed += f'&start={t}'
+			embed += '"></lite-youtube>'
+
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 			id = url.split("/post/")[1]
 			if "/" in id: id = id.split("/")[0]
