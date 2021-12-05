@@ -411,8 +411,7 @@
 {% endif %}
 
 {% include "expanded_image_modal.html" %}
-
-{% block popovers %}
+{% include "/modals/ModalSubmissionActions.html" %}
 
 {% for p in listing %}
 <div style="display:none" id="popover-{{p.id}}">
@@ -449,8 +448,6 @@
 	</div>
 </div>
 {% endfor %}
-
-{% endblock %}
 
 <script defer src="/assets/js/new_comments_count.js?v=54"></script>
 <script defer src="/assets/js/popover.js?v=9"></script>
