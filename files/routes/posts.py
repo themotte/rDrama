@@ -195,9 +195,9 @@ def post_id(pid, anything=None, v=None):
 	count = 0
 	for comment in comments:
 		comments2.append(comment)
-		count += g.db.query(Comment.id).filter_by(top_comment_id=comment.id).count()
+		count += g.db.query(Comment.id).filter_by(top_comment_id=comment.id).count() + 1
 		offset += 1
-		if count > 50: break
+		if count > 10: break
 
 	if len(comments) == len(comments2): offset = None
 
