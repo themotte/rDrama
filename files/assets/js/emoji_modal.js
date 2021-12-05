@@ -116,7 +116,7 @@ const EMOJIS_STRINGS = [
 			marseytears: ['crying','cried','sad','pout','teary','eyes'],
 			marseyteaparty: ['donger','arran','soren','duck','carp'],
 			marseyturkey: ['thanksgiving','holiday','bird','beak','feathers'],
-			marseyxmassweater: ['holiday','christmas','santa hat','ugly'],
+			marseyuglyxmasweater: ['holiday','christmas','santa hat','ugly'],
 			marseytalibanpat: ['janniejihad','muslim','terrorist','afganistan','patting','petting','animated'],
 			marseyanime: ['weeb','sayian'],
 			marseyanticarp: ['fish','carpathianflorist'],
