@@ -396,9 +396,9 @@
 		Looks like there is no content atm.
 	</p>
 </div>	
-
-
 {% endif %}
+
+{% include "/modals/ModalSubmissionListingActions.html" %}
 
 {% endfor %}
 
@@ -411,7 +411,6 @@
 {% endif %}
 
 {% include "expanded_image_modal.html" %}
-{% include "/modals/ModalSubmissionListingActions.html" %}
 
 {% for p in listing %}
 <div style="display:none" id="popover-{{p.id}}">
