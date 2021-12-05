@@ -227,7 +227,7 @@
 <div class="col-span-full xl:col-span-9">
 
 <!-- Post -->
-<div id="post-root" class="col-span-full sm:py-4 my-2.5 sm:my-0">
+<div id="post-root" class="sm:py-4 my-2.5 sm:my-0">
 
 	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 {% if p.is_banned %}bg-red-900{% endif %}{% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
 		<div class="{% if p.deleted_utc > 0 %}deleted {% endif %} flex flex-row-reverse flex-nowrap justify-end">
@@ -368,66 +368,66 @@
 							<div class="row no-gutters">
 								<div class="col">
 									<video controls loop preload="metadata" style="max-width: 100%">
-										<source src="{{ p.realurl(v) }}" type="video/mp4">
-										</video>
-									</div>
-								</div>
-								<pre></pre>
-								{% endif %}
-
-								{{p.realbody(v) | safe}}
-
-								{% for c in p.options %}
-								<div class="custom-control">								
-									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
-									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
-								</div>
-								{% endfor %}
-
-								{% if p.is_banned and p.ban_reason %}
-								<div class="text-removed mb-0">removed by @{{p.ban_reason}}</div>
-								{% endif %}
-
-
-
-
-							</div>
-
-							{% if p.embed_url %}
-							{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
-							{% include "embeds/twitterlight.html" %}
-							{% elif "twitter.com" in p.domain %}
-							{% include "embeds/twitter.html" %}
-							{% elif "youtu" in p.domain %}
-							{% include "embeds/youtube.html" %}
-							{% endif %}
-							{% endif %}
-						</div>
-
-						{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and not v.is_suspended %}
-							{% include "/submission/SubmissionEditForm.html" %}
-						{% endif %}
-
-						{% if p.embed_url and "http" not in p.embed_url %}
-						<div id="crosspost-embed">
-							<div class="row no-gutters">
-								<div id="frontpage" class="col-12 pt-0">
-									<div class="posts" id="posts">
-										{{ p.embed_url | post_embed(v) | safe }}
-									</div>
+										<source src="{{ p.realurl(v) }}" type="video/mp4"/>
+									</video>
 								</div>
 							</div>
+							<pre></pre>
+							{% endif %}
+
+							{{p.realbody(v) | safe}}
+
+							{% for c in p.options %}
+							<div class="custom-control">								
+								<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
+								<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
+							</div>
+							{% endfor %}
+
+							{% if p.is_banned and p.ban_reason %}
+							<div class="text-removed mb-0">removed by @{{p.ban_reason}}</div>
+							{% endif %}
+
+
+
+
 						</div>
+
+						{% if p.embed_url %}
+						{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
+						{% include "embeds/twitterlight.html" %}
+						{% elif "twitter.com" in p.domain %}
+						{% include "embeds/twitter.html" %}
+						{% elif "youtu" in p.domain %}
+						{% include "embeds/youtube.html" %}
 						{% endif %}
-
+						{% endif %}
 					</div>
 
-					<!-- Post actions -->
-					<div class="hidden md:block pt-4">
-						{% include "/submission/SubmissionActions.html" %}
+					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and not v.is_suspended %}
+						{% include "/submission/SubmissionEditForm.html" %}
+					{% endif %}
+
+					{% if p.embed_url and "http" not in p.embed_url %}
+					<div id="crosspost-embed">
+						<div class="row no-gutters">
+							<div id="frontpage" class="col-12 pt-0">
+								<div class="posts" id="posts">
+									{{ p.embed_url | post_embed(v) | safe }}
+								</div>
+							</div>
+						</div>
 					</div>
+					{% endif %}
 
 				</div>
+
+				<!-- Post actions -->
+				<div class="hidden md:block pt-4">
+					{% include "/submission/SubmissionActions.html" %}
+				</div>
+
+			</div>
 
 				<!-- Author avatar, post score, and voting buttons -->
 				<div class="hidden md:flex flex-col flex-shrink-0 items-center mr-4">
@@ -505,7 +505,7 @@
 
 			</div>
 
-		</div>
+	</div>
 
 		{% if not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
 		<div class="col-span-full">
@@ -516,7 +516,7 @@
 		{% endif %}
 	</div>
 
-	<div class="col-span-full md:hidden px-2.5">
+	<div class="md:hidden px-2.5">
 		<ul class="flex items-center space-x-5 text-sm text-gray-500 mb-0">
 
 			<li class="mr-auto">
@@ -561,7 +561,7 @@
 		</ul>
 	</div>
 
-	<div class="col-span-full shadow-inset-t-white-05 border-t border-gray-300 py-4">
+	<div class="shadow-inset-t-white-05 border-t border-gray-300 py-4">
 
 			<!-- <div class="comments-count mb-4">
 				<div class="dropdown dropdown-actions">
