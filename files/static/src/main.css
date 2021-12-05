@@ -75,7 +75,7 @@
 	}
 	/* Images */
 	img {
-		@apply inline hidden
+		@apply inline
 	}
 	img[lazy=loading] {
 		@apply animate-pulse;
