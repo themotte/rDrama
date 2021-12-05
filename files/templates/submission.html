@@ -696,17 +696,19 @@
 					const el = document.getElementById(id)
 					const form = new FormData();
 					const xhr = new XMLHttpRequest();
+
 					xhr.open("post", "/viewmore/{{p.id}}/{{sort}}/{{offset}}");
 					xhr.withCredentials=true;
 					xhr.onload=function(){
 						if (xhr.status==200) {
 							el.innerHTML = xhr.response;
 						}
+						el.classList.toggle('hidden');
 					}
 					xhr.send(form)
 				}
 			</script>
-			<button class="mt-2 w-full btn btn-gray" onclick="loadMore('comment-section')">
+			<button class="mt-2 w-full btn btn-gray" onclick="loadMore('comment-section'); this.disabled = true;">
 				Load more comments
 			</button>
 			{% endif %}
