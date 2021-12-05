@@ -33,6 +33,7 @@ class Comment(Base):
 	is_approved = Column(Integer, default=0)
 	level = Column(Integer, default=0)
 	parent_comment_id = Column(Integer, ForeignKey("comments.id"))
+	top_comment_id = Column(Integer)
 	over_18 = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
 	is_pinned = Column(String)

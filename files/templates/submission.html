@@ -811,6 +811,12 @@
 		{% include "comments.html" %}
 	{% endwith %}
  </div>
+ 
+{% if offset %}
+ 	<br>
+	<a class="pt-2" href="/post/8/kek?offset={{offset}}">VIEW MORE</a>
+{% endif %}
+
  {% elif not p.replies and p.deleted_utc == 0 %}
  <div class="comment-section text-center py-7">
 	<span class="fa-stack fa-2x text-muted mb-4">
