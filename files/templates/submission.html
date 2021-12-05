@@ -825,6 +825,7 @@
 {% if offset %}
  	<script>
 		function viewmore() {
+			document.getElementById("viewmore").classList.add('d-none');
 			var form = new FormData();
 			var xhr = new XMLHttpRequest();
 			xhr.open("post", "/viewmore/{{p.id}}/{{sort}}/{{offset}}");
