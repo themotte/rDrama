@@ -59,11 +59,11 @@
 
 			<div class="max-w-2xl w-full space-y-8 px-6 py-5 bg-gray-200 rounded shadow-sm">
 
-				<form action="/signup" method="post" class="relative space-y-4" id="signup">
+				<form action="/signup" method="post" id="signup">
 
 					{% if error %}<div class="text-red-600 mb-2">{{error}}</div>{% endif %}
 
-					<div class="absolute">
+					<div class="hidden">
 						<input type="hidden" name="formkey" value="{{formkey}}">
 						<input type="hidden" name="now" value="{{now}}">
 						{% if redirect %}
@@ -72,50 +72,54 @@
 						<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
 					</div>
 
-					<div>
-						<label for="username-register" class="label text-black">Username</label>
-						<input class="form-input" id="username-register"
-						aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
-						<small id="usernameHelpRegister"></small>
-					</div>
+					<div class="space-y-4">
 
-					<div>
-						<label for="email-register" class="label text-black">
-							Email Address <span class="text-xs text-gray-500 font-normal pl-1">(optional)</span>
-						</label>
-						<input class="form-input" id="email-register" aria-describedby="emailHelpRegister" type="email" name="email">
-					</div>
-
-					<div>
-						<label for="password-register" class="label text-black">Password</label>
-						<input class="form-input" id="password-register"
-						aria-describedby="passwordHelpReigster" type="password" name="password" required="">
-						<small id="passwordHelpRegister" class="block mt-1 text-gray-500 hidden">
-							Minimum of 8 characters required.
-						</small>
-						<small id="passwordHelpSuccess" class="block mt-1 text-green-600 hidden">
-							Your password meets the requirements.
-						</small>
-					</div>
-
-					<div>
-						<label for="password_confirm" class="label text-black">Confirm Password</label>
-						<input class="form-input" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required="">
-						<div class="mt-4">
-							<input type="checkbox" id="termsCheck" required>
-							<label class="text-gray-700 text-xs pl-1" for="termsCheck">
-								I accept the <a href="/rules" target="_blank" class="text-blue-500 hover:text-blue-600">terms and conditions</a>
-							</label>
+						<div>
+							<label for="username-register" class="label text-black">Username</label>
+							<input class="form-input" id="username-register"
+							aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
+							<small id="usernameHelpRegister"></small>
 						</div>
+
+						<div>
+							<label for="email-register" class="label text-black">
+								Email Address <span class="text-xs text-gray-500 font-normal pl-1">(optional)</span>
+							</label>
+							<input class="form-input" id="email-register" aria-describedby="emailHelpRegister" type="email" name="email">
+						</div>
+
+						<div>
+							<label for="password-register" class="label text-black">Password</label>
+							<input class="form-input" id="password-register"
+							aria-describedby="passwordHelpReigster" type="password" name="password" required="">
+							<small id="passwordHelpRegister" class="block mt-1 text-gray-500 hidden">
+								Minimum of 8 characters required.
+							</small>
+							<small id="passwordHelpSuccess" class="block mt-1 text-green-600 hidden">
+								Your password meets the requirements.
+							</small>
+						</div>
+
+						<div>
+							<label for="password_confirm" class="label text-black">Confirm Password</label>
+							<input class="form-input" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required="">
+							<div class="mt-4">
+								<input type="checkbox" id="termsCheck" required>
+								<label class="text-gray-700 text-xs pl-1" for="termsCheck">
+									I accept the <a href="/rules" target="_blank" class="text-blue-500 hover:text-blue-600">terms and conditions</a>
+								</label>
+							</div>
+						</div>
+
+						{% if hcaptcha %}
+						<div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
+						{% endif %}
+
+						<button class="btn btn-green w-full" id="register_button">
+							Create account
+						</button>
+
 					</div>
-
-					{% if hcaptcha %}
-					<div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
-					{% endif %}
-
-					<button class="btn btn-green w-full" id="register_button">
-						Create account
-					</button>
 
 				</form>
 
