@@ -814,7 +814,11 @@
  
 {% if offset %}
  	<br>
-	<a class="pt-2" href="/post/8/kek?offset={{offset}}">VIEW MORE</a>
+	{% if '?' in request.full_url %}
+		 <a class="pt-2" href="{{request.full_url}}&offset={{offset}}">VIEW MORE</a>
+ 	{% else &}
+		 <a class="pt-2" href="{{request.full_url}}?offset={{offset}}">VIEW MORE</a>
+ 	{% endif %}
 {% endif %}
 
  {% elif not p.replies and p.deleted_utc == 0 %}
