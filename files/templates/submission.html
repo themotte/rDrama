@@ -160,6 +160,40 @@
 
 {% block actionsModal %}
 
+<div style="display:none" id="popover-{{p.id}}">
+	<div class="popover-user-profile" role="tooltip">
+		<img class="w-100 h-64 object-cover" src="{{p.author.banner_url}}">
+		<div class="d-flex align-items-end px-3 mt-n6 mb-3">
+			<img class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
+			<div class="px-3 text-truncate">
+				<h5 class="text-truncate text-black">{{p.author.username}}</h5>
+			</div>
+		</div>
+		<div class="px-3">
+			<span class="popover-bio text-black">{% if p.author.bio_html %}{{p.author.bio_html_eager | safe}}{% endif %}</span>
+		</div>
+		<div class="border-top d-flex align-items-center p-3 gap-3 smol">
+			<span>
+				<strong class="text-black">{{p.author.post_count}}</strong>
+				<span class="text-black">posts</span>
+			</span>
+			<span class="ml-3">
+				<strong class="text-black">{{p.author.comment_count}}</strong>
+				<span class="text-black">comments</span>
+			</span>
+			<span class="ml-3">
+				<strong class="text-black">{{p.author.coins}}</strong>
+				<span class="text-black">coins</span>
+			</span>  
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} target="_blank" class="ml-auto text-decoration-none">
+				View
+				<i class="fas fa-arrow-right fa-sm px-1"></i>
+			</a>
+		</div>
+	</div>
+</div>
+
 {% include "/modals/ModalSubmissionActions.html" %}
 
 {% endblock %}
@@ -668,4 +702,37 @@
 	{% if v %}
 	<script defer src="/assets/js/vote.js?v=1"></script>
 	{% endif %}
+
+	<script defer src="/assets/js/new_comments_count.js?v=53"></script>
+
+	<script defer>
+		(() => {
+			const date = new Date({{p.created_utc*1000}});
+			document.getElementById('timestamp').title = date.toString();
+			{% if p.edited_utc %}
+			const dateEdited = new Date({{p.edited_utc*1000}});
+			document.getElementById('edited_timestamp').title = dateEdited.toString();
+			{% endif %}
+
+			{% if (not v or v.highlightcomments) %}
+			showNewCommentCounts('{{p.id}}', {{p.comment_count}})
+			{% endif %}
+
+			{% if "?context" not in request.full_path %}
+			const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+			const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || { c: 0 }).c + 1)
+			comments['{{p.id}}'] = { c: newTotal, t: Date.now() }
+			window.localStorage.setItem("comment-counts", JSON.stringify(comments))
+			{% endif %}
+
+			{% if p.stickied %}
+			const pinned_info = document.getElementById('pinned-{{p.id}}')
+			{% if p.stickied.startswith('t:') %}
+			pinned_info.setAttribute("data-bs-original-title", `Pinned until ${new Date({{p.stickied[2:]}} * 1000).toString()}`)
+				{% else %}
+				pinned_info.setAttribute("data-bs-original-title", "Pinned by @{{p.stickied}}")
+				{%endif%}
+				{%endif%}
+			})()
+		</script>
 {% endblock %}

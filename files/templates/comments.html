@@ -28,7 +28,6 @@
 
 {% if v %}
 	{% include "award_modal.html" %}
-	<script defer src="https://cdn.jsdelivr.net/npm/marked@3.0.8/lib/marked.min.js"></script>
 	<script defer src="/assets/js/comments_v.js?v=74"></script>
 {% endif %}
 
@@ -36,109 +35,13 @@
 	<script defer src="/assets/js/comments_admin.js?v=54"></script>
 {% endif %}
 
-<script defer src="/assets/js/popover.js?v=9"></script>
+
 <script defer src="/assets/js/comments.js?v=5"></script>
 
 {% include "expanded_image_modal.html" %}
 
-<script defer>
-	function poll_vote(cid, parentid) {
-		{% if v %}
-			for(let el of document.getElementsByClassName('presult-'+parentid)) {
-				el.classList.remove('hidden');
-			}
-			for(let el of document.getElementsByClassName('presult')) {
-				el.classList.remove('hidden');
-			}
-			var type = document.getElementById(cid).checked;
-			var scoretext = document.getElementById('poll-' + cid);
-			var score = Number(scoretext.textContent);
-			if (type == true) scoretext.textContent = score + 1;
-			else scoretext.textContent = score - 1;
-			post('/vote/poll/' + cid + '?vote=' + type);
-		{% else %}
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-			myToast.show();
-			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-		{% endif %}
-	}
-</script>
-
 
 {% macro single_comment(c, level=1) %}
-
-{% if p and not (v and v.id==c.author_id) and (not v or v.highlightcomments) %}
-	<script defer>
-		comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
-		lastCount = comments['{{p.id}}']
-		if (lastCount && {{c.created_utc*1000}} > lastCount.t) {
-			document.getElementById("reddot-{{c.id}}").innerHTML = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Unread"></i>'
-		}
-	</script>
-{% endif %}
-
-<script defer>
-	(() => {
-		const date = new Date({{c.created_utc*1000}});
-		document.getElementById('timestamp-{{c.id}}').title = date.toString();
-
-		{% if c.is_pinned %}
-			const pinned_info = document.getElementById('pinned-{{c.id}}')
-			{% if c.is_pinned.startswith('t:') %}
-				pinned_info.setAttribute("data-bs-original-title", `Pinned until ${new Date({{c.is_pinned[2:]}} * 1000).toString()}`)
-			{% else %}
-				pinned_info.setAttribute("data-bs-original-title", "Pinned by @{{c.is_pinned}}")
-			{%endif%}
-		{%endif%}
-	})()
-</script>
-
-<div style="display:none" id="popover-{{c.id}}">
-	<div class="popover-user-profile" role="tooltip">
-	<img class="w-100 h-64 object-cover lozad" src="{{c.author.banner_url}}">
-	<div class="d-flex align-items-end px-3 mt-n6 mb-3">
-		<img loading="lazy" class="avatar-72 rounded img-thumbnail shadow-sm lozad" src="{{c.author.profile_url}}">
-		<div class="px-3 text-truncate">
-		<h5 class="text-truncate text-black">{{c.author.username}}</h5>
-		</div>
-	</div>
-	<div class="px-3">
-		<span class="popover-bio text-black">{% if c.author.bio_html %}{{c.author.bio_html_eager | safe}}{% endif %}</span>
-	</div>
-
-	<div class="ml-3 mr-3 my-2">
-		{% for b in c.author.badges %}
-			{% if b.url %}
-				<a rel="nofollow noopener noreferrer" href="{{b.url}}">
-					<img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{b.name}} - {{b.text}}">
-				</a>
-			{% else %}
-				<img width="32" loading="lazy" class="lozad" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{b.name}} - {{b.text}}">
-			{% endif %}
-		{% endfor %}
-	</div>
-
-	<div class="border-top d-flex align-items-center p-3 gap-3 smol">
-		<span>
-		<strong class="text-black">{{c.author.post_count}}</strong>
-		<span class="text-black">posts</span>
-		</span>
-		<span class="ml-3">
-		<strong class="text-black">{{c.author.comment_count}}</strong>
-		<span class="text-black">comments</span>
-		</span>
-		<span class="ml-3">
-			<strong class="text-black">{{c.author.coins}}</strong>
-			<span class="text-black">coins</span>
-		</span>  
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a {% if v %}href="{{c.author.url}}"{% else %}href="/logged_out{{c.author.url}}"{% endif %} target="_blank" class="ml-auto text-decoration-none">
-		View
-		<i class="fas fa-arrow-right fa-sm px-1"></i>
-		</a>
-	</div>
-	</div>
-</div>
 
 {% set ups=c.upvotes %}
 {% set downs=c.downvotes %}
