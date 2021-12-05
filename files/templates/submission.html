@@ -825,7 +825,7 @@
 {% if offset %}
  	<script>
 		function viewmore() {
-			btn = document.getElementById("viewmore");
+			btn = document.getElementById("viewbtn");
 			btn.disabled = true;
 			btn.value = "Requesting...";
 			var form = new FormData();
@@ -841,7 +841,7 @@
 		}
 	</script>
  	<br>
-	<div id="viewmore"><button class="btn btn-primary" onclick="viewmore()">VIEW MORE COMMENTS</a></div>
+	<div id="viewmore"><button id="viewbtn" class="btn btn-primary" onclick="viewmore()">VIEW MORE COMMENTS</a></div>
 {% endif %}
 
 
