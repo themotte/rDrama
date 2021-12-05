@@ -693,8 +693,8 @@
 			{% if offset %}
 		 	<script defer>
 				function loadMore(id, trigger) {
-					const btn = document.getElementById(trigger)
-					const el = document.getElementById(id)
+					const btn = document.getElementById(trigger) // trigger button
+					const el = document.getElementById(id) // target element to populate
 					const form = new FormData();
 					const xhr = new XMLHttpRequest();
 
@@ -702,10 +702,10 @@
 					xhr.withCredentials=true;
 					xhr.onload=function(){
 						if (xhr.status==200) {
-							el.innerHTML = xhr.response;
-							btn.classList.style('display: none');
+							el.innerHTML = xhr.response; // replace desired element with response html
+							btn.style.display = "none"; // hide button
 						} else {
-							btn.disabled = false;
+							btn.disabled = false; // enable our button if GET fails
 						}
 					}
 					xhr.send(form)
