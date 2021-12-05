@@ -429,7 +429,7 @@ def all_comments(v):
 	sort=request.values.get("sort", "new")
 	t=request.values.get("t", defaulttimefilter)
 
-	if request.values.get("shadowbanned"):
+	if request.values.get("shadowbanned") and v and v.admin_level > 1:
 		idlist = comment_idlist(v=v,
 								page=page,
 								sort=sort,
