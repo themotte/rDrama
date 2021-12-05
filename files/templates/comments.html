@@ -346,7 +346,7 @@
 		</div>
 
 	{% if render_replies %} 
-		{% if level<10 %}
+		{% if level<5 %}
 			<div id="replies-of-{{c.id}}">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
