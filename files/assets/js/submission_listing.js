@@ -5,7 +5,6 @@ function timestamp(str, ti) {
 
 function expandText(id) {
 	const el = document.getElementById('post-text-'+id);
-    el.toggle('hidden');
     ['max-h-32', 'overflow-hidden', 'pointer-events-none', 'text-gray-600'].map(v=> el.classList.toggle(v));
     ['text-black'].map(v=> el.classList.toggle(v));
     document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
