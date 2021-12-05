@@ -316,8 +316,12 @@
 			</video>
 		</div>
 	{% elif p.embed_url and "youtu" in p.domain %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} mt-3 mb-4">
-			<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" style="max-width: 100%" width="600" height="337" allow="fullscreen"></iframe>
+		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-3 mb-4">
+			{% if 'lite' in p.embed_url %}
+				{{p.embed_url | safe}}
+			{% else %}
+				<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" style="max-width:100%;max-height:20rem" width="600" height="337" allow="fullscreen"></iframe>
+			{% endif %}
 		</div>
 	{% elif p.url and "streamable.com/e/" in p.url %}
 		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} mt-3 mb-4">
