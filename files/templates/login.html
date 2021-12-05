@@ -1,30 +1,17 @@
 {% set random = range(1, 13)|random() %}
 
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="Sign in to {{'SITE_NAME' | app_config}}">
 	<meta name="author" content="">
-	<meta property="og:type" content="article" >
-	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
-	<meta property="og:site_name" content="{{request.host}}" >
-	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=3" >
-	<meta property="og:url" content="{{request.host}}">
-	<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
-	<meta property="og:author" name="author" content="{{request.host_url}}" >
-	<meta property="og:site_name" content="{{request.host}}" >
 
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="{{request.host_url}}">
-	<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
-	<meta name="twitter:creator" content="{{request.host_url}}">
-	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-	<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=3" >
-	<meta name="twitter:url" content="{{request.host}}" >
-
-	<title>Login - {{'SITE_NAME' | app_config}}{% endif %}</title>
+	{% block title %}
+	<title>Login -	{{'SITE_NAME' | app_config}}</title>
+	{% endblock %}
 
 	<link rel="stylesheet" href="/assets/css/main.css?v=125">
 
@@ -36,6 +23,7 @@
 
 	<link rel="preload" href="/assets/css/fa.css?v=52" as="style" onload="this.onload=null;this.rel='stylesheet'">
 	<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=52"></noscript>
+
 </head>
 
 <body class="relative h-full bg-gradient-to-t from-gray-500 to-gray-400">
