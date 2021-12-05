@@ -3797,7 +3797,7 @@ pre .com, code .com {
  }
 
  .arrow-up::before, .arrow-down::before, .arrow-up:hover::before, .arrow-down:hover::before {
-   font-size: 1.5rem;
+   font-size: 1.25rem;
    color: var(--gray-200);
    opacity: 1;
  }
