@@ -320,10 +320,10 @@
 					<!-- Title -->
 					<h1 id="post-title" class="post-title font-bold font-heading text-lg md:text-3xl leading-normal mb-2">
 						{% if p.club %}
-							<span class="badge badge-yellow font-sans-serif">Country Club</span>
+							<span class="badge badge-yellow font-sans-serif md:hidden">Country Club</span>
 						{% endif %}
 						{% if p.flair %}
-						<span class="badge badge-blue font-sans-serif">
+						<span class="badge badge-blue font-sans-serif md:hidden">
 							{{p.flair | safe}}
 						</span>
 						{% endif %}
