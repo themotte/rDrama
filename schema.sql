@@ -266,7 +266,8 @@ CREATE TABLE public.comments (
     body_html character varying(40000),
     ban_reason character varying(25),
     notifiedto integer,
-    realupvotes integer
+    realupvotes integer,
+    top_comment_id integer
 );
 
 
@@ -1709,6 +1710,7 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
+
 
 --
 -- PostgreSQL database dump complete
