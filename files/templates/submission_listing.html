@@ -192,7 +192,7 @@
 			</h5>
 
 			{% if p.realbody(v) %}
-				<div class="max-h-32 mb-2 overflow-hidden pointer-events-none text-gray-600" style="-webkit-mask-image: linear-gradient(180deg,#000 60%,transparent); mask-image: linear-gradient(180deg,#000 60%,transparent)" id="post-text-{{p.id}}">
+				<div class="gradient-mesh max-h-32 mb-2 overflow-hidden pointer-events-none text-gray-600" id="post-text-{{p.id}}">
 					{{p.realbody(v) | safe}}
 				</div>
 			{% endif %}
