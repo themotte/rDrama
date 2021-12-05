@@ -827,7 +827,7 @@
 		function viewmore() {
 			btn = document.getElementById("viewbtn");
 			btn.disabled = true;
-			btn.value = "Requesting...";
+			btn.innerHTML = "Requesting...";
 			var form = new FormData();
 			var xhr = new XMLHttpRequest();
 			xhr.open("post", "/viewmore/{{p.id}}/{{sort}}/{{offset}}");
