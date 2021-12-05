@@ -394,13 +394,29 @@
 						</div>
 
 						{% if p.embed_url %}
-						{% if p.domain == "twitter.com" and (v and v.theme.split("_")[0] in ["light", "coffee", "4chan"]) %}
-						{% include "embeds/twitterlight.html" %}
-						{% elif "twitter.com" in p.domain %}
-						{% include "embeds/twitter.html" %}
-						{% elif "youtu" in p.domain %}
-						{% include "embeds/youtube.html" %}
+							{% if p.domain == "twitter.com" %}
+								{{p.embed_url | safe}}
+								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
+									<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+								{% else %}
+									<script src="/assets/js/twitter.js" charset="utf-8"></script>
+								{% endif %}
+								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
+							{% elif "youtu" in p.domain %}
+								{% if 'lite' in p.embed_url %}
+									{{p.embed_url | safe}}
+								{% else %}
+									<div class="embed-responsive embed-responsive-16by9 mb-3">
+										<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+									</div>
+								{% endif %}
+							{% endif %}
 						{% endif %}
+
+
+						{% if p.author.sig_html and (p.author_id == 1904 or not (v and v.sigs_disabled)) %}
+							<hr>
+							{{p.author.sig_html | safe}}
 						{% endif %}
 					</div>
 
