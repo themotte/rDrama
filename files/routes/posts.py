@@ -171,17 +171,7 @@ def post_id(pid, anything=None, v=None):
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
 
-		comments = []
-		count = 0
-		for comment in output:
-			comments.append(comment)
-			count += g.db.query(Comment.id).filter_by(top_comment_id=comment.id).count()
-			offset += 1
-			if count > 3: break
-
-		if len(output) == len(comments): offset = None
-
-		post.replies = pinned + comments
+		comments = output
 	else:
 		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.level == 1, Comment.is_pinned == None)
 
@@ -201,18 +191,19 @@ def post_id(pid, anything=None, v=None):
 
 		comments = comments.all()
 
-		comments2 = []
-		count = 0
-		for comment in comments:
-			comments2.append(comment)
-			count += g.db.query(Comment.id).filter_by(top_comment_id=comment.id).count()
-			offset += 1
-			if count > 3: break
+	comments2 = []
+	count = 0
+	for comment in comments:
+		comments2.append(comment)
+		count += g.db.query(Comment.id).filter_by(top_comment_id=comment.id).count()
+		offset += 1
+		if count > 50: break
 
-		if len(comments) == len(comments2): offset = None
+	if len(comments) == len(comments2): offset = None
 
-		post.replies = pinned + comments2
-		
+	post.replies = pinned + comments2
+
+
 	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD] and not request.values.get("sort"): post.replies = post.replies[:10]
 
 	post.views += 1
