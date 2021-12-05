@@ -1,3 +1,5 @@
+{% set random = range(1, 13)|random() %}
+
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
@@ -40,12 +42,16 @@
 
 	<div class="relative min-h-full flex flex-col items-center justify-center pt-28 pb-12 px-4 sm:px-6 lg:px-8">
 
-		<div class="max-w-md w-full space-y-8">
+		<div class="max-w-md w-full">
 
 			{% if ref_user %}
 			<h1 class="text-center h2">@{{ref_user.username}} has invited you!</h1>
 			<p class="mx-auto text-gray-500">Looks like someone wants you to join {{'SITE_NAME' | app_config}}.</p>
 			{% endif %}
+
+			<div class="max-w-2xl px-16 rounded-t-lg bg-green-800">
+				<img class="block lg:hidden w-32 object-contain" src="/assets/images/logos/winter/logo-{{ random }}.png" alt="logo">
+			</div>
 
 			<div class="max-w-2xl w-full space-y-8 px-6 py-5 bg-gray-200 rounded shadow-sm">
 
