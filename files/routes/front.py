@@ -367,7 +367,7 @@ def random_post(v):
 	return redirect(f"/post/{post.id}")
 
 @cache.memoize(timeout=86400)
-def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
+def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", shadowbanned=False):
 
 	posts = g.db.query(Submission)
 	cc_idlist = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
@@ -415,6 +415,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 	elif sort == "bottom":
 		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
+	if shadowbanned: comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned != None)
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	return [x[0] for x in comments]
 
@@ -428,13 +429,21 @@ def all_comments(v):
 	sort=request.values.get("sort", "new")
 	t=request.values.get("t", defaulttimefilter)
 
-	idlist = comment_idlist(v=v,
-							page=page,
-							sort=sort,
-							t=t,
-							)
-
-	comments = get_comments(idlist, v=v)
+	if request.values.get("shadowbanned"):
+		idlist = comment_idlist(v=v,
+								page=page,
+								sort=sort,
+								t=t,
+								shadowbanned=true
+								)		
+		comments = get_comments(idlist, v=v, shadowbanned=True)
+	else:
+		idlist = comment_idlist(v=v,
+								page=page,
+								sort=sort,
+								t=t,
+								)
+		comments = get_comments(idlist, v=v)
 
 	next_exists = len(idlist) > 25
 
