@@ -610,7 +610,7 @@
 					</span>
 					<!-- Entire thread link -->
 					{% if linked_comment and p.comment_count >= 2%}
-					<a href="{{ 'p.permalink' if v else '/logged_out/p.permalink' }}" class="pl-2 text-red-600 hover:text-red-700">
+					<a href="{{ '{{ p.permalink }}' if v else '{{ /logged_out/p.permalink }}' }}" class="pl-2 text-red-600 hover:text-red-700">
 						View entire thread
 					</a>
 					{% endif %}
