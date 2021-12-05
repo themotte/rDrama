@@ -89,7 +89,7 @@ function openReplyBox(id) {
 	element.getElementsByTagName('textarea')[0].focus()
 }
 
-toggleEdit=function(id){
+function toggleEdit(id){
 	comment=document.getElementById("comment-text-"+id);
 	form=document.getElementById("comment-edit-"+id);
 	box=document.getElementById('comment-edit-body-'+id);
@@ -121,7 +121,7 @@ function delete_commentModal(id) {
 
 };
 
-post_reply=function(id){
+function post_reply(id){
 
 	var form = new FormData();
 
@@ -148,7 +148,7 @@ post_reply=function(id){
 	xhr.send(form)
 }
 
-comment_edit=function(id){
+function comment_edit(id){
 
 	var form = new FormData();
 
@@ -177,7 +177,7 @@ comment_edit=function(id){
 	xhr.send(form)
 }
 
-post_comment=function(fullname){
+function post_comment(fullname){
 	const btn = document.getElementById('save-reply-to-'+fullname)
 	btn.classList.add('disabled');
 

@@ -78,7 +78,7 @@ function charLimit(form, text) {
 
 }
 
-hide_image=function(){
+function hide_image(){
 	x=document.getElementById('image-upload-block');
 	url=document.getElementById('post-URL').value;
 	if (url.length>=1){

@@ -189,8 +189,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		offset = int(request.values.get("offset", 0))
-		if offset: comments = comments.offset(offset)
+		offset = 0
 
 		comments = comments.all()
 
@@ -221,6 +220,87 @@ def post_id(pid, anything=None, v=None):
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
 		return render_template(template, v=v, p=post, sort=sort, render_replies=True, offset=offset)
+
+@app.post("/viewmore/<pid>/<sort>/<offset>")
+@limiter.limit("1/second")
+@auth_desired
+def viewmore(v, pid, sort, offset):
+	if v:
+		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
+
+		blocking = v.blocking.subquery()
+
+		blocked = v.blocked.subquery()
+
+		comments = g.db.query(
+			Comment,
+			votes.c.vote_type,
+			blocking.c.id,
+			blocked.c.id,
+		)
+		
+		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
+			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
+ 
+		comments=comments.filter(Comment.parent_submission == pid, Comment.author_id != AUTOPOLLER_ID).join(
+			votes,
+			votes.c.comment_id == Comment.id,
+			isouter=True
+		).join(
+			blocking,
+			blocking.c.target_id == Comment.author_id,
+			isouter=True
+		).join(
+			blocked,
+			blocked.c.user_id == Comment.author_id,
+			isouter=True
+		)
+
+		output = []
+		for c in comments.all():
+			comment = c[0]
+			comment.voted = c[1] or 0
+			comment.is_blocking = c[2] or 0
+			comment.is_blocked = c[3] or 0
+			output.append(comment)
+		
+		pinned = [c[0] for c in comments.filter(Comment.is_pinned != None).all()]
+		
+		comments = comments.filter(Comment.level == 1, Comment.is_pinned == None)
+
+		if sort == "new":
+			comments = comments.order_by(Comment.created_utc.desc())
+		elif sort == "old":
+			comments = comments.order_by(Comment.created_utc.asc())
+		elif sort == "controversial":
+			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+		elif sort == "top":
+			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+		elif sort == "bottom":
+			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+
+		if offset: comments = comments.offset(int(offset))
+
+		comments = [c[0] for c in comments.all()]
+	else:
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id != AUTOPOLLER_ID, Comment.level == 1, Comment.is_pinned == None)
+
+		if sort == "new":
+			comments = comments.order_by(Comment.created_utc.desc())
+		elif sort == "old":
+			comments = comments.order_by(Comment.created_utc.asc())
+		elif sort == "controversial":
+			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
+		elif sort == "top":
+			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+		elif sort == "bottom":
+			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
+
+		if offset: comments = comments.offset(int(offset))
+
+		comments = comments.all()
+
+	return render_template("comments.html", v=v, comments=comments, render_replies=True)
 
 
 @app.post("/edit_post/<pid>")
