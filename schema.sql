@@ -585,7 +585,8 @@ CREATE TABLE public.submissions (
     embed_url character varying(1500),
     ban_reason character varying(25),
     title_html character varying(1500),
-    realupvotes integer
+    realupvotes integer,
+    flair character varying(350)
 );
 
 
@@ -1710,7 +1711,6 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
-
 
 --
 -- PostgreSQL database dump complete
