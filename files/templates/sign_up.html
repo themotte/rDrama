@@ -55,31 +55,31 @@
 
 			<div class="max-w-2xl w-full space-y-8 px-6 py-5 bg-gray-200 rounded shadow-sm">
 
-				<form action="/signup" method="post" class="mt-8 space-y-6" id="signup">
+				<form action="/signup" method="post" class="mt-8 space-y-4" id="signup">
 
 					{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
 
 					<input type="hidden" name="formkey" value="{{formkey}}">
 					<input type="hidden" name="now" value="{{now}}">
 
-					{% if redirect %}<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
+					{% if redirect %}
+					<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
 					{% if ref_user %}
 					<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
 
-					<label for="username-register" class="mt-3">Username</label>
-
+					<label for="username-register" class="label text-black">Username</label>
 					<input class="form-input" id="username-register"
 					aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
 					<small id="usernameHelpRegister"></small>
 
-					<label for="email-register" class="mt-3">Email Address</label>
+					<label for="email-register" class="label text-black">Email Address</label>
 
 					<small class="d-inline-block text-muted ml-1">(optional)</small>
 
 					<input class="form-input" id="email-register"
 					aria-describedby="emailHelpRegister" type="text" name="email">
 
-					<label for="password-register" class="mt-3">Password</label>
+					<label for="password-register" class="label text-black">Password</label>
 
 					<input class="form-input" id="password-register"
 					aria-describedby="passwordHelpReigster" type="password" name="password" required="">
@@ -89,7 +89,7 @@
 					<small id="passwordHelpSuccess" class="form-text font-weight-bold text-success d-none mt-1">Your password meets the requirements.
 					</small>
 
-					<label for="password_confirm" class="mt-3">Confirm Password</label>
+					<label for="password_confirm" class="label text-black">Confirm Password</label>
 
 					<input class="form-input" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required="">
 					<div class="custom-control custom-checkbox mt-4">
