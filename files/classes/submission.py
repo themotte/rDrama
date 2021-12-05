@@ -336,6 +336,7 @@ class Submission(Base):
 			rand = random.randint(0, maxupvotes)
 			if self.upvotes < rand:
 				amount = random.randint(0, 3)
+				self.views += amount*random.randint(3, 5)
 				self.upvotes += amount
 				g.db.add(self)
 				self.author.coins += amount
