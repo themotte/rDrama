@@ -692,7 +692,8 @@
 
 			{% if offset %}
 		 	<script defer>
-				function loadMore(id) {
+				function loadMore(id, btn) {
+					const btn = document.getElementById(btn)
 					const el = document.getElementById(id)
 					const form = new FormData();
 					const xhr = new XMLHttpRequest();
@@ -702,13 +703,15 @@
 					xhr.onload=function(){
 						if (xhr.status==200) {
 							el.innerHTML = xhr.response;
+							btn.classList.toggle('hidden');
+						} else {
+							btn.disabled = false;
 						}
-						el.classList.toggle('hidden');
 					}
 					xhr.send(form)
 				}
 			</script>
-			<button class="mt-2 w-full btn btn-gray" onclick="loadMore('comment-section'); this.disabled = true;">
+			<button class="mt-2 w-full btn btn-gray" id="load-more-button" onclick="loadMore('comment-section', this.id); this.disabled = true;">
 				Load more comments
 			</button>
 			{% endif %}
