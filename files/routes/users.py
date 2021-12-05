@@ -383,7 +383,7 @@ def message2(v, username):
 					'notification': {
 						'title': f'New message from @{v.username}',
 						'body': message,
-						'deep_link': f'http://{site}/notifications',
+						'deep_link': f'https://{site}/notifications',
 					},
 				},
 			},

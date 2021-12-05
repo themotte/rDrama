@@ -62,12 +62,12 @@ def publish(pid, v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
-	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{post.permalink}")
+	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://{site}{post.permalink}")
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
 		if post.club and not user.club_allowed: continue
-		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})", True)
+		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](https://{site}{post.permalink})", True)
 
 	cache.delete_memoized(frontlist)
 
@@ -481,7 +481,7 @@ def edit_post(pid, v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
-		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
+		message = f"@{v.username} has mentioned you: https://{site}{p.permalink}"
 
 		for x in notify_users: send_notification(x, message)
 
@@ -524,8 +524,8 @@ def thumbnail_thread(pid):
 
 		if fragment_url.startswith("https://"):
 			return fragment_url
-		elif fragment_url.startswith("http://"):
-			return f"https://{fragment_url.split('http://')[1]}"
+		elif fragment_url.startswith("https://"):
+			return f"https://{fragment_url.split('https://')[1]}"
 		elif fragment_url.startswith('//'):
 			return f"https:{fragment_url}"
 		elif fragment_url.startswith('/'):
@@ -968,12 +968,12 @@ def submit_post(v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
-		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
+		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://{site}{new_post.permalink}")
 		
 		for follow in v.followers:
 			user = get_account(follow.user_id)
 			if new_post.club and not user.club_allowed: continue
-			send_notification(user.id, f"@{v.username} has made a new post: [{title}](http://{site}{new_post.permalink})", True)
+			send_notification(user.id, f"@{v.username} has made a new post: [{title}](https://{site}{new_post.permalink})", True)
 
 	g.db.add(new_post)
 	g.db.flush()
@@ -1119,7 +1119,7 @@ def submit_post(v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title):
-		send_message(f"http://{site}{new_post.permalink}")
+		send_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()
