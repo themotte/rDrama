@@ -148,6 +148,7 @@ if SITE == 'rdrama.net':
 	LLM_ID = 253
 	DAD_ID = 2513
 	MOM_ID = 4588
+	BUG_THREAD = 18459
 elif SITE == "pcmemes.net":
 	BASEDBOT_ID = 800
 	KIPPY_ID = 1592
@@ -168,6 +169,7 @@ elif SITE == "pcmemes.net":
 	LLM_ID = 0
 	DAD_ID = 0
 	MOM_ID = 0
+	BUG_THREAD = 4103
 else:
 	BASEDBOT_ID = 0
 	KIPPY_ID = 0
@@ -188,6 +190,7 @@ else:
 	LLM_ID = 0
 	DAD_ID = 0
 	MOM_ID = 0
+	BUG_THREAD = 0
 
 PUSHER_INSTANCE_ID = '02ddcc80-b8db-42be-9022-44c546b4dce6'
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
