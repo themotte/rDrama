@@ -675,11 +675,7 @@
 			{% endif %}
 
 			{% if offset %}
-				{% if '?' in request.full_path %}
-					<a class="pt-2" href="{{request.path}}?sort={{sort}}&offset={{offset}}">VIEW MORE</a>
-				{% else %}
-					<a class="pt-2" href="{{request.full_path}}&offset={{offset}}">View more</a>
-			 	{% endif %}
+				<a class="pt-2" href="{{request.path}}?sort={{sort}}&offset={{offset}}">View more</a>
 			{% endif %}
 
 	</div>
