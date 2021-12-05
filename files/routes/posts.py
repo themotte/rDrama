@@ -193,17 +193,23 @@ def post_id(pid, anything=None, v=None):
 
 		comments = comments.all()
 
+	comments2 = []
+	count = 0
 	if post.created_utc > 1638672040:
-		comments2 = []
-		count = 0
 		for comment in comments:
 			comments2.append(comment)
 			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
 			offset += 1
 			if count > 50: break
+	else:
+		for comment in comments:
+			comments2.append(comment)
+			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
+			offset += 1
+			if count > 10: break
 
-		if len(comments) == len(comments2): offset = None
-		comments = comments2
+	if len(comments) == len(comments2): offset = None
+	comments = comments2
 
 	post.replies = pinned + comments
 
