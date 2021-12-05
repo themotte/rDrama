@@ -80,6 +80,9 @@
 	img[lazy=loading] {
 		@apply animate-pulse;
 	}
+	img[width], img[height] {
+	  max-width: none;
+	}
 	/*Inputs*/
 	.label {
 		@apply block font-bold text-gray-700 text-sm leading-normal mb-1;
