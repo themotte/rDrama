@@ -200,9 +200,6 @@
 			<div class="hidden md:block pt-3">
 				{% include "/submission/SubmissionActions.html" %}
 			</div>
-			<div class="md:hidden pt-3">
-				{% include "/submission/SubmissionActionsMobile.html" %}
-			</div>
 	</div>
 
 		<div class="flex flex-row flex-nowrap pl-3 md:pl-5">
@@ -230,6 +227,10 @@
 		</div>
 
 </div>
+
+	<div class="md:hidden pt-3">
+		{% include "/submission/SubmissionActionsMobile.html" %}
+	</div>
 
 <!-- <div class="card-footer md:hidden mt-2 {% if request.path == '/changelog' %}px-0{% endif %}">
 	<div class="post-actions">
