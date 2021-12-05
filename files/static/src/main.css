@@ -113,7 +113,7 @@
 
 /* ----------------------- BADGES ----------------------- */
 .badge {
-	@apply px-1 py-0.5 text-xs text-shadow-light font-bold leading-normal rounded bg-gradient-to-t;
+	@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded bg-gradient-to-t;
 }
 .badge-red {
 	@apply from-red-600 to-red-500 text-white;
