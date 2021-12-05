@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function(){
         particlesJS("snow", {
             "particles": {
                 "number": {
-                    "value": 200,
+                    "value": 150,
                     "density": {
                         "enable": true,
                         "value_area": 800
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 },
                 "move": {
                     "enable": true,
-                    "speed": 5,
+                    "speed": 4,
                     "direction": "bottom",
                     "random": true,
                     "straight": false,
