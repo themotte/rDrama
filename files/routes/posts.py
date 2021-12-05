@@ -173,7 +173,7 @@ def post_id(pid, anything=None, v=None):
 		offset = int(request.values.get("offset", 0))
 		if offset: comments = comments.offset(offset)
 
-		comments2 = [c[0] for c in comments.all()]
+		comments = [c[0] for c in comments.all()]
 	else:
 		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.level == 1, Comment.is_pinned == None)
 
@@ -191,7 +191,7 @@ def post_id(pid, anything=None, v=None):
 		offset = int(request.values.get("offset", 0))
 		if offset: comments = comments.offset(offset)
 
-		comments2 = comments.all()
+		comments = comments.all()
 
 	if post.created_utc > 1638672040:
 		comments2 = []
@@ -203,8 +203,9 @@ def post_id(pid, anything=None, v=None):
 			if count > 50: break
 
 		if len(comments) == len(comments2): offset = None
+		comments = comments2
 
-	post.replies = pinned + comments2
+	post.replies = pinned + comments
 
 	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD] and not request.values.get("sort"): post.replies = post.replies[:10]
 
