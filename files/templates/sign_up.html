@@ -64,10 +64,12 @@
 
 					<div class="space-y-4">
 
-						<h2 class="text-sm label text-black">
+						<h2 class="text-base label text-black">
 							Create an Account
-							<span class="text-gray-500">
-							<a href="/login" class="text-blue-500 hover:text-blue-600">Login</a>
+							<span class="text-gray-500">or</span>
+							<a href="/login{{'?redirect='+redirect if redirect else ''}}" class="text-blue-500 hover:text-blue-600">
+								Login to rDrama
+							</a>
 						</h2>
 
 						<div>
@@ -123,7 +125,7 @@
 
 		</div>
 
-		<div class="mx-auto text-gray-300/70 text-xs mt-4">
+		<div class="hidden mx-auto text-gray-300/70 text-xs mt-4">
 			Already have an account?
 			<a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-bold text-gray-300/70 hover:text-gray-300">Log in</a>
 		</div>
