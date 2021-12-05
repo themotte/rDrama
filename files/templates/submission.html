@@ -497,7 +497,7 @@
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input type="hidden" name="current_page" value="{{request.path}}">
 									<input name="title" class="edit-title" required placeholder="title" value="{{p.title}}" >
-									<textarea name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea> 
+									<textarea name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
 									
 									<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
@@ -508,9 +508,9 @@
 										<a class="format btn btn-secondary" href="javascript:void(0)"><span class="font-weight-bolder text-uppercase" onclick="commentForm('post-edit-box-{{p.id}}');getGif()" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add GIF">GIF</span></a>
 										<a class="format btn btn-secondary" href="javascript:void(0)"><i class="fas fa-smile-beam" onclick="loadEmojis('post-edit-box-{{p.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
 
-										<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-edit-{{p.fullname}}">
-											<div id="filename-show-edit-{{p.fullname}}"><i class="far fa-image"></i></div>
-											<input id="file-upload-edit-{{p.fullname}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-edit-{{p.fullname}}').innerHTML='image';" hidden>
+										<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-edit-{{p.id}}">
+											<div id="filename-show-edit-{{p.id}}"><i class="far fa-image"></i></div>
+											<input id="file-upload-edit-{{p.id}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-edit-{{p.id}}').innerHTML='image';" hidden>
 										</label>
 						
 										<small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
@@ -868,7 +868,7 @@
 
 {% if not p.comment_count %}
 	{% if v %}
-		<script src="/assets/js/comments_v.js?v=78"></script>
+		<script src="/assets/js/comments_v.js?v=80"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}

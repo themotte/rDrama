@@ -234,6 +234,17 @@ document.onpaste = function(event) {
 			document.getElementById('filename-edit-reply-' + id).textContent = filename;
 		}
 	}
+	else if (focused.id.includes('post-edit-box-')) {
+		var id = focused.dataset.id;
+		f=document.getElementById('file-upload-edit-' + id);
+		files = event.clipboardData.files
+		filename = files[0].name.toLowerCase()
+		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+		{
+			f.files = files;
+			document.getElementById('filename-show-edit-' + id).textContent = filename;
+		}
+	}
 }
 
 function markdown(first, second) {
