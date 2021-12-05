@@ -665,7 +665,7 @@ const EMOJIS_STRINGS = [
 			marseylizard: ['reptilian'],
 			marseylolcow: ['lulz','trolled'],
 			marseymanlet: ['llm','short','little king','midget','dwarf'],
-			marseymaois: ['ccp','china','chinese','maoism','communism','communist','little red book','marxist','marxism','authleft'],
+			marseymaoist: ['ccp','china','chinese','maoism','communism','communist','little red book','marxist','marxism','authleft'],
 			marseymcarthur: ['nuclear bomb','missile','nuke','history'],
 			marseymermaid: ['merman','merfolk'],
 			marseymouse: ['cheesed to meet you','rodent'],
