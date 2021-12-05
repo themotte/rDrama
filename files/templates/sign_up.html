@@ -57,15 +57,16 @@
 
 				<form action="/signup" method="post" class="mt-8 space-y-4" id="signup">
 
-					{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
+					{% if error %}<div class="text-red-600 mb-2">{{error}}</div>{% endif %}
 
-					<input type="hidden" name="formkey" value="{{formkey}}">
-					<input type="hidden" name="now" value="{{now}}">
-
-					{% if redirect %}
-					<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
-					{% if ref_user %}
-					<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
+					<div class="hidden">
+						<input type="hidden" name="formkey" value="{{formkey}}">
+						<input type="hidden" name="now" value="{{now}}">
+						{% if redirect %}
+						<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
+						{% if ref_user %}
+						<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
+					</div>
 
 					<div>
 						<label for="username-register" class="label text-black">Username</label>
@@ -98,7 +99,7 @@
 						<input class="form-input" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required="">
 						<div class="mt-4">
 							<input type="checkbox" id="termsCheck" required>
-							<label class="text-gray-400 text-xs pl-1" for="termsCheck">
+							<label class="text-gray-700 text-xs pl-1" for="termsCheck">
 								I accept the <a href="/rules" target="_blank" class="text-blue-500 hover:text-blue-600">terms and conditions</a>
 							</label>
 						</div>
