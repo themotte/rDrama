@@ -309,12 +309,6 @@
 {% endif %}
 
 {% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
-	{% if p.realbody(v) %}
-		<div class="hidden rounded-md bg-gray-300/40 border border-gray-400/40 mt-3 md:ml-[4.5rem] p-3" id="post-text-{{p.id}}">
-			{{p.realbody(v) | safe}}
-		</div>
-	{% endif %}
-
 	{% if p.url and p.url.lower().endswith('.mp4') %}
 		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} mt-4">
 			<video controls loop preload="metadata" style="max-width: 100%">
