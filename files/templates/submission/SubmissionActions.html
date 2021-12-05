@@ -9,7 +9,8 @@
 	{% if p.realbody(v) and '/post/' not in request.full_path  %}
 	<li>
 		<button class="hover:text-gray-400" onclick="expandText('{{p.id}}')">
-			<i class="fas fa-expand-alt fa-fw mr-2 text-expand-icon-{{p.id}}"></i>Expand
+			<i class="fas fa-expand-alt fa-fw mr-2 text-expand-icon-{{p.id}}"></i>
+			<span class="hidden md:inline-block">Expand</span>
 		</button>
 	</li>
 	{% endif %}
@@ -32,7 +33,7 @@
 	{% endif %}
 
 	{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and '/post/' in request.full_path %}
-	<li>
+	<li class="hidden md:inline-block">
 		<button class="hover:text-gray-400" onclick="togglePostEdit('{{p.id}}')">
 			<i class="fas fa-pencil fa-fw mr-2"></i>Edit
 		</button>
@@ -41,7 +42,7 @@
 
 	{% if v and v.id==p.author_id %}
 	{% if p.private %}
-	<li>
+	<li class="hidden md:inline-block">
 		<button class="hover:text-gray-400" onclick="post_toast('/publish/{{p.id}}')">
 			<i class="fas fa-globe fa-fw mr-2"></i>Publish
 		</button>
@@ -67,12 +68,12 @@
 	</li>
 	{% endif %}
 	<!-- Does not require auth -->
-	<li>
+	<li class="hidden md:inline-block">
 		<a href="/votes?link={{p.fullname}}" class="text-gray-500 hover:text-gray-400">
 			<i class="fas fa-poll fa-fw mr-2"></i>Votes
 		</a>
 	</li>
-	<li>
+	<li class="hidden md:inline-block">
 		<div class="dropdown">
 			<button type="button" id="dropdownPostActions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
 				<i class="fas fa-ellipsis-h fa-fw"></i>
