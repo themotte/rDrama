@@ -50,6 +50,7 @@ class Submission(Base):
 	url = Column(String)
 	body = Column(String)
 	body_html = Column(String)
+	flair = Column(String)
 	ban_reason = Column(String)
 	embed_url = Column(String)
 

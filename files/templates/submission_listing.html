@@ -198,7 +198,8 @@
 			</div>
 
 			<h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="stretched-link">
-				{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:10px; line-height:2;">{{cc}}</span>{% endif %}
+				{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{cc}}</span>{% endif %}
+				{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair}}</span>{% endif %}
 				{{p.realtitle(v) | safe}}
 			</a></h5>
 

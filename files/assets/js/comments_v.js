@@ -64,7 +64,7 @@ document.getElementById("reportCommentButton").onclick = function() {
 	this.innerHTML='Reporting comment';
 	this.disabled = true;
 	var xhr = new XMLHttpRequest();
-	xhr.open("POST", '/flag/comment/'+id, true);
+	xhr.open("POST", '/report/comment/'+id, true);
 	var form = new FormData()
 	form.append("formkey", formkey());
 	form.append("reason", document.getElementById("reason-comment").value);

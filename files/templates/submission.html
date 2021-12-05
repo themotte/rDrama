@@ -401,12 +401,14 @@
 					{% endif %}
 					{% if p.realurl(v) %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3"><a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:10px; line-height:2;">{{cc}}</span>{% endif %}
+							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{cc}}</span>{% endif %}
+							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
 						</a></h1>					
 					{% else %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3">
-							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:10px; line-height:2;">{{cc}}</span>{% endif %}
+							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{cc}}</span>{% endif %}
+							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
 						</h1>
 					{% endif %}
@@ -902,7 +904,7 @@
 
 {% if not p.comment_count %}
 	{% if v %}
-		<script src="/assets/js/comments_v.js?v=81"></script>
+		<script src="/assets/js/comments_v.js?v=82"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
