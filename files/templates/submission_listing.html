@@ -197,8 +197,11 @@
 				</div>
 			{% endif %}
 
-			<div class="pt-3">
+			<div class="hidden md:block pt-3">
 				{% include "/submission/SubmissionActions.html" %}
+			</div>
+			<div class="md:hidden pt-3">
+				{% include "/submission/SubmissionActionsMobile.html" %}
 			</div>
 	</div>
 
