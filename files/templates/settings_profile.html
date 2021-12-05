@@ -250,7 +250,7 @@
 					<form action="/settings/titlecolor" id="color-code-form" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
 						<div class="w-full md:w-44">
-							<input class="form-input" type="text" name="color" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
+							<input class="form-input" type="text" name="titlecolor" id="color-code" maxlength="6" value="{% if v.titlecolor %}{{v.titlecolor}}{% endif %}">
 						</div>
 						<div class="mt-4">
 							<input class="ml-auto btn btn-gray" type="submit" value="Change flair color">
