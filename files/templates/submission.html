@@ -356,23 +356,13 @@
 						{% endif %}
 						<div id="post-text" class="text-black {% if p.award_count("candycane") %}candycane{% endif %}">
 							{% if p.is_image %}
-							<div class="row no-gutters">
-								<div class="col">
-									<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-										<img loading="lazy" src="{{p.realurl(v)}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
-									</a>
-								</div>
-							</div>
-							<pre></pre>
+							<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
+								<img loading="lazy" src="{{p.realurl(v)}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
+							</a>
 							{% elif p.url and p.url.lower().endswith('.mp4') %}
-							<div class="row no-gutters">
-								<div class="col">
-									<video controls loop preload="metadata" style="max-width: 100%">
-										<source src="{{ p.realurl(v) }}" type="video/mp4"/>
-									</video>
-								</div>
-							</div>
-							<pre></pre>
+							<video controls loop preload="metadata" style="max-width: 100%">
+								<source src="{{ p.realurl(v) }}" type="video/mp4"/>
+							</video>
 							{% endif %}
 
 							{{p.realbody(v) | safe}}
