@@ -478,9 +478,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="https://platform.twitter.com/widgets.js"></script>
+									<script src="/assets/js/twitterlight.js?v=1"></script>
 								{% else %}
-									<script src="/assets/js/twitter.js"></script>
+									<script src="/assets/js/twitter.js?v=1"></script>
 								{% endif %}
 								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
 							{% elif "youtu" in p.domain %}
@@ -914,7 +914,7 @@
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+<script src="/assets/js/clipboard.js?v=1"></script>
 
 {% if not p.comment_count %}
 	{% if v %}

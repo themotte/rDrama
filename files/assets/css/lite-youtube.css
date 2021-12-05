@@ -24,9 +24,6 @@ lite-youtube::before {
     transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
-/* responsive iframe with a 16:9 aspect ratio
-    thanks https://css-tricks.com/responsive-iframes/
-*/
 lite-youtube::after {
     content: "";
     display: block;

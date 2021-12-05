@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap');
+@import '/roboto.css';
 
 *,
 *::before,
@@ -1056,15 +1056,6 @@ input[type=button].btn-block {
 
 .dropdown-menu.show {
   display: block;
-}
-
-.btn-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-.btn-toolbar .input-group {
-  width: auto;
 }
 
 .input-group {
@@ -5049,7 +5040,7 @@ pre .com, code .com {
 	padding: 0.25rem 0.75rem;
   }
 
-  #thread, #submit, #error-401, #error-403, #error-404, #error-405, #error-429, #error-451, #error-500 {
+  #thread, #submit {
 	background-color: var(--light);
   }
 
@@ -5637,10 +5628,6 @@ blockquote p {
   color: gold !important;
 }
 
-.text-green {
-  color: green !important;
-}
-
 .text-lightgreen {
   color: lightgreen !important;
 }
@@ -5704,8 +5691,4 @@ blockquote p {
 .edit-title {
   background-color: #fff !important;
   color: #000 !important
-}
-
-.color-black {
-  color: var(--black);
 }
