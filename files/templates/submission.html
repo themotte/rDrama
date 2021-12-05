@@ -15,7 +15,7 @@
 
 {% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
 	<script>
-		togglePostEdit=function(id){
+		function togglePostEdit(id){
 
 			body=document.getElementById("post-body");
 			title=document.getElementById("post-title");
@@ -823,9 +823,24 @@
  </div>
  
 {% if offset %}
+ 	<script>
+		function viewmore() {
+			var form = new FormData();
+			var xhr = new XMLHttpRequest();
+			xhr.open("post", "/viewmore/{{p.id}}/{{sort}}/{{offset}}");
+			xhr.withCredentials=true;
+			xhr.onload=function(){
+				if (xhr.status==200) {
+					document.getElementById("viewmore").innerHTML = xhr.response;
+				}
+			}
+			xhr.send(form)
+		}
+	</script>
  	<br>
-	<a class="pt-2" href="{{request.path}}?sort={{sort}}&offset={{offset}}">VIEW MORE</a>
+	<div id="viewmore"><a class="btn btn-primary" href="javascript:void(0)" onclick="viewmore()">VIEW MORE COMMENTS</a></div>
 {% endif %}
+
 
  {% elif not p.replies and p.deleted_utc == 0 %}
  <div class="comment-section text-center py-7">
@@ -884,7 +899,7 @@
 
 {% if not p.comment_count %}
 	{% if v %}
-		<script src="/assets/js/comments_v.js?v=80"></script>
+		<script src="/assets/js/comments_v.js?v=81"></script>
 		{% include "award_modal.html" %}
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}

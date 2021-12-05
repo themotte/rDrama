@@ -832,7 +832,7 @@ function loadEmojis(form) {
 			{
 				let arr2 = EMOJIS_STRINGS[i].tagged;
 				for (const [key, value] of Object.entries(arr2)) {
-					if (str.includes(`${key}`)) continue;
+					if (str.includes(`'${key}'`)) continue;
 					if (key.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(key)) {
 						str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
 					}
