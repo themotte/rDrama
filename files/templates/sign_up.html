@@ -31,6 +31,9 @@
 	{% endassets %}
 
 	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+
+	<link rel="preload" href="/assets/css/fa.css?v=52" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=52"></noscript>
 </head>
 
 <body class="relative h-full bg-gradient-to-t from-gray-500 to-gray-400">
@@ -44,12 +47,6 @@
 	<div class="relative min-h-full flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 
 		<div class="max-w-md w-full space-y-8">
-
-			<div class="mb-3">
-				<a href="/" class="text-decoration-none">
-					<span class="h3 text-primary">{{'SITE_NAME' | app_config}}</span>
-				</a>
-			</div>
 
 			{% if ref_user %}
 			<h1 class="text-center h2">@{{ref_user.username}} has invited you!</h1>
