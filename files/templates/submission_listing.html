@@ -191,9 +191,11 @@
 				</a>
 			</h5>
 
-			<div class="max-h-32 mb-2 overflow-hidden pointer-events-none text-gray-600" style="-webkit-mask-image: linear-gradient(180deg,#000 60%,transparent); mask-image: linear-gradient(180deg,#000 60%,transparent)">
-				{{p.realbody(v) | safe}}
-			</div>
+			{% if p.realbody(v) %}
+				<div class="max-h-32 mb-2 overflow-hidden pointer-events-none text-gray-600" style="-webkit-mask-image: linear-gradient(180deg,#000 60%,transparent); mask-image: linear-gradient(180deg,#000 60%,transparent)" id="post-text-{{p.id}}">
+					{{p.realbody(v) | safe}}
+				</div>
+			{% endif %}
 
 			<div class="hidden md:block pt-3">
 				{% include "/submission/SubmissionActions.html" %}
