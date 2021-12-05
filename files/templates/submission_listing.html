@@ -187,6 +187,11 @@
 				{% if p.club %}
 					<span class="badge badge-yellow font-sans-serif">Country Club</span>
 				{% endif %}
+				{% if p.flair %}
+				<span class="badge badge-blue font-sans-serif">
+					{{p.flair | safe}}
+				</span>
+				{% endif %}
 				{{p.realtitle(v) | safe}}
 				</a>
 			</h5>

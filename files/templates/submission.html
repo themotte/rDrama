@@ -318,17 +318,22 @@
 					</div>
 
 					<!-- Title -->
-					{% if p.realurl(v) %}
 					<h1 id="post-title" class="post-title font-bold font-heading text-lg md:text-3xl leading-normal mb-2">
+						{% if p.club %}
+							<span class="badge badge-yellow font-sans-serif">Country Club</span>
+						{% endif %}
+						{% if p.flair %}
+						<span class="badge badge-blue font-sans-serif">
+							{{p.flair | safe}}
+						</span>
+						{% endif %}
+						{% if p.realurl(v) %}
 						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black hover:text-primary">
 							{{p.realtitle(v) | safe}}
 						</a>
-					</h1>					
-					{% else %}
-					<h1 id="post-title" class="post-title text-black font-bold font-heading text-lg md:text-3xl leading-normal mb-2">
+						{% else %}
 						{{p.realtitle(v) | safe}}
 					</h1>
-					{% endif %}
 
 					<!-- Body content -->
 					<div id="post-body" class="post-body mb-3">
