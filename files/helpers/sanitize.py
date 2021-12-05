@@ -130,16 +130,14 @@ def sanitize(sanitized, noimages=False):
 			if site not in tag["src"] and not tag["src"].startswith('/'): tag["rel"] = "nofollow noopener noreferrer"
 			tag["class"] = "in-comment-image"
 			tag["loading"] = "lazy"
-			# tag["data-src"] = tag["src"]
-			# tag["src"] = "/assets/images/loading.webp"
+			tag["data-src"] = tag["src"]
+			tag["src"] = "/assets/images/loading.webp"
 
 			link = soup.new_tag("a")
-			# link["href"] = tag["data-src"]
-			link["href"] = tag["src"]
+			link["href"] = tag["data-src"]
 			if site not in link["href"] and not link["href"].startswith('/'): link["rel"] = "nofollow noopener noreferrer"
 			link["target"] = "_blank"
-			# link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
-			link["onclick"] = f"expandDesktopImage('{tag['src']}');"
+			link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
 			link["data-bs-toggle"] = "modal"
 			link["data-bs-target"] = "#expandImageModal"
 
@@ -174,17 +172,17 @@ def sanitize(sanitized, noimages=False):
 		for i in re.finditer('(?<!"):([^ ]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("!"):
-				classes = 'class="mirrored lozad" '
+				classes = 'class="bigemoji mirrored" '
 				remoji = emoji[1:]
 			elif emoji.startswith("#"):
 				classes = ""
 				remoji = emoji[1:]
 			else:
-				classes = 'class="lozad" '
+				classes = 'class="bigemoji" '
 				remoji = emoji
 
 			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" {classes}src="http://{site}/assets/images/emojis/{remoji}.webp" width="48px" height="48px">', new)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" {classes}src="http://{site}/assets/images/emojis/{remoji}.webp" >', new)
 
 				if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
 				else: session["favorite_emojis"][remoji] = 1
@@ -197,13 +195,13 @@ def sanitize(sanitized, noimages=False):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="mirrored lozad" src="http://{site}/assets/images/emojis/{emoji}.webp" width="28px" height="28px">', sanitized)
+				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="emoji mirrored" src="http://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
 		
 				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 				else: session["favorite_emojis"][emoji] = 1
 
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="lozad" src="http://{site}/assets/images/emojis/{emoji}.webp" width="28px" height="28px">', sanitized)
+			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="emoji" src="http://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
 				
 			if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
 			else: session["favorite_emojis"][emoji] = 1
