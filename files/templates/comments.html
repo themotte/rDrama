@@ -291,13 +291,13 @@
 					<img loading="lazy" src="{{ c.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 				</div>
 
-				<a class="text-sm font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" tabindex="0">
+				<a class="text-sm font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" tabindex="0" style="color:#{{c.author.namecolor}};">
 					{% if c.author.patron and not c.distinguish_level %}
-					<span class="patron">
+					<span class="patron" style="background-color:#{{c.author.namecolor}};">
 						{{c.author.username}}
 					</span>
 					{% elif c.distinguish_level and 'rama' in request.host %}
-					<span class="mod">
+					<span class="mod" style="background-color:#{{c.author.namecolor}};">
 						{{c.author.username}}
 					</span>
 					{% else %}
@@ -307,8 +307,14 @@
 					{% endif %}
 				</a>
 
+				{% if c.author.customtitle %}
+				<bdi style="color: #{{c.author.titlecolor}}">
+					{{c.author.customtitle | safe }}
+				</bdi>
+				{% endif %}
+
 				{% if c.author.verified %}
-				<i class="fas fa-badge-check align-middle ml-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
+				<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
 				{% endif %}
 
 				{% if c.bannedfor and c.author.banned_by %}
