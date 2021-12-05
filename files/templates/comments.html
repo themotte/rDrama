@@ -800,4 +800,12 @@
 	{% endif %}
 </script>
 
+{% if offset %}
+	{% if p %}
+		{% set pid = p.id %}
+	{% endif %}
+ 	<br>
+	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}})">VIEW MORE COMMENTS</a></div>
+{% endif %}
+
 </body>
