@@ -703,7 +703,7 @@
 					xhr.onload=function(){
 						if (xhr.status==200) {
 							el.innerHTML = xhr.response;
-							btn.classList.toggle('hidden');
+							btn.classList.style('display: none');
 						} else {
 							btn.disabled = false;
 						}
