@@ -1,9 +1,7 @@
-document.addEventListener("DOMContentLoaded", function(){
-	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
 	tooltipTriggerList.map(function(element){
 		return new bootstrap.Tooltip(element);
 	});
-});
 
 function post_toast(url, reload, data) {
 	var xhr = new XMLHttpRequest();
