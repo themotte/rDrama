@@ -810,9 +810,7 @@ function loadEmojis(form) {
 			let arr = EMOJIS_STRINGS[i].emojis
 
 			for (let j = 0; j < arr.length; j++) {
-				if (arr[j].match(search_bar.value)) {
-					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
-				}
+				str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 			}
 
 			container.innerHTML = str
@@ -840,7 +838,7 @@ function loadEmojis(form) {
 					}
 					else {
 						for (let j = 0; j < value.length; j++) {
-							if (value[j].match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(value[j])) {
+							if (value[j].match(search_bar.value.toLowerCase())) {
 								str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
 								break;
 							}
