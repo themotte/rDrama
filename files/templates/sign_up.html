@@ -67,43 +67,47 @@
 					{% if ref_user %}
 					<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
 
-					<label for="username-register" class="label text-black">Username</label>
-					<input class="form-input" id="username-register"
-					aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
-					<small id="usernameHelpRegister"></small>
+					<div>
+						<label for="username-register" class="label text-black">Username</label>
+						<input class="form-input" id="username-register"
+						aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
+						<small id="usernameHelpRegister"></small>
+					</div>
 
-					<label for="email-register" class="label text-black">Email Address</label>
+					<div>
+						<label for="email-register" class="label text-black">Email Address</label>
+						<small class="text-xs text-gray-500 pl-1">(optional)</small>
+						<input class="form-input" id="email-register" aria-describedby="emailHelpRegister" type="email" name="email">
+					</div>
 
-					<small class="d-inline-block text-muted ml-1">(optional)</small>
+					<div>
+						<label for="password-register" class="label text-black">Password</label>
+						<input class="form-input" id="password-register"
+						aria-describedby="passwordHelpReigster" type="password" name="password" required="">
+						<small id="passwordHelpRegister" class="block mt-1 text-gray-500 hidden">
+							Minimum of 8 characters required.
+						</small>
+						<small id="passwordHelpSuccess" class="block mt-1 text-green-600 hidden">
+							Your password meets the requirements.
+						</small>
+					</div>
 
-					<input class="form-input" id="email-register"
-					aria-describedby="emailHelpRegister" type="text" name="email">
-
-					<label for="password-register" class="label text-black">Password</label>
-
-					<input class="form-input" id="password-register"
-					aria-describedby="passwordHelpReigster" type="password" name="password" required="">
-					<small id="passwordHelpRegister" class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8
-						characters
-					required.</small>
-					<small id="passwordHelpSuccess" class="form-text font-weight-bold text-success d-none mt-1">Your password meets the requirements.
-					</small>
-
-					<label for="password_confirm" class="label text-black">Confirm Password</label>
-
-					<input class="form-input" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required="">
-					<div class="custom-control custom-checkbox mt-4">
-						<input type="checkbox" class="custom-control-input" id="termsCheck" required>
-						<label class="custom-control-label terms" for="termsCheck">I accept the
-							<a href="/rules" target="_blank">terms and conditions</a>
-						</label>
+					<div>
+						<label for="password_confirm" class="label text-black">Confirm Password</label>
+						<input class="form-input" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required="">
+						<div class="custom-control custom-checkbox mt-4">
+							<input type="checkbox" class="custom-control-input" id="termsCheck" required>
+							<label class="custom-control-label terms" for="termsCheck">I accept the
+								<a href="/rules" target="_blank">terms and conditions</a>
+							</label>
+						</div>
 					</div>
 
 					{% if hcaptcha %}
 					<div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
 					{% endif %}
 
-					<button class="btn btn-primary login w-100 mt-3" id="register_button">Register</button>
+					<button class="btn btn-green login" id="register_button">Register</button>
 
 					<div class="text-center text-muted text-small mt-2 mb-0">
 						Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login">Log in</a>
