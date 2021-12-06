@@ -606,14 +606,16 @@
 			{% endif %}
 
 			{% if not v and not p.is_banned %}
-			<div class="comment-write flex flex-col md:flex-row mb-3 px-2.5 md:px-0">
+			<div class="comment-write flex mb-3 px-2.5 md:px-0">
 				<div class="hidden md:block relative flex-shrink-0 mr-4">
 					<div class="flex items-center justify-center w-14 h-14 p-[3px] bg-transparent border border-dashed border-gray-400 object-cover">
 						<i class="fas fa-user fa-fw text-gray-400"></i>
 					</div>
 				</div>
-				<textarea maxlength="10000" class="comment-box rounded border border-gray-700 border-opacity-40 bg-gray-700 bg-opacity-20 focus:bg-opacity-100 focus:bg-white hover:bg-opacity-30 shadow-inner w-full p-2" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
-				<a href="/login?redirect={{request.path | urlencode}}" class="btn btn-gray ml-auto mt-2">Login to comment</a>
+				<div>
+					<textarea maxlength="10000" class="comment-box rounded border border-gray-700 border-opacity-40 bg-gray-700 bg-opacity-20 focus:bg-opacity-100 focus:bg-white hover:bg-opacity-30 shadow-inner w-full p-2" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
+					<a href="/login?redirect={{request.path | urlencode}}" class="btn btn-gray ml-auto mt-2">Login to comment</a>
+				</div>
 			</div>
 			{% endif %}
 
