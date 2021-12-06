@@ -9,7 +9,7 @@
 	{% if p.realbody(v) and '/post/' not in request.full_path  %}
 	<li>
 		<button class="hover:text-gray-400" onclick="expandText('{{p.id}}')">
-			<i class="fas fa-expand-alt fa-fw mr-2 text-expand-icon-{{p.id}}"></i>
+			<i class="fas fa-expand-alt fa-fw text-expand-icon-{{p.id}}"></i>
 		</button>
 	</li>
 	{% endif %}
