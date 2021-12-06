@@ -254,15 +254,4 @@
 			</ul>
 		</div>
 	</li>
-
-	{% if not v.id==p.author_id and v.admin_level == 1 %}
-	<a id="sex-user-{{p.id}}" class="list-inline-item{% if p.is_blocking %} hidden{% endif %} text-red-500" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')"><i class="fas fa-user-slash text-red-500"></i>Ban user</a>
-	<a id="unsex-user-{{p.id}}" class="list-inline-item{% if not p.is_blocking %} hidden{% endif %} text-success" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')"><i class="fas fa-user-slash fa-fw mr-2 text-success"></i>Unban user</a>
-	{% endif %}
-
-	{% if v.admin_level >=3 and v.id!=p.author_id %}
-	<a id="ban-{{p.id}}" class="{% if p.author.is_suspended %}hidden{% endif %} list-inline-item text-red-500" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')"><i class="fas fa-user-slash text-red-500 fa-fw mr-2"></i>Ban user</a>
-	<a id="unban-{{p.id}}" class="{% if not p.author.is_suspended %}hidden{% endif %} list-inline-item text-red-500" id="unexile2-user-{{p.id}}" href="javascript:void(0)" onclick="post_toast2('/unban_user/{{p.author_id}}','ban-{{p.id}}','unban-{{p.id}}')"><i class="fas fa-user-slash"></i>Unban user</a>
-	{% endif %}
-	{% endif %}
 </ul>
