@@ -1,11 +1,5 @@
 <ul class="flex items-center space-x-5 text-sm text-gray-500 mb-0">
 
-	<!-- <li class="flex">
-		<button id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></button>
-		<span id="post-score-{{p.id}}" class="mx-2 score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}">{{score}}</span>
-		<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></button>
-	</li> -->
-
 	{% if p.realbody(v) and '/post/' not in request.full_path  %}
 	<li>
 		<button class="hover:text-gray-400" onclick="expandText('{{p.id}}')">
@@ -45,7 +39,7 @@
 		<button class="hover:text-gray-400" onclick="post_toast('/publish/{{p.id}}')">
 			<i class="fas fa-globe fa-fw mr-2"></i>Publish
 		</button>
-	<li>
+	</li>
 	{% endif %}
 	{% endif %}
 
@@ -117,13 +111,13 @@
 					<button class="dropdown-item dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/undelete_post/{{p.id}}')">
 						<i class="fas fa-trash-alt fa-sm fa-fw mr-4"></i>Undelete
 					</button>
-				<li>
+				</li>
 				{% else %}
 				<li>
 					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')">
 						<i class="fas fa-trash-alt fa-sm fa-fw mr-4"></i>Delete
 					</button>
-				<li>
+				</li>
 				{% endif %}
 				{% endif %}
 				<!-- Requires auth and admin -->
