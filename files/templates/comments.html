@@ -526,7 +526,7 @@
 {% endif %}
 
 	{% if offset %}
-	<button class="mt-2 w-full btn btn-gray" id="load-more-button" onclick="loadMore(); this.disabled = true;">
+	<button class="mt-2 w-full btn btn-gray" id="load-more-button" onclick="loadMore({{pid}},'{{sort}}',{{offset}},'comment-list',this.id); this.disabled = true;">
 		Load more comments
 	</button>
 	{% endif %}
