@@ -269,7 +269,7 @@
 		<!-- Stickied -->
 		{% if p.stickied %}
 		<li>
-			<span class="badge badge-primary">
+			<span class="badge badge-pink">
 				Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
 			</span>
 		</li>
