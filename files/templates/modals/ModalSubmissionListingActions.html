@@ -166,15 +166,30 @@
 					{% endif %}
 
 					{% if v and (v.id==p.author_id or v.admin_level > 1) %}
-						<button id="mark2-{{p.id}}" class="{% if p.over_18 %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark2-{{p.id}}','unmark2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-eye-evil text-center text-danger mr-3"></i>Mark +18</button>
-						<button id="unmark2-{{p.id}}" class="{% if not p.over_18 %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark2-{{p.id}}','unmark2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-eye-evil text-center text-danger mr-3"></i>Unmark +18</button>
+					<li id="mark2-{{p.id}}" class="{% if p.over_18 %}hidden{% endif %}">
+						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark2-{{p.id}}','unmark2-{{p.id}}')">
+							<i class="far fa-eye-evil fa-fw mr-4"></i>Mark +18
+						</button>
+					</li>
+					<li id="unmark2-{{p.id}}" class="{% if not p.over_18 %}hidden{% endif %}">
+						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark2-{{p.id}}','unmark2-{{p.id}}')">
+							<i class="far fa-eye-evil fa-fw mr-4"></i>Unmark +18
+						</button>
+					</li>
 					{% endif %}
 
 					{% if v and v.admin_level > 1 and v.id!=p.author_id %}
-						<button id="ban2-{{p.id}}" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')" class="{% if p.author.is_suspended %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)"><i class="fas fa-user-minus mr-3"></i>Ban user</button>
-						<button id="unban2-{{p.id}}" class="{% if not p.author.is_suspended %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left" href="javascript:void(0)" onclick="post_toast2('/unban_user/{{p.author_id}}','ban2-{{p.id}}','unban2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-user-minus mr-3"></i>Unban user</button>
+					<li id="ban2-{{p.id}}" class="{% if p.author.is_suspended %}hidden{% endif %}">
+						<button class="btn btn-gray w-full text-left" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')">
+							<i class="fas fa-user-minus fa-fw mr-4"></i>Ban user
+						</button>
+					</li>
+					<li id="unban2-{{p.id}}" class="{% if not p.author.is_suspended %}hidden{% endif %}">
+						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/unban_user/{{p.author_id}}','ban2-{{p.id}}','unban2-{{p.id}}')">
+							<i class="fas fa-user-minus fa-fw mr-4"></i>Unban user
+						</button>
+					</li>
 					{% endif %}
-
 				</ul>
 			</div>
 		</div>
