@@ -215,23 +215,22 @@
 
 {% block content %}
 
-{% if p.is_banned and p.ban_reason %}
 <div class="col-span-full xl:col-span-9">
-	<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-gray-200 bg-red-600 border border-gray-900 shadow-inset-t-white-10">
-		<i class="fas fa-gavel fa-fw mr-1"></i>
-		<span class="font-medium">
-			Removed by @{{p.ban_reason}}
-		</span>
-	</div>
+
+<!-- Non-dismissable Alerts -->
+{% if p.is_banned and p.ban_reason %}
+<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-gray-200 bg-red-600 border border-red-900 shadow-inset-t-white-10">
+	<i class="fas fa-gavel fa-fw mr-1"></i>
+	<span class="font-medium">
+		Removed by @{{p.ban_reason}}
+	</span>
 </div>
 {% endif %}
-
-<div class="col-span-full xl:col-span-9">
 
 <!-- Post -->
 <div id="post-root" class="sm:py-4 my-2.5 sm:my-0">
 
-	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %} {% if p.is_banned %}bg-red-100{% endif %}">
+	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
 		<div class="{% if p.deleted_utc > 0 %}deleted {% endif %} flex flex-row-reverse flex-nowrap justify-end">
 
 			{% if not p.is_image and p.thumb_url and not p.embed_url %}
