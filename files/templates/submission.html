@@ -270,7 +270,7 @@
 		{% if p.stickied %}
 		<li>
 			<span class="badge badge-pink">
-				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-1"></i>
+				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
 				Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
 			</span>
 		</li>
@@ -279,7 +279,7 @@
 		{% if p.is_pinned %}
 		<li>
 			<span class="badge badge-green">
-				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-1"></i>
+				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
 				Pinned to profile
 			</span>
 		</li>
@@ -288,7 +288,7 @@
 		{% if p.private %}
 		<li>
 			<span class="badge badge-blue">
-				<i class="fas fa-lock-alt fa-sm fa-fw mr-1"></i>
+				<i class="fas fa-lock-alt fa-sm fa-fw1"></i>
 				Draft
 			</span>
 		</li>
