@@ -233,12 +233,6 @@ f{% if v %}
 
 </div>
 
-	<div class="md:hidden pt-3">
-		{% include "/submission/SubmissionActionsMobile.html" %}
-	</div>
-
-{% include "/modals/ModalSubmissionListingActions.html" %}
-
 {% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
 <div class="md:ml-[4.5rem] mt-4">
 	<a target="_blank" rel="nofollow noopener noreferrer" href="{{p.url}}" class="inline-block">
