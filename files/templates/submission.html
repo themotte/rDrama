@@ -248,9 +248,11 @@
 	<ul class="flex flex-wrap gap-2 items-center mb-0">
 		<!-- Flair -->
 		{% if p.flair %}
+		<li>
 			<span class="badge badge-blue font-sans-serif">
 				{{p.flair | safe}}
 			</span>
+		</li>
 		{% endif %}
 		<!-- NSFW -->
 		{% if p.over_18 %}
@@ -262,7 +264,7 @@
 		{% if p.club %}
 		<li>
 			<span class="badge badge-yellow">Country Club</span>
-		<li>
+		</li>
 		{% endif %}
 		<!-- Stickied -->
 		{% if p.stickied %}
