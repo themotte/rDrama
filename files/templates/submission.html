@@ -219,26 +219,26 @@
 
 <!-- Non-dismissable Alerts -->
 <div class="p-2.5 md:p-0">
-{% if p.is_banned and p.ban_reason %}
-	<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
-		<i class="fas fa-gavel fa-fw mr-1"></i>
-		<span class="font-medium">
-			Removed by @{{p.ban_reason}}
-		</span>
-	</div>
-{% endif %}
+	<!-- Removal Reason -->
+	{% if p.is_banned and p.ban_reason %}
+		<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
+			<i class="fas fa-gavel fa-fw mr-1"></i>
+			<span class="font-medium">
+				Removed by @{{p.ban_reason}}
+			</span>
+		</div>
+	{% endif %}
+	<!-- Banned -->
+	{% if p.bannedfor and p.author.banned_by %}
+		<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
+			<i class="fas fa-gavel fa-fw mr-1"></i>
+			<span class="font-medium">
+				Author was banned for this post by
+				<a href="/@{{p.author.banned_by.username}}" class="text-white hover:underline">@{{p.author.banned_by.username}}</a>
+			</span>
+		</div>
+	{% endif %}	
 </div>
-
-<!-- Banned -->
-{% if p.bannedfor and p.author.banned_by %}
-<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
-	<i class="fas fa-gavel fa-fw mr-1"></i>
-	<span class="font-medium">
-		Author was banned for this post by
-		<a href="/@{{p.author.banned_by.username}}" class="text-white hover:underline">@{{p.author.banned_by.username}}</a>
-	</span>
-</div>
-{% endif %}	
 
 <!-- Post -->
 <div id="post-root" class="sm:py-4 my-2.5 sm:my-0">
