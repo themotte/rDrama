@@ -9,7 +9,7 @@ function removeComment(post_id,button1,button2) {
 		document.getElementById("context").classList.add("bg-red-200");
 	}
 
-	var button=document.getElementById("remove-"+post_id);
+	const button=document.getElementById("remove-"+post_id);
 	button.onclick=function(){approveComment(post_id)};
 	button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
 
@@ -30,7 +30,7 @@ function approveComment(post_id,button1,button2) {
 		document.getElementById("context").classList.remove("bg-red-200");
 	}
 
-	var button=document.getElementById("remove-"+post_id);
+	const button=document.getElementById("remove-"+post_id);
 	button.onclick=function(){removeComment(post_id)};
 	button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 
@@ -47,7 +47,7 @@ function removeComment2(post_id,button1,button2) {
 	post(url)
 
 	document.getElementById("comment-"+post_id+"-only").classList.add("bg-red-200");
-	var button=document.getElementById("remove-"+post_id);
+	const button=document.getElementById("remove-"+post_id);
 	button.onclick=function(){approveComment(post_id)};
 	button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
 
@@ -63,7 +63,7 @@ function approveComment2(post_id,button1,button2) {
 	post(url)
 
 	document.getElementById("comment-"+post_id+"-only").classList.remove("bg-red-200");
-	var button=document.getElementById("remove-"+post_id);
+	const button=document.getElementById("remove-"+post_id);
 	button.onclick=function(){removeComment(post_id)};
 	button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 
