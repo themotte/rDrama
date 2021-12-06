@@ -7,18 +7,15 @@
 {% block pagetype %}error-401{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-	<div class="col-10 col-md-5">
-	<div class="text-center px-3 my-8">
-
-		<img loading="lazy" src="/assets/images/emojis/marseydead.webp?v=1">
-		<pre></pre>
-
-			<h1 class="h5">401 Not Authorized</h1>
-			<p class="text-muted mb-5">What you're trying to do requires an account. I think. The original error message said something about a castle and I hated that.</p>
-			<div><a href="/signup" class="btn btn-primary mb-2">Create an account</a></div>
-			<div><a href="/login" class="text-muted text-small">Or sign in</a></div>
-		</div>
+<div class="col-span-full h-screen flex items-center justify-center">
+	<div class="md:max-w-xl text-center">
+		<img loading="lazy" src="/assets/images/emojis/marseydead.webp?v=1" class="w-14 h-14 object-contain mb-2">
+		<h1 class="h5">401 Not Authorized</h1>
+		<p class="text-gray-500">
+			What you're trying to do requires an account. I think. The original error message said something about a castle and I hated that.
+		</p>
+		<a href="/signup" class="btn btn-gray">Create an account</a>
+		<a href="/login" class="btn btn-gray">Login</a>
 	</div>
 </div>
 {% endblock %}
