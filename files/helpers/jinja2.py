@@ -27,7 +27,7 @@ def favorite_emojis(x):
 	str = ""
 	emojis = sorted(x.items(), key=lambda x: x[1], reverse=True)[:25]
 	for k, v in emojis:
-		str += f'<button class="btn m-1 px-0 emoji2" onclick="getEmoji(\'{k}\')" data-bs-toggle="tooltip" title=":{k}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/{k}.webp" alt="{k}-emoji"></button>'
+		str += f'<button class="m-1 p-[3px] bg-transparent hover:bg-gray-400 w-16 h-16 overflow-hidden" onclick="getEmoji(\'{k}\')" data-bs-toggle="tooltip" title=":{k}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/{k}.webp" alt="{k}-emoji"></button>'
 	return str
 
 @app.context_processor
