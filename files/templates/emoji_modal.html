@@ -48,8 +48,8 @@
 					<div id="emoji-tab-search"></div>
 					<div id="no-emojis-found"></div>
 					<div class="tab-content">
-						<div class="tab-pane fade show active" id="emoji-tab-favorite">
-							<div class="d-flex flex-wrap py-3 pl-2" id="EMOJIS_favorite">
+						<div class="tabs tab-pane fade show active" id="emoji-tab-favorite">
+							<div class="flex flex-wrap p-3" id="EMOJIS_favorite">
 								{% if session.get("favorite_emojis") %}
 									{{session.get("favorite_emojis") | favorite_emojis | safe}}
 								{% endif %}								
