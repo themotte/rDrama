@@ -95,6 +95,7 @@
 			{% if p.stickied %}
 			<li>
 				<span class="badge badge-pink">
+					<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-1"></i>
 					Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
 				</span>
 			</li>
@@ -111,6 +112,7 @@
 			<!-- Private -->
 			{% if p.private %}
 			<li>
+				<i class="fas fa-lock-alt fa-sm fa-fw mr-1"></i>
 				<span class="badge badge-blue">Draft</span>
 			</li>
 			{% endif %}
