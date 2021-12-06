@@ -614,7 +614,9 @@
 				</div>
 				<div class="w-full">
 					<textarea maxlength="10000" class="comment-box rounded border border-gray-700 border-opacity-40 bg-gray-700 bg-opacity-20 focus:bg-opacity-100 focus:bg-white hover:bg-opacity-30 shadow-inner w-full p-2" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
-					<a href="/login?redirect={{request.path | urlencode}}" class="btn btn-gray ml-auto mt-2">Login to comment</a>
+					<div class="flex w-full justify-end mt-2">
+						<a href="/login?redirect={{request.path | urlencode}}" class="btn btn-gray">Login to comment</a>
+					</div>
 				</div>
 			</div>
 			{% endif %}
