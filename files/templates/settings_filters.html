@@ -10,6 +10,13 @@
 
 		<div class="settings">
 
+			<h2 class="label text-black">Card view</h2>
+
+			<div>
+				<input type="checkbox" id="cardview" name="cardview"{% if v.cardview %} checked{% endif %} onchange="post_toast('/settings/profile?cardview='+document.getElementById('cardview').checked);">
+				<label class="inline-block pl-2 text-gray-400" for="cardview"></label>
+			</div>
+
 			<h2 class="h5 text-black" name="referral">Frontpage Size</h2>
 
 			<div class="settings-section rounded">
