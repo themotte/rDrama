@@ -1,5 +1,3 @@
-import { initializeBootstrap } from '/assets/js/modules/initializeBootstrap.js';
-
 function loadMore() {
     // const btn = document.getElementById(trigger) // trigger button
     // const el = document.getElementById(id) // target element to populate
