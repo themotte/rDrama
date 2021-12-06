@@ -14,7 +14,7 @@
 				<ul class="flex flex-col space-y-1">
 					<li>
 						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')">
-							<i class="far fa-flag text-center text-muted mr-3"></i>Report
+							<i class="fas fa-flag text-center text-muted mr-3"></i>Report
 						</button>
 					</li>
 					{% if v and v.id==p.author_id %}
@@ -38,13 +38,13 @@
 						{% if p.deleted_utc > 0 %}
 						<li>
 							<button class="btn btn-gray w-full text-left" onclick="post_toast('/undelete_post/{{p.id}}')" data-bs-dismiss="modal">
-								<i class="far fa-trash-alt fa-fw mr-4"></i>Undelete
+								<i class="fas fa-trash-alt fa-fw mr-4"></i>Undelete
 							</button>
 						</li>
 						{% else %}
 						<li>
 							<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')">
-								<i class="far fa-trash-alt fa-fw mr-4"></i>Delete
+								<i class="fas fa-trash-alt fa-fw mr-4"></i>Delete
 							</button>
 						</li>
 						{% endif %}
@@ -52,7 +52,7 @@
 
 					<li>
 						<a class="btn btn-gray w-full text-left" href="/votes?link={{p.fullname}}">
-							<i class="fas fa-arrows-v fa-fw mr-4"></i>Votes
+							<i class="fas fa-poll fa-fw mr-4"></i>Votes
 						</a>
 					</li>
 
@@ -168,12 +168,12 @@
 					{% if v and (v.id==p.author_id or v.admin_level > 1) %}
 					<li id="mark2-{{p.id}}" class="{% if p.over_18 %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark2-{{p.id}}','unmark2-{{p.id}}')">
-							<i class="far fa-eye-evil fa-fw mr-4"></i>Mark +18
+							<i class="fas fa-eye-evil fa-fw mr-4"></i>Mark +18
 						</button>
 					</li>
 					<li id="unmark2-{{p.id}}" class="{% if not p.over_18 %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark2-{{p.id}}','unmark2-{{p.id}}')">
-							<i class="far fa-eye-evil fa-fw mr-4"></i>Unmark +18
+							<i class="fas fa-eye-evil fa-fw mr-4"></i>Unmark +18
 						</button>
 					</li>
 					{% endif %}
