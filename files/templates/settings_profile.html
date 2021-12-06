@@ -357,9 +357,7 @@
 					<h2 class="label text-black">Friends</h2>
 					<form id="profile-friends" action="/settings/profile" method="post" enctype="multipart/form-data">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<textarea  id="friends-text" class="form-input" aria-label="With textarea" placeholder="Enter your friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">
-							{% if v.friends %}{{v.friends}}{% endif %}
-						</textarea>
+						<textarea  id="friends-text" class="form-input" aria-label="With textarea" placeholder="Enter your friends on the site..." rows="3" name="friends" form="profile-friends" maxlength="1500">{% if v.friends %}{{v.friends}}{% endif %}</textarea>
 						<small class="block mt-2 text-gray-400">Limit of 500 characters</small>
 						<div class="mt-4">
 							<input class="ml-auto btn btn-gray" type="submit" value="Save changes">
@@ -370,9 +368,7 @@
 					<h2 class="label text-black">Enemies</h2>
 					<form id="profile-friends" action="/settings/profile" method="post" enctype="multipart/form-data">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<textarea  id="enemies-text" class="form-input" aria-label="With textarea" placeholder="Enter your enemies on the site..." rows="3" name="enemies" form="profile-enemies" maxlength="1500">
-							{% if v.enemies %}{{v.enemies}}{% endif %}
-						</textarea>
+						<textarea  id="enemies-text" class="form-input" aria-label="With textarea" placeholder="Enter your enemies on the site..." rows="3" name="enemies" form="profile-enemies" maxlength="1500">{% if v.enemies %}{{v.enemies}}{% endif %}</textarea>
 						<small class="block mt-2 text-gray-400">Limit of 500 characters</small>
 						<div class="mt-4">
 							<input class="ml-auto btn btn-gray" type="submit" value="Save changes">
