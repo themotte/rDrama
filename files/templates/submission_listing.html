@@ -202,9 +202,6 @@ f{% if v %}
 				</div>
 			{% endif %}
 
-			<div class="hidden md:block pt-3">
-				{% include "/submission/SubmissionActions.html" %}
-			</div>
 	</div>
 
 		<div class="flex flex-row flex-nowrap pl-3 md:pl-5">
@@ -232,6 +229,12 @@ f{% if v %}
 		</div>
 
 </div>
+
+	<div class="md:hidden pt-3">
+		{% include "/submission/SubmissionActionsMobile.html" %}
+	</div>
+
+{% include "/modals/ModalSubmissionListingActions.html" %}
 
 {% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
 <div class="md:ml-[4.5rem] mt-4">
