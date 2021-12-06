@@ -115,6 +115,12 @@
 .badge {
 	@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded bg-gradient-to-t;
 }
+.badge-pink {
+	@apply from-pink-600 to-pink-500 text-white;
+}
+.badge-purple {
+	@apply from-purple-600 to-purple-500 text-white;
+}
 .badge-red {
 	@apply from-red-600 to-red-500 text-white;
 }
