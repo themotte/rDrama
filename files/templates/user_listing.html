@@ -31,12 +31,13 @@
 						<a class="btn btn-green " href="/signup?redirect={{request.path}}">Follow</a>
 					</div>
 				{% endif %}
-				{% if not hide_bios and u.bio_html %}
-					<div class="text-black">
-						{{u.bio_html | safe}}
-					</div>
-				{% endif %}
 			</div>
+
+			{% if not hide_bios and u.bio_html %}
+				<div class="text-black px-2.5 md:px-3 mt-3">
+					{{u.bio_html | safe}}
+				</div>
+			{% endif %}
 		</div>
 	</div>
 </div>
