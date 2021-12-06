@@ -173,13 +173,13 @@
       {% else %}
       <ul class="flex flex-col space-y-2">
         <li>
-          <a class="btn btn-red" href="/login?redirect={{request.path | urlencode}}">
+          <a class="btn btn-gray" href="/login?redirect={{request.path | urlencode}}">
             Login
           </a>
         </li>
         <li>
-          <a class="btn border border-red-600 hover:bg-gradient-to-t hover:from-red-600 hover:to-red-700 hover:border-red-900 text-red-600 hover:text-white focus:text-white;" href="/signup?redirect={{request.path | urlencode}}">
-            Join rdrama
+          <a class="btn hover:bg-gradient-to-t hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-700 hover:text-gray-900 focus:text-gray-900" href="/signup?redirect={{request.path | urlencode}}">
+            Signup
           </a>
         </li>
       </ul>
