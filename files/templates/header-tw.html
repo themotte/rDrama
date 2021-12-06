@@ -97,11 +97,11 @@
         <!-- Not logged in -->
         {% else %}
         <!-- Login button -->
-        <a class="btn btn-gray" href="/login?redirect={{request.path | urlencode}}">
+        <a class="hidden sm:block btn btn-gray" href="/login?redirect={{request.path | urlencode}}">
           Login
         </a>
         <!-- Register button -->
-        <a class="btn hover:bg-gradient-to-t hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-200 hover:text-gray-700 focus:text-gray-900" href="/signup?redirect={{request.path | urlencode}}">
+        <a class="hidden sm:block btn hover:bg-gradient-to-t hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-200 hover:text-gray-700 focus:text-gray-900" href="/signup?redirect={{request.path | urlencode}}">
           Sign up
         </a>
         {% endif %}
