@@ -217,6 +217,7 @@
 
 <div class="col-span-full xl:col-span-9">
 
+{% if (p.is_banned and p.ban_reason) or (p.bannedfor and p.author.banned_by) %}
 <!-- Non-dismissable Alerts -->
 <div class="p-2.5 md:p-0">
 	<!-- Removal Reason -->
@@ -239,6 +240,7 @@
 		</div>
 	{% endif %}	
 </div>
+{% endif %}	
 
 {% if p.awards or p.over_18 or p.stickied or p.is_pinned or p.private %}
 <!-- Mobile post meta, awards, etc -->
