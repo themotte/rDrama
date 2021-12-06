@@ -32,7 +32,7 @@
 
 		<div class="max-w-md w-full">
 
-			<div class="max-w-2xl mx-8 p-3 flex justify-center items-center rounded-t-lg bg-gray-700 border border-gray-800 shadow-inset-t-white-10">
+			<div class="max-w-3xl mx-8 p-3 flex justify-center items-center rounded-t-lg bg-gray-700 border border-gray-800 shadow-inset-t-white-10">
 				<img class="-ml-4 block w-32 object-contain" src="/assets/images/logos/winter/logo-{{ random }}.png" alt="logo"/>
 			</div>
 
@@ -71,13 +71,27 @@
 
 				</form>
 
+
+				<ul class="pt-4 mx-auto w-full flex flex-col md:flex-row md:items-center md:justify-center md:space-x-3 md:divide-x md:divide-gray-300 text-xs leading-none border-t border-gray-300">
+					<li>
+						<a href="#" class="text-gray-400 hover:text-gray-500">
+							About
+						</a>
+					</li>
+					<li class="mt-2 md:mt-0 md:pl-3">
+						<a href="/rules" class="text-gray-400 hover:text-gray-500">
+							Community Etiquette
+						</a>
+					</li>
+					<li class="mt-2 md:mt-0 md:pl-3">
+						<span class="text-gray-400">
+							©2021 Copyright rdrama.net
+						</span>
+					</li>
+				</ul>
+
 			</div>
 
-		</div>
-
-		<div class="hidden mx-auto text-gray-300/70 text-xs mt-4">
-			Not a rdramanaut yet?
-			<a href="/signup{{'?redirect='+redirect if redirect else ''}}" class="font-bold text-gray-300/70 hover:text-gray-300">Create account</a>
 		</div>
 
 		{% include '/awards/Christmas/Snow.html' %}
