@@ -10,7 +10,7 @@
 				</button>
 			</div>
 			<div class="relative p-3">
-				<ul class="flex flex-col">
+				<ul class="flex flex-col space-y-3">
 					<li>
 						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')">
 							<i class="far fa-flag text-center text-muted mr-3"></i>Report
@@ -57,7 +57,9 @@
 
 					{% if v %}
 					<li>
-						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw mr-2"></i>Give Award</button>
+						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')">
+							<i class="fas fa-gift fa-fw mr-2"></i>Give Award
+						</button>
 					</li>
 					{% endif %}
 
@@ -73,9 +75,7 @@
 							<i class="fas fa-eye-slash fa-fw mr-2"></i>Unsubscribe
 						</button>
 					</li>
-					{% endif %}
 
-					{% if v %}
 						<button id="save2-{{p.id}}" class="{% if p.id in v.saved_idlist() %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast2('/save_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Save</button>
 						<button id="unsave2-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast2('/unsave_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</button>
 
