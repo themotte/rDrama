@@ -4,9 +4,9 @@ function removeComment(post_id,button1,button2) {
 	post(url)
 
 	try {
-		document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+		document.getElementById("comment-"+post_id+"-only").classList.add("bg-red-200");
 	} catch(e) {
-		document.getElementById("context").classList.add("banned");
+		document.getElementById("context").classList.add("bg-red-200");
 	}
 
 	var button=document.getElementById("remove-"+post_id);
@@ -25,9 +25,9 @@ function approveComment(post_id,button1,button2) {
 	post(url)
 
 	try {
-		document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+		document.getElementById("comment-"+post_id+"-only").classList.remove("bg-red-200");
 	} catch(e) {
-		document.getElementById("context").classList.remove("banned");
+		document.getElementById("context").classList.remove("bg-red-200");
 	}
 
 	var button=document.getElementById("remove-"+post_id);
@@ -46,14 +46,14 @@ function removeComment2(post_id,button1,button2) {
 
 	post(url)
 
-	document.getElementById("comment-"+post_id+"-only").classList.add("banned");
+	document.getElementById("comment-"+post_id+"-only").classList.add("bg-red-200");
 	var button=document.getElementById("remove-"+post_id);
 	button.onclick=function(){approveComment(post_id)};
 	button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
 
 	if (typeof button1 !== 'undefined') {
-		document.getElementById(button1).classList.toggle("d-none");
-		document.getElementById(button2).classList.toggle("d-none");
+		document.getElementById(button1).classList.toggle("hidden");
+		document.getElementById(button2).classList.toggle("hidden");
 	}
 };
 
@@ -62,13 +62,13 @@ function approveComment2(post_id,button1,button2) {
 
 	post(url)
 
-	document.getElementById("comment-"+post_id+"-only").classList.remove("banned");
+	document.getElementById("comment-"+post_id+"-only").classList.remove("bg-red-200");
 	var button=document.getElementById("remove-"+post_id);
 	button.onclick=function(){removeComment(post_id)};
 	button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
 
 	if (typeof button1 !== 'undefined') {
-		document.getElementById(button1).classList.toggle("d-none");
-		document.getElementById(button2).classList.toggle("d-none");
+		document.getElementById(button1).classList.toggle("hidden");
+		document.getElementById(button2).classList.toggle("hidden");
 	}
 }
