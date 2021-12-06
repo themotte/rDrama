@@ -7,6 +7,10 @@ function expandText(id) {
 	const el = document.getElementById('post-text-'+id);
     ['gradient-mask', 'max-h-32', 'overflow-hidden', 'pointer-events-none', 'text-gray-600'].map(v=> el.classList.toggle(v));
     ['text-black'].map(v=> el.classList.toggle(v));
-    document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
-    document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
+
+    const trigger = document.getElementsByClassName('text-expand-icon-'+id);
+    for (let i = 0; i < trigger.length; i++) {
+    	trigger.classList.toggle('fa-expand-alt');
+    	trigger.classList.toggle('fa-compress-alt');
+    }
 };
