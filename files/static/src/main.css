@@ -85,7 +85,7 @@
 	}
 	img[width], img[height] {
 	  max-width: none;
-	  height: 100%;
+	  height: 24px;
 	}
 	/*Inputs*/
 	.label {
