@@ -4,38 +4,28 @@
 
 {% block content %}
 
-<div class="row">
+<div class="flex flex-col space-y-4 sm:py-4 my-2.5 sm:my-0">
 
-	<div class="col col-md-8">
-
-	<div class="settings">
-
-		<div id="description">
-
-		<p class="text-small text-muted">Edit your custom CSS for the site.</p>
-
-		<div class="settings-section rounded mb-0">
-
-			<div class="body d-lg-flex border-bottom">
-				<div class="w-lg-100">
-					<form id="profile-settings" action="/settings/css" method="post">
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<textarea class="form-control rounded" id="bio-text" aria-label="With textarea" placeholder="Custom CSS" rows="50" name="css" form="profile-settings" maxlength="4000">{% if v.css %}{{v.csslazy}}{% endif %}</textarea>
-						<small>Limit of 4000 characters</small>
-						<div class="d-flex mt-2">
-							<input id="submit-btn" class="btn btn-primary ml-auto" type="submit" value="Save">
-						</div>
-					</form>
+	<!-- Custom website CSS -->
+	<div class="rounded-lg divide-y divide-gray-300 bg-gray-100 border border-gray-300 shadow-inset-t-white-10">
+		<div class="px-4 py-4">
+			<h2 class="label text-black">Custom site CSS</h2>
+			<form id="profile-settings" action="/settings/css" method="post">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
+				<textarea class="text-lg sm:text-base text-gray-100 appearance-none block w-full rounded shadow-inner p-2 bg-gray-800 border border-gray-900 hover:border-black focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" id="bio-text" aria-label="With textarea" placeholder="Custom CSS" rows="50" name="css" form="profile-settings" maxlength="4000">{% if v.css %}{{v.csslazy}}{% endif %}</textarea>
+				<small>Limit of 4000 characters</small>
+				<div class="d-flex mt-2">
+					<input id="submit-btn" class="btn btn-primary ml-auto" type="submit" value="Save">
 				</div>
-
-			</div>
-
-	</div>
-
+			</form>
+		</div>
 	</div>
 
 </div>
-</div>
+
+{% endblock %}
+
+{% block scripts %}
 {% if v.agendaposter %}
 <script>
 	const flip = (e) => {
@@ -47,5 +37,4 @@
 </script>
 {% endif %}
 </div>
-
-{% endblock %}
+{% endblcok %}
