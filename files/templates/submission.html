@@ -242,17 +242,15 @@
 </div>
 {% endif %}	
 
-{% if p.awards or p.over_18 or p.stickied or p.is_pinned or p.private %}
+{% if p.awards or p.over_18 or p.stickied or p.is_pinned or p.private or p.flair or p.club %}
 <!-- Mobile post meta, awards, etc -->
-<div class="px-2.5 mt-2.5 md:p-0 block md:hidden">
-	<ul class="flex flex-wrap gap-3 items-center mb-0">
-		<!-- Awards -->
-		{% if p.awards %}
-		{% for a in p.awards %}
-		<li>
-			<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
-		</li>
-		{% endfor %}
+<div class="px-2.5 mt-2.5 lg:p-0 block lg:hidden">
+	<ul class="flex flex-wrap gap-2 items-center mb-0">
+		<!-- Flair -->
+		{% if p.flair %}
+			<span class="badge badge-blue font-sans-serif md:hidden">
+				{{p.flair | safe}}
+			</span>
 		{% endif %}
 		<!-- NSFW -->
 		{% if p.over_18 %}
@@ -260,6 +258,7 @@
 			<span class="badge badge-red">+18</span>
 		</li>
 		{% endif %}
+		<!-- Country Club -->
 		{% if p.club %}
 		<li>
 			<span class="badge badge-yellow">Country Club</span>
@@ -283,8 +282,16 @@
 		<!-- Private -->
 		{% if p.private %}
 		<li>
-			<span class="badge border-blue">Draft</span>
+			<span class="badge badge-blue">Draft</span>
 		</li>
+		{% endif %}
+		<!-- Awards -->
+		{% if p.awards %}
+		{% for a in p.awards %}
+		<li>
+			<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
+		</li>
+		{% endfor %}
 		{% endif %}
 	</ul>
 </div>
@@ -383,14 +390,6 @@
 
 					<!-- Title -->
 					<h1 id="post-title" class="post-title font-bold font-heading text-lg md:text-3xl leading-normal mb-2">
-						{% if p.club %}
-							<span class="badge badge-yellow font-sans-serif md:hidden">Country Club</span>
-						{% endif %}
-						{% if p.flair %}
-						<span class="badge badge-blue font-sans-serif md:hidden">
-							{{p.flair | safe}}
-						</span>
-						{% endif %}
 						{% if p.realurl(v) %}
 						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black hover:text-primary">
 							{{p.realtitle(v) | safe}}
