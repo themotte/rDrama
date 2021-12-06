@@ -40,9 +40,9 @@
 
 				<form action="/login" method="post" class="mt-md-3" id="login">
 
-					<div class="space-y-4">
+					<input type="hidden" name="redirect" value="{{redirect}}">
 
-						<input type="hidden" name="redirect" value="{{redirect}}">
+					<div class="space-y-4">
 
 						<h2 class="text-base label text-black">
 							Login to rDrama
