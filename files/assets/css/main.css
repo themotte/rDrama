@@ -2180,8 +2180,8 @@ ol > li::before {
 }
 
 .tooltip-inner {
-  background-color: var(--white);
-  color: var(--dark);
+  background-color: var(--black);
+  color: var(--white);
 }
 
 .alert {
