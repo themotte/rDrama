@@ -10,7 +10,7 @@ function expandText(id) {
 
     const trigger = document.getElementsByClassName('text-expand-icon-'+id);
     for (let i = 0; i < trigger.length; i++) {
-    	trigger.classList.toggle('fa-expand-alt');
-    	trigger.classList.toggle('fa-compress-alt');
+    	trigger[i].classList.toggle('fa-expand-alt');
+    	trigger[i].classList.toggle('fa-compress-alt');
     }
 };
