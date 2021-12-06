@@ -36,7 +36,6 @@ AJ_REPLACEMENTS = {
 }
 
 SLURS = {
-	"white": "mayo",
 	"retarded": "r-slurred",
 	"retard": "r-slur",
 	"tard": "r-slur",
