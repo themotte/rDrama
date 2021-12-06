@@ -25,7 +25,6 @@
 {% endblock %}
 
 {% block content %}
-<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" class="flex flex-col space-y-6">
 <div class="col-span-full xl:col-span-9 sm:py-4 px-2.5 md:px-0 my-2.5 sm:my-0">
 
 	<div class="flex items-center mb-4">
@@ -33,7 +32,7 @@
 		<div class="text-lg text-black font-bold pl-2">{{ v.username }}</div>
 	</div>
 
-	<div class="flex flex-col space-y-6">
+	<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" class="flex flex-col space-y-6">
 
 		<!-- Post title field section -->
 		<div class="flex flex-col">
@@ -134,6 +133,24 @@
 
 		<!-- User form key (required) -->
 		<input type="hidden" name="formkey" value="{{v.formkey}}" class="hidden">
+	</form>
+
+	<ul class="flex lg:hidden flex-col space-y-4 mb-0">
+		<li class="flex items-center">
+			<input type="checkbox" id="nsfwCheck" name="over_18" form="submitform">
+			<label class="leading-4 ml-2 inline-block badge badge-red select-none" for="nsfwCheck">18+</label>
+		</li>
+		<li class="flex items-center">
+			<input type="checkbox" id="privateCheck" name="private" form="submitform">
+			<label class="leading-4 ml-2 inline-blue badge badge-blue select-nonee" for="privateCheck">Draft</label>
+		</li>
+		{% if v.paid_dues %}
+		<li class="flex items-center">
+			<input type="checkbox" id="clubCheck" name="club" form="submitform">
+			<label class="leading-4 ml-2 inline-block badge badge-yellow select-none" for="clubCheck">Country Club Thread</label>
+		</li>
+		{% endif %}
+	</ul>
 
 </div>
 {% endblock %}
@@ -141,7 +158,6 @@
 {% block sidebar %}
 	{% include '/sidebars/SubmitSidebar.html' %}
 {% endblock %}
-</form>
 
 {% block modals %}
 	{% include "emoji_modal.html" %}
