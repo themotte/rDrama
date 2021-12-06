@@ -12,20 +12,20 @@
 			<div class="relative p-3">
 				<ul class="flex flex-col">
 					<li>
-						<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')">
+						<button class="btn btn-gray w-full" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportPostModal" onclick="report_postModal('{{p.id}}')">
 							<i class="far fa-flag text-center text-muted mr-3"></i>Report
 						</button>
 					</li>
 					{% if v and v.id==p.author_id %}
 						{% if p.private %}
 						<li>
-							<button class="btn btn-gray" onclick="post_toast('/publish/{{p.id}}')" data-bs-dismiss="modal">
+							<button class="btn btn-gray w-full" onclick="post_toast('/publish/{{p.id}}')" data-bs-dismiss="modal">
 								<i class="fas fa-globe fa-fw mr-2"></i>Publish
 							</button>
 						</li>
 						{% endif %}
 						<li id="pin-profile2-{{p.id}}" class="{% if p.is_pinned %}hidden{% endif %}">
-							<button class="btn btn-gray" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')">
+							<button class="btn btn-gray w-full" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')">
 								<i class="fas fa-thumbtack fa-rotate--45 fa-fw mr-2"></i>Pin to profile
 							</button>
 						</li>
@@ -36,13 +36,13 @@
 						</li>
 						{% if p.deleted_utc > 0 %}
 						<li>
-							<button class="btn btn-gray" onclick="post_toast('/undelete_post/{{p.id}}')" data-bs-dismiss="modal">
+							<button class="btn btn-gray w-full" onclick="post_toast('/undelete_post/{{p.id}}')" data-bs-dismiss="modal">
 								<i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete
 							</button>
 						</li>
 						{% else %}
 						<li>
-							<button class="btn btn-gray" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')">
+							<button class="btn btn-gray w-full" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')">
 								<i class="far fa-trash-alt fa-fw mr-2"></i>Delete
 							</button>
 						</li>
@@ -50,26 +50,26 @@
 					{% endif %}
 
 					<li>
-						<a class="btn btn-gray" href="/votes?link={{p.fullname}}">
+						<a class="btn btn-gray w-full" href="/votes?link={{p.fullname}}">
 							<i class="fas fa-arrows-v fa-fw mr-2"></i>Votes
 						</a>
 					</li>
 
 					{% if v %}
 					<li>
-						<button class="btn btn-gray" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw mr-2"></i>Give Award</button>
+						<button class="btn btn-gray w-full" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')"><i class="fas fa-gift fa-fw mr-2"></i>Give Award</button>
 					</li>
 					{% endif %}
 
 					{% if v %}
 					<li id="subscribe2-{{p.id}}" class="{% if p.id in v.subscribed_idlist() %}hidden{% endif %}">
-						<button class="btn btn-gray" onclick="post_toast2('/subscribe/{{p.id}}','subscribe2-{{p.id}}','unsubscribe2-{{p.id}}')">
+						<button class="btn btn-gray w-full" onclick="post_toast2('/subscribe/{{p.id}}','subscribe2-{{p.id}}','unsubscribe2-{{p.id}}')">
 							<i class="fas fa-eye fa-fw mr-2"></i>Subscribe
 						</button>
 					</li>
 
 					<li id="unsubscribe2-{{p.id}}" class="{% if not p.id in v.subscribed_idlist() %}hidden{% endif %}">
-						<button class="btn btn-gray" onclick="post_toast2('/unsubscribe/{{p.id}}','subscribe2-{{p.id}}','unsubscribe2-{{p.id}}')">
+						<button class="btn btn-gray w-full" onclick="post_toast2('/unsubscribe/{{p.id}}','subscribe2-{{p.id}}','unsubscribe2-{{p.id}}')">
 							<i class="fas fa-eye-slash fa-fw mr-2"></i>Unsubscribe
 						</button>
 					</li>
