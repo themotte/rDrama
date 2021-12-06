@@ -485,41 +485,6 @@
 						{% endif %}
 					</div>
 
-					<!-- {% if v %}
-					<div id="voting" class="shadow-inner shadow-md rounded-md flex flex-col mb-1 py-2 items-center w-16 border-opacity-40 border border-gray-700 bg-gray-700 text-gray-500">
-						 <button id="post-{{p.id}}-up" tabindex="0" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></button>
-						<span id="post-score-{{p.id}}" class="font-bold text-lg post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}">{{score}}</span>
-						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="text-muted mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
-					</div>
-
-					<button id="post-{{p.id}}-up" class="flex items-center justify-center text-xs font-bold mb-1 rounded-md w-full border p-1 border-gray-800 post-{{p.id}}-up text-gray-500 hover:text-pink-500 focus:text-pink-500" onclick="vote('post', '{{p.id}}', '1')">
-						+&nbsp;<i class="fas fa-heart fa-sm fa-fw pl-1"></i>
-					</button>
- 					
-					{% if environ.get('DISABLE_DOWNVOTES') != '1' %}
-					<button id="post-{{p.id}}-down" class="text-gray-600 text-center text-xs post-{{p.id}}-down {% if voted==-1 %}active{% endif %}" onclick="vote('post', '{{p.id}}', '-1')">
-						Dislike
-					</button>
-					{% endif %}
-
-					{% else %}
-					Logged out score
-					<div id="voting" class="shadow-inner shadow-md rounded-md flex flex-col mb-1 py-2 items-center w-16 border-opacity-40 border border-gray-700 bg-gray-700 text-gray-500">
-						<span id="post-score-{{p.id}}" class="font-bold text-lg post-score-{{p.id}}" data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}">{{score}}</span>
-					</div>
-					Logged out upvote (links to login)
-					<button id="post-{{p.id}}-up" class="flex items-center justify-center text-xs font-bold mb-1 rounded-md w-full border p-1 border-gray-800 post-{{p.id}}-up text-gray-500 hover:text-pink-500 focus:text-pink-500" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
-						+&nbsp;<i class="fas fa-heart fa-sm fa-fw pl-1"></i>
-					</button>
-					Logged out downvote (links to login)
-					{% if environ.get('DISABLE_DOWNVOTES') != '1' %}
-					<button id="post-{{p.id}}-down" class="text-gray-600 text-center text-xs post-{{p.id}}-down" onclick="location.href='/login?redirect={{request.path | urlencode}}';">
-						Dislike
-					</button>
-					{% endif %}
-
-					{% endif %} -->
-
 				</div>
 
 			</div>
@@ -540,30 +505,6 @@
 	</div>
 
 	<div class="shadow-inset-t-white-05 border-t border-gray-300 py-4">
-
-			<!-- <div class="comments-count mb-4">
-				<div class="dropdown dropdown-actions">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
-						{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
-						{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
-						{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
-						{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
-						{{sort | capitalize}}
-					</button>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-						{% if sort != "top" %}<a class="dropdown-item" href="?sort=top"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-						{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
-						{% if sort != "new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-						{% if sort != "old" %}<a class="dropdown-item" href="?sort=old"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
-						{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
-					</div>
-					{% if linked_comment and p.comment_count >= 2%}
-					<pre></pre>
-					<div class="total"><a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>View entire discussion</a></div>
-					{% endif %}
-				</div>
-			</div> -->
 
 			<div class="flex justify-between mb-1 px-2.5 md:px-0">
 				<div class="md:ml-20 font-bold text-sm">
