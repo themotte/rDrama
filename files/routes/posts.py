@@ -190,7 +190,7 @@ def post_id(pid, anything=None, v=None):
 
 	offset = 0
 
-	if len(comments) > 60:
+	if post.comment_count > 60:
 		comments2 = []
 		count = 0
 		if post.created_utc > 1638672040:
