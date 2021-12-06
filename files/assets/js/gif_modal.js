@@ -35,9 +35,9 @@ async function getGif(searchTerm) {
 		loadGIFs.innerHTML = null;
 	}
 	else {
-		backBtn.innerHTML = '<button class="btn btn-gray" id="gifs-back-btn" onclick="getGif();"><i class="fas fa-long-arrow-left"></i></button>';
+		backBtn.innerHTML = '<button class="btn btn-gray mr-2" id="gifs-back-btn" onclick="getGif();"><i class="fas fa-long-arrow-left"></i></button>';
 
-		cancelBtn.innerHTML = '<button class="btn btn-gray" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
+		cancelBtn.innerHTML = '<button class="btn btn-gray ml-2" id="gifs-cancel-btn" onclick="getGif();"><i class="fas fa-times text-muted"></i></button>';
 
 		let response = await fetch("/giphy?searchTerm=" + searchTerm + "&limit=48");
 		let data = await response.json()
