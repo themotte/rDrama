@@ -1,8 +1,8 @@
 <ul class="flex items-center text-sm text-gray-500 mb-0">
 	{% if p.realbody(v) and '/post/' not in request.full_path  %}
 	<li class="mr-5">
-		<button class="hover:text-gray-400 transform" onclick="expandText('{{p.id}}'); this.classList.toggle('rotate-180')">
-			<i class="fas fa-chevron-down fa-fw"></i>
+		<button class="hover:text-gray-400" onclick="expandText('{{p.id}}')">
+			<i class="fas fa-expand-alt fa-fw text-expand-icon-{{p.id}}"></i>
 		</button>
 	</li>
 	{% endif %}
