@@ -812,7 +812,7 @@ function loadEmojis(form) {
 			let arr = EMOJIS_STRINGS[i].emojis
 
 			for (let j = 0; j < arr.length; j++) {
-				str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-400 w-16 h-16 overflow-hidden" onclick="getEmoji('${arr[j]}')" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" class="object-contain" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
+				str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-200 w-16 h-16 overflow-hidden" onclick="getEmoji('${arr[j]}')" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" class="object-contain" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 			}
 
 			container.innerHTML = str
@@ -826,7 +826,7 @@ function loadEmojis(form) {
 			let container = document.getElementById(`EMOJIS_${EMOJIS_STRINGS[i].type}`)
 			for (let j = 0; j < arr.length; j++) {
 				if (arr[j].match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(arr[j])) {
-					str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-400 w-16 h-16 overflow-hidden" onclick="getEmoji('${arr[j]}')" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" class="object-contain" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
+					str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-200 w-16 h-16 overflow-hidden" onclick="getEmoji('${arr[j]}')" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" class="object-contain" width=50 src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 				}
 			}
 
@@ -836,12 +836,12 @@ function loadEmojis(form) {
 				for (const [key, value] of Object.entries(arr2)) {
 					if (str.includes(`'${key}'`)) continue;
 					if (key.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(key)) {
-						str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-400 w-16 h-16 overflow-hidden" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" class="object-contain" width=50 src="/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+						str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-200 w-16 h-16 overflow-hidden" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" class="object-contain" width=50 src="/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
 					}
 					else {
 						for (let j = 0; j < value.length; j++) {
 							if (value[j].match(search_bar.value.toLowerCase())) {
-								str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-400 w-16 h-16 overflow-hidden" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" class="object-contain" width=50 src="/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+								str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-200 w-16 h-16 overflow-hidden" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" class="object-contain" width=50 src="/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
 								break;
 							}
 						}
