@@ -231,7 +231,7 @@ def contact(v):
 @limiter.limit("1/second")
 @auth_required
 def submit_contact(v):
-	message = f'This message has been sent automatically to all admins via http://{site}/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
+	message = f'This message has been sent automatically to all admins via https://{site}/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
 	send_admin(v.id, message)
 	g.db.commit()
 	return render_template("contact.html", v=v, msg="Your message has been sent.")

@@ -62,12 +62,12 @@ def publish(pid, v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
-	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{post.permalink}")
+	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://{site}{post.permalink}")
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
 		if post.club and not user.club_allowed: continue
-		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](http://{site}{post.permalink})", True)
+		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](https://{site}{post.permalink})", True)
 
 	cache.delete_memoized(frontlist)
 
@@ -169,9 +169,6 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		offset = int(request.values.get("offset", 0))
-		if offset: comments = comments.offset(offset)
-
 		comments = [c[0] for c in comments.all()]
 	else:
 		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
@@ -189,27 +186,28 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		offset = 0
-
 		comments = comments.all()
 
-	comments2 = []
-	count = 0
-	if post.created_utc > 1638672040:
-		for comment in comments:
-			comments2.append(comment)
-			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-			offset += 1
-			if count > 50: break
-	else:
-		for comment in comments:
-			comments2.append(comment)
-			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-			offset += 1
-			if count > 10: break
+	offset = 0
 
-	if len(comments) == len(comments2): offset = None
-	comments = comments2
+	if len(comments) > 60:
+		comments2 = []
+		count = 0
+		if post.created_utc > 1638672040:
+			for comment in comments:
+				comments2.append(comment)
+				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
+				offset += 1
+				if count > 50: break
+		else:
+			for comment in comments:
+				comments2.append(comment)
+				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
+				offset += 1
+				if count > 10: break
+
+		if len(comments) == len(comments2): offset = None
+		comments = comments2
 
 	post.replies = pinned + comments
 
@@ -231,6 +229,7 @@ def post_id(pid, anything=None, v=None):
 @limiter.limit("1/second")
 @auth_desired
 def viewmore(v, pid, sort, offset):
+	offset = int(offset)
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
@@ -285,7 +284,7 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		if offset: comments = comments.offset(int(offset))
+		comments = comments.offset(offset)
 
 		comments = [c[0] for c in comments.all()]
 	else:
@@ -302,11 +301,32 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		if offset: comments = comments.offset(int(offset))
-
+		comments = comments.offset(offset)
+		
 		comments = comments.all()
 
-	return render_template("comments.html", v=v, comments=comments, render_replies=True)
+	if len(comments) > 60:
+		comments2 = []
+		count = 0
+		post = get_post(pid, v=v)
+		if post.created_utc > 1638672040:
+			for comment in comments:
+				comments2.append(comment)
+				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
+				offset += 1
+				if count > 50: break
+		else:
+			for comment in comments:
+				comments2.append(comment)
+				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
+				offset += 1
+				if count > 10: break
+
+		if len(comments) == len(comments2): offset = None
+		comments = comments2
+	else: offset = None
+
+	return render_template("comments.html", v=v, comments=comments, render_replies=True, pid=pid, sort=sort, offset=offset)
 
 
 @app.post("/edit_post/<pid>")
@@ -483,7 +503,7 @@ def edit_post(pid, v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
-		message = f"@{v.username} has mentioned you: http://{site}{p.permalink}"
+		message = f"@{v.username} has mentioned you: https://{site}{p.permalink}"
 
 		for x in notify_users: send_notification(x, message)
 
@@ -526,8 +546,8 @@ def thumbnail_thread(pid):
 
 		if fragment_url.startswith("https://"):
 			return fragment_url
-		elif fragment_url.startswith("http://"):
-			return f"https://{fragment_url.split('http://')[1]}"
+		elif fragment_url.startswith("https://"):
+			return f"https://{fragment_url.split('https://')[1]}"
 		elif fragment_url.startswith('//'):
 			return f"https:{fragment_url}"
 		elif fragment_url.startswith('/'):
@@ -970,12 +990,12 @@ def submit_post(v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
-		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: http://{site}{new_post.permalink}")
+		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://{site}{new_post.permalink}")
 		
 		for follow in v.followers:
 			user = get_account(follow.user_id)
 			if new_post.club and not user.club_allowed: continue
-			send_notification(user.id, f"@{v.username} has made a new post: [{title}](http://{site}{new_post.permalink})", True)
+			send_notification(user.id, f"@{v.username} has made a new post: [{title}](https://{site}{new_post.permalink})", True)
 
 	g.db.add(new_post)
 	g.db.flush()
@@ -1121,7 +1141,7 @@ def submit_post(v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title):
-		send_message(f"http://{site}{new_post.permalink}")
+		send_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()

@@ -6,11 +6,11 @@
 {% block content %}
 {% if v %}
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=135"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
+	<link rel="stylesheet" href="/assets/css/main.css?v=136"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
 	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=124">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 {% else %}
 	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=135"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
+	<link rel="stylesheet" href="/assets/css/main.css?v=136"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
 {% endif %}
 
 <div class="row justify-content-around">
@@ -122,7 +122,7 @@
 	</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+<script src="/assets/js/clipboard.js?v=1"></script>
 
 <script>
 	var clipboard = new ClipboardJS('.copy-link');

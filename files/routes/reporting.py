@@ -4,48 +4,47 @@ from flask import g
 from files.__main__ import app, limiter
 from os import path
 
-@app.post("/flag/post/<pid>")
+@app.post("/report/post/<pid>")
 @limiter.limit("1/second")
-@auth_desired
+@auth_required
 def api_flag_post(pid, v):
 
 	post = get_post(pid)
 
-	if v and not v.shadowbanned:
-		existing = g.db.query(Flag.id).filter_by(user_id=v.id, post_id=post.id).first()
-
-		if existing: return "", 409
-
+	if not v.shadowbanned:
 		reason = request.values.get("reason", "").strip()[:100]
 		if "<" in reason: return {"error": f"Reasons can't contain <"}
 
+		if not reason.startswith('!'):
+			existing = g.db.query(Flag.id).filter_by(user_id=v.id, post_id=post.id).first()
+			if existing: return "", 409
+
 		for i in re.finditer(':(.{1,30}?):', reason):
 			if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
-				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{i.group(1)}:" title=":{i.group(1)}:" delay="0" height=20 src="http://{site}/assets/images/emojis/{i.group(1)}.webp">')
+				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{i.group(1)}:" title=":{i.group(1)}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp">')
 
 		if len(reason) > 350: return {"error": f"Too long."}
 
-		flag = Flag(post_id=post.id,
-					user_id=v.id,
-					reason=reason,
-					)
-					
-
-		g.db.add(flag)
+		if reason.startswith('!') and v.admin_level > 1:
+			post.flair = reason[1:]
+			g.db.add(post)
+		else:
+			flag = Flag(post_id=post.id, user_id=v.id, reason=reason)
+			g.db.add(flag)
 
 		g.db.commit()
 
 	return {"message": "Post reported!"}
 
 
-@app.post("/flag/comment/<cid>")
+@app.post("/report/comment/<cid>")
 @limiter.limit("1/second")
-@auth_desired
+@auth_required
 def api_flag_comment(cid, v):
 
 	comment = get_comment(cid)
 	
-	if v and not v.shadowbanned:
+	if not v.shadowbanned:
 		existing = g.db.query(CommentFlag.id).filter_by(
 			user_id=v.id, comment_id=comment.id).first()
 
@@ -55,7 +54,7 @@ def api_flag_comment(cid, v):
 
 		for i in re.finditer(':(.{1,30}?):', reason):
 			if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
-				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{i.group(1)}:" title=":{i.group(1)}:" delay="0" height=20 src="http://{site}/assets/images/emojis/{i.group(1)}.webp">')
+				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{i.group(1)}:" title=":{i.group(1)}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp">')
 
 		if len(reason) > 350: return {"error": f"Too long."}
 
