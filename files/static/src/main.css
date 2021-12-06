@@ -124,6 +124,12 @@
 .badge-blue {
 	@apply from-blue-600 to-blue-500 text-white;
 }
+.badge-green {
+	@apply from-green-600 to-green-500 text-white;
+}
+.badge-primary {
+	@apply bg-primary text-white;
+}
 
 /* ---------------------- TOOLTIPS ---------------------- */
 .tooltip-inner {
