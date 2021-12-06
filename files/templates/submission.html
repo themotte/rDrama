@@ -267,8 +267,7 @@
 		<!-- Stickied -->
 		{% if p.stickied %}
 		<li>
-			<i id="pinned-{{p.id}}" class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom"></i>
-			<span class="font-heading text-xs text-red-500">
+			<span class="badge badge-primary">
 				Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
 			</span>
 		</li>
@@ -276,7 +275,10 @@
 		<!-- Pinned -->
 		{% if p.is_pinned %}
 		<li>
-			<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned to profile"></i>
+			<span class="badge badge-green">
+				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-1"></i>
+				Pinned to profile
+			</span>
 		</li>
 		{% endif %}
 		<!-- Private -->
