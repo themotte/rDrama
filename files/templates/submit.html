@@ -137,16 +137,16 @@
 
 	<ul class="flex lg:hidden flex-col space-y-4 mb-0">
 		<li class="flex items-center">
-			<input type="checkbox" id="nsfwCheck" name="over_18" form="submitform">
+			<input type="checkbox" id="nsfwCheck-mobile" name="over_18" form="submitform">
 			<label class="leading-4 ml-2 inline-block badge badge-red select-none" for="nsfwCheck">18+</label>
 		</li>
 		<li class="flex items-center">
-			<input type="checkbox" id="privateCheck" name="private" form="submitform">
+			<input type="checkbox" id="privateCheck-mobile" name="private" form="submitform">
 			<label class="leading-4 ml-2 inline-blue badge badge-blue select-nonee" for="privateCheck">Draft</label>
 		</li>
 		{% if v.paid_dues %}
 		<li class="flex items-center">
-			<input type="checkbox" id="clubCheck" name="club" form="submitform">
+			<input type="checkbox" id="clubCheck-mobile" name="club" form="submitform">
 			<label class="leading-4 ml-2 inline-block badge badge-yellow select-none" for="clubCheck">Country Club Thread</label>
 		</li>
 		{% endif %}
