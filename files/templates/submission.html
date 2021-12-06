@@ -215,6 +215,17 @@
 
 {% block content %}
 
+{% if p.is_banned and p.ban_reason %}
+<div class="col-span-full xl:col-span-9">
+	<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-gray-200 bg-red-600 border border-gray-900 shadow-inset-t-white-10">
+		<i class="fas fa-gavel fa-fw mr-1"></i>
+		<span class="font-medium">
+			Removed by @{{p.ban_reason}}
+		</span>
+	</div>
+</div>
+{% endif %}
+
 <div class="col-span-full xl:col-span-9">
 
 <!-- Post -->
@@ -370,10 +381,6 @@
 								<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
 							</div>
 							{% endfor %}
-
-							{% if p.is_banned and p.ban_reason %}
-							<div class="text-red-800 font-bold text-lg">removed by @{{p.ban_reason}}</div>
-							{% endif %}
 
 						</div>
 
