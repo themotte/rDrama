@@ -159,14 +159,14 @@
 				{% endif %}
 
 				{% if v and v.admin_level > 1 %}
-							{% if "/reported/" in request.path %}
-								<a class="list-inline-item text-muted d-none d-md-inline-block text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a>
-								<a class="list-inline-item text-muted d-none d-md-inline-block text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a>
-							{% else %}
-								<a id="approve-{{c.id}}" class="list-inline-item text-success d-none {% if c.is_banned %}d-md-inline-block{% endif %} text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a>
-								<a id="remove-{{c.id}}" class="list-inline-item text-danger d-none {% if not c.is_banned %}d-md-inline-block{% endif %} text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a>
-							{% endif %}
-						{% endif %}
+					{% if "/reported/" in request.path %}
+						<a class="list-inline-item text-muted d-none d-md-inline-block text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a>
+						<a class="list-inline-item text-muted d-none d-md-inline-block text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a>
+					{% else %}
+						<a id="approve-{{c.id}}" class="list-inline-item text-success d-none {% if c.is_banned %}d-md-inline-block{% endif %} text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a>
+						<button id="remove-{{c.id}}" class="list-inline-item text-danger hidden {% if not c.is_banned %}md:block{% endif %} text-danger" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a>
+					{% endif %}
+				{% endif %}
 
 				{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
 				<li>
