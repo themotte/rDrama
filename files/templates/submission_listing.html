@@ -104,9 +104,6 @@
 				{% if p.is_pinned and request.path.startswith('/@') %}
 				<i class="fas fa-thumbtack fa-rotate--45 fa-fw fa-sm text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Pinned to profile"></i>
 				{% endif %}
-				{% if p.over_18 %}
-				<span class="p-1 text-xs uppercase font-bold leading-tight bg-red-600">+18</span>
-				{% endif %}
 				{% if p.is_bot %}
 				<i class="fad fa-robot fa-fw fa-sm text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="" data-bs-original-title="Bot"></i>
 				{% endif %}
@@ -184,6 +181,9 @@
 			<h5 class="post-title font-bold font-heading text-lg md:text-xl leading-normal mb-2">
 				<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"
 				{% endif %} class="text-black hover:text-primary visited:text-gray-700">
+				{% if p.over_18 %}
+				<span class="badge badge-red">+18</span>
+				{% endif %}
 				{% if p.club %}
 					<span class="badge badge-yellow font-sans-serif">Country Club</span>
 				{% endif %}
