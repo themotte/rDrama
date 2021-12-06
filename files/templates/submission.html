@@ -400,9 +400,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+									<script src="/assets/js/twitterlight.js?v=1"></script>
 								{% else %}
-									<script src="/assets/js/twitter.js" charset="utf-8"></script>
+									<script src="/assets/js/twitter.js?v=1"></script>
 								{% endif %}
 								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
 							{% elif "youtu" in p.domain %}
@@ -415,7 +415,6 @@
 								{% endif %}
 							{% endif %}
 						{% endif %}
-
 
 						{% if p.author.sig_html and (p.author_id == 1904 or not (v and v.sigs_disabled)) %}
 							<hr>
