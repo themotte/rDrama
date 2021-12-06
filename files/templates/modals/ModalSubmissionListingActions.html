@@ -76,34 +76,51 @@
 						</button>
 					</li>
 
-						<button id="save2-{{p.id}}" class="{% if p.id in v.saved_idlist() %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast2('/save_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Save</button>
-						<button id="unsave2-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast2('/unsave_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-save text-center text-muted mr-3"></i>Unsave</button>
+					<li id="save2-{{p.id}}" class="{% if p.id in v.saved_idlist() %}hidden{% endif %}">
+						<button class="btn btn-gray" onclick="post_toast2('/save_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')">
+							<i class="far fa-save text-center text-muted mr-3"></i>Save
+						</button>
+					<li>
 
-						{% if v.admin_level > 1 or v.id == p.author.id and v.paid_dues %}
-							<button id="club2-{{p.id}}" class="{% if p.club %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-info text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye-slash mr-3"></i>Mark club</button>
-							<button id="unclub2-{{p.id}}" class="{% if not p.club %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-info text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye mr-3"></i>Unmark club</button>
+					<li id="unsave2-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}hidden{% endif %}">
+						<button id="btn btn-gray" onclick="post_toast2('/unsave_post/{{p.id}}','save2-{{p.id}}','unsave2-{{p.id}}')">
+							<i class="fas fa-save text-center text-muted mr-3"></i>Unsave
+						</button>
+					</li>
+
+					{% if v.admin_level > 1 or v.id == p.author.id and v.paid_dues %}
+					<li id="club2-{{p.id}}" class="{% if p.club %}hidden{% endif %}">
+						<button class="btn btn-gray" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')">
+							<i class="fas fa-eye-slash mr-3"></i>Mark club
+						</button>
+					</li>
+					<li id="unclub2-{{p.id}}" class="{% if not p.club %}hidden{% endif %}">
+						<button class="btn btn-gray" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')">
+							<i class="fas fa-eye mr-3"></i>Unmark club
+						</button>
+					</li>
+					{% endif %}
+
+					{% if v.admin_level > 0 %}
+						<button id="pin2-{{p.id}}" class="{% if p.stickied %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Pin</button>
+						<button id="unpin2-{{p.id}}" class="{% if not p.stickied %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Unpin</button>
+						{% if v==p.author %}
+							<button id="distinguish2-{{p.id}}" class="{% if p.distinguish_level %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Distinguish</button>
+							<button id="undistinguish2-{{p.id}}" class="{% if not p.distinguish_level %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Undistinguish</button>
 						{% endif %}
 
-						{% if v.admin_level > 0 %}
-							<button id="pin2-{{p.id}}" class="{% if p.stickied %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Pin</button>
-							<button id="unpin2-{{p.id}}" class="{% if not p.stickied %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Unpin</button>
-							{% if v==p.author %}
-								<button id="distinguish2-{{p.id}}" class="{% if p.distinguish_level %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Distinguish</button>
-								<button id="undistinguish2-{{p.id}}" class="{% if not p.distinguish_level %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-left" href="javascript:void(0)" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Undistinguish</button>
-							{% endif %}
-
-							{% if "/reported/" in request.path %}
-								<button class="nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast('/ban_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
-								<button class="nobackground btn btn-link btn-block btn-lg text-success text-left" href="javascript:void(0)" onclick="post_toast('/unban_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
-							{% else %}
-								<button id="remove2-{{p.id}}" class="{% if p.is_banned %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast2('/ban_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
-								<button id="approve2-{{p.id}}" class="{% if not p.is_banned %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left"  href="javascript:void(0)" onclick="post_toast2('/unban_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
-							{% endif %}
+						{% if "/reported/" in request.path %}
+							<button class="nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast('/ban_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
+							<button class="nobackground btn btn-link btn-block btn-lg text-success text-left" href="javascript:void(0)" onclick="post_toast('/unban_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
+						{% else %}
+							<button id="remove2-{{p.id}}" class="{% if p.is_banned %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)" onclick="post_toast2('/ban_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
+							<button id="approve2-{{p.id}}" class="{% if not p.is_banned %}hidden{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left"  href="javascript:void(0)" onclick="post_toast2('/unban_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
 						{% endif %}
+					{% endif %}
 
-						{% if v.admin_level > 1 and p.oauth_app %}
-							<a href="{{p.oauth_app.permalink}}"><button class="nobackground btn btn-link btn-block btn-lg text-muted text-left"><i class="far fa-code text-center text-info mr-3"></i>API App</button></a>
-						{% endif %}
+					{% if v.admin_level > 1 and p.oauth_app %}
+						<a href="{{p.oauth_app.permalink}}"><button class="nobackground btn btn-link btn-block btn-lg text-muted text-left"><i class="far fa-code text-center text-info mr-3"></i>API App</button></a>
+					{% endif %}
 
 					{% endif %}
 
