@@ -86,64 +86,6 @@
 		  
 		<div class="w-full">
 
-			<ul class="flex flex-wrap gap-2 items-center mb-1">
-				<!-- Flair -->
-				{% if p.flair %}
-				<li>
-					<span class="badge badge-purple">
-						{{p.flair | safe}}
-					</span>
-				</li>
-				{% endif %}
-				<!-- NSFW -->
-				{% if p.over_18 %}
-				<li>
-					<span class="badge badge-red">+18</span>
-				</li>
-				{% endif %}
-				<!-- Country Club -->
-				{% if p.club %}
-				<li>
-					<span class="badge badge-yellow">Country Club</span>
-				</li>
-				{% endif %}
-				<!-- Stickied -->
-				{% if p.stickied %}
-				<li>
-					<span class="badge badge-pink">
-						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
-						Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
-					</span>
-				</li>
-				{% endif %}
-				<!-- Pinned -->
-				{% if p.is_pinned and request.path.startswith('/@') %}
-				<li>
-					<span class="badge badge-green">
-						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
-						Pinned to profile
-					</span>
-				</li>
-				{% endif %}
-				<!-- Private -->
-				{% if p.private %}
-				<li>
-					<span class="badge badge-blue">
-						<i class="fas fa-lock-alt fa-sm fa-fw1"></i>
-						Draft
-					</span>
-				</li>
-				{% endif %}
-				<!-- Awards -->
-				{% if p.awards %}
-				{% for a in p.awards %}
-				<li>
-					<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
-				</li>
-				{% endfor %}
-				{% endif %}
-			</ul>
-
 			<div class="overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
 
 				<div class="relative md:hidden {{ 'santa' if p.author.patron else 'cap' }}">
@@ -223,6 +165,64 @@
 					<a><i class="fad fa-gavel fa-fw fa-sm text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
 				{% endif %}
 			</div>
+
+			<ul class="flex flex-wrap gap-2 items-center mb-1">
+				<!-- Flair -->
+				{% if p.flair %}
+				<li>
+					<span class="badge badge-purple">
+						{{p.flair | safe}}
+					</span>
+				</li>
+				{% endif %}
+				<!-- NSFW -->
+				{% if p.over_18 %}
+				<li>
+					<span class="badge badge-red">+18</span>
+				</li>
+				{% endif %}
+				<!-- Country Club -->
+				{% if p.club %}
+				<li>
+					<span class="badge badge-yellow">Country Club</span>
+				</li>
+				{% endif %}
+				<!-- Stickied -->
+				{% if p.stickied %}
+				<li>
+					<span class="badge badge-pink">
+						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
+						Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
+					</span>
+				</li>
+				{% endif %}
+				<!-- Pinned -->
+				{% if p.is_pinned and request.path.startswith('/@') %}
+				<li>
+					<span class="badge badge-green">
+						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
+						Pinned to profile
+					</span>
+				</li>
+				{% endif %}
+				<!-- Private -->
+				{% if p.private %}
+				<li>
+					<span class="badge badge-blue">
+						<i class="fas fa-lock-alt fa-sm fa-fw1"></i>
+						Draft
+					</span>
+				</li>
+				{% endif %}
+				<!-- Awards -->
+				{% if p.awards %}
+				{% for a in p.awards %}
+				<li>
+					<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
+				</li>
+				{% endfor %}
+				{% endif %}
+			</ul>
 
 			<h5 class="post-title font-bold font-heading text-lg md:text-xl leading-normal mb-2">
 				<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"
