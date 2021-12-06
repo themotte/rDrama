@@ -229,6 +229,16 @@
 {% endif %}
 </div>
 
+<!-- Banned -->
+{% if p.bannedfor and p.author.banned_by %}
+<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
+	<i class="fas fa-gavel fa-fw mr-1"></i>
+	<span class="font-medium">
+		Author was banned for this post by @{{p.author.banned_by.username}}
+	</span>
+</div>
+{% endif %}	
+
 <!-- Post -->
 <div id="post-root" class="sm:py-4 my-2.5 sm:my-0">
 
