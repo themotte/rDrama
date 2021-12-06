@@ -165,11 +165,13 @@ function markdown() {
 			var remoji = emoji.replace(/:/g,'');
 			if (remoji.startsWith("!"))
 			{
-				input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji.substring(1) + ".webp' class='mirrored'>")
+				input = input.replace(emoji, "<img class='mirrored' src='/assets/images/emojis/" + remoji.substring(2) + ".webp'>")
+			} else if (remoji.startsWith("!"))
+			{
+				input = input.replace(emoji, "<img height=30 class='mirrored' src='/assets/images/emojis/" + remoji.substring(1) + ".webp'>")
 			} else {
 				input = input.replace(emoji, "<img height=30 src='/assets/images/emojis/" + remoji + ".webp'>")
 			}
-
 		}
 	}
 
