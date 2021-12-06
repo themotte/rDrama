@@ -71,28 +71,30 @@
 			{% endif %}
 		</ul>
 		<ul class="flex flex-col mb-0">
+			<!-- Flair -->
+			{% if p.flair %}
+			<li>
+				<span class="badge badge-blue font-sans-serif">
+					{{p.flair | safe}}
+				</span>
+			</li>
+			{% endif %}
 			<!-- NSFW -->
 			{% if p.over_18 %}
 			<li>
 				<span class="badge badge-red">+18</span>
 			</li>
 			{% endif %}
+			<!-- Country Club -->
 			{% if p.club %}
 			<li>
 				<span class="badge badge-yellow">Country Club</span>
-			<li>
-			{% endif %}
-			<!-- Banned -->
-			{% if p.bannedfor and p.author.banned_by %}
-			<li>
-				<i class="fad fa-gavel fa-sm fa-fw text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i>
 			</li>
-			{% endif %}	
+			{% endif %}
 			<!-- Stickied -->
 			{% if p.stickied %}
 			<li>
-				<i id="pinned-{{p.id}}" class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom"></i>
-				<span class="font-heading text-xs text-red-500">
+				<span class="badge badge-pink">
 					Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
 				</span>
 			</li>
@@ -100,7 +102,10 @@
 			<!-- Pinned -->
 			{% if p.is_pinned %}
 			<li>
-				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned to profile"></i>
+				<span class="badge badge-green">
+					<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-1"></i>
+					Pinned to profile
+				</span>
 			</li>
 			{% endif %}
 			<!-- Private -->
@@ -108,6 +113,14 @@
 			<li>
 				<span class="badge badge-blue">Draft</span>
 			</li>
+			{% endif %}
+			<!-- Awards -->
+			{% if p.awards %}
+			{% for a in p.awards %}
+			<li>
+				<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
+			</li>
+			{% endfor %}
 			{% endif %}
 		</ul>
 	</div>
