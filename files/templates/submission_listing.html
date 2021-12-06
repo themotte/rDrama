@@ -319,22 +319,23 @@
 
 {% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
 	{% if p.url and p.url.lower().endswith('.mp4') %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem]">
-			<video controls loop preload="metadata" style="max-width:100%;max-height:20rem">
+		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
+			<video controls loop preload="metadata" class="w-full max-h-[20rem]">
 				<source src="{{p.realurl(v)}}" type="video/mp4">
 			</video>
 		</div>
 	{% elif p.embed_url and "youtu" in p.domain %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem]">
+		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
 			{% if 'lite' in p.embed_url %}
 				{{p.embed_url | safe}}
 			{% else %}
-				<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" style="max-width:100%;max-height:20rem" width="600" height="337" allow="fullscreen"></iframe>
+				<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" class="w-full max-h-[20rem]" width="600" height="337" allow="fullscreen"></iframe>
 			{% endif %}
 		</div>
 	{% elif p.url and "streamable.com/e/" in p.url %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem]">
-			<iframe loading="lazy" src="{{p.url}}" frameborder="0" style="max-width:100%;max-height:20rem" width="600" height="337" allow="fullscreen"></iframe>
+		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
+			<iframe loading="lazy" src="{{p.url}}" frameborder="0" class="w-full max-h-[20rem]" width="600" height="337" allow="fullscreen">
+			</iframe>
 		</div>
 	{% endif %}
 {% endif %}
