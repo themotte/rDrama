@@ -29,35 +29,35 @@
 
 	{% block stylesheets %}
 
-		<link rel="stylesheet" href="/assets/css/main.css?v=125">
+	<link rel="stylesheet" href="/assets/css/main.css?v=125">
 
-		{% assets 'css' %}
-      		<link rel="stylesheet" href="{{ ASSET_URL }}">
-    	{% endassets %}
+	{% assets 'css' %}
+	<link rel="stylesheet" href="{{ ASSET_URL }}">
+	{% endassets %}
 
-    	<link rel="stylesheet" href="/assets/css/mistletoe.css?v=18">
+	<link rel="stylesheet" href="/assets/css/mistletoe.css?v=18">
 
-		{% if v %}
-			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<!-- <link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=118"> -->
-			{% if v.agendaposter %}
-			<link rel="stylesheet" href="/assets/css/agendaposter.css?v=120">
-			{% elif v.css %}
-			<link rel="stylesheet" href="/@{{v.username}}/css">
-			{% endif %}
-		{% else %}
-			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<!-- <link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=118"> -->
-		{% endif %}
+	{% if v %}
+	<style>:root{--primary:#{{v.themecolor}}}</style>
+	<!-- <link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=118"> -->
+	{% if v.agendaposter %}
+	<link rel="stylesheet" href="/assets/css/agendaposter.css?v=120">
+	{% elif v.css %}
+	<link rel="stylesheet" href="/@{{v.username}}/css">
+	{% endif %}
+	{% else %}
+	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+	<!-- <link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=118"> -->
+	{% endif %}
 
-		{% endblock %}
+	{% endblock %}
 
-		<link rel="preload" href="/assets/css/fa.css?v=52" as="style" onload="this.onload=null;this.rel='stylesheet'">
-		<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=52"></noscript>
+	<link rel="preload" href="/assets/css/fa.css?v=52" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=52"></noscript>
 
-		<style>
-    		@font-face { font-family: 'Delius Swash Caps'; src: url('/assets/fonts/DeliusSwashCaps-Regular.ttf'); } 
-		</style>
+	<style>
+		@font-face { font-family: 'Delius Swash Caps'; src: url('/assets/fonts/DeliusSwashCaps-Regular.ttf'); } 
+	</style>
 </head>
 
 <body class="overflow-hidden antialiased bg-cover bg-center bg-gray-200 text-gray-900" {% if v and v.background %}style="background:url(/assets/images/backgrounds/{{v.background}})"{% endif %}>
@@ -75,9 +75,38 @@
 							<h1 class="font-bold text-xl font-heading leading-normal mb-0">
 								Settings
 							</h1>
-							<small class="block text-gray-700">
-								Manage your rDrama account
-							</small>
+							<ul class="text-xs flex items-center space-x-3 leading-normal mb-0">
+								<li>
+									<a class="{{ 'font-bold text-red-600' if '/settings/profile' in request.full_path else 'text-gray-700' }}" href="/settings/profile">
+										Profile
+									</a>
+								</li>
+								<li>
+									<a class="{{ 'font-bold text-red-600' if '/settings/security' in request.full_path else 'text-gray-700' }}" href="/settings/security">
+										Security
+									</a>
+								</li>
+								<li>
+									<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
+										Content
+									</a>
+								</li>
+								<li>
+									<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
+										CSS
+									</a>
+								</li>
+								<li>
+									<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
+										Blocked
+									</a>
+								</li>
+								<li>
+									<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
+										Apps
+									</a>
+								</li>
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -163,9 +192,9 @@
 	<script>
 		var clipboard = new ClipboardJS('.copy-link');
 		clipboard.on('success', function(e) {
-				var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-				myToast.show();
-				console.log(e);
+			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
+			myToast.show();
+			console.log(e);
 		});
 	</script>
 </body>
