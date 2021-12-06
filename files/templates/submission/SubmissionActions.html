@@ -173,34 +173,19 @@
 				{% endif %}
 				<!-- Requires admin and post has been reported -->
 				{% if v.admin_level >=3 %}
-				{% if "/reported/" in request.path %}
+				<!-- Requires non author -->
 				{% if v.id != p.author.id %}
-				<li>
-					<button class="list-inline-item text-red-600" class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/ban_post/{{p.id}}')">
-						<i class="fas fa-ban"></i>Remove
-					</button>
-				</li>
-				{% endif %}
-				<li>
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/unban_post/{{p.id}}')">
-						<i class="fas fa-check fa-sm fa-fw mr-4"></i>Approve
-					</button>
-				</li>
-				{% else %}
-				<!-- Requires author -->
-				{% if v.id != p.author.id %}
-				<li class="{% if p.is_banned %}hidden{% endif %} text-red-600">
-					<button id="remove-{{p.id}}" class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/ban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')">
+				<li id="remove-{{p.id}}" class="{% if p.is_banned %}hidden{% endif %} text-red-600">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/ban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')">
 						<i class="fas fa-ban fa-sm fa-fw mr-4"></i>Remove
 					</button>
 				</li>
 				{% endif %}
-				<li class="{% if not p.is_banned %}hidden{% endif %}">
-					<button id="approve-{{p.id}}" class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/unban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')">
+				<li id="approve-{{p.id}}" class="{% if not p.is_banned %}hidden{% endif %}">
+					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/unban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')">
 						<i class="fas fa-check fa-sm fa-fw mr-4"></i>Approve
 					</button>
 				</li>
-				{% endif %}
 				{% endif %}
 				<!-- Requires admin or author -->
 				{% if v.id == p.author_id or v.admin_level >= 3 %}
