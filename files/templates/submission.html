@@ -637,31 +637,7 @@
 			{% endif %}
 
 			{% if offset %}
-		 	<script defer>
-				function loadMore(id, trigger) {
-					const btn = document.getElementById(trigger) // trigger button
-					const el = document.getElementById(id) // target element to populate
-					const form = new FormData();
-					const xhr = new XMLHttpRequest();
-
-					btn.classList.toggle('animate-pulse');
-
-					xhr.open("post", "/viewmore/{{p.id}}/{{sort}}/{{offset}}");
-					xhr.withCredentials=true;
-					xhr.onload=function(){
-						if (xhr.status==200) {
-							el.innerHTML = xhr.response; // replace desired element with response html
-							btn.style.display = "none"; // hide button
-						} else {
-							btn.disabled = false; // enable our button if GET fails
-						}
-					}
-					xhr.send(form)
-				}
-			</script>
-			<button class="mt-2 w-full btn btn-gray" id="load-more-button" onclick="loadMore('comment-section', this.id); this.disabled = true;">
-				Load more comments
-			</button>
+				<script src="/assets/js/viewmore.js?v=1"></script>
 			{% endif %}
 
 	</div>
