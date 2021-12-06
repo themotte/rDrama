@@ -209,7 +209,20 @@
 				</li>
 				<li id="unsex-user-{{p.id}}" class="{% if not p.is_blocking %}hidden{% endif %}">
 					<button class="btn btn-gray" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')">
-						<i class="fas fa-user-slash fa-sm fa-fw mr-4"></i>Unban user
+						<i class="fas fa-user-check fa-sm fa-fw mr-4"></i>Unban user
+					</button>
+				</li>
+				{% endif %}
+
+				{% if v.admin_level >=3 and v.id != p.author_id %}
+				<li id="ban-{{p.id}}" class="{% if p.author.is_suspended %}hidden{% endif %} text-red-600">
+					<button data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')">
+						<i class="fas fa-user-slash fa-sm fa-fw mr-4"></i>Ban user
+					</button>
+				</li>
+				<li id="unban-{{p.id}}" class="{% if not p.author.is_suspended %}hidden{% endif %}">
+					<button id="unexile2-user-{{p.id}}" onclick="post_toast2('/unban_user/{{p.author_id}}','ban-{{p.id}}','unban-{{p.id}}')">
+						<i class="fas fa-user-check fa-sm fa-fw mr-4"></i>Unban user
 					</button>
 				</li>
 				{% endif %}
