@@ -2179,10 +2179,10 @@ ol > li::before {
   font-weight: 600;
 }
 
-.tooltip-inner {
+/*.tooltip-inner {
   background-color: var(--black);
   color: var(--white);
-}
+}*/
 
 .alert {
   padding: 0.5rem 1rem;
