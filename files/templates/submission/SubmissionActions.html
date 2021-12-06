@@ -200,6 +200,20 @@
 					</button>
 				</li>
 				{% endif %}
+
+				{% if v.id != p.author_id and v.admin_level == 1 %}
+				<li id="sex-user-{{p.id}}" class="{% if p.is_blocking %}hidden{% endif %} text-red-600">
+					<button class="btn btn-gray" onclick="post_toast2('/settings/block?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')">
+						<i class="fas fa-user-slash fa-sm fa-fw mr-4"></i>Ban user
+					</button>
+				</li>
+				<li id="unsex-user-{{p.id}}" class="{% if not p.is_blocking %}hidden{% endif %}">
+					<button class="btn btn-gray" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','sex-user-{{p.id}}','unsex-user-{{p.id}}')">
+						<i class="fas fa-user-slash fa-sm fa-fw mr-4"></i>Unban user
+					</button>
+				</li>
+				{% endif %}
+
 				<!-- Requires super admin and app -->
 				{% if v.admin_level >= 4 and p.oauth_app %}
 				<li>
