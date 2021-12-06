@@ -127,12 +127,12 @@
 					{% endif %}
 					<li id="remove2-{{p.id}}" class="{% if p.is_banned %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/ban_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')">
-							<i class="far fa-ban fa-fw mr-4"></i>Remove
+							<i class="fas fa-ban fa-fw mr-4"></i>Remove
 						</button>
 					</li>
 					<li id="approve2-{{p.id}}" class="{% if not p.is_banned %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/unban_post/{{p.id}}','remove2-{{p.id}}','approve2-{{p.id}}')">
-							<i class="far fa-check fa-fw mr-4"></i>Approve
+							<i class="fas fa-check fa-fw mr-4"></i>Approve
 						</button>
 					</li>
 					{% endif %}
@@ -140,7 +140,7 @@
 					{% if v.admin_level > 1 and p.oauth_app %}
 					<li>
 						<a href="{{p.oauth_app.permalink}}" class="btn btn-gray w-full text-left">
-							<i class="far fa-code fa-fw mr-4"></i>API App
+							<i class="fas fa-code fa-fw mr-4"></i>API App
 						</a>
 					</li>
 					{% endif %}
@@ -148,11 +148,21 @@
 					{% endif %}
 
 					{% if v and v.id != p.author_id %}
-						<button id="unblock2-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-success text-left{% if not p.is_blocking %} hidden{% endif %}" data-bs-dismiss="modal" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye mr-3 text-success"></i>Unblock user</button>
-
-						<button id="prompt2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-danger text-left hidden" data-bs-dismiss="modal" onclick="post_toast2('/settings/block?username={{p.author.username}}','prompt2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye-slash mr-3 text-danger"></i>Are you sure?</button>
-						
-						<button id="block2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-danger text-left{% if p.is_blocking %} hidden{% endif %}" onclick="document.getElementById('block2-{{p.id}}').classList.toggle('hidden');document.getElementById('prompt2-{{p.id}}').classList.toggle('hidden');"><i class="fas fa-eye-slash mr-3 text-danger"></i>Block user</button>
+					<li id="unblock2-{{p.id}}" class="{% if not p.is_blocking %} hidden{% endif %}">
+						<button onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block2-{{p.id}}','unblock2-{{p.id}}')">
+							<i class="fas fa-user-check fa-fw mr-4"></i>Unblock user
+						</button>
+					</li>
+					<li id="prompt2-{{p.id}}" class="blockuser hidden">
+						<button onclick="post_toast2('/settings/block?username={{p.author.username}}','prompt2-{{p.id}}','unblock2-{{p.id}}')">
+							<i class="fas fa-user-slash fa-fw mr-4"></i>Are you sure?
+						</button>
+					</li>
+					<li id="block2-{{p.id}}" class="{% if p.is_blocking %} hidden{% endif %}">
+						<button onclick="document.getElementById('block2-{{p.id}}').classList.toggle('hidden');document.getElementById('prompt2-{{p.id}}').classList.toggle('hidden');">
+							<i class="fas fa-eye-slash fa-fw mr-4"></i>Block user
+						</button>
+					</li>
 					{% endif %}
 
 					{% if v and (v.id==p.author_id or v.admin_level > 1) %}
