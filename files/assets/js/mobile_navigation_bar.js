@@ -4,7 +4,7 @@ window.onscroll = function () {
 
 	let currentScrollPos = window.pageYOffset;
 	// var topBar = document.getElementById("fixed-bar-mobile");
-	var bottomBar = document.getElementById("mobile-bottom-navigation-bar");
+	const bottomBar = document.getElementById("mobile-bottom-navigation-bar");
 	// var dropdown = document.getElementById("mobileSortDropdown");
 	// var navbar = document.getElementById("navbar");
 
@@ -16,10 +16,10 @@ window.onscroll = function () {
 			bottomBar.style.transform = "translateY(0px)";
 		}
 		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
-			bottomBar.style.transform = "translateY(-50px)"
+			bottomBar.style.transform = "translateY(60px)"
 		}
 		else {
-			bottomBar.style.transform = "translateY(-50px)"
+			bottomBar.style.transform = "translateY(60px)"
 		}
 	}
 
