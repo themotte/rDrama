@@ -196,7 +196,7 @@ def searchcomments(v):
 
 	if 'q' in criteria:
 		words=criteria['q'].split()
-		words=[Comment.body.ilike('%'+x+'%') for x in words]
+		words=[Comment.body_html.ilike('%'+x+'%') for x in words]
 		words=tuple(words)
 		comments=comments.filter(*words)
 
