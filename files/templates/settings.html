@@ -75,7 +75,10 @@
 							<h1 class="font-bold text-xl font-heading leading-normal mb-0">
 								Settings
 							</h1>
-							<ul class="text-xs flex items-center space-x-3 leading-normal mb-0">
+							<small class="hidden lg:block text-gray-700 leading-normal">
+								Manage your rDrama profile and more.
+							</small>
+							<ul class="text-xs flex lg:hidden items-center space-x-3 leading-normal mb-0">
 								<li>
 									<a class="{{ 'font-bold text-red-600' if '/settings/profile' in request.full_path else 'text-gray-700' }}" href="/settings/profile">
 										Profile
@@ -87,22 +90,22 @@
 									</a>
 								</li>
 								<li>
-									<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
+									<a class="{{ 'font-bold text-red-600' if '/settings/content' in request.full_path else 'text-gray-500' }}" href="/settings/content">
 										Content
 									</a>
 								</li>
 								<li>
-									<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
+									<a class="{{ 'font-bold text-red-600' if '/settings/css' in request.full_path else 'text-gray-500' }}" href="/settings/css">
 										CSS
 									</a>
 								</li>
 								<li>
-									<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
+									<a class="{{ 'font-bold text-red-600' if '/settings/blocks' in request.full_path else 'text-gray-500' }}" href="/settings/blocks">
 										Blocked
 									</a>
 								</li>
 								<li>
-									<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
+									<a class="{{ 'font-bold text-red-600' if '/settings/apps' in request.full_path else 'text-gray-500' }}" href="/settings/apps">
 										Apps
 									</a>
 								</li>
