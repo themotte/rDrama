@@ -2,6 +2,8 @@ let prevScrollpos = window.pageYOffset;
 
 window.onscroll = function () {
 
+	console.log('this works')
+
 	let currentScrollPos = window.pageYOffset;
 	// var topBar = document.getElementById("fixed-bar-mobile");
 	const bottomBar = document.getElementById("mobile-bottom-navigation-bar");
@@ -10,12 +12,14 @@ window.onscroll = function () {
 
 	if (bottomBar != null) {
 		if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
+			console.log('this translate y 0 works')
 			bottomBar.style.transform = "translateY(0px)"
 		} 
 		else if (currentScrollPos <= 125 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
 			bottomBar.style.transform = "translateY(0px)";
 		}
 		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
+			console.log('this translate y 60 works')
 			bottomBar.style.transform = "translateY(60px)"
 		}
 		else {
