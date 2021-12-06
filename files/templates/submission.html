@@ -220,7 +220,7 @@
 <!-- Post -->
 <div id="post-root" class="sm:py-4 my-2.5 sm:my-0">
 
-	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %} {% if p.is_banned %}bg-red-900{% endif %}">
+	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %} {% if p.is_banned %}bg-red-100{% endif %}">
 		<div class="{% if p.deleted_utc > 0 %}deleted {% endif %} flex flex-row-reverse flex-nowrap justify-end">
 
 			{% if not p.is_image and p.thumb_url and not p.embed_url %}
