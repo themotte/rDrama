@@ -159,29 +159,14 @@
 				{% endif %}
 
 				{% if v and v.admin_level > 1 %}
-				{% if "/reported/" in request.path %}
-				<li>
-					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
-				</li>
-				<li class="hidden md:block">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-green-600 fa-sm fa-fw mr-4"></i>Approve</button>
-				</li>
-				<li class="hidden md:block">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-red-600 fa-sm fa-fw mr-4"></i>Remove</button>
-				</li>
-				{% else %}
-				<li id="approve-{{c.id}}" class="hidden {% if c.is_banned %}md:block{% endif %}">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')">
-						<i class="fas fa-check text-green-600 fa-sm fa-fw mr-4"></i>Approve
-					</button>
-				</li>
-				<li id="remove-{{c.id}}" class="hidden {% if not c.is_banned %}md:block{% endif %}"> 
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')">
-						<i class="fas fa-ban text-red-600 fa-sm fa-fw mr-4"></i>Remove
-					</button>
-				</li>
-				{% endif %}
-				{% endif %}
+							{% if "/reported/" in request.path %}
+								<a class="list-inline-item text-muted d-none d-md-inline-block text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a>
+								<a class="list-inline-item text-muted d-none d-md-inline-block text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a>
+							{% else %}
+								<a id="approve-{{c.id}}" class="list-inline-item text-success d-none {% if c.is_banned %}d-md-inline-block{% endif %} text-success" href="javascript:void(0)" onclick="approveComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-check text-success fa-fw"></i>Approve</a>
+								<a id="remove-{{c.id}}" class="list-inline-item text-danger d-none {% if not c.is_banned %}d-md-inline-block{% endif %} text-danger" href="javascript:void(0)" onclick="removeComment('{{c.id}}','approve-{{c.id}}','remove-{{c.id}}')"><i class="fas fa-ban text-danger fa-fw"></i>Remove</a>
+							{% endif %}
+						{% endif %}
 
 				{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
 				<li>
