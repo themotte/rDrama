@@ -158,7 +158,7 @@
 				</li>
 				{% endif %}
 
-				{% if v and v.admin_level>=3 %}
+				{% if v and v.admin_level > 1 %}
 				{% if "/reported/" in request.path %}
 				<li>
 					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
