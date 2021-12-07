@@ -415,10 +415,10 @@
 
 					<div id="post-body" class="post-body mt-3">
 						{% if p.realurl(v) %}
-							{% if "streamable.com/" in p.realurl(v) %}
+							{% if p.url.startswith('https://streamable.com/e/') %}
 								<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;"><iframe loading="lazy" src="{{p.realurl(v)}}" frameborder="0" width="100%" height="100%" allowfullscreen="" style="width: 100%; height: 100%; position: absolute;"></iframe></div>
 								<pre></pre>
-							{% elif "spotify.com/" in p.realurl(v) %}
+							{% elif p.domain == 'open.spotify.com' %}
 								{% if "spotify.com/embed/" in p.realurl(v) %}
 									{% set streamurl=p.realurl(v) %}
 								{% else %}
@@ -483,7 +483,7 @@
 									<script src="/assets/js/twitter.js?v=1"></script>
 								{% endif %}
 								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
-							{% elif "youtu" in p.domain %}
+							{% elif p.domain in ['youtu.be','youtube.com'] %}
 								{% if 'lite' in p.embed_url %}
 									{{p.embed_url | safe}}
 								{% else %}
