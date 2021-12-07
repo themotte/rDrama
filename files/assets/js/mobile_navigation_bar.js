@@ -12,13 +12,12 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 			bottomBar.style.transform = "translateY(60px)";
 			console.log('test 2')
 		}
-		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 100)) {
+		else if ((window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 60)) {
+			bottomBar.style.transform = "translateY(60px)";
+		}
+		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 60)) {
 			bottomBar.style.transform = "translateY(0px)"
 			console.log('test 1')
-		}
-		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 100)) {
-			bottomBar.style.transform = "translateY(0px)"
-			console.log('test 3')
 		}
 		else {
 			bottomBar.style.transform = "translateY(60px)"
