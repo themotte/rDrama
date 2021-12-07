@@ -54,9 +54,11 @@
 
 <div class="col-span-full">
 
-  	{% with comments=notifications %}
-		{% include "comments.html" %}
-	{% endwith %}
+	<div class="col-span-full px-2.5 md:px-0">
+	  	{% with comments=notifications %}
+			{% include "comments.html" %}
+		{% endwith %}
+	</div>
 
 	{% if not notifications %}
 	<div class="flex flex-col items-center justify-center py-24 md:py-48">
