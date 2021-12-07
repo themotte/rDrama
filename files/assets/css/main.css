@@ -3676,13 +3676,13 @@ pre .com, code .com {
    padding: 0.25rem 0.75rem;
  }
 
- #thread, #submit, #error-401, #error-403, #error-404, #error-405, #error-429, #error-451, #error-500 {
+ /*#thread, #submit, #error-401, #error-403, #error-404, #error-405, #error-429, #error-451, #error-500 {
    background-color: var(--light);
- }
+ }*/
 
- #frontpage {
+ /*#frontpage {
    padding-top: 49px;
- }
+ }*/
 
  #search .search-results.card {
    border-bottom: 0.1px solid var(--gray-400);
