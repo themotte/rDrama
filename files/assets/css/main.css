@@ -3921,7 +3921,8 @@ pre .com, code .com {
  .pagination {
    padding: 1rem;
  }
-
+ 
+/*
  input[type=color],
  input[type=date],
  input[type=email],
@@ -3937,13 +3938,13 @@ pre .com, code .com {
  select:focus,
  textarea {
    font-size: 16px !important;
- }
+ }*/
 
- textarea, input[type=text] {
+ /*textarea, input[type=text] {
    -webkit-appearance: none;
    -moz-appearance: none;
    appearance: none;
- }
+ }*/
 }
 /*.bg-white {
   background-color: var(--gray-600) !important;
