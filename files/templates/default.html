@@ -218,7 +218,7 @@
 
  </head>
 
- <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="overflow-hidden antialiased bg-cover bg-center bg-gray-200 text-gray-900" style="{% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}){% endif %}">
+ <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900">
 
 {% block Banner %}
 {% endblock %}
@@ -234,8 +234,8 @@
 {% block postNav %}
 {% endblock %}
 
-<div class="flex h-screen pt-16 bg-gray-500">
-	<div class="w-full overflow-y-auto">
+<div class="flex h-screen bg-gray-500">
+	<div class="w-full sm:overflow-y-auto">
 
 			{% block desktopUserBanner %}
 			{% endblock %}
