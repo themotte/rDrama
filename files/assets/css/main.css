@@ -3608,7 +3608,7 @@ pre .com, code .com {
   border-radius: 4px;
 }
 
-@media (max-width: 991.98px) {
+/*@media (max-width: 991.98px) {
   #frontpage, #search {
    padding-top: 49px;
  }
@@ -3616,26 +3616,26 @@ pre .com, code .com {
 @media (max-width: 767.98px) {
   html {
    font-size: 14px;
- }
+ }*/
 
- .container {
+/* .container {
    overflow: hidden;
    max-width: none;
  }
-
- body, #settings, #notifications, #submit {
+*/
+/* body, #settings, #notifications, #submit {
    padding-top: 49px;
    background-color: var(--gray-700);
- }
-
+ }*/
+/*
  #thread, #userpage {
    background-color: var(--gray-600);
- }
+ }*/
 
- .custom-gutters {
+/* .custom-gutters {
    padding-left: 0;
    padding-right: 0;
- }
+ }*/
 
  .navbar.bg-primary {
    background-color: var(--dark) !important;
