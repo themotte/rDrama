@@ -3,6 +3,7 @@ from files.helpers.get import *
 from flask import g
 from files.__main__ import app, limiter
 from os import path
+from files.helpers.sanitize import filter_emojis_only
 
 @app.post("/report/post/<pid>")
 @limiter.limit("1/second")
@@ -13,15 +14,12 @@ def api_flag_post(pid, v):
 
 	if not v.shadowbanned:
 		reason = request.values.get("reason", "").strip()[:100]
-		if "<" in reason: return {"error": f"Reasons can't contain <"}
 
 		if not reason.startswith('!'):
 			existing = g.db.query(Flag.id).filter_by(user_id=v.id, post_id=post.id).first()
 			if existing: return "", 409
 
-		for i in re.finditer(':(.{1,30}?):', reason):
-			if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
-				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{i.group(1)}:" title=":{i.group(1)}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp">')
+		reason = filter_emojis_only(reason)
 
 		if len(reason) > 350: return {"error": f"Too long."}
 
@@ -45,26 +43,17 @@ def api_flag_comment(cid, v):
 	comment = get_comment(cid)
 	
 	if not v.shadowbanned:
-		existing = g.db.query(CommentFlag.id).filter_by(
-			user_id=v.id, comment_id=comment.id).first()
-
+		existing = g.db.query(CommentFlag.id).filter_by( user_id=v.id, comment_id=comment.id).first()
 		if existing: return "", 409
-		reason = request.values.get("reason", "").strip()[:100]
-		if "<" in reason: return {"error": f"Reasons can't contain <"}
 
-		for i in re.finditer(':(.{1,30}?):', reason):
-			if path.isfile(f'./files/assets/images/emojis/{i.group(1)}.webp'):
-				reason = reason.replace(f':{i.group(1)}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{i.group(1)}:" title=":{i.group(1)}:" delay="0" height=20 src="https://{site}/assets/images/emojis/{i.group(1)}.webp">')
+		reason = request.values.get("reason", "").strip()[:100]
+		reason = filter_emojis_only(reason)
 
 		if len(reason) > 350: return {"error": f"Too long."}
 
-		flag = CommentFlag(comment_id=comment.id,
-					user_id=v.id,
-					reason=reason,
-					)
+		flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
 
 		g.db.add(flag)
-
 		g.db.commit()
 
 	return {"message": "Comment reported!"}

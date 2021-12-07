@@ -372,7 +372,7 @@ def edit_post(pid, v):
 			title = title.replace('I ', f'@{v.username} ')
 			title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
 
-		title_html = filter_title(title)
+		title_html = filter_emojis_only(title)
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
 		p.title = title
 		p.title_html = title_html
@@ -402,7 +402,7 @@ def edit_post(pid, v):
 				c = Comment(author_id=AUTOPOLLER_ID,
 					parent_submission=p.id,
 					level=1,
-					body_html=filter_title(i.group(1)),
+					body_html=filter_emojis_only(i.group(1)),
 					upvotes=0
 					)
 				g.db.add(c)
@@ -681,7 +681,7 @@ def submit_post(v):
 		title = title.replace('I ', f'@{v.username} ')
 		title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
 
-	title_html = filter_title(title)
+	title_html = filter_emojis_only(title)
 	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
@@ -921,7 +921,7 @@ def submit_post(v):
 		c = Comment(author_id=AUTOPOLLER_ID,
 			parent_submission=new_post.id,
 			level=1,
-			body_html=filter_title(option),
+			body_html=filter_emojis_only(option),
 			upvotes=0
 			)
 
