@@ -8,7 +8,7 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 	// var navbar = document.getElementById("navbar");
 
 	if (bottomBar != null) {
-		if (currentScrollPos <= 60 || (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 100)) {
+		if (currentScrollPos <= 60 || (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
 			bottomBar.style.transform = "translateY(60px)";
 			console.log('test 2')
 		}
