@@ -18,7 +18,7 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 			bottomBar.style.transform = "translateY(0px)"
 		}
 		else {
-			bottomBar.style.transform = "translateY(0px)"
+			bottomBar.style.transform = "translateY(60px)"
 		}
 	}
 
