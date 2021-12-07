@@ -42,4 +42,4 @@ document.addEventListener('scroll', function(e) {
 	// 	}
 	// }
 	prevScrollpos = currentScrollPos;
-}
+})
