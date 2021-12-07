@@ -1,6 +1,6 @@
 let prevScrollpos = window.pageYOffset;
 
-window.onscroll = function () {
+document.getElementsByTagName('body')[0].onscroll = () => {
 
 	console.log('this works')
 
