@@ -8,13 +8,13 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 	// var navbar = document.getElementById("navbar");
 
 	if (bottomBar != null) {
-		if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 100)) {
-			bottomBar.style.transform = "translateY(0px)"
-			console.log('test 1')
-		} 
-		else if (currentScrollPos <= 60 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 100)) {
+		if (currentScrollPos <= 60 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 100)) {
 			bottomBar.style.transform = "translateY(60px)";
 			console.log('test 2')
+		}
+		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 100)) {
+			bottomBar.style.transform = "translateY(0px)"
+			console.log('test 1')
 		}
 		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 100)) {
 			bottomBar.style.transform = "translateY(0px)"
