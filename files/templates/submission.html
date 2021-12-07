@@ -480,7 +480,9 @@
 					</div>
 
 					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and not v.is_suspended %}
+					<div class="py-2">
 						{% include "/submission/SubmissionEditForm.html" %}
+					</div>
 					{% endif %}
 
 					{% if p.embed_url and "http" not in p.embed_url %}
@@ -545,7 +547,7 @@
 
 			</div>
 
-			<div class="md:hidden px-2.5 pt-4">
+			<div class="md:hidden px-2.5">
 				{% include "/submission/SubmissionActionsMobile.html" %}
 			</div>
 
