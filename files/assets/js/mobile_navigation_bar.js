@@ -9,7 +9,7 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 
 	if (bottomBar != null) {
 		if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
-			bottomBar.style.transform = "translateY(0px)"
+			bottomBar.style.transform = "translateY(60px)"
 		} 
 		else if (currentScrollPos <= 125 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
 			bottomBar.style.transform = "translateY(60px)";
@@ -18,7 +18,7 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 			bottomBar.style.transform = "translateY(0px)"
 		}
 		else {
-			bottomBar.style.transform = "translateY(60px)"
+			bottomBar.style.transform = "translateY(0px)"
 		}
 	}
 
