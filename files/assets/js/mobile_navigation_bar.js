@@ -14,7 +14,8 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 		}
 		else if (prevScrollpos < currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight)) {
 			bottomBar.style.transform = "translateY(60px)";
-			console.log('test 3')
+			console.log(document.body.offsetHeight)
+			console.log((window.innerHeight + currentScrollPos))
 		}
 		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 60)) {
 			bottomBar.style.transform = "translateY(0px)"
