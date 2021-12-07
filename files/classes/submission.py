@@ -251,6 +251,7 @@ class Submission(Base):
 				'distinguish_level': self.distinguish_level,
 				'voted': self.voted if hasattr(self, 'voted') else 0,
 				'flags': flags,
+				'club': self.club,
 				}
 
 		if self.ban_reason:
