@@ -1,6 +1,6 @@
 let prevScrollpos = window.pageYOffset;
 
-window.onscroll = () => {
+document.addEventListener('scroll', function(e) {
 	console.log('this works')
 
 	let currentScrollPos = window.pageYOffset;
