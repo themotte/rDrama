@@ -36,7 +36,6 @@ AJ_REPLACEMENTS = {
 }
 
 SLURS = {
-	"white": "mayo",
 	"retarded": "r-slurred",
 	"retard": "r-slur",
 	"tard": "r-slur",
@@ -149,6 +148,7 @@ if SITE == 'rdrama.net':
 	DAD_ID = 2513
 	MOM_ID = 4588
 	BUG_THREAD = 18459
+	EMOJI_THREAD = 22479
 elif SITE == "pcmemes.net":
 	BASEDBOT_ID = 800
 	KIPPY_ID = 1592
@@ -158,7 +158,7 @@ elif SITE == "pcmemes.net":
 	LONGPOSTBOT_ID = 1832
 	ZOZBOT_ID = 1833
 	AUTOPOLLER_ID = 3369
-	TAX_RECEIVER_ID = 1577
+	TAX_RECEIVER_ID = 1592
 	PIZZA_SHILL_ID = 0
 	IDIO_ID = 0
 	CARP_ID = 0
@@ -170,6 +170,7 @@ elif SITE == "pcmemes.net":
 	DAD_ID = 0
 	MOM_ID = 0
 	BUG_THREAD = 4103
+	EMOJI_THREAD = 0
 else:
 	BASEDBOT_ID = 0
 	KIPPY_ID = 0
@@ -191,6 +192,7 @@ else:
 	DAD_ID = 0
 	MOM_ID = 0
 	BUG_THREAD = 0
+	EMOJI_THREAD = 0
 
 PUSHER_INSTANCE_ID = '02ddcc80-b8db-42be-9022-44c546b4dce6'
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()

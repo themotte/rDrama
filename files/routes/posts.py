@@ -101,7 +101,8 @@ def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
-	if v: defaultsortingcomments = v.defaultsortingcomments
+	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
+	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 
 	sort = request.values.get("sort", defaultsortingcomments)
@@ -247,7 +248,7 @@ def viewmore(v, pid, sort, offset):
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
-		comments=comments.filter(Comment.parent_submission == pid, Comment.author_id != AUTOPOLLER_ID).join(
+		comments=comments.filter(Comment.parent_submission == pid, Comment.author_id != AUTOPOLLER_ID, Comment.is_pinned == None).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -268,10 +269,8 @@ def viewmore(v, pid, sort, offset):
 			comment.is_blocking = c[2] or 0
 			comment.is_blocked = c[3] or 0
 			output.append(comment)
-		
-		pinned = [c[0] for c in comments.filter(Comment.is_pinned != None).all()]
-		
-		comments = comments.filter(Comment.level == 1, Comment.is_pinned == None)
+				
+		comments = comments.filter(Comment.level == 1)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -305,26 +304,24 @@ def viewmore(v, pid, sort, offset):
 		
 		comments = comments.all()
 
-	if len(comments) > 60:
-		comments2 = []
-		count = 0
-		post = get_post(pid, v=v)
-		if post.created_utc > 1638672040:
-			for comment in comments:
-				comments2.append(comment)
-				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
-				offset += 1
-				if count > 50: break
-		else:
-			for comment in comments:
-				comments2.append(comment)
-				count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
-				offset += 1
-				if count > 10: break
+	comments2 = []
+	count = 0
+	post = get_post(pid, v=v)
+	if post.created_utc > 1638672040:
+		for comment in comments:
+			comments2.append(comment)
+			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, top_comment_id=comment.id).count() + 1
+			offset += 1
+			if count > 50: break
+	else:
+		for comment in comments:
+			comments2.append(comment)
+			count += g.db.query(Comment.id).filter_by(parent_submission=post.id, parent_comment_id=comment.id).count() + 1
+			offset += 1
+			if count > 10: break
 
-		if len(comments) == len(comments2): offset = None
-		comments = comments2
-	else: offset = None
+	if len(comments) == len(comments2): offset = None
+	comments = comments2
 
 	return render_template("comments.html", v=v, comments=comments, render_replies=True, pid=pid, sort=sort, offset=offset)
 
