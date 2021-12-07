@@ -1,7 +1,7 @@
 let prevScrollpos = window.pageYOffset;
 
 document.addEventListener('scroll', function(e) {
-	console.log('this works')
+	console.log('this works');
 
 	let currentScrollPos = window.pageYOffset;
 	// var topBar = document.getElementById("fixed-bar-mobile");
