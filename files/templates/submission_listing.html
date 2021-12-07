@@ -487,7 +487,7 @@
 
 	{% if p.url and p.url.lower().endswith('.mp4') %}
 		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-4">
-			<video controls loop preload="metadata" style="max-width:100%;max-height:20rem">
+			<video controls preload="metadata" style="max-width:100%;max-height:20rem">
 				<source src="{{p.realurl(v)}}" type="video/mp4">
 			</video>
 		</div>
