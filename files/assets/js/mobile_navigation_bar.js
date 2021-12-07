@@ -10,17 +10,19 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 	if (bottomBar != null) {
 		if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 100)) {
 			bottomBar.style.transform = "translateY(0px)"
+			console.log('test 1')
 		} 
 		else if (currentScrollPos <= 60 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 100)) {
 			bottomBar.style.transform = "translateY(60px)";
-			console.log('test 1')
+			console.log('test 2')
 		}
 		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 100)) {
 			bottomBar.style.transform = "translateY(0px)"
+			console.log('test 3')
 		}
 		else {
 			bottomBar.style.transform = "translateY(60px)"
-			console.log('test 2')
+			console.log('test 4')
 		}
 	}
 
