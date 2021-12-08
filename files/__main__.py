@@ -125,7 +125,7 @@ def after_request(response):
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
-	response.headers.add("Content-Security-Policy", "script-src 'self';")
+	response.headers.add("Content-Security-Policy", "script-src 'self' *.cloudflare.com;")
 	return response
 
 
