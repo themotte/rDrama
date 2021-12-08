@@ -97,7 +97,13 @@
 <div class="col-span-full xl:col-span-9 -mt-6">
 
 	<div class="sm:py-4 my-2.5 sm:my-0">
-		{% include "submission_listing.html" %}
+		{% if not "saved" in request.full_path %}
+		{% include "/dropdowns/SubmissionSorts.html" %}
+		<hr class="my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
+		{% endif %}
+		<div class="posts">
+			{% include "submission_listing.html" %}
+		</div>
 	</div>
 
 </div>
