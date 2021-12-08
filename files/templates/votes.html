@@ -22,6 +22,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="col-span-full">
 <h1>Vote Info</h1>
 
 <form action="votes" method="get" class="mb-6">
@@ -42,7 +43,7 @@
 <h2 class="text-2xl font-heading font-bold mb-0">
 	Upvotes
 </h2>
-<div class="flex flex-col">
+<div class="flex flex-col mb-8">
 	<div class="-mx-4 overflow-x-auto">
 		<div class="align-middle inline-block min-w-full">
 			<div class="flex flex-col bg-gray-200 rounded-b-xl overflow-hidden">
@@ -83,17 +84,53 @@
 		</div>
 	</div>
 </div>
-<h2>Downvotes</h2>
-<table class="table table-striped mb-5">
-	<thead class="bg-primary text-white"><tr><th>User</th></tr></thead>
 
-	{% for vote in downs %}
-		<tr><td><a style="color:#{{vote.user.namecolor}};  font-weight:bold;" href="/@{{vote.user.username}}"><img loading="lazy" src="/uid/{{vote.user.id}}/pic" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}};"{% endif %}>{{vote.user.username}}</span></a></td></tr>
-	{% endfor %}
-</table>
+<h2 class="text-2xl font-heading font-bold mb-0">
+	Downvotes
+</h2>
+<div class="flex flex-col mb-8">
+	<div class="-mx-4 overflow-x-auto">
+		<div class="align-middle inline-block min-w-full">
+			<div class="flex flex-col bg-gray-200 rounded-b-xl overflow-hidden">
+				<table class="min-w-full">
+					<thead class="bg-gradient-to-t from-gray-200 to-gray-100">
+						<tr>
+							<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+								Members
+							</th>
+						</tr>
+					</thead>
+					<tbody class="bg-gray-100 divide-y divide-gray-300">
+						{% for vote in downs %}
+						<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="flex items-center">
+									<div class="flex items-center justify-center flex-shrink-0 h-10 w-10">
+										<img src="{{vote.user.profile_url}}" class="p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
+									</div>
+									<!-- User Details -->
+									<div class="ml-3">
+										<a class="block font-heading font-bold text-xl text-black hover:text-red-600" href="/@{{vote.user.username}}">
+											{{vote.user.username}}
+										</a>
+										{% if vote.user.customtitle %}
+										<p class="text-sm" style="#{{vote.user.namecolor}}">
+											{{vote.user.customtitle | safe}}
+										</p>
+										{% endif %}
+									</div>
+								</div>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 
-
-
+</div>
 {% endif %}
 
 
