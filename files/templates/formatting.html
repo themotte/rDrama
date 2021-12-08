@@ -123,17 +123,16 @@ These Markdown tags format an entire paragraph of text at a time.
 			<td>Code Block</td>
 			<td>```<br>Use three backticks above and below.<br>Or, indent the lines with four spaces.<br>```</td>
 			<td>
-		</tr>
-		<tr>
-			<td>Spoilers</td>
-			<td>&lt;s&gt; bussy > gussy &lt;/s&gt;</td>
-			<td><p class="spoiler">bussy > gussy</p></td>
-			<td>
 				<pre>
 				Use three backticks above and below.
 				Or, indent the lines with four spaces.
 				</pre>
 			</td>
+		</tr>
+		<tr>
+			<td>Spoilers</td>
+			<td>&lt;s&gt; bussy > gussy &lt;/s&gt;</td>
+			<td><p class="spoiler">bussy > gussy</p></td>
 		</tr>
 	</tbody>
 </table>
@@ -285,7 +284,6 @@ Text 2
 			<td>Italics</td>
 			<td>
 				&lt;i&gt;This&lt;/i&gt; is how you get italics.
-				<i>This</i> is how you get italics.
 			</td>
 			<td>
 				<i>This</i> is how you get italics.
@@ -546,6 +544,9 @@ line breaks
 			display: inline-block;
 			overflow: auto;
 		}
+	}
+	pre {
+		color: var(--white) !important;
 	}
 </style>
 
