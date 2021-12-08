@@ -45,7 +45,13 @@
 				<h1 class="font-bold text-2xl leading-normal mb-0" style="color: #{{u.namecolor}}">
 					<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span>
 				</h1>
+				<div class="flex items-center space-x-2">
+				Member since
+				<span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.created_datetime}}">
+					{{u.created_date}}
+				</span>
 				{% if u.username != u.original_username %}
+				&#183;
 				<div class="text-xs text-gray-500">
 					aka <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original username: @{{u.original_username}}">{{u.original_username}}</span>
 				</div>
