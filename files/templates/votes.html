@@ -60,12 +60,18 @@
 							<td class="px-6 py-4 whitespace-nowrap">
 								<div class="flex items-center">
 									<div class="flex items-center justify-center flex-shrink-0 h-10 w-10">
+										<img src="{{vote.user.profile_url}}" class="p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
 									</div>
 									<!-- User Details -->
 									<div class="ml-3">
-										<a class="block font-heading font-bold text-xl text-black hover:text-red-600" href="/@{{user.username}}">
+										<a class="block font-heading font-bold text-xl text-black hover:text-red-600" href="/@{{vote.user.username}}">
 											{{vote.user.username}}
 										</a>
+										{% if vote.user.customtitle %}
+										<p class="text-sm" style="#{{vote.user.namecolor}}">
+											{{vote.user.customtitle | safe}}
+										</p>
+										{% endif %}
 									</div>
 								</div>
 							</td>
