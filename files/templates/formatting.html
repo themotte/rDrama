@@ -157,7 +157,7 @@ And we allow custom HTML in most places:
 
 </pre>
 
-<h2>Allowed tags:</h2>
+<h4>Allowed tags:</h4>
 
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
@@ -168,6 +168,15 @@ And we allow custom HTML in most places:
 		</tr>
 	</thead>
 	<tbody>
+		<tr>
+			<td>Span</td>
+			<td>
+				My mother has &lt;span style="color:blue"&gt;blue&lt;/span&gt; eyes.
+			</td>
+			<td>
+				My mother has <span style="color:blue">blue</span> eyes.
+			</td>
+		</tr>
 		<tr>
 			<td>Bold</td>
 			<td>This will be &lt;b&gt;bold&lt;/b&gt;</td>
@@ -439,19 +448,10 @@ line breaks
 				<img src="https://i.imgur.com/Lf6dfPO.jpg" width="200">
 			</td>
 		</tr>
-		<tr>
-			<td>Span</td>
-			<td>
-				My mother has &lt;span style="color:blue"&gt;blue&lt;/span&gt; eyes.
-			</td>
-			<td>
-				My mother has <span style="color:blue">blue</span> eyes.
-			</td>
-		</tr>
 	</tbody>
 </table>
 
-<h2>Allowed Attributes</h2>
+<h4>Allowed Attributes</h4>
 
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
@@ -493,7 +493,7 @@ line breaks
 	</tbody>
 </table>
 
-<h2>Allowed Styles</h2>
+<h5>Allowed Styles</h5>
 
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
