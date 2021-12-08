@@ -48,31 +48,34 @@
 				{% endif %}
 				</div>
 			</div>
-			<div class="flex space-x-3 divide-x divide-gray-400 text-xs">
-				<ul class="flex items-center space-x-3 leading-normal mb-0">
-					<li>
-						<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}">
-							Posts
-						</a>
-					</li>
-					<li>
-						<a class="{{ 'font-bold text-red-600' if '/comments/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}/comments">
-							Comments
-						</a>
-					</li>
-					<li>
-						<a class="{{ 'font-bold text-red-600' if '/saved/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}/saved/posts">
-							Saved Posts
-						</a>
-					</li>
-				</ul>
-			</div>
 		</div>
 	</div>
 </div>
 {% endblock %}
 
 {% block content %}
+
+<div class="col-span-full">
+	<div class="flex space-x-3 divide-x divide-gray-400 text-xs">
+		<ul class="flex items-center space-x-3 leading-normal mb-0">
+			<li>
+				<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}">
+					Posts
+				</a>
+			</li>
+			<li>
+				<a class="{{ 'font-bold text-red-600' if '/comments/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}/comments">
+					Comments
+				</a>
+			</li>
+			<li>
+				<a class="{{ 'font-bold text-red-600' if '/saved/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}/saved/posts">
+					Saved Posts
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
 
 <div class="col-span-full xl:col-span-9">
 
