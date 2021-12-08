@@ -169,7 +169,7 @@ def sanitize(sanitized, noimages=False):
 		old = i.group(0)
 		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
 		else: new = old.lower()
-		for i in re.finditer('(?<!"):([A-Za-z0-9]{1,30}?):', new):
+		for i in re.finditer('(?<!"):([!#A-Za-z0-9]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("#!") or emoji.startswith("!#"):
 				classes = 'class="mirrored" '
@@ -193,7 +193,7 @@ def sanitize(sanitized, noimages=False):
 		sanitized = sanitized.replace(old, new)
 
 
-	for i in re.finditer('(?<!"):([A-Za-z0-9]{1,30}?):', sanitized):
+	for i in re.finditer('(?<!"):([!A-Za-z0-9]{1,30}?):', sanitized):
 		emoji = i.group(1).lower()
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
@@ -260,7 +260,7 @@ def filter_emojis_only(title):
 
 	title = bleach.clean(title, tags=[])
 
-	for i in re.finditer('(?<!"):([A-Za-z0-9]{1,30}?):', title):
+	for i in re.finditer('(?<!"):([!A-Za-z0-9]{1,30}?):', title):
 		emoji = i.group(1)
 
 		if emoji.startswith("!"):
