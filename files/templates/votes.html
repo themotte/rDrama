@@ -93,26 +93,36 @@
 						</tr>
 					</thead>
 					<tbody class="bg-gray-100 divide-y divide-gray-300 border-t border-gray-300">
-						{% for vote in downs %}
-						<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
-							<td class="px-6 py-4 whitespace-nowrap">
-								<div class="flex items-center">
-									<img loading="lazy" src="{{vote.user.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
-									<!-- User Details -->
-									<div class="ml-3">
-										<a class="block font-bold text-black hover:text-red-600" href="/@{{vote.user.username}}">
-											{{vote.user.username}}
-										</a>
-										{% if vote.user.customtitle %}
-										<p class="text-sm" style="#{{vote.user.namecolor}}">
-											{{vote.user.customtitle | safe}}
-										</p>
-										{% endif %}
+						{% if downs %}
+							{% for vote in downs %}
+							<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+								<td class="px-6 py-4 whitespace-nowrap">
+									<div class="flex items-center">
+										<img loading="lazy" src="{{vote.user.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
+										<!-- User Details -->
+										<div class="ml-3">
+											<a class="block font-bold text-black hover:text-red-600" href="/@{{vote.user.username}}">
+												{{vote.user.username}}
+											</a>
+											{% if vote.user.customtitle %}
+											<p class="text-sm" style="#{{vote.user.namecolor}}">
+												{{vote.user.customtitle | safe}}
+											</p>
+											{% endif %}
+										</div>
 									</div>
-								</div>
-							</td>
-						</tr>
-						{% endfor %}
+								</td>
+							</tr>
+							{% endfor %}
+						{% else %}
+						<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+								<td class="px-6 py-4 whitespace-nowrap">
+									<div class="flex items-center">
+										No downvotes yet...
+									</div>
+								</td>
+							</tr>
+						{% endfif %}
 					</tbody>
 				</table>
 			</div>
