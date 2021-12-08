@@ -35,20 +35,28 @@
 	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
 	<div class="relative col-span-full flex items-center">
 		<div>
-			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
-				Thread
+			<h1 class="font-bold text-xl leading-normal mb-0" style="color: #{{u.namecolor}}">
+				<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span>
 			</h1>
-			<ul class="flex space-x-2 text-xs text-gray-500 leading-normal mb-0">
-				<li>
-					<a href="/" class="text-gray-500 hover:underline">Home</a>
-				</li>
-				<li>
-					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
-				</li>
-				<li>
-					<a href="#" class="text-gray-700 hover:underline">asdf</a>
-				<li>
-			</ul>
+			<div class="flex space-x-3 divide-x divide-gray-400 text-xs">
+				<ul class="flex items-center space-x-3 leading-normal mb-0">
+					<li>
+						<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}">
+							Posts
+						</a>
+					</li>
+					<li>
+						<a class="{{ 'font-bold text-red-600' if '/comments/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}/comments">
+							Comments
+						</a>
+					</li>
+					<li>
+						<a class="{{ 'font-bold text-red-600' if '/saved/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}/saved/posts">
+							Saved Posts
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>
