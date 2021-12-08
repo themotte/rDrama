@@ -56,7 +56,21 @@
 					</thead>
 					<tbody class="bg-gray-100 divide-y divide-gray-300">
 						{% for vote in ups %}
-						fix
+						<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="flex items-center">
+									<div class="flex items-center justify-center flex-shrink-0 h-10 w-10">
+										<img src="{{vote.user.profile_url}}" class="p-[3px] border w-12 h-12 object-cover avatar"/>
+									</div>
+									<!-- User Details -->
+									<div class="ml-3">
+										<a class="block font-heading font-bold text-xl text-black hover:text-red-600" href="/@{{user.username}}">
+											{{vote.user.username}}
+										</a>
+									</div>
+								</div>
+							</td>
+						</tr>
 						{% endfor %}
 					</tbody>
 				</table>
