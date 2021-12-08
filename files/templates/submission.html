@@ -454,7 +454,7 @@
 							{% elif p.url and p.url.lower().endswith('.mp4') %}
 								<div class="row no-gutters">
 									<div class="col">
-										<video controls preload="metadata" class="embedvid">
+										<video controls preload="none" class="embedvid">
 											<source src="{{p.realurl(v)}}" type="video/mp4">
 										</video>
 									</div>
