@@ -5690,3 +5690,7 @@ blockquote p {
   background-color: #fff !important;
   color: #000 !important
 }
+
+.emj {
+  max-width: 100% !important;
+}
