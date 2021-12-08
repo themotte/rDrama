@@ -1,5 +1,7 @@
 {% extends "default.html" %}
 
+{% block pagetype %}userpage{% endblock %}
+
 {% block title %}
 
 <!-- {% if u and u.profilecss and (u.admin_level or not (v and v.admin_level)) %}
@@ -95,10 +97,6 @@
 <div class="col-span-full xl:col-span-9 -mt-6">
 
 	<div class="sm:py-4 my-2.5 sm:my-0">
-		{% if not "saved" in request.full_path %}
-		{% include "/dropdowns/SubmissionSorts.html" %}
-		<hr class="my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
-		{% endif %}
 		{% include "submission_listing.html" %}
 	</div>
 
