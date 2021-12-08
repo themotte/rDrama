@@ -53,7 +53,7 @@
 				{% if b.url %}
 					<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img class="w-5 h-5 object-contain" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
 				{% else %}
-					<img width="60" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+					<img class="w-5 h-5 object-contain" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
 				{% endif %}
 			{% endfor %}
 			<a href="/settings/profile" class='btn btn-gray'>
