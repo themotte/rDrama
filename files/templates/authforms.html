@@ -10,16 +10,16 @@
 
 		<title>{% block pagetitle %}{{'SITE_NAME' | app_config}}{% endblock %}</title>
 
-		<link href="/assets/css/opensans.css?v=1" rel="stylesheet">
+		<link href="/assets/css/opensans.css?v=2" rel="stylesheet">
 
 
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=136"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=124">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=136"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=125">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=125">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=136"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
+			<link rel="stylesheet" href="/assets/css/main.css?v=136"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=125">
 		{% endif %}
 
 </head>
