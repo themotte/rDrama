@@ -125,7 +125,7 @@ def after_request(response):
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
-	response.headers.add("Content-Security-Policy", "script-src 'self' ajax.cloudflare.com 'unsafe-inline' static.cloudflareinsights.com; connect-src cloudflareinsights.co;")
+	response.headers.add("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'unsafe-eval' ajax.cloudflare.com static.cloudflareinsights.com; connect-src 'self' cloudflareinsights.co;")
 	return response
 
 
