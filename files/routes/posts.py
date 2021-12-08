@@ -733,15 +733,14 @@ def submit_post(v):
 		elif "twitter.com" == domain:
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
-		elif "youtu" in domain:
-			yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+		elif url.startswith('https://youtube.com/watch?v='):
+			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0]
 			params = parse_qs(urlparse(url).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if isinstance(t, str): t = t.replace('s','')
 			embed = f'<lite-youtube videoid="{yt_id}" params="controls=0&modestbranding=1'
 			if t: embed += f'&start={t}'
 			embed += '"></lite-youtube>'
-
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 			id = url.split("/post/")[1]
 			if "/" in id: id = id.split("/")[0]
