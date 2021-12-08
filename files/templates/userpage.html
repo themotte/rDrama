@@ -113,35 +113,32 @@
 		</div>
 		<hr class="hidden md:block my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
 		{% endif %}
-		<ul class="mb-0">
+		<ul>
 		{% include "submission_listing.html" %}
 		</ul>
+		<!-- Pagination -->
+		{% if listing %}
+			<ul class="flex flex-wrap items-center mb-4">
+				{% if page>1 %}
+				<li>
+					<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
+						Prev
+					</a>
+				</li>
+				{% else %}
+				<li><span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Prev</span></li>
+				{% endif %}
+				{% if next_exists %}
+				<li class="page-item">
+					<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
+				</li>
+				{% else %}
+				<li><span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Next</span></li>
+				{% endif %}
+			</ul>
+		{% endif %}
 	</div>
 </div>
-
-<!-- Pagination -->
-{% if listing %}
-	<div class="col-span-full">
-		<ul class="flex flex-wrap items-center mb-4">
-			{% if page>1 %}
-			<li>
-				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
-					Prev
-				</a>
-			</li>
-			{% else %}
-			<li><span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Prev</span></li>
-			{% endif %}
-			{% if next_exists %}
-			<li class="page-item">
-				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
-			</li>
-			{% else %}
-			<li><span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Next</span></li>
-			{% endif %}
-		</ul>
-	</div>
-{% endif %}
 
 {% endblock %}
 
