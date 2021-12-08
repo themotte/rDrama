@@ -219,8 +219,7 @@ def sanitize(sanitized, noimages=False):
 		yt_id = i.group(2).split('&')[0].split('%')[0]
 		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
 
-		print(url)
-		params = parse_qs(urlparse(url).query)
+		params = parse_qs(urlparse(url.replace('&amp;','&')).query)
 		t = params.get('t', params.get('start', [0]))[0]
 		if isinstance(t, str): t = t.replace('s','')
 
