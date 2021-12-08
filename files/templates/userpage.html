@@ -41,12 +41,12 @@
 					<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span>
 				</h1>
 				{% if u.username != u.original_username %}
-					<div class="text-sm text-gray-600">
+					<div class="text-xs text-gray-600">
 						aka <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original username: @{{u.original_username}}">{{u.original_username}}</span>
 					</div>
 				{% endif %}
 			</div>
-			<a href="/settings/profile" class='btn btn-gray pl-3'>
+			<a href="/settings/profile" class='ml-3 btn btn-gray'>
 				<i class="fas fa-user-edit fa-fw fa-sm mr-2"></i>
 				Edit profile
 			</a>
