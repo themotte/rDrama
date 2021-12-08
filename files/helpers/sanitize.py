@@ -229,21 +229,8 @@ def sanitize(sanitized, noimages=False):
 		htmlsource += '"></lite-youtube>'
 
 		sanitized = sanitized.replace(replacing, htmlsource)
-		
-	for i in re.finditer('<a href="(https://streamable\.com/e/.*?)"', sanitized):
-		url = i.group(1)
-		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
-		htmlsource = f'<iframe class="embedvid" loading="lazy" src="{url}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-		sanitized = sanitized.replace(replacing, htmlsource)
-
 	for i in re.finditer('<p>(https:.*?\.mp4)</p>', sanitized):
 		sanitized = sanitized.replace(i.group(0), f'<p><video controls preload="metadata" class="embedvid"><source src="{i.group(1)}" type="video/mp4"></video>')
-
-	for i in re.finditer('<a href="(https://open\.spotify\.com/embed/.*?)"', sanitized):
-		url = i.group(1)
-		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
-		htmlsource = f'<iframe src="{url}" class="spotify" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>'
-		sanitized = sanitized.replace(replacing, htmlsource)
 
 	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")

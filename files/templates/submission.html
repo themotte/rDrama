@@ -415,19 +415,7 @@
 
 					<div id="post-body" class="post-body mt-3">
 						{% if p.realurl(v) %}
-							{% if p.url.startswith('https://streamable.com/e/') %}
-								<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;"><iframe loading="lazy" src="{{p.realurl(v)}}" frameborder="0" width="100%" height="100%" allowfullscreen="" style="width: 100%; height: 100%; position: absolute;"></iframe></div>
-								<pre></pre>
-							{% elif p.domain == 'open.spotify.com' %}
-								{% if "spotify.com/embed/" in p.realurl(v) %}
-									{% set streamurl=p.realurl(v) %}
-								{% else %}
-									{% set streamurl=p.realurl(v).replace("spotify.com", "spotify.com/embed") %}
-								{% endif %}
-								<iframe loading="lazy" src="{{streamurl}}" width="100%" height="160" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-								<pre></pre>
-
-							{% elif not p.embed_url and not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
+							{% if not p.embed_url and not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
 								<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
 									<div class="d-flex d-md-none justify-content-between align-items-center border rounded p-2{% if p.realbody(v) %} mb-3{% endif %}">
 										<span>{{p.domain|truncate(30, True)}}</span>
@@ -483,14 +471,8 @@
 									<script src="/assets/js/twitter.js?v=1"></script>
 								{% endif %}
 								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
-							{% elif p.domain in ['youtu.be','youtube.com'] %}
-								{% if 'lite' in p.embed_url %}
-									{{p.embed_url | safe}}
-								{% else %}
-									<div class="embed-responsive embed-responsive-16by9 mb-3">
-										<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-									</div>
-								{% endif %}
+							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
+								{{p.embed_url | safe}}
 							{% endif %}
 						{% endif %}
 
