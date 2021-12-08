@@ -17,6 +17,11 @@
 					See which losers downvoted your quality content.
 				</small>
 			</div>
+			<form action="votes" method="get" class="ml-auto flex items-center">
+				<label for="link-input">Paste permalink</label>
+				<input id="link-input" type="text" class="form-input" name="link" value="{{thing.permalink if thing else ''}}">
+				<input type="submit" value="See votes" class="ml-2 btn btn-gray">
+			</form>
 		</div>
 	</div>
 {% endblock %}
@@ -24,12 +29,6 @@
 {% block content %}
 <div class="col-span-full">
 <h1>Vote Info</h1>
-
-<form action="votes" method="get" class="mb-6">
-	<label for="link-input">Paste permalink</label>
-	<input id="link-input" type="text" class="form-input mb-2" name="link" value="{{thing.permalink if thing else ''}}">
-	<input type="submit" value="See votes" class="btn btn-gray">
-</form>
 
 {% if thing %}
 
