@@ -35,9 +35,12 @@
 	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
 	<div class="relative col-span-full flex items-center">
 		<div>
-			<h1 class="font-bold text-xl leading-normal mb-0" style="color: #{{u.namecolor}}">
-				<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span>
-			</h1>
+			<div class="flex items-center">
+				<img class="h-14 w-14 bg-white p-[3px] border border-gray-800" src="{{ v.profile_url }}" alt="Your avatar"/>
+				<h1 class="font-bold text-xl leading-normal mb-0 pl-3" style="color: #{{u.namecolor}}">
+					<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span>
+				</h1>
+			</div>
 			<div class="flex space-x-3 divide-x divide-gray-400 text-xs">
 				<ul class="flex items-center space-x-3 leading-normal mb-0">
 					<li>
