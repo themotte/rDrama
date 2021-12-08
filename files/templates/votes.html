@@ -5,13 +5,29 @@
 <meta name="description" content="{{'SITE_NAME' | app_config}} Votes">
 {% endblock %}
 
+{% block subHeader %}
+	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="relative col-span-full flex items-center">
+			<div>
+				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+					Votes
+				</h1>
+				<small class="block text-gray-700 leading-normal">
+					See which losers downvoted your quality content.
+				</small>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
 {% block content %}
 <h1>Vote Info</h1>
 
 <form action="votes" method="get" class="mb-6">
 	<label for="link-input">Paste permalink</label>
-	<input id="link-input" type="text" class="form-control mb-2" name="link" value="{{thing.permalink if thing else ''}}">
-	<input type="submit" value="Submit" class="btn btn-primary">
+	<input id="link-input" type="text" class="form-input mb-2" name="link" value="{{thing.permalink if thing else ''}}">
+	<input type="submit" value="See votes" class="btn btn-gray">
 </form>
 
 {% if thing %}
@@ -23,15 +39,50 @@
 <p><b>Upvotes: </b>{{ups | length}}</p>
 <p><b>Downvotes: </b>{{downs | length}}</p>
 
-<h2>Upvotes</h2>
-<table class="table table-striped mb-5">
-	<thead class="bg-primary text-white"><tr><th>User</th></tr></thead>
-
-	{% for vote in ups %}
-		<tr><td><a style="color:#{{vote.user.namecolor}};  font-weight:bold;" href="/@{{vote.user.username}}"><img loading="lazy" src="/uid/{{vote.user.id}}/pic" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}};"{% endif %}>{{vote.user.username}}</span></a></td></tr>
-	{% endfor %}
-</table>
-
+<h2 class="text-2xl font-heading font-bold mb-0">
+	Upvotes
+</h2>
+<div class="flex flex-col">
+	<div class="-mx-4 overflow-x-auto">
+		<div class="align-middle inline-block min-w-full">
+			<div class="flex flex-col bg-gray-200 rounded-b-xl overflow-hidden">
+				<table class="min-w-full">
+					<thead class="bg-gradient-to-t from-gray-200 to-gray-100">
+						<tr>
+							<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+								Members
+							</th>
+						</tr>
+					</thead>
+					<tbody class="bg-gray-100 divide-y divide-gray-300">
+						{% for vote in ups %}
+						<tr class="shadow-inset-t-white-05 {% if awards.index(a) % 2 != 0 %}bg-gray-200{% endif %}">
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="flex items-center">
+									<div class="flex items-center justify-center flex-shrink-0 h-10 w-10">
+										<img src="{{vote.user.profile_url}}" class="p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
+									</div>
+									<!-- User Details -->
+									<div class="ml-3">
+										<a class="block font-heading font-bold text-xl text-black hover:text-red-600" href="/@{{user.username}}">
+											{{user.username}}
+										</a>
+										{% if user.customtitle %}
+										<p class="text-sm" style="#{{user.namecolor}}">
+											{{user.customtitle | safe}}
+										</p>
+										{% endif %}
+									</div>
+								</div>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 <h2>Downvotes</h2>
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white"><tr><th>User</th></tr></thead>
