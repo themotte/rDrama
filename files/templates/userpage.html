@@ -56,7 +56,7 @@
 {% block content %}
 
 <div class="col-span-full md:-mx-4">
-	<div class="px-4 py-2 flex space-x-3 divide-x divide-gray-400 text-xs bg-gray-100 border-b border-gray-300">
+	<div class="px-4 py-2 flex space-x-3 divide-x divide-gray-400 text-xs bg-gray-100 border-b md:border-gray-300 border-gray-400">
 		<ul class="flex items-center space-x-3 leading-normal mb-0">
 			<li>
 				<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-500' }}" href="/@{{u.username}}">
