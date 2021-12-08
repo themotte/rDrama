@@ -223,7 +223,7 @@
 {% block postNav %}
 {% endblock %}
 
-<div class="container {% if request.path=='/' or '/post/' in request.path or '/comment/' in request.path %} transparent {% endif %}">
+<div id="fuck" class="container{% if request.path=='/' or '/post/' in request.path or '/comment/' in request.path %} transparent{% endif %}">
 	<div class="row justify-content-around" id="main-content-row">
 
 		<div class="col h-100 {% block customPadding %}{% if not '/message' in request.path %}custom-gutters{% endif %}{% endblock %}" id="main-content-col">
