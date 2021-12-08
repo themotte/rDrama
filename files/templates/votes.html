@@ -5,6 +5,22 @@
 <meta name="description" content="{{'SITE_NAME' | app_config}} Votes">
 {% endblock %}
 
+{% block subHeader %}
+	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="relative col-span-full flex items-center">
+			<div>
+				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+					Votes
+				</h1>
+				<small class="block text-gray-700 leading-normal">
+					See which losers downvoted your quality content.
+				</small>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
 {% block content %}
 <h1>Vote Info</h1>
 
@@ -44,19 +60,10 @@
 							<td class="px-6 py-4 whitespace-nowrap">
 								<div class="flex items-center">
 									<div class="flex items-center justify-center flex-shrink-0 h-10 w-10">
-										<img src="{{vote.user.profile_url}}" class="p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
+										fix
 									</div>
 									<!-- User Details -->
-									<div class="ml-3">
-										<a class="block font-heading font-bold text-xl text-black hover:text-red-600" href="/@{{user.username}}">
-											{{vote.user.username}}
-										</a>
-										{% if vote.user.customtitle %}
-										<p class="text-sm" style="#{{vote.user.namecolor}}">
-											{{vote.user.customtitle | safe}}
-										</p>
-										{% endif %}
-									</div>
+									
 								</div>
 							</td>
 						</tr>
