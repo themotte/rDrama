@@ -124,8 +124,8 @@ def teardown_request(error):
 def after_request(response):
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
-	response.headers.add("Referrer-Policy", "same-origin")
 	response.headers.add("X-Frame-Options", "deny")
+	response.headers.add("Content-Security-Policy", "script-src 'self';")
 	return response
 
 

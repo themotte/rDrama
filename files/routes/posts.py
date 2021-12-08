@@ -1070,7 +1070,7 @@ def submit_post(v):
 		if "rama" in request.host or "pcm" in request.host:
 			if v.id == CARP_ID:
 				if random.random() < 0.02: body = "i love you carp"
-				else: body = "![](/assets/images/emojis/fuckoffcarp.webp)"
+				else: body = ":#marseyfuckoffcarp:"
 			elif v.id == LAWLZ_ID:
 				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 				else: body = "wow, a good lawlzpost for once!"
