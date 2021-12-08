@@ -46,9 +46,9 @@
 					<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span>
 				</h1>
 				{% if u.username != u.original_username %}
-					<div class="text-xs text-gray-500">
-						aka <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original username: @{{u.original_username}}">{{u.original_username}}</span>
-					</div>
+				<div class="text-xs text-gray-500">
+					aka <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original username: @{{u.original_username}}">{{u.original_username}}</span>
+				</div>
 				{% endif %}
 			</div>
 		</div>
@@ -57,11 +57,11 @@
 			{% for b in u.badges %}
 			<li>
 				{% if b.url %}
-					<a rel="nofollow noopener noreferrer" href="{{b.url}}">
-						<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
-					</a>
-				{% else %}
+				<a rel="nofollow noopener noreferrer" href="{{b.url}}">
 					<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+				</a>
+				{% else %}
+				<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
 				{% endif %}
 			</li>
 			{% endfor %}
@@ -97,88 +97,36 @@
 
 <div class="col-span-full xl:col-span-9">
 
-<div id="profilecontent" class="row no-gutters">
-	<div class="col">
-		<div class="flex-row box-shadow-bottom flex justify-content-center justify-content-md-between align-items-center">
-			<ul class="nav settings-nav">
-				<li class="nav-item">
-					<a class="nav-link {% if not 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}">Posts</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/comments">Comments</a>
-				</li>
-				{% if u.id == v.id %}
-				<li class="nav-item">
-					<a class="nav-link {% if 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/saved/posts">Saved Posts</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/saved/comments">Saved Comments</a>
-				</li>
-				{% endif %}
-			</ul>
-		</div>
-	</div>
-</div>
-
-{% if not "saved" in request.full_path %}
-	<div class="flex justify-content-between align-items-center" style="padding-top:10px">
-
-		<div class="flex align-items-center sortingbarmargin">
-			<div class="text-small font-weight-bold mr-2">‎</div>
-			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					{% if t=="day" %}<i class="fas fa-calendar-day mr-1"></i>{% endif %}
-					{% if t=="week" %}<i class="fas fa-calendar-week mr-1"></i>{% endif %}
-					{% if t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>{% endif %}
-					{% if t=="year" %}<i class="fas fa-calendar mr-1"></i>{% endif %}
-					{% if t=="all" %}<i class="fas fa-infinity mr-1"></i>{% endif %}
-					{{t | capitalize}}
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-					{% if not t=="hour" %}<a class="dropdown-item" href="?sort={{sort}}&t=hour"><i class="fas fa-clock mr-2"></i>Hour</a>{% endif %}
-					{% if not t=="day" %}<a class="dropdown-item" href="?sort={{sort}}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
-					{% if not t=="week" %}<a class="dropdown-item" href="?sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
-					{% if not t=="month" %}<a class="dropdown-item" href="?sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
-					{% if not t=="year" %}<a class="dropdown-item" href="?sort={{sort}}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
-					{% if not t=="all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
-				</div>
-			</div>
-
-			<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
-			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
-					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
-					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
-					{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
-					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
-					{% if sort=="comments" %}<i class="fas fa-comments mr-1"></i>{% endif %}
-					{{sort | capitalize}}
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-					{% if sort != "top" %}<a class="dropdown-item" href="?sort=top&t={{t}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-					{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom&t={{t}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
-					{% if sort != "new" %}<a class="dropdown-item" href="?sort=new&t={{t}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-					{% if sort != "old" %}<a class="dropdown-item" href="?sort=old&t={{t}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
-					{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{t}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
-					{% if sort != "comments" %}<a class="dropdown-item" href="?sort=comments&t={{t}}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
-				</div>
+	<div id="profilecontent" class="row no-gutters">
+		<div class="col">
+			<div class="flex-row box-shadow-bottom flex justify-content-center justify-content-md-between align-items-center">
+				<ul class="nav settings-nav">
+					<li class="nav-item">
+						<a class="nav-link {% if not 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}">Posts</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/comments">Comments</a>
+					</li>
+					{% if u.id == v.id %}
+					<li class="nav-item">
+						<a class="nav-link {% if 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/saved/posts">Saved Posts</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/saved/comments">Saved Comments</a>
+					</li>
+					{% endif %}
+				</ul>
 			</div>
 		</div>
 	</div>
-{% endif %}
 
-<div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}" style="margin-top: 10px;">
+	{% if not "saved" in request.full_path %}
+	{% include "/dropdowns/SubmissionSorts.html" %}
+	{% endif %}
 
-	<div class="col">
-
-		<div class="posts">
-			{% include "submission_listing.html" %}
-		</div>
-
+	<div class="posts">
+		{% include "submission_listing.html" %}
 	</div>
-
-</div>
 
 </div>
 
@@ -215,78 +163,78 @@
 
 {% block modals %}
 {% if v %}
-	{% include "emoji_modal.html" %}
-	{% include "gif_modal.html" %}
+{% include "emoji_modal.html" %}
+{% include "gif_modal.html" %}
 {% endif %}
 {% endblock %}
 
 {% block scripts %}
 {% if v %}
-	<script>
-		const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
+<script>
+	const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
 
-		function updateTax(mobile=false) {
-			let suf = mobile ? "-mobile" : "";
-			let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
-			if(isNaN(amount) || amount < 0) {
+	function updateTax(mobile=false) {
+		let suf = mobile ? "-mobile" : "";
+		let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
+		if(isNaN(amount) || amount < 0) {
 			amount = 0;
-			}
-			document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
 		}
+		document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+	}
 
-		function transferCoins(mobile=false) {
-			let t = event.target;
-			t.disabled = true;
+	function transferCoins(mobile=false) {
+		let t = event.target;
+		t.disabled = true;
 
-			let amount = parseInt(document.getElementById("coins-transfer-amount").value);
-			let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+		let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
 
-			post_toast_callback("/@{{u.username}}/transfer_coins",
-				{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
-				(xhr) => {
+		post_toast_callback("/@{{u.username}}/transfer_coins",
+			{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
+			(xhr) => {
 				if(xhr.status == 200) {
 					document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
 					document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
 					document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
 				}
-				}
+			}
 			);
 
-			setTimeout(_ => t.disabled = false, 2000);
-		}
-	</script>
+		setTimeout(_ => t.disabled = false, 2000);
+	}
+</script>
 {% endif %}
 
 {% if u.song %}
-	<script>
-		window.addEventListener("load",function(event) {
-			var audio = new Audio('/songs/{{u.id}}');
-			audio.loop=true;
-			
-			{% if not u.unmutable %}
-				function pause() {
-					audio.pause();
-					document.getElementById("pause1").classList.toggle("hidden");
-					document.getElementById("play1").classList.toggle("hidden");
-					document.getElementById("pause2").classList.toggle("hidden");
-					document.getElementById("play2").classList.toggle("hidden");
-				}
+<script>
+	window.addEventListener("load",function(event) {
+		var audio = new Audio('/songs/{{u.id}}');
+		audio.loop=true;
+		
+		{% if not u.unmutable %}
+		function pause() {
+			audio.pause();
+			document.getElementById("pause1").classList.toggle("hidden");
+			document.getElementById("play1").classList.toggle("hidden");
+			document.getElementById("pause2").classList.toggle("hidden");
+			document.getElementById("play2").classList.toggle("hidden");
+		}
 
-				function play() {
-					audio.play();
-					document.getElementById("pause1").classList.toggle("hidden");
-					document.getElementById("play1").classList.toggle("hidden");
-					document.getElementById("pause2").classList.toggle("hidden");
-					document.getElementById("play2").classList.toggle("hidden");
-				}
-			{% endif %}
-
+		function play() {
 			audio.play();
-			document.getElementById('userpage').addEventListener('click', () => {
-				if (audio.paused) audio.play(); 
-			}, {once : true});
-		});
-	</script>
+			document.getElementById("pause1").classList.toggle("hidden");
+			document.getElementById("play1").classList.toggle("hidden");
+			document.getElementById("pause2").classList.toggle("hidden");
+			document.getElementById("play2").classList.toggle("hidden");
+		}
+		{% endif %}
+
+		audio.play();
+		document.getElementById('userpage').addEventListener('click', () => {
+			if (audio.paused) audio.play(); 
+		}, {once : true});
+	});
+</script>
 {% endif %}
 
 <script defer src="/assets/js/userpage.js?v=73"></script>
