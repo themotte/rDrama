@@ -424,6 +424,23 @@
 								</a>
 							{% endif %}
 						{% endif %}
+
+
+						{% if p.embed_url %}
+							{% if p.domain == "twitter.com" %}
+								{{p.embed_url | safe}}
+								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
+									<script src="/assets/js/twitterlight.js?v=1"></script>
+								{% else %}
+									<script src="/assets/js/twitter.js?v=1"></script>
+								{% endif %}
+								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
+							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
+								{{p.embed_url | safe}}
+							{% endif %}
+						{% endif %}
+
+						
 						<div id="post-text">
 							{% if p.is_image %}
 								<div class="row no-gutters">
@@ -461,20 +478,6 @@
 
 
 						</div>
-
-						{% if p.embed_url %}
-							{% if p.domain == "twitter.com" %}
-								{{p.embed_url | safe}}
-								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="/assets/js/twitterlight.js?v=1"></script>
-								{% else %}
-									<script src="/assets/js/twitter.js?v=1"></script>
-								{% endif %}
-								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
-							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
-								{{p.embed_url | safe}}
-							{% endif %}
-						{% endif %}
 
 
 						{% if p.author.sig_html and (p.author_id == 1904 or not (v and v.sigs_disabled)) %}
