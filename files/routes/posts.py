@@ -372,7 +372,7 @@ def edit_post(pid, v):
 			title = title.replace('I ', f'@{v.username} ')
 			title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
 
-		title_html = filter_title(title)
+		title_html = filter_emojis_only(title)
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
 		p.title = title
 		p.title_html = title_html
@@ -402,7 +402,7 @@ def edit_post(pid, v):
 				c = Comment(author_id=AUTOPOLLER_ID,
 					parent_submission=p.id,
 					level=1,
-					body_html=filter_title(i.group(1)),
+					body_html=filter_emojis_only(i.group(1)),
 					upvotes=0
 					)
 				g.db.add(c)
@@ -681,7 +681,7 @@ def submit_post(v):
 		title = title.replace('I ', f'@{v.username} ')
 		title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
 
-	title_html = filter_title(title)
+	title_html = filter_emojis_only(title)
 	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
@@ -698,10 +698,8 @@ def submit_post(v):
 
 		for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 			url = url.replace(rd, "https://old.reddit.com/")
-		
-		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery")
 
-		url = url.replace("https://mobile.twitter.com", "https://twitter.com").replace("https://m.facebook", "https://facebook").replace("https://m.wikipedia", "https://wikipedia").replace("https://m.youtube", "https://youtube")
+		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("https://m.wikipedia", "https://wikipedia").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
 
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
@@ -735,15 +733,14 @@ def submit_post(v):
 		elif "twitter.com" == domain:
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
-		elif "youtu" in domain:
-			yt_id = re.match(re.compile("^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|shorts\/|\&v=)([^#\&\?]*).*"), url).group(2)
+		elif url.startswith('https://youtube.com/watch?v='):
+			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
 			params = parse_qs(urlparse(url).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if isinstance(t, str): t = t.replace('s','')
 			embed = f'<lite-youtube videoid="{yt_id}" params="controls=0&modestbranding=1'
 			if t: embed += f'&start={t}'
 			embed += '"></lite-youtube>'
-
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
 			id = url.split("/post/")[1]
 			if "/" in id: id = id.split("/")[0]
@@ -923,7 +920,7 @@ def submit_post(v):
 		c = Comment(author_id=AUTOPOLLER_ID,
 			parent_submission=new_post.id,
 			level=1,
-			body_html=filter_title(option),
+			body_html=filter_emojis_only(option),
 			upvotes=0
 			)
 
@@ -1098,7 +1095,7 @@ def submit_post(v):
 			if "Snapshots:\n\n"	 not in body: body += "Snapshots:\n\n"			
 
 			body += f'**[{title}]({href})**:\n\n'
-			if href.startswith('https://old.reddit.com'):
+			if href.startswith('https://old.reddit.com/'):
 				body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
 			body += f'* [archive.org](https://web.archive.org/{href})\n'
 			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'

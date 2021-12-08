@@ -10,7 +10,7 @@ from files.__main__ import app, cache, limiter
 import youtube_dl
 from .front import frontlist
 import os
-from files.helpers.sanitize import filter_title
+from files.helpers.sanitize import filter_emojis_only
 from files.helpers.discord import add_role
 from shutil import copyfile
 import requests
@@ -1074,7 +1074,7 @@ def settings_title_change(v):
 
 	v.customtitleplain = new_name
 
-	v.customtitle = filter_title(new_name)
+	v.customtitle = filter_emojis_only(new_name)
 
 	if len(v.customtitle) < 1000:
 		g.db.add(v)

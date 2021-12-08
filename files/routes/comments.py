@@ -9,7 +9,7 @@ from files.routes.front import comment_idlist
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
-from files.helpers.sanitize import filter_title
+from files.helpers.sanitize import filter_emojis_only
 
 site = environ.get("DOMAIN").strip()
 if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
@@ -297,7 +297,7 @@ def api_comment(v):
 			parent_submission=parent_submission,
 			parent_comment_id=c.id,
 			level=level+1,
-			body_html=filter_title(option),
+			body_html=filter_emojis_only(option),
 			upvotes=0
 			)
 
@@ -657,7 +657,7 @@ def edit_comment(cid, v):
 					parent_submission=c.parent_submission,
 					parent_comment_id=c.id,
 					level=c.level+1,
-					body_html=filter_title(i.group(1)),
+					body_html=filter_emojis_only(i.group(1)),
 					upvotes=0
 					)
 				g.db.add(c_option)

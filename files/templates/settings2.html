@@ -33,18 +33,16 @@
 
 	<title>{% block pagetitle %}{{'SITE_NAME' | app_config}}{% endblock %}</title>
 
-	<link href="/assets/css/opensans.css?v=1" rel="stylesheet">
-
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=136"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=124">
+		<link rel="stylesheet" href="/assets/css/main.css?v=137"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=125">
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=136"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=124">
+		<link rel="stylesheet" href="/assets/css/main.css?v=137"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=125">
 	{% endif %}
 
-		<link href="/assets/css/fa.css?v=53" rel="stylesheet"> 
+		<link href="/assets/css/fa.css?v=54" rel="stylesheet"> 
 </head>
 
 <body id="settings2" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">

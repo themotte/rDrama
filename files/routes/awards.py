@@ -6,7 +6,7 @@ from files.helpers.const import *
 from files.classes.award import *
 from .front import frontlist
 from flask import g, request
-from files.helpers.sanitize import filter_title
+from files.helpers.sanitize import filter_emojis_only
 
 discounts = {
 	69: 0.02,
@@ -610,7 +610,7 @@ def award_post(pid, v):
 	elif kind == "flairlock":
 		new_name = note[:100].replace("𒐪","")
 		author.customtitleplain = new_name
-		author.customtitle = filter_title(new_name)
+		author.customtitle = filter_emojis_only(new_name)
 		if len(author.customtitle) > 1000: abort(403)
 		author.flairchanged = time.time() + 86400
 	elif kind == "pause":
@@ -764,7 +764,7 @@ def award_comment(cid, v):
 	elif kind == "flairlock":
 		new_name = note[:100].replace("𒐪","")
 		author.customtitleplain = new_name
-		author.customtitle = filter_title(new_name)
+		author.customtitle = filter_emojis_only(new_name)
 		if len(author.customtitle) > 1000: abort(403)
 		author.flairchanged = time.time() + 86400
 	elif kind == "pause":
