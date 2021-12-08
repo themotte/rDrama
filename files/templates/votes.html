@@ -25,26 +25,16 @@
 <div class="col-span-full px-2.5 md:px-0">
 {% if thing %}
 
-<div class="grid grid-cols-3 md:divide-x divide-gray-300 border-b border-gray-300 py-4 mb-4">
-	<div class="col-span-full md:col-span-1 px-4">
-		<label class="label">Post</label>
-		<a href="{{thing.permalink}}" class="block">
-			{{ thing.title }}
+<div class="mx-4 mb-4 p-3 bg-gray-300 shadow-inner">
+	<div class="flex items-center">
+		<img loading="lazy" src="{{thing.author.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover bg-white border-gray-300" alt="{{thing.author.profile_url}} avatar"/>
+		<a href="{{thing.author.url}}" class="text-sm font-bold text-black hover:text-red-600">
+			@{{thing.author.username}}
 		</a>
 	</div>
-	<div class="col-span-full md:col-span-1 px-4">
-		<label class="label">Author</label>
-		<div class="flex items-center">
-			<img loading="lazy" src="{{thing.author.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover bg-white border-gray-300" alt="{{thing.author.profile_url}} avatar"/>
-			<a href="{{thing.author.url}}">
-				@{{thing.author.username}}
-			</a>
-		</div>
-	</div>
-	<div class="col-span-full md:col-span-1 px-4">
-		<label class="label">Created</label>
-		{{thing.author.created_utc}} ({{thing.author.created_datetime}})
-	</div>
+	<h5 class="font-heading mb-2">
+		{{ thing.title }}
+	</h5>
 </div>
 
 <h2 class="text-lg">
