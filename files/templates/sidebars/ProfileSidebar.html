@@ -1,9 +1,21 @@
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 my-4 px-4 py-3 rounded-md bg-gray-300/40 shadow-inner">
-	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Options</h2>
+	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">About</h2>
 	<div class="flex flex-col space-y-4 mb-3">
-		<div class="flex items-center">
-			<input type="checkbox" id="nsfwCheck" name="over_18" form="submitform">
-			<label class="leading-4 ml-2 inline-block badge badge-red select-none" for="nsfwCheck">18+</label>
+		<div>
+		{% if u.bio_html %}
+				<p class="text-black text-break">{{u.bio_html | safe}}</p>
+			{% endif %}
+		</div>
+		<div>
+			{% if u.friends_html %}
+					<p class="text-muted font-weight-bold mt-3">Friends:</p>
+					{{u.friends_html | safe}}
+				{% endif %}
+
+				{% if u.enemies_html %}
+					<p class="text-muted font-weight-bold mt-3">Enemies:</p>
+					{{u.enemies_html | safe}}
+				{% endif %}
 		</div>
 		<div class="flex items-center">
 			<input type="checkbox" id="privateCheck" name="private" form="submitform">
