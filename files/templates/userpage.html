@@ -106,15 +106,14 @@
 </div>
 
 <div class="col-span-full xl:col-span-9 -mt-2">
-	<div class="md:bg-gray-100 md:border md:border-gray-300 md:rounded-lg shadow-inset-t-white-10">
-	<div class="px-4 py-3 border-b md:bg-gray-100">
-		Posts
+	<div class="md:border md:border-gray-300 md:rounded-lg shadow-inset-t-white-10">
+	<div class="flex items-center px-4 py-3 border-b md:bg-gray-100">
+		<div class="font-bold text-black">Posts</div>
+		{% if not "saved" in request.full_path %}
+			<div class="ml-auto">{% include "/dropdowns/SubmissionSorts.html" %}</div>
+		{% endif %}
 	</div>
 	<div class="bg-gray-100/40 p-4">
-		{% if not "saved" in request.full_path %}
-		{% include "/dropdowns/SubmissionSorts.html" %}
-		<hr class="my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
-		{% endif %}
 		<ul class="mb-0">
 			{% include "submission_listing.html" %}
 		</ul>
