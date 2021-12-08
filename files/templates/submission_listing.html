@@ -492,7 +492,7 @@
 			</video>
 		</div>
 	{% elif p.embed_url and p.domain in ['youtu.be','youtube.com'] and p.embed_url.startswith('<lite-youtube') %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-3 mb-4">
+		<div id="video-{{p.id}}" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-3 mb-4">
 			{{p.embed_url | safe}}
 		</div>
 	{% endif %}
@@ -646,6 +646,10 @@
 		background: -moz-linear-gradient(180deg, red, orange, yellow, green, blue, indigo, violet);
 		background: -webkit-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet );
 		text-shadow:-1px -1px 0 black,1px -1px 0 black,-1px 1px 0 black,1px 1px 0 black;
+	}
+
+	lite-youtube {
+		margin: auto
 	}
 </style>
 
