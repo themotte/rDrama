@@ -25,7 +25,7 @@
 <div class="col-span-full px-2.5 md:px-0">
 {% if thing %}
 
-<div class="grid grid-cols-3 md:divide-x divide-gray-300">
+<div class="grid grid-cols-3 md:divide-x divide-gray-300 border-b border-gray-400 mb-4">
 	<div class="col-span-full md:col-span-1">
 		<label class="label">Post</label>
 		<a href="{{thing.permalink}}" class="block">
@@ -33,21 +33,22 @@
 		</a>
 	</div>
 	<div class="col-span-full md:col-span-1">
-		test
+		<label class="label">Author</label>
+		<div class="flex items-center">
+			<img loading="lazy" src="{{thing.author.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover bg-white border-gray-300" alt="{{thing.author.profile_url}} avatar"/>
+			<a href="{{thing.author.url}}">
+				@{{thing.author.username}}
+			</a>
+		</div>
 	</div>
 	<div class="col-span-full md:col-span-1">
-		test
+		<label class="label">Posted on</label>
+		{{thing.author.created_utc}} ({{thing.author.created_datetime}})
 	</div>
 </div>
-<h1>Info</h1>
-<p><a href="{{thing.permalink}}">{{thing.permalink}}</a></p>
-<p><b>Author:</b> <a href="{{thing.author.url}}">@{{thing.author.username}}</a></p>
-<p><b>Author Created At:</b> {{thing.author.created_utc}} ({{thing.author.created_datetime}})</p>
-<p><b>Upvotes: </b>{{ups | length}}</p>
-<p><b>Downvotes: </b>{{downs | length}}</p>
 
 <h2 class="text-2xl font-heading font-bold">
-	Upvotes
+	Upvotes - {{ups | length}
 </h2>
 <div class="flex flex-col mb-4">
 	<div class="overflow-x-auto">
@@ -100,7 +101,7 @@
 </div>
 
 <h2 class="text-2xl font-heading font-bold">
-	Downvotes
+	Downvotes - {{downs | length}
 </h2>
 <div class="flex flex-col mb-4">
 	<div class="overflow-x-auto">
