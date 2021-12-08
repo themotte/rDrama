@@ -97,7 +97,7 @@
 						<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
 							<td class="px-6 py-4 whitespace-nowrap">
 								<div class="flex items-center">
-									<img src="{{vote.user.profile_url}}" class="flex-shrink-0 p-[3px] border w-10 h-10 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
+									<img src="{{vote.user.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
 									<!-- User Details -->
 									<div class="ml-3">
 										<a class="block font-bold text-black hover:text-red-600" href="/@{{vote.user.username}}">
