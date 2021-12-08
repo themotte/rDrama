@@ -80,3 +80,7 @@ lite-youtube.lyt-activated > .lty-playbtn {
     white-space: nowrap;
     width: 1px;
   }
+
+.ytp-pause-overlay-controls-hidden .ytp-pause-overlay {
+    display: none!important;
+}
