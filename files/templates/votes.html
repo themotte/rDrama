@@ -33,18 +33,22 @@
 		</a>
 	</div>
 	<div class="col-span-full md:col-span-1">
-		test
+		<label class="label">Author</label>
+		<div class="flex items-center">
+			<img loading="lazy" src="{{thing.author.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover bg-white border-gray-300" alt="{{thing.author.profile_url}} avatar"/>
+			<a href="{{thing.author.url}}">
+				@{{thing.author.username}}
+			</a>
+		</div>
+	</div>
+	<div class="col-span-full md:col-span-1">
+		<label class="label">Created</label>
+		{{thing.author.created_utc}} ({{thing.author.created_datetime}})
 	</div>
 </div>
 
-<p><a href="{{thing.permalink}}">{{thing.permalink}}</a></p>
-<p><b>Author:</b> <a href="{{thing.author.url}}">@{{thing.author.username}}</a></p>
-<p><b>Author Created At:</b> {{thing.author.created_utc}} ({{thing.author.created_datetime}})</p>
-<p><b>Upvotes: </b>{{ups | length}}</p>
-<p><b>Downvotes: </b>{{downs | length}}</p>
-
 <h2 class="text-2xl font-heading font-bold">
-	Upvotes - {{ups | length}
+	Upvotes - {{ups | length}}
 </h2>
 <div class="flex flex-col mb-4">
 	<div class="overflow-x-auto">
@@ -97,7 +101,7 @@
 </div>
 
 <h2 class="text-2xl font-heading font-bold">
-	Downvotes - {{downs | length}
+	Downvotes - {{downs | length}}
 </h2>
 <div class="flex flex-col mb-4">
 	<div class="overflow-x-auto">
