@@ -23,10 +23,22 @@
 
 {% block content %}
 <div class="col-span-full px-2.5 md:px-0">
-<h1>Vote Info</h1>
-
 {% if thing %}
 
+<div class="grid-cols-3 md:divide-x divide-gray-300">
+	<div class="col-span-full md:col-span-1">
+		<label class="label">Post</label>
+		<a href="{{thing.permalink}}" class="block">
+			{{ thing.title }}
+		</a>
+	</div>
+	<div class="col-span-full md:col-span-1">
+		test
+	</div>
+	<div class="col-span-full md:col-span-1">
+		test
+	</div>
+</div>
 <h1>Info</h1>
 <p><a href="{{thing.permalink}}">{{thing.permalink}}</a></p>
 <p><b>Author:</b> <a href="{{thing.author.url}}">@{{thing.author.username}}</a></p>
