@@ -57,10 +57,10 @@
 			<li>
 				{% if b.url %}
 					<a rel="nofollow noopener noreferrer" href="{{b.url}}">
-						<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[115%]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+						<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
 					</a>
 				{% else %}
-					<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[115%]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+					<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
 				{% endif %}
 			</li>
 			{% endfor %}
