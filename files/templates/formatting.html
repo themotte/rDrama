@@ -9,15 +9,13 @@
 
 
 </pre>
-<h1>Formatting</h1>
+<h1>Markdown Formatting</h1>
 
-On {{'SITE_NAME' | app_config}}, you can use Markdown formatting.
+You can use Markdown formatting.
 
 <pre>
 
 </pre>
-
-<h2>Inline formatting</h2>
 
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
@@ -54,6 +52,17 @@ On {{'SITE_NAME' | app_config}}, you can use Markdown formatting.
 			<td><a href="{{request.host_url}}">{{'SITE_NAME' | app_config}}</a></td>
 		</tr>
 		<tr>
+			<td>Images</td>
+			<td>https://i.imgur.com/Lf6dfPO.jpg</td>
+			<td><img src="https://i.imgur.com/Lf6dfPO.jpg"></td>
+		</tr>
+		<tr>
+			<td>Videos</td>
+			<td>[{{'SITE_NAME' | app_config}}]({{request.host_url}})</td>
+			<td><video controls preload="metadata" class="embedvid"><source src="https://files.catbox.moe/v4om92.mp4" type="video/mp4"></video></td>
+		</tr>
+
+		<tr>
 			<td>Emojis</td>
 			<td>:marseylove:</td>
 			<td><img loading="lazy" data-bs-toggle="tooltip" alt=":marseylove:" data-bs-original-title=":marseylove:" delay="0" height="30" src="/assets/images/emojis/marseylove.webp?v=1"></td>
@@ -83,22 +92,6 @@ On {{'SITE_NAME' | app_config}}, you can use Markdown formatting.
 				</div>		
 			</td>
 		</tr>
-	</tbody>
-</table>
-
-<h2>Block formatting</h2>
-
-These Markdown tags format an entire paragraph of text at a time.
-
-<table class="table table-striped mb-5">
-	<thead class="bg-primary text-white">
-		<tr>
-			<th>Name</th>
-			<th>Type</th>
-			<th>Displays as</th>
-		</tr>
-	</thead>
-	<tbody>
 		<tr>
 			<td>Blockquote</td>
 			<td>&gt; text</td>
@@ -134,23 +127,6 @@ These Markdown tags format an entire paragraph of text at a time.
 			<td>&lt;s&gt; bussy > gussy &lt;/s&gt;</td>
 			<td><p class="spoiler">bussy > gussy</p></td>
 		</tr>
-	</tbody>
-</table>
-
-
-<h2>Custom Formatting</h2>
-
-We also have some custom hooks for mentioning users and subreddits. Note that these only work if the mentioned user or subreddit actually exists.
-
-<table class="table table-striped mb-5">
-	<thead class="bg-primary text-white">
-		<tr>
-			<th>Name</th>
-			<th>Type</th>
-			<th>Displays as</th>
-		</tr>
-	</thead>
-	<tbody>
 		<tr>
 			<td>Username Mention</td>
 			<td>@QuadNarca</td>
@@ -169,7 +145,7 @@ We also have some custom hooks for mentioning users and subreddits. Note that th
 	</tbody>
 </table>
 
-<h2>Custom HTML</h2>
+<h1>HTML Formatting</h1>
 
 And we allow custom HTML in most places.
 
@@ -449,10 +425,10 @@ line breaks
 		<tr>
 			<td>Images</td>
 			<td>
-				&lt;img src="https://i.imgur.com/SwVuagI_d.webp" width="200"&gt;
+				&lt;img src="https://i.imgur.com/Lf6dfPO.jpg" width="200"&gt;
 			</td>
 			<td>
-				<img src="https://i.imgur.com/SwVuagI_d.webp" width="200">
+				<img src="https://i.imgur.com/Lf6dfPO.jpg" width="200">
 			</td>
 		</tr>
 		<tr>
