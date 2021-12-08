@@ -734,7 +734,7 @@ def submit_post(v):
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
 		elif url.startswith('https://youtube.com/watch?v='):
-			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0]
+			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
 			params = parse_qs(urlparse(url).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if isinstance(t, str): t = t.replace('s','')
