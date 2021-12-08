@@ -30,6 +30,30 @@
 <meta name="twitter:url" content="{{u.url | full_link}}" >
 {% endblock %}
 
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Thread
+			</h1>
+			<ul class="flex space-x-2 text-xs text-gray-500 leading-normal mb-0">
+				<li>
+					<a href="/" class="text-gray-500 hover:underline">Home</a>
+				</li>
+				<li>
+					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
+				</li>
+				<li>
+					<a href="#" class="text-gray-700 hover:underline">asdf</a>
+				<li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
 {% block content %}
 
 <div class="col-span-full xl:col-span-9">
