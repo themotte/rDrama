@@ -1,6 +1,5 @@
 {% extends "default.html" %}
 
-
 {% block pagetype %}userpage{% endblock %}
 
 {% block title %}
@@ -33,13 +32,13 @@
 
 {% block desktopUserBanner %}
 
-<div class="row hidden d-md-block">
+<div class="row hidden md:block">
 	<div class="col px-0">
-		<div class="jumbotron jumbotron-fluid jumbotron-guild hidden d-md-block" style="background-image: url({{u.banner_url}})">
+		<div class="jumbotron jumbotron-fluid jumbotron-guild hidden md:block" style="background-image: url({{u.banner_url}})">
 			<div class="jumbotron-overlay"></div>
 			<div class="w-100 my-3">
 				<div class="container-fluid nobackground">
-					<div class="d-md-flex text-center text-md-left">
+					<div class="d-mflex text-center text-md-left">
 						<div>
 							<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img loading="lazy" src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
 						</div>
@@ -52,7 +51,7 @@
 								{% endif %}</h5>
 								{% if u.unban_utc %}<h5 style="color:#ff66ac;">{{u.unban_string}}</h5>{% endif %}
 							{% endif %}
-							<div class="d-flex align-items-center mt-1 mb-2">
+							<div class="flex align-items-center mt-1 mb-2">
 								<h1 class="font-weight-bolder h3 mb-0" style="color: #{{u.namecolor}}"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span></h1>
 								{% if u.username != u.original_username %}
 								<span>
@@ -154,7 +153,7 @@
 				</div>
 				{% endif %}
 
-				<div class="d-flex justify-content-between align-items-center">
+				<div class="flex justify-content-between align-items-center">
 					<div>
 					{% if v and v.id != u.id %}
 						{% if u.id != 995 %}<a id="button-unsub" class="btn btn-secondary {% if not is_following %}hidden{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub','button-sub')">Unfollow</a>{% endif %}
@@ -215,7 +214,7 @@
 								<form action="/admin/title_change/{{u.id}}" method="post">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
-									<div class="d-flex mt-2">
+									<div class="flex mt-2">
 										<a class="format" href="javascript:void(0)"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
 										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
@@ -491,7 +490,7 @@
 								<form action="/admin/title_change/{{u.id}}" method="post">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
-									<div class="d-flex mt-2">
+									<div class="flex mt-2">
 										<a class="format" href="javascript:void(0)"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
 										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
@@ -598,7 +597,7 @@
 
 <div id="profilecontent" class="row no-gutters">
 	<div class="col">
-		<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
+		<div class="flex-row box-shadow-bottom flex justify-content-center justify-content-md-between align-items-center">
 			<ul class="nav settings-nav">
 				<li class="nav-item">
 					<a class="nav-link {% if not 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}">Posts</a>
@@ -620,9 +619,9 @@
 </div>
 
 {% if not "saved" in request.full_path %}
-	<div class="d-flex justify-content-between align-items-center" style="padding-top:10px">
+	<div class="flex justify-content-between align-items-center" style="padding-top:10px">
 
-		<div class="d-flex align-items-center sortingbarmargin">
+		<div class="flex align-items-center sortingbarmargin">
 			<div class="text-small font-weight-bold mr-2">‎</div>
 			<div class="dropdown dropdown-actions">
 				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
