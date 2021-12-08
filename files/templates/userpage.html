@@ -97,34 +97,11 @@
 
 <div class="col-span-full xl:col-span-9">
 
-	<div id="profilecontent" class="row no-gutters">
-		<div class="col">
-			<div class="flex-row box-shadow-bottom flex justify-content-center justify-content-md-between align-items-center">
-				<ul class="nav settings-nav">
-					<li class="nav-item">
-						<a class="nav-link {% if not 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}">Posts</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/comments">Comments</a>
-					</li>
-					{% if u.id == v.id %}
-					<li class="nav-item">
-						<a class="nav-link {% if 'saved' in request.path %}active{% endif %}" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/saved/posts">Saved Posts</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" style="font-size: .9rem !important; padding: .75rem .4rem !important;" href="/@{{u.username}}/saved/comments">Saved Comments</a>
-					</li>
-					{% endif %}
-				</ul>
-			</div>
-		</div>
-	</div>
-
 	{% if not "saved" in request.full_path %}
 	{% include "/dropdowns/SubmissionSorts.html" %}
 	{% endif %}
 
-	<div class="posts">
+	<div class="sm:py-4 my-2.5 sm:my-0">
 		{% include "submission_listing.html" %}
 	</div>
 
@@ -210,7 +187,7 @@
 	window.addEventListener("load",function(event) {
 		var audio = new Audio('/songs/{{u.id}}');
 		audio.loop=true;
-		
+
 		{% if not u.unmutable %}
 		function pause() {
 			audio.pause();
