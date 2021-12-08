@@ -1,0 +1,23 @@
+<div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 my-4 px-4 py-3 rounded-md bg-gray-300/40 shadow-inner">
+	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Options</h2>
+	<div class="flex flex-col space-y-4 mb-3">
+		<div class="flex items-center">
+			<input type="checkbox" id="nsfwCheck" name="over_18" form="submitform">
+			<label class="leading-4 ml-2 inline-block badge badge-red select-none" for="nsfwCheck">18+</label>
+		</div>
+		<div class="flex items-center">
+			<input type="checkbox" id="privateCheck" name="private" form="submitform">
+			<label class="leading-4 ml-2 inline-blue badge badge-blue select-nonee" for="privateCheck">Draft</label>
+		</div>
+		{% if v.paid_dues %}
+		<div class="flex items-center">
+			<input type="checkbox" id="clubCheck" name="club" form="submitform">
+			<label class="leading-4 ml-2 inline-block badge badge-yellow select-none" for="clubCheck">Country Club Thread</label>
+		</div>
+		{% endif %}
+	</div>
+	<hr class="my-2 border-t border-gray-300 h-1 shadow-inset-t-white-10"/>
+	<a href="https://www.youtube.com/watch?v=Qlpnt-6HQZo" target="_blank">
+		<img src="https://media0.giphy.com/media/3o72FhIuVWddxQHftS/giphy.gif" class="sticky top-4 w-full h-58 object-contain p-[3px] bg-white lozad" alt="cozy fireplace log fire"/>
+	</a>
+</div>
