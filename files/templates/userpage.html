@@ -107,13 +107,18 @@
 
 <div class="col-span-full xl:col-span-9 -mt-6">
 
-	<div class="sm:py-4 my-2.5 sm:my-0">
+	<div class="sm:py-4 my-2.5 md:bg-gray-100 md:border md:border-gray-300 md:rounded-lg shadow-inset-t-white-10">
+	<div class="px-4 py-3 border-b">
+		Posts
+	</div>
+	<div class="p-4">
 		{% if not "saved" in request.full_path %}
 		{% include "/dropdowns/SubmissionSorts.html" %}
 		<hr class="my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
 		{% endif %}
 		{% include "submission_listing.html" %}
 	</div>
+</div>
 
 </div>
 
