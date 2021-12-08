@@ -25,6 +25,11 @@
 <div class="col-span-full px-2.5 md:px-0">
 {% if thing %}
 
+<a href="{{thing.permalink}}" class='block mb-2 text-xs text-gray-500 hover:text-gray-700'>
+	<i class="fas fa-arrow-right fa-sm fa-fw mr-2"></i>
+	Back to post
+</a>
+
 <div class="my-4 p-3 bg-gray-100 border border-gray-300 shadow-sm rounded">
 	<div class="flex items-center space-x-2 mb-2">
 		<img loading="lazy" src="{{thing.author.profile_url}}" class="flex-shrink-0 p-[3px] border w-8 h-8 object-cover bg-white border-gray-300" alt="{{thing.author.profile_url}} avatar"/>
