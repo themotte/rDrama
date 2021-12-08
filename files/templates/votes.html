@@ -65,11 +65,11 @@
 									<!-- User Details -->
 									<div class="ml-3">
 										<a class="block font-heading font-bold text-xl text-black hover:text-red-600" href="/@{{user.username}}">
-											{{user.username}}
+											{{vote.user.username}}
 										</a>
-										{% if user.customtitle %}
-										<p class="text-sm" style="#{{user.namecolor}}">
-											{{user.customtitle | safe}}
+										{% if vote.user.customtitle %}
+										<p class="text-sm" style="#{{vote.user.namecolor}}">
+											{{vote.user.customtitle | safe}}
 										</p>
 										{% endif %}
 									</div>
