@@ -179,7 +179,7 @@
 				</a>
 			</li>
 			<li>
-				<a class="{{ 'font-bold text-red-600' if 'comments' in request.full_path else 'text-gray-700' }}" href="/@{{u.username}}/comments">
+				<a class="{{ 'font-bold text-red-600' if 'comments' and not 'saved' in request.full_path else 'text-gray-700' }}" href="/@{{u.username}}/comments">
 					Comments <span class="text-gray-500 font-normal">{{ u.comment_count }}</span>
 				</a>
 			</li>
