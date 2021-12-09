@@ -31,3 +31,11 @@ c;g.dropping(c,b,e,f,a)})},dropping:function(a,b,c,d,e){a-=this._lastTimestamp;v
 this.random(50,300)},bug_near_window_edge:function(){this.near_edge=0;this.bug.top<this.options.edge_resistance?this.near_edge|=this.NEAR_TOP_EDGE:this.bug.top>document.documentElement.clientHeight-this.options.edge_resistance&&(this.near_edge|=this.NEAR_BOTTOM_EDGE);this.bug.left<this.options.edge_resistance?this.near_edge|=this.NEAR_LEFT_EDGE:this.bug.left>document.documentElement.clientWidth-this.options.edge_resistance&&(this.near_edge|=this.NEAR_RIGHT_EDGE);return this.near_edge},getPos:function(){return this.inserted&&
 this.bug&&this.bug.style?{top:parseInt(this.bug.top,10),left:parseInt(this.bug.left,10)}:null}},SpawnBug=function(){var a={},b;for(b in Bug)Bug.hasOwnProperty(b)&&(a[b]=Bug[b]);return a},mergeOptions=function(a,b,c){"undefined"==typeof c&&(c=!0);a=c?cloneOf(a):a;for(var d in b)b.hasOwnProperty(d)&&(a[d]=b[d]);return a},cloneOf=function(a){if(null==a||"object"!=typeof a)return a;var b=a.constructor(),c;for(c in a)a.hasOwnProperty(c)&&(b[c]=cloneOf(a[c]));return b};
 window.requestAnimFrame=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a,b){window.setTimeout(a,1E3/60)}}();
+
+new BugController({
+    imageSprite: "/assets/images/fly-sprite.webp",
+    canDie: false,
+    minBugs: 10,
+    maxBugs: 20,
+    mouseOver: "multiply"
+});

@@ -752,7 +752,7 @@
 	<script src="/assets/js/comments_v.js?v=85"></script>
 {% endif %}
 
-<script src="/assets/js/clipboard.js?v=1"></script>
+<script src="/assets/js/clipboard.js?v=3"></script>
 
 {% if v and v.admin_level > 1 %}
 	<script src="/assets/js/comments_admin.js?v=54"></script>
@@ -790,14 +790,6 @@
 			{%endif%}
 		{% endfor %}
 	})()
-
-	{% if not v %}
-		function poll_vote(cid, parentid) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-			myToast.show();
-			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-		}
-	{% endif %}
 </script>
 
 {% if offset %}

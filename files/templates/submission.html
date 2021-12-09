@@ -14,20 +14,7 @@
 {% block title %}
 
 {% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-	<script>
-		function togglePostEdit(id){
-
-			body=document.getElementById("post-body");
-			title=document.getElementById("post-title");
-			form=document.getElementById("edit-post-body-"+id);
-			box=document.getElementById("post-edit-box-"+id);
-
-			body.classList.toggle("d-none");
-			title.classList.toggle("d-none");
-			form.classList.toggle("d-none");
-			autoExpand(box);
-		};
-	</script>
+	<script src="/assets/js/submission.js?v=2"></script>
 {% endif %}
 
 <script src="/assets/js/new_comments_count.js?v=53"></script>
@@ -430,11 +417,10 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="/assets/js/twitterlight.js?v=1"></script>
+									<script src="/assets/js/twitterlight.js?v=3"></script>
 								{% else %}
-									<script src="/assets/js/twitter.js?v=1"></script>
+									<script src="/assets/js/twitter.js?v=3"></script>
 								{% endif %}
-								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
 							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
 								{{p.embed_url | safe}}
 							{% endif %}
@@ -866,7 +852,7 @@
 
 
 
-<script src="/assets/js/clipboard.js?v=1"></script>
+<script src="/assets/js/clipboard.js?v=3"></script>
 
 {% if not p.comment_count %}
 	{% if v %}
@@ -883,41 +869,12 @@
 {% endif %}
 
 {% if p.award_count("shit") %}
-	<script src="/assets/js/bugs.js?v=55"></script>
-	{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
-	{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
-	<script>
-		new BugController({
-			imageSprite: "/assets/images/fly-sprite.webp",
-			canDie: false,
-			minBugs: {{minbugs}},
-			maxBugs: {{maxbugs}},
-			mouseOver: "multiply"
-		});
-		{% if not v %}
-			function poll_vote(cid, parentid) {
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.show();
-				document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
-			}
-		{% endif %}
-	</script>
+	<script src="/assets/js/bugs.js?v=57"></script>
 {% endif %}
 
 
 {% if p.award_count("fireflies") %}
-	<script src="/assets/js/fireflies.js?v=55"></script>
-	{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
-	{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
-	<script>
-		new BugController({
-			imageSprite: "/assets/images/fireflies.webp",
-			canDie: false,
-			minBugs: {{minbugs}},
-			maxBugs: {{maxbugs}},
-			mouseOver: "multiply"
-		});
-	</script>
+	<script src="/assets/js/fireflies.js?v=58"></script>
 {% endif %}
 
 

@@ -237,21 +237,7 @@
 
 {% block onload %}{% endblock %}
 
-<script src="/assets/js/clipboard.js?v=1"></script>
-
-<script>
-	function formkey() {return '{{v.formkey}}';}
-
-	var clipboard = new ClipboardJS('.copy-link');
-	clipboard.on('success', function(e) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-			myToast.show();
-	});
-	
-	function emailVerifyText() {
-		document.getElementById("email-verify-text").innerHTML = "Verification email sent! Please check your inbox.";
-	}
-</script>
+<script src="/assets/js/clipboard.js?v=3"></script>
 
 <style>
 	.navsettings {

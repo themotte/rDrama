@@ -3,27 +3,6 @@
 {% block pagetype %}userpage{% endblock %}
 
 {% block fixedMobileBarJS %}
-<script>
-	var prevScrollpos = window.pageYOffset;
-	window.onscroll = function () {
-		var currentScrollPos = window.pageYOffset;
-		if (prevScrollpos > currentScrollPos) {
-			document.getElementById("fixed-bar-mobile").style.top = "48px";
-			document.getElementById("navbar").classList.remove("shadow");
-		} 
-		else if (currentScrollPos <= 125) {
-			document.getElementById("fixed-bar-mobile").style.top = "48px";
-			document.getElementById("navbar").classList.remove("shadow");
-		}
-		else {
-			document.getElementById("fixed-bar-mobile").style.top = "-48px";
-			document.getElementById("dropdownMenuSortBy").classList.remove('show');
-			document.getElementById("dropdownMenuFrom").classList.remove('show');
-			document.getElementById("navbar").classList.add("shadow");
-		}
-		prevScrollpos = currentScrollPos;
-	}
-</script>
 {% endblock %}
 
 {% block title %}

@@ -134,3 +134,9 @@ function post_toast2(url, button1, button2) {
 	document.getElementById(button1).classList.toggle("d-none");
 	document.getElementById(button2).classList.toggle("d-none");
 }
+
+function expandDesktopImage(image) {
+	document.getElementById("desktop-expanded-image").src = image.replace("200w_d.webp", "giphy.webp");
+	document.getElementById("desktop-expanded-image-link").href = image;
+	document.getElementById("desktop-expanded-image-wrap-link").href=image;
+};

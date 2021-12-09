@@ -1,12 +1,6 @@
 {% extends "default.html" %}
 {% block content %}
-<script>
-	function removeFollower(event, username) {
-		post_toast('/unfollow/' + username); 
-		let table = document.getElementById("followers-table");
-		table.removeChild(event.target.parentElement.parentElement);
-	}
-</script>
+<script src="/assets/js/following.js?v=2"></script>
 <pre>
 
 	

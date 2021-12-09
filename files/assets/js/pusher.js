@@ -2605,3 +2605,12 @@ var PusherPushNotifications = (function (exports) {
     return exports;
   
   }({}));
+
+const beamsClient = new PusherPushNotifications.Client({
+  instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6',
+});		
+beamsClient.start()
+.then((beamsClient) => beamsClient.getDeviceId())
+.then(() => beamsClient.addDeviceInterest('{{v.strid}}'))
+.then(() => beamsClient.getDeviceInterests())
+.catch(console.error);
