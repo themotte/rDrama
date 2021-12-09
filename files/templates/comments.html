@@ -291,7 +291,7 @@
 						<img loading="lazy" src="{{ c.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 					</div>
 
-					<a class="user-name text-sm font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" tabindex="0" style="color:#{{c.author.namecolor}};">
+					<a class="user-name text-sm font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" href="javascript:void(0)" tabindex="0" style="color:#{{c.author.namecolor}};">
 						{% if c.author.patron and not c.distinguish_level %}
 						<span class="patron" style="background-color:#{{c.author.namecolor}};">
 							{{c.author.username}}
