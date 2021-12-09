@@ -13,12 +13,6 @@
 
 {% block title %}
 
-{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-	<script src="/assets/js/submission.js?v=3"></script>
-{% endif %}
-
-<script src="/assets/js/new_comments_count.js?v=53"></script>
-
 {% if p.award_count("train") %}
 	<style>
 		@keyframes train {
@@ -841,7 +835,13 @@
 	{% include "report_post_modal.html" %}
 {% endif %}
 
+{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
+	<script src="/assets/js/submission.js?v=3"></script>
+{% endif %}
 
+{% if (not v or v.highlightcomments) %}
+	<script src="/assets/js/new_comments_count.js?v=53"></script>
+{% endif %}
 
 <script src="/assets/js/clipboard.js?v=3"></script>
 

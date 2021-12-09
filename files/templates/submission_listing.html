@@ -8,8 +8,6 @@
 	{% set cc='COUNTRY CLUB' %}
 {% endif %}
 
-<script src="/assets/js/new_comments_count.js?v=53"></script>
-
 {% for p in listing %}
 
 <div style="display:none" id="popover-{{p.id}}">
@@ -648,7 +646,9 @@
 </style>
 
 
+{% if (not v or v.highlightcomments) %}
+	<script src="/assets/js/new_comments_count.js?v=53"></script>
+{% endif %}
 <script src="/assets/js/clipboard.js?v=3"></script>
-
 <script src="/assets/js/popover.js?v=10"></script>
 <script src="/assets/js/submission_listing.js?v=6"></script>
