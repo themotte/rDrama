@@ -33,7 +33,7 @@
 {% block subHeader %}
 <img src="{{ u.banner_url}}" class="-mb-0.5 w-full h-72 lg:h-[28rem] object-cover"/>
 <div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-	{% if v and v.username == u.username %}
+	{% if v and v.id == u.id %}
 	<a href="/settings/profile" class="absolute -top-12 right-3 btn btn-gray shadow">
 		<i class="fas fa-user-edit fa-fw fa-sm mr-2"></i>
 		Edit profile
@@ -65,6 +65,31 @@
 				</div>
 			</div>
 		</div>
+		{% if v and v.id != u.id %}
+		<ul class="ml-auto">
+			<li>
+				<button class="btn btn-primary" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">
+					<i class="fas fa-paper-plane fa-sm fa-fw mr-2"></i>
+					<span class="hidden md:inline-block">Message</span>
+				</button >
+			</li>
+			{% if u.id != 995 %}
+			<li id="button-unsub2" class="{% if not is_following %}hidden{% endif %}">
+				<button class="btn btn-gray" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">
+					<i class="fas fa-heart-broken fa-sm fa-fw mr-2"></i>
+					Unfollow
+				</button>
+			</li>
+			{% endif %}
+			<li id="button-sub2" class="{% if is_following or u.is_nofollow or u.is_blocked %}hidden{% endif %}">
+				<button class="btn btn-gray" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">
+					<i class="far fa-heart fa-sm fa-fw mr-2"></i>
+					Follow
+				</button>		
+			</li>
+			<!-- <li> dropdown here </li> -->
+		</ul>
+		{% endif %}
 	</div>
 	<div class="relative col-span-full flex xl:hidden flex-col space-y-4">
 		<div>
