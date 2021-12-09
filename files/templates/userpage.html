@@ -97,6 +97,7 @@
 				<p class="text-black text-break">{{u.bio_html | safe}}</p>
 			{% endif %}
 		</div>
+		{% if u.badges %}
 		<ul class="flex flex-row flex-wrap gap-2">
 			{% for b in u.badges %}
 			<li>
@@ -110,6 +111,7 @@
 			</li>
 			{% endfor %}
 		</ul>
+		{% endif %}
 		<div>
 			{% if u.friends_html %}
 				<p class="label">Friends</p>
