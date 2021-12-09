@@ -11,7 +11,7 @@ function checkIfBussy() {
 }
 function dfgh(e) {
     active = document.activeElement;
-    if (active.getAttributeNode("class") == null || active.getAttributeNode("class").nodeValue != "user-name text-decoration-none") {
+    if (active.getAttributeNode("class") == null || active.getAttributeNode("class").nodeValue != "user-name") {
         checkIfBussy();
     }
 }
