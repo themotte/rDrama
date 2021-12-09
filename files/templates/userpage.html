@@ -40,7 +40,7 @@
 			</li>
 			{% if v and v.id == u.id %}
 			<li>
-				<a href="/settings/profile" class="absolute -top-12 right-3 btn btn-gray shadow">
+				<a href="/settings/profile" class="btn btn-gray shadow">
 					<i class="fas fa-user-edit fa-fw fa-sm mr-2"></i>
 					Edit profile
 				</a>
@@ -48,21 +48,21 @@
 			{% endif %}
 			{% if v and v.id != u.id %}
 				<li>
-					<button class="btn btn-gray" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">
+					<button class="btn btn-gray shadow" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">
 						<i class="fas fa-paper-plane fa-sm fa-fw md:mr-1"></i>
 						<span class="hidden md:inline-block">Message</span>
 					</button >
 				</li>
 				{% if u.id != 995 %}
 				<li id="button-unsub2" class="{% if not is_following %}hidden{% endif %}">
-					<button class="btn btn-gray" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">
+					<button class="btn btn-gray shadow" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">
 						<i class="fas fa-heart-broken fa-sm fa-fw mr-1"></i>
 						Unfollow
 					</button>
 				</li>
 				{% endif %}
 				<li id="button-sub2" class="{% if is_following or u.is_nofollow or u.is_blocked %}hidden{% endif %}">
-					<button class="btn btn-gray" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">
+					<button class="btn btn-gray shadow" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">
 						<i class="far fa-heart fa-sm fa-fw mr-1"></i>
 						Follow
 					</button>		
