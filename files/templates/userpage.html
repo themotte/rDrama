@@ -55,9 +55,9 @@
 					<i class="fas fa-badge-check fa-fw fa-sm" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.verified}}"></i>
 					{% endif %}
 					{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
-					<i class="fas fa-broom fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Admin"></i>
+					<i class="fas fa-broom text-admin fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Admin"></i>
 					{% elif u.admin_level == 1 and v and v.admin_level > 1 %}
-					<i class="fas fa-broom fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Meme Admin"></i>
+					<i class="fas fa-broom text-admin fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Meme Admin"></i>
 					{% endif %}
 					{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="badge badge-green">Follows you</span>
