@@ -767,6 +767,22 @@
 <script src="/assets/js/popover.js?v=10"></script>
 <script src="/assets/js/comments.js?v=10"></script>
 
+<script>
+	{% if p and (not v or v.highlightcomments) %}
+		comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+		lastCount = comments['{{p.id}}']
+		redhtml = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Unread"></i>'
+		if (lastCount)
+		{
+			{% for c in comments %}
+				{% if not (v and v.id==c.author_id) %}
+					if ({{c.created_utc*1000}} > lastCount.t) document.getElementById("reddot-{{c.id}}").innerHTML = redhtml
+				{% endif %}
+			{% endfor %}
+		}
+	{% endif %}
+</script>
+
 {% if offset %}
 	{% if p %}
 		{% set pid = p.id %}
