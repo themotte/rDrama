@@ -15,7 +15,8 @@ function collapse_comment(comment_id) {
 
     const arr = [text, actions, repliesOf];
 
-    arr.map(x => x.classList.toggle('hidden'));
+    arr.map(x => x.classList.toggle('hidden')); // hide comment elements
+    comment.classList.toggle('items-center opacity-50') // apply flex alignment and opacity to comment parent wrapping div
 
     if (closed && top < 0) {
         element.scrollIntoView()
