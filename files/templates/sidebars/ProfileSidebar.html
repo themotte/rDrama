@@ -1,22 +1,4 @@
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 my-4 px-4 py-3 rounded-md bg-gray-300/40 shadow-inner">
-	{% if u.id == v.id or not u.is_private %}
-	<ul class="flex items-center justify-around">
-		<li>
-			<div class="text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</div>
-			<small class="mt-1 block font-bold text-gray-500">Followers</small>
-		</li>
-		<li>
-			<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
-			<small class="mt-1 block font-bold text-gray-500">Dramacoin</small>
-		</li>
-		{% if u.procoins %}
-		<li>
-			<div class="text-lg font-bold mb-0">{{ u.procoins }}</div>
-			<small class="mt-1 block font-bold text-gray-500">MarseyBux</small>
-		</li>
-		{% endif %}
-	</ul>
-	{% endif %}
 	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Bio</h2>
 	<div class="flex flex-col space-y-4 mb-3">
 		<div>
