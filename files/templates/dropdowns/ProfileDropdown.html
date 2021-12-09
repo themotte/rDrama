@@ -4,6 +4,27 @@
 	</button>
 	<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownProfile-Actions">
 		<li>
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="@{{ u.username }}/upvoters">
+				Simps
+			</a>
+		</li>
+		<li>
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="@{{ u.username }}/downvoters">
+				Haters
+			</a>
+		</li>
+		<li>
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="@{{ u.username }}/upvoting">
+				Simps for
+			</a>
+		</li>
+		<li>
+			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="@{{ u.username }}/downvoting">
+				Hates
+			</a>
+		</li>
+		{% if v and v.id != u.id %}
+		<li>
 			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/@{{u.username}}/suicide')">
 				<i class="fas fa-briefcase-medical fa-sm fa-fw mr-4"></i>
 				Get them help
@@ -15,5 +36,6 @@
 				Gift {{'COINS_NAME' | app_config}}
 			</button>
 		</li>
+		{% endif %}
 	</ul>
 </div>
