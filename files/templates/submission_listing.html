@@ -57,23 +57,6 @@
 	</div>
 </div>
 
-<script>
-	(() => {
-		{% if (not v or v.highlightcomments) %}
-			showNewCommentCounts('{{p.id}}', {{p.comment_count}})
-		{% endif %}
-
-		{% if p.stickied %}
-		const pinned_info = document.getElementById('pinned-{{p.id}}')
-		{% if p.stickied.startswith('t:') %}
-			pinned_info.setAttribute("data-bs-original-title", `Pinned until ${new Date({{p.stickied[2:]}} * 1000).toString()}`)
-		{% else %}
-			pinned_info.setAttribute("data-bs-original-title", "Pinned by @{{p.stickied}}")
-		{%endif%}
-		{%endif%}
-	})()
-</script>
-
 {% set ups=p.upvotes %}
 {% set downs=p.downvotes %}
 {% set score=ups-downs %}
@@ -176,7 +159,13 @@
 					{% endfor %}
 				{% endif %}
 				{% if v and v.admin_level > 1 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>{% endif %}
-				{% if p.stickied %}<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}"></i>{% endif %}
+
+				{% if p.stickied and p.stickied.startswith('t:') %}
+					<i id='pinned-{{p.id}}' onmouseover="pinned_tooltip('pinned-{{p.id}}')" class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-timestamp={{p.stickied[2:]}}*1000></i>
+				{% elif p.stickied %}
+					<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned by @{{p.stickied}}"></i>
+				{% endif %}
+
 				{% if p.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}
 				{% if p.is_pinned and request.path.startswith('/@') %}<i class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned to profile"></i>{% endif %}
 				{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
@@ -662,4 +651,4 @@
 <script src="/assets/js/clipboard.js?v=3"></script>
 
 <script src="/assets/js/popover.js?v=10"></script>
-<script src="/assets/js/submission_listing.js?v=5"></script>
+<script src="/assets/js/submission_listing.js?v=6"></script>

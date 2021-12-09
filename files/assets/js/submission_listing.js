@@ -9,12 +9,6 @@ function expandText(id) {
     document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
 };
 
-var clipboard = new ClipboardJS('.copy-link');
-clipboard.on('success', function(e) {
-    var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-    myToast.show();
-});
-
 const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
 
 const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
@@ -25,3 +19,8 @@ const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
         html: true,
     });
 })
+
+function pinned_timestamp(id) {
+    const time =  new Date(dataset.timestamp).toString()
+    document.getElementById(id).setAttribute("data-bs-original-title", `Pinned until ${time}`)
+}

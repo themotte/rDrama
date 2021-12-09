@@ -198,7 +198,11 @@
 				{% if c.active_flags %}<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Reports</a>{% endif %}
 				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 				{% if v and v.admin_level > 1 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
-				{% if c.is_pinned %}<i id='pinned-{{c.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned {% if c.is_pinned.startswith('t:') %}until {{c.is_pinned[2:]}}{% else %}by @{{c.is_pinned}}{%endif%}"></i>{% endif %}
+				{% if c.is_pinned and c.is_pinned.startswith('t:') %}
+					<i id='pinned-{{c.id}}' onmouseover="pinned_tooltip('pinned-{{c.id}}')" class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-timestamp={{c.is_pinned[2:]}}*1000></i>
+				{% elif c.is_pinned %}
+					<i id='pinned-{{c.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned by @{{c.is_pinned}}"></i>
+				{% endif %}
 				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}
 				{% if c.is_op %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="OP"></i>{% endif %}
 				{% if c.is_bot %}<i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bot"></i>{% endif %}
@@ -761,36 +765,7 @@
 {% include "expanded_image_modal.html" %}
 
 <script src="/assets/js/popover.js?v=10"></script>
-<script src="/assets/js/comments.js?v=9"></script>
-
-<script>
-	{% if p and (not v or v.highlightcomments) %}
-		comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
-		lastCount = comments['{{p.id}}']
-		redhtml = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Unread"></i>'
-		if (lastCount)
-		{
-			{% for c in comments %}
-				{% if not (v and v.id==c.author_id) %}
-					if ({{c.created_utc*1000}} > lastCount.t) document.getElementById("reddot-{{c.id}}").innerHTML = redhtml
-				{% endif %}
-			{% endfor %}
-		}
-	{% endif %}
-
-	(() => {
-		{% for c in comments %}
-			{% if c.is_pinned %}
-				const pinned_info = document.getElementById('pinned-{{c.id}}')
-				{% if c.is_pinned.startswith('t:') %}
-					pinned_info.setAttribute("data-bs-original-title", `Pinned until ${new Date({{c.is_pinned[2:]}} * 1000).toString()}`)
-				{% else %}
-					pinned_info.setAttribute("data-bs-original-title", "Pinned by @{{c.is_pinned}}")
-				{%endif%}
-			{%endif%}
-		{% endfor %}
-	})()
-</script>
+<script src="/assets/js/comments.js?v=10"></script>
 
 {% if offset %}
 	{% if p %}
