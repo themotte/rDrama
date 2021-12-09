@@ -1,4 +1,8 @@
-makeBold = function (form) {
+function formkey() {
+	return document.getElementById("formkey").innerHTML;
+}
+
+function makeBold(form) {
 	var text = document.getElementById(form);
 	var startIndex = text.selectionStart,
 	endIndex = text.selectionEnd;
@@ -17,7 +21,7 @@ makeBold = function (form) {
 	}
 }
 
-makeItalics = function (form) {
+function makeItalics(form) {
 	var text = document.getElementById(form);
 	var startIndex = text.selectionStart,
 	endIndex = text.selectionEnd;

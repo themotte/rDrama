@@ -618,6 +618,14 @@ AWARDS = {
 		"color": "text-silver",
 		"price": 10000
 	},
+	"unblockable": {
+		"kind": "unblockable",
+		"title": "Unblockable",
+		"description": "Makes the recipient unblockable and removes all blocks on them.",
+		"icon": "far fa-laugh-squint",
+		"color": "text-lightgreen",
+		"price": 10000
+	},
 	"pause": {
 		"kind": "pause",
 		"title": "Pause",
@@ -625,14 +633,6 @@ AWARDS = {
 		"icon": "fas fa-volume-mute",
 		"color": "text-danger",
 		"price": 20000
-	},
-	"unblockable": {
-		"kind": "unblockable",
-		"title": "Unblockable",
-		"description": "Makes the recipient unblockable and removes all blocks on them.",
-		"icon": "far fa-laugh-squint",
-		"color": "text-lightgreen",
-		"price": 25000
 	},
 	"unpausable": {
 		"kind": "unpausable",
@@ -797,6 +797,14 @@ AWARDS2 = {
 		"color": "text-silver",
 		"price": 10000
 	},
+	"unblockable": {
+		"kind": "unblockable",
+		"title": "Unblockable",
+		"description": "Makes the recipient unblockable and removes all blocks on them.",
+		"icon": "far fa-laugh-squint",
+		"color": "text-lightgreen",
+		"price": 10000
+	},
 	"pause": {
 		"kind": "pause",
 		"title": "Pause",
@@ -804,14 +812,6 @@ AWARDS2 = {
 		"icon": "fas fa-volume-mute",
 		"color": "text-danger",
 		"price": 20000
-	},
-	"unblockable": {
-		"kind": "unblockable",
-		"title": "Unblockable",
-		"description": "Makes the recipient unblockable and removes all blocks on them.",
-		"icon": "far fa-laugh-squint",
-		"color": "text-lightgreen",
-		"price": 25000
 	},
 	"unpausable": {
 		"kind": "unpausable",

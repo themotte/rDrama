@@ -174,6 +174,15 @@ def shop(v):
 			"owned": 0,
 			"price": 10000
 		},
+		"unblockable": {
+			"kind": "unblockable",
+			"title": "Unblockable",
+			"description": "Makes the recipient unblockable and removes all blocks on them.",
+			"icon": "far fa-laugh-squint",
+			"color": "text-lightgreen",
+			"owned": 0,
+			"price": 10000
+		},
 		"pause": {
 			"kind": "pause",
 			"title": "Pause",
@@ -182,15 +191,6 @@ def shop(v):
 			"color": "text-danger",
 			"owned": 0,
 			"price": 20000
-		},
-		"unblockable": {
-			"kind": "unblockable",
-			"title": "Unblockable",
-			"description": "Makes the recipient unblockable and removes all blocks on them.",
-			"icon": "far fa-laugh-squint",
-			"color": "text-lightgreen",
-			"owned": 0,
-			"price": 25000
 		},
 		"unpausable": {
 			"kind": "unpausable",
@@ -384,6 +384,14 @@ def buy(v, award):
 			"color": "text-silver",
 			"price": 10000
 		},
+		"unblockable": {
+			"kind": "unblockable",
+			"title": "Unblockable",
+			"description": "Makes the recipient unblockable and removes all blocks on them.",
+			"icon": "far fa-laugh-squint",
+			"color": "text-lightgreen",
+			"price": 10000
+		},
 		"pause": {
 			"kind": "pause",
 			"title": "Pause",
@@ -391,14 +399,6 @@ def buy(v, award):
 			"icon": "fas fa-volume-mute",
 			"color": "text-danger",
 			"price": 20000
-		},
-		"unblockable": {
-			"kind": "unblockable",
-			"title": "Unblockable",
-			"description": "Makes the recipient unblockable and removes all blocks on them.",
-			"icon": "far fa-laugh-squint",
-			"color": "text-lightgreen",
-			"price": 25000
 		},
 		"unpausable": {
 			"kind": "unpausable",
@@ -467,6 +467,7 @@ def buy(v, award):
 
 	if request.values.get("mb"):
 		if v.procoins < price: return {"error": "Not enough marseybux."}, 400
+		if award in ["grass","alt"]: return {"error": "You can't buy those awards with marseybux."}, 403
 		v.procoins -= price
 	else:
 		if v.coins < price: return {"error": "Not enough coins."}, 400

@@ -39,6 +39,9 @@ allowed_tags = tags = ['b',
 						'a',
 						'img',
 						'span',
+						'ruby',
+						'rp',
+						'rt',
 						]
 
 no_images = ['b',
@@ -71,6 +74,9 @@ no_images = ['b',
 						'marquee',
 						'a',
 						'span',
+						'ruby',
+						'rp',
+						'rt',
 						]
 
 def sanitize_marquee(tag, name, value):
@@ -84,7 +90,7 @@ def sanitize_marquee(tag, name, value):
 	return False
 
 allowed_attributes = {
-		'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name'],
+		'*': ['href', 'style', 'src', 'class', 'title'],
 		'marquee': sanitize_marquee}
 
 allowed_protocols = ['http', 'https']
@@ -228,8 +234,8 @@ def sanitize(sanitized, noimages=False):
 		htmlsource += '"></lite-youtube>'
 
 		sanitized = sanitized.replace(replacing, htmlsource)
-	for i in re.finditer('<p>(https:.*?\.mp4)</p>', sanitized):
-		sanitized = sanitized.replace(i.group(0), f'<p><video controls preload="none" class="embedvid"><source src="{i.group(1)}" type="video/mp4"></video>')
+	for i in re.finditer('<p>(https:.*?\.(mp4|webm))</p>', sanitized):
+		sanitized = sanitized.replace(i.group(0), f'<p><video controls preload="none" class="embedvid"><source src="{i.group(1)}" type="video/{i.group(2)}"></video>')
 
 	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")
