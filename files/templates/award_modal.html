@@ -11,6 +11,7 @@
 			</div>
 			<div id="awardModalBody" class="modal-body">
 				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
+					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<div class="card-columns award-columns awards-wrapper">
 						{% for award in v.user_awards %}
 							{% if award.owned %}
