@@ -291,21 +291,7 @@
 						<img loading="lazy" src="{{ c.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 					</div>
 
-					<a class="user-name text-sm font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" href="javascript:void(0)" tabindex="0" style="color:#{{c.author.namecolor}};">
-						{% if c.author.patron and not c.distinguish_level %}
-						<span class="patron" style="background-color:#{{c.author.namecolor}};">
-							{{c.author.username}}
-						</span>
-						{% elif c.distinguish_level and 'rama' in request.host %}
-						<span class="mod" style="background-color:#{{c.author.namecolor}};">
-							{{c.author.username}}
-						</span>
-						{% else %}
-						<span>
-							{{c.author.username}}
-						</span>
-						{% endif %}
-					</a>
+					<a class="user-name text-decoration-none" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" href="javascript:void(0)" tabindex="0" style="color:#{{c.author.namecolor}};  font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{c.author.username}}</span></a>
 
 					{% if c.author.customtitle %}
 					<bdi style="color: #{{c.author.titlecolor}}">
