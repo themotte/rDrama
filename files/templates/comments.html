@@ -292,19 +292,19 @@
 					</div>
 
 					<a class="user-name" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{c.id}}" href="javascript:void(0)" tabindex="0" style="color:#{{c.author.namecolor}};">
-						{% if c.author.patron and not c.distinguish_level %}
-						<span class="patron" style="background-color:#{{c.author.namecolor}};">
+						<span class="text-sm font-bold">
+							{% if c.author.patron and not c.distinguish_level %}
+							<span class="patron" style="background-color:#{{c.author.namecolor}};">
+								{{c.author.username}}
+							</span>
+							{% elif c.distinguish_level and 'rama' in request.host %}
+							<span class="mod" style="background-color:#{{c.author.namecolor}};">
+								{{c.author.username}}
+							</span>
+							{% else %}
 							{{c.author.username}}
+							{% endif %}
 						</span>
-						{% elif c.distinguish_level and 'rama' in request.host %}
-						<span class="mod" style="background-color:#{{c.author.namecolor}};">
-							{{c.author.username}}
-						</span>
-						{% else %}
-						<span>
-							{{c.author.username}}
-						</span>
-						{% endif %}
 					</a>
 
 					{% if c.author.customtitle %}
