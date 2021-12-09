@@ -182,8 +182,13 @@
 				</a>
 			</li>
 			<li>
-				<a class="{{ 'font-bold text-red-600' if '/saved/' in request.path else 'text-gray-700' }}" href="/@{{u.username}}/saved/posts">
+				<a class="{{ 'font-bold text-red-600' if '/saved/posts' in request.path else 'text-gray-700' }}" href="/@{{u.username}}/saved/posts">
 					Saved Posts
+				</a>
+			</li>
+			<li>
+				<a class="{{ 'font-bold text-red-600' if '/saved/comments' in request.path else 'text-gray-700' }}" href="/@{{u.username}}/saved/comments">
+					Saved Comments
 				</a>
 			</li>
 		</ul>
