@@ -3877,10 +3877,10 @@ pre .com, code .com {
    white-space: nowrap;
    background: transparent;
  }
-
+/*
  #thread .post-title {
    font-size: 16px;
- }
+ }*/
 
  #submit .submission {
    border: none;
