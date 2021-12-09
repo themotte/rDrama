@@ -86,12 +86,12 @@
 		  
 		<div class="w-full">
 
-			<div class="overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
+			<div class="overflow-x-scroll flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
 
 				<div class="relative md:hidden {{ 'santa' if p.author.patron else 'cap' }}">
-					<img loading="lazy" src="{{ p.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
+					<img loading="lazy" src="{{ p.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
 				</div>
-
+				<span class="flex-shrink-0">
 				{% if v and v.admin_level==6 and p.author.shadowbanned %}
 				<i class="fas fa-user-times fa-fw fa-sm text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
 				{% endif %}
@@ -109,9 +109,10 @@
 				{% endif %}
 				{% if p.author.verified %}
 				<i class="fas fa-badge-check fa-fw fa-sm" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
+				</span>
 				{% endif %}
 				{% if not p.award_count('ghosts') %}
-				<button class="flex items-center font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" tabindex="0" style="color: #{{p.author.namecolor}};">
+				<button class="flex flex-shrink-0 items-center font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" tabindex="0" style="color: #{{p.author.namecolor}};">
 					{% if p.author.patron and not p.distinguish_level %}
 					<span class="patron" style="background-color:#{{p.author.namecolor}};">
 						{{p.author.username}}
@@ -127,7 +128,7 @@
 					{% endif %}
 				</button>
 				{% if p.author.customtitle %}
-					<bdi style="color: #{{p.author.titlecolor}}">
+					<bdi class="flex-shrink-0" style="color: #{{p.author.titlecolor}}">
 						{% if p.author.quadrant %}
 							<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">
 						{% endif %}
@@ -135,29 +136,24 @@
 					</bdi>
 				{% endif %}
 				{% endif %}
-				<span onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp-{{p.id}}">
+				<span class="flex-shrink-0" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp-{{p.id}}">
 					{{p.age_string}}
 				</span>
 
 				{% if p.edited_utc %}
 					Edited
-					<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}">{{p.edited_string}}</span>
+					<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}">{{p.edited_string}}</span>
 				{% endif %}
 				
 				{% if p.realurl(v) %}
-					<a class="text-gray-500 hover:underline" href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>({{p.domain}})
+					<a class="flex-shrink-0" class="text-gray-500 hover:underline" href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>({{p.domain}})
 					</a>
 					{% else %}
 					<span>(text post)</span>
 				{% endif %}
 
-				{% if p.private %}
-				<span class="px-1 py-0.5 text-xs text-yellow-900 text-shadow-light bg-yellow-400 font-bold leading-normal rounded">
-					Draft
-				</span>
-				{% endif %}
 				{% if p.active_flags %}
-				<button class="badge badge-red" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">{{p.active_flags}} Reports
+				<button class="flex-shrink-0 badge badge-red" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">{{p.active_flags}} Reports
 				</button>
 				{% endif %}
 
