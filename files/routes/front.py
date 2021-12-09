@@ -13,6 +13,7 @@ def slash_post():
 
 @app.post("/clear")
 @auth_required
+@validate_formkey
 def clear(v):
 	for n in v.notifications.filter_by(read=False).all():
 		n.read = True
@@ -210,7 +211,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = posts.filter(Submission.created_utc >= cutoff)
 	else: cutoff = 0
 
-	posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
+	if sort == "new": posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
+	else: posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
 
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
@@ -263,13 +265,14 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts[:size]
 
-	pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
-	if v and v.admin_level == 0:
-		blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
-		blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
-		pins = pins.filter(Submission.author_id.notin_(blocking), Submission.author_id.notin_(blocked))
+	if sort != "new":
+		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
+		if v and v.admin_level == 0:
+			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
+			blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
+			pins = pins.filter(Submission.author_id.notin_(blocking), Submission.author_id.notin_(blocked))
 
-	if page == 1 and not gt and not lt: posts = pins.all() + posts
+	if sort != "new" and page == 1 and not gt and not lt: posts = pins.all() + posts
 
 	if ids_only: posts = [x.id for x in posts]
 

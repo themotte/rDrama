@@ -34,6 +34,7 @@ tiers={
 @app.post("/settings/removebackground")
 @limiter.limit("1/second")
 @auth_required
+@validate_formkey
 def removebackground(v):
 	v.background = None
 	g.db.add(v)
@@ -439,6 +440,7 @@ def settings_profile_post(v):
 
 @app.post("/settings/filters")
 @auth_required
+@validate_formkey
 def filters(v):
 	filters=request.values.get("filters")[:1000].strip()
 
@@ -810,6 +812,7 @@ def settings_css_get(v):
 @app.post("/settings/css")
 @limiter.limit("1/second")
 @auth_required
+@validate_formkey
 def settings_css(v):
 	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
 
@@ -826,14 +829,15 @@ def settings_css(v):
 @auth_required
 def settings_profilecss_get(v):
 
-	if v.truecoins < 1000 and not v.patron and v.admin_level == 0 : return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
+	if v.truecoins < 1000 and not v.patron and v.admin_level == 0 : return f"You must have +1000 {COINS_NAME} or be a paypig to set profile css."
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
 @limiter.limit("1/second")
 @auth_required
+@validate_formkey
 def settings_profilecss(v):
-	if v.truecoins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a patron to set profile css."
+	if v.truecoins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a paypig to set profile css."
 	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
 	v.profilecss = profilecss
 	g.db.add(v)

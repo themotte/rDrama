@@ -43,6 +43,7 @@ def send_verification_email(user, email=None):
 @app.post("/verify_email")
 @limiter.limit("1/second")
 @auth_required
+@validate_formkey
 def api_verify_email(v):
 
 	send_verification_email(v)

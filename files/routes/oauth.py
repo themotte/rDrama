@@ -38,6 +38,7 @@ def authorize(v):
 @app.post("/api_keys")
 @limiter.limit("1/second")
 @is_not_banned
+@validate_formkey
 def request_api_keys(v):
 
 	new_app = OauthApp(
@@ -253,6 +254,7 @@ def admin_apps_list(v):
 @app.post("/oauth/reroll/<aid>")
 @limiter.limit("1/second")
 @auth_required
+@validate_formkey
 def reroll_oauth_tokens(aid, v):
 
 	aid = aid

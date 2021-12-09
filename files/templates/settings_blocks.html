@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<script src="/assets/js/settings_block.js?v=2"></script>
+<script src="/assets/js/settings_blocks.js?v=2"></script>
 
 <div class="row">
 
@@ -120,5 +120,9 @@
 		<i class="fas fa-exclamation-circle text-danger mr-2"></i><span id="toast-error-message">Error. Please try again.</span>
 	</div>
 </div>
+
+{% if v %}
+	<div id="formkey" class="d-none">{{v.formkey}}</div>
+{% endif %}
 
 {% endblock %}

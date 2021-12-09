@@ -196,6 +196,7 @@ def api_vote_comment(comment_id, new, v):
 
 @app.post("/vote/poll/<comment_id>")
 @auth_required
+@validate_formkey
 def api_vote_poll(comment_id, v):
 	
 	vote = request.values.get("vote")

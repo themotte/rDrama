@@ -2,6 +2,7 @@ function post_toast2(url, button1, button2) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	var form = new FormData()
+	form.append("formkey", formkey());
 
 	if(typeof data === 'object' && data !== null) {
 		for(let k of Object.keys(data)) {

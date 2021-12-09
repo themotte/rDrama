@@ -35,67 +35,6 @@
 
 {% if v %}
 	<script>
-		const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
-
-		function updateTax(mobile=false) {
-			let suf = mobile ? "-mobile" : "";
-			let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
-			if(isNaN(amount) || amount < 0) {
-			amount = 0;
-			}
-			document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
-		}
-
-		function transferCoins(mobile=false) {
-			let t = event.target;
-			t.disabled = true;
-
-			let amount = parseInt(document.getElementById("coins-transfer-amount").value);
-			let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
-
-			post_toast_callback("/@{{u.username}}/transfer_coins",
-				{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
-				(xhr) => {
-				if(xhr.status == 200) {
-					document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
-					document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
-					document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
-				}
-				}
-			);
-
-			setTimeout(_ => t.disabled = false, 2000);
-		}
-	</script>
-{% endif %}
-
-{% if u.song %}
-	<script>
-		var audio = new Audio('/songs/{{u.id}}');
-		audio.loop=true;
-		
-		{% if not u.unmutable %}
-			function pause() {
-				audio.pause();
-				document.getElementById("pause1").classList.toggle("d-none");
-				document.getElementById("play1").classList.toggle("d-none");
-				document.getElementById("pause2").classList.toggle("d-none");
-				document.getElementById("play2").classList.toggle("d-none");
-			}
-
-			function play() {
-				audio.play();
-				document.getElementById("pause1").classList.toggle("d-none");
-				document.getElementById("play1").classList.toggle("d-none");
-				document.getElementById("pause2").classList.toggle("d-none");
-				document.getElementById("play2").classList.toggle("d-none");
-			}
-		{% endif %}
-
-		audio.play();
-		document.getElementById('userpage').addEventListener('click', () => {
-			if (audio.paused) audio.play(); 
-		}, {once : true});
 	</script>
 {% endif %}
 
@@ -780,8 +719,18 @@
 	{% include "emoji_modal.html" %}
 {% endif %}
 
-<script src="/assets/js/userpage.js?v=72"></script>
 {% endblock %}
 
 {% block GIFpicker %}
+	{% if u.song %}
+		<div id="uid" class="d-none">{{u.id}}</div>
+	{% endif %}
+
+	{% if v}
+		<script src="/assets/js/userpage_v.js?v=75"></script>
+		<div id="tax" class="d-none">{% if v.patron or u.patron %}0{% else %}0.03{% endif %}</div>
+		<div id="username" class="d-none">{{u.username}}</div>
+	{% endif %}
+
+	<script src="/assets/js/userpage.js?v=75"></script>
 {% endblock %}
