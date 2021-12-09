@@ -336,13 +336,14 @@
 					{% endif %}
 
 					<!-- Meta information -->
-					<div class="flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
+					<div class="overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
 
-						<div class="relative avatar md:hidden">
+						<div class="relative md:hidden flex-shrink-0 {{ 'santa' if p.author.patron else 'cap' }}">
 							<img loading="lazy" src="{{ p.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
 						</div>
 
 						{% if v and v.admin_level==6 and p.author.shadowbanned %}
+						<span class="flex-shrink-0">
 						<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
 						{% endif %}
 						{% if p.distinguish_level %}
@@ -354,7 +355,8 @@
 						{% if p.author.verified %}
 						<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
 						{% endif %}
-						<button class="flex items-center font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" tabindex="0" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name">
+						</span>
+						<button class="inline-flex flex-shrink-0 items-center font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" tabindex="0" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name">
 							{% if p.author.patron and not p.distinguish_level %}
 							<span class="patron" style="background-color:#{{p.author.namecolor}};">
 								{{p.author.username}}
@@ -371,7 +373,7 @@
 						</button>
 
 						{% if p.author.customtitle %}
-						<bdi style="color: #{{p.author.titlecolor}}">
+						<bdi class="flex-shrink-0" style="color: #{{p.author.titlecolor}}">
 							{% if p.author.quadrant %}
 								<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">
 							{% endif %}
@@ -379,18 +381,18 @@
 						</bdi>
 						{% endif %}
 
-						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp">{{p.age_string}}</span>
+						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp">{{p.age_string}}</span>
 
 						{% if p.edited_utc %}
 						Edited
-						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp">{{p.edited_string}}</span>
+						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp">{{p.edited_string}}</span>
 						{% endif %}
 
 						{% if p.realurl(v) %}
-						<a class="text-gray-500 hover:underline" href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>({{p.domain}})
+						<a class="flex-shrink-0 text-gray-500 hover:underline" href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>({{p.domain}})
 						</a>
 						{% else %}
-						<span>(text post)</span>
+						<span class="flex-shrink-0">(text post)</span>
 						{% endif %}
 
 						<!-- <span>{{p.views}} views</span> -->
