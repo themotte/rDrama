@@ -230,6 +230,7 @@ def contact(v):
 @app.post("/contact")
 @limiter.limit("1/second")
 @auth_required
+@validate_formkey
 def submit_contact(v):
 	message = f'This message has been sent automatically to all admins via https://{site}/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
 	send_admin(v.id, message)

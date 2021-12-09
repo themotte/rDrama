@@ -36,6 +36,7 @@ def truescore(v):
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second")
 @admin_level_required(2)
+@validate_formkey
 def revert_actions(v, username):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
@@ -61,6 +62,7 @@ def revert_actions(v, username):
 @app.post("/@<username>/club_allow")
 @limiter.limit("1/second")
 @admin_level_required(2)
+@validate_formkey
 def club_allow(v, username):
 
 	u = get_user(username, v=v)
@@ -84,6 +86,7 @@ def club_allow(v, username):
 @app.post("/@<username>/club_ban")
 @limiter.limit("1/second")
 @admin_level_required(2)
+@validate_formkey
 def club_ban(v, username):
 
 	u = get_user(username, v=v)
@@ -107,6 +110,7 @@ def club_ban(v, username):
 @app.post("/@<username>/make_admin")
 @limiter.limit("1/second")
 @admin_level_required(2)
+@validate_formkey
 def make_admin(v, username):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
@@ -120,6 +124,7 @@ def make_admin(v, username):
 @app.post("/@<username>/remove_admin")
 @limiter.limit("1/second")
 @admin_level_required(2)
+@validate_formkey
 def remove_admin(v, username):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
@@ -133,6 +138,7 @@ def remove_admin(v, username):
 @app.post("/@<username>/make_meme_admin")
 @limiter.limit("1/second")
 @admin_level_required(2)
+@validate_formkey
 def make_meme_admin(v, username):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
@@ -146,6 +152,7 @@ def make_meme_admin(v, username):
 @app.post("/@<username>/remove_meme_admin")
 @limiter.limit("1/second")
 @admin_level_required(2)
+@validate_formkey
 def remove_meme_admin(v, username):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		user = get_user(username)
@@ -159,6 +166,7 @@ def remove_meme_admin(v, username):
 @app.post("/admin/monthly")
 @limiter.limit("1/day")
 @admin_level_required(2)
+@validate_formkey
 def monthly(v):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
@@ -930,6 +938,7 @@ def api_distinguish_post(post_id, v):
 
 @app.post("/sticky/<post_id>")
 @admin_level_required(2)
+@validate_formkey
 def api_sticky_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).first()
@@ -965,6 +974,7 @@ def api_sticky_post(post_id, v):
 @app.post("/ban_comment/<c_id>")
 @limiter.limit("1/second")
 @admin_level_required(1)
+@validate_formkey
 def api_ban_comment(c_id, v):
 
 	comment = g.db.query(Comment).filter_by(id=c_id).first()
@@ -989,6 +999,7 @@ def api_ban_comment(c_id, v):
 @app.post("/unban_comment/<c_id>")
 @limiter.limit("1/second")
 @admin_level_required(1)
+@validate_formkey
 def api_unban_comment(c_id, v):
 
 	comment = g.db.query(Comment).filter_by(id=c_id).first()
@@ -1013,6 +1024,7 @@ def api_unban_comment(c_id, v):
 
 @app.post("/distinguish_comment/<c_id>")
 @admin_level_required(1)
+@validate_formkey
 def admin_distinguish_comment(c_id, v):
 	
 	

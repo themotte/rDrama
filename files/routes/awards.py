@@ -270,6 +270,7 @@ def shop(v):
 
 @app.post("/buy/<award>")
 @auth_required
+@validate_formkey
 def buy(v, award):
 	AWARDS = {
 		"shit": {
@@ -514,6 +515,7 @@ def buy(v, award):
 @app.post("/post/<pid>/awards")
 @limiter.limit("1/second")
 @auth_required
+@validate_formkey
 def award_post(pid, v):
 
 	if v.shadowbanned: return render_template('errors/500.html', v=v), 500
@@ -671,6 +673,7 @@ def award_post(pid, v):
 @app.post("/comment/<cid>/awards")
 @limiter.limit("1/second")
 @auth_required
+@validate_formkey
 def award_comment(cid, v):
 
 	if v.shadowbanned: return render_template('errors/500.html', v=v), 500

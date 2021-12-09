@@ -1,6 +1,8 @@
-function block_user() {
+function formkey() {
+	return document.getElementById("formkey").innerHTML;
+}
 
-    var exileForm = document.getElementById("exile-form");
+function block_user() {
 
     var usernameField = document.getElementById("exile-username");
 
