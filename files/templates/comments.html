@@ -324,7 +324,7 @@
 					<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('hidden')">{{c.active_flags}} Reports</a>
 					{% endif %}
 					{% if c.over_18 %}
-					<span class="badge badge-danger text-small-extra mr-1">+18</span>
+					<span class="badge badge-red">+18</span>
 					{% endif %}
 					{% if v and v.admin_level==6 and c.author.shadowbanned %}
 					<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{c.author.shadowbanned}}"></i>
