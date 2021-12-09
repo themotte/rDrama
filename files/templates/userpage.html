@@ -65,7 +65,14 @@
 				</div>
 			</div>
 		</div>
-		<ul class="ml-auto hidden xl:flex flex-row flex-wrap gap-2 mb-0">
+	</div>
+	<div class="relative col-span-full flex xl:hidden flex-col space-y-4">
+		<div>
+			{% if u.bio_html %}
+				<p class="text-black text-break">{{u.bio_html | safe}}</p>
+			{% endif %}
+		</div>
+		<ul class="flex flex-row flex-wrap gap-2">
 			{% for b in u.badges %}
 			<li>
 				{% if b.url %}
@@ -78,21 +85,14 @@
 			</li>
 			{% endfor %}
 		</ul>
-	</div>
-	<div class="relative col-span-full flex xl:hidden flex-col space-y-4">
-		<div>
-			{% if u.bio_html %}
-				<p class="text-black text-break">{{u.bio_html | safe}}</p>
-			{% endif %}
-		</div>
 		<div>
 			{% if u.friends_html %}
-				<p class="text-muted font-weight-bold mt-3">Friends:</p>
+				<p class="label">Friends</p>
 				{{u.friends_html | safe}}
 			{% endif %}
 
 			{% if u.enemies_html %}
-				<p class="text-muted font-weight-bold mt-3">Enemies:</p>
+				<p class="label">Enemies</p>
 				{{u.enemies_html | safe}}
 			{% endif %}
 		</div>
