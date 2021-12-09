@@ -64,8 +64,10 @@
 					{% endif %}
 				</div>
 			</div>
+		</div>
+		<div class="ml-auto flex items-center space-x-4">
 			{% if u.id == v.id or not u.is_private %}
-			<ul class="pl-4 hidden xl:flex items-center space-x-3 mb-0">
+			<ul class="hidden xl:flex items-center space-x-3 mb-0">
 				<li>
 					<div class="text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</div>
 					<small class="block font-bold text-gray-500">Followers</small>
@@ -82,8 +84,6 @@
 				{% endif %}
 			</ul>
 			{% endif %}
-		</div>
-		<div class="ml-auto flex items-center space-x-4">
 			{% if v and v.id != u.id %}
 			<ul class="flex flex-wrap space-x-2 items-center mb-0">
 				<li>
