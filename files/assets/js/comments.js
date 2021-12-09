@@ -4,10 +4,9 @@ function timestamp(str, ti) {
 };
 
 function collapse_comment(comment_id) {
-    const comment = "comment-" + comment_id
-    const element = document.getElementById(comment)
-    const closed = element.classList.toggle("collapsed")
-    const top = element.getBoundingClientRect().y
+    const comment = `comment-${comment_id}`;
+    const closed = comment.classList.toggle("collapsed");
+    const top = comment.getBoundingClientRect().y;
 
     const text = document.getElementById(`comment-text-${comment_id}`)
     const actions = document.getElementById(`comment-${comment_id}-actions`)
@@ -16,10 +15,10 @@ function collapse_comment(comment_id) {
     const arr = [text, actions, repliesOf];
 
     arr.map(x => x.classList.toggle('hidden')); // hide comment elements
-    comment.classList.toggle('items-center opacity-50') // apply flex alignment and opacity to comment parent wrapping div
+    comment.classList.toggle('items-center opacity-50'); // apply flex alignment and opacity to comment parent wrapping div
 
     if (closed && top < 0) {
-        element.scrollIntoView()
+        comment.scrollIntoView()
         window.scrollBy(0, - 100)
     }
 };
