@@ -426,7 +426,7 @@
 
 						{% elif not p.embed_url and not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
 						<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
-							<div class="flex md:hidden justify-between items-center border border-gray-300 bg-gray-400 rounded-sm p-2{% if p.realbody(v) %} mb-3{% endif %}">
+							<div class="flex md:hidden justify-between items-center border border-gray-300 rounded p-2{% if p.realbody(v) %} mb-3{% endif %}">
 								<span>{{p.domain|truncate(30, True)}}</span>
 								<i class="fas fa-external-link-alt fa-sm fa-fw"></i>
 							</div>
