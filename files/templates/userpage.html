@@ -47,6 +47,20 @@
 				</a>
 			</li>
 			{% endif %}
+			{% if u.song and v and v.mute and not u.unmutable %}
+			<li id="pause2">
+				<button class="btn btn-gray shadow" onclick="pause()">
+					<i class="fas fa-pause fa-sm fa-fw md:mr-1"></i>
+					<span class="hidden md:inline-block">Pause anthem</span>
+				</button>
+			</li>
+			<li id="play2">
+				<button class="btn btn-gray shadow hidden" onclick="play()">
+					<i class="fas fa-play fa-sm fa-fw md:mr-1"></i>
+					<span class="hidden md:inline-block">Play anthem</span>
+				</button>
+			</li>
+			{% endif %}
 			{% if v.id != u.id %}
 				<li>
 					<button class="btn btn-gray shadow" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">
