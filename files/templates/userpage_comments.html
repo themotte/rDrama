@@ -26,36 +26,60 @@
 	</div>
 </div> -->
 
+
+{% block content %}
 <div class="col-span-full xl:col-span-9">
-
-	{% if listing %}
-		<div id="comments" class="posts">
-			{% with comments=listing %}
-			{% include "comments.html" %}
-			{% endwith %}
+	<div class="sm:py-4 my-2.5 sm:my-0">
+		{% if not "saved" in request.full_path %}
+		<div class="flex justify-end md:justify-start mb-3 md:m-0 px-2.5 md:px-0">
+			{% include "/dropdowns/SubmissionSorts.html" %}
 		</div>
-	{% else %}
-
-	<div class="md:max-w-xl text-center">
-		<img loading="lazy" src="/assets/images/emojis/marseydead.webp?v=1" class="w-14 h-14 object-contain mb-4">
-		{% if '/saved/' in request.path %}
-		<h3 class="h5">You have no saved comments</h3>
-		<p class="text-gray-500 mb-3">
-			Go save some comments!
-		</p>
-		{% elif v and v.id == u.id %}
-		<h3 class="h5">You have no comments</h3>
-		<p class="text-gray-500 mb-3">
-			Go write some comments!
-		</p>
+		<hr class="hidden md:block my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
+		{% endif %}
+		{% if listing %}
+		<div id="comments">
+		{% with comments=listing %}
+			{% include "comments.html" %}
+		{% endwith %}
+		</div>
 		{% else %}
-		<h3 class="h5">You have no comments</h3>
-		<p class="text-gray-500 mb-3">
-			Their comments will show up here.
-		</p>
+		<div class="md:max-w-xl text-center">
+			<img loading="lazy" src="/assets/images/emojis/marseydead.webp?v=1" class="w-14 h-14 object-contain mb-4">
+			{% if '/saved/' in request.path %}
+			<h3 class="h5">You have no saved comments</h3>
+			<p class="text-gray-500 mb-3">
+				Go save some comments!
+			</p>
+			{% elif v and v.id == u.id %}
+			<h3 class="h5">You have no comments</h3>
+			<p class="text-gray-500 mb-3">
+				Go write some comments!
+			</p>
+			{% else %}
+			<h3 class="h5">You have no comments</h3>
+			<p class="text-gray-500 mb-3">
+				Their comments will show up here.
+			</p>
+			{% endif %}
+		</div>
+		{% endif %}
+		<!-- Pagination -->
+		{% if listing %}
+			<div class="flex flex-wrap items-center">
+				{% if page>1 %}
+				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
+					Prev
+				</a>
+				{% else %}
+				<span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Prev</span>
+				{% endif %}
+				{% if next_exists %}
+				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
+				{% else %}
+				<span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Next</span>
+				{% endif %}
+			</div>
 		{% endif %}
 	</div>
-
-	{% endif %}
 </div>
 {% endblock %}
