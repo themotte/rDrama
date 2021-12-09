@@ -113,9 +113,9 @@
 			{% endif %}
 		</div>
 	</div>
-	<div class="relative col-span-full flex xl:hidden flex-col mt-3">
+	<div class="relative col-span-full flex xl:hidden flex-col">
 		{% if u.id == v.id or not u.is_private %}
-		<ul class="flex items-center space-x-3">
+		<ul class="flex items-center space-x-3 mt-3 mb-0">
 			<li>
 				<div class="text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</div>
 				<small class="block font-bold text-gray-500">Followers</small>
@@ -132,13 +132,15 @@
 			{% endif %}
 		</ul>
 		{% endif %}
+		<div class="mt-3">
 		{% if u.bio_html %}
-		<div class="mb-3">
 			<p class="text-black text-break">{{u.bio_html | safe}}</p>
-		</div>
+		{% else }
+			<p class="italic text-gray-500">No bio...</p>
 		{% endif %}
+		<div>
 		{% if u.badges %}
-		<ul class="flex flex-row flex-wrap gap-2">
+		<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
 			{% for b in u.badges %}
 			<li>
 				{% if b.url %}
