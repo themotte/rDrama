@@ -19,19 +19,26 @@
 		</div>
 	</div>
 	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Badges</h2>
-	<ul class="ml-auto flex-row flex-wrap gap-2">
+	<ul class="flex-row flex-wrap gap-2">
 		{% for b in u.badges %}
 		<li>
 			{% if b.url %}
 			<a rel="nofollow noopener noreferrer" href="{{b.url}}">
-				<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+				<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
 			</a>
 			{% else %}
-			<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+			<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
 			{% endif %}
 		</li>
 		{% endfor %}
 	</ul>
+	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Awards</h2>
+	<ul class="flex-row flex-wrap gap-2">
+		{% for a in u.received_awards %}
+		<li>
+			<i class="{{a['icon']}} {{a['color']}} fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
+			<span class="text-gray-500 text-sm">x{{a['count']}}</span>
+		</li>
+		{% endfor %}
+	</ul>
 </div>
-
-{% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %}
