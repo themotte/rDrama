@@ -174,7 +174,7 @@
 	<div class="px-4 py-2 flex space-x-3 divide-x divide-gray-400 text-xs bg-gray-100 md:border-b md:border-gray-300">
 		<ul class="flex items-center space-x-3 leading-normal mb-0">
 			<li>
-				<a class="{{ 'font-bold text-red-600' if not 'saved' or 'comments' in request.path else 'text-gray-700' }}" href="/@{{u.username}}">
+				<a class="{{ 'font-bold text-red-600' if not 'saved' or not 'comments' in request.path else 'text-gray-700' }}" href="/@{{u.username}}">
 					Posts <span class="text-gray-500 font-normal">{{ u.post_count }}</span>
 				</a>
 			</li>
