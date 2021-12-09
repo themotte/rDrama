@@ -91,12 +91,12 @@
 		</ul>
 		{% endif %}
 	</div>
-	<div class="relative col-span-full flex xl:hidden flex-col space-y-4">
-		<div>
-			{% if u.bio_html %}
-				<p class="text-black text-break">{{u.bio_html | safe}}</p>
-			{% endif %}
+	<div class="relative col-span-full flex xl:hidden flex-col">
+		{% if u.bio_html %}
+		<div class="mb-3">
+			<p class="text-black text-break">{{u.bio_html | safe}}</p>
 		</div>
+		{% endif %}
 		{% if u.badges %}
 		<ul class="flex flex-row flex-wrap gap-2">
 			{% for b in u.badges %}
