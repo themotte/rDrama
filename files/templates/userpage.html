@@ -181,6 +181,7 @@
 					Comments <span class="text-gray-500 font-normal">{{ u.comment_count }}</span>
 				</a>
 			</li>
+			{% if u.id == v.id %}
 			<li>
 				<a class="{{ 'font-bold text-red-600' if '/saved/posts' in request.path else 'text-gray-700' }}" href="/@{{u.username}}/saved/posts">
 					Saved Posts
@@ -191,6 +192,7 @@
 					Saved Comments
 				</a>
 			</li>
+			{% endif %}
 		</ul>
 	</div>
 </div>
