@@ -378,17 +378,28 @@
 {% for p in listing %}
 <div style="display:none" id="popover-{{p.id}}">
 	<div class="popover-user-profile" role="tooltip">
-	  <img loading="lazy" class="w-full h-64 object-cover" src="{{p.author.banner_url}}">
-	  <div class="flex align-items-end px-3 mt-n6 mb-3">
-		<img loading="lazy" class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
-		<div class="px-3 text-truncate">
-		  <h5 class="text-truncate text-black">{{p.author.username}}</h5>
+		<img loading="lazy" class="w-100 h-64 object-cover" src="{{p.author.banner_url}}">
+		<div class="d-flex align-items-end px-3 mt-n6 mb-3">
+			<img loading="lazy" class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
+			<div class="px-3 text-truncate">
+			<h5 class="text-truncate text-black">{{p.author.username}}</h5>
+			</div>
 		</div>
-	  </div>
-	  <div class="px-3">
-		<span class="popover-bio text-black">{% if p.author.bio_html %}{{p.author.bio_html_eager | safe}}{% endif %}</span>
-	  </div>
-	  <div class="border-top flex align-items-center p-3 gap-3 smol">
+		<div class="px-3">
+			<span class="popover-bio text-black">{% if p.author.bio_html %}{{p.author.bio_html_eager | safe}}{% endif %}</span>
+		</div>
+
+		<div class="ml-3 mr-3 my-2">
+			{% for b in p.author.badges %}
+				{% if b.url %}
+					<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
+				{% else %}
+					<img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+				{% endif %}
+			{% endfor %}
+		</div>
+
+	  <div class="border-top d-flex align-items-center p-3 gap-3 smol">
 		<span>
 		  <strong class="text-black">{{p.author.post_count}}</strong>
 		  <span class="text-black">posts</span>
