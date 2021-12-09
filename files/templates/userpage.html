@@ -44,9 +44,30 @@
 		<div class="flex items-center">
 			<img class="h-14 w-14 bg-white p-[3px] border border-gray-400" src="{{ v.profile_url }}" alt="Your avatar"/>
 			<div class="pl-2">
-				<h1 class="font-bold text-2xl leading-normal mb-0" style="color: #{{u.namecolor}}">
+				<!-- <h1 class="font-bold text-2xl leading-normal mb-0" style="color: #{{u.namecolor}}">
 					<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span>
-				</h1>
+				</h1> -->
+				<div class="flex items-center space-x-2">
+					<h1 class="font-bold text-2xl leading-normal mb-0">
+						{{ u.username }}
+					</h1>
+					{% if u.verified %}
+					<i class="fas fa-badge-check fa-fw fa-sm" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.verified}}"></i>
+					{% endif %}
+					{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
+					<i class="fas fa-broom fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Admin"></i>
+					{% elif u.admin_level == 1 and v and v.admin_level > 1 %}
+					<i class="fas fa-broom fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Meme Admin"></i>
+					{% endif %}
+					{% if v and v.has_follower(u) and not v.is_nofollow %}
+					<span class="badge badge-green">Follows you</span>
+					{% endif %}
+					{% if u.customtitle %}
+					<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}
+						<img loading="lazy" height="20" src="/assets/images/quadrants/{{u.quadrant}}.webp?v=1">{% endif %}{{u.customtitle | safe}}
+					</p>
+					{% endif %}
+				</div>
 				<div class="flex items-center space-x-2 text-sm text-gray-500">
 					<div>
 						rDramanaut since
