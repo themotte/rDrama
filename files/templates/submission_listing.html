@@ -86,7 +86,7 @@
 		  
 		<div class="w-full">
 
-			<div class="overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
+			<div class="overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
 
 				<div class="relative md:hidden flex-shrink-0 {{ 'santa' if p.author.patron else 'cap' }}">
 					<img loading="lazy" src="{{ p.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
@@ -112,7 +112,7 @@
 				</span>
 				{% endif %}
 				{% if not p.award_count('ghosts') %}
-				<button class="flex flex-shrink-0 items-center font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" tabindex="0" style="color: #{{p.author.namecolor}};">
+				<button class="inline-flex flex-shrink-0 items-center font-bold" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" tabindex="0" style="color: #{{p.author.namecolor}};">
 					{% if p.author.patron and not p.distinguish_level %}
 					<span class="patron" style="background-color:#{{p.author.namecolor}};">
 						{{p.author.username}}
@@ -128,7 +128,7 @@
 					{% endif %}
 				</button>
 				{% if p.author.customtitle %}
-					<bdi style="color: #{{p.author.titlecolor}}">
+					<bdi class="flex-shrink-0" style="color: #{{p.author.titlecolor}}">
 						{% if p.author.quadrant %}
 							<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">
 						{% endif %}
