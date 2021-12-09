@@ -67,7 +67,7 @@ function toggleElement(group, id) {
 	document.getElementById(id).classList.toggle('d-none');
 }
 
-let TRANSFER_TAX=document.getElementById('tax').innerHTML
+let TRANSFER_TAX = document.getElementById('tax').innerHTML
 
 function updateTax(mobile=false) {
 	let suf = mobile ? "-mobile" : "";
@@ -84,8 +84,9 @@ function transferCoins(mobile=false) {
 
 	let amount = parseInt(document.getElementById("coins-transfer-amount").value);
 	let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+	let username = document.getElementById('username').innerHTML
 
-	post_toast_callback("/@{{u.username}}/transfer_coins",
+	post_toast_callback(`/@${username}/transfer_coins`,
 		{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
 		(xhr) => {
 		if(xhr.status == 200) {
