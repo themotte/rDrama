@@ -270,7 +270,7 @@
 
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="comment-anchor relative {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
 
-			<span class="absolute right-3 top-1" id="reddot-{{c.id}}"></span>
+			<span class="absolute right-4 top-2" id="reddot-{{c.id}}"></span>
 
 			<div class="user-info no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
 				<span class="flex-shrink-0 comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
