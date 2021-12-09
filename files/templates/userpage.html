@@ -41,7 +41,7 @@
 	{% endif %}
 	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
 	<div class="relative col-span-full flex items-end">
-		<div class="flex items-center mr-auto">
+		<div class="flex items-center">
 			<img class="h-14 w-14 bg-white p-[3px] border border-gray-400" src="{{ v.profile_url }}" alt="Your avatar"/>
 			<div class="pl-2">
 				<h1 class="font-bold text-2xl leading-normal mb-0" style="color: #{{u.namecolor}}">
@@ -65,49 +65,51 @@
 				</div>
 			</div>
 		</div>
-		{% if u.id == v.id or not u.is_private %}
-		<ul class="hidden xl:flex items-center space-x-3 mb-0">
-			<li>
-				<div class="text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</div>
-				<small class="block font-bold text-gray-500">Followers</small>
-			</li>
-			<li>
-				<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
-				<small class="block font-bold text-gray-500">Dramacoin</small>
-			</li>
-			{% if u.procoins %}
-			<li>
-				<div class="text-lg font-bold mb-0">{{ u.procoins }}</div>
-				<small class="block font-bold text-gray-500">MarseyBux</small>
-			</li>
+		<div class="ml-auto flex items-center space-x-4">
+			{% if u.id == v.id or not u.is_private %}
+			<ul class="hidden xl:flex items-center space-x-3 mb-0">
+				<li>
+					<div class="text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</div>
+					<small class="block font-bold text-gray-500">Followers</small>
+				</li>
+				<li>
+					<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
+					<small class="block font-bold text-gray-500">Dramacoin</small>
+				</li>
+				{% if u.procoins %}
+				<li>
+					<div class="text-lg font-bold mb-0">{{ u.procoins }}</div>
+					<small class="block font-bold text-gray-500">MarseyBux</small>
+				</li>
+				{% endif %}
+			</ul>
 			{% endif %}
-		</ul>
-		{% endif %}
-		{% if v and v.id != u.id %}
-		<ul class="ml-auto flex flex-wrap space-x-2 items-center mb-0">
-			<li>
-				<button class="btn btn-gray" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">
-					<i class="fas fa-paper-plane fa-sm fa-fw md:mr-1"></i>
-					<span class="hidden md:inline-block">Message</span>
-				</button >
-			</li>
-			{% if u.id != 995 %}
-			<li id="button-unsub2" class="{% if not is_following %}hidden{% endif %}">
-				<button class="btn btn-gray" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">
-					<i class="fas fa-heart-broken fa-sm fa-fw mr-1"></i>
-					Unfollow
-				</button>
-			</li>
+			{% if v and v.id != u.id %}
+			<ul class="flex flex-wrap space-x-2 items-center mb-0">
+				<li>
+					<button class="btn btn-gray" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">
+						<i class="fas fa-paper-plane fa-sm fa-fw md:mr-1"></i>
+						<span class="hidden md:inline-block">Message</span>
+					</button >
+				</li>
+				{% if u.id != 995 %}
+				<li id="button-unsub2" class="{% if not is_following %}hidden{% endif %}">
+					<button class="btn btn-gray" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">
+						<i class="fas fa-heart-broken fa-sm fa-fw mr-1"></i>
+						Unfollow
+					</button>
+				</li>
+				{% endif %}
+				<li id="button-sub2" class="{% if is_following or u.is_nofollow or u.is_blocked %}hidden{% endif %}">
+					<button class="btn btn-gray" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">
+						<i class="far fa-heart fa-sm fa-fw mr-1"></i>
+						Follow
+					</button>		
+				</li>
+				<!-- <li> dropdown here </li> -->
+			</ul>
 			{% endif %}
-			<li id="button-sub2" class="{% if is_following or u.is_nofollow or u.is_blocked %}hidden{% endif %}">
-				<button class="btn btn-gray" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">
-					<i class="far fa-heart fa-sm fa-fw mr-1"></i>
-					Follow
-				</button>		
-			</li>
-			<!-- <li> dropdown here </li> -->
-		</ul>
-		{% endif %}
+		</div>
 	</div>
 	<div class="relative col-span-full flex xl:hidden flex-col mt-3">
 		{% if u.id == v.id or not u.is_private %}
