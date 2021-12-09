@@ -33,12 +33,13 @@
 {% block subHeader %}
 <img src="{{ u.banner_url}}" class="-mb-0.5 w-full h-72 lg:h-[28rem] object-cover"/>
 <div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	{% if v %}
 	<div class="absolute -top-12 right-3">
 		<ul class="flex flex-wrap space-x-2 items-center mb-0">
 			<li>
 				{% include '/dropdowns/ProfileDropdown.html' %}
 			</li>
-			{% if v and v.id == u.id %}
+			{% if v.id == u.id %}
 			<li>
 				<a href="/settings/profile" class="btn btn-gray shadow">
 					<i class="fas fa-user-edit fa-fw fa-sm mr-2"></i>
@@ -46,7 +47,7 @@
 				</a>
 			</li>
 			{% endif %}
-			{% if v and v.id != u.id %}
+			{% if v.id != u.id %}
 				<li>
 					<button class="btn btn-gray shadow" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">
 						<i class="fas fa-paper-plane fa-sm fa-fw md:mr-1"></i>
@@ -70,6 +71,7 @@
 			{% endif %}
 		</ul>
 	</div>
+	{% endif %}
 	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
 	<div class="relative col-span-full flex items-center">
 		<div class="flex items-center">
