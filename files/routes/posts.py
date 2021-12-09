@@ -114,7 +114,7 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if post.club and not (v and (v.paid_dues or v.id == post.author_id)) or post.private and not (v and v.id == post.author_id): abort(403)
+	if not (v and v.admin_level > 1) and post.club and not (v and (v.paid_dues or v.id == post.author_id)) or post.private and not (v and v.id == post.author_id): abort(403)
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -1070,7 +1070,7 @@ def submit_post(v):
 		if "rama" in request.host or "pcm" in request.host:
 			if v.id == CARP_ID:
 				if random.random() < 0.02: body = "i love you carp"
-				else: body = "![](/assets/images/emojis/fuckoffcarp.webp)"
+				else: body = ":#marseyfuckoffcarp:"
 			elif v.id == LAWLZ_ID:
 				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 				else: body = "wow, a good lawlzpost for once!"

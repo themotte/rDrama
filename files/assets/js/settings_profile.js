@@ -71,3 +71,17 @@ function updatebgselection(){
 		bgContainer.innerHTML = str;
 	}
 	updatebgselection();
+
+document.onpaste = function(event) {
+	var focused = document.activeElement;
+	if (focused.id == 'bio-text') {
+		f=document.getElementById('file-upload');
+		files = event.clipboardData.files
+		filename = files[0].name.toLowerCase()
+		if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".png") || filename.endsWith(".webp") || filename.endsWith(".gif"))
+		{
+			f.files = files;
+			document.getElementById('filename-show').textContent = filename;
+		}
+	}
+}

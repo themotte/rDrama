@@ -9,22 +9,20 @@
 
 
 </pre>
-<h1>Formatting</h1>
+<h1>Markdown Formatting</h1>
 
-On {{'SITE_NAME' | app_config}}, you can use Markdown formatting.
+You can use Markdown formatting:
 
 <pre>
 
 </pre>
 
-<h2>Inline formatting</h2>
-
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
 			<th>Name</th>
-			<th>Type</th>
-			<th>Displays as</th>
+			<th>What you type</th>
+			<th>What gets displayed</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -54,24 +52,39 @@ On {{'SITE_NAME' | app_config}}, you can use Markdown formatting.
 			<td><a href="{{request.host_url}}">{{'SITE_NAME' | app_config}}</a></td>
 		</tr>
 		<tr>
+			<td>Images</td>
+			<td>https://i.imgur.com/Lf6dfPO.jpg</td>
+			<td><img src="https://i.imgur.com/Lf6dfPO.jpg"></td>
+		</tr>
+		<tr>
+			<td>Youtube Videos</td>
+			<td>https://youtube.com/watch?v=3Hecr51ByE4</td>
+			<td><lite-youtube videoid="3Hecr51ByE4" params="controls=0&modestbranding=1"></lite-youtube></td>
+		</tr>
+		<tr>
+			<td>Video Files</td>
+			<td>https://files.catbox.moe/v4om92.mp4</td>
+			<td><video controls preload="none" class="embedvid"><source src="https://files.catbox.moe/v4om92.mp4" type="video/mp4"></video></td>
+		</tr>
+		<tr>
 			<td>Emojis</td>
 			<td>:marseylove:</td>
-			<td><img loading="lazy" data-bs-toggle="tooltip" alt=":marseylove:" data-bs-original-title=":marseylove:" delay="0" height="30" src="/assets/images/emojis/marseylove.webp?v=1"></td>
+			<td><img loading="lazy" data-bs-toggle="tooltip" class="emj" alt=":marseylove:" data-bs-original-title=":marseylove:" delay="0" height="30" src="/assets/images/emojis/marseylove.webp?v=1"></td>
 		</tr>
 		<tr>
 			<td>Mirrored Emojis</td>
 			<td>:!marseylove:</td>
-			<td><img loading="lazy" data-bs-toggle="tooltip" class="mirrored" alt=":!marseylove:" data-bs-original-title=":!marseylove:" delay="0" height="30" src="/assets/images/emojis/marseylove.webp?v=1"></td>
+			<td><img loading="lazy" data-bs-toggle="tooltip" class="emj mirrored" alt=":!marseylove:" data-bs-original-title=":!marseylove:" delay="0" height="30" src="/assets/images/emojis/marseylove.webp?v=1"></td>
 		</tr>
 		<tr>
 			<td>Large Emojis</td>
 			<td>:#marseylove:</td>
-			<td><img loading="lazy" data-bs-toggle="tooltip" alt=":!marseylove:" data-bs-original-title=":!marseylove:" delay="0" src="/assets/images/emojis/marseylove.webp?v=1"></td>
+			<td><img loading="lazy" data-bs-toggle="tooltip" class="emj" alt=":!marseylove:" data-bs-original-title=":!marseylove:" delay="0" src="/assets/images/emojis/marseylove.webp?v=1"></td>
 		</tr>
 		<tr>
 			<td>Large Mirroed Emojis</td>
 			<td>:#!marseylove:</td>
-			<td><img loading="lazy" data-bs-toggle="tooltip" class="mirrored" alt=":!marseylove:" data-bs-original-title=":!marseylove:" delay="0" src="/assets/images/emojis/marseylove.webp?v=1"></td>
+			<td><img loading="lazy" data-bs-toggle="tooltip" class="emj mirrored" alt=":!marseylove:" data-bs-original-title=":!marseylove:" delay="0" src="/assets/images/emojis/marseylove.webp?v=1"></td>
 		</tr>
 		<tr>
 			<td>Poll Options</td>
@@ -83,22 +96,6 @@ On {{'SITE_NAME' | app_config}}, you can use Markdown formatting.
 				</div>		
 			</td>
 		</tr>
-	</tbody>
-</table>
-
-<h2>Block formatting</h2>
-
-These Markdown tags format an entire paragraph of text at a time.
-
-<table class="table table-striped mb-5">
-	<thead class="bg-primary text-white">
-		<tr>
-			<th>Name</th>
-			<th>Type</th>
-			<th>Displays as</th>
-		</tr>
-	</thead>
-	<tbody>
 		<tr>
 			<td>Blockquote</td>
 			<td>&gt; text</td>
@@ -123,35 +120,17 @@ These Markdown tags format an entire paragraph of text at a time.
 			<td>Code Block</td>
 			<td>```<br>Use three backticks above and below.<br>Or, indent the lines with four spaces.<br>```</td>
 			<td>
-		</tr>
-		<tr>
-			<td>Spoilers</td>
-			<td>&lt;s&gt; bussy > gussy &lt;/s&gt;</td>
-			<td><p class="spoiler">bussy > gussy</p></td>
-			<td>
 				<pre>
 				Use three backticks above and below.
 				Or, indent the lines with four spaces.
 				</pre>
 			</td>
 		</tr>
-	</tbody>
-</table>
-
-
-<h2>Custom Formatting</h2>
-
-We also have some custom hooks for mentioning users and subreddits. Note that these only work if the mentioned user or subreddit actually exists.
-
-<table class="table table-striped mb-5">
-	<thead class="bg-primary text-white">
 		<tr>
-			<th>Name</th>
-			<th>Type</th>
-			<th>Displays as</th>
+			<td>Spoilers</td>
+			<td>&lt;s&gt; bussy > gussy &lt;/s&gt;</td>
+			<td><p class="spoiler">bussy > gussy</p></td>
 		</tr>
-	</thead>
-	<tbody>
 		<tr>
 			<td>Username Mention</td>
 			<td>@QuadNarca</td>
@@ -170,21 +149,34 @@ We also have some custom hooks for mentioning users and subreddits. Note that th
 	</tbody>
 </table>
 
-<h2>Custom HTML</h2>
+<h1>HTML Formatting</h1>
 
-And we allow custom HTML in most places.
+And we allow custom HTML in most places:
 
-Allowed tags:
+<pre>
+
+</pre>
+
+<h4>Allowed Tags</h4>
 
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
 			<th>Name</th>
-			<th>Type</th>
-			<th>Displays as</th>
+			<th>What you type</th>
+			<th>What gets displayed</th>
 		</tr>
 	</thead>
 	<tbody>
+		<tr>
+			<td>Span</td>
+			<td>
+				My mother has &lt;span style="color:blue"&gt;blue&lt;/span&gt; eyes.
+			</td>
+			<td>
+				My mother has <span style="color:blue">blue</span> eyes.
+			</td>
+		</tr>
 		<tr>
 			<td>Bold</td>
 			<td>This will be &lt;b&gt;bold&lt;/b&gt;</td>
@@ -285,7 +277,6 @@ Text 2
 			<td>Italics</td>
 			<td>
 				&lt;i&gt;This&lt;/i&gt; is how you get italics.
-				<i>This</i> is how you get italics.
 			</td>
 			<td>
 				<i>This</i> is how you get italics.
@@ -457,19 +448,10 @@ line breaks
 				<img src="https://i.imgur.com/SwVuagI_d.webp" width="200">
 			</td>
 		</tr>
-		<tr>
-			<td>Span</td>
-			<td>
-				My mother has &lt;span style="color:blue"&gt;blue&lt;/span&gt; eyes.
-			</td>
-			<td>
-				My mother has <span style="color:blue">blue</span> eyes.
-			</td>
-		</tr>
 	</tbody>
 </table>
 
-<h2>Allowed Attributes</h2>
+<h4>Allowed Attributes</h4>
 
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
@@ -511,7 +493,7 @@ line breaks
 	</tbody>
 </table>
 
-<h2>Allowed Styles</h2>
+<h5>Allowed Styles</h5>
 
 <table class="table table-striped mb-5">
 	<thead class="bg-primary text-white">
@@ -546,6 +528,9 @@ line breaks
 			display: inline-block;
 			overflow: auto;
 		}
+	}
+	pre {
+		color: var(--white) !important;
 	}
 </style>
 
