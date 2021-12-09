@@ -87,6 +87,9 @@
 			{% if v and v.id != u.id %}
 			<ul class="flex flex-wrap space-x-2 items-center mb-0">
 				<li>
+					{% include '/dropdowns/ProfileDropdown.html' %}
+				</li>
+				<li>
 					<button class="btn btn-gray" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">
 						<i class="fas fa-paper-plane fa-sm fa-fw md:mr-1"></i>
 						<span class="hidden md:inline-block">Message</span>
@@ -105,9 +108,6 @@
 						<i class="far fa-heart fa-sm fa-fw mr-1"></i>
 						Follow
 					</button>		
-				</li>
-				<li>
-					{% include '/dropdowns/ProfileDropdown.html' %}
 				</li>
 			</ul>
 			{% endif %}
