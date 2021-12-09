@@ -1,7 +1,8 @@
-let uid = document.getElementById('uid').innerHTML
+let uid = document.getElementById('uid')
 
 if (uid)
 {
+	uid = uid.innerHTML
 	function pause() {
 		audio.pause();
 		document.getElementById("pause1").classList.toggle("d-none");
