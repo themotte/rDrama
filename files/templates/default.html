@@ -287,11 +287,15 @@
 <script src="/assets/js/lozad.js?v=54"></script>
 
 {% if v %}
-	<script src="/assets/js/default.js?v=57"></script>
+	<script src="/assets/js/default.js?v=58"></script>
 {% endif %}
 
 <link rel="stylesheet" href="/assets/css/lite-youtube.css?v=3">
 <script src="/assets/js/lite-youtube.js?v=2"></script>
+
+{% if v %}
+	<div id="formkey" class="d-none">{{v.formkey}}</div>
+{% endif %}
 
 </body>
 
