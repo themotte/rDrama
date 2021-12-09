@@ -125,7 +125,7 @@ def after_request(response):
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
-	response.headers.add("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' *.pusher.com; object-src 'none';")
+	response.headers.add("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' tls-use1.fpapi.io api.fpjs.io; object-src 'none';")
 	return response
 
 
