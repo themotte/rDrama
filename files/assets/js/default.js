@@ -1,5 +1,5 @@
 function formkey() {
-	return Document.getElementById("formkey").innerHTML;
+	return document.getElementById("formkey").innerHTML;
 }
 
 function makeBold(form) {
