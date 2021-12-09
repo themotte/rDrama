@@ -116,7 +116,7 @@
 	<div class="relative col-span-full flex xl:hidden flex-col">
 		<div class="mt-3">
 		{% if u.bio_html %}
-			<p class="text-black text-break">{{u.bio_html | safe}}</p>
+			<div class="text-black text-break">{{u.bio_html | safe}}</div>
 		{% else %}
 			<p class="italic text-gray-500 text-sm">No bio...</p>
 		{% endif %}
