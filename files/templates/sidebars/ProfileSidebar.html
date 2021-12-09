@@ -21,6 +21,7 @@
 	<div>
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Badges</h2>
 		<ul class="flex-row flex-wrap gap-2 mb-0">
+			{% if u.badges %}
 			{% for b in u.badges %}
 			<li>
 				{% if b.url %}
@@ -32,18 +33,25 @@
 				{% endif %}
 			</li>
 			{% endfor %}
+			{% else %}
+				<p class="italic text-gray-500 text-sm">No badges...</p>
+			{% endif %}
 		</ul>
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
 	<div>
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Awards</h2>
 		<ul class="flex-row flex-wrap gap-2 mb-0">
+			{% if u.received_awards %}
 			{% for a in u.received_awards %}
 			<li>
 				<i class="{{a['icon']}} {{a['color']}} fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
 				<span class="text-gray-500 text-sm">x{{a['count']}}</span>
 			</li>
 			{% endfor %}
+			{% else %}
+				<p class="italic text-gray-500 text-sm">No badges...</p>
+			{% endif %}
 		</ul>
 	</div>
 </div>
