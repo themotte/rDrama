@@ -33,10 +33,12 @@
 {% block subHeader %}
 <img src="{{ u.banner_url}}" class="-mb-0.5 w-full h-72 lg:h-[28rem] object-cover"/>
 <div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	{% if v and v.username == u.username %}
 	<a href="/settings/profile" class="absolute -top-12 right-3 btn btn-gray shadow">
 		<i class="fas fa-user-edit fa-fw fa-sm mr-2"></i>
 		Edit profile
 	</a>
+	{% endif %}
 	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
 	<div class="relative col-span-full flex items-center">
 		<div class="flex items-center">
@@ -63,8 +65,7 @@
 				</div>
 			</div>
 		</div>
-		{% if v and v.username == u.username %}
-		<ul class="ml-auto flex flex-row flex-wrap gap-2 mb-0">
+		<ul class="ml-auto hidden xl:flex flex-row flex-wrap gap-2 mb-0">
 			{% for b in u.badges %}
 			<li>
 				{% if b.url %}
@@ -77,7 +78,6 @@
 			</li>
 			{% endfor %}
 		</ul>
-		{% endif %}
 	</div>
 	<div class="relative col-span-full flex xl:hidden flex-col space-y-4">
 		<div>
