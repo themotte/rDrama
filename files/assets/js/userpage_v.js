@@ -67,38 +67,6 @@ function toggleElement(group, id) {
 	document.getElementById(id).classList.toggle('d-none');
 }
 
-let uid = document.getElementById('uid')
-
-if (uid)
-{
-	function pause() {
-		audio.pause();
-		document.getElementById("pause1").classList.toggle("d-none");
-		document.getElementById("play1").classList.toggle("d-none");
-		document.getElementById("pause2").classList.toggle("d-none");
-		document.getElementById("play2").classList.toggle("d-none");
-	}
-
-	function play() {
-		audio.play();
-		document.getElementById("pause1").classList.toggle("d-none");
-		document.getElementById("play1").classList.toggle("d-none");
-		document.getElementById("pause2").classList.toggle("d-none");
-		document.getElementById("play2").classList.toggle("d-none");
-	}
-	
-	window.addEventListener('load', (e) => {
-
-		let audio = new Audio(`/songs/${uid}`);
-		audio.loop=true;
-
-		audio.play();
-		document.getElementById('userpage').addEventListener('click', () => {
-			if (audio.paused) audio.play(); 
-		}, {once : true});
-	});
-}
-
 let TRANSFER_TAX=document.getElementById()
 
 function updateTax(mobile=false) {
