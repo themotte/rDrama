@@ -148,7 +148,7 @@
 					<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
-				{% elif (p.url and p.url.lower().endswith('.mp4')) or (p.embed_url and "youtu" in p.domain) or (p.url and "streamable.com/e/" in p.url) %}
+				{% elif (p.url and (p.url.lower().endswith('.mp4') or p.url.lower().endswith('.webm'))) or (p.embed_url and "youtu" in p.domain) or (p.url and "streamable.com/e/" in p.url) %}
 					<a href="javascript:void(0)" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none')">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
@@ -489,6 +489,12 @@
 		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-4">
 			<video controls preload="none" class="embedvid">
 				<source src="{{p.realurl(v)}}" type="video/mp4">
+			</video>
+		</div>
+	{% elif p.url and p.url.lower().endswith('.webm') %}
+		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-4">
+			<video controls preload="none" class="embedvid">
+				<source src="{{p.realurl(v)}}" type="video/webm">
 			</video>
 		</div>
 	{% elif p.embed_url and p.domain in ['youtu.be','youtube.com'] and p.embed_url.startswith('<lite-youtube') %}

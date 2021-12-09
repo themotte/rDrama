@@ -123,7 +123,7 @@
 <meta property="og:author" name="author" content="{{'@'+comment_info.author.username}}" >
 <meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}" >
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" >
-{% if p.url and p.url.lower().endswith('.mp4') %}
+{% if p.url and (p.url.lower().endswith('.mp4') or p.url.lower().endswith('.webm')) %}
 	<meta property="og:video" content="{{ p.realurl(v) }}" >
 {% endif %}
 <meta property="og:url" content="{{comment_info.permalink | full_link}}" >
@@ -152,7 +152,7 @@
 {% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author.username}}" >{% endif %}
 <meta property="og:title" content="{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}" >
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" >
-{% if p.url and p.url.lower().endswith('.mp4') %}
+{% if p.url and (p.url.lower().endswith('.mp4') or p.url.lower().endswith('.webm')) %}
 <meta property="og:video" content="{{ p.realurl(v) }}" >
 {% endif %}
 <meta property="og:url" content="{{p.permalink | full_link}}" >
@@ -402,7 +402,7 @@
 
 					<div id="post-body" class="post-body mt-3">
 						{% if p.realurl(v) %}
-							{% if not p.embed_url and not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
+							{% if not p.embed_url and not p.is_image and not (p.url and (p.url.lower().endswith('.mp4') or p.url.lower().endswith('.webm'))) %}
 								<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
 									<div class="d-flex d-md-none justify-content-between align-items-center border rounded p-2{% if p.realbody(v) %} mb-3{% endif %}">
 										<span>{{p.domain|truncate(30, True)}}</span>
@@ -442,6 +442,15 @@
 									<div class="col">
 										<video controls preload="none" class="embedvid">
 											<source src="{{p.realurl(v)}}" type="video/mp4">
+										</video>
+									</div>
+								</div>
+								<pre></pre>
+							{% elif p.url and p.url.lower().endswith('.webm') %}
+								<div class="row no-gutters">
+									<div class="col">
+										<video controls preload="none" class="embedvid">
+											<source src="{{p.realurl(v)}}" type="video/webm">
 										</video>
 									</div>
 								</div>
@@ -651,7 +660,7 @@
 
 		</div>
 
-		{% if not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
+		{% if not p.is_image and not (p.url and (p.url.lower().endswith('.mp4') or p.url.lower().endswith('.webm'))) %}
 			<div class="row no-gutters d-md-none">
 				<div class="col">
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}"></a>
