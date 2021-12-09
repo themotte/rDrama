@@ -79,7 +79,7 @@
 		</ul>
 		{% endif %}
 	</div>
-	<div class="flex xl:hidden flex-col space-y-4">
+	<div class="relative col-span-full flex xl:hidden flex-col space-y-4">
 		<div>
 			{% if u.bio_html %}
 				<p class="text-black text-break">{{u.bio_html | safe}}</p>
