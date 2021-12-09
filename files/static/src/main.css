@@ -27,6 +27,14 @@
 	.gradient-mask {
 		-webkit-mask-image: linear-gradient(180deg,#000 60%,transparent); mask-image: linear-gradient(180deg,#000 60%,transparent)
 	}
+	/* Chrome, Safari and Opera */
+	.no-scrollbar::-webkit-scrollbar {
+	  display: none;
+	}
+	.no-scrollbar {
+	  -ms-overflow-style: none;  /* IE and Edge */
+	  scrollbar-width: none;  /* Firefox */
+	}
 }
 
 /* -------------------- BASE STYLING -------------------- */
