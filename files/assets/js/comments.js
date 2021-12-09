@@ -9,9 +9,9 @@ function collapse_comment(comment_id) {
     const closed = element.classList.toggle("collapsed")
     const top = element.getBoundingClientRect().y
 
-    const text = document.getElementById('comment-text-'+comment_id)
-    const actions = document.getElementById('comment-actions-'+comment_id)
-    const repliesOf = document.getElementById('replies-of-'+comment_id)
+    const text = document.getElementById(`comment-text-${comment_id}`)
+    const actions = document.getElementById(`comment-${comment_id}-actions`)
+    const repliesOf = document.getElementById(`replies-of-${comment_id}`)
 
     const arr = [text, actions, repliesOf];
 

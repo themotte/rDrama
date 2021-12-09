@@ -37,7 +37,7 @@
 {% endif %}
 
 <script defer src="/assets/js/popover.js?v=16"></script>
-<script defer src="/assets/js/comments.js?v=6"></script>
+<script defer src="/assets/js/comments.js?v=7"></script>
 
 {% include "expanded_image_modal.html" %}
 
@@ -179,7 +179,7 @@
 				{% endfor %}
 			</div>
 		{% elif "notifications" in request.path %}
-			<div id="replies-of-{{c.id}}" class="hidden d-md-block">
+			<div id="replies-of-{{c.id}}" class="hidden md:block">
 				{% set standalone=False %}
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
