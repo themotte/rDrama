@@ -2575,11 +2575,7 @@ var PusherPushNotifications = (function (exports) {
       return Uint8Array.from(toConsumableArray(rawData).map(function (_char) {
         return _char.charCodeAt(0);
       }));
-    }
-    /**
-     * Modified from https://stackoverflow.com/questions/4565112
-     */
-  
+    }  
   
     function isSupportedBrowser() {
       var winNav = window.navigator;
@@ -2606,11 +2602,12 @@ var PusherPushNotifications = (function (exports) {
   
   }({}));
 
-const beamsClient = new PusherPushNotifications.Client({
-  instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6',
-});		
+
+const beamsClient = new PusherPushNotifications.Client({instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6'});
+const strid = document.getElementById('strid').innerHTML;
+
 beamsClient.start()
 .then((beamsClient) => beamsClient.getDeviceId())
-.then(() => beamsClient.addDeviceInterest('{{v.strid}}'))
+.then(() => beamsClient.addDeviceInterest(`${strid}`))
 .then(() => beamsClient.getDeviceInterests())
 .catch(console.error);
