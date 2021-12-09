@@ -2,17 +2,17 @@
 	{% if u.id == v.id or not u.is_private %}
 	<ul class="flex items-center justify-around">
 		<li>
-			<p class="text-lg font-bold">{{ u.stored_subscriber_count }}</p>
-			<small class="block font-bold text-gray-500">Followers</small>
+			<h2 class="text-lg font-bold">{{ u.stored_subscriber_count }}</h2>
+			<small class="mt-1 block font-bold text-gray-500">Followers</small>
 		</li>
 		<li>
-			<p class="text-lg font-bold">{{ u.coins }}</p>
-			<small class="block font-bold text-gray-500">Dramacoin</small>
+			<h2 class="text-lg font-bold">{{ u.coins }}</h2>
+			<small class="mt-1 block font-bold text-gray-500">Dramacoin</small>
 		</li>
 		{% if u.procoins %}
 		<li>
-			<p class="text-lg font-bold">{{ u.procoins }}</p>
-			<small class="block font-bold text-gray-500">MarseyBux</small>
+			<h2 class="text-lg font-bold">{{ u.procoins }}</h2>
+			<small class="mt-1 block font-bold text-gray-500">MarseyBux</small>
 		</li>
 		{% endif %}
 	</ul>
