@@ -4,20 +4,22 @@ function timestamp(str, ti) {
 };
 
 function collapse_comment(comment_id) {
-    const comment = `comment-${comment_id}`;
-    const closed = comment.classList.toggle("collapsed");
-    const top = comment.getBoundingClientRect().y;
-
+    const comment = document.getElementById(`comment-${comment_id}`)
     const text = document.getElementById(`comment-text-${comment_id}`)
     const actions = document.getElementById(`comment-${comment_id}-actions`)
     const repliesOf = document.getElementById(`replies-of-${comment_id}`)
+
+
+    const isClosed = comment.classList.contains("collapsed");
+    
+    const top = comment.getBoundingClientRect().y;
 
     const arr = [text, actions, repliesOf];
 
     arr.map(x => x.classList.toggle('hidden')); // hide comment elements
     comment.classList.toggle('items-center opacity-50'); // apply flex alignment and opacity to comment parent wrapping div
 
-    if (closed && top < 0) {
+    if (isClosed && top < 0) {
         comment.scrollIntoView()
         window.scrollBy(0, - 100)
     }
