@@ -67,7 +67,7 @@ function toggleElement(group, id) {
 	document.getElementById(id).classList.toggle('d-none');
 }
 
-let TRANSFER_TAX=document.getElementById('tax')
+let TRANSFER_TAX=document.getElementById('tax').innerHTML
 
 function updateTax(mobile=false) {
 	let suf = mobile ? "-mobile" : "";
