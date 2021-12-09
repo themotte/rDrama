@@ -270,8 +270,8 @@
 
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="comment-anchor relative {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
 
-			<div class="user-info">
-				<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
+			<div class="user-info no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2">
+				<span class="flex-shrink-0 comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
 				<span id="reddot-{{c.id}}"></span>
 
 				{% if c.awards %}
@@ -283,7 +283,7 @@
 				{% if c.post and c.post.award_count("ghosts") %}
 					<span>👻</span>
 				{% else %}
-					<div class="flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
+					<div class="flex-shrink-0 flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
 
 					<div class="relative md:hidden {{ 'santa' if c.author.patron else 'cap' }}">
 						<img loading="lazy" src="{{ c.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
@@ -368,7 +368,7 @@
 					</div>
 				{% endif %}
 			</div>
-			
+
 			{% if c.active_flags %}
 			<div id="flaggers-{{c.id}}" class="flaggers hidden">
 				<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
