@@ -1,4 +1,4 @@
-let uid = document.getElementById('uid')
+let uid = document.getElementById('uid').innerHTML
 
 if (uid)
 {
