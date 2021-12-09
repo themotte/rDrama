@@ -29,7 +29,7 @@
     }
     
     
-    var usernames = document.querySelectorAll("button.user-name");
+    var usernames = document.querySelectorAll("a.user-name");
     usernames.forEach(eventasdf);
     
     document.addEventListener("click", function(e){dfgh(e)});
