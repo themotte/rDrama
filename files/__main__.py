@@ -128,5 +128,4 @@ def after_request(response):
 	response.headers.add("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self' tls-use1.fpapi.io api.fpjs.io 02ddcc80-b8db-42be-9022-44c546b4dce6.pushnotifications.pusher.com; object-src 'none';")
 	return response
 
-
 from files.routes import *

@@ -39,6 +39,9 @@ allowed_tags = tags = ['b',
 						'a',
 						'img',
 						'span',
+						'ruby',
+						'rp',
+						'rt',
 						]
 
 no_images = ['b',
@@ -71,6 +74,9 @@ no_images = ['b',
 						'marquee',
 						'a',
 						'span',
+						'ruby',
+						'rp',
+						'rt',
 						]
 
 def sanitize_marquee(tag, name, value):

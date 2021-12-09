@@ -417,9 +417,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="/assets/js/twitterlight.js?v=4"></script>
+									<script src="/assets/js/twitterlight.js?v=5"></script>
 								{% else %}
-									<script src="/assets/js/twitter.js?v=4"></script>
+									<script src="/assets/js/twitter.js?v=5"></script>
 								{% endif %}
 							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
 								{{p.embed_url | safe}}
@@ -460,7 +460,7 @@
 
 							{% for c in p.options %}
 								<div class="custom-control">								
-									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
+									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="{% if v %}poll_vote('{{c.id}}'){% else %}poll_vote_no_v(){% endif %}">
 									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}}<span class="presult {% if not p.total_poll_voted(v) %}d-none{% endif %}"> - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></span></label>
 								</div>
 							{% endfor %}
@@ -873,7 +873,7 @@
 			{% include "ban_modal.html" %}
 		{% endif %}
 	{% endif %}
-	<script src="/assets/js/comments.js?v=8"></script>
+	<script src="/assets/js/comments.js?v=9"></script>
 	{% include "expanded_image_modal.html" %}
 {% endif %}
 
