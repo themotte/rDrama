@@ -84,7 +84,7 @@ def sanitize_marquee(tag, name, value):
 	return False
 
 allowed_attributes = {
-		'*': ['href', 'style', 'src', 'class', 'title', 'rel', 'data-bs-original-name'],
+		'*': ['href', 'style', 'src', 'class', 'title'],
 		'marquee': sanitize_marquee}
 
 allowed_protocols = ['http', 'https']
