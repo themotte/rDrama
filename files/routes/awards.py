@@ -183,6 +183,15 @@ def shop(v):
 			"owned": 0,
 			"price": 10000
 		},
+		"fish": {
+			"kind": "fish",
+			"title": "Fish",
+			"description": "This user cannot be unfollowed",
+			"icon": "fas fa-fish",
+			"color": "text-lightblue",
+			"owned": 0,
+			"price": 20000
+		},
 		"pause": {
 			"kind": "pause",
 			"title": "Pause",
@@ -356,6 +365,14 @@ def buy(v, award):
 			"icon": "far fa-laugh-squint",
 			"color": "text-lightgreen",
 			"price": 10000
+		},
+		"fish": {
+			"kind": "fish",
+			"title": "Fish",
+			"description": "This user cannot be unfollowed",
+			"icon": "fas fa-fish",
+			"color": "text-lightblue",
+			"price": 20000
 		},
 		"pause": {
 			"kind": "pause",
@@ -593,6 +610,9 @@ def award_post(pid, v):
 			new_badge = Badge(badge_id=87, user_id=author.id)
 			g.db.add(new_badge)
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
+	elif kind == "fish":
+		author.fish = True
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 
 	if post.author.received_award_count: post.author.received_award_count += 1
 	else: post.author.received_award_count = 1
@@ -749,6 +769,9 @@ def award_comment(cid, v):
 			new_badge = Badge(badge_id=87, user_id=author.id)
 			g.db.add(new_badge)
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
+	elif kind == "fish":
+		author.fish = True
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 
 	if c.author.received_award_count: c.author.received_award_count += 1
 	else: c.author.received_award_count = 1

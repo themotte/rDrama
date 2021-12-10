@@ -5694,3 +5694,7 @@ blockquote p {
 .emj {
   max-width: 100% !important;
 }
+
+.text-lightblue {
+  color: lightblue;
+}

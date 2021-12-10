@@ -765,7 +765,7 @@ def unfollow_user(username, v):
 
 	target = get_user(username)
 
-	if target.id == CARP_ID: abort(403)
+	if target.fish: return {"error": "You can't unfollow this user!"}
 
 	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
 

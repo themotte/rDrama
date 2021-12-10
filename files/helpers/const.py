@@ -626,6 +626,14 @@ AWARDS = {
 		"color": "text-lightgreen",
 		"price": 10000
 	},
+	"fish": {
+		"kind": "fish",
+		"title": "Fish",
+		"description": "This user cannot be unfollowed",
+		"icon": "fas fa-fish",
+		"color": "text-lightblue",
+		"price": 20000
+	},
 	"pause": {
 		"kind": "pause",
 		"title": "Pause",
@@ -773,6 +781,14 @@ AWARDS2 = {
 		"icon": "far fa-laugh-squint",
 		"color": "text-lightgreen",
 		"price": 10000
+	},
+	"fish": {
+		"kind": "fish",
+		"title": "Fish",
+		"description": "This user cannot be unfollowed",
+		"icon": "fas fa-fish",
+		"color": "text-lightblue",
+		"price": 20000
 	},
 	"pause": {
 		"kind": "pause",
