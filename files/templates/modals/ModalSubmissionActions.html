@@ -120,12 +120,12 @@
 					{% if v==p.author %}
 					<li id="distinguish2-{{p.id}}" class="{% if p.distinguish_level %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')">
-							<i class="fas fa-crown fa-fw mr-4"></i>Distinguish
+							<i class="fas fa-id-badge fa-fw mr-4"></i>Distinguish
 						</button>
 					</li>
 					<li id="undistinguish2-{{p.id}}" class="{% if not p.distinguish_level %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')">
-							<i class="fas fa-crown fa-fw mr-4"></i>Undistinguish
+							<i class="fas fa-id-badge fa-fw mr-4"></i>Undistinguish
 						</button>
 					</li>
 					{% endif %}
@@ -148,10 +148,9 @@
 						</a>
 					</li>
 					{% endif %}
-
 					{% endif %}
 
-					{% if v and v.id != p.author_id %}
+					{% if v and v.id != p.author_id and not p.award_count("ghosts") %}
 					<li id="unblock2-{{p.id}}" class="{% if not p.is_blocking %} hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block2-{{p.id}}','unblock2-{{p.id}}')">
 							<i class="fas fa-user-check fa-fw mr-4"></i>Unblock user
