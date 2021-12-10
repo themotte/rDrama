@@ -192,7 +192,7 @@ def api_comment(v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.webp'
+		name = f'/images/{time.time()}'.replace('.','') + '.webp'
 		file.save(name)
 		url = request.host_url[:-1] + process_image(name)
 		
@@ -595,11 +595,6 @@ def api_comment(v):
 	
 	g.db.commit()
 
-	if v.agendaposter and random.randint(1, 10) < 4:
-		if request.host == 'rdrama.net':
-			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
-		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
-
 	if request.headers.get("Authorization"): return c.json
 	else: return render_template("comments.html", v=v, comments=[c])
 
@@ -726,7 +721,7 @@ def edit_comment(cid, v):
 			file=request.files["file"]
 			if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-			name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.webp'
+			name = f'/images/{time.time()}'.replace('.','') + '.webp'
 			file.save(name)
 			url = request.host_url[:-1] + process_image(name)
 

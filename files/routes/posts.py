@@ -93,10 +93,6 @@ def post_id(pid, anything=None, v=None):
 
 	if v and request.path.startswith('/logged_out'): v = None
 
-	if v and v.agendaposter and random.randint(1, 20) == 1:
-		if request.host == 'rdrama.net':
-			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
-		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
 
 	try: pid = int(pid)
 	except Exception as e: pass
@@ -381,7 +377,7 @@ def edit_post(pid, v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.webp'
+		name = f'/images/{time.time()}'.replace('.','') + '.webp'
 		file.save(name)
 		url = request.host_url[:-1] + process_image(name)
 		
@@ -650,7 +646,7 @@ def thumbnail_thread(pid):
 		db.close()
 		return
 
-	name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.webp'
+	name = f'/images/{time.time()}'.replace('.','') + '.webp'
 
 	with open(name, "wb") as file:
 		for chunk in image_req.iter_content(1024):
@@ -868,7 +864,7 @@ def submit_post(v):
 		file=request.files["file2"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.webp'
+		name = f'/images/{time.time()}'.replace('.','') + '.webp'
 		file.save(name)
 		url = request.host_url[:-1] + process_image(name)
 		
@@ -956,7 +952,7 @@ def submit_post(v):
 				), 403
 
 		if file.content_type.startswith('image/'):
-			name = f'/images/{int(time.time())}{secrets.token_urlsafe(2)}.webp'
+			name = f'/images/{time.time()}'.replace('.','') + '.webp'
 			file.save(name)
 			new_post.url = request.host_url[:-1] + process_image(name)
 			
@@ -1140,10 +1136,6 @@ def submit_post(v):
 
 	g.db.commit()
 
-	if v.agendaposter and random.randint(1, 10) < 4:
-		if request.host == 'rdrama.net':
-			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
-		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
 
 	if request.headers.get("Authorization"): return new_post.json
 	else: return redirect(new_post.permalink)

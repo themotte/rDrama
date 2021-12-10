@@ -27,6 +27,11 @@
 							</label>
 						</div>
 						{% endfor %}
+						<a class="card disabled d-md-none" style="border:none">
+							<i class="fas fa-volume-mute" style="opacity:0"></i>
+							<div class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">&nbsp;</div>
+							<div class="text-muted">&nbsp;</div>
+						</a>
 					</div>
 					<label id="notelabel" for="note" class="pt-4 label">
 						Note
@@ -80,7 +85,7 @@
 
 	@media (min-width: 767.98px) {
 		.award-columns {
-			column-count: 9 !important;
+			column-count: 7 !important;
 		}
 	}
 </style>
