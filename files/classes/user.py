@@ -433,7 +433,7 @@ class User(Base):
 				'id': self.id,
 				'is_private': self.is_private,
 				'profile_url': self.profile_url,
-				'bannerurl': self.bannerurl,
+				'bannerurl': self.banner_url,
 				'bio': self.bio,
 				'bio_html': self.bio_html_eager,
 				'flair': self.customtitle
