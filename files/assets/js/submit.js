@@ -74,43 +74,6 @@ function checkForRequired() {
 	}
 }
 
-
-function markdown() {
-	var input = document.getElementById('post-text').value;
-
-	var emojis = Array.from(input.matchAll(/:(.{1,30}?):/gi))
-	if(emojis != null){
-		for(i = 0; i < emojis.length; i++){
-			var emoji = emojis[i][0]
-			var remoji = emoji.replace(/:/g,'');
-			if (remoji.startsWith("!#") || remoji.startsWith("#!"))
-			{
-				input = input.replace(emoji, "<img class='emj mirrored' src='/assets/images/emojis/" + remoji.substring(2) + ".webp'>")
-			} else if (remoji.startsWith("#"))
-			{
-				input = input.replace(emoji, "<img class='emj' src='/assets/images/emojis/" + remoji.substring(1) + ".webp'>")
-			} else if (remoji.startsWith("!"))
-			{
-				input = input.replace(emoji, "<img height=30 class='emj mirrored' src='/assets/images/emojis/" + remoji.substring(1) + ".webp'>")
-			} else {
-				input = input.replace(emoji, "<img height=30 class='emj' src='/assets/images/emojis/" + remoji + ".webp'>")
-			}
-		}
-	}
-
-	var options = Array.from(input.matchAll(/\s*\$\$([^\$\n]+)\$\$\s*/gi))
-	if(options != null){
-		for(i = 0; i < options.length; i++){
-			var option = options[i][0];
-			var option2 = option.replace(/\$\$/g, '').replace(/\n/g, '')
-			input = input.replace(option, '');
-			input += '<div class="custom-control"><input type="checkbox" class="custom-control-input" id="' + option2 + '"><label class="custom-control-label" for="' + option2 + '">' + option2 + ' - <a>0 votes</a></label></div>';
-		}
-	}
-
-	document.getElementById('preview').innerHTML = marked(input)
-}
-
 document.onpaste = function(event) {
 	f=document.getElementById('file-upload');
 	files = event.clipboardData.files
