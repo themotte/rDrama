@@ -5,19 +5,9 @@ function timestamp(str, ti) {
 
 function collapse_comment(comment_id) {
     const comment = document.getElementById(`comment-${comment_id}`)
-    const text = document.getElementById(`comment-text-${comment_id}`)
-    const actions = document.getElementById(`comment-${comment_id}-actions`)
-    const repliesOf = document.getElementById(`replies-of-${comment_id}`)
-
-    const toggler = document.getElementById(`comment-collapse-lg-${comment_id}`)
-
     const isClosed = comment.classList.contains("collapsed");
-
     const top = comment.getBoundingClientRect().y;
 
-    const arr = [text, actions, repliesOf, toggler];
-
-    arr.map(x => x.classList.toggle('hidden')); // hide comment elements
     ['items-center', 'opacity-50', 'collapsed'].map(y=> comment.classList.toggle(y)); // apply flex alignment and opacity to comment parent wrapping div
 
     if (isClosed && top < 0) {
