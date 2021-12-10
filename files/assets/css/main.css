@@ -5699,6 +5699,6 @@ blockquote p {
   color: lightblue;
 }
 
-p {
+p, .post-title {
   text-transform: uppercase !important;
 }
