@@ -18,8 +18,8 @@ function collapse_comment(comment_id) {
     const icon = document.getElementsByClassName(`comment-toggle-icon-${comment_id}`);
     for (let i = 0; i < icon.length; i++) {
         //icon[i].innerText = isClosed ? '[+]' : '[-]'; // text fallback if we don't want to use icons
-        trigger[i].classList.toggle('fa-minus-circle');
-        trigger[i].classList.toggle('fa-plus-circle');
+        icon[i].classList.toggle('fa-minus-circle');
+        icon[i].classList.toggle('fa-plus-circle');
     }
 
     if (isClosed && top < 0) {
