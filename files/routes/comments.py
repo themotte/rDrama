@@ -192,7 +192,7 @@ def api_comment(v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		name = f'/images/{str(time.time()).replace('.','')}.webp'
+		name = f'/images/{time.time()}'.replace('.','') + '.webp'
 		file.save(name)
 		url = request.host_url[:-1] + process_image(name)
 		
@@ -721,7 +721,7 @@ def edit_comment(cid, v):
 			file=request.files["file"]
 			if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-			name = f'/images/{str(time.time()).replace('.','')}.webp'
+			name = f'/images/{time.time()}'.replace('.','') + '.webp'
 			file.save(name)
 			url = request.host_url[:-1] + process_image(name)
 
