@@ -164,7 +164,7 @@
 						<div class="user-info">
 							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
 							<button class="p-2 md:hidden" onclick="collapse_comment('{{c.id}}')">
-								<i class="fas fa-minus-circle comment-toggle-icon-{{c.id}}"></i>
+								<i class="fas fa-minus-circle fa-fw comment-toggle-icon-{{c.id}}"></i>
 							</button>
 							{% if standalone and c.over_18 %}<span class="badge badge-red">+18</span>{% endif %}
 							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
@@ -279,7 +279,7 @@
 
 			<div class="user-info no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 text-sm text-gray-500 leading-normal">
 				<button class="p-2 md:hidden" onclick="collapse_comment('{{c.id}}')">
-					<i class="fas fa-minus-circle comment-toggle-icon-{{c.id}}"></i>
+					<i class="fas fa-minus-circle fa-fw comment-toggle-icon-{{c.id}}"></i>
 				</button>
 				{% if c.awards %}
 				<ul class="flex space-x-2 mb-0">
