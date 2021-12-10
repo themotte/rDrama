@@ -56,11 +56,11 @@ function post_toast3(url, button1, button2) {
 	document.getElementById(button2).classList.toggle("d-md-inline-block");
 }
 
-report_commentModal = function(id, author) {
+function report_commentModal(id, author) {
 
-document.getElementById("comment-author").textContent = author;
+	document.getElementById("comment-author").textContent = author;
 
-document.getElementById("reportCommentButton").onclick = function() {
+	document.getElementById("reportCommentButton").onclick = function() {
 
 	this.innerHTML='Reporting comment';
 	this.disabled = true;
@@ -285,30 +285,6 @@ function markdown(first, second) {
 	}
 	
 	document.getElementById(second).innerHTML = marked(input)
-}
-
-function charLimit(form, text) {
-
-	var input = document.getElementById(form);
-
-	var text = document.getElementById(text);
-
-	var length = input.value.length;
-
-	var maxLength = input.getAttribute("maxlength");
-
-	if (length >= maxLength) {
-		text.style.color = "#E53E3E";
-	}
-	else if (length >= maxLength * .72){
-		text.style.color = "#FFC107";
-	}
-	else {
-		text.style.color = "#A0AEC0";
-	}
-
-	text.innerText = length + ' / ' + maxLength;
-
 }
 
 function poll_vote(cid, parentid) {

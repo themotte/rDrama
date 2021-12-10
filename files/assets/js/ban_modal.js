@@ -1,4 +1,4 @@
-const banModal = function(link, id, name) {
+function banModal(link, id, name) {
     document.getElementById("banModalTitle").innerHTML = `Ban @${name}`;
     document.getElementById("ban-modal-link").value = link;
     document.getElementById("banUserButton").innerHTML = `Ban @${name}`;

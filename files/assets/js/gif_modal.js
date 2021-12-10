@@ -11,11 +11,7 @@ async function getGif(searchTerm) {
 
 	var noGIFs = document.getElementById('no-gifs-found');
 
-	var cats = document.getElementById('GIFcats');
-
 	var container = document.getElementById('GIFs');
-
-	var modalBody = document.getElementById('gif-modal-body')
 
 	var backBtn = document.getElementById('gifs-back-btn');
 

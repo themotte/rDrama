@@ -8,6 +8,10 @@
 	{% set cc='COUNTRY CLUB' %}
 {% endif %}
 
+{% if not v or v.highlightcomments %}
+	<script src="/assets/js/new_comments_count.js?v=53"></script>
+{% endif %}
+
 {% for p in listing %}
 
 <div style="display:none" id="popover-{{p.id}}">
@@ -57,7 +61,7 @@
 
 <script>
 	(() => {
-		{% if (not v or v.highlightcomments) %}
+		{% if not v or v.highlightcomments %}
 			showNewCommentCounts('{{p.id}}', {{p.comment_count}})
 		{% endif %}
 	})()
@@ -653,10 +657,7 @@
 	}
 </style>
 
-
-{% if (not v or v.highlightcomments) %}
-	<script src="/assets/js/new_comments_count.js?v=53"></script>
-{% endif %}
 <script src="/assets/js/clipboard.js?v=3"></script>
-<script src="/assets/js/popover.js?v=10"></script>
-<script src="/assets/js/submission_listing.js?v=8"></script>
+<script src="/assets/js/popover.js?v=12"></script>
+<script src="/assets/js/timestamps.js?v=13"></script>
+<script src="/assets/js/submission_listing.js?v=10"></script>
