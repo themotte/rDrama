@@ -1,7 +1,3 @@
-function formkey() {
-	return document.getElementById("formkey").innerHTML;
-}
-
 function autoExpand (field) {
 	xpos=window.scrollX;
 	ypos=window.scrollY;

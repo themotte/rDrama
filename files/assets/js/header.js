@@ -1,3 +1,7 @@
+function formkey() {
+	return document.getElementById("formkey").innerHTML;
+}
+	
 document.addEventListener("DOMContentLoaded", function(){
 	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
 	tooltipTriggerList.map(function(element){
