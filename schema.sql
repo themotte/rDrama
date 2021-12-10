@@ -766,7 +766,8 @@ CREATE TABLE public.users (
     longpost integer,
     unblockable boolean,
     teddit boolean,
-    bird integer
+    bird integer,
+    fish boolean
 );
 
 
