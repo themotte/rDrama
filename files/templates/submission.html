@@ -353,7 +353,7 @@
 						{% if v and v.admin_level > 1 and p.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>{% endif %}
 
 						{% if p.stickied and p.stickied.startswith('t:') %}
-							<i id='pinned-{{p.id}}' onmouseover="pinned_tooltip('pinned-{{p.id}}')" class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-timestamp={{p.stickied[2:]}}*1000></i>
+							<i id='pinned-{{p.id}}' onmouseover="pinned_timestamp('pinned-{{p.id}}')" class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-timestamp={{p.stickied[2:]}}*1000></i>
 						{% elif p.stickied %}
 							<i id='pinned-{{p.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned by @{{p.stickied}}"></i>
 						{% endif %}
@@ -805,7 +805,7 @@
  </div>
  
 {% if offset %}
-	<script src="/assets/js/viewmore.js?v=2"></script>
+	<script src="/assets/js/viewmore.js?v=3"></script>
 {% endif %}
 
 {% elif not p.replies and p.deleted_utc == 0 %}
@@ -855,7 +855,7 @@
 			{% include "ban_modal.html" %}
 		{% endif %}
 	{% endif %}
-	<script src="/assets/js/comments.js?v=10"></script>
+	<script src="/assets/js/comments.js?v=11"></script>
 	{% include "expanded_image_modal.html" %}
 {% endif %}
 

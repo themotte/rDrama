@@ -10,14 +10,15 @@ function expandText(id) {
 };
 
 const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-
 const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
     const popoverId = popoverTriggerEl.getAttribute('data-content-id');
-    const contentEl = document.getElementById(popoverId).innerHTML;
-    return new bootstrap.Popover(popoverTriggerEl, {
-        content: contentEl,
-        html: true,
-    });
+    const contentEl = document.getElementById(popoverId);
+    if (contentEl) {
+        return new bootstrap.Popover(popoverTriggerEl, {
+            content: contentEl.innerHTML,
+            html: true,
+        });
+    }
 })
 
 function pinned_timestamp(id) {
