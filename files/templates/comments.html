@@ -373,7 +373,7 @@
 			</div>
 
 			{% if c.active_flags %}
-			<div id="flaggers-{{c.id}}" class="flaggers hidden">
+			<div id="flaggers-{{c.id}}" class="flaggers hidden hidden-on-collapse">
 				<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
 				<pre></pre>
 				<ul style="padding-left:20px; margin-bottom: 0;">
@@ -435,14 +435,14 @@
 					{% include "/comments/CommentEditForm.html" %}
 				{% endif %}
 				<!-- Comment actions -->
-				<div id="comment-{{c.id}}-actions" class="py-3 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+				<div id="comment-{{c.id}}-actions" class="hidden-on-collapse py-3 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 					{% include "/comments/CommentActions.html" %}
 				</div>
 			{% endif %}
 
 		</div>
 
-		<div id="reply-to-{{c.id}}" class="hidden">
+		<div id="reply-to-{{c.id}}" class="hidden hidden-on-collapse">
 			{% include "/comments/CommentReplyForm.html" %}
 		</div>
 
