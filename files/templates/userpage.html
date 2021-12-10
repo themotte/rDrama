@@ -318,8 +318,9 @@
 	const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
 
 	function updateTax() {
+
+		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
 		// let suf = mobile ? "-mobile" : "";
-		let amount = parseInt((document.getElementById("coins-transfer-amount").value);
 
 		if(isNaN(amount) || amount < 0) {
 			amount = 0;
