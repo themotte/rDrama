@@ -28,7 +28,7 @@
 						</button>
 					</li>
 					<li id="unsave2-{{c.id}}" class="{% if c.id not in v.saved_comment_idlist() %}hidden{% endif %}">
-						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-bs-dismiss="modal">
+						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')">
 							<i class="fas fa-bookmark fa-fw mr-4"></i>Unsave
 						</button>
 					</li>
