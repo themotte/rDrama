@@ -3083,12 +3083,12 @@ th {
   color: var(--muted);
 }
 
-.comment {
+/*.comment {
   display: flex;
   position: relative;
   margin-top: 2rem;
   padding-left: 12px;
-}
+}*/
 
 #notifications .comment, #userpage .comment {
   margin-top: 0.5rem;
@@ -4008,12 +4008,12 @@ img.emoji {
   color: var(--gray);
 }
 
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
   .comment {
    border-left: 0 !important;
    padding-left: 0 !important;
  }
-}
+}*/
 .comment .comment-collapse-desktop {
   padding-right: 20px;
   cursor: pointer;
