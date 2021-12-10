@@ -67,26 +67,26 @@
 			</li>
 			{% endif %}
 			{% if v.id != u.id %}
-				<li>
-					<button class="btn btn-gray shadow" data-bs-toggle="modal" data-bs-target="#directMessageModal">
-						<i class="fas fa-paper-plane fa-sm fa-fw md:mr-1"></i>
-						<span class="hidden md:inline-block">Message</span>
-					</button >
-				</li>
-				{% if u.id != 995 %}
-				<li id="button-unsub2" class="{% if not is_following %}hidden{% endif %}">
-					<button class="btn btn-gray shadow" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">
-						<i class="fas fa-heart-broken fa-sm fa-fw mr-1"></i>
-						Unfollow
-					</button>
-				</li>
-				{% endif %}
-				<li id="button-sub2" class="{% if is_following or u.is_nofollow or u.is_blocked %}hidden{% endif %}">
-					<button class="btn btn-gray shadow" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">
-						<i class="far fa-heart fa-sm fa-fw mr-1"></i>
-						Follow
-					</button>		
-				</li>
+			<li>
+				<button class="btn btn-gray shadow" data-bs-toggle="modal" data-bs-target="#directMessageModal">
+					<i class="fas fa-paper-plane fa-sm fa-fw md:mr-1"></i>
+					<span class="hidden md:inline-block">Message</span>
+				</button >
+			</li>
+			{% if u.id != 995 %}
+			<li id="button-unsub2" class="{% if not is_following %}hidden{% endif %}">
+				<button class="btn btn-gray shadow" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">
+					<i class="fas fa-heart-broken fa-sm fa-fw mr-1"></i>
+					Unfollow
+				</button>
+			</li>
+			{% endif %}
+			<li id="button-sub2" class="{% if is_following or u.is_nofollow or u.is_blocked %}hidden{% endif %}">
+				<button class="btn btn-gray shadow" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">
+					<i class="far fa-heart fa-sm fa-fw mr-1"></i>
+					Follow
+				</button>		
+			</li>
 			{% endif %}
 		</ul>
 	</div>
@@ -161,11 +161,11 @@
 	</div>
 	<div class="relative col-span-full flex xl:hidden flex-col">
 		<div class="mt-3">
-		{% if u.bio_html %}
+			{% if u.bio_html %}
 			<div class="text-black text-break">{{u.bio_html | safe}}</div>
-		{% else %}
+			{% else %}
 			<p class="italic text-gray-500 text-sm">No bio...</p>
-		{% endif %}
+			{% endif %}
 		</div>
 		{% if u.id == v.id or not u.is_private %}
 		<ul class="flex items-center space-x-3 mt-3 mb-0">
@@ -202,13 +202,13 @@
 		{% endif %}
 		<div>
 			{% if u.friends_html %}
-				<p class="label">Friends</p>
-				{{u.friends_html | safe}}
+			<p class="label">Friends</p>
+			{{u.friends_html | safe}}
 			{% endif %}
 
 			{% if u.enemies_html %}
-				<p class="label">Enemies</p>
-				{{u.enemies_html | safe}}
+			<p class="label">Enemies</p>
+			{{u.enemies_html | safe}}
 			{% endif %}
 		</div>
 	</div>
@@ -248,6 +248,21 @@
 
 {% block content %}
 <div class="col-span-full xl:col-span-9">
+
+	{% if u.is_suspended %}
+	<!-- Non-dismissable Alerts -->
+	<div class="p-2.5 md:p-0">
+		<!-- Banned -->
+		<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
+			<i class="fas fa-gavel fa-fw mr-1"></i>
+			<span class="font-medium">
+				{{ u.username }} was banned by
+				<a href="{{u.banned_by.url}}" class="text-white hover:underline">@{{u.banned_by.username}}</a>
+			</span>
+		</div>
+	</div>
+	{% endif %}	
+
 	<div class="sm:py-4 my-2.5 sm:my-0">
 		{% if not "saved" in request.full_path %}
 		<div class="flex justify-end md:justify-start mb-3 md:m-0 px-2.5 md:px-0">
@@ -256,31 +271,31 @@
 		<hr class="hidden md:block my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
 		{% endif %}
 		<ul>
-		{% include "submission_listing.html" %}
+			{% include "submission_listing.html" %}
 		</ul>
 		<!-- Pagination -->
 		{% if listing %}
-			<div class="flex flex-wrap items-center">
-				{% if page>1 %}
-				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
-					Prev
-				</a>
-				{% else %}
-				<span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Prev</span>
-				{% endif %}
-				{% if next_exists %}
-				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
-				{% else %}
-				<span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Next</span>
-				{% endif %}
-			</div>
+		<div class="flex flex-wrap items-center">
+			{% if page>1 %}
+			<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
+				Prev
+			</a>
+			{% else %}
+			<span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Prev</span>
+			{% endif %}
+			{% if next_exists %}
+			<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
+			{% else %}
+			<span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Next</span>
+			{% endif %}
+		</div>
 		{% endif %}
 	</div>
 </div>
 {% endblock %}
 
 {% block sidebar %}
-	{% include "/sidebars/ProfileSidebar.html" %}
+{% include "/sidebars/ProfileSidebar.html" %}
 {% endblock %}
 
 {% block modals %}
