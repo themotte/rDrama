@@ -243,6 +243,6 @@
 	{% elif v %}
 	<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-mobile-{{c.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('comment-mobile', '{{c.id}}', '-1')" class="list-inline-item arrow-down downvote-button d-inline-block md:hidden mx-0 pl-1 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></li>
 	{% else %}
-	<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" href="/login" onclick="vote('comment', '{{c.id}}', '-1')" class="list-inline-item arrow-down mx-0 pl-1 d-inline-block md:hidden"></li>
+	<li {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" href="/login" class="list-inline-item arrow-down mx-0 pl-1 d-inline-block md:hidden"></li>
 	{% endif %}
 </ul>
