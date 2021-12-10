@@ -3818,19 +3818,19 @@ pre .com, code .com {
    font-size: 1rem;
  }
 
- .comment-section {
+/* .comment-section {
    background-color: var(--gray-600);
  }
 
  .comment-section > .comment {
    padding-left: 12px;
- }
+ }*/
 
- .comment {
+/* .comment {
    margin-top: 1.5rem;
  }
-
- .comment .comment-collapse {
+*/
+/* .comment .comment-collapse {
    padding-right: 10px;
  }
 
@@ -3849,7 +3849,7 @@ pre .com, code .com {
 
  .comment.collapsed .comment-body:hover {
    opacity: 0.5;
- }
+ }*/
 
  .comment-actions .fa, .comment-actions .fas, .comment-actions .far {
    color: var(--gray-100);
