@@ -392,25 +392,7 @@
 						<i class="fas fa-reply fa-sm fa-fw mr-1"></i>
 						Reply
 					</button>
-					<pre></pre>
-					<div id="reply-m-{{c.id}}" class="hidden">
-						<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
-							<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
-								<input type="hidden" name="formkey" value="{{v.formkey}}"> 
-								<textarea maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-input" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3"></textarea> 
-								<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
-									<label class="btn btn-secondary format d-inline-block m-0" for="gif-reply-btn-{{c.id}}">
-										<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"></i>
-									</label>
-									&nbsp;
-									<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('hidden')" class="hidden d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-									<a id="save-reply-to-{{c.id}}" class="hidden d-md-block btn btn-primary text-muted ml-2" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
-								</div>
-								<a href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('hidden')" class="md:hidden btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-								<a id="save-reply-to-{{c.id}}" class="md:hidden btn btn-primary text-white ml-2" onclick="post_reply('{{c.id}}');" href="javascript:void(0)">Reply</a> 
-							</form>
-						</div>
-					</div>
+					{% include "/comments/CommentMessageReplyForm.html" %}
 				{% endif %}
 			</div>
 			{% if c.parent_submission %}

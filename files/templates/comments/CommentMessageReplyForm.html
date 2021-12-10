@@ -1,0 +1,44 @@
+<div id="reply-m-{{c.id}}" class="hidden">
+	<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
+		<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
+			<input type="hidden" name="formkey" value="{{v.formkey}}"> 
+			<div class="relative comment-box rounded-lg border border-gray-300 bg-gray-100 shadow-inner w-full"> 
+				<textarea maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="form-input" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3"></textarea>
+				<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
+					<li>
+						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('reply-form-body-{{c.id}}')">
+							<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
+						</button>
+					</li>
+					<li>
+						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('reply-form-body-{{c.id}}')">
+							<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
+						</button>
+					</li>
+					<li>
+						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('reply-form-body-{{c.id}}')">
+							<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
+						</button>
+					</li>
+					<li>
+						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">	<i class="fas fa-smile-beam fa-fw fa-sm"></i>
+						</button>
+					</li>
+				</ul>
+			</div>
+			<div class="flex w-full justify-between mt-2">
+				<a href="/formatting" target="_blank" class="inline-block text-sm text-gray-600">
+					Formatting help
+				</a>
+				<div class="ml-auto flex">
+					<button type="button" class="px-4 py-2 text-sm font-bold text-gray-400 hover:text-gray-500" onclick="document.getElementById('reply-m-{{c.id}}').classList.add('hidden')">
+						Cancel
+					</button>
+					<button type="button" id="save-reply-to-{{c.id}}" class="ml-2 btn btn-green" onclick="post_reply('{{c.id}}');">
+						Reply
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
