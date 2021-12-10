@@ -304,7 +304,7 @@
 						<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this comment by @{{c.author.banned_by.username}}"></i></a>
 					{% endif %}
 					{% if c.active_flags %}
-					<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('hidden')">{{c.active_flags}} Reports</a>
+					<a class="btn btn-gray" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('hidden')">{{c.active_flags}} Reports</a>
 					{% endif %}
 					{% if c.over_18 %}
 					<span class="badge badge-red">+18</span>
@@ -388,7 +388,10 @@
 
 
 				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ID and c.author_id!=AUTOJANNY_ID and c.author_id!=v.id %}
-					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.toggle('hidden')">Reply</a>
+					<button class="btn btn-gray" onclick="document.getElementById('reply-m-{{c.id}}').classList.toggle('hidden')">
+						<i class="fas fa-reply fa-sm fa-fw mr-1"></i>
+						Reply
+					</button>
 					<pre></pre>
 					<div id="reply-m-{{c.id}}" class="hidden">
 						<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
