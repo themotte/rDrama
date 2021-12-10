@@ -36,6 +36,11 @@
 	{% if v %}
 	<div class="absolute -top-12 right-3">
 		<ul class="flex flex-wrap space-x-2 items-center mb-0">
+			{% if v.admin_level > 1 %}
+			<li>
+				{% include '/dropdowns/ProfileAdminDropdown.html' %}
+			</li>
+			{% endif %}
 			<li>
 				{% include '/dropdowns/ProfileDropdown.html' %}
 			</li>
