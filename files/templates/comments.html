@@ -385,10 +385,10 @@
 			{% endif %}
 
 			{% if c.is_banned and c.ban_reason %}
-				<div id="comment-banned-warning" class="comment-text text-red-600 mb-0">Removed by @{{c.ban_reason}}</div>
+				<div id="comment-banned-warning" class="hidden-on-collapse text-red-600 mb-0">Removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="comment-text text-black mb-0 {% if c.award_count("candycane") %}candycane{% endif %} {% if c.award_count("snow") %}snow{% endif %}">
+			<div id="comment-text-{{c.id}}" class="hidden-on-collapse text-black mb-0 {% if c.award_count("candycane") %}candycane{% endif %} {% if c.award_count("snow") %}snow{% endif %}">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
 					{% for o in c.options %}
@@ -604,7 +604,7 @@
 		font-size: 11.5px;
 	}
 
-	.comment.collapsed :not(.user-info) {
+	.comment.collapsed .hidden-on-collapse {
 		display: hidden;
 	}
 </style>
