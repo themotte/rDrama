@@ -163,7 +163,7 @@
 
 						<div class="user-info">
 							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
-							<button class="p-2 md:hidden tracking-wide comment-toggle-icon-{{c.id}}" onclick="collapse_comment('{{c.id}}')">
+							<button class="p-2 md:hidden tracking-[2px] comment-toggle-icon-{{c.id}}" onclick="collapse_comment('{{c.id}}')">
 								[-]
 							</button>
 							{% if standalone and c.over_18 %}<span class="badge badge-red">+18</span>{% endif %}
@@ -278,7 +278,7 @@
 			<span class="absolute right-4 top-2" id="reddot-{{c.id}}"></span>
 
 			<div class="user-info no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 text-sm text-gray-500 leading-normal">
-				<button class="p-2 md:hidden tracking-wide comment-toggle-icon-{{c.id}}" onclick="collapse_comment('{{c.id}}')">
+				<button class="p-2 md:hidden tracking-[2px] comment-toggle-icon-{{c.id}}" onclick="collapse_comment('{{c.id}}')">
 					[-]
 				</button>
 				{% if c.awards %}
