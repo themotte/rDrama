@@ -34,6 +34,7 @@ function poll_vote_no_v() {
 }
 
 function pinned_timestamp(id) {
-    const time =  new Date(dataset.timestamp).toString()
-    document.getElementById(id).setAttribute("data-bs-original-title", `Pinned until ${time}`)
+    const el = document.getElementById(id)
+    const time =  new Date(eldataset.timestamp).toString()
+    el.setAttribute("data-bs-original-title", `Pinned until ${time}`)
 }
