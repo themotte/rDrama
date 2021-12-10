@@ -790,6 +790,11 @@ function getEmoji(searchTerm) {
 	commentBox.setAttribute(TEXTAREA_POS_ATTR, newPos.toString());
 
 	if (typeof checkForRequired === "function") checkForRequired();
+
+	const favorite_emojis = JSON.parse(localStorage.getItem("favorite_emojis")) || {}
+	if (favorite_emojis[searchTerm]) favorite_emojis[searchTerm] += 1
+	else favorite_emojis[searchTerm] = 1
+	window.localStorage.setItem("favorite_emojis", JSON.stringify(favorite_emojis))	
 }
 
 function loadEmojis(form) {
@@ -855,4 +860,19 @@ function loadEmojis(form) {
 	search_bar.oninput = function () {
 		loadEmojis(form);
 	};
+}
+
+let str = ""
+const favorite_emojis = JSON.parse(localStorage.getItem("favorite_emojis"))
+
+if (favorite_emojis)
+{
+	const sortable = Object.fromEntries(
+		Object.entries(favorite_emojis).sort(([,a],[,b]) => b-a)
+	);
+			
+	for (const emoji of Object.keys(sortable))
+		str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${emoji}')" data-bs-toggle="tooltip" title=":${emoji}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/${emoji}.webp" alt="${emoji}-emoji"></button>`
+
+	document.getElementById('EMOJIS_favorite').innerHTML = str
 }

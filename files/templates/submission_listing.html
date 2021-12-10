@@ -55,6 +55,14 @@
 	</div>
 </div>
 
+<script>
+	(() => {
+		{% if (not v or v.highlightcomments) %}
+			showNewCommentCounts('{{p.id}}', {{p.comment_count}})
+		{% endif %}
+	})()
+</script>
+
 {% set ups=p.upvotes %}
 {% set downs=p.downvotes %}
 {% set score=ups-downs %}

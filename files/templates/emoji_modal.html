@@ -48,9 +48,6 @@
 					<div class="tab-content">
 						<div class="tab-pane fade show active" id="emoji-tab-favorite">
 							<div class="d-flex flex-wrap py-3 pl-2" id="EMOJIS_favorite">
-								{% if session.get("favorite_emojis") %}
-									{{session.get("favorite_emojis") | favorite_emojis | safe}}
-								{% endif %}								
 							</div>
 						</div>
 						<div class="tab-pane fade" id="emoji-tab-marsey">
@@ -84,7 +81,7 @@
 	</div>
 </div>
 
-<script src="/assets/js/emoji_modal.js?v=140"></script>
+<script src="/assets/js/emoji_modal.js?v=146"></script>
 
 <style>
 	a.emojitab {
