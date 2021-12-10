@@ -157,7 +157,10 @@ def api_comment(v):
 		else: top_comment_id = parent.top_comment_id
 	else: abort(400)
 
-	body = request.values.get("body", "").strip()[:10000]
+	body = request.values.get("body", "").strip()[:10000].replace(' ','\n')
+	for i in re.finditer('(^|\n)(?!.*http)(.*)', body):
+		body = body.replace(i.group(2), i.group(2).upper())
+	body = body.replace('\n\n','%&$').replace('\n',' ').replace('%&$','\n\n')
 
 	if v.marseyawarded:
 		if time.time() > v.marseyawarded:
@@ -192,7 +195,7 @@ def api_comment(v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		name = f'/images/{time.time()}'.replace('.','') + '.webp'
+		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 		file.save(name)
 		url = request.host_url[:-1] + process_image(name)
 		
@@ -615,7 +618,11 @@ def edit_comment(cid, v):
 
 	if c.is_banned or c.deleted_utc > 0: abort(403)
 
-	body = request.values.get("body", "").strip()[:10000]
+	body = request.values.get("body", "").strip()[:10000].replace(' ','\n')
+	for i in re.finditer('(^|\n)(?!.*http)(.*)', body):
+		body = body.replace(i.group(2), i.group(2).upper())
+	body = body.replace('\n\n','%&$').replace('\n',' ').replace('%&$','\n\n')
+
 	if len(body) < 1: return {"error":"You have to actually type something!"}, 400
 
 	if body != c.body and body != "":
@@ -721,7 +728,7 @@ def edit_comment(cid, v):
 			file=request.files["file"]
 			if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-			name = f'/images/{time.time()}'.replace('.','') + '.webp'
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
 			url = request.host_url[:-1] + process_image(name)
 

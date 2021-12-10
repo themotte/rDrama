@@ -134,11 +134,10 @@ def teardown_request(error):
 
 @app.after_request
 def after_request(response):
-	if session.get("favorite_emojis"): del session["favorite_emojis"]
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
-	response.headers.add("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'unsafe-eval' ajax.cloudflare.com; connect-src 'self' tls-use1.fpapi.io api.fpjs.io 02ddcc80-b8db-42be-9022-44c546b4dce6.pushnotifications.pusher.com; object-src 'none';")
 	return response
+
 
 from files.routes import *
