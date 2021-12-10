@@ -8,6 +8,22 @@
 				</button>
 			</div>
 			<div class="modal-body flex flex-col space-y-4">
+				<div class="p-4 bg-gray-300 border border-gray-400 shadow-inset-t-white-10">
+					{% if v and v.admin_level > 1 %}
+						<p>True score: {{u.truecoins}}</p>
+						{% if u.is_private %}
+						<p>User has private mode enabled.</p>
+						{% endif %}
+					{% endif %}
+					{% if v and (v.admin_level > 1 or v.alt) %}
+						<span>Alts:</span>
+						<ul>
+							{% for account in u.alts_unique %}
+								<li><a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}</li>
+							{% endfor %}
+						</ul>
+					{% endif %}
+				</div>
 				<div class="w-full">
 					<form action="/admin/title_change/{{u.id}}" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
