@@ -1,4 +1,4 @@
-report_postModal = function(id) {
+function report_postModal(id) {
 
 	submitbutton=document.getElementById("reportPostButton");
 

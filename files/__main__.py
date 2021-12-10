@@ -134,6 +134,7 @@ def teardown_request(error):
 
 @app.after_request
 def after_request(response):
+	if session.get("favorite_emojis"): del session["favorite_emojis"]
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")

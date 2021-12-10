@@ -161,15 +161,7 @@ def sanitize(sanitized, noimages=False):
 
 	sanitized = str(soup)
 	
-	start = '&lt;s&gt;'
-	end = '&lt;/s&gt;' 
-
-	try:
-		if not session.get("favorite_emojis"): session["favorite_emojis"] = {}
-	except:
-		pass
-
-	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
+	sanitized = re.sub('\|\|(.*?)\|\|', r'<span class="spoiler">\1</span>', sanitized)
 	
 	for i in re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized):
 		old = i.group(0)
@@ -192,9 +184,6 @@ def sanitize(sanitized, noimages=False):
 
 			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
 				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" {classes}src="https://{site}/assets/images/emojis/{remoji}.webp" >', new)
-
-				if remoji in session["favorite_emojis"]: session["favorite_emojis"][remoji] += 1
-				else: session["favorite_emojis"][remoji] = 1
 					
 		sanitized = sanitized.replace(old, new)
 
@@ -205,16 +194,9 @@ def sanitize(sanitized, noimages=False):
 			emoji = emoji[1:]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 class="emj mirrored" src="https://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
-		
-				if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-				else: session["favorite_emojis"][emoji] = 1
 
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
 			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 class="emj" src="https://{site}/assets/images/emojis/{emoji}.webp">', sanitized)
-				
-			if emoji in session["favorite_emojis"]: session["favorite_emojis"][emoji] += 1
-			else: session["favorite_emojis"][emoji] = 1
-
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("https://m.wikipedia", "https://wikipedia").replace("https://m.youtube", "https://youtube")
 

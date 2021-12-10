@@ -56,11 +56,11 @@ function post_toast3(url, button1, button2) {
 	document.getElementById(button2).classList.toggle("md:block");
 }
 
-report_commentModal = function(id, author) {
+function report_commentModal(id, author) {
 
-document.getElementById("comment-author").textContent = author;
+	document.getElementById("comment-author").textContent = author;
 
-document.getElementById("reportCommentButton").onclick = function() {
+	document.getElementById("reportCommentButton").onclick = function() {
 
 	this.innerHTML='Reporting comment';
 	this.disabled = true;
@@ -246,69 +246,6 @@ document.onpaste = function(event) {
 			document.getElementById('filename-show-edit-' + id).textContent = filename;
 		}
 	}
-}
-
-function markdown(first, second) {
-	var input = document.getElementById(first).value;
-
-	var emojis = Array.from(input.matchAll(/:(.{1,30}?):/gi))
-	if(emojis != null){
-		for(i = 0; i < emojis.length; i++){
-			var emoji = emojis[i][0]
-			var remoji = emoji.replace(/:/g,'');
-			if (remoji.startsWith("!#") || remoji.startsWith("#!"))
-			{
-				input = input.replace(emoji, "<img class='emj mirrored' src='/assets/images/emojis/" + remoji.substring(2) + ".webp'>")
-			} else if (remoji.startsWith("#"))
-			{
-				input = input.replace(emoji, "<img class='emj' src='/assets/images/emojis/" + remoji.substring(1) + ".webp'>")
-			} else if (remoji.startsWith("!"))
-			{
-				input = input.replace(emoji, "<img height=30 class='emj mirrored' src='/assets/images/emojis/" + remoji.substring(1) + ".webp'>")
-			} else {
-				input = input.replace(emoji, "<img height=30 class='emj' src='/assets/images/emojis/" + remoji + ".webp'>")
-			}
-		}
-	}
-
-	if (!first.includes('edit'))
-	{
-		var options = Array.from(input.matchAll(/\s*\$\$([^\$\n]+)\$\$\s*/gi))
-		if(options != null){
-			for(i = 0; i < options.length; i++){
-				var option = options[i][0];
-				var option2 = option.replace(/\$\$/g, '').replace(/\n/g, '')
-				input = input.replace(option, '');
-				input += '<div class="custom-control"><input type="checkbox" class="custom-control-input" id="' + option2 + '"><label class="custom-control-label" for="' + option2 + '">' + option2 + ' - <a>0 votes</a></label></div>';
-			}
-		}
-	}
-	
-	document.getElementById(second).innerHTML = marked(input)
-}
-
-function charLimit(form, text) {
-
-	var input = document.getElementById(form);
-
-	var text = document.getElementById(text);
-
-	var length = input.value.length;
-
-	var maxLength = input.getAttribute("maxlength");
-
-	if (length >= maxLength) {
-		text.style.color = "#E53E3E";
-	}
-	else if (length >= maxLength * .72){
-		text.style.color = "#FFC107";
-	}
-	else {
-		text.style.color = "#A0AEC0";
-	}
-
-	text.innerText = length + ' / ' + maxLength;
-
 }
 
 function poll_vote(cid, parentid) {
