@@ -1,0 +1,53 @@
+<div class="dropdown">
+	<button class="btn btn-gray" type="button" id="dropdownProfile-Actions" data-bs-toggle="dropdown" aria-expanded="false">
+		<i class="fas fa-shield fa-fw fa-sm"></i>
+	</button>
+	<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownProfile-Actions">
+		{% if v.admin_level > 1 %}
+		<li>
+			<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+		</li>
+		<li id="grant" class="{% if u.paid_dues %}hidden{% endif %}">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/@{{u.username}}/club_allow','grant','bar')">
+				<i class="fas fa-door-open fa-sm fa-fw mr-4"></i>
+				Grant club access
+			</button>
+		</li>
+		<li id="bar" class="{% if u.club_banned %}hidden{% endif %}">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/@{{u.username}}/club_ban','grant','bar')">
+				<i class="fas fa-door-closed fa-sm fa-fw mr-4"></i>
+				Bar from club
+			</button>
+		</li>
+		{% endif %}
+		{% if v.admin_level > 2 %}
+		<li>
+			<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
+		</li>
+		<li id="admin2" class="{% if u.admin_level > 1 %}hidden{% endif %}">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">
+				<i class="fas fa-user-shield fa-sm fa-fw mr-4"></i>
+				Make admin
+			</button>
+		</li>
+		<li id="unadmin2" class="{% if u.admin_level < 2 %}hidden{% endif %}">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">
+				<i class="fas fa-user-minus fa-sm fa-fw mr-4"></i>
+				Remove admin
+			</button>
+		</li>
+		<li id="memeadmin2" class="{% if u.admin_level == 1%}hidden{% endif %}">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/@{{u.username}}/make_meme_admin','memeadmin2','unmemeadmin2')">
+				<i class="fas fa-grin-squint-tears fa-sm fa-fw mr-4"></i>
+				Make meme admin
+			</button>
+		</li>
+		<li id="unmemeadmin2" class="{% if u.admin_level != 1 %}hidden{% endif %}">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','memeadmin2','unmemeadmin2')">
+				<i class="fas fa-sad-cry fa-sm fa-fw mr-4"></i>
+				Remove meme admin
+			</button>
+		</li>
+		{% endif %}
+	</ul>
+</div>
