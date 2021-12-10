@@ -378,7 +378,7 @@
 {% for p in listing %}
 <div style="display:none" id="popover-{{p.id}}">
 	<div class="popover-user-profile" role="tooltip">
-		<img loading="lazy" class="w-100 h-64 object-cover" src="{{p.author.banner_url}}">
+		<img loading="lazy" class="w-100 w-48 lg:h-64 object-cover" src="{{p.author.banner_url}}">
 		<div class="d-flex align-items-end px-3 mt-n6 mb-3">
 			<img loading="lazy" class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
 			<div class="px-3 text-truncate">
