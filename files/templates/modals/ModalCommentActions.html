@@ -1,39 +1,82 @@
-<div class="modal fade md:hidden" id="actionsModal-{{c.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
+<div class="modal fade modal-sm-bottom md:hidden" id="actionsModal-{{c.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title h6">More options</h5>
-				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true"><i class="far fa-times"></i></span>
+			<div class="relative rounded-t-md border-b border-gray-300 p-3">
+				<h5 class="font-bold font-heading text-lg mb-0">More options</h5>
+				<button type="button" class="close absolute right-3.5 top-3.5" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">
+						<i class="fas fa-times-circle text-gray-500"></i>
+					</span>
 				</button>
 			</div>
-			<div class="modal-body">
-				<ul class="list-group comment-actions">
+			<div class="relative p-3">
+				<ul class="flex flex-col space-y-1">
 
-					<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v"></i>Votes</li></a>
+					<li>
+						<a class="btn btn-gray w-full text-left" href="/votes?link={{c.fullname}}">
+							<i class="fas fa-poll fa-fw mr-4"></i>Votes
+						</a>
+					</li>
 
 					{% if v %}
-						<a class="list-group-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</a>
+					<li>
+						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')">
+							<i class="fas fa-gift fa-fw mr-4"></i>Give Award
+						</button>
+					</li>
 
-						<a id="save2-{{c.id}}" class="list-group-item {% if c.id in v.saved_comment_idlist() %}hidden{% endif %}" href="javascript:void(0)" data-bs-dismiss="modal" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save"></i>Save</a>
+					<li id="save2-{{c.id}}" class="{% if c.id in v.saved_comment_idlist() %}hidden{% endif %}">
+						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')">
+							<i class="far fa-bookmark fa-fw mr-4"></i>Save
+						</button>
+					</li>
 
-						<a id="unsave2-{{c.id}}" class="list-group-item {% if c.id not in v.saved_comment_idlist() %}hidden{% endif %}" href="javascript:void(0)" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-save"></i>Unsave</a>
+					<li id="unsave2-{{c.id}}" class="{% if c.id not in v.saved_comment_idlist() %}hidden{% endif %}">
+						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-bs-dismiss="modal">
+							<i class="fas fa-bookmark fa-fw mr-4"></i>Unsave
+						</button>
+					</li>
 					{% endif %}
 
-					<a href="javascript:void(0);" role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=10#context"><i class="fas fa-copy"></i>Copy link</a>
+					<li>
+						<button class="btn btn-gray w-full text-left copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=10#context">
+							<i class="fas fa-copy fa-fw mr-4"></i>Copy link
+						</button>
+					</li>
 
-					<a class="list-group-item" {% if v %} href="{{c.permalink}}?context=10#context" {% else %} href="/logged_out{{c.permalink}}?context=10#context" {% endif %}><i class="fas fa-dna"></i>Context</a>
+					<li>
+						<a class="btn btn-gray w-full text-left" href="{{c.permalink}}?context=10#context">
+							<i class="fas fa-dna fa-fw mr-4"></i>Context
+						</a>
+					</li>
 
-					<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')" class="list-group-item"><i class="fas fa-flag"></i>Report</a>
+					<li>
+						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')">
+							<i class="fas fa-flag text-center text-muted mr-3"></i>Report
+						</button>
+					</li>
 
 					{% if v and c.parent_submission and c.author_id==v.id %}
-						<a href="javascript:void(0)" data-bs-dismiss="modal" onclick="toggleEdit('{{c.id}}')" class="list-group-item"><i class="fas fa-edit"></i>Edit</a>
+					<li>
+						<button class="btn btn-gray w-full text-left" data-bs-dismiss="modal" onclick="toggleEdit('{{c.id}}')">
+							<i class="fas fa-pencil fa-fw mr-4"></i>Edit
+						</button>
+					</li>
 
-						{% if c.deleted_utc > 0 %}
-							<a href="javascript:void(0)" onclick="post_toast('/undelete/comment/{{c.id}}')" data-bs-dismiss="modal" class="list-group-item"><i class="fas fa-trash-alt"></i>Undelete</a>
-						{% else %}
-							<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')" class="list-group-item"><i class="fas fa-trash-alt"></i>Delete</a>
-						{% endif %}
+					{% if c.deleted_utc > 0 %}
+					<li>
+						<button class="btn btn-gray w-full text-left" onclick="post_toast('/undelete/comment/{{c.id}}')" data-bs-dismiss="modal">
+							<i class="fas fa-trash-alt fa-fw mr-4"></i>Undelete
+						</button>
+					</li>
+					{% else %}
+					<li>
+						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')">
+							<i class="fas fa-trash-alt fa-fw mr-4"></i>Delete
+						</button>
+					</li>
+					{% endif %}
+					
 					{% endif %}
 
 					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
