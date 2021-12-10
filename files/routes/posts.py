@@ -335,8 +335,8 @@ def edit_post(pid, v):
 
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
-	title = request.values.get("title", "").strip().upper()
-	body = request.values.get("body", "").strip().upper()
+	title = request.values.get("title", "").strip()
+	body = request.values.get("body", "").strip()
 
 	if len(body) > 10000: return {"error":"Character limit is 10000!"}, 403
 
@@ -669,7 +669,7 @@ def submit_post(v):
 		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
 	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
 
-	title = request.values.get("title", "").strip()[:500].upper()
+	title = request.values.get("title", "").strip()[:500]
 	url = request.values.get("url", "").strip()
 
 	if v.agendaposter and not v.marseyawarded:
@@ -678,7 +678,7 @@ def submit_post(v):
 		title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
 
 	title_html = filter_emojis_only(title)
-	body = request.values.get("body", "").strip().upper()
+	body = request.values.get("body", "").strip()
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
 
