@@ -251,9 +251,9 @@
 </div>
 {% endif %}
 
-<div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}">
+<div id="comment-{{c.id}}" class="comment anchor {% if c.unread %}unread{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}">
 
-	<div id="comment-collapse-lg-{{c.id}}" class="hidden w-full h-full bottom-0 left-0 right-0 top-0 cursor-pointer" onclick="collapse_comment('{{c.id}}')"></div>
+	<div id="comment-collapse-lg-{{c.id}}" class="visible-on-collapse w-full h-full bottom-0 left-0 right-0 top-0 cursor-pointer" onclick="collapse_comment('{{c.id}}')"></div>
 
 	<span class="comment-collapse-desktop hidden" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 
@@ -435,36 +435,36 @@
 					{% include "/comments/CommentEditForm.html" %}
 				{% endif %}
 				<!-- Comment actions -->
-				<div id="comment-{{c.id}}-actions" class="py-3 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+				<div id="comment-{{c.id}}-actions" class="hidden-on-collapse py-3 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 					{% include "/comments/CommentActions.html" %}
 				</div>
 			{% endif %}
 
 		</div>
 
-		<div id="reply-to-{{c.id}}" class="hidden">
+		<div id="reply-to-{{c.id}}" class="hidden hidden-on-collapse">
 			{% include "/comments/CommentReplyForm.html" %}
 		</div>
 
 	{% if render_replies %} 
 		{% if level<10 %}
-			<div id="replies-of-{{c.id}}">
+			<div id="replies-of-{{c.id}}" class="hidden-on-collapse">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
 				{% endfor %}
 			</div>
 		{% elif replies and "notifications" in request.path %}
-			<div id="replies-of-{{c.id}}" class="hidden md:block">
+			<div id="replies-of-{{c.id}}" class="hidden md:block hidden-on-collapse">
 				{% set standalone=False %}
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
 				{% endfor %}
 			</div>
-			<div id="morecomment-{{c.id}}" class="md:hidden mt-2 more-comments text-small">
+			<div id="morecomment-{{c.id}}" class="md:hidden mt-2 more-comments text-small hidden-on-collapse">
 				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
-			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
+			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small hidden-on-collapse">
 				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
@@ -606,5 +606,8 @@
 
 	.comment.collapsed .hidden-on-collapse {
 		display: none;
+	}
+	.comment.collapsed .visible-on-collapse {
+		display: block;
 	}
 </style>
