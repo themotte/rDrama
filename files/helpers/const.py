@@ -415,6 +415,10 @@ BADGES = {
 		'name': 'Dinner',
 		'description': 'Yes, it is edible'
 	},
+        90: {
+		'name': 'Fish',
+		'description': 'This user cannot be unfollowed'
+	},
 }
 
 AWARDS = {
