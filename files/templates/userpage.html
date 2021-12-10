@@ -177,6 +177,7 @@
 						{% endif %}
 
 						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message" method="post">
+							<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 							<pre></pre>
 							<textarea id="input-message" form="message" name="message" rows="3" maxlength="1000" class="form-control b2" required></textarea>
 							<pre></pre>
@@ -460,6 +461,7 @@
 
 					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message" method="post">
 						<pre></pre>
+						<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<textarea id="input-message-mobile" form="message-mobile" name="message" rows="3" maxlength="1000" class="form-control" required></textarea>
 						<pre></pre>
 						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bold"></pre>
