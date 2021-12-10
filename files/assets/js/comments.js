@@ -5,7 +5,6 @@ function timestamp(str, ti) {
 
 function collapse_comment(comment_id) {
     const comment = document.getElementById(`comment-${comment_id}`)
-    const isClosed = comment.classList.contains("collapsed");
     const top = comment.getBoundingClientRect().y;
 
     const toggler = document.getElementById(`comment-collapse-${comment_id}`);
@@ -13,6 +12,8 @@ function collapse_comment(comment_id) {
     ['hidden', 'pointer-events-none'].map(x=> toggler.classList.toggle(x));
 
     ['items-center', 'opacity-50', 'hover:opacity-100', 'collapsed'].map(y=> comment.classList.toggle(y)); // apply flex alignment and opacity to comment parent wrapping div
+
+    const isClosed = comment.classList.contains("collapsed");
 
     document.getElementById(`comment-toggle-icon-${comment_id}`).innerText = isClosed ? '[+]' : '[-]';
 
