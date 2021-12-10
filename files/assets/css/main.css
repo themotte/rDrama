@@ -5698,3 +5698,7 @@ blockquote p {
 .text-lightblue {
   color: lightblue;
 }
+
+p *, .post-title, .post-body *, .comment-text * {
+  text-transform: uppercase !important;
+}
