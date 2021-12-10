@@ -613,6 +613,9 @@ def award_post(pid, v):
 	elif kind == "fish":
 		author.fish = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		if not author.has_badge(90):
+			new_badge = Badge(badge_id=90, user_id=author.id)
+			g.db.add(new_badge)
 
 	if post.author.received_award_count: post.author.received_award_count += 1
 	else: post.author.received_award_count = 1
@@ -772,6 +775,9 @@ def award_comment(cid, v):
 	elif kind == "fish":
 		author.fish = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		if not author.has_badge(90):
+			new_badge = Badge(badge_id=90, user_id=author.id)
+			g.db.add(new_badge)
 
 	if c.author.received_award_count: c.author.received_award_count += 1
 	else: c.author.received_award_count = 1
