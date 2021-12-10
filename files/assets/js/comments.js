@@ -14,7 +14,7 @@ function collapse_comment(comment_id) {
 
     ['items-center', 'opacity-50', 'hover:opacity-100', 'collapsed'].map(y=> comment.classList.toggle(y)); // apply flex alignment and opacity to comment parent wrapping div
 
-    toggler.innerText = isClosed ? '[+]' : '[-]';
+    document.getElementById(`comment-toggle-icon-${comment_id}`).innerText = isClosed ? '[+]' : '[-]';
 
     if (isClosed && top < 0) {
         comment.scrollIntoView()
