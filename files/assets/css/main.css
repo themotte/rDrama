@@ -3836,7 +3836,7 @@ pre .com, code .com {
 
  .comment.collapsed .user-info {
    padding-top: 0.5rem;
- }
+ }*/
 
  .comment .comment-collapse::before {
    content: "\f056";
@@ -3847,7 +3847,7 @@ pre .com, code .com {
    margin-left: 0.25rem;
  }
 
- .comment.collapsed .comment-body:hover {
+/* .comment.collapsed .comment-body:hover {
    opacity: 0.5;
  }*/
 
