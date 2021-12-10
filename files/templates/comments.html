@@ -355,7 +355,7 @@
 					<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This user is blocking you."></i>
 					{% endif %}
 					{% if c.parent_comment_id and not standalone and level<=7 %}
-					<a href="#comment-{{ c.parent_comment_id }}-only" class="text-gray-500 hover:text-gray-400 user-name-reply">
+					<a href="#comment-{{ c.parent_comment_id }}-only" class="flex-shrink-0 text-gray-500 hover:text-gray-400 user-name-reply">
 						<i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal"></i>
 						<span class="hidden sm:inline-block">replying to</span>
 						<span class="font-bold">
@@ -366,11 +366,11 @@
 						</span>
 					</a>
 					{% endif %}
-					<span onmouseover="timestamp('timestamp-{{c.id}}','{{c.created_utc}}')" id="timestamp-{{c.id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">
+					<span onmouseover="timestamp('timestamp-{{c.id}}','{{c.created_utc}}')" id="timestamp-{{c.id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="flex-shrink-0 time-stamp">
 						{{c.age_string}}
 					</span>
 					{% if c.edited_utc %}
-					<span onmouseover="timestamp('time-edit-{{c.id}}','{{c.edited_utc}}')" id="time-edit-{{c.id}}" class="time-edited italic">
+					<span onmouseover="timestamp('time-edit-{{c.id}}','{{c.edited_utc}}')" id="time-edit-{{c.id}}" class="flex-shrink-0 time-edited italic">
 						Edited {{c.edited_string}}
 					</span>
 					{% endif %}
