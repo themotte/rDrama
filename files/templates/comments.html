@@ -253,7 +253,7 @@
 
 <div id="comment-{{c.id}}" class="comment anchor {% if c.unread %}unread{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}">
 
-	<div id="comment-collapse-lg-{{c.id}}" class="hidden w-full h-full bottom-0 left-0 right-0 top-0 cursor-pointer" onclick="collapse_comment('{{c.id}}')"></div>
+	<div id="comment-collapse-{{c.id}}" class="hidden pointer-events-none z-10 absolute w-full h-full bottom-0 left-0 right-0 top-0 cursor-pointer" onclick="collapse_comment('{{c.id}}')"></div>
 
 	<span class="comment-collapse-desktop hidden" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 
@@ -388,7 +388,7 @@
 				<div id="comment-banned-warning" class="hidden-on-collapse text-red-600 mb-0">Removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="hidden-on-collapse text-black mb-0 {% if c.award_count("candycane") %}candycane{% endif %} {% if c.award_count("snow") %}snow{% endif %}">
+			<div id="comment-text-{{c.id}}" class="hidden-on-collapse text-black mt-2 {% if c.award_count("candycane") %}candycane{% endif %} {% if c.award_count("snow") %}snow{% endif %}">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
 					{% for o in c.options %}
