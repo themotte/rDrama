@@ -381,7 +381,7 @@ def edit_post(pid, v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		name = f'/images/{time.time()}'.replace('.','') + '.webp'
+		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 		file.save(name)
 		url = request.host_url[:-1] + process_image(name)
 		
@@ -650,7 +650,7 @@ def thumbnail_thread(pid):
 		db.close()
 		return
 
-	name = f'/images/{time.time()}'.replace('.','') + '.webp'
+	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 
 	with open(name, "wb") as file:
 		for chunk in image_req.iter_content(1024):
@@ -872,7 +872,7 @@ def submit_post(v):
 		file=request.files["file2"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		name = f'/images/{time.time()}'.replace('.','') + '.webp'
+		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 		file.save(name)
 		url = request.host_url[:-1] + process_image(name)
 		
@@ -960,7 +960,7 @@ def submit_post(v):
 				), 403
 
 		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','') + '.webp'
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
 			new_post.url = request.host_url[:-1] + process_image(name)
 			
