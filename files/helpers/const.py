@@ -536,7 +536,7 @@ AWARDS = {
 		"description": "Pins the post/comment.",
 		"icon": "fas fa-thumbtack fa-rotate--45",
 		"color": "text-warning",
-		"price": 750
+		"price": 1000
 	},
 	"unpin": {
 		"kind": "unpin",
@@ -692,7 +692,7 @@ AWARDS2 = {
 		"description": "Pins the post/comment.",
 		"icon": "fas fa-thumbtack fa-rotate--45",
 		"color": "text-warning",
-		"price": 750
+		"price": 1000
 	},
 	"unpin": {
 		"kind": "unpin",
