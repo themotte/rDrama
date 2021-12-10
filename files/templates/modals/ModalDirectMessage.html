@@ -8,8 +8,8 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<form class="hidden profile-toggleable" id="message" action="/@{{u.username}}/message" method="post">
-					<div class="relative comment-box rounded-lg border border-gray-300 bg-gray-100 shadow-inner w-full"> 
+				<form id="message" action="/@{{u.username}}/message" method="post">
+					<div class="relative rounded-lg border border-gray-300 bg-gray-100 shadow-inner w-full"> 
 						<textarea maxlength="1000" id="input-message" name="message" form="message" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Write your message..." rows="3"></textarea>
 						<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
 							<li>
