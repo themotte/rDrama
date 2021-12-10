@@ -11,9 +11,9 @@
 				<div class="w-full">
 					<form action="/admin/title_change/{{u.id}}" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<input id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
+						<input id="customtitlebody-mobile" type="text" name="title" class="form-input" placeholder='Enter a flair here' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
 						<div class="flex mt-2">
-							<a class="format" href="javascript:void(0)"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
+							<a class="format" href="javascript:void(0)"><i class="btn btn-secondary format inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
 							&nbsp;&nbsp;&nbsp;
 							<div class="custom-control custom-checkbox">
 								<input type="checkbox" class="custom-control-input" id="locked-mobile" name="locked" {% if u.flairchanged %}checked{% endif %}>
@@ -34,14 +34,14 @@
 						<label class="custom-control-label" for="alts-1-mobile">Include alts</label>
 					</div>
 					<br >
-					<input type="submit" class="btn btn-success" value="Unban user">
+					<input type="submit" class="btn btn-gray" value="Unban user">
 				</form>
 				{% else %}
 				<form action="/ban_user/{{u.id}}/" method="post">
 					<input type="hidden" name="formkey" value="{{v.formkey}}">
 					<input type="hidden" name="redir" value="true">
-					<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
-					<input style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
+					<input style="font-size:11px;" type="text" class="form-input" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
+					<input style="font-size:11px;" type="number" step="any" class="form-input" name="days" placeholder="Days (blank = permanent)">
 					<br >
 					<div class="custom-control custom-checkbox">
 						<input type="checkbox" id="alts-2-mobile" class="custom-control-input" name="alts" value="1">
@@ -53,14 +53,14 @@
 				{% endif %}
 				<form id="agendaposter2" class="{% if u.agendaposter %}hidden{% endif %}" action="/agendaposter/{{u.id}}" method="post">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
-					<input type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
+					<input type="number" step="any" name="days" class="form-input" placeholder="Days (0 or blank = permanent)" >
 					<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" >
 				</form>
-				<a id="unagendaposter2" class="{% if not u.agendaposter %}hidden{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Agendaposter Theme</a>
+				<a id="unagendaposter2" class="{% if not u.agendaposter %}hidden{% endif %} btn btn-gray" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Agendaposter Theme</a>
 				<form action="/admin/unnuke_user" method="post">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<input type="hidden" name="user" value="{{u.username}}">
-					<input type="submit" class="btn btn-success" value="Approve User's Content">
+					<input type="submit" class="btn btn-gray" value="Approve User's Content">
 				</form>
 				<pre></pre>
 				<form action="/admin/nuke_user" method="post">
