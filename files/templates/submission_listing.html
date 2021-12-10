@@ -12,52 +12,48 @@
 	<script src="/assets/js/new_comments_count.js?v=53"></script>
 {% endif %}
 
-{% for p in listing %}
+<script>
+</script>
 
-<div style="display:none" id="popover-{{p.id}}">
+<div style="display:none" id="popover">
 	<div class="popover-user-profile" role="tooltip">
-		<img loading="lazy" class="w-100 h-64 object-cover" src="{{p.author.banner_url}}">
+		<img loading="lazy" class="pop-banner w-100 h-64 object-cover">
 		<div class="d-flex align-items-end px-3 mt-n6 mb-3">
-			<img loading="lazy" class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
+			<img loading="lazy" class="pop-picture avatar-72 rounded img-thumbnail shadow-sm">
 			<div class="px-3 text-truncate">
-			<h5 class="text-truncate text-black">{{p.author.username}}</h5>
+			<h5 class="pop-username text-truncate text-black"></h5>
 			</div>
 		</div>
 		<div class="px-3">
-			<span class="popover-bio text-black">{% if p.author.bio_html %}{{p.author.bio_html_eager | safe}}{% endif %}</span>
+			<span class="pop-bio popover-bio text-black"></span>
 		</div>
 
 		<div class="ml-3 mr-3 my-2">
-			{% for b in p.author.badges %}
-				{% if b.url %}
-					<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
-				{% else %}
-					<img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
-				{% endif %}
-			{% endfor %}
 		</div>
 
 	  <div class="border-top d-flex align-items-center p-3 gap-3 smol">
 		<span>
-		  <strong class="text-black">{{p.author.post_count}}</strong>
+		  <strong class="pop-postcount text-black"></strong>
 		  <span class="text-black">posts</span>
 		</span>
 		<span class="ml-3">
-		  <strong class="text-black">{{p.author.comment_count}}</strong>
+		  <strong class="pop-commentcount text-black"></strong>
 		  <span class="text-black">comments</span>
 		</span>
 		<span class="ml-3">
-			<strong class="text-black">{{p.author.coins}}</strong>
+			<strong class="pop-coins text-black"></strong>
 			<span class="text-black">coins</span>
 		</span>  
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="{{p.author.url}}" target="_blank" class="ml-auto text-decoration-none">
+		<a target="_blank" class="pop-viewmore ml-auto text-decoration-none">
 		  View
 		  <i class="fas fa-arrow-right fa-sm px-1"></i>
 		</a>
 	  </div>
 	</div>
 </div>
+
+{% for p in listing %}
 
 <script>
 	(() => {
@@ -186,7 +182,7 @@
 				{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
 				{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{p.author.verified}}"></i>
 				{% endif %}
-				<a class="user-name text-decoration-none" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};  font-weight: bold;"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{p.author.quadrant}}.webp?v=1">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
+				<a class="user-name text-decoration-none" onclick='popclick({{p.author.json | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};  font-weight: bold;"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{p.author.quadrant}}.webp?v=1">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 				<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
 				&nbsp;
 				({% if p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})
@@ -658,6 +654,5 @@
 </style>
 
 <script src="/assets/js/clipboard.js?v=3"></script>
-<script src="/assets/js/popover.js?v=12"></script>
-<script src="/assets/js/comments+submission_listing.js?v=9"></script>
+<script src="/assets/js/comments+submission_listing.js?v=71"></script>
 <script src="/assets/js/submission_listing.js?v=10"></script>

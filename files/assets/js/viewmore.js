@@ -14,18 +14,7 @@ function viewmore(pid,sort,offset) {
             tooltipTriggerList.map(function(element){
                 return new bootstrap.Tooltip(element);
             });
-
-            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-            const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-                const popoverId = popoverTriggerEl.getAttribute('data-content-id');
-                const contentEl = document.getElementById(popoverId);
-                if (contentEl) {
-                    return new bootstrap.Popover(popoverTriggerEl, {
-                        content: contentEl.innerHTML,
-                        html: true,
-                    });
-                }
-            })
+            popovertrigger()
         }
     }
     xhr.send(form)

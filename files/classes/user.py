@@ -267,6 +267,7 @@ class User(Base):
 	@property
 	@lazy
 	def bio_html_eager(self):
+		if self.bio_html == None: return ''
 		return self.bio_html.replace('data-src', 'src').replace('src="/assets/images/loading.webp"', '')
 
 	@property
@@ -434,7 +435,7 @@ class User(Base):
 				'profile_url': self.profile_url,
 				'bannerurl': self.bannerurl,
 				'bio': self.bio,
-				'bio_html': self.bio_html,
+				'bio_html': self.bio_html_eager,
 				'flair': self.customtitle
 				}
 
