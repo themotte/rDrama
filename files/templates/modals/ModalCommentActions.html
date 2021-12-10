@@ -1,6 +1,6 @@
 <div class="modal fade modal-sm-bottom md:hidden" id="actionsModal-{{c.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
+		<div class="modal-content rounded-t-md w-full bg-gray-200">
 			<div class="relative rounded-t-md border-b border-gray-300 p-3">
 				<h5 class="font-bold font-heading text-lg mb-0">More options</h5>
 				<button type="button" class="close absolute right-3.5 top-3.5" data-bs-dismiss="modal" aria-label="Close">
@@ -11,58 +11,49 @@
 			</div>
 			<div class="relative p-3">
 				<ul class="flex flex-col space-y-1">
-
 					<li>
 						<a class="btn btn-gray w-full text-left" href="/votes?link={{c.fullname}}">
 							<i class="fas fa-poll fa-fw mr-4"></i>Votes
 						</a>
 					</li>
-
 					{% if v %}
 					<li>
 						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')">
 							<i class="fas fa-gift fa-fw mr-4"></i>Give Award
 						</button>
 					</li>
-
 					<li id="save2-{{c.id}}" class="{% if c.id in v.saved_comment_idlist() %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')">
 							<i class="far fa-bookmark fa-fw mr-4"></i>Save
 						</button>
 					</li>
-
 					<li id="unsave2-{{c.id}}" class="{% if c.id not in v.saved_comment_idlist() %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/unsave_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')" data-bs-dismiss="modal">
 							<i class="fas fa-bookmark fa-fw mr-4"></i>Unsave
 						</button>
 					</li>
 					{% endif %}
-
 					<li>
 						<button class="btn btn-gray w-full text-left copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=10#context">
 							<i class="fas fa-copy fa-fw mr-4"></i>Copy link
 						</button>
 					</li>
-
 					<li>
 						<a class="btn btn-gray w-full text-left" href="{{c.permalink}}?context=10#context">
 							<i class="fas fa-dna fa-fw mr-4"></i>Context
 						</a>
 					</li>
-
 					<li>
 						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')">
 							<i class="fas fa-flag text-center text-muted mr-3"></i>Report
 						</button>
 					</li>
-
 					{% if v and c.parent_submission and c.author_id==v.id %}
 					<li>
 						<button class="btn btn-gray w-full text-left" data-bs-dismiss="modal" onclick="toggleEdit('{{c.id}}')">
 							<i class="fas fa-pencil fa-fw mr-4"></i>Edit
 						</button>
 					</li>
-
 					{% if c.deleted_utc > 0 %}
 					<li>
 						<button class="btn btn-gray w-full text-left" onclick="post_toast('/undelete/comment/{{c.id}}')" data-bs-dismiss="modal">
@@ -76,9 +67,7 @@
 						</button>
 					</li>
 					{% endif %}
-
 					{% endif %}
-
 					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
 					<li id="pin2-{{c.id}}" class="{% if c.is_pinned %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')">
@@ -91,7 +80,6 @@
 						</button>
 					</li>
 					{% endif %}
-
 					{% if v %}
 						{% if v.admin_level>=1 and v.id==c.author_id %}
 						<li id="distinguish2-{{c.id}}" class="{% if c.distinguish_level %}hidden{% endif %}">
@@ -124,10 +112,7 @@
 							</a>
 						</li>
 						{% endif %}
-
 						{% if not v.id==c.author_id and not (c.post and c.post.award_count("ghosts")) %}
-
-
 						<li id="unblock2-{{c.id}}" class="{% if not c.is_blocking %}hidden{% endif %}">
 							<button class="btn btn-gray w-full text-left" onclick="post_toast2('/settings/unblock?username={{c.author.username}}','block2-{{c.id}}','unblock2-{{c.id}}')">
 								<i class="fas fa-user-check fa-fw mr-4"></i>Unblock user
@@ -145,7 +130,6 @@
 						</li>
 						{% endif %}
 					{% endif %}
-
 					{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
 					<li id="mark2-{{c.id}}" class="{% if c.over_18 %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/toggle_comment_nsfw/{{c.id}}','mark2-{{c.id}}','unmark2-{{c.id}}')">
@@ -158,7 +142,6 @@
 						</button>
 					</li>
 					{% endif %}
-
 					{% if v and (c.post and v.admin_level == 6) %}
 						{% if c.author_id != v.id %}
 						<li id="ban2-{{c.id}}" class="{% if c.author.is_suspended %}hidden{% endif %}">
@@ -174,7 +157,6 @@
 						</li>
 						{% endif %}
 					{% endif %}	
-
 				</ul>
 			</div>
 		</div>
