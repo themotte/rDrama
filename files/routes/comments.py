@@ -595,11 +595,6 @@ def api_comment(v):
 	
 	g.db.commit()
 
-	if v.agendaposter and random.randint(1, 10) < 4:
-		if request.host == 'rdrama.net':
-			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
-		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
-
 	if request.headers.get("Authorization"): return c.json
 	else: return render_template("comments.html", v=v, comments=[c])
 

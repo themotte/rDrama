@@ -93,10 +93,6 @@ def post_id(pid, anything=None, v=None):
 
 	if v and request.path.startswith('/logged_out'): v = None
 
-	if v and v.agendaposter and random.randint(1, 20) == 1:
-		if request.host == 'rdrama.net':
-			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
-		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
 
 	try: pid = int(pid)
 	except Exception as e: pass
@@ -1140,10 +1136,6 @@ def submit_post(v):
 
 	g.db.commit()
 
-	if v.agendaposter and random.randint(1, 10) < 4:
-		if request.host == 'rdrama.net':
-			return redirect(random.choice(['https://secure.actblue.com/donate/ms_blm_homepage_2019','https://rdrama.net/post/19711/a-short-guide-on-how-to','https://secure.transequality.org/site/Donation2?df_id=1480']))
-		return redirect('https://secure.actblue.com/donate/ms_blm_homepage_2019')
 
 	if request.headers.get("Authorization"): return new_post.json
 	else: return redirect(new_post.permalink)
