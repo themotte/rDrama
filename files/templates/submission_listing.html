@@ -51,7 +51,7 @@
 			<span class="text-black">coins</span>
 		</span>  
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} target="_blank" class="ml-auto text-decoration-none">
+		<a href="{{p.author.url}}" target="_blank" class="ml-auto text-decoration-none">
 		  View
 		  <i class="fas fa-arrow-right fa-sm px-1"></i>
 		</a>
@@ -134,7 +134,7 @@
 				{% if p.club and not (v and (v.paid_dues or v.id == p.author_id)) %}
 					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-img">
 				{% elif not p.url %}
-					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+					<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif p.is_image %}
@@ -196,7 +196,7 @@
 				&nbsp;&nbsp;{{p.views}} views
 			</div>
 
-			<h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="stretched-link">
+			<h5 class="card-title post-title text-left w-lg-75 mb-0 pb-0 pb-md-1"><a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" class="stretched-link">
 				{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{cc}}</span>{% endif %}
 				{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 				{{p.realtitle(v) | safe}}
@@ -208,7 +208,7 @@
 						<a class="list-inline-item" href="javascript:void(0)" onclick="expandText('{{p.id}}')"><i class="fas fa-expand-alt mr-0 text-expand-icon-{{p.id}}"></i></a>
 						{% endif %}
 						<li class="list-inline-item">
-							<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+							<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}">
 								<i class="fas fa-comment-dots"></i>{{p.comment_count}}
 								<span class="text-info d-none new-comments"></span>
 							</a>
@@ -301,7 +301,7 @@
 	<div class="post-actions">
 		<ul class="list-inline text-right d-flex">
 			<li class="list-inline-item mr-auto">
-				<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+				<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}">
 					<i class="fas fa-comment-dots"></i>{{p.comment_count}}
 					<span class="text-info d-none new-comments"></span>
 				</a>

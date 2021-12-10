@@ -208,7 +208,7 @@
 			<span class="text-black">coins</span>
 		</span>  
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} target="_blank" class="ml-auto text-decoration-none">
+		<a href="{{p.author.url}}" target="_blank" class="ml-auto text-decoration-none">
 		  View
 		  <i class="fas fa-arrow-right fa-sm px-1"></i>
 		</a>
@@ -532,7 +532,7 @@
 				<ul class="list-inline text-right d-flex">
 
 						<li class="list-inline-item">
-							<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+							<a href="{{p.permalink}}">
 								<i class="fas fa-comment-dots"></i>{{p.comment_count}}
 								<span class="text-info d-none new-comments"></span>
 							</a>
@@ -676,7 +676,7 @@
 			<ul class="list-inline text-right d-flex">
 
 				<li class="list-inline-item mr-auto">
-					<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+					<a href="{{p.permalink}}">
 						<i class="fas fa-comment-dots"></i>{{p.comment_count}}
 						<span class="text-info d-none new-comments"></span>
 					</a>
@@ -738,7 +738,7 @@
 				</div>
 				{% if linked_comment and p.comment_count >= 2%}
 					<pre></pre>
-					<div class="total"><a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>View entire discussion</a></div>
+					<div class="total"><a href="{{p.permalink}}">View entire discussion</a></div>
 				{% endif %}
 			</div>
 		</div>
