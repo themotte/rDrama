@@ -5,8 +5,8 @@ function timestamp(str, ti) {
 
 function pinned_timestamp(id) {
     const el = document.getElementById(id)
-    console.log(el.dataset.time)
-    console.log(typeof(el.dataset.time))
+    console.log(el.dataset.timestamp)
+    console.log(typeof(el.dataset.timestamp))
     const time =  new Date(el.dataset.timestamp)
     el.setAttribute("data-bs-original-title", `Pinned until ${time}`)
 }
