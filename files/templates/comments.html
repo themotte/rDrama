@@ -164,7 +164,7 @@
 						<div class="user-info">
 							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
 							<button class="p-2 md:hidden" onclick="collapse_comment('{{c.id}}')">
-								<i class="fas fa-minus-circle fa-fw comment-toggle-icon-{{c.id}}"></i>
+								<i class="fas fa-minus-circle fa-sm fa-fw comment-toggle-icon-{{c.id}}"></i>
 							</button>
 							{% if standalone and c.over_18 %}<span class="badge badge-red">+18</span>{% endif %}
 							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
@@ -268,7 +268,7 @@
 			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 			{% endif %}
 		</div>
-		<button onclick="collapse_comment('{{c.id}}')" class="hidden-on-collapse md:ml-4 my-2 w-[1px] md:w-4 h-full border-l border-gray-400"></button>
+		<button onclick="collapse_comment('{{c.id}}')" class="md:ml-4 my-2 w-[1px] md:w-4 h-full border-l border-gray-400"></button>
 	</div>
 
 	<div class="w-full">
@@ -279,7 +279,7 @@
 
 			<div class="user-info no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 text-sm text-gray-500 leading-normal">
 				<button class="p-2 md:hidden" onclick="collapse_comment('{{c.id}}')">
-					<i class="fas fa-minus-circle fa-fw comment-toggle-icon-{{c.id}}"></i>
+					<i class="fas fa-minus-circle fa-fw fa-sm comment-toggle-icon-{{c.id}}"></i>
 				</button>
 				{% if c.awards %}
 				<ul class="flex space-x-2 mb-0">
