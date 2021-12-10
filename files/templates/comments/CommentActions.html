@@ -9,7 +9,7 @@
 	<li id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="list-inline-item arrow-up upvote-button hidden md:block px-2 mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></li>
 
 	{% else %}
-	<li id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="list-inline-item arrow-up hidden md:block mr-2" onclick="location.href='/login';">
+	<li id="comment-{{c.id}}-up" tabindex="0" href="/login" class="list-inline-item arrow-up hidden md:block mr-2" onclick="location.href='/login';">
 	</li>
 
 	{% endif %}
@@ -28,7 +28,7 @@
 	{% else %}
 
 	{% if environ.get('DISABLE_DOWNVOTES') != '1' %}
-	<li id="comment-{{c.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '-1')" class="list-inline-item arrow-down hidden md:block" onclick="location.href='/login';">
+	<li id="comment-{{c.id}}-down" tabindex="0" href="/login" class="list-inline-item arrow-down hidden md:block" onclick="location.href='/login';">
 	</li>
 	{% endif %}
 
