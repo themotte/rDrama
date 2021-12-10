@@ -260,12 +260,12 @@
 	<div class="flex flex-col flex-shrink-0 items-center mr-2.5 {{ 'md:mr-4' if not c.parent_comment_id or standalone else 'md:mr-3' }}">
 		<div class="relative {{ 'santa' if c.author.patron else 'cap' }}">
 			{% if standalone or level==1 %}
-			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 mb-2 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
+			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 			{% else %}
-			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-9 h-9 mb-2 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
+			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 			{% endif %}
 		</div>
-		<button onclick="collapse_comment('{{c.id}}')" class="md:ml-4 mb-2 w-[1px] md:w-4 h-full border-l border-gray-400"></button>
+		<button onclick="collapse_comment('{{c.id}}')" class="hidden-on-collapse md:ml-4 my-2 w-[1px] md:w-4 h-full border-l border-gray-400"></button>
 	</div>
 
 	<div class="w-full">
