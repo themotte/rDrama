@@ -4,10 +4,16 @@
 	</button>
 	<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownProfile-Actions">
 		{% if v.admin_level > 1 %}
-		<li>
-			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/@{{u.username}}/revert_actions')">
-				<i class="fas fa-history fa-sm fa-fw mr-4"></i>
-				Revert admin actions
+		<li id="verify2" class="{% if u.verified %}hidden{% endif %}">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/admin/verify/{{u.id}}','verify2','unverify2')">
+				<i class="fas fa-badge-check fa-sm fa-fw mr-4"></i>
+				Verify
+			</button>
+		</li>
+		<li id="unverify2" class="{% if not u.verified %}hidden{% endif %}">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/admin/unverify/{{u.id}}','verify2','unverify2')">
+				<i class="fas fa-eraser fa-sm fa-fw mr-4"></i>
+				Unverify
 			</button>
 		</li>
 		<li id="grant" class="{% if u.paid_dues %}hidden{% endif %}">
@@ -34,16 +40,22 @@
 				Unshadowban
 			</button>
 		</li>
-		<li id="verify2" class="{% if u.verified %}hidden{% endif %}">
-			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/admin/verify/{{u.id}}','verify2','unverify2')">
-				<i class="fas fa-badge-check fa-sm fa-fw mr-4"></i>
-				Verify
+		<li id="unnuke-user">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/admin/unnuke_user')">
+				<i class="fas fa-file-check fa-sm fa-fw mr-4"></i>
+				Approve user's content
 			</button>
 		</li>
-		<li id="unverify2" class="{% if not u.verified %}hidden{% endif %}">
-			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast2('/admin/unverify/{{u.id}}','verify2','unverify2')">
-				<i class="fas fa-eraser fa-sm fa-fw mr-4"></i>
-				Unverify
+		<li id="unnuke-user">
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/admin/nuke_user')">
+				<i class="fas fa-file-times fa-sm fa-fw mr-4"></i>
+				Remove user's content
+			</button>
+		</li>
+		<li>
+			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/@{{u.username}}/revert_actions')">
+				<i class="fas fa-history fa-sm fa-fw mr-4"></i>
+				Revert admin actions
 			</button>
 		</li>
 		{% endif %}
