@@ -846,18 +846,7 @@
 <script src="/assets/js/clipboard.js?v=3"></script>
 
 {% if not p.comment_count %}
-	{% if v %}
-		<script src="/assets/js/comments_v.js?v=88"></script>
-		{% include "award_modal.html" %}
-		{% include "emoji_modal.html" %}
-		{% include "gif_modal.html" %}
-		{% if v.admin_level > 1 %}
-			{% include "ban_modal.html" %}
-		{% endif %}
-	{% endif %}
-	<script src="/assets/js/comments+submission_listing.js?v=1"></script>
-	<script src="/assets/js/comments.js?v=13"></script>
-	{% include "expanded_image_modal.html" %}
+	{% include "comments.html" %}
 {% endif %}
 
 {% if p.award_count("shit") %}
