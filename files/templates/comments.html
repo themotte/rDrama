@@ -453,23 +453,23 @@
 
 	{% if render_replies %} 
 		{% if level<10 %}
-			<div id="replies-of-{{c.id}}">
+			<div id="replies-of-{{c.id}}" class="hidden-on-collapse">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
 				{% endfor %}
 			</div>
 		{% elif replies and "notifications" in request.path %}
-			<div id="replies-of-{{c.id}}" class="hidden md:block">
+			<div id="replies-of-{{c.id}}" class="hidden md:block hidden-on-collapse">
 				{% set standalone=False %}
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
 				{% endfor %}
 			</div>
-			<div id="morecomment-{{c.id}}" class="md:hidden mt-2 more-comments text-small">
+			<div id="morecomment-{{c.id}}" class="md:hidden mt-2 more-comments text-small hidden-on-collapse">
 				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
-			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
+			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small hidden-on-collapse">
 				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
