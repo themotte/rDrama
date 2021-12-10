@@ -199,7 +199,7 @@
 				{% if c.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 				{% if v and v.admin_level > 1 and c.author.shadowbanned %}<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Shadowbanned by @{{c.author.shadowbanned}}"></i>{% endif %}
 				{% if c.is_pinned and c.is_pinned.startswith('t:') %}
-					<i id='pinned-{{c.id}}' onmouseover="pinned_timestamp('pinned-{{c.id}}')" class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-timestamp={{c.is_pinned[2:]}}*1000></i>
+					<i id='pinned-{{c.id}}' onmouseover="pinned_timestamp('pinned-{{c.id}}')" class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-timestamp={{c.is_pinned[2:]}}></i>
 				{% elif c.is_pinned %}
 					<i id='pinned-{{c.id}}' class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned by @{{c.is_pinned}}"></i>
 				{% endif %}
@@ -765,7 +765,7 @@
 {% include "expanded_image_modal.html" %}
 
 <script src="/assets/js/popover.js?v=12"></script>
-<script src="/assets/js/comments+submission_listing.js?v=3"></script>
+<script src="/assets/js/comments+submission_listing.js?v=9"></script>
 <script src="/assets/js/comments.js?v=13"></script>
 
 <script>

@@ -594,7 +594,8 @@ def award_post(pid, v):
 			g.db.add(new_badge)
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 
-	post.author.received_award_count += 1
+	if post.author.received_award_count: post.author.received_award_count += 1
+	else: post.author.received_award_count = 1
 	g.db.add(post.author)
 
 	g.db.commit()
@@ -749,7 +750,8 @@ def award_comment(cid, v):
 			g.db.add(new_badge)
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 
-	c.author.received_award_count += 1
+	if c.author.received_award_count: c.author.received_award_count += 1
+	else: c.author.received_award_count = 1
 	g.db.add(c.author)
 
 	g.db.commit()
