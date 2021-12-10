@@ -6,6 +6,7 @@
 		{% if v.admin_level > 1 %}
 		<li>
 			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/@{{u.username}}/revert_actions')">
+				<i class="fas fa-history fa-sm fa-fw mr-4"></i>
 				Revert admin actions
 			</button>
 		</li>
