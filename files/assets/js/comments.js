@@ -8,7 +8,7 @@ function collapse_comment(comment_id) {
     const isClosed = comment.classList.contains("collapsed");
     const top = comment.getBoundingClientRect().y;
 
-    const toggler = document.getElementById(`comment-collase-${comment_id}`);
+    const toggler = document.getElementById(`comment-collapse-${comment_id}`);
 
     ['hidden', 'pointer-events-none'].map(x=> toggler.classList.toggle(x));
 
