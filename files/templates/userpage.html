@@ -318,12 +318,12 @@
 	const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
 
 	function updateTax(mobile=false) {
-		let suf = mobile ? "-mobile" : "";
-		let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
+		// let suf = mobile ? "-mobile" : "";
+		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
 		if(isNaN(amount) || amount < 0) {
 			amount = 0;
 		}
-		document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+		document.getElementById("coins-transfer-taxed".innerText = amount - Math.ceil(amount*TRANSFER_TAX);
 	}
 
 	function transferCoins(mobile=false) {
@@ -334,11 +334,11 @@
 		let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
 
 		post_toast_callback("/@{{u.username}}/transfer_coins",
-			{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
+			{"amount": document.getElementById("coins-transfer-amount").value},
 			(xhr) => {
 				if(xhr.status == 200) {
 					document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
-					document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
+					// document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
 					document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
 				}
 			}
