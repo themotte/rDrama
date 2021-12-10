@@ -1,28 +1,3 @@
-<style>
-	html {
-		scroll-padding-top: 75px;
-	}
-	.comment .comment-body {
-		padding: 3px 0;
-	}
-	.comment-anchor:target {
-		transition: all 0.25s ease;
-		animation: blink normal 1s ease;
-	}
-
-	@keyframes blink {
-		0% {
-			background-color: rgba(0,0,0,0.1)
-		}
-		50% {
-			background-color: rgba(0,0,0,0.2)
-		}
-		100% {
-			background-color: rgba(0,0,0,0.1)
-		}
-	}
-</style>
-
 {% if v %}
 	{% include "award_modal.html" %}
 	<script defer src="/assets/js/marked.js"></script>
@@ -536,6 +511,28 @@
 	{% endif %}
 
 <style>
+	html {
+		scroll-padding-top: 75px;
+	}
+	.comment .comment-body {
+		padding: 3px 0;
+	}
+	.comment-anchor:target {
+		transition: all 0.25s ease;
+		animation: blink normal 1s ease;
+	}
+
+	@keyframes blink {
+		0% {
+			background-color: rgba(0,0,0,0.1)
+		}
+		50% {
+			background-color: rgba(0,0,0,0.2)
+		}
+		100% {
+			background-color: rgba(0,0,0,0.1)
+		}
+	}
 	.mod:before {
 		content: '(((';
 	}
