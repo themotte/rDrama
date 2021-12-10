@@ -338,9 +338,12 @@ def edit_post(pid, v):
 	title = request.values.get("title", "").strip().replace(' ','\n')
 	for i in re.finditer('(^|\n)(?!.*http)(.*)', title):
 		title = title.replace(i.group(2), i.group(2).upper())
+	title = title.replace('\n\n','%&$').replace('\n',' ').replace('%&$','\n\n')
+
 	body = request.values.get("body", "").strip().replace(' ','\n')
 	for i in re.finditer('(^|\n)(?!.*http)(.*)', body):
 		body = body.replace(i.group(2), i.group(2).upper())
+	body = body.replace('\n\n','%&$').replace('\n',' ').replace('%&$','\n\n')
 
 	if len(body) > 10000: return {"error":"Character limit is 10000!"}, 403
 
@@ -676,6 +679,8 @@ def submit_post(v):
 	title = request.values.get("title", "").strip()[:500].replace(' ','\n')
 	for i in re.finditer('(^|\n)(?!.*http)(.*)', title):
 		title = title.replace(i.group(2), i.group(2).upper())
+	title = title.replace('\n\n','%&$').replace('\n',' ').replace('%&$','\n\n')
+
 	url = request.values.get("url", "").strip()
 
 	if v.agendaposter and not v.marseyawarded:
@@ -687,6 +692,7 @@ def submit_post(v):
 	body = request.values.get("body", "").strip().replace(' ','\n')
 	for i in re.finditer('(^|\n)(?!.*http)(.*)', body):
 		body = body.replace(i.group(2), i.group(2).upper())
+	body = body.replace('\n\n','%&$').replace('\n',' ').replace('%&$','\n\n')
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
 

@@ -160,6 +160,7 @@ def api_comment(v):
 	body = request.values.get("body", "").strip()[:10000].replace(' ','\n')
 	for i in re.finditer('(^|\n)(?!.*http)(.*)', body):
 		body = body.replace(i.group(2), i.group(2).upper())
+	body = body.replace('\n\n','%&$').replace('\n',' ').replace('%&$','\n\n')
 
 	if v.marseyawarded:
 		if time.time() > v.marseyawarded:
@@ -620,6 +621,8 @@ def edit_comment(cid, v):
 	body = request.values.get("body", "").strip()[:10000].replace(' ','\n')
 	for i in re.finditer('(^|\n)(?!.*http)(.*)', body):
 		body = body.replace(i.group(2), i.group(2).upper())
+	body = body.replace('\n\n','%&$').replace('\n',' ').replace('%&$','\n\n')
+
 	if len(body) < 1: return {"error":"You have to actually type something!"}, 400
 
 	if body != c.body and body != "":
