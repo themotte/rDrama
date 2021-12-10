@@ -15,7 +15,12 @@ function collapse_comment(comment_id) {
 
     const isClosed = comment.classList.contains("collapsed");
 
-    document.getElementById(`comment-toggle-icon-${comment_id}`).innerText = isClosed ? '[+]' : '[-]';
+    // document.getElementById(`comment-toggle-icon-${comment_id}`).innerText = isClosed ? '[+]' : '[-]';
+
+    const icon = document.getElementsByClassName(`comment-toggle-icon-${comment_id}`);
+    for (let i = 0; i < icon.length; i++) {
+        icon[i].innerText = isClosed ? '[+]' : '[-]';
+    }
 
     if (isClosed && top < 0) {
         comment.scrollIntoView()
