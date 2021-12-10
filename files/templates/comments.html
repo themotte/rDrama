@@ -294,7 +294,7 @@
 				{% if c.post and c.post.award_count("ghosts") %}
 					<span>👻</span>
 				{% else %}
-					<div class="relative md:hidden {{ 'santa' if c.author.patron else 'cap' }}">
+					<div class="relative md:hidden flex-shrink-0 {{ 'santa' if c.author.patron else 'cap' }}">
 						<img loading="lazy" src="{{ c.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 					</div>
 
