@@ -302,12 +302,13 @@
 
 {% block modals %}
 {% if v %}
-{% include "emoji_modal.html" %}
-{% include "gif_modal.html" %}
-{% include "/modals/ModalDirectMessage.html" %}
-{% if v.admin_level > 1 %}
-{% include "/modals/ModalAdminManageUser.html" %}
-{% endif %}
+	{% include "emoji_modal.html" %}
+	{% include "gif_modal.html" %}
+	{% include "/modals/ModalDirectMessage.html" %}
+	{% include "/modals/ModalGiftCoins.html" %}
+	{% if v.admin_level > 1 %}
+		{% include "/modals/ModalAdminManageUser.html" %}
+	{% endif %}
 {% endif %}
 {% endblock %}
 
