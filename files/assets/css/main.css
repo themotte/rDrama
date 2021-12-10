@@ -3271,12 +3271,12 @@ ul.comment-section {
   color: var(--primary);
 }
 
-.comment.collapsed .comment-body p.text, .comment.collapsed div.comment-text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write,
+/*.comment.collapsed .comment-body p.text, .comment.collapsed div.comment-text, .comment.collapsed .comment-actions, .comment.collapsed .comment-write,
 .comment.collapsed .comment {
   display: none;
-}
+}*/
 
-.comment.collapsed .user-info {
+/*.comment.collapsed .user-info {
   margin-bottom: 0;
 }
 
@@ -3290,7 +3290,7 @@ ul.comment-section {
 
 .comment.collapsed .comment-body:hover {
   opacity: 1;
-}
+}*/
 
 #login {
   padding-top: 0;
