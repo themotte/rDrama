@@ -819,7 +819,7 @@ def user_profile_uid(id):
 	x=get_account(id)
 
 	purl = x.profile_url
-	if not 'images/' in purl: return redirect(purl)
+	if not purl.startswith(f'{request.host_url}images/'): return redirect(purl)
 
 	path = purl.split('images/')[1]
 	resp = make_response(send_from_directory('/images', path))
