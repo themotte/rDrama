@@ -7,7 +7,7 @@
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body flex flex-col space-y-4">
 				<div class="w-full">
 					<form action="/admin/title_change/{{u.id}}" method="post">
 						<input type="hidden" name="formkey" value="{{v.formkey}}">
@@ -48,13 +48,13 @@
 						<label class="custom-control-label" for="alts-2-mobile">Include alts</label>
 					</div>
 					<br >
-					<input id="user-ban-submit2" type="submit" class="btn btn-danger" value="Ban user" disabled>
+					<input id="user-ban-submit2" type="submit" class="btn btn-red" value="Ban user" disabled>
 				</form>
 				{% endif %}
 				<form id="agendaposter2" class="{% if u.agendaposter %}hidden{% endif %}" action="/agendaposter/{{u.id}}" method="post">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<input type="number" step="any" name="days" class="form-input" placeholder="Days (0 or blank = permanent)" >
-					<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" >
+					<input type="submit" class="btn btn-red" value="Lock Agendaposter Theme" >
 				</form>
 				<a id="unagendaposter2" class="{% if not u.agendaposter %}hidden{% endif %} btn btn-gray" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Agendaposter Theme</a>
 				<form action="/admin/unnuke_user" method="post">
@@ -66,7 +66,7 @@
 				<form action="/admin/nuke_user" method="post">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<input type="hidden" name="user" value="{{u.username}}">
-					<input type="submit" class="btn btn-danger" value="Remove User's Content">
+					<input type="submit" class="btn btn-red" value="Remove User's Content">
 				</form>
 			</div>
 			<div class="flex justify-end space-x-2 border-t border-gray-300 p-4">
