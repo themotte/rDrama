@@ -425,6 +425,21 @@ class User(Base):
 
 	@property
 	@lazy
+	def json_popover(self):
+		data = {'username': self.username,
+				'url': self.url,
+				'profile_url': self.profile_url,
+				'bannerurl': self.banner_url,
+				'bio_html': self.bio_html_eager,
+				'coins': self.coins,
+				'post_count': self.post_count,
+				'comment_count': self.comment_count,
+				}
+
+		return data
+
+	@property
+	@lazy
 	def json_raw(self):
 		data = {'username': self.username,
 				'url': self.url,
@@ -462,7 +477,7 @@ class User(Base):
 		data = self.json_core
 
 		data["badges"] = [x.json_core for x in self.badges]
-		data['coins'] = int(self.coins)
+		data['coins'] = self.coins
 		data['post_count'] = self.post_count
 		data['comment_count'] = self.comment_count
 
