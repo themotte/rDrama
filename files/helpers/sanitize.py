@@ -161,10 +161,7 @@ def sanitize(sanitized, noimages=False):
 
 	sanitized = str(soup)
 	
-	start = '&lt;s&gt;'
-	end = '&lt;/s&gt;' 
-
-	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
+	sanitized = re.sub('\|\|(.*?)\|\|', r'<span class="spoiler">\1</span>', sanitized)
 	
 	for i in re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized):
 		old = i.group(0)
