@@ -3,8 +3,10 @@
 	{% for c in p.options %}
 	<li>
 		<input type="checkbox" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
-		<label class="inline-block pl-2 text-gray-400" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}">
-			<span id="poll-{{c.id}}" class="font-bold">{{c.upvotes}}</span> votes</a>
+		<label class="inline-block pl-2 text-black" for="{{c.id}}">{{c.body_html | safe}} -
+			<a href="/votes?link=t3_{{c.id}}" class="font-bold text-gray-600 hover:text-red-600">
+				<span id="poll-{{c.id}}">{{c.upvotes}}</span> votes
+			</a>
 		</label>
 	</li>
 	{% endfor %}
