@@ -1,4 +1,3 @@
-{% if v %}
 <form id="reply-to-{{p.fullname}}" class="flex flex-wrap w-full" action="/comment" method="post">
 	<input type="hidden" name="formkey" value="{{v.formkey}}">
 	<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
@@ -52,4 +51,3 @@
 		</button>
 	</div>
 </form>
-{% endif %}

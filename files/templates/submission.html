@@ -455,7 +455,25 @@
 
 						</div>
 
-						
+						{% if p.embed_url %}
+							{% if p.domain == "twitter.com" %}
+								{{p.embed_url | safe}}
+								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
+									<script src="/assets/js/twitterlight.js?v=13"></script>
+								{% else %}
+									<script src="/assets/js/twitter.js?v=13"></script>
+								{% endif %}
+								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
+							{% elif "youtu" in p.domain %}
+								{% if 'lite' in p.embed_url %}
+									{{p.embed_url | safe}}
+								{% else %}
+									<div class="embed-responsive embed-responsive-16by9 mb-3">
+										<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+									</div>
+								{% endif %}
+							{% endif %}
+						{% endif %}
 
 						{% if p.author.sig_html and (p.author_id == 1904 or not (v and v.sigs_disabled)) %}
 							<hr>
@@ -615,11 +633,6 @@
 			{% endif %}
 
 			{% if p.replies %}
-			<div class="comment-section px-2.5 md:px-0" id="comment-section">
-				{% with comments=p.replies %}
-				{% include "comments.html" %}
-				{% endwith %}
-			</div>
 			{% elif not p.replies and p.deleted_utc == 0 %}
 			<div class="comment-section px-2.5 md:px-0 text-center py-7">
 				<span class="fa-stack fa-2x text-muted mb-4">
@@ -633,10 +646,6 @@
 				<p class="text-muted">This comment section is a ghost town. <a href="/login?redirect={{request.path | urlencode}}">Sign in</a></p>
 				{% endif %}
 			</div>
-			{% endif %}
-
-			{% if offset %}
-				<script src="/assets/js/viewmore.js?v=7"></script>
 			{% endif %}
 
 	</div>
