@@ -902,7 +902,7 @@ def submit_post(v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-	if v and v.admin_level > 1:
+	if v and v.admin_level > 2:
 		bet_options = []
 		for i in re.finditer('\s*\$\$\$([^\$\n]+)\$\$\$\s*', body):
 			bet_options.append(i.group(1))
@@ -970,7 +970,7 @@ def submit_post(v):
 	g.db.add(new_post)
 	g.db.flush()
 
-	if v and v.admin_level > 1:
+	if v and v.admin_level > 2:
 		for option in bet_options:
 			bet_option = Comment(author_id=AUTOBETTER_ID,
 				parent_submission=new_post.id,
