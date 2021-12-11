@@ -266,7 +266,7 @@ def static_service(path):
 @app.get('/hostedimages/<path:path>')
 @limiter.exempt
 def images(path):
-	resp = make_response(send_from_directory('/images', path.replace('.WEBP','.webp')))
+	resp = make_response(send_from_directory('images', path.replace('.WEBP','.webp')))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")
 	if request.path.endswith('.webp'):

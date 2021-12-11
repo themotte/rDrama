@@ -192,9 +192,9 @@ def api_comment(v):
 		file=request.files["file"]
 		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+		name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
 		file.save(name)
-		url = request.host_url[:-1] + process_image(name)
+		url = request.host_url + process_image(name)
 		
 		body += f"\n\n![]({url})"
 
@@ -722,9 +722,9 @@ def edit_comment(cid, v):
 			file=request.files["file"]
 			if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
 
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = request.host_url[:-1] + process_image(name)
+			url = request.host_url + process_image(name)
 
 			body += f"\n\n![]({url})"
 			body_md = CustomRenderer().render(mistletoe.Document(body))

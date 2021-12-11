@@ -124,9 +124,9 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = request.host_url[:-1] + process_image(name)
+			url = request.host_url + process_image(name)
 
 			bio += f"\n\n![]({url})"
 		
@@ -314,9 +314,9 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = request.host_url[:-1] + process_image(name)
+			url = request.host_url + process_image(name)
 
 			bio += f"\n\n![]({url})"
 		
@@ -720,20 +720,20 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 
-	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
 	file.save(name)
-	highres = request.host_url[:-1] + process_image(name)
+	highres = request.host_url + process_image(name)
 
 	if not highres: abort(400)
 
 	name2 = name.replace('.webp', 'r.webp')
 	copyfile(name, name2)
-	imageurl = request.host_url[:-1] + process_image(name2, True)
+	imageurl = request.host_url + process_image(name2, True)
 
 	if not imageurl: abort(400)
 
-	if v.highres and '/images/' in v.highres : os.remove('/images/' + v.highres.split('/images/')[1])
-	if v.profileurl and '/images/' in v.profileurl : os.remove('/images/' + v.profileurl.split('/images/')[1])
+	if v.highres and '/images/' in v.highres : os.remove('images/' + v.highres.split('/images/')[1])
+	if v.profileurl and '/images/' in v.profileurl : os.remove('images/' + v.profileurl.split('/images/')[1])
 	v.highres = highres
 	v.profileurl = imageurl
 	g.db.add(v)
@@ -756,12 +756,12 @@ def settings_images_banner(v):
 
 	file = request.files["banner"]
 
-	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
 	file.save(name)
-	bannerurl = request.host_url[:-1] + process_image(name)
+	bannerurl = request.host_url + process_image(name)
 
 	if bannerurl:
-		if v.bannerurl and '/images/' in v.bannerurl : os.remove('/images/' + v.bannerurl.split('/images/')[1])
+		if v.bannerurl and '/images/' in v.bannerurl : os.remove('images/' + v.bannerurl.split('/images/')[1])
 		v.bannerurl = bannerurl
 		g.db.add(v)
 		g.db.commit()
@@ -986,8 +986,8 @@ def settings_name_change(v):
 def settings_song_change(v):
 	song=request.values.get("song").strip()
 
-	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
-		os.remove(f"/songs/{v.song}.mp3")
+	if song == "" and v.song and path.isfile(f"songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
+		os.remove(f"songs/{v.song}.mp3")
 		v.song = None
 		g.db.add(v)
 		g.db.commit()
@@ -1006,7 +1006,7 @@ def settings_song_change(v):
 	if "?" in id: id = id.split("?")[0]
 	if "&" in id: id = id.split("&")[0]
 
-	if path.isfile(f'/songs/{id}.mp3'): 
+	if path.isfile(f'songs/{id}.mp3'): 
 		v.song = id
 		g.db.add(v)
 		g.db.commit()
@@ -1028,11 +1028,11 @@ def settings_song_change(v):
 						error=f"Duration of the video must not exceed 10 minutes.")
 
 
-	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
-		os.remove(f"/songs/{v.song}.mp3")
+	if v.song and path.isfile(f"songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
+		os.remove(f"songs/{v.song}.mp3")
 
 	ydl_opts = {
-		'outtmpl': '/songs/%(title)s.%(ext)s',
+		'outtmpl': 'songs/%(title)s.%(ext)s',
 		'format': 'bestaudio/best',
 		'postprocessors': [{
 			'key': 'FFmpegExtractAudio',
@@ -1049,10 +1049,10 @@ def settings_song_change(v):
 						   v=v,
 						   error=f"Age-restricted videos aren't allowed.")
 
-	files = os.listdir("/songs/")
-	paths = [path.join("/songs/", basename) for basename in files]
+	files = os.listdir("songs/")
+	paths = [path.join("songs/", basename) for basename in files]
 	songfile = max(paths, key=path.getctime)
-	os.rename(songfile, f"/songs/{id}.mp3")
+	os.rename(songfile, f"songs/{id}.mp3")
 
 	v.song = id
 	g.db.add(v)

@@ -142,7 +142,6 @@ def sanitize(sanitized, noimages=False):
 			link = soup.new_tag("a")
 			link["href"] = tag["data-src"]
 			if site not in link["href"] and not link["href"].startswith('/'): link["rel"] = "nofollow noopener noreferrer"
-			link["target"] = "_blank"
 			link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
 			link["data-bs-toggle"] = "modal"
 			link["data-bs-target"] = "#expandImageModal"
@@ -151,8 +150,9 @@ def sanitize(sanitized, noimages=False):
 
 	for tag in soup.find_all("a"):
 		if tag.get("href"):
-			tag["target"] = "_blank"
-			if site not in tag["href"] and not tag["href"].startswith('/'): tag["rel"] = "nofollow noopener noreferrer"
+			if site not in tag["href"] and not tag["href"].startswith('/'):
+				tag["target"] = "_blank"
+				tag["rel"] = "nofollow noopener noreferrer"
 
 			if re.match("https?://\S+", str(tag.string)):
 				try: tag.string = tag["href"]
@@ -205,7 +205,7 @@ def sanitize(sanitized, noimages=False):
 	for i in re.finditer('" target="_blank">(https://youtube\.com/watch\?v\=(.*?))</a>', sanitized):
 		url = i.group(1)
 		yt_id = i.group(2).split('&')[0].split('%')[0]
-		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
+		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer">{url}</a>'
 
 		params = parse_qs(urlparse(url.replace('&amp;','&')).query)
 		t = params.get('t', params.get('start', [0]))[0]
