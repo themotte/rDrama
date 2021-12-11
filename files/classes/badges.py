@@ -50,15 +50,9 @@ class Badge(Base):
 
 	@property
 	@lazy
-	def json_core(self):
-
+	def json(self):
 		return {'text': self.text,
 				'name': self.name,
 				'url': self.url,
 				'icon_url':f"https://{app.config['SERVER_NAME']}{self.path}"
 				}
-
-	@property
-	@lazy
-	def json(self):
-		return self.json_core
