@@ -902,10 +902,11 @@ def submit_post(v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-	bet_options = []
-	for i in re.finditer('\s*\$\$\$([^\$\n]+)\$\$\$\s*', body):
-		bet_options.append(i.group(1))
-		body = body.replace(i.group(0), "")
+	if v and v.admin_level > 1:
+		bet_options = []
+		for i in re.finditer('\s*\$\$\$([^\$\n]+)\$\$\$\s*', body):
+			bet_options.append(i.group(1))
+			body = body.replace(i.group(0), "")
 
 	options = []
 	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):
@@ -969,15 +970,16 @@ def submit_post(v):
 	g.db.add(new_post)
 	g.db.flush()
 
-	for option in bet_options:
-		bet_option = Comment(author_id=AUTOBETTER_ID,
-			parent_submission=new_post.id,
-			level=1,
-			body_html=filter_emojis_only(option),
-			upvotes=0
-			)
+	if v and v.admin_level > 1:
+		for option in bet_options:
+			bet_option = Comment(author_id=AUTOBETTER_ID,
+				parent_submission=new_post.id,
+				level=1,
+				body_html=filter_emojis_only(option),
+				upvotes=0
+				)
 
-		g.db.add(bet_option)
+			g.db.add(bet_option)
 
 	for option in options:
 		c = Comment(author_id=AUTOPOLLER_ID,
