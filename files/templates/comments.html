@@ -449,9 +449,11 @@
 	{% if p %}
 		{% set pid = p.id %}
 	{% endif %}
-	<button class="mt-2 w-full btn btn-gray" id="load-more-button" onclick="loadMore({{pid}},'{{sort}}',{{offset}},'comment-list',this.id); this.disabled = true;">
-		Load more comments
-	</button>
+	<div id="comment-list-{{ offset }}">
+		<button class="mt-2 w-full btn btn-gray" id="load-more-button" onclick="loadMore({{pid}},'{{sort}}',{{offset}},'comment-list-{{ offset }}',this.id); this.disabled = true;">
+			Load more comments
+		</button>
+	</div>
 	{% endif %}
 
 <style>
