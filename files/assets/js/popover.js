@@ -33,15 +33,21 @@ usernames.forEach(eventasdf);
 
 document.addEventListener("click", function(e){dfgh(e)});
 
+
 function userPopover(author) {
-    for (const x of document.getElementsByClassName('pop-banner')) {x.src = author["bannerurl"]}
-    for (const x of document.getElementsByClassName('pop-picture')) {x.src = author["profile_url"]}
-
-    for (const x of document.getElementsByClassName('pop-username')) {x.innerHTML = author["username"]}
-    for (const x of document.getElementsByClassName('pop-bio')) {x.innerHTML = author["bio_html"]}
-    for (const x of document.getElementsByClassName('pop-postcount')) {x.innerHTML = author["post_count"]}
-    for (const x of document.getElementsByClassName('pop-commentcount')) {x.innerHTML = author["comment_count"]}
-    for (const x of document.getElementsByClassName('pop-coins')) {x.innerHTML = author["coins"]}
-
-    for (const x of document.getElementsByClassName('pop-viewmore')) {x.href = author["url"]}
+    let badges = ''
+    for (const x of author["badges"]) {
+        badges += `<img width="32" loading="lazy" src="${x}">`
+    }
+    for (let i = 0; i < document.getElementsByClassName('pop-banner').length; i++) {
+        document.getElementsByClassName('pop-banner')[i].src = author["bannerurl"]
+        document.getElementsByClassName('pop-picture')[i].src = author["profile_url"]
+        document.getElementsByClassName('pop-username')[i].innerHTML = author["username"]
+        document.getElementsByClassName('pop-bio')[i].innerHTML = author["bio_html"]
+        document.getElementsByClassName('pop-postcount')[i].innerHTML = author["post_count"]
+        document.getElementsByClassName('pop-commentcount')[i].innerHTML = author["comment_count"]
+        document.getElementsByClassName('pop-coins')[i].innerHTML = author["coins"]
+        document.getElementsByClassName('pop-viewmore')[i].href = author["url"]
+        document.getElementsByClassName('pop-badges')[i].innerHTML = badges
+    }
 }
