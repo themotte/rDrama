@@ -322,6 +322,14 @@ def viewmore(v, pid, sort, offset):
 	return render_template("comments.html", v=v, comments=comments, render_replies=True, pid=pid, sort=sort, offset=offset)
 
 
+@app.post("/morecomments/<cid>")
+@limiter.limit("1/second")
+@auth_desired
+def morecomments(v, cid):
+	c = g.db.query(Comment).filter_by(id=cid).first()
+	comments = c.replies
+	return render_template("comments.html", v=v, comments=comments, render_replies=True)
+
 @app.post("/edit_post/<pid>")
 @limiter.limit("1/second")
 @auth_required

@@ -485,8 +485,8 @@
 				<a href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
-			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
-				<a href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+			<div id="morecomments-{{c.id}}" class="mt-2 more-comments text-small">
+				<button id="btn-{{c.id}}" class="btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
 			</div>
 		{% endif %}
 	{% endif %}
@@ -757,7 +757,7 @@
 {% include "expanded_image_modal.html" %}
 
 <script src="/assets/js/comments+submission_listing.js?v=100"></script>
-<script src="/assets/js/comments.js?v=13"></script>
+<script src="/assets/js/comments.js?v=14"></script>
 
 <script>
 	{% if p and (not v or v.highlightcomments) %}
