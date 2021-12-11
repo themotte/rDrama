@@ -483,7 +483,7 @@
 
 					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and not v.is_suspended %}
 					<div class="py-2">
-						{% include "/submission/SubmissionEditForm.html" %}
+						
 					</div>
 					{% endif %}
 
@@ -503,7 +503,7 @@
 
 				<!-- Post actions -->
 				<div class="hidden md:block pt-4">
-					{% include "/submission/SubmissionActions.html" %}
+					
 				</div>
 
 			</div>
@@ -550,7 +550,7 @@
 			</div>
 
 			<div class="md:hidden px-2.5 mt-4">
-				{% include "/submission/SubmissionActionsMobile.html" %}
+				
 			</div>
 
 	</div>
@@ -612,7 +612,7 @@
 				<div class="hidden md:block relative flex-shrink-0 mr-4 {{ 'santa' if p.author.patron else 'cap' }}">
 					<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="my avatar"/>
 				</div>
-				{% include "/comments/CommentForm.html" %}
+				
 			</div>
 			{% endif %}
 
@@ -635,7 +635,7 @@
 			{% if p.replies %}
 			<div class="comment-section px-2.5 md:px-0" id="comment-section">
 				{% with comments=p.replies %}
-				{% include "comments.html" %}
+				
 				{% endwith %}
 			</div>
 			{% elif not p.replies and p.deleted_utc == 0 %}
@@ -665,32 +665,27 @@
 
 <!-- Sidebar -->
 {% block sidebar %}
-	{% include "/sidebars/SubmissionSidebar.html" %}
+	
 {% endblock %}
 
 {% block modals %}
 	{% if v %}
 		{% if v.id == p.author_id %}
-			{% include "delete_post_modal.html" %}
+			
 		{% endif %}
 
-		{% include "report_post_modal.html" %}
-		{% include "award_modal.html" %}
-		{% include "emoji_modal.html" %}
-		{% include "gif_modal.html" %}
 
 		{% if v.admin_level == 6 %}
-			{% include "ban_modal.html" %}
+			
 		{% endif %}
 	{% endif %}
 
-	{% include "/modals/ModalSubmissionActions.html" %}
-	{% include "expanded_image_modal.html" %}
+
 {% endblock %}
 
 {% block scripts %}
 	<!-- This file contains minimal html and javascript required for awards, needs to be near </body> closing tag -->
-	{% include "/submission/SubmissionAwards.html" %}
+	
 
 	{% if v %}
 	<script defer src="/assets/js/vote.js?v=1"></script>
