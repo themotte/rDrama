@@ -87,7 +87,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def bet_options(self):
-		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOBETTER_ID, level=1).order_by(Comment.upvotes.desc())
+		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOBETTER_ID, level=1)
 
 	def total_poll_voted(self, v):
 		if v:
