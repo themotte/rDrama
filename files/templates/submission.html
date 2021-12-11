@@ -676,7 +676,7 @@
 	{% include "/submission/SubmissionAwards.html" %}
 
 	{% if v %}
-	<script defer src="/assets/js/vote.js?v=1"></script>
+		<script defer src="/assets/js/vote.js?v=1"></script>
 		{% if not p.comment_count %}
 			<script defer src="/assets/js/comments_v.js?v=74"></script>
 		{% endif %}
@@ -686,7 +686,9 @@
 		<script src="/assets/js/submission.js?v=3"></script>
 	{% endif %}
 
-	<script defer src="/assets/js/new_comments_count.js?v=53"></script>
+	{% if not v or v.highlightcomments %}
+		<script defer src="/assets/js/new_comments_count.js?v=53"></script>
+	{% endif %}
 
 	<script defer>
 		(() => {
