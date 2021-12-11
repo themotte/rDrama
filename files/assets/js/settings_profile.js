@@ -1,7 +1,3 @@
-function formkey() {
-	return document.getElementById("formkey").innerHTML;
-}
-
 function post(url) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
