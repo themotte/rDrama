@@ -379,11 +379,39 @@
 				{% endfor %}
 			</div>
 			<div id="morecomment-{{c.id}}" class="md:hidden mt-2 more-comments text-small hidden-on-collapse">
-				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<a href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small hidden-on-collapse">
-				<a {% if v %}href="{{c.shortlink}}"{% else %}href="/logged_out{{c.shortlink}}"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<button id="btn-{{c.id}}" class="btn btn-gray" onclick="morecomments('{{c.id}}')">More comments</button>
+				<a class="md:hidden" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+			</div>
+		{% endif %}
+	{% endif %}
+
+	{% if render_replies %} 
+		{% if level<10 %}
+			<div id="replies-of-{{c.id}}">
+				{% for reply in replies %}
+					{{single_comment(reply, level=level+1)}}
+				{% endfor %}
+			</div>
+		{% elif replies and "notifications" in request.path %}
+			<div id="replies-of-{{c.id}}" class="d-none d-md-block">
+				{% set standalone=False %}
+				{% for reply in replies %}
+					{{single_comment(reply, level=level+1)}}
+				{% endfor %}
+			</div>
+			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
+				<a href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+			</div>
+		{% elif replies %}
+			<div id="morecomments-{{c.id}}" class="mt-2 more-comments text-small">
+				<button class="mt-2 w-full btn btn-gray" id="load-more-replies-button" onclick="loadMoreReplies({{cid}},'{{sort}}',{{offset}},'comment-list',this.id); this.disabled = true;">
+					Load more replies
+				</button>
+				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
