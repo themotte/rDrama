@@ -24,6 +24,8 @@ else: cc = "country club"
 @app.get("/distribute/<cid>")
 @admin_level_required(2)
 def distribute(v, cid):
+	try: int(cid)
+	except: abort(400)
 	votes = g.db.query(CommentVote).filter_by(comment_id=cid)
 	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
 	coinsperperson = int(autobetter.coins / votes.count())
