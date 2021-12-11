@@ -1,5 +1,6 @@
 from files.helpers.wrappers import *
 from files.helpers.get import *
+from files.helpers.const import AUTOBETTER_ID
 from files.helpers.alerts import send_notification
 from files.classes import *
 from flask import *
