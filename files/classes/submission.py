@@ -91,7 +91,7 @@ class Submission(Base):
 
 	def total_poll_voted(self, v):
 		if v:
-			for option in self.options + self.bet_options:
+			for option in self.options:
 				if option.poll_voted(v): return True
 		return False
 
