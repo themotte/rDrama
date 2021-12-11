@@ -96,6 +96,7 @@ class Submission(Base):
 		return False
 
 	def total_bet_voted(self, v):
+		if "closed" in self.body.lower(): return True
 		if v:
 			for option in self.bet_options:
 				if option.poll_voted(v): return True

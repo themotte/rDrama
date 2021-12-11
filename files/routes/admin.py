@@ -22,16 +22,18 @@ if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 
 @app.get("/distribute/<cid>")
-@admin_level_required(2)
+@admin_level_required(3)
 def distribute(v, cid):
 	try: int(cid)
 	except: abort(400)
+	post = g.db.query(Comment).filter_by(id=cid).first().post.permalink
 	votes = g.db.query(CommentVote).filter_by(comment_id=cid)
 	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
 	coinsperperson = int(autobetter.coins / votes.count())
 	for vote in votes:
 		u = vote.user
 		u.coins += coinsperperson
+		send_notification(u.id, f"You won {coinsperperson} coins betting on https://{request.host}{post} !")
 		g.db.add(u)
 
 	autobetter.coins = 0
