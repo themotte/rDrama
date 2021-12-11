@@ -117,7 +117,8 @@
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
-				<a href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
+				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
@@ -486,7 +487,8 @@
 			</div>
 		{% elif replies %}
 			<div id="morecomments-{{c.id}}" class="mt-2 more-comments text-small">
-				<button id="btn-{{c.id}}" class="btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
+				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
+				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
