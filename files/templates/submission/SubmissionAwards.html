@@ -46,7 +46,9 @@
 {% endif %}
 
 <!-- Ginger Marsey award -->
-{% include "/awards/Christmas/Gingerbread.html" %}
+{% if p.award_count("gingerbread") %}
+	{% include "/awards/Christmas/Gingerbread.html" %}
+{% endif %}
 
 <!-- Javascript -->
 
