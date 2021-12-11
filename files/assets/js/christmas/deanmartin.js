@@ -1,4 +1,4 @@
-const audio = new Audio('/assets/christmas/songs/mariah.mp3');
+const audio = new Audio('/assets/christmas/songs/cold.mp3');
 audio.loop=true;
 
 function play() {
