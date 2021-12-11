@@ -1,3 +1,30 @@
+/* Colors */
+
+.text-twitter {
+	color: #00acee;
+}
+.text-success {
+	color: #16a34a;
+}
+.text-danger {
+	color: #dc2626;
+}
+.text-blue {
+	color: #0369a1;
+}
+.text-lightblue {
+	color: #0ea5e9;
+}
+.text-gold {
+	color: #facc15;
+}
+.text-silver {
+	color: #94a3b8;
+}
+.text-lightgreen {
+	color: #84cc16;
+}
+
 /* Hats */
 
 .cap::before {
@@ -26,6 +53,31 @@
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
+}
+
+
+/* Mistletoe */
+
+.mistletoe::before {
+	content: '';
+	pointer-events: none;
+	background: url("https://i.ibb.co/LN79rp9/Image.png");
+	position: absolute;
+	bottom: -15px;
+	right: 0;
+	height: 23px;
+	background-size: contain;
+}
+
+.mistletoe::after {
+	content: '';
+	pointer-events: none;
+	background: url("https://i.ibb.co/LN79rp9/Image.png");
+	position: absolute;
+	bottom: -15px;
+	left: 0;
+	height: 23px;
+	background-size: contain;
 }
 
 /* Snow caps */

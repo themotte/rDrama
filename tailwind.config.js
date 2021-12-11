@@ -27,7 +27,7 @@ module.exports = {
       green: colors.green,
       red: colors.red,
       yellow: colors.amber,
-      blue: colors.sky,
+      blue: colors.sky
     },
     fontFamily: {
       'sans-serif': ['Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'Tahoma', 'Segoe UI', 'Helvetica', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'],
