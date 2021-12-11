@@ -308,7 +308,234 @@
 <!-- Post -->
 <div id="post-root" class="sm:py-4 my-2.5 sm:my-0">
 
-	
+	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 bg-gray-200 {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
+		<div class="{% if p.deleted_utc > 0 %}deleted {% endif %} flex flex-row-reverse flex-nowrap justify-end">
+
+			{% if not p.is_image and p.thumb_url and not p.embed_url %}
+			<div class="hidden md:block pl-3 flex-shrink-0">
+				<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
+					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0" alt="post thumbnail">
+				</a>
+			</div>
+			{% endif %}
+
+			<div class="w-full">
+				<!-- Content -->
+				<div id="post-content" class="{% if p.deleted_utc > 0 %}deleted {% endif %}card-block w-100 my-md-auto">
+
+					{% if p.active_flags %}
+					<div id="flaggers" class="flaggers hidden">
+						<strong><i class="far fa-fw fa-flag"></i> Reported by:</strong>
+						<pre></pre>
+						<ul style="padding-left:20px; margin-bottom: 0;">
+							{% for f in p.ordered_flags %}
+							<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}<a href="javascript:void(0)" onclick="post_toast('/del_report/p{{ f.id }}')">[remove]</a>{% endif %}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					{% endif %}
+
+					<!-- Meta information -->
+					<div class="no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
+
+						<div class="relative md:hidden flex-shrink-0 {{ 'santa' if p.author.patron else 'cap' }}">
+							<img loading="lazy" src="{{ p.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
+						</div>
+
+						{% if v and v.admin_level==6 and p.author.shadowbanned %}
+						<span class="flex-shrink-0">
+						<i class="fas fa-user-times text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
+						{% endif %}
+						{% if p.distinguish_level %}
+						<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>
+						{% endif %}
+						{% if p.is_bot %}
+						<i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bot"></i>
+						{% endif %}
+						{% if p.author.verified %}
+						<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
+						{% endif %}
+						</span>
+						<a class="user-name" onclick="userPopover({{p.author.json_popover | tojson}})" data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover-{{p.id}}" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}}" data-bs-original-title="" title="">
+							<span class="inline-flex flex-shrink-0 items-center font-bold">
+								{% if p.author.patron and not p.distinguish_level %}
+								<span class="patron" style="background-color:#{{p.author.namecolor}};">
+									{{p.author.username}}
+								</span>
+								{% elif p.distinguish_level and 'rama' in request.host %}
+								<span class="mod">
+									{{p.author.username}}
+								</span>
+								{% else %}
+								{{p.author.username}}
+								{% endif %}
+							</span>
+						</a>
+
+						{% if p.author.customtitle %}
+						<bdi class="flex-shrink-0" style="color: #{{p.author.titlecolor}}">
+							{% if p.author.quadrant %}
+								<img loading="lazy" height="20" src="/assets/images/PCM/quadrants/{{p.author.quadrant}}.gif">
+							{% endif %}
+							{{p.author.customtitle | safe}}
+						</bdi>
+						{% endif %}
+
+						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp">{{p.age_string}}</span>
+
+						{% if p.edited_utc %}
+						Edited
+						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp">{{p.edited_string}}</span>
+						{% endif %}
+
+						{% if p.realurl(v) %}
+						<a class="flex-shrink-0 text-gray-500 hover:underline" href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>({{p.domain}})
+						</a>
+						{% else %}
+						<span class="flex-shrink-0">(text post)</span>
+						{% endif %}
+
+						<!-- <span>{{p.views}} views</span> -->
+					</div>
+
+					<!-- Title -->
+					<h1 id="post-title" class="post-title font-bold font-heading text-lg md:text-3xl leading-normal mb-2">
+						{% if p.realurl(v) %}
+						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black hover:text-primary">
+							{{p.realtitle(v) | safe}}
+						</a>
+						{% else %}
+						{{p.realtitle(v) | safe}}
+						{% endif %}
+					</h1>
+
+					<!-- Body content -->
+					<div id="post-body" class="post-body mb-3">
+						{% if p.realurl(v) %}
+						{% if "streamable.com/" in p.realurl(v) %}
+						<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;"><iframe loading="lazy" src="{{p.realurl(v)}}" frameborder="0" width="100%" height="100%" allowfullscreen="" style="width: 100%; height: 100%; position: absolute;"></iframe></div>
+						<pre></pre>
+						{% elif "spotify.com/" in p.realurl(v) %}
+						{% if "spotify.com/embed/" in p.realurl(v) %}
+						{% set streamurl=p.realurl(v) %}
+						{% else %}
+						{% set streamurl=p.realurl(v).replace("spotify.com", "spotify.com/embed") %}
+						{% endif %}
+						<iframe loading="lazy" src="{{streamurl}}" width="100%" height="160" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+						<pre></pre>
+
+						{% elif not p.embed_url and not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
+						<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
+							<div class="flex md:hidden justify-between items-center border border-gray-300 rounded p-2{% if p.realbody(v) %} mb-3{% endif %}">
+								<span>{{p.domain|truncate(30, True)}}</span>
+								<i class="fas fa-external-link-alt fa-sm fa-fw"></i>
+							</div>
+						</a>
+						{% endif %}
+						{% endif %}
+						<div id="post-text" class="text-black {% if p.award_count("candycane") %}candycane{% endif %}">
+							{% if p.is_image %}
+							<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
+								<img loading="lazy" src="{{p.realurl(v)}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
+							</a>
+							{% elif p.url and p.url.lower().endswith('.mp4') %}
+							<video controls loop preload="metadata" style="max-width: 100%">
+								<source src="{{ p.realurl(v) }}" type="video/mp4"/>
+							</video>
+							{% endif %}
+
+							{{p.realbody(v) | safe}}
+
+							{% for c in p.options %}
+							<div class="custom-control">								
+								<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
+								<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
+							</div>
+							{% endfor %}
+
+						</div>
+
+						
+
+						{% if p.author.sig_html and (p.author_id == 1904 or not (v and v.sigs_disabled)) %}
+							<hr>
+							{{p.author.sig_html | safe}}
+						{% endif %}
+					</div>
+
+					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and not v.is_suspended %}
+					<div class="py-2">
+						{% include "/submission/SubmissionEditForm.html" %}
+					</div>
+					{% endif %}
+
+					{% if p.embed_url and "http" not in p.embed_url %}
+					<div id="crosspost-embed" class="p-2.5 rounded-md bg-gray-300 border border-gray-400">
+						<div class="row no-gutters">
+							<div id="frontpage" class="col-12 pt-0">
+								<div class="posts" id="posts">
+									{{ p.embed_url | post_embed(v) | safe }}
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+
+				</div>
+
+				<!-- Post actions -->
+				<div class="hidden md:block pt-4">
+					{% include "/submission/SubmissionActions.html" %}
+				</div>
+
+			</div>
+
+				<!-- Author avatar, post score, and voting buttons -->
+				<div class="hidden md:flex flex-col flex-shrink-0 items-center mr-4">
+
+					<div class="relative avatar">
+						<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="author avatar"/>
+					</div>
+
+					<div class="py-2 text-sm text-gray-400 text-center font-bold hidden md:block">
+					{% if v and request.path.startswith('/@') and not v.admin_level %}
+						{% if voted==1 %}
+						<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
+						{% endif %}
+
+						<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+
+						{% if voted==-1 %}
+							<div class="mx-auto arrow-down post-{{p.id}}-down active"></div>
+						{% endif %}
+
+						{% elif v %}
+
+						<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
+
+						<span id="post-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+
+						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
+
+						{% else %}
+
+						<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up" onclick="location.href='/login';"></div>
+
+						<span id="post-{{p.id}}-score-none" class="score"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+
+						<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="mx-auto arrow-down" onclick="location.href='/login';"></div>
+						{% endif %}
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="md:hidden px-2.5 mt-4">
+				{% include "/submission/SubmissionActionsMobile.html" %}
+			</div>
+
+	</div>
 
 		{% if not p.is_image and not (p.url and p.url.lower().endswith('.mp4')) %}
 		<div class="col-span-full">
