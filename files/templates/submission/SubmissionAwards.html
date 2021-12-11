@@ -129,9 +129,11 @@
 {% elif p.award_count("fireplace")%}
 	<script defer src="/assets/js/christmas/fireplace.js?v=2"></script>
 {% else %}
-	<script defer src="/assets/js/christmas/fireplace.js?v=2"></script>
-	<!-- <script defer src="/assets/js/christmas/playlist.js?v=2"></script> -->
+	<script defer src="/assets/js/christmas/playlist.js?v=2"></script>
 {% endif %}
 
 <!-- Fireplace award -->
-{% include "/awards/Christmas/Fireplace.html" %}
+{% if p.award_count("fireplace")%}
+	{% include "/awards/Christmas/Fireplace.html" %}
+{% endif %}
+
