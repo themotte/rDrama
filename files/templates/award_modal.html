@@ -15,10 +15,10 @@
 						{% for award in v.user_awards %}
 						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
 							{% if award.owned %}
-							<input hidden name="kind" value="{{award.kind}}" type="radio" id="{{award.kind}}-award" class="peer">
+							<input hidden name="kind" value="{{award.kind}}" type="radio" id="{{award.kind}}" class="peer">
 							<label for="{{award.kind}}-award" onclick="document.getElementById('giveaward').disabled=false" class="w-full h-full p-2 text-center hover:bg-gray-300 peer-checked:shadow-inner peer-checked:bg-gray-400 rounded">
 							{% else %}
-							<input hidden name="kind" value="{{award.kind}}" type="radio" id="{{award.kind}}-award" class="peer" disabled>
+							<input hidden name="kind" value="{{award.kind}}" type="radio" id="{{award.kind}}" class="peer" disabled>
 							<label for="{{award.kind}}-award" onclick="document.getElementById('giveaward').disabled=false" class="w-full h-full p-2 text-center hover:bg-gray-300 peer-checked:shadow-inner peer-checked:bg-gray-400 rounded cursor-not-allowed opacity-50">
 							{% endif %}
 								<i class="{{award.icon}} {{award.color}}"></i>
