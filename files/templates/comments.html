@@ -382,12 +382,12 @@
 				<a href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
-			<div id="morecomments-{{c.id}}" class="mt-2 more-comments text-small hidden-on-collapse">
+			<div id="morecomments-{{c.id}}" class="mt-2 more-comments text-small hidden-on-collapse hidden md:block">
 				<button class="mt-2 w-full btn btn-gray" id="load-more-replies-button-{{c.id}}" onclick="loadMoreReplies('{{c.id}}','morecomments-{{c.id}}',this.id); this.disabled = true;">
 					Load more replies
 				</button>
-				<a class="md:hidden" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
+			<a class="md:hidden hidden-on-collapse" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 		{% endif %}
 	{% endif %}
 	</div>
