@@ -34,7 +34,7 @@ const trackList = [
 ];
 const selected = trackList[Math.floor(Math.random() * trackList.length)];
 
-const audio = new Audio(`/assets/christmas/songs/${selected}.mp3',`);
+const audio = new Audio(`/assets/christmas/songs/${selected}.mp3`);
 audio.loop=true;
 
 function play() {
