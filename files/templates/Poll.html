@@ -1,6 +1,12 @@
-{% for c in p.options %}
-<div class="custom-control">								
-	<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
-	<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
+<div class="p-2.5 bg-gray-100 border border-gray-300 rounded-md shadow-inset-t-white-10">
+	<ul class="flex flex-col space-y-2 mb-0">
+	{% for c in p.options %}
+	<li>
+		<div class="custom-control">								
+			<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
+			<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
+		</div>
+	</li>
+	{% endfor %}
+	</ul>
 </div>
-{% endfor %}
