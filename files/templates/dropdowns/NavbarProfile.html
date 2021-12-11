@@ -10,15 +10,15 @@
 				<div class="text-base text-white leading-5 font-bold">
 					{{ v.username }}
 				</div>
-				<div class="flex space-x-3 mt-1">
+				<div class="flex space-x-4 mt-1">
 					<small class="flex items-center block mt-1 text-gray-300">
 						<img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/images/emojis/marseycoin.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}" class="w-6 h-6 object-contain" alt="coin icon"/>
-						<span class="pl-1">{{v.coins}}</span>
+						<span class="pl-2">{{v.coins}}</span>
 					</small>
 					{% if v.procoins %}
 					<small class="flex items-center block mt-1 text-gray-300">
 						<img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/images/emojis/marseybux.webp" data-bs-original-title="MarseyBux" aria-label="MarseyBux" class="w-6 h-6 object-contain" alt="coin icon"/>
-						<span class="pl-1">{{v.procoins}}</span>
+						<span class="pl-2">{{v.procoins}}</span>
 					</small>
 					{% endif %}
 				</div>
