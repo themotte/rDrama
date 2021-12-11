@@ -434,6 +434,7 @@ class User(Base):
 				'coins': self.coins,
 				'post_count': self.post_count,
 				'comment_count': self.comment_count,
+				'badges': [x.path for x in self.badges],
 				}
 
 		return data
