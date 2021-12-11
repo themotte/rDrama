@@ -1,6 +1,5 @@
 function formkey() {
-	let formkey = document.getElementById("formkey")
-	if (formkey) return formkey.innerHTML;
+	return document.getElementById("formkey").innerHTML
 }
 	
 document.addEventListener("DOMContentLoaded", function(){
@@ -22,8 +21,6 @@ function post_toast(url, reload, data) {
 		}
 	}
 
-
-	form.append("formkey", formkey());
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
