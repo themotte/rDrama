@@ -1,5 +1,6 @@
 from files.helpers.wrappers import *
 from files.helpers.get import *
+from files.helpers.const import AUTOBETTER_ID
 from files.helpers.alerts import send_notification
 from files.classes import *
 from flask import *
@@ -226,4 +227,35 @@ def api_vote_poll(comment_id, v):
 		g.db.add(comment)
 		g.db.commit()
 	except: g.db.rollback()
+	return "", 204
+
+
+@app.post("/bet/<comment_id>")
+@limiter.limit("1/second")
+@auth_required
+@validate_formkey
+def bet(comment_id, v):
+	
+	if v.coins < 200: return {"error": "You don't have 200 coins!"}
+
+	vote = request.values.get("vote")
+	comment_id = int(comment_id)
+	comment = get_comment(comment_id)
+	
+	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
+	if existing: return "", 204
+
+	vote = CommentVote(user_id=v.id, vote_type=1, comment_id=comment.id)
+	g.db.add(vote)
+
+	comment.upvotes += 1
+	g.db.add(comment)
+
+	v.coins -= 200
+	g.db.add(v)
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
+	autobetter.coins += 200
+	g.db.add(autobetter)
+
+	g.db.commit()
 	return "", 204

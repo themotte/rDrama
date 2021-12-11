@@ -96,7 +96,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		 
 		comments=comments.filter(
 			Comment.parent_submission == post.id,
-			Comment.author_id != AUTOPOLLER_ID
+			Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID))
 		).join(
 			votes,
 			votes.c.comment_id == Comment.id,
