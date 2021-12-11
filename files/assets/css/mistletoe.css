@@ -92,6 +92,9 @@
 .fa-mistletoe::after {
 	color: #3f6212!important;
 }
+.fad.fa-mistletoe:after {
+	opacity: 1;
+}
 
 /* Snow caps */
 
