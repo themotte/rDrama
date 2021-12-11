@@ -24,13 +24,14 @@ const trackList = [
 'santa',
 'santababy',
 'simply',
+'simplyhaving',
 'sinatra',
 'sinatra2',
 'steve',
 'trans',
 'waitresses',
 'wham',
-'wonderland',
+'wonderland'
 ];
 const selected = trackList[Math.floor(Math.random() * trackList.length)];
 
