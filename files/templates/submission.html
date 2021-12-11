@@ -23,7 +23,7 @@
 		scoretext.textContent = score + 1;
 		post('/bet/' + cid);
 		document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - 200;
-		document.getElementById("span-{{c.id}}").classList.add('bet_voted')
+		document.getElementById(`span-${cid}`).classList.add('bet_voted')
 	}
 </script>
 
