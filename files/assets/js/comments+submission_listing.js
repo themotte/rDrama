@@ -47,4 +47,24 @@ function popclick(author) {
     document.getElementsByClassName('pop-coins')[i].innerHTML = author["coins"]
     document.getElementsByClassName('pop-viewmore')[i].href = author["url"]
     document.getElementsByClassName('pop-badges')[i].innerHTML = badges
+
+    let popfix = document.getElementById("popover-fix")
+    if (popfix) document.body.removeChild(popfix);
+
+    var popover_old = document.getElementsByClassName("popover")[0];
+    var popover_new = document.createElement("DIV");
+  
+    popover_new.innerHTML = popover_old.outerHTML;
+    popover_new.id = "popover-fix";
+  
+    document.body.appendChild(popover_new);
+    document.body.removeChild(popover_old);
 }
+
+document.addEventListener("click", function(){
+    active = document.activeElement.getAttributeNode("class");
+    if (!(active && active.nodeValue == "user-name text-decoration-none")){
+        let popfix = document.getElementById("popover-fix")
+        if (popfix) document.body.removeChild(popfix);
+    }
+});
