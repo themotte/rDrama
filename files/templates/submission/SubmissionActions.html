@@ -25,7 +25,7 @@
 	</li>
 	{% endif %}
 
-	{% if v and (v.id==p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
+	{% if v and (v.id==p.author_id or v.admin_level > 1 and v.admin_level > 2) and '/post/' in request.full_path %}
 	<li class="hidden md:inline-block">
 		<button class="hover:text-gray-400" onclick="togglePostEdit('{{p.id}}')">
 			<i class="fas fa-pencil fa-fw mr-2"></i>Edit
