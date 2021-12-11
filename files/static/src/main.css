@@ -65,6 +65,9 @@
 	a {
 		@apply text-primary break-all
 	}
+	blockquote {
+		@apply bg-red-200 border-l-2 border-red-600
+	}
 	hr {
 		@apply my-3
 	}
