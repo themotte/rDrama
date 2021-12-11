@@ -86,6 +86,13 @@
 	background-size: contain;
 }
 
+.fa-mistletoe::before {
+	color: #dc2626;
+}
+.fa-mistletoe::after {
+	color: #3f6212;
+}
+
 /* Snow caps */
 
 .snowcaps::after {
