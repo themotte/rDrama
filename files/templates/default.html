@@ -344,18 +344,6 @@
 {% if v %}
 	<script>function formkey() {return '{{v.formkey}}';}</script>
 	<script src="/assets/js/default.js?v=57"></script>
-	<!-- Push notifications -->
-	<script src="/assets/js/pusher.js"></script>
-	<script>
-		const beamsClient = new PusherPushNotifications.Client({
-			instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6',
-		});		
-		beamsClient.start()
-		.then((beamsClient) => beamsClient.getDeviceId())
-		.then(() => beamsClient.addDeviceInterest('{{v.strid}}'))
-		.then(() => beamsClient.getDeviceInterests())
-		.catch(console.error);
-	</script>
 {% endif %}
 
 </body>
