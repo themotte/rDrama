@@ -28,23 +28,23 @@ function collapse_comment(comment_id) {
     }
 };
 
-function morecomments(cid) {
-    btn = document.getElementById(`btn-${cid}`);
-    btn.disabled = true;
-    btn.innerHTML = "Requesting...";
-    var form = new FormData();
-    form.append("formkey", formkey());
-    var xhr = new XMLHttpRequest();
+function loadMoreReplies(cid,id,trigger) {
+    const btn = document.getElementById(trigger) // trigger button
+    const el = document.getElementById(id) // target element to populate
+    const form = new FormData();
+    const xhr = new XMLHttpRequest();
+
+    btn.classList.toggle('animate-pulse');
+
     xhr.open("post", `/morecomments/${cid}`);
     xhr.withCredentials=true;
     xhr.onload=function(){
         if (xhr.status==200) {
-            document.getElementById(`morecomments-${cid}`).innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function(element){
-                return new bootstrap.Tooltip(element);
-            });
-            popovertrigger()
+            btn.style.display = "none"; // hide button
+            el.innerHTML += xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, ''); // replace desired element with response html
+            initializeBootstrap()
+        } else {
+            btn.disabled = false; // enable our button if GET fails
         }
     }
     xhr.send(form)
