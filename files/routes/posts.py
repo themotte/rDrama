@@ -697,7 +697,7 @@ def thumbnail_thread(pid):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = "https://" + site + process_image(name, True)
+	post.thumburl = f"https://{site}/" + process_image(name, True)
 	db.add(post)
 	db.commit()
 	db.close()

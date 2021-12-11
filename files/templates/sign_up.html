@@ -111,7 +111,7 @@
 														<div class="custom-control custom-checkbox mt-4">
 																<input type="checkbox" class="custom-control-input" id="termsCheck" required>
 																<label class="custom-control-label terms" for="termsCheck">I accept the <a
-																		href="/rules" target="_blank">terms and conditions</a></label>
+																		href="/rules" {% if v and v.newtab %}target="_blank"{% endif %}>terms and conditions</a></label>
 														</div>
 
 														{% if hcaptcha %}

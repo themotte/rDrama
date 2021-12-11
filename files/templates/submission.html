@@ -470,7 +470,7 @@
 								<a href="javascript:void(0)" onclick="togglePostEdit('{{p.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r">Cancel</a> 
 							</form>
 							<div id="post-edit-{{p.id}}" class="mb-3 mt-5"></div>
-							<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
+							<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab %}target="_blank"{% endif %}>Formatting help</a></div>
 						</div>
 					{% endif %}
 
@@ -734,7 +734,7 @@
 			<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto fl-r" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
 		</form>
 		<div id="form-preview-{{p.id}}" class="mb-3 mt-5"></div>
-		<div class="form-text text-small p-0 m-0"><a href="/formatting" target="_blank">Formatting help</a></div>
+		<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab %}target="_blank"{% endif %}>Formatting help</a></div>
 	</div>
 
 	{% if not v and not p.is_banned %}

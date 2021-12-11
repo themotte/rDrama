@@ -50,11 +50,11 @@
 
 {% elif v %}
 
-<p>Please <a target="_blank" href="/settings/security">verify your email address</a> in order to ensure we can respond to your message if needed. Then, refresh this page.</p>
+<p>Please <a {% if v and v.newtab %}target="_blank"{% endif %} href="/settings/security">verify your email address</a> in order to ensure we can respond to your message if needed. Then, refresh this page.</p>
 
 {% else %}
 
-<p>In order to ensure that we can respond to your message, please first <a href="/signup" target="_blank">sign up</a> or <a href="/login" target="_blank">log in</a> and make sure you have <a target="_blank" href="/settings/security">verified your email address</a>. Then, refresh this page.</p>
+<p>In order to ensure that we can respond to your message, please first <a href="/signup" {% if v and v.newtab %}target="_blank"{% endif %}>sign up</a> or <a href="/login" {% if v and v.newtab %}target="_blank"{% endif %}>log in</a> and make sure you have <a {% if v and v.newtab %}target="_blank"{% endif %} href="/settings/security">verified your email address</a>. Then, refresh this page.</p>
 
 {% endif %}
 
