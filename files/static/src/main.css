@@ -156,7 +156,4 @@
 }
 
 /* ---------------------- TOASTS ----------------------- */
-.toast {
-	@apply bg-gray-300 border border-gray-400
-}
 
