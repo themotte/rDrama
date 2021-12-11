@@ -33,7 +33,7 @@ module.exports = {
       'danger': '#dc2626',
       'blue': '#0369a1',
       'lightblue': '#0ea5e9',
-      'gold': '#facc15'
+      'gold': '#facc15',
       'silver': '#94a3b8',
       'lightgreen': '#84cc16'
     },
