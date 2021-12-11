@@ -87,10 +87,10 @@
 }
 
 .fa-mistletoe::before {
-	color: #dc2626;
+	color: #dc2626!important;
 }
 .fa-mistletoe::after {
-	color: #3f6212;
+	color: #3f6212!important;
 }
 
 /* Snow caps */
