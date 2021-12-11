@@ -32,25 +32,19 @@ function popovertrigger() {
 
 popovertrigger()
 
-var usernames = document.querySelectorAll("a.user-name");
-usernames.forEach(eventasdf);
-
-document.addEventListener("click", function(e){dfgh(e)});
-
 function popclick(author) {
     let badges = ''
     for (const x of author["badges"]) {
         badges += `<img width="32" loading="lazy" src="${x}">`
     }
-    for (let i = 0; i < document.getElementsByClassName('pop-banner').length; i++) {
-        document.getElementsByClassName('pop-banner')[i].src = author["bannerurl"]
-        document.getElementsByClassName('pop-picture')[i].src = author["profile_url"]
-        document.getElementsByClassName('pop-username')[i].innerHTML = author["username"]
-        document.getElementsByClassName('pop-bio')[i].innerHTML = author["bio_html"]
-        document.getElementsByClassName('pop-postcount')[i].innerHTML = author["post_count"]
-        document.getElementsByClassName('pop-commentcount')[i].innerHTML = author["comment_count"]
-        document.getElementsByClassName('pop-coins')[i].innerHTML = author["coins"]
-        document.getElementsByClassName('pop-viewmore')[i].href = author["url"]
-        document.getElementsByClassName('pop-badges')[i].innerHTML = badges
-    }
+    i = document.getElementsByClassName('pop-banner').length - 1
+    document.getElementsByClassName('pop-banner')[i].src = author["bannerurl"]
+    document.getElementsByClassName('pop-picture')[i].src = author["profile_url"]
+    document.getElementsByClassName('pop-username')[i].innerHTML = author["username"]
+    document.getElementsByClassName('pop-bio')[i].innerHTML = author["bio_html"]
+    document.getElementsByClassName('pop-postcount')[i].innerHTML = author["post_count"]
+    document.getElementsByClassName('pop-commentcount')[i].innerHTML = author["comment_count"]
+    document.getElementsByClassName('pop-coins')[i].innerHTML = author["coins"]
+    document.getElementsByClassName('pop-viewmore')[i].href = author["url"]
+    document.getElementsByClassName('pop-badges')[i].innerHTML = badges
 }

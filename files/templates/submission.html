@@ -420,8 +420,10 @@
 							{% endfor %}
 
 							{% for c in p.bet_options %}
-								<span id="span-{{c.id}}" {% if c.poll_voted(v) %}class="bet_voted"{% endif %}><input {% if c.poll_voted(v) %}checked{% endif %} class="bet" {% if not (v and v.coins > 200) or p.total_bet_voted(v) %}disabled{% endif %} type="radio" id="{{c.id}}" onchange="bet_vote('{{c.id}}')"></span>
-								<label for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="bet-{{c.id}}">{{c.upvotes}}</span> bets</a>{% if not p.total_bet_voted(v) %} (cost of entry: 200 coins){% endif %}</label><br>
+								<div class="custom-control">								
+									<input {% if c.poll_voted(v) %}checked{% endif %} class="custom-control-input bet" {% if not (v and v.coins > 200) or p.total_bet_voted(v) %}disabled{% endif %} type="radio" id="{{c.id}}" onchange="bet_vote('{{c.id}}')">
+									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="bet-{{c.id}}">{{c.upvotes}}</span> bets</a>{% if not p.total_bet_voted(v) %}<span class="cost"> (cost of entry: 200 coins)</span>{% endif %}</label>
+								</div>
 							{% endfor %}
 
 							{% if p.is_banned and p.ban_reason %}
@@ -796,7 +798,7 @@
 {% endif %}
 
 {% if v %}
-	<script src="/assets/js/submission.js?v=5"></script>
+	<script src="/assets/js/submission.js?v=7"></script>
 {% endif %}
 
 {% if not v or v.highlightcomments %}
@@ -835,11 +837,4 @@
 		{% endif %}
 	})()
 </script>
-
-<style>
-	.bet_voted {
-		border-radius: 40%;
-		background: var(--primary);
-	}
-</style>
 {% endblock %}

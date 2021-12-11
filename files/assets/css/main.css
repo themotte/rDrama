@@ -5698,3 +5698,7 @@ blockquote p {
 .text-lightblue {
   color: lightblue;
 }
+
+.bet ~ .custom-control-label::before {
+  border-radius: 50%;
+}
