@@ -1,0 +1,7 @@
+{% set count = p.award_count("gingerbread") * 1 if p.award_count("gingerbread") < 10 else 10 %}
+
+{% for i in range(count) %}
+<div class="snowflake pointer-events-none animate-spin">
+	<img src="/assets/christmas/images/marsey/ginger2-1.png" width="40" height="40" alt="animated coal icon"/>
+</div>
+{% endfor %}
