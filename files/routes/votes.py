@@ -246,10 +246,15 @@ def bet(comment_id, v):
 
 	vote = CommentVote(user_id=v.id, vote_type=1, comment_id=comment.id)
 	g.db.add(vote)
-	v.coins -= 200
-	g.db.add(v)
+
 	comment.upvotes += 1
 	g.db.add(comment)
+
+	v.coins -= 200
+	g.db.add(v)
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
+	autobetter.coins += 200
+	g.db.add(autobetter)
 
 	g.db.commit()
 	return "", 204
