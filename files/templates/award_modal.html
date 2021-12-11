@@ -1,31 +1,27 @@
-<script src="/assets/js/award_modal.js?v=63"></script>
-
+<script src="/assets/js/award_modal.js?v=60"></script>
 <div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="awardModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-		<div class="modal-content mx-auto max-w-3xl bg-gray-100 rounded-md shadow-lg">
+		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="font-bold text-xl text-black font-heading leading-normal">Gift Award</h5>
-				<button type="button" class="close text-gray-700 hover:text-gray-900" data-bs-dismiss="modal" aria-label="Close">
+				<h5 class="modal-title">Give Award</h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
 			</div>
-			<div id="awardModalBody" class="overflow-y-auto px-4">
-				<form id="awardTarget" action="" method="post">
-					<div class="flex flex-wrap -mx-4 overflow-hidden">
+			<div id="awardModalBody" class="modal-body">
+				<form id="awardTarget" class="pt-3 pb-0" action="" method="post">
+					<input type="hidden" name="formkey", value="{{v.formkey}}">
+					<div class="card-columns award-columns awards-wrapper">
 						{% for award in v.user_awards %}
-						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
 							{% if award.owned %}
-							<input hidden name="kind" value="{{award.kind}}" type="radio" id="{{award.kind}}-award" class="peer">
-							<label for="{{award.kind}}-award" onclick="document.getElementById('giveaward').disabled=false" class="w-full h-full p-2 text-center hover:bg-gray-300 peer-checked:shadow-inner peer-checked:bg-gray-400 rounded">
+								<a href="javascript:void(0)" id="{{award.kind}}" class="card" onclick="bruh('{{award.kind}}')">
 							{% else %}
-							<input hidden name="kind" value="{{award.kind}}" type="radio" id="{{award.kind}}-award" class="peer" disabled>
-							<label for="{{award.kind}}-award" onclick="document.getElementById('giveaward').disabled=false" class="w-full h-full p-2 text-center hover:bg-gray-300 peer-checked:shadow-inner peer-checked:bg-gray-400 rounded cursor-not-allowed opacity-50">
+								<a href="javascript:void(0)" id="{{award.kind}}" class="card disabled">
 							{% endif %}
 								<i class="{{award.icon}} {{award.color}}"></i>
-								<div class="mt-2 font-bold text-base text-black">{{award.title}}</div>
-								<div class="text-sm text-gray-600">{{award.owned}} owned</div>
-							</label>
-						</div>
+								<div class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</div>
+								<div class="text-muted">{{award.owned}} owned</div>
+							</a>
 						{% endfor %}
 						<a class="card disabled d-md-none" style="border:none">
 							<i class="fas fa-volume-mute" style="opacity:0"></i>
@@ -33,17 +29,14 @@
 							<div class="text-muted">&nbsp;</div>
 						</a>
 					</div>
-					<label id="notelabel" for="note" class="pt-4 label">
-						Note
-						<small class="font-normal text-gray-500">Optional</small>
-					</label>
-					<textarea id="note" maxlength="200" name="note" class="form-input" placeholder="Note to include in award notification..."></textarea>
-					<div class="flex justify-end space-x-2 border-t border-gray-300 p-4 -mx-4 mt-4">
-						<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700" data-bs-dismiss="modal">
-							Cancel
-						</button>
-						<input id="giveaward" class="ml-auto btn btn-green" type="submit" value="Gift Award" disabled>
-					</div>
+					<label id="notelabel" for="note" class="pt-4">Note (optional):</label>
+					<input id="kind" name="kind" value="" hidden>
+					<textarea id="note" maxlength="200" name="note" class="form-control" placeholder="Note to include in award notification..."></textarea>
+					<input id="giveaward" class="btn btn-primary" style="float:right" type="submit" value="Give Award" disabled>
+					<pre>
+
+
+					</pre>
 				</form>
 			</div>
 		</div>
