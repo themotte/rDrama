@@ -682,6 +682,10 @@
 		{% endif %}
 	{% endif %}
 
+	{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
+		<script src="/assets/js/submission.js?v=3"></script>
+	{% endif %}
+
 	<script defer src="/assets/js/new_comments_count.js?v=53"></script>
 
 	<script defer>
