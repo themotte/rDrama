@@ -398,12 +398,12 @@
 							{{p.realbody(v) | safe}}
 
 							<!-- Polls -->
-							{% if p.options %}
+							{% if p.options.count() %}
 								{% include "Poll.html" %}
 							{% endif %}
 
 							<!-- Bets -->
-							{% if p.bet_options %}
+							{% if p.bet_options.count() %}
 								{% include "Bets.html" %}
 							{% endif %}
 
