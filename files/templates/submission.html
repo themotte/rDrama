@@ -464,7 +464,7 @@
 						{% endif %}
 					</div>
 
-					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and not v.is_suspended %}
+					{% if v and (v.id==p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
 					<div class="py-2">
 						{% include "/submission/SubmissionEditForm.html" %}
 					</div>
