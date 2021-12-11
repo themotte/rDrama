@@ -2,10 +2,10 @@
 	<ul class="flex flex-col space-y-2 mb-0">
 	{% for c in p.options %}
 	<li>
-		<div class="custom-control">								
-			<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
-			<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></label>
-		</div>
+		<input type="checkbox" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="poll_vote('{{c.id}}')">
+		<label class="inline-block pl-2 text-gray-400" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}">
+			<span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a>
+		</label>
 	</li>
 	{% endfor %}
 	</ul>
