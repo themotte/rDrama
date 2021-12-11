@@ -211,7 +211,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		posts = posts.filter(Submission.created_utc >= cutoff)
 	else: cutoff = 0
 
-	if sort == "new": posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
+	if sort != "hot": posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
 	else: posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
 
 	if v and v.admin_level == 0:
@@ -265,14 +265,14 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts[:size]
 
-	if sort != "new":
+	if sort == "hot" and page == 1:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]
 			blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
 			pins = pins.filter(Submission.author_id.notin_(blocking), Submission.author_id.notin_(blocked))
 
-	if sort != "new" and page == 1 and not gt and not lt: posts = pins.all() + posts
+		posts = pins.all() + posts
 
 	if ids_only: posts = [x.id for x in posts]
 
