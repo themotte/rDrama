@@ -10,8 +10,8 @@ function loadMore(pid,sort,offset,id,trigger) {
     xhr.withCredentials=true;
     xhr.onload=function(){
         if (xhr.status==200) {
-            el.innerHTML += xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, ''); // replace desired element with response html
             btn.style.display = "none"; // hide button
+            el.innerHTML += xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, ''); // replace desired element with response html
             initializeBootstrap()
         } else {
             btn.disabled = false; // enable our button if GET fails
@@ -32,8 +32,8 @@ function loadMoreReplies(cid,id,trigger) {
     xhr.withCredentials=true;
     xhr.onload=function(){
         if (xhr.status==200) {
-            el.innerHTML += xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, ''); // replace desired element with response html
             btn.style.display = "none"; // hide button
+            el.innerHTML += xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, ''); // replace desired element with response html
             initializeBootstrap()
         } else {
             btn.disabled = false; // enable our button if GET fails
