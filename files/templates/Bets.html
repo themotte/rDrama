@@ -1,0 +1,13 @@
+{% for c in p.bet_options %}
+<span id="span-{{c.id}}" {% if c.poll_voted(v) %}class="bet_voted"{% endif %}>
+	<input {% if c.poll_voted(v) %}checked{% endif %} class="bet" {% if not (v and v.coins > 200) or p.total_bet_voted(v) %}disabled{% endif %} type="radio" id="{{c.id}}" onchange="bet_vote('{{c.id}}')">
+</span>
+<label for="{{c.id}}">
+	{{c.body_html | safe}} - 
+	<a href="/votes?link=t3_{{c.id}}">
+		<span id="bet-{{c.id}}">{{c.upvotes}}</span> bets
+	</a>
+	{% if not p.total_bet_voted(v) %} (cost of entry: 200 coins){% endif %}
+</label>
+<br>
+{% endfor %}
