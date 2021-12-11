@@ -12,6 +12,79 @@
 
 {% block title %}
 
+{% if v and (v.id == p.author_id or v.admin_level == 6 and v.id in [1,28,995,2513]) %}
+<script defer>		
+	togglePostEdit=function(id){
+
+		body=document.getElementById("post-body");
+		title=document.getElementById("post-title");
+		form=document.getElementById("edit-post-body-"+id);
+		box=document.getElementById("post-edit-box-"+id);
+
+		body.classList.toggle("hidden");
+		title.classList.toggle("hidden");
+		form.classList.toggle("hidden");
+		autoExpand(box);
+	};
+</script>
+{% endif %}
+
+{% if 'rama' not in request.host %}
+<script defer>
+	function poll_vote(cid) {
+		{% if v %}
+		var type = document.getElementById(cid).checked;
+		var scoretext = document.getElementById('poll-' + cid);
+		var score = Number(scoretext.textContent);
+		if (type == true) scoretext.textContent = score + 1;
+		else scoretext.textContent = score - 1;
+		post('/vote/poll/' + cid + '?vote=' + type);
+		{% else %}
+		var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+		myToast.show();
+		document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
+		{% endif %}
+	}
+</script>
+
+{% if v %}
+<script defer src="/assets/js/comments_v.js?v=70"></script>
+{% endif %}
+
+{% endif %}
+
+{% if p.award_count("shit") %}
+<script defer src="/assets/js/bugs.js?v=54"></script>
+{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
+{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
+<script>
+	new BugController({
+		imageSprite: "/assets/images/fly-sprite.gif",
+		canDie: false,
+		minBugs: {{minbugs}},
+		maxBugs: {{maxbugs}},
+		mouseOver: "multiply"
+	});
+</script>
+{% endif %}
+
+
+{% if p.award_count("fireflies") %}
+<script defer src="/assets/js/fireflies.js?v=54"></script>
+{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
+{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
+<script>
+	new BugController({
+		imageSprite: "/assets/images/fireflies.gif",
+		canDie: false,
+		minBugs: {{minbugs}},
+		maxBugs: {{maxbugs}},
+		mouseOver: "multiply"
+	});
+</script>
+{% endif %}
+
+
 <meta charset="utf-8" >
 <meta property="og:type" content="article" >
 
