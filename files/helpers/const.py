@@ -422,6 +422,10 @@ BADGES = {
 		'name': 'Fish',
 		'description': 'This user cannot be unfollowed'
 	},
+	91: {
+		'name': 'Grinch',
+		'description': 'This user is a joyless grinch who pays money to avoid having fun'
+	},
 }
 
 AWARDS = {
