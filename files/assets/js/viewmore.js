@@ -20,7 +20,7 @@ function loadMore(pid,sort,offset,id,trigger) {
     xhr.send(form)
 }
 
-function loadMoreReplies(cid,sort,offset,id,trigger) {
+function loadMoreReplies(cid,id,trigger) {
     const btn = document.getElementById(trigger) // trigger button
     const el = document.getElementById(id) // target element to populate
     const form = new FormData();

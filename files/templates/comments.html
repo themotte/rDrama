@@ -383,7 +383,7 @@
 			</div>
 		{% elif replies %}
 			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small hidden-on-collapse">
-				<button class="mt-2 w-full btn btn-gray" id="load-more-replies-button" onclick="loadMoreReplies({{c.id}},'{{sort}}',{{offset}},'comment-list',this.id); this.disabled = true;">
+				<button class="mt-2 w-full btn btn-gray" id="load-more-replies-button" onclick="loadMoreReplies('{{c.id}}','{{sort}}',{{offset}},'comment-list',this.id); this.disabled = true;">
 					Load more replies
 				</button>
 				<a class="md:hidden" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
