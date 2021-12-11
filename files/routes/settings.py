@@ -848,8 +848,6 @@ def settings_profilecss(v):
 @validate_formkey
 def settings_block_user(v):
 
-	if v and v.admin_level: return {"error": "Admins can't block users."}, 403
-
 	user = get_user(request.values.get("username"), graceful=True)
 
 	if not user: return {"error": "That user doesn't exist."}, 404

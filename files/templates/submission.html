@@ -247,7 +247,7 @@
 
 					{% endif %}
 
-					{% if v and v.id != p.author_id and not v.admin_level %}
+					{% if v and v.id != p.author_id %}
 						<button id="unblock2-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-success text-left{% if not p.is_blocking %} d-none{% endif %}" data-bs-dismiss="modal" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye mr-3 text-success"></i>Unblock user</button>
 
 						<button id="prompt2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-danger text-left d-none" data-bs-dismiss="modal" onclick="post_toast2('/settings/block?username={{p.author.username}}','prompt2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye-slash mr-3 text-danger"></i>Are you sure?</button>
@@ -567,7 +567,7 @@
 								<a class="list-inline-item" href="{{p.oauth_app.permalink}}" ><i class="fas fa-code"></i>API App</a>
 							{% endif %}
 
-							{% if not v.id==p.author_id and not v.admin_level %}								
+							{% if not v.id==p.author_id %}								
 								<a id="unblock-{{p.id}}" class="text-success list-inline-item {% if not p.is_blocking %} d-none{% endif %}" href="javascript:void(0)" onclick="post_toast2('/settings/unblock?username={{p.author.username}}','block-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye text-success"></i>Unblock user</a>
 
 								<a id="prompt-{{p.id}}" class="text-danger blockuser list-inline-item d-none" href="javascript:void(0)" onclick="post_toast2('/settings/block?username={{p.author.username}}','prompt-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye-slash text-danger"></i>Are you sure?</a>
