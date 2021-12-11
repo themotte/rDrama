@@ -1,9 +1,43 @@
-<!-- Awards -->
+<!-- Train award -->
 {% if p.award_count("train") %}
 {% include "/awards/Trains.html" %}
 {% endif %}
 
+<!-- Poop award -->
+{% if p.award_count("shit") %}
+<script defer src="/assets/js/bugs.js?v=54"></script>
+{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
+{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
+<script>
+	new BugController({
+		imageSprite: "/assets/images/fly-sprite.gif",
+		canDie: false,
+		minBugs: {{minbugs}},
+		maxBugs: {{maxbugs}},
+		mouseOver: "multiply"
+	});
+</script>
+{% endif %}
+
+<!-- Fireflies award -->
+{% if p.award_count("fireflies") %}
+<script defer src="/assets/js/fireflies.js?v=54"></script>
+{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
+{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
+<script>
+	new BugController({
+		imageSprite: "/assets/images/fireflies.gif",
+		canDie: false,
+		minBugs: {{minbugs}},
+		maxBugs: {{maxbugs}},
+		mouseOver: "multiply"
+	});
+</script>
+{% endif %}
+
 <!-- Christmas Awards -->
+
+<!-- Snow award -->
 {% if p.award_count("snow") %}
 {% include "/awards/Christmas/Snow.html" %}
 {% if p.award_count("snow") > 4 %}
@@ -12,11 +46,11 @@
 {% endif %}
 
 <!-- Javascript -->
+
+<!-- Snow award -->
 {% if p.award_count("snow") %}
-
 {% set snowCount = p.award_count("snow") if p.award_count("snow") < 5 else 5 %}
-
-<script>
+<script defer>
 	document.addEventListener('DOMContentLoaded', function(){
 		var script = document.createElement('script');
 		script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
@@ -82,4 +116,11 @@
 		document.head.append(script);
 	});
 </script>
+{% endif %}
+
+<!-- Songs & Mariah award -->
+{% if p.award_count("mariah") %}
+	<script defer src="/assets/js/christmas/mariah.js?v=1"></script>
+{% else %}
+	<script defer src="/assets/js/christmas/playlist.js?v=1"></script>
 {% endif %}

@@ -36,38 +36,6 @@
 
 {% endif %}
 
-{% if p.award_count("shit") %}
-<script defer src="/assets/js/bugs.js?v=54"></script>
-{% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
-{% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
-<script>
-	new BugController({
-		imageSprite: "/assets/images/fly-sprite.gif",
-		canDie: false,
-		minBugs: {{minbugs}},
-		maxBugs: {{maxbugs}},
-		mouseOver: "multiply"
-	});
-</script>
-{% endif %}
-
-
-{% if p.award_count("fireflies") %}
-<script defer src="/assets/js/fireflies.js?v=54"></script>
-{% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
-{% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
-<script>
-	new BugController({
-		imageSprite: "/assets/images/fireflies.gif",
-		canDie: false,
-		minBugs: {{minbugs}},
-		maxBugs: {{maxbugs}},
-		mouseOver: "multiply"
-	});
-</script>
-{% endif %}
-
-
 <meta charset="utf-8" >
 <meta property="og:type" content="article" >
 
