@@ -1,5 +1,5 @@
 <ul class="flex items-center text-sm text-gray-500 mb-0">
-	{% if p.realbody(v) and '/post/' not in request.full_path  %}
+	{% if p.realbody(v) and '/post/' not in request.full_path and not p.over_18 %}
 	<li class="mr-5">
 		<button class="hover:text-gray-400" onclick="expandText('{{p.id}}')">
 			<i class="fas fa-expand-alt fa-fw text-expand-icon-{{p.id}}"></i>
