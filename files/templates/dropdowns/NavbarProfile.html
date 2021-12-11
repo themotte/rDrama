@@ -6,26 +6,23 @@
 	</button>
 	<ul class="dropdown-menu w-56 bg-gray-900 rounded-md rounded-t-none shadow-lg" aria-labelledby="dropdownProfileMenuButton" x-placement="bottom-start">
 		<li>
-			<a class="inline-flex items-center" aria-current="page" href="/me">
-            <img src="{{ v.profile_url }}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover"/>
-            <div class="pl-3">
-              <div class="text-base text-black leading-5">
-                {{ v.username }}
-              </div>
-              <div class="flex space-x-3 mt-1">
-                <small class="flex items-center block mt-1 text-gray-500">
-                  <img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/images/emojis/marseycoin.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}" class="w-6 h-6 object-contain" alt="coin icon"/>
-                  <span class="pl-1">{{v.coins}} {{'COINS_NAME' | app_config}}</span>
-                </small>
-                {% if v.procoins %}
-                <small class="flex items-center block mt-1 text-gray-500">
-                  <img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/images/emojis/marseybux.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}" class="w-6 h-6 object-contain" alt="coin icon"/>
-                  <span class="pl-1">{{v.procoins}} MarseyBux</span>
-                </small>
-                {% endif %}
-              </div>
-            </div>
-          </a>
+			<a aria-current="page" href="/me">
+				<div class="text-base text-black leading-5">
+					{{ v.username }}
+				</div>
+				<div class="flex space-x-3 mt-1">
+					<small class="flex items-center block mt-1 text-gray-500">
+						<img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/images/emojis/marseycoin.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}" class="w-6 h-6 object-contain" alt="coin icon"/>
+						<span class="pl-1">{{v.coins}} {{'COINS_NAME' | app_config}}</span>
+					</small>
+					{% if v.procoins %}
+					<small class="flex items-center block mt-1 text-gray-500">
+						<img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/images/emojis/marseybux.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}" class="w-6 h-6 object-contain" alt="coin icon"/>
+						<span class="pl-1">{{v.procoins}} MarseyBux</span>
+					</small>
+					{% endif %}
+				</div>
+			</a>
         </li>
         <li>
 			<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
