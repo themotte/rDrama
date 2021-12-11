@@ -7,7 +7,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
 from files.classes.votes import CommentVote
-from files.helpers.const import AUTOPOLLER_ID, censor_slurs
+from files.helpers.const import AUTOPOLLER_ID, AUTOBETTER_ID, censor_slurs
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
 from random import randint
