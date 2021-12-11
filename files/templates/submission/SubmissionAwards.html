@@ -6,6 +6,9 @@
 <!-- Christmas Awards -->
 {% if p.award_count("snow") %}
 {% include "/awards/Christmas/Snow.html" %}
+{% if p.award_count("snow") > 4 %}
+	<div class="frost"></div>
+{% endif %}
 {% endif %}
 
 <!-- Javascript -->
