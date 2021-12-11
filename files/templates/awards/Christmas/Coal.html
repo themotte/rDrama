@@ -1,0 +1,7 @@
+{% set coalCount = p.award_count("coal") * 1 if p.award_count("snow") < 10 else 10 %}
+
+{% for i in range(coalCount) %}
+<div class="snowflake">
+	<img src="/assets/christmas/images/coal.gif" width="40" height="40" alt="animated coal icon"/>
+</div>
+{% endfor %}
