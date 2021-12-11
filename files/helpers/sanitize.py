@@ -205,7 +205,7 @@ def sanitize(sanitized, noimages=False):
 	for i in re.finditer('" target="_blank">(https://youtube\.com/watch\?v\=(.*?))</a>', sanitized):
 		url = i.group(1)
 		yt_id = i.group(2).split('&')[0].split('%')[0]
-		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer">{url}</a>'
+		replacing = f'<a href="{url}" rel="nofollow noopener noreferrer" target="_blank">{url}</a>'
 
 		params = parse_qs(urlparse(url.replace('&amp;','&')).query)
 		t = params.get('t', params.get('start', [0]))[0]
