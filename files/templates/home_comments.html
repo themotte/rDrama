@@ -31,7 +31,7 @@
 
 			<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
 			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
 					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
 					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
@@ -39,7 +39,7 @@
 					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
 					{{sort | capitalize}}
 				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 					{% if sort != "top" %}<a class="dropdown-item" href="?sort=top&t={{t}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
 					{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom&t={{t}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
 					{% if sort != "new" %}<a class="dropdown-item" href="?sort=new&t={{t}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}

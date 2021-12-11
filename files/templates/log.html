@@ -49,10 +49,10 @@
 						<div class="text-small font-weight-bold mr-2">‎</div>
 						<div class="dropdown dropdown-actions">
 
-							<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								{% if type %}<i class="fas {{types[type]['icon']}} mr-2"></i>{{type}}{% else %}<i class="fas fa-broom mr-2"></i>All{% endif %}
 							</button>
-							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2s" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 								<a class="dropdown-item" href="/log{% if admin %}?admin={{admin}}{% endif %}"><i class="fas fa-broom mr-2"></i>All</a>
 								{% for t, v in types.items() %}
 									<a class="dropdown-item" href="?{% if admin %}admin={{admin}}&{% endif %}kind={{t}}"><i class="fas {{v['icon']}} mr-2"></i>{{t}}</a>
