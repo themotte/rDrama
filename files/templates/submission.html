@@ -13,6 +13,19 @@
 
 {% block title %}
 
+<script>
+	function bet_vote(cid) {
+		for(let el of document.getElementsByClassName('bet')) {
+			el.disabled = true;
+		}
+		var scoretext = document.getElementById('bet-' + cid);
+		var score = Number(scoretext.textContent);
+		scoretext.textContent = score + 1;
+		post('/bet/' + cid);
+		document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - 200;
+	}
+</script>
+
 {% if p.award_count("train") %}
 	<style>
 		@keyframes train {
@@ -418,13 +431,15 @@
 									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}}<span class="presult {% if not p.total_poll_voted(v) %}d-none{% endif %}"> - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></span></label>
 								</div>
 							{% endfor %}
-								
+
+							{% for c in p.bet_options %}
+								<span {% if c.poll_voted(v) %}class="bet_voted"{% endif %}><input {% if c.poll_voted(v) %}checked{% endif %} class="bet" {% if not (v and v.coins > 200) or p.total_bet_voted(v) %}disabled{% endif %} type="radio" id="{{c.id}}" onchange="bet_vote('{{c.id}}')"></span>
+								<label for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="bet-{{c.id}}">{{c.upvotes}}</span> bets</a>{% if not p.total_bet_voted(v) %} (cost of entry: 200 coins){% endif %}</label><br>
+							{% endfor %}
+
 							{% if p.is_banned and p.ban_reason %}
 								<div class="text-removed mb-0">removed by @{{p.ban_reason}}</div>
 							{% endif %}
-			
-			
-
 
 						</div>
 
@@ -830,4 +845,10 @@
 	})()
 </script>
 
+<style>
+	.bet_voted {
+		border-radius: 40%;
+		background: var(--primary);
+	}
+</style>
 {% endblock %}

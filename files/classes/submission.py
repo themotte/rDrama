@@ -7,7 +7,7 @@ from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
-from files.helpers.const import AUTOPOLLER_ID, censor_slurs, TROLLTITLES
+from files.helpers.const import AUTOPOLLER_ID, AUTOBETTER_ID, censor_slurs, TROLLTITLES
 from files.helpers.lazy import lazy
 from .flags import Flag
 from .comment import Comment
@@ -84,9 +84,20 @@ class Submission(Base):
 	def options(self):
 		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOPOLLER_ID, level=1)
 
+	@property
+	@lazy
+	def bet_options(self):
+		return g.db.query(Comment).filter_by(parent_submission = self.id, author_id = AUTOBETTER_ID, level=1).order_by(Comment.upvotes.desc())
+
 	def total_poll_voted(self, v):
 		if v:
-			for option in self.options:
+			for option in self.options + self.bet_options:
+				if option.poll_voted(v): return True
+		return False
+
+	def total_bet_voted(self, v):
+		if v:
+			for option in self.bet_options:
 				if option.poll_voted(v): return True
 		return False
 

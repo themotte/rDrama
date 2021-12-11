@@ -129,7 +129,7 @@ def post_id(pid, anything=None, v=None):
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
-		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID).join(
+		comments=comments.filter(Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID))).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -170,7 +170,7 @@ def post_id(pid, anything=None, v=None):
 	else:
 		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
 
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id != AUTOPOLLER_ID, Comment.level == 1, Comment.is_pinned == None)
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == post.id, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.level == 1, Comment.is_pinned == None)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -244,7 +244,7 @@ def viewmore(v, pid, sort, offset):
 		if not (v and v.shadowbanned) and not (v and v.admin_level > 1):
 			comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned == None)
  
-		comments=comments.filter(Comment.parent_submission == pid, Comment.author_id != AUTOPOLLER_ID, Comment.is_pinned == None).join(
+		comments=comments.filter(Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.is_pinned == None).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -283,7 +283,7 @@ def viewmore(v, pid, sort, offset):
 
 		comments = [c[0] for c in comments.all()]
 	else:
-		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id != AUTOPOLLER_ID, Comment.level == 1, Comment.is_pinned == None)
+		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.level == 1, Comment.is_pinned == None)
 
 		if sort == "new":
 			comments = comments.order_by(Comment.created_utc.desc())
@@ -902,6 +902,11 @@ def submit_post(v):
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
+	bet_options = []
+	for i in re.finditer('\s*\$\$\$([^\$\n]+)\$\$\$\s*', body):
+		bet_options.append(i.group(1))
+		body = body.replace(i.group(0), "")
+
 	options = []
 	for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):
 		options.append(i.group(1))
@@ -963,7 +968,17 @@ def submit_post(v):
 
 	g.db.add(new_post)
 	g.db.flush()
-	
+
+	for option in bet_options:
+		bet_option = Comment(author_id=AUTOBETTER_ID,
+			parent_submission=new_post.id,
+			level=1,
+			body_html=filter_emojis_only(option),
+			upvotes=0
+			)
+
+		g.db.add(bet_option)
+
 	for option in options:
 		c = Comment(author_id=AUTOPOLLER_ID,
 			parent_submission=new_post.id,
