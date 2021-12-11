@@ -430,12 +430,12 @@
 							{{p.realbody(v) | safe}}
 
 							<!-- Polls -->
-							{% if p.options|length > 1 %}
+							{% if p.options %}
 								{% include "Poll.html" %}
 							{% endif %}
 
 							<!-- Bets -->
-							{% if p.bet_options|length > 1 %}
+							{% if p.bet_options %}
 								{% include "Bets.html" %}
 							{% endif %}
 
