@@ -34,13 +34,15 @@ usernames.forEach(eventasdf);
 
 document.addEventListener("click", function(e){dfgh(e)});
 
-function popclick(author) {
+function userPopover(author) {
     for (const x of document.getElementsByClassName('pop-banner')) {x.src = author["bannerurl"]}
     for (const x of document.getElementsByClassName('pop-picture')) {x.src = author["profile_url"]}
+
     for (const x of document.getElementsByClassName('pop-username')) {x.innerHTML = author["username"]}
     for (const x of document.getElementsByClassName('pop-bio')) {x.innerHTML = author["bio_html"]}
     for (const x of document.getElementsByClassName('pop-postcount')) {x.innerHTML = author["post_count"]}
     for (const x of document.getElementsByClassName('pop-commentcount')) {x.innerHTML = author["comment_count"]}
     for (const x of document.getElementsByClassName('pop-coins')) {x.innerHTML = author["coins"]}
+
     for (const x of document.getElementsByClassName('pop-viewmore')) {x.href = author["url"]}
 }
