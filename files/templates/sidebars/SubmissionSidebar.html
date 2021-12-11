@@ -14,11 +14,11 @@
 		<ul class="flex flex-wrap gap-3 items-center">
 			<!-- Awards -->
 			{% if p.awards %}
-			{% for a in p.awards %}
-			<li>
-				<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
-			</li>
-			{% endfor %}
+				{% for a in p.awards %}
+				<li>
+					<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
+				</li>
+				{% endfor %}
 			{% endif %}
 		</ul>
 	</div>
