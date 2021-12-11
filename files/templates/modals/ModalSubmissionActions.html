@@ -16,7 +16,7 @@
 							<i class="fas fa-flag text-center text-muted mr-3"></i>Report
 						</button>
 					</li>
-					{% if v and (v.id==p.author_id or v.admin_level==6 and v.id in [1,28,995,2513]) and '/post/' in request.full_path %}
+					{% if v and (v.id==p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
 					<li>
 						<button class="btn btn-gray w-full text-left" data-bs-dismiss="modal" onclick="togglePostEdit('{{p.id}}')">
 							<i class="fas fa-pencil fa-fw mr-4"></i>Edit
