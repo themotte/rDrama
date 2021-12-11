@@ -4829,8 +4829,8 @@ ul.comment-section {
 }
 
 .custom-control-label {
-  text-transform: none;
-  font-weight: 400;
+  text-transform: uppercase;
+  font-weight: 600;
   font-size: 1rem;
   letter-spacing: 0;
   color: var(--black);
