@@ -155,3 +155,11 @@
   color: @apply text-white;
 }
 
+/* ---------------------- TOASTS ----------------------- */
+.toast.success {
+	@apply bg-gray-300 border border-gray-400
+}
+.toast.danger, .toast.error {
+	@apply bg-red-500 border border-red-900
+}
+
