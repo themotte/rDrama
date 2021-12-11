@@ -326,8 +326,44 @@ def viewmore(v, pid, sort, offset):
 @limiter.limit("1/second")
 @auth_desired
 def morecomments(v, cid):
-	c = g.db.query(Comment).filter_by(id=cid).first()
-	comments = c.replies
+	if v:
+		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
+
+		blocking = v.blocking.subquery()
+
+		blocked = v.blocked.subquery()
+
+		comments = g.db.query(
+			Comment,
+			votes.c.vote_type,
+			blocking.c.id,
+			blocked.c.id,
+		).filter_by(parent_comment_id=cid).join(
+			votes,
+			votes.c.comment_id == Comment.id,
+			isouter=True
+		).join(
+			blocking,
+			blocking.c.target_id == Comment.author_id,
+			isouter=True
+		).join(
+			blocked,
+			blocked.c.user_id == Comment.author_id,
+			isouter=True
+		)
+
+		output = []
+		for c in comments.all():
+			comment = c[0]
+			comment.voted = c[1] or 0
+			comment.is_blocking = c[2] or 0
+			comment.is_blocked = c[3] or 0
+			output.append(comment)
+		comments = output
+	else:
+		c = g.db.query(Comment).filter_by(id=cid).first()
+		comments = c.replies
+
 	return render_template("comments.html", v=v, comments=comments, render_replies=True)
 
 @app.post("/edit_post/<pid>")
