@@ -6,6 +6,9 @@
 .text-success {
 	color: #16a34a;
 }
+.text-warning {
+	color: #facc15;
+}
 .text-danger {
 	color: #dc2626;
 }
@@ -23,6 +26,9 @@
 }
 .text-lightgreen {
 	color: #84cc16;
+}
+.text-black-50 {
+	color: #57534e;
 }
 
 /* Hats */
