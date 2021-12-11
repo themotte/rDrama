@@ -980,7 +980,7 @@ def settings_name_change(v):
 	return redirect("/settings/profile")
 
 @app.post("/settings/song_change")
-@limiter.limit("1/second")
+@limiter.limit("5/day;1/second")
 @auth_required
 @validate_formkey
 def settings_song_change(v):
