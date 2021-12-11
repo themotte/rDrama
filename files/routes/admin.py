@@ -21,6 +21,24 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 
+@app.get("/distribute/<cid>")
+@admin_level_required(2)
+def distribute(v, cid):
+	try: int(cid)
+	except: abort(400)
+	votes = g.db.query(CommentVote).filter_by(comment_id=cid)
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
+	coinsperperson = int(autobetter.coins / votes.count())
+	for vote in votes:
+		u = vote.user
+		u.coins += coinsperperson
+		g.db.add(u)
+
+	autobetter.coins = 0
+	g.db.add(autobetter)
+	g.db.commit()
+	return str(coinsperperson)
+
 @app.get("/marseys")
 @auth_desired
 def marseys(v):
