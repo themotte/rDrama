@@ -375,55 +375,7 @@
 
 {% include "expanded_image_modal.html" %}
 
-{% for p in listing %}
-<div style="display:none" id="popover-{{p.id}}">
-	<div class="popover-user-profile" role="tooltip">
-		<img loading="lazy" class="w-100 w-48 lg:h-64 object-cover" src="{{p.author.banner_url}}">
-		<div class="d-flex align-items-end px-3 mt-n6 mb-3">
-			<img loading="lazy" class="avatar-72 rounded img-thumbnail shadow-sm" src="{{p.author.profile_url}}">
-			<div class="px-3 text-truncate">
-			<h5 class="text-truncate text-black">{{p.author.username}}</h5>
-			</div>
-		</div>
-		<div class="px-3">
-			<span class="popover-bio text-black">{% if p.author.bio_html %}{{p.author.bio_html_eager | safe}}{% endif %}</span>
-		</div>
-
-		<div class="ml-3 mr-3 my-2">
-			{% for b in p.author.badges %}
-				{% if b.url %}
-					<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
-				{% else %}
-					<img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
-				{% endif %}
-			{% endfor %}
-		</div>
-
-	  <div class="border-top d-flex align-items-center p-3 gap-3 smol">
-		<span>
-		  <strong class="text-black">{{p.author.post_count}}</strong>
-		  <span class="text-black">posts</span>
-		</span>
-		<span class="ml-3">
-		  <strong class="text-black">{{p.author.comment_count}}</strong>
-		  <span class="text-black">comments</span>
-		</span>
-		<span class="ml-3">
-			<strong class="text-black">{{p.author.coins}}</strong>
-			<span class="text-black">coins</span>
-		</span>  
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a {% if v %}href="{{p.author.url}}"{% else %}href="/logged_out{{p.author.url}}"{% endif %} target="_blank" class="ml-auto text-decoration-none">
-		  View
-		  <i class="fas fa-arrow-right fa-sm px-1"></i>
-		</a>
-	  </div>
-	</div>
-</div>
-{% endfor %}
-
 <script defer src="/assets/js/new_comments_count.js?v=54"></script>
-<script defer src="/assets/js/popover.js?v=17"></script>
 <script defer src="/assets/js/submission_listing.js?v=11"></script>
 
 <style>
