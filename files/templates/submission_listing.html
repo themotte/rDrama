@@ -112,7 +112,7 @@
 				</span>
 				{% endif %}
 				{% if not p.award_count('ghosts') %}
-				<span class="flex-shrink-">
+				<span class="flex-shrink-0">
 					<a class="user-name" onclick='userPopover({{p.author.json_popover | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};">
 						<span class="inline-flex flex-shrink-0 items-center font-bold">
 							{% if p.author.patron and not p.distinguish_level %}
