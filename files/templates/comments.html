@@ -206,7 +206,7 @@
 				{% endif %}
 
 				<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color:#{{c.author.namecolor}};  font-size:12px; font-weight:bold;"><img loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{c.author.username}}</span></a>
-				{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{% if c.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{c.author.quadrant}}.webp?v=1">{% endif %}{{c.author.customtitle | safe}}</bdi>{% endif %}
+				{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{% if c.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{c.author.quadrant}}.webp?v=190>{% endif %}{{c.author.customtitle | safe}}</bdi>{% endif %}
 
 				{% if c.parent_comment_id and not standalone and level != 1 %}<a href="#comment-{{ c.parent_comment_id }}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{ c.parent_comment.author.username }}</a>{% endif %}
 
@@ -752,20 +752,20 @@
 </style>
 
 {% if v %}
-	<script src="/assets/js/marked.js?v=8"></script>
-	<script src="/assets/js/comments_v.js?v=88"></script>
+	<script src="/assets/js/marked.js?v=190></script>
+	<script src="/assets/js/comments_v.js?v=190></script>
 {% endif %}
 
-<script src="/assets/js/clipboard.js?v=3"></script>
+<script src="/assets/js/clipboard.js?v=190></script>
 
 {% if v and v.admin_level > 1 %}
-	<script src="/assets/js/comments_admin.js?v=54"></script>
+	<script src="/assets/js/comments_admin.js?v=190></script>
 {% endif %}
 
 {% include "expanded_image_modal.html" %}
 
-<script src="/assets/js/comments+submission_listing.js?v=143"></script>
-<script src="/assets/js/comments.js?v=14"></script>
+<script src="/assets/js/comments+submission_listing.js?v=190></script>
+<script src="/assets/js/comments.js?v=190></script>
 
 <script>
 	{% if p and (not v or v.highlightcomments) %}

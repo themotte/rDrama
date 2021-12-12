@@ -3,13 +3,13 @@
 <head>
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-		<script src="/assets/js/bootstrap.js?v=1"></script>
+		<script src="/assets/js/bootstrap.js?v=190></script>
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=5">
+		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190>
 
 		{% if request.host == 'pcmemes.net' %}
 			{% set cc='Splash Mountain' %}
@@ -25,16 +25,16 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=154"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=125">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=125">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/assets/css/main.css?v=190><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=190>
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=190>{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?v=154">
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=125">
+			<link rel="stylesheet" href="/assets/css/main.css?v=190>
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=190>
 		{% endif %}
 		{% endblock %}
 
-			<link href="/assets/css/fa.css?v=55" rel="stylesheet"> </head>
+			<link href="/assets/css/fa.css?v=190 rel="stylesheet"> </head>
 
 <body id="submit" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}display: block;">
 
@@ -175,9 +175,9 @@
 		</div>
 		{% endblock %}
 
-		<script src="/assets/js/marked.js?v=8"></script>
-		<script src="/assets/js/formatting.js?v=61"></script>
-		<script src="/assets/js/submit.js?v=78"></script>
+		<script src="/assets/js/marked.js?v=190></script>
+		<script src="/assets/js/formatting.js?v=190></script>
+		<script src="/assets/js/submit.js?v=190></script>
 
 
 		{% include "emoji_modal.html" %}

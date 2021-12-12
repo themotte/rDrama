@@ -4,20 +4,20 @@
 <head>
 	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-	<script src="/assets/js/bootstrap.js?v=1"></script>
+	<script src="/assets/js/bootstrap.js?v=190></script>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=5">
+	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190>
 
 	<title>{% block pagetitle %}Settings - {{'SITE_NAME' | app_config}}{% endblock %}</title>
 		<meta property="og:type" content="article" >
 		<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
 		<meta property="og:site_name" content="{{request.host}}" >
-		<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=3" >
+		<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190 >
 		<meta property="og:url" content="{{request.host}}">
 		<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 		<meta property="og:author" name="author" content="@{{request.host_url}}" >
@@ -28,15 +28,15 @@
 		<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
 		<meta name="twitter:creator" content="@{{request.host_url}}">
 		<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-		<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=3" >
+		<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190 >
 		<meta name="twitter:url" content="{{request.host}}" >
 
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/css/main.css?v=154"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=125">
-	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=125">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+	<link rel="stylesheet" href="/assets/css/main.css?v=190><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=190>
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=190>{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 
-		<link href="/assets/css/fa.css?v=55" rel="stylesheet"> 
+		<link href="/assets/css/fa.css?v=190 rel="stylesheet"> 
 </head>
 
 <body id="settings" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
@@ -239,7 +239,7 @@
 
 {% block onload %}{% endblock %}
 
-<script src="/assets/js/clipboard.js?v=3"></script>
+<script src="/assets/js/clipboard.js?v=190></script>
 
 <style>
 	.navsettings {
