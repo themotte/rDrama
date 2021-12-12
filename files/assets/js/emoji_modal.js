@@ -810,7 +810,7 @@ const EMOJIS_STRINGS = [
 	},
 	{
 		type: 'wojak',
-		emojis: ['soymad','boomerportrait','soycry','punchjak','seethejak','chadyes','chadno','abusivewife','ancap','bardfinn','bloomer','boomer','boomermonster','brainletbush','brainletcaved','brainletchair','brainletchest','brainletmaga','brainletpit','chad','chadarab','chadasian','chadblack','chadjesus','chadjew','chadjihadi','chadlatino','chadlibleft','chadnordic','chadsikh','chadusa','coomer','doomer','doomerfront','doomergirl','ethot','fatbrain','fatpriest','femboy','gogetter','grug','monke','nazijak','npc','npcfront','npcmaga','psychojak','ragejak','ragemask','ramonajak','soyjackwow','soyjak','soyjakfront','soyjakhipster','soyjakmaga','soyjakyell','tomboy','zoomer','zoomersoy']
+		emojis: ['trolldespair','soymad','boomerportrait','soycry','punchjak','seethejak','chadyes','chadno','abusivewife','ancap','bardfinn','bloomer','boomer','boomermonster','brainletbush','brainletcaved','brainletchair','brainletchest','brainletmaga','brainletpit','chad','chadarab','chadasian','chadblack','chadjesus','chadjew','chadjihadi','chadlatino','chadlibleft','chadnordic','chadsikh','chadusa','coomer','doomer','doomerfront','doomergirl','ethot','fatbrain','fatpriest','femboy','gogetter','grug','monke','nazijak','npc','npcfront','npcmaga','psychojak','ragejak','ragemask','ramonajak','soyjackwow','soyjak','soyjakfront','soyjakhipster','soyjakmaga','soyjakyell','tomboy','zoomer','zoomersoy']
 	},
 	{
 		type: 'flags',
@@ -818,7 +818,7 @@ const EMOJIS_STRINGS = [
 	},
 	{
 		type: 'misc',
-		emojis: ['bruh','autism','doot','kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
+		emojis: ['retardedchildren','bruh','autism','doot','kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
 	},
 ]
 
