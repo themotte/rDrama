@@ -29,31 +29,31 @@
 
 	{% block stylesheets %}
 
-	<link rel="stylesheet" href="/assets/css/main.css?v=500>
+	<link rel="stylesheet" href="/assets/css/main.css?v=200>
 
 	{% assets 'css' %}
   		<link rel="stylesheet" href="{{ ASSET_URL }}">
 	{% endassets %}
 
-	<link rel="stylesheet" href="/assets/css/mistletoe.css?v=500>
+	<link rel="stylesheet" href="/assets/css/mistletoe.css?v=200>
 
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<!-- <link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=500> -->
+		<!-- <link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=200> -->
 		{% if v.agendaposter %}
-		<link rel="stylesheet" href="/assets/css/agendaposter.css?v=500>
+		<link rel="stylesheet" href="/assets/css/agendaposter.css?v=200>
 		{% elif v.css %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<!-- <link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=500> -->
+		<!-- <link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=200> -->
 	{% endif %}
 
 	{% endblock %}
 
-	<link rel="preload" href="/assets/css/fa.css?v=500 as="style" onload="this.onload=null;this.rel='stylesheet'">
-	<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=500></noscript>
+	<link rel="preload" href="/assets/css/fa.css?v=200 as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=200></noscript>
 
 	<style>
 		@font-face { font-family: 'Delius Swash Caps'; src: url('/assets/fonts/DeliusSwashCaps-Regular.ttf'); } 
@@ -188,10 +188,10 @@
 
 	<!-- Scripts -->
 
-	<script src="/assets/js/header.js?v=500></script>
+	<script src="/assets/js/header.js?v=200></script>
 
 	<!-- Lazy Loading -->
-	<script src="/assets/js/lozad.js?v=500></script>
+	<script src="/assets/js/lozad.js?v=200></script>
 	<script>
 		const observer = lozad();
 		observer.observe();
@@ -211,11 +211,11 @@
 		});
 	</script>
 
-	<script src="/assets/js/mobile_navigation_bar.js?v=500></script>
+	<script src="/assets/js/mobile_navigation_bar.js?v=200></script>
 
 	{% if v %}
 		<script>function formkey() {return '{{v.formkey}}';}</script>
-		<script src="/assets/js/default.js?v=500></script>
+		<script src="/assets/js/default.js?v=200></script>
 	{% endif %}
 </body>
 </html>

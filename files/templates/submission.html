@@ -31,7 +31,7 @@
 </script>
 
 {% if v %}
-<script defer src="/assets/js/comments_v.js?v=500></script>
+<script defer src="/assets/js/comments_v.js?v=200></script>
 {% endif %}
 
 {% endif %}
@@ -376,9 +376,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="/assets/js/twitterlight.js?v=500></script>
+									<script src="/assets/js/twitterlight.js?v=200></script>
 								{% else %}
-									<script src="/assets/js/twitter.js?v=500></script>
+									<script src="/assets/js/twitter.js?v=200></script>
 								{% endif %}
 								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
 							{% elif "youtu" in p.domain %}
@@ -571,7 +571,7 @@
 			{% endif %}
 
 			{% if offset %}
-				<script src="/assets/js/viewmore.js?v=500></script>
+				<script src="/assets/js/viewmore.js?v=200></script>
 			{% endif %}
 
 	</div>
@@ -610,18 +610,18 @@
 	{% include "/submission/SubmissionAwards.html" %}
 
 	{% if v %}
-		<script defer src="/assets/js/vote.js?v=500></script>
+		<script defer src="/assets/js/vote.js?v=200></script>
 		{% if not p.comment_count %}
-			<script defer src="/assets/js/comments_v.js?v=500></script>
+			<script defer src="/assets/js/comments_v.js?v=200></script>
 		{% endif %}
 	{% endif %}
 
 	{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-		<script src="/assets/js/submission.js?v=500></script>
+		<script src="/assets/js/submission.js?v=200></script>
 	{% endif %}
 
 	{% if not v or v.highlightcomments %}
-		<script defer src="/assets/js/new_comments_count.js?v=500></script>
+		<script defer src="/assets/js/new_comments_count.js?v=200></script>
 	{% endif %}
 
 	<script defer>

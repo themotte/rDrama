@@ -5,7 +5,7 @@
 
 <!-- Poop award -->
 {% if p.award_count("shit") %}
-<script defer src="/assets/js/bugs.js?v=500></script>
+<script defer src="/assets/js/bugs.js?v=200></script>
 {% set minbugs = 10*p.award_count("shit") if p.award_count("shit") < 3 else 20 %}
 {% set maxbugs = 20*p.award_count("shit") if p.award_count("shit") < 3 else 40 %}
 <script>
@@ -21,7 +21,7 @@
 
 <!-- Fireflies award -->
 {% if p.award_count("fireflies") %}
-<script defer src="/assets/js/fireflies.js?v=500></script>
+<script defer src="/assets/js/fireflies.js?v=200></script>
 {% set minbugs = 10*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 20 %}
 {% set maxbugs = 20*p.award_count("fireflies") if p.award_count("fireflies") < 3 else 40 %}
 <script>
@@ -122,22 +122,22 @@
 <!-- Songs & Fireplace awards (logged in) -->
 {% if v and not v.grincheffect %}
 	{% if p.award_count("snow") and p.award_count("fireplace") %}
-		<script defer src="/assets/js/christmas/deanmartin.js?v=500></script>
+		<script defer src="/assets/js/christmas/deanmartin.js?v=200></script>
 	{% elif p.award_count("fireplace")%}
-		<script defer src="/assets/js/christmas/fireplace.js?v=500></script>
+		<script defer src="/assets/js/christmas/fireplace.js?v=200></script>
 	{% else %}
-		<script defer src="/assets/js/christmas/playlist.js?v=500></script>
+		<script defer src="/assets/js/christmas/playlist.js?v=200></script>
 	{% endif %}
 {% endif %}
 
 <!-- Songs & Fireplace awards (logged out) -->
 {% if not v %}
 	{% if p.award_count("snow") and p.award_count("fireplace") %}
-		<script defer src="/assets/js/christmas/deanmartin.js?v=500></script>
+		<script defer src="/assets/js/christmas/deanmartin.js?v=200></script>
 	{% elif p.award_count("fireplace")%}
-		<script defer src="/assets/js/christmas/fireplace.js?v=500></script>
+		<script defer src="/assets/js/christmas/fireplace.js?v=200></script>
 	{% else %}
-		<script defer src="/assets/js/christmas/playlist.js?v=500></script>
+		<script defer src="/assets/js/christmas/playlist.js?v=200></script>
 	{% endif %}
 {% endif %}
 
