@@ -1,4 +1,4 @@
-{% set count = p.award_count("gingerbread") if p.award_count("gingerbread") < 10 else 10 %}
+{% set count = p.award_count("gingerbread") * 2 if p.award_count("gingerbread") <= 5 else 10 %}
 
 <div class="snowflakes">
 	{% for i in range(count) %}
