@@ -5702,3 +5702,7 @@ blockquote p {
 .bet ~ .custom-control-label::before {
   border-radius: 50%;
 }
+
+.emoji-modal {
+  max-width: 90% !important
+}
