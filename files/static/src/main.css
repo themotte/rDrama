@@ -155,3 +155,17 @@
   color: @apply text-white;
 }
 
+/* ----------------------- EMOJI ------------------------ */
+
+img.emoji {
+	width: 30px;
+	height: 30px;
+	@apply inline-block object-contain
+}
+
+img.emoji-lg {
+	width: 60px;
+	height: 60px;
+	@apply inline-block object-contain
+}
+
