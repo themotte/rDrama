@@ -354,28 +354,28 @@
 }
 .snowflake:nth-of-type(11) {
 	left: 5%;
-	-webkit-animation-delay: 0s, 0s;
-	animation-delay: 0s, 0s
+	-webkit-animation-delay: 1s, 1s;
+	animation-delay: 1s, 1s
 }
 .snowflake:nth-of-type(12) {
 	left: 15%;
 	-webkit-animation-delay: 1s, 1.5s;
-	animation-delay: 1s, 1s
+	animation-delay: 1s, 1.5s
 }
 .snowflake:nth-of-type(13) {
 	left: 25%;
-	-webkit-animation-delay: 6s, .5s;
-	animation-delay: 6s, .5s
+	-webkit-animation-delay: 6s, 2.5s;
+	animation-delay: 6s, 2.5s
 }
 .snowflake:nth-of-type(14) {
 	left: 35%;
-	-webkit-animation-delay: 4s, 2.5s;
-	animation-delay: 4s, 2s
+	-webkit-animation-delay: 4s, 3s;
+	animation-delay: 4s, 3s
 }
 .snowflake:nth-of-type(15) {
 	left: 45%;
-	-webkit-animation-delay: 2s, 1.5s;
-	animation-delay: 2s, 2s
+	-webkit-animation-delay: 2s, 4s;
+	animation-delay: 2s, 4s
 }
 .snowflake:nth-of-type(16) {
 	left: 55%;
@@ -385,7 +385,7 @@
 .snowflake:nth-of-type(17) {
 	left: 65%;
 	-webkit-animation-delay: 6s, 3s;
-	animation-delay: 6s, 2s
+	animation-delay: 6s, 3s
 }
 .snowflake:nth-of-type(18) {
 	left: 75%;
@@ -394,8 +394,8 @@
 }
 .snowflake:nth-of-type(19) {
 	left: 85%;
-	-webkit-animation-delay: 1s, 0s;
-	animation-delay: 1s, 0s
+	-webkit-animation-delay: 2s, 0s;
+	animation-delay: 2s, 0s
 }
 .snowflake:nth-of-type(20) {
 	left: 95%;
