@@ -828,6 +828,6 @@ NOTIFIED_USERS = {
 	'landlordmessiah': LLM_ID,
 	' llm ': LLM_ID,
 	'landlet': LLM_ID,
-	'donger': DONGER_ID,
-	'donger': FARTBINN_ID
+	'dong': DONGER_ID,
+	'dong': FARTBINN_ID
 }
