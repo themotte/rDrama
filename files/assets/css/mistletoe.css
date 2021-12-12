@@ -354,8 +354,8 @@
 }
 .snowflake:nth-of-type(11) {
 	left: 5%;
-	-webkit-animation-delay: 1s, 1s;
-	animation-delay: 1s, 1s
+	-webkit-animation-delay: 1s, 4s;
+	animation-delay: 1s, 4s
 }
 .snowflake:nth-of-type(12) {
 	left: 15%;
@@ -369,8 +369,8 @@
 }
 .snowflake:nth-of-type(14) {
 	left: 35%;
-	-webkit-animation-delay: 4s, 3s;
-	animation-delay: 4s, 3s
+	-webkit-animation-delay: 4s, 1s;
+	animation-delay: 4s, 1s
 }
 .snowflake:nth-of-type(15) {
 	left: 45%;
@@ -389,8 +389,8 @@
 }
 .snowflake:nth-of-type(18) {
 	left: 75%;
-	-webkit-animation-delay: 2.5s, 1s;
-	animation-delay: 2.5s, 1s
+	-webkit-animation-delay: 2.5s, 4s;
+	animation-delay: 2.5s, 4s
 }
 .snowflake:nth-of-type(19) {
 	left: 85%;
