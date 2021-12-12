@@ -116,11 +116,11 @@
 					<a class="user-name" onclick='userPopover({{p.author.json_popover | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};">
 						<span class="inline-flex items-center font-bold">
 							{% if p.author.patron and not p.distinguish_level %}
-							<span class="patron" style="background-color:#{{p.author.namecolor}};">
+							<span class="patron flex-shrink-0" style="background-color:#{{p.author.namecolor}};">
 								{{p.author.username}}
 							</span>
 							{% elif p.distinguish_level and 'rama' in request.host %}
-							<span class="mod">
+							<span class="mod flex-shrink-0">
 								{{p.author.username}}
 							</span>
 							{% else %}
