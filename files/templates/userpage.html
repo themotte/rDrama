@@ -265,7 +265,7 @@
 	</div>
 	{% endif %}	
 
-	{% if v and v.admin_level > 1 and u.is_suspended %}
+	{% if v and v.admin_level > 1 and u.shadowbanned %}
 	<!-- Non-dismissable Alerts -->
 	<div class="p-2.5 md:p-0">
 		<!-- Banned -->
