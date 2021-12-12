@@ -1,12 +1,4 @@
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 py-4">
-	{% if v %}
-	<div class="flex flex-col mb-4">
-		<a class="btn btn-red text-center w-full" href="/submit">
-			Submit drama
-			<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
-		</a>
-	</div>
-	{% endif %}
 	<div class="mb-4">
 		<h2 class="ml-2 font-bold text-xl font-heading leading-normal mb-2">
 			Fistmas Stickies
@@ -40,6 +32,14 @@
 			</li>
 		</ul>
 	</div>
+	{% if v %}
+	<div class="flex flex-col mb-4 sticky top-4">
+		<a class="btn btn-red text-center w-full" href="/submit">
+			Submit drama
+			<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
+		</a>
+	</div>
+	{% endif %}
 	<div class="mb-4">
 		<h2 class="ml-2 font-bold text-xl font-heading leading-normal mb-2">
 			Commission a Marsey
