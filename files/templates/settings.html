@@ -184,8 +184,16 @@
 
 	{% block scripts %}{% endblock %}
 
-	<script src="/assets/js/default.js"></script>
-	<script src="/assets/js/header.js?v=54"></script>
+	<!-- Scripts -->
+
+	<script src="/assets/js/header.js?v=58"></script>
+
+	<!-- Lazy Loading -->
+	<script src="/assets/js/lozad.js?v=54"></script>
+	<script>
+		const observer = lozad();
+		observer.observe();
+	</script>
 
 	<!-- Bootstrap -->
 	<script src="/assets/js/bootstrap.js"></script>
@@ -195,10 +203,20 @@
 	<script>
 		var clipboard = new ClipboardJS('.copy-link');
 		clipboard.on('success', function(e) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-			myToast.show();
-			console.log(e);
+				var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
+				myToast.show();
+				console.log(e);
 		});
 	</script>
+
+	<script src="/assets/js/gif_modal.js?v=56"></script>
+	<script src="/assets/js/emoji_modal.js?v=149"></script>
+
+	<script src="/assets/js/mobile_navigation_bar.js?v=117"></script>
+
+	{% if v %}
+		<script>function formkey() {return '{{v.formkey}}';}</script>
+		<script src="/assets/js/default.js?v=57"></script>
+	{% endif %}
 </body>
 </html>
