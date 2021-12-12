@@ -69,7 +69,7 @@ def admin_vote_info_get(v):
 @validate_formkey
 def api_vote_post(post_id, new, v):
 
-	if v.is_banned and not v.unban_utc: return {"error": "forbidden."}, 403
+	if v.is_banned and not v.unban_utc or new == "-1": return {"error": "forbidden."}, 403
 
 	if new not in ["-1", "0", "1"]: abort(400)
 
@@ -85,13 +85,13 @@ def api_vote_post(post_id, new, v):
 
 	if existing:
 		if existing.vote_type == 0 and new != 0:
-			post.author.coins += 1
+			post.author.coins += 2
 			post.author.truecoins += 1
 			g.db.add(post.author)
 			existing.vote_type = new
 			g.db.add(existing)
 		elif existing.vote_type != 0 and new == 0:
-			post.author.coins -= 1
+			post.author.coins -= 2
 			post.author.truecoins -= 1
 			g.db.add(post.author)
 			g.db.delete(existing)
@@ -99,7 +99,7 @@ def api_vote_post(post_id, new, v):
 			existing.vote_type = new
 			g.db.add(existing)
 	elif new != 0:
-		post.author.coins += 1
+		post.author.coins += 2
 		post.author.truecoins += 1
 		g.db.add(post.author)
 		real = (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor) and not v.agendaposter and not v.shadowbanned
@@ -132,7 +132,7 @@ def api_vote_post(post_id, new, v):
 @validate_formkey
 def api_vote_comment(comment_id, new, v):
 
-	if v.is_banned and not v.unban_utc: return {"error": "forbidden."}, 403
+	if v.is_banned and not v.unban_utc or new == "-1": return {"error": "forbidden."}, 403
 
 	if new not in ["-1", "0", "1"]: abort(400)
 
@@ -153,13 +153,13 @@ def api_vote_comment(comment_id, new, v):
 
 	if existing:
 		if existing.vote_type == 0 and new != 0:
-			comment.author.coins += 1
+			comment.author.coins += 2
 			comment.author.truecoins += 1
 			g.db.add(comment.author)
 			existing.vote_type = new
 			g.db.add(existing)
 		elif existing.vote_type != 0 and new == 0:
-			comment.author.coins -= 1
+			comment.author.coins -= 2
 			comment.author.truecoins -= 1
 			g.db.add(comment.author)
 			g.db.delete(existing)
@@ -167,7 +167,7 @@ def api_vote_comment(comment_id, new, v):
 			existing.vote_type = new
 			g.db.add(existing)
 	elif new != 0:
-		comment.author.coins += 1
+		comment.author.coins += 2
 		comment.author.truecoins += 1
 		g.db.add(comment.author)
 		real = (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor) and not v.agendaposter and not v.shadowbanned

@@ -281,8 +281,14 @@ class User(Base):
 		if not self.is_suspended: return None
 		return g.db.query(User).filter_by(id=self.is_banned).first()
 
+	@lazy
 	def has_badge(self, badge_id):
 		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).first()
+
+	@property
+	@lazy
+	def grinch(self):
+		return self.has_badge(91)
 
 	def hash_password(self, password):
 		return generate_password_hash(
@@ -418,6 +424,7 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
+		if self.grinch: return f"https://{site}/assets/images/grinch.webp?v=1"
 		if self.agendaposter: return f"https://{site}/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?v=1"
 		if self.profileurl: return self.profileurl
 		if "rama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=1"

@@ -456,6 +456,14 @@ AWARDS = {
 		"color": "",
 		"price": 1000
 	},
+	"grinch": {
+		"kind": "grinch",
+		"title": "Grinch",
+		"description": "???",
+		"icon": "fas fa-angry",
+		"color": "text-green-500",
+		"price": 1000
+	},
 	"haunt": {
 		"kind": "haunt",
 		"title": "Haunt",
@@ -714,6 +722,14 @@ AWARDS2 = {
 		"description": "???",
 		"icon": "fas fa-mistletoe",
 		"color": "",
+		"price": 1000
+	},
+	"grinch": {
+		"kind": "grinch",
+		"title": "Grinch",
+		"description": "???",
+		"icon": "fas fa-angry",
+		"color": "text-green-500",
 		"price": 1000
 	},
 	"shit": {
