@@ -442,7 +442,7 @@
 					</div>
 					{% endif %}
 
-					{% if p.embed_url and "http" not in p.embed_url %}
+					{% if p.embed_url and "http" not in p.embed_url and "<" not in p.embed_url %}
 					<div id="crosspost-embed" class="p-2.5 rounded-md bg-gray-300 border border-gray-400">
 						<div class="row no-gutters">
 							<div id="frontpage" class="col-12 pt-0">
