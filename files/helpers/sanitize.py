@@ -170,13 +170,13 @@ def sanitize(sanitized, noimages=False):
 		for i in re.finditer('(?<!"):([!#A-Za-z0-9]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("#!") or emoji.startswith("!#"):
-				classes = 'class="emoji mirrored" '
+				classes = 'class="emoji-lg mirrored" '
 				remoji = emoji[2:]
 			elif emoji.startswith("!"):
-				classes = 'height=60 class="emoji-lg mirrored" '
+				classes = 'height=60 class="emoji mirrored" '
 				remoji = emoji[1:]
 			elif emoji.startswith("#"):
-				classes = 'class="emoji" '
+				classes = 'class="emoji-lg" '
 				remoji = emoji[1:]
 			else:
 				classes = 'height=60 class="emoji-lg" '
