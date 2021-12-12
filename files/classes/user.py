@@ -481,7 +481,7 @@ class User(Base):
 	def json(self):
 		data = self.json_core
 
-		data["badges"] = [x.json_core for x in self.badges]
+		data["badges"] = [x.json for x in self.badges]
 		data['coins'] = self.coins
 		data['post_count'] = self.post_count
 		data['comment_count'] = self.comment_count

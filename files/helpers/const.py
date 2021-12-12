@@ -127,6 +127,8 @@ if SITE == 'rdrama.net':
 	LLM_ID = 253
 	DAD_ID = 2513
 	MOM_ID = 4588
+	DONGER_ID = 541
+	FARTBINN_ID = 2256 
 	BUG_THREAD = 18459
 	EMOJI_THREAD = 22479
 elif SITE == "pcmemes.net":
@@ -150,6 +152,8 @@ elif SITE == "pcmemes.net":
 	LLM_ID = 0
 	DAD_ID = 0
 	MOM_ID = 0
+	DONGER_ID = 0
+	FARTBINN_ID = 0
 	BUG_THREAD = 4103
 	EMOJI_THREAD = 0
 else:
@@ -173,6 +177,8 @@ else:
 	LLM_ID = 0
 	DAD_ID = 0
 	MOM_ID = 0
+	DONGER_ID = 0
+	FARTBINN_ID = 0
 	BUG_THREAD = 0
 	EMOJI_THREAD = 0
 
@@ -890,4 +896,6 @@ NOTIFIED_USERS = {
 	'landlordmessiah': LLM_ID,
 	' llm ': LLM_ID,
 	'landlet': LLM_ID,
+	'dong': DONGER_ID,
+	'dong': FARTBINN_ID
 }
