@@ -127,6 +127,8 @@ if SITE == 'rdrama.net':
 	LLM_ID = 253
 	DAD_ID = 2513
 	MOM_ID = 4588
+	DONGER_ID = 541
+	FARTBINN_ID = 2256 
 	BUG_THREAD = 18459
 	EMOJI_THREAD = 22479
 elif SITE == "pcmemes.net":
@@ -826,4 +828,6 @@ NOTIFIED_USERS = {
 	'landlordmessiah': LLM_ID,
 	' llm ': LLM_ID,
 	'landlet': LLM_ID,
+	'donger': DONGER_ID,
+	'donger': FARTBINN_ID
 }
