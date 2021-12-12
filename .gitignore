@@ -3,8 +3,8 @@ chart.png
 video.mp4
 video.webm
 cache/
-images/
-songs/
+/images/
+/songs/
 __pycache__/
 disablesignups
 *rules.html
