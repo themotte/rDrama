@@ -170,49 +170,51 @@
 			{% endif %}
 		</div>
 		{% if u.id == v.id or not u.is_private %}
-		<ul class="flex items-center space-x-3 mt-3 mb-0">
-			<li>
-				<div class="text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</div>
-				<small class="block font-bold text-gray-500">Followers</small>
-			</li>
-			<li>
-				<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
-				<small class="block font-bold text-gray-500">Dramacoin</small>
-			</li>
-			{% if u.procoins %}
-			<li>
-				<div class="text-lg font-bold mb-0">{{ u.procoins }}</div>
-				<small class="block font-bold text-gray-500">MarseyBux</small>
-			</li>
-			{% endif %}
-		</ul>
+			<ul class="flex items-center space-x-3 mt-3 mb-0">
+				<li>
+					<div class="text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</div>
+					<small class="block font-bold text-gray-500">Followers</small>
+				</li>
+				<li>
+					<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
+					<small class="block font-bold text-gray-500">Dramacoin</small>
+				</li>
+				{% if u.procoins %}
+				<li>
+					<div class="text-lg font-bold mb-0">{{ u.procoins }}</div>
+					<small class="block font-bold text-gray-500">MarseyBux</small>
+				</li>
+				{% endif %}
+			</ul>
 		{% endif %}
 		{% if u.badges %}
-		<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
-			{% for b in u.badges %}
-			<li>
-				{% if b.url %}
-				<a rel="nofollow noopener noreferrer" href="{{b.url}}">
+			<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
+				{% for b in u.badges %}
+				<li>
+					{% if b.url %}
+					<a rel="nofollow noopener noreferrer" href="{{b.url}}">
+						<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+					</a>
+					{% else %}
 					<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
-				</a>
-				{% else %}
-				<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
-				{% endif %}
-			</li>
-			{% endfor %}
-		</ul>
+					{% endif %}
+				</li>
+				{% endfor %}
+			</ul>
 		{% endif %}
-		<div>
-			{% if u.friends_html %}
-			<p class="label">Friends</p>
-			{{u.friends_html | safe}}
-			{% endif %}
+		{% if u.friends_html or u.enemies_html %}
+			<div class="mt-3">
+				{% if u.friends_html %}
+				<p class="label">Friends</p>
+				{{u.friends_html | safe}}
+				{% endif %}
 
-			{% if u.enemies_html %}
-			<p class="label">Enemies</p>
-			{{u.enemies_html | safe}}
-			{% endif %}
-		</div>
+				{% if u.enemies_html %}
+				<p class="label">Enemies</p>
+				{{u.enemies_html | safe}}
+				{% endif %}
+			</div>
+		{% endif %}
 	</div>
 </div>
 {% endblock %}
