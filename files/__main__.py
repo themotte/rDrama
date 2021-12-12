@@ -3,7 +3,6 @@ gevent.monkey.patch_all()
 from os import environ
 import secrets
 from flask import *
-from flask_assets import Bundle, Environment
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
@@ -89,13 +88,6 @@ cache = Cache(app)
 Compress(app)
 mail = Mail(app)
 
-assets = Environment(app)
-css = Bundle('src/main.css', output='dist/main.css', filters='postcss')
-
-assets.register('css', css)
-css.build()
-
-
 @app.before_request
 def before_request():
 
@@ -122,10 +114,6 @@ def before_request():
 	elif "Safari/" in ua: g.system="ios/safari"
 	elif "Mobile/" in ua: g.system="ios/webview"
 	else: g.system="other/other"
-
-@app.get('/tw')
-def get_tailwind():
-	return render_template('tailwind.html')
 
 @app.teardown_appcontext
 def teardown_request(error):
