@@ -3998,14 +3998,14 @@ img.emoji {
 }
 
 .spoiler {
-  color: var(--white);
-  background-color: var(--white);
+  color: #000000;
+  background-color: #000000;
   font-weight: 600 !important;
   padding: 5px;
 }
 
 .spoiler:hover {
-  color: var(--gray);
+  color: #FFFFFF;
 }
 
 /*@media (min-width: 768px) {
