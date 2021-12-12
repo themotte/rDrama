@@ -64,6 +64,16 @@
 
 /* Mistletoe */
 
+.fa-mistletoe::before {
+	color: #dc2626!important;
+}
+.fa-mistletoe::after {
+	color: #3f6212!important;
+}
+.fad.fa-mistletoe:after {
+	opacity: 1;
+}
+
 .mistletoe::before {
 	content: '';
 	pointer-events: none;
@@ -86,13 +96,15 @@
 	background-size: contain;
 }
 
-.fa-mistletoe::before {
-	color: #dc2626!important;
+/* Fireplace */
+
+.fa-fireplace::before {
+	color: #7c2d12!important;
 }
-.fa-mistletoe::after {
-	color: #3f6212!important;
+.fa-fireplace::after {
+	color: #f59e0b!important;
 }
-.fad.fa-mistletoe:after {
+.fad.fa-fireplace:after {
 	opacity: 1;
 }
 
@@ -111,7 +123,7 @@
 	background-size: contain;
 }
 
-/* Snow */
+/* Frost */
 
 .frost {
 	position: fixed;
@@ -125,6 +137,16 @@
 }
 
 /* Lights */
+
+.fa-lights-holiday::before {
+	color: #3f6212!important;
+}
+.fa-lights-holiday::after {
+	color: #dc2626!important;
+}
+.fad.fa-lights-holiday:after {
+	opacity: 1;
+}
 
 @keyframes lights {
     0% {
@@ -150,6 +172,16 @@
 }
 
 /* Candy Cane */
+
+.fa-candy-cane::before {
+	color: #ffffff!important;
+}
+.fa-candy-cane::after {
+	color: #dc2626!important;
+}
+.fad.fa-candy-cane:after {
+	opacity: 1;
+}
 
 .candycane p {
   --color1: #DC2626;
@@ -180,7 +212,17 @@
   }
 }
 
-/* Falling marsey & coal */
+/* Falling Gingermarsey */
+
+.fa-gingerbread-man::before {
+	color: #ef4444!important;
+}
+.fa-gingerbread-man::after {
+	color: #a16207!important;
+}
+.fad.fa-gingerbread-man:after {
+	opacity: 1;
+}
 
 .snowflake {
 	color: #fff;
