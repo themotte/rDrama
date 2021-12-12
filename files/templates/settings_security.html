@@ -16,7 +16,7 @@
 				<form	action="/settings/security" method="post">
 					<input type="hidden" name="formkey" value="{{v.formkey}}">
 					<div class="body">
-						<div class="md:flex">
+						<div class="d-lg-flex">
 							<label for="new-email" class="w-lg-25">Email</label>
 							<div class="w-lg-100">
 								<input class="form-input" id="new_email" {% if v.email %}placeholder="{{v.email}}"{% else %}placeholder="Your email"{% endif %}
@@ -28,7 +28,7 @@
 								{% endif %}
 							</div>
 						</div>
-						<div class="md:flex mt-3">
+						<div class="d-lg-flex mt-3">
 							<label for="email-password" class="w-lg-25 hidden" id="email-password-label">Password</label>
 							<div class="w-lg-100">
 								<input autocomplete="new-password" type="password" class="form-input mb-2 hidden" id="email-password" name="password" autocomplete="off" required>
@@ -65,7 +65,7 @@
 
 					<div class="body">
 
-						<div class="md:flex">
+						<div class="d-lg-flex">
 
 							<label for="new_password" class="mb-0 w-lg-25">New Password</label>
 
@@ -84,7 +84,7 @@
 
 				</div>
 
-				<div class="md:flex mt-3">
+				<div class="d-lg-flex mt-3">
 
 					<label for="cnf_password" class="mb-0 w-lg-25">Confirm New Password</label>
 
@@ -101,7 +101,7 @@
 
 		</div>
 
-		<div class="md:flex mt-5">
+		<div class="d-lg-flex mt-5">
 
 			<label for="old_password" class="mb-0 w-lg-25">Old Password</label>
 
@@ -138,7 +138,7 @@
 
 <div class="settings-section rounded">
 
-	<div class="md:flex">
+	<div class="d-lg-flex">
 
 		<div class="title w-lg-25">
 			<label for="2faToggle">Use 2-step login</label>
@@ -172,7 +172,7 @@
 
 		<div class="body">
 
-			<div class="md:flex">
+			<div class="d-lg-flex">
 
 				<label for="forcelog-password" class="w-lg-25" id="email-password-label">Password</label>
 
@@ -223,7 +223,7 @@
 					<input type="hidden" name="formkey" value="{{v.formkey}}">
 					<div class="modal-body body">
 
-						<div class="md:flex">
+						<div class="d-lg-flex">
 
 							<label for="delete-password" class="w-lg-25" id="email-password-label">Password</label>
 
@@ -236,7 +236,7 @@
 						</div>
 
 						{% if v.mfa_secret %}
-						<div class="md:flex mt-3">
+						<div class="d-lg-flex mt-3">
 
 							<label for="delete-mfa" class="w-lg-25" id="email-password-label">Two-Factor Code</label>
 
