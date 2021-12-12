@@ -93,15 +93,6 @@ def shop(v):
 			"owned": 0,
 			"price": 600
 		},
-		"mistletoe": {
-			"kind": "mistletoe",
-			"title": "Mistletoe",
-			"description": "???",
-			"icon": "fas fa-mistletoe",
-			"color": "",
-			"owned": 0,
-			"price": 1000
-		},
 		"grinch": {
 			"kind": "grinch",
 			"title": "Grinch",
@@ -348,14 +339,6 @@ def buy(v, award):
 			"icon": "fad fa-fireplace",
 			"color": "",
 			"price": 600
-		},
-		"mistletoe": {
-			"kind": "mistletoe",
-			"title": "Mistletoe",
-			"description": "???",
-			"icon": "fas fa-mistletoe",
-			"color": "",
-			"price": 1000
 		},
 		"grinch": {
 			"kind": "grinch",

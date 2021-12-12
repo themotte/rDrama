@@ -69,7 +69,7 @@ def admin_vote_info_get(v):
 @validate_formkey
 def api_vote_post(post_id, new, v):
 
-	if v.is_banned and not v.unban_utc or new == "-1": return {"error": "forbidden."}, 403
+	if v.is_banned and not v.unban_utc or new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
 
 	if new not in ["-1", "0", "1"]: abort(400)
 
@@ -132,7 +132,7 @@ def api_vote_post(post_id, new, v):
 @validate_formkey
 def api_vote_comment(comment_id, new, v):
 
-	if v.is_banned and not v.unban_utc or new == "-1": return {"error": "forbidden."}, 403
+	if v.is_banned and not v.unban_utc or new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
 
 	if new not in ["-1", "0", "1"]: abort(400)
 
