@@ -8,11 +8,11 @@
 		<div class="container-fluid" style="padding:0;">
 			<div class="flex-grow-1">
 				<a href="/" class="navbar-brand mr-auto">
-					<img loading="lazy" height="30" src="/assets/images/{{'SITE_NAME' | app_config}}/headericon.webp?v=190>
+					<img loading="lazy" height="30" src="/assets/images/{{'SITE_NAME' | app_config}}/headericon.webp?v=190">
 					{% if "gigachadlife" in request.host %}
 						<span style="font-weight: bold; font-size: 1.2rem;">GigaChadLife</span>
 					{% elif 'pcm' not in request.host %}
-						<img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/logo.webp?v=190 height="20">
+						<img loading="lazy" src="/assets/images/{{'SITE_NAME' | app_config}}/logo.webp?v=190" height="20">
 					{% endif %}
 				</a>
 			</div>
@@ -111,7 +111,7 @@
 								<button class="dropdown-item copy-link" data-clipboard-text="/signup?ref={{v.username}}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
 							</div>
 							<div class="px-2">
-								<a class="dropdown-item" href="/assets/{{'SITE_NAME' | app_config}}.apk?v=190><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
+								<a class="dropdown-item" href="/assets/{{'SITE_NAME' | app_config}}.apk?v=190"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
 
 								<a class="dropdown-item" href="/rules"><i class="fas fa-balance-scale fa-fw text-left mr-3"></i>Rules</a>
 
@@ -175,7 +175,7 @@
 			<li class="nav-item">
 				<a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
 			</li>
-			<a class="nav-item nav-link" href="/assets/{{'SITE_NAME' | app_config}}.apk?v=190><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
+			<a class="nav-item nav-link" href="/assets/{{'SITE_NAME' | app_config}}.apk?v=190"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
 
 			<a class="nav-item nav-link" href="/rules"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a>
 
@@ -212,7 +212,7 @@
 	</div>
 </nav>
 
-<script src="/assets/js/header.js?v=190></script>
+<script src="/assets/js/header.js?v=190"></script>
 
 <style>
 	.notif-count {
