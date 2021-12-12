@@ -37,23 +37,19 @@
 
 <!-- Christmas Awards -->
 
-<!-- Snow award -->
-{% if p.award_count("snow") %}
-{% include "/awards/Christmas/Snow.html" %}
-{% if p.award_count("snow") > 4 %}
-	<div class="frost"></div>
-{% endif %}
-{% endif %}
-
 <!-- Ginger Marsey award -->
 {% if p.award_count("gingerbread") %}
 	{% include "/awards/Christmas/Gingerbread.html" %}
 {% endif %}
 
-<!-- Javascript -->
-
 <!-- Snow award -->
 {% if p.award_count("snow") %}
+
+{% include "/awards/Christmas/Snow.html" %}
+{% if p.award_count("snow") > 5 %}
+	<div class="frost"></div>
+{% endif %}
+
 {% set snowCount = p.award_count("snow") if p.award_count("snow") < 5 else 5 %}
 <script defer>
 	document.addEventListener('DOMContentLoaded', function(){
