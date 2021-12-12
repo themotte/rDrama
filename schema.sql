@@ -767,7 +767,9 @@ CREATE TABLE public.users (
     unblockable boolean,
     teddit boolean,
     bird integer,
-    fish boolean
+    fish boolean,
+    grinch boolean,
+    grincheffect boolean
 );
 
 
