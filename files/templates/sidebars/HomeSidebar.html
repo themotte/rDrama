@@ -36,7 +36,7 @@
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
 	<div class="w-full h-56 shadow-sm p-[3px] bg-white overflow-hidden">
-		<img class="w-full h-full flex-shrink-0 object-contain" src="/assets/christmas/banners/banner-{{ random }}.jpg" alt="cat in a bar wearing a santa hat">
+		<img class="w-full h-full flex-shrink-0 object-contain" src="/assets/christmas/banners/banner-{{ random }}.jpg" alt="cat in a bar wearing a santa hat" data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="/assets/christmas/banners/banner-{{ random }}.jpg" onclick="expandDesktopImage('/assets/christmas/banners/banner-{{ random }}.jpg')"/>
 	</div>
 	{% if v %}
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
