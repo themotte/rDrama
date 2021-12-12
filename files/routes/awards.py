@@ -48,6 +48,60 @@ AWARDS3 = {
 @auth_required
 def shop(v):
 	AWARDS = {
+		"snow": {
+			"kind": "snow",
+			"title": "Snow",
+			"description": "???",
+			"icon": "fas fa-snowflake",
+			"color": "text-blue-200",
+			"owned": 0,
+			"price": 300
+		},
+		"gingerbread": {
+			"kind": "gingerbread",
+			"title": "Gingerbread",
+			"description": "???",
+			"icon": "fas fa-gingerbread-man",
+			"color": "",
+			"owned": 0,
+			"price": 300
+		},
+		"lights": {
+			"kind": "lights",
+			"title": "Lights",
+			"description": "???",
+			"icon": "fad fa-lights-holiday",
+			"color": "",
+			"owned": 0,
+			"price": 300
+		},
+		"candycane": {
+			"kind": "candycane",
+			"title": "Candy Cane",
+			"description": "???",
+			"icon": "fad fa-candy-cane",
+			"color": "",
+			"owned": 0,
+			"price": 400
+		},
+		"fireplace": {
+			"kind": "fireplace",
+			"title": "Fireplace",
+			"description": "???",
+			"icon": "fad fa-fireplace",
+			"color": "",
+			"owned": 0,
+			"price": 600
+		},
+		"mistletoe": {
+			"kind": "mistletoe",
+			"title": "Mistletoe",
+			"description": "???",
+			"icon": "fas fa-mistletoe",
+			"color": "",
+			"owned": 0,
+			"price": 1000
+		},
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",
@@ -219,42 +273,6 @@ def shop(v):
 			"owned": 0,
 			"price": 50000
 		},
-		"snow": {
-			"kind": "snow",
-			"title": "Snow",
-			"description": "???",
-			"icon": "fas fa-snowflake",
-			"color": "text-gray",
-			"owned": 0,
-			"price": 300
-		},
-		"candycane": {
-			"kind": "candycane",
-			"title": "Candy Cane",
-			"description": "???",
-			"icon": "fas fa-candy-cane",
-			"color": "text-gray",
-			"owned": 0,
-			"price": 500
-		},
-		"mistletoe": {
-			"kind": "mistletoe",
-			"title": "Mistletoe",
-			"description": "???",
-			"icon": "fas fa-mistletoe",
-			"color": "text-gray",
-			"owned": 0,
-			"price": 600
-		},
-		"mariah": {
-			"kind": "mariah",
-			"title": "Mariah",
-			"description": "???",
-			"icon": "fas fa-music",
-			"color": "text-gray",
-			"owned": 0,
-			"price": 800
-		},
 	}
 
 	for useraward in g.db.query(AwardRelationship).filter(AwardRelationship.user_id == v.id, AwardRelationship.submission_id == None, AwardRelationship.comment_id == None).all():
@@ -282,6 +300,54 @@ def shop(v):
 @validate_formkey
 def buy(v, award):
 	AWARDS = {
+		"snow": {
+			"kind": "snow",
+			"title": "Snow",
+			"description": "???",
+			"icon": "fas fa-snowflake",
+			"color": "text-blue-200",
+			"price": 300
+		},
+		"gingerbread": {
+			"kind": "gingerbread",
+			"title": "Gingerbread",
+			"description": "???",
+			"icon": "fas fa-gingerbread-man",
+			"color": "",
+			"price": 300
+		},
+		"lights": {
+			"kind": "lights",
+			"title": "Lights",
+			"description": "???",
+			"icon": "fad fa-lights-holiday",
+			"color": "",
+			"price": 300
+		},
+		"candycane": {
+			"kind": "candycane",
+			"title": "Candy Cane",
+			"description": "???",
+			"icon": "fad fa-candy-cane",
+			"color": "",
+			"price": 400
+		},
+		"fireplace": {
+			"kind": "fireplace",
+			"title": "Fireplace",
+			"description": "???",
+			"icon": "fad fa-fireplace",
+			"color": "",
+			"price": 600
+		},
+		"mistletoe": {
+			"kind": "mistletoe",
+			"title": "Mistletoe",
+			"description": "???",
+			"icon": "fas fa-mistletoe",
+			"color": "",
+			"price": 1000
+		},
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",
@@ -433,38 +499,6 @@ def buy(v, award):
 			"icon": "fas fa-eye",
 			"color": "text-gold",
 			"price": 50000
-		},
-		"snow": {
-			"kind": "snow",
-			"title": "Snow",
-			"description": "???",
-			"icon": "fas fa-snowflake",
-			"color": "text-gray",
-			"price": 300
-		},
-		"candycane": {
-			"kind": "candycane",
-			"title": "Candy Cane",
-			"description": "???",
-			"icon": "fas fa-candy-cane",
-			"color": "text-gray",
-			"price": 500
-		},
-		"mistletoe": {
-			"kind": "mistletoe",
-			"title": "Mistletoe",
-			"description": "???",
-			"icon": "fas fa-mistletoe",
-			"color": "text-gray",
-			"price": 600
-		},
-		"mariah": {
-			"kind": "mariah",
-			"title": "Mariah",
-			"description": "???",
-			"icon": "fas fa-music",
-			"color": "text-gray",
-			"price": 800
 		},
 	}
 

@@ -5,18 +5,6 @@ SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 
 AJ_REPLACEMENTS = {
-	':': '',
-	"'": '',
-	'-': '',
-	'.': '',
-	'!': '',
-	'"': '',
-	';': '',
-
-	'their': '$#3$1',
-	'there': 'their',
-	'$#3$1': 'there',
-
 	"you're": '$#3$2',
 	'your': "you're",
 	'$#3$2': 'your',
@@ -24,15 +12,6 @@ AJ_REPLACEMENTS = {
 	"too": '$#3$3',
 	'to': "too",
 	'$#3$3': 'to',
-
-	'$#3$3': 'to',
-	'$#3$3': 'to',
-	'$#3$3': 'to',
-
-	'she': 'they',
-	'her': 'they',
-	'he': 'they',
-	'him': 'they',
 }
 
 SLURS = {
@@ -434,32 +413,48 @@ AWARDS = {
 		"title": "Snow",
 		"description": "???",
 		"icon": "fas fa-snowflake",
-		"color": "text-gray",
+		"color": "text-blue-200",
+		"price": 300
+	},
+	"gingerbread": {
+		"kind": "gingerbread",
+		"title": "Gingerbread",
+		"description": "???",
+		"icon": "fas fa-gingerbread-man",
+		"color": "",
+		"price": 300
+	},
+	"lights": {
+		"kind": "lights",
+		"title": "Lights",
+		"description": "???",
+		"icon": "fad fa-lights-holiday",
+		"color": "",
 		"price": 300
 	},
 	"candycane": {
 		"kind": "candycane",
 		"title": "Candy Cane",
 		"description": "???",
-		"icon": "fas fa-candy-cane",
-		"color": "text-gray",
-		"price": 500
+		"icon": "fad fa-candy-cane",
+		"color": "",
+		"price": 400
+	},
+	"fireplace": {
+		"kind": "fireplace",
+		"title": "Fireplace",
+		"description": "???",
+		"icon": "fad fa-fireplace",
+		"color": "",
+		"price": 600
 	},
 	"mistletoe": {
 		"kind": "mistletoe",
 		"title": "Mistletoe",
 		"description": "???",
 		"icon": "fas fa-mistletoe",
-		"color": "text-gray",
-		"price": 600
-	},
-	"mariah": {
-		"kind": "mariah",
-		"title": "Mariah",
-		"description": "???",
-		"icon": "fas fa-music",
-		"color": "text-gray",
-		"price": 800
+		"color": "",
+		"price": 1000
 	},
 	"haunt": {
 		"kind": "haunt",
@@ -669,41 +664,58 @@ AWARDS = {
 		"color": "text-gold",
 		"price": 50000
 	},
+
+}
+
+AWARDS2 = {
 	"snow": {
 		"kind": "snow",
 		"title": "Snow",
 		"description": "???",
 		"icon": "fas fa-snowflake",
-		"color": "text-gray",
+		"color": "text-blue-200",
+		"price": 300
+	},
+	"gingerbread": {
+		"kind": "gingerbread",
+		"title": "Gingerbread",
+		"description": "???",
+		"icon": "fas fa-gingerbread-man",
+		"color": "",
+		"price": 300
+	},
+	"lights": {
+		"kind": "lights",
+		"title": "Lights",
+		"description": "???",
+		"icon": "fad fa-lights-holiday",
+		"color": "",
 		"price": 300
 	},
 	"candycane": {
 		"kind": "candycane",
 		"title": "Candy Cane",
 		"description": "???",
-		"icon": "fas fa-candy-cane",
-		"color": "text-gray",
-		"price": 500
+		"icon": "fad fa-candy-cane",
+		"color": "",
+		"price": 400
+	},
+	"fireplace": {
+		"kind": "fireplace",
+		"title": "Fireplace",
+		"description": "???",
+		"icon": "fad fa-fireplace",
+		"color": "",
+		"price": 600
 	},
 	"mistletoe": {
 		"kind": "mistletoe",
 		"title": "Mistletoe",
 		"description": "???",
 		"icon": "fas fa-mistletoe",
-		"color": "text-gray",
-		"price": 600
+		"color": "",
+		"price": 1000
 	},
-	"mariah": {
-		"kind": "mariah",
-		"title": "Mariah",
-		"description": "???",
-		"icon": "fas fa-music",
-		"color": "text-gray",
-		"price": 800
-	},
-}
-
-AWARDS2 = {
 	"shit": {
 		"kind": "shit",
 		"title": "Shit",
@@ -855,30 +867,6 @@ AWARDS2 = {
 		"icon": "fas fa-eye",
 		"color": "text-gold",
 		"price": 50000
-	},
-	"snow": {
-		"kind": "snow",
-		"title": "Snow",
-		"description": "???",
-		"icon": "fas fa-snowflake",
-		"color": "text-gray",
-		"price": 300
-	},
-	"mistletoe": {
-		"kind": "mistletoe",
-		"title": "Mistletoe",
-		"description": "???",
-		"icon": "fas fa-mistletoe",
-		"color": "text-gray",
-		"price": 600
-	},
-	"mariah": {
-		"kind": "mariah",
-		"title": "Mariah",
-		"description": "???",
-		"icon": "fas fa-music",
-		"color": "text-gray",
-		"price": 800
 	},
 }
 
