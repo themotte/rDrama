@@ -14,9 +14,11 @@
 
 			<div class="body w-lg-100">
 
-				<div class="custom-control custom-switch">
-					<input type="checkbox" class="custom-control-input" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="post_toast('/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
-					<label class="custom-control-label" for="highlightcomments"></label>
+				<div>
+					<input type="checkbox" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="post_toast('/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
+					<label class="inline-block pl-2 text-gray-400" for="highlightcomments">
+						Highlight new comments with a red dot since your last visit to a thread.
+					</label>
 				</div>
 
 			</div>
