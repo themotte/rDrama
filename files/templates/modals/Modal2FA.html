@@ -1,6 +1,6 @@
 <div class="modal fade" id="2faModal" tabindex="-1" role="dialog" aria-labelledby="2faModalTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
+	<div class="modal-dialog modal-dialog-centered mx-auto max-w-xl" role="document">
+		<div class="modal-content mx-auto max-w-2xl bg-gray-100 rounded-md shadow-lg">
 			<div class="modal-header">
 				<h5 class="modal-title">{% if mfa_secret %}Setup two-step login{% elif mfa_secret and not v.email %}Email required for two-step login{% else %}Disable two-step login{% endif %}</h5>
 				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -17,18 +17,17 @@
 							<span class="font-weight-bold">Step 1:</span> Scan this barcode (or enter the code) using a two-factor authentication app such as Google Authenticator or Authy.
 						</p>
 						<div class="text-center mb-3">
-							<img loading="lazy" class="img-fluid" width=175 src="/2faqr/{{mfa_secret}}">
-							<pre></pre>
-							<div class="text-small text-muted">Or enter this code: {{mfa_secret}}</div>
+							<img loading="lazy" class="w-24 h-24 object-contain" width=175 src="/2faqr/{{mfa_secret}}">
+							<div class="mt-2 text-small text-muted">Or enter this code: {{mfa_secret}}</div>
 						</div>
 						<p>
-							<span class="font-weight-bold">Step 2:</span> Enter the six-digit code generated in the authenticator app and your {{'SITE_NAME' | app_config}} account password.
+							<span class="font-bold">Step 2:</span> Enter the six-digit code generated in the authenticator app and your {{'SITE_NAME' | app_config}} account password.
 						</p>
 						<label for="2fa_input">6-digit code</label>
-						<input type="text" class="form-control mb-2" id="2fa_input" name="2fa_token" placeholder="# # # # # #" required>
+						<input type="text" class="form-input mb-2" id="2fa_input" name="2fa_token" placeholder="# # # # # #" required>
 
 						<label for="2fa_input_password">Password</label>
-						<input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" oninput="document.getElementById('enable2faButton').disabled=false" autocomplete="off" required>
+						<input type="password" autocomplete="new-password" class="form-input mb-2" id="2fa_input_password" name="password" oninput="document.getElementById('enable2faButton').disabled=false" autocomplete="off" required>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
@@ -49,10 +48,10 @@
 						</div>
 
 						<label for="2fa_input_password">Password</label>
-						<input type="password" autocomplete="new-password" class="form-control mb-2" id="2fa_input_password" name="password" autocomplete="off" required>
+						<input type="password" autocomplete="new-password" class="form-input mb-2" id="2fa_input_password" name="password" autocomplete="off" required>
 
 						<label for="2fa_input">6-digit code</label>
-						<input type="text" class="form-control mb-2" id="2fa_input" name="2fa_remove" placeholder="# # # # # #" oninput="document.getElementById('disable2faButton').disabled=false" required>
+						<input type="text" class="form-input mb-2" id="2fa_input" name="2fa_remove" placeholder="# # # # # #" oninput="document.getElementById('disable2faButton').disabled=false" required>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
