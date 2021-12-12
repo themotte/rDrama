@@ -1,14 +1,14 @@
 {% if v %}
 	{% include "award_modal.html" %}
-	<script defer src="/assets/js/marked.js?v=200></script>
-	<script defer src="/assets/js/comments_v.js?v=200></script>
+	<script defer src="/assets/js/marked.js?v=200"></script>
+	<script defer src="/assets/js/comments_v.js?v=200"></script>
 {% endif %}
 
 {% if v and v.admin_level > 1 %}
-	<script defer src="/assets/js/comments_admin.js?v=200></script>
+	<script defer src="/assets/js/comments_admin.js?v=200"></script>
 {% endif %}
 
-<script defer src="/assets/js/comments.js?v=200></script>
+<script defer src="/assets/js/comments.js?v=200"></script>
 
 {% include "expanded_image_modal.html" %}
 
