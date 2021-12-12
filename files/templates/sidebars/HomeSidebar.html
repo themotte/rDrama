@@ -1,3 +1,5 @@
+{% set random = range(1, 10)|random() %}
+
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 py-4">
 	<div>
 		<h2 class="ml-2 font-bold text-xl font-heading leading-normal mb-2">
@@ -34,7 +36,7 @@
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
 	<div class="w-full h-56 shadow-sm p-[3px] bg-white overflow-hidden">
-		<img class="w-full h-full flex-shrink-0 object-cover" src="/assets/christmas/marsey-irl.jpg" alt="cat in a bar wearing a santa hat">
+		<img class="w-full h-full flex-shrink-0 object-cover" src="/assets/christmas/banner-{{ random }}.jpg" alt="cat in a bar wearing a santa hat">
 	</div>
 	{% if v %}
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 shadow-inset-t-white-05"/>
