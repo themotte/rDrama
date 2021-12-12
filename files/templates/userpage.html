@@ -339,7 +339,7 @@
 	<div class="row">
 		<div class="col px-0">
 			<a rel="nofollow noopener noreferrer" href="{{u.banner_url}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
-				<img class="wtf" height="100" width="100%" loading="lazy" src="{{u.banner_url}}">
+				<img class="userbanner" height="100" width="100%" src="{{u.banner_url}}">
 			</a>
 		</div>
 	</div>
@@ -706,7 +706,7 @@
 {% endif %}
 
 <style>
-	.wtf {
+	.userbanner {
 		object-fit: cover !important;
 	}
 </style>
