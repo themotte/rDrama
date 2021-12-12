@@ -152,6 +152,8 @@ elif SITE == "pcmemes.net":
 	LLM_ID = 0
 	DAD_ID = 0
 	MOM_ID = 0
+	DONGER_ID = 0
+	FARTBINN_ID = 0
 	BUG_THREAD = 4103
 	EMOJI_THREAD = 0
 else:
@@ -175,6 +177,8 @@ else:
 	LLM_ID = 0
 	DAD_ID = 0
 	MOM_ID = 0
+	DONGER_ID = 0
+	FARTBINN_ID = 0
 	BUG_THREAD = 0
 	EMOJI_THREAD = 0
 
