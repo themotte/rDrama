@@ -38,10 +38,10 @@
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=151"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=125">
+		<link rel="stylesheet" href="/assets/css/main.css?v=152"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=125">
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/assets/css/main.css?v=151"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=125">
+		<link rel="stylesheet" href="/assets/css/main.css?v=152"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=125">
 	{% endif %}
 
 		<link href="/assets/css/fa.css?v=55" rel="stylesheet"> 
@@ -148,6 +148,8 @@
 		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text">Error, please try again later.</span>
 	</div>
 </div>
+
+<div id="formkey" class="hidden">{{ v.formkey }}</div>
 
 {% block mobilenavbar %}
 	{% include "mobile_navigation_bar.html" %}

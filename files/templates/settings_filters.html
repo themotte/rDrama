@@ -10,6 +10,19 @@
 
 		<div class="settings">
 
+			<h2 class="label text-black">Grinch Mode</h2>
+
+			<div class="body w-lg-100">
+
+				<div>
+					<input type="checkbox" id="grincheffect" name="grincheffect"{% if v.grincheffect %} checked{% endif %} onchange="post_toast('/settings/profile?grincheffect='+document.getElementById('grincheffect').checked);">
+					<label class="inline-block pl-2 text-gray-400" for="grincheffect">
+						Disable holigay music.
+					</label>
+				</div>
+
+			</div>
+
 			<h2 class="label text-black">Highlight New Comments</h2>
 
 			<div class="body w-lg-100">
