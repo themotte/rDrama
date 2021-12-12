@@ -94,9 +94,9 @@
 	img[lazy=loading] {
 		@apply animate-pulse;
 	}
-	bdi img[width], bdi img[height], h1 img[width], h1 img[height] {
+	img[width], img[height] {
 	  max-width: none;
-	  height: 24px;
+	  height: null;
 	}
 	/*Inputs*/
 	.label {
