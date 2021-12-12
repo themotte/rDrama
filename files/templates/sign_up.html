@@ -10,7 +10,7 @@
 	<meta property="og:type" content="article" >
 	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta property="og:site_name" content="{{request.host}}" >
-	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=3" >
+	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=500 >
 	<meta property="og:url" content="{{request.host}}">
 	<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 	<meta property="og:author" name="author" content="{{request.host_url}}" >
@@ -21,12 +21,12 @@
 	<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta name="twitter:creator" content="{{request.host_url}}">
 	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-	<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=3" >
+	<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=500 >
 	<meta name="twitter:url" content="{{request.host}}" >
 
 	<title>{% if ref_user %}{{ref_user.username}} invites you to {{'SITE_NAME' | app_config}}{% else %}Sign up - {{'SITE_NAME' | app_config}}{% endif %}</title>
 
-	<link rel="stylesheet" href="/assets/css/main.css?v=136">
+	<link rel="stylesheet" href="/assets/css/main.css?v=500>
 
 	{% assets 'css' %}
 	<link rel="stylesheet" href="{{ ASSET_URL }}">
@@ -34,8 +34,8 @@
 
 	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
 
-	<link rel="preload" href="/assets/css/fa.css?v=52" as="style" onload="this.onload=null;this.rel='stylesheet'">
-	<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=52"></noscript>
+	<link rel="preload" href="/assets/css/fa.css?v=500 as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=500></noscript>
 </head>
 
 <body class="relative h-full bg-gradient-to-t from-gray-500 to-gray-400">
@@ -156,13 +156,13 @@
 
 	</div>
 
-	<script src="/assets/js/signup.js?v=63"></script>
+	<script src="/assets/js/signup.js?v=500></script>
 
 	{% if hcaptcha %}
-	<script src="/assets/js/hcaptcha.js?v=1"></script>
+	<script src="/assets/js/hcaptcha.js?v=500></script>
 	{% endif %}
 
-	<script defer src="/assets/js/christmas/snow.js?v=2"></script>
+	<script defer src="/assets/js/christmas/snow.js?v=500></script>
 
 </body>
 
