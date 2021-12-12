@@ -255,9 +255,9 @@
 	<!-- Non-dismissable Alerts -->
 	<div class="p-2.5 md:p-0">
 		<!-- Banned -->
-		<div class="mt-4 mb-0 rounded-lg shadow-lg flex items-center p-3 text-yellow-800 bg-yellow-500 border border-yellow-600 shadow-inset-t-white-10">
+		<div class="mt-4 mb-0 rounded-lg shadow-lg flex items-center p-3 text-yellow-900 bg-yellow-500 border border-yellow-600 shadow-inset-t-white-10">
 			<i class="fas fa-grin fa-fw mr-1"></i>
-			<div class="font-bold">
+			<div>
 				{{ u.username }} has Agendaposter theme activated
 			</div>
 		</div>
@@ -270,7 +270,7 @@
 		<!-- Banned -->
 		<div class="mt-4 mb-0 rounded-lg shadow-lg flex items-center p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
 			<i class="fas fa-gavel fa-fw mr-1"></i>
-			<div class="font-bold">
+			<div>
 				{{ u.username }} was banned by
 				<a href="{{u.banned_by.url}}" class="text-white hover:underline">@{{u.banned_by.username}}</a>
 			</div>
@@ -287,7 +287,7 @@
 		<!-- Banned -->
 		<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
 			<i class="fas fa-ghost fa-fw mr-1"></i>
-			<span class="font-bold">
+			<span>
 				{{ u.username }} is shadowbanned
 			</span>
 		</div>
