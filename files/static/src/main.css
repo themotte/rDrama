@@ -94,7 +94,7 @@
 	img[lazy=loading] {
 		@apply animate-pulse;
 	}
-	bdi img[width], img[height] {
+	bdi img[width], bdi img[height] {
 	  max-width: none;
 	  height: 24px;
 	}
