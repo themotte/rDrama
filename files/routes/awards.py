@@ -736,6 +736,7 @@ def award_post(pid, v):
 			new_badge = Badge(badge_id=90, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "grinch":
+		author.grinch = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(91):
 			new_badge = Badge(badge_id=91, user_id=author.id)
@@ -903,6 +904,7 @@ def award_comment(cid, v):
 			new_badge = Badge(badge_id=90, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "grinch":
+		author.grinch = True
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(91):
 			new_badge = Badge(badge_id=91, user_id=author.id)

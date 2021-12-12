@@ -83,6 +83,8 @@ class User(Base):
 	oldreddit = Column(Boolean, default=True)
 	teddit = Column(Boolean)
 	nitter = Column(Boolean)
+	grinch = Column(Boolean)
+	grincheffect = Column(Boolean)
 	mute = Column(Boolean)
 	unmutable = Column(Boolean)
 	eye = Column(Boolean)
@@ -284,11 +286,6 @@ class User(Base):
 	@lazy
 	def has_badge(self, badge_id):
 		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).first()
-
-	@property
-	@lazy
-	def grinch(self):
-		return self.has_badge(91)
 
 	def hash_password(self, password):
 		return generate_password_hash(
