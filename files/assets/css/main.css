@@ -4739,3 +4739,10 @@ blockquote p {
   padding: 0;
   overflow-y: visible;
 }
+
+.pp20 {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  display: inline;
+}
