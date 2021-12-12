@@ -146,12 +146,14 @@
 
 		<div class="body w-lg-100">
 
-			<div class="custom-control custom-switch">
-				<input type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" onchange="twoStepModal.show()" {% if not mfa_secret %}checked=""{% endif %}>
-				<label class="custom-control-label" for="2faToggle"></label>
+			<div>
+				<input type="checkbox" id="2faToggle" name="2faToggle" onchange="twoStepModal.show()" {% if not mfa_secret %}checked=""{% endif %}>
+				<label class="label" for="2faToggle"></label>
 			</div>
 
-			<span class="text-xs text-gray-500">This requires entering a randomly-generated, 6-digit code and your password to login. See <a href="javascript:void(0)">Google Authenticator</a> or <a href="javascript:void(0)">Authy</a> for more details.</span>
+			<span class="text-xs text-gray-500">
+				This requires entering a randomly-generated, 6-digit code and your password to login. See <a href="javascript:void(0)">Google Authenticator</a> or <a href="javascript:void(0)">Authy</a> for more details.
+			</span>
 
 		</div>
 
