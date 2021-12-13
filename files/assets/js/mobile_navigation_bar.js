@@ -9,12 +9,15 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 
 	if (bottomBar != null) {
 		if (currentScrollPos <= 60 || (currentScrollPos >= document.body.offsetHeight)) {
+			console.log('less than 60 greater than offsetHeight');
 			bottomBar.style.transform = "translateY(60px)";
 		}
 		else if (prevScrollpos > currentScrollPos) {
+			console.log('prev greater than current');
 			bottomBar.style.transform = "translateY(0px)"
 		}
 		else {
+			console.log('else');
 			bottomBar.style.transform = "translateY(60px)";
 		}
 	}
