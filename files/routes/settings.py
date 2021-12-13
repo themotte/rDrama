@@ -986,8 +986,8 @@ def settings_name_change(v):
 def settings_song_change(v):
 	song=request.values.get("song").strip()
 
-	if song == "" and v.song and path.isfile(f"songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
-		os.remove(f"songs/{v.song}.mp3")
+	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
+		os.remove(f"/songs/{v.song}.mp3")
 		v.song = None
 		g.db.add(v)
 		g.db.commit()
@@ -1006,7 +1006,7 @@ def settings_song_change(v):
 	if "?" in id: id = id.split("?")[0]
 	if "&" in id: id = id.split("&")[0]
 
-	if path.isfile(f'songs/{id}.mp3'): 
+	if path.isfile(f'/songs/{id}.mp3'): 
 		v.song = id
 		g.db.add(v)
 		g.db.commit()
@@ -1028,11 +1028,11 @@ def settings_song_change(v):
 						error=f"Duration of the video must not exceed 10 minutes.")
 
 
-	if v.song and path.isfile(f"songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
-		os.remove(f"songs/{v.song}.mp3")
+	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
+		os.remove(f"/songs/{v.song}.mp3")
 
 	ydl_opts = {
-		'outtmpl': 'songs/%(title)s.%(ext)s',
+		'outtmpl': '/songs/%(title)s.%(ext)s',
 		'format': 'bestaudio/best',
 		'postprocessors': [{
 			'key': 'FFmpegExtractAudio',
@@ -1049,10 +1049,10 @@ def settings_song_change(v):
 						   v=v,
 						   error=f"Age-restricted videos aren't allowed.")
 
-	files = os.listdir("songs/")
-	paths = [path.join("songs/", basename) for basename in files]
+	files = os.listdir("/songs/")
+	paths = [path.join("/songs/", basename) for basename in files]
 	songfile = max(paths, key=path.getctime)
-	os.rename(songfile, f"songs/{id}.mp3")
+	os.rename(songfile, f"/songs/{id}.mp3")
 
 	v.song = id
 	g.db.add(v)
