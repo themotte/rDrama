@@ -13,7 +13,7 @@
 			<div class="title w-lg-25">
 						<label for="over18"><a href="{{app.permalink}}" {% if v and v.newtab %}target="_blank"{% endif %}>{{app.app_name}}</a></label>
 				</div>
-				<div class="body w-lg-100">
+				<div class="flex flex-col space-y-2">
 			<label for="edit-{{app.id}}-author" class="mb-0 w-lg-25">User</label>
 			<input id="edit-{{app.id}}-author" class="form-control" type="text" name="name" value="{{app.author.username}}" readonly=readonly>
 
@@ -36,8 +36,8 @@
 		<div class="d-flex">
 			{% if not app.client_id %}
 
-				<a href="javascript:void(0)" class="btn btn-primary ml-auto" onclick="post_toast('/admin/app/approve/{{app.id}}')">Approve</a>
-				<a href="javascript:void(0)" class="btn btn-secondary mr-0" onclick="post_toast('/admin/app/reject/{{app.id}}')">Reject</a> 
+				<a href="javascript:void(0)" class="btn btn-green ml-auto" onclick="post_toast('/admin/app/approve/{{app.id}}')">Approve</a>
+				<a href="javascript:void(0)" class="btn btn-red" onclick="post_toast('/admin/app/reject/{{app.id}}')">Reject</a> 
 
 			{% else %}
 
