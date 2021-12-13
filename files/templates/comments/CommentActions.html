@@ -45,12 +45,18 @@
 			<i class="fas fa-gift fa-fw mr-2" aria-hidden="true"></i>Gift Award
 		</button>
 	</li>
+	{% endif %}
+
 	<li class="hidden md:block">
 		<button class="copy-link hover:text-gray-400" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=10#context">
 			<i class="fas fa-link fa-fw mr-2"></i>Copy link
 		</button>
 	</li>
-	{% endif %}
+	<li class="hidden md:block">
+		<a href="/votes?link={{c.fullname}}" class="text-gray-500 hover:text-gray-400">
+			<i class="fas fa-poll fa-fw mr-2"></i>Votes
+		</a>
+	</li>
 
 	<li class="hidden md:block">
 		<div class="dropdown">
@@ -58,7 +64,7 @@
 				<i class="fas fa-ellipsis-h fa-fw"></i>
 			</button>
 			<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownComment-{{c.id}}Actions">
-				<li class="hidden md:block">
+				<li class="hidden">
 					<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/votes?link={{c.fullname}}">
 						<i class="fas fa-poll fa-sm fa-fw mr-4"></i>Votes
 					</a>
