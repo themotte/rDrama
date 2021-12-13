@@ -1,13 +1,13 @@
 {% extends "default.html" %}
 {% block content %}
-<script src="/assets/js/followers.js?v=200"></script>
+<div class="col-span-full">
 <pre>
 
 	
 </pre>
 <h5>@{{u.username}}'s followers</h5>
 <pre></pre>
-<table class="table table-striped mb-5">
+<table class="w-full table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
 		<th style="font-weight: bold">#</th>
@@ -29,5 +29,9 @@
 {% endfor %}
 </tbody>
 </table>
+</div>
+{% endblock %}
 
+{% block scripts %}
+<script src="/assets/js/followers.js?v=200"></script>
 {% endblock %}
