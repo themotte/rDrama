@@ -5,7 +5,7 @@ function timestamp(str, ti) {
 
 function expandText(id) {
 	const el = document.getElementById('post-text-'+id);
-    ['gradient-mask', 'max-h-32', 'overflow-hidden', 'pointer-events-none', 'text-gray-600'].map(v=> el.classList.toggle(v));
+    ['gradient-mask', 'max-h-12', 'overflow-hidden', 'pointer-events-none', 'text-gray-600'].map(v=> el.classList.toggle(v));
     ['text-black'].map(v=> el.classList.toggle(v));
 
     const trigger = document.getElementsByClassName('text-expand-icon-'+id);
