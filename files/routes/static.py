@@ -249,7 +249,7 @@ def archives(path):
 
 @app.get('/static/<path:path>')
 @limiter.exempt
-def static_service(path):
+def static_service2(path):
 	resp = make_response(send_from_directory('./static', path))
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
