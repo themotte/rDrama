@@ -244,14 +244,14 @@
 						</a>
 					</span>
 
+					{% if c.author.verified %}
+					<i class="fas fa-badge-check" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
+					{% endif %}
+
 					{% if c.author.customtitle %}
 					<bdi class="flex-shrink-0" style="color: #{{c.author.titlecolor}}">
 						{{c.author.customtitle | safe }}
 					</bdi>
-					{% endif %}
-
-					{% if c.author.verified %}
-					<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
 					{% endif %}
 
 					{% if c.bannedfor and c.author.banned_by %}
