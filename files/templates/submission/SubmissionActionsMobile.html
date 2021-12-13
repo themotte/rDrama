@@ -20,7 +20,7 @@
 	</li>
 	<li class="mr-5">
 		<button class="copy-link" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{p.permalink}}{% else %}{{p.permalink | full_link}}{% endif %}">
-			<i class="fas fa-link fa-fw mr-2"></i>Copy link
+			<i class="fas fa-link fa-fw mr-2"></i>
 		</button>
 	</li>
 	{% if v %}
@@ -30,7 +30,7 @@
 		</button>
 	</li>
 	{% endif %}
-	<li id="voting-{{p.id}}-mobile" class="voting {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+	<li id="voting-{{p.id}}-mobile" class="flex-shrink-0 voting {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 		{% if v %}
 		<button id="post-mobile-{{p.id}}-up" onclick="vote('post-mobile', '{{p.id}}', '1')" class="mx-0 pr-1 arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}">
 		</button>
@@ -40,7 +40,7 @@
 		</button>
 		{% endif %}
 
-		<span id="post-mobile-score-{{p.id}}" class="score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="+{{ups}} | -{{downs}}">
+		<span id="post-mobile-score-{{p.id}}" class="text-base score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="+{{ups}} | -{{downs}}">
 			{{score}}
 		</span>
 
