@@ -9,7 +9,7 @@
 			</div>
 			<div class="relative modal-body">
 				<!-- If user has less than 100 dramacoin, disable form -->
-				{% if u.coins < 100 %}
+				{% if u.coins >= 100 %}
 				<div class="absolute left-0 bottom-0 flex flex-col items-center justify-center w-full h-full bg-white/60 z-10">
 					<p class="text-lg font-bold text-gray-900 mb-0">
 						You need at least 100 dramacoin to send coins.
