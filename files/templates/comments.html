@@ -222,6 +222,11 @@
 				{% if c.post and c.post.award_count("ghosts") %}
 					<span>👻</span>
 				{% else %}
+
+					{% if c.author.verified %}
+					<i class="fas fa-badge-check" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
+					{% endif %}
+
 					<div class="relative md:hidden flex-shrink-0 {{ 'santa' if c.author.patron else 'cap' }}">
 						<img loading="lazy" src="{{ c.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 					</div>
@@ -243,10 +248,6 @@
 							</span>
 						</a>
 					</span>
-
-					{% if c.author.verified %}
-					<i class="fas fa-badge-check" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
-					{% endif %}
 
 					{% if c.author.customtitle %}
 					<bdi class="flex-shrink-0" style="color: #{{c.author.titlecolor}}">
