@@ -186,7 +186,7 @@
 
 		{% block stylesheets %}
 
-		<link rel="stylesheet" href="/assets/css/main.css?v=202">
+		<link rel="stylesheet" href="/assets/css/main.css?v=203">
 
 		{% assets 'css' %}
       		<link rel="stylesheet" href="{{ ASSET_URL }}">
@@ -195,7 +195,8 @@
     	<link rel="stylesheet" href="/assets/css/mistletoe.css?v=200">
 
 		{% if v %}
-			<style>:root{--primary:#{{v.themecolor}}}</style>
+			<style>:root{--primary:#dc2626}</style>
+			<!-- <style>:root{--primary:#{{v.themecolor}}}</style> -->
 			<!-- <link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=200"> -->
 			{% if v.agendaposter %}
 			<link rel="stylesheet" href="/assets/css/agendaposter.css?v=200">
@@ -203,7 +204,8 @@
 			<link rel="stylesheet" href="/@{{v.username}}/css">
 			{% endif %}
 		{% else %}
-			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+			<style>:root{--primary:#dc2626}</style>
+			<!-- <style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}}</style> -->
 			<!-- <link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=200"> -->
 		{% endif %}
 
@@ -340,7 +342,7 @@
 
 <script defer src="/assets/js/popover.js?v=200"></script>
 
-<script src="/assets/js/mobile_navigation_bar.js?v=200"></script>
+<script src="/assets/js/mobile_navigation_bar.js?v=204"></script>
 
 {% if v %}
 	<script>function formkey() {return '{{v.formkey}}';}</script>

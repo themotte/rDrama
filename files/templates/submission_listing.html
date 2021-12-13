@@ -225,14 +225,14 @@
 				{% endif %}
 			</ul>
 
-			<h5 class="post-title font-bold font-heading text-lg md:text-xl leading-normal mb-2">
-				<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" class="stretched-link text-black hover:text-primary visited:text-gray-700">
+			<h5 class="post-title font-bold font-heading text-lg md:text-xl leading-5 mb-2">
+				<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" class="stretched-link text-black hover:text-primary visited:text-gray-700 break-words" style="word-break: break-word;">
 				{{p.realtitle(v) | safe}}
 				</a>
 			</h5>
 
 			{% if p.realbody(v) and not p.over_18 %}
-				<div class="gradient-mask max-h-12 mb-2 overflow-hidden pointer-events-none text-gray-600" id="post-text-{{p.id}}">
+				<div class="relative z-10 gradient-mask max-h-12 mb-2 overflow-hidden pointer-events-none text-gray-600" id="post-text-{{p.id}}">
 					{{p.realbody(v) | safe}}
 				</div>
 			{% endif %}

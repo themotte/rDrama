@@ -140,10 +140,10 @@
       </form>
       {% if v %}
       <!-- Submit post link -->
-      <button class="w-full btn btn-red mb-4">
+      <a href="/submit" class="w-full btn btn-red mb-4">
         <i class="fas fa-pen fa-sm fa-fw mr-2"></i>
         Create post
-      </button>
+      </a>
       <!-- Meta links -->
       <ul class="flex flex-col space-y-3 font-bold text-base text-gray-600">
         <li>
@@ -199,12 +199,12 @@
       {% else %}
       <ul class="flex flex-col space-y-2">
         <li>
-          <a class="btn btn-gray" href="/login?redirect={{request.path | urlencode}}">
+          <a class="btn btn-gray w-full" href="/login?redirect={{request.path | urlencode}}">
             Login
           </a>
         </li>
         <li>
-          <a class="btn btn-gray" href="/signup?redirect={{request.path | urlencode}}">
+          <a class="btn btn-gray w-full" href="/signup?redirect={{request.path | urlencode}}">
             Signup
           </a>
         </li>

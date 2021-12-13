@@ -144,16 +144,16 @@
 			{% if u.id == v.id or not u.is_private %}
 			<ul class="hidden xl:flex items-center space-x-3 mb-0">
 				<li>
-					<div class="text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</div>
+					<a href="/@{{ u.username }}/followers" class="text-black text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</a>
 					<small class="block font-bold text-gray-500">Followers</small>
 				</li>
 				<li>
-					<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
+					<div class="text-black text-lg font-bold mb-0">{{ u.coins }}</div>
 					<small class="block font-bold text-gray-500">Dramacoin</small>
 				</li>
 				{% if u.procoins %}
 				<li>
-					<div class="text-lg font-bold mb-0">{{ u.procoins }}</div>
+					<div class="text-black text-lg font-bold mb-0">{{ u.procoins }}</div>
 					<small class="block font-bold text-gray-500">MarseyBux</small>
 				</li>
 				{% endif %}
@@ -172,16 +172,16 @@
 		{% if u.id == v.id or not u.is_private %}
 			<ul class="flex items-center space-x-3 mt-3 mb-0">
 				<li>
-					<div class="text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</div>
+					<a href="/@{{ u.username }}/followers" class="text-black text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</a>
 					<small class="block font-bold text-gray-500">Followers</small>
 				</li>
 				<li>
-					<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
+					<div class="text-black text-lg font-bold mb-0">{{ u.coins }}</div>
 					<small class="block font-bold text-gray-500">Dramacoin</small>
 				</li>
 				{% if u.procoins %}
 				<li>
-					<div class="text-lg font-bold mb-0">{{ u.procoins }}</div>
+					<div class="text-black text-lg font-bold mb-0">{{ u.procoins }}</div>
 					<small class="block font-bold text-gray-500">MarseyBux</small>
 				</li>
 				{% endif %}
@@ -393,28 +393,28 @@
 
 {% if u.song %}
 <script>
-	window.addEventListener("load",function(event) {
-		var audio = new Audio('/songs/{{u.id}}');
-		audio.loop=true;
+	const uid = {{ u.id }}
 
-		{% if not u.unmutable %}
-		function pause() {
-			audio.pause();
-			document.getElementById("pause1").classList.toggle("hidden");
-			document.getElementById("play1").classList.toggle("hidden");
-			document.getElementById("pause2").classList.toggle("hidden");
-			document.getElementById("play2").classList.toggle("hidden");
-		}
+	let audio = new Audio(`/songs/${uid}`);
+	audio.loop=true;
 
-		function play() {
-			audio.play();
-			document.getElementById("pause1").classList.toggle("hidden");
-			document.getElementById("play1").classList.toggle("hidden");
-			document.getElementById("pause2").classList.toggle("hidden");
-			document.getElementById("play2").classList.toggle("hidden");
-		}
-		{% endif %}
+	function pause() {
+		audio.pause();
+		document.getElementById("pause1").classList.toggle("hidden");
+		document.getElementById("play1").classList.toggle("hidden");
+		document.getElementById("pause2").classList.toggle("hidden");
+		document.getElementById("play2").classList.toggle("hidden");
+	}
 
+	function play() {
+		audio.play();
+		document.getElementById("pause1").classList.toggle("hidden");
+		document.getElementById("play1").classList.toggle("hidden");
+		document.getElementById("pause2").classList.toggle("hidden");
+		document.getElementById("play2").classList.toggle("hidden");
+	}
+
+	window.addEventListener('load', (e) => {
 		audio.play();
 		document.getElementById('userpage').addEventListener('click', () => {
 			if (audio.paused) audio.play(); 

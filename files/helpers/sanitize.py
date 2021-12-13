@@ -179,7 +179,7 @@ def sanitize(sanitized, noimages=False):
 				classes = 'class="emoji-lg" '
 				remoji = emoji[1:]
 			else:
-				classes = 'height=60 class="emoji-lg" '
+				classes = 'height=60 class="emoji" '
 				remoji = emoji
 
 			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
