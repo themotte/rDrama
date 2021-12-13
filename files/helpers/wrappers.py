@@ -49,7 +49,7 @@ def auth_desired(f):
 
 		if request.host == 'old.rdrama.net' and not (v and v.admin_level):
 			if request.headers.get("Authorization"): return {"error": "403 Forbidden"}, 403
-			else: return render_template('errors/403.html', v=v), 403
+		 	else: return render_template('errors/403.html', v=v), 403
 		check_ban_evade(v)
 
 		resp = make_response(f(*args, v=v, **kwargs))
