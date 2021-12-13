@@ -987,7 +987,7 @@ def api_sticky_post(post_id, v):
 
 @app.post("/ban_comment/<c_id>")
 @limiter.limit("1/second")
-@admin_level_required(1)
+@admin_level_required(2)
 @validate_formkey
 def api_ban_comment(c_id, v):
 
@@ -1012,7 +1012,7 @@ def api_ban_comment(c_id, v):
 
 @app.post("/unban_comment/<c_id>")
 @limiter.limit("1/second")
-@admin_level_required(1)
+@admin_level_required(2)
 @validate_formkey
 def api_unban_comment(c_id, v):
 
