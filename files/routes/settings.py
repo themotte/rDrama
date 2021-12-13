@@ -124,9 +124,9 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = request.host_url + process_image(name)
+			url = request.host_url[:-1] + process_image(name)
 
 			bio += f"\n\n![]({url})"
 		
@@ -314,9 +314,9 @@ def settings_profile_post(v):
 				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
 
-			name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = request.host_url + process_image(name)
+			url = request.host_url[:-1] + process_image(name)
 
 			bio += f"\n\n![]({url})"
 		
@@ -720,9 +720,9 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 
-	name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 	file.save(name)
-	highres = request.host_url + process_image(name)
+	highres = request.host_url[:-1] + process_image(name)
 
 	if not highres: abort(400)
 
@@ -756,9 +756,9 @@ def settings_images_banner(v):
 
 	file = request.files["banner"]
 
-	name = f'images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 	file.save(name)
-	bannerurl = request.host_url + process_image(name)
+	bannerurl = request.host_url[:-1] + process_image(name)
 
 	if bannerurl:
 		if v.bannerurl and '/images/' in v.bannerurl : os.remove('images/' + v.bannerurl.split('/images/')[1])
