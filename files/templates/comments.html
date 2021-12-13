@@ -222,6 +222,11 @@
 				{% if c.post and c.post.award_count("ghosts") %}
 					<span>👻</span>
 				{% else %}
+
+					{% if c.author.verified %}
+					<i class="fas fa-badge-check" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
+					{% endif %}
+
 					<div class="relative md:hidden flex-shrink-0 {{ 'santa' if c.author.patron else 'cap' }}">
 						<img loading="lazy" src="{{ c.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 					</div>
@@ -250,15 +255,11 @@
 					</bdi>
 					{% endif %}
 
-					{% if c.author.verified %}
-					<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
-					{% endif %}
-
 					{% if c.bannedfor and c.author.banned_by %}
 						<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this comment by @{{c.author.banned_by.username}}"></i></a>
 					{% endif %}
 					{% if c.active_flags %}
-					<a class="btn btn-gray" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('hidden')">{{c.active_flags}} Reports</a>
+					<a class="flex-shrink-0 badge badge-red" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('hidden')">{{c.active_flags}} Reports</a>
 					{% endif %}
 					{% if c.over_18 %}
 					<span class="badge badge-red">+18</span>
@@ -323,7 +324,7 @@
 				<div id="comment-banned-warning" class="hidden-on-collapse text-red-600 mb-0">Removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="hidden-on-collapse text-black mt-2 {% if c.award_count("candycane") %}candycane{% endif %}">
+			<div id="comment-text-{{c.id}}" class="hidden-on-collapse text-black mt-2 break-words {% if c.award_count("candycane") %}candycane{% endif %}">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
 					{% for o in c.options %}

@@ -142,9 +142,9 @@
 
 					<div class="body w-lg-100">
 
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="newtab" name="newtab"{% if v.newtab %} checked{% endif %} onchange="post_toast('/settings/profile?newtab='+document.getElementById('newtab').checked);">
-							<label class="custom-control-label" for="newtab"></label>
+						<div>
+							<input type="checkbox" id="newtab" name="newtab"{% if v.newtab %} checked{% endif %} onchange="post_toast('/settings/profile?newtab='+document.getElementById('newtab').checked);">
+							<label class="label" for="newtab"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically open threads in new tabs.</span>
@@ -162,9 +162,9 @@
 
 					<div class="body w-lg-100">
 
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="newtabexternal" name="newtabexternal"{% if v.newtabexternal %} checked{% endif %} onchange="post_toast('/settings/profile?newtabexternal='+document.getElementById('newtabexternal').checked);">
-							<label class="custom-control-label" for="newtabexternal"></label>
+						<div>
+							<input type="checkbox" id="newtabexternal" name="newtabexternal"{% if v.newtabexternal %} checked{% endif %} onchange="post_toast('/settings/profile?newtabexternal='+document.getElementById('newtabexternal').checked);">
+							<label class="label" for="newtabexternal"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically open external links in new tabs.</span>
@@ -190,9 +190,9 @@
 
 					<div class="body w-lg-100">
 
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="nitter" name="nitter"{% if v.nitter %} checked{% endif %} onchange="post_toast('/settings/profile?nitter='+document.getElementById('nitter').checked);">
-							<label class="custom-control-label" for="nitter"></label>
+						<div>
+							<input type="checkbox" id="nitter" name="nitter"{% if v.nitter %} checked{% endif %} onchange="post_toast('/settings/profile?nitter='+document.getElementById('nitter').checked);">
+							<label class="label" for="nitter"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert twitter.com links to nitter.net links.</span>
@@ -216,9 +216,9 @@
 
 					<div class="body w-lg-100">
 
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="teddit" name="teddit"{% if v.teddit %} checked{% endif %} onchange="post_toast('/settings/profile?teddit='+document.getElementById('teddit').checked);">
-							<label class="custom-control-label" for="teddit"></label>
+						<div>
+							<input type="checkbox" id="teddit" name="teddit"{% if v.teddit %} checked{% endif %} onchange="post_toast('/settings/profile?teddit='+document.getElementById('teddit').checked);">
+							<label class="label" for="teddit"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert reddit.com links to teddit.net links.</span>
@@ -235,9 +235,9 @@
 
 					<div class="body w-lg-100">
 
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="oldreddit" name="oldreddit"{% if v.oldreddit %} checked{% endif %} onchange="post_toast('/settings/profile?oldreddit='+document.getElementById('oldreddit').checked);">
-							<label class="custom-control-label" for="oldreddit"></label>
+						<div>
+							<input type="checkbox" id="oldreddit" name="oldreddit"{% if v.oldreddit %} checked{% endif %} onchange="post_toast('/settings/profile?oldreddit='+document.getElementById('oldreddit').checked);">
+							<label class="label" for="oldreddit"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert reddit.com links to old.reddit.com links.</span>
@@ -254,9 +254,9 @@
 
 					<div class="body w-lg-100">
 
-						<div class="custom-control custom-switch">
-							<input type="checkbox" class="custom-control-input" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="post_toast('/settings/profile?controversial='+document.getElementById('controversial').checked);">
-							<label class="custom-control-label" for="controversial"></label>
+						<div>
+							<input type="checkbox" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="post_toast('/settings/profile?controversial='+document.getElementById('controversial').checked);">
+							<label class="label" for="controversial"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically sort reddit.com links by controversial.</span>
@@ -279,9 +279,9 @@
 
 						<div class="body w-lg-100">
 
-							<div class="custom-control custom-switch">
-								<input type="checkbox" class="custom-control-input" id="sigs_disabled" name="sigs_disabled"{% if v.sigs_disabled %} checked{% endif %} onchange="post_toast('/settings/profile?sigs_disabled='+document.getElementById('sigs_disabled').checked);">
-								<label class="custom-control-label" for="sigs_disabled"></label>
+							<div>
+								<input type="checkbox" id="sigs_disabled" name="sigs_disabled"{% if v.sigs_disabled %} checked{% endif %} onchange="post_toast('/settings/profile?sigs_disabled='+document.getElementById('sigs_disabled').checked);">
+								<label class="label" for="sigs_disabled"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Hide user signatures.</span>
@@ -300,9 +300,9 @@
 
 						<div class="body w-lg-100">
 
-							<div class="custom-control custom-switch">
-								<input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast('/settings/profile?over18='+document.getElementById('over18').checked);">
-								<label class="custom-control-label" for="over18"></label>
+							<div>
+								<input type="checkbox" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast('/settings/profile?over18='+document.getElementById('over18').checked);">
+								<label class="label" for="over18"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Enable if you would like to not get a warning before viewing +18 content.</span>
@@ -321,9 +321,9 @@
 
 						<div class="body w-lg-100">
 
-							<div class="custom-control custom-switch">
-								<input type="checkbox" class="custom-control-input" id="slurreplacer" name="slurreplacer"{% if v.slurreplacer %} checked{% endif %} onchange="post_toast('/settings/profile?slurreplacer='+document.getElementById('slurreplacer').checked);">
-								<label class="custom-control-label" for="slurreplacer"></label>
+							<div>
+								<input type="checkbox" id="slurreplacer" name="slurreplacer"{% if v.slurreplacer %} checked{% endif %} onchange="post_toast('/settings/profile?slurreplacer='+document.getElementById('slurreplacer').checked);">
+								<label class="label" for="slurreplacer"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Enable if you would like to automatically replace slurs.</span>
@@ -341,9 +341,9 @@
 
 						<div class="body w-lg-100">
 
-							<div class="custom-control custom-switch">
-								<input type="checkbox" class="custom-control-input" id="hidevotedon" name="hidevotedon"{% if v.hidevotedon %} checked{% endif %} onchange="post_toast('/settings/profile?hidevotedon='+document.getElementById('hidevotedon').checked);">
-								<label class="custom-control-label" for="hidevotedon"></label>
+							<div>
+								<input type="checkbox" id="hidevotedon" name="hidevotedon"{% if v.hidevotedon %} checked{% endif %} onchange="post_toast('/settings/profile?hidevotedon='+document.getElementById('hidevotedon').checked);">
+								<label class="label" for="hidevotedon"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Enable if you would like to automatically hide posts you have voted on from your frontpage.</span>

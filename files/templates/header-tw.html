@@ -43,7 +43,7 @@
             <i class="fas fa-search text-gray-600 absolute top-3 right-2"></i>
           </form>
         </div>
-        <div class="hidden lg:flex items-center space-x-2 sm:ml-4">
+        <div class="hidden lg:flex items-center sm:ml-4">
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
             <a href="/" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/' else 'text-gray-500 hover:text-gray-400' }}" aria-current="page">
               <i class="fas fa-home-lg-alt fa-fw mr-2"></i>
@@ -55,12 +55,12 @@
               Comments
             </a>
 
-            {% include "/dropdowns/NavbarExtraLinks.html" %}
+            <a href="/leaderboard" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/leaderboard' else 'text-gray-500 hover:text-gray-400' }}" aria-current="page">
+              <i class="fas fa-trophy fa-fw mr-2"></i>
+              Leaderboard
+            </a>
 
-            <!-- <a href="/shop" class="relative px-3 py-2.5 rounded text-sm {{ 'text-gray-200 font-bold text-shadow' if request.path == '/shop' else 'text-gray-500 hover:text-gray-400' }}">
-              <i class="fas fa-store fa-fw mr-2"></i>
-              Shop
-            </a> -->
+            {% include "/dropdowns/NavbarExtraLinks.html" %}
 
             <a href="/shop" class="hidden xl:flex items-center relative px-3 py-2.5 rounded text-sm text-yellow-500 leading-normal {{ 'font-bold text-shadow' if request.path == '/shop' else 'font-medium' }}">
               <img src="https://i.ibb.co/xFgG6yf/Coinfixed.gif" width="15px" height="12px" class="object-contain mr-2.5"/>
@@ -76,10 +76,17 @@
         <div class="ml-3 relative hidden sm:block">
           {% include "/dropdowns/NavbarProfile.html" %}
         </div>
-        <!-- Post Creation -->
-        <a href="{{ '/submit' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-          <span class="sr-only">Submit post</span>
-          <i class="fas fa-plus fa-fw"></i>
+        {% if v.admin_level > 1 %}
+        <!-- Admin link -->
+        <a href="{{ '/admin' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+          <span class="sr-only">Admin tools</span>
+          <i class="fas fa-crown fa-fw"></i>
+        </a>
+        {% endif %}
+        <!-- Profile link -->
+        <a href="{{ '/me' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+          <span class="sr-only">My profile</span>
+          <i class="fas fa-user fa-fw"></i>
         </a>
         <!-- Notifications -->
         <a href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" class="block bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -93,6 +100,11 @@
             </div>
             {% endif %}
           </div>
+        </a>
+        <!-- Post Creation -->
+        <a href="{{ '/submit' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+          <span class="sr-only">Submit post</span>
+          <i class="fas fa-plus fa-fw"></i>
         </a>
         <!-- Not logged in -->
         {% else %}
@@ -128,10 +140,10 @@
       </form>
       {% if v %}
       <!-- Submit post link -->
-      <button class="w-full btn btn-red mb-4">
+      <a href="/submit" class="w-full btn btn-red mb-4">
         <i class="fas fa-pen fa-sm fa-fw mr-2"></i>
         Create post
-      </button>
+      </a>
       <!-- Meta links -->
       <ul class="flex flex-col space-y-3 font-bold text-base text-gray-600">
         <li>
@@ -187,12 +199,12 @@
       {% else %}
       <ul class="flex flex-col space-y-2">
         <li>
-          <a class="btn btn-gray" href="/login?redirect={{request.path | urlencode}}">
+          <a class="btn btn-gray w-full" href="/login?redirect={{request.path | urlencode}}">
             Login
           </a>
         </li>
         <li>
-          <a class="btn btn-gray" href="/signup?redirect={{request.path | urlencode}}">
+          <a class="btn btn-gray w-full" href="/signup?redirect={{request.path | urlencode}}">
             Signup
           </a>
         </li>

@@ -8,6 +8,8 @@
 
 {% block content %}
 
+<div class="col-span-full my-4">
+
 	{% if error %}
 	<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 		<i class="fas fa-exclamation-circle my-auto"></i>
@@ -38,9 +40,9 @@
 	<form action="/admin/awards", method="post">
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<label for="input-username">Username</label><br>
-		<input id="input-username" class="form-control mb-3" type="text" name="username" required>
+		<input id="input-username" class="form-input mb-3" type="text" name="username" required>
 
-		<table class="table table-striped">
+		<table class="w-full table table-striped">
 			<thead class="bg-primary text-white">
 				<tr>
 					<th scope="col">Icon</th>
@@ -53,17 +55,19 @@
 				<tr>
 					<td><i class="{{a['icon']}} {{a['color']}}" style="font-size: 30px"></i></td>
 					<td style="font-weight: bold">{{a['title']}}</td>
-					<td><input type="number" class="form-control" name="{{a['kind']}}" value="0" min="0" max="10" placeholder="Enter amount..." ></td>
+					<td><input type="number" class="form-input" name="{{a['kind']}}" value="0" min="0" max="10" placeholder="Enter amount..." ></td>
 				</tr>
 			{% endfor %}
 		</table>
 
-		<input class="btn btn-primary mt-3" type="submit" value="Grant Awards">
+		<input class="btn btn-green mt-3" type="submit" value="Grant Awards">
 
 	</form>
 
 	<pre></pre>
 	{% if 'rdrama.net' not in request.host or v.admin_level > 2 %}
-		<div><a class="btn btn-success" href="javascript:void(0)" onclick="post_toast('/admin/monthly')">Grant Monthly Marseybux</a></div>
+		<div><a class="btn btn-green mt-3" href="javascript:void(0)" onclick="post_toast('/admin/monthly')">Grant Monthly Marseybux</a></div>
 	{% endif %}
+
+</div>
 {% endblock %}

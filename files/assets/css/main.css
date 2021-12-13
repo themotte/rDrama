@@ -4746,3 +4746,7 @@ blockquote p {
   object-fit: cover;
   display: inline;
 }
+
+.max-h-12 {
+  max-height: 3rem;
+}
