@@ -15,21 +15,21 @@
 				</div>
 				<div class="flex flex-col space-y-2">
 			<label for="edit-{{app.id}}-author" class="mb-0 w-lg-25">User</label>
-			<input id="edit-{{app.id}}-author" class="form-control" type="text" name="name" value="{{app.author.username}}" readonly=readonly>
+			<input id="edit-{{app.id}}-author" class="form-input" type="text" name="name" value="{{app.author.username}}" readonly=readonly>
 
 			<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
-			<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}" readonly=readonly>
+			<input id="edit-{{app.id}}-name" class="form-input" type="text" name="name" value="{{app.app_name}}" readonly=readonly>
 
 			{% if app.client_id %}
 			<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
-			<input id="edit-{{app.id}}-client-id" class="form-control" type="text" name="name" value="{{app.client_id}}" readonly="readonly">
+			<input id="edit-{{app.id}}-client-id" class="form-input" type="text" name="name" value="{{app.client_id}}" readonly="readonly">
 			{% endif %}
 
 
 			<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
-			<input id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}" readonly="readonly">
+			<input id="edit-{{app.id}}-redirect" class="form-input" type="text" name="redirect_uri" value="{{app.redirect_uri}}" readonly="readonly">
 			<label for="edit-{{app.id}}-desc" class="mb-0 w-lg-25">Description</label>
-			<textarea form="edit-app-{{app.id}}" class="form-control" name="description" id="edit-{{app.id}}-desc" maxlength="256" readonly="readonly">{{app.description}}</textarea>
+			<textarea form="edit-app-{{app.id}}" class="form-input" name="description" id="edit-{{app.id}}-desc" maxlength="256" readonly="readonly">{{app.description}}</textarea>
 		</div>
 	</div>
 	<div class="footer">
