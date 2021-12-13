@@ -247,6 +247,20 @@ def archives(path):
 	if request.path.endswith('.css'): resp.headers.add("Content-Type", "text/css")
 	return resp
 
+@app.get('/static/<path:path>')
+@limiter.exempt
+def static_service(path):
+	resp = make_response(send_from_directory('./static', path))
+	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
+		resp.headers.remove("Cache-Control")
+		resp.headers.add("Cache-Control", "public, max-age=2628000")
+
+	if request.path.endswith('.webp'):
+		resp.headers.remove("Content-Type")
+		resp.headers.add("Content-Type", "image/webp")
+
+	return resp
+
 @app.get('/assets/<path:path>')
 @limiter.exempt
 def static_service(path):
