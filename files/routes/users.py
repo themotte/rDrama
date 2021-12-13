@@ -307,7 +307,7 @@ def songs(id):
 
 @app.get("/song/<song>")
 def song(song):
-	resp = make_response(send_from_directory('songs/', song))
+	resp = make_response(send_from_directory('/songs', song))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")
 	return resp
