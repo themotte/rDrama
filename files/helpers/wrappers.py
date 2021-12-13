@@ -47,9 +47,9 @@ def auth_desired(f):
 
 		v = get_logged_in_user()
 
-		# if request.host == 'old.rdrama.net' and not (v and v.admin_level):
-		# 	if request.headers.get("Authorization"): return {"error": "403 Forbidden"}, 403
-		# 	else: return render_template('errors/403.html', v=v), 403
+		if request.host == 'old.rdrama.net' and not (v and v.admin_level):
+			if request.headers.get("Authorization"): return {"error": "403 Forbidden"}, 403
+		 	else: return render_template('errors/403.html', v=v), 403
 		check_ban_evade(v)
 
 		resp = make_response(f(*args, v=v, **kwargs))
@@ -67,7 +67,7 @@ def auth_required(f):
 
 		if not v: abort(401)
 			
-		# if request.host == 'old.rdrama.net' and not v.admin_level: abort(403)
+		if request.host == 'old.rdrama.net' and not v.admin_level: abort(403)
 
 		check_ban_evade(v)
 
@@ -88,7 +88,7 @@ def is_not_banned(f):
 
 		if not v: abort(401)
 			
-		# if request.host == 'old.rdrama.net' and not v.admin_level: abort(403)
+		if request.host == 'old.rdrama.net' and not v.admin_level: abort(403)
 
 		check_ban_evade(v)
 
