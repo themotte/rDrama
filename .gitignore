@@ -14,4 +14,3 @@ venv/
 .vscode/
 disablesignups
 .sass-cache/
-node_modules/
