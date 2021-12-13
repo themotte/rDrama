@@ -258,7 +258,7 @@
 						<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this comment by @{{c.author.banned_by.username}}"></i></a>
 					{% endif %}
 					{% if c.active_flags %}
-					<a class="flex-shrink-0 btn btn-gray" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('hidden')">{{c.active_flags}} Reports</a>
+					<a class="flex-shrink-0 badge badge-red" style="padding:1px 5px; font-size:10px;" href="javascript:void(0)" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('hidden')">{{c.active_flags}} Reports</a>
 					{% endif %}
 					{% if c.over_18 %}
 					<span class="badge badge-red">+18</span>
