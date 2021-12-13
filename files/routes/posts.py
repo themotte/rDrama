@@ -53,6 +53,7 @@ def publish(pid, v):
 	post = get_post(pid)
 	if not post.author_id == v.id: abort(403)
 	post.private = False
+	post.created_utc = int(time.time())
 	g.db.add(post)
 	
 	notify_users = NOTIFY_USERS(f'{post.body_html}{post.title}', v.id)
@@ -97,7 +98,7 @@ def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
-	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
+	if 'rdrama.net' in request.host and pid in [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
 	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
 
@@ -424,7 +425,7 @@ def edit_post(pid, v):
 
 		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 		file.save(name)
-		url = request.host_url + process_image(name)
+		url = request.host_url[:-1] + process_image(name)
 		
 		body += f"\n\n![]({url})"
 
@@ -918,7 +919,7 @@ def submit_post(v):
 
 		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 		file.save(name)
-		url = request.host_url + process_image(name)
+		url = request.host_url[:-1] + process_image(name)
 		
 		body += f"\n\n![]({url})"
 
@@ -958,7 +959,8 @@ def submit_post(v):
 		body_html=body_html,
 		embed_url=embed,
 		title=title[:500],
-		title_html=title_html
+		title_html=title_html,
+		created_utc=int(time.time())	
 	)
 
 	g.db.add(new_post)
@@ -1017,7 +1019,7 @@ def submit_post(v):
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			new_post.url = request.host_url + process_image(name)
+			new_post.url = request.host_url[:-1] + process_image(name)
 			
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
