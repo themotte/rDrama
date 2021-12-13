@@ -91,7 +91,9 @@ def api_vote_post(post_id, new, v):
 			existing.vote_type = new
 			g.db.add(existing)
 		elif existing.vote_type != 0 and new == 0:
-			post.author.coins -= 2
+			if post.created_utc > 1639302300: post.author.coins -= 2
+			else: post.author.coins -= 1
+			post.author.coins -= amount
 			post.author.truecoins -= 1
 			g.db.add(post.author)
 			g.db.delete(existing)
@@ -159,7 +161,8 @@ def api_vote_comment(comment_id, new, v):
 			existing.vote_type = new
 			g.db.add(existing)
 		elif existing.vote_type != 0 and new == 0:
-			comment.author.coins -= 2
+			if comment.created_utc > 1639302300: comment.author.coins -= 2
+			else: comment.author.coins -= 1
 			comment.author.truecoins -= 1
 			g.db.add(comment.author)
 			g.db.delete(existing)
