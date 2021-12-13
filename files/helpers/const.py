@@ -419,32 +419,48 @@ AWARDS = {
 		"title": "Snow",
 		"description": "???",
 		"icon": "fas fa-snowflake",
-		"color": "text-gray",
+		"color": "text-blue-200",
+		"price": 300
+	},
+	"gingerbread": {
+		"kind": "gingerbread",
+		"title": "Gingerbread",
+		"description": "???",
+		"icon": "fas fa-gingerbread-man",
+		"color": "",
+		"price": 300
+	},
+	"lights": {
+		"kind": "lights",
+		"title": "Lights",
+		"description": "???",
+		"icon": "fad fa-lights-holiday",
+		"color": "",
 		"price": 300
 	},
 	"candycane": {
 		"kind": "candycane",
 		"title": "Candy Cane",
 		"description": "???",
-		"icon": "fas fa-candy-cane",
-		"color": "text-gray",
-		"price": 500
+		"icon": "fad fa-candy-cane",
+		"color": "",
+		"price": 400
 	},
-	"mistletoe": {
-		"kind": "mistletoe",
-		"title": "Mistletoe",
+	"fireplace": {
+		"kind": "fireplace",
+		"title": "Fireplace",
 		"description": "???",
-		"icon": "fas fa-mistletoe",
-		"color": "text-gray",
+		"icon": "fad fa-fireplace",
+		"color": "",
 		"price": 600
 	},
-	"mariah": {
-		"kind": "mariah",
-		"title": "Mariah",
+	"grinch": {
+		"kind": "grinch",
+		"title": "Grinch",
 		"description": "???",
-		"icon": "fas fa-music",
-		"color": "text-gray",
-		"price": 800
+		"icon": "fas fa-angry",
+		"color": "text-green-500",
+		"price": 1000
 	},
 	"haunt": {
 		"kind": "haunt",
