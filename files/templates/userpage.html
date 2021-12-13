@@ -327,6 +327,12 @@
 		{% endif %}
 	</div>
 </div>
+
+{% if u.song and v and v.mute and not u.unmutable %}
+	<a id="pause1" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
+	<a id="play1" class="btn btn-secondary hidden" href="javascript:void(0)" onclick="play()">Play anthem</a>
+{% endif %}
+
 {% endblock %}
 
 {% block sidebar %}
