@@ -242,7 +242,7 @@ class Comment(Base):
 			'permalink': self.permalink,
 			'is_pinned': self.is_pinned,
 			'distinguish_level': self.distinguish_level,
-			'post_id': self.post.id,
+			'post_id': self.post.id if self.post else None,
 			'score': self.score,
 			'upvotes': self.upvotes,
 			'downvotes': self.downvotes,
