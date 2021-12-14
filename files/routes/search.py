@@ -249,7 +249,7 @@ def searchcomments(v):
 
 	comments = get_comments(ids, v=v)
 
-	if request.headers.get("Authorization"): return [x.json for x in comments]
+	if request.headers.get("Authorization"): return {"data":[x.json for x in comments]}
 	else: return render_template("search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists)
 
 

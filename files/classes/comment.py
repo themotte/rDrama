@@ -265,14 +265,14 @@ class Comment(Base):
 			data= {'is_banned': True,
 					'ban_reason': self.ban_reason,
 					'id': self.id,
-					'post': self.post.id,
+					'post': self.post.id if self.post else 0,
 					'level': self.level,
 					'parent': self.parent_fullname
 					}
 		elif self.deleted_utc > 0:
 			data= {'deleted_utc': self.deleted_utc,
 					'id': self.id,
-					'post': self.post.id,
+					'post': self.post.id if self.post else 0,
 					'level': self.level,
 					'parent': self.parent_fullname
 					}
