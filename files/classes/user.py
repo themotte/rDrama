@@ -83,6 +83,8 @@ class User(Base):
 	oldreddit = Column(Boolean, default=True)
 	teddit = Column(Boolean)
 	nitter = Column(Boolean)
+	grinch = Column(Boolean)
+	grincheffect = Column(Boolean)
 	mute = Column(Boolean)
 	unmutable = Column(Boolean)
 	eye = Column(Boolean)
@@ -281,6 +283,7 @@ class User(Base):
 		if not self.is_suspended: return None
 		return g.db.query(User).filter_by(id=self.is_banned).first()
 
+	@lazy
 	def has_badge(self, badge_id):
 		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).first()
 
@@ -413,14 +416,15 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"https://{site}/assets/images/{site_name}/preview.webp?v=190"
+		else: return f"https://{site}/assets/images/{site_name}/preview.webp?v=200"
 
 	@property
 	@lazy
 	def profile_url(self):
-		if self.agendaposter: return f"https://{site}/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?v=190"
+		if self.grincheffect: return f"https://{site}/assets/images/grinch.webp?v=200"
+		if self.agendaposter: return f"https://{site}/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?v=200"
 		if self.profileurl: return self.profileurl
-		if "rama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=190"
+		if "rama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=200"
 		return f"https://{site}/assets/images/default-profile-pic.webp"
 
 	@property

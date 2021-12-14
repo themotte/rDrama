@@ -52,7 +52,11 @@ def settings_profile_post(v):
 
 	updated = False
 
-	if request.values.get("background", v.background) != v.background:
+	if request.values.get("grincheffect", v.grincheffect) != v.grincheffect:
+		updated = True
+		v.grincheffect = request.values.get("grincheffect", None) == 'true'
+
+	elif request.values.get("background", v.background) != v.background:
 		updated = True
 		v.background = request.values.get("background", None)
 
@@ -732,8 +736,8 @@ def settings_images_profile(v):
 
 	if not imageurl: abort(400)
 
-	if v.highres and '/images/' in v.highres : os.remove('images/' + v.highres.split('/images/')[1])
-	if v.profileurl and '/images/' in v.profileurl : os.remove('images/' + v.profileurl.split('/images/')[1])
+	if v.highres and '/images/' in v.highres : os.remove('/images/' + v.highres.split('/images/')[1])
+	if v.profileurl and '/images/' in v.profileurl : os.remove('/images/' + v.profileurl.split('/images/')[1])
 	v.highres = highres
 	v.profileurl = imageurl
 	g.db.add(v)
@@ -761,7 +765,7 @@ def settings_images_banner(v):
 	bannerurl = process_image(name)
 
 	if bannerurl:
-		if v.bannerurl and '/images/' in v.bannerurl : os.remove('images/' + v.bannerurl.split('/images/')[1])
+		if v.bannerurl and '/images/' in v.bannerurl : os.remove('/images/' + v.bannerurl.split('/images/')[1])
 		v.bannerurl = bannerurl
 		g.db.add(v)
 		g.db.commit()

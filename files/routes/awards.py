@@ -48,6 +48,58 @@ AWARDS3 = {
 @auth_required
 def shop(v):
 	AWARDS = {
+		"snow": {
+			"kind": "snow",
+			"title": "Snow",
+			"description": "???",
+			"icon": "fas fa-snowflake",
+			"color": "text-blue-200",
+			"owned": 0,
+			"price": 300
+		},
+		"gingerbread": {
+			"kind": "gingerbread",
+			"title": "Gingerbread",
+			"description": "???",
+			"icon": "fas fa-gingerbread-man",
+			"color": "",
+			"owned": 0,
+			"price": 300
+		},
+		"lights": {
+			"kind": "lights",
+			"title": "Lights",
+			"description": "???",
+			"icon": "fad fa-lights-holiday",
+			"color": "",
+			"owned": 0,
+			"price": 300
+		},
+		"candycane": {
+			"kind": "candycane",
+			"title": "Candy Cane",
+			"description": "???",
+			"icon": "fad fa-candy-cane",
+			"color": "",
+			"owned": 0,
+			"price": 400
+		},
+		"fireplace": {
+			"kind": "fireplace",
+			"title": "Fireplace",
+			"description": "???",
+			"icon": "fad fa-fireplace",
+			"color": "",
+			"owned": 0,
+			"price": 600
+		},
+		"grinch": {
+			"kind": "grinch",
+			"title": "Grinch",
+			"description": "???",
+			"icon": "fas fa-angry",
+			"color": "text-green-500",
+		},
 		"lootbox": {
 			"kind": "lootbox",
 			"title": "Lootstocking",
@@ -255,6 +307,53 @@ def shop(v):
 @validate_formkey
 def buy(v, award):
 	AWARDS = {
+		"snow": {
+			"kind": "snow",
+			"title": "Snow",
+			"description": "???",
+			"icon": "fas fa-snowflake",
+			"color": "text-blue-200",
+			"price": 300
+		},
+		"gingerbread": {
+			"kind": "gingerbread",
+			"title": "Gingerbread",
+			"description": "???",
+			"icon": "fas fa-gingerbread-man",
+			"color": "",
+			"price": 300
+		},
+		"lights": {
+			"kind": "lights",
+			"title": "Lights",
+			"description": "???",
+			"icon": "fad fa-lights-holiday",
+			"color": "",
+			"price": 300
+		},
+		"candycane": {
+			"kind": "candycane",
+			"title": "Candy Cane",
+			"description": "???",
+			"icon": "fad fa-candy-cane",
+			"color": "",
+			"price": 400
+		},
+		"fireplace": {
+			"kind": "fireplace",
+			"title": "Fireplace",
+			"description": "???",
+			"icon": "fad fa-fireplace",
+			"color": "",
+			"price": 600
+		},
+		"grinch": {
+			"kind": "grinch",
+			"title": "Grinch",
+			"description": "???",
+			"icon": "fas fa-angry",
+			"color": "text-green-500",
+		},
 		"lootbox": {
 			"kind": "lootbox",
 			"title": "Lootstocking",
@@ -645,6 +744,12 @@ def award_post(pid, v):
 		if not author.has_badge(90):
 			new_badge = Badge(badge_id=90, user_id=author.id)
 			g.db.add(new_badge)
+	elif kind == "grinch":
+		author.grinch = True
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		if not author.has_badge(91):
+			new_badge = Badge(badge_id=91, user_id=author.id)
+			g.db.add(new_badge)
 
 	if post.author.received_award_count: post.author.received_award_count += 1
 	else: post.author.received_award_count = 1
@@ -806,6 +911,12 @@ def award_comment(cid, v):
 		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(90):
 			new_badge = Badge(badge_id=90, user_id=author.id)
+			g.db.add(new_badge)
+	elif kind == "grinch":
+		author.grinch = True
+		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		if not author.has_badge(91):
+			new_badge = Badge(badge_id=91, user_id=author.id)
 			g.db.add(new_badge)
 
 	if c.author.received_award_count: c.author.received_award_count += 1

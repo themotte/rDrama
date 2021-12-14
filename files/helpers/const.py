@@ -674,6 +674,53 @@ AWARDS = {
 }
 
 AWARDS2 = {
+	"snow": {
+		"kind": "snow",
+		"title": "Snow",
+		"description": "???",
+		"icon": "fas fa-snowflake",
+		"color": "text-blue-200",
+		"price": 300
+	},
+	"gingerbread": {
+		"kind": "gingerbread",
+		"title": "Gingerbread",
+		"description": "???",
+		"icon": "fas fa-gingerbread-man",
+		"color": "",
+		"price": 300
+	},
+	"lights": {
+		"kind": "lights",
+		"title": "Lights",
+		"description": "???",
+		"icon": "fad fa-lights-holiday",
+		"color": "",
+		"price": 300
+	},
+	"candycane": {
+		"kind": "candycane",
+		"title": "Candy Cane",
+		"description": "???",
+		"icon": "fad fa-candy-cane",
+		"color": "",
+		"price": 400
+	},
+	"fireplace": {
+		"kind": "fireplace",
+		"title": "Fireplace",
+		"description": "???",
+		"icon": "fad fa-fireplace",
+		"color": "",
+		"price": 600
+	},
+	"grinch": {
+		"kind": "grinch",
+		"title": "Grinch",
+		"description": "???",
+		"icon": "fas fa-angry",
+		"color": "text-green-500",
+	},
 	"lootbox": {
 		"kind": "lootbox",
 		"title": "Lootstocking",
