@@ -271,7 +271,9 @@
 	</div>
 </div>
 
-<div id="formkey" class="hidden">{{ v.formkey }}</div>
+{% if v %}
+	<div id="formkey" class="hidden">{{ v.formkey }}</div>
+{% endif %}
 
 {% include "ProfilePopover.html" %}
 
