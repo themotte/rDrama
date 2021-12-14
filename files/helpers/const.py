@@ -720,6 +720,7 @@ AWARDS2 = {
 		"description": "???",
 		"icon": "fas fa-angry",
 		"color": "text-green-500",
+		"price": 1000
 	},
 	"lootbox": {
 		"kind": "lootbox",
