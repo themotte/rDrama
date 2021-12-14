@@ -194,7 +194,7 @@ def api_comment(v):
 
 		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 		file.save(name)
-		url = request.host_url[:-1] + process_image(name)
+		url = process_image(name)
 		
 		body += f"\n\n![]({url})"
 
@@ -724,7 +724,7 @@ def edit_comment(cid, v):
 
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = request.host_url[:-1] + process_image(name)
+			url = process_image(name)
 
 			body += f"\n\n![]({url})"
 			body_md = CustomRenderer().render(mistletoe.Document(body))

@@ -232,7 +232,7 @@ def contact(v):
 @auth_required
 @validate_formkey
 def submit_contact(v):
-	message = f'This message has been sent automatically to all admins via https://{site}/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
+	message = f'This message has been sent automatically to all admins via [/contact](/contact), user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
 	send_admin(v.id, message)
 	g.db.commit()
 	return render_template("contact.html", v=v, msg="Your message has been sent.")

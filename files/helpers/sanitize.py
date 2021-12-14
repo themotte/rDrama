@@ -183,7 +183,7 @@ def sanitize(sanitized, noimages=False):
 				remoji = emoji
 
 			if path.isfile(f'./files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}: emoji" title=":{emoji}:" delay="0" {classes}src="https://{site}/assets/images/emojis/{remoji}.webp" >', new, flags=re.I)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}: emoji" title=":{emoji}:" delay="0" {classes}src="/assets/images/emojis/{remoji}.webp" >', new, flags=re.I)
 					
 		sanitized = sanitized.replace(old, new)
 
@@ -193,10 +193,10 @@ def sanitize(sanitized, noimages=False):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}: emoji" title=":!{emoji}:" delay="0" height=30 class="emoji mirrored" src="https://{site}/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}: emoji" title=":!{emoji}:" delay="0" height=30 class="emoji mirrored" src="/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}: emoji" title=":{emoji}:" delay="0" height=30 class="emoji" src="https://{site}/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}: emoji" title=":{emoji}:" delay="0" height=30 class="emoji" src="/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("https://m.wikipedia", "https://wikipedia").replace("https://m.youtube", "https://youtube")
 
@@ -240,10 +240,10 @@ def filter_emojis_only(title):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}: emoji" title=":!{emoji}:" delay="0" height=30 src="https://{site}/assets/images/emojis/{emoji}.webp" class="emoji mirrored">', title, flags=re.I)
+				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}: emoji" title=":!{emoji}:" delay="0" height=30 src="/assets/images/emojis/{emoji}.webp" class="emoji mirrored">', title, flags=re.I)
 				
 		elif path.isfile(f'./files/assets/images/emojis/{emoji}.webp'):
-			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}: emoji" title=":{emoji}:" delay="0" height=30 class="emoji" src="https://{site}/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
+			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}: emoji" title=":{emoji}:" delay="0" height=30 class="emoji" src="/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
 	
 	if len(title) > 1500: abort(400)
 	else: return title

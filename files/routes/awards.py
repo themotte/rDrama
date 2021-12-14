@@ -585,7 +585,7 @@ def award_post(pid, v):
 			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
-		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {request.host_url}{post.shortlink}")
+		send_notification(IDIO_ID, f"@{v.username} used {kind} award on [{post.shortlink}]({post.shortlink})")
 	elif kind == "bird":
 		if author.longpost:
 			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404
@@ -747,7 +747,7 @@ def award_comment(cid, v):
 			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
-		send_notification(IDIO_ID, f"@{v.username} used {kind} award on {request.host_url}{c.shortlink}")
+		send_notification(IDIO_ID, f"@{v.username} used {kind} award on [{c.shortlink}]({c.shortlink})")
 	elif kind == "bird":
 		if author.longpost:
 			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404

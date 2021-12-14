@@ -33,7 +33,7 @@ def distribute(v, cid):
 	for vote in votes:
 		u = vote.user
 		u.coins += coinsperperson
-		send_notification(u.id, f"You won {coinsperperson} coins betting on https://{request.host}{post} !")
+		send_notification(u.id, f"You won {coinsperperson} coins betting on {post} !")
 		g.db.add(u)
 
 	autobetter.coins = 0
