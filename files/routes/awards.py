@@ -99,6 +99,7 @@ def shop(v):
 			"description": "???",
 			"icon": "fas fa-angry",
 			"color": "text-green-500",
+			"price": 1000
 		},
 		"lootbox": {
 			"kind": "lootbox",
@@ -353,6 +354,7 @@ def buy(v, award):
 			"description": "???",
 			"icon": "fas fa-angry",
 			"color": "text-green-500",
+			"price": 1000
 		},
 		"lootbox": {
 			"kind": "lootbox",
