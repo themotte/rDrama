@@ -297,7 +297,7 @@ class Comment(Base):
 			return data
 
 		data["author"]=self.author.json_core
-		data["post"]=self.post.json_core
+		data["post"]=self.post.json_core if self.post else ''
 
 		if self.level >= 2:
 			data["parent"]=self.parent.json_core
