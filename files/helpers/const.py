@@ -673,9 +673,216 @@ AWARDS = {
 
 }
 
-AWARDS2 = dict(AWARDS)
-
-for i in ["haunt", "upsidedown", "stab", "ghosts", "spiders", "fog"]: del AWARDS2[i]
+AWARDS2 = {
+	"snow": {
+		"kind": "snow",
+		"title": "Snow",
+		"description": "???",
+		"icon": "fas fa-snowflake",
+		"color": "text-blue-200",
+		"price": 300
+	},
+	"gingerbread": {
+		"kind": "gingerbread",
+		"title": "Gingerbread",
+		"description": "???",
+		"icon": "fas fa-gingerbread-man",
+		"color": "",
+		"price": 300
+	},
+	"lights": {
+		"kind": "lights",
+		"title": "Lights",
+		"description": "???",
+		"icon": "fad fa-lights-holiday",
+		"color": "",
+		"price": 300
+	},
+	"candycane": {
+		"kind": "candycane",
+		"title": "Candy Cane",
+		"description": "???",
+		"icon": "fad fa-candy-cane",
+		"color": "",
+		"price": 400
+	},
+	"fireplace": {
+		"kind": "fireplace",
+		"title": "Fireplace",
+		"description": "???",
+		"icon": "fad fa-fireplace",
+		"color": "",
+		"price": 600
+	},
+	"grinch": {
+		"kind": "grinch",
+		"title": "Grinch",
+		"description": "???",
+		"icon": "fas fa-angry",
+		"color": "text-green-500",
+		"price": 1000
+	},
+	"lootbox": {
+		"kind": "lootbox",
+		"title": "Lootstocking",
+		"description": "???",
+		"icon": "fas fa-stocking",
+		"color": "text-red",
+		"price": 1000
+	},
+	"shit": {
+		"kind": "shit",
+		"title": "Shit",
+		"description": "Makes flies swarm the post.",
+		"icon": "fas fa-poop",
+		"color": "text-black-50",
+		"price": 500
+	},
+	"fireflies": {
+		"kind": "fireflies",
+		"title": "Fireflies",
+		"description": "Makes fireflies swarm the post.",
+		"icon": "fas fa-sparkles",
+		"color": "text-warning",
+		"price": 500
+	},
+	"train": {
+		"kind": "train",
+		"title": "Train",
+		"description": "Summons a train on the post.",
+		"icon": "fas fa-train",
+		"color": "text-pink",
+		"price": 500
+	},
+	"pin": {
+		"kind": "pin",
+		"title": "1-Hour Pin",
+		"description": "Pins the post/comment.",
+		"icon": "fas fa-thumbtack fa-rotate--45",
+		"color": "text-warning",
+		"price": 1000
+	},
+	"unpin": {
+		"kind": "unpin",
+		"title": "1-Hour Unpin",
+		"description": "Removes 1 hour from the pin duration of the post/comment.",
+		"icon": "fas fa-thumbtack fa-rotate--45",
+		"color": "text-black",
+		"price": 1000
+	},
+	"flairlock": {
+		"kind": "flairlock",
+		"title": "1-Day Flairlock",
+		"description": "Sets a flair for the recipient and locks it or 24 hours.",
+		"icon": "fas fa-lock",
+		"color": "text-black",
+		"price": 1250
+	},
+	"pizzashill": {
+		"kind": "pizzashill",
+		"title": "Pizzashill",
+		"description": "Forces the recipient to make all posts/comments > 280 characters for 24 hours.",
+		"icon": "fas fa-pizza-slice",
+		"color": "text-orange",
+		"price": 1500
+	},
+	"bird": {
+		"kind": "bird",
+		"title": "Bird Site",
+		"description": "Forces the recipient to make all posts/comments < 140 characters for 24 hours.",
+		"icon": "fab fa-twitter",
+		"color": "text-blue",
+		"price": 1500
+	},
+	"agendaposter": {
+		"kind": "agendaposter",
+		"title": "Agendaposter",
+		"description": "Forces the agendaposter theme on the recipient for 24 hours.",
+		"icon": "fas fa-snooze",
+		"color": "text-purple",
+		"price": 2500
+	},
+	"marsey": {
+		"kind": "marsey",
+		"title": "Marsey",
+		"description": "Makes the recipient unable to post/comment anything but marsey emojis for 24 hours.",
+		"icon": "fas fa-cat",
+		"color": "text-orange",
+		"price": 3000
+	},
+	"ban": {
+		"kind": "ban",
+		"title": "1-Day Ban",
+		"description": "Bans the recipient for a day.",
+		"icon": "fas fa-gavel",
+		"color": "text-danger",
+		"price": 3000
+	},
+	"unban": {
+		"kind": "unban",
+		"title": "1-Day Unban",
+		"description": "Removes 1 day from the ban duration of the recipient.",
+		"icon": "fas fa-gavel",
+		"color": "text-success",
+		"price": 3500
+	},
+	"grass": {
+		"kind": "grass",
+		"title": "Grass",
+		"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+		"icon": "fas fa-seedling",
+		"color": "text-success",
+		"price": 10000
+	},
+	"eye": {
+		"kind": "eye",
+		"title": "All-Seeing Eye",
+		"description": "Gives the recipient the ability to view private profiles.",
+		"icon": "fas fa-eye",
+		"color": "text-silver",
+		"price": 10000
+	},
+	"unblockable": {
+		"kind": "unblockable",
+		"title": "Unblockable",
+		"description": "Makes the recipient unblockable and removes all blocks on them.",
+		"icon": "far fa-laugh-squint",
+		"color": "text-lightgreen",
+		"price": 10000
+	},
+	"fish": {
+		"kind": "fish",
+		"title": "Fish",
+		"description": "This user cannot be unfollowed",
+		"icon": "fas fa-fish",
+		"color": "text-lightblue",
+		"price": 20000
+	},
+	"pause": {
+		"kind": "pause",
+		"title": "Pause",
+		"description": "Gives the recipient the ability to pause profile anthems.",
+		"icon": "fas fa-volume-mute",
+		"color": "text-danger",
+		"price": 20000
+	},
+	"unpausable": {
+		"kind": "unpausable",
+		"title": "Unpausable",
+		"description": "Makes the profile anthem of the recipient unpausable.",
+		"icon": "fas fa-volume",
+		"color": "text-success",
+		"price": 40000
+	},
+	"alt": {
+		"kind": "alt",
+		"title": "Alt-Seeing Eye",
+		"description": "Gives the recipient the ability to view alts.",
+		"icon": "fas fa-eye",
+		"color": "text-gold",
+		"price": 50000
+	},
+}
 
 TROLLTITLES = [
 	"how will @{username} ever recover?",
