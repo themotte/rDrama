@@ -284,7 +284,7 @@ def shop(v):
 @auth_required
 @validate_formkey
 def buy(v, award):
-	AWARDS2 = {
+	AWARDS = {
 		"snow": {
 			"kind": "snow",
 			"title": "Snow",
