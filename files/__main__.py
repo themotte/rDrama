@@ -16,7 +16,7 @@ import gevent
 from werkzeug.middleware.proxy_fix import ProxyFix
 import redis
 
-if environ.get("CHRISTMAS"): templates = 'templates/CHRISTMAS'
+if int(environ.get("CHRISTMAS", 0)): templates = 'templates/CHRISTMAS'
 else: templates = 'templates'
 app = Flask(__name__, template_folder=templates)
 
