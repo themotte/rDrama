@@ -465,13 +465,25 @@ def buy(v, award):
 			g.db.add(new_badge)
 		g.db.add(v)
 
+
+
 	g.db.add(v)
 	g.db.flush()
-	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
-	thing += 1
 
-	award = AwardRelationship(id=thing, user_id=v.id, kind=award)
-	g.db.add(award)
+	if award == "lootbox":
+		send_notification(995, f"@{v.username} bought a lootbox!")
+		for i in [1,2,3,4,5]:
+			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+			thing += 1
+			award = random.choice(["snow", "gingerbread", "lights", "candycane", "fireplace"])
+			award = AwardRelationship(id=thing, user_id=v.id, kind=award)
+			g.db.add(award)
+			g.db.flush()
+	else:
+		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+		thing += 1
+		award = AwardRelationship(id=thing, user_id=v.id, kind=award)
+		g.db.add(award)
 
 	g.db.commit()
 
