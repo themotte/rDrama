@@ -131,6 +131,7 @@ def buy(v, award):
 	g.db.flush()
 
 	if award == "lootbox":
+		send_notification(995, f"@{v.username} bought a lootbox!")
 		for i in [1,2,3,4,5]:
 			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 			thing += 1
