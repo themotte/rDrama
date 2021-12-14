@@ -12,17 +12,23 @@ from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
 
+@app.get("/emojis")
+@auth_desired
+def emojis(v):
+	emojis = (x.replace('.webp','') for x in os.listdir("files/assets/images/emojis"))
+	return render_template("emojis.html", v=v, emojis=emojis)
+
 @app.get('/rules')
 @auth_desired
 def static_rules(v):
 
-	if not path.exists(f'./rules_{site_name}.html'):
+	if not path.exists(f'rules_{site_name}.html'):
 		if v and v.admin_level > 1:
 			return render_template('norules.html', v=v)
 		else:
 			abort(404)
 
-	with open(f'./rules_{site_name}.html', 'r') as f:
+	with open(f'rules_{site_name}.html', 'r') as f:
 		rules = f.read()
 
 	return render_template('rules.html', rules=rules, v=v)
@@ -69,7 +75,7 @@ def participation_stats(v):
 @auth_required
 def chart(v):
 	file = cached_chart()
-	return send_file(f"../{file}")
+	return send_file(f".{file}")
 
 
 @cache.memoize(timeout=86400)
@@ -264,7 +270,7 @@ def static_service2(path):
 @app.get('/assets/<path:path>')
 @limiter.exempt
 def static_service(path):
-	resp = make_response(send_from_directory('./assets', path))
+	resp = make_response(send_from_directory('assets', path))
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
 		resp.headers.add("Cache-Control", "public, max-age=2628000")
@@ -289,7 +295,7 @@ def images(path):
 
 @app.get("/robots.txt")
 def robots_txt():
-	return send_file("./assets/robots.txt")
+	return send_file("assets/robots.txt")
 
 @app.get("/settings")
 @auth_required

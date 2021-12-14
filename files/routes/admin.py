@@ -204,7 +204,7 @@ def monthly(v):
 def get_rules(v):
 
 	try:
-		with open(f'./rules_{SITE_NAME}.html', 'r') as f: rules = f.read()
+		with open(f'rules_{SITE_NAME}.html', 'r') as f: rules = f.read()
 	except Exception:
 		rules = None
 
@@ -219,9 +219,9 @@ def post_rules(v):
 
 	text = request.values.get('rules', '').strip()
 
-	with open(f'./rules_{SITE_NAME}.html', 'w+') as f: f.write(text)
+	with open(f'rules_{SITE_NAME}.html', 'w+') as f: f.write(text)
 
-	with open(f'./rules_{SITE_NAME}.html', 'r') as f: rules = f.read()
+	with open(f'rules_{SITE_NAME}.html', 'r') as f: rules = f.read()
 
 	ma = ModAction(
 		kind="change_rules",
@@ -317,7 +317,7 @@ def reported_comments(v):
 @app.get("/admin")
 @admin_level_required(2)
 def admin_home(v):
-	with open('./disablesignups', 'r') as f:
+	with open('disablesignups', 'r') as f:
 		x = f.read()
 		return render_template("admin/admin_home.html", v=v, x=x)
 
@@ -325,9 +325,9 @@ def admin_home(v):
 @admin_level_required(2)
 @validate_formkey
 def disablesignups(v):
-	with open('./disablesignups', 'r') as f: content = f.read()
+	with open('disablesignups', 'r') as f: content = f.read()
 
-	with open('./disablesignups', 'w') as f:
+	with open('disablesignups', 'w') as f:
 		if content == "yes":
 			f.write("no")
 			return {"message": "Signups enabed!"}
