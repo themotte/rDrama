@@ -307,7 +307,6 @@ def shop(v):
 @validate_formkey
 def buy(v, award):
 	AWARDS = {
-<<<<<<< HEAD
 		"snow": {
 			"kind": "snow",
 			"title": "Snow",
