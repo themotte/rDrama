@@ -128,7 +128,6 @@ def buy(v, award):
 
 
 
-	g.db.add(v)
 	g.db.flush()
 
 	if award == "lootbox":
@@ -140,12 +139,24 @@ def buy(v, award):
 			award = AwardRelationship(id=thing, user_id=v.id, kind=award)
 			g.db.add(award)
 			g.db.flush()
+		v.lootboxes_bought += 1
+		if v.lootboxes_bought == 10 and not v.has_badge(76):
+			new_badge = Badge(badge_id=76, user_id=v.id)
+			g.db.add(new_badge)
+		elif v.lootboxes_bought == 50 and not v.has_badge(77):
+			new_badge = Badge(badge_id=77, user_id=v.id)
+			g.db.add(new_badge)
+		elif v.lootboxes_bought == 150 and not v.has_badge(78):
+			new_badge = Badge(badge_id=78, user_id=v.id)
+			g.db.add(new_badge)
+
 	else:
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		thing += 1
 		award = AwardRelationship(id=thing, user_id=v.id, kind=award)
 		g.db.add(award)
 
+	g.db.add(v)
 	g.db.commit()
 
 	return {"message": "Award bought!"}

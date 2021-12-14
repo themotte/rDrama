@@ -75,7 +75,7 @@ def participation_stats(v):
 @auth_required
 def chart(v):
 	file = cached_chart()
-	return send_file(f".{file}")
+	return send_file(file)
 
 
 @cache.memoize(timeout=86400)
