@@ -4357,6 +4357,10 @@ blockquote p {
   overflow-y: auto;
 }
 
+.emj, .emoji, .emoji-lg {
+  max-width: 100% !important;
+}
+
 .offcanvas-start {
   top: 0;
   left: 0;
