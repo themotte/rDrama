@@ -229,7 +229,7 @@ class Submission(Base):
 		flags = {}
 		for f in self.flags: flags[f.user.username] = f.reason
 
-		data = {'author_name': self.author.username,
+		data = {'author_name': self.author.username if self.author else '',
 				'permalink': self.permalink,
 				'is_banned': bool(self.is_banned),
 				'deleted_utc': self.deleted_utc,
