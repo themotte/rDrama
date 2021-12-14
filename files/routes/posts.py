@@ -63,12 +63,12 @@ def publish(pid, v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
-	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://{site}{post.permalink}")
+	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: [{post.title}]({post.permalink})")
 
 	for follow in v.followers:
 		user = get_account(follow.user_id)
 		if post.club and not user.club_allowed: continue
-		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}](https://{site}{post.permalink})", True)
+		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}]({post.permalink})", True)
 
 	cache.delete_memoized(frontlist)
 
@@ -425,7 +425,7 @@ def edit_post(pid, v):
 
 		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 		file.save(name)
-		url = request.host_url[:-1] + process_image(name)
+		url = process_image(name)
 		
 		body += f"\n\n![]({url})"
 
@@ -542,7 +542,7 @@ def edit_post(pid, v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
-		message = f"@{v.username} has mentioned you: https://{site}{p.permalink}"
+		message = f"@{v.username} has mentioned you: [{p.title}]({p.permalink})"
 
 		for x in notify_users: send_notification(x, message)
 
@@ -698,7 +698,7 @@ def thumbnail_thread(pid):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = f"https://{site}" + process_image(name, True)
+	post.thumburl = process_image(name, True)
 	db.add(post)
 	db.commit()
 	db.close()
@@ -919,7 +919,7 @@ def submit_post(v):
 
 		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 		file.save(name)
-		url = request.host_url[:-1] + process_image(name)
+		url = process_image(name)
 		
 		body += f"\n\n![]({url})"
 
@@ -1019,7 +1019,7 @@ def submit_post(v):
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			new_post.url = request.host_url[:-1] + process_image(name)
+			new_post.url = process_image(name)
 			
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")

@@ -130,7 +130,7 @@ def settings_profile_post(v):
 
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = request.host_url[:-1] + process_image(name)
+			url = process_image(name)
 
 			bio += f"\n\n![]({url})"
 		
@@ -320,7 +320,7 @@ def settings_profile_post(v):
 
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = request.host_url[:-1] + process_image(name)
+			url = process_image(name)
 
 			bio += f"\n\n![]({url})"
 		
@@ -726,13 +726,13 @@ def settings_images_profile(v):
 
 	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 	file.save(name)
-	highres = request.host_url[:-1] + process_image(name)
+	highres = process_image(name)
 
 	if not highres: abort(400)
 
 	name2 = name.replace('.webp', 'r.webp')
 	copyfile(name, name2)
-	imageurl = request.host_url + process_image(name2, True)
+	imageurl = process_image(name2, True)
 
 	if not imageurl: abort(400)
 
@@ -762,7 +762,7 @@ def settings_images_banner(v):
 
 	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 	file.save(name)
-	bannerurl = request.host_url[:-1] + process_image(name)
+	bannerurl = process_image(name)
 
 	if bannerurl:
 		if v.bannerurl and '/images/' in v.bannerurl : os.remove('/images/' + v.bannerurl.split('/images/')[1])
