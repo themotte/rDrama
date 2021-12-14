@@ -1,166 +1,158 @@
-{% set random = range(1, 13)|random() %}
 
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Sign up in under 27 seconds.">
-	<meta name="author" content="">
-	<meta property="og:type" content="article" >
-	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
-	<meta property="og:site_name" content="{{request.host}}" >
-	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=200" >
-	<meta property="og:url" content="{{request.host}}">
-	<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
-	<meta property="og:author" name="author" content="{{request.host_url}}" >
-	<meta property="og:site_name" content="{{request.host}}" >
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:site" content="{{request.host_url}}">
-	<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
-	<meta name="twitter:creator" content="{{request.host_url}}">
-	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-	<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=200" >
-	<meta name="twitter:url" content="{{request.host}}" >
+		<script src="/assets/js/bootstrap.js?v=190"></script>
 
-	<title>{% if ref_user %}{{ref_user.username}} invites you to {{'SITE_NAME' | app_config}}{% else %}Sign up - {{'SITE_NAME' | app_config}}{% endif %}</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Sign up in under 27 seconds.">
+		<meta name="author" content="">
+		<meta property="og:type" content="article" >
+		<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
+		<meta property="og:site_name" content="{{request.host}}" >
+		<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190" >
+		<meta property="og:url" content="{{request.host}}">
+		<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
+		<meta property="og:author" name="author" content="{{request.host_url}}" >
+		<meta property="og:site_name" content="{{request.host}}" >
 
-	<link rel="stylesheet" href="/assets/css/main.css?v=400">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:site" content="{{request.host_url}}">
+		<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
+		<meta name="twitter:creator" content="{{request.host_url}}">
+		<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
+		<meta name="twitter:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190" >
+		<meta name="twitter:url" content="{{request.host}}" >
 
-	<link rel="stylesheet" href="/static/dist/main.css?v=400">
+		<title>{% if ref_user %}{{ref_user.username}} invites you to {{'SITE_NAME' | app_config}}{% else %}Sign up - {{'SITE_NAME' | app_config}}{% endif %}</title>
 
-	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+		<link rel="stylesheet" href="/assets/css/main.css?v=211"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=190">
 
-	<link rel="preload" href="/assets/css/fa.css?v=200" as="style" onload="this.onload=null;this.rel='stylesheet'">
-	<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=200"></noscript>
 </head>
 
-<body class="relative h-full bg-gradient-to-t from-gray-500 to-gray-400">
+<body id="login">
 
-	<div class="relative min-h-full flex flex-col items-center justify-center pt-28 pb-12 px-4 sm:px-6 lg:px-8">
+				<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
+				<div class="container-fluid">
+						<button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+						aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+				</button>
+		</div>
+</nav>
 
-		<div class="max-w-md w-full">
 
-			{% if ref_user %}
-			<h1 class="text-center h2">@{{ref_user.username}} has invited you!</h1>
-			<p class="mx-auto text-gray-500">Looks like someone wants you to join {{'SITE_NAME' | app_config}}.</p>
-			{% endif %}
+<div class="container-fluid position-absolute h-100 p-0 overflow-auto">
+		<div class="row no-gutters h-100">
 
-			<div class="max-w-2xl mx-8 p-3 flex justify-center items-center rounded-t-lg bg-gray-700 border border-gray-800 shadow-inset-t-white-10">
-				<a href="/">
-					<img class="-ml-4 block w-32 object-contain" src="/assets/images/logos/winter/logo-{{ random }}.png" alt="logo"/>
-				</a>
-			</div>
+				<div class="col-12 col-md-6 my-auto p-3">
 
-			<div class="max-w-3xl w-full space-y-6 px-6 py-5 bg-gray-200 rounded shadow">
+						<div class="row justify-content-center">
 
-				<form action="/signup" method="post" id="signup">
+								<div class="col-10 col-md-7">
 
-					{% if error %}<div class="text-red-600 mb-2">{{error}}</div>{% endif %}
+										<div class="mb-3">
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{'SITE_NAME' | app_config}}</span></a>
+										</div>
 
-					<div class="hidden">
-						<input type="hidden" name="formkey" value="{{formkey}}">
-						<input type="hidden" name="now" value="{{now}}">
-						{% if redirect %}
-						<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
-						{% if ref_user %}
-						<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
-					</div>
+										<div id="register-form" class="">
 
-					<div class="space-y-4">
+											{% if ref_user %}
+											<h1 class="h2">@{{ref_user.username}} has invited you!</h1>
+											<p class="text-muted mb-md-2">Looks like someone wants you to join {{'SITE_NAME' | app_config}}.</p>
+											{% else %}
+											<h1 class="h2">Create your account.</h1>
+											<p class="text-muted mb-md-2">No email address required.</p>
+											{% endif %}
 
-						<h2 class="text-base label text-black">
-							Create an Account
-							<span class="text-gray-500">or</span>
-							<a href="/login{{'?redirect='+redirect if redirect else ''}}" class="text-green-600 hover:text-green-700">
-								Login to rDrama
-							</a>
-						</h2>
+											<form action="/signup" method="post" class="mt-md-3" id="signup">
 
-						<div>
-							<label for="username-register" class="hidden">Username</label>
-							<input class="form-input" id="username-register"
-							aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required placeholder="Username">
-							<small id="usernameHelpRegister" class="mt-1 block text-gray-500"></small>
+														{% if error %}<span class="text-danger">{{error}}</span><br>{% endif %}
+
+														<input type="hidden" name="formkey" value="{{formkey}}">
+														<input type="hidden" name="now" value="{{now}}">
+
+														{% if redirect %}<input type="hidden" name="redirect" value="{{redirect}}">{% endif %}
+														{% if ref_user %}
+														<input type="hidden" name="referred_by" value="{{ref_user.id}}">{% endif %}
+
+														<label for="username-register" class="mt-3">Username</label>
+
+														<input class="form-control" id="username-register"
+														aria-describedby="usernameHelpRegister" type="text" name="username" pattern="[a-zA-Z0-9_\-]{3,25}" min="3" max="25" required="">
+														<small id="usernameHelpRegister"></small>
+
+														<label for="email-register" class="mt-3">Email Address</label>
+
+														<small class="d-inline-block text-muted ml-1">(optional)</small>
+
+														<input class="form-control" id="email-register"
+														aria-describedby="emailHelpRegister" type="text" name="email">
+
+														<label for="password-register" class="mt-3">Password</label>
+
+														<input class="form-control" id="password-register"
+														aria-describedby="passwordHelpReigster" type="password" name="password" required="">
+														<small id="passwordHelpRegister" class="form-text font-weight-bold text-muted d-none mt-1">Minimum of 8
+																characters
+														required.</small>
+														<small id="passwordHelpSuccess" class="form-text font-weight-bold text-success d-none mt-1">Your password meets the requirements.
+														</small>
+
+														<label for="password_confirm" class="mt-3">Confirm Password</label>
+
+														<input class="form-control" id="password_confirm"
+														aria-describedby="passwordConfirmHelp" type="password" name="password_confirm"
+														required="">
+														<div class="custom-control custom-checkbox mt-4">
+																<input type="checkbox" class="custom-control-input" id="termsCheck" required>
+																<label class="custom-control-label terms" for="termsCheck">I accept the <a
+																		href="/rules" {% if v and v.newtab %}target="_blank"{% endif %}>terms and conditions</a></label>
+														</div>
+
+														{% if hcaptcha %}
+															<div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
+														{% endif %}
+
+														<button class="btn btn-primary login w-100 mt-3" id="register_button">Register</button>
+
+														<div class="text-center text-muted text-small mt-2 mb-0">
+																		Already have an account? <a href="/login{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login">Log in</a>
+														</div>
+
+												</form>
+
+										</div>
+
+								</div>
+
 						</div>
 
-						<div>
-							<label for="email-register" class="hidden">
-								Email Address <span class="text-xs text-gray-500 font-normal pl-1">(optional)</span>
-							</label>
-							<input class="form-input" id="email-register" aria-describedby="emailHelpRegister" type="email" name="email" placeholder="Email address">
+				</div>
+
+				<div class="col-12 col-md-6 d-none d-md-block">
+
+						<div class="splash-wrapper">
+
+								<div class="splash-overlay"></div>
+
+								<img loading="lazy" class="splash-img" src="/assets/images/{{'SITE_NAME' | app_config}}/cover.webp?v=190"></img>
 						</div>
 
-						<div>
-							<label for="password-register" class="hidden">Password</label>
-							<input class="form-input" id="password-register"
-							aria-describedby="passwordHelpReigster" type="password" name="password" required placeholder="Password">
-							<small id="passwordHelpRegister" class="block mt-1 text-gray-500 hidden">
-								Minimum of 8 characters required.
-							</small>
-							<small id="passwordHelpSuccess" class="block mt-1 text-green-600 hidden">
-								Your password meets the requirements.
-							</small>
-						</div>
-
-						<div>
-							<label for="password_confirm" class="hidden">Confirm Password</label>
-							<input class="form-input" id="password_confirm" aria-describedby="passwordConfirmHelp" type="password" name="password_confirm" required placeholder="Confirm password">
-							<div class="mt-4">
-								<input type="checkbox" id="termsCheck" required>
-								<label class="text-gray-700 text-xs pl-1" for="termsCheck">
-									I accept the <a href="/rules" target="_blank" class="text-blue-500 hover:text-blue-600">terms and conditions</a>
-								</label>
-							</div>
-						</div>
-
-						{% if hcaptcha %}
-						<div class="h-captcha" data-sitekey="{{ hcaptcha }}"></div>
-						{% endif %}
-
-						<button class="btn btn-green w-full" id="register_button">
-							Create account
-						</button>
-
-					</div>
-
-				</form>
-
-
-				<ul class="pt-4 mx-auto w-full flex flex-col md:flex-row md:items-center md:justify-center md:space-x-3 md:divide-x md:divide-gray-300 text-xs leading-none border-t border-gray-300">
-					<li>
-						<a href="#" class="text-gray-400 hover:text-gray-500">
-							About
-						</a>
-					</li>
-					<li class="mt-2 md:mt-0 md:pl-3">
-						<a href="/rules" class="text-gray-400 hover:text-gray-500">
-							Community Etiquette
-						</a>
-					</li>
-					<li class="mt-2 md:mt-0 md:pl-3">
-						<span class="text-gray-400">
-							©2021 Copyright rdrama.net
-						</span>
-					</li>
-				</ul>
-
-			</div>
+				</div>
 
 		</div>
+</div>
 
-		{% include '/awards/Christmas/Snow.html' %}
+<script src="/assets/js/signup.js?v=190"></script>
 
-	</div>
-
-	<script src="/assets/js/signup.js?v=200"></script>
-
-	{% if hcaptcha %}
-	<script src="/assets/js/hcaptcha.js?v=200"></script>
-	{% endif %}
-
-	<script defer src="/assets/js/christmas/snow.js?v=200"></script>
+{% if hcaptcha %}
+	<script src="/assets/js/hcaptcha.js?v=190"></script>
+{% endif %}
 
 </body>
 

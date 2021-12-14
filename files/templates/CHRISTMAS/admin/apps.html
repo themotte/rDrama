@@ -1,0 +1,68 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>API App Administration</title>
+<meta name="description" content="{{'SITE_NAME' | app_config}} Help">
+{% endblock %}
+
+{% block content %}
+<div class="col-span-full my-4">
+	{% for app in apps %}
+	<div class="flex flex-col space-y-4">
+		<div class="d-lg-flex">
+			<div class="text-lg mb-2 learding-normal">
+				<label for="over18">
+					<a href="{{app.permalink}}" {% if v and v.newtab %}target="_blank"{% endif %}>{{app.app_name}}</a>
+				</label>
+			</div>
+			<div class="flex flex-col space-y-2">
+				<label for="edit-{{app.id}}-author" class="label">User</label>
+				<input id="edit-{{app.id}}-author" class="form-input" type="text" name="name" value="{{app.author.username}}" readonly=readonly>
+
+				<label for="edit-{{app.id}}-name" class="label">App Name</label>
+				<input id="edit-{{app.id}}-name" class="form-input" type="text" name="name" value="{{app.app_name}}" readonly=readonly>
+
+				{% if app.client_id %}
+				<label for="edit-{{app.id}}-client-id" class="label">Client ID</label>
+				<input id="edit-{{app.id}}-client-id" class="form-input" type="text" name="name" value="{{app.client_id}}" readonly="readonly">
+				{% endif %}
+
+
+				<label for="edit-{{app.id}}-redirect" class="label">Redirect URI</label>
+				<input id="edit-{{app.id}}-redirect" class="form-input" type="text" name="redirect_uri" value="{{app.redirect_uri}}" readonly="readonly">
+				<label for="edit-{{app.id}}-desc" class="label">Description</label>
+				<textarea form="edit-app-{{app.id}}" class="form-input" name="description" id="edit-{{app.id}}-desc" maxlength="256" readonly="readonly">{{app.description}}</textarea>
+			</div>
+		</div>
+		<div class="mt-2">
+			<div class="flex">
+				{% if not app.client_id %}
+
+				<a href="javascript:void(0)" class="btn btn-green ml-auto" onclick="post_toast('/admin/app/approve/{{app.id}}')">Approve</a>
+				<a href="javascript:void(0)" class="btn btn-red" onclick="post_toast('/admin/app/reject/{{app.id}}')">Reject</a> 
+
+				{% else %}
+
+				<a href="javascript:void(0)" class="btn btn-red ml-auto" onclick="post_toast('/admin/app/revoke/{{app.id}}')">Revoke</a>
+
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+	<div class="toast-body bg-success text-center text-white">
+		<i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text"></span>
+	</div>
+</div>
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+	<div class="toast-body bg-danger text-center text-white">
+		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text">Error, please try again later.</span>
+	</div>
+</div>
+
+
+
+{% endblock %}

@@ -1,50 +1,88 @@
 {% extends "default.html" %}
 
-{% block subHeader %}
-	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
-		<div class="relative col-span-full flex items-center">
-			<div>
-				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
-					Comments
-				</h1>
-				<small class="block text-gray-700">
-					<span class="capitalize font-bold">{{ sort }}</span>
-					comments {{ 'from all time' if t=='all' else 'in the last' }}
-					{% if t != 'all' %}<strong>{{ t }}</strong>{% endif %}
-				</small>
+{% block PseudoSubmitForm %}{% endblock %}
+{% block sortnav %}{% endblock %}
+
+{% block content %}
+
+	<pre></pre>
+	<div class="d-flex justify-content-between align-items-center">
+
+		<div class="d-flex px-2 align-items-center sortingbarmargin">
+			<div class="text-small font-weight-bold mr-2">‎</div>
+			<div class="dropdown dropdown-actions">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if t=="day" %}<i class="fas fa-calendar-day mr-1"></i>{% endif %}
+					{% if t=="week" %}<i class="fas fa-calendar-week mr-1"></i>{% endif %}
+					{% if t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>{% endif %}
+					{% if t=="year" %}<i class="fas fa-calendar mr-1"></i>{% endif %}
+					{% if t=="all" %}<i class="fas fa-infinity mr-1"></i>{% endif %}
+					{{t | capitalize}}
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+					{% if t !="hour" %}<a class="dropdown-item" href="?sort={{sort}}&t=hour"><i class="fas fa-clock mr-2"></i>Hour</a>{% endif %}
+					{% if t !="day" %}<a class="dropdown-item" href="?sort={{sort}}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
+					{% if t !="week" %}<a class="dropdown-item" href="?sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
+					{% if t !="month" %}<a class="dropdown-item" href="?sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
+					{% if t !="year" %}<a class="dropdown-item" href="?sort={{sort}}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
+					{% if t !="all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+				</div>
 			</div>
-			<div class="ml-auto">
-				{% include "/dropdowns/SubmissionSorts.html" %}
+
+			<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
+			<div class="dropdown dropdown-actions">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
+					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+					{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
+					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
+					{{sort | capitalize}}
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+					{% if sort != "top" %}<a class="dropdown-item" href="?sort=top&t={{t}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+					{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom&t={{t}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
+					{% if sort != "new" %}<a class="dropdown-item" href="?sort=new&t={{t}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+					{% if sort != "old" %}<a class="dropdown-item" href="?sort=old&t={{t}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
+					{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{t}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
+				</div>
 			</div>
 		</div>
 	</div>
+
+
+	<div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
+
+		<div class="col-12 px-3">
+
+			<div class="posts" id="posts">
+
+				{% include "comments.html" %}
+
+			</div>
+		</div>
+	</div>
+
+
 {% endblock %}
 
-{% block content %}
-	<!-- Comments list -->
-	<div class="col-span-full px-2.5 md:px-0" id="posts">
-		{% include "comments.html" %}
-	</div>
-	<!-- Pagination -->
-	<div class="col-span-full">
-		<ul class="flex flex-wrap items-center mb-4">
-			{% if page>1 %}
-			<li>
-				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
-					Prev
-				</a>
-			</li>
-			{% else %}
-			<li><span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Prev</span></li>
-			{% endif %}
-			{% if next_exists %}
-			<li class="page-item">
-				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
-			</li>
-			{% else %}
-			<li><span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Next</span></li>
-			{% endif %}
-		</ul>
-	</div>
+{% block pagenav %}
+<nav aria-label="Page navigation">
+	<ul class="pagination pagination-sm mb-0">
+		{% if page>1 %}
+		<li class="page-item">
+			<small><a class="page-link" href="?page={{page-1}}&sort={{sort}}&t={{t}}{% if shadowbanned %}&shadowbanned=true{% endif %}" tabindex="-1">Prev</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Prev</span></li>
+		{% endif %}
+		{% if next_exists %}
+		<li class="page-item">
+			<small><a class="page-link" href="?page={{page+1}}&sort={{sort}}&t={{t}}{% if shadowbanned %}&shadowbanned=true{% endif %}">Next</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Next</span></li>
+		{% endif %}
+	</ul>
+</nav>
 {% endblock %}

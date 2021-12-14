@@ -1,0 +1,215 @@
+{% set random = range(1, 13)|random() %}
+
+<!-- This example requires Tailwind CSS v2.0+ -->
+<nav class="fixed top-0 w-full bg-gray-700" style="z-index: 1030;">
+  <div class="w-full max-w-screen-2xl mx-auto grid grid-cols-12 px-4">
+    <div class="relative col-span-full flex items-center justify-between h-16 px-4 snowcaps">
+      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+        <!-- Mobile menu button-->
+        <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+          <span class="sr-only">Open main menu</span>
+          <!--
+            Icon when menu is closed.
+
+            Heroicon name: outline/menu
+
+            Menu open: "hidden", Menu closed: "block"
+          -->
+          <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!--
+            Icon when menu is open.
+
+            Heroicon name: outline/x
+
+            Menu open: "block", Menu closed: "hidden"
+          -->
+          <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+        <div class="flex-shrink-0 flex items-center">
+          <a href="{{ '/' if v else '/logged_out'}}">
+            <img class="block lg:hidden w-32 object-contain" src="/assets/CHRISTMAS/images/logos/winter/logo-{{ random }}.png" alt="logo">
+            <img class="hidden lg:block w-32 object-contain" src="/assets/CHRISTMAS/images/logos/winter/logo-{{ random }}.png" alt="logo">
+          </a>
+        </div>
+        <div class="relative hidden sm:flex flex-shrink-0 items-center sm:ml-6">
+          <form action="/search/posts/" method="get" class="relative mb-0">
+            <input placeholder="Search" class="w-full text-gray-500 focus:text-black rounded border border-gray-800 bg-black/20 focus:bg-white hover:bg-black/30 shadow-inner w-full px-2 py-1.5 pr-7" aria-label="Search" name="q" value="{{request.args.get('q', '')}}">
+            <i class="fas fa-search text-gray-600 absolute top-3 right-2"></i>
+          </form>
+        </div>
+        <div class="hidden lg:flex items-center sm:ml-4">
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+            <a href="/" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/' else 'text-gray-500 hover:text-gray-400' }}" aria-current="page">
+              <i class="fas fa-home-lg-alt fa-fw mr-2"></i>
+              Home
+            </a>
+
+            <a href="/comments" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/comments' else 'text-gray-500 hover:text-gray-400' }}" aria-current="page">
+              <i class="fas fa-comments-alt fa-fw mr-2"></i>
+              Comments
+            </a>
+
+            <a href="/leaderboard" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/leaderboard' else 'text-gray-500 hover:text-gray-400' }}" aria-current="page">
+              <i class="fas fa-trophy fa-fw mr-2"></i>
+              Leaderboard
+            </a>
+
+            {% include "/dropdowns/NavbarExtraLinks.html" %}
+
+            <a href="/shop" class="hidden xl:flex items-center relative px-3 py-2.5 rounded text-sm text-yellow-500 leading-normal {{ 'font-bold text-shadow' if request.path == '/shop' else 'font-medium' }}">
+              <img src="https://i.ibb.co/xFgG6yf/Coinfixed.gif" width="15px" height="12px" class="object-contain mr-2.5"/>
+              Holigay Emporium
+            </a>
+
+        </div>
+      </div>
+      <div class="absolute inset-y-0 right-0 flex items-center space-x-3 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <!-- Logged in -->
+        {% if v %}
+        <!-- Profile dropdown -->
+        <div class="ml-3 relative hidden sm:block">
+          {% include "/dropdowns/NavbarProfile.html" %}
+        </div>
+        {% if v.admin_level > 1 %}
+        <!-- Admin link -->
+        <a href="{{ '/admin' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+          <span class="sr-only">Admin tools</span>
+          <i class="fas fa-crown fa-fw"></i>
+        </a>
+        {% endif %}
+        <!-- Profile link -->
+        <a href="{{ '/me' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+          <span class="sr-only">My profile</span>
+          <i class="fas fa-user fa-fw"></i>
+        </a>
+        <!-- Notifications -->
+        <a href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" class="block bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+          <span class="sr-only">View notifications</span>
+          <div class="relative">
+            <i class="fas fa-envelope fa-fw"></i>
+            <!-- Counter -->
+            {% if v.notifications_count %}
+            <div class="absolute -top-1.5 -right-3 {{ 'w-10' if v.notifications_count > 99 else 'w-6' }} h-6 rounded-full border-2 border-gray-700 flex items-center justify-center bg-red-600">
+              <span class="text-xs text-gray-100 font-bold leading-none">{{ v.notifications_count }}</span>
+            </div>
+            {% endif %}
+          </div>
+        </a>
+        <!-- Post Creation -->
+        <a href="{{ '/submit' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+          <span class="sr-only">Submit post</span>
+          <i class="fas fa-plus fa-fw"></i>
+        </a>
+        <!-- Not logged in -->
+        {% else %}
+        <!-- Login button -->
+        <a class="btn btn-gray" href="/login?redirect={{request.path | urlencode}}">
+          Login
+        </a>
+        <!-- Register button -->
+        <a class="hidden sm:block px-4 py-2 active:shadow-inner border rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold focus:outline-none disabled:opacity- hover:bg-gradient-to-t hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-200 hover:text-gray-700 focus:text-gray-900" href="/signup?redirect={{request.path | urlencode}}">
+          Sign up
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu, show/hide based on menu state. -->
+  <div class="offcanvas offcanvas-end bg-gray-200" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+    <div class="relative flex w-full bg-gray-700 h-16 px-4 items-center snowcaps">
+      <a class="block" href="{{ '/' if v else '/logged_out'}}">
+          <img class="block lg:hidden w-32 object-contain" src="/assets/CHRISTMAS/images/logos/winter/logo-{{ random }}.png" alt="logo">
+          <img class="hidden lg:block w-32 object-contain" src="/assets/CHRISTMAS/images/logos/winter/logo-{{ random }}.png" alt="logo">
+      </a>
+      <button type="button" class="ml-auto close" data-bs-dismiss="offcanvas" aria-label="Close">
+        <span aria-hidden="true"><i class="far fa-times"></i></span>
+      </button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- Search box -->
+      <form action="/search/posts/" method="get" class="relative mb-4">
+        <input placeholder="Search" class="block w-full rounded shadow-inner py-2 pl-2 pr-7 bg-white border border-gray-300 hover:border-gray-400 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" aria-label="Search" name="q" value="{{request.args.get('q', '')}}">
+        <i class="fas fa-search text-gray-400 absolute top-3 right-3"></i>
+      </form>
+      {% if v %}
+      <!-- Submit post link -->
+      <a href="/submit" class="w-full btn btn-red mb-4">
+        <i class="fas fa-pen fa-sm fa-fw mr-2"></i>
+        Create post
+      </a>
+      <!-- Meta links -->
+      <ul class="flex flex-col space-y-3 font-bold text-base text-gray-600">
+        <li>
+          <a class="inline-flex items-center" aria-current="page" href="/me">
+            <img src="{{ v.profile_url }}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover"/>
+            <div class="pl-3">
+              <div class="text-base text-black leading-5">
+                {{ v.username }}
+              </div>
+              <div class="flex space-x-3 mt-1">
+                <small class="flex items-center block mt-1 text-gray-500">
+                  <img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/CHRISTMAS/images/emojis/marseycoin.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}" class="w-6 h-6 object-contain" alt="coin icon"/>
+                  <span class="pl-1">{{v.coins}} {{'COINS_NAME' | app_config}}</span>
+                </small>
+                {% if v.procoins %}
+                <small class="flex items-center block mt-1 text-gray-500">
+                  <img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/CHRISTMAS/images/emojis/marseybux.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}" class="w-6 h-6 object-contain" alt="coin icon"/>
+                  <span class="pl-1">{{v.procoins}} MarseyBux</span>
+                </small>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="text-gray-700 hover:text-gray-900" href="/@me">
+            <i class="fas fa-user fa-fw mr-2"></i>
+            My Profile
+          </a>
+        </li>
+        <li>
+          <a class="text-gray-700 hover:text-gray-900" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}">
+            <i class="fas fa-envelope fa-fw mr-2"></i>
+            Inbox
+            {% if v.notifications_count %}
+            <span class="text-red-600">{{ v.notifications_count }}</span>
+            {% endif %}
+          </a>
+        </li>
+        <li>
+          <a class="text-gray-700 hover:text-gray-900" href="/settings">
+            <i class="fas fa-cog fa-fw mr-2"></i>
+            Settings
+          </a>
+        </li>
+        <li>
+          <button class="text-gray-700 hover:text-gray-900 font-bold" onclick="post_toast('/logout', '1')">
+            <i class="fas fa-power-off fa-fw mr-2"></i>
+            Log out
+          </button>
+        </li>
+      </ul>
+      {% else %}
+      <ul class="flex flex-col space-y-2">
+        <li>
+          <a class="btn btn-gray w-full" href="/login?redirect={{request.path | urlencode}}">
+            Login
+          </a>
+        </li>
+        <li>
+          <a class="btn btn-gray w-full" href="/signup?redirect={{request.path | urlencode}}">
+            Signup
+          </a>
+        </li>
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</nav>

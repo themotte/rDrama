@@ -1,0 +1,43 @@
+{% extends "login.html" %}
+
+{% block title %}
+<title>Application Request for Access</title>
+{% endblock %}
+
+{% block content %}
+
+<div id="auth-form" class="">
+
+		<h1 class="h2">{{application.app_name}}</h1>
+
+		<p class="mb-md-5">wants to access your @{{v.username}} account.</p>
+		<p>It will be able to:</p>
+		<ul>
+		{% for scope in scopes %}
+				<li>{{SCOPES[scope]}}</li>
+		{% endfor %}
+		{% if permanent %}
+		<li>Maintain this access indefinitely, or until you revoke it</li>
+		{% endif %}
+		</ul>
+
+		<p class="mb-md-5">It will not be able to see your password, or change your account settings.</p>
+
+		<form action="/authorize" method="post" class="mt-md-3" id="login">
+
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
+				<input type="hidden" name="scopes" value="{{scopes_txt}}">
+				<input type="hidden" name="redirect_uri" value="{{redirect_uri}}">
+				<input type="hidden" name="permanent" value="{{permanent}}">
+				<input type="hidden" name="client_id" value="{{application.client_id}}">
+				<input type="hidden" name="state" value="{{state}}">
+
+				<input type="submit" class="btn btn-primary" id="auth_button" value="Authorize {{application.app_name}}">
+
+				<a href="/" class="btn btn-secondary">No, back to {{'SITE_NAME' | app_config}}</a>
+
+		</form>
+
+</div>
+
+{% endblock %}

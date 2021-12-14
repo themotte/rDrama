@@ -1,0 +1,60 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>{{'SITE_NAME' | app_config}}</title>
+<meta name="description" content="{{'SITE_NAME' | app_config}} Help">
+{% endblock %}
+
+{% block content %}
+<div class="col-span-full">
+	<h3>Admin Tools</h3>
+
+	<h4>Content</h4>
+	<ul>
+		<li><a href="/admin/reported/posts">Reported Posts</a></li>
+		<li><a href="/admin/reported/comments">Reported Comments</a></li>
+		<li><a href="/admin/image_posts">Image Posts</a></li>
+		<li><a href="/admin/removed">Removed Posts</a></li>
+	</ul>
+
+	<h4>Users</h4>
+	<ul>
+		<li><a href="/admin/shadowbanned">Shadowbanned Users</a></li>
+		<li><a href="/admin/agendaposters">Users with Agendaposter Theme</a></li>
+		<li><a href="/admin/users">Users Feed</a></li>
+	</ul>
+
+	<h4>Safety</h4>
+	<ul>
+		<li><a href="/admin/banned_domains">Banned Domains</a></li>
+		<li><a href="/admin/alt_votes">Multi Vote Analysis</a></li>
+	</ul>
+
+	<h4>Grant</h4>
+	<ul>
+		<li><a href="/admin/awards">Give User Award</a></li>
+		<li><a href="/admin/badge_grant">Badges</a></li>
+	</ul>
+
+	<h4>API Access Control</h4>
+	<ul>
+		<li><a href="/admin/apps">Apps</a></li>
+	</ul>
+
+	<h4>Statistics</h4>
+	<ul>
+		<li><a href="/stats">Content Stats</a></li>
+		<li><a href="/chart">Stat Chart</a></li>
+	</ul>
+
+	<h4>Configuration</h4>
+	<ul>
+		<li><a href="/admin/rules">Site Rules</a></li>
+	</ul>
+
+	<div>
+		<input type="checkbox" id="disablesignups" name="disablesignups" {% if x == "yes" %}checked{% endif %} onchange="post_toast('/admin/disablesignups');">
+		<label class="label" for="disablesignups">Disable signups</label>
+	</div>
+</div>
+{% endblock %}

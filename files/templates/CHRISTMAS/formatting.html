@@ -1,0 +1,524 @@
+{% extends "settings2.html" %}
+{% block title %}
+<title>{{'SITE_NAME' | app_config}} - Formatting</title>
+<meta name="description" content="{{'SITE_NAME' | app_config}} Formatting">
+{% endblock %}
+
+{% block content %}
+<pre>
+
+
+</pre>
+<h1>Markdown Formatting</h1>
+
+You can use Markdown formatting:
+
+<pre>
+
+</pre>
+
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th>Name</th>
+			<th>What you type</th>
+			<th>What gets displayed</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Italics</td>
+			<td>*text*</td>
+			<td><i>text</i></td>
+		</tr>
+		<tr>
+			<td>Bold</td>
+			<td>**text**</td>
+			<td><b>text</b></td>
+		</tr>
+		<tr>
+			<td>Code</td>
+			<td>`text`</td>
+			<td><code>text</code></td>
+		</tr>
+		<tr>
+			<td>Strikethrough</td>
+			<td>~~text~~</td>
+			<td><del>text</del></td>
+		</tr>
+		<tr>
+			<td>Links</td>
+			<td>[{{'SITE_NAME' | app_config}}]({{request.host_url}})</td>
+			<td><a href="{{request.host_url}}">{{'SITE_NAME' | app_config}}</a></td>
+		</tr>
+		<tr>
+			<td>Images</td>
+			<td>https://i.imgur.com/Lf6dfPO.jpg</td>
+			<td><img src="https://i.imgur.com/Lf6dfPO.jpg"></td>
+		</tr>
+		<tr>
+			<td>Youtube Videos</td>
+			<td>https://youtube.com/watch?v=3Hecr51ByE4</td>
+			<td><lite-youtube videoid="3Hecr51ByE4" params="controls=0&modestbranding=1"></lite-youtube></td>
+		</tr>
+		<tr>
+			<td>MP4 Files</td>
+			<td>https://files.catbox.moe/v4om92.mp4</td>
+			<td><video controls preload="none" class="embedvid"><source src="https://files.catbox.moe/v4om92.mp4" type="video/mp4"></video></td>
+		</tr>
+		<tr>
+			<td>WEBM Files</td>
+			<td>https://files.catbox.moe/v4om92.mp4</td>
+			<td><video controls preload="none" class="embedvid"><source src="https://files.catbox.moe/nr9joo.webm" type="video/webm"></video></td>
+		</tr>
+		<tr>
+			<td>Emojis</td>
+			<td>:marseylove:</td>
+			<td><img loading="lazy" data-bs-toggle="tooltip" class="emj" alt=":marseylove:" data-bs-original-title=":marseylove:" delay="0" height="30" src="/assets/CHRISTMAS/images/emojis/marseylove.webp?v=200"></td>
+		</tr>
+		<tr>
+			<td>Mirrored Emojis</td>
+			<td>:!marseylove:</td>
+			<td><img loading="lazy" data-bs-toggle="tooltip" class="emj mirrored" alt=":!marseylove:" data-bs-original-title=":!marseylove:" delay="0" height="30" src="/assets/CHRISTMAS/images/emojis/marseylove.webp?v=200"></td>
+		</tr>
+		<tr>
+			<td>Large Emojis</td>
+			<td>:#marseylove:</td>
+			<td><img loading="lazy" data-bs-toggle="tooltip" class="emj" alt=":!marseylove:" data-bs-original-title=":!marseylove:" delay="0" src="/assets/CHRISTMAS/images/emojis/marseylove.webp?v=200"></td>
+		</tr>
+		<tr>
+			<td>Large Mirroed Emojis</td>
+			<td>:#!marseylove:</td>
+			<td><img loading="lazy" data-bs-toggle="tooltip" class="emj mirrored" alt=":!marseylove:" data-bs-original-title=":!marseylove:" delay="0" src="/assets/CHRISTMAS/images/emojis/marseylove.webp?v=200"></td>
+		</tr>
+		<tr>
+			<td>Poll Options</td>
+			<td>$$bussy$$</td>
+			<td>
+				<div class="custom-control">
+					<input type="checkbox" class="custom-control-input" id="422741" name="option">
+					<label class="custom-control-label" for="422741">bussy - <a href="/votes?link=t3_422741"><span id="poll-422741">0</span> votes</a></label>
+				</div>		
+			</td>
+		</tr>
+		<tr>
+			<td>Blockquote</td>
+			<td>&gt; text</td>
+			<td><blockquote>text</blockquote></td>
+		</tr>
+		<tr>
+			<td>Headers 1-6</td>
+			<td># Header 1<br>## Header 2<br>### Header 3<br>#### Header 4<br>##### Header 5<br>###### Header 6</td>
+			<td><h1>Header 1</h1><h2>Header 2</h2><h3>Header 3</h3><h4>Header 4</h4><h5>Header 5</h5><h6>Header 6</h6></td>
+		</tr>
+		<tr>
+			<td>Ordered list</td>
+			<td>1. First thing<br>2. Second thing</td>
+			<td><ol><li>First thing</li><li>Second thing</li></ol></td>
+		</tr>
+		<tr>
+			<td>Unordered list</td>
+			<td>* First thing<br>* Second thing</td>
+			<td><ul><li>First thing</li><li>Second thing</li></ul></td>
+		</tr>
+		<tr>
+			<td>Code Block</td>
+			<td>```<br>Use three backticks above and below.<br>Or, indent the lines with four spaces.<br>```</td>
+			<td>
+				<pre>
+				Use three backticks above and below.
+				Or, indent the lines with four spaces.
+				</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>Spoilers</td>
+			<td>||bussy > gussy||</td>
+			<td><p class="spoiler">bussy > gussy</p></td>
+		</tr>
+		<tr>
+			<td>Username Mention</td>
+			<td>@QuadNarca</td>
+			<td><a class="d-inline-block" href="/@QuadNarca"><img loading="lazy" src="/uid/29/pic" class="pp20">@QuadNarca</a></td>
+		</tr>
+		<tr>
+			<td>Subreddit Mention</td>
+			<td>r/{{'SITE_NAME' | app_config}}</td>
+			<td><a class="d-inline-block" rel="nofollow noopener noreferrer" href="https://www.reddit.com/r/{{'SITE_NAME' | app_config}}/">r/{{'SITE_NAME' | app_config}}</a></td>
+		</tr>
+		<tr>
+			<td>Redditor Mention</td>
+			<td>u/Bardfinn</td>
+			<td><a class="d-inline-block" rel="nofollow noopener noreferrer" href="https://www.reddit.com/u/Bardfinn/">u/Bardfinn</a></td>
+		</tr>
+	</tbody>
+</table>
+
+<h1>HTML Formatting</h1>
+
+And we allow custom HTML in most places:
+
+<pre>
+
+</pre>
+
+<h4>Allowed Tags</h4>
+
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th>Name</th>
+			<th>What you type</th>
+			<th>What gets displayed</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Span</td>
+			<td>
+				My mother has &lt;span style="color:blue"&gt;blue&lt;/span&gt; eyes.
+			</td>
+			<td>
+				My mother has <span style="color:blue">blue</span> eyes.
+			</td>
+		</tr>
+		<tr>
+			<td>Bold</td>
+			<td>This will be &lt;b&gt;bold&lt;/b&gt;</td>
+			<td>
+				This will be <b>bold</b>
+			</td>
+		</tr>
+		<tr>
+			<td>Blockquote</td>
+			<td>
+				&lt;blockquote&gt;This is a blockquote&lt;/blockquote&gt;
+			</td>
+			<td>
+				<blockquote>
+					This is a blockquote
+				</blockquote>
+			</td>
+		</tr>
+		<tr>
+			<td>Line Break</td>
+			<td>
+				<pre style="color:var(--white)">
+Line 1
+&lt;br&gt;
+Line 2
+				</pre>
+			</td>
+			<td>
+				Line 1
+				<br>
+				Line 2
+			</td>
+		</tr>
+		<tr>
+			<td>Code</td>
+			<td>
+				&lt;code&gt;This is code&lt;/code&gt;
+			</td>
+			<td>
+				<code>This is code</code>
+			</td>
+		</tr>
+		<tr>
+			<td>Strikethrough</td>
+			<td>
+				The last word will have a &lt;del&gt;strikethrough&lt;/del&gt;
+			</td>
+			<td>
+				The last word will have a <del>strikethrough</del>
+			</td>
+		</tr>
+		<tr>
+			<td>Emphasis</td>
+			<td>
+				We &lt;em&gt;cannot&lt;/em&gt; live like this.
+			</td>
+			<td>
+				We <em>cannot</em> live like this.
+			</td>
+		</tr>
+		<tr>
+			<td>Headings</td>
+			<td>
+				<pre>
+&lt;h1&gt;This is heading 1&lt;/h1&gt;
+&lt;h2&gt;This is heading 2&lt;/h2&gt;
+&lt;h3&gt;This is heading 3&lt;/h3&gt;
+&lt;h4&gt;This is heading 4&lt;/h4&gt;
+&lt;h5&gt;This is heading 5&lt;/h5&gt;
+&lt;h6&gt;This is heading 6&lt;/h6&gt;
+				</pre>
+			</td>
+			<td>
+				<h1>This is heading 1</h1>
+				<h2>This is heading 2</h2>
+				<h3>This is heading 3</h3>
+				<h4>This is heading 4</h4>
+				<h5>This is heading 5</h5>
+				<h6>This is heading 6</h6>
+			</td>
+		</tr>
+		<tr>
+			<td>Horizontal Rule</td>
+			<td>
+				<pre>
+Text 1
+&lt;hr&gt;
+Text 2
+				</pre>
+			</td>
+			<td>
+				Text 1
+				<hr>
+				Text 2
+			</td>
+		</tr>
+		<tr>
+			<td>Italics</td>
+			<td>
+				&lt;i&gt;This&lt;/i&gt; is how you get italics.
+			</td>
+			<td>
+				<i>This</i> is how you get italics.
+			</td>
+		</tr>
+		<tr>
+			<td>Lists</td>
+			<td>
+				<pre>
+&lt;ul&gt;
+	&lt;li&gt;Bullet 1&lt;/li&gt;
+	&lt;li&gt;Bullet 2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+	&lt;li&gt;Number 1&lt;/li&gt;
+	&lt;li&gt;Number 2&lt;/li&gt;
+&lt;/ol&gt;
+				</pre>
+			</td>
+			<td>
+				<ul>
+					<li>Bullet 1</li>
+					<li>Bullet 2</li>
+				</ul>
+				<ol>
+					<li>Number 1</li>
+					<li>Number 2</li>
+				</ol>
+			</td>
+		</tr>
+		<tr>
+			<td>Paragraphs</td>
+			<td>
+				<pre>
+&lt;p&gt;Paragraph 1&lt;/p&gt;
+&lt;p&gt;Paragraph 2&lt;/p&gt;
+				</pre>
+			</td>
+			<td>
+				<p>Paragraph 1</p>
+				<p>Paragraph 2</p>
+			</td>
+		</tr>
+		<tr>
+			<td>Preformatted Text</td>
+			<td><pre>
+&lt;pre&gt;
+	Text in a pre element
+	is displayed in a fixed-width
+	font, and it preserves
+	both	  spaces and
+	line breaks
+&lt;/pre&gt;
+			</pre></td>
+			<td>
+				<pre>
+Text in a pre element
+is displayed in a fixed-width
+font, and it preserves
+both	  spaces and
+line breaks
+				</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>Strong</td>
+			<td>
+				&lt;strong&gt;This text is important!&lt;/strong&gt;
+			</td>
+			<td>
+				<strong>This text is important!</strong>
+			</td>
+		</tr>
+		<tr>
+			<td>Subscript</td>
+			<td>
+				This text contains &lt;sub&gt;subscript&lt;/sub&gt; text.
+			</td>
+			<td>
+				This text contains <sub>subscript</sub> text.
+			</td>
+		</tr>
+		<tr>
+			<td>Superscript</td>
+			<td>
+				E = mc&lt;sup&gt;2&lt;/sup&gt;
+			</td>
+			<td>
+				E = mc<sup>2</sup>
+			</td>
+		</tr>
+		<tr>
+			<td>Tables</td>
+			<td><pre>
+&lt;table&gt;
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Col 1&lt;/td&gt;
+			&lt;td&gt;Col 2&lt;/td&gt;
+			&lt;td&gt;Col 3&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;td&gt;1&lt;/td&gt;
+			&lt;td&gt;2&lt;/td&gt;
+			&lt;td&gt;3&lt;/td&gt;
+		&lt;/tr&gt;
+		&lt;tr&gt;
+			&lt;td&gt;4&lt;/td&gt;
+			&lt;td&gt;5&lt;/td&gt;
+			&lt;td&gt;6&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/tbody&gt;
+&lt;/table&gt;</pre>
+			</td>
+			<td>
+				<table>
+					<thead>
+						<tr>
+							<td>Col 1</td>
+							<td>Col 2</td>
+							<td>Col 3</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>2</td>
+							<td>3</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>5</td>
+							<td>6</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>Marquee</td>
+			<td>
+				&lt;marquee direction="up" behavior="scroll" scrollamount="10" height="100"&gt;
+					This is a sample scrolling text that has scrolls in the upper direction.
+				&lt;/marquee&gt;
+			</td>
+			<td>
+				<marquee direction="up" behavior="scroll" scrollamount="10" height="100">
+					This is a sample scrolling text that has scrolls in the upper direction.
+				</marquee>
+			</td>
+		</tr>
+		<tr>
+			<td>Links</td>
+			<td>
+				This is a &lt;a href='https://www.w3schools.com/tags/tag_a.asp'&gt;link&lt;/a&gt;
+			</td>
+			<td>
+				This is a <a href='https://www.w3schools.com/tags/tag_a.asp'>link</a>
+			</td>
+		</tr>
+		<tr>
+			<td>Images</td>
+			<td>
+				&lt;img src="https://i.imgur.com/SwVuagI_d.webp" width="200"&gt;
+			</td>
+			<td>
+				<img src="https://i.imgur.com/SwVuagI_d.webp" width="200">
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<h4>Allowed Attributes</h4>
+
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>href</td>
+		</tr>
+		<tr>
+			<td>style</td>
+		</tr>
+		<tr>
+			<td>src</td>
+		</tr>
+		<tr>
+			<td>class</td>
+		</tr>
+		<tr>
+			<td>title</td>
+		</tr>
+		<tr>
+			<td>direction</td>
+		</tr>
+		<tr>
+			<td>behavior</td>
+		</tr>
+		<tr>
+			<td>scrollamount</td>
+		</tr>
+	</tbody>
+</table>
+
+<h5>Allowed Styles</h5>
+
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>color</td>
+		</tr>
+		<tr>
+			<td>background-color</td>
+		</tr>
+		<tr>
+			<td>font-weight</td>
+		</tr>
+		<tr>
+			<td>transform</td>
+		</tr>
+		<tr>
+			<td>-webkit-transform</td>
+		</tr>
+	</tbody>
+</table>
+
+{% include "expanded_image_modal.html" %}
+
+{% endblock %}

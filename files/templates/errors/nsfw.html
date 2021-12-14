@@ -7,21 +7,22 @@
 {% block pagetype %}error-451{% endblock %}
 
 {% block content %}
-<div class="col-span-full h-screen flex items-center justify-center">
-	<div class="md:max-w-xl text-center">
-		<img loading="lazy" src="/assets/images/emojis/marseytwerking.webp?v=200" class="w-14 h-14 object-contain mb-4">
-		<h1 class="h5">Are you over 18?</h1>
-		<p class="text-gray-500 mb-3">
-			This post is rated +18 (Adult-Only). You must be 18 or older to continue. Are you sure you want to proceed?
-		</p>
-		<div class="flex flex-wrap justify-center space-x-2">
-			<form action="/allow_nsfw" method="post">
-				<input type="hidden" name="redir" value="{{request.path}}">
-				<input type="submit" class="btn btn-red" value="Yes, I am +18">
-			</form>
-			<a href="/" class="btn btn-gray">No</a>
+<div class="row justify-content-center">
+	<div class="col col-md-5">
+		<div class="text-center px-3 mt-5">
+			<img loading="lazy" src="/assets/images/emojis/marseytwerking.webp?v=190">
+			<h1 class="h5">Are you over 18?</h1>
+			<p class="mb-5">This post is rated +18 (Adult-Only). You must be 18 or older to continue. Are you sure you want to proceed?</p>
+			<div class="btn-toolbar justify-content-center mb-4">
+
+				<form action="/allow_nsfw" method="post">
+					<input type="hidden" name="redir" value="{{request.path}}">
+					<input type="submit" class="btn btn-danger mr-2" value="Yes, I am +18">
+				</form>
+				<div><a href="/" class="btn btn-secondary">No</a></div>
+			</div>
+
 		</div>
 	</div>
 </div>
 {% endblock %}
-

@@ -1,0 +1,9 @@
+{% extends "search.html" %}
+
+{% block listing_template %}
+<div class="flex flex-wrap -mx-2 overflow-hidden">
+{% include "user_listing.html" %}
+</div>
+{% endblock %}
+
+{% block listinglength %}{{users | length}}{% endblock %}

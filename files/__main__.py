@@ -16,9 +16,7 @@ import gevent
 from werkzeug.middleware.proxy_fix import ProxyFix
 import redis
 
-if environ.get("CHRISTMAS"): templates = 'templates/CHRISTMAS'
-else: templates = 'templates'
-app = Flask(__name__, template_folder=templates)
+app = Flask(__name__, template_folder='templates/CHRISTMAS')
 
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
 app.url_map.strict_slashes = False

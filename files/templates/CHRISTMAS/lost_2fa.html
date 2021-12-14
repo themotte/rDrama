@@ -1,0 +1,36 @@
+{% extends "authforms.html" %}
+
+{% block pagetitle %}{{'SITE_NAME' | app_config}} Two-Factor Removal{% endblock %}
+
+{% block authtitle %}Remove the two-factor authentication from your account.{% endblock %}
+
+{% block authtext %}If all information is correct, you will be able to remove 2-factor authentication from your account in 24 hours.{% endblock %}
+
+{% block content %}
+
+												<div id="login-form" class="">
+
+														<form action="/request_2fa_disable" method="post" class="mt-3" autocomplete="off">
+
+																<label for="username" class="mt-3">Username</label>
+
+																<input class="form-control" id="username" aria-describedby="usernameHelp"
+																		type="text" name="username" required=""{% if v %} value="{{v.username}}" disabled{% endif %}>
+
+																<label for="email" class="mt-3">Password</label>
+
+																<input class="form-control" id="password" aria-describedby="passwordHelp" autocomplete="off"
+																		type="password" name="password" required="">
+
+																<label for="email" class="mt-3">Email</label>
+
+																<input class="form-control" id="password"
+																		type="text" name="email" required=""{% if v %} value="{{v.email}}" disabled{% endif %}>
+
+																<input class="btn btn-primary login w-100 mt-3" type="submit" value="Send recovery link">
+
+														</form>
+
+												</div>
+
+{% endblock %}

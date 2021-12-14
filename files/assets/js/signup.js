@@ -7,11 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		var successID = document.getElementById("passwordHelpSuccess");
 
 		if (charCount.length >= 8) {
-			id.classList.add("hidden");
-			successID.classList.remove("hidden");
+			id.classList.add("d-none");
+			successID.classList.remove("d-none");
 		} else {
-			id.classList.remove("hidden");
-			successID.classList.add("hidden");
+			id.classList.remove("d-none");
+			successID.classList.add("d-none");
 		}
 	});
 

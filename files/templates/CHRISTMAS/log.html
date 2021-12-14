@@ -1,0 +1,127 @@
+{% extends "settings2.html" %}
+
+{% block pagetitle %}Moderation Log{% endblock %}
+
+
+{% block content %}
+{% if v %}
+	<style>:root{--primary:#{{v.themecolor}}}</style>
+	<link rel="stylesheet" href="/assets/CHRISTMAS/css/main-deprecated.css?v=200"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{v.theme}}.css?v=200">
+	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/CHRISTMAS/css/agendaposter.css?v=200">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+{% else %}
+	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+	<link rel="stylesheet" href="/assets/CHRISTMAS/css/main-deprecated.css?v=200"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{'DEFAULT_THEME' | app_config}}.css?v=200">
+{% endif %}
+
+<div class="row justify-content-around">
+
+	<div class="col h-100">
+
+		<div class="d-md-flex justify-content-between mt-4">
+			<div>
+				<h5>Moderation Log</h5>
+			</div>
+
+		</div>
+
+		<div class="row" style="overflow: visible;padding-top:5px;">
+			<div class="col">
+				<div class="d-flex justify-content-between align-items-center mr-2">
+		
+					{% block navbar %}
+					<div class="font-weight-bold py-3">‎</div>
+		
+					<div class="d-flex align-items-center sortingbarmargin">
+						<div class="text-small font-weight-bold mr-2">‎</div>
+						<div class="dropdown dropdown-actions">
+
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{% if admin %}<img src="/@{{admin}}/pic" alt="avatar" width=20 height=20 class="rounded-circle mr-2">{{admin}}{% else %}<img src="/assets/CHRISTMAS/images/emojis/marseyjanny.webp" alt="avatar" width=20 height=20 class="rounded-circle mr-2">All{% endif %}
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+								<a class="dropdown-item" href="/log{% if type %}?kind={{type}}{% endif %}"><img src="/assets/CHRISTMAS/images/emojis/marseyjanny.webp" alt="avatar" width=20 height=20 class="rounded-circle mr-2">All</a>
+								{% for a in admins %}
+									<a class="dropdown-item" href="?admin={{a}}{% if type %}&kind={{type}}{% endif %}"><img src="/@{{a}}/pic" alt="avatar" width=20 height=20 class="rounded-circle mr-2">{{a}}</a>
+								{% endfor %}
+							</div>
+						</div>
+		
+						<div class="text-small font-weight-bold mr-2">‎</div>
+						<div class="dropdown dropdown-actions">
+
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{% if type %}<i class="fas {{types[type]['icon']}} mr-2"></i>{{type}}{% else %}<i class="fas fa-broom mr-2"></i>All{% endif %}
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2s" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+								<a class="dropdown-item" href="/log{% if admin %}?admin={{admin}}{% endif %}"><i class="fas fa-broom mr-2"></i>All</a>
+								{% for t, v in types.items() %}
+									<a class="dropdown-item" href="?{% if admin %}admin={{admin}}&{% endif %}kind={{t}}"><i class="fas {{v['icon']}} mr-2"></i>{{t}}</a>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+
+
+		<div class="rounded border bg-white mx-auto">
+			{% for ma in actions %}
+
+				<div id="action-{{ma.id}}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white{% if loop.index > 1 %} border-top{% endif %}">
+
+				<div class="d-flex flex-grow-1 align-items-center">
+					<div class="d-flex align-items-center justify-content-center {{ma.color}} mr-3 rounded-lg flex-shrink-0" style="width: 32px;height: 32px;"><i class="far text-center {{ma.icon}} text-lg text-white fa-fw"></i></div>
+					<div class="d-flex align-items-center">
+						<span class="rounded">
+						<img src="{{ma.user.profile_url}}" alt="avatar" width=42 height=42 class="rounded-circle">
+					</span>
+						<div class="text-muted pl-3">
+							<div>
+								<a href="{{ma.user.url}}" class="font-weight-bold text-black" target="_self">@{{ma.user.username}}</a>
+
+							<span>{{ma.string | safe}}</span>
+						</div>
+
+						<div class="text-gray-500">{{ma.age_string}} <a href="{{ma.permalink}}"><i class="far fa-link ml-1 text-muted"></i></a>
+							<a href="javascript:void(0)" class="copy-link" role="button"data-clipboard-text="{{ma.permalink | full_link}}"><i class="far fa-copy ml-1 text-muted"></i></a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			</div>
+
+
+			{% else %}
+				<div>There's nothing here right now.</div>
+			{% endfor %}
+		</div>
+
+
+		<nav aria-label="Page navigation" class="mb-5">
+			<ul class="pagination pagination-sm mb-0">
+				{% if page>1 %}
+					<li class="page-item">
+						<small><a class="page-link" href="/log?page={{page+1}}{% if admin %}&admin={{admin}}{% endif %}{% if type %}&kind={{type}}{% endif %}" tabindex="-1">Prev</a></small>
+					</li>
+				{% else %}
+					<li class="page-item disabled"><span class="page-link">Prev</span></li>
+				{% endif %}
+				{% if next_exists %}
+				<li class="page-item">
+					<small><a class="page-link" href="/log?page={{page+1}}{% if admin %}&admin={{admin}}{% endif %}{% if type %}&kind={{type}}{% endif %}">Next</a></small>
+				</li>
+				{% else %}
+					<li class="page-item disabled"><span class="page-link">Next</span></li>
+				{% endif %}
+			</ul>
+		</nav>
+
+	</div>
+</div>
+
+<script src="/assets/CHRISTMAS/js/clipboard.js?v=200"></script>
+
+{% endblock %}

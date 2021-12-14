@@ -1,9 +1,12 @@
-{% set random = range(1, 13)|random() %}
 
 <!DOCTYPE html>
-<html class="h-full" lang="en">
+<html lang="en">
 
 <head>
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
+
+	<script src="/assets/js/bootstrap.js?v=190"></script>
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="Sign in to {{'SITE_NAME' | app_config}}">
@@ -12,93 +15,108 @@
 	{% block title %}
 	<title>Login -	{{'SITE_NAME' | app_config}}</title>
 	{% endblock %}
-
-	<link rel="stylesheet" href="/assets/css/main.css?v=400">
-
-	<link rel="stylesheet" href="/static/dist/main.css?v=400">
-
+	
 	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-
-	<link rel="preload" href="/assets/css/fa.css?v=200" as="style" onload="this.onload=null;this.rel='stylesheet'">
-	<noscript><link rel="stylesheet" href="/assets/css/fa.css?v=200"></noscript>
+	<link rel="stylesheet" href="/assets/css/main.css?v=154">
+	<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=190">
+	<link href="/assets/css/fa.css?v=193" rel="stylesheet"> 
 
 </head>
 
-<body class="relative h-full bg-gradient-to-t from-gray-500 to-gray-400">
+<body id="login">
 
-	<div class="relative min-h-full flex flex-col items-center justify-center pt-28 pb-12 px-4 sm:px-6 lg:px-8">
+				<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
+				<div class="container-fluid">
+						<button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+						aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+				</button>
+		</div>
+</nav>
 
-		<div class="max-w-md w-full">
 
-			<div class="max-w-3xl mx-8 p-3 flex justify-center items-center rounded-t-lg bg-gray-700 border border-gray-800 shadow-inset-t-white-10">
-				<a href="/">
-					<img class="-ml-4 block w-32 object-contain" src="/assets/images/logos/winter/logo-{{ random }}.png" alt="logo"/>
-				</a>
-			</div>
+<div class="container-fluid position-absolute h-100 p-0 overflow-auto">
+		<div class="row no-gutters h-100">
 
-			<div class="max-w-2xl w-full space-y-6 px-6 py-5 bg-gray-200 rounded shadow">
+				<div class="col-12 col-md-6 my-auto p-3">
 
-				<form action="/login" method="post" class="mt-md-3" id="login">
+						<div class="row justify-content-center">
 
-					<input type="hidden" name="redirect" value="{{redirect}}">
+								<div class="col-10 col-md-7">
 
-					<div class="space-y-4">
+										<div class="mb-5">
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{'SITE_NAME' | app_config}}</span></a>
+										</div>
 
-						<h2 class="text-base label text-black">
-							Login to rDrama
-							<span class="text-gray-500">or</span>
-							<a href="/signup{{'?redirect='+redirect if redirect else ''}}" class="text-green-600 hover:text-green-700">
-								Create an Account
-							</a>
-						</h2>
+										{% block content %}
 
-						<div>
-							<label for="username" class="hidden">Username or Email Address</label>
-							<input class="form-input" id="username" aria-describedby="usernameHelp" type="text" name="username" required placeholder="Username or Email Address">
+										<div id="login-form" class="">
+
+												<h1 class="h2">Welcome back.</h1>
+
+												<p class="text-muted mb-md-5">Glad to have you back!</p>
+
+												{% if failed %}
+												<div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
+													<i class="fas fa-exclamation-circle my-auto"></i>
+													<div>
+															Incorrect username, email address, or password.
+															<br>
+															<a href="/forgot" class="alert-link">Forgot password?</a>
+													</div>
+													<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+												</button>
+												</div>
+												{% endif %}
+
+												<form action="/login" method="post" class="mt-md-3" id="login">
+
+														<label for="username" class="mt-3">Username or Email Address</label>
+
+														<input class="form-control" id="username" aria-describedby="usernameHelp"
+														type="text" name="username" required="">
+														<input type="hidden" name="redirect" value="{{redirect}}">
+
+														<label for="password" class="mt-3">Password</label>
+
+														<input class="form-control" id="password" aria-describedby="passwordHelp"
+														type="password" name="password" required="">
+
+
+														<small><a href="/forgot">Forgot password?</a></small>
+
+														<button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
+
+														<div class="text-center text-muted text-small mt-5 mb-3">
+																Don't have an account? <a href="/signup{{'?redirect='+redirect if redirect else ''}}" class="font-weight-bold toggle-login">Sign up</a>
+														</div>
+
+												</form>
+
+										</div>
+
+										{% endblock %}
+
+								</div>
+
 						</div>
 
-						<div>
-							<label for="password" class="hidden">Password</label>
-							<input class="form-input" id="password" aria-describedby="passwordHelp" type="password" name="password" required placeholder="Password">
-							<small class="block mt-1">
-								<a href="/forgot" class="text-gray-400 hover:text-gray-500">Forgot password?</a>
-							</small>
+				</div>
+
+				<div class="col-12 col-md-6 d-none d-md-block">
+
+						<div class="splash-wrapper">
+
+								<div class="splash-overlay"></div>
+
+								<img loading="lazy" class="splash-img" src="/assets/images/{{'SITE_NAME' | app_config}}/cover.webp?v=190"></img>
 						</div>
 
-						<button class="btn btn-green w-full" id="login_button">Log in</button>
-
-					</div>
-
-				</form>
-
-
-				<ul class="pt-4 mx-auto w-full flex flex-col md:flex-row md:items-center md:justify-center md:space-x-3 md:divide-x md:divide-gray-300 text-xs leading-none border-t border-gray-300">
-					<li>
-						<a href="#" class="text-gray-400 hover:text-gray-500">
-							About
-						</a>
-					</li>
-					<li class="mt-2 md:mt-0 md:pl-3">
-						<a href="/rules" class="text-gray-400 hover:text-gray-500">
-							Community Etiquette
-						</a>
-					</li>
-					<li class="mt-2 md:mt-0 md:pl-3">
-						<span class="text-gray-400">
-							©2021 Copyright rdrama.net
-						</span>
-					</li>
-				</ul>
-
-			</div>
+				</div>
 
 		</div>
-
-		{% include '/awards/Christmas/Snow.html' %}
-
-	</div>
-
-	<script defer src="/assets/js/christmas/snow.js?v=200"></script>
+</div>
 
 </body>
 

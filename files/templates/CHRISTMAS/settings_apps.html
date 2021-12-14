@@ -1,0 +1,156 @@
+{% extends "settings.html" %}
+
+{% block title %}
+<title>{{'SITE_NAME' | app_config}} - FAQ</title>
+<meta name="description" content="{{'SITE_NAME' | app_config}} FAQ">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col col-lg-8">
+		<div class="settings">
+
+
+<h2 class="h5"><a href="/api">API Guide</a></h2>
+
+<pre></pre>
+
+<h2 class="h5">Your API Applications</h2>
+
+{% for app in v.applications if app.client_id %}
+
+<form id="edit-app-{{app.id}}" action="/edit_app/{{app.id}}" method="post">
+	<div class="settings-section rounded">
+		<div class="d-lg-flex">
+				<div class="title w-lg-25">
+								<label for="over18">{{app.app_name}}</label>
+						</div>
+						<div class="body w-lg-100">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
+				<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
+				<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}">
+				
+				{% if app.client_id %}
+				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
+				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
+				{% endif %}
+				
+				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
+				<input id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}">
+				<label for="edit-{{app.id}}-desc" class="mb-0 w-lg-25">Description</label>
+				<textarea form="edit-app-{{app.id}}" class="form-control" name="description" id="edit-{{app.id}}-desc" maxlength="256">{{app.description}}</textarea>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="d-flex">
+				<a href="javascript:void(0)" class="btn btn-secondary ml-auto" onclick="post_toast('/oauth/reroll/{{app.id}}','1')">Reroll Client ID</a>
+				<input type="submit" class="btn btn-primary ml-2" value="Save Changes">
+			</div>
+		</div>
+	</div>
+
+</form>
+{% else %}
+<p>None</p>
+{% endfor %}
+
+<h2 class="h5">API Applications Awaiting Approval</h2>
+
+{% for app in v.applications if not app.client_id %}
+
+<form id="edit-app-{{app.id}}" action="/edit_app/{{app.id}}" method="post">
+	<div class="settings-section rounded">
+		<div class="d-lg-flex">
+				<div class="title w-lg-25">
+								<label for="over18">{{app.app_name}}</label>
+						</div>
+						<div class="body w-lg-100">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
+				<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
+				<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}">
+
+				{% if app.client_id %}
+				<label for="edit-{{app.id}}-client-id" class="mb-0 w-lg-25">Client ID</label>
+				<input id="edit-{{app.id}}-client-id" class="form-control copy-link" type="text" name="name" value="{{app.client_id}}" data-clipboard-text="{{app.client_id}}" role="button" readonly="readonly">
+				{% endif %}
+
+				<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
+				<input id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}">
+				<label for="edit-{{app.id}}-desc" class="mb-0 w-lg-25">Description</label>
+				<textarea form="edit-app-{{app.id}}" class="form-control" name="description" id="edit-{{app.id}}-desc" maxlength="256">{{app.description}}</textarea>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="d-flex">
+				<input type="submit" class="btn btn-primary ml-auto" value="Save Changes">
+			</div>
+		</div>
+	</div>
+
+</form>
+{% else %}
+<p>None</p>
+{% endfor %}
+
+<h2 class="h5">Your Authorized Applications</h2>
+
+{% for auth in v.authorizations %}
+
+	<div id="auth-{{auth.id}}" class="settings-section rounded">
+		<div class="d-lg-flex">
+				<div class="title w-lg-25">
+								<label for="over18">{{auth.application.app_name}}</label>
+						</div>
+						<div class="body w-lg-100">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
+				<label class="mb-0 w-lg-25">Description</label>
+				<textarea class="form-control" name="description" maxlength="256" readonly="readonly">{{auth.application.description}}</textarea>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="d-flex">
+				<a href="javascript:void(0)" class="btn btn-primary ml-auto text-white" onclick="post_toast('/oauth/rescind/{{auth.id}}')">Revoke</a>
+			</div>
+		</div>
+	</div>
+{% else %}
+<p>None</p>
+{% endfor %}
+
+<h2>Request API Keys</h2>
+
+<form id="api-key-request-form" action="/api_keys" method="post">
+	<div class="settings-section rounded">
+		<div class="d-lg-flex">
+			<div class="body w-lg-100">
+				<input type="hidden" name="formkey" value="{{v.formkey}}">
+				<label for="form-username">Username</label>
+				<input type="text" id="form-username" class="form-control" name="username" value="{{v.username}}" readonly>
+				<label for="form-appname">Application Name</label>
+				<input type="text" id="form-appname" class="form-control" name="name" required>
+				<label for="form-redirect">Redirect URI</label>
+				<input type="text" id="form-redirect" class="form-control" name="redirect_uri" placeholder="Custom URI scheme can be used. Separate multiple options with comma." required>
+				<label for="form-username">Description</label>
+				<textarea form="api-key-request-form" id="form-desc" class="form-control" name="description" maxlength="256" required></textarea>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="d-flex">
+				<input type="submit" class="btn btn-primary ml-auto" value="Request API Key">
+			</div>
+		</div>
+	</div>
+</form>
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+{% block clipboard %}
+<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+	<div class="toast-body text-center">
+		<i class="fas fa-check-circle text-success mr-2"></i>Token copied to clipboard
+	</div>
+</div>
+{% endblock %}

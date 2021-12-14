@@ -1,31 +1,33 @@
 {% extends "userpage.html" %}
 
+
 {% block content %}
-<div class="col-span-full xl:col-span-9 py-36 flex items-center justify-center">
-	<div class="md:max-w-xl text-center">
-		<img loading="lazy" src="/assets/images/emojis/marseytroll.webp?v=200" class="w-14 h-14 object-contain mb-4">
-		<h1 class="h5">This account is private</h1>
-		<p class="text-gray-500 mb-3">
-			YOU AREN'T WELCOME HERE GO AWAY
-		</p>
-		{% if u.id == 253 and 'rama' in request.host %}
-		<div class="bg-gray-100 border border-gray-300 p-4">
-			{% if v and v.coins > 500 and not v.is_suspended %}
-				<p class="text-gray-500 mb-3">
-					You may pay rent to view this profile.
-				</p>
-				<button class="btn btn-gray" onclick="post_toast('/pay_rent', '1')">Pay 500 coins</button>
-			{% endif %}
-			{% if v and v.coins > 5000 and time - v.created_utc > 604800 and not v.is_suspended %}
-				<button class="btn btn-gray" onclick="post_toast('/steal', '1')">
-					Attempt to steal coins
-				</button>
-				<p class="text-xs text-gray-400 mt-1">
-					Landlords, like all other men, love to reap where they never sowed.
-				</p>
+<div class="row justify-content-center">
+	<div class="col-10 col-md-5">
+		<div class="text-center px-3 my-3">
+			<span class="fa-stack fa-2x text-muted mb-4">
+				<i class="fas fa-square text-gray-500 opacity-25 fa-stack-2x"></i>
+				<i class="fas text-gray-500 fa-user-lock fa-stack-1x text-lg"></i>
+			</span>
+			<h2 class="h5">This account is private</h2>
+			<p class="text-muted">This user has enabled private mode to cloak their posting history.</p>
+			{% if u.id == 253 and 'rama' in request.host %}
+				{% if v and v.coins > 500 and not v.is_suspended %}
+					<a class="btn btn-primary" href="javascript:void(0)", onclick="post_toast('/pay_rent', '1')">Pay rent to view profile (500 coins)</a>
+				{% endif %}
+				<pre></pre>
+				{% if v and v.coins > 5000 and time - v.created_utc > 604800 and not v.is_suspended %}
+					<a class="btn btn-primary" href="javascript:void(0)", onclick="post_toast('/steal', '1')">Attempt to steal coins</a>
+					<div class="text-small-extra text-muted mt-1">Landlords, like all other men, love to reap where they never sowed.</div>
+				{% endif %}
+				<pre>
+
+
+
+
+				</pre>
 			{% endif %}
 		</div>
-		{% endif %}
 	</div>
 </div>
 {% endblock %}

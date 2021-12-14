@@ -1,9 +1,13 @@
 {% extends "default.html" %}
 {% block content %}
-<div class="col-span-full my-4">
+<script src="/assets/js/following.js?v=190"></script>
+<pre>
+
+	
+</pre>
 <h5>Users followed by @{{u.username}}</h5>
 <pre></pre>
-<table class="w-full table table-striped mb-5">
+<table class="table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
 		<th style="font-weight: bold">#</th>
@@ -25,9 +29,5 @@
 {% endfor %}
 </tbody>
 </table>
-</div>
-{% endblock %}
 
-{% block scripts %}
-<script src="/assets/js/following.js?v=200"></script>
 {% endblock %}

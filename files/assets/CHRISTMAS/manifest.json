@@ -1,0 +1,8 @@
+{
+  "name": "files",
+  "short_name": "files",
+  "start_url": "https://rdrama.net",
+  "display": "standalone",
+  "background_color": "#FF66AC",
+  "description": "files"
+}

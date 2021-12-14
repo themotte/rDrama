@@ -1,0 +1,89 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>{{'SITE_NAME' | app_config}}</title>
+<meta name="description" content="{{'SITE_NAME' | app_config}} Help">
+{% endblock %}
+
+{% block content %}
+<div class="col-span-full my-4">
+<pre>
+
+
+
+</pre>
+<h5>Vote Info</h5>
+
+<form action="/admin/alt_votes" method="get" class="mb-6">
+	<label for="link-input">Usernames</label>
+	<input id="link-input" type="text" class="form-control mb-2" name="u1" value="{{u1.username if u1 else ''}}" placeholder="User 1">
+	<input id="link-input" type="text" class="form-control mb-2" name="u2" value="{{u2.username if u2 else ''}}" placeholder="User 2">
+	<input type="submit" value="Submit" class="btn btn-primary">
+</form>
+
+{% if u1 and u2 %}
+
+
+<h2>Analysis</h2>
+
+
+
+<table class="w-full table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th></th>
+			<th>@{{u1.username}} only(% unique)</th>
+			<th>Both</th>
+			<th>@{{u2.username}} only (% unique)</th>
+		</tr>
+	</thead>
+
+	<tr>
+		<td><b>Post Upvotes</b></td>
+		<td>{{data['u1_only_post_ups']}} ({{data['u1_post_ups_unique']}}%)</td>
+		<td>{{data['both_post_ups']}}</td>
+		<td>{{data['u2_only_post_ups']}} ({{data['u2_post_ups_unique']}}%)</td>
+	</tr>
+	<tr>
+		<td><b>Post Downvotes</b></td>
+		<td>{{data['u1_only_post_downs']}} ({{data['u1_post_downs_unique']}}%)</td>
+		<td>{{data['both_post_downs']}}</td>
+		<td>{{data['u2_only_post_downs']}} ({{data['u2_post_downs_unique']}}%)</td>
+	</tr>
+	<tr>
+		<td><b>Comment Upvotes</b></td>
+		<td>{{data['u1_only_comment_ups']}} ({{data['u1_comment_ups_unique']}}%)</td>
+		<td>{{data['both_comment_ups']}}</td>
+		<td>{{data['u2_only_comment_ups']}} ({{data['u2_comment_ups_unique']}}%)</td>
+	</tr>
+	<tr>
+		<td><b>Comment Downvotes</b></td>
+		<td>{{data['u1_only_comment_downs']}} ({{data['u1_comment_downs_unique']}}%)</td>
+		<td>{{data['both_comment_downs']}}</td>
+		<td>{{data['u2_only_comment_downs']}} ({{data['u2_comment_downs_unique']}}%)</td>
+	</tr>
+</table>
+
+<h2>Link Accounts</h2>
+
+{% if u2 in u1.alts %}
+<p>Accounts are known alts of eachother.</p>
+{% else %}
+
+<p>Two accounts controlled by different people should have most uniqueness percentages at or above 70-80%</p>
+<p>A sockpuppet account will have its uniqueness percentages significantly lower.</p>
+
+<a href="javascript:void(0)" class="btn btn-secondary" onclick="document.getElementById('linkbtn').classList.toggle('d-none');">Link Accounts</a>
+<form action="/admin/link_accounts" method="post">
+	<input type="hidden" name="formkey" value="{{v.formkey}}">
+	<input type="hidden" name="u1" value="{{u1.id}}">
+	<input type="hidden" name="u2" value="{{u2.id}}">
+	<input type="submit" id="linkbtn" class="btn btn-primary d-none" value="Confirm Link: {{u1.username}} and {{u2.username}}">
+</form>
+
+{% endif %}
+
+{% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "home.html" %}
+
+{% block PseudoSubmitForm %}{% endblock %}
+
+
+{% block customPadding %}{% endblock %}
+
+{% block content %}
+
+
+<div class="row mt-3 p-md-4">
+
+	{% block maincontent %}
+	{% endblock %}
+
+</div>
+
+{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+	<ul class="pagination pagination-sm mb-0">
+		{% if page>1 %}
+		<li class="page-item">
+			<small><a class="page-link" href="?kind={{kind}}&page={{page-1}}" tabindex="-1">Prev</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Prev</span></li>
+		{% endif %}
+		{% if next_exists %}
+		<li class="page-item">
+			<small><a class="page-link" href="?kind={{kind}}&page={{page+1}}">Next</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Next</span></li>
+		{% endif %}
+	</ul>
+</nav>
+{% endblock %}

@@ -1,32 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>  
-	{% if v and v.agendaposter %}
-		<script src="/assets/js/agendaposter.js"></script>
-		<noscript>
-			<style>
-				body {
-					-moz-transform: scale(-1, -1);
-					-o-transform: scale(-1, -1);
-					-webkit-transform: scale(-1, -1);
-					transform: scale(-1, -1);
-				}
-			</style>
-		</noscript>
+<head>
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' ajax.cloudflare.com; connect-src 'self' tls-use1.fpapi.io api.fpjs.io 02ddcc80-b8db-42be-9022-44c546b4dce6.pushnotifications.pusher.com; object-src 'none';">
+
+	<script src="/assets/js/bootstrap.js?v=190"></script>
+	{% if v %}
+		<style>:root{--primary:#{{v.themecolor}}}</style>
+		<link rel="stylesheet" href="/assets/css/main.css?v=211">
+		<link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=190">
+		{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=190">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+	{% else %}
+		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+		<link rel="stylesheet" href="/assets/css/main.css?v=211"><link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=190">
 	{% endif %}
+
+	<link href="/assets/css/fa.css?v=193" rel="stylesheet"> 
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="thumbnail" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.gif">
 
-	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99">
+	<meta name="thumbnail" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190">
+
+	<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190">
 	{% block title %}
 	<title>{{'SITE_NAME' | app_config}}</title>
 
 	<meta property="og:type" content="article" >
 	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta property="og:site_name" content="{{request.host}}" >
-	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.gif" >
+	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190" >
 	<meta property="og:url" content="{{request.path | full_link}}">
 	<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 	<meta property="og:author" name="author" content="@{{request.host_url}}" >
@@ -37,192 +39,181 @@
 	<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta name="twitter:creator" content="@{{request.host_url}}">
 	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-	<meta name="twitter:image" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.gif" >
+	<meta name="twitter:image" content="/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190" >
 	<meta name="twitter:url" content="{{request.path | full_link}}" >
 	{% endblock %}
 
-	<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-touch-fullscreen" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 
-	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99">
-	<!---<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99">
-		<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99">--->
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190">
 		<link rel="manifest" href="/assets/manifest.json">
-		<link rel="mask-icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99" color="#{{'DEFAULT_COLOR' | app_config}}">
-		<link rel="shortcut icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99">
+		<link rel="mask-icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190" color="#{{'DEFAULT_COLOR' | app_config}}">
+		<link rel="shortcut icon" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190">
 		<meta name="apple-mobile-web-app-title" content="{{'SITE_NAME' | app_config}}">
 		<meta name="application-name" content="{{'SITE_NAME' | app_config}}">
 		<meta name="msapplication-TileColor" content="#{{'DEFAULT_COLOR' | app_config}}">
-		<meta name="msapplication-config" content="/assets/images/browserconfig.xml">
+		<meta name="msapplication-config" content="/assets/browserconfig.xml">
 		<meta name="theme-color" content="#{{'DEFAULT_COLOR' | app_config}}">
+
+
 
 		<link
 		rel="apple-touch-startup-image"
 		sizes="320x480"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="640x960"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-icon"
 		sizes="640x1136"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-icon"
 		sizes="750x1334"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="768x1004"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="768x1024"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="828x1792"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1024x748"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1024x768"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1125x2436"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1242x2208"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1242x2688"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1334x750"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1536x2008"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1536x2048"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1668x2224"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="1792x828"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2048x1496"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2048x1536"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2048x2732"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2208x1242"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2224x1668"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2436x1125"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2668x1242"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 		<link
 		rel="apple-touch-startup-image"
 		sizes="2737x2048"
-		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99"
+		href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190"
 		>
 
-		{% block stylesheets %}
-
-		<link rel="stylesheet" href="/assets/css/main.css?v=400">
-
-      	<link rel="stylesheet" href="/static/dist/main.css?v=400">
-
-    	<link rel="stylesheet" href="/assets/css/mistletoe.css?v=400">
-
-		{% if v %}
-			<style>:root{--primary:#dc2626}</style>
-			<!-- <style>:root{--primary:#{{v.themecolor}}}</style> -->
-			<!-- <link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=200"> -->
-			{% if v.agendaposter %}
-			<link rel="stylesheet" href="/assets/css/agendaposter.css?v=200">
-			{% elif v.css %}
-			<link rel="stylesheet" href="/@{{v.username}}/css">
-			{% endif %}
-		{% else %}
-			<style>:root{--primary:#dc2626}</style>
-			<!-- <style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}}</style> -->
-			<!-- <link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=200"> -->
-		{% endif %}
-
+		{% block fixedMobileBarJS %}
 		{% endblock %}
-
-		<link href="/assets/css/fa.css?v=200" rel="stylesheet"> 
-
-		<style>
-    		@font-face { font-family: 'Delius Swash Caps'; src: url('/assets/fonts/DeliusSwashCaps-Regular.ttf'); } 
-		</style>
 
  </head>
 
- <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900">
+ <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="{% if path != '/formatting' %}overflow-x: hidden; {% endif %}{% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %} {% if 'rama' in request.host %}margin-top: 29px!important;{% endif %}">
 
 {% block Banner %}
+	{% if '@' not in request.path %}
+		<style>
+			.banner {
+				margin-top: -3px;
+			}
+			@media (min-width: 992px) {
+				.banner {
+					margin-top: 10px !important;
+				}
+			}
+		</style>
+		
+		<a  rel="nofollow noopener noreferrer" href="{% if 'rama' in request.host %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}">
+			<img class="banner" src="/assets/images/{{'SITE_NAME' | app_config}}/{% if v %}banner.webp{% else %}cached.webp{% endif %}?v=190" width="100%">
+		</a>
+	{% endif %}
 {% endblock %}
 
-{% include "header-tw.html" %}
+{% include "header.html" %}
+
 
 {% block mobileUserBanner %}
 {% endblock %}
@@ -233,8 +224,10 @@
 {% block postNav %}
 {% endblock %}
 
-<div class="flex h-screen pt-16 bg-gray-500">
-	<div class="w-full sm:overflow-y-auto">
+<div id="fuck" class="container{% if request.path=='/' or '/post/' in request.path or '/comment/' in request.path %} transparent{% endif %}">
+	<div class="row justify-content-around" id="main-content-row">
+
+		<div class="col h-100 {% block customPadding %}{% if not '/message' in request.path %}custom-gutters{% endif %}{% endblock %}" id="main-content-col">
 
 			{% block desktopUserBanner %}
 			{% endblock %}
@@ -242,40 +235,21 @@
 			{% block desktopBanner %}
 			{% endblock %}
 
-		<div class="md:px-4 bg-gray-700" id="sub-header-row">
-			{% block subHeader %}
+			{% block PseudoSubmitForm %}
 			{% endblock %}
+
+			{% block searchText %}
+			{% endblock %}
+
+			{% block content %}
+			{% endblock %}
+
+			{% block pagenav %}
+			{% endblock %}
+
 		</div>
-
-		{% block subHeader2 %}
-		{% endblock %}
-
-		<div class="w-full md:px-4">
-			<div class="w-full max-w-screen-2xl mx-auto mb-4 md:px-4 grid grid-cols-12 gap-6 bg-gray-300 md:bg-gray-200 rounded-b" id="main-content-row">
-
-				{% block searchText %}
-				{% endblock %}
-
-				{% block content %}
-				{% endblock %}
-
-				{% block pagenav %}
-				{% endblock %}
-
-				{% block sidebar %}
-				{% endblock %}
-			</div>
-		</div>
-
-		{% include "footer.html" %}
 	</div>
 </div>
-
-{% if v %}
-	<div id="formkey" class="hidden">{{ v.formkey }}</div>
-{% endif %}
-
-{% include "ProfilePopover.html" %}
 
 {% block mobilenavbar %}
 	{% include "mobile_navigation_bar.html" %}
@@ -294,60 +268,34 @@
 {% endblock %}
 
 
-<!-- Import toast notifications -->
-{% include "/toasts/toasts.html" %}
+<div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+	<div class="toast-body text-center">
+		<i class="fas fa-check-circle text-success mr-2"></i>Link copied to clipboard
+	</div>
+</div>
 
-{% block modals %}
-{% endblock %}
+<div class="toast" id="toast-post-success" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+	<div class="toast-body bg-success text-center text-white">
+		<i class="fas fa-comment-alt-smile mr-2"></i><span id="toast-post-success-text"></span>
+	</div>
+</div>
+<div class="toast" id="toast-post-error" style="position: fixed; bottom: 1.5rem; margin: 0 auto; left: 0; right: 0; width: 275px; z-index: 1000" role="alert" aria-live="assertive" aria-atomic="true" data-bs-animation="true" data-bs-autohide="true" data-bs-delay="5000">
+	<div class="toast-body bg-danger text-center text-white">
+		<i class="fas fa-exclamation-circle mr-2"></i><span id="toast-post-error-text">Error, please try again later.</span>
+	</div>
+</div>
 
-{% block popovers %}
-{% endblock %}
-
-{% block fixedMobileBarJS %}
-{% endblock %}
-
-{% block scripts %}
-{% endblock %}
-
-<!-- Scripts -->
-
-<script src="/assets/js/header.js?v=200"></script>
-
-<!-- Lazy Loading -->
-<script src="/assets/js/lozad.js?v=200"></script>
-<script>
-	const observer = lozad();
-	observer.observe();
-</script>
-
-<!-- Bootstrap -->
-<script src="/assets/js/bootstrap.js"></script>
-
-<!-- Clipboard JS -->
-<script src="/assets/js/clipboard.js"></script>
-<script>
-	var clipboard = new ClipboardJS('.copy-link');
-	clipboard.on('success', function(e) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-success'));
-			myToast.show();
-			console.log(e);
-	});
-</script>
-
-<link rel="stylesheet" href="/assets/css/lite-youtube.css?v=200">
-<script src="/assets/js/lite-youtube.js?v=200"></script>
-
-<script src="/assets/js/gif_modal.js?v=200"></script>
-<script src="/assets/js/emoji_modal.js?v=202"></script>
-
-<script defer src="/assets/js/popover.js?v=200"></script>
-
-<script src="/assets/js/mobile_navigation_bar.js?v=204"></script>
+<script src="/assets/js/lozad.js?v=190"></script>
 
 {% if v %}
-	<script>function formkey() {return '{{v.formkey}}';}</script>
-	<script src="/assets/js/default.js?v=200"></script>
+	<script src="/assets/js/post_toast2.js?v=190"></script>
+	<script src="/assets/js/formatting.js?v=190"></script>
+	<script src="/assets/js/default.js?v=190"></script>
 {% endif %}
 
+<link rel="stylesheet" href="/assets/css/lite-youtube.css?v=190">
+<script src="/assets/js/lite-youtube.js?v=190"></script>
+
 </body>
+
 </html>

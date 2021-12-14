@@ -1,4 +1,4 @@
-{% extends "default.html" %}
+{% extends "home.html" %}
 
 {% block pagetype %}search{% endblock %}
 
@@ -6,83 +6,158 @@
 <title>Search for "{{query}}" - {{'SITE_NAME' | app_config}}"</title> <meta name="description" content="{{total}} result{{'s' if total != 1 else ''}}">
 {% endblock %}
 
-{% block subHeader %}
-<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
-	<div class="relative col-span-full flex items-center">
-		<div class="truncate">
-			<h1 class="font-bold text-xl font-heading leading-normal mb-0 truncate ellipsis">
-				<span class="hidden md:inline-block">Search Results:</span> "{{query}}"
-			</h1>
-			<div class="flex space-x-3 divide-x divide-gray-400 text-xs">
-				<ul class="flex items-center space-x-3 leading-normal mb-0">
-					<li>
-						<a class="{{ 'font-bold text-red-600' if '/posts/' in request.path else 'text-gray-500' }}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
-							Posts
-						</a>
-					</li>
-					<li>
-						<a class="{{ 'font-bold text-red-600' if '/comments/' in request.path else 'text-gray-500' }}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
-							Comments
-						</a>
-					</li>
-					<li>
-						<a class="{{ 'font-bold text-red-600' if '/users/' in request.path else 'text-gray-500' }}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">
-							Users
-						</a>
-					</li>
-				</ul>
-				<div class="hidden md:block pl-3 text-gray-500 leading-normal">
-					<strong>{{ total }}</strong>
-					{% if '/users/' in request.path %}
-					user{{ '' if total == 1 else 's' }} found
-					{% else %}
-					{{ sort }} result{{ '' if total == 1 else 's' }} matching
-					<strong>"{{query}}"</strong> {{ 'from all time' if t=='all' else 'in the last' }}
-					{% if t != 'all' %}<span class="font-bold">{{ t }}</span>{% endif %}
-					{% endif %}
+{% block PseudoSubmitForm %}{% endblock %}
+
+{% block navbar %}
+	{% if not '/users/' in request.path %}
+		<div class="mt-5 d-flex align-items-center">
+			<div class="dropdown dropdown-actions">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if t=="day" %}<i class="fas fa-calendar-day mr-1"></i>{% endif %}
+					{% if t=="week" %}<i class="fas fa-calendar-week mr-1"></i>{% endif %}
+					{% if t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>{% endif %}
+					{% if t=="year" %}<i class="fas fa-calendar mr-1"></i>{% endif %}
+					{% if t=="all" %}<i class="fas fa-infinity mr-1"></i>{% endif %}
+					{{t | capitalize}}
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+					{% if not t=="hour" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=hour"><i class="fas fa-clock mr-2"></i>Hour</a>{% endif %}
+					{% if not t=="day" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
+					{% if not t=="week" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
+					{% if not t=="month" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
+					{% if not t=="year" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
+					{% if not t=="all" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+				</div>
+			</div>
+
+			<div class="dropdown dropdown-actions">
+				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
+					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+					{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
+					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
+					{% if sort=="comments" %}<i class="fas fa-comments mr-1"></i>{% endif %}
+					{{sort | capitalize}}
+				</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+					{% if sort != "top" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=top&t={{t}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+					{% if sort != "bottom" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=bottom&t={{t}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
+					{% if sort != "new" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=new&t={{t}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+					{% if sort != "old" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=old&t={{t}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
+					{% if sort != "controversial" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=controversial&t={{t}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
+					{% if sort != "comments" and "/posts/" in request.path %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=comments&t={{t}}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
 				</div>
 			</div>
 		</div>
-		{% if not '/users/' in request.path %}
-		<div class="ml-auto pl-3 md:pl-0">
-			{% include "/dropdowns/SearchSorts.html" %}
-		</div>
-		{% endif %}
-	</div>
-</div>
+	{% endif %}
 {% endblock %}
 
 {% block content %}
 
-<div class="col-span-full px-4 md:px-0 py-4">
-	<p class="text-gray-500 text-sm">
-		Advanced search parameters (with examples): "author:quadnarca", "domain:reddit.com", "over18:true"
-	</p>
-	<!-- <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div> -->
-</div>
+<div class="row no-gutters my-md-3">
 
-<div class="col-span-full px-4 md:px-0">
-	<div class="posts" id="posts">
-		{% block listing_template %}
-		{% include "submission_listing.html" %}
-		{% endblock %}
+	<div class="col">
+
+		<div class="card search-results">
+
+			<div class="card-header bg-white d-none">
+				<ul class="list-inline no-bullets mb-0">
+					<li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
+					<li class="list-inline-item"><i class="fas fa-link text-gray-400"></i></li>
+				</ul>
+			</div>
+			<div class="card-body">
+				<div class="pl-md-3">
+					<div class="text-muted text-small mb-1">Advanced search parameters (with examples): "author:quadnarca", "domain:reddit.com", "over18:true"<div>
+					<br>
+					<div class="text-muted text-small mb-1">Showing {% block listinglength %}{{listing | length}}{% endblock %} of {{total}} result{{'s' if total != 1 else ''}} for</div>
+					<h1 class="h4 mb-0">{{query}}</h1>
+
+				</div>
+			</div>
+		</div>
 	</div>
+
 </div>
-{% endblock %}
 
-{% block pagenav %}
-<nav aria-label="Page navigation">
-	<ul class="pagination pagination-sm mb-0">
-		<li class="page-item{% if page==1 %} disabled{% endif %}">
 
-			<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+{% if not '/users/' in request.path %}
+
+<div class="flex-row tab-bar sticky d-none">
+
+	<ul class="nav post-nav mr-auto">
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='top' %} active{% endif %}" href="?sort=top&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
 		</li>
-		<li class="page-item{% if not next_exists %} disabled{% endif %}">
-			<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a></small>
-
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='bottom' %} active{% endif %}" href="?sort=bottom&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-down"></i>Bottom</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='new' %} active{% endif %}" href="?sort=new&q={{query | urlencode}}&t={{t}}"><i class="fas fa-sparkles"></i>New</a> 
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='old' %} active{% endif %}" href="?sort=old&q={{query | urlencode}}&t={{t}}"><i class="fas fa-book"></i>Old</a> 
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='fiery' %} active{% endif %}" href="?sort=fiery&q={{query | urlencode}}&t={{t}}"><i class="fas fa-bullhorn"></i>Controversial</a>
+		</li>
+		<li class="nav-item ">
+			<a class="nav-link {% if sort=='comments' %} active{% endif %}" href="/?sort=comments&q={{query | urlencode}}&t={{t}}"><i class="fas fa-comments"></i>Comments</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='random' %} active{% endif %}" href="?sort=random&q={{query | urlencode}}&t={{t}}"><i class="fas fa-arrow-alt-circle-down"></i>Random</a>
 		</li>
 	</ul>
-</nav>
 
-{% endblock %}
+	</div>
+	{% endif %}
+
+	<div class="row no-gutters">
+		<div class="col">
+			<div class="flex-row box-shadow-bottom d-flex justify-content-center justify-content-md-between align-items-center">
+				<ul class="nav settings-nav">
+					<li class="nav-item">
+						<a class="nav-link{% if '/posts/' in request.path %} active{% endif %}" href="/search/posts/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Posts</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link{% if  '/comments/' in request.path %} active{% endif %}" href="/search/comments/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Comments</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link{% if  '/users/' in request.path %} active{% endif %}" href="/search/users/?sort={{sort}}&q={{query | urlencode}}&t={{t}}">Users</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="row no-gutters">
+
+		<div class="col-12">
+
+			<div class="posts" id="posts">
+
+				{% block listing_template %}
+					{% include "submission_listing.html" %}
+				{% endblock %}
+
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+
+	{% block pagenav %}
+		<nav aria-label="Page navigation">
+			<ul class="pagination pagination-sm mb-0">
+				<li class="page-item{% if page==1 %} disabled{% endif %}">
+
+					<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+				</li>
+				<li class="page-item{% if not next_exists %} disabled{% endif %}">
+					<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a></small>
+
+				</li>
+			</ul>
+		</nav>
+
+	{% endblock %}

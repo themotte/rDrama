@@ -1,0 +1,38 @@
+
+<script src="/assets/CHRISTMAS/js/ban_modal.js?v=200"></script>
+
+<div class="modal fade" id="banModal" tabindex="-1" role="dialog" aria-labelledby="banModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content mx-auto max-w-3xl bg-gray-100 rounded-md shadow-lg">
+			<div class="modal-header pt-3">
+				<h5 id="banModalTitle"></h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"><i class="far fa-times"></i></span>
+				</button>
+			</div>
+			<div class="modal-body" id="ban-modal-body">
+
+				<form id="banModalForm">
+
+					<input type="hidden" name="formkey" value="{{v.formkey}}" >
+
+					<label for="ban-modal-link">Public ban reason (optional)</label>
+					<textarea maxlength="64" name="reason" form="banModalForm" class="form-control" id="ban-modal-link" aria-label="With textarea" placeholder="Enter reason"></textarea>
+
+					<label for="days" class="mt-3">Duration days</label>
+					<input type="number" step="any" name="days" id="days" class="form-control" placeholder="leave blank for permanent" >
+
+					<div class="custom-control custom-switch mt-3">
+						<input type="checkbox" class="custom-control-input" id="alts" name="alts">
+						<label class="custom-control-label" for="alts">Ban known alts</label>
+					</div>
+
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" id="banUserButton" class="btn btn-danger" data-bs-dismiss="modal"></button>
+			</div>
+		</div>
+	</div>
+</div>

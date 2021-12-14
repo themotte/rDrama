@@ -7,14 +7,15 @@
 {% block pagetype %}error-403{% endblock %}
 
 {% block content %}
-<div class="col-span-full h-screen flex items-center justify-center">
-	<div class="md:max-w-xl text-center">
-		<img loading="lazy" src="/assets/images/emojis/marseytroll.webp?v=200" class="w-14 h-14 object-contain mb-4">
+<div class="row justify-content-center">
+	<div class="col-10 col-md-5">
+	<div class="text-center px-3 my-8">
+		<img loading="lazy" src="/assets/images/emojis/marseytroll.webp?v=190">
+		<pre></pre>
 		<h1 class="h5">403 Forbidden</h1>
-		<p class="text-gray-500 mb-3">
-			YOU AREN'T WELCOME HERE GO AWAY
-		</p>
-		<a href="/" class="btn btn-gray">Go to frontpage</a>
+			<p class="text-muted mb-5">YOU AREN'T WELCOME HERE GO AWAY</p>
+			<div><a href="/" class="btn btn-primary">Go to frontpage</a></div>
+		</div>
 	</div>
 </div>
 {% endblock %}

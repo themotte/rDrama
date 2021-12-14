@@ -1,0 +1,109 @@
+{% extends "default.html" %}
+
+{% block subHeader %}
+	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="relative col-span-full flex items-center">
+			<div>
+				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+					Home
+				</h1>
+				<small class="block text-gray-700">
+					<span class="capitalize font-bold">{{ sort }}</span>
+					posts {{ 'from all time' if t=='all' else 'in the last' }}
+					{% if t != 'all' %}<span class="font-bold">{{ t }}{% endif %}
+				</small>
+			</div>
+			<div class="ml-auto">
+				{% include "/dropdowns/SubmissionSorts.html" %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block desktopBanner %}
+{% endblock %}
+
+{% block content %}
+<div class="col-span-full xl:col-span-9">
+
+	<ul class="flex flex-col sm:py-4 my-2.5 sm:my-0" id="posts">
+		{% include "submission_listing.html" %}
+	</ul>
+
+	{% if listing %}
+	<nav aria-label="Page navigation">
+		<ul class="pagination pagination-sm mb-0">
+			{% if page>1 %}
+			<li class="page-item">
+				<small><a class="page-link" href="?sort={{sort}}&page={{page-1}}&t={{t}}{% if only %}&only={{only}}{% endif %}" tabindex="-1">Prev</a></small>
+			</li>
+			{% else %}
+			<li class="page-item disabled"><span class="page-link">Prev</span></li>
+			{% endif %}
+			{% if next_exists %}
+			<li class="page-item">
+				<small><a class="page-link" href="?sort={{sort}}&page={{page+1}}&t={{t}}{% if only %}&only={{only}}{% endif %}">Next</a></small>
+			</li>
+			{% else %}
+			<li class="page-item disabled"><span class="page-link">Next</span></li>
+			{% endif %}
+		</ul>
+	</nav>
+	{% endif %}
+
+</div>
+{% endblock %}
+
+<!-- Sidebar -->
+{% block sidebar %}
+	{% include "/sidebars/HomeSidebar.html" %}
+{% endblock %}
+
+{% block modals %}
+	{% if v %}
+		{% include "award_modal.html" %}
+	{% endif %}
+
+	{% if v.agendaposter %}
+		<iframe width="0" height="0" src="https://www.youtube.com/embed/A2o15RCtSS0?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	{% endif %}
+{% endblock %}
+
+{% block scripts %}
+
+{% if v %}
+	<script src="/assets/CHRISTMAS/js/award_modal.js?v=200"></script>
+	<script src="/assets/CHRISTMAS/js/pusher.js?v=200"></script>
+{% endif %}
+
+<script src="/assets/CHRISTMAS/js/submission_listing.js?v=200"></script>
+
+{% if not v.fp %}
+	<script>
+		function fp(fp) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
+			var form = new FormData()
+			form.append("formkey", formkey());
+			xhr.withCredentials=true;
+			xhr.send(form);
+		};
+
+		const fpPromise = new Promise((resolve, reject) => {
+			const script = document.createElement('script');
+			script.onload = resolve;
+			script.onerror = reject;
+			script.async = true;
+			script.src = 'https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3/dist/fp.min.js';
+			document.head.appendChild(script);
+		})
+			.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
+
+		fpPromise
+			.then(fp => fp.get())
+			.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
+	</script>
+{% endif %}
+
+{% endblock %}

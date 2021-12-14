@@ -5,29 +5,13 @@
 <meta name="description" content="{{'SITE_NAME' | app_config}} Rules">
 {% endblock %}
 
-{% block subHeader %}
-	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
-		<div class="relative col-span-full flex items-center">
-			<div>
-				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
-					Rules
-				</h1>
-				<small class="block text-gray-700">
-					How to save yourself from the mop.
-				</small>
-			</div>
-		</div>
-	</div>
-{% endblock %}
-
 {% block content %}
-<div class="col-span-full">
-	<h5 class="text-muted text-uppercase">
-		{{'SITE_NAME'|app_config}} Rules{% if v and v.admin_level == 6 %} <a href="/admin/rules" class="btn btn-link text-lowercase">
-			<i class="far fa-fw fa-pencil"></i> Edit rules
-		</a>{% endif %}
-	</h5>
+<pre>
+
+
+</pre>
+<div class="mx-4 mt-2 mb-6">
+	<h5 class="text-muted text-uppercase">{{'SITE_NAME'|app_config}} Rules{% if v and v.admin_level == 6 %} <a href="/admin/rules" class="btn btn-link text-lowercase"><i class="far fa-fw fa-pencil"></i> Edit rules</a>{% endif %}</h5>
 
 	<div id="rules" class="my-3">
 		{{ rules | safe }}

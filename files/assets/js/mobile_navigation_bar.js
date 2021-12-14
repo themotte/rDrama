@@ -1,41 +1,44 @@
-let prevScrollpos = window.pageYOffset;
+var prevScrollpos = window.pageYOffset;
+window.onscroll = function () {
+	var currentScrollPos = window.pageYOffset;
 
-document.getElementsByTagName('body')[0].onscroll = () => {
-	let currentScrollPos = window.pageYOffset;
-	// var topBar = document.getElementById("fixed-bar-mobile");
-	const bottomBar = document.getElementById("mobile-bottom-navigation-bar");
-	// var dropdown = document.getElementById("mobileSortDropdown");
-	// var navbar = document.getElementById("navbar");
+	var topBar = document.getElementById("fixed-bar-mobile");
+
+	var bottomBar = document.getElementById("mobile-bottom-navigation-bar");
+
+	var dropdown = document.getElementById("mobileSortDropdown");
+
+	var navbar = document.getElementById("navbar");
 
 	if (bottomBar != null) {
-		if (currentScrollPos <= 60 || ((window.innerHeight + currentScrollPos) < document.body.offsetHeight)) {
-			// console.log('less than 60 greater than offsetHeight');
-			bottomBar.style.transform = "translateY(60px)";
+		if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
+			bottomBar.style.bottom = "0px";
+		} 
+		else if (currentScrollPos <= 125 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
+			bottomBar.style.bottom = "0px";
 		}
-		else if (prevScrollpos > currentScrollPos) {
-			// console.log('prev greater than current');
-			bottomBar.style.transform = "translateY(0px)"
+		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
+			bottomBar.style.bottom = "-50px";
 		}
 		else {
-			// console.log('else');
-			bottomBar.style.transform = "translateY(60px)";
+			bottomBar.style.bottom = "-50px";
 		}
 	}
 
-	// if (topBar != null && dropdown != null) {
-	// 	if (prevScrollpos > currentScrollPos) {
-	// 		topBar.style.top = "48px";
-	// 		navbar.classList.remove("shadow");
-	// 	} 
-	// 	else if (currentScrollPos <= 125) {
-	// 		topBar.style.top = "48px";
-	// 		navbar.classList.remove("shadow");
-	// 	}
-	// 	else {
-	// 		topBar.style.top = "-48px";
-	// 		dropdown.classList.remove('show');
-	// 		navbar.classList.add("shadow");
-	// 	}
-	// }
+	if (topBar != null && dropdown != null) {
+		if (prevScrollpos > currentScrollPos) {
+			topBar.style.top = "48px";
+			navbar.classList.remove("shadow");
+		} 
+		else if (currentScrollPos <= 125) {
+			topBar.style.top = "48px";
+			navbar.classList.remove("shadow");
+		}
+		else {
+			topBar.style.top = "-48px";
+			dropdown.classList.remove('show');
+			navbar.classList.add("shadow");
+		}
+	}
 	prevScrollpos = currentScrollPos;
 }

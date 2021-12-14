@@ -1,109 +1,178 @@
 {% extends "default.html" %}
 
-{% block subHeader %}
-	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
-		<div class="relative col-span-full flex items-center">
-			<div>
-				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
-					Home
-				</h1>
-				<small class="block text-gray-700">
-					<span class="capitalize font-bold">{{ sort }}</span>
-					posts {{ 'from all time' if t=='all' else 'in the last' }}
-					{% if t != 'all' %}<span class="font-bold">{{ t }}{% endif %}
-				</small>
+{% block desktopBanner %}
+
+{% if v %}
+	{% if not v.fp %}
+		<script>
+			function fp(fp) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
+				var form = new FormData()
+				form.append("formkey", formkey());
+				xhr.withCredentials=true;
+				xhr.send(form);
+			};
+
+			const fpPromise = new Promise((resolve, reject) => {
+				const script = document.createElement('script');
+				script.onload = resolve;
+				script.onerror = reject;
+				script.async = true;
+				script.src = '/assets/js/fp.js?v=3';
+				document.head.appendChild(script);
+			})
+				.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
+
+			fpPromise
+				.then(fp => fp.get())
+				.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
+		</script>
+	{% endif %}
+{% endif %}
+  
+
+<div class="row" style="overflow: visible;padding-top:5px;">
+	<div class="col">
+		<div class="d-flex justify-content-between align-items-center mr-2">
+
+			{% block navbar %}
+			<div class="font-weight-bold py-3">‎</div>
+
+			<div class="d-flex align-items-center sortingbarmargin">
+				<div class="text-small font-weight-bold mr-2">‎</div>
+				<div class="dropdown dropdown-actions">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						{% if t=="day" %}<i class="fas fa-calendar-day mr-1"></i>{% endif %}
+						{% if t=="week" %}<i class="fas fa-calendar-week mr-1"></i>{% endif %}
+						{% if t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>{% endif %}
+						{% if t=="year" %}<i class="fas fa-calendar mr-1"></i>{% endif %}
+						{% if t=="all" %}<i class="fas fa-infinity mr-1"></i>{% endif %}
+						{{t | capitalize}}
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+						{% if not t=="hour" %}<a class="dropdown-item" href="?sort={{sort}}&t=hour"><i class="fas fa-clock mr-2"></i>Hour</a>{% endif %}
+						{% if not t=="day" %}<a class="dropdown-item" href="?sort={{sort}}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
+						{% if not t=="week" %}<a class="dropdown-item" href="?sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
+						{% if not t=="month" %}<a class="dropdown-item" href="?sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
+						{% if not t=="year" %}<a class="dropdown-item" href="?sort={{sort}}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
+						{% if not t=="all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+					</div>
+				</div>
+
+				<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
+				<div class="dropdown dropdown-actions">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						{% if sort=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
+						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+						{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
+						{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+						{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
+						{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
+						{% if sort=="comments" %}<i class="fas fa-comments mr-1"></i>{% endif %}
+						{{sort | capitalize}}
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+						{% if sort != "hot" %}<a class="dropdown-item" href="?sort=hot&t={{t}}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
+						{% if sort != "top" %}<a class="dropdown-item" href="?sort=top&t={{t}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+						{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom&t={{t}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
+						{% if sort != "new" %}<a class="dropdown-item" href="?sort=new&t={{t}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+						{% if sort != "old" %}<a class="dropdown-item" href="?sort=old&t={{t}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
+						{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{t}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
+						{% if sort != "comments" %}<a class="dropdown-item" href="?sort=comments&t={{t}}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
+					</div>
+				</div>
 			</div>
-			<div class="ml-auto">
-				{% include "/dropdowns/SubmissionSorts.html" %}
+			{% endblock %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block PseudoSubmitForm %}
+
+<div class="row no-gutters d-none d-lg-flex mt-3 {% if not v %}mb-3{% endif %}">
+
+	<div class="col">
+		<div class="card pseudo-submit-form border">
+			<div class="card-header bg-gray-100">
+				<div class="mb-0">Create post</div>
+				<ul class="list-inline no-bullets mb-0 d-none">
+					<li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
+					<li class="list-inline-item"><i class="fas fa-link text-gray-400"></i></li>
+				</ul>
+			</div>
+			<div class="card-body">
+				{% if v %}
+					<a href="/submit">
+						<input type="text" class="form-control"
+						placeholder="Post..." aria-label="Username"
+						aria-describedby="basic-addon1">
+					</a>
+				{% else %}
+					<a href="/signup">
+						<input type="text" class="form-control"
+						placeholder="Post..." aria-label="Username"
+						aria-describedby="basic-addon1">
+					</a>
+				{% endif %}
 			</div>
 		</div>
 	</div>
-{% endblock %}
-
-{% block desktopBanner %}
-{% endblock %}
-
-{% block content %}
-<div class="col-span-full xl:col-span-9">
-
-	<ul class="flex flex-col sm:py-4 my-2.5 sm:my-0" id="posts">
-		{% include "submission_listing.html" %}
-	</ul>
-
-	{% if listing %}
-	<nav aria-label="Page navigation">
-		<ul class="pagination pagination-sm mb-0">
-			{% if page>1 %}
-			<li class="page-item">
-				<small><a class="page-link" href="?sort={{sort}}&page={{page-1}}&t={{t}}{% if only %}&only={{only}}{% endif %}" tabindex="-1">Prev</a></small>
-			</li>
-			{% else %}
-			<li class="page-item disabled"><span class="page-link">Prev</span></li>
-			{% endif %}
-			{% if next_exists %}
-			<li class="page-item">
-				<small><a class="page-link" href="?sort={{sort}}&page={{page+1}}&t={{t}}{% if only %}&only={{only}}{% endif %}">Next</a></small>
-			</li>
-			{% else %}
-			<li class="page-item disabled"><span class="page-link">Next</span></li>
-			{% endif %}
-		</ul>
-	</nav>
-	{% endif %}
 
 </div>
 {% endblock %}
 
-<!-- Sidebar -->
-{% block sidebar %}
-	{% include "/sidebars/HomeSidebar.html" %}
+{% block content %}
+
+<div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
+
+	<div class="col-12">
+
+		<div class="posts" id="posts">
+
+			{% include "submission_listing.html" %}
+
+		</div>
+	</div>
+</div>
+
 {% endblock %}
 
-{% block modals %}
-	{% if v %}
-		{% include "award_modal.html" %}
-	{% endif %}
-
-	{% if v.agendaposter %}
-		<iframe width="0" height="0" src="https://www.youtube.com/embed/A2o15RCtSS0?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-	{% endif %}
-{% endblock %}
-
-{% block scripts %}
-
-{% if v %}
-	<script src="/assets/js/award_modal.js?v=200"></script>
-	<script src="/assets/js/pusher.js?v=200"></script>
+{% block pagenav %}
+{% if listing %}
+<nav aria-label="Page navigation">
+	<ul class="pagination pagination-sm mb-0">
+		{% if page>1 %}
+		<li class="page-item">
+			<small><a class="page-link" href="?sort={{sort}}&page={{page-1}}&t={{t}}{% if only %}&only={{only}}{% endif %}" tabindex="-1">Prev</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Prev</span></li>
+		{% endif %}
+		{% if next_exists %}
+		<li class="page-item">
+			<small><a class="page-link" href="?sort={{sort}}&page={{page+1}}&t={{t}}{% if only %}&only={{only}}{% endif %}">Next</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Next</span></li>
+		{% endif %}
+	</ul>
+</nav>
 {% endif %}
 
-<script src="/assets/js/submission_listing.js?v=200"></script>
+{% if request.path == '/' and g.system and g.timestamp > session.get('tooltip_last_dismissed',0)+60*60*24 and (not g.system.endswith('/chrome') and not g.system.endswith('/other')) and not g.system.endswith('/webview') %}
+	<div id="mobile-prompt-container" class="fixed-bottom">
+		<div id="mobile-prompt" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-container="#mobile-prompt-container" data-bs-placement="top" data-bs-trigger="click" data-bs-original-title="Install the {{'SITE_NAME' | app_config}} webapp by saving this page to your home screen!"></div>
+	</div>
 
-{% if not v.fp %}
-	<script>
-		function fp(fp) {
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
-			var form = new FormData()
-			form.append("formkey", formkey());
-			xhr.withCredentials=true;
-			xhr.send(form);
-		};
+	<script src="/assets/js/home.js?v=190"></script>
+{% endif %}
 
-		const fpPromise = new Promise((resolve, reject) => {
-			const script = document.createElement('script');
-			script.onload = resolve;
-			script.onerror = reject;
-			script.async = true;
-			script.src = 'https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3/dist/fp.min.js';
-			document.head.appendChild(script);
-		})
-			.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
-
-		fpPromise
-			.then(fp => fp.get())
-			.then(result => {if (result.visitorId != '{{v.fp}}') fp(result.visitorId);})
-	</script>
+{% if v %}
+	<div class="d-none" id="strid">{{v.strid}}</div>
+	<script src="/assets/js/pusher.js?v=190"></script>
 {% endif %}
 
 {% endblock %}

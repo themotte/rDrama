@@ -1,0 +1,427 @@
+{% extends "default.html" %}
+
+{% block pagetype %}userpage{% endblock %}
+
+{% block title %}
+
+<!-- {% if u and u.profilecss and (u.admin_level or not (v and v.admin_level)) %}
+<link rel="stylesheet" href="/@{{u.username}}/profilecss">
+{% endif %} -->
+<title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
+{% if u.is_private %}
+<meta name="robots" content="noindex">
+{% endif %}
+<meta property="og:article:author" content="@{{u.username}}" >
+<meta property="article:section" content="{{u.username}}'s profile - {{'SITE_NAME' | app_config}}" >
+<meta property="article:published_time" content="{{u.created_date}}" >
+<meta property="og:description" name="description" content="{{u.coins}} {{'COINS_NAME' | app_config}} - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers - {% endif %}{% if not u.is_private %}{{u.post_count}} Posts - {{u.comment_count}} Comments - {% endif %}{{u.bio}}" >
+<meta property="og:author" name="author" content="@{{u.username}}" >
+<meta property="og:title" content="{{u.username}}" >
+<meta property="og:image" content="{{u.banner_url}}" >
+<meta property="og:url" content="{{u.url | full_link}}" >
+<meta property="og:site_name" content="{{request.host}}" >
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="{{request.host_url}}">
+<meta name="twitter:title" content="{{u.username}}'s profile - {{'SITE_NAME' | app_config}}" >
+<meta name="twitter:creator" content="@{{u.username}}">
+<meta name="twitter:description" content="{{u.coins}} {{'COINS_NAME' | app_config}} - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{u.post_count}} Posts - {{u.comment_count}} Comments -{% endif %} {{u.bio}}" >
+<meta name="twitter:image" content="{{u.banner_url}}" >
+<meta name="twitter:url" content="{{u.url | full_link}}" >
+{% endblock %}
+
+{% block subHeader %}
+<img src="{{ u.banner_url}}" class="-mb-0.5 w-full h-48 lg:h-[28rem] object-cover"/>
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	{% if v %}
+	<div class="absolute -top-12 right-3">
+		<ul class="flex flex-wrap space-x-2 items-center mb-0">
+			{% if v.admin_level > 1 %}
+			<li>
+				{% include '/dropdowns/ProfileAdminDropdown.html' %}
+			</li>
+			{% endif %}
+			{% if not u.is_suspended %}
+				<li>
+					{% include '/dropdowns/ProfileDropdown.html' %}
+				</li>
+				{% if v.id == u.id %}
+				<li>
+					<a href="/settings/profile" class="btn btn-gray shadow">
+						<i class="fas fa-user-edit fa-fw fa-sm mr-2"></i>
+						Edit profile
+					</a>
+				</li>
+				{% endif %}
+				{% if u.song and v and v.mute and not u.unmutable %}
+				<li id="pause2">
+					<button class="btn btn-gray shadow" onclick="pause()">
+						<i class="fas fa-pause fa-sm fa-fw md:mr-1"></i>
+						<span class="hidden md:inline-block">Pause anthem</span>
+					</button>
+				</li>
+				<li id="play2">
+					<button class="btn btn-gray shadow hidden" onclick="play()">
+						<i class="fas fa-play fa-sm fa-fw md:mr-1"></i>
+						<span class="hidden md:inline-block">Play anthem</span>
+					</button>
+				</li>
+				{% endif %}
+				{% if v.id != u.id %}
+				<li>
+					<button class="btn btn-gray shadow" data-bs-toggle="modal" data-bs-target="#directMessageModal">
+						<i class="fas fa-paper-plane fa-sm fa-fw md:mr-1"></i>
+						<span class="hidden md:inline-block">Message</span>
+					</button >
+				</li>
+				{% if u.id != 995 %}
+				<li id="button-unsub2" class="{% if not is_following %}hidden{% endif %}">
+					<button class="btn btn-gray shadow" onclick="post_toast2('/unfollow/{{u.username}}','button-unsub2','button-sub2')">
+						<i class="fas fa-heart-broken fa-sm fa-fw mr-1"></i>
+						Unfollow
+					</button>
+				</li>
+				{% endif %}
+				<li id="button-sub2" class="{% if is_following or u.is_nofollow or u.is_blocked %}hidden{% endif %}">
+					<button class="btn btn-gray shadow" onclick="post_toast2('/follow/{{u.username}}','button-unsub2','button-sub2')">
+						<i class="far fa-heart fa-sm fa-fw mr-1"></i>
+						Follow
+					</button>		
+				</li>
+				{% endif %}
+			{% endif %}
+		</ul>
+	</div>
+	{% endif %}
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+	<div class="relative col-span-full flex items-center">
+		<div class="flex items-center">
+			<img class="h-14 w-14 bg-white p-[3px] border border-gray-400" src="{{ u.profile_url }}" alt="Your avatar"/>
+			<div class="pl-2">
+				<!-- <h1 class="font-bold text-2xl leading-normal mb-0" style="color: #{{u.namecolor}}">
+					<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span>
+				</h1> -->
+				<div class="flex flex-wrap items-center space-x-2">
+					<h1 class="font-bold text-2xl leading-normal mb-0">
+						{{ u.username }}
+					</h1>
+					{% if u.verified %}
+					<i class="fas fa-badge-check fa-fw fa-sm" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.verified}}"></i>
+					{% endif %}
+					{% if u.admin_level > 1 or (u.admin_level == 1 and not(v and v.admin_level > 1)) %}
+					<i class="fas fa-broom text-admin fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Admin"></i>
+					{% elif u.admin_level == 1 and v and v.admin_level > 1 %}
+					<i class="fas fa-broom text-admin fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Meme Admin"></i>
+					{% endif %}
+					{% if v and v.has_follower(u) and not v.is_nofollow %}
+					<span class="badge badge-green">Follows you</span>
+					{% endif %}
+					{% if u.customtitle %}
+					<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}
+						<img loading="lazy" height="20" src="/assets/CHRISTMAS/images/quadrants/{{u.quadrant}}.webp?v=200">{% endif %}{{u.customtitle | safe}}
+					</p>
+					{% endif %}
+				</div>
+				<div class="flex items-center space-x-2 text-sm text-gray-500">
+					<div>
+						rDramanaut since
+						<span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.created_datetime}}">
+							{{u.created_date}}
+						</span>
+					</div>
+					{% if u.username != u.original_username %}
+					<div>&#183;</div>
+					<div>
+						a.k.a.
+						<span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original username: @{{u.original_username}}">@{{u.original_username}}
+						</span>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="ml-auto flex items-center space-x-4">
+			{% if u.id == v.id or not u.is_private %}
+			<ul class="hidden xl:flex items-center space-x-3 mb-0">
+				<li>
+					<a href="/@{{ u.username }}/followers" class="text-black text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</a>
+					<small class="block font-bold text-gray-500">Followers</small>
+				</li>
+				<li>
+					<div class="text-black text-lg font-bold mb-0">{{ u.coins }}</div>
+					<small class="block font-bold text-gray-500">Dramacoin</small>
+				</li>
+				{% if u.procoins %}
+				<li>
+					<div class="text-black text-lg font-bold mb-0">{{ u.procoins }}</div>
+					<small class="block font-bold text-gray-500">MarseyBux</small>
+				</li>
+				{% endif %}
+			</ul>
+			{% endif %}
+		</div>
+	</div>
+	<div class="relative col-span-full flex xl:hidden flex-col">
+		<div class="mt-3">
+			{% if u.bio_html %}
+			<div class="text-black text-break">{{u.bio_html | safe}}</div>
+			{% else %}
+			<p class="italic text-gray-500 text-sm">No bio...</p>
+			{% endif %}
+		</div>
+		{% if u.id == v.id or not u.is_private %}
+			<ul class="flex items-center space-x-3 mt-3 mb-0">
+				<li>
+					<a href="/@{{ u.username }}/followers" class="text-black text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</a>
+					<small class="block font-bold text-gray-500">Followers</small>
+				</li>
+				<li>
+					<div class="text-black text-lg font-bold mb-0">{{ u.coins }}</div>
+					<small class="block font-bold text-gray-500">Dramacoin</small>
+				</li>
+				{% if u.procoins %}
+				<li>
+					<div class="text-black text-lg font-bold mb-0">{{ u.procoins }}</div>
+					<small class="block font-bold text-gray-500">MarseyBux</small>
+				</li>
+				{% endif %}
+			</ul>
+		{% endif %}
+		{% if u.badges %}
+			<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
+				{% for b in u.badges %}
+				<li>
+					{% if b.url %}
+					<a rel="nofollow noopener noreferrer" href="{{b.url}}">
+						<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+					</a>
+					{% else %}
+					<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+					{% endif %}
+				</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+		{% if u.friends_html or u.enemies_html %}
+			<div class="mt-3">
+				{% if u.friends_html %}
+				<p class="label">Friends</p>
+				{{u.friends_html | safe}}
+				{% endif %}
+
+				{% if u.enemies_html %}
+				<p class="label">Enemies</p>
+				{{u.enemies_html | safe}}
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
+
+{% block subHeader2 %}
+<div class="md:px-4 sticky top-0 z-20">
+	<div class="max-w-screen-2xl mx-auto">
+		<div class="px-4 py-2 flex space-x-3 divide-x divide-gray-400 text-xs bg-gray-100 md:border-b md:border-gray-300">
+			<ul class="flex items-center space-x-3 leading-normal mb-0">
+				<li>
+					<a class="{{ 'font-bold text-red-600' if not 'comments' in request.path else 'text-gray-700' }}" href="/@{{u.username}}">
+						Posts <span class="text-gray-500 font-normal">{{ u.post_count }}</span>
+					</a>
+				</li>
+				<li>
+					<a class="{{ 'font-bold text-red-600' if 'comments' in request.path else 'text-gray-700' }}" href="/@{{u.username}}/comments">
+						Comments <span class="text-gray-500 font-normal">{{ u.comment_count }}</span>
+					</a>
+				</li>
+				{% if u.id == v.id %}
+				<li>
+					<a class="{{ 'font-bold text-red-600' if 'saved/posts' in request.full_path else 'text-gray-700' }}" href="/@{{u.username}}/saved/posts">
+						Saved Posts
+					</a>
+				</li>
+				<li>
+					<a class="{{ 'font-bold text-red-600' if 'saved/comments' in request.full_path else 'text-gray-700' }}" href="/@{{u.username}}/saved/comments">
+						Saved Comments
+					</a>
+				</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-span-full xl:col-span-9">
+
+	{% if v and v.admin_level > 1 and u.agendaposter %}
+	<!-- Non-dismissable Alerts -->
+	<div class="p-2.5 md:p-0">
+		<!-- Banned -->
+		<div class="mt-4 mb-0 rounded-lg shadow-lg flex items-center p-3 text-yellow-900 bg-yellow-500 border border-yellow-600 shadow-inset-t-white-10">
+			<i class="fas fa-grin fa-fw mr-1"></i>
+			<div>
+				{{ u.username }} has Agendaposter theme activated
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+	{% if u.is_suspended %}
+	<!-- Non-dismissable Alerts -->
+	<div class="p-2.5 md:p-0">
+		<!-- Banned -->
+		<div class="mt-4 mb-0 rounded-lg shadow-lg flex items-center p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
+			<i class="fas fa-gavel fa-fw mr-1"></i>
+			<div>
+				{{ u.username }} was banned by
+				<a href="{{u.banned_by.url}}" class="text-white hover:underline">@{{u.banned_by.username}}</a>
+			</div>
+			{% if u.unban_utc %}
+				<div class="ml-auto text-white font-bold text-red-200">{{u.unban_string}}</div>
+			{% endif %}
+		</div>
+	</div>
+	{% endif %}
+
+	{% if v and v.admin_level > 1 and u.shadowbanned %}
+	<!-- Non-dismissable Alerts -->
+	<div class="p-2.5 md:p-0">
+		<!-- Banned -->
+		<div class="mt-4 mb-0 rounded-lg shadow-lg p-3 text-white bg-red-600 border border-red-900 shadow-inset-t-white-10">
+			<i class="fas fa-ghost fa-fw mr-1"></i>
+			<span>
+				{{ u.username }} is shadowbanned
+			</span>
+		</div>
+	</div>
+	{% endif %}
+
+	<div class="sm:py-4 my-2.5 sm:my-0">
+		{% if not "saved" in request.full_path %}
+		<div class="flex justify-end md:justify-start mb-3 md:m-0 px-2.5 md:px-0">
+			{% include "/dropdowns/SubmissionSorts.html" %}
+		</div>
+		<hr class="hidden md:block my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
+		{% endif %}
+		<ul>
+			{% include "submission_listing.html" %}
+		</ul>
+		<!-- Pagination -->
+		{% if listing %}
+		<div class="flex flex-wrap items-center">
+			{% if page>1 %}
+			<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
+				Prev
+			</a>
+			{% else %}
+			<span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Prev</span>
+			{% endif %}
+			{% if next_exists %}
+			<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
+			{% else %}
+			<span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Next</span>
+			{% endif %}
+		</div>
+		{% endif %}
+	</div>
+</div>
+
+{% if u.song and v and v.mute and not u.unmutable %}
+	<a id="pause1" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
+	<a id="play1" class="btn btn-secondary hidden" href="javascript:void(0)" onclick="play()">Play anthem</a>
+{% endif %}
+
+{% endblock %}
+
+{% block sidebar %}
+{% include "/sidebars/ProfileSidebar.html" %}
+{% endblock %}
+
+{% block modals %}
+{% if v %}
+	{% include "emoji_modal.html" %}
+	{% include "gif_modal.html" %}
+	{% include "/modals/ModalDirectMessage.html" %}
+	{% include "/modals/ModalGiftCoins.html" %}
+	{% if v.admin_level > 1 %}
+		{% include "/modals/ModalAdminManageUser.html" %}
+	{% endif %}
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if v %}
+<script>
+	const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
+
+	function updateTax() {
+
+		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+		// let suf = mobile ? "-mobile" : "";
+
+		if(isNaN(amount) || amount < 0) {
+			amount = 0;
+		}
+		
+		document.getElementById("coins-transfer-taxed").innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+	}
+
+	function transferCoins() {
+		let t = event.target;
+		t.disabled = true;
+
+		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+		let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+
+		post_toast_callback("/@{{u.username}}/transfer_coins",
+			{"amount": document.getElementById("coins-transfer-amount").value},
+			(xhr) => {
+				if(xhr.status == 200) {
+					document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
+					// document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
+					document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
+				}
+			}
+			);
+
+		setTimeout(_ => t.disabled = false, 2000);
+	}
+</script>
+{% endif %}
+
+{% if u.song %}
+<script>
+	const uid = {{ u.id }}
+
+	let audio = new Audio(`/songs/${uid}`);
+	audio.loop=true;
+
+	function pause() {
+		audio.pause();
+		document.getElementById("pause1").classList.toggle("hidden");
+		document.getElementById("play1").classList.toggle("hidden");
+		document.getElementById("pause2").classList.toggle("hidden");
+		document.getElementById("play2").classList.toggle("hidden");
+	}
+
+	function play() {
+		audio.play();
+		document.getElementById("pause1").classList.toggle("hidden");
+		document.getElementById("play1").classList.toggle("hidden");
+		document.getElementById("pause2").classList.toggle("hidden");
+		document.getElementById("play2").classList.toggle("hidden");
+	}
+
+	window.addEventListener('load', (e) => {
+		audio.play();
+		document.getElementById('userpage').addEventListener('click', () => {
+			if (audio.paused) audio.play(); 
+		}, {once : true});
+	});
+</script>
+{% endif %}
+
+<script defer src="/assets/CHRISTMAS/js/userpage.js?v=200"></script>
+{% endblock %}

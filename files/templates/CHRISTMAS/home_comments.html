@@ -1,0 +1,50 @@
+{% extends "default.html" %}
+
+{% block subHeader %}
+	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="relative col-span-full flex items-center">
+			<div>
+				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+					Comments
+				</h1>
+				<small class="block text-gray-700">
+					<span class="capitalize font-bold">{{ sort }}</span>
+					comments {{ 'from all time' if t=='all' else 'in the last' }}
+					{% if t != 'all' %}<strong>{{ t }}</strong>{% endif %}
+				</small>
+			</div>
+			<div class="ml-auto">
+				{% include "/dropdowns/SubmissionSorts.html" %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block content %}
+	<!-- Comments list -->
+	<div class="col-span-full px-2.5 md:px-0" id="posts">
+		{% include "comments.html" %}
+	</div>
+	<!-- Pagination -->
+	<div class="col-span-full">
+		<ul class="flex flex-wrap items-center mb-4">
+			{% if page>1 %}
+			<li>
+				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">
+					Prev
+				</a>
+			</li>
+			{% else %}
+			<li><span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Prev</span></li>
+			{% endif %}
+			{% if next_exists %}
+			<li class="page-item">
+				<a class="block px-2 py-1 text-sm font-bold text-gray-700 hover:text-gray-900 bg-gray-300 hover:bg-gray-400 active:shadow-inner" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a>
+			</li>
+			{% else %}
+			<li><span class="block px-2 py-1 text-sm font-bold text-gray-400 bg-gray-300/50 disabled">Next</span></li>
+			{% endif %}
+		</ul>
+	</div>
+{% endblock %}

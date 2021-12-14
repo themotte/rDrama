@@ -1,172 +1,188 @@
-{% block title %}
-<title>Create a post - {{'SITE_NAME' | app_config}}</title>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-{% extends "default.html" %}
+		<script src="/assets/js/bootstrap.js?v=190"></script>
 
-{% block subHeader %}
-	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
-		<div class="relative col-span-full flex items-center">
-			<div>
-				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
-					Create post
-				</h1>
-				<small class="block text-gray-700">
-					Share drama with the community.
-				</small>
-			</div>
-			<div class="ml-auto">
-				{% if error %}<span class="text-danger mr-2">{{error}}</span>{% endif %}
-				<button class="btn btn-green" id="create_button" type="submit" form="submitform" disabled>Post</button>
-			</div>
-		</div>
-	</div>
-{% endblock %}
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190">
 
-{% block content %}
-<div class="col-span-full xl:col-span-9 sm:py-4 px-2.5 md:px-0 my-2.5 sm:my-0">
-
-	<div class="flex items-center mb-4">
-		<img src="{{ v.profile_url }}" class="w-8 h-8 object-cover rounded" alt="My avatar"/>
-		<div class="text-lg text-black font-bold pl-2">{{ v.username }}</div>
-	</div>
-
-	<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" class="flex flex-col space-y-6">
-
-		<!-- Post title field section -->
-		<div class="flex flex-col">
-			<label for="post-title" class="label text-black">Title</label>
-			<div>
-				<!-- Input field -->
-				<input class="form-input" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="rdrama.net is one of the most malevolent, cruel, coldhearted online communities you'll ever find" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
-				<!-- Add emoji button -->
-				<button type="button" class="mt-1 text-sm text-gray-400 hover:text-gray-500" onclick="loadEmojis('post-title')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">
-					Add emoji
-				</button>
-			</div>
-		</div>
-
-		<!-- Link field section -->
-		<div id="urlblock" class="flex flex-col">
-			<label for="url" class="label text-black">
-				Link
-				<span class="italic text-sm font-normal text-gray-500">(optional if you have text)</span>
-			</label>
-			<div>
-				<!-- Input field -->
-				<input class="form-input" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="https://www.youtube.com/watch?v=iik25wqIuFo" value="{{request.values.get('url','')}}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
-				<small class="block mt-1 text-gray-500">
-					To post an image, use a direct image link such as i.imgur.com
-				</small>
-			</div>
-		</div>
-
-		<!-- Attachment field section -->
-		<div class="flex flex-col">
-			<label for="file" class="label text-black">
-				Image or Video
-				<span class="italic text-sm font-normal text-gray-500">(optional)</span>
-			</label>
-			<div>
-				<!-- Input field -->
-				<label class="btn btn-gray w-32 truncate" for="file-upload">
-					<i class="fas fa-file fa-fw fa-sm mr-1"></i>
-					<span id="filename-show" class="truncate ellipsis">Select file</span>
-					<input id="file-upload" type="file" name="file" accept="image/*, video/*" hidden oninput="hide_image()">
-				</label>
-				<small class="block mt-1 text-gray-500">
-					You may upload videos.
-				</small>
-			</div>
-			<!-- Image preview QoL-->
-			<!-- <img loading="lazy" id="image-preview" class="shadow-md p-1 bg-white border border-gray-900 w-72"/> -->
-			<div id="image-upload-block" class="hidden mt-2">
-				<img loading="lazy" id="image-preview" class="shadow-sm p-[3px] bg-white w-72"/>
-			</div>
-		</div>
-
-		<!-- Link field section -->
-		<div class="flex flex-col">
-			<label for="body" class="label text-black">
-				Post
-				<span class="italic text-sm font-normal text-gray-500">(optional if you have a link)</span>
-			</label>
-			<!-- Input field -->
-			<div class="relative rounded border border-gray-300 bg-white w-full">
-				<textarea form="submitform" id="post-text" class="p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown('post-text','preview');charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
-				<ul class="flex space-x-4 px-3 py-2 border-t border-dashed border-gray-300 mb-0">
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('post-text')">
-							<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
-						</button>
-					</li>
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('post-text')">
-							<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
-						</button>
-					</li>
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('post-text')">
-							<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
-						</button>
-					</li>
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="commentForm('post-text');getGif()">
-							<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
-						</button>
-					</li>
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam fa-fw fa-sm"></i>
-						</button>
-					</li>
-				</ul>
-				<span class="absolute right-3 bottom-3 z-10 text-xs font-medium text-gray-500" id="character-count-submit-text-form"></span>
-			</div>
-			<a href="/formatting" target="_blank" class="block mt-2 text-xs text-gray-500 hover:text-gray-400">Formatting help</a>
-		</div>
-
-		<!-- <div class="btn btn-secondary" onclick="document.getElementById('preview').classList.toggle('d-none');" style="float: right;">
-			Toggle preview
-		</div> -->
-		<div id="preview" class="hidden my-3"></div>
-
-		<!-- User form key (required) -->
-		<input type="hidden" name="formkey" value="{{v.formkey}}" class="hidden">
-	</form>
-
-	<ul class="flex xl:hidden flex-col space-y-4 mb-0">
-		<li class="flex items-center">
-			<input type="checkbox" id="nsfwCheck-mobile" name="over_18" form="submitform">
-			<label class="leading-4 ml-2 inline-block badge badge-red select-none" for="nsfwCheck">18+</label>
-		</li>
-		<li class="flex items-center">
-			<input type="checkbox" id="privateCheck-mobile" name="private" form="submitform">
-			<label class="leading-4 ml-2 inline-blue badge badge-blue select-nonee" for="privateCheck">Draft</label>
-		</li>
-		{% if v.paid_dues %}
-		<li class="flex items-center">
-			<input type="checkbox" id="clubCheck-mobile" name="club" form="submitform">
-			<label class="leading-4 ml-2 inline-block badge badge-yellow select-none" for="clubCheck">Country Club Thread</label>
-		</li>
+		{% if request.host == 'pcmemes.net' %}
+			{% set cc='Splash Mountain' %}
+		{% else %}
+			{% set cc='Country Club' %}
 		{% endif %}
-	</ul>
 
-</div>
-{% endblock %}
+		{% block title %}
+		<title>Create a post - {{'SITE_NAME' | app_config}}</title>
+		{% endblock %}
 
-{% block sidebar %}
-	{% include '/sidebars/SubmitSidebar.html' %}
-{% endblock %}
+		
+		{% block stylesheets %}
+		{% if v %}
+			<style>:root{--primary:#{{v.themecolor}}}</style>
+			<link rel="stylesheet" href="/assets/css/main.css?v=211"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?v=190">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?v=190">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+		{% else %}
+			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+			<link rel="stylesheet" href="/assets/css/main.css?v=211">
+			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?v=190">
+		{% endif %}
+		{% endblock %}
 
-{% block modals %}
-	{% include "emoji_modal.html" %}
-	{% include "gif_modal.html" %}
-	{% include '/awards/Christmas/Snow.html' %}
-{% endblock %}
+			<link href="/assets/css/fa.css?v=193" rel="stylesheet"> </head>
 
-{% block scripts %}
-	<script defer src="/assets/js/marked.js?v=200"></script>
-	<script defer src="/assets/js/submit.js?v=200"></script>
-	<script defer src="/assets/js/christmas/snow.js?v=200"></script>
-{% endblock %}
+<body id="submit" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}display: block;">
+
+				{% include "header.html" %}
+
+		{% block form %}
+
+		
+		<div class="submit-grid-view">
+			<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" style="grid-column: 2">
+
+				<div class="container">
+
+						<div class="row justify-content-center mb-5">
+
+								<div class="col p-3 py-md-0">
+
+										<h1 class="d-none d-md-block mt-3">Create a post</h1>
+
+										<h2 class="h3 d-md-none mt-5">Create a post</h2>
+
+										<div class="body">
+
+												<input type="hidden" name="formkey" value="{{v.formkey}}">
+
+												<label for="title">Post Title</label>
+
+
+												<input class="form-control" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="Required" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
+
+												<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn-2">
+													<div id="emoji-reply-btn-2" onclick="loadEmojis('post-title')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
+												</label>
+
+												<div id="urlblock">
+														<label for="URL" class="mt-3">URL</label>
+														<input class="form-control" id="post-URL" aria-describedby="URLHelp" name="url" placeholder="Optional if you have text." value="{{request.values.get('url','')}}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
+														<small class="form-text text-muted">To post an image, use a direct image link such as i.imgur.com</small>
+												</div>
+												<div id="image-upload-block">
+													<div><label class="mt-3">Attachment Upload</label></div>
+
+													<img loading="lazy" id="image-preview" class="w-100">
+													<label class="btn btn-secondary m-0" for="file-upload">
+														<div id="filename-show">Select File</div>
+														<input id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*, video/*" hidden>
+													</label>
+													<small class="form-text text-muted">Optional if you have text.</small>
+													<small class="form-text text-muted">You can upload images or videos.</small>
+												</div>
+												</div>
+
+												<label for="body" class="mt-3">Text<i class="fas fa-info-circle text-gray-400 ml-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Uses markdown. Limited to 10000 characters."></i></label>
+
+												<div>
+													<textarea form="submitform" id="post-text" class="form-control rounded" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown('post-text','preview');charLimit('post-text','character-count-submit-text-form');checkForRequired()" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" required></textarea>
+
+													<div class="btn btn-secondary fl-r mt-3" onclick="document.getElementById('preview').classList.toggle('d-none');">
+														Toggle preview
+													</div>
+
+													<div class="text-small font-weight-bold mt-1" id="character-count-submit-text-form" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
+
+													<div id="preview" class="my-3"></div>
+												</div>
+
+												<p></p>
+												<small class="btn btn-secondary format d-inline-block m-0">
+												<i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bold"></i>
+												</small>
+												&nbsp; 
+												<small class="btn btn-secondary format d-inline-block m-0">
+												<i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Italicize"></i>
+												</small>
+												&nbsp; 
+												<small class="btn btn-secondary format d-inline-block m-0">
+												<i class="fas fa-quote-right" aria-hidden="true" onclick="makeQuote('post-text')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Quote"></i>
+												</small>
+												&nbsp;
+												<small class="btn btn-secondary format d-inline-block m-0"><span class="font-weight-bolder text-uppercase" aria-hidden="true" onclick="getGif();commentForm('post-text')" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add GIF">GIF</span></small>
+												&nbsp;
+												<label class="btn btn-secondary format d-inline-block m-0" for="emoji-reply-btn">
+													<div id="emoji-reply-btn" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam"></i></div>
+												</label>
+																
+												<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-submit">
+													<div id="filename-show-submit"><i class="far fa-image"></i></div>
+													<input id="file-upload-submit" type="file" name="file2" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-submit').innerHTML='image';" hidden>
+												</label>		
+
+												<pre></pre>
+												<div class="form-text text-small"><a href="/formatting" {% if v and v.newtab %}target="_blank"{% endif %}>Formatting help</a></div>
+												<pre></pre>
+
+												<div class="custom-control custom-checkbox">
+														<input type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18">
+														<label class="custom-control-label" for="nsfwCheck">+18</label>
+												</div>
+												<div class="custom-control custom-checkbox">
+														<input type="checkbox" class="custom-control-input" id="privateCheck" name="private">
+														<label class="custom-control-label" for="privateCheck">Draft</label>
+												</div>
+
+												{% if v.paid_dues %}
+													<div class="custom-control custom-checkbox">
+														<input type="checkbox" class="custom-control-input" id="clubCheck" name="club">
+														<label class="custom-control-label" for="clubCheck">{{cc}} thread</label>
+													</div>
+												{% endif %}
+												<pre>
+
+
+
+
+
+
+												</pre>
+										</div>
+
+								</div>
+
+						</div>
+
+				<div class="container">
+						<div class="row fixed-bottom bg-white border-top p-3" id="" style="z-index: 100; bottom: 0px; transition: bottom 220ms cubic-bezier(0, 0, 0.2, 1) 0s;">
+								<div class="col">
+										<a href="/" class="btn btn-secondary">Cancel</a>
+								</div>
+								<div class="col text-right">
+										{% if error %}<span class="text-danger mr-2">{{error}}</span>{% endif %}
+										<button class="btn btn-outline-purple" id="create_button" type="submit" disabled>Post</button>
+								</div>
+						</div>
+				</div>
+
+			</form>
+
+		</div>
+		{% endblock %}
+
+		<script src="/assets/js/marked.js?v=190"></script>
+		<script src="/assets/js/formatting.js?v=190"></script>
+		<script src="/assets/js/submit.js?v=190"></script>
+
+
+		{% include "emoji_modal.html" %}
+		{% include "gif_modal.html" %}
+
+</body>
+
+</html>

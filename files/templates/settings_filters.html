@@ -4,50 +4,14 @@
 
 {% block content %}
 
+
 <div class="row">
 
 	<div class="col col-lg-8">
 
 		<div class="settings">
 
-			{% if v.grinch %}
-
-			<h2 class="label text-black">Grinch Mode</h2>
-
-			<div class="body w-lg-100">
-
-				<div>
-					<input type="checkbox" id="grincheffect" name="grincheffect"{% if v.grincheffect %} checked{% endif %} onchange="post_toast('/settings/profile?grincheffect='+document.getElementById('grincheffect').checked);">
-					<label class="inline-block pl-2 text-gray-400" for="grincheffect">
-						Disable holigay music.
-					</label>
-				</div>
-
-			</div>
-
-			{% endif %}
-
-			<h2 class="label text-black">Highlight New Comments</h2>
-
-			<div class="body w-lg-100">
-
-				<div>
-					<input type="checkbox" id="highlightcomments" name="highlightcomments"{% if v.highlightcomments %} checked{% endif %} onchange="post_toast('/settings/profile?highlightcomments='+document.getElementById('highlightcomments').checked);">
-					<label class="inline-block pl-2 text-gray-400" for="highlightcomments">
-						Highlight new comments with a red dot since your last visit to a thread.
-					</label>
-				</div>
-
-			</div>
-
-			<h2 class="label text-black">Card view</h2>
-
-			<div>
-				<input type="checkbox" id="cardview" name="cardview"{% if v.cardview %} checked{% endif %} onchange="post_toast('/settings/profile?cardview='+document.getElementById('cardview').checked);">
-				<label class="inline-block pl-2 text-gray-400" for="cardview">View posts in a larger, card format.</label>
-			</div>
-
-			<h2 class="h5 text-black">Frontpage Size</h2>
+			<h2 class="h5" name="referral">Frontpage Size</h2>
 
 			<div class="settings-section rounded">
 				<div class="d-lg-flex border-bottom">
@@ -58,7 +22,7 @@
 					<div class="body w-lg-100">
 						<p>Change how many posts appear on every page.</p>
 						<div class="input-group mb2">
-							<select id='frontsize' form="profile-settings" name="frontsize" onchange="post_toast('/settings/profile?frontsize='+document.getElementById('frontsize').value)">
+							<select id='frontsize' class="form-control" form="profile-settings" name="frontsize" onchange="post_toast('/settings/profile?frontsize='+document.getElementById('frontsize').value)">
 							{% for entry in [25, 50, 100] %}
 								<option value="{{entry}}"{{' selected' if v.frontsize==entry}}>{{entry}}</option>
 							{% endfor %}
@@ -71,7 +35,7 @@
 			</div>
 
 
-			<h2 class="h5 text-black" name="referral">Default Sorting and Time Filter</h2>
+			<h2 class="h5" name="referral">Default Sorting and Time Filter</h2>
 
 			<div class="settings-section rounded">
 
@@ -83,7 +47,7 @@
 						<div class="body w-lg-100">
 							<p>Change the default sorting for comments.</p>
 							<div class="input-group mb2">
-								<select id='defaultsortingcomments' form="profile-settings" name="defaultsortingcomments" onchange="post_toast('/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
+								<select id='defaultsortingcomments' class="form-control" form="profile-settings" name="defaultsortingcomments" onchange="post_toast('/settings/profile?defaultsortingcomments='+document.getElementById('defaultsortingcomments').value)">
 								{% for entry in ["new", "old", "top", "bottom", "controversial"] %}
 									<option value="{{entry}}"{{' selected' if v.defaultsortingcomments==entry}}>{{entry}}</option>
 								{% endfor %}
@@ -102,7 +66,7 @@
 						<div class="body w-lg-100">
 							<p>Change the default sorting for posts.</p>
 							<div class="input-group mb2">
-								<select id='defaultsorting' form="profile-settings" name="defaultsorting" onchange="post_toast('/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
+								<select id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="post_toast('/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
 								{% for entry in ["hot", "new", "old", "top", "bottom", "controversial", "comments"] %}
 								<option value="{{entry}}"{{' selected' if v.defaultsorting==entry}}>{{entry}}</option>
 								{% endfor %}
@@ -121,7 +85,7 @@
 						<div class="body w-lg-100">
 							<p>Change the default time filter for posts.</p>
 							<div class="input-group mb2">
-								<select id='defaulttime' form="profile-settings" name="defaulttime" onchange="post_toast('/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
+								<select id='defaulttime' class="form-control" form="profile-settings" name="defaulttime" onchange="post_toast('/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
 								{% for entry in ["hour", "day", "week", "month", "year", "all"] %}
 									<option value="{{entry}}"{{' selected' if v.defaulttime==entry}}>{{entry}}</option>
 								{% endfor %}
@@ -134,24 +98,24 @@
 
 			</div>
 
-			<h2 class="h5 text-black">Tab Behaviour</h2>
+			<h2 class="h5">Tab Behaviour</h2>
 
 			<div class="settings-section rounded">
 
 				<div class="d-lg-flex border-bottom">
 
 					<div class="title w-lg-25">
-						<label class="label" for="newtab">Open Threads In New Tabs</label>
+						<label for="newtab">Open Internal Links In New Tabs</label>
 					</div>
 
 					<div class="body w-lg-100">
 
-						<div>
-							<input type="checkbox" id="newtab" name="newtab"{% if v.newtab %} checked{% endif %} onchange="post_toast('/settings/profile?newtab='+document.getElementById('newtab').checked);">
-							<label class="label" for="newtab"></label>
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input" id="newtab" name="newtab"{% if v.newtab %} checked{% endif %} onchange="post_toast('/settings/profile?newtab='+document.getElementById('newtab').checked);">
+							<label class="custom-control-label" for="newtab"></label>
 						</div>
 
-						<span class="text-small-extra text-muted">Enable if you would like to automatically open threads in new tabs.</span>
+						<span class="text-small-extra text-muted">Enable if you would like to automatically open links to other pages in the site in new tabs.</span>
 
 					</div>
 
@@ -166,12 +130,12 @@
 
 					<div class="body w-lg-100">
 
-						<div>
-							<input type="checkbox" id="newtabexternal" name="newtabexternal"{% if v.newtabexternal %} checked{% endif %} onchange="post_toast('/settings/profile?newtabexternal='+document.getElementById('newtabexternal').checked);">
-							<label class="label" for="newtabexternal"></label>
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input" id="newtabexternal" name="newtabexternal"{% if v.newtabexternal %} checked{% endif %} onchange="post_toast('/settings/profile?newtabexternal='+document.getElementById('newtabexternal').checked);">
+							<label class="custom-control-label" for="newtabexternal"></label>
 						</div>
 
-						<span class="text-small-extra text-muted">Enable if you would like to automatically open external links in new tabs.</span>
+						<span class="text-small-extra text-muted">Enable if you would like to automatically open links to other sites in new tabs.</span>
 
 					</div>
 
@@ -182,21 +146,21 @@
 			</div>
 
 
-			<h2 class="h5 text-black">Twitter Links</h2>
+			<h2 class="h5">Twitter Links</h2>
 
 			<div class="settings-section rounded">
 
 				<div class="d-lg-flex border-bottom">
 
 					<div class="title w-lg-25">
-						<label class="label" for="nitter">Use Nitter</label>
+						<label for="nitter">Use Nitter</label>
 					</div>
 
 					<div class="body w-lg-100">
 
-						<div>
-							<input type="checkbox" id="nitter" name="nitter"{% if v.nitter %} checked{% endif %} onchange="post_toast('/settings/profile?nitter='+document.getElementById('nitter').checked);">
-							<label class="label" for="nitter"></label>
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input" id="nitter" name="nitter"{% if v.nitter %} checked{% endif %} onchange="post_toast('/settings/profile?nitter='+document.getElementById('nitter').checked);">
+							<label class="custom-control-label" for="nitter"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert twitter.com links to nitter.net links.</span>
@@ -208,7 +172,7 @@
 			</div>
 
 
-			<h2 class="h5 text-black">Reddit Links</h2>
+			<h2 class="h5">Reddit Links</h2>
 
 			<div class="settings-section rounded">
 
@@ -220,9 +184,9 @@
 
 					<div class="body w-lg-100">
 
-						<div>
-							<input type="checkbox" id="teddit" name="teddit"{% if v.teddit %} checked{% endif %} onchange="post_toast('/settings/profile?teddit='+document.getElementById('teddit').checked);">
-							<label class="label" for="teddit"></label>
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input" id="teddit" name="teddit"{% if v.teddit %} checked{% endif %} onchange="post_toast('/settings/profile?teddit='+document.getElementById('teddit').checked);">
+							<label class="custom-control-label" for="teddit"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert reddit.com links to teddit.net links.</span>
@@ -239,9 +203,9 @@
 
 					<div class="body w-lg-100">
 
-						<div>
-							<input type="checkbox" id="oldreddit" name="oldreddit"{% if v.oldreddit %} checked{% endif %} onchange="post_toast('/settings/profile?oldreddit='+document.getElementById('oldreddit').checked);">
-							<label class="label" for="oldreddit"></label>
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input" id="oldreddit" name="oldreddit"{% if v.oldreddit %} checked{% endif %} onchange="post_toast('/settings/profile?oldreddit='+document.getElementById('oldreddit').checked);">
+							<label class="custom-control-label" for="oldreddit"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically convert reddit.com links to old.reddit.com links.</span>
@@ -258,9 +222,9 @@
 
 					<div class="body w-lg-100">
 
-						<div>
-							<input type="checkbox" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="post_toast('/settings/profile?controversial='+document.getElementById('controversial').checked);">
-							<label class="label" for="controversial"></label>
+						<div class="custom-control custom-switch">
+							<input type="checkbox" class="custom-control-input" id="controversial" name="controversial"{% if v.controversial %} checked{% endif %} onchange="post_toast('/settings/profile?controversial='+document.getElementById('controversial').checked);">
+							<label class="custom-control-label" for="controversial"></label>
 						</div>
 
 						<span class="text-small-extra text-muted">Enable if you would like to automatically sort reddit.com links by controversial.</span>
@@ -270,7 +234,7 @@
 				</div>
 			</div>
 
-			<h2 class="h5 text-black">Content Filters</h2>
+			<h2 class="h5">Content Filters</h2>
 
 				<div class="settings-section rounded">
 
@@ -283,9 +247,9 @@
 
 						<div class="body w-lg-100">
 
-							<div>
-								<input type="checkbox" id="sigs_disabled" name="sigs_disabled"{% if v.sigs_disabled %} checked{% endif %} onchange="post_toast('/settings/profile?sigs_disabled='+document.getElementById('sigs_disabled').checked);">
-								<label class="label" for="sigs_disabled"></label>
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="sigs_disabled" name="sigs_disabled"{% if v.sigs_disabled %} checked{% endif %} onchange="post_toast('/settings/profile?sigs_disabled='+document.getElementById('sigs_disabled').checked);">
+								<label class="custom-control-label" for="sigs_disabled"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Hide user signatures.</span>
@@ -304,9 +268,9 @@
 
 						<div class="body w-lg-100">
 
-							<div>
-								<input type="checkbox" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast('/settings/profile?over18='+document.getElementById('over18').checked);">
-								<label class="label" for="over18"></label>
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast('/settings/profile?over18='+document.getElementById('over18').checked);">
+								<label class="custom-control-label" for="over18"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Enable if you would like to not get a warning before viewing +18 content.</span>
@@ -325,9 +289,9 @@
 
 						<div class="body w-lg-100">
 
-							<div>
-								<input type="checkbox" id="slurreplacer" name="slurreplacer"{% if v.slurreplacer %} checked{% endif %} onchange="post_toast('/settings/profile?slurreplacer='+document.getElementById('slurreplacer').checked);">
-								<label class="label" for="slurreplacer"></label>
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="slurreplacer" name="slurreplacer"{% if v.slurreplacer %} checked{% endif %} onchange="post_toast('/settings/profile?slurreplacer='+document.getElementById('slurreplacer').checked);">
+								<label class="custom-control-label" for="slurreplacer"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Enable if you would like to automatically replace slurs.</span>
@@ -345,9 +309,9 @@
 
 						<div class="body w-lg-100">
 
-							<div>
-								<input type="checkbox" id="hidevotedon" name="hidevotedon"{% if v.hidevotedon %} checked{% endif %} onchange="post_toast('/settings/profile?hidevotedon='+document.getElementById('hidevotedon').checked);">
-								<label class="label" for="hidevotedon"></label>
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="hidevotedon" name="hidevotedon"{% if v.hidevotedon %} checked{% endif %} onchange="post_toast('/settings/profile?hidevotedon='+document.getElementById('hidevotedon').checked);">
+								<label class="custom-control-label" for="hidevotedon"></label>
 							</div>
 
 							<span class="text-small-extra text-muted">Enable if you would like to automatically hide posts you have voted on from your frontpage.</span>
@@ -367,11 +331,11 @@
 								<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<small>Hides matching posts from the frontpage and collapses matching comments.</small>
 								<div class="input-group mb-2">
-									<textarea class="form-input rounded" id="filters-text" aria-label="With textarea"
+									<textarea class="form-control rounded" id="filters-text" aria-label="With textarea"
 									placeholder="Add your own custom content filters."
 									rows="3" name="filters" form="custom-filter" maxlength="1000">{% if v.custom_filter_list %}{{v.custom_filter_list}}{% endif %}</textarea>
 								</div>
-								<div class="flex">
+								<div class="d-flex">
 									<small>Use a new line for each filter entry. Limit of 1000 characters.</small>
 									<input class="btn btn-primary ml-auto" id="bioSave" type="submit" value="Save Changes">
 								</div>
@@ -386,6 +350,10 @@
 				</div>
 
 		</div>
+
+</div>
+
+</div>
 
 </div>
 

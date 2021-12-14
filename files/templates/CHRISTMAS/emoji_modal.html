@@ -1,0 +1,105 @@
+<div id="form" class="d-none"></div>
+<div class="modal fade" id="emojiModal" tabindex="-1" role="dialog" aria-labelledby="emojiModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered p-2 py-5" role="document">
+		<div class="modal-content mx-auto max-w-3xl bg-gray-100 rounded-md shadow-lg" id="emojiTabs">
+			<div class="modal-header">
+				<div>
+					<ul class="nav nav-pills py-2">
+						<li class="nav-item">
+							<a class="nav-link active emojitab" data-bs-toggle="tab" href="#emoji-tab-favorite">Favorite</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-marsey">Marsey</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-platy">Platy</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-tay">Tay</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-classic">Classic</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-rage">Rage</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-wojak">Wojak</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-flags">Flags</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link emojitab" data-bs-toggle="tab" href="#emoji-tab-misc">Misc</a>
+						</li>
+					</ul>
+				</div>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<i class="fal fa-times text-muted"></i>
+				</button>
+			</div>
+
+			<div class="px-3">
+				<input class="form-input" type="text" id="emoji_search" placeholder="Search emoji..">
+			</div>
+
+			<div style="overflow-y: scroll;">
+				<div class="modal-body p-0" id="emoji-modal-body">
+					<div id="emoji-tab-search"></div>
+					<div id="no-emojis-found"></div>
+					<div class="tab-content">
+						<div class="tab-pane fade show active" id="emoji-tab-favorite">
+							<div class="flex flex-wrap p-3" id="EMOJIS_favorite">
+								{% if session.get("favorite_emojis") %}
+									{{session.get("favorite_emojis") | favorite_emojis | safe}}
+								{% endif %}								
+							</div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-marsey">
+							<div class="flex flex-wrap p-3" id="EMOJIS_marsey"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-platy">
+							<div class="flex flex-wrap p-3" id="EMOJIS_platy"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-tay">
+							<div class="flex flex-wrap p-3" id="EMOJIS_tay"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-classic">
+							<div class="flex flex-wrap p-3" id="EMOJIS_classic"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-rage">
+							<div class="flex flex-wrap p-3" id="EMOJIS_rage"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-wojak">
+							<div class="flex flex-wrap p-3" id="EMOJIS_wojak"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-flags">
+							<div class="flex flex-wrap p-3" id="EMOJIS_flags"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-misc">
+							<div class="flex flex-wrap p-3" id="EMOJIS_misc"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	a.emojitab {
+		padding: 0.5rem 0.7rem !important;
+		font-size: 13px !important;
+	}
+
+	.emoji2 {
+		background: None!important;
+		width:60px;
+		overflow: hidden;
+		border: none;
+	}
+
+	.emoji2:focus {
+		border: 1px solid var(--primary) !important;
+	}
+</style>

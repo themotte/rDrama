@@ -1,0 +1,172 @@
+{% block title %}
+<title>Create a post - {{'SITE_NAME' | app_config}}</title>
+{% endblock %}
+
+{% extends "default.html" %}
+
+{% block subHeader %}
+	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="relative col-span-full flex items-center">
+			<div>
+				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+					Create post
+				</h1>
+				<small class="block text-gray-700">
+					Share drama with the community.
+				</small>
+			</div>
+			<div class="ml-auto">
+				{% if error %}<span class="text-danger mr-2">{{error}}</span>{% endif %}
+				<button class="btn btn-green" id="create_button" type="submit" form="submitform" disabled>Post</button>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-span-full xl:col-span-9 sm:py-4 px-2.5 md:px-0 my-2.5 sm:my-0">
+
+	<div class="flex items-center mb-4">
+		<img src="{{ v.profile_url }}" class="w-8 h-8 object-cover rounded" alt="My avatar"/>
+		<div class="text-lg text-black font-bold pl-2">{{ v.username }}</div>
+	</div>
+
+	<form id="submitform" action="/submit" method="post" enctype="multipart/form-data" class="flex flex-col space-y-6">
+
+		<!-- Post title field section -->
+		<div class="flex flex-col">
+			<label for="post-title" class="label text-black">Title</label>
+			<div>
+				<!-- Input field -->
+				<input class="form-input" id="post-title" aria-describedby="titleHelpRegister" type="text" name="title" placeholder="rdrama.net is one of the most malevolent, cruel, coldhearted online communities you'll ever find" value="{{title}}" minlength="1" maxlength="500" required oninput="checkForRequired()">
+				<!-- Add emoji button -->
+				<button type="button" class="mt-1 text-sm text-gray-400 hover:text-gray-500" onclick="loadEmojis('post-title')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji">
+					Add emoji
+				</button>
+			</div>
+		</div>
+
+		<!-- Link field section -->
+		<div id="urlblock" class="flex flex-col">
+			<label for="url" class="label text-black">
+				Link
+				<span class="italic text-sm font-normal text-gray-500">(optional if you have text)</span>
+			</label>
+			<div>
+				<!-- Input field -->
+				<input class="form-input" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="https://www.youtube.com/watch?v=iik25wqIuFo" value="{{request.values.get('url','')}}" required oninput="checkForRequired();autoSuggestTitle();hide_image()">
+				<small class="block mt-1 text-gray-500">
+					To post an image, use a direct image link such as i.imgur.com
+				</small>
+			</div>
+		</div>
+
+		<!-- Attachment field section -->
+		<div class="flex flex-col">
+			<label for="file" class="label text-black">
+				Image or Video
+				<span class="italic text-sm font-normal text-gray-500">(optional)</span>
+			</label>
+			<div>
+				<!-- Input field -->
+				<label class="btn btn-gray w-32 truncate" for="file-upload">
+					<i class="fas fa-file fa-fw fa-sm mr-1"></i>
+					<span id="filename-show" class="truncate ellipsis">Select file</span>
+					<input id="file-upload" type="file" name="file" accept="image/*, video/*" hidden oninput="hide_image()">
+				</label>
+				<small class="block mt-1 text-gray-500">
+					You may upload videos.
+				</small>
+			</div>
+			<!-- Image preview QoL-->
+			<!-- <img loading="lazy" id="image-preview" class="shadow-md p-1 bg-white border border-gray-900 w-72"/> -->
+			<div id="image-upload-block" class="hidden mt-2">
+				<img loading="lazy" id="image-preview" class="shadow-sm p-[3px] bg-white w-72"/>
+			</div>
+		</div>
+
+		<!-- Link field section -->
+		<div class="flex flex-col">
+			<label for="body" class="label text-black">
+				Post
+				<span class="italic text-sm font-normal text-gray-500">(optional if you have a link)</span>
+			</label>
+			<!-- Input field -->
+			<div class="relative rounded border border-gray-300 bg-white w-full">
+				<textarea form="submitform" id="post-text" class="p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown('post-text','preview');charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
+				<ul class="flex space-x-4 px-3 py-2 border-t border-dashed border-gray-300 mb-0">
+					<li>
+						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('post-text')">
+							<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
+						</button>
+					</li>
+					<li>
+						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('post-text')">
+							<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
+						</button>
+					</li>
+					<li>
+						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('post-text')">
+							<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
+						</button>
+					</li>
+					<li>
+						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="commentForm('post-text');getGif()">
+							<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
+						</button>
+					</li>
+					<li>
+						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam fa-fw fa-sm"></i>
+						</button>
+					</li>
+				</ul>
+				<span class="absolute right-3 bottom-3 z-10 text-xs font-medium text-gray-500" id="character-count-submit-text-form"></span>
+			</div>
+			<a href="/formatting" target="_blank" class="block mt-2 text-xs text-gray-500 hover:text-gray-400">Formatting help</a>
+		</div>
+
+		<!-- <div class="btn btn-secondary" onclick="document.getElementById('preview').classList.toggle('d-none');" style="float: right;">
+			Toggle preview
+		</div> -->
+		<div id="preview" class="hidden my-3"></div>
+
+		<!-- User form key (required) -->
+		<input type="hidden" name="formkey" value="{{v.formkey}}" class="hidden">
+	</form>
+
+	<ul class="flex xl:hidden flex-col space-y-4 mb-0">
+		<li class="flex items-center">
+			<input type="checkbox" id="nsfwCheck-mobile" name="over_18" form="submitform">
+			<label class="leading-4 ml-2 inline-block badge badge-red select-none" for="nsfwCheck">18+</label>
+		</li>
+		<li class="flex items-center">
+			<input type="checkbox" id="privateCheck-mobile" name="private" form="submitform">
+			<label class="leading-4 ml-2 inline-blue badge badge-blue select-nonee" for="privateCheck">Draft</label>
+		</li>
+		{% if v.paid_dues %}
+		<li class="flex items-center">
+			<input type="checkbox" id="clubCheck-mobile" name="club" form="submitform">
+			<label class="leading-4 ml-2 inline-block badge badge-yellow select-none" for="clubCheck">Country Club Thread</label>
+		</li>
+		{% endif %}
+	</ul>
+
+</div>
+{% endblock %}
+
+{% block sidebar %}
+	{% include '/sidebars/SubmitSidebar.html' %}
+{% endblock %}
+
+{% block modals %}
+	{% include "emoji_modal.html" %}
+	{% include "gif_modal.html" %}
+	{% include '/awards/Christmas/Snow.html' %}
+{% endblock %}
+
+{% block scripts %}
+	<script defer src="/assets/CHRISTMAS/js/marked.js?v=200"></script>
+	<script defer src="/assets/CHRISTMAS/js/submit.js?v=200"></script>
+	<script defer src="/assets/CHRISTMAS/js/christmas/snow.js?v=200"></script>
+{% endblock %}

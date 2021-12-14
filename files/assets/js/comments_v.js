@@ -52,8 +52,8 @@ function post_toast3(url, button1, button2) {
 
 	xhr.send(form);
 
-	document.getElementById(button1).classList.toggle("md:block");
-	document.getElementById(button2).classList.toggle("md:block");
+	document.getElementById(button1).classList.toggle("d-md-inline-block");
+	document.getElementById(button2).classList.toggle("d-md-inline-block");
 }
 
 function report_commentModal(id, author) {
@@ -73,8 +73,8 @@ function report_commentModal(id, author) {
 	xhr.withCredentials=true;
 
 	xhr.onload=function() {
-		document.getElementById("reportCommentFormBefore").classList.add('hidden');
-		document.getElementById("reportCommentFormAfter").classList.remove('hidden');
+		document.getElementById("reportCommentFormBefore").classList.add('d-none');
+		document.getElementById("reportCommentFormAfter").classList.remove('d-none');
 	};
 
 	xhr.onerror=function(){alert(errortext)};
@@ -85,7 +85,7 @@ function report_commentModal(id, author) {
 
 function openReplyBox(id) {
 	const element = document.getElementById(`reply-to-${id}`);
-	element.classList.remove('hidden')
+	element.classList.remove('d-none')
 
 	element.getElementsByTagName('textarea')[0].focus()
 }
@@ -96,9 +96,9 @@ function toggleEdit(id){
 	box=document.getElementById('comment-edit-body-'+id);
 	actions = document.getElementById('comment-' + id +'-actions');
 
-	comment.classList.toggle("hidden");
-	form.classList.toggle("hidden");
-	actions.classList.toggle("hidden");
+	comment.classList.toggle("d-none");
+	form.classList.toggle("d-none");
+	actions.classList.toggle("d-none");
 	autoExpand(box);
 };
 

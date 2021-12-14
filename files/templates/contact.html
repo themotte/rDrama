@@ -7,61 +7,62 @@
 
 {% block content %}
 
-<div class="col-span-full">
+		{% if request.values.get('error') or error %}
+		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-exclamation-circle my-auto"></i>
+			<span>
+				{{error if error else request.values.get('error')}}
+			</span>
+			<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
+		{% if request.values.get('msg') or msg %}
+		<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+			<span>
+				{{msg if msg else request.values.get('msg')}}
+			</span>
+			<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
 
-	{% if request.values.get('error') or error %}
-	<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
-		<i class="fas fa-exclamation-circle my-auto"></i>
-		<span>
-			{{error if error else request.values.get('error')}}
-		</span>
-		<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true"><i class="far fa-times"></i></span>
-		</button>
-	</div>
-	{% endif %}
-	{% if request.values.get('msg') or msg %}
-	<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
-		<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
-		<span>
-			{{msg if msg else request.values.get('msg')}}
-		</span>
-		<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true"><i class="far fa-times"></i></span>
-		</button>
-	</div>
-	{% endif %}
+<h1 class="article-title">Contact {{'SITE_NAME' | app_config}} Admins</h1>
+{% if v and v.is_activated and not v.is_suspended %}
 
-	<h1 class="article-title">Contact {{'SITE_NAME' | app_config}} Admins</h1>
-	{% if v and v.is_activated and not v.is_suspended %}
+<p>Use this form to contact {{'SITE_NAME' | app_config}} Admins.</p>
 
-	<p>Use this form to contact {{'SITE_NAME' | app_config}} Admins.</p>
+<label class="mt-3">Your Email</label>
+<input class="form-control" value="{{v.email}}" readonly="readonly" disabled>
 
-	<label class="mt-3">Your Email</label>
-	<input class="form-control" value="{{v.email}}" readonly="readonly" disabled>
+<form id="contactform" action="/contact" method="post">
 
-	<form id="contactform" action="/contact" method="post">
+<label for="input-message" class="mt-3">Your message</label>
+<textarea maxlength="10000" id="input-message" form="contactform" name="message" class="form-control" required></textarea>
 
-		<label for="input-message" class="mt-3">Your message</label>
-		<textarea maxlength="10000" id="input-message" form="contactform" name="message" class="form-control" required></textarea>
+<input type="submit" value="Submit" class="btn btn-primary mt-3">
 
-		<input type="submit" value="Submit" class="btn btn-primary mt-3">
-
-	</form>
+</form>
 
 
-	{% elif v %}
+{% elif v %}
 
-	<p>Please <a {% if v and v.newtab %}target="_blank"{% endif %} href="/settings/security">verify your email address</a> in order to ensure we can respond to your message if needed. Then, refresh this page.</p>
+<p>Please <a {% if v and v.newtab %}target="_blank"{% endif %} href="/settings/security">verify your email address</a> in order to ensure we can respond to your message if needed. Then, refresh this page.</p>
 
-	{% else %}
+{% else %}
 
-	<p>In order to ensure that we can respond to your message, please first <a href="/signup" {% if v and v.newtab %}target="_blank"{% endif %}>sign up</a> or <a href="/login" {% if v and v.newtab %}target="_blank"{% endif %}>log in</a> and make sure you have <a {% if v and v.newtab %}target="_blank"{% endif %} href="/settings/security">verified your email address</a>. Then, refresh this page.</p>
+<p>In order to ensure that we can respond to your message, please first <a href="/signup" {% if v and v.newtab %}target="_blank"{% endif %}>sign up</a> or <a href="/login" {% if v and v.newtab %}target="_blank"{% endif %}>log in</a> and make sure you have <a {% if v and v.newtab %}target="_blank"{% endif %} href="/settings/security">verified your email address</a>. Then, refresh this page.</p>
 
-	{% endif %}
+{% endif %}
 
-	<p>If you can see this line, we haven't been contacted by any law enforcement or governmental organizations in 2021 yet.</p>
+<pre>
 
-</div>
+
+</pre>
+
+<p>If you can see this line, we haven't been contacted by any law enforcement or governmental organizations in 2021 yet.</p>
 
 {% endblock %}

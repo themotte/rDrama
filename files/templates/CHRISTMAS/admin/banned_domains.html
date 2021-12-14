@@ -1,0 +1,37 @@
+{% extends "default.html" %}
+
+{% block title %}
+	<title>Banned Domains</title>
+{% endblock %}
+
+{% block content %}
+
+<pre>
+
+</pre>
+
+<table class="table table-striped mb-5">
+	<thead class="bg-primary text-white">
+		<tr>
+			<th style="font-weight:bold;">Domain</th>
+			<th style="font-weight:bold;">Ban reason</th>
+		</tr>
+	</thead>
+
+	{% for domain in banned_domains %}
+		<tr>
+			<td style="font-weight:bold;">{{domain.domain}}</td>
+			<td>{{domain.reason}}</td>
+		</tr>
+	{% endfor %}
+</table>
+
+
+<form action="/admin/banned_domains" method="post">
+	<input type="hidden" name="formkey" value="{{v.formkey}}">
+	<input name="domain" placeholder="Enter domain here.." class="form-control" required>
+	<input name="reason" placeholder="Enter ban reason here.." onchange="document.getElementById('ban-submit').disabled=false" class="form-control">
+	<input id="ban-submit" type="submit" class="btn btn-primary" value="Toggle ban" disabled>
+</form>
+
+{% endblock %}

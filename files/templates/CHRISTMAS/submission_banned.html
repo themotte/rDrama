@@ -1,0 +1,138 @@
+{% extends "submission.html" %}
+
+{% set score=p.score %}
+{% if v %}
+{% set voted=p.voted %}
+{% set adjust=voted %}
+{% else %}
+{% set voted=-2 %}
+{% set adjust=0 %}
+{% endif %}
+
+{% block title %}
+<title>{{p.plaintitle(v)}}</title>
+{% if p.is_banned %}
+<meta name="description" content="removed by @{{p.ban_reason}}">
+{% else %}
+<meta name="description" content="[deleted by user]">
+{% endif %}
+{% endblock %}
+
+{% block adminpanel %}
+{% if v.admin_level > 1 %}
+<form action="/sticky/{{p.id}}" method="post">
+<input type="hidden" name="formkey", value="{{v.formkey}}">
+<input type="submit" value="{% if p.stickied %}Un-sticky{% else %}Pin{% endif %}">
+</form>
+{% endif %}
+{% if v.admin_level > 0 and v.id==p.author_id %}
+<form action="/distinguish/{{p.id}}" method="post">
+<input type="hidden" name="formkey", value="{{v.formkey}}">
+<input type="submit" value="{% if p.distinguish_level %}Un-distinguish{% else %}Distinguish{% endif %}">
+</form>
+{% endif %}
+{% if v.admin_level > 1 and v.admin_level > p.author.admin_level %}
+{% if p.is_banned %}
+<form action="/unban_post/{{p.id}}" method="post">
+<input type="hidden" name="formkey", value="{{v.formkey}}">
+<input type="submit" value="Approve Post">
+</form>
+{% else %}
+<form action="/ban_post/{{p.id}}", method="post">
+<input type="hidden" name="formkey", value="{{v.formkey}}">
+<input type="submit" value="Remove Post">
+</form>
+{% endif %}
+{% endif %}
+<p>Score: +{{p.upvotes}}/-{{p.downvotes}}</p>
+{% endblock %}
+
+{% block content %}
+<div class="mb-2 p-3">
+
+										<div class="col-12">
+
+												<div id="post-{{p.id}}" class="card d-flex flex-row-reverse flex-nowrap justify-content-end border-0 p-0 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+														<div class="card-block my-md-auto{% if p.is_banned %} banned{% endif %}">
+																<div class="post-meta text-left d-md-none mb-1">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.is_banned %}removed by @{{p.ban_reason}}{% else %}[Deleted by user]{% endif %}</div>
+																<h5 class="card-title post-title text-left mb-0 mb-md-1">{{p.plaintitle(v)}}</h5>
+																<div class="post-meta text-left d-none d-md-block">{% if p.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}{% if p.is_banned %}removed by @{{p.ban_reason}}{% else %}[Deleted by user]{% endif %}</div>
+
+														</div>
+
+														
+														<div id="voting" class="d-md-block my-auto mr-3 text-center">
+																<div id="post-{{p.id}}-up" class="arrow-up mx-auto">
+																</div>
+																<span id="post-{{p.id}}-score-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
+					<span id="post-{{p.id}}-score-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
+					<span id="post-{{p.id}}-score-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
+																<div id="post-{{p.id}}-down" class="arrow-down mx-auto">
+																</div>
+														</div>
+
+												</div>
+			{% if v and v.admin_level > 1 and p.body_html %}
+												<div class="post-body mt-4 mb-2"> 
+				{{p.body_html | safe}}
+			</div>
+			{% endif %}
+
+										</div>
+								</div>
+
+								<div class="row mb-2 p-3">
+										<div class="col-12">
+
+												<div class="post-actions d-none d-md-block">
+														<ul class="list-inline text-left mb-2">
+																<li class="list-inline-item"><a href="{{p.permalink}}"><i
+																						class="fas fa-comment-dots"></i>{{p.comment_count}} Comment{{'s' if p.comment_count != 1 else ''}}</a>
+																</li>
+
+														</ul>
+												</div>
+
+										</div>
+
+								</div>
+
+		<div class="comment-section">
+		{% with comments=p.replies %}
+			{% include "comments.html" %}
+		{% endwith %}
+	</div>
+
+
+
+
+{% endblock %}
+
+{% block mobileactions %}
+
+				<div class="row fixed-top bg-white shadow d-inline-flex d-md-none p-3" id="footer-actions" style="z-index: 3; top: 48px; transition: top cubic-bezier(0, 0, 0.2, 1) 220ms;">
+						<div class="col text-center">
+								<div class="post-actions mx-auto">
+										<ul class="list-inline">
+												<li id="voting-mobile" class="voting list-inline-item{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+														<span id="arrow-mobile-up" class="mr-2 arrow-mobile-up">
+																<i class="fas fa-arrow-alt-up mx-0"></i>
+														</span>
+
+
+				<span id="post-{{p.id}}-score-mobile-up" class="score-up text-muted{% if voted!=1 %} d-none{% endif %}">✖</span>
+					<span id="post-{{p.id}}-score-mobile-none" class="score text-muted{% if voted!=0 and voted!=-2 %} d-none{% endif %}">✖</span>
+					<span id="post-{{p.id}}-score-mobile-down" class="score-down text-muted{% if voted!=-1 %} d-none{% endif %}">✖</span>
+
+
+														<span id="arrow-mobile-down" class="arrow-mobile-down ml-2 my-0">
+																<i class="fas fa-arrow-alt-down mx-0"></i>
+														</span>
+												</li>
+
+										</ul>
+								</div>
+						</div>
+				</div>
+
+{% endblock %}

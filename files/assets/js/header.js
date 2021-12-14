@@ -1,25 +1,12 @@
-function initializeBootstrap() {
-    // tooltips
-    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function(element){
-        return new bootstrap.Tooltip(element);
-    });
-    // popovers
-    let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    let popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-        let popoverId = popoverTriggerEl.getAttribute('data-content-id');
-        let contentEl = document.getElementById(popoverId);
-        if (contentEl) {
-            return new bootstrap.Popover(popoverTriggerEl, {
-                content: contentEl.innerHTML,
-                html: true,
-            });
-        }
-    })
+function formkey() {
+	return document.getElementById("formkey").innerHTML
 }
-
+	
 document.addEventListener("DOMContentLoaded", function(){
-	initializeBootstrap()
+	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+	tooltipTriggerList.map(function(element){
+		return new bootstrap.Tooltip(element);
+	});
 });
 
 function post_toast(url, reload, data) {
@@ -34,8 +21,6 @@ function post_toast(url, reload, data) {
 		}
 	}
 
-
-	form.append("formkey", formkey());
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {

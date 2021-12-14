@@ -4,82 +4,77 @@
 
 {% block pagetype %}{% endblock %}
 
-{% block subHeader %}
-	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
-		<div class="relative col-span-full flex items-center">
-			<div>
-				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
-					Inbox
-				</h1>
-				<ul class="text-xs flex items-center space-x-3 leading-normal mb-0">
-					<li>
-						<a class="{{ 'font-bold text-red-600' if not '=true' in request.full_path else 'text-gray-500' }}" href="/notifications">
-							All
-						</a>
-					</li>
-					<li>
-						<a class="{{ 'font-bold text-red-600' if '/notifications?posts=true' in request.full_path else 'text-gray-500' }}" href="/notifications?posts=true">
-							Posts
-							{% if v.post_notifications_count %}
-							<span class="text-gray-600">({{v.post_notifications_count}})</span>
-							{% endif %}
-						</a>
-					</li>
-					<li>
-						<a class="{{ 'font-bold text-red-600' if '/notifications?messages=true' in request.full_path else 'text-gray-500' }}" href="/notifications?messages=true">
-							Messages
-						</a>
-					</li>
-					{% if v.admin_level > 1 %}
-					<li>
-						<a class="{{ 'font-bold text-red-600' if '/notifications?modmail=true' in request.full_path else 'text-gray-500' }}" href="/notifications?modmail=true">
-							Mod Mail
-						</a>
-					</li>
-					{% endif %}
-				</ul>
-			</div>
-			<div class="ml-auto">
-				<button class="block px-4 py-2 bg-gradient-to-t from-gray-800 to-gray-700 focus:from-gray-700 focus:to-gray-800 border border-gray-900 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-300 focus:text-gray-500 focus:shadow-inner focus:outline-none" onclick="post_toast('/clear')">
-					<i class="fas fa-check-double text-gray-500 fa-sm fa-fw mr-1"></i>
-					Mark all as read
-				</button>
-			</div>
-		</div>
-	</div>
+{% block PseudoSubmitForm %}{% endblock %}
+
+{% block navbar %}
+<div class="font-weight-bold py-3">‎</div>
 {% endblock %}
 
 {% block content %}
 
-<div class="col-span-full">
+<div class="row border-bottom bg-white w-200 pr-0" style="overflow: visible;">
+  <div class="col p-0 w-100">
+	<ul class="nav settings-nav" style="padding:0 30px;">
+	<li class="nav-item">
+		<a class="nav-link py-3{% if not '=true' in request.full_path %} active{% endif %}" href="/notifications">
+		All
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link py-3{% if '/notifications?posts=true' in request.full_path %} active{% endif %}" href="/notifications?posts=true">
+		Posts{% if v.post_notifications_count %} <span class="text-primary font-weight-bold">({{v.post_notifications_count}})</span>{% endif %}
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link py-3{% if '/notifications?messages=true' in request.full_path %} active{% endif %}" href="/notifications?messages=true">
+		Messages
+		</a>
+	</li>
+	{% if v.admin_level > 1 %}
+		<li class="nav-item">
+			<a class="nav-link py-3{% if '/notifications?modmail=true' in request.full_path %} active{% endif %}" href="/notifications?modmail=true">
+			Modmail
+			</a>
+		</li>
+	{% endif %}
+	</ul>
+  </div>
+</div>
 
-	<div class="col-span-full px-2.5 md:px-0">
-	  	{% with comments=notifications %}
-			{% include "comments.html" %}
-		{% endwith %}
-	</div>
+
+<a class="btn btn-primary mt-3 ml-3" href="javascript:void(0)" onclick="post_toast('/clear')">Clear all notifications</a>
+
+<div class="notifs p-3 p-md-0">
+
+	{% with comments=notifications %}
+		{% include "comments.html" %}
+	{% endwith %}
 
 	{% if not notifications %}
-	<div class="flex flex-col items-center justify-center py-24 md:py-48">
-		<img loading="lazy" src="https://c.tenor.com/NhDy-AkelhQAAAAM/marsey-drama.gif" class="w-20 h-20 mb-4 rounded-md object-cover">
-		<h2 class="text-xl font-bold leading-normal font-heading">No unread messages</h2>
-		<p class="text-gray-500 text-sm">
-			When someone comments or replies, it will show up here.
-		</p>
-		<a href="/notifications" class="mt-3 btn btn-gray">
-			View entire inbox
-		</a>
+	<div class="text-center py-7 py-md-8">
+
+		<span class="fa-stack fa-2x text-muted mb-4">
+			<i class="fas fa-square text-gray-400 fa-stack-2x"></i>
+			<i class="fas text-gray-600 fa-envelope fa-stack-1x text-lg"></i>
+		</span>
+
+		<div class="h5">No unread messages</div>
+		<div class="text-small text-muted mb-3">When someone comments or replies, it will show up here.</div>
+		<a href="/notifications" class="btn btn-primary ">View entire inbox</a>
 	</div>
+
 	{% endif %}
 
 </div>
 
+{% endblock %}
+
+{% block pagenav %}
 {% if notifications %}
-<div class="col-span-full">
-	<ul class="flex flex-wrap items-center mb-4">
+<nav aria-label="Page navigation">
+	<ul class="pagination pagination-sm mb-0">
 		{% if page>1 %}
-		<li>
+		<li class="page-item">
 			{% if "?page=" in request.full_path %}
 				{% set path = request.full_path.split("?page=")[0] %}
 			{% elif "&page=" in request.full_path %}
@@ -88,17 +83,17 @@
 				{% set path = request.full_path %}
 			{% endif %}
 			{% if request.full_path == "/notifications" %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-red-600 bg-gray-900" href="{{path}}?page={{page-1}}">Previous</a></small>
+				<small><a class="page-link" href="{{path}}?page={{page-1}}">Previous</a></small>
 			{% else %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-red-600 bg-gray-900" href="{{path}}&page={{page-1}}">Previous</a></small>
+				<small><a class="page-link" href="{{path}}&page={{page-1}}">Previous</a></small>
 			{% endif %}
 		</li>
 		{% else %}
-		<li><span class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 disabled">Prev</span></li>
+		<li class="page-item disabled"><span class="page-link">Prev</span></li>
 		{% endif %}
 
 		{% if next_exists %}
-		<li>
+		<li class="page-item">
 			{% if "?page=" in request.full_path %}
 				{% set path = request.full_path.split("?page=")[0] %}
 			{% elif "&page=" in request.full_path %}
@@ -107,18 +102,17 @@
 				{% set path = request.full_path %}
 			{% endif %}
 			{% if request.full_path == "/notifications" %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-red-600 bg-gray-900" href="{{path}}?page={{page+1}}">Next</a></small>
+				<small><a class="page-link" href="{{path}}?page={{page+1}}">Next</a></small>
 			{% else %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-red-600 bg-gray-900" href="{{path}}&page={{page+1}}">Next</a></small>
+				<small><a class="page-link" href="{{path}}&page={{page+1}}">Next</a></small>
 			{% endif %}
 		</li>
 		{% else %}
-		<li><span class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 disabled">Next</span></li>
+		<li class="page-item disabled"><span class="page-link">Next</span></li>
 		{% endif %}
 	</ul>
-</div>
+</nav>
 {% endif %}
-
 {% endblock %}
 
 {% block GIFpicker %}

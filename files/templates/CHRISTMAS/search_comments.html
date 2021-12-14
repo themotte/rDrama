@@ -1,0 +1,13 @@
+{% extends "search.html" %}
+
+{% block listing_template %}
+<div class="posts p-3 p-md-0">
+ {% with comments=comments %}
+ {% include "comments.html" %}
+ {% endwith %}
+</div>
+{% endblock %}
+
+{% block listinglength %}
+{{comments | length}}
+{% endblock %}

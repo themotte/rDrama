@@ -1,0 +1,87 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>Badge Grant</title>
+{% endblock %}
+
+{% block pagetype %}message{% endblock %}
+
+{% block content %}
+<div class="col-span-full">
+
+		{% if error %}
+		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-exclamation-circle my-auto"></i>
+			<span>
+				{{error}}
+			</span>
+			<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
+		{% if msg %}
+		<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+			<span>
+				{{msg}}
+			</span>
+			<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
+
+<pre></pre>
+<pre></pre>
+<h5>Badge Grant</h5>
+
+<form action="/admin/badge_grant", method="post">
+<input type="hidden" name="formkey" value="{{v.formkey}}">
+
+
+<label for="input-username">Username</label><br>
+<input id="input-username" class="form-control" type="text" name="username" required>
+
+<table class="table table-striped">
+<thead class="bg-primary text-white">
+		<tr>
+			<th scope="col">Select</th>
+			<th scope="col">Image</th>
+			<th scope="col">Name</th>
+			<th scope="col">Default Description</th>
+		</tr>
+	</thead>
+	<tbody>
+{% for k, v in badge_types.items() %}
+<tr>
+	<td><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}"></td>
+	<td><label for="badge-{{k}}"><img loading="lazy" src="/assets/CHRISTMAS/images/badges/{{v['name']}}.webp?v=200" width="70px" height="70px"></label></td>
+	<td>{{v['name']}}</td>
+	<td>{{v['description']}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<label for="input-url">URL</label><br>
+<input id="input-url" class="form-control" type="text" name="url" placeholder="Optional">
+
+<label for="input-description">Custom description</label><br>
+<input id="input-description" class="form-control" type="text" name="description" placeholder="Leave blank for badge default">
+
+<input class="btn btn-primary" type="submit">
+
+</form>
+
+</div>
+
+<style>
+	@media (max-width: 767.98px) {
+		table {
+			display: inline-block;
+			overflow: auto;
+		}
+	}
+</style>
+
+{% endblock %}

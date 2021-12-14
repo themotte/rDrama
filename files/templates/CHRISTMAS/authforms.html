@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="{% block pagedesc %}{{'SITE_NAME' | app_config}}{% endblock %}">
+		<meta name="author" content="">
+
+		<title>{% block pagetitle %}{{'SITE_NAME' | app_config}}{% endblock %}</title>
+
+
+		{% if v %}
+			<style>:root{--primary:#{{v.themecolor}}}</style>
+			<link rel="stylesheet" href="/assets/CHRISTMAS/css/main.css?v=400"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{v.theme}}.css?v=200">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/CHRISTMAS/css/agendaposter.css?v=200">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+		{% else %}
+			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
+			<link rel="stylesheet" href="/assets/CHRISTMAS/css/main.css?v=400"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{'DEFAULT_THEME' | app_config}}.css?v=200">
+		{% endif %}
+
+</head>
+
+<body id="login">
+
+				<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
+				<div class="container-fluid">
+						<button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+								aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+								<span class="navbar-toggler-icon"></span>
+						</button>
+				</div>
+		</nav>
+
+		
+		<div class="container-fluid position-absolute h-100 p-0">
+				<div class="row no-gutters h-100">
+
+						<div class="col-12 col-md-6 my-auto p-3">
+
+								<div class="row justify-content-center">
+
+										<div class="col-10 col-md-7">
+
+										<div class="mb-5">
+												<a href="/" class="text-decoration-none"><span class="h3 text-primary">{{'SITE_NAME' | app_config}}</span></a>
+										</div>
+
+										<h1 class="h2">{% block authtitle %}{% endblock %}</h1>
+
+										<p class="text-muted mb-md-5">{% block authtext %}{% endblock %}</p>
+
+			{% if error %}
+				<div class="alert alert-danger alert-dismissible fade show d-flex my-3" role="alert">
+													<i class="fas fa-exclamation-circle my-auto"></i>
+													<span>
+													{{error}}
+													</span>
+													<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+														<span aria-hidden="true"><i class="far fa-times"></i></span>
+												</button>
+								</div>
+			{% endif %}
+			{% if msg %}
+				<div class="alert alert-success alert-dismissible fade show d-flex my-3" role="alert">
+													<i class="fas fa-info-circle my-auto" aria-hidden="true"></i>
+													<span>
+													{{msg}}
+													</span>
+													<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+														<span aria-hidden="true"><i class="far fa-times"></i></span>
+												</button>
+								</div>
+			{% endif %}
+
+												{% block content %}
+			{% endblock %}
+
+										</div>
+
+								</div>
+
+						</div>
+
+						<div class="col-12 col-md-6 d-none d-md-block">
+
+								<div class="splash-wrapper">
+
+										<div class="splash-overlay"></div>
+
+										<img loading="lazy" class="splash-img" src="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/cover.webp?v=200"></img>
+								</div>
+
+						</div>
+
+				</div>
+		</div>
+
+</body>
+
+</html>
