@@ -512,10 +512,10 @@ AWARDS = {
 	},
 	"lootbox": {
 		"kind": "lootbox",
-		"title": "Homoween Lootbox",
+		"title": "Lootstocking",
 		"description": "???",
-		"icon": "fas fa-treasure-chest",
-		"color": "text-orange",
+		"icon": "fas fa-stocking",
+		"color": "text-red",
 		"price": 1000
 	},
 	"shit": {
@@ -674,6 +674,14 @@ AWARDS = {
 }
 
 AWARDS2 = {
+	"lootbox": {
+		"kind": "lootbox",
+		"title": "Lootstocking",
+		"description": "???",
+		"icon": "fas fa-stocking",
+		"color": "text-red",
+		"price": 1000
+	},
 	"shit": {
 		"kind": "shit",
 		"title": "Shit",

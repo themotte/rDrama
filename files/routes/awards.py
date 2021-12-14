@@ -48,6 +48,15 @@ AWARDS3 = {
 @auth_required
 def shop(v):
 	AWARDS = {
+		"lootbox": {
+			"kind": "lootbox",
+			"title": "Lootstocking",
+			"description": "???",
+			"icon": "fas fa-stocking",
+			"color": "text-red",
+			"owned": 0,
+			"price": 1000
+		},
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",
@@ -246,6 +255,14 @@ def shop(v):
 @validate_formkey
 def buy(v, award):
 	AWARDS = {
+		"lootbox": {
+			"kind": "lootbox",
+			"title": "Lootstocking",
+			"description": "???",
+			"icon": "fas fa-stocking",
+			"color": "text-red",
+			"price": 1000
+		},
 		"shit": {
 			"kind": "shit",
 			"title": "Shit",

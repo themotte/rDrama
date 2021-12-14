@@ -5633,6 +5633,10 @@ blockquote p {
   color: #1D9BF0 !important;
 }
 
+.text-red {
+  color: #C30F16 !important;
+}
+
 .timeline-Widget {
   max-height: 500px !important;
   overflow-y: scroll !important;
