@@ -99,8 +99,9 @@ def cached_chart(days):
 		firstsignup = g.db.query(User.created_utc).filter(User.created_utc != 0).order_by(User.created_utc).first()[0] - 86400
 		nowstamp = int(time.time())
 		days = int((nowstamp - firstsignup) / 86400)
-
-	day_cutoffs = [today_cutoff - 86400 * i for i in range(days)]
+	
+	if days > 30: day_cutoffs = [today_cutoff - 86400*7 * i for i in range(days)]
+	else: day_cutoffs = [today_cutoff - 86400 * i for i in range(days)]
 	day_cutoffs.insert(0, calendar.timegm(now))
 
 	daily_times = [time.strftime("%d/%m", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
