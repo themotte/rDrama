@@ -97,7 +97,6 @@ def cached_chart(days):
 
 	if not days:
 		firstsignup = g.db.query(User.created_utc).filter(User.created_utc != 0).order_by(User.created_utc).first()[0]
-		print(firstsignup)
 		nowstamp = int(time.time())
 		days = int((nowstamp - firstsignup) / 86400)
 
