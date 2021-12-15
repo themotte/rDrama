@@ -80,7 +80,7 @@ def chart(v):
 	return send_file(file)
 
 
-@cache.memoize(timeout=86400)
+# @cache.memoize(timeout=86400)
 def cached_chart(days):
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,
@@ -96,15 +96,11 @@ def cached_chart(days):
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
 	if not days:
-		firstsignup = g.db.query(User.created_utc).filter(User.created_utc != 0).order_by(User.created_utc).first()[0]
-		print(firstsignup)
+		firstsignup = g.db.query(User.created_utc).filter(User.created_utc != 0).order_by(User.created_utc).first()[0] - 86400
 		nowstamp = int(time.time())
 		days = int((nowstamp - firstsignup) / 86400)
-		print(days)
 
-	day = 3600 * days
-
-	day_cutoffs = [today_cutoff - day * i for i in range(30)]
+	day_cutoffs = [today_cutoff - 86400 * i for i in range(days)]
 	day_cutoffs.insert(0, calendar.timegm(now))
 
 	daily_times = [time.strftime("%d/%m", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
