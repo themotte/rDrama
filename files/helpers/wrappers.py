@@ -48,7 +48,7 @@ def auth_desired(f):
 		v = get_logged_in_user()
 
 		if request.host == 'old.rdrama.net' and not (v and v.admin_level) and '/log' not in request.path:
-			return redirect(request.full_path.replace('old.',''))
+			return request.full_path.replace('old.','')
 		check_ban_evade(v)
 
 		resp = make_response(f(*args, v=v, **kwargs))
