@@ -7,7 +7,7 @@
 {% block pagetype %}message{% endblock %}
 
 {% block content %}
-<div class="col-span-full">
+<div class="col-span-full my-2">
 
 		{% if error %}
 		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
@@ -36,12 +36,12 @@
 <pre></pre>
 <h5>Badge Grant</h5>
 
-<form action="/admin/badge_grant", method="post">
+<form action="/admin/badge_grant" method="post">
 <input type="hidden" name="formkey" value="{{v.formkey}}">
 
 
-<label for="input-username">Username</label><br>
-<input id="input-username" class="form-input" type="text" name="username" required>
+<label for="input-username" class="label">Username</label>
+<input id="input-username" class="form-input mb-4" type="text" name="username" required placeholder="Enter a username">
 
 <table class="w-full table table-striped">
 <thead class="bg-primary text-white">
