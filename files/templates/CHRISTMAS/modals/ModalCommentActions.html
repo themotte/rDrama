@@ -68,7 +68,7 @@
 					</li>
 					{% endif %}
 					{% endif %}
-					{% if v and c.post and (v.admin_level >= 1 or v.id == c.post.author_id) and c.level == 1 %}
+					{% if v and c.post and (v.admin_level > 1 or v.id == c.post.author_id) %}
 					<li id="pin2-{{c.id}}" class="{% if c.is_pinned %}hidden{% endif %}">
 						<button class="btn btn-gray w-full text-left" onclick="post_toast2('/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')">
 							<i class="fas fa-thumbtack fa-rotate--45 fa-fw mr-4"></i>Pin
