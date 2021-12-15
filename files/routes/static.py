@@ -79,7 +79,7 @@ def chart(v):
 	return send_file(file)
 
 
-#@cache.memoize(timeout=86400)
+@cache.memoize(timeout=86400)
 def cached_chart(days):
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,
