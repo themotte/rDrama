@@ -74,14 +74,14 @@ def participation_stats(v):
 @app.get("/chart")
 @auth_required
 def chart(v):
-	try: days = int(request.values.get("days", 0))
-	except: days = 0
-	file = cached_chart(days)
+	file = cached_chart()
 	return send_file(file)
 
 
-# @cache.memoize(timeout=86400)
-def cached_chart(days):
+#@cache.memoize(timeout=86400)
+def cached_chart():
+	days = int(request.values.get("days", 30))
+
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,
 											  now.tm_mon,
@@ -95,13 +95,9 @@ def cached_chart(days):
 											 )
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
-	if not days:
-		firstsignup = g.db.query(User.created_utc).filter(User.created_utc != 0).order_by(User.created_utc).first()[0] - 86400
-		nowstamp = int(time.time())
-		days = int((nowstamp - firstsignup) / 86400)
-	
-	if days > 30: day_cutoffs = [today_cutoff - 86400*7 * i for i in range(int(days/7))]
-	else: day_cutoffs = [today_cutoff - 86400 * i for i in range(days)]
+	day = 3600 * 200
+
+	day_cutoffs = [today_cutoff - day * i for i in range(30)]
 	day_cutoffs.insert(0, calendar.timegm(now))
 
 	daily_times = [time.strftime("%d/%m", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
