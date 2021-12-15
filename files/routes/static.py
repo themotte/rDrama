@@ -74,7 +74,8 @@ def participation_stats(v):
 @app.get("/chart")
 @auth_required
 def chart(v):
-	days = request.values.get("days", 0)
+	try: days = int(request.values.get("days", 0))
+	except: days = 0
 	file = cached_chart(days)
 	return send_file(file)
 
