@@ -74,14 +74,12 @@ def participation_stats(v):
 @app.get("/chart")
 @auth_required
 def chart(v):
-	try: days = int(request.values.get('days', 0))
-	except: days = 0
-	file = cached_chart(days)
+	file = cached_chart()
 	return send_file(file)
 
 
-@cache.memoize(timeout=86400)
-def cached_chart(days):
+#@cache.memoize(timeout=86400)
+def cached_chart():
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,
 											  now.tm_mon,
@@ -95,23 +93,16 @@ def cached_chart(days):
 											 )
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
-	if not days:
-		firstsignup = g.db.query(User.created_utc).filter(User.created_utc != 0).order_by(User.created_utc).first()[0] - 86400
-		nowstamp = int(time.time())
-		days = int((nowstamp - firstsignup) / 86400)
-
-	day = 3600 * days
-
-	day_cutoffs = [today_cutoff - day * i for i in range(30)]
+	day_cutoffs = [today_cutoff - 86400 * i for i in range(0, 31)]
 	day_cutoffs.insert(0, calendar.timegm(now))
 
-	daily_times = [time.strftime("%d/%m", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	daily_times = [time.strftime("%d/%m", time.gmtime(day_cutoffs[i + 1])) for i in range(len(day_cutoffs) - 1)][::-1]
 
-	daily_signups = [g.db.query(User.id).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	daily_signups = [g.db.query(User.id).filter(User.created_utc < day_cutoffs[i], User.created_utc > day_cutoffs[i + 1]).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
-	post_stats = [g.db.query(Submission.id).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	post_stats = [g.db.query(Submission.id).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
-	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][2:][::-1]
+	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
 	plt.rcParams["figure.figsize"] = (20,20)
 
