@@ -4357,7 +4357,7 @@ blockquote p {
   overflow-y: auto;
 }
 
-.emj, .emoji, .emoji-lg {
+.emj, .emoji, .emoji-md, .emoji-lg {
   max-width: 100% !important;
 }
 

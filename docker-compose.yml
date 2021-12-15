@@ -42,7 +42,7 @@ services:
       - DUES=0
       - MAIL_USERNAME=blahblahblah@gmail.com
       - MAIL_PASSWORD=3435tdfsdudebussylmaoxxt43
-      - CHRISTMAS=1
+      - CHRISTMAS=0
     links:
       - "redis"
       - "postgres"

@@ -172,14 +172,14 @@ def sanitize(sanitized, noimages=False):
 			if emoji.startswith("#!") or emoji.startswith("!#"):
 				classes = 'class="emoji-lg mirrored" '
 				remoji = emoji[2:]
-			elif emoji.startswith("!"):
-				classes = 'height=60 class="emoji mirrored" '
-				remoji = emoji[1:]
 			elif emoji.startswith("#"):
 				classes = 'class="emoji-lg" '
 				remoji = emoji[1:]
+			elif emoji.startswith("!"):
+				classes = 'height=60 class="emoji-md mirrored" '
+				remoji = emoji[1:]
 			else:
-				classes = 'height=60 class="emoji" '
+				classes = 'height=60 class="emoji-md" '
 				remoji = emoji
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):

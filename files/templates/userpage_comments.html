@@ -32,12 +32,14 @@
 			<div class="text-small font-weight-bold mr-2">‎</div>
 			<div class="dropdown dropdown-actions">
 				<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					{% if t=="day" %}<i class="fas fa-calendar-day mr-1"></i>{% endif %}
-					{% if t=="week" %}<i class="fas fa-calendar-week mr-1"></i>{% endif %}
-					{% if t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>{% endif %}
-					{% if t=="year" %}<i class="fas fa-calendar mr-1"></i>{% endif %}
-					{% if t=="all" %}<i class="fas fa-infinity mr-1"></i>{% endif %}
-					{{t | capitalize}}
+					{% if t=="hour" %}<i class="fas fa-clock mr-1"></i>
+					{% elif t=="day" %}<i class="fas fa-calendar-day mr-1"></i>
+					{% elif t=="week" %}<i class="fas fa-calendar-week mr-1"></i>
+					{% elif t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>
+					{% elif t=="year" %}<i class="fas fa-calendar mr-1"></i>
+					{% elif t=="all" %}<i class="fas fa-infinity mr-1"></i>
+					{% endif %}
+				{{t | capitalize}}
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 					{% if not t=="hour" %}<a class="dropdown-item" href="?sort={{sort}}&t=hour"><i class="fas fa-clock mr-2"></i>Hour</a>{% endif %}

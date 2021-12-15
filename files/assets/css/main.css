@@ -5337,12 +5337,6 @@ div.deleted.banned {
   object-fit: cover;
 }
 
-img.emoji {
-  max-width: 100px;
-  height: 30px;
-  object-fit: contain;
-}
-
 .spoiler {
   color: var(--white);
   background-color: var(--white);
@@ -5579,14 +5573,6 @@ blockquote p {
   margin-bottom: 0.5rem !important;  
 }
 
-.emoji {
-  height: 30px !important;
-}
-
-.bigemoji {
-  height: 60px !important;
-}
-
 .embedvid {
   max-height: 20rem !important;
   max-width: 100% !important;
@@ -5694,10 +5680,6 @@ blockquote p {
   color: #000 !important
 }
 
-.emj, .emoji, .emoji-lg {
-  max-width: 100% !important;
-}
-
 .text-lightblue {
   color: lightblue;
 }
@@ -5708,4 +5690,17 @@ blockquote p {
 
 .emoji-modal {
   max-width: 90% !important
+}
+
+.emoji {
+  height: 30px !important;
+}
+
+.bigemoji {
+  height: 60px !important;
+}
+
+.bigemoji, .emj, .emoji, .emoji-md, .emoji-lg {
+  max-width: 100% !important;
+  object-fit: contain;
 }

@@ -163,9 +163,13 @@ img.emoji {
 	@apply inline-block object-contain
 }
 
-img.emoji-lg {
+img.emoji-md {
 	width: 60px;
 	height: 60px;
 	@apply inline-block object-contain
 }
 
+img.emoji-lg {
+	max-width: 100%;
+	@apply inline-block object-contain
+}
