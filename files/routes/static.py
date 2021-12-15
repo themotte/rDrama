@@ -138,7 +138,7 @@ def cached_chart():
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
 
-	file = "chart.png"
+	file = "/chart.png"
 	plt.savefig(file)
 	plt.clf()
 	return file
