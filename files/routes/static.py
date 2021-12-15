@@ -99,8 +99,12 @@ def cached_chart(days):
 		nowstamp = int(time.time())
 		days = int((nowstamp - firstsignup) / 86400)
 
-	if days > 31: day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(31)][1:]
-	else: day_cutoffs = [today_cutoff - 86400 * i for i in range(31)]
+	if days > 31:
+		file = "/weekly_chart.png"
+		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(31)][1:]
+	else:
+		file = "/daily_chart.png"
+		day_cutoffs = [today_cutoff - 86400 * i for i in range(31)]
 
 	day_cutoffs.insert(0, calendar.timegm(now))
 
@@ -142,7 +146,6 @@ def cached_chart(days):
 	posts_chart.legend(loc='upper left', frameon=True)
 	comments_chart.legend(loc='upper left', frameon=True)
 
-	file = "/chart.png"
 	plt.savefig(file)
 	plt.clf()
 	return file
