@@ -655,11 +655,12 @@ video {
 	color: rgba(var(--color-primary), var(--tw-text-opacity));
 }
 	blockquote {
+	margin-bottom: 1rem;
 	border-left-width: 2px;
 	--tw-border-opacity: 1;
-	border-color: rgba(220, 38, 38, var(--tw-border-opacity));
+	border-color: rgba(21, 128, 61, var(--tw-border-opacity));
 	--tw-bg-opacity: 1;
-	background-color: rgba(254, 202, 202, var(--tw-bg-opacity));
+	background-color: rgba(220, 252, 231, var(--tw-bg-opacity));
 }
 	hr {
 	margin-top: 0.75rem;
