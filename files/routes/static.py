@@ -99,7 +99,6 @@ def cached_chart(days):
 		print(firstsignup)
 		nowstamp = int(time.time())
 		days = int((nowstamp - firstsignup) / 86400)
-		print(days)
 
 	day = 3600 * days
 
