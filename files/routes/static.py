@@ -100,7 +100,7 @@ def cached_chart(days):
 		nowstamp = int(time.time())
 		days = int((nowstamp - firstsignup) / 86400)
 	
-	if days > 30: day_cutoffs = [today_cutoff - 86400*7 * i for i in range(days/7)]
+	if days > 30: day_cutoffs = [today_cutoff - 86400*7 * i for i in range(int(days/7))]
 	else: day_cutoffs = [today_cutoff - 86400 * i for i in range(days)]
 	day_cutoffs.insert(0, calendar.timegm(now))
 
