@@ -41,9 +41,9 @@
 
 
 <label for="input-username">Username</label><br>
-<input id="input-username" class="form-control" type="text" name="username" required>
+<input id="input-username" class="form-input" type="text" name="username" required>
 
-<table class="table table-striped">
+<table class="w-full table table-striped">
 <thead class="bg-primary text-white">
 		<tr>
 			<th scope="col">Select</th>
@@ -56,7 +56,7 @@
 {% for k, v in badge_types.items() %}
 <tr>
 	<td><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}"></td>
-	<td><label for="badge-{{k}}"><img loading="lazy" src="/assets/CHRISTMAS/images/badges/{{v['name']}}.webp?v=200" width="70px" height="70px"></label></td>
+	<td><label for="badge-{{k}}"><img loading="lazy" src="/assets/CHRISTMAS/images/badges/{{v['name']}}.webp?v=200" class="object-contain w-16 h-16 p-2"></label></td>
 	<td>{{v['name']}}</td>
 	<td>{{v['description']}}</td>
 </tr>
@@ -64,10 +64,10 @@
 </table>
 
 <label for="input-url">URL</label><br>
-<input id="input-url" class="form-control" type="text" name="url" placeholder="Optional">
+<input id="input-url" class="form-input" type="text" name="url" placeholder="Optional">
 
 <label for="input-description">Custom description</label><br>
-<input id="input-description" class="form-control" type="text" name="description" placeholder="Leave blank for badge default">
+<input id="input-description" class="form-input" type="text" name="description" placeholder="Leave blank for badge default">
 
 <input class="btn btn-primary" type="submit">
 
