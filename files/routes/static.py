@@ -95,7 +95,7 @@ def cached_chart(days):
 	today_cutoff = calendar.timegm(midnight_this_morning)
 
 	if not days:
-		firstsignup = g.db.query(User.created_utc).filter(User.created_utc != None).order_by(User.created_utc).first()[0]
+		firstsignup = g.db.query(User.created_utc).filter(User.created_utc != 0).order_by(User.created_utc).first()[0]
 		print(firstsignup)
 		nowstamp = int(time.time())
 		print(nowstamp - firstsignup)
