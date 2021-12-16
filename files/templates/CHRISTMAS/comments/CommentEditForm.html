@@ -30,12 +30,12 @@
 				</li>
 				{% if v %}
 				<li>
-					<button type="button" class="text-gray-400 hover:text-gray-500">
+					<label for="file-edit-reply-{{c.id}}" type="button" class="text-gray-400 hover:text-gray-500">
 						<div id="filename-edit-reply-{{c.id}}">
 							<i class="fas fa-camera fa-fw fa-sm"></i>
 						</div>
 						<input id="file-edit-reply-{{c.id}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-edit-reply-{{c.id}}').innerHTML='image';" hidden>
-					</button>
+					</label>
 				</li>
 				{% endif %}
 			</ul>
