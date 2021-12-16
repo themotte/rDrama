@@ -296,11 +296,11 @@
 		<div class="flex items-center border-b last:border-b-none border-gray-300 shadow-inset-t-white-05 px-5 py-3 {% if v.username == user.username %}text-red-900 text-shadow-light bg-red-600{% elif users9.index(user) % 2 != 0 %}bg-gray-200{% endif %}">
 			<!-- Rank -->
 			<h2 class="flex-shrink-0 text-2xl font-bold font-heading text-center w-16 -ml-5 mb-0 {{ 'text-red-900' if v.username == user.username else 'text-gray-400' }}">
-				{{users9.index(user)+1}}
+				{{loop.index}}
 			</h2>
 			<div class="relative flex-shrink-0">
 				<img src="{{user[0].profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == user[0].username else 'bg-white border-gray-300' }}" alt="{{ user[0].username }} avatar"/>
-				{% if users9.index(user)+1 == 1 %}
+				{% if loop.index == 1 %}
 				<img src="https://i.ibb.co/xFgG6yf/Coinfixed.gif" width="20px" height="12px" class="absolute -top-1 -right-2.5 object-contain"/>
 				{% endif %}
 			</div>
