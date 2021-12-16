@@ -223,6 +223,16 @@
 				{% endif %}
 			</div>
 		{% endif %}
+		{% if v and (v.admin_level > 1 or v.alt) %}
+		<p class="label">Alts:</p>
+		<ul class="mt-3 mb-0">
+			{% for account in u.alts_unique %}
+				<li>
+					<a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}
+				</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
 	</div>
 </div>
 {% endblock %}
