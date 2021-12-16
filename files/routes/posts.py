@@ -603,7 +603,9 @@ def thumbnail_thread(pid):
 		time.sleep(5)
 		post = db.query(Submission).filter_by(id=pid).first()
 
-	fetch_url=post.url
+	fetch_url = post.url
+
+	if fetch_url.startswith('/'): fetch_url = request.host_url[:-1] + fetch_url
 
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
