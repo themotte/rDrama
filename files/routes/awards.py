@@ -168,7 +168,7 @@ def buy(v, award):
 @validate_formkey
 def award_post(pid, v):
 
-	if v.shadowbanned: return render_template('errors/500.html', v=v), 500
+	if v.shadowbanned: return render_template('errors/500.html', error=True, v=v), 500
 	
 	if v.is_banned and not v.unban_utc: return {"error": "forbidden."}, 403
 
@@ -339,7 +339,7 @@ def award_post(pid, v):
 @validate_formkey
 def award_comment(cid, v):
 
-	if v.shadowbanned: return render_template('errors/500.html', v=v), 500
+	if v.shadowbanned: return render_template('errors/500.html', error=True, v=v), 500
 
 	if v.is_suspended and v.unban_utc == 0: return {"error": "forbidden"}, 403
 

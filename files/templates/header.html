@@ -26,6 +26,7 @@
 					</span>
 				</form>
 			</div>
+			{% if not error %}
 			<a class="mobile-nav-icon d-md-none" href="/random"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
 			{% if v and v.admin_level > 0 %}
 			<a class="mobile-nav-icon d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
@@ -208,6 +209,7 @@
 			{% endif %}
 		</ul>
 	</div>
+	{% endif %}
 	</div>
 	</div>
 </nav>

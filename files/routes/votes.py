@@ -16,7 +16,7 @@ defaultcolor = environ.get("DEFAULT_COLOR").strip()
 @auth_desired
 def admin_vote_info_get(v):
 
-	if v and v.shadowbanned: return render_template('errors/500.html', v=v), 500
+	if v and v.shadowbanned: return render_template('errors/500.html', error=True, v=v), 500
 
 	link = request.values.get("link")
 	if not link: return render_template("votes.html", v=v)
@@ -27,7 +27,7 @@ def admin_vote_info_get(v):
 		else: abort(400)
 	except: abort(400)
 
-	if thing.author.shadowbanned and not (v and v.admin_level): return render_template('errors/500.html', v=v), 500
+	if thing.author.shadowbanned and not (v and v.admin_level): return render_template('errors/500.html', error=True, v=v), 500
 
 	if isinstance(thing, Submission):
 
