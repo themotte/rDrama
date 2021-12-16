@@ -299,7 +299,7 @@
 				{{users9.index(user)+1}}
 			</h2>
 			<div class="relative flex-shrink-0">
-				<img src="{{user.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == user.username else 'bg-white border-gray-300' }}" alt="{{ user.username }} avatar"/>
+				<img src="{{user[0].profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == user[0].username else 'bg-white border-gray-300' }}" alt="{{ user[0].username }} avatar"/>
 				{% if users9.index(user)+1 == 1 %}
 				<img src="https://i.ibb.co/xFgG6yf/Coinfixed.gif" width="20px" height="12px" class="absolute -top-1 -right-2.5 object-contain"/>
 				{% endif %}
@@ -307,11 +307,11 @@
 			<!-- User Details -->
 			<div class="ml-3">
 				<a class="block font-heading font-bold text-lg md:text-xl text-black hover:text-red-600" href="/@{{user.username}}">
-					{{user.realusername}}
+					{{user[0].username}}
 				</a>
-				{% if user.customtitle %}
+				{% if user[0].customtitle %}
 				<p class="text-sm" style="#{{user.namecolor}}">
-					{{user.customtitle | safe}}
+					{{user[0].customtitle | safe}}
 				</p>
 				{% endif %}
 			</div>
