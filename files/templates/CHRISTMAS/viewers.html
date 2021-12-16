@@ -1,21 +1,20 @@
 {% extends "default.html" %}
 {% block content %}
-<pre></pre>
-<h5>Users who viewed your profile</h5>
-<pre></pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th style="font-weight: bold">Name</th>
-		<th style="font-weight: bold">Last visit</th>
-	</tr>
-</thead>
-{% for view in viewers %}
-	<tr>
-		<td style="font-weight: bold"><a style="color: #{{view.viewer.namecolor}}" href="/@{{view.viewer.username}}"><img loading="lazy" src="/uid/{{view.viewer.id}}/pic" class="pp20"><span {% if view.viewer.patron %}class="patron" style="background-color:#{{view.viewer.namecolor}};"{% endif %}>{{view.viewer.username}}</span></a></td>
-		<td style="font-weight: bold">{{view.last_view_string}}</td>
-	</tr>
-{% endfor %}
-</table>
-
+<div class="col-span-full my-4 px-2.5 md:px-0">
+	<h5>Users who viewed your profile</h5>
+	<table class="w-full table table-striped mb-5">
+		<thead class="bg-primary text-white">
+			<tr>
+				<th style="font-weight: bold">Name</th>
+				<th style="font-weight: bold">Last visit</th>
+			</tr>
+		</thead>
+		{% for view in viewers %}
+		<tr>
+			<td style="font-weight: bold"><a style="color: #{{view.viewer.namecolor}}" href="/@{{view.viewer.username}}"><img loading="lazy" src="/uid/{{view.viewer.id}}/pic" class="pp20"><span {% if view.viewer.patron %}class="patron" style="background-color:#{{view.viewer.namecolor}};"{% endif %}>{{view.viewer.username}}</span></a></td>
+			<td style="font-weight: bold">{{view.last_view_string}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
 {% endblock %}
