@@ -142,7 +142,7 @@
 		</div>
 		<div class="ml-auto flex items-center space-x-4">
 			{% if u.id == v.id or not u.is_private %}
-			<ul class="hidden xl:flex items-center space-x-3 mb-0">
+			<ul class="hidden xl:flex items-center space-x-4 mb-0">
 				<li>
 					<a href="/@{{ u.username }}/followers" class="text-black text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</a>
 					<small class="block font-bold text-gray-500">Followers</small>
