@@ -1146,8 +1146,10 @@ def submit_post(v):
 				rev = new_post.url.replace('https://old.reddit.com/', '')
 				rev = f"* [unddit.com](https://unddit.com/{rev})\n"
 			else: rev = ''
-			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{new_post.url})\n* [archive.ph](https://archive.ph/?url={quote(new_post.url)}&run=1) (click to archive)\n\n"			
-			gevent.spawn(archiveorg, new_post.url)
+			newposturl = new_post.url
+			if newposturl.startswith('/'): newposturl = f"https://{site}{newposturl}"
+			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
+			gevent.spawn(archiveorg, newposturl)
 
 		url_regex = '<a (target=\"_blank\"  )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
 		for url_match in re.finditer(url_regex, new_post.body_html, flags=re.M|re.I):

@@ -289,6 +289,7 @@ def static_service(path):
 	return resp
 
 @app.get('/images/<path:path>')
+@app.get('/IMAGES/<path:path>')
 @app.get('/hostedimages/<path:path>')
 @limiter.exempt
 def images(path):

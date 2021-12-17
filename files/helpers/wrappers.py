@@ -4,36 +4,26 @@ from files.helpers.const import *
 
 
 def get_logged_in_user():
+	token = request.headers.get("Authorization")
 
-	if request.headers.get("Authorization"):
-		token = request.headers.get("Authorization")
-		if not token: return None
+	if token:
+		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).first()
+		if not client: return None
 
-		try:
-			client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).first()
-			x = (client.user, client) if client else (None, None)
-		except: x = (None, None)
-
-
+		v = client.user
+		v.client = client
+		return v
 	else:
-
 		uid = session.get("user_id")
 		nonce = session.get("login_nonce", 0)
-		if not uid: x= (None, None)
-		try:
-			if g.db: v = g.db.query(User).filter_by(id=uid).first()
-			else: v = None
-		except: v = None
+		logged_in = session.get("logged_in")
 
-		if v and (nonce < v.login_nonce):
-			x= (None, None)
-		else:
-			x=(v, None)
+		if not uid or not logged_in or uid != logged_in: return None
 
+		v = g.db.query(User).filter_by(id=uid).first()
+		if not v or nonce < v.login_nonce: return None
 
-	if x[0]: x[0].client=x[1]
-
-	return x[0]
+		return v
 
 def check_ban_evade(v):
 	if v and v.ban_evade and v.admin_level == 0 and not v.is_suspended:
@@ -71,8 +61,6 @@ def auth_required(f):
 
 		check_ban_evade(v)
 
-		g.v = v
-
 		resp = make_response(f(*args, v=v, **kwargs))
 		return resp
 
@@ -94,8 +82,6 @@ def is_not_banned(f):
 
 		if v.is_suspended: return {"error": "You can't perform this action while being banned."}, 403
 
-		g.v = v
-
 		resp = make_response(f(*args, v=v, **kwargs))
 		return resp
 
@@ -114,8 +100,6 @@ def admin_level_required(x):
 			if not v: abort(401)
 
 			if v.admin_level < x: abort(403)
-
-			g.v = v
 
 			response = f(*args, v=v, **kwargs)
 
