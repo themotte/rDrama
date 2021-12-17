@@ -68,7 +68,7 @@ def revert_actions(v, username):
 		g.db.add(item)
 
 	users = (x[0] for x in g.db.query(ModAction.target_user_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind.in_(('shadowban', 'ban_user'))).all())
-	users = g.db.query(User).filter_by(id.in_(users)).all()
+	users = g.db.query(User).filter(User.id.in_(users)).all()
 
 	for user in users:
 		user.shadowbanned = None
