@@ -4218,6 +4218,8 @@ th {
 	bottom: 0;
 	left: 0;
 	z-index: 1030;
+  max-width: 80%;
+  margin: auto;
   }
 
   .modal.modal-sm-bottom .modal-content {
