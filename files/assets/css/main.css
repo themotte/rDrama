@@ -4212,33 +4212,9 @@ th {
 }
 
 @media (max-width: 767.98px) {
-  .modal.modal.modal-sm-bottom .modal-dialog {
-	position: fixed;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	z-index: 1030;
-  max-width: 80%;
-  margin: auto;
-  }
-
-  .modal.modal-sm-bottom .modal-content {
-	position: absolute;
-	bottom: 0;
-	border-radius: 1rem;
-  }
-
-  .modal.fade.modal-sm-bottom .modal-dialog {
-	transform: translate3d(0, 100vh, 0);
-  }
-
-  .modal.show.modal-sm-bottom .modal-dialog {
-	transform: translate3d(0, 0, 0);
-  }
-
-  .modal.modal-sm-bottom .modal-header {
-	border-top-right-radius: 1rem;
-	border-top-left-radius: 1rem;
+  .modal-dialog {
+    margin: auto;
+    max-width: 80%;
   }
 }
 .dropdown-actions {

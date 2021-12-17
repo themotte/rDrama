@@ -172,7 +172,7 @@
 {% block actionsModal %}
 
 {% if v %}
-	<div class="modal fade modal-sm-bottom d-md-none" id="actionsModal" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
+	<div class="modal fade d-md-none" id="actionsModal" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header p-3">
@@ -232,8 +232,8 @@
 	</div>
 {% endif %}
 
-{% if v and v.admin_level > 1%}
-	<div class="modal fade modal-sm-bottom d-md-none" id="adminModal" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
+{% if v and v.admin_level > 1 %}
+	<div class="modal fade d-md-none" id="adminModal" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header p-3">
@@ -244,6 +244,10 @@
 				</div>
 				<div class="modal-body">
 					<ul class="list-group post-actions">
+						{% if v.admin_level > 2 %}
+							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="togglePostEdit('{{p.id}}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
+						{% endif %}
+
 						<button id="club2-{{p.id}}" class="{% if p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-info text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye-slash mr-3"></i>Mark club</button>
 						<button id="unclub2-{{p.id}}" class="{% if not p.club %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-info text-left" href="javascript:void(0)" onclick="post_toast2('/toggle_club/{{p.id}}','club2-{{p.id}}','unclub2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye mr-3"></i>Unmark club</button>
 
@@ -652,7 +656,7 @@
 						<span class="text-info d-none new-comments"></span>
 					</a>
 
-					{% if v and v.admin_level > 1%}
+					{% if v and v.admin_level > 1 %}
 						<a class="ml-2" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#adminModal">
 							<i class="fas fa-broom"></i>
 						</a>

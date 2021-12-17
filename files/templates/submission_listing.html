@@ -302,7 +302,7 @@
 					<span class="text-info d-none new-comments"></span>
 				</a>
 
-				{% if v and v.admin_level > 1%}
+				{% if v and v.admin_level > 1 %}
 					<a class="ml-2" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#adminModal-{{p.id}}">
 						<i class="fas fa-broom"></i>
 					</a>
@@ -371,7 +371,7 @@
 </div>
 
 {% if v %}
-	<div class="modal fade modal-sm-bottom d-md-none" id="actionsModal-{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
+	<div class="modal fade d-md-none" id="actionsModal-{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header p-3">
@@ -431,8 +431,8 @@
 	</div>
 {% endif %}
 
-{% if v and v.admin_level > 1%}
-	<div class="modal fade modal-sm-bottom d-md-none" id="adminModal-{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
+{% if v and v.admin_level > 1 %}
+	<div class="modal fade d-md-none" id="adminModal-{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="actionsModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header p-3">
