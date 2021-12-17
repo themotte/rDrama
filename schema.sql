@@ -768,7 +768,8 @@ CREATE TABLE public.users (
     bird integer,
     fish boolean,
     grinch boolean,
-    grincheffect boolean
+    grincheffect boolean,
+    lootboxes_bought integer
 );
 
 
@@ -1713,6 +1714,7 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
+
 
 --
 -- PostgreSQL database dump complete
