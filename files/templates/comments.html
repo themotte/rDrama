@@ -244,7 +244,7 @@
 
 
 				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ID and c.author_id!=AUTOJANNY_ID and c.author_id!=v.id %}
-					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.toggle('d-none')">Reply</a>
+					<a class="btn btn-primary" href="javascript:void(0)" onclick="document.getElementById('reply-m-{{c.id}}').classList.toggle('d-none');document.getElementById('reply-m-{{c.id}}').focus()">Reply</a>
 					<pre></pre>
 					<div id="reply-m-{{c.id}}" class="d-none">
 						<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
