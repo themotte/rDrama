@@ -2382,7 +2382,7 @@ img.emoji-md {
 	   object-fit: contain}
 
 img.emoji-lg {
-	max-width: 100%;
+	max-width: 10rem;
 	display: inline-block;
 	-o-object-fit: contain;
 	   object-fit: contain}
