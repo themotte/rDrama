@@ -83,9 +83,8 @@ function report_commentModal(id, author) {
 };
 
 function openReplyBox(id) {
-	const element = document.getElementById(`reply-to-${id}`);
+	const element = document.getElementById(id);
 	element.classList.remove('d-none')
-
 	element.getElementsByTagName('textarea')[0].focus()
 }
 
