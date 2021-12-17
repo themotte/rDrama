@@ -967,6 +967,9 @@ def api_distinguish_post(post_id, v):
 @validate_formkey
 def api_sticky_post(post_id, v):
 
+	pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()
+	if pins > 2: return {"error": "Can't exceed 3 pinned posts limit!"}, 403
+
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if post:
 		if post.stickied:

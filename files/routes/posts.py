@@ -211,8 +211,7 @@ def post_id(pid, anything=None, v=None):
 
 	post.views += 1
 	g.db.add(post)
-	if isinstance(session.get('over_18', 0), dict): session["over_18"] = 0
-	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
+	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
 		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
 		else: return render_template("errors/nsfw.html", v=v)
 
@@ -1047,12 +1046,12 @@ def submit_post(v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
-		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: [{title}]({new_post.permalink})")
+		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://{site}{new_post.permalink}")
 		
 		for follow in v.followers:
 			user = get_account(follow.user_id)
 			if new_post.club and not user.club_allowed: continue
-			send_notification(user.id, f"@{v.username} has made a new post: [{title}]({new_post.permalink})", True)
+			send_notification(user.id, f"@{v.username} has made a new post: [{title}](https://{site}{new_post.permalink})", True)
 
 	g.db.add(new_post)
 	g.db.flush()

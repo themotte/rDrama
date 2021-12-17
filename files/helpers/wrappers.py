@@ -18,7 +18,8 @@ def get_logged_in_user():
 		nonce = session.get("login_nonce", 0)
 		logged_in = session.get("logged_in")
 
-		if not uid or not logged_in or uid != logged_in: return None
+		if not uid: return None
+		# if not uid or not logged_in or uid != logged_in: return None
 
 		v = g.db.query(User).filter_by(id=uid).first()
 		if not v or nonce < v.login_nonce: return None
@@ -37,8 +38,6 @@ def auth_desired(f):
 
 		v = get_logged_in_user()
 
-		if request.host == 'old.rdrama.net' and not (v and v.admin_level) and '/log' not in request.path:
-			return redirect(request.url.replace('https://old.','https://'))
 		check_ban_evade(v)
 
 		resp = make_response(f(*args, v=v, **kwargs))
@@ -55,9 +54,6 @@ def auth_required(f):
 		v = get_logged_in_user()
 
 		if not v: abort(401)
-			
-		if request.host == 'old.rdrama.net' and not v.admin_level:
-			return redirect(request.url.replace('https://old.','https://'))
 
 		check_ban_evade(v)
 
@@ -76,8 +72,6 @@ def is_not_banned(f):
 
 		if not v: abort(401)
 			
-		if request.host == 'old.rdrama.net' and not v.admin_level:
-			return redirect(request.url.replace('https://old.','https://'))
 		check_ban_evade(v)
 
 		if v.is_suspended: return {"error": "You can't perform this action while being banned."}, 403

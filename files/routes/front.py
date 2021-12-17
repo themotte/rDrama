@@ -123,6 +123,9 @@ def notifications(v):
 @auth_desired
 def front_all(v):
 
+	if request.host == 'old.rdrama.net' and not (v and v.admin_level):
+		return render_template("home.html", v=v, listing=[], next_exists=False, sort='hot', t='all', page=1)
+
 	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
 	if v and v.is_banned and not v.unban_utc: return render_template('errors/500.html', error=True, v=v), 500
@@ -199,10 +202,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = g.db.query(Submission)
 
-	if SITE_NAME == 'Drama' and sort == "hot":
-		cutoff = int(time.time()) - 86400
-		posts = posts.filter(Submission.created_utc >= cutoff)
-	elif t != 'all':
+	if t == 'all': cutoff = 0
+	else:
 		now = int(time.time())
 		if t == 'hour': cutoff = now - 3600
 		elif t == 'week': cutoff = now - 604800
@@ -210,7 +211,6 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		elif t == 'year': cutoff = now - 31536000
 		else: cutoff = now - 86400
 		posts = posts.filter(Submission.created_utc >= cutoff)
-	else: cutoff = 0
 
 	if sort != "hot": posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
 	else: posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
