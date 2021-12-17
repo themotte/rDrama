@@ -301,7 +301,7 @@
 				<div id="comment-{{c.id}}-actions" class="comment-actions{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 					<ul class="list-inline text-right text-md-left {% if v and v.admin_level > 1 %}d-flex{% endif %}">
 						{% if v and v.admin_level > 1 %}
-							<a class="list-inline-item mr-auto" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#adminModal-{{c.id}}">
+							<a class="list-inline-item mr-auto d-md-none" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#adminModal-{{c.id}}">
 								<i class="fas fa-broom"></i>
 							</a>
 						{% endif %}
