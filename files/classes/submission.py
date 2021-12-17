@@ -228,6 +228,12 @@ class Submission(Base):
 
 	@property
 	@lazy
+	def full_url(self):
+		if self.url.startswith('/'): return 'https://rdrama.net' + self.url
+		return self.url
+
+	@property
+	@lazy
 	def json_raw(self):
 		flags = {}
 		for f in self.flags: flags[f.user.username] = f.reason
@@ -243,7 +249,7 @@ class Submission(Base):
 				'is_bot': self.is_bot,
 				'thumb_url': self.full_thumb,
 				'domain': self.domain,
-				'url': self.url,
+				'url': self.full_url,
 				'body': self.body,
 				'body_html': self.body_html,
 				'created_utc': self.created_utc,
