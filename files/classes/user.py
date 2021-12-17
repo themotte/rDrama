@@ -446,7 +446,7 @@ class User(Base):
 	@property
 	@lazy
 	def full_profileurl(self):
-		if self.profile_url.startswith('/'): return 'https://rdrama.net' + self.profile_url
+		if self.profile_url.startswith('/'): return f'https://{site}' + self.profile_url
 		return self.profile_url
 
 	@property

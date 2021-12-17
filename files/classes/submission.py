@@ -223,13 +223,13 @@ class Submission(Base):
 	@property
 	@lazy
 	def full_thumb(self):
-		if self.thumb_url.startswith('/'): return 'https://rdrama.net' + self.thumb_url
+		if self.thumb_url.startswith('/'): return f'https://{site}' + self.thumb_url
 		return self.thumb_url
 
 	@property
 	@lazy
 	def full_url(self):
-		if self.url.startswith('/'): return 'https://rdrama.net' + self.url
+		if self.url.startswith('/'): return f'https://{site}' + self.url
 		return self.url
 
 	@property
