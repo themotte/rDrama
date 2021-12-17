@@ -21,15 +21,6 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 
-@app.get("/notify")
-@admin_level_required(3)
-def notify(v):
-	users = (x[0] for x in g.db.query(User.id).all())
-	for u in users:
-		send_notification(u, f"IMPORTANT: https://rdrama.net/post/30782/psa-make-sure-you-know-your")
-	g.db.commit()
-	return "sex"
-
 @app.get("/distribute/<cid>")
 @admin_level_required(3)
 def distribute(v, cid):
