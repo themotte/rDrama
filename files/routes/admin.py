@@ -21,27 +21,6 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 
-@app.get("/notify")
-@admin_level_required(3)
-def notify(v):
-
-	text_html = sanitize(CustomRenderer().render(mistletoe.Document("IMPORTANT: https://rdrama.net/post/30782/psa-make-sure-you-know-your")))
-
-	new_comment = Comment(author_id=1046,
-							parent_submission=None,
-							distinguish_level=6,
-							body_html=text_html)
-	g.db.add(new_comment)
-	g.db.flush()
-	print('wtf')
-	users = g.db.query(User.id).all()
-	for u in users:
-		notif = Notification(comment_id=new_comment.id, user_id=u[0])
-		g.db.add(notif)
-
-	g.db.commit()
-	return "sex"
-
 @app.get("/distribute/<cid>")
 @admin_level_required(3)
 def distribute(v, cid):
