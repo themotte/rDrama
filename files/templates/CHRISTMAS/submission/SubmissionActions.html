@@ -156,7 +156,7 @@
 				{% endif %}
 				{% if v %}
 				<!-- Requires auth and admin and author -->
-				{% if v.admin_level >=3 or v.id == p.author.id and v.paid_dues %}
+				{% if v.admin_level >=3 or v.id == p.author.id and not v.club_banned %}
 				<li>
 					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 				</li>

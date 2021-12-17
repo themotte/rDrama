@@ -32,8 +32,8 @@ if path.exists(f'snappy_{site_name}.txt'):
 @auth_required
 def toggle_club(pid, v):
 
+	if v.club_banned: abort(403)
 	post = get_post(pid)
-
 	if post.author_id != v.id and v.admin_level == 0: abort(403)
 
 	post.club = not post.club
@@ -943,7 +943,7 @@ def submit_post(v):
 		if request.headers.get("Authorization"): return {"error": reason}, 403
 		else: return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 
-	if v.paid_dues: club = bool(request.values.get("club",""))
+	if not v.club_banned: club = bool(request.values.get("club",""))
 	else: club = False
 
 	if embed and len(embed) > 1500: embed = None
