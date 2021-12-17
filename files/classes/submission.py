@@ -222,6 +222,12 @@ class Submission(Base):
 
 	@property
 	@lazy
+	def full_thumb(self):
+		if self.thumb_url.startswith('/'): return 'https://rdrama.net' + self.thumb_url
+		return self.thumb_url
+
+	@property
+	@lazy
 	def json_raw(self):
 		flags = {}
 		for f in self.flags: flags[f.user.username] = f.reason
@@ -235,7 +241,7 @@ class Submission(Base):
 				'title': self.title,
 				'is_nsfw': self.over_18,
 				'is_bot': self.is_bot,
-				'thumb_url': self.thumb_url,
+				'thumb_url': self.full_thumb,
 				'domain': self.domain,
 				'url': self.url,
 				'body': self.body,
