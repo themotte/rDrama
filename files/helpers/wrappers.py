@@ -24,6 +24,7 @@ def get_logged_in_user():
 		v = g.db.query(User).filter_by(id=uid).first()
 		if not v or nonce < v.login_nonce: return None
 
+		v.client = None
 		return v
 
 def check_ban_evade(v):
