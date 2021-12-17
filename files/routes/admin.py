@@ -58,10 +58,10 @@ def revert_actions(v, username):
 	cutoff = int(time.time()) - 86400
 
 	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'ban_post').all()]
-	posts = g.db.query(Submission).filter_by(id.in_(posts)).all()
+	posts = g.db.query(Submission).filter(Submission.id.in_(posts)).all()
 
 	comments = [x[0] for x in g.db.query(ModAction.target_comment_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'ban_comment').all()]
-	comments = g.db.query(Comment).filter_by(id.in_(comments)).all()
+	comments = g.db.query(Comment).filter(Comment.id.in_(comments)).all()
 	
 	for item in posts + comments:
 		item.is_banned = False
