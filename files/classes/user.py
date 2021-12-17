@@ -445,6 +445,12 @@ class User(Base):
 
 	@property
 	@lazy
+	def full_profileurl(self):
+		if self.profile_url.startswith('/'): return 'https://rdrama.net' + self.profile_url
+		return self.profile_url
+
+	@property
+	@lazy
 	def json_raw(self):
 		data = {'username': self.username,
 				'url': self.url,
@@ -452,7 +458,7 @@ class User(Base):
 				'created_utc': self.created_utc,
 				'id': self.id,
 				'is_private': self.is_private,
-				'profile_url': self.profile_url,
+				'profile_url': self.full_profileurl,
 				'bannerurl': self.banner_url,
 				'bio': self.bio,
 				'bio_html': self.bio_html_eager,
