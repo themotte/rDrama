@@ -34,9 +34,9 @@ def notify(v):
 	# g.db.add(new_comment)
 	# g.db.flush()
 
-	users = (x[0] for x in g.db.query(User.id).all())
+	users = g.db.query(User.id).all()
 	for u in users:
-		print(u)
+		print(u[0])
 		# notif = Notification(comment_id=new_comment.id, user_id=u)
 		# g.db.add(notif)
 
