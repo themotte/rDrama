@@ -290,7 +290,7 @@ def reported_posts(v):
 	posts = g.db.query(Submission).filter_by(
 		is_approved=0,
 		is_banned=False
-	).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
+	).join(Submission.reports).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
 
 	listing = [p.id for p in posts]
 	next_exists = (len(listing) > 25)
@@ -312,7 +312,7 @@ def reported_comments(v):
 					   ).filter_by(
 		is_approved=0,
 		is_banned=False
-	).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+	).join(Comment.reports).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	listing = [p.id for p in posts]
 	next_exists = (len(listing) > 25)
@@ -559,7 +559,7 @@ def admin_link_accounts(v):
 	return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
 
 
-@app.get("/admin/removed")
+@app.get("/admin/removed/posts")
 @admin_level_required(2)
 def admin_removed(v):
 
@@ -582,6 +582,29 @@ def admin_removed(v):
 						   next_exists=next_exists
 						   )
 
+
+@app.get("/admin/removed/comments")
+@admin_level_required(2)
+def admin_removed_comments(v):
+
+	page = int(request.values.get("page", 1))
+	
+	ids = g.db.query(Comment.id).join(User, User.id == Comment.author_id).filter(or_(Comment.is_banned==True, User.shadowbanned != None)).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
+
+	ids=[x[0] for x in ids]
+
+	next_exists = len(ids) > 25
+
+	ids = ids[:25]
+
+	comments = get_comments(ids, v=v)
+
+	return render_template("admin/removed_comments.html",
+						   v=v,
+						   listing=comments,
+						   page=page,
+						   next_exists=next_exists
+						   )
 
 
 @app.post("/agendaposter/<user_id>")

@@ -370,7 +370,7 @@ def random_post(v):
 	return redirect(f"/post/{post.id}")
 
 @cache.memoize(timeout=86400)
-def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", shadowbanned=False):
+def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
 	posts = g.db.query(Submission)
 	cc_idlist = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
@@ -418,7 +418,6 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all", shadowbanned
 	elif sort == "bottom":
 		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-	if shadowbanned: comments = comments.join(User, User.id == Comment.author_id).filter(User.shadowbanned != None)
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
 	return [x[0] for x in comments]
 
@@ -432,20 +431,17 @@ def all_comments(v):
 	sort=request.values.get("sort", "new")
 	t=request.values.get("t", defaulttimefilter)
 
-	if request.values.get("shadowbanned") and v and v.admin_level > 1: shadowbanned = True
-	else: shadowbanned = False
-
 	idlist = comment_idlist(v=v,
 							page=page,
 							sort=sort,
 							t=t,
-							shadowbanned=shadowbanned
-							)		
-	comments = get_comments(idlist, v=v, shadowbanned=shadowbanned)
+							)
+
+	comments = get_comments(idlist, v=v)
 
 	next_exists = len(idlist) > 25
 
 	idlist = idlist[:25]
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
-	else: return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists, shadowbanned=shadowbanned)
+	else: return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)

@@ -1003,10 +1003,7 @@ def settings_song_change(v):
 		id = song.split("v=")[1]
 	elif song.startswith("https://youtu.be/"):
 		id = song.split("https://youtu.be/")[1]
-	else:
-		return render_template("settings_profile.html",
-					v=v,
-					error=f"Not a youtube link.")
+	else: return render_template("settings_profile.html", v=v, error=f"Not a youtube link.")
 
 	if "?" in id: id = id.split("?")[0]
 	if "&" in id: id = id.split("&")[0]
@@ -1020,17 +1017,16 @@ def settings_song_change(v):
 	
 	req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
 	duration = req['items'][0]['contentDetails']['duration']
+	if duration == 'P0D':
+		return render_template("settings_profile.html", v=v, error=f"Can't use a live youtube video!")
+
 	if "H" in duration:
-		return render_template("settings_profile.html",
-					v=v,
-					error=f"Duration of the video must not exceed 10 minutes.")
+		return render_template("settings_profile.html", v=v, error=f"Duration of the video must not exceed 10 minutes.")
 
 	if "M" in duration:
 		duration = int(duration.split("PT")[1].split("M")[0])
 		if duration > 10: 
-			return render_template("settings_profile.html",
-						v=v,
-						error=f"Duration of the video must not exceed 10 minutes.")
+			return render_template("settings_profile.html", v=v, error=f"Duration of the video must not exceed 10 minutes.")
 
 
 	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
