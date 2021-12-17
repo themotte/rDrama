@@ -33,7 +33,7 @@ def notify(v):
 	# 						body_html=text_html)
 	# g.db.add(new_comment)
 	# g.db.flush()
-
+	print('wtf')
 	users = g.db.query(User.id).all()
 	for u in users:
 		print(u[0])
