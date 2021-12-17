@@ -16,7 +16,7 @@ function post_toast2(url, button1, button2) {
 
 	xhr.onload = function() {
 		data = JSON.parse(xhr.response)
-		if (xhr.status >= 200 && xhr.status < 300 && !data["error"] ) {
+		if (xhr.status >= 200 && xhr.status < 300 && !data["error"]) {
 			try {
 				document.getElementById('toast-post-success-text').innerText = data["message"];
 			} catch(e) {}
