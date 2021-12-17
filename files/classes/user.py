@@ -428,17 +428,16 @@ class User(Base):
 		if "rama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=200"
 		return f"https://{site}/assets/images/default-profile-pic.webp"
 
-	@property
 	@lazy
-	def json_popover(self):
+	def json_popover(self, v):
 		data = {'username': self.username,
 				'url': self.url,
 				'profile_url': self.profile_url,
 				'bannerurl': self.banner_url,
 				'bio_html': self.bio_html_eager,
 				'coins': self.coins,
-				'post_count': self.post_count,
-				'comment_count': self.comment_count,
+				'post_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level)) else self.post_count,
+				'comment_count': 0 if self.shadowbanned and not (v and (v.shadowbanned or v.admin_level)) else self.comment_count,
 				'badges': [x.path for x in self.badges],
 				}
 

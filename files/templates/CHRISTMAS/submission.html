@@ -270,7 +270,7 @@
 						{% endif %}
 						</span>
 						<span class="flex-shrink-0">
-							<a class="user-name" onclick='userPopover({{p.author.json_popover | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}}" data-bs-original-title="" title="">
+							<a class="user-name" onclick='userPopover({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}}" data-bs-original-title="" title="">
 								<span class="inline-flex items-center font-bold">
 									{% if p.author.patron and not p.distinguish_level %}
 									<span class="patron" style="background-color:#{{p.author.namecolor}};">
