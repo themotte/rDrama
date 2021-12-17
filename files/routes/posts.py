@@ -211,7 +211,7 @@ def post_id(pid, anything=None, v=None):
 
 	post.views += 1
 	g.db.add(post)
-	if post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
+	if request.host != 'old.rdrama.net' and post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
 		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
 		else: return render_template("errors/nsfw.html", v=v)
 
