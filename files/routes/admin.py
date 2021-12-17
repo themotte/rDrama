@@ -27,7 +27,7 @@ def notify(v):
 
 	text_html = sanitize(CustomRenderer().render(mistletoe.Document("IMPORTANT: https://rdrama.net/post/30782/psa-make-sure-you-know-your")))
 
-	new_comment = Comment(author_id=AUTOJANNY_ID,
+	new_comment = Comment(author_id=1046,
 							parent_submission=None,
 							distinguish_level=6,
 							body_html=text_html)
