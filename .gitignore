@@ -8,5 +8,4 @@ disablesignups
 **/.pytest_cache/
 venv/
 .vscode/
-disablesignups
 .sass-cache/
