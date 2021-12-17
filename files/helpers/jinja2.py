@@ -22,14 +22,6 @@ def post_embed(id, v):
 	
 	return render_template("submission_listing.html", listing=[p], v=v)
 
-@app.template_filter("favorite_emojis")
-def favorite_emojis(x):
-	str = ""
-	emojis = sorted(x.items(), key=lambda x: x[1], reverse=True)[:25]
-	for k, v in emojis:
-		str += f'<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 w-16 h-16 overflow-hidden" onclick="getEmoji(\'{k}\')" data-bs-toggle="tooltip" title=":{k}:" delay:="0"><img loading="lazy" width=50 src="/assets/images/emojis/{k}.webp" alt="{k}-emoji"></button>'
-	return str
-
 @app.context_processor
 def inject_constants():
 	constants = [c for c in dir(const) if not c.startswith("_")]

@@ -698,7 +698,8 @@ def settings_log_out_others(v):
 
 	submitted_password = request.values.get("password", "").strip()
 
-	if not v.verifyPass(submitted_password): return render_template("settings_security.html", v=v, error="Incorrect Password"), 401
+	if not v.verifyPass(submitted_password):
+		return render_template("settings_security.html", v=v, error="Incorrect Password"), 401
 
 	v.login_nonce += 1
 

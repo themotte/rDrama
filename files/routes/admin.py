@@ -49,28 +49,41 @@ def truescore(v):
 
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second")
-@admin_level_required(2)
+@admin_level_required(3)
 @validate_formkey
 def revert_actions(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
-		user = get_user(username)
-		if not user: abort(404)
+	user = get_user(username)
+	if not user: abort(404)
+	
+	cutoff = int(time.time()) - 86400
 
-		items = g.db.query(Submission).filter_by(removed_by=user.id).all() + g.db.query(Comment).filter_by(removed_by=user.id).all()
+	posts = [x[0] for x in g.db.query(ModAction.target_submission_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'ban_post').all()]
+	posts = g.db.query(Submission).filter(Submission.id.in_(posts)).all()
 
-		for item in items:
-			item.is_banned = False
-			item.removed_by = None
-			g.db.add(item)
+	comments = [x[0] for x in g.db.query(ModAction.target_comment_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind == 'ban_comment').all()]
+	comments = g.db.query(Comment).filter(Comment.id.in_(comments)).all()
+	
+	for item in posts + comments:
+		item.is_banned = False
+		g.db.add(item)
 
-		users = g.db.query(User).filter_by(is_banned=user.id).all()
-		for user in users:
-			user.is_banned = 0
-			user.unban_utc = 0
-			user.ban_evade = 0
-			g.db.add(user)
+	users = (x[0] for x in g.db.query(ModAction.target_user_id).filter(ModAction.user_id == user.id, ModAction.created_utc > cutoff, ModAction.kind.in_(('shadowban', 'ban_user'))).all())
+	users = g.db.query(User).filter(User.id.in_(users)).all()
 
-		g.db.commit()
+	for user in users:
+		user.shadowbanned = None
+		user.is_banned = 0
+		user.unban_utc = 0
+		user.ban_evade = 0
+		g.db.add(user)
+		for u in user.alts:
+			u.shadowbanned = None
+			u.is_banned = 0
+			u.unban_utc = 0
+			u.ban_evade = 0
+			g.db.add(u)
+
+	g.db.commit()
 	return {"message": "Admin actions reverted!"}
 
 @app.post("/@<username>/club_allow")
@@ -868,7 +881,6 @@ def ban_post(post_id, v):
 	post.is_approved = 0
 	post.stickied = None
 	post.is_pinned = False
-	post.removed_by = v.id
 	post.ban_reason = v.username
 	g.db.add(post)
 
@@ -955,6 +967,9 @@ def api_distinguish_post(post_id, v):
 @validate_formkey
 def api_sticky_post(post_id, v):
 
+	pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()
+	if pins > 2: return {"error": "Can't exceed 3 pinned posts limit!"}, 403
+
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if post:
 		if post.stickied:
@@ -997,7 +1012,6 @@ def api_ban_comment(c_id, v):
 
 	comment.is_banned = True
 	comment.is_approved = 0
-	comment.removed_by = v.id
 	comment.ban_reason = v.username
 	g.db.add(comment)
 	ma=ModAction(

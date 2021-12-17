@@ -79,7 +79,7 @@
 
 <script src="/assets/CHRISTMAS/js/submission_listing.js?v=200"></script>
 
-{% if not v.fp %}
+{% if v and not v.fp %}
 	<script>
 		function fp(fp) {
 			var xhr = new XMLHttpRequest();

@@ -224,6 +224,6 @@
 	}
 </style>
 
-{% if v %}
+{% if v and not error %}
 	<div id="formkey" class="d-none">{{v.formkey}}</div>
 {% endif %}
