@@ -24,9 +24,21 @@ else: cc = "country club"
 @app.get("/notify")
 @admin_level_required(3)
 def notify(v):
+
+	text_html = sanitize(CustomRenderer().render(mistletoe.Document("IMPORTANT: https://rdrama.net/post/30782/psa-make-sure-you-know-your")))
+
+	new_comment = Comment(author_id=AUTOJANNY_ID,
+							parent_submission=None,
+							distinguish_level=6,
+							body_html=text_html)
+	g.db.add(new_comment)
+	g.db.flush()
+
 	users = (x[0] for x in g.db.query(User.id).all())
 	for u in users:
-		send_notification(u, f"IMPORTANT: https://rdrama.net/post/30782/psa-make-sure-you-know-your")
+		notif = Notification(comment_id=new_comment.id, user_id=u)
+		g.db.add(notif)
+
 	g.db.commit()
 	return "sex"
 
