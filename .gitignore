@@ -6,7 +6,6 @@ cache/
 /songs/
 __pycache__/
 disablesignups
-*_rules.html
 .idea/
 **/.pytest_cache/
 venv/
