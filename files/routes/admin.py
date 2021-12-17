@@ -36,6 +36,7 @@ def notify(v):
 
 	users = (x[0] for x in g.db.query(User.id).all())
 	for u in users:
+		print(u)
 		notif = Notification(comment_id=new_comment.id, user_id=u)
 		g.db.add(notif)
 
