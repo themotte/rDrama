@@ -4439,6 +4439,12 @@ th {
   color: var(--gray-100);
 }
 
+@media (min-width: 768px) {
+  .comment-actions .fa, .comment-actions .fas, .comment-actions .fa {
+    margin-right: 0.5rem;
+  }
+}
+
 .comment-actions .dropdown-item:active .fa, .comment-actions .dropdown-item:active .fas, .comment-actions .dropdown-item:active .far {
   color: var(--black);
 }
