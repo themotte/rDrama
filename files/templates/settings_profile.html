@@ -544,7 +544,7 @@
 											&nbsp;
 											<label class="btn btn-secondary format d-inline-block m-0">
 												<div id="filename-show"><i class="far fa-image"></i></div>
-												<input id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*, video/*" onchange="document.getElementById('filename-show').innerHTML='image';" hidden>
+												<input id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*, video/*" onchange="document.getElementById('filename-show').innerHTML='image/video';" hidden>
 											</label>
 										</div>
 										<pre></pre>
