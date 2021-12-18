@@ -319,7 +319,9 @@
 						
 						{% endif %}
 						
-						<span class="btn d-none d-md-block points" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}" id="comment-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{score}}</span>
+						<button class="btn list-inline-item d-none d-md-inline-block px-3 mx-0">
+						<span class="points" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}" id="comment-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{score}}</span>
+						</button>
 						
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
 						{% if voted==-1 %}
