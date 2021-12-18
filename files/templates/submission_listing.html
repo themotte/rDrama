@@ -185,7 +185,7 @@
 				<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};  font-weight: bold;"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{p.author.quadrant}}.webp?v=190">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 				<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
 				&nbsp;
-				({% if p.is_image %}image post{% elif p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if v and v.newtab %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
+				({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if v and v.newtab %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
 				{% if p.edited_utc %}
 					&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp-{{p.id}}" onmouseover="timestamp('edited_timestamp-{{p.id}}','{{p.edited_utc}}')">{{p.edited_string}}</span>
 				{% endif %}
@@ -506,18 +506,10 @@
 				<img loading="lazy" src="/assets/images/loading.webp" data-src="{{p.url}}" class="img-fluid" style="max-height:20rem;" alt="Unable to load image">
 			</a>
 		</div>
-	{% endif %}
-
-	{% if p.url and p.url.lower().endswith('.mp4') %}
+	{% elif p.is_video %}
 		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-4">
 			<video controls preload="none" class="embedvid">
 				<source src="{{p.realurl(v)}}" type="video/mp4">
-			</video>
-		</div>
-	{% elif p.url and p.url.lower().endswith('.webm') %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-4">
-			<video controls preload="none" class="embedvid">
-				<source src="{{p.realurl(v)}}" type="video/webm">
 			</video>
 		</div>
 	{% elif p.embed_url and p.domain in ['youtu.be','youtube.com'] and p.embed_url.startswith('<lite-youtube') %}

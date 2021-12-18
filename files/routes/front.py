@@ -123,9 +123,6 @@ def notifications(v):
 @auth_desired
 def front_all(v):
 
-	if request.host == 'old.rdrama.net' and not (v and (v.admin_level or v.patron)):
-		return render_template("home.html", v=v, listing=[], next_exists=False, sort='hot', t='all', page=1)
-
 	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
 	if v and v.is_banned and not v.unban_utc: return render_template('errors/500.html', error=True, v=v), 500

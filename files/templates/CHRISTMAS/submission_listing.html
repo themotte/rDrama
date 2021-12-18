@@ -149,6 +149,8 @@
 				
 				{% if p.is_image %}
 					<span>(image post)</span>
+				{% elif p.is_video %}
+					<span>(video post)</span>
 				{% elif p.realurl(v) %}
 					<a class="flex-shrink-0" class="text-gray-500 hover:underline" href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
 						({{p.domain}})
@@ -285,7 +287,7 @@
 {% endif %}
 
 {% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
-	{% if p.url and p.url.lower().endswith('.mp4') %}
+	{% if p.is_video %}
 		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
 			<video controls loop preload="metadata" class="w-full max-h-[20rem]">
 				<source src="{{p.realurl(v)}}" type="video/mp4">

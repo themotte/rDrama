@@ -18,6 +18,7 @@ from PIL import Image as PILimage
 from .front import frontlist, changeloglist
 from urllib.parse import ParseResult, urlunparse, urlparse, quote
 from os import path
+import requests
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
@@ -420,13 +421,17 @@ def edit_post(pid, v):
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
-		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
-
-		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-		file.save(name)
-		url = process_image(name)
-		
-		body += f"\n\n![]({url})"
+		if file.content_type.startswith('image/'):
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			file.save(name)
+			url = process_image(name)
+			body += f"\n\n![]({url})"
+		elif file.content_type.startswith('video/'):
+			file.save("video.mp4")
+			with open("video.mp4", 'rb') as f:
+				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+			body += f"\n\n{url}"
+		else: return {"error": f"Image/Video files only"}, 400
 
 	if body != p.body:
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
@@ -743,7 +748,7 @@ def submit_post(v):
 		for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 			url = url.replace(rd, "https://old.reddit.com/")
 
-		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("https://m.wikipedia", "https://wikipedia").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
+		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
 
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
@@ -916,13 +921,18 @@ def submit_post(v):
 
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file2"]
-		if not file.content_type.startswith('image/'): return {"error": "That wasn't an image!"}, 400
-
-		name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-		file.save(name)
-		url = process_image(name)
-		
-		body += f"\n\n![]({url})"
+		if file.content_type.startswith('image/'):
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			file.save(name)
+			body += f"\n\n![]({url})"
+		elif file.content_type.startswith('video/'):
+			file.save("video.mp4")
+			with open("video.mp4", 'rb') as f:
+				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+			body += f"\n\n{url}"
+		else:
+			if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
+			else: return render_template("submit.html", v=v, error=f"Image/Video files only."), 400
 
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
@@ -1003,20 +1013,6 @@ def submit_post(v):
 			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
 			else: return render_template("submit.html", v=v, error=f"File type not allowed.", title=title, body=request.values.get("body", "")), 400
 
-		if file.content_type.startswith('video/') and v.truecoins < app.config["VIDEO_COIN_REQUIREMENT"] and v.admin_level < 1:
-			if request.headers.get("Authorization"):
-				return {
-					"error": f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos"
-				}, 403
-			else:
-				return render_template(
-					"submit.html",
-					v=v,
-					error=f"You need at least {app.config['VIDEO_COIN_REQUIREMENT']} coins to upload videos.",
-					title=title,
-					body=request.values.get("body", "")
-				), 403
-
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
@@ -1025,7 +1021,7 @@ def submit_post(v):
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				new_post.url = requests.post('https://catbox.moe/user/api.php', timeout=5, data={'userhash':CATBOX_KEY, 'reqtype':'fileupload'}, files={'fileToUpload':f}).text
+				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
 
 		g.db.add(new_post)
 	

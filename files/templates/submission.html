@@ -339,7 +339,7 @@
 						{% endif %}
 						<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}}; font-weight: bold;" class="user-name"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}&nbsp;<bdi style="color: #{{p.author.titlecolor}}">&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/assets/images/quadrants/{{p.author.quadrant}}.webp?v=190">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp" onmouseover="timestamp('timestamp','{{p.created_utc}}')">&nbsp;{{p.age_string}}</span>
-						({% if p.is_image %}image post{% elif p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
+						({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
 
 						{% if p.edited_utc %}
 							&nbsp;&nbsp;Edited <span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">{{p.edited_string}}</span>
@@ -408,20 +408,11 @@
 									</div>
 								</div>
 								<pre></pre>
-							{% elif p.url and p.url.lower().endswith('.mp4') %}
+							{% elif p.is_video %}
 								<div class="row no-gutters">
 									<div class="col">
 										<video controls preload="none" class="embedvid">
 											<source src="{{p.realurl(v)}}" type="video/mp4">
-										</video>
-									</div>
-								</div>
-								<pre></pre>
-							{% elif p.url and p.url.lower().endswith('.webm') %}
-								<div class="row no-gutters">
-									<div class="col">
-										<video controls preload="none" class="embedvid">
-											<source src="{{p.realurl(v)}}" type="video/webm">
 										</video>
 									</div>
 								</div>
@@ -477,7 +468,7 @@
 
 										<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-edit-{{p.id}}">
 											<div id="filename-show-edit-{{p.id}}"><i class="far fa-image"></i></div>
-											<input id="file-upload-edit-{{p.id}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-edit-{{p.id}}').innerHTML='image';" hidden>
+											<input id="file-upload-edit-{{p.id}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-edit-{{p.id}}').innerHTML='image/video';" hidden>
 										</label>
 						
 										<small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
@@ -751,7 +742,7 @@
 				</label> 
 				<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{p.fullname}}">
 					<div id="filename-show-reply-{{p.fullname}}"><i class="far fa-image"></i></div>
-					<input id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{p.fullname}}').innerHTML='image';" hidden>
+					<input id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{p.fullname}}').innerHTML='image/video';" hidden>
 				</label>
 			</div>
 			<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto fl-r" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>

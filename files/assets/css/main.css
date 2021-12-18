@@ -3865,14 +3865,17 @@ th {
 
 .score {
   color: var(--black);
+  font-size: 1.1rem;
 }
 
 .score-up {
   color: var(--primary) !important;
+  font-size: 1.1rem;
 }
 
 .score-down {
   color: #38B2AC !important;
+  font-size: 1.1rem;
 }
 
 .box-shadow-bottom {
@@ -4467,9 +4470,11 @@ th {
   margin-bottom: 0;
 }
 
-.comment-actions .list-inline .list-inline-item {
+.comment-actions .list-inline li .btn, .comment-actions .list-inline .btn {
   margin-right: 0.5rem;
   box-shadow: none;
+  border: none;
+  font-size: 12px;
 }
 
 .comment-actions .list-inline .list-inline-item .dropdown-item {

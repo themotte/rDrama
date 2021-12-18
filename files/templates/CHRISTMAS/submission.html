@@ -304,6 +304,8 @@
 
 						{% if p.is_image %}
 							<span class="flex-shrink-0">(image post)</span>
+						{% elif p.is_video %}
+							<span class="flex-shrink-0">(video post)</span>
 						{% elif p.realurl(v) %}
 							<a class="flex-shrink-0 text-gray-500 hover:underline" href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
 								({{p.domain}})
@@ -352,13 +354,13 @@
 						{% endif %}
 						<div id="post-text" class="text-black {% if p.award_count("candycane") %}candycane{% endif %}">
 							{% if p.is_image %}
-							<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-								<img loading="lazy" src="{{p.realurl(v)}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
-							</a>
-							{% elif p.url and p.url.lower().endswith('.mp4') %}
-							<video controls loop preload="metadata" style="max-width: 100%">
-								<source src="{{ p.realurl(v) }}" type="video/mp4"/>
-							</video>
+								<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
+									<img loading="lazy" src="{{p.realurl(v)}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
+								</a>
+							{% elif p.is_video %}
+								<video controls loop preload="metadata" style="max-width: 100%">
+									<source src="{{ p.realurl(v) }}" type="video/mp4"/>
+								</video>
 							{% endif %}
 
 							{{p.realbody(v) | safe}}
