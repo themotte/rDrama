@@ -4442,6 +4442,7 @@ th {
 @media (min-width: 768px) {
   .comment-actions .fa, .comment-actions .fas, .comment-actions .fa {
     margin-right: 0.5rem;
+    margin-left: 0;
   }
 }
 
