@@ -247,7 +247,7 @@
 		<div class="relative z-10 flex flex-row flex-nowrap pl-3 md:pl-5 flex-shrink-0">
 			<div style="z-index: 3;">
 				{% if p.club and not (v and v.paid_dues) %}
-					<img loading="lazy" src="/assets/CHRISTMAS/images/emojis/marseyglow.webp" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0">
+					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0">
 				{% elif not p.url %}
 					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0">

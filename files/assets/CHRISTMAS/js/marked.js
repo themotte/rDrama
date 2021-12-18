@@ -11,15 +11,15 @@ function markdown(first, second) {
 			var remoji = emoji.replace(/:/g,'');
 			if (remoji.startsWith("!#") || remoji.startsWith("#!"))
 			{
-				input = input.replace(emoji, "<img class='emj mirrored' src='/assets/CHRISTMAS/images/emojis/" + remoji.substring(2) + ".webp'>")
+				input = input.replace(emoji, "<img class='emj mirrored' src='/assets/images/emojis/" + remoji.substring(2) + ".webp'>")
 			} else if (remoji.startsWith("#"))
 			{
-				input = input.replace(emoji, "<img class='emj' src='/assets/CHRISTMAS/images/emojis/" + remoji.substring(1) + ".webp'>")
+				input = input.replace(emoji, "<img class='emj' src='/assets/images/emojis/" + remoji.substring(1) + ".webp'>")
 			} else if (remoji.startsWith("!"))
 			{
-				input = input.replace(emoji, "<img height=30 class='emj mirrored' src='/assets/CHRISTMAS/images/emojis/" + remoji.substring(1) + ".webp'>")
+				input = input.replace(emoji, "<img height=30 class='emj mirrored' src='/assets/images/emojis/" + remoji.substring(1) + ".webp'>")
 			} else {
-				input = input.replace(emoji, "<img height=30 class='emj' src='/assets/CHRISTMAS/images/emojis/" + remoji + ".webp'>")
+				input = input.replace(emoji, "<img height=30 class='emj' src='/assets/images/emojis/" + remoji + ".webp'>")
 			}
 		}
 	}

@@ -313,7 +313,7 @@ const EMOJIS_STRINGS = [
 			marseyduck: 'bird beak',
 			marseyduck2: 'onesie',
 			marseydynamite: 'dynomite black afro gun',
-			marseyegg_irl: 'troomer tranny transgender lgbt groomer troid transsexual',
+			marseyeggirl: 'troomer tranny transgender lgbt groomer troid transsexual',
 			marseyeldritch: 'lovecraft horror halloween tentacles holiday scary monster',
 			marseyeldritch2: 'horror halloween lovecraftian holiday scary',
 			marseyelephant: 'oliphant dumbo',
@@ -875,12 +875,12 @@ function loadEmojis(form) {
 			if (i == 0)
 				{
 					for (const [key, value] of Object.entries(arr)) {
-						str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/CHRISTMAS/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+						str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
 					}
 				}
 			else {
 				for (let j = 0; j < arr.length; j++) {
-					str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${arr[j]}')" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/CHRISTMAS/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
+					str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${arr[j]}')" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 				}
 			}
 
@@ -895,7 +895,7 @@ function loadEmojis(form) {
 			let container = document.getElementById(`EMOJIS_${EMOJIS_STRINGS[i].type}`)
 			for (let j = 0; j < arr.length; j++) {
 				if (arr[j].match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(arr[j])) {
-					str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${arr[j]}')" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/CHRISTMAS/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
+					str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${arr[j]}')" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 				}
 			}
 
@@ -905,7 +905,7 @@ function loadEmojis(form) {
 				for (const [key, value] of Object.entries(arr2)) {
 					if (str.includes(`'${key}'`)) continue;
 					if (key.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(key) || value.match(search_bar.value.toLowerCase())) {
-						str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/CHRISTMAS/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+						str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
 					}
 				}
 				container.innerHTML = ""
@@ -928,7 +928,7 @@ if (favorite_emojis)
 	);
 			
 	for (const emoji of Object.keys(sortable))
-		str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${emoji}')" data-bs-toggle="tooltip" title=":${emoji}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/CHRISTMAS/images/emojis/${emoji}.webp" alt="${emoji}-emoji"></button>`
+		str += `<button class="m-1 p-[3px] bg-transparent hover:bg-gray-300 overflow-hidden" onclick="getEmoji('${emoji}')" data-bs-toggle="tooltip" title=":${emoji}:" delay:="0"><img loading="lazy" class="object-contain h-14 w-14" src="/assets/images/emojis/${emoji}.webp" alt="${emoji}-emoji"></button>`
 
 	document.getElementById('EMOJIS_favorite').innerHTML = str
 }
