@@ -382,7 +382,7 @@
 						{% endif %}
 						
 						{% if v and c.post and (v.admin_level > 1 or v.id == c.post.author_id) %}
-						<button id="unpin-{{c.id}}" class="{% if c.is_pinned %}d-md-inline-block{% endif %} list-inline-item text-muted d-none text-info"   data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
+						<button id="unpin-{{c.id}}" class="btn py-0 nobackground {% if c.is_pinned %}d-md-inline-block{% endif %} list-inline-item text-muted d-none text-info"   data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
 						
 						<button id="pin-{{c.id}}" class="btn py-0 nobackground px-1 {% if not c.is_pinned %}d-md-inline-block{% endif %} list-inline-item text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
 						{% endif %}
