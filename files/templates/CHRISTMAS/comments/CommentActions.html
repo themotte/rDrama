@@ -58,12 +58,12 @@
 	{% endif %}
 
 	<li class="hidden md:block">
-		<button class="copy-link hover:text-gray-400" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}?context=10#context">
+		<button class="copy-link hover:text-gray-400" data-clipboard-text="{% if 'rama' in request.host %}https://dogpill.life{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}">
 			<i class="fas fa-link fa-fw mr-2"></i>Copy link
 		</button>
 	</li>
 	<li class="hidden md:block">
-		<a href="{{c.permalink}}?context=10#context" class="text-gray-500 hover:text-gray-400">
+		<a href="{{c.permalink}}" class="text-gray-500 hover:text-gray-400">
 			<i class="fas fa-book-open fa-fw mr-2"></i>Context
 		</a>
 	</li>
@@ -85,7 +85,7 @@
 					</a>
 				</li>
 				<li class="hidden">
-					<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" {% if v %}href="{{c.permalink}}?context=10#context"{% else %}href="/logged_out{{c.permalink}}?context=10#context"{% endif %}>
+					<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="{{c.permalink}}">
 						<i class="fas fa-book-open fa-sm fa-fw mr-4"></i>Context
 					</a>
 				</li>
