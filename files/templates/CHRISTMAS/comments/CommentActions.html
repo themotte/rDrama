@@ -47,12 +47,12 @@
 	</li>
 	<li id="unsave-{{c.id}}" class="hidden {% if c.id in v.saved_comment_idlist() %}md:block{% endif %}">
 		<button class="hover:text-gray-400" onclick="post_toast3('/unsave_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')">
-			<i class="fas fa-bookmark fa-sm fa-fw mr-4"></i>Unsave
+			<i class="fas fa-bookmark fa-fw mr-2"></i>Unsave
 		</button>
 	</li>
 	<li id="save-{{c.id}}" class="hidden {% if c.id not in v.saved_comment_idlist() %}md:block{% endif %}">
 		<button class="hover:text-gray-400" onclick="post_toast3('/save_comment/{{c.id}}','save-{{c.id}}','unsave-{{c.id}}')">
-			<i class="far fa-bookmark fa-sm fa-fw mr-4"></i>Save
+			<i class="far fa-bookmark fa-fw mr-2"></i>Save
 		</button>
 	</li>
 	{% endif %}
