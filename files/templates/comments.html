@@ -231,7 +231,7 @@
 				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="pb-2 comment-text mb-0">
+			<div id="comment-text-{{c.id}}" class="comment-text mb-0">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
 					{{c.options_html(v) | safe}}
