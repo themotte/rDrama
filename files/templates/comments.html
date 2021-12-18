@@ -302,17 +302,17 @@
 
 					<ul class="d-md-none list-inline text-right text-md-left {% if v and v.admin_level > 1 %}d-flex{% endif %}">
 						{% if v and v.admin_level > 1 %}
-							<button class="btn py-0 nobackground px-1 mr-auto d-md-none" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#adminModal-{{c.id}}">
+							<button class="btn p-0 m-0 nobackground mr-auto d-md-none" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#adminModal-{{c.id}}">
 								<i class="fas fa-broom"></i>
 							</button>
 						{% endif %}	
 					
 						<li class="pt-1">
 							{% if v %}
-								<button class="btn py-0 nobackground px-1 text-muted" href="javascript:void(0)" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i></button>
+								<button class="btn p-0 m-0 nobackground text-muted" href="javascript:void(0)" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply" aria-hidden="true"></i></button>
 							{% endif %}
 
-							<button class="btn py-0 nobackground px-1 " href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#actionsModal-{{c.id}}" data-bs-focus="false"><i class="fas fa-ellipsis-h"></i></button>
+							<button class="btn py-0 m-0 mr-2 nobackground" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#actionsModal-{{c.id}}" data-bs-focus="false"><i class="fas fa-ellipsis-h"></i></button>
 								
 							{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
 								{% if voted==1 %}
@@ -536,9 +536,9 @@
 
 					<a class="list-group-item" href="{{c.permalink}}"><i class="fas fa-dna"></i>Context</a>
 
-					<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')" class="list-group-item"><i class="fas fa-flag"></i>Report</a>
-
 					{% if v %}
+						<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')" class="list-group-item"><i class="fas fa-flag"></i>Report</a>
+
 						<a class="list-group-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</a>
 
 						<a id="save2-{{c.id}}" class="list-group-item {% if c.id in v.saved_comment_idlist() %}d-none{% endif %}" href="javascript:void(0)" data-bs-dismiss="modal" onclick="post_toast2('/save_comment/{{c.id}}','save2-{{c.id}}','unsave2-{{c.id}}')"><i class="fas fa-save"></i>Save</a>
