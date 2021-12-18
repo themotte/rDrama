@@ -18,8 +18,7 @@ def get_logged_in_user():
 		nonce = session.get("login_nonce", 0)
 		logged_in = session.get("logged_in")
 
-		if not uid: return None
-		# if not uid or not logged_in or uid != logged_in: return None
+		if not uid or not logged_in or uid != logged_in: return None
 
 		try:
 			if g.db: v = g.db.query(User).filter_by(id=uid).first()
