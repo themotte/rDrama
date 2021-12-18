@@ -3865,15 +3865,17 @@ th {
 
 .score {
   color: var(--black);
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 }
 
 .score-up {
   color: var(--primary) !important;
+  font-size: 1.1rem;
 }
 
 .score-down {
   color: #38B2AC !important;
+  font-size: 1.1rem;
 }
 
 .box-shadow-bottom {
