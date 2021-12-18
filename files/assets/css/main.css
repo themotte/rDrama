@@ -4470,6 +4470,7 @@ th {
 .comment-actions .list-inline .list-inline-item {
   margin-right: 0.5rem;
   box-shadow: none;
+  font-size: 0.8rem;
 }
 
 .comment-actions .list-inline .list-inline-item .dropdown-item {
