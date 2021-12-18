@@ -405,7 +405,7 @@ class Comment(Base):
 			else: html += f''' onchange="poll_vote_no_v('{o.id}', '{self.id}')"'''
 			html += f'''><label class="custom-control-label" for="{o.id}">{o.body_html}<span class="presult-{self.id}'''
 			if not self.total_poll_voted(v): html += ' d-none'	
-			html += f'"> - <a href="/votes?link=t3_{o.id}"><span id="poll-{o.id}">{o.upvotes}</span> votes</a></span></label></div><pre></pre>'
+			html += f'"> - <a href="/votes?link=t3_{o.id}"><span id="poll-{o.id}">{o.upvotes}</span> votes</a></span></label></div>'
 		return html
 
 class Notification(Base):
