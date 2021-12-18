@@ -131,7 +131,7 @@ const EMOJIS_STRINGS = [
 			marmsey: 'rodent happy marmot',
 			marppy: 'cyborg sentient snapshillbot android snappy robot',
 			marscientist: 'beaker goggles glass crazy chemicals science',
-			marsey173: 'horror spooky halloween spc holiday',
+			marsey173: 'horror spooky halloween scp spc holiday',
 			marsey1984: 'orwell book ingsoc big brother fascist',
 			marsey300: 'leonidas shield armor thermopylae spear greek spartan',
 			marsey420: 'marijuana weed dude weed lmao ganja drugs pot reggae joint jamaican',
