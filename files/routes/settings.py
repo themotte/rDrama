@@ -22,6 +22,7 @@ YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
+CATBOX_KEY = environ.get("CATBOX_KEY").strip()
 
 tiers={
 	"(Paypig)": 1,
@@ -115,50 +116,6 @@ def settings_profile_post(v):
 	elif request.values.get("nofollow", v.is_nofollow) != v.is_nofollow:
 		updated = True
 		v.is_nofollow = request.values.get("nofollow", None) == 'true'
-
-	elif request.values.get("bio") or request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
-		bio = request.values.get("bio")[:1500]
-
-		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', bio, re.MULTILINE):
-			if "wikipedia" not in i.group(1): bio = bio.replace(i.group(1), f'![]({i.group(1)})')
-
-		if request.files.get('file'):
-			file = request.files['file']
-			if not file.content_type.startswith('image/'):
-				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
-				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
-
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(name)
-			url = process_image(name)
-
-			bio += f"\n\n![]({url})"
-		
-		bio_html = CustomRenderer().render(mistletoe.Document(bio))
-		bio_html = sanitize(bio_html)
-		bans = filter_comment_html(bio_html)
-
-		if bans:
-			ban = bans[0]
-			reason = f"Remove the {ban.domain} link from your bio and try again."
-			if ban.reason:
-				reason += f" {ban.reason}"
-				
-			return {"error": reason}, 401
-
-		if len(bio_html) > 10000:
-			return render_template("settings_profile.html",
-								   v=v,
-								   error="Your bio is too long")
-
-		v.bio = bio[:1500]
-		v.bio_html=bio_html
-		g.db.add(v)
-		g.db.commit()
-		return render_template("settings_profile.html",
-							   v=v,
-							   msg="Your bio has been updated.")
-
 
 	elif request.values.get("bio") == "":
 		v.bio = None
@@ -314,15 +271,19 @@ def settings_profile_post(v):
 
 		if request.files.get('file'):
 			file = request.files['file']
-			if not file.content_type.startswith('image/'):
-				if request.headers.get("Authorization"): return {"error": f"Image files only"}, 400
-				else: return render_template("settings_profile.html", v=v, error=f"Image files only."), 400
+			if file.content_type.startswith('image/'):
+				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+				file.save(name)
+				url = process_image(name)
+			elif file.content_type.startswith('video/'):
+				file.save("video.mp4")
+				with open("video.mp4", 'rb') as f:
+					url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+			else:
+				if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
+				else: return render_template("settings_profile.html", v=v, error=f"Image/Video files only."), 400
 
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(name)
-			url = process_image(name)
-
-			bio += f"\n\n![]({url})"
+			bio += f"\n\n{url}"
 		
 		bio_html = CustomRenderer().render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html)

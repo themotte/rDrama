@@ -477,7 +477,7 @@
 
 										<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-edit-{{p.id}}">
 											<div id="filename-show-edit-{{p.id}}"><i class="far fa-image"></i></div>
-											<input id="file-upload-edit-{{p.id}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-edit-{{p.id}}').innerHTML='image';" hidden>
+											<input id="file-upload-edit-{{p.id}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-edit-{{p.id}}').innerHTML='image';" hidden>
 										</label>
 						
 										<small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
@@ -751,7 +751,7 @@
 				</label> 
 				<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{p.fullname}}">
 					<div id="filename-show-reply-{{p.fullname}}"><i class="far fa-image"></i></div>
-					<input id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{p.fullname}}').innerHTML='image';" hidden>
+					<input id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{p.fullname}}').innerHTML='image';" hidden>
 				</label>
 			</div>
 			<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto fl-r" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>

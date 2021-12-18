@@ -36,7 +36,7 @@
 						<div id="filename-show-reply-{{c.fullname}}">
 							<i class="fas fa-camera fa-fw fa-sm"></i>
 						</div>
-						<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
+						<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*, video/*" onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
 					</label>
 				</li>
 				{% endif %}
@@ -67,7 +67,7 @@
 			&nbsp;
 			<label class="btn btn-secondary format d-inline-block m-0" for="file-upload-reply-{{c.fullname}}">
 				<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
-				<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
+				<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*, video/*" onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image';" hidden>
 			</label>
 			<a href="javascript:void(0)" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('hidden')" class="hidden d-md-block btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 			<a id="save-reply-to-{{c.fullname}}" class="hidden d-md-block btn btn-primary text-muted ml-2" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>

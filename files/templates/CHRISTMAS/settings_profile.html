@@ -96,7 +96,7 @@
 								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
 									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
-										Update<input type="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*" hidden name="banner" onchange="form.submit()">
+										Update<input type="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*, video/*" hidden name="banner" onchange="form.submit()">
 									</label>
 								</form>
 
