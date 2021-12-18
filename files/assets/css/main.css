@@ -4434,7 +4434,8 @@ th {
 
 .comment-actions .fa, .comment-actions .fas, .comment-actions .far {
   font-size: 12px;
-  margin-right: 0.5rem;
+  margin-right: 0.25rem;
+  margin-left: 0.25rem;
   color: var(--gray-100);
 }
 
