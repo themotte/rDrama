@@ -3865,6 +3865,7 @@ th {
 
 .score {
   color: var(--black);
+  font-size: 1.3rem;
 }
 
 .score-up {
@@ -4467,10 +4468,10 @@ th {
   margin-bottom: 0;
 }
 
-.comment-actions .list-inline .list-inline-item {
+.comment-actions .list-inline .btn {
   margin-right: 0.5rem;
   box-shadow: none;
-  font-size: 0.8rem;
+  font-size: 12px;
 }
 
 .comment-actions .list-inline .list-inline-item .dropdown-item {
