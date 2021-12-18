@@ -217,7 +217,7 @@
 
  </head>
 
- <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900">
+ <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900 dark:bg-gray-700 dark:text-gray-200">
 
 {% block Banner %}
 {% endblock %}
@@ -233,7 +233,7 @@
 {% block postNav %}
 {% endblock %}
 
-<div class="flex h-screen pt-16 bg-gray-500">
+<div class="flex h-screen pt-16 bg-gray-500 dark:bg-gray-700">
 	<div class="w-full sm:overflow-y-auto">
 
 			{% block desktopUserBanner %}
