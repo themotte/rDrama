@@ -4468,7 +4468,7 @@ th {
   margin-bottom: 0;
 }
 
-.comment-actions li .btn {
+.comment-actions .list-inline li .btn {
   margin-right: 0.5rem;
   box-shadow: none;
   font-size: 12px;
