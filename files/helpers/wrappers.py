@@ -21,7 +21,7 @@ def get_logged_in_user():
 		if not uid or not logged_in or uid != logged_in: return None
 
 		try:
-			if g.db: v = g.db.query(User).filter_by(id=uid).first()
+			if g.db: v = g.db.query(User).filter_by(id=uid).one_or_none()
 			else: return None
 		except: return None
 
