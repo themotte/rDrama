@@ -2806,6 +2806,16 @@ img.emoji-lg {
 	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.dark .dark\:bg-gray-700 {
+	--tw-bg-opacity: 1;
+	background-color: rgba(var(--color-700), var(--tw-bg-opacity));
+}
+
+.dark .dark\:text-gray-200 {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-200), var(--tw-text-opacity));
+}
+
 @media (min-width: 640px) {
 
 	.sm\:static {
