@@ -315,7 +315,7 @@
 						<button id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="btn p-0 mr-1 list-inline-item arrow-up upvote-button d-none d-md-inline-block mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
 						
 						{% else %}
-						<button id="comment-{{c.id}}-up" tabindex="0" class="btn p-0 pr-1 list-inline-item arrow-up d-none d-md-inline-block" onclick="location.href='/login';"></button>
+						<button id="comment-{{c.id}}-up" tabindex="0" class="btn p-0 mr-1 list-inline-item arrow-up d-none d-md-inline-block" onclick="location.href='/login';"></button>
 						
 						{% endif %}
 						
@@ -417,9 +417,9 @@
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
 						{% if voted==1 %}<button class="btn py-0 px-1 list-inline-item arrow-up d-inline-block d-md-none mr-2 comment-{{c.id}}-up active"></button>{% endif %}
 						{% elif v %}
-						<button id="comment-mobile-{{c.id}}-up" tabindex="0" onclick="vote('comment-mobile', '{{c.id}}', '1')" class="btn py-0 px-1 list-inline-item arrow-up upvote-button d-inline-block d-md-none mx-0 pr-1 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
+						<button id="comment-mobile-{{c.id}}-up" tabindex="0" onclick="vote('comment-mobile', '{{c.id}}', '1')" class="btn py-0 px-1 list-inline-item arrow-up upvote-button d-inline-block d-md-none mx-0 mr-1 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
 						{% else %}
-						<button id="comment-{{c.id}}-up" tabindex="0" onclick="vote('comment', '{{c.id}}', '1')" class="btn py-0 px-1 list-inline-item arrow-up d-inline-block d-md-none mx-0 pr-1" onclick="location.href='/login';"></button>
+						<button id="comment-{{c.id}}-up" tabindex="0" onclick="vote('comment', '{{c.id}}', '1')" class="btn py-0 px-1 list-inline-item arrow-up d-inline-block d-md-none mx-0 mr-1" onclick="location.href='/login';"></button>
 						{% endif %}
 						<button class="btn py-0 px-2 list-inline-item d-inline-block d-md-none mx-0"><span class="points" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"><span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{score}}</span></span></button>
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
@@ -427,9 +427,9 @@
 							<button class="btn py-0 px-1 list-inline-item arrow-down d-inline-block d-md-none mr-2 comment-{{c.id}}-up active"></button>
 						{% endif %}
 						{% elif v %}
-						<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-mobile-{{c.id}}-down" tabindex="0" onclick="vote('comment-mobile', '{{c.id}}', '-1')" class="btn py-0 px-1 list-inline-item arrow-down downvote-button d-inline-block d-md-none mx-0 pl-1 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>
+						<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-mobile-{{c.id}}-down" tabindex="0" onclick="vote('comment-mobile', '{{c.id}}', '-1')" class="btn py-0 px-1 list-inline-item arrow-down downvote-button d-inline-block d-md-none mr-0 ml-1 comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>
 						{% else %}
-						<a {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" onclick="vote('comment', '{{c.id}}', '-1')" class="list-inline-item arrow-down mx-0 pl-1 d-inline-block d-md-none" onclick="location.href='/login';"></a>
+						<a {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" onclick="vote('comment', '{{c.id}}', '-1')" class="list-inline-item arrow-down mr-0 ml-1 d-inline-block d-md-none" onclick="location.href='/login';"></a>
 						{% endif %}
 					</ul>
 				</div>
