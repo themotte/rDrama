@@ -4470,9 +4470,10 @@ th {
   margin-bottom: 0;
 }
 
-.comment-actions .list-inline li .btn {
+.comment-actions .list-inline li .btn, .comment-actions .list-inline .btn {
   margin-right: 0.5rem;
   box-shadow: none;
+  border: none;
   font-size: 12px;
 }
 
