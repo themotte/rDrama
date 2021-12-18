@@ -115,9 +115,6 @@
 				{% endif %}
 
 				{% if v and v.admin_level==6 and v.id==c.author_id %}
-				<li>
-					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
-				</li>
 				<li id="undistinguish-{{c.id}}" class="hidden {% if c.distinguish_level %}md:block{% endif %}">
 					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')">
 						<i class="fas fa-id-badge text-info fa-sm fa-fw mr-4"></i>Undistinguish
