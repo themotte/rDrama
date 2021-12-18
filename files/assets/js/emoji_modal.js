@@ -313,7 +313,7 @@ const EMOJIS_STRINGS = [
 			marseyduck: 'bird beak',
 			marseyduck2: 'onesie',
 			marseydynamite: 'dynomite black afro gun',
-			marseyegg_irl: 'troomer tranny transgender lgbt groomer troid transsexual',
+			marseyeggirl: 'troomer tranny transgender lgbt groomer troid transsexual',
 			marseyeldritch: 'lovecraft horror halloween tentacles holiday scary monster',
 			marseyeldritch2: 'horror halloween lovecraftian holiday scary',
 			marseyelephant: 'oliphant dumbo',
