@@ -1251,6 +1251,7 @@ a.close.disabled {
   padding: 0.75rem;
 }
 
+
 .modal-open {
   overflow: hidden;
 }
@@ -1275,6 +1276,7 @@ a.close.disabled {
   position: relative;
   width: auto;
   margin: 0.5rem;
+  pointer-events: none;
 }
 .modal.fade .modal-dialog {
   transition: transform 0.3s ease-out;
@@ -1282,8 +1284,8 @@ a.close.disabled {
 }
 @media (prefers-reduced-motion: reduce) {
   .modal.fade .modal-dialog {
-   transition: none;
- }
+  transition: none;
+  }
 }
 .modal.show .modal-dialog {
   transform: none;
@@ -1400,34 +1402,34 @@ a.close.disabled {
 
 @media (min-width: 576px) {
   .modal-dialog {
-   max-width: 500px;
-   margin: 1.75rem auto;
- }
+  max-width: 500px;
+  margin: 1.75rem auto;
+  }
 
- .modal-dialog-scrollable {
-   max-height: calc(100% - 3.5rem);
- }
- .modal-dialog-scrollable .modal-content {
-   max-height: calc(100vh - 3.5rem);
- }
+  .modal-dialog-scrollable {
+  max-height: calc(100% - 3.5rem);
+  }
+  .modal-dialog-scrollable .modal-content {
+  max-height: calc(100vh - 3.5rem);
+  }
 
- .modal-dialog-centered {
-   min-height: calc(100% - 3.5rem);
- }
- .modal-dialog-centered::before {
-   height: calc(100vh - 3.5rem);
- }
+  .modal-dialog-centered {
+  min-height: calc(100% - 3.5rem);
+  }
+  .modal-dialog-centered::before {
+  height: calc(100vh - 3.5rem);
+  }
 }
 @media (min-width: 992px) {
-
-  .modal-xl {
-   max-width: 800px;
- }
+  
+.modal-xl {
+  max-width: 800px;
+  }
 }
 @media (min-width: 1200px) {
   .modal-xl {
-   max-width: 1140px;
- }
+  max-width: 1140px;
+  }
 }
 .tooltip {
   position: absolute;
@@ -4187,7 +4189,7 @@ blockquote p {
 @media (min-width: 576px)
 {
   .modal-dialog {
-   max-width: 90% !important;
+   max-width: 50% !important;
    margin: 1.75rem auto !important;
  }
 }
