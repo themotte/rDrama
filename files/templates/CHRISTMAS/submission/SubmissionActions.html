@@ -61,12 +61,12 @@
 	</li>
 	<li id="save-{{p.id}}" class="{% if p.id in v.saved_idlist() %}hidden{% endif %}">
 		<button class="hover:text-gray-400" onclick="post_toast2('/save_post/{{p.id}}','save-{{p.id}}','unsave-{{p.id}}')">
-			<i class="far fa-bookmark fa-sm fa-fw mr-4"></i>Save
+			<i class="far fa-bookmark fa-fw mr-2"></i>Save
 		</button>
 	</li>
 	<li id="unsave-{{p.id}}" class="{% if not p.id in v.saved_idlist() %}hidden{% endif %}">
 		<button class="hover:text-gray-400" onclick="post_toast2('/unsave_post/{{p.id}}','save-{{p.id}}','unsave-{{p.id}}')">
-			<i class="fas fa-bookmark fa-sm fa-fw mr-4"></i>Unsave
+			<i class="fas fa-bookmark fa-fw mr-2"></i>Unsave
 		</button>
 	</li>
 	{% endif %}
