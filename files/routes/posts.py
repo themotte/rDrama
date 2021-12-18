@@ -425,13 +425,13 @@ def edit_post(pid, v):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
 			url = process_image(name)
+			body += f"\n\n![]({url})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+			body += f"\n\n{url}"
 		else: return {"error": f"Image/Video files only"}, 400
-
-		body += f"\n\n{url}"
 
 	if body != p.body:
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
@@ -924,16 +924,15 @@ def submit_post(v):
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = process_image(name)
+			body += f"\n\n![]({url})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+			body += f"\n\n{url}"
 		else:
 			if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
 			else: return render_template("submit.html", v=v, error=f"Image/Video files only."), 400
-
-		body += f"\n\n{url}"
 
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 

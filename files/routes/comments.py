@@ -196,13 +196,13 @@ def api_comment(v):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
 			url = process_image(name)
+			body += f"\n\n![]({url})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+			body += f"\n\n{url}"
 		else: return {"error": f"Image/Video files only"}, 400
-
-		body += f"\n\n{url}"
 
 	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
@@ -730,13 +730,14 @@ def edit_comment(cid, v):
 				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 				file.save(name)
 				url = process_image(name)
+				body += f"\n\n![]({url})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
 					url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+				body += f"\n\n{url}"
 			else: return {"error": f"Image/Video files only"}, 400
 
-			body += f"\n\n{url}"
 			body_md = CustomRenderer().render(mistletoe.Document(body))
 			body_html = sanitize(body_md)
 

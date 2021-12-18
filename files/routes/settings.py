@@ -275,15 +275,15 @@ def settings_profile_post(v):
 				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 				file.save(name)
 				url = process_image(name)
+				bio += f"\n\n![]({url})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
 					url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+				bio += f"\n\n{url}"
 			else:
 				if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
 				else: return render_template("settings_profile.html", v=v, error=f"Image/Video files only."), 400
-
-			bio += f"\n\n{url}"
 		
 		bio_html = CustomRenderer().render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html)
