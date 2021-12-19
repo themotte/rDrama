@@ -2834,6 +2834,11 @@ img.emoji-lg {
 	background-image: none;
 }
 
+.dark .dark\:text-gray-100 {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-100), var(--tw-text-opacity));
+}
+
 .dark .dark\:text-gray-200 {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-200), var(--tw-text-opacity));
