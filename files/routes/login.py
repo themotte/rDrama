@@ -369,11 +369,7 @@ def sign_up_post(v):
 
 @app.get("/forgot")
 def get_forgot():
-
-	if v and v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}forgot_password.html",
-						   )
+	return render_template(f"forgot_password.html")
 
 
 @app.post("/forgot")
@@ -410,9 +406,7 @@ def post_forgot():
 									   v=user)
 				  )
 
-	if v and v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}forgot_password.html",
+	return render_template(f"forgot_password.html",
 						   msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process.")
 
 
@@ -426,9 +420,7 @@ def get_reset():
 	now = int(time.time())
 
 	if now - timestamp > 600:
-		if v and v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}message.html", 
+		return render_template(f"message.html", 
 			title="Password reset link expired",
 			error="That password reset link has expired.")
 
@@ -442,9 +434,7 @@ def get_reset():
 
 	reset_token = generate_hash(f"{user.id}+{timestamp}+reset+{user.login_nonce}")
 
-	if v and v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}reset_password.html",
+	return render_template(f"reset_password.html",
 						   v=user,
 						   token=reset_token,
 						   time=timestamp,
@@ -519,9 +509,7 @@ def request_2fa_disable():
 	username=request.values.get("username")
 	user=get_user(username, graceful=True)
 	if not user or not user.email or not user.mfa_secret:
-		if v and v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}message.html",
+		return render_template(f"message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
@@ -533,18 +521,14 @@ def request_2fa_disable():
 		email=email.replace('.','').replace('_','')
 		email=f"{email}@gmail.com"
 		if email != user.email:
-			if v and v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}message.html",
+			return render_template(f"message.html",
 							title="Removal request received",
 							message="If username, password, and email match, we will send you an email.")
 
 
 	password =request.values.get("password")
 	if not user.verifyPass(password):
-		if v and v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}message.html",
+		return render_template(f"message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
@@ -560,9 +544,7 @@ def request_2fa_disable():
 								   v=user)
 			  )
 
-	if v and v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}message.html",
+	return render_template(f"message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
@@ -573,9 +555,7 @@ def reset_2fa():
 	t=int(request.values.get("t"))
 
 	if now > t+3600*24:
-		if v and v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}message.html",
+		return render_template(f"message.html",
 						   title="Expired Link",
 						   error="That link has expired.")
 
@@ -593,8 +573,6 @@ def reset_2fa():
 
 	g.db.commit()
 
-	if v and v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}message_success.html",
+	return render_template(f"message_success.html",
 						   title="Two-factor authentication removed.",
 						   message="Login normally to access your account.")
