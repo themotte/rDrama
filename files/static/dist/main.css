@@ -2818,6 +2818,11 @@ img.emoji-lg {
 	border-color: rgba(var(--color-700), var(--tw-border-opacity));
 }
 
+.dark .dark\:border-gray-600 {
+	--tw-border-opacity: 1;
+	border-color: rgba(var(--color-600), var(--tw-border-opacity));
+}
+
 .dark .dark\:border-gray-900 {
 	--tw-border-opacity: 1;
 	border-color: rgba(var(--color-900), var(--tw-border-opacity));
@@ -3174,6 +3179,11 @@ img.emoji-lg {
 
 	.md\:hover\:opacity-100:hover {
 		opacity: 1;
+	}
+
+	.dark .dark\:md\:border-gray-700 {
+		--tw-border-opacity: 1;
+		border-color: rgba(var(--color-700), var(--tw-border-opacity));
 	}
 }
 
