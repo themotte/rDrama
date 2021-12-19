@@ -221,7 +221,7 @@
 <!-- Post -->
 <div id="post-root" class="sm:py-4 my-2.5 sm:my-0">
 
-	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 bg-gray-200 {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
+	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 bg-gray-200 dark:bg-gray-800 {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
 		<div class="{% if p.deleted_utc > 0 %}deleted {% endif %} flex flex-row-reverse flex-nowrap justify-end">
 
 			{% if not p.is_image and p.thumb_url and not p.embed_url %}
@@ -410,7 +410,7 @@
 					{% endif %}
 
 					{% if p.embed_url and "http" not in p.embed_url and "<" not in p.embed_url %}
-					<div id="crosspost-embed" class="p-2.5 rounded-md bg-gray-300 border border-gray-400">
+					<div id="crosspost-embed" class="p-2.5 rounded-md bg-gray-300 dark:bg-gray-700 border border-gray-400 dark:border-gray-600">
 						<div class="row no-gutters">
 							<div id="frontpage" class="col-12 pt-0">
 								<div class="posts" id="posts">
@@ -486,7 +486,7 @@
 		{% endif %}
 	</div>
 
-	<div class="shadow-inset-t-white-05 bg-gray-200 md:border-t md:border-gray-300 py-4 mt-3 md:mt-0">
+	<div class="shadow-inset-t-white-05 bg-gray-200 dark:bg-gray-800 md:border-t md:border-gray-300 dark:md:border-gray-700 py-4 mt-3 md:mt-0">
 
 			<div class="flex flex-wrap justify-between mb-2 px-2.5 md:px-0">
 				<div class="md:ml-20 font-bold text-sm">
@@ -546,7 +546,7 @@
 					</div>
 				</div>
 				<div class="w-full">
-					<textarea maxlength="10000" class="text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-gray-300 border border-gray-400 hover:border-gray-500 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
+					<textarea maxlength="10000" class="text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-gray-300 dark:bg-gray-700 border border-gray-400 dark:border-gray-600 hover:border-gray-500 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
 					<div class="flex w-full justify-end mt-2">
 						<a href="/login?redirect={{request.path | urlencode}}" class="btn btn-gray">Log in to comment</a>
 					</div>
