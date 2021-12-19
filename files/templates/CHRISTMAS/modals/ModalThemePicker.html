@@ -1,0 +1,37 @@
+<div class="modal fade" id="themePickerModal" tabindex="-1" role="dialog" aria-labelledby="themePickerModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content bg-gray-100 rounded-md shadow-lg">
+			<div class="modal-header">
+				<h5 class="font-bold text-xl text-black font-heading leading-normal">Select theme</h5>
+				<button type="button" class="close text-gray-700 hover:text-gray-900" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"><i class="far fa-times"></i></span>
+				</button>
+			</div>
+			<div id="awardModalBody" class="overflow-y-auto px-4">
+				<form id="awardTarget" action="" method="post">
+					<input type="hidden" name="formkey", value="{{v.formkey}}">
+					<div class="flex flex-wrap -mx-4 overflow-hidden">
+						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
+							<input hidden name="kind" value="evergreen" type="radio" id="evergreen-theme" class="peer">
+							<label for="{{award.kind}}-award" class="flex flex-col items-center justify-center w-full h-full p-2 text-center hover:bg-gray-300 peer-checked:border-primary rounded">
+								<div class="flex flex-col w-full h-full bg-[#37523e]">
+									<div class="h-4 w-full bg-[#37523e]"></div>
+									<div class="h-full w-full mt-2 bg-[#e5ebe7]"></div>
+								</div>
+								<div class="border-t p-2 text-center">
+									<span class="font-bold text-base text-black">Evergreen</span>
+								</div>
+							</label>
+						</div>
+						{% endfor %}
+						<a class="card disabled d-md-none" style="border:none">
+							<i class="fas fa-volume-mute" style="opacity:0"></i>
+							<div class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">&nbsp;</div>
+							<div class="text-muted">&nbsp;</div>
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
