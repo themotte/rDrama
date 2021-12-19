@@ -924,6 +924,7 @@ def submit_post(v):
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
+			url = process_image(name)
 			body += f"\n\n![]({url})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
@@ -1022,6 +1023,7 @@ def submit_post(v):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+			new_post.url = url
 
 		g.db.add(new_post)
 	
