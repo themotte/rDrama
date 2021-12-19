@@ -2176,7 +2176,7 @@ video {
     --color-900: 24,24,27;
 }
 
-.theme-canary {
+.theme-bubblegum {
 	--color-primary: 2,132,199;
     --color-100: 252,231,243;
     --color-200: 251,207,232;
@@ -2187,6 +2187,19 @@ video {
     --color-700: 190,24,93;
     --color-800: 157,23,77;
     --color-900: 131,24,67;
+}
+
+.theme-canary {
+	--color-primary: 125,211,252;
+    --color-100: 254,249,195;
+    --color-200: 254,240,138;
+    --color-300: 253,224,71;
+    --color-400: 250,204,21;
+    --color-500: 234,179,8;
+    --color-600: 202,138,4;
+    --color-700: 161,98,7;
+    --color-800: 133,77,14;
+    --color-900: 113,63,18;
 }
 
 .theme-evergreen {
