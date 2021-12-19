@@ -104,13 +104,13 @@
 
 {% block subHeader %}
 	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t {% if p.award_count("lights") %}lights{% endif %}">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
 		<div class="relative col-span-full flex items-center">
 			<div>
 				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
 					Thread
 				</h1>
-				<ul class="flex space-x-2 text-xs text-gray-500 leading-normal mb-0">
+				<ul class="flex space-x-2 text-xs text-gray-500 dark:text-gray-400 leading-normal mb-0">
 					<li>
 						<a href="/" class="text-gray-500 hover:underline">Home</a>
 					</li>
@@ -118,7 +118,7 @@
 						<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
 					</li>
 					<li>
-						<a href="{{p.permalink}}" class="text-gray-700 hover:underline">{{p.author.username}}'s post</a>
+						<a href="{{p.permalink}}" class="text-gray-700 dark:text-gray-500 hover:underline">{{p.author.username}}'s post</a>
 					<li>
 				</ul>
 			</div>
@@ -221,7 +221,7 @@
 <!-- Post -->
 <div id="post-root" class="sm:py-4 my-2.5 sm:my-0">
 
-	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 bg-gray-200 {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
+	<div id="post-{{p.id}}" class="w-full p-2.5 md:p-0 bg-gray-200 dark:bg-gray-800 {% if voted==1 %}upvoted{% elif voted==-1 %}downvoted{% endif %}">
 		<div class="{% if p.deleted_utc > 0 %}deleted {% endif %} flex flex-row-reverse flex-nowrap justify-end">
 
 			{% if not p.is_image and p.thumb_url and not p.embed_url %}
@@ -320,7 +320,7 @@
 					<!-- Title -->
 					<h1 id="post-title" class="post-title font-medium text-lg md:text-3xl leading-normal mb-2">
 						{% if p.realurl(v) %}
-						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black hover:text-primary">
+						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black dark:text-gray-200 hover:text-primary">
 							{{p.realtitle(v) | safe}}
 						</a>
 						{% else %}
@@ -352,7 +352,7 @@
 						</a>
 						{% endif %}
 						{% endif %}
-						<div id="post-text" class="text-black {% if p.award_count("candycane") %}candycane{% endif %}">
+						<div id="post-text" class="text-black dark:text-gray-200 {% if p.award_count("candycane") %}candycane{% endif %}">
 							{% if p.is_image %}
 								<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 									<img loading="lazy" src="{{p.realurl(v)}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
@@ -410,7 +410,7 @@
 					{% endif %}
 
 					{% if p.embed_url and "http" not in p.embed_url and "<" not in p.embed_url %}
-					<div id="crosspost-embed" class="p-2.5 rounded-md bg-gray-300 border border-gray-400">
+					<div id="crosspost-embed" class="p-2.5 rounded-md bg-gray-300 dark:bg-gray-700 border border-gray-400 dark:border-gray-600">
 						<div class="row no-gutters">
 							<div id="frontpage" class="col-12 pt-0">
 								<div class="posts" id="posts">
@@ -486,11 +486,11 @@
 		{% endif %}
 	</div>
 
-	<div class="shadow-inset-t-white-05 bg-gray-200 md:border-t md:border-gray-300 py-4 mt-3 md:mt-0">
+	<div class="shadow-inset-t-white-05 bg-gray-200 dark:bg-gray-800 md:border-t md:border-gray-300 dark:md:border-gray-900 py-4 mt-3 md:mt-0">
 
 			<div class="flex flex-wrap justify-between mb-2 px-2.5 md:px-0">
 				<div class="md:ml-20 font-bold text-sm">
-					<span class="text-black">
+					<span class="text-black dark:text-gray-300">
 						{{ p.comment_count }} {{ 'Response' if p.comment_count == 1 else 'Responses' }}
 					</span>
 					<!-- Entire thread link -->
@@ -546,7 +546,7 @@
 					</div>
 				</div>
 				<div class="w-full">
-					<textarea maxlength="10000" class="text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-gray-300 border border-gray-400 hover:border-gray-500 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
+					<textarea maxlength="10000" class="text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-gray-300 dark:bg-gray-700 border border-gray-400 dark:border-gray-600 hover:border-gray-500 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
 					<div class="flex w-full justify-end mt-2">
 						<a href="/login?redirect={{request.path | urlencode}}" class="btn btn-gray">Log in to comment</a>
 					</div>
