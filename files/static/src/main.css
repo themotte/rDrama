@@ -170,7 +170,7 @@
 			@apply text-primary break-all
 		}
 		blockquote {
-			@apply bg-gray-100 border-l-2 border-gray-700 text-gray-900 mb-4
+			@apply bg-gray-100 dark:bg-gray-700 border-l-2 border-gray-700 dark:border-gray-500; mb-4;
 		}
 		hr {
 			@apply my-3
