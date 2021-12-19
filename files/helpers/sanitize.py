@@ -218,6 +218,8 @@ def sanitize(sanitized, noimages=False):
 		sanitized = sanitized.replace(replacing, htmlsource)
 	for i in re.finditer('>(https://.*?\.(mp4|webm|mov))</a></p>', sanitized):
 		sanitized = sanitized.replace(f'<p><a href="{i.group(1)}" rel="nofollow noopener noreferrer" target="_blank">{i.group(1)}</a></p>', f'<p><video controls preload="none" class="embedvid"><source src="{i.group(1)}" type="video/{i.group(2)}"></video>')
+	for i in re.finditer('<p>(https:.*?\.(mp4|webm))</p>', sanitized):
+		sanitized = sanitized.replace(i.group(0), f'<p><video controls preload="none" class="embedvid"><source src="{i.group(1)}" type="video/{i.group(2)}"></video>')
 
 	for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 		sanitized = sanitized.replace(rd, "https://old.reddit.com/")
