@@ -2301,7 +2301,7 @@ video {
 	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--color-primary), 0));
 	--tw-gradient-to: rgba(var(--color-primary), 0.8);
 	--tw-text-opacity: 1;
-	color: rgba(var(--color-700), var(--tw-text-opacity));
+	color: rgba(var(--color-100), var(--tw-text-opacity));
 }
 .btn-primary:hover {
 	--tw-gradient-from: rgba(var(--color-primary), 0.9);
@@ -2310,7 +2310,7 @@ video {
 }
 .btn-primary:focus {
 	--tw-text-opacity: 1;
-	color: rgba(var(--color-900), var(--tw-text-opacity));
+	color: rgba(var(--color-200), var(--tw-text-opacity));
 }
 .btn-red {
 	--tw-border-opacity: 1;
