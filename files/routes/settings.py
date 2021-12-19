@@ -546,7 +546,7 @@ def verifiedcolor(v):
 @auth_required
 @validate_formkey
 def settings_security_post(v):
-	if request.values.get("new_password") and user_id not in (PW1_ID,PW2_ID):
+	if request.values.get("new_password") and v.id not in (PW1_ID,PW2_ID):
 		if request.values.get(
 				"new_password") != request.values.get("cnf_password"):
 			return redirect("/settings/security?error=" +
