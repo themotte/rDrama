@@ -92,6 +92,8 @@ def submit_get(v):
 @app.get("/logged_out/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None):
+	if v and v.oldsite: template2 = ''
+	else: template2 = 'CHRISTMAS/'
 
 	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
@@ -216,15 +218,13 @@ def post_id(pid, anything=None, v=None):
 	g.db.add(post)
 	if request.host != 'old.rdrama.net' and post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
 		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
-		if v and v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}errors/nsfw.html", v=v)
+		return render_template(f"{template2}errors/nsfw.html", v=v)
 
 	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
 	else:
-		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
-		else: template = "submission.html"
+		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "{template2}submission_banned.html"
+		else: template = "{template2}submission.html"
 		return render_template(template, v=v, p=post, sort=sort, render_replies=True, offset=offset)
 
 @app.post("/viewmore/<pid>/<sort>/<offset>")
