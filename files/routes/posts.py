@@ -112,7 +112,7 @@ def post_id(pid, anything=None, v=None):
 
 	post = get_post(pid, v=v)
 
-	if not (v and v.admin_level > 1) and (post.club and not (v and (v.paid_dues or v.id == post.author_id)) or post.private and not (v and v.id == post.author_id)): abort(403)
+	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
@@ -924,6 +924,7 @@ def submit_post(v):
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
+			url = process_image(name)
 			body += f"\n\n![]({url})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
@@ -1022,6 +1023,7 @@ def submit_post(v):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+			new_post.url = url
 
 		g.db.add(new_post)
 	
