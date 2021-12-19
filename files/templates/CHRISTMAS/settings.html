@@ -58,7 +58,7 @@
 </head>
 
  {% if v and (v.theme2 == 'theme-iron dark' or v.theme2 == 'theme-evergreen') %}
- 	{% set theme = v.them2e %}
+ 	{% set theme = v.theme2 %}
  {% else %}
  	{% set theme = 'theme-iron dark' %}
  {% endif %}
@@ -223,7 +223,7 @@
 		<script>function formkey() {return '{{v.formkey}}';}</script>
 
 		<script>
-			var previousTheme = '{{ v.theme }}'.split(' ');
+			var previousTheme = '{{ v.theme2 }}'.split(' ');
 			function changeTheme(theme) {
 				const body = document.body;
 				// if previous selection has a value, remove them from body tag
