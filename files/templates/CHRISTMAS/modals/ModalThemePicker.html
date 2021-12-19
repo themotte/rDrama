@@ -10,6 +10,7 @@
 			<div id="themePickerModalBody" class="overflow-y-auto px-4">
 				<form id="themeTarget" action="" method="post">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
+					<!-- Evergreen -->
 					<div class="flex flex-wrap -mx-4 overflow-hidden">
 						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
 							<input hidden name="kind" value="evergreen" type="radio" id="evergreen-theme" class="peer">
@@ -37,6 +38,38 @@
 								</div>
 								<div class="w-full border-t border-gray-200 dark:border-gray-600 p-2 text-center">
 									<span class="font-bold text-base">Evergreen</span>
+								</div>
+							</label>
+						</div>
+					</div>
+					<!-- Iron -->
+					<div class="flex flex-wrap -mx-4 overflow-hidden">
+						<div class="my-4 px-4 w-1/2 overflow-hidden lg:w-1/4 flex items-center justify-center">
+							<input hidden name="kind" value="iron" type="radio" id="iron-theme" class="peer">
+							<label for="iron-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-primary rounded-lg overflow-hidden">
+								<div class="flex flex-col w-full h-full bg-[#3f3f46]">
+									<div class="h-3 w-full bg-[#3f3f46]"></div>
+									<div class="h-4 w-full bg-[#27272a]"></div>
+									<ul class="flex flex-col space-y-1 h-12 w-full bg-[#27272a] p-2 mb-0">
+										<li class="flex">
+											<i class="fas fa-arrow-alt-up text-[8px] text-[#db2777]"></i>
+											<div class="ml-1 h-2 w-2/4 rounded-full bg-black/50"></div>
+											<div class="ml-auto h-2 w-1/4 rounded-full bg-[#db2777]"></div>
+										</li>
+										<li class="flex">
+											<i class="fas fa-arrow-alt-up text-[8px] text-gray-400"></i>
+											<div class="ml-1 h-2 w-2/4 rounded-full bg-black/50"></div>
+											<div class="ml-auto h-2 w-1/4 rounded-full bg-transparent"></div>
+										</li>
+										<li class="flex">
+											<i class="fas fa-arrow-alt-up text-[8px] text-gray-400"></i>
+											<div class="ml-1 h-2 w-2/4 rounded-full bg-black/50"></div>
+											<div class="ml-auto h-2 w-1/4 rounded-full bg-transparent"></div>
+										</li>
+									</ul>
+								</div>
+								<div class="w-full border-t border-gray-200 dark:border-gray-600 p-2 text-center">
+									<span class="font-bold text-base">Iron (Dark)</span>
 								</div>
 							</label>
 						</div>
