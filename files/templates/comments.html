@@ -347,7 +347,7 @@
 							{% endif %}
 						{% elif v %}
 						
-							<button id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="btn p-0 m-0 nobackground arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
+							<button id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="btn p-0 m-0 pl-2 nobackground arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
 						
 						{% else %}
 							<button id="comment-{{c.id}}-up" tabindex="0" class="btn p-0 m-0 arrow-up" onclick="location.href='/login';"></button>
