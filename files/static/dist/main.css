@@ -2164,7 +2164,7 @@ video {
 	}
 
 .theme-midnight {
-	--color-primary: 2,132,199;
+	--color-primary: 219,39,119;
     --color-100: 244,244,245;
     --color-200: 228,228,231;
     --color-300: 212,212,216;
@@ -2888,6 +2888,11 @@ img.emoji-lg {
 .dark .dark\:bg-gray-800 {
 	--tw-bg-opacity: 1;
 	background-color: rgba(var(--color-800), var(--tw-bg-opacity));
+}
+
+.dark .dark\:bg-gray-900 {
+	--tw-bg-opacity: 1;
+	background-color: rgba(var(--color-900), var(--tw-bg-opacity));
 }
 
 .dark .dark\:bg-none {
