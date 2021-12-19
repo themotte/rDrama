@@ -268,9 +268,12 @@
 		</div>
 
 		{% include "CHRISTMAS/footer.html" %}
-		{% include "CHRISTMAS/modals/ModalThemePicker.html" %}
 	</div>
 </div>
+
+{% if v %}
+{% include "CHRISTMAS/modals/ModalThemePicker.html" %}
+{% endif %}
 
 {% if v %}
 	<div id="formkey" class="hidden">{{ v.formkey }}</div>
