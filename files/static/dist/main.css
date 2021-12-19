@@ -2914,6 +2914,11 @@ img.emoji-lg {
 	color: rgba(var(--color-400), var(--tw-text-opacity));
 }
 
+.dark .dark\:text-gray-500 {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-500), var(--tw-text-opacity));
+}
+
 .dark .dark\:text-gray-300 {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-300), var(--tw-text-opacity));
