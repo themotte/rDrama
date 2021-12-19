@@ -271,8 +271,6 @@
 	</div>
 </div>
 
-{% include "CHRISTMAS/modals/ModalThemePicker.html" %}
-
 {% if v %}
 	<div id="formkey" class="hidden">{{ v.formkey }}</div>
 {% endif %}
@@ -299,6 +297,9 @@
 {% include "CHRISTMAS/toasts/toasts.html" %}
 
 {% block modals %}
+	{% if v %}
+		{% include "CHRISTMAS/modals/ModalThemePicker.html" %}
+	{% endif %}
 {% endblock %}
 
 {% block popovers %}
