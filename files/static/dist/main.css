@@ -2880,6 +2880,11 @@ img.emoji-lg {
 	border-color: rgba(var(--color-900), var(--tw-border-opacity));
 }
 
+.dark .dark\:bg-gray-900 {
+	--tw-bg-opacity: 1;
+	background-color: rgba(var(--color-900), var(--tw-bg-opacity));
+}
+
 .dark .dark\:bg-gray-700 {
 	--tw-bg-opacity: 1;
 	background-color: rgba(var(--color-700), var(--tw-bg-opacity));
@@ -2888,11 +2893,6 @@ img.emoji-lg {
 .dark .dark\:bg-gray-800 {
 	--tw-bg-opacity: 1;
 	background-color: rgba(var(--color-800), var(--tw-bg-opacity));
-}
-
-.dark .dark\:bg-gray-900 {
-	--tw-bg-opacity: 1;
-	background-color: rgba(var(--color-900), var(--tw-bg-opacity));
 }
 
 .dark .dark\:bg-none {

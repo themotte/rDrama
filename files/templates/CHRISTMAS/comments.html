@@ -324,7 +324,7 @@
 				<div id="comment-banned-warning" class="hidden-on-collapse text-red-600 mb-0">Removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="hidden-on-collapse text-black mt-2 break-words {% if c.award_count("candycane") %}candycane{% endif %}">
+			<div id="comment-text-{{c.id}}" class="hidden-on-collapse mt-2 break-words {% if c.award_count("candycane") %}candycane{% endif %}">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
 					{% for o in c.options %}
