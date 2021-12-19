@@ -42,7 +42,7 @@
 	color: var(--white) !important;
 }
 
-.nav-link, .btn, .btn-secondary, .col.px-0.pl-2.btn.btn-dead.my-0.mx-2 {
+.nav-link, .btn:not(.caction), .btn-secondary, .col.px-0.pl-2.btn.btn-dead.my-0.mx-2 {
 	border: 2px outset white !important;
 	border-bottom: 2px solid #a7a5a1 !important;
 	border-right: 2px solid #a7a5a1 !important;
