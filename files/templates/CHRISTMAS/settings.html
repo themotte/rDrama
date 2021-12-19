@@ -58,7 +58,7 @@
 	</style>
 </head>
 
-<body class="overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900" {% if v and v.background %}style="background:url(/assets/CHRISTMAS/images/backgrounds/{{v.background}})"{% endif %}>
+<body class="{% if v and v.theme %}{{v.theme}}{% else %}theme-iron dark{% endif %} overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900" {% if v and v.background %}style="background:url(/assets/CHRISTMAS/images/backgrounds/{{v.background}})"{% endif %}>
 
 	{% include "CHRISTMAS/header-tw.html" %}
 
@@ -215,7 +215,23 @@
 
 	{% if v %}
 		<script>function formkey() {return '{{v.formkey}}';}</script>
-		<script src="/assets/CHRISTMAS/js/default.js?v=201"></script>
+
+		<script>
+			var previousTheme = '{{ v.theme }}'.split(' ');
+			function changeTheme(theme) {
+				const body = document.body;
+				// if previous selection has a value, remove them from body tag
+				if (previousTheme.length) {
+					previousTheme.map(v => body.classList.toggle(v));
+				}
+				// toggle classes in body tag
+				theme.map(v => body.classList.toggle(v));
+				// Set global previous selection to current selection
+				previousTheme = theme;
+			}
+		</script>
 	{% endif %}
+
+	<script src="/assets/CHRISTMAS/js/default.js?v=204"></script>
 </body>
 </html>
