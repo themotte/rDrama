@@ -147,22 +147,22 @@
 			{% if c.author_id==v.id and c.child_comments and is_notification_page%}
 			<span>
 				Comment {{'Replies' if (c.child_comments | length)>1 else 'Reply'}}:
-				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a>
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">{{c.post.realtitle(v) | safe}}</a>
 			</span>
 			{% elif c.post.author_id==v.id and c.level == 1 and is_notification_page%}
 			<span>Post Reply:
-				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a>
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">{{c.post.realtitle(v) | safe}}</a>
 			</span>
 			{% elif is_notification_page and c.parent_submission in v.subscribed_idlist() %}
 			<span>Subscribed Thread:
-				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a></span>
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">{{c.post.realtitle(v) | safe}}</a></span>
 			{% elif is_notification_page %}
 			<span>Username Mention:
-				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a>
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">{{c.post.realtitle(v) | safe}}</a>
 			</span>
 			{% else %}
 			<span>
-				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900">{{c.post.realtitle(v) | safe}}</a>
+				<a href="{{c.post.permalink}}" class="text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">{{c.post.realtitle(v) | safe}}</a>
 			</span>
 			{% endif %}
 			{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
