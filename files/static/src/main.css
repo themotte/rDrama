@@ -165,11 +165,17 @@
 .btn {
 	@apply inline-block px-4 py-2 active:shadow-inner border rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold focus:outline-none disabled:opacity-50;
 }
+.btn-primary {
+	@apply bg-white bg-gradient-to-t from-primary to-primary/80 hover:from-primary/90 hover:to-primary border-black/10 text-gray-700 focus:text-gray-900;
+}
 .btn-red {
 	@apply bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 border-red-900 text-gray-100 focus:text-white;
 }
 .btn-green {
 	@apply bg-gradient-to-t from-green-700 to-green-600 hover:from-green-600 hover:to-green-700 border-green-900 text-gray-100 focus:text-gray-200;
+}
+.btn-blue {
+	@apply bg-gradient-to-t from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-700 border-blue-900 text-gray-100 focus:text-gray-200;
 }
 .btn-gray {
 	@apply bg-gradient-to-t from-gray-200 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-700 focus:text-gray-900;
