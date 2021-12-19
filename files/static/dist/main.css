@@ -2425,10 +2425,6 @@ img.emoji-lg {
 	-o-object-fit: contain;
 	   object-fit: contain}
 
-.last\:border-none:last-child {
-	border-style: none;
-}
-
 .odd\:bg-gray-200:nth-child(odd) {
 	--tw-bg-opacity: 1;
 	background-color: rgba(var(--color-200), var(--tw-bg-opacity));
@@ -2831,6 +2827,11 @@ img.emoji-lg {
 }
 
 .dark .dark\:visited\:text-gray-400:visited {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-400), var(--tw-text-opacity));
+}
+
+.dark .dark\:hover\:text-gray-400:hover {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-400), var(--tw-text-opacity));
 }
