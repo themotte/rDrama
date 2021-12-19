@@ -3012,6 +3012,11 @@ video {
 	color: rgba(var(--color-400), var(--tw-text-opacity));
 }
 
+	.dark .dark\:hover\:bg-gray-600:hover {
+	--tw-bg-opacity: 1;
+	background-color: rgba(var(--color-600), var(--tw-bg-opacity));
+}
+
 	.dark .dark\:hover\:text-gray-400:hover {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-400), var(--tw-text-opacity));
