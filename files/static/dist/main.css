@@ -3360,6 +3360,11 @@ video {
 		border-color: rgba(var(--color-900), var(--tw-border-opacity));
 	}
 
+	.dark .md\:dark\:bg-gray-800 {
+		--tw-bg-opacity: 1;
+		background-color: rgba(var(--color-800), var(--tw-bg-opacity));
+	}
+
 	.dark .dark\:md\:bg-transparent {
 		background-color: transparent;
 	}
