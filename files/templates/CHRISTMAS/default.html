@@ -348,8 +348,24 @@
 
 {% if v %}
 	<script>function formkey() {return '{{v.formkey}}';}</script>
+
+	<script>
+		var previousTheme = ['theme-iron','dark'];
+		//var previousTheme = {{ u.theme }}.split(' ');
+		function changeTheme(theme) {
+			const body = document.body;
+			// if previous selection has a value, remove them from body tag
+			if (previousTheme.length) {
+				previousTheme.map(v => body.classList.toggle(v));
+			}
+			// toggle classes in body tag
+			theme.map(v => body.classList.toggle(v));
+			// Set global previous selection to current selection
+			previousTheme = theme;
+		}
+	</script>
 {% endif %}
-	<script src="/assets/CHRISTMAS/js/default.js?v=203"></script>
+	<script src="/assets/CHRISTMAS/js/default.js?v=204"></script>
 
 </body>
 </html>

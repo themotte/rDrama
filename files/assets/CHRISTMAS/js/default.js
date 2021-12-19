@@ -146,18 +146,3 @@ function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image-link").href = image;
 	document.getElementById("desktop-expanded-image-wrap-link").href=image;
 };
-
-
-var previousTheme = ['theme-iron','dark'];
-
-function changeTheme(theme) {
-  const body = document.body;
-  // if previous selection has a value, remove them from body tag
-  if (previousTheme.length) {
-    previousTheme.map(v => body.classList.toggle(v));
-  }
-  // toggle classes in body tag
-  theme.map(v => body.classList.toggle(v));
-  // Set global previous selection to current selection
-  previousTheme = theme;
-}
