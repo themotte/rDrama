@@ -4437,15 +4437,15 @@ th {
 
 .comment-actions .fa, .comment-actions .fas, .comment-actions .far {
   font-size: 12px;
-  margin-right: 0.25rem;
-  margin-left: 0.25rem;
+  padding-right: 0.25rem;
+  padding-left: 0.25rem;
   color: var(--gray-100);
 }
 
 @media (min-width: 768px) {
   .comment-actions .fa, .comment-actions .fas, .comment-actions .fa {
-    margin-right: 0.5rem;
-    margin-left: 0;
+    padding-right: 0.5rem;
+    padding-left: 0;
   }
 }
 
