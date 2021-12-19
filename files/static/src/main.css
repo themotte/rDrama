@@ -178,6 +178,12 @@
 		ul {
 			@apply mb-3
 		}
+		.comment-text ul, .post-body ul {
+			@apply list-disc
+		}
+		.comment-text ol, .post-body ol {
+			@apply list-decimal
+		}
 		strong {
 			@apply font-bold
 		}
