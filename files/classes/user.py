@@ -43,7 +43,7 @@ class User(Base):
 	theme2 = Column(String, default='theme-iron dark')
 	themecolor = Column(String, default=defaultcolor)
 	cardview = Column(Boolean, default=cardview)
-	oldsite = Column(Boolean)
+	oldsite = Column(Boolean, default=True)
 	song = Column(String)
 	highres = Column(String)
 	profileurl = Column(String)
