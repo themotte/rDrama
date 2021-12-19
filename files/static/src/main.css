@@ -166,7 +166,7 @@
 	@apply inline-block px-4 py-2 active:shadow-inner border rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold focus:outline-none disabled:opacity-50;
 }
 .btn-primary {
-	@apply bg-white bg-gradient-to-t from-primary to-primary/80 hover:from-primary/90 hover:to-primary border-black/10 text-gray-700 focus:text-gray-900;
+	@apply bg-white bg-gradient-to-t from-primary to-primary/80 hover:from-primary/90 hover:to-primary border-black/10 text-gray-100 focus:text-gray-200;
 }
 .btn-red {
 	@apply bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 border-red-900 text-gray-100 focus:text-white;
