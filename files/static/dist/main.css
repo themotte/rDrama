@@ -1682,8 +1682,8 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(229, 235, 231, var(--tw-bg-opacity));
 }
-.bg-black\/70 {
-	background-color: rgba(0, 0, 0, 0.7);
+.bg-black\/50 {
+	background-color: rgba(0, 0, 0, 0.5);
 }
 .bg-\[\#dc2626\] {
 	--tw-bg-opacity: 1;
