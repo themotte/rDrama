@@ -3181,9 +3181,9 @@ img.emoji-lg {
 		opacity: 1;
 	}
 
-	.dark .dark\:md\:border-gray-700 {
+	.dark .dark\:md\:border-gray-900 {
 		--tw-border-opacity: 1;
-		border-color: rgba(var(--color-700), var(--tw-border-opacity));
+		border-color: rgba(var(--color-900), var(--tw-border-opacity));
 	}
 }
 
