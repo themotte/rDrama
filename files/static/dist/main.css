@@ -2654,6 +2654,11 @@ img.emoji-lg {
 	color: rgba(255, 255, 255, var(--tw-text-opacity));
 }
 
+.hover\:text-primary:hover {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-primary), var(--tw-text-opacity));
+}
+
 .hover\:text-green-700:hover {
 	--tw-text-opacity: 1;
 	color: rgba(21, 128, 61, var(--tw-text-opacity));
@@ -2672,11 +2677,6 @@ img.emoji-lg {
 .hover\:text-blue-600:hover {
 	--tw-text-opacity: 1;
 	color: rgba(2, 132, 199, var(--tw-text-opacity));
-}
-
-.hover\:text-primary:hover {
-	--tw-text-opacity: 1;
-	color: rgba(var(--color-primary), var(--tw-text-opacity));
 }
 
 .hover\:text-red-700:hover {
