@@ -11,7 +11,7 @@
 
 					<h2 class="label text-black">Use Old Site</h2>
 					<div class="mb-4">
-						<input type="checkbox" id="oldsite" name="oldsite"{% if v.oldsite%} checked{% endif %} onchange="post_toast('/settings/profile?oldsite='+document.getElementById('oldsite').checked);location.reload(true)">
+						<input type="checkbox" id="oldsite" name="oldsite"{% if v.oldsite%} checked{% endif %} onchange="post_toast('/settings/profile?oldsite='+document.getElementById('oldsite').checked, 1)">
 						<label for="oldsite" class="inline-block pl-2 text-gray-400">Use the old version of the site.</label>
 					</div>
 					

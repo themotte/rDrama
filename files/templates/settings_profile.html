@@ -52,7 +52,7 @@
 						<div class="body w-lg-100">
 
 							<div class="custom-control custom-switch">
-								<input type="checkbox" class="custom-control-input" id="oldsite" name="oldsite"{% if v.oldsite %} checked{% endif %} onchange="post_toast('/settings/profile?oldsite='+document.getElementById('oldsite').checked);location.reload(true)">
+								<input type="checkbox" class="custom-control-input" id="oldsite" name="oldsite"{% if v.oldsite %} checked{% endif %} onchange="post_toast('/settings/profile?oldsite='+document.getElementById('oldsite').checked, 1)">
 								<label class="custom-control-label" for="oldsite"></label>
 							</div>
 
