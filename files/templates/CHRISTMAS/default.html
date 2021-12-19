@@ -297,10 +297,11 @@
 {% include "CHRISTMAS/toasts/toasts.html" %}
 
 {% block modals %}
-	{% if v %}
-		{% include "CHRISTMAS/modals/ModalThemePicker.html" %}
-	{% endif %}
 {% endblock %}
+
+{% if v %}
+	{% include "CHRISTMAS/modals/ModalThemePicker.html" %}
+{% endif %}
 
 {% block popovers %}
 {% endblock %}
