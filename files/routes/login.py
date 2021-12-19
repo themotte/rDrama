@@ -91,8 +91,7 @@ def login_post():
 
 	if not account:
 		time.sleep(random.uniform(0, 2))
-		if v and v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
+		template = ''
 		return render_template(f"{template}login.html", failed=True)
 
 
@@ -100,15 +99,13 @@ def login_post():
 
 		if not account.verifyPass(request.values.get("password")):
 			time.sleep(random.uniform(0, 2))
-			if v and v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
+			template = ''
 			return render_template(f"{template}login.html", failed=True)
 
 		if account.mfa_secret:
 			now = int(time.time())
 			hash = generate_hash(f"{account.id}+{now}+2fachallenge")
-			if v and v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
+			template = ''
 			return render_template(f"{template}login_2fa.html",
 								   v=account,
 								   time=now,
@@ -129,8 +126,7 @@ def login_post():
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
 			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
-			if v and v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
+			template = ''
 			return render_template(f"{template}login_2fa.html",
 								   v=account,
 								   time=now,
