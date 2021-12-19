@@ -389,6 +389,11 @@ def settings_profile_post(v):
 		if theme == "win98": v.themecolor = "30409f"
 		updated = True
 
+	theme2 = request.values.get("theme2")
+	if theme2:
+		v.theme2 = theme2
+		updated = True
+
 	quadrant = request.values.get("quadrant")
 	if quadrant and 'pcmemes.net' == request.host.lower():
 		v.quadrant = quadrant
