@@ -218,7 +218,7 @@
  </head>
 
  {% if v and (v.theme == 'theme-iron dark' or v.theme == 'theme-evergreen') %}
- 	{% set theme = {{ v.theme }} %}
+ 	{% set theme = v.theme %}
  {% else %}
  	{% set theme = 'theme-iron dark' %}
  {% endif %}
