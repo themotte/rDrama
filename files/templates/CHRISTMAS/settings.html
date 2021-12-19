@@ -57,7 +57,13 @@
 	</style>
 </head>
 
-<body class="{% if v and v.theme %}{{v.theme}}{% else %}theme-iron dark{% endif %} overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900" {% if v and v.background %}style="background:url(/assets/CHRISTMAS/images/backgrounds/{{v.background}})"{% endif %}>
+ {% if v and (v.theme == 'theme-iron dark' or v.theme == 'theme-evergreen') %}
+ 	{% set theme = v.theme %}
+ {% else %}
+ 	{% set theme = 'theme-iron dark' %}
+ {% endif %}
+
+<body class="{{ theme }} overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900" {% if v and v.background %}style="background:url(/assets/CHRISTMAS/images/backgrounds/{{v.background}})"{% endif %}>
 
 	{% include "CHRISTMAS/header-tw.html" %}
 
