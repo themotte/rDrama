@@ -824,13 +824,6 @@ def ban_user(user_id, v):
 	message = request.values.get("reason", "").strip()[:256]
 
 	if not user: abort(400)
-	
-	if days > 0:
-		if message: text = f"Your account has been suspended for {days} days for the following reason:\n\n> {message}"
-		else: text = f"Your account has been suspended for {days} days."
-	else:
-		if message: text = f"Your account has been permanently suspended for the following reason:\n\n> {message}"
-		else: text = "Your account has been permanently suspended."
 
 	user.ban(admin=v, reason=reason, days=days)
 
@@ -838,6 +831,13 @@ def ban_user(user_id, v):
 		for x in user.alts:
 			if x.admin_level > 0: break
 			user.ban(admin=v, reason=reason, days=days)
+
+	if days > 0:
+		if message: text = f"Your account has been suspended for {days} days for the following reason:\n\n> {message}"
+		else: text = f"Your account has been suspended for {days} days."
+	else:
+		if message: text = f"Your account has been permanently suspended for the following reason:\n\n> {message}"
+		else: text = "Your account has been permanently suspended."
 
 	send_notification(user.id, text)
 	
