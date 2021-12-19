@@ -293,12 +293,10 @@
 {% block GIFpicker %}
 {% endblock %}
 
-
 <!-- Import toast notifications -->
 {% include "CHRISTMAS/toasts/toasts.html" %}
 
 {% block modals %}
-	{% include "CHRISTMAS/modals/ModalThemePicker.html" %}
 {% endblock %}
 
 {% block popovers %}
@@ -310,8 +308,11 @@
 {% block scripts %}
 {% endblock %}
 
-<!-- Scripts -->
+{% if v %}
+{% include "CHRISTMAS/modals/ModalThemePicker.html" %}
+{% endif %}
 
+<!-- Scripts -->
 <script src="/assets/CHRISTMAS/js/header.js?v=200"></script>
 
 <!-- Lazy Loading -->
