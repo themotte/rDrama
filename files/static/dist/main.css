@@ -2164,6 +2164,7 @@ video {
 	}
 
 .theme-midnight {
+	--color-primary: 2,132,199;
     --color-100: 244,244,245;
     --color-200: 228,228,231;
     --color-300: 212,212,216;
@@ -2176,6 +2177,7 @@ video {
 }
 
 .theme-canary {
+	--color-primary: 2,132,199;
     --color-100: 252,231,243;
     --color-200: 251,207,232;
     --color-300: 249,168,212;
@@ -2188,6 +2190,7 @@ video {
 }
 
 .theme-evergreen {
+	--color-primary: 220, 38, 38;
     --color-100: 244,246,244;
     --color-200: 229,235,231;
     --color-300: 209,219,213;
@@ -2200,9 +2203,9 @@ video {
 }
 
 /* ----------------------- VARIABLES --------------------- */
-:root {
+/*:root {
 	--color-primary: 220, 38, 38;
-}
+}*/
 
 /* ---------------- RESPONSIVE UTILITIES ----------------- */
 
