@@ -40,7 +40,7 @@ class User(Base):
 	customtitleplain = deferred(Column(String))
 	titlecolor = Column(String, default=defaultcolor)
 	theme = Column(String, default=defaulttheme)
-	theme2 = Column(String, default=defaulttheme)
+	theme2 = Column(String, default='theme-iron dark')
 	themecolor = Column(String, default=defaultcolor)
 	cardview = Column(Boolean, default=cardview)
 	oldsite = Column(Boolean)
