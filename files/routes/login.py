@@ -137,7 +137,7 @@ def login_post():
 	session["login_nonce"] = account.login_nonce
 	session.permanent = True
 
-	if user_id not in (PW1_ID,PW2_ID): check_for_alts(account.id)
+	if account.id not in (PW1_ID,PW2_ID): check_for_alts(account.id)
 
 
 	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
