@@ -5,10 +5,10 @@
 		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
 		<div class="relative col-span-full flex items-center">
 			<div>
-				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				<h1 class="font-bold text-xl text-gray-900 dark:text-gray-200 font-heading leading-normal mb-0">
 					Home
 				</h1>
-				<small class="block text-gray-700">
+				<small class="block text-gray-700 dark:text-gray-400">
 					<span class="capitalize font-bold">{{ sort }}</span>
 					posts {{ 'from all time' if t=='all' else 'in the last' }}
 					{% if t != 'all' %}<span class="font-bold">{{ t }}{% endif %}
