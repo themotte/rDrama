@@ -660,8 +660,12 @@ video {
 	border-color: rgba(var(--color-700), var(--tw-border-opacity));
 	--tw-bg-opacity: 1;
 	background-color: rgba(var(--color-100), var(--tw-bg-opacity));
-	--tw-text-opacity: 1;
-	color: rgba(var(--color-900), var(--tw-text-opacity));
+}
+		.dark blockquote {
+	--tw-border-opacity: 1;
+	border-color: rgba(var(--color-500), var(--tw-border-opacity));
+	--tw-bg-opacity: 1;
+	background-color: rgba(var(--color-700), var(--tw-bg-opacity));
 }
 		hr {
 	margin-top: 0.75rem;
