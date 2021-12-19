@@ -161,7 +161,9 @@ def searchposts(v):
 		domain_obj=None
 
 	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in posts]}
-	else: return render_template("search.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}search.html",
 						   v=v,
 						   query=query,
 						   total=total,
@@ -250,7 +252,9 @@ def searchcomments(v):
 	comments = get_comments(ids, v=v)
 
 	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in comments]}
-	else: return render_template("search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists)
 
 
 @app.get("/search/users")
@@ -279,4 +283,6 @@ def searchusers(v):
 	
 	
 	if request.headers.get("Authorization"): return [x.json for x in users]
-	else: return render_template("search_users.html", v=v, query=query, total=total, page=page, users=users, sort=sort, t=t, next_exists=next_exists)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}search_users.html", v=v, query=query, total=total, page=page, users=users, sort=sort, t=t, next_exists=next_exists)

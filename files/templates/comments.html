@@ -324,7 +324,7 @@
 								<button id="comment-{{c.id}}-up" tabindex="0" onclick="vote('comment', '{{c.id}}', '1')" class="btn m-0 py-0 px-2 nobackground arrow-up" onclick="location.href='/login';"></button>
 							{% endif %}
 
-							<span style="font-size:14px" class="btn m-0 p-0 nobackground comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}" id="comment-mobile-score-{{c.id}}">{{score}}</span>
+							<span style="font-size:14px" class="score btn m-0 p-0 nobackground comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}" id="comment-mobile-score-{{c.id}}">{{score}}</span>
 						
 							{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
 								{% if voted==-1 %}

@@ -1,5 +1,5 @@
 {% if v %}
-	{% include "award_modal.html" %}
+	{% include "CHRISTMAS/award_modal.html" %}
 	<script defer src="/assets/CHRISTMAS/js/marked.js?v=202"></script>
 	<script defer src="/assets/CHRISTMAS/js/comments_v.js?v=200"></script>
 {% endif %}
@@ -10,7 +10,7 @@
 
 <script defer src="/assets/CHRISTMAS/js/comments.js?v=200"></script>
 
-{% include "expanded_image_modal.html" %}
+{% include "CHRISTMAS/expanded_image_modal.html" %}
 
 <script defer>
 	function poll_vote(cid, parentid) {
@@ -347,24 +347,24 @@
 						<i class="fas fa-reply fa-sm fa-fw mr-1"></i>
 						Reply
 					</button>
-					{% include "/comments/CommentMessageReplyForm.html" %}
+					{% include "CHRISTMAS/comments/CommentMessageReplyForm.html" %}
 				{% endif %}
 			</div>
 			{% if c.parent_submission %}
 				<!-- Author's edit comment form -->
 				{% if v and v.id==c.author_id %}
-					{% include "/comments/CommentEditForm.html" %}
+					{% include "CHRISTMAS/comments/CommentEditForm.html" %}
 				{% endif %}
 				<!-- Comment actions -->
 				<div id="comment-{{c.id}}-actions" class="hidden-on-collapse py-3 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-					{% include "/comments/CommentActions.html" %}
+					{% include "CHRISTMAS/comments/CommentActions.html" %}
 				</div>
 			{% endif %}
 
 		</div>
 
 		<div id="reply-to-{{c.id}}" class="hidden hidden-on-collapse">
-			{% include "/comments/CommentReplyForm.html" %}
+			{% include "CHRISTMAS/comments/CommentReplyForm.html" %}
 		</div>
 
 	{% if render_replies %} 
@@ -395,7 +395,7 @@
 	{% endif %}
 	</div>
 
-	{% include "/modals/ModalCommentActions.html" %}
+	{% include "CHRISTMAS/modals/ModalCommentActions.html" %}
 
 </div>
 
@@ -414,10 +414,10 @@
 </div>
 
 {% if v %}
-	{% include "gif_modal.html" %}
-	{% include "emoji_modal.html" %}
+	{% include "CHRISTMAS/gif_modal.html" %}
+	{% include "CHRISTMAS/emoji_modal.html" %}
 	{% if v.admin_level > 1 %}
-		{% include "ban_modal.html" %}
+		{% include "CHRISTMAS/ban_modal.html" %}
 	{% endif %}
 
 		<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
@@ -445,7 +445,7 @@
 		</div>
 	</div>
 
-	{% include "/modals/ModalReportComment.html" %}
+	{% include "CHRISTMAS/modals/ModalReportComment.html" %}
 {% endif %}
 
 	{% if offset %}

@@ -107,7 +107,9 @@ def notifications(v):
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
-	return render_template("notifications.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}notifications.html",
 							v=v,
 							notifications=listing,
 							next_exists=next_exists,
@@ -190,7 +192,9 @@ def front_all(v):
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	else: return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
 
 
@@ -299,7 +303,9 @@ def changelog(v):
 	posts = get_posts(ids, v=v)
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
-	else: return render_template("changelog.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}changelog.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
 
 @cache.memoize(timeout=86400)
@@ -441,4 +447,6 @@ def all_comments(v):
 	idlist = idlist[:25]
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
-	else: return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)

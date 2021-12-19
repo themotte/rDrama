@@ -20,7 +20,9 @@ def post_embed(id, v):
 	
 	p = get_post(id, v, graceful=True)
 	
-	return render_template("submission_listing.html", listing=[p], v=v)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}submission_listing.html", listing=[p], v=v)
 
 @app.context_processor
 def inject_constants():

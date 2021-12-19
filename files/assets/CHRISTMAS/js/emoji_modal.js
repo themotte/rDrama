@@ -553,6 +553,7 @@ const EMOJIS_STRINGS = [
 			marseypirate2: 'party parrot eyepatch partyparrot',
 			marseypixel: 'reaction lorez lowres',
 			marseypizzashill: 'sex haver chad grass toucher',
+			marseyplane: 'flying jet pilot',
 			marseyplanecrash: 'flying wreck jet pilot animated',
 			marseyplaty: 'hearts crossover platypus love',
 			marseypleading: 'sad eyes begging puppy dog eyes',

@@ -45,7 +45,9 @@ def distribute(v, cid):
 @admin_level_required(2)
 def truescore(v):
 	users = g.db.query(User).order_by(User.truecoins.desc()).limit(25).all()
-	return render_template("truescore.html", v=v, users=users)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}truescore.html", v=v, users=users)
 
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second")
@@ -252,7 +254,9 @@ def post_rules(v):
 def shadowbanned(v):
 	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).all()]
-	return render_template("shadowbanned.html", v=v, users=users)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}shadowbanned.html", v=v, users=users)
 
 
 @app.get("/admin/agendaposters")
@@ -260,7 +264,9 @@ def shadowbanned(v):
 def agendaposters(v):
 	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter_by(agendaposter = True).all()]
-	return render_template("agendaposters.html", v=v, users=users)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}agendaposters.html", v=v, users=users)
 
 
 @app.get("/admin/image_posts")
@@ -278,7 +284,9 @@ def image_posts_listing(v):
 	next_exists = (len(posts) > 25)
 	posts = get_posts(posts[:25], v=v)
 
-	return render_template("admin/image_posts.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}admin/image_posts.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
 
 
 @app.get("/admin/reported/posts")
@@ -298,7 +306,9 @@ def reported_posts(v):
 
 	listing = get_posts(listing, v=v)
 
-	return render_template("admin/reported_posts.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}admin/reported_posts.html",
 						   next_exists=next_exists, listing=listing, page=page, v=v)
 
 
@@ -320,7 +330,9 @@ def reported_comments(v):
 
 	listing = get_comments(listing, v=v)
 
-	return render_template("admin/reported_comments.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}admin/reported_comments.html",
 						   next_exists=next_exists,
 						   listing=listing,
 						   page=page,
@@ -332,7 +344,9 @@ def reported_comments(v):
 def admin_home(v):
 	with open('disablesignups', 'r') as f:
 		x = f.read()
-		return render_template("admin/admin_home.html", v=v, x=x)
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}admin/admin_home.html", v=v, x=x)
 
 @app.post("/admin/disablesignups")
 @admin_level_required(2)
@@ -356,7 +370,9 @@ def badge_grant_get(v):
 			  "no_user": "That user doesn't exist."
 			  }
 
-	return render_template("admin/badge_grant.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}admin/badge_grant.html",
 						   v=v,
 						   badge_types=BADGES,
 						   error=errors.get(
@@ -422,7 +438,9 @@ def users_list(v):
 	next_exists = (len(users) > 25)
 	users = users[:25]
 
-	return render_template("admin/new_users.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}admin/new_users.html",
 						   v=v,
 						   users=users,
 						   next_exists=next_exists,
@@ -434,7 +452,9 @@ def users_list(v):
 def alt_votes_get(v):
 
 	if not request.values.get("u1") or not request.values.get("u2"):
-		return render_template("admin/alt_votes.html", v=v)
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}admin/alt_votes.html", v=v)
 
 	u1 = request.values.get("u1")
 	u2 = request.values.get("u2")
@@ -530,7 +550,9 @@ def alt_votes_get(v):
 		data['u2_only_comment_downs'] // len(
 			u2_comment_downs) if u2_comment_downs else 0
 
-	return render_template("admin/alt_votes.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}admin/alt_votes.html",
 						   u1=u1,
 						   u2=u2,
 						   v=v,
@@ -575,7 +597,9 @@ def admin_removed(v):
 
 	posts = get_posts(ids, v=v)
 
-	return render_template("admin/removed_posts.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}admin/removed_posts.html",
 						   v=v,
 						   listing=posts,
 						   page=page,
@@ -599,7 +623,9 @@ def admin_removed_comments(v):
 
 	comments = get_comments(ids, v=v)
 
-	return render_template("admin/removed_comments.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}admin/removed_comments.html",
 						   v=v,
 						   listing=comments,
 						   page=page,
@@ -1106,7 +1132,9 @@ def admin_dump_cache(v):
 def admin_banned_domains(v):
 
 	banned_domains = g.db.query(BannedDomain).all()
-	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
 @app.post("/admin/banned_domains")
 @limiter.limit("1/second")

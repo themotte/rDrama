@@ -1,4 +1,4 @@
-{% extends "admin/image_posts.html" %}
+{% extends "CHRISTMAS/admin/image_posts.html" %}
 
 
 {% block title %}
@@ -33,7 +33,7 @@
 
 		<div class="posts">
 			{% with comments=listing %}
-				{% include "comments.html" %}
+				{% include "CHRISTMAS/comments.html" %}
 			{% endwith %}
 			{% if not listing %}
 			<div class="row no-gutters">	
