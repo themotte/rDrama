@@ -343,14 +343,14 @@
 					<ul class="d-none d-md-flex list-inline text-right text-md-left"><li>
 						{% if v and request.path.startswith('/@') and v.admin_level == 0%}
 							{% if voted==1 %}
-								<button class="btn p-0 m-0 px-2 arrow-up mx-0 comment-{{c.id}}-up active"></button>
+								<button class="btn py-0 m-0 pr-1 pl-2 arrow-up mx-0 comment-{{c.id}}-up active"></button>
 							{% endif %}
 						{% elif v %}
 						
-							<button id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="btn p-0 m-0 px-2 nobackground arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
+							<button id="comment-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '1')" class="btn py-0 m-0 pr-1 pl-2 nobackground arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
 						
 						{% else %}
-							<button id="comment-{{c.id}}-up" tabindex="0" class="btn p-0 m-0 px-2 arrow-up" onclick="location.href='/login';"></button>
+							<button id="comment-{{c.id}}-up" tabindex="0" class="btn py-0 m-0 pr-1 pl-2 arrow-up" onclick="location.href='/login';"></button>
 						
 						{% endif %}
 						
@@ -360,10 +360,10 @@
 						
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}
 							{% if voted==-1 %}
-								<li class=" arrow-down p-0 m-0 px-2 comment-{{c.id}}-down active"></li>
+								<li class=" arrow-down p-0 m-0 px-1 comment-{{c.id}}-down active"></li>
 							{% endif %}
 						{% elif v %}
-							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '-1')" class="btn p-0 m-0 px-2 nobackground arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>
+							<button {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-{{c.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('comment', '{{c.id}}', '-1')" class="btn p-0 m-0 px-1 nobackground arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}"></button>
 						
 						{% else %}
 						
