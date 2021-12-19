@@ -171,64 +171,66 @@
 				{% endif %}
 			</div>
 
-			<ul class="relative z-10 flex flex-wrap gap-2 items-center mb-1">
-				<!-- Flair -->
-				{% if p.flair %}
-				<li>
-					<span class="badge badge-purple">
-						{{p.flair | safe}}
-					</span>
-				</li>
-				{% endif %}
-				<!-- NSFW -->
-				{% if p.over_18 %}
-				<li>
-					<span class="badge badge-red">+18</span>
-				</li>
-				{% endif %}
-				<!-- Country Club -->
-				{% if p.club %}
-				<li>
-					<span class="badge badge-yellow">Country Club</span>
-				</li>
-				{% endif %}
-				<!-- Stickied -->
-				{% if p.stickied %}
-				<li>
-					<span class="badge badge-pink">
-						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
-						Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
-					</span>
-				</li>
-				{% endif %}
-				<!-- Pinned -->
-				{% if p.is_pinned and request.path.startswith('/@') %}
-				<li>
-					<span class="badge badge-green">
-						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
-						Pinned to profile
-					</span>
-				</li>
-				{% endif %}
-				<!-- Private -->
-				{% if p.private %}
-				<li>
-					<span class="badge badge-blue">
-						<i class="fas fa-lock-alt fa-sm fa-fw1"></i>
-						Draft
-					</span>
-				</li>
-				{% endif %}
-				<!-- Awards -->
-				{% if p.awards %}
-				{% for a in p.awards %}
-				<li>
-					<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
-				</li>
-				{% endfor %}
-				{% endif %}
-			</ul>
-
+			{% if p.flair or p.over_18 or p.club or p.stickied or (p.is_pinned and request.path.startswith('/@')) or p.private or p.awards %}
+				<ul class="relative z-10 flex flex-wrap gap-2 items-center mb-1">
+					<!-- Flair -->
+					{% if p.flair %}
+					<li>
+						<span class="badge badge-purple">
+							{{p.flair | safe}}
+						</span>
+					</li>
+					{% endif %}
+					<!-- NSFW -->
+					{% if p.over_18 %}
+					<li>
+						<span class="badge badge-red">+18</span>
+					</li>
+					{% endif %}
+					<!-- Country Club -->
+					{% if p.club %}
+					<li>
+						<span class="badge badge-yellow">Country Club</span>
+					</li>
+					{% endif %}
+					<!-- Stickied -->
+					{% if p.stickied %}
+					<li>
+						<span class="badge badge-pink">
+							<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
+							Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
+						</span>
+					</li>
+					{% endif %}
+					<!-- Pinned -->
+					{% if p.is_pinned and request.path.startswith('/@') %}
+					<li>
+						<span class="badge badge-green">
+							<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
+							Pinned to profile
+						</span>
+					</li>
+					{% endif %}
+					<!-- Private -->
+					{% if p.private %}
+					<li>
+						<span class="badge badge-blue">
+							<i class="fas fa-lock-alt fa-sm fa-fw1"></i>
+							Draft
+						</span>
+					</li>
+					{% endif %}
+					<!-- Awards -->
+					{% if p.awards %}
+					{% for a in p.awards %}
+					<li>
+						<i class="{{a.class_list}} fa-sm fa-fw" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a.title}} Award given by @{{a.user.username}}"></i>
+					</li>
+					{% endfor %}
+					{% endif %}
+				</ul>
+			{% endif %}
+			
 			<h5 class="post-title font-medium text-lg md:text-xl leading-5 mb-2">
 				<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" class="stretched-link text-black dark:text-gray-200 hover:text-primary visited:text-gray-700 dark:visited:text-gray-400 break-words" style="word-break: break-word;">
 				{{p.realtitle(v) | safe}}
