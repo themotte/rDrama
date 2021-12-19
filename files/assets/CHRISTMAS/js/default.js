@@ -148,7 +148,7 @@ function expandDesktopImage(image) {
 };
 
 
-var previousTheme = [];
+var previousTheme = ['theme-iron','dark'];
 
 function changeTheme(theme) {
   const body = document.body;
