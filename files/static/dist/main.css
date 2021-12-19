@@ -1566,6 +1566,10 @@ video {
 	--tw-border-opacity: 1;
 	border-color: rgba(0, 0, 0, var(--tw-border-opacity));
 }
+.border-gray-200 {
+	--tw-border-opacity: 1;
+	border-color: rgba(var(--color-200), var(--tw-border-opacity));
+}
 .border-opacity-10 {
 	--tw-border-opacity: 0.1;
 }
@@ -2585,6 +2589,11 @@ video {
 	.hover\:bg-gray-400:hover {
 	--tw-bg-opacity: 1;
 	background-color: rgba(var(--color-400), var(--tw-bg-opacity));
+}
+
+	.hover\:bg-gray-100:hover {
+	--tw-bg-opacity: 1;
+	background-color: rgba(var(--color-100), var(--tw-bg-opacity));
 }
 
 	.hover\:bg-gradient-to-t:hover {
