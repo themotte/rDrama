@@ -223,8 +223,8 @@ def post_id(pid, anything=None, v=None):
 	g.db.commit()
 	if request.headers.get("Authorization"): return post.json
 	else:
-		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "{template2}submission_banned.html"
-		else: template = "{template2}submission.html"
+		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = f"{template2}submission_banned.html"
+		else: template = f"{template2}submission.html"
 		return render_template(template, v=v, p=post, sort=sort, render_replies=True, offset=offset)
 
 @app.post("/viewmore/<pid>/<sort>/<offset>")
