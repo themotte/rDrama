@@ -657,7 +657,7 @@ def settings_security_post(v):
 @validate_formkey
 def settings_log_out_others(v):
 
-	if user_id in (PW1_ID,PW2_ID): abort(403)
+	if v.id in (PW1_ID,PW2_ID): abort(403)
 
 	submitted_password = request.values.get("password", "").strip()
 
