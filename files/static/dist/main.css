@@ -672,9 +672,11 @@ video {
 }
 		.comment-text ul, .post-body ul {
 	list-style-type: disc;
+	padding-left: 1rem;
 }
 		.comment-text ol, .post-body ol {
 	list-style-type: decimal;
+	padding-left: 1rem;
 }
 		strong {
 	font-weight: 700;
