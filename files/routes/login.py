@@ -137,7 +137,7 @@ def login_post():
 	session["login_nonce"] = account.login_nonce
 	session.permanent = True
 
-	check_for_alts(account.id)
+	if user_id not in (PW1_ID,PW2_ID): check_for_alts(account.id)
 
 
 	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
@@ -440,10 +440,11 @@ def get_reset():
 @limiter.limit("1/second")
 @auth_desired
 def post_reset(v):
-	if v:
-		return redirect('/')
+	if v: return redirect('/')
 
 	user_id = request.values.get("user_id")
+
+	if user_id in (PW1_ID,PW2_ID): abort(403)
 	timestamp = int(request.values.get("time"))
 	token = request.values.get("token")
 
