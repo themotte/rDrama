@@ -320,7 +320,7 @@
 					<!-- Title -->
 					<h1 id="post-title" class="post-title font-medium text-lg md:text-3xl leading-normal mb-2">
 						{% if p.realurl(v) %}
-						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black hover:text-primary">
+						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black dark:text-gray-200 hover:text-primary">
 							{{p.realtitle(v) | safe}}
 						</a>
 						{% else %}
@@ -352,7 +352,7 @@
 						</a>
 						{% endif %}
 						{% endif %}
-						<div id="post-text" class="text-black {% if p.award_count("candycane") %}candycane{% endif %}">
+						<div id="post-text" class="text-black dark:text-gray-200 {% if p.award_count("candycane") %}candycane{% endif %}">
 							{% if p.is_image %}
 								<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 									<img loading="lazy" src="{{p.realurl(v)}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
@@ -490,7 +490,7 @@
 
 			<div class="flex flex-wrap justify-between mb-2 px-2.5 md:px-0">
 				<div class="md:ml-20 font-bold text-sm">
-					<span class="text-black">
+					<span class="text-black dark:text-gray-300">
 						{{ p.comment_count }} {{ 'Response' if p.comment_count == 1 else 'Responses' }}
 					</span>
 					<!-- Entire thread link -->
