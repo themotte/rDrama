@@ -46,7 +46,7 @@
 
 		<div class="relative z-10 hidden md:flex flex-col flex-shrink-0 items-center mr-4">
 			<div class="relative {{ 'santa' if p.author.patron else 'cap' }}">
-				<img loading="lazy" src="{{ p.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
+				<img loading="lazy" src="{{ p.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
 			</div>
 
 			{% if not postembed %}
@@ -89,7 +89,7 @@
 			<div class="relative z-10 no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
 
 				<div class="relative md:hidden flex-shrink-0 {{ 'santa' if p.author.patron else 'cap' }}">
-					<img loading="lazy" src="{{ p.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
+					<img loading="lazy" src="{{ p.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
 				</div>
 				<span class="flex-shrink-0">
 				{% if v and v.admin_level==6 and p.author.shadowbanned %}
@@ -249,22 +249,22 @@
 		<div class="relative z-10 flex flex-row flex-nowrap pl-3 md:pl-5 flex-shrink-0">
 			<div style="z-index: 3;">
 				{% if p.club and not (v and v.paid_dues) %}
-					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0">
+					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 				{% elif not p.url %}
 					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 					</a>
 				{% elif p.is_image %}
 					<button data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 					</button>
 				{% elif (p.url and p.url.lower().endswith('.mp4')) or (p.embed_url and "youtu" in p.domain) or (p.url and "streamable.com/e/" in p.url) %}
 					<button onclick="document.getElementById('video-{{p.id}}').classList.toggle('hidden')">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 					</button>
 				{% else %}
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0">
+						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover  bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 					</a>
 				{% endif %}
 			</div>
@@ -281,7 +281,7 @@
 {% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
 <div class="md:ml-[4.5rem] mt-4">
 	<a target="_blank" rel="nofollow noopener noreferrer" href="{{p.url}}" class="inline-block">
-		<img loading="lazy" src="/assets/CHRISTMAS/images/loading.gif" data-src="{{p.url}}" class="shadow-md p-1 bg-white w-full md:w-64" alt="Post preview">
+		<img loading="lazy" src="/assets/CHRISTMAS/images/loading.gif" data-src="{{p.url}}" class="shadow-md p-1 bg-white dark:bg-gray-900 w-full md:w-64" alt="Post preview">
 	</a>
 </div>
 {% endif %}
