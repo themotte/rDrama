@@ -1,4 +1,4 @@
-{% extends "userpage.html" %}
+{% extends "CHRISTMAS/userpage.html" %}
 
 <!-- 
 <div class="row no-gutters">
@@ -30,14 +30,14 @@
 	<div class="sm:py-4 my-2.5 sm:my-0">
 		{% if not "saved" in request.full_path %}
 		<div class="flex justify-end md:justify-start mb-3 md:m-0 px-2.5 md:px-0">
-			{% include "/dropdowns/SubmissionSorts.html" %}
+			{% include "CHRISTMAS/dropdowns/SubmissionSorts.html" %}
 		</div>
 		<hr class="hidden md:block my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
 		{% endif %}
 		{% if listing %}
 		<div id="comments">
 		{% with comments=listing %}
-			{% include "comments.html" %}
+			{% include "CHRISTMAS/comments.html" %}
 		{% endwith %}
 		</div>
 		{% else %}

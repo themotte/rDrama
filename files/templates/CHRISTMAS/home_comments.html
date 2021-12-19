@@ -1,4 +1,4 @@
-{% extends "default.html" %}
+{% extends "CHRISTMAS/default.html" %}
 
 {% block subHeader %}
 	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
@@ -15,7 +15,7 @@
 				</small>
 			</div>
 			<div class="ml-auto">
-				{% include "/dropdowns/SubmissionSorts.html" %}
+				{% include "CHRISTMAS/dropdowns/SubmissionSorts.html" %}
 			</div>
 		</div>
 	</div>
@@ -24,7 +24,7 @@
 {% block content %}
 	<!-- Comments list -->
 	<div class="col-span-full px-2.5 md:px-0" id="posts">
-		{% include "comments.html" %}
+		{% include "CHRISTMAS/comments.html" %}
 	</div>
 	<!-- Pagination -->
 	<div class="col-span-full">

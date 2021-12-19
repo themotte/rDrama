@@ -46,6 +46,25 @@
 					<div class="d-lg-flex border-bottom">
 
 						<div class="title w-lg-25">
+							<label for="oldsite">Use Old Site</label>
+						</div>
+
+						<div class="body w-lg-100">
+
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="oldsite" name="oldsite"{% if v.oldsite %} checked{% endif %} onchange="post_toast('/settings/profile?oldsite='+document.getElementById('oldsite').checked);location.reload(true)">
+								<label class="custom-control-label" for="oldsite"></label>
+							</div>
+
+							<span class="text-small-extra text-muted">Enable if you would like to display images and videos in full size on the frontpage.</span>
+
+						</div>
+
+					</div>
+
+					<div class="d-lg-flex border-bottom">
+
+						<div class="title w-lg-25">
 							<label for="cardview">Card View</label>
 						</div>
 

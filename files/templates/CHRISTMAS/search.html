@@ -1,4 +1,4 @@
-{% extends "default.html" %}
+{% extends "CHRISTMAS/default.html" %}
 
 {% block pagetype %}search{% endblock %}
 
@@ -46,7 +46,7 @@
 		</div>
 		{% if not '/users/' in request.path %}
 		<div class="ml-auto pl-3 md:pl-0">
-			{% include "/dropdowns/SearchSorts.html" %}
+			{% include "CHRISTMAS/dropdowns/SearchSorts.html" %}
 		</div>
 		{% endif %}
 	</div>
@@ -65,7 +65,7 @@
 <div class="col-span-full px-4 md:px-0">
 	<div class="posts" id="posts">
 		{% block listing_template %}
-		{% include "submission_listing.html" %}
+		{% include "CHRISTMAS/submission_listing.html" %}
 		{% endblock %}
 	</div>
 </div>

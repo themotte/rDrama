@@ -1,5 +1,5 @@
 {% if v %}
-	{% include "award_modal.html" %}
+	{% include "CHRISTMAS/award_modal.html" %}
 {% endif %}
 
 {% for p in listing %}
@@ -242,7 +242,7 @@
 			{% endif %}
 
 			<div class="relative z-20 hidden md:block pt-3">
-				{% include "/submission/SubmissionActions.html" %}
+				{% include "CHRISTMAS/submission/SubmissionActions.html" %}
 			</div>
 	</div>
 
@@ -273,10 +273,10 @@
 </div>
 
 	<div class="relative z-10 md:hidden pt-3">
-		{% include "/submission/SubmissionActionsMobile.html" %}
+		{% include "CHRISTMAS/submission/SubmissionActionsMobile.html" %}
 	</div>
 
-{% include "/modals/ModalSubmissionActions.html" %}
+{% include "CHRISTMAS/modals/ModalSubmissionActions.html" %}
 
 {% if p.is_image and not p.over_18 and ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}
 <div class="md:ml-[4.5rem] mt-4">
@@ -371,14 +371,14 @@
 {% endfor %}
 
 {% if v %}
-	{% include "delete_post_modal.html" %}
-	{% include "report_post_modal.html" %}
+	{% include "CHRISTMAS/delete_post_modal.html" %}
+	{% include "CHRISTMAS/report_post_modal.html" %}
 	{% if v.admin_level == 6 %}
-		{% include "ban_modal.html" %}
+		{% include "CHRISTMAS/ban_modal.html" %}
 	{% endif %}
 {% endif %}
 
-{% include "expanded_image_modal.html" %}
+{% include "CHRISTMAS/expanded_image_modal.html" %}
 
 <script defer src="/assets/CHRISTMAS/js/new_comments_count.js?v=200"></script>
 <script defer src="/assets/CHRISTMAS/js/submission_listing.js?v=201"></script>

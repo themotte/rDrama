@@ -16,7 +16,9 @@ def login_get(v):
 	if v:
 		return redirect(redir)
 
-	return render_template("login.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}login.html",
 						   failed=False,
 						   redirect=redir)
 
@@ -89,19 +91,25 @@ def login_post():
 
 	if not account:
 		time.sleep(random.uniform(0, 2))
-		return render_template("login.html", failed=True)
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}login.html", failed=True)
 
 
 	if request.values.get("password"):
 
 		if not account.verifyPass(request.values.get("password")):
 			time.sleep(random.uniform(0, 2))
-			return render_template("login.html", failed=True)
+			if v and v.oldsite: template = ''
+			else: template = 'CHRISTMAS/'
+			return render_template(f"{template}login.html", failed=True)
 
 		if account.mfa_secret:
 			now = int(time.time())
 			hash = generate_hash(f"{account.id}+{now}+2fachallenge")
-			return render_template("login_2fa.html",
+			if v and v.oldsite: template = ''
+			else: template = 'CHRISTMAS/'
+			return render_template(f"{template}login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
@@ -121,7 +129,9 @@ def login_post():
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
 			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
-			return render_template("login_2fa.html",
+			if v and v.oldsite: template = ''
+			else: template = 'CHRISTMAS/'
+			return render_template(f"{template}login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
@@ -187,7 +197,9 @@ def sign_up_get(v):
 		ref_user = None
 
 	if ref_user and (ref_user.id in session.get("history", [])):
-		return render_template("sign_up_failed_ref.html")
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}sign_up_failed_ref.html")
 
 	now = int(time.time())
 	token = token_hex(16)
@@ -204,7 +216,9 @@ def sign_up_get(v):
 
 	error = request.values.get("error", None)
 
-	return render_template("sign_up.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}sign_up.html",
 						   formkey=formkey,
 						   now=now,
 						   redirect=redir,
@@ -363,7 +377,9 @@ def sign_up_post(v):
 @app.get("/forgot")
 def get_forgot():
 
-	return render_template("forgot_password.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}forgot_password.html",
 						   )
 
 
@@ -401,7 +417,9 @@ def post_forgot():
 									   v=user)
 				  )
 
-	return render_template("forgot_password.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}forgot_password.html",
 						   msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process.")
 
 
@@ -415,7 +433,9 @@ def get_reset():
 	now = int(time.time())
 
 	if now - timestamp > 600:
-		return render_template("message.html", 
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}message.html", 
 			title="Password reset link expired",
 			error="That password reset link has expired.")
 
@@ -429,7 +449,9 @@ def get_reset():
 
 	reset_token = generate_hash(f"{user.id}+{timestamp}+reset+{user.login_nonce}")
 
-	return render_template("reset_password.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}reset_password.html",
 						   v=user,
 						   token=reset_token,
 						   time=timestamp,
@@ -454,7 +476,9 @@ def post_reset(v):
 	now = int(time.time())
 
 	if now - timestamp > 600:
-		return render_template("message.html",
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}message.html",
 							   title="Password reset expired",
 							   error="That password reset form has expired.")
 
@@ -466,7 +490,9 @@ def post_reset(v):
 		abort(404)
 
 	if not password == confirm_password:
-		return render_template("reset_password.html",
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}reset_password.html",
 							   v=user,
 							   token=token,
 							   time=timestamp,
@@ -477,7 +503,9 @@ def post_reset(v):
 
 	g.db.commit()
 
-	return render_template("message_success.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}message_success.html",
 						   title="Password reset successful!",
 						   message="Login normally to access your account.")
 
@@ -498,7 +526,9 @@ def request_2fa_disable():
 	username=request.values.get("username")
 	user=get_user(username, graceful=True)
 	if not user or not user.email or not user.mfa_secret:
-		return render_template("message.html",
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
@@ -510,14 +540,18 @@ def request_2fa_disable():
 		email=email.replace('.','').replace('_','')
 		email=f"{email}@gmail.com"
 		if email != user.email:
-			return render_template("message.html",
+			if v and v.oldsite: template = ''
+			else: template = 'CHRISTMAS/'
+			return render_template(f"{template}message.html",
 							title="Removal request received",
 							message="If username, password, and email match, we will send you an email.")
 
 
 	password =request.values.get("password")
 	if not user.verifyPass(password):
-		return render_template("message.html",
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
@@ -533,7 +567,9 @@ def request_2fa_disable():
 								   v=user)
 			  )
 
-	return render_template("message.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
@@ -544,7 +580,9 @@ def reset_2fa():
 	t=int(request.values.get("t"))
 
 	if now > t+3600*24:
-		return render_template("message.html",
+		if v and v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}message.html",
 						   title="Expired Link",
 						   error="That link has expired.")
 
@@ -562,6 +600,8 @@ def reset_2fa():
 
 	g.db.commit()
 
-	return render_template("message_success.html",
+	if v and v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}message_success.html",
 						   title="Two-factor authentication removed.",
 						   message="Login normally to access your account.")

@@ -2,7 +2,7 @@
 <title>Create a post - {{'SITE_NAME' | app_config}}</title>
 {% endblock %}
 
-{% extends "default.html" %}
+{% extends "CHRISTMAS/default.html" %}
 
 {% block subHeader %}
 	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
@@ -156,13 +156,13 @@
 {% endblock %}
 
 {% block sidebar %}
-	{% include '/sidebars/SubmitSidebar.html' %}
+	{% include 'CHRISTMAS//sidebars/SubmitSidebar.html' %}
 {% endblock %}
 
 {% block modals %}
-	{% include "emoji_modal.html" %}
-	{% include "gif_modal.html" %}
-	{% include '/awards/Christmas/Snow.html' %}
+	{% include "CHRISTMAS/emoji_modal.html" %}
+	{% include "CHRISTMAS/gif_modal.html" %}
+	{% include 'CHRISTMAS//awards/Christmas/Snow.html' %}
 {% endblock %}
 
 {% block scripts %}

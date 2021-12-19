@@ -1,4 +1,4 @@
-{% extends "default.html" %}
+{% extends "CHRISTMAS/default.html" %}
 
 {% block pagetype %}userpage{% endblock %}
 
@@ -38,12 +38,12 @@
 		<ul class="flex flex-wrap space-x-2 items-center mb-0">
 			{% if v.admin_level > 1 %}
 			<li>
-				{% include '/dropdowns/ProfileAdminDropdown.html' %}
+				{% include 'CHRISTMAS//dropdowns/ProfileAdminDropdown.html' %}
 			</li>
 			{% endif %}
 			{% if not u.is_suspended %}
 				<li>
-					{% include '/dropdowns/ProfileDropdown.html' %}
+					{% include 'CHRISTMAS//dropdowns/ProfileDropdown.html' %}
 				</li>
 				{% if v.id == u.id %}
 				<li>
@@ -321,12 +321,12 @@
 	<div class="sm:py-4 my-2.5 sm:my-0">
 		{% if not "saved" in request.full_path %}
 		<div class="flex justify-end md:justify-start mb-3 md:m-0 px-2.5 md:px-0">
-			{% include "/dropdowns/SubmissionSorts.html" %}
+			{% include "CHRISTMAS/dropdowns/SubmissionSorts.html" %}
 		</div>
 		<hr class="hidden md:block my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
 		{% endif %}
 		<ul>
-			{% include "submission_listing.html" %}
+			{% include "CHRISTMAS/submission_listing.html" %}
 		</ul>
 		<!-- Pagination -->
 		{% if listing %}
@@ -356,17 +356,17 @@
 {% endblock %}
 
 {% block sidebar %}
-{% include "/sidebars/ProfileSidebar.html" %}
+{% include "CHRISTMAS/sidebars/ProfileSidebar.html" %}
 {% endblock %}
 
 {% block modals %}
 {% if v %}
-	{% include "emoji_modal.html" %}
-	{% include "gif_modal.html" %}
-	{% include "/modals/ModalDirectMessage.html" %}
-	{% include "/modals/ModalGiftCoins.html" %}
+	{% include "CHRISTMAS/emoji_modal.html" %}
+	{% include "CHRISTMAS/gif_modal.html" %}
+	{% include "CHRISTMAS/modals/ModalDirectMessage.html" %}
+	{% include "CHRISTMAS/modals/ModalGiftCoins.html" %}
 	{% if v.admin_level > 1 %}
-		{% include "/modals/ModalAdminManageUser.html" %}
+		{% include "CHRISTMAS/modals/ModalAdminManageUser.html" %}
 	{% endif %}
 {% endif %}
 {% endblock %}

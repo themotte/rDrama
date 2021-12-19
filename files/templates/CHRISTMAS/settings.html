@@ -60,7 +60,7 @@
 
 <body class="overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900" {% if v and v.background %}style="background:url(/assets/CHRISTMAS/images/backgrounds/{{v.background}})"{% endif %}>
 
-	{% include "header-tw.html" %}
+	{% include "CHRISTMAS/header-tw.html" %}
 
 	<div class="flex h-screen pt-16 bg-gray-500">
 		<div class="w-full sm:overflow-y-auto">
@@ -144,12 +144,12 @@
 						{% endblock %}
 					</div>
 
-					{% include "/sidebars/SettingsSidebar.html" %}
+					{% include "CHRISTMAS/sidebars/SettingsSidebar.html" %}
 
 				</div>
 			</div>
 
-			{% include "footer.html" %}
+			{% include "CHRISTMAS/footer.html" %}
 		</div>
 	</div>
 
@@ -177,7 +177,7 @@
 	{% endif %}
 
 	{% if v %}
-	{% include "/modals/Modal2FA.html" %}
+	{% include "CHRISTMAS/modals/Modal2FA.html" %}
 	{% endif %}
 
 	{% block modals %}{% endblock %}
