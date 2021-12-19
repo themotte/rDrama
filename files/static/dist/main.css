@@ -670,6 +670,12 @@ video {
 		ul {
 	margin-bottom: 0.75rem;
 }
+		.comment-text ul, .post-body ul {
+	list-style-type: disc;
+}
+		.comment-text ol, .post-body ol {
+	list-style-type: decimal;
+}
 		strong {
 	font-weight: 700;
 }

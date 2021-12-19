@@ -179,10 +179,10 @@
 			@apply mb-3
 		}
 		.comment-text ul, .post-body ul {
-			@apply list-disc
+			@apply list-disc pl-4
 		}
 		.comment-text ol, .post-body ol {
-			@apply list-decimal
+			@apply list-decimal pl-4
 		}
 		strong {
 			@apply font-bold
