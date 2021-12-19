@@ -2165,6 +2165,19 @@ video {
 
 .theme-midnight {
 	--color-primary: 219,39,119;
+    --color-100: 243,244,246;
+    --color-200: 229,231,235;
+    --color-300: 209,213,219;
+    --color-400: 156,163,175;
+    --color-500: 107,114,128;
+    --color-600: 75,85,99;
+    --color-700: 55,65,81;
+    --color-800: 31,41,55;
+    --color-900: 17,24,39;
+}
+
+.theme-iron {
+	--color-primary: 219,39,119;
     --color-100: 244,244,245;
     --color-200: 228,228,231;
     --color-300: 212,212,216;
@@ -2870,14 +2883,14 @@ img.emoji-lg {
 	border-color: rgba(var(--color-700), var(--tw-border-opacity));
 }
 
-.dark .dark\:border-gray-600 {
-	--tw-border-opacity: 1;
-	border-color: rgba(var(--color-600), var(--tw-border-opacity));
-}
-
 .dark .dark\:border-gray-900 {
 	--tw-border-opacity: 1;
 	border-color: rgba(var(--color-900), var(--tw-border-opacity));
+}
+
+.dark .dark\:border-gray-600 {
+	--tw-border-opacity: 1;
+	border-color: rgba(var(--color-600), var(--tw-border-opacity));
 }
 
 .dark .dark\:bg-gray-900 {
