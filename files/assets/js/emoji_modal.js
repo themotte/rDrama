@@ -860,8 +860,8 @@ function loadEmojis(form) {
 	let search_bar = document.getElementById("emoji_search");
 	let search_container = document.getElementById('emoji-tab-search')
 
-	let container = document.getElementById(EMOJI_BOX_ID)
-	container.setAttribute(EMOJI_FORM_DESTINATION_ATTR, form)
+	let fav = document.getElementById(EMOJI_BOX_ID)
+	fav.setAttribute(EMOJI_FORM_DESTINATION_ATTR, form)
 
 	const commentBox = document.getElementById(form);
 	commentBox.setAttribute(TEXTAREA_POS_ATTR, commentBox.selectionStart);
