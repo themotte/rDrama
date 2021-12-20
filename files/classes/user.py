@@ -377,6 +377,10 @@ class User(Base):
 	def post_notifications_count(self):
 		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ID).count()
 
+	@property
+	@lazy
+	def not_post_notifications_count(self):
+		return self.notifications_count - self.post_notifications_count
 
 	@property
 	@lazy

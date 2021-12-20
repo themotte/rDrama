@@ -16,8 +16,8 @@
   <div class="col p-0 w-100">
 	<ul class="nav settings-nav" style="padding:0 30px;">
 	<li class="nav-item">
-		<a class="nav-link py-3{% if not '=true' in request.full_path %} active{% endif %}" href="/notifications">
-		All
+		<a class="nav-link py-3{% if not '=true' in request.full_path %} active{% endif %}" href="/notifications?posts=true">
+		All{% if v.not_post_notifications_count %} <span class="text-primary font-weight-bold">({{v.not_post_notifications_count}})</span>{% endif %}
 		</a>
 	</li>
 	<li class="nav-item">
