@@ -15,7 +15,7 @@ defaultcolor = environ.get("DEFAULT_COLOR").strip()
 @limiter.limit("5/second;60/minute;200/hour")
 @auth_desired
 def admin_vote_info_get(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
 	if v and v.shadowbanned: return render_template('errors/500.html', error=True, v=v), 500
@@ -57,7 +57,7 @@ def admin_vote_info_get(v):
 
 	else: abort(400)
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}votes.html",
 						   v=v,

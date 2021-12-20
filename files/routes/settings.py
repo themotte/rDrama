@@ -126,7 +126,7 @@ def settings_profile_post(v):
 		v.bio_html = None
 		g.db.add(v)
 		g.db.commit()
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html", v=v, msg="Your bio has been updated.")
 
@@ -135,7 +135,7 @@ def settings_profile_post(v):
 		v.sig_html = None
 		g.db.add(v)
 		g.db.commit()
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html", v=v, msg="Your sig has been updated.")
 
@@ -144,7 +144,7 @@ def settings_profile_post(v):
 		v.friends_html = None
 		g.db.add(v)
 		g.db.commit()
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html", v=v, msg="Your friends list has been updated.")
 
@@ -153,7 +153,7 @@ def settings_profile_post(v):
 		v.enemies_html = None
 		g.db.add(v)
 		g.db.commit()
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html", v=v, msg="Your enemies list has been updated.")
 
@@ -177,7 +177,7 @@ def settings_profile_post(v):
 			return {"error": reason}, 401
 
 		if len(sig_html) > 1000:
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}settings_profile.html",
 								   v=v,
@@ -187,7 +187,7 @@ def settings_profile_post(v):
 		v.sig_html=sig_html
 		g.db.add(v)
 		g.db.commit()
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html",
 							   v=v,
@@ -213,7 +213,7 @@ def settings_profile_post(v):
 			return {"error": reason}, 401
 
 		if len(friends_html) > 2000:
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}settings_profile.html",
 								   v=v,
@@ -234,7 +234,7 @@ def settings_profile_post(v):
 		v.friends_html=friends_html
 		g.db.add(v)
 		g.db.commit()
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html",
 							   v=v,
@@ -258,7 +258,7 @@ def settings_profile_post(v):
 			return {"error": reason}, 401
 
 		if len(enemies_html) > 2000:
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}settings_profile.html",
 								   v=v,
@@ -280,7 +280,7 @@ def settings_profile_post(v):
 		v.enemies_html=enemies_html
 		g.db.add(v)
 		g.db.commit()
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html",
 							   v=v,
@@ -307,7 +307,7 @@ def settings_profile_post(v):
 				bio += f"\n\n{url}"
 			else:
 				if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
-				if v and v.oldsite: template = ''
+				if not v or v.oldsite: template = ''
 				else: template = 'CHRISTMAS/'
 				return render_template(f"{template}settings_profile.html", v=v, error=f"Image/Video files only."), 400
 		
@@ -316,7 +316,7 @@ def settings_profile_post(v):
 		bans = filter_comment_html(bio_html)
 
 		if len(bio_html) > 10000:
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}settings_profile.html",
 								   v=v,
@@ -347,7 +347,7 @@ def settings_profile_post(v):
 		v.bio_html=bio_html
 		g.db.add(v)
 		g.db.commit()
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html",
 							   v=v,
@@ -445,14 +445,14 @@ def filters(v):
 	filters=request.values.get("filters")[:1000].strip()
 
 	if filters == v.custom_filter_list:
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_filters.html", v=v, error="You didn't change anything")
 
 	v.custom_filter_list=filters
 	g.db.add(v)
 	g.db.commit()
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_filters.html", v=v, msg="Your custom filters have been updated.")
 
@@ -474,7 +474,7 @@ def changelogsub(v):
 @auth_required
 @validate_formkey
 def namecolor(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
 	color = str(request.values.get("color", "")).strip()
@@ -490,7 +490,7 @@ def namecolor(v):
 @auth_required
 @validate_formkey
 def themecolor(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
 	themecolor = str(request.values.get("themecolor", "")).strip()
@@ -530,7 +530,7 @@ def gumroad(v):
 
 	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"][0]
 	tier = tiers[response["variants_and_quantity"]]
-	
+
 	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
 
 	existing = g.db.query(User.id).filter_by(email=v.email, is_activated=True, patron=tier).one_or_none()
@@ -570,7 +570,7 @@ def gumroad(v):
 @auth_required
 @validate_formkey
 def titlecolor(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
 	titlecolor = str(request.values.get("titlecolor", "")).strip()
@@ -586,7 +586,7 @@ def titlecolor(v):
 @auth_required
 @validate_formkey
 def verifiedcolor(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
 	verifiedcolor = str(request.values.get("verifiedcolor", "")).strip()
@@ -718,7 +718,7 @@ def settings_log_out_others(v):
 	submitted_password = request.values.get("password", "").strip()
 
 	if not v.verifyPass(submitted_password):
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_security.html", v=v, error="Incorrect Password"), 401
 
@@ -730,7 +730,7 @@ def settings_log_out_others(v):
 
 	g.db.commit()
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_security.html", v=v, msg="All other devices have been logged out")
 
@@ -768,7 +768,7 @@ def settings_images_profile(v):
 
 	g.db.commit()
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_profile.html", v=v, msg="Profile picture successfully updated.")
 
@@ -796,7 +796,7 @@ def settings_images_banner(v):
 		g.db.add(v)
 		g.db.commit()
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_profile.html", v=v, msg="Banner successfully updated.")
 
@@ -812,7 +812,7 @@ def settings_delete_profile(v):
 		g.db.add(v)
 		g.db.commit()
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_profile.html", v=v,
 						   msg="Profile picture successfully removed.")
@@ -828,7 +828,7 @@ def settings_delete_banner(v):
 		g.db.add(v)
 		g.db.commit()
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_profile.html", v=v,  msg="Banner successfully removed.")
 
@@ -837,7 +837,7 @@ def settings_delete_banner(v):
 @auth_required
 def settings_blockedpage(v):
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_blocks.html", v=v)
 
@@ -845,7 +845,7 @@ def settings_blockedpage(v):
 @auth_required
 def settings_css_get(v):
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_css.html", v=v)
 
@@ -860,7 +860,7 @@ def settings_css(v):
 	g.db.add(v)
 	g.db.commit()
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_css.html", v=v)
 
@@ -869,7 +869,7 @@ def settings_css(v):
 def settings_profilecss_get(v):
 
 	if v.truecoins < 1000 and not v.patron and v.admin_level == 0 : return f"You must have +1000 {COINS_NAME} or be a paypig to set profile css."
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_profilecss.html", v=v)
 
@@ -884,7 +884,7 @@ def settings_profilecss(v):
 	g.db.add(v)
 	g.db.commit()
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_profilecss.html", v=v)
 
@@ -954,7 +954,7 @@ def settings_unblock_user(v):
 @auth_required
 def settings_apps(v):
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_apps.html", v=v)
 
@@ -978,7 +978,7 @@ def settings_remove_discord(v):
 @auth_required
 def settings_content_get(v):
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_filters.html", v=v)
 
@@ -993,14 +993,14 @@ def settings_name_change(v):
 	new_name=request.values.get("name").strip()
 
 	if new_name==v.username:
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html",
 						   v=v,
 						   error="You didn't change anything")
 
 	if not re.match(valid_username_regex, new_name):
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html",
 						   v=v,
@@ -1016,7 +1016,7 @@ def settings_name_change(v):
 		).first()
 
 	if x and x.id != v.id:
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html",
 						   v=v,
@@ -1054,7 +1054,7 @@ def settings_song_change(v):
 		id = song.split("v=")[1]
 	elif song.startswith("https://youtu.be/"):
 		id = song.split("https://youtu.be/")[1]
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_profile.html", v=v, error=f"Not a youtube link.")
 
@@ -1071,19 +1071,19 @@ def settings_song_change(v):
 	req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
 	duration = req['items'][0]['contentDetails']['duration']
 	if duration == 'P0D':
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html", v=v, error=f"Can't use a live youtube video!")
 
 	if "H" in duration:
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html", v=v, error=f"Duration of the video must not exceed 10 minutes.")
 
 	if "M" in duration:
 		duration = int(duration.split("PT")[1].split("M")[0])
 		if duration > 10: 
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}settings_profile.html", v=v, error=f"Duration of the video must not exceed 10 minutes.")
 
@@ -1105,7 +1105,7 @@ def settings_song_change(v):
 		try: ydl.download([f"https://youtube.com/watch?v={id}"])
 		except Exception as e:
 			print(e)
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}settings_profile.html",
 						   v=v,
@@ -1128,7 +1128,7 @@ def settings_song_change(v):
 @auth_required
 @validate_formkey
 def settings_title_change(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
 	if v.flairchanged: abort(403)

@@ -81,7 +81,7 @@ def publish(pid, v):
 @auth_required
 def submit_get(v):
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}submit.html",
 						   v=v)
@@ -92,7 +92,7 @@ def submit_get(v):
 @app.get("/logged_out/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None):
-	if v and v.oldsite: template2 = ''
+	if not v or v.oldsite: template2 = ''
 	else: template2 = 'CHRISTMAS/'
 
 	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
@@ -324,7 +324,7 @@ def viewmore(v, pid, sort, offset):
 	if len(comments) == len(comments2): offset = None
 	comments = comments2
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}comments.html", v=v, comments=comments, render_replies=True, pid=pid, sort=sort, offset=offset)
 
@@ -371,7 +371,7 @@ def morecomments(v, cid):
 		c = g.db.query(Comment).filter_by(id=cid).first()
 		comments = c.replies
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}comments.html", v=v, comments=comments, render_replies=True)
 
@@ -786,7 +786,7 @@ def submit_post(v):
 		domain_obj = get_domain(domain)
 		if domain_obj:
 			if request.headers.get("Authorization"): return {"error":domain_obj.reason}, 400
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}submit.html", v=v, error=domain_obj.reason, title=title, url=url, body=request.values.get("body", "")), 400
 		elif "twitter.com" == domain:
@@ -809,13 +809,13 @@ def submit_post(v):
 
 	if not url and not request.values.get("body") and not request.files.get("file", None):
 		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if not title:
 		if request.headers.get("Authorization"): return {"error": "Please enter a better title"}, 400
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.values.get("body", "")), 400
 
@@ -907,14 +907,14 @@ def submit_post(v):
 	if len(str(body)) > 10000:
 
 		if request.headers.get("Authorization"): return {"error":"10000 character limit for text body."}, 400
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}submit.html", v=v, error="10000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if len(url) > 2048:
 
 		if request.headers.get("Authorization"): return {"error":"2048 character limit for URLs."}, 400
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
 
@@ -951,7 +951,7 @@ def submit_post(v):
 			body += f"\n\n{url}"
 		else:
 			if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}submit.html", v=v, error=f"Image/Video files only."), 400
 
@@ -972,7 +972,7 @@ def submit_post(v):
 		reason = f"Remove the {ban.domain} link from your post and try again."
 		if ban.reason: reason += f" {ban.reason}"
 		if request.headers.get("Authorization"): return {"error": reason}, 403
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 
@@ -1034,7 +1034,7 @@ def submit_post(v):
 
 		if not file.content_type.startswith(('image/', 'video/')):
 			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}submit.html", v=v, error=f"File type not allowed.", title=title, body=request.values.get("body", "")), 400
 

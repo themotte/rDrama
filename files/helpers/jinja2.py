@@ -20,7 +20,7 @@ def post_embed(id, v):
 	
 	p = get_post(id, v, graceful=True)
 	
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}submission_listing.html", listing=[p], v=v)
 

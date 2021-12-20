@@ -602,7 +602,7 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}comments.html", v=v, comments=[c])
 
@@ -686,7 +686,7 @@ def edit_comment(cid, v):
 			if ban.reason: reason += f" {ban.reason}"	
 		
 			if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
-			if v and v.oldsite: template = ''
+			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}comment_failed.html",
 													action=f"/edit_comment/{c.id}",
