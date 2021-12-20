@@ -5698,7 +5698,7 @@ blockquote p {
   color: lightblue;
 }
 
-.bet ~ .custom-control-label::before {
+input[type=radio] ~ .custom-control-label::before {
   border-radius: 50%;
 }
 
