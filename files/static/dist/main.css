@@ -2519,9 +2519,6 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
 	background-image: linear-gradient(to top, var(--tw-gradient-stops));
-	--tw-gradient-from: rgb(var(--color-primary));
-	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--color-primary), 0));
-	--tw-gradient-to: rgba(var(--color-primary), 0.8);
 	padding-left: 1rem;
 	padding-right: 1rem;
 	padding-top: 0.5rem;
@@ -2533,6 +2530,9 @@ video {
 	color: rgba(var(--color-200), var(--tw-text-opacity));
 }
 	.dropdown-item-primary:hover {
+	--tw-gradient-from: rgb(var(--color-primary));
+	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--color-primary), 0));
+	--tw-gradient-to: rgba(var(--color-primary), 0.8);
 	--tw-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
@@ -2544,11 +2544,15 @@ video {
 	.dark .dropdown-item-primary {
 	--tw-bg-opacity: 1;
 	background-color: rgba(0, 0, 0, var(--tw-bg-opacity));
+	background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
 }
 	.dark .dropdown-item-primary:hover {
 	--tw-gradient-from: rgba(var(--color-primary), 0.8);
 	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(255, 255, 255, 0));
 	--tw-gradient-to: rgb(var(--color-primary));
+}
+	.dark .dropdown-item-primary:focus {
+	background-image: linear-gradient(to top, var(--tw-gradient-stops));
 }
 
 	/* ----------------------- BADGES ----------------------- */
