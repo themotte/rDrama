@@ -239,6 +239,11 @@
 		@apply bg-gradient-to-t from-gray-200 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-700 focus:text-gray-900;
 	}
 
+	/* ---------------------- DROPDOWNS --------------------- */
+	.dropdown-item-primary {
+		@apply block w-full text-left px-4 py-2 text-sm text-gray-200 bg-white dark:bg-black bg-gradient-to-t from-primary to-primary/80 dark:hover:from-primary/80 dark:hover:to-primary hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-b
+	}
+
 	/* ----------------------- BADGES ----------------------- */
 	.badge {
 		@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded bg-gradient-to-t;
@@ -272,7 +277,6 @@
 	}
 
 	/* ----------------------- EMOJI ------------------------ */
-
 	img.emoji {
 		width: 30px;
 		height: 30px;
