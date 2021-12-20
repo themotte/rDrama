@@ -1759,6 +1759,18 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(255, 248, 172, var(--tw-bg-opacity));
 }
+.bg-\[\#be185d\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(190, 24, 93, var(--tw-bg-opacity));
+}
+.bg-\[\#f9a8d4\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(249, 168, 212, var(--tw-bg-opacity));
+}
+.bg-\[\#fcdff0\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(252, 223, 240, var(--tw-bg-opacity));
+}
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
@@ -2351,8 +2363,8 @@ video {
 
 .theme-bubblegum {
 	--color-primary: 2,132,199;
-	--color-100: 252,231,243;
-	--color-200: 251,207,232;
+	--color-100: 254,236,246;
+	--color-200: 252,223,240;
 	--color-300: 249,168,212;
 	--color-400: 244,114,182;
 	--color-500: 236,72,153;
