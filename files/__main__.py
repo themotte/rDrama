@@ -18,7 +18,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 import redis
 
 app = Flask(__name__, template_folder='templates')
-app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_TYPE"] = "redis"
 Session(app)
 
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
