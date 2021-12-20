@@ -3226,6 +3226,11 @@ video {
 	background-color: rgba(var(--color-400), var(--tw-bg-opacity));
 }
 
+	.peer:checked ~ .peer-checked\:bg-blue-100 {
+	--tw-bg-opacity: 1;
+	background-color: rgba(224, 242, 254, var(--tw-bg-opacity));
+}
+
 	.peer:checked ~ .peer-checked\:shadow-inner {
 	--tw-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
