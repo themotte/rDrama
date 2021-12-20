@@ -2421,7 +2421,7 @@ video {
 .theme-limon {
 	--color-primary: 202,138,4;
 	--color-100: 236,252,203;
-	--color-200: 217,249,157;
+	--color-200: 231, 255, 186;
 	--color-300: 190,242,100;
 	--color-400: 163,230,53;
 	--color-500: 132,204,22;
@@ -2452,8 +2452,8 @@ video {
 	--color-400: 175, 169, 155;
 	--color-500: 148,144,129;
 	--color-600: 99,96,77;
-	--color-700: 82,76,55;
-	--color-800: 55,52,31;
+	--color-700: 70, 65, 47;
+	--color-800: 42, 40, 24;
 	--color-900: 40,37,17;
 }
 
@@ -2813,6 +2813,18 @@ video {
 	background-color: rgba(var(--color-primary), var(--tw-bg-opacity));
 	--tw-text-opacity: 1;
 	color: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+	.patron {
+	border-radius: 0.25rem;
+	padding-left: 0.25rem;
+	padding-right: 0.25rem;
+	padding-top: 0.125rem;
+	padding-bottom: 0.125rem;
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	font-weight: 700;
+	line-height: 1.5;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 	/* ---------------------- TOOLTIPS ---------------------- */
