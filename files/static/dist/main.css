@@ -1743,6 +1743,10 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(2, 132, 199, var(--tw-bg-opacity));
 }
+.bg-\[\#1e293b\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(30, 41, 59, var(--tw-bg-opacity));
+}
 .bg-\[\#a16207\] {
 	--tw-bg-opacity: 1;
 	background-color: rgba(161, 98, 7, var(--tw-bg-opacity));
