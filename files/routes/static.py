@@ -180,12 +180,12 @@ def admins(v):
 @auth_desired
 def log(v):
 
-	page = int(request.args.get("page",1))
-	admin = request.args.get("admin")
+	page = int(request.values.get("page",1))
+	admin = request.values.get("admin")
 	if admin: admin_id = get_id(admin)
 	else: admin_id = 0
 
-	kind = request.args.get("kind")
+	kind = request.values.get("kind")
 
 	if v and v.admin_level > 1: types = ACTIONTYPES
 	else: types = ACTIONTYPES2

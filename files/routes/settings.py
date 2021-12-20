@@ -50,9 +50,9 @@ def sex(v):
 			email=f"{email}@gmail.com"
 		emails.append(email.lower())
 
-	users = g.db.query(User).filter(User.patron > 0, User.patron < 5, User.email != None).all()
+	users = g.db.query(User).filter(User.patron > 0, User.patron < 5).all()
 	for u in users:
-		if u.email.lower() not in emails: print(u.username)
+		if not u.email or u.email.lower() not in emails: print(u.username)
 
 	return "sex"
 
