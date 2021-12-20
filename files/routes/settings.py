@@ -48,7 +48,7 @@ def sex(v):
 			email=email.split('+')[0]
 			email=email.replace('.','').replace('_','')
 			email=f"{email}@gmail.com"
-		emails.append(email)
+		emails.append(email.lower())
 
 	users = g.db.query(User).filter(User.patron > 0, User.patron < 5, User.email != None).all()
 	for u in users:
@@ -548,7 +548,7 @@ def gumroad(v):
 			email=email.split('+')[0]
 			email=email.replace('.','').replace('_','')
 			email=f"{email}@gmail.com"
-		emails.append(email)
+		emails.append(email.lower())
 
 	if v.email.lower() not in emails: return {"error": "Email not found"}, 404
 
@@ -561,7 +561,7 @@ def gumroad(v):
 	if existing: return {"error": f"{patron} rewards already claimed on another account"}, 400
 
 	if v.patron:
-		badge = v.has_badge(20+tier)
+		badge = v.has_badge(20+v.patron)
 		if badge: g.db.delete(badge)
 	
 	v.patron = tier
@@ -655,7 +655,7 @@ def settings_security_post(v):
 			return redirect("/settings/security?error=" +
 							escape("Invalid password."))
 
-		new_email = request.values.get("new_email","").strip()
+		new_email = request.values.get("new_email","").strip().lower()
 
 		if new_email.endswith("@gmail.com"):
 			new_email=new_email.split('@')[0]
