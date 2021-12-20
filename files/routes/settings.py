@@ -530,7 +530,11 @@ def gumroad(v):
 
 	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"][0]
 	tier = tiers[response["variants_and_quantity"]]
+	
 	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
+
+	existing = g.db.query(User.id).filter_by(email=v.email, is_activated=True, patron=tier).one_or_none()
+	if existing: return {"error": f"{patron} rewards already claimed on another account"}, 400
 
 	if v.patron:
 		badge = v.has_badge(20+tier)
