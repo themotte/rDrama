@@ -2488,8 +2488,8 @@ video {
 	--color-100: 244,244,245;
 	--color-200: 228,228,231;
 	--color-300: 212,212,216;
-	--color-400: 161,161,170;
-	--color-500: 113,113,122;
+	--color-400: 161, 161,171;
+	--color-500: 117, 117,126;
 	--color-600: 82,82,91;
 	--color-700: 63,63,70;
 	--color-800: 39,39,42;
@@ -3214,10 +3214,6 @@ video {
 	.active\:outline-none:active {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
-}
-
-	.peer:checked ~ .peer-checked\:rounded-lg {
-	border-radius: 0.5rem;
 }
 
 	.peer:checked ~ .peer-checked\:border-blue-500 {
