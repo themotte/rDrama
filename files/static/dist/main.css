@@ -1735,9 +1735,25 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(203, 213, 225, var(--tw-bg-opacity));
 }
+.bg-\[\#e2e8f0\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(226, 232, 240, var(--tw-bg-opacity));
+}
 .bg-\[\#0284c7\] {
 	--tw-bg-opacity: 1;
 	background-color: rgba(2, 132, 199, var(--tw-bg-opacity));
+}
+.bg-\[\#a16207\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(161, 98, 7, var(--tw-bg-opacity));
+}
+.bg-\[\#fde047\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(253, 224, 71, var(--tw-bg-opacity));
+}
+.bg-\[\#fff8ac\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(255, 248, 172, var(--tw-bg-opacity));
 }
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
@@ -2338,7 +2354,7 @@ video {
 
 .theme-canary {
 	--color-primary: 2,132,199;
-	--color-100: 254,249,195;
+	--color-100: 255, 248, 172;
 	--color-200: 254,240,138;
 	--color-300: 253,224,71;
 	--color-400: 250,204,21;
