@@ -1,7 +1,7 @@
 from files.mail import *
 from files.__main__ import app, limiter, mail
 from files.helpers.alerts import *
-from files.helpers.const import BADGES
+from files.helpers.const import *
 from files.classes.award import AWARDS
 from sqlalchemy import func
 from os import path
@@ -56,11 +56,11 @@ def participation_stats(v):
 			"removed_posts": g.db.query(Submission.id).filter_by(is_banned=True).count(),
 			"deleted_posts": g.db.query(Submission.id).filter(Submission.deleted_utc > 0).count(),
 			"posts_last_24h": g.db.query(Submission.id).filter(Submission.created_utc > day).count(),
-			"total_comments": g.db.query(Comment.id).count(),
+			"total_comments": g.db.query(Comment.id).filter(Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
 			"commenting_users": g.db.query(Comment.author_id).distinct().count(),
 			"removed_comments": g.db.query(Comment.id).filter_by(is_banned=True).count(),
 			"deleted_comments": g.db.query(Comment.id).filter(Comment.deleted_utc>0).count(),
-			"comments_last_24h": g.db.query(Comment.id).filter(Comment.created_utc > day).count(),
+			"comments_last_24h": g.db.query(Comment.id).filter(Comment.created_utc > day, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
 			"post_votes": g.db.query(Vote.id).count(),
 			"post_voting_users": g.db.query(Vote.user_id).distinct().count(),
 			"comment_votes": g.db.query(CommentVote.id).count(),
@@ -118,7 +118,7 @@ def cached_chart(days):
 
 	post_stats = [g.db.query(Submission.id).filter(Submission.created_utc < day_cutoffs[i], Submission.created_utc > day_cutoffs[i + 1], Submission.is_banned == False).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
-	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id != 1).count() for i in range(len(day_cutoffs) - 1)][::-1]
+	comment_stats = [g.db.query(Comment.id).filter(Comment.created_utc < day_cutoffs[i], Comment.created_utc > day_cutoffs[i + 1],Comment.is_banned == False, Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count() for i in range(len(day_cutoffs) - 1)][::-1]
 
 	plt.rcParams["figure.figsize"] = (20,20)
 

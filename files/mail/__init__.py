@@ -55,7 +55,7 @@ def api_verify_email(v):
 @auth_desired
 def activate(v):
 
-	email = request.values.get("email", "").strip()
+	email = request.values.get("email", "").strip().lower()
 	id = request.values.get("id", "").strip()
 	timestamp = int(request.values.get("time", "0"))
 	token = request.values.get("token", "").strip()

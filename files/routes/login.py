@@ -278,8 +278,7 @@ def sign_up_post(v):
 	if not re.fullmatch(valid_password_regex, request.values.get("password")):
 		return new_signup("Password must be between 8 and 100 characters.")
 
-	email = request.values.get("email")
-	email = email.strip()
+	email = request.values.get("email").strip().lower()
 
 	if email.endswith("@gmail.com"):
 		email=email.split('@')[0]
@@ -377,7 +376,7 @@ def get_forgot():
 def post_forgot():
 
 	username = request.values.get("username").lstrip('@')
-	email = request.values.get("email",'').strip()
+	email = request.values.get("email",'').strip().lower()
 
 	email=email.replace("_","\_")
 
@@ -514,7 +513,7 @@ def request_2fa_disable():
 						   message="If username, password, and email match, we will send you an email.")
 
 
-	email=request.values.get("email")
+	email=request.values.get("email").strip().lower()
 	if email != user.email and email.endswith("@gmail.com"):
 		email=email.split('@')[0]
 		email=email.split('+')[0]

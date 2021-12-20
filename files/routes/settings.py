@@ -32,6 +32,32 @@ tiers={
 	"(Rich Bich)": 5,
 	}
 
+
+
+@app.get("/sex")
+@admin_level_required(3)
+def sex(v):
+	data = {'access_token': GUMROAD_TOKEN}
+
+	response = [x['email'] for x in requests.get('https://api.gumroad.com/v2/products/tfcvri/subscribers', data=data, timeout=5).json()["subscribers"]]
+	emails = []
+
+	for email in response:
+		if email.endswith("@gmail.com"):
+			email=email.split('@')[0]
+			email=email.split('+')[0]
+			email=email.replace('.','').replace('_','')
+			email=f"{email}@gmail.com"
+		emails.append(email.lower())
+
+	users = g.db.query(User).filter(User.patron > 0, User.patron < 5, User.email != None).all()
+	for u in users:
+		if u.email.lower() not in emails: print(u.username)
+
+	return "sex"
+
+
+
 @app.post("/settings/removebackground")
 @limiter.limit("1/second")
 @auth_required
@@ -511,9 +537,7 @@ def gumroad(v):
 
 	if not (v.email and v.is_activated): return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
 
-	data = {
-		'access_token': GUMROAD_TOKEN,
-	}
+	data = {'access_token': GUMROAD_TOKEN,}
 
 	response = [x['email'] for x in requests.get('https://api.gumroad.com/v2/products/tfcvri/subscribers', data=data, timeout=5).json()["subscribers"]]
 	emails = []
@@ -524,9 +548,9 @@ def gumroad(v):
 			email=email.split('+')[0]
 			email=email.replace('.','').replace('_','')
 			email=f"{email}@gmail.com"
-		emails.append(email)
+		emails.append(email.lower())
 
-	if v.email not in emails: return {"error": "Email not found"}, 404
+	if v.email.lower() not in emails: return {"error": "Email not found"}, 404
 
 	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"][0]
 	tier = tiers[response["variants_and_quantity"]]
@@ -537,7 +561,7 @@ def gumroad(v):
 	if existing: return {"error": f"{patron} rewards already claimed on another account"}, 400
 
 	if v.patron:
-		badge = v.has_badge(20+tier)
+		badge = v.has_badge(20+v.patron)
 		if badge: g.db.delete(badge)
 	
 	v.patron = tier
@@ -631,7 +655,7 @@ def settings_security_post(v):
 			return redirect("/settings/security?error=" +
 							escape("Invalid password."))
 
-		new_email = request.values.get("new_email","").strip()
+		new_email = request.values.get("new_email","").strip().lower()
 
 		if new_email.endswith("@gmail.com"):
 			new_email=new_email.split('@')[0]
@@ -1054,9 +1078,10 @@ def settings_song_change(v):
 		id = song.split("v=")[1]
 	elif song.startswith("https://youtu.be/"):
 		id = song.split("https://youtu.be/")[1]
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}settings_profile.html", v=v, error=f"Not a youtube link.")
+	else:
+		if not v or v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}settings_profile.html", v=v, error=f"Not a youtube link.")
 
 	if "?" in id: id = id.split("?")[0]
 	if "&" in id: id = id.split("&")[0]

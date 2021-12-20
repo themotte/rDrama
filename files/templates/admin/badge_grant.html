@@ -54,7 +54,12 @@
 	<tbody>
 {% for k, v in badge_types.items() %}
 <tr>
-	<td><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}"></td>
+	<td>
+		<div class="custom-control">
+			<input checked="" class="custom-control-input" type="radio" id="{{k}}" name="badge_id" value="{{k}}">
+			<label class="custom-control-label" for="{{k}}"></label>
+		</div>		
+	</td>
 	<td><label for="badge-{{k}}"><img loading="lazy" src="/assets/images/badges/{{v['name']}}.webp?v=190" width="70px" height="70px"></label></td>
 	<td>{{v['name']}}</td>
 	<td>{{v['description']}}</td>
