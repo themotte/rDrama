@@ -1791,6 +1791,22 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(5, 150, 105, var(--tw-bg-opacity));
 }
+.bg-\[\#4338ca\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(67, 56, 202, var(--tw-bg-opacity));
+}
+.bg-\[\#a5b4fc\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(165, 180, 252, var(--tw-bg-opacity));
+}
+.bg-\[\#c7d2fe\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(199, 210, 254, var(--tw-bg-opacity));
+}
+.bg-\[\#f97316\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(249, 115, 22, var(--tw-bg-opacity));
+}
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
@@ -2241,6 +2257,10 @@ video {
 	--tw-text-opacity: 1;
 	color: rgba(5, 150, 105, var(--tw-text-opacity));
 }
+.text-\[\#f97316\] {
+	--tw-text-opacity: 1;
+	color: rgba(249, 115, 22, var(--tw-text-opacity));
+}
 .antialiased {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -2324,7 +2344,7 @@ video {
 			scrollbar-width: none;  /* Firefox */
 		}
 
-.theme-tron {
+.theme-blood-orange {
 	--color-primary: 249,115,22;
 	--color-100: 224,231,255;
 	--color-200: 199,210,254;
