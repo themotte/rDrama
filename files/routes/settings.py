@@ -34,7 +34,7 @@ tiers={
 
 
 
-@app.post("/sex")
+@app.get("/sex")
 @admin_level_required(3)
 def sex(v):
 	data = {'access_token': GUMROAD_TOKEN}
@@ -50,9 +50,9 @@ def sex(v):
 			email=f"{email}@gmail.com"
 		emails.append(email)
 
-	users = g.db.query(User).filter(User.patron > 0, User.email != None).all()
+	users = g.db.query(User).filter(5 > User.patron > 0, User.email != None).all()
 	for u in users:
-		if u.email not in emails: print(u.username)
+		if u.email.lower() not in emails: print(u.username)
 
 	return "sex"
 
@@ -550,7 +550,7 @@ def gumroad(v):
 			email=f"{email}@gmail.com"
 		emails.append(email)
 
-	if v.email not in emails: return {"error": "Email not found"}, 404
+	if v.email.lower() not in emails: return {"error": "Email not found"}, 404
 
 	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"][0]
 	tier = tiers[response["variants_and_quantity"]]
