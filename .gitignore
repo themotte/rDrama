@@ -9,3 +9,4 @@ disablesignups
 venv/
 .vscode/
 .sass-cache/
+flask_session/

@@ -8,6 +8,7 @@ from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
 from flask_mail import Mail
+from flask_session import Session
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -17,6 +18,8 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 import redis
 
 app = Flask(__name__, template_folder='templates')
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
 app.url_map.strict_slashes = False
