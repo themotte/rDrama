@@ -1779,6 +1779,10 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(82, 76, 55, var(--tw-bg-opacity));
 }
+.bg-\[\#dbdad1\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(219, 218, 209, var(--tw-bg-opacity));
+}
 .bg-\[\#ebe9e5\] {
 	--tw-bg-opacity: 1;
 	background-color: rgba(235, 233, 229, var(--tw-bg-opacity));
