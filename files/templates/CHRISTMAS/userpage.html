@@ -144,7 +144,9 @@
 			{% if u.id == v.id or not u.is_private %}
 			<ul class="hidden xl:flex items-center space-x-4 mb-0 font-bold text-black dark:text-gray-200">
 				<li>
-					<a href="/@{{ u.username }}/followers" class="text-lg mb-0">{{ u.stored_subscriber_count }}</a>
+					<a href="/@{{ u.username }}/followers" class="text-black dark:text-gray-200 text-lg mb-0">
+						{{ u.stored_subscriber_count }}
+					</a>
 					<small class="block text-gray-500">Followers</small>
 				</li>
 				<li>
