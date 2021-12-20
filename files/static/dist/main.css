@@ -2593,7 +2593,7 @@ video {
 	.dark .form-input {
 	--tw-border-opacity: 1;
 	border-color: rgba(var(--color-900), var(--tw-border-opacity));
-	background-color: rgba(255, 255, 255, 03);
+	background-color: rgba(255, 255, 255, .05);
 }
 	@media (min-width: 640px) {
 
