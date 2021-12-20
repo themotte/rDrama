@@ -6,31 +6,37 @@ from .markdown import *
 from .sanitize import *
 from .const import *
 
-def send_repeatable_notification(uid, text, autojanny=False):
+def create_comment(text, autojanny=False):
+	if autojanny: author_id = AUTOJANNY_ID
+	else: author_id = NOTIFICATIONS_ID
 
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
+	text_html = sanitize(CustomRenderer().render(mistletoe.Document(text)))
+	new_comment = Comment(author_id=author_id,
+							parent_submission=None,
+							distinguish_level=6,
+							body=text,
+							created_utc=0,
+							body_html=text_html)
+	g.db.add(new_comment)
+	g.db.flush()
+	return new_comment.id
+
+def send_repeatable_notification(uid, text, autojanny=False):
 
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 	
-	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).first()
-	if existing:
-		existing2 = g.db.query(Notification.id).filter_by(user_id=uid, comment_id=existing[0]).first()
-		if existing2:
-			text_html = sanitize(CustomRenderer().render(mistletoe.Document(text)))
-			new_comment = Comment(author_id=author_id,
-									parent_submission=None,
-									distinguish_level=6,
-									body=text,
-									body_html=text_html,
-									created_utc=0)
-			g.db.add(new_comment)
-			g.db.flush()
-			notif = Notification(comment_id=new_comment.id, user_id=uid)
-			g.db.add(notif)
-			return
+	existing_comment = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).first()
 
-	send_notification(uid, text, autojanny)
+	if existing_comment:
+		cid = existing_comment[0]
+		existing_notif = g.db.query(Notification.id).filter_by(user_id=uid, comment_id=cid).first()
+		if existing_notif: cid = create_comment(text, autojanny)
+	else: cid = create_comment(text, autojanny)
+
+	notif = Notification(comment_id=cid, user_id=uid)
+	g.db.add(notif)
 
 
 def send_notification(uid, text, autojanny=False):
@@ -41,33 +47,21 @@ def send_notification(uid, text, autojanny=False):
 
 def notif_comment(text, autojanny=False):
 
-	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
-
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
-	
+
 	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).first()
 	
-	if existing: cid = existing[0]
-	else:
-		text_html = sanitize(CustomRenderer().render(mistletoe.Document(text)))
-		new_comment = Comment(author_id=author_id,
-								parent_submission=None,
-								distinguish_level=6,
-								body=text,
-								body_html=text_html,
-								created_utc=0)
-		g.db.add(new_comment)
-		g.db.flush()
-		cid = new_comment.id
+	if existing: return existing[0]
+	else: return create_comment(text, autojanny)
 
-	return cid
 
 def add_notif(cid, uid):
 	existing = g.db.query(Notification.id).filter_by(comment_id=cid, user_id=uid).first()
 	if not existing:
 		notif = Notification(comment_id=cid, user_id=uid)
 		g.db.add(notif)
+
 
 def send_admin(vid, text):
 
@@ -88,6 +82,7 @@ def send_admin(vid, text):
 	for admin in admins:
 		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 		g.db.add(notif)
+
 
 def NOTIFY_USERS(text, vid):
 	text = text.lower()
