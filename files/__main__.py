@@ -1,5 +1,4 @@
-import gevent.monkey
-gevent.monkey.patch_all()
+import gevent.monkeygevent.monkey.patch_all()
 from os import environ
 import secrets
 from flask import *
@@ -33,7 +32,8 @@ app.config['DATABASE_URL'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get("DOMAIN").strip()
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400
-app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("DOMAIN")
+if app.config["SITE_NAME"] == 'Drama': app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("DOMAIN")
+else: app.config["SESSION_COOKIE_NAME"] = "session_" + app.config["SITE_NAME"]
 app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 app.config["SESSION_COOKIE_SECURE"] = bool(int(environ.get("FORCE_HTTPS", 1)))
