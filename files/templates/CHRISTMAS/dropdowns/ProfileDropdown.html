@@ -4,32 +4,32 @@
 	</button>
 	<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownProfile-Actions">
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/@{{ u.username }}/upvoters">
+			<a class="dropdown-item dropdown-item-primary" href="/@{{ u.username }}/upvoters">
 				<i class="fas fa-kiss-wink-heart fa-sm fa-fw mr-4"></i>
 				Simps
 			</a>
 		</li>
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/@{{ u.username }}/downvoters">
+			<a class="dropdown-item dropdown-item-primary" href="/@{{ u.username }}/downvoters">
 				<i class="fas fa-tired fa-sm fa-fw mr-4"></i>
 				Haters
 			</a>
 		</li>
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/@{{ u.username }}/upvoting">
+			<a class="dropdown-item dropdown-item-primary" href="/@{{ u.username }}/upvoting">
 				<i class="fas fa-grin-hearts fa-sm fa-fw mr-4"></i>
 				Simps for
 			</a>
 		</li>
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/@{{ u.username }}/downvoting">
+			<a class="dropdown-item dropdown-item-primary" href="/@{{ u.username }}/downvoting">
 				<i class="fas fa-angry fa-sm fa-fw mr-4"></i>
 				Hates
 			</a>
 		</li>
 		{% if v and v.id == u.id %}
 		<li>
-			<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/views">
+			<a class="dropdown-item dropdown-item-primary" href="/views">
 				<i class="fas fa-binoculars fa-sm fa-fw mr-4"></i>
 				Profile views
 			</a>
@@ -40,13 +40,13 @@
 			<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 		</li>
 		<li>
-			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/@{{u.username}}/suicide')">
+			<button class="dropdown-item dropdown-item-primary" onclick="post_toast('/@{{u.username}}/suicide')">
 				<i class="fas fa-briefcase-medical fa-sm fa-fw mr-4"></i>
 				Get them help
 			</button>
 		</li>
 		<li>
-			<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" data-bs-toggle="modal" data-bs-target="#giftCoinsModal">
+			<button class="dropdown-item dropdown-item-primary" data-bs-toggle="modal" data-bs-target="#giftCoinsModal">
 				<i class="fas fa-gift fa-sm fa-fw mr-4"></i>
 				Gift {{'COINS_NAME' | app_config}}
 			</button>
