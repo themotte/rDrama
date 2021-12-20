@@ -45,7 +45,7 @@ def distribute(v, cid):
 @admin_level_required(2)
 def truescore(v):
 	users = g.db.query(User).order_by(User.truecoins.desc()).limit(25).all()
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}truescore.html", v=v, users=users)
 
@@ -254,7 +254,7 @@ def post_rules(v):
 def shadowbanned(v):
 	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).all()]
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}shadowbanned.html", v=v, users=users)
 
@@ -264,7 +264,7 @@ def shadowbanned(v):
 def agendaposters(v):
 	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter_by(agendaposter = True).all()]
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}agendaposters.html", v=v, users=users)
 
@@ -284,7 +284,7 @@ def image_posts_listing(v):
 	next_exists = (len(posts) > 25)
 	posts = get_posts(posts[:25], v=v)
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/image_posts.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
 
@@ -306,7 +306,7 @@ def reported_posts(v):
 
 	listing = get_posts(listing, v=v)
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/reported_posts.html",
 						   next_exists=next_exists, listing=listing, page=page, v=v)
@@ -330,7 +330,7 @@ def reported_comments(v):
 
 	listing = get_comments(listing, v=v)
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/reported_comments.html",
 						   next_exists=next_exists,
@@ -344,7 +344,7 @@ def reported_comments(v):
 def admin_home(v):
 	with open('disablesignups', 'r') as f:
 		x = f.read()
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}admin/admin_home.html", v=v, x=x)
 
@@ -370,7 +370,7 @@ def badge_grant_get(v):
 			  "no_user": "That user doesn't exist."
 			  }
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/badge_grant.html",
 						   v=v,
@@ -438,7 +438,7 @@ def users_list(v):
 	next_exists = (len(users) > 25)
 	users = users[:25]
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/new_users.html",
 						   v=v,
@@ -452,7 +452,7 @@ def users_list(v):
 def alt_votes_get(v):
 
 	if not request.values.get("u1") or not request.values.get("u2"):
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}admin/alt_votes.html", v=v)
 
@@ -550,7 +550,7 @@ def alt_votes_get(v):
 		data['u2_only_comment_downs'] // len(
 			u2_comment_downs) if u2_comment_downs else 0
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/alt_votes.html",
 						   u1=u1,
@@ -597,7 +597,7 @@ def admin_removed(v):
 
 	posts = get_posts(ids, v=v)
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/removed_posts.html",
 						   v=v,
@@ -623,7 +623,7 @@ def admin_removed_comments(v):
 
 	comments = get_comments(ids, v=v)
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/removed_comments.html",
 						   v=v,
@@ -824,26 +824,20 @@ def ban_user(user_id, v):
 	message = request.values.get("reason", "").strip()[:256]
 
 	if not user: abort(400)
-	
-	if days > 0:
-		if message:
-			text = f"Your account has been suspended for {days} days for the following reason:\n\n> {message}"
-		else:
-			text = f"Your account has been suspended for {days} days."
-		user.ban(admin=v, reason=reason, days=days)
 
-	else:
-		if message:
-			text = f"Your account has been permanently suspended for the following reason:\n\n> {message}"
-		else:
-			text = "Your account has been permanently suspended."
-
-		user.ban(admin=v, reason=reason)
+	user.ban(admin=v, reason=reason, days=days)
 
 	if request.values.get("alts", ""):
 		for x in user.alts:
 			if x.admin_level > 0: break
-			x.ban(admin=v, reason=reason)
+			user.ban(admin=v, reason=reason, days=days)
+
+	if days > 0:
+		if message: text = f"Your account has been suspended for {days} days for the following reason:\n\n> {message}"
+		else: text = f"Your account has been suspended for {days} days."
+	else:
+		if message: text = f"Your account has been permanently suspended for the following reason:\n\n> {message}"
+		else: text = "Your account has been permanently suspended."
 
 	send_notification(user.id, text)
 	
@@ -1132,7 +1126,7 @@ def admin_dump_cache(v):
 def admin_banned_domains(v):
 
 	banned_domains = g.db.query(BannedDomain).all()
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/banned_domains.html", v=v, banned_domains=banned_domains)
 

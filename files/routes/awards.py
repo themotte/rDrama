@@ -69,7 +69,7 @@ def shop(v):
 		val["price"] = int(val["price"]*discount)
 
 	sales = g.db.query(Vote.id).count() + g.db.query(CommentVote.id).count() - g.db.query(func.sum(User.coins)).scalar()
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}shop.html", awards=list(AWARDS.values()), v=v, sales=sales)
 
@@ -505,7 +505,7 @@ def award_comment(cid, v):
 @app.get("/admin/awards")
 @admin_level_required(2)
 def admin_userawards_get(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
 	if v.admin_level != 3:
@@ -518,7 +518,7 @@ def admin_userawards_get(v):
 @admin_level_required(2)
 @validate_formkey
 def admin_userawards_post(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
 	try: u = request.values.get("username").strip()

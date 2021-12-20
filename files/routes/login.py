@@ -16,7 +16,7 @@ def login_get(v):
 	if v:
 		return redirect(redir)
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}login.html",
 						   failed=False,
@@ -190,7 +190,7 @@ def sign_up_get(v):
 		ref_user = None
 
 	if ref_user and (ref_user.id in session.get("history", [])):
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}sign_up_failed_ref.html")
 
@@ -209,7 +209,7 @@ def sign_up_get(v):
 
 	error = request.values.get("error", None)
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}sign_up.html",
 						   formkey=formkey,
@@ -459,7 +459,7 @@ def post_reset(v):
 	now = int(time.time())
 
 	if now - timestamp > 600:
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}message.html",
 							   title="Password reset expired",
@@ -473,7 +473,7 @@ def post_reset(v):
 		abort(404)
 
 	if not password == confirm_password:
-		if v and v.oldsite: template = ''
+		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}reset_password.html",
 							   v=user,
@@ -486,7 +486,7 @@ def post_reset(v):
 
 	g.db.commit()
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}message_success.html",
 						   title="Password reset successful!",

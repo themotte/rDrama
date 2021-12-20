@@ -16,7 +16,7 @@ site_name = environ.get("SITE_NAME").strip()
 @auth_desired
 def emojis(v):
 	emojis = (x.replace('.webp','') for x in os.listdir("files/assets/images/emojis"))
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}emojis.html", v=v, emojis=emojis)
 
@@ -70,7 +70,7 @@ def participation_stats(v):
 			}
 
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admin/content_stats.html", v=v, title="Content Statistics", data=data)
 
@@ -161,7 +161,7 @@ def cached_chart(days):
 def patrons(v):
 	users = g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc(), User.id).all()
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}patrons.html", v=v, users=users)
 
@@ -170,7 +170,7 @@ def patrons(v):
 @auth_desired
 def admins(v):
 	admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truecoins.desc()).all()
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admins.html", v=v, admins=admins)
 
@@ -205,7 +205,7 @@ def log(v):
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
 
@@ -231,7 +231,7 @@ def log_item(id, v):
 	if v and v.admin_level > 1: types = ACTIONTYPES
 	else: types = ACTIONTYPES2
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
@@ -242,7 +242,7 @@ def favicon():
 @app.get("/api")
 @auth_desired
 def api(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}api.html", v=v)
 
@@ -252,7 +252,7 @@ def api(v):
 @auth_required
 def contact(v):
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}contact.html", v=v)
 
@@ -264,7 +264,7 @@ def submit_contact(v):
 	message = f'This message has been sent automatically to all admins via [/contact](/contact), user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
 	send_admin(v.id, message)
 	g.db.commit()
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}contact.html", v=v, msg="Your message has been sent.")
 
@@ -336,7 +336,7 @@ def settings(v):
 def settings_profile(v):
 
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_profile.html",
 						   v=v)
@@ -344,7 +344,7 @@ def settings_profile(v):
 @app.get("/badges")
 @auth_desired
 def badges(v):
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}badges.html", v=v, badges=BADGES)
 
@@ -360,7 +360,7 @@ def blocks(v):
 		users.append(get_account(x.user_id))
 		targets.append(get_account(x.target_id))
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}blocks.html", v=v, users=users, targets=targets)
 
@@ -369,7 +369,7 @@ def blocks(v):
 def banned(v):
 
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}banned.html", v=v, users=users)
 
@@ -377,7 +377,7 @@ def banned(v):
 @auth_desired
 def formatting(v):
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}formatting.html", v=v)
 
@@ -390,7 +390,7 @@ def serviceworker():
 def settings_security(v):
 
 
-	if v and v.oldsite: template = ''
+	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_security.html",
 						   v=v,
