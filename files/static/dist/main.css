@@ -1161,8 +1161,8 @@ video {
 .h-7 {
 	height: 1.75rem;
 }
-.max-h-12 {
-	max-height: 3rem;
+.max-h-10 {
+	max-height: 2.5rem;
 }
 .max-h-\[20rem\] {
 	max-height: 20rem;
