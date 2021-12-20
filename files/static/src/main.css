@@ -308,6 +308,9 @@
 	.badge-primary {
 		@apply bg-primary text-white;
 	}
+	.patron {
+		px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded
+	}
 
 	/* ---------------------- TOOLTIPS ---------------------- */
 	.tooltip-inner {

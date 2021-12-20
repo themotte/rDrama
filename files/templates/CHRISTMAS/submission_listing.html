@@ -238,12 +238,12 @@
 			</h5>
 
 			{% if p.realbody(v) and not p.over_18 %}
-				<div class="relative z-10 gradient-mask max-h-12 mb-2 overflow-hidden pointer-events-none text-gray-600 break-words" style="word-break: break-word;" id="post-text-{{p.id}}">
+				<div class="relative z-10 gradient-mask max-h-12 overflow-hidden pointer-events-none text-gray-600 break-words" style="word-break: break-word;" id="post-text-{{p.id}}">
 					{{p.realbody(v) | safe}}
 				</div>
 			{% endif %}
 
-			<div class="relative z-20 hidden md:block pt-3">
+			<div class="relative z-20 hidden md:block pt-2">
 				{% include "CHRISTMAS/submission/SubmissionActions.html" %}
 			</div>
 	</div>
