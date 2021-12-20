@@ -3290,6 +3290,11 @@ video {
 	background-image: none;
 }
 
+	.dark .dark\:from-red-800 {
+	--tw-gradient-from: #991b1b;
+	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(153, 27, 27, 0));
+}
+
 	.dark .dark\:from-gray-800 {
 	--tw-gradient-from: rgb(var(--color-800));
 	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--color-800), 0));
