@@ -130,6 +130,36 @@
 							</div>
 						</label>
 					</div>
+					<!-- Dramblr -->
+					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
+						<input hidden name="kind" value="theme-dramblr-dark" type="radio" id="dramblr-theme-dark" class="peer" onchange="changeTheme(['theme-dramblr','dark']); post_toast2('/settings/profile?theme='+value, '1')" {% if v.theme == 'theme-dramblr dark'%}checked{% endif %}>
+						<label for="dramblr-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 rounded-lg overflow-hidden">
+							<div class="flex flex-col w-full h-full bg-[#334155]">
+								<div class="h-3 w-full bg-[#334155]"></div>
+								<div class="h-4 w-full bg-[#cbd5e1]"></div>
+								<ul class="flex flex-col space-y-1 h-12 w-full bg-[#e2e8f0] p-2 mb-0">
+									<li class="flex">
+										<i class="fas fa-arrow-alt-up text-[8px] text-[#0284c7]"></i>
+										<div class="ml-1 h-2 w-2/4 rounded-full bg-black/40"></div>
+										<div class="ml-auto h-2 w-1/4 rounded-full bg-[#0284c7]"></div>
+									</li>
+									<li class="flex">
+										<i class="fas fa-arrow-alt-up text-[8px] text-black/40"></i>
+										<div class="ml-1 h-2 w-2/4 rounded-full bg-black/40"></div>
+										<div class="ml-auto h-2 w-1/4 rounded-full bg-transparent"></div>
+									</li>
+									<li class="flex">
+										<i class="fas fa-arrow-alt-up text-[8px] text-black/40"></i>
+										<div class="ml-1 h-2 w-2/4 rounded-full bg-black/40"></div>
+										<div class="ml-auto h-2 w-1/4 rounded-full bg-transparent"></div>
+									</li>
+								</ul>
+							</div>
+							<div class="w-full border-t border-gray-200 dark:border-gray-600 p-2 text-center">
+								<span class="font-bold text-base">Dramblr</span>
+							</div>
+						</label>
+					</div>
 					<!-- Canary -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
 						<input hidden name="kind" value="theme-canary" type="radio" id="canary-theme" class="peer" onchange="changeTheme(['theme-canary']); post_toast2('/settings/profile?theme='+value, '1')" {% if v.theme == 'theme-canary'%}checked{% endif %}>
