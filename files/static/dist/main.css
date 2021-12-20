@@ -1843,6 +1843,10 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(234, 179, 8, var(--tw-bg-opacity));
 }
+.bg-\[\#000000\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(0, 0, 0, var(--tw-bg-opacity));
+}
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
