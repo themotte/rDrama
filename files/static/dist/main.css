@@ -1137,6 +1137,12 @@ video {
 .h-48 {
 	height: 12rem;
 }
+.h-0\.5 {
+	height: 0.125rem;
+}
+.h-0 {
+	height: 0px;
+}
 .h-1 {
 	height: 0.25rem;
 }
@@ -1151,12 +1157,6 @@ video {
 }
 .h-5 {
 	height: 1.25rem;
-}
-.h-0\.5 {
-	height: 0.125rem;
-}
-.h-0 {
-	height: 0px;
 }
 .h-7 {
 	height: 1.75rem;
