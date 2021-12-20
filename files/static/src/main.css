@@ -62,8 +62,8 @@
 	--color-400: 175, 169, 155;
 	--color-500: 148,144,129;
 	--color-600: 99,96,77;
-	--color-700: 82,76,55;
-	--color-800: 55,52,31;
+	--color-700: 70, 65, 47;
+	--color-800: 42, 40, 24;
 	--color-900: 40,37,17;
 }
 
@@ -309,7 +309,7 @@
 		@apply bg-primary text-white;
 	}
 	.patron {
-		px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded
+		@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded;
 	}
 
 	/* ---------------------- TOOLTIPS ---------------------- */
