@@ -2194,6 +2194,9 @@ video {
 	--tw-text-opacity: 1;
 	color: rgba(219, 39, 119, var(--tw-text-opacity));
 }
+.text-white\/50 {
+	color: rgba(255, 255, 255, 0.5);
+}
 .text-\[\#0284c7\] {
 	--tw-text-opacity: 1;
 	color: rgba(2, 132, 199, var(--tw-text-opacity));
