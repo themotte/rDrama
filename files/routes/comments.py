@@ -260,7 +260,7 @@ def api_comment(v):
 
 		if len(similar_comments) > threshold:
 			text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-			send_notification(v.id, text)
+			send_repeatable_notification(v.id, text)
 
 			v.ban(reason="Spamming.",
 					days=1)
@@ -719,7 +719,7 @@ def edit_comment(cid, v):
 
 			if len(similar_comments) > threshold:
 				text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-				send_notification(v.id, text)
+				send_repeatable_notification(v.id, text)
 
 				v.ban(reason="Spamming.",
 						days=1)
@@ -931,13 +931,13 @@ def toggle_pin_comment(cid, v):
 	if comment.is_pinned:
 		if v.id != comment.author_id:
 			message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
-			send_notification(comment.author_id, message)
+			send_repeatable_notification(comment.author_id, message)
 		g.db.commit()
 		return {"message": "Comment pinned!"}
 	else:
 		if v.id != comment.author_id:
 			message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
-			send_notification(comment.author_id, message)
+			send_repeatable_notification(comment.author_id, message)
 		g.db.commit()
 		return {"message": "Comment unpinned!"}
 	

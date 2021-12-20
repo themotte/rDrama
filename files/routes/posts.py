@@ -7,7 +7,7 @@ from files.helpers.sanitize import *
 from files.helpers.filters import *
 from files.helpers.markdown import *
 from files.helpers.session import *
-from files.helpers.alerts import send_notification, NOTIFY_USERS
+from files.helpers.alerts import *
 from files.helpers.discord import send_message
 from files.helpers.const import *
 from files.classes import *
@@ -64,12 +64,17 @@ def publish(pid, v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
-	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: [{post.title}]({post.permalink})")
+	cid = notif_comment(f"@{v.username} has mentioned you: [{post.title}]({post.permalink})")
+	for x in notify_users:
+		add_notif(cid, x)
 
+	
+	cid = notif_comment(f"@{v.username} has made a new post: [{post.title}]({post.permalink})", True)
 	for follow in v.followers:
 		user = get_account(follow.user_id)
-		if post.club and not user.club_allowed: continue
-		send_notification(user.id, f"@{v.username} has made a new post: [{post.title}]({post.permalink})", True)
+		if post.club and not user.paid_dues: continue
+		add_notif(cid, user.id)
+
 
 	cache.delete_memoized(frontlist)
 
@@ -554,9 +559,10 @@ def edit_post(pid, v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
-		message = f"@{v.username} has mentioned you: [{p.title}]({p.permalink})"
+		cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.permalink})")
+		for x in notify_users:
+			add_notif(cid, x)
 
-		for x in notify_users: send_notification(x, message)
 
 
 	if (title != p.title or body != p.body) and v.id == p.author_id:
@@ -881,7 +887,7 @@ def submit_post(v):
 	if max(len(similar_urls), len(similar_posts)) >= threshold:
 
 		text = "Your account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-		send_notification(v.id, text)
+		send_repeatable_notification(v.id, text)
 
 		v.ban(reason="Spamming.",
 			  days=1)
@@ -1068,12 +1074,15 @@ def submit_post(v):
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
-		for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: [{title}]({new_post.permalink})")
-		
+		cid = notif_comment(f"@{v.username} has mentioned you: [{title}]({new_post.permalink})")
+		for x in notify_users:
+			add_notif(cid, x)
+
+		cid = notif_comment(f"@{v.username} has made a new post: [{title}]({new_post.permalink})", True)
 		for follow in v.followers:
 			user = get_account(follow.user_id)
-			if new_post.club and not user.club_allowed: continue
-			send_notification(user.id, f"@{v.username} has made a new post: [{title}]({new_post.permalink})", True)
+			if new_post.club and not user.paid_dues: continue
+			add_notif(cid, user.id)
 
 	g.db.add(new_post)
 	g.db.flush()

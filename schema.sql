@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.4
+-- Dumped from database version 13.5
 -- Dumped by pg_dump version 13.4 (Ubuntu 13.4-1.pgdg20.04+1)
 
 SET statement_timeout = 0;
@@ -260,11 +260,10 @@ CREATE TABLE public.comments (
     app_id integer,
     sentto integer,
     bannedfor boolean,
-=    is_pinned character varying(30),
+    is_pinned character varying(30),
     body character varying(10000),
     body_html character varying(40000),
     ban_reason character varying(25),
-    notifiedto integer,
     realupvotes integer,
     top_comment_id integer
 );
@@ -452,12 +451,7 @@ CREATE TABLE public.notifications (
     id integer NOT NULL,
     user_id integer,
     comment_id integer,
-    read boolean NOT NULL,
-    followsender integer,
-    unfollowsender integer,
-    blocksender integer,
-    unblocksender integer,
-    removefollowsender integer
+    read boolean NOT NULL
 );
 
 
@@ -767,7 +761,9 @@ CREATE TABLE public.users (
     fish boolean,
     grinch boolean,
     grincheffect boolean,
-    lootboxes_bought integer
+    lootboxes_bought integer,
+    oldsite boolean,
+    theme2 character varying(30)
 );
 
 
@@ -1712,7 +1708,6 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
-
 
 --
 -- PostgreSQL database dump complete

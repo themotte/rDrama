@@ -161,7 +161,7 @@ def front_all(v):
 		if v.agendaposter_expires_utc and v.agendaposter_expires_utc < time.time():
 			v.agendaposter_expires_utc = 0
 			v.agendaposter = None
-			send_notification(v.id, "Your agendaposter theme has expired!")
+			send_repeatable_notification(v.id, "Your agendaposter theme has expired!")
 			g.db.add(v)
 			badge = v.has_badge(26)
 			if badge: g.db.delete(badge)
@@ -169,25 +169,25 @@ def front_all(v):
 
 		if v.flairchanged and v.flairchanged < time.time():
 			v.flairchanged = None
-			send_notification(v.id, "Your flair lock has expired. You can now change your flair!")
+			send_repeatable_notification(v.id, "Your flair lock has expired. You can now change your flair!")
 			g.db.add(v)
 			g.db.commit()
 
 		if v.marseyawarded and v.marseyawarded < time.time():
 			v.marseyawarded = None
-			send_notification(v.id, "Your marsey award has expired!")
+			send_repeatable_notification(v.id, "Your marsey award has expired!")
 			g.db.add(v)
 			g.db.commit()
 
 		if v.longpost and v.longpost < time.time():
 			v.longpost = None
-			send_notification(v.id, "Your pizzashill award has expired!")
+			send_repeatable_notification(v.id, "Your pizzashill award has expired!")
 			g.db.add(v)
 			g.db.commit()
 
 		if v.bird and v.bird < time.time():
 			v.bird = None
-			send_notification(v.id, "Your bird site award has expired!")
+			send_repeatable_notification(v.id, "Your bird site award has expired!")
 			g.db.add(v)
 			g.db.commit()
 

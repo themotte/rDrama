@@ -133,7 +133,7 @@ def buy(v, award):
 	g.db.flush()
 
 	if award == "lootbox":
-		send_notification(995, f"@{v.username} bought a lootbox!")
+		send_repeatable_notification(995, f"@{v.username} bought a lootbox!")
 		for i in [1,2,3,4,5]:
 			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 			thing += 1
@@ -212,7 +212,7 @@ def award_post(pid, v):
 	note = request.values.get("note", "").strip()
 	if note: msg += f"\n\n> {note}"
 
-	send_notification(post.author.id, msg)
+	send_repeatable_notification(post.author.id, msg)
 
 	author = post.author
 	if kind == "ban":
@@ -220,26 +220,26 @@ def award_post(pid, v):
 
 		if not author.is_suspended:
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /post/{post.id}", days=1)
-			send_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
+			send_repeatable_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
 			author.unban_utc += 86400
-			send_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
+			send_repeatable_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
 		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
 
 		if author.unban_utc - time.time() > 86400:
 			author.unban_utc -= 86400
-			send_notification(author.id, f"Your ban duration has been reduced by 1 day!")
+			send_repeatable_notification(author.id, f"Your ban duration has been reduced by 1 day!")
 		else:
 			author.unban_utc = 0
 			author.is_banned = 0
 			author.ban_evade = 0
-			send_notification(author.id, f"You have been unbanned!")
+			send_repeatable_notification(author.id, f"You have been unbanned!")
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ID
 		author.ban_reason = f"grass award used by @{v.username} on /post/{post.id}"
 		link = f"[this post]({post.permalink})"
-		send_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+		send_repeatable_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 	elif kind == "pin":
 		if post.stickied and post.stickied.startswith("t:"): t = int(post.stickied[2:]) + 3600
 		else: t = int(time.time()) + 3600
@@ -270,13 +270,13 @@ def award_post(pid, v):
 		author.flairchanged = time.time() + 86400
 	elif kind == "pause":
 		author.mute = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(68):
 			new_badge = Badge(badge_id=68, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "unpausable":
 		author.unmutable = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(67):
 			new_badge = Badge(badge_id=67, user_id=author.id)
 			g.db.add(new_badge)
@@ -288,7 +288,7 @@ def award_post(pid, v):
 			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
-		send_notification(IDIO_ID, f"@{v.username} used {kind} award on [{post.shortlink}]({post.shortlink})")
+		send_repeatable_notification(IDIO_ID, f"@{v.username} used {kind} award on [{post.shortlink}]({post.shortlink})")
 	elif kind == "bird":
 		if author.longpost:
 			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404
@@ -296,32 +296,32 @@ def award_post(pid, v):
 		else: author.bird = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(83):
 			new_badge = Badge(badge_id=83, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "alt":
 		author.alt = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(84):
 			new_badge = Badge(badge_id=84, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "unblockable":
 		author.unblockable = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(87):
 			new_badge = Badge(badge_id=87, user_id=author.id)
 			g.db.add(new_badge)
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 	elif kind == "fish":
 		author.fish = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(90):
 			new_badge = Badge(badge_id=90, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "grinch":
 		author.grinch = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(91):
 			new_badge = Badge(badge_id=91, user_id=author.id)
 			g.db.add(new_badge)
@@ -383,7 +383,7 @@ def award_comment(cid, v):
 	note = request.values.get("note", "").strip()
 	if note: msg += f"\n\n> {note}"
 
-	send_notification(c.author.id, msg)
+	send_repeatable_notification(c.author.id, msg)
 	author = c.author
 
 	if kind == "ban":
@@ -391,26 +391,26 @@ def award_comment(cid, v):
 
 		if not author.is_suspended:
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /comment/{c.id}", days=1)
-			send_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
+			send_repeatable_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
 		elif author.unban_utc > 0:
 			author.unban_utc += 86400
-			send_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
+			send_repeatable_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
 		if not author.is_suspended or not author.unban_utc or time.time() > author.unban_utc: abort(403)
 
 		if author.unban_utc - time.time() > 86400:
 			author.unban_utc -= 86400
-			send_notification(author.id, f"Your ban duration has been reduced by 1 day!")
+			send_repeatable_notification(author.id, f"Your ban duration has been reduced by 1 day!")
 		else:
 			author.unban_utc = 0
 			author.is_banned = 0
 			author.ban_evade = 0
-			send_notification(author.id, f"You have been unbanned!")
+			send_repeatable_notification(author.id, f"You have been unbanned!")
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ID
 		author.ban_reason = f"grass award used by @{v.username} on /comment/{c.id}"
 		link = f"[this comment]({c.permalink})"
-		send_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+		send_repeatable_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 	elif kind == "pin":
 		if c.is_pinned and c.is_pinned.startswith("t:"): t = int(c.is_pinned[2:]) + 3600
 		else: t = int(time.time()) + 3600
@@ -438,13 +438,13 @@ def award_comment(cid, v):
 		author.flairchanged = time.time() + 86400
 	elif kind == "pause":
 		author.mute = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(68):
 			new_badge = Badge(badge_id=68, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "unpausable":
 		author.unmutable = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(67):
 			new_badge = Badge(badge_id=67, user_id=author.id)
 			g.db.add(new_badge)
@@ -456,7 +456,7 @@ def award_comment(cid, v):
 			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = time.time() + 86400
-		send_notification(IDIO_ID, f"@{v.username} used {kind} award on [{c.shortlink}]({c.shortlink})")
+		send_repeatable_notification(IDIO_ID, f"@{v.username} used {kind} award on [{c.shortlink}]({c.shortlink})")
 	elif kind == "bird":
 		if author.longpost:
 			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404
@@ -464,32 +464,32 @@ def award_comment(cid, v):
 		else: author.bird = time.time() + 86400
 	elif kind == "eye":
 		author.eye = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(83):
 			new_badge = Badge(badge_id=83, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "alt":
 		author.alt = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(84):
 			new_badge = Badge(badge_id=84, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "unblockable":
 		author.unblockable = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(87):
 			new_badge = Badge(badge_id=87, user_id=author.id)
 			g.db.add(new_badge)
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 	elif kind == "fish":
 		author.fish = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(90):
 			new_badge = Badge(badge_id=90, user_id=author.id)
 			g.db.add(new_badge)
 	elif kind == "grinch":
 		author.grinch = True
-		send_notification(CARP_ID, f"@{v.username} used {kind} award!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(91):
 			new_badge = Badge(badge_id=91, user_id=author.id)
 			g.db.add(new_badge)
@@ -555,7 +555,7 @@ def admin_userawards_post(v):
 
 	for key, value in notify_awards.items(): text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
 
-	send_notification(u.id, text)
+	send_repeatable_notification(u.id, text)
 
 	g.db.commit()
 

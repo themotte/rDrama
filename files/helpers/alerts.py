@@ -6,107 +6,68 @@ from .markdown import *
 from .sanitize import *
 from .const import *
 
+def send_repeatable_notification(uid, text, autojanny=False):
+
+	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
+
+	if autojanny: author_id = AUTOJANNY_ID
+	else: author_id = NOTIFICATIONS_ID
+	
+	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).first()
+	if existing:
+		existing2 = g.db.query(Notification.id).filter_by(user_id=uid, comment_id=existing[0]).first()
+		if existing2:
+			text_html = sanitize(CustomRenderer().render(mistletoe.Document(text)))
+			new_comment = Comment(author_id=author_id,
+									parent_submission=None,
+									distinguish_level=6,
+									body=text,
+									body_html=text_html,
+									created_utc=0)
+			g.db.add(new_comment)
+			g.db.flush()
+			notif = Notification(comment_id=new_comment.id, user_id=uid)
+			g.db.add(notif)
+			return
+
+	send_notification(uid, text, autojanny)
+
 
 def send_notification(uid, text, autojanny=False):
 
+	cid = notif_comment(text, autojanny)
+	add_notif(cid, uid)
+
+
+def notif_comment(text, autojanny=False):
+
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
-	text_html = CustomRenderer().render(mistletoe.Document(text))
-	text_html = sanitize(text_html)
-	
+
 	if autojanny: author_id = AUTOJANNY_ID
+	else: author_id = NOTIFICATIONS_ID
+	
+	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).first()
+	
+	if existing: cid = existing[0]
 	else:
-		author_id = NOTIFICATIONS_ID
-		if ' has gifted you ' not in text:
-			existing = g.db.query(Comment.id).filter(Comment.author_id == author_id, Comment.body_html == text_html, Comment.notifiedto == uid).first()
-			if existing: return
+		text_html = sanitize(CustomRenderer().render(mistletoe.Document(text)))
+		new_comment = Comment(author_id=author_id,
+								parent_submission=None,
+								distinguish_level=6,
+								body=text,
+								body_html=text_html,
+								created_utc=0)
+		g.db.add(new_comment)
+		g.db.flush()
+		cid = new_comment.id
 
-	new_comment = Comment(author_id=author_id,
-							parent_submission=None,
-							distinguish_level=6,
-							body_html=text_html,
-							notifiedto=uid
-						  )
-	g.db.add(new_comment)
+	return cid
 
-	g.db.flush()
-
-	notif = Notification(comment_id=new_comment.id, user_id=uid)
-	g.db.add(notif)
-
-
-def send_follow_notif(vid, user, text):
-
-	text_html = CustomRenderer().render(mistletoe.Document(text))
-	text_html = sanitize(text_html)
-	
-	new_comment = Comment(author_id=NOTIFICATIONS_ID,
-							parent_submission=None,
-							distinguish_level=6,
-							body_html=text_html,
-						  )
-	g.db.add(new_comment)
-	g.db.flush()
-
-	notif = Notification(comment_id=new_comment.id,
-						 user_id=user,
-						 followsender=vid)
-	g.db.add(notif)
-	
-def send_unfollow_notif(vid, user, text):
-
-	text_html = CustomRenderer().render(mistletoe.Document(text))
-	text_html = sanitize(text_html)
-	
-	new_comment = Comment(author_id=NOTIFICATIONS_ID,
-							parent_submission=None,
-							distinguish_level=6,
-							body_html=text_html,
-						  )
-	g.db.add(new_comment)
-	g.db.flush()
-
-	notif = Notification(comment_id=new_comment.id,
-						 user_id=user,
-						 unfollowsender=vid)
-	g.db.add(notif)
-
-def send_block_notif(vid, user, text):
-
-	text_html = CustomRenderer().render(mistletoe.Document(text))
-	text_html = sanitize(text_html)
-	
-	new_comment = Comment(author_id=NOTIFICATIONS_ID,
-							parent_submission=None,
-							distinguish_level=6,
-							body_html=text_html,
-						  )
-	g.db.add(new_comment)
-	g.db.flush()
-
-	notif = Notification(comment_id=new_comment.id,
-						 user_id=user,
-						 blocksender=vid)
-	g.db.add(notif)
-	
-def send_unblock_notif(vid, user, text):
-
-	text_html = CustomRenderer().render(mistletoe.Document(text))
-	text_html = sanitize(text_html)
-	
-	new_comment = Comment(author_id=NOTIFICATIONS_ID,
-							parent_submission=None,
-							distinguish_level=6,
-							body_html=text_html,
-						  )
-	g.db.add(new_comment)
-	g.db.flush()
-
-	notif = Notification(comment_id=new_comment.id,
-						 user_id=user,
-						 unblocksender=vid)
-	g.db.add(notif)
-
-
+def add_notif(cid, uid):
+	existing = g.db.query(Notification.id).filter_by(comment_id=cid, user_id=uid).first()
+	if not existing:
+		notif = Notification(comment_id=cid, user_id=uid)
+		g.db.add(notif)
 
 def send_admin(vid, text):
 
