@@ -3226,9 +3226,9 @@ video {
 	background-color: rgba(var(--color-400), var(--tw-bg-opacity));
 }
 
-	.peer:checked ~ .peer-checked\:bg-blue-100 {
+	.peer:checked ~ .peer-checked\:bg-blue-50 {
 	--tw-bg-opacity: 1;
-	background-color: rgba(224, 242, 254, var(--tw-bg-opacity));
+	background-color: rgba(240, 249, 255, var(--tw-bg-opacity));
 }
 
 	.peer:checked ~ .peer-checked\:shadow-inner {
