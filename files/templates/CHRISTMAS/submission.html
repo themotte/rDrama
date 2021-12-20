@@ -495,34 +495,34 @@
 					</span>
 					<!-- Entire thread link -->
 					{% if linked_comment and p.comment_count >= 2%}
-					<a href="{% if v %}{{ p.permalink }}{% else %}/logged_out/{{p.permalink}}{% endif %}" class="pl-2 text-red-600 hover:text-red-700">
+					<a href="{% if v %}{{ p.permalink }}{% else %}/logged_out/{{p.permalink}}{% endif %}" class="pl-2 text-primary hover:text-red-700">
 						View entire thread
 					</a>
 					{% endif %}
 				</div>
 				<ul class="flex space-x-3 text-sm text-gray-500 leading-normal mb-0">
 					<li>
-						<a href="?sort=top" class="{{ 'font-bold text-red-600' if sort == 'top' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=top" class="{{ 'font-bold text-primary' if sort == 'top' else 'text-gray-500 hover:text-gray-700'}}">
 							Top
 						</a>
 					</li>
 					<li>
-						<a href="?sort=new" class="{{ 'font-bold text-red-600' if sort == 'new' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=new" class="{{ 'font-bold text-primary' if sort == 'new' else 'text-gray-500 hover:text-gray-700'}}">
 							Latest
 						</a>
 					</li>
 					<li>
-						<a href="?sort=old" class="{{ 'font-bold text-red-600' if sort == 'old' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=old" class="{{ 'font-bold text-primary' if sort == 'old' else 'text-gray-500 hover:text-gray-700'}}">
 							Oldest
 						</a>
 					</li>
 					<li>
-						<a href="?sort=controversial" class="{{ 'font-bold text-red-600' if sort == 'controversial' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=controversial" class="{{ 'font-bold text-primary' if sort == 'controversial' else 'text-gray-500 hover:text-gray-700'}}">
 							Controversial
 						</a>
 					</li>
 					<li>
-						<a href="?sort=bottom" class="{{ 'font-bold text-red-600' if sort == 'bottom' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=bottom" class="{{ 'font-bold text-primary' if sort == 'bottom' else 'text-gray-500 hover:text-gray-700'}}">
 							Worst
 						</a>
 					</li>

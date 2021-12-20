@@ -3308,15 +3308,6 @@ video {
 	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(255, 255, 255, 0));
 }
 
-	.dark .dark\:from-gray-800 {
-	--tw-gradient-from: rgb(var(--color-800));
-	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--color-800), 0));
-}
-
-	.dark .dark\:to-gray-700 {
-	--tw-gradient-to: rgb(var(--color-700));
-}
-
 	.dark .dark\:text-gray-400 {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-400), var(--tw-text-opacity));
