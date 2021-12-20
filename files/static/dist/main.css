@@ -3216,6 +3216,10 @@ video {
 	outline-offset: 2px;
 }
 
+	.peer:checked ~ .peer-checked\:rounded-lg {
+	border-radius: 0.5rem;
+}
+
 	.peer:checked ~ .peer-checked\:border-blue-500 {
 	--tw-border-opacity: 1;
 	border-color: rgba(14, 165, 233, var(--tw-border-opacity));
@@ -3226,9 +3230,8 @@ video {
 	background-color: rgba(var(--color-400), var(--tw-bg-opacity));
 }
 
-	.peer:checked ~ .peer-checked\:bg-blue-50 {
-	--tw-bg-opacity: 1;
-	background-color: rgba(240, 249, 255, var(--tw-bg-opacity));
+	.peer:checked ~ .peer-checked\:bg-blue-500\/20 {
+	background-color: rgba(14, 165, 233, 0.2);
 }
 
 	.peer:checked ~ .peer-checked\:shadow-inner {
