@@ -240,6 +240,7 @@ def award_post(pid, v):
 		author.ban_reason = f"grass award used by @{v.username} on /post/{post.id}"
 		link = f"[this post]({post.permalink})"
 		send_repeatable_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award on [{post.shortlink}]({post.shortlink})")
 	elif kind == "pin":
 		if post.stickied and post.stickied.startswith("t:"): t = int(post.stickied[2:]) + 3600
 		else: t = int(time.time()) + 3600
@@ -411,6 +412,7 @@ def award_comment(cid, v):
 		author.ban_reason = f"grass award used by @{v.username} on /comment/{c.id}"
 		link = f"[this comment]({c.permalink})"
 		send_repeatable_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
+		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award on [{c.shortlink}]({c.shortlink})")
 	elif kind == "pin":
 		if c.is_pinned and c.is_pinned.startswith("t:"): t = int(c.is_pinned[2:]) + 3600
 		else: t = int(time.time()) + 3600

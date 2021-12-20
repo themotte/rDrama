@@ -23,6 +23,15 @@ if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 month = datetime.now().strftime('%B')
 
+@app.get("/admin/grassed")
+@admin_level_required(3)
+def grassed(v):
+	users = g.db.query(User).filter(User.ban_reason.like('grass award used by @%')).all()
+
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}grassed.html", v=v, users=users)
+
 @app.get("/distribute/<cid>")
 @admin_level_required(3)
 def distribute(v, cid):
@@ -261,7 +270,6 @@ def shadowbanned(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}shadowbanned.html", v=v, users=users)
-
 
 @app.get("/admin/agendaposters")
 @auth_required
@@ -887,6 +895,7 @@ def unban_user(user_id, v):
 	user.is_banned = 0
 	user.unban_utc = 0
 	user.ban_evade = 0
+	user.ban_reason = None
 	g.db.add(user)
 
 	if request.values.get("alts", ""):
