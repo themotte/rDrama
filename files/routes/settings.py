@@ -1054,9 +1054,10 @@ def settings_song_change(v):
 		id = song.split("v=")[1]
 	elif song.startswith("https://youtu.be/"):
 		id = song.split("https://youtu.be/")[1]
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}settings_profile.html", v=v, error=f"Not a youtube link.")
+	else:
+		if not v or v.oldsite: template = ''
+		else: template = 'CHRISTMAS/'
+		return render_template(f"{template}settings_profile.html", v=v, error=f"Not a youtube link.")
 
 	if "?" in id: id = id.split("?")[0]
 	if "&" in id: id = id.split("&")[0]
