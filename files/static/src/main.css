@@ -268,7 +268,7 @@
 
 	/* ----------------------- INPUTS ----------------------- */
 	.form-input {
-		@apply text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-white dark:bg-white/[.05] border border-gray-300 hover:border-gray-400 dark:border-gray-900 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
+		@apply text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-white dark:bg-white/[.06] border border-gray-300 hover:border-gray-400 dark:border-gray-900 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
 	}
 
 	/* ---------------------- BUTTONS ----------------------- */
