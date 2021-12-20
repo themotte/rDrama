@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.theme-tron {
+.theme-blood-orange {
 	--color-primary: 249,115,22;
 	--color-100: 224,231,255;
 	--color-200: 199,210,254;
