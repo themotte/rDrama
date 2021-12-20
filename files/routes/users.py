@@ -114,7 +114,7 @@ def pay_rent(v):
 	u = get_account(253)
 	u.coins += 500
 	g.db.add(u)
-	send_notification(u.id, f"@{v.username} has paid rent!")
+	send_repeatable_notification(u.id, f"@{v.username} has paid rent!")
 	g.db.commit()
 	return {"message": "Rent paid!"}
 
@@ -135,20 +135,20 @@ def steal(v):
 		g.db.add(v)
 		u.coins -= 700
 		g.db.add(u)
-		send_notification(u.id, f"Some [grubby little rentoid](/@{v.username}) has absconded with 700 of your hard-earned dramacoins to fuel his Funko Pop addiction. Stop being so trusting.")
-		send_notification(v.id, f"You have successfully shorted your heroic landlord 700 dramacoins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
+		send_repeatable_notification(u.id, f"Some [grubby little rentoid](/@{v.username}) has absconded with 700 of your hard-earned dramacoins to fuel his Funko Pop addiction. Stop being so trusting.")
+		send_repeatable_notification(v.id, f"You have successfully shorted your heroic landlord 700 dramacoins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
 		g.db.commit()
 		return {"message": "Attempt successful!"}
 
 	else:
 		if random.random() < 0.15:
-			send_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you sold his Nintendo Switch for 500 dramacoins and called the cops. He was sentenced to one (1) day in renthog prison.")
-			send_notification(v.id, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. The police take you away and laugh as you impotently stutter A-ACAB :sob:  You are fined 500 dramacoins and sentenced to one (1) day in renthog prison.")
+			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you sold his Nintendo Switch for 500 dramacoins and called the cops. He was sentenced to one (1) day in renthog prison.")
+			send_repeatable_notification(v.id, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. The police take you away and laugh as you impotently stutter A-ACAB :sob:  You are fined 500 dramacoins and sentenced to one (1) day in renthog prison.")
 			v.ban(days=1, reason="Jailed thief")
 			v.fail_utc = int(time.time())
 		else:
-			send_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you showed mercy in exchange for a 500 dramacoin tip. This time.")
-			send_notification(v.id, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. You were able to convince him to spare your life with a 500 dramacoin tip. This time.")
+			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you showed mercy in exchange for a 500 dramacoin tip. This time.")
+			send_repeatable_notification(v.id, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. You were able to convince him to spare your life with a 500 dramacoin tip. This time.")
 			v.fail2_utc = int(time.time())
 		v.coins -= 500
 		g.db.add(v)
@@ -187,7 +187,7 @@ def suicide(v, username):
 	if v.admin_level == 0 and t - v.suicide_utc < 86400: return {"message": "You're on 1-day cooldown!"}
 	user = get_user(username)
 	suicide = f"Hi there,\n\nA [concerned user]({v.url}) reached out to us about you.\n\nWhen you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.\n\nThere are resources available in your area that are free, confidential, and available 24/7:\n\n- Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)\n- Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)\n- Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.\nIf you don't see a resource in your area above, the moderators at r/SuicideWatch keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now\n\nIf you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.\n\nIt may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.\n\nYour fellow users care about you and there are people who want to help."
-	send_notification(user.id, suicide)
+	send_repeatable_notification(user.id, suicide)
 	v.suicide_utc = t
 	g.db.add(v)
 	g.db.commit()
@@ -224,26 +224,26 @@ def transfer_coins(v, username):
 			if 'rdrama.net' in request.host: tax_receiver.coins += tax/3
 			else: tax_receiver.coins += tax
 			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
-			send_notification(TAX_RECEIVER_ID, log_message)
+			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 			g.db.add(tax_receiver)
 
 			if 'rdrama.net' in request.host:
 				carp = g.db.query(User).filter_by(id=CARP_ID).first()
 				carp.coins += tax/3
 				log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
-				send_notification(CARP_ID, log_message)
+				send_repeatable_notification(CARP_ID, log_message)
 				g.db.add(carp)
 				
 				dad = g.db.query(User).filter_by(id=DAD_ID).first()
 				dad.coins += tax/3
 				log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
-				send_notification(DAD_ID, log_message)
+				send_repeatable_notification(DAD_ID, log_message)
 				g.db.add(dad)
 		else: tax = 0
 
 		receiver.coins += amount-tax
 		v.coins -= amount
-		send_notification(receiver.id, f"🤑 [@{v.username}]({v.url}) has gifted you {amount-tax} {app.config['COINS_NAME']}!")
+		send_repeatable_notification(receiver.id, f"🤑 [@{v.username}]({v.url}) has gifted you {amount-tax} {app.config['COINS_NAME']}!")
 		g.db.add(receiver)
 		g.db.add(v)
 
@@ -803,8 +803,7 @@ def follow_user(username, v):
 	target.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=target.id).count()
 	g.db.add(target)
 
-	existing = g.db.query(Notification.id).filter_by(followsender=v.id, user_id=target.id).first()
-	if not existing: send_follow_notif(v.id, target.id, f"@{v.username} has followed you!")
+	send_notification(target.id, f"@{v.username} has followed you!")
 
 	g.db.commit()
 
@@ -822,18 +821,16 @@ def unfollow_user(username, v):
 
 	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
 
-	if not follow: return {"message": "User unfollowed!"}
+	if follow:
+		g.db.delete(follow)
+		
+		g.db.flush()
+		target.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=target.id).count()
+		g.db.add(target)
 
-	g.db.delete(follow)
-	
-	g.db.flush()
-	target.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=target.id).count()
-	g.db.add(target)
+		send_notification(target.id, f"@{v.username} has unfollowed you!")
 
-	existing = g.db.query(Notification.id).filter_by(unfollowsender=v.id, user_id=target.id).first()
-	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has unfollowed you!")
-
-	g.db.commit()
+		g.db.commit()
 
 	return {"message": "User unfollowed!"}
 
@@ -854,8 +851,7 @@ def remove_follow(username, v):
 	v.stored_subscriber_count = g.db.query(Follow.id).filter_by(target_id=v.id).count()
 	g.db.add(v)
 
-	existing = g.db.query(Notification.id).filter_by(removefollowsender=v.id, user_id=target.id).first()
-	if not existing: send_unfollow_notif(v.id, target.id, f"@{v.username} has removed your follow!")
+	send_repeatable_notification(target.id, f"@{v.username} has removed your follow!")
 
 	g.db.commit()
 

@@ -16,10 +16,12 @@ from flask import *
 from files.__main__ import app, cache, limiter
 from .front import frontlist
 from files.helpers.discord import add_role
+from datetime import datetime
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
+month = datetime.now().strftime('%B')
 
 @app.get("/distribute/<cid>")
 @admin_level_required(3)
@@ -30,16 +32,16 @@ def distribute(v, cid):
 	votes = g.db.query(CommentVote).filter_by(comment_id=cid)
 	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
 	coinsperperson = int(autobetter.coins / votes.count())
+	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post}]({post}) !")
 	for vote in votes:
 		u = vote.user
 		u.coins += coinsperperson
-		send_notification(u.id, f"You won {coinsperperson} coins betting on {post} !")
-		g.db.add(u)
+		add_notif(cid, u.id)
 
 	autobetter.coins = 0
 	g.db.add(autobetter)
 	g.db.commit()
-	return str(coinsperperson)
+	return f"Each winner has received {coinsperperson} coins!"
 
 @app.get("/truescore")
 @admin_level_required(2)
@@ -199,16 +201,18 @@ def remove_meme_admin(v, username):
 def monthly(v):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+
 		for u in g.db.query(User).filter(User.patron > 0).all():
 			if u.patron == 1: procoins = 2500
 			elif u.patron == 2: procoins = 5000
 			elif u.patron == 3: procoins = 10000
 			elif u.patron == 4: procoins = 25000
 			elif u.patron == 5: procoins = 50000
-
 			u.procoins += procoins
-			send_notification(u.id, f"You were given {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
 			g.db.add(u)
+			
+			cid = notif_comment(f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
+			add_notif(cid, u.id)
 
 		g.db.commit()
 	return {"message": "Monthly coins granted"}
@@ -677,8 +681,8 @@ def agendaposter(user_id, v):
 		badge = user.has_badge(26)
 		if badge: g.db.delete(badge)
 
-	if user.agendaposter: send_notification(user.id, f"You have been marked by an admin as an agendaposter ({note}).")
-	else: send_notification(user.id, f"You have been unmarked by an admin as an agendaposter.")
+	if user.agendaposter: send_repeatable_notification(user.id, f"You have been marked by an admin as an agendaposter ({note}).")
+	else: send_repeatable_notification(user.id, f"You have been unmarked by an admin as an agendaposter.")
 
 	g.db.commit()
 	if user.agendaposter: return redirect(user.url)
@@ -839,7 +843,7 @@ def ban_user(user_id, v):
 		if message: text = f"Your account has been permanently suspended for the following reason:\n\n> {message}"
 		else: text = "Your account has been permanently suspended."
 
-	send_notification(user.id, text)
+	send_repeatable_notification(user.id, text)
 	
 	if days == 0: duration = "permanent"
 	elif days == 1: duration = "1 day"
@@ -893,7 +897,7 @@ def unban_user(user_id, v):
 				x.ban_evade = 0
 				g.db.add(x)
 
-	send_notification(user.id,
+	send_repeatable_notification(user.id,
 					  "Your account has been reinstated. Please carefully review and abide by the [rules](/post/2510) to ensure that you don't get suspended again.")
 
 	ma=ModAction(
@@ -1033,13 +1037,13 @@ def api_sticky_post(post_id, v):
 		if post.stickied:
 			if v.id != post.author_id:
 				message = f"@{v.username} has pinned your [post](/post/{post_id})!"
-				send_notification(post.author_id, message)
+				send_repeatable_notification(post.author_id, message)
 			g.db.commit()
 			return {"message": "Post pinned!"}
 		else:
 			if v.id != post.author_id:
 				message = f"@{v.username} has unpinned your [post](/post/{post_id})!"
-				send_notification(post.author_id, message)
+				send_repeatable_notification(post.author_id, message)
 			g.db.commit()
 			return {"message": "Post unpinned!"}
 

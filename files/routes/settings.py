@@ -252,9 +252,11 @@ def settings_profile_post(v):
 			username = mention["href"].split("@")[1]
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+
+		cid = notif_comment(f"@{v.username} has added you to their friends list!")
+
 		for x in notify_users:
-			message = f"@{v.username} has added you to their friends list!"
-			send_notification(x, message)
+			add_notif(cid, x)
 
 		v.friends = friends[:500]
 		v.friends_html=friends_html
@@ -297,10 +299,11 @@ def settings_profile_post(v):
 			username = mention["href"].split("@")[1]
 			user = g.db.query(User).filter_by(username=username).first()
 			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
-			
+
+		cid = notif_comment(f"@{v.username} has added you to their enemies list!")
+
 		for x in notify_users:
-			message = f"@{v.username} has added you to their enemies list!"
-			send_notification(x, message)
+			add_notif(cid, x)
 
 		v.enemies = enemies[:500]
 		v.enemies_html=enemies_html
@@ -365,9 +368,12 @@ def settings_profile_post(v):
 				username = mention["href"].split("@")[1]
 				user = g.db.query(User).filter_by(username=username).first()
 				if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+
+			cid = notif_comment(f"@{v.username} has added you to their friends list!")
+
 			for x in notify_users:
-				message = f"@{v.username} has added you to their friends list!"
-				send_notification(x, message)
+				add_notif(cid, x)
+
 
 		v.bio = bio[:1500]
 		v.bio_html=bio_html
@@ -574,7 +580,7 @@ def gumroad(v):
 	elif v.patron == 5: procoins = 50000
 
 	v.procoins += procoins
-	send_notification(v.id, f"You were given {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
+	send_repeatable_notification(v.id, f"You have received {procoins} Marseybux! You can use them to buy awards in the [shop](/shop).")
 
 	if v.truecoins > 150 and v.patron > 0: v.cluballowed = True
 	if v.patron > 3 and v.verified == None: v.verified = "Verified"
@@ -938,10 +944,7 @@ def settings_block_user(v):
 						  )
 	g.db.add(new_block)
 
-	
-
-	existing = g.db.query(Notification.id).filter_by(blocksender=v.id, user_id=user.id).first()
-	if not existing: send_block_notif(v.id, user.id, f"@{v.username} has blocked you!")
+	send_notification(user.id, f"@{v.username} has blocked you!")
 
 	cache.delete_memoized(frontlist)
 
@@ -964,8 +967,7 @@ def settings_unblock_user(v):
 
 	g.db.delete(x)
 
-	existing = g.db.query(Notification.id).filter_by(unblocksender=v.id, user_id=user.id).first()
-	if not existing: send_unblock_notif(v.id, user.id, f"@{v.username} has unblocked you!")
+	send_notification(user.id, f"@{v.username} has unblocked you!")
 
 	cache.delete_memoized(frontlist)
 

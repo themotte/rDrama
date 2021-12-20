@@ -264,7 +264,6 @@ CREATE TABLE public.comments (
     body character varying(10000),
     body_html character varying(40000),
     ban_reason character varying(25),
-    notifiedto integer,
     realupvotes integer,
     top_comment_id integer
 );
@@ -453,11 +452,6 @@ CREATE TABLE public.notifications (
     user_id integer,
     comment_id integer,
     read boolean NOT NULL,
-    followsender integer,
-    unfollowsender integer,
-    blocksender integer,
-    unblocksender integer,
-    removefollowsender integer
 );
 
 
