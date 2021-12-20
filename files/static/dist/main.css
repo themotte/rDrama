@@ -3287,6 +3287,10 @@ video {
 	background-color: rgba(var(--color-800), var(--tw-bg-opacity));
 }
 
+	.dark .dark\:bg-white\/\[\.05\] {
+	background-color: rgba(255, 255, 255, .05);
+}
+
 	.dark .dark\:bg-gray-700\/40 {
 	background-color: rgba(var(--color-700), 0.4);
 }
@@ -3352,6 +3356,10 @@ video {
 	.dark .dark\:hover\:text-gray-400:hover {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-400), var(--tw-text-opacity));
+}
+
+	.dark .dark\:focus\:bg-transparent:focus {
+	background-color: transparent;
 }
 
 	@media (min-width: 640px) {
