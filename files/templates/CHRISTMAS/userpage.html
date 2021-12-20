@@ -142,23 +142,23 @@
 		</div>
 		<div class="ml-auto flex items-center space-x-4">
 			{% if u.id == v.id or not u.is_private %}
-			<ul class="hidden xl:flex items-center space-x-4 mb-0">
+			<ul class="hidden xl:flex items-center space-x-4 mb-0 font-bold text-black dark:text-gray-200">
 				<li>
-					<a href="/@{{ u.username }}/followers" class="text-black dark:text-gray-200 text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</a>
-					<small class="block font-bold text-gray-500">Followers</small>
+					<a href="/@{{ u.username }}/followers" class="text-lg mb-0">{{ u.stored_subscriber_count }}</a>
+					<small class="block text-gray-500">Followers</small>
 				</li>
 				<li>
-					<div class="text-black dark:text-gray-200 text-lg font-bold mb-0">{{ u.coins_spent }}</div>
-					<small class="block font-bold text-gray-500">Dramacoin Spent</small>
+					<div class="text-lg mb-0">{{ u.coins_spent }}</div>
+					<small class="block text-gray-500">Dramacoin Spent</small>
 				</li>
 				<li>
-					<div class="text-black dark:text-gray-200 text-lg font-bold mb-0">{{ u.coins }}</div>
+					<div class="text-lg mb-0">{{ u.coins }}</div>
 					<small class="block font-bold text-gray-500">Dramacoin Earned</small>
 				</li>
 				{% if u.procoins %}
 				<li>
-					<div class="text-black dark:text-gray-200 text-lg font-bold mb-0">{{ u.procoins }}</div>
-					<small class="block font-bold text-gray-500">MarseyBux</small>
+					<div class="text-lg mb-0">{{ u.procoins }}</div>
+					<small class="block text-gray-500">MarseyBux</small>
 				</li>
 				{% endif %}
 			</ul>
