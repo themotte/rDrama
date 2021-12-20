@@ -241,7 +241,7 @@
 
 	/* ---------------------- DROPDOWNS --------------------- */
 	.dropdown-item-primary {
-		@apply block w-full text-left px-4 py-2 text-sm text-gray-200 bg-white dark:bg-black bg-gradient-to-t from-primary to-primary/80 dark:hover:from-primary/80 dark:hover:to-primary hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-b
+		@apply block w-full text-left px-4 py-2 text-sm text-gray-200 bg-white dark:bg-black bg-gradient-to-t dark:bg-gradient-to-b hover:from-primary hover:to-primary/80 dark:hover:from-primary/80 dark:hover:to-primary hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-b dark:focus:bg-gradient-to-t;
 	}
 
 	/* ----------------------- BADGES ----------------------- */
