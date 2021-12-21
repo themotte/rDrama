@@ -633,19 +633,16 @@ def verifiedcolor(v):
 @validate_formkey
 def settings_security_post(v):
 	if request.values.get("new_password"):
-		if v.id in (PW1_ID,PW2_ID): return redirect("/settings/security?error=" + escape("This account is protected from password changes."))
-		if request.values.get(
-				"new_password") != request.values.get("cnf_password"):
-			return redirect("/settings/security?error=" +
-							escape("Passwords do not match."))
+		if v.id in (PW1_ID,PW2_ID): return render_template("settings_security.html", v=v, error="This account is protected from password changes.")
+
+		if request.values.get("new_password") != request.values.get("cnf_password"):
+			return render_template("settings_security.html", v=v, error="Passwords do not match.")
 
 		if not re.match(valid_password_regex, request.values.get("new_password")):
-			return redirect("/settings/security?error=" + 
-							escape("Password must be between 8 and 100 characters."))
+			return render_template("settings_security.html", v=v, error="Password must be between 8 and 100 characters.")
 
 		if not v.verifyPass(request.values.get("old_password")):
-			return render_template(
-				"settings_security.html", v=v, error="Incorrect password")
+			return render_template("settings_security.html", v=v, error="Incorrect password")
 
 		v.passhash = v.hash_password(request.values.get("new_password"))
 
@@ -653,14 +650,12 @@ def settings_security_post(v):
 
 		g.db.commit()
 
-		return redirect("/settings/security?msg=" +
-						escape("Your password has been changed."))
+		return render_template("settings_security.html", v=v, error="Your password has been changed.")
 
 	if request.values.get("new_email"):
 
 		if not v.verifyPass(request.values.get('password')):
-			return redirect("/settings/security?error=" +
-							escape("Invalid password."))
+			return render_template("settings_security.html", v=v, error="Invalid password.")
 
 		new_email = request.values.get("new_email","").strip().lower()
 
@@ -671,13 +666,12 @@ def settings_security_post(v):
 			new_email=f"{new_email}@gmail.com"
 
 		if new_email == v.email:
-			return redirect("/settings/security?error=That email is already yours!")
+			return render_template("settings_security.html", v=v, error="That email is already yours!")
 
 		existing = g.db.query(User.id).filter(User.id != v.id,
 										   func.lower(User.email) == new_email.lower()).first()
 		if existing:
-			return redirect("/settings/security?error=" +
-							escape("That email address is already in use."))
+			return render_template("settings_security.html", v=v, error="That email address is already in use.")
 
 		url = f"https://{app.config['SERVER_NAME']}/activate"
 
@@ -695,48 +689,41 @@ def settings_security_post(v):
 									   v=v)
 				  )
 
-		return redirect("/settings/security?msg=" + escape(
-			"Check your email and click the verification link to complete the email change."))
+		return render_template("settings_security.html", v=v, error="Check your email and click the verification link to complete the email change."))
 
 	if request.values.get("2fa_token", ""):
 
 		if not v.verifyPass(request.values.get('password')):
-			return redirect("/settings/security?error=" +
-							escape("Invalid password or token."))
+			return render_template("settings_security.html", v=v, error="Invalid password or token.")
 
 		secret = request.values.get("2fa_secret")
 		x = pyotp.TOTP(secret)
 		if not x.verify(request.values.get("2fa_token"), valid_window=1):
-			return redirect("/settings/security?error=" +
-							escape("Invalid password or token."))
+			return render_template("settings_security.html", v=v, error="Invalid password or token.")
 
 		v.mfa_secret = secret
 		g.db.add(v)
 
 		g.db.commit()
 
-		return redirect("/settings/security?msg=" +
-						escape("Two-factor authentication enabled."))
+		return render_template("settings_security.html", v=v, error="Two-factor authentication enabled.")
 
 	if request.values.get("2fa_remove", ""):
 
 		if not v.verifyPass(request.values.get('password')):
-			return redirect("/settings/security?error=" +
-							escape("Invalid password or token."))
+			return render_template("settings_security.html", v=v, error="Invalid password or token.")
 
 		token = request.values.get("2fa_remove")
 
 		if not v.validate_2fa(token):
-			return redirect("/settings/security?error=" +
-							escape("Invalid password or token."))
+			return render_template("settings_security.html", v=v, error="Invalid password or token.")
 
 		v.mfa_secret = None
 		g.db.add(v)
 
 		g.db.commit()
 
-		return redirect("/settings/security?msg=" +
-						escape("Two-factor authentication disabled."))
+		return render_template("settings_security.html", v=v, error="Two-factor authentication disabled.")
 
 @app.post("/settings/log_out_all_others")
 @limiter.limit("1/second")

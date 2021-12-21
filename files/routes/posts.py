@@ -429,7 +429,7 @@ def edit_post(pid, v):
 
 		title_html = filter_emojis_only(title)
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
-		p.title = title
+		p.title = title[:500]
 		p.title_html = title_html
 
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
