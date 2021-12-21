@@ -134,9 +134,8 @@ def login_post():
 	else:
 		abort(400)
 
-	session["user_id"] = account.id
-	session["logged_in"] = account.id
-	session["session_id"] = token_hex(50)
+	session["logged_in_user"] = account.id
+	session["session_id"] = token_hex(52)
 	session["login_nonce"] = account.login_nonce
 	session.permanent = True
 
@@ -164,9 +163,8 @@ def me(v):
 @validate_formkey
 def logout(v):
 
-	session.pop("user_id", None)
 	session.pop("session_id", None)
-	session.pop("logged_in", None)
+	session.pop("logged_in_user", None)
 
 	return {"message": "Logout successful!"}
 
@@ -340,9 +338,8 @@ def sign_up_post(v):
 
 	if "rama" in request.host: send_notification(new_user.id, WELCOME_MSG)
 
-	session["user_id"] = new_user.id
-	session["logged_in"] = new_user.id
-	session["session_id"] = token_hex(50)
+	session["logged_in_user"] = new_user.id
+	session["session_id"] = token_hex(52)
 
 	g.db.commit()
 

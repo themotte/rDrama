@@ -108,7 +108,7 @@ def before_request():
 
 	if not request.path.startswith("/assets") and not request.path.startswith("/images") and not request.path.startswith("/hostedimages"):
 		session.permanent = True
-		if not session.get("session_id"): session["session_id"] = secrets.token_hex(50)
+		if not session.get("session_id"): session["session_id"] = secrets.token_hex(52)
 
 	if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
 		url = request.url.replace("http://", "https://", 1)
