@@ -320,7 +320,7 @@
 					<!-- Title -->
 					<h1 id="post-title" class="post-title font-medium text-lg md:text-3xl leading-normal mb-2">
 						{% if p.realurl(v) %}
-						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black dark:text-gray-200 hover:text-primary">
+						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black dark:text-gray-200 hover:text-primary" style="word-break: break-word;">
 							{{p.realtitle(v) | safe}}
 						</a>
 						{% else %}
