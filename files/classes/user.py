@@ -302,7 +302,7 @@ class User(Base):
 	def formkey(self):
 
 		if "session_id" not in session:
-			session["session_id"] = token_hex(16)
+			session["session_id"] = token_hex(50)
 
 		msg = f"{session['session_id']}+{self.id}+{self.login_nonce}"
 
@@ -377,6 +377,10 @@ class User(Base):
 	def post_notifications_count(self):
 		return g.db.query(Notification.id).join(Comment).filter(Notification.user_id == self.id, Notification.read == False, Comment.author_id == AUTOJANNY_ID).count()
 
+	@property
+	@lazy
+	def not_post_notifications_count(self):
+		return self.notifications_count - self.post_notifications_count
 
 	@property
 	@lazy

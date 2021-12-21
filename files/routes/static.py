@@ -104,10 +104,10 @@ def cached_chart(days):
 		days = int((nowstamp - firstsignup) / 86400)
 
 	if days > 31:
-		file = "/weekly_chart.webp"
+		file = "/weekly_chart.png"
 		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(31)][1:]
 	else:
-		file = "/daily_chart.webp"
+		file = "/daily_chart.png"
 		day_cutoffs = [today_cutoff - 86400 * i for i in range(31)][1:]
 
 	day_cutoffs.insert(0, calendar.timegm(now))

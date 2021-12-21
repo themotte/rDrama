@@ -13,7 +13,6 @@ services:
       - DOMAIN=localhost
       - SITE_NAME=Drama
       - GIPHY_KEY=3435tdfsdudebussylmaoxxt43
-      - FORCE_HTTPS=0
       - DISCORD_SERVER_ID=3435tdfsdudebussylmaoxxt43
       - DISCORD_CLIENT_ID=3435tdfsdudebussylmaoxxt43
       - DISCORD_CLIENT_SECRET=3435tdfsdudebussylmaoxxt43

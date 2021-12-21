@@ -136,7 +136,7 @@ def login_post():
 
 	session["user_id"] = account.id
 	session["logged_in"] = account.id
-	session["session_id"] = token_hex(16)
+	session["session_id"] = token_hex(50)
 	session["login_nonce"] = account.login_nonce
 	session.permanent = True
 
@@ -343,7 +343,7 @@ def sign_up_post(v):
 
 	session["user_id"] = new_user.id
 	session["logged_in"] = new_user.id
-	session["session_id"] = token_hex(16)
+	session["session_id"] = token_hex(50)
 
 	g.db.commit()
 
