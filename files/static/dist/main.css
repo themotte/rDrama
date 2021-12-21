@@ -2569,7 +2569,7 @@ video {
 }
 
 .theme-haskell {
-	--color-primary: 236,72,153;
+	--color-primary: 72,236,135;
 	--color-100: 251,207,232;
 	--color-200: 251,207,232;
 	--color-300: 251,207,232;
@@ -2582,7 +2582,7 @@ video {
 }
 
 .theme-war-games {
-	--color-primary: 72,236,135;
+	--color-primary: 236,72,153;
 	--color-100: 207,251,231;
 	--color-200: 207,251,231;
 	--color-300: 207,251,231;
