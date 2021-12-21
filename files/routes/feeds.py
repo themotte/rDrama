@@ -35,7 +35,7 @@ def feeds_user(sort='hot', t='all'):
 		for post in posts:
 			with tag("entry", ("xml:base", request.url)):
 				with tag("title", type="text"):
-					text(post.title)
+					text(post.realtitle(None))
 
 				with tag("id"):
 					text(post.fullname)
@@ -61,6 +61,6 @@ def feeds_user(sort='hot', t='all'):
 
 				if len(post.body_html) > 0:
 					with tag("content", type="html"):
-						doc.cdata(f'''<img alt="{post.title}" loading="lazy" src={image_url}><br>{post.body_html}''')
+						doc.cdata(f'''<img alt="{post.realtitle(None)}" loading="lazy" src={image_url}><br>{post.body_html}''')
 
 	return Response( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+ doc.getvalue(), mimetype="application/xml")

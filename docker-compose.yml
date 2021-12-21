@@ -8,7 +8,7 @@ services:
       - "./:/service"
     environment:
       - DATABASE_URL=postgresql://postgres@postgres:5432
-      - MASTER_KEY=XuxGqp5NyygJrM24b5gt3YgyvFVGdQnwVDwLzLwpu3eQwY
+      - MASTER_KEY=3435tdfsdudebussylmaoxxt43
       - DOMAIN=localhost
       - SITE_NAME=Drama
       - GIPHY_KEY=3435tdfsdudebussylmaoxxt43
