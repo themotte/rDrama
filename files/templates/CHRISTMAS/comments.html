@@ -420,9 +420,9 @@
 		{% include "CHRISTMAS/ban_modal.html" %}
 	{% endif %}
 
-		<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
+	<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
+			<div class="modal-content mx-auto max-w-xl bg-gray-100 dark:bg-gray-700 rounded-md shadow-lg">
 				<div class="modal-header">
 					<h5 class="modal-title">Delete comment?</h5>
 					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -432,14 +432,18 @@
 				<div class="modal-body text-center">
 
 					<div class="py-4">
-						<i class="fad fa-trash-alt text-muted" style="font-size: 3.5rem;"></i>
+						<i class="fad fa-trash-alt text-gray-400" style="font-size: 3.5rem;"></i>
 					</div>
 
-					<p>Your comment will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.</p>
+					<p>
+						Your comment will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.
+					</p>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
-					<button id="deleteCommentButton" class="btn btn-danger">Delete comment</button>
+				<div class="flex justify-end space-x-2 border-t border-gray-400 p-4">
+					<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" data-bs-dismiss="modal">
+						Cancel
+					</button>
+					<button id="deleteCommentButton" class="btn btn-red">Delete comment</button>
 				</div>
 			</div>
 		</div>
