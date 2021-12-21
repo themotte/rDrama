@@ -1867,6 +1867,14 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(153, 27, 27, var(--tw-bg-opacity));
 }
+.bg-\[\#00001f\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(0, 0, 31, var(--tw-bg-opacity));
+}
+.bg-\[\#fbcfe8\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(251, 207, 232, var(--tw-bg-opacity));
+}
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
