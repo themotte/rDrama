@@ -1906,6 +1906,14 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(72, 236, 135, var(--tw-bg-opacity));
 }
+.bg-\[\#524737\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(82, 71, 55, var(--tw-bg-opacity));
+}
+.bg-\[\#dbd8d1\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(219, 216, 209, var(--tw-bg-opacity));
+}
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
@@ -2381,6 +2389,10 @@ video {
 	--tw-text-opacity: 1;
 	color: rgba(72, 236, 135, var(--tw-text-opacity));
 }
+.text-\[\#155e75\] {
+	--tw-text-opacity: 1;
+	color: rgba(21, 94, 117, var(--tw-text-opacity));
+}
 .antialiased {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -2683,6 +2695,19 @@ video {
 	--color-700: 55,82,62;
 	--color-800: 31,55,38;
 	--color-900: 17,40,23;
+}
+
+.theme-savile-row {
+	--color-primary: 21,94,117;
+	--color-100: 246,245,244;
+	--color-200: 235,233,229;
+	--color-300: 219,216,209;
+	--color-400: 175,169,155;
+	--color-500: 148,143,129;
+	--color-600: 99,92,78;
+	--color-700: 82,71,55;
+	--color-800: 55,46,31;
+	--color-900: 40,31,17;
 }
 
 /* ----------------------- VARIABLES --------------------- */
