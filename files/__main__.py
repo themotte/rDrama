@@ -8,8 +8,6 @@ from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
 from flask_mail import Mail
-from flask_session import Session
-
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
@@ -18,8 +16,6 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 import redis
 
 app = Flask(__name__, template_folder='templates')
-app.config["SESSION_TYPE"] = "redis"
-Session(app)
 
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
 app.url_map.strict_slashes = False
@@ -70,10 +66,6 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = environ.get("MAIL_USERNAME", "").strip()
 app.config['MAIL_PASSWORD'] = environ.get("MAIL_PASSWORD", "").strip()
-
-app.config["SESSION_USE_SIGNER"] = True
-app.config["SESSION_COOKIE_DOMAIN"] = app.config["SERVER_NAME"]
-
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"),  decode_responses=True, ssl_cert_reqs=None)
 
