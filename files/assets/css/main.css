@@ -4462,7 +4462,6 @@ div.deleted.banned {
 }
 .container, .container-fluid {
     background-color: var(--gray-700) !important;
-    border-radius: 5px !important;
 }
 .btn {
     background-color: var(--gray-700) !important;
