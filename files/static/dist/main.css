@@ -1612,8 +1612,8 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
 }
-.bg-primary\/70 {
-	background-color: rgba(var(--color-primary), 0.7);
+.bg-primary\/20 {
+	background-color: rgba(var(--color-primary), 0.2);
 }
 .bg-gray-500 {
 	--tw-bg-opacity: 1;
@@ -3349,10 +3349,6 @@ video {
 
 	.dark .dark\:border-white\/\[\.05\] {
 	border-color: rgba(255, 255, 255, .05);
-}
-
-	.dark .dark\:bg-primary\/50 {
-	background-color: rgba(var(--color-primary), 0.5);
 }
 
 	.dark .dark\:bg-gray-900 {
