@@ -35,7 +35,7 @@
 <div class="my-4 p-3 bg-gray-400 dark:bg-gray-800 border border-gray-500 dark:bg-gray-700 shadow-inset-t-white-10 rounded">
 	<div class="flex items-center space-x-2 mb-2">
 		<img loading="lazy" src="{{thing.author.profile_url}}" class="flex-shrink-0 p-[3px] border w-8 h-8 object-cover bg-white border-gray-300" alt="{{thing.author.profile_url}} avatar"/>
-		<a href="{{thing.author.url}}" class="block text-base font-bold text-black hover:text-primary leading-normal">
+		<a href="{{thing.author.url}}" class="block text-base font-bold text-black dark:text-gray-200 hover:text-primary leading-normal">
 			@{{thing.author.username}}
 		</a>
 		<span class="text-sm text-gray-500 leading-normal">
@@ -82,7 +82,7 @@
 							</tr>
 							{% endfor %}
 						{% else %}
-						<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+						<tr class="shadow-inset-t-white-05 odd:bg-gray-200 dark:bg-gray-700">
 								<td class="px-6 py-4 whitespace-nowrap">
 									<div class="flex items-center text-gray-500">
 										No upvotes yet...
@@ -135,7 +135,7 @@
 							</tr>
 							{% endfor %}
 						{% else %}
-						<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+						<tr class="shadow-inset-t-white-05 odd:bg-gray-200 dark:bg-gray-700">
 								<td class="px-6 py-4 whitespace-nowrap">
 									<div class="flex items-center text-gray-500">
 										No downvotes yet...
