@@ -490,6 +490,66 @@
 							</div>
 						</label>
 					</div>
+					<!-- Haskell -->
+					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
+						<input hidden name="theme" value="theme-haskell dark" type="radio" id="haskell-theme" class="peer" onchange="changeTheme(['theme-haskell','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-haskell dark' %}checked{% endif %}>
+						<label for="haskell-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
+							<div class="flex flex-col w-full h-full bg-[#00001f]">
+								<div class="h-3 w-full bg-[#00001f]"></div>
+								<div class="h-4 w-full bg-[#00001f]"></div>
+								<ul class="flex flex-col space-y-1 h-12 w-full bg-[#00001f] p-2 mb-0">
+									<li class="flex">
+										<i class="fas fa-arrow-alt-up text-[8px] text-[#ec4899]"></i>
+										<div class="ml-1 h-2 w-2/4 rounded-full bg-white/50"></div>
+										<div class="ml-auto h-2 w-1/4 rounded-full bg-[#ec4899]"></div>
+									</li>
+									<li class="flex">
+										<i class="fas fa-arrow-alt-up text-[8px] text-white/50"></i>
+										<div class="ml-1 h-2 w-2/4 rounded-full bg-white/50"></div>
+										<div class="ml-auto h-2 w-1/4 rounded-full bg-transparent"></div>
+									</li>
+									<li class="flex">
+										<i class="fas fa-arrow-alt-up text-[8px] text-white/50"></i>
+										<div class="ml-1 h-2 w-2/4 rounded-full bg-white/50"></div>
+										<div class="ml-auto h-2 w-1/4 rounded-full bg-transparent"></div>
+									</li>
+								</ul>
+							</div>
+							<div class="w-full border-t border-gray-200 dark:border-gray-600 p-2 text-center">
+								<span class="font-bold text-base">Haskell</span>
+							</div>
+						</label>
+					</div>
+					<!-- Alpine -->
+					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
+						<input hidden name="theme" value="theme-alpine" type="radio" id="alpine-theme" class="peer" onchange="changeTheme(['theme-alpine']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-alpine' %}checked{% endif %}>
+						<label for="alpine-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
+							<div class="flex flex-col w-full h-full bg-[#44423b]">
+								<div class="h-3 w-full bg-[#44423b]"></div>
+								<div class="h-4 w-full bg-[#d6d4d1]"></div>
+								<ul class="flex flex-col space-y-1 h-12 w-full bg-[#e7e5e3] p-2 mb-0">
+									<li class="flex">
+										<i class="fas fa-arrow-alt-up text-[8px] text-[#0891b2]"></i>
+										<div class="ml-1 h-2 w-2/4 rounded-full bg-black/40"></div>
+										<div class="ml-auto h-2 w-1/4 rounded-full bg-[#0891b2]"></div>
+									</li>
+									<li class="flex">
+										<i class="fas fa-arrow-alt-up text-[8px] text-black/40"></i>
+										<div class="ml-1 h-2 w-2/4 rounded-full bg-black/40"></div>
+										<div class="ml-auto h-2 w-1/4 rounded-full bg-transparent"></div>
+									</li>
+									<li class="flex">
+										<i class="fas fa-arrow-alt-up text-[8px] text-black/40"></i>
+										<div class="ml-1 h-2 w-2/4 rounded-full bg-black/40"></div>
+										<div class="ml-auto h-2 w-1/4 rounded-full bg-transparent"></div>
+									</li>
+								</ul>
+							</div>
+							<div class="w-full border-t border-gray-200 dark:border-gray-600 p-2 text-center">
+								<span class="font-bold text-base">Alpine</span>
+							</div>
+						</label>
+					</div>
 				</div>
 			</div>
 		</div>
