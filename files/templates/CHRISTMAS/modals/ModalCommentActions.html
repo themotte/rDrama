@@ -45,7 +45,7 @@
 					</li>
 					<li>
 						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}')">
-							<i class="fas fa-flag text-center text-muted mr-3"></i>Report
+							<i class="fas fa-flag fa-fw mr-4"></i>Report
 						</button>
 					</li>
 					{% if v and c.parent_submission and c.author_id==v.id %}

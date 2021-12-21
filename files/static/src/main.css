@@ -2,17 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-.theme-tron {
+.theme-blood-orange {
 	--color-primary: 249,115,22;
 	--color-100: 224,231,255;
-	--color-200: 199,210,254;
+	--color-200: 218, 225, 254;
 	--color-300: 165,180,252;
 	--color-400: 129,140,248;
-	--color-500: 121,124,242;
+	--color-500: 125, 128, 236;
 	--color-600: 79,70,229;
 	--color-700: 67,56,202;
 	--color-800: 55,48,163;
 	--color-900: 49,46,129;
+}
+
+.theme-lake-tahoe {
+	--color-primary: 13,148,136;
+	--color-100: 245,253,254;
+	--color-200: 185,239,245;
+	--color-300: 157,237,247;
+	--color-400: 126,213,226;
+	--color-500: 56,173,193;
+	--color-600: 8,145,178;
+	--color-700: 23,108,131;
+	--color-800: 17,76,94;
+	--color-900: 12,47,60;
+}
+
+.theme-alpine {
+	--color-primary: 8,145,178;
+	--color-100: 245,244,242;
+	--color-200: 231,229,227;
+	--color-300: 214,212,209;
+	--color-400: 168,164,158;
+	--color-500: 120,115,108;
+	--color-600: 87,83,78;
+	--color-700: 68,66,59;
+	--color-800: 41,39,36;
+	--color-900: 28,26,23;
+}
+
+.theme-cambridge {
+	--color-primary: 153,27,27;
+	--color-100: 231,229,228;
+	--color-200: 231,229,228;
+	--color-300: 214,211,209;
+	--color-400: 168,162,158;
+	--color-500: 120,113,108;
+	--color-600: 87,83,78;
+	--color-700: 68,64,60;
+	--color-800: 41,37,36;
+	--color-900: 28,25,23;
+}
+
+.theme-limon {
+	--color-primary: 202,138,4;
+	--color-100: 236,252,203;
+	--color-200: 234,255,195;
+	--color-300: 200,242,126;
+	--color-400: 136,182,61;
+	--color-500: 131,181,54;
+	--color-600: 101,163,13;
+	--color-700: 72,113,16;
+	--color-800: 63,98,18;
+	--color-900: 54,83,20;
 }
 
 .theme-mocha {
@@ -20,11 +72,24 @@
 	--color-100: 246,246,244;
 	--color-200: 235,233,229;
 	--color-300: 219,218,209;
-	--color-400: 155,175,161;
+	--color-400: 175, 169, 155;
 	--color-500: 148,144,129;
 	--color-600: 99,96,77;
 	--color-700: 82,76,55;
 	--color-800: 55,52,31;
+	--color-900: 40,37,17;
+}
+
+.theme-choco-mint {
+	--color-primary: 37, 193, 136;
+	--color-100: 246,246,244;
+	--color-200: 235,232,229;
+	--color-300: 219,218,209;
+	--color-400: 177,171,158;
+	--color-500: 130,123,110;
+	--color-600: 99,96,77;
+	--color-700: 70,62,47;
+	--color-800: 52,44,32;
 	--color-900: 40,37,17;
 }
 
@@ -36,9 +101,61 @@
 	--color-400: 148,163,184;
 	--color-500: 100,116,139;
 	--color-600: 71,85,105;
-	--color-700: 51,65,85;
+	--color-700: 45,60,80;
 	--color-800: 30,41,59;
 	--color-900: 15,23,42;
+}
+
+.theme-haskell {
+	--color-primary: 72,236,135;
+	--color-100: 251,207,232;
+	--color-200: 251,207,232;
+	--color-300: 251,207,232;
+	--color-400: 244,114,182;
+	--color-500: 236,72,153;
+	--color-600: 219,39,119;
+	--color-700: 0,0,31;
+	--color-800: 0,0,31;
+	--color-900: 0,0,31;
+}
+
+.theme-war-games {
+	--color-primary: 236,72,153;
+	--color-100: 207,251,231;
+	--color-200: 207,251,231;
+	--color-300: 207,251,231;
+	--color-400: 114,244,173;
+	--color-500: 72,236,135;
+	--color-600: 39,219,138;
+	--color-700: 0,23,21;
+	--color-800: 0,23,21;
+	--color-900: 0,23,21;
+}
+
+.theme-yale {
+	--color-primary: 109,40,217;
+	--color-100: 254,231,244;
+	--color-200: 254,231,244;
+	--color-300: 254,231,244;
+	--color-400: 255,245,117;
+	--color-500: 254,237,8;
+	--color-600: 219,39,119;
+	--color-700: 215,57,135;
+	--color-800: 215,57,135;
+	--color-900: 157,23,77;
+}
+
+.theme-abyss {
+	--color-primary: 219,39,119;
+	--color-100: 189,189,193;
+	--color-200: 189,189,193;
+	--color-300: 189,189,193;
+	--color-400: 161,161,171;
+	--color-500: 117,117,126;
+	--color-600: 82,82,91;
+	--color-700: 0,0,0;
+	--color-800: 0,0,0;
+	--color-900: 0,0,0;
 }
 
 .theme-midnight {
@@ -59,8 +176,8 @@
 	--color-100: 244,244,245;
 	--color-200: 228,228,231;
 	--color-300: 212,212,216;
-	--color-400: 161,161,170;
-	--color-500: 113,113,122;
+	--color-400: 161,161,171;
+	--color-500: 117,117,126;
 	--color-600: 82,82,91;
 	--color-700: 63,63,70;
 	--color-800: 39,39,42;
@@ -68,9 +185,9 @@
 }
 
 .theme-bubblegum {
-	--color-primary: 2,132,199;
-	--color-100: 252,231,243;
-	--color-200: 251,207,232;
+	--color-primary: 236,72,153;
+	--color-100: 254,236,246;
+	--color-200: 252,223,240;
 	--color-300: 249,168,212;
 	--color-400: 244,114,182;
 	--color-500: 236,72,153;
@@ -82,13 +199,13 @@
 
 .theme-canary {
 	--color-primary: 2,132,199;
-	--color-100: 254,249,195;
-	--color-200: 254,240,138;
-	--color-300: 253,224,71;
-	--color-400: 250,204,21;
-	--color-500: 234,179,8;
-	--color-600: 202,138,4;
-	--color-700: 161,98,7;
+	--color-100: 254,248,190;
+	--color-200: 247,237,160;
+	--color-300: 247,231,109;
+	--color-400: 210,179,55;
+	--color-500: 199,159,39;
+	--color-600: 187,129,6;
+	--color-700: 170,106,14;
 	--color-800: 133,77,14;
 	--color-900: 113,63,18;
 }
@@ -104,6 +221,19 @@
 	--color-700: 55,82,62;
 	--color-800: 31,55,38;
 	--color-900: 17,40,23;
+}
+
+.theme-savile-row {
+	--color-primary: 21,94,117;
+	--color-100: 246,245,244;
+	--color-200: 235,233,229;
+	--color-300: 219,216,209;
+	--color-400: 175,169,155;
+	--color-500: 148,143,129;
+	--color-600: 99,92,78;
+	--color-700: 82,71,55;
+	--color-800: 55,46,31;
+	--color-900: 40,31,17;
 }
 
 /* ----------------------- VARIABLES --------------------- */
@@ -178,10 +308,10 @@
 		ul {
 			@apply mb-3
 		}
-		.comment-text ul, .post-body ul {
+		.comment-text > ul, .post-body > ul {
 			@apply list-disc pl-4
 		}
-		.comment-text ol, .post-body ol {
+		.comment-text > ol, .post-body > ol {
 			@apply list-decimal pl-4
 		}
 		strong {
@@ -216,7 +346,7 @@
 
 	/* ----------------------- INPUTS ----------------------- */
 	.form-input {
-		@apply text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-white border border-gray-300 hover:border-gray-400 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 
+		@apply text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-white dark:bg-white/[.06] border border-gray-300 hover:border-gray-400 dark:border-gray-900 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
 	}
 
 	/* ---------------------- BUTTONS ----------------------- */
@@ -237,6 +367,11 @@
 	}
 	.btn-gray {
 		@apply bg-gradient-to-t from-gray-200 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-700 focus:text-gray-900;
+	}
+
+	/* ---------------------- DROPDOWNS --------------------- */
+	.dropdown-item-primary {
+		@apply block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white dark:hover:bg-black bg-gradient-to-t dark:bg-gradient-to-t hover:from-primary hover:to-primary/80 dark:hover:from-primary/80 dark:hover:to-primary hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-b dark:focus:bg-gradient-to-t;
 	}
 
 	/* ----------------------- BADGES ----------------------- */
@@ -264,6 +399,9 @@
 	.badge-primary {
 		@apply bg-primary text-white;
 	}
+	.patron {
+		@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded;
+	}
 
 	/* ---------------------- TOOLTIPS ---------------------- */
 	.tooltip-inner {
@@ -272,7 +410,6 @@
 	}
 
 	/* ----------------------- EMOJI ------------------------ */
-
 	img.emoji {
 		width: 30px;
 		height: 30px;

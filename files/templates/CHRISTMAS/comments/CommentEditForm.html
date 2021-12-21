@@ -1,9 +1,9 @@
 <div id="comment-edit-{{c.id}}" class="hidden flex flex-wrap w-full">
 	<form id="comment-edit-form-{{c.id}}" action="/edit_comment/{{c.id}}" method="post" class="input-group" enctype="multipart/form-data"> 
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
-		<div class="relative comment-box rounded-lg border border-gray-300 bg-gray-100 shadow-inner w-full"> 
-			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
-			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
+		<div class="relative comment-box rounded-lg border border-gray-300 dark:border-gray-900 bg-gray-100 dark:bg-white/[.05] shadow-inner w-full">
+			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white dark:focus:bg-transparent shadow-inner resize-y focus:outline-none placehoder:text-gray-400" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
+			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 dark:border-white/[.05] mb-0">
 				<li>
 					<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('comment-edit-body-{{c.id}}')">
 						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>

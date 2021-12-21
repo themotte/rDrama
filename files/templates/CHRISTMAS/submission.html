@@ -227,7 +227,7 @@
 			{% if not p.is_image and p.thumb_url and not p.embed_url %}
 			<div class="hidden md:block pl-3 flex-shrink-0">
 				<a rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
-					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white border border-gray-300 flex-shrink-0" alt="post thumbnail">
+					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0" alt="post thumbnail">
 				</a>
 			</div>
 			{% endif %}
@@ -252,7 +252,7 @@
 					<div class="no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
 
 						<div class="relative md:hidden flex-shrink-0 {{ 'santa' if p.author.patron else 'cap' }}">
-							<img loading="lazy" src="{{ p.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white border border-gray-300 object-cover" alt="{{ p.author.username }} avatar"/>
+							<img loading="lazy" src="{{ p.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
 						</div>
 
 						{% if v and v.admin_level==6 and p.author.shadowbanned %}
@@ -434,7 +434,7 @@
 				<div class="relative z-10 hidden md:flex flex-col flex-shrink-0 items-center mr-4">
 
 					<div class="relative avatar">
-						<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="author avatar"/>
+						<img loading="lazy" src="{{p.author.profile_url}}" class="w-14 h-14 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="author avatar"/>
 					</div>
 
 					<div class="py-2 text-sm text-gray-400 text-center font-bold hidden md:block">
@@ -495,34 +495,34 @@
 					</span>
 					<!-- Entire thread link -->
 					{% if linked_comment and p.comment_count >= 2%}
-					<a href="{% if v %}{{ p.permalink }}{% else %}/logged_out/{{p.permalink}}{% endif %}" class="pl-2 text-red-600 hover:text-red-700">
+					<a href="{% if v %}{{ p.permalink }}{% else %}/logged_out/{{p.permalink}}{% endif %}" class="pl-2 text-primary hover:text-red-700">
 						View entire thread
 					</a>
 					{% endif %}
 				</div>
 				<ul class="flex space-x-3 text-sm text-gray-500 leading-normal mb-0">
 					<li>
-						<a href="?sort=top" class="{{ 'font-bold text-red-600' if sort == 'top' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=top" class="{{ 'font-bold text-primary' if sort == 'top' else 'text-gray-500 hover:text-gray-700'}}">
 							Top
 						</a>
 					</li>
 					<li>
-						<a href="?sort=new" class="{{ 'font-bold text-red-600' if sort == 'new' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=new" class="{{ 'font-bold text-primary' if sort == 'new' else 'text-gray-500 hover:text-gray-700'}}">
 							Latest
 						</a>
 					</li>
 					<li>
-						<a href="?sort=old" class="{{ 'font-bold text-red-600' if sort == 'old' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=old" class="{{ 'font-bold text-primary' if sort == 'old' else 'text-gray-500 hover:text-gray-700'}}">
 							Oldest
 						</a>
 					</li>
 					<li>
-						<a href="?sort=controversial" class="{{ 'font-bold text-red-600' if sort == 'controversial' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=controversial" class="{{ 'font-bold text-primary' if sort == 'controversial' else 'text-gray-500 hover:text-gray-700'}}">
 							Controversial
 						</a>
 					</li>
 					<li>
-						<a href="?sort=bottom" class="{{ 'font-bold text-red-600' if sort == 'bottom' else 'text-gray-500 hover:text-gray-700'}}">
+						<a href="?sort=bottom" class="{{ 'font-bold text-primary' if sort == 'bottom' else 'text-gray-500 hover:text-gray-700'}}">
 							Worst
 						</a>
 					</li>
@@ -532,7 +532,7 @@
 			{% if v %}
 			<div id="comment-form-space-{{p.fullname}}" class="comment-write flex px-2.5 md:px-0">
 				<div class="hidden md:block relative flex-shrink-0 mr-4 {{ 'santa' if p.author.patron else 'cap' }}">
-					<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white border border-gray-300 object-cover" alt="my avatar"/>
+					<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="my avatar"/>
 				</div>
 				{% include "CHRISTMAS/comments/CommentForm.html" %}
 			</div>
