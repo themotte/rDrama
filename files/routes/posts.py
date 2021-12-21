@@ -6,7 +6,6 @@ from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.filters import *
 from files.helpers.markdown import *
-from files.helpers.session import *
 from files.helpers.alerts import *
 from files.helpers.discord import send_message
 from files.helpers.const import *

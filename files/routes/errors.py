@@ -1,14 +1,10 @@
 import jinja2.exceptions
 
 from files.helpers.wrappers import *
-from files.helpers.session import *
 from flask import *
 from urllib.parse import quote, urlencode
 import time
 from files.__main__ import app, limiter
-
-# Errors
-
 
 
 @app.errorhandler(400)

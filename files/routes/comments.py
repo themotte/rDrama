@@ -2,7 +2,6 @@ from files.helpers.wrappers import *
 from files.helpers.filters import *
 from files.helpers.alerts import *
 from files.helpers.images import *
-from files.helpers.session import *
 from files.helpers.const import *
 from files.classes import *
 from files.routes.front import comment_idlist

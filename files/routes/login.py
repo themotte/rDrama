@@ -134,8 +134,8 @@ def login_post():
 	else:
 		abort(400)
 
-	session["session_id"] = token_hex(52)
-	session["logged_in_user"] = account.id
+	session["session_id"] = token_hex(49)
+	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
 
 	if account.id not in (PW1_ID,PW2_ID): check_for_alts(account.id)
@@ -163,7 +163,7 @@ def me(v):
 def logout(v):
 
 	session.pop("session_id", None)
-	session.pop("logged_in_user", None)
+	session.pop("lo_user", None)
 
 	return {"message": "Logout successful!"}
 
@@ -337,8 +337,8 @@ def sign_up_post(v):
 
 	if "rama" in request.host: send_notification(new_user.id, WELCOME_MSG)
 
-	session["session_id"] = token_hex(52)
-	session["logged_in_user"] = new_user.id
+	session["session_id"] = token_hex(49)
+	session["lo_user"] = new_user.id
 
 	g.db.commit()
 

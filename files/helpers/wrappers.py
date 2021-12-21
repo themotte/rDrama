@@ -14,12 +14,12 @@ def get_logged_in_user():
 		v.client = client
 		return v
 	else:
-		logged_in_user = session.get("logged_in_user")
-		if not logged_in_user: return None
+		lo_user = session.get("lo_user")
+		if not lo_user: return None
 
 		nonce = session.get("login_nonce", 0)
 		try:
-			if g.db: v = g.db.query(User).filter_by(id=logged_in_user).one_or_none()
+			if g.db: v = g.db.query(User).filter_by(id=lo_user).one_or_none()
 			else: return None
 		except: return None
 
