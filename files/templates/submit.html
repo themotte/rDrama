@@ -138,7 +138,7 @@
 														<label class="custom-control-label" for="privateCheck">Draft</label>
 												</div>
 
-												{% if not v.club_banned %}
+												{% if v.club_allowed != False %}
 													<div class="custom-control custom-checkbox">
 														<input type="checkbox" class="custom-control-input" id="clubCheck" name="club">
 														<label class="custom-control-label" for="clubCheck">{{cc}} thread</label>

@@ -289,7 +289,7 @@
 						</form>
 
 						<button id="grant2" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_allow','grant2','bar2')">Grant club access</button>
-						<button id="bar2" class="{% if u.club_banned %}d-none{% endif %} btn btn-danger" onclick="post_toast2('/@{{u.username}}/club_ban','grant2','bar2')">Bar from club</button>
+						<button id="bar2" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="post_toast2('/@{{u.username}}/club_ban','grant2','bar2')">Bar from club</button>
 						{% endif %}
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
@@ -483,7 +483,7 @@
 					{% if v.admin_level > 1 %}
 
 					<button id="grant" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_allow','grant','bar')">Grant club access</button>
-					<button id="bar" class="{% if u.club_banned %}d-none{% endif %} btn btn-danger" onclick="post_toast2('/@{{u.username}}/club_ban','grant','bar')">Bar from club</button>
+					<button id="bar" class="{% if u.club_allowed == False %}d-none{% endif %} btn btn-danger" onclick="post_toast2('/@{{u.username}}/club_ban','grant','bar')">Bar from club</button>
 
 						<br><br>
 						<div class="body d-lg-flex border-bottom">

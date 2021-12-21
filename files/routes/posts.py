@@ -33,7 +33,7 @@ if path.exists(f'snappy_{site_name}.txt'):
 @auth_required
 def toggle_club(pid, v):
 
-	if v.club_banned: abort(403)
+	if v.club_allowed == False: abort(403)
 	post = get_post(pid)
 	if post.author_id != v.id and v.admin_level == 0: abort(403)
 
@@ -982,9 +982,9 @@ def submit_post(v):
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 
-	if not v.club_banned: club = bool(request.values.get("club",""))
-	else: club = False
-
+	if v.club_allowed == False: club = False
+	else: club = bool(request.values.get("club",""))
+	
 	if embed and len(embed) > 1500: embed = None
 
 	new_post = Submission(

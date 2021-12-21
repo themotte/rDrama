@@ -108,7 +108,6 @@ class User(Base):
 	is_banned = Column(Integer, default=0)
 	unban_utc = Column(Integer, default=0)
 	ban_reason = deferred(Column(String))
-	club_banned = Column(Boolean, default=False)
 	club_allowed = Column(Boolean, default=False)
 	login_nonce = Column(Integer, default=0)
 	reserved = deferred(Column(String))
@@ -188,7 +187,7 @@ class User(Base):
 	@property
 	@lazy
 	def paid_dues(self):
-		return self.admin_level > 1 or self.club_allowed or (self.truecoins > int(environ.get("DUES").strip()) and not self.club_banned)
+		return self.admin_level > 1 or self.club_allowed or self.truecoins > int(environ.get("DUES").strip()) and self.club_allowed != False
 
 	def any_block_exists(self, other):
 
