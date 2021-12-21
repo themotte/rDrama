@@ -23,7 +23,7 @@ app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
 import faulthandler
 faulthandler.enable()
-	
+
 
 app.config["SITE_NAME"]=environ.get("SITE_NAME").strip()
 app.config["COINS_NAME"]=environ.get("COINS_NAME").strip()
@@ -33,7 +33,7 @@ app.config['DATABASE_URL'] = environ.get("DATABASE_URL")
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get("DOMAIN").strip()
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400
-app.config["SESSION_COOKIE_NAME"] = f'session_{environ.get("DOMAIN")}'.strip().lower()
+app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_NAME").strip().lower()
 app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 app.config["SESSION_COOKIE_SECURE"] = True
@@ -109,10 +109,6 @@ def before_request():
 	elif "Safari/" in ua: g.system="ios/safari"
 	elif "Mobile/" in ua: g.system="ios/webview"
 	else: g.system="other/other"
-
-@app.get('/tw')
-def get_tailwind():
-	return render_template('tailwind.html')
 
 @app.teardown_appcontext
 def teardown_request(error):
