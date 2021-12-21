@@ -7,7 +7,7 @@
 
 {% block subHeader %}
 	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
 		<div class="relative col-span-full flex items-center">
 			<div>
 				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
@@ -19,7 +19,7 @@
 					Back to post
 				</a>
 				{% else %}
-				<small class="block text-gray-700 leading-normal">
+				<small class="block text-gray-700 dark:text-gray-400 leading-normal">
 					See which losers downvoted your quality content.
 				</small>
 				{% endif %}
@@ -32,21 +32,16 @@
 <div class="col-span-full px-2.5 md:px-0">
 {% if thing %}
 
-<div class="my-4 p-3 bg-gray-400 border border-gray-500 shadow-inset-t-white-10 rounded">
+<div class="my-4 p-3 bg-gray-400 dark:bg-gray-800 border border-gray-500 dark:bg-gray-700 shadow-inset-t-white-10 rounded">
 	<div class="flex items-center space-x-2 mb-2">
 		<img loading="lazy" src="{{thing.author.profile_url}}" class="flex-shrink-0 p-[3px] border w-8 h-8 object-cover bg-white border-gray-300" alt="{{thing.author.profile_url}} avatar"/>
-		<a href="{{thing.author.url}}" class="block text-base font-bold text-black hover:text-red-600 leading-normal">
+		<a href="{{thing.author.url}}" class="block text-base font-bold text-black dark:text-gray-200 hover:text-primary leading-normal">
 			@{{thing.author.username}}
 		</a>
 		<span class="text-sm text-gray-500 leading-normal">
 			{{thing.author.created_datetime}}
 		</span>
 	</div>
-	<h5 class="font-heading mb-2">
-		<a href="{{thing.permalink}}" class="text-black hover:text-red-600">
-			{{ thing.realtitle(v) | safe}}
-		</a>
-	</h5>
 </div>
 
 <h2 class="text-lg">
@@ -55,25 +50,25 @@
 <div class="flex flex-col mb-4">
 	<div class="overflow-x-auto">
 		<div class="align-middle inline-block min-w-full">
-			<div class="flex flex-col bg-gray-100 border border-gray-300 rounded overflow-hidden">
+			<div class="flex flex-col bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-900 rounded overflow-hidden">
 				<table class="min-w-full">
 					<thead class="bg-gradient-to-t from-gray-200 to-gray-100">
 						<tr>
-							<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+							<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-500 uppercase tracking-wider">
 								Members
 							</th>
 						</tr>
 					</thead>
-					<tbody class="bg-gray-100 divide-y divide-gray-300 border-t border-gray-300">
+					<tbody class="bg-gray-100 divide-y divide-gray-300 border-t border-gray-300 dark:border-gray-700">
 						{% if ups %}
 							{% for vote in ups %}
-							<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+							<tr class="shadow-inset-t-white-05 odd:bg-gray-200 dark:bg-gray-700">
 								<td class="px-6 py-4 whitespace-nowrap">
 									<div class="flex items-center">
 										<img loading="lazy" src="{{vote.user.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
 										<!-- User Details -->
 										<div class="ml-3">
-											<a class="block font-bold text-black hover:text-red-600" href="/@{{vote.user.username}}">
+											<a class="block font-bold text-black dark:text-gray-200 hover:text-primary" href="/@{{vote.user.username}}">
 												{{vote.user.username}}
 											</a>
 											{% if vote.user.customtitle %}
@@ -87,7 +82,7 @@
 							</tr>
 							{% endfor %}
 						{% else %}
-						<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+						<tr class="shadow-inset-t-white-05 odd:bg-gray-200 dark:bg-gray-700">
 								<td class="px-6 py-4 whitespace-nowrap">
 									<div class="flex items-center text-gray-500">
 										No upvotes yet...
@@ -112,21 +107,21 @@
 				<table class="min-w-full">
 					<thead class="bg-gradient-to-t from-gray-200 to-gray-100">
 						<tr>
-							<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+							<th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-500 uppercase tracking-wider">
 								Members
 							</th>
 						</tr>
 					</thead>
-					<tbody class="bg-gray-100 divide-y divide-gray-300 border-t border-gray-300">
+					<tbody class="bg-gray-100 divide-y divide-gray-300 border-t border-gray-300 dark:border-gray-700">
 						{% if downs %}
 							{% for vote in downs %}
-							<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+							<tr class="shadow-inset-t-white-05 odd:bg-gray-200 dark:bg-gray-700">
 								<td class="px-6 py-4 whitespace-nowrap">
 									<div class="flex items-center">
 										<img loading="lazy" src="{{vote.user.profile_url}}" class="flex-shrink-0 p-[3px] border w-12 h-12 object-cover {{ 'bg-red-800 border-red-900' if v.username == vote.user.username else 'bg-white border-gray-300' }}" alt="{{ vote.user.username }} avatar"/>
 										<!-- User Details -->
 										<div class="ml-3">
-											<a class="block font-bold text-black hover:text-red-600" href="/@{{vote.user.username}}">
+											<a class="block font-bold text-black hover:text-primary" href="/@{{vote.user.username}}">
 												{{vote.user.username}}
 											</a>
 											{% if vote.user.customtitle %}
@@ -140,7 +135,7 @@
 							</tr>
 							{% endfor %}
 						{% else %}
-						<tr class="shadow-inset-t-white-05 odd:bg-gray-200">
+						<tr class="shadow-inset-t-white-05 odd:bg-gray-200 dark:bg-gray-700">
 								<td class="px-6 py-4 whitespace-nowrap">
 									<div class="flex items-center text-gray-500">
 										No downvotes yet...
