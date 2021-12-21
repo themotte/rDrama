@@ -52,7 +52,7 @@ def sex(v):
 
 	users = g.db.query(User).filter(User.patron > 0, User.patron < 5).all()
 	for u in users:
-		if not u.email or u.email.lower() not in emails: print(u.username + ' - ' + u.email)
+		if not u.email or u.email.lower() not in emails: print(f'{u.username} - {u.email}')
 
 	return "sex"
 
