@@ -4,10 +4,10 @@ from files.helpers.const import *
 
 
 def get_logged_in_user():
-	token = request.headers.get("Authorization")
+	token = request.headers.get("Authorization","").strip()
 
 	if token:
-		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).first()
+		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).one_or_none()
 		if not client: return None
 
 		v = client.user
@@ -21,7 +21,7 @@ def get_logged_in_user():
 		if not uid or not logged_in or uid != logged_in: return None
 
 		try:
-			if g.db: v = g.db.query(User).filter_by(id=uid).one_or_none()
+			if g.db: v = g.db.query(User).filter_by(id=logged_in).one_or_none()
 			else: return None
 		except: return None
 
