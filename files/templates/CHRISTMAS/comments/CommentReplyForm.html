@@ -3,9 +3,9 @@
 		<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 		<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
 		<input id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}">
-		<div class="relative comment-box rounded-lg border border-gray-300 bg-gray-100 shadow-inner w-full"> 
-			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="text-black w-full rounded-t-md p-3 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none placehoder:text-gray-400" aria-label="With textarea" placeholder="Write your reply..." rows="3" oninput="charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')"></textarea>
-			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
+		<div class="relative comment-box rounded-lg border border-gray-300 dark:border-gray-900 bg-gray-100 dark:bg-white/[.05] shadow-inner w-full">
+			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white dark:focus:bg-transparent shadow-inner resize-y focus:outline-none placehoder:text-gray-400" aria-label="With textarea" placeholder="Write your reply..." rows="3" oninput="charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')"></textarea>
+			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 dark:border-white/[.05] mb-0">
 				<li>
 					<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('reply-form-body-{{c.fullname}}')">
 						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
@@ -51,7 +51,7 @@
 				<button type="button" class="px-4 py-2 text-sm font-bold text-gray-400 hover:text-gray-500" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('hidden')">
 					Cancel
 				</button>
-				<button type="button" id="save-reply-to-{{c.fullname}}" class="ml-2 btn btn-green" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');">
+				<button type="button" id="save-reply-to-{{c.fullname}}" class="ml-2 btn btn-primary" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');">
 					Comment
 				</button>
 			</div>

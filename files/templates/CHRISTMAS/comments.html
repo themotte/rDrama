@@ -178,7 +178,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{c.id}}" class="comment anchor {% if c.unread %}bg-gradient-to-r from-red-200{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed items-center opacity-50 md:hover:opacity-100{% endif %}">
+<div id="comment-{{c.id}}" class="comment anchor {% if c.unread %}bg-primary/20{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed items-center opacity-50 md:hover:opacity-100{% endif %}">
 
 	{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %}
 	<div id="comment-collapse-{{c.id}}" class="z-20 absolute w-full h-full bottom-0 left-0 right-0 top-0 cursor-pointer" onclick="collapse_comment('{{c.id}}')"></div>
@@ -189,14 +189,14 @@
 	<span class="comment-collapse-desktop hidden" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 
 	<div class="flex flex-col flex-shrink-0 items-center mr-2.5 {{ 'md:mr-4' if not c.parent_comment_id or standalone else 'md:mr-3' }}">
-		<div class="relative {{ 'santa' if c.author.patron else 'cap' }}">
+		<button class="relative {{ 'santa' if c.author.patron else 'cap' }}" onclick="collapse_comment('{{c.id}}')">
 			{% if standalone or level==1 %}
 			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 			{% else %}
 			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-9 h-9 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 			{% endif %}
-		</div>
-		<button onclick="collapse_comment('{{c.id}}')" class="invisible-on-collapse md:ml-4 w-[1px] md:w-4 h-full border-l border-gray-400 dark:border-gray-700"></button>
+		</button>
+		<button onclick="collapse_comment('{{c.id}}')" class="invisible-on-collapse md:ml-4 w-[1px] md:w-4 h-full border-l border-gray-400 dark:border-gray-600"></button>
 	</div>
 
 	<div class="w-full">
@@ -420,9 +420,9 @@
 		{% include "CHRISTMAS/ban_modal.html" %}
 	{% endif %}
 
-		<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
+	<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
+			<div class="modal-content mx-auto max-w-xl bg-gray-100 dark:bg-gray-700 rounded-md shadow-lg">
 				<div class="modal-header">
 					<h5 class="modal-title">Delete comment?</h5>
 					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -432,14 +432,18 @@
 				<div class="modal-body text-center">
 
 					<div class="py-4">
-						<i class="fad fa-trash-alt text-muted" style="font-size: 3.5rem;"></i>
+						<i class="fad fa-trash-alt text-gray-400" style="font-size: 3.5rem;"></i>
 					</div>
 
-					<p>Your comment will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.</p>
+					<p>
+						Your comment will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.
+					</p>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
-					<button id="deleteCommentButton" class="btn btn-danger">Delete comment</button>
+				<div class="flex justify-end space-x-2 border-t border-gray-400 dark:border-gray-800 p-4">
+					<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" data-bs-dismiss="modal">
+						Cancel
+					</button>
+					<button id="deleteCommentButton" class="btn btn-red">Delete comment</button>
 				</div>
 			</div>
 		</div>
@@ -500,7 +504,7 @@
 	}
 
 	.popover {
-		max-width: 100%;
+		max-width: 50%;
 		box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
 		border-color: #dadada;
 	}
@@ -520,10 +524,6 @@
 		padding: 0;
 		border-radius: .25rem;
 		overflow: hidden;
-	}
-
-	.mt-n6 {
-		margin-top: -1.75rem !important;
 	}
 
 	.avatar-72 {

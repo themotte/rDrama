@@ -44,7 +44,7 @@
 	</div>
 	<h5 class="font-heading mb-2">
 		<a href="{{thing.permalink}}" class="text-black hover:text-red-600">
-			{{ thing.title }}
+			{{ thing.realtitle(v) | safe}}
 		</a>
 	</h5>
 </div>

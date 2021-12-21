@@ -57,22 +57,22 @@
 	</style>
 </head>
 
- {% if v and (v.theme == 'theme-iron dark' or v.theme == 'theme-evergreen') %}
- 	{% set theme = v.theme %}
+{% if v and v.theme2 %}
+ 	{% set theme = v.theme2 %}
  {% else %}
  	{% set theme = 'theme-iron dark' %}
  {% endif %}
 
-<body class="{{ theme }} overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-gray-900" {% if v and v.background %}style="background:url(/assets/CHRISTMAS/images/backgrounds/{{v.background}})"{% endif %}>
+ <body class="{{ theme }} overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-black dark:bg-gray-700 dark:text-gray-100">
 
 	{% include "CHRISTMAS/header-tw.html" %}
 
-	<div class="flex h-screen pt-16 bg-gray-500">
+	<div class="flex h-screen pt-16 bg-gray-500 dark:bg-gray-700 dark:text-gray-200">
 		<div class="w-full sm:overflow-y-auto">
 
 			<div class="md:px-4 bg-gray-700" id="sub-header-row">
 				<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-					<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+					<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
 					<div class="relative col-span-full flex items-center">
 						<div>
 							<h1 class="font-bold text-xl font-heading leading-normal mb-0">
@@ -119,7 +119,7 @@
 			</div>
 
 			<div class="w-full md:px-4">
-				<div class="w-full max-w-screen-2xl mx-auto mb-4 md:px-4 grid grid-cols-12 gap-6 bg-gray-300 md:bg-gray-200 rounded-b" id="main-content-row">
+				<div class="w-full max-w-screen-2xl mx-auto mb-4 md:px-4 grid grid-cols-12 gap-6 bg-gray-300 md:bg-gray-200 dark:bg-gray-800 rounded-b" id="main-content-row">
 
 					<div class="col-span-full xl:col-span-9">
 						{% if error %}
@@ -223,7 +223,7 @@
 		<script>function formkey() {return '{{v.formkey}}';}</script>
 
 		<script>
-			var previousTheme = '{{ v.theme }}'.split(' ');
+			var previousTheme = '{{ v.theme2 }}'.split(' ');
 			function changeTheme(theme) {
 				const body = document.body;
 				// if previous selection has a value, remove them from body tag

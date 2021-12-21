@@ -3,9 +3,9 @@
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<input type="hidden" name="current_page" value="{{request.path}}">
 		<input name="title" class="form-input border-dashed mb-2" required placeholder="title" value="{{p.title}}">
-		<div class="rounded border border-gray-300 border-dashed bg-white w-full">
-			<textarea name="body" maxlength="10000" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea>
-			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-300 mb-0">
+		<div class="rounded border border-gray-300 dark:border-gray-900 bg-white dark:bg-white/[.05] border-dashed w-full">
+			<textarea name="body" maxlength="10000" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="rounded-t bg-transparent p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Add text to your post..." rows="10">{{p.body}}</textarea>
+			<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 dark:border-white/[.05] mb-0">
 				<li>
 					<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('post-edit-box-{{p.id}}')">
 						<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>

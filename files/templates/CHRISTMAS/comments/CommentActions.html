@@ -80,31 +80,31 @@
 			</button>
 			<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownComment-{{c.id}}Actions">
 				<li class="hidden">
-					<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="/votes?link={{c.fullname}}">
+					<a class="dropdown-item dropdown-item-primary" href="/votes?link={{c.fullname}}">
 						<i class="fas fa-poll fa-sm fa-fw mr-4"></i>Votes
 					</a>
 				</li>
 				<li class="hidden">
-					<a class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" href="{{c.permalink}}">
+					<a class="dropdown-item dropdown-item-primary" href="{{c.permalink}}">
 						<i class="fas fa-book-open fa-sm fa-fw mr-4"></i>Context
 					</a>
 				</li>
 				{% if v and c.parent_submission and c.author_id==v.id %}
 				<li class="hidden md:block">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="toggleEdit('{{c.id}}')">
+					<button class="dropdown-item dropdown-item-primary" onclick="toggleEdit('{{c.id}}')">
 						<i class="fas fa-edit fa-sm fa-fw mr-4"></i>Edit
 					</button>
 				</li>
 
 				{% if c.deleted_utc > 0 %}
 				<li class="hidden md:block">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast('/undelete/comment/{{c.id}}')">
+					<button class="dropdown-item dropdown-item-primary" onclick="post_toast('/undelete/comment/{{c.id}}')">
 						<i class="fas fa-trash-alt fa-sm fa-fw mr-4"></i>Undelete
 					</button>
 				</li>
 				{% else %}
 				<li class="hidden md:block">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')">
+					<button class="dropdown-item dropdown-item-primary" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')">
 						<i class="fas fa-trash-alt fa-sm fa-fw mr-4"></i>Delete
 					</button>
 				</li>
@@ -113,12 +113,12 @@
 
 				{% if v and v.admin_level==6 and v.id==c.author_id %}
 				<li id="undistinguish-{{c.id}}" class="hidden {% if c.distinguish_level %}md:block{% endif %}">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')">
+					<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')">
 						<i class="fas fa-id-badge text-info fa-sm fa-fw mr-4"></i>Undistinguish
 					</button>
 				</li>
 				<li id="distinguish-{{c.id}}" class="hidden {% if not c.distinguish_level %}md:block{% endif %}">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')">
+					<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')">
 						<i class="fas fa-id-badge text-info fa-sm fa-fw mr-4"></i>Distinguish
 					</button>
 				</li>
@@ -126,17 +126,17 @@
 
 				{% if v and not v.id==c.author_id and not (c.post and c.post.award_count("ghosts")) %}
 				<li class="hidden {% if c.is_blocking %}md:block{% endif %} text-green-600">
-					<button id="unblock-{{c.id}}" class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/settings/unblock?username={{c.author.username}}','block-{{c.id}}','unblock-{{c.id}}')">
+					<button id="unblock-{{c.id}}" class="dropdown-item dropdown-item-primary" onclick="post_toast3('/settings/unblock?username={{c.author.username}}','block-{{c.id}}','unblock-{{c.id}}')">
 						<i class="fas fa-eye-slash fa-sm fa-fw mr-4"></i>Unblock user
 					</button>
 				</li>
 				<li id="prompt-{{c.id}}" class="hidden text-red-600">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/settings/block?username={{c.author.username}}','prompt-{{c.id}}','unblock-{{c.id}}')">
+					<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/settings/block?username={{c.author.username}}','prompt-{{c.id}}','unblock-{{c.id}}')">
 						<i class="fas fa-eye-slash fa-sm fa-fw mr-4"></i>Are you sure?
 					</button>
 				</li>
 				<li class="hidden {% if not c.is_blocking %}md:block{% endif %} text-red-600">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" id="block-{{c.id}}" onclick="document.getElementById('block-{{c.id}}').classList.toggle('md:block');document.getElementById('prompt-{{c.id}}').classList.toggle('md:block');">
+					<button class="dropdown-item dropdown-item-primary" id="block-{{c.id}}" onclick="document.getElementById('block-{{c.id}}').classList.toggle('md:block');document.getElementById('prompt-{{c.id}}').classList.toggle('md:block');">
 						<i class="fas fa-eye-slash fa-sm fa-fw mr-4"></i>Block user
 					</button>
 				</li>
@@ -147,12 +147,12 @@
 					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 				</li>
 				<li id="unpin-{{c.id}}" class="hidden {% if c.is_pinned %}md:block{% endif %}">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
+					<button class="dropdown-item dropdown-item-primary" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
 						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Unpin
 					</button>
 				</li>
 				<li id="pin-{{c.id}}" class="hidden {% if not c.is_pinned %}md:block{% endif %}">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
+					<button class="dropdown-item dropdown-item-primary" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
 						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Pin
 					</button>
 				</li>
@@ -167,7 +167,7 @@
 				</li>
 				{% endif %}
 				<li id="approve-{{c.id}}" class="hidden {% if c.is_banned %}md:block{% endif %}">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/unban_comment/{{c.id}}','remove-{{c.id}}','approve-{{c.id}}')">
+					<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/unban_comment/{{c.id}}','remove-{{c.id}}','approve-{{c.id}}')">
 						<i class="fas fa-check fa-sm fa-fw mr-4"></i>Approve
 					</button>
 				</li>
@@ -188,12 +188,12 @@
 
 				{% if v and v.admin_level==6 and v.id != c.author_id %}
 				<li id="unban-{{c.id}}" class="hidden {% if c.author.is_suspended %}md:block{% endif %}">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" onclick="post_toast3('/unban_user/{{c.author_id}}','ban-{{c.id}}','unban-{{c.id}}')">
+					<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/unban_user/{{c.author_id}}','ban-{{c.id}}','unban-{{c.id}}')">
 						<i class="fas fa-user-slash text-green-600 fa-sm fa-fw mr-4"></i>Unban user
 					</button>
 				</li>
 				<li id="ban-{{c.id}}" class="hidden {% if not c.author.is_suspended %}md:block{% endif %}">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{ c.author.id }}', '{{c.author.username}}')">
+					<button class="dropdown-item dropdown-item-primary" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{ c.author.id }}', '{{c.author.username}}')">
 						<i class="fas fa-user-slash text-red-600 fa-sm fa-fw mr-4"></i>Ban user
 					</button>
 				</li>
@@ -204,7 +204,7 @@
 					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 				</li>
 				<li class="hidden md:block">
-					<a href="{{c.oauth_app.permalink}}/comments" class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700">
+					<a href="{{c.oauth_app.permalink}}/comments" class="dropdown-item dropdown-item-primary">
 						<i class="fas fa-code fa-sm fa-fw mr-4"></i>API App
 					</a>
 				</li>
@@ -213,7 +213,7 @@
 					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 				</li>
 				<li class="text-red-600">
-					<button class="dropdown-item block w-full text-left px-4 py-2 text-sm text-gray-200 bg-gradient-to-t hover:from-red-800 hover:to-red-700 hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-t focus:from-red-800 focus:to-red-700" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)">
+					<button class="dropdown-item dropdown-item-primary" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)">
 						<i class="fas fa-flag fa-sm fa-fw mr-4"></i>Report
 					</button>
 				</li>

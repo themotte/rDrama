@@ -93,10 +93,10 @@
 		</ul>
 	</div>
 	{% endif %}
-	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
 	<div class="relative col-span-full flex items-center">
 		<div class="flex items-center">
-			<img class="h-14 w-14 bg-white p-[3px] border border-gray-400" src="{{ u.profile_url }}" alt="Your avatar"/>
+			<img class="h-14 w-14 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" src="{{ u.profile_url }}" alt="Your avatar"/>
 			<div class="pl-2">
 				<!-- <h1 class="font-bold text-2xl leading-normal mb-0" style="color: #{{u.namecolor}}">
 					<span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span>
@@ -142,23 +142,25 @@
 		</div>
 		<div class="ml-auto flex items-center space-x-4">
 			{% if u.id == v.id or not u.is_private %}
-			<ul class="hidden xl:flex items-center space-x-4 mb-0">
+			<ul class="hidden xl:flex items-center space-x-4 mb-0 font-bold text-black dark:text-gray-200">
 				<li>
-					<a href="/@{{ u.username }}/followers" class="text-black text-lg font-bold mb-0">{{ u.stored_subscriber_count }}</a>
-					<small class="block font-bold text-gray-500">Followers</small>
+					<a href="/@{{ u.username }}/followers" class="text-black dark:text-gray-200 text-lg mb-0">
+						{{ u.stored_subscriber_count }}
+					</a>
+					<small class="block text-gray-500">Followers</small>
 				</li>
 				<li>
-					<div class="text-black text-lg font-bold mb-0">{{ u.coins_spent }}</div>
-					<small class="block font-bold text-gray-500">Dramacoin Spent</small>
+					<div class="text-lg mb-0">{{ u.coins_spent }}</div>
+					<small class="block text-gray-500">Dramacoin Spent</small>
 				</li>
 				<li>
-					<div class="text-black text-lg font-bold mb-0">{{ u.coins }}</div>
-					<small class="block font-bold text-gray-500">Dramacoin Earned</small>
+					<div class="text-lg mb-0">{{ u.coins }}</div>
+					<small class="block text-gray-500">Dramacoin Earned</small>
 				</li>
 				{% if u.procoins %}
 				<li>
-					<div class="text-black text-lg font-bold mb-0">{{ u.procoins }}</div>
-					<small class="block font-bold text-gray-500">MarseyBux</small>
+					<div class="text-lg mb-0">{{ u.procoins }}</div>
+					<small class="block text-gray-500">MarseyBux</small>
 				</li>
 				{% endif %}
 			</ul>
@@ -242,26 +244,26 @@
 {% block subHeader2 %}
 <div class="md:px-4 sticky top-0 z-20">
 	<div class="max-w-screen-2xl mx-auto">
-		<div class="px-4 py-2 flex space-x-3 divide-x divide-gray-400 text-xs bg-gray-100 md:border-b md:border-gray-300">
+		<div class="px-4 py-2 flex space-x-3 divide-x divide-gray-400 text-xs bg-gray-100 dark:bg-gray-800 md:border-b md:border-gray-300 dark:border-gray-700">
 			<ul class="flex items-center space-x-3 leading-normal mb-0">
 				<li>
-					<a class="{{ 'font-bold text-red-600' if not 'comments' in request.path else 'text-gray-700' }}" href="/@{{u.username}}">
+					<a class="{{ 'font-bold text-primary' if not 'comments' in request.path else 'text-gray-700 dark:text-gray-400' }}" href="/@{{u.username}}">
 						Posts <span class="text-gray-500 font-normal">{{0 if u.shadowbanned and not (v and (v.shadowbanned or v.admin_level)) else u.post_count}}</span>
 					</a>
 				</li>
 				<li>
-					<a class="{{ 'font-bold text-red-600' if 'comments' in request.path else 'text-gray-700' }}" href="/@{{u.username}}/comments">
+					<a class="{{ 'font-bold text-primary' if 'comments' in request.path else 'text-gray-700 dark:text-gray-400' }}" href="/@{{u.username}}/comments">
 						Comments <span class="text-gray-500 font-normal">{{0 if u.shadowbanned and not (v and (v.shadowbanned or v.admin_level)) else u.comment_count}}</span>
 					</a>
 				</li>
 				{% if u.id == v.id %}
 				<li>
-					<a class="{{ 'font-bold text-red-600' if 'saved/posts' in request.full_path else 'text-gray-700' }}" href="/@{{u.username}}/saved/posts">
+					<a class="{{ 'font-bold text-primary' if 'saved/posts' in request.full_path else 'text-gray-700 dark:text-gray-400' }}" href="/@{{u.username}}/saved/posts">
 						Saved Posts
 					</a>
 				</li>
 				<li>
-					<a class="{{ 'font-bold text-red-600' if 'saved/comments' in request.full_path else 'text-gray-700' }}" href="/@{{u.username}}/saved/comments">
+					<a class="{{ 'font-bold text-primary' if 'saved/comments' in request.full_path else 'text-gray-700 dark:text-gray-400' }}" href="/@{{u.username}}/saved/comments">
 						Saved Comments
 					</a>
 				</li>
@@ -323,7 +325,7 @@
 		<div class="flex justify-end md:justify-start mb-3 md:m-0 px-2.5 md:px-0">
 			{% include "CHRISTMAS/dropdowns/SubmissionSorts.html" %}
 		</div>
-		<hr class="hidden md:block my-4 shadow-inset-t-white-05 border-t border-gray-300"/>
+		<hr class="hidden md:block my-4 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 		{% endif %}
 		<ul>
 			{% include "CHRISTMAS/submission_listing.html" %}
