@@ -9,7 +9,6 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres@postgres:5432
       - MASTER_KEY=XuxGqp5NyygJrM24b5gt3YgyvFVGdQnwVDwLzLwpu3eQwY
-      - REDIS_URL=redis://redis
       - DOMAIN=localhost
       - SITE_NAME=Drama
       - GIPHY_KEY=3435tdfsdudebussylmaoxxt43
@@ -41,7 +40,6 @@ services:
       - DUES=0
       - MAIL_USERNAME=blahblahblah@gmail.com
       - MAIL_PASSWORD=3435tdfsdudebussylmaoxxt43
-      - CHRISTMAS=0
     links:
       - "redis"
       - "postgres"
