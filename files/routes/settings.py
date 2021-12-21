@@ -689,7 +689,7 @@ def settings_security_post(v):
 									   v=v)
 				  )
 
-		return render_template("settings_security.html", v=v, error="Check your email and click the verification link to complete the email change."))
+		return render_template("settings_security.html", v=v, error="Check your email and click the verification link to complete the email change.")
 
 	if request.values.get("2fa_token", ""):
 
