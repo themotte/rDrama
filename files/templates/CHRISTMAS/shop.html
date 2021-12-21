@@ -6,13 +6,13 @@
 
 {% block subHeader %}
 <div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 rounded-t sub-header-shadow"></div>
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
 		<div class="relative col-span-full flex items-center">
 		<div>
 			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
 				rDrama's Holigay Emporium
 			</h1>
-			<small class="block text-gray-700">
+			<small class="block text-gray-700 dark:text-gray-400">
 				Stir drama. Earn coins.
 			</small>
 		</div>
@@ -21,19 +21,19 @@
 				<strong class="text-lg md:text-2xl">
 					{{v.coins}}
 				</strong>
-				<small class="text-gray-700">your balance</small>
+				<small class="text-gray-700 dark:text-gray-400">your balance</small>
 			</li>
 			<li>
 				<strong class="text-lg md:text-2xl">
 					{{v.coins_spent}}
 				</strong>
-				<small class="text-gray-700">spent by you</small>
+				<small class="text-gray-700 dark:text-gray-400">spent by you</small>
 			</li>
 			<li>
 				<strong class="text-lg md:text-2xl">
 					{{sales}}
 				</strong>
-				<small class="text-gray-700">total sales</small>
+				<small class="text-gray-700 dark:text-gray-400">total sales</small>
 			</li>
 		</ul>
 	</div>
