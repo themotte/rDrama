@@ -771,7 +771,7 @@ def submit_post(v):
 		domain = parsed_url.netloc
 
 		qd = parse_qs(parsed_url.query)
-		filtered = dict((k, v) for k, v in qd.items() if not k.startswith('utm_') and not k.startswith('ref_'))
+		filtered = dict((k, val) for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_'))
 
 		new_url = ParseResult(scheme="https",
 							netloc=parsed_url.netloc,
