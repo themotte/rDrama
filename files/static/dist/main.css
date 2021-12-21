@@ -1898,6 +1898,14 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(8, 145, 178, var(--tw-bg-opacity));
 }
+.bg-\[\#001f1b\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(0, 31, 27, var(--tw-bg-opacity));
+}
+.bg-\[\#48ec87\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(72, 236, 135, var(--tw-bg-opacity));
+}
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
@@ -2369,6 +2377,10 @@ video {
 	--tw-text-opacity: 1;
 	color: rgba(8, 145, 178, var(--tw-text-opacity));
 }
+.text-\[\#48ec87\] {
+	--tw-text-opacity: 1;
+	color: rgba(72, 236, 135, var(--tw-text-opacity));
+}
 .antialiased {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -2567,6 +2579,19 @@ video {
 	--color-700: 0,0,31;
 	--color-800: 0,0,31;
 	--color-900: 0,0,31;
+}
+
+.theme-war-games {
+	--color-primary: 72,236,135;
+	--color-100: 207,251,231;
+	--color-200: 207,251,231;
+	--color-300: 207,251,231;
+	--color-400: 114,244,173;
+	--color-500: 72,236,135;
+	--color-600: 39,219,138;
+	--color-700: 0,31,27;
+	--color-800: 0,31,27;
+	--color-900: 0,31,27;
 }
 
 .theme-yale {
