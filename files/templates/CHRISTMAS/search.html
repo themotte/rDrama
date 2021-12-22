@@ -78,11 +78,11 @@
 			{% if page > 1 %}
 			<small>
 				<a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1" {% if page==1 %}aria-disabled="true"{% endif %}>
-					Previous
+					Back
 				</a>
 			</small>
 			{% else %}
-			<button disabled class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 cursor-not-allowed">Prev</button>
+			<button disabled class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 cursor-not-allowed">Back</button>
 			{% endif %}
 		</li>
 		<li class="{% if not next_exists %}opacity-50 pointer-events-none{% endif %}">
