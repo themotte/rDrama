@@ -3469,12 +3469,21 @@ video {
 	background-color: rgba(255, 255, 255, .05);
 }
 
+	.dark .dark\:bg-white\/10 {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
 	.dark .dark\:bg-gray-700\/40 {
 	background-color: rgba(var(--color-700), 0.4);
 }
 
 	.dark .dark\:bg-none {
 	background-image: none;
+}
+
+	.dark .dark\:text-gray-200 {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-200), var(--tw-text-opacity));
 }
 
 	.dark .dark\:text-gray-400 {
@@ -3485,11 +3494,6 @@ video {
 	.dark .dark\:text-gray-100 {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-100), var(--tw-text-opacity));
-}
-
-	.dark .dark\:text-gray-200 {
-	--tw-text-opacity: 1;
-	color: rgba(var(--color-200), var(--tw-text-opacity));
 }
 
 	.dark .dark\:text-gray-500 {
