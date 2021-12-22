@@ -736,6 +736,10 @@ video {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-700), var(--tw-text-opacity));
 }
+		.dark .label {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-500), var(--tw-text-opacity));
+}
 .container {
 	width: 100%;
 }
