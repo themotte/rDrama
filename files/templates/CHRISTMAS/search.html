@@ -82,13 +82,19 @@
 				</a>
 			</small>
 			{% else %}
-			<button class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 disabled cursor-not-allowed">Prev</button>
+			<button disabled class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 cursor-not-allowed">Prev</button>
 			{% endif %}
 		</li>
 		<li class="{% if not next_exists %}opacity-50 pointer-events-none{% endif %}">
+			{% if next_exists %}
 			<small>
-				<a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a>
+				<a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">
+					Next
+				</a>
 			</small>
+			{% else %}
+			<button disabled class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 cursor-not-allowed">Next</button>
+			{% endif %}
 		</li>
 	</ul>
 </div>
