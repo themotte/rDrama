@@ -633,8 +633,6 @@ def verifiedcolor(v):
 @validate_formkey
 def settings_security_post(v):
 	if request.values.get("new_password"):
-		if v.id in (PW1_ID,PW2_ID): return render_template("settings_security.html", v=v, error="This account is protected from password changes.")
-
 		if request.values.get("new_password") != request.values.get("cnf_password"):
 			return render_template("settings_security.html", v=v, error="Passwords do not match.")
 
@@ -730,8 +728,6 @@ def settings_security_post(v):
 @auth_required
 @validate_formkey
 def settings_log_out_others(v):
-
-	if v.id in (PW1_ID,PW2_ID): abort(403)
 
 	submitted_password = request.values.get("password", "").strip()
 
