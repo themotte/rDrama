@@ -13,7 +13,7 @@
 {% block title %}
 
 {% if 'rama' not in request.host %}
-<script defer>
+<!-- <script defer>
 	function poll_vote(cid) {
 		{% if v %}
 		var type = document.getElementById(cid).checked;
@@ -28,10 +28,10 @@
 		document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
 		{% endif %}
 	}
-</script>
+</script> -->
 
 {% if v %}
-<script defer src="/assets/CHRISTMAS/js/comments_v.js?v=200"></script>
+<!-- <script defer src="/assets/CHRISTMAS/js/comments_v.js?v=200"></script> -->
 {% endif %}
 
 {% endif %}
@@ -616,9 +616,6 @@
 
 	{% if v %}
 		<script defer src="/assets/CHRISTMAS/js/vote.js?v=200"></script>
-		{% if not p.comment_count %}
-			<script defer src="/assets/CHRISTMAS/js/comments_v.js?v=200"></script>
-		{% endif %}
 	{% endif %}
 
 	{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
