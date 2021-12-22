@@ -48,7 +48,7 @@
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			DramaMetric™
 		</h2>
-		<ul class="flex flex-col space-y-2 text-gray-500">
+		<ul class="flex flex-col space-y-1 text-gray-500">
 			<li>
 				<p class="text-sm">
 					<strong>{{ p.views }}</strong> {{ 'view' if p.views == 1 else 'views' }} on this post
@@ -70,7 +70,7 @@
 			</li>
 			{% endif %}
 		</ul>
-		<ul class="flex flex-col mb-0">
+		<ul class="flex flex-col space-y-1 mb-0">
 			<!-- Flair -->
 			{% if p.flair %}
 			<li>
