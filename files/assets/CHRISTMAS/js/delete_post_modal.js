@@ -15,8 +15,6 @@ function delete_postModal(id) {
         xhr.send(form);
     }
 
-    document.getElementById("deletePostButton-mobile").onclick = delete_post;
-
     document.getElementById("deletePostButton").onclick =  delete_post;
 
 };
