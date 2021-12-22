@@ -340,7 +340,7 @@
 		}
 		/*Inputs*/
 		.label {
-			@apply block font-bold text-gray-700 text-sm leading-normal mb-1;
+			@apply block font-bold text-gray-700 dark:text-gray-500 text-sm leading-normal mb-1;
 		}
 	}
 

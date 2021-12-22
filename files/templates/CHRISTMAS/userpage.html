@@ -199,6 +199,16 @@
 				{% endif %}
 			</ul>
 		{% endif %}
+		{% if u.received_awards %}
+		<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
+			{% for a in u.received_awards %}
+			<li>
+				<i class="{{a['icon']}} {{a['color']}} fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
+				<span class="text-gray-500 text-sm">x{{a['count']}}</span>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
 		{% if u.badges %}
 			<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
 				{% for b in u.badges %}
@@ -213,16 +223,6 @@
 				</li>
 				{% endfor %}
 			</ul>
-		{% endif %}
-		{% if u.received_awards %}
-		<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
-			{% for a in u.received_awards %}
-			<li>
-				<i class="{{a['icon']}} {{a['color']}} fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
-				<span class="text-gray-500 text-sm">x{{a['count']}}</span>
-			</li>
-			{% endfor %}
-		</ul>
 		{% endif %}
 		{% if u.friends_html or u.enemies_html %}
 			<div class="mt-3">
