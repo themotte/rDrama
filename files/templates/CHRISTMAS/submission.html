@@ -42,7 +42,6 @@
 {% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc > 0 %}
 <title>{{'@'+comment_info.author.username}} comments on "{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}"</title>
 
-
 <meta property="og:article:author" content="{{'@'+comment_info.author.username}}" >
 <meta property="article:published_time" content="{{comment_info.created_datetime}}" >
 {% if comment_info.edited_utc %}<meta property="article:modified_time" content="{{comment_info.edited_string}}" >{% endif %}
@@ -295,11 +294,17 @@
 						</bdi>
 						{% endif %}
 
-						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp">{{p.age_string}}</span>
+						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp">
+							{{p.age_string}}
+						</span>
 
 						{% if p.edited_utc %}
+						<span class="flex-shrink-0 italic">
 						Edited
-						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp">{{p.edited_string}}</span>
+							<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">
+								{{ p.edited_string }}
+							</span>
+						</span>
 						{% endif %}
 
 						{% if p.is_image %}
@@ -619,7 +624,7 @@
 	{% endif %}
 
 	{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-		<script src="/assets/CHRISTMAS/js/submission.js?v=201"></script>
+		<script src="/assets/CHRISTMAS/js/submission.js?v=202"></script>
 	{% endif %}
 
 	{% if not v or v.highlightcomments %}
