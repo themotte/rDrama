@@ -1379,10 +1379,10 @@ video {
 .gap-y-2 {
 	row-gap: 0.5rem;
 }
-.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+.space-y-1 > :not([hidden]) ~ :not([hidden]) {
 	--tw-space-y-reverse: 0;
-	margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-	margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+	margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
+	margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
 }
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
 	--tw-space-x-reverse: 0;
@@ -1398,6 +1398,11 @@ video {
 	--tw-space-y-reverse: 0;
 	margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
 	margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+}
+.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+	--tw-space-y-reverse: 0;
+	margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+	margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
 .space-y-6 > :not([hidden]) ~ :not([hidden]) {
 	--tw-space-y-reverse: 0;
@@ -1418,11 +1423,6 @@ video {
 	--tw-space-x-reverse: 0;
 	margin-right: calc(1.25rem * var(--tw-space-x-reverse));
 	margin-left: calc(1.25rem * calc(1 - var(--tw-space-x-reverse)));
-}
-.space-y-1 > :not([hidden]) ~ :not([hidden]) {
-	--tw-space-y-reverse: 0;
-	margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
-	margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
 }
 .divide-x > :not([hidden]) ~ :not([hidden]) {
 	--tw-divide-x-reverse: 0;
@@ -2146,6 +2146,9 @@ video {
 .pt-0 {
 	padding-top: 0px;
 }
+.pb-2 {
+	padding-bottom: 0.5rem;
+}
 .pt-16 {
 	padding-top: 4rem;
 }
@@ -2206,14 +2209,14 @@ video {
 .text-\[8px\] {
 	font-size: 8px;
 }
+.font-medium {
+	font-weight: 500;
+}
 .font-bold {
 	font-weight: 700;
 }
 .font-normal {
 	font-weight: 400;
-}
-.font-medium {
-	font-weight: 500;
 }
 .uppercase {
 	text-transform: uppercase;
@@ -2573,7 +2576,7 @@ video {
 	--color-200: 226,232,240;
 	--color-300: 203,213,225;
 	--color-400: 148,163,184;
-	--color-500: 100,116,139;
+	--color-500: 114,129,149;
 	--color-600: 71,85,105;
 	--color-700: 45,60,80;
 	--color-800: 30,41,59;
@@ -3143,9 +3146,9 @@ video {
 	--tw-gradient-to: #f59e0b;
 }
 
-	.hover\:text-red-600:hover {
+	.hover\:text-primary:hover {
 	--tw-text-opacity: 1;
-	color: rgba(220, 38, 38, var(--tw-text-opacity));
+	color: rgba(var(--color-primary), var(--tw-text-opacity));
 }
 
 	.hover\:text-gray-900:hover {
@@ -3176,11 +3179,6 @@ video {
 	.hover\:text-white:hover {
 	--tw-text-opacity: 1;
 	color: rgba(255, 255, 255, var(--tw-text-opacity));
-}
-
-	.hover\:text-primary:hover {
-	--tw-text-opacity: 1;
-	color: rgba(var(--color-primary), var(--tw-text-opacity));
 }
 
 	.hover\:text-green-700:hover {
@@ -3221,6 +3219,11 @@ video {
 	.hover\:text-red-500:hover {
 	--tw-text-opacity: 1;
 	color: rgba(239, 68, 68, var(--tw-text-opacity));
+}
+
+	.hover\:text-red-600:hover {
+	--tw-text-opacity: 1;
+	color: rgba(220, 38, 38, var(--tw-text-opacity));
 }
 
 	.hover\:underline:hover {
@@ -3419,6 +3422,11 @@ video {
 	border-bottom-width: 1px;
 }
 
+	.dark .dark\:border-gray-900 {
+	--tw-border-opacity: 1;
+	border-color: rgba(var(--color-900), var(--tw-border-opacity));
+}
+
 	.dark .dark\:border-gray-700 {
 	--tw-border-opacity: 1;
 	border-color: rgba(var(--color-700), var(--tw-border-opacity));
@@ -3434,23 +3442,18 @@ video {
 	border-color: rgba(var(--color-800), var(--tw-border-opacity));
 }
 
-	.dark .dark\:border-gray-900 {
-	--tw-border-opacity: 1;
-	border-color: rgba(var(--color-900), var(--tw-border-opacity));
-}
-
 	.dark .dark\:border-white\/\[\.05\] {
 	border-color: rgba(255, 255, 255, .05);
-}
-
-	.dark .dark\:bg-gray-900 {
-	--tw-bg-opacity: 1;
-	background-color: rgba(var(--color-900), var(--tw-bg-opacity));
 }
 
 	.dark .dark\:bg-gray-700 {
 	--tw-bg-opacity: 1;
 	background-color: rgba(var(--color-700), var(--tw-bg-opacity));
+}
+
+	.dark .dark\:bg-gray-900 {
+	--tw-bg-opacity: 1;
+	background-color: rgba(var(--color-900), var(--tw-bg-opacity));
 }
 
 	.dark .dark\:bg-gray-800 {
@@ -3638,10 +3641,6 @@ video {
 
 	.md\:mb-4 {
 		margin-bottom: 1rem;
-	}
-
-	.md\:mb-0 {
-		margin-bottom: 0px;
 	}
 
 	.md\:ml-\[4\.5rem\] {
