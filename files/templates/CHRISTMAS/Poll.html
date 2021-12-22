@@ -1,11 +1,11 @@
-<div class="md:inline-block px-4 py-2 md:py-3 bg-gray-100 border border-gray-300 rounded-md shadow-inset-t-white-10 select-none">
+<div class="md:inline-block px-4 py-2 md:py-3 bg-gray-100 dark:border-gray-700 border border-gray-300 dark:border-gray-900 rounded-md shadow-inset-t-white-10 select-none">
 	<ul class="flex flex-col space-y-2 mb-0">
 	{% for c in p.options %}
 	<li>
 		<input type="checkbox" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="{% if v %}poll_vote('{{c.id}}'){% else %}poll_vote_no_v(){% endif %}">
-		<label class="inline-block pl-2 text-black" for="{{c.id}}">{{c.body_html | safe}}
+		<label class="inline-block pl-2" for="{{c.id}}">{{c.body_html | safe}}
 		<span class="presult {% if not p.total_poll_voted(v) %}hidden{% endif %}"> -
-			<a href="/votes?link=t3_{{c.id}}" class="font-bold text-gray-600 hover:text-red-600">
+			<a href="/votes?link=t3_{{c.id}}" class="font-bold text-gray-500 hover:text-primary">
 				<span id="poll-{{c.id}}">{{c.upvotes}}</span> votes
 			</a>
 		</span>
