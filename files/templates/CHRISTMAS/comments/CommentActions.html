@@ -76,7 +76,7 @@
 	{% if v and c.parent_submission and c.author_id==v.id %}
 	<li>
 		<button class="hover:text-gray-400" onclick="toggleEdit('{{c.id}}')">
-			<i class="fas fa-edit fa-fw mr-2"></i>Edit
+			<i class="fas fa-pencil fa-fw mr-2"></i>Edit
 		</button>
 	</li>
 	{% endif %}
@@ -100,7 +100,7 @@
 				{% if v and c.parent_submission and c.author_id==v.id %}
 				<li class="hidden">
 					<button class="dropdown-item dropdown-item-primary" onclick="toggleEdit('{{c.id}}')">
-						<i class="fas fa-edit fa-sm fa-fw mr-4"></i>Edit
+						<i class="fas fa-pencil fa-sm fa-fw mr-4"></i>Edit
 					</button>
 				</li>
 				{% if c.deleted_utc > 0 %}
