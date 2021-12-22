@@ -73,7 +73,7 @@
 
 {% block pagenav %}
 <nav aria-label="Page navigation">
-	<ul class="flex flex-wrap items-center mb-0">
+	<ul class="flex flex-wrap items-center mb-4">
 		<li class="{% if page==1 %} disabled{% endif %}">
 			<small>
 				<a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1" {% if page==1 %}aria-disabled="true"{% endif %}>
