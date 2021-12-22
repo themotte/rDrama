@@ -75,12 +75,11 @@ function vote(type, id, dir) {
 }
 
 function awardModal(link) {
-	var target = document.getElementById("awardTarget");
+	const target = document.getElementById("awardTarget");
 	target.action = link;
 }
 
 function checkAward(kind) {
-	document.getElementById('giveaward').disabled=false;
 	// document.getElementById('kind').value=kind;
 	// try {document.getElementsByClassName('bg-green-400')[0].classList.toggle('bg-green-400');} catch(e) {}
 	// document.getElementById(kind).classList.toggle('bg-green-400')
