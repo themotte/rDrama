@@ -77,24 +77,20 @@
 
 <div id="comment-{{c.id}}" class="comment">
 
-
 		<span class="comment-collapse-desktop hidden d-md-block" style="border-left: 2px solid #{{c.author.namecolor}};" onclick="collapse_comment('{{c.id}}')"></span>
 
 		<div class="comment-body">
 
 				<div id="comment-{{c.id}}-only">
-
-						<div class="user-info">
-							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
-							<button class="p-2 md:hidden" onclick="collapse_comment('{{c.id}}')">
-								<i class="fas fa-minus-circle fa-sm fa-fw comment-toggle-icon-{{c.id}}"></i>
-							</button>
-							{% if standalone and c.over_18 %}<span class="badge badge-red">+18</span>{% endif %}
-							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
-						</div>
-
+					<div class="user-info">
+						<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
+						<button class="p-2 md:hidden" onclick="collapse_comment('{{c.id}}')">
+							<i class="fas fa-minus-circle fa-sm fa-fw comment-toggle-icon-{{c.id}}"></i>
+						</button>
+						{% if standalone and c.over_18 %}<span class="badge badge-red">+18</span>{% endif %}
+						{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
+					</div>
 				</div>
-
 
 	{% if render_replies %} 
 		{% if level<10 %}
