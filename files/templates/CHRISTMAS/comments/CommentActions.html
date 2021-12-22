@@ -73,6 +73,14 @@
 		</a>
 	</li>
 
+	{% if v and c.parent_submission and c.author_id==v.id %}
+	<li class="hidden md:block">
+		<button class="hover:text-gray-400" onclick="toggleEdit('{{c.id}}')">
+			<i class="fas fa-edit fa-fw mr-2"></i>Edit
+		</button>
+	</li>
+	{% endif %}
+
 	<li class="hidden md:block">
 		<div class="dropdown">
 			<button type="button" id="dropdownComment-{{c.id}}Actions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
@@ -90,12 +98,11 @@
 					</a>
 				</li>
 				{% if v and c.parent_submission and c.author_id==v.id %}
-				<li class="hidden md:block">
+				<li class="hidden">
 					<button class="dropdown-item dropdown-item-primary" onclick="toggleEdit('{{c.id}}')">
 						<i class="fas fa-edit fa-sm fa-fw mr-4"></i>Edit
 					</button>
 				</li>
-
 				{% if c.deleted_utc > 0 %}
 				<li class="hidden md:block">
 					<button class="dropdown-item dropdown-item-primary" onclick="post_toast('/undelete/comment/{{c.id}}')">
