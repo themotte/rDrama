@@ -153,9 +153,9 @@
 				{% endif %}
 				
 				{% if p.is_image %}
-					<span>(image post)</span>
+					<span class="flex-shrink-0">(image post)</span>
 				{% elif p.is_video %}
-					<span>(video post)</span>
+					<span class="flex-shrink-0">(video post)</span>
 				{% elif p.realurl(v) %}
 					<a class="flex-shrink-0" class="text-gray-500 hover:underline" href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
 						({{p.domain}})
