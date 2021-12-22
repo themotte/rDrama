@@ -223,7 +223,7 @@
 
  </head>
 
- <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="overflow-hidden overflow-y-auto sm:overflow-y-none antialiased text-black bg-gray-700 dark:text-gray-100">
+ <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="overflow-hidden overflow-y-auto antialiased text-black bg-gray-700 dark:text-gray-100">
 
 {% block Banner %}
 {% endblock %}
@@ -240,7 +240,7 @@
 {% endblock %}
 
 <div class="flex h-screen pt-16 bg-gray-500 dark:bg-gray-700 dark:text-gray-200">
-	<div id="scrollable-area" class="w-full sm:overflow-y-auto">
+	<div class="w-full">
 
 			{% block desktopUserBanner %}
 			{% endblock %}
@@ -363,12 +363,6 @@
 	</script>
 {% endif %}
 	<script src="/assets/CHRISTMAS/js/default.js?v=204"></script>
-
-	<script>
-	window.onload = function() {
-	  document.getElementById("scrollable-area").focus();
-	};
-	</script>
 
 </body>
 </html>
