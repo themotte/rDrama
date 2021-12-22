@@ -250,10 +250,10 @@ document.onpaste = function(event) {
 
 function poll_vote(cid, parentid) {
 	for(let el of document.getElementsByClassName('presult-'+parentid)) {
-		el.classList.remove('d-none');
+		el.classList.remove('hidden');
 	}
 	for(let el of document.getElementsByClassName('presult')) {
-		el.classList.remove('d-none');
+		el.classList.remove('hidden');
 	}
 	var type = document.getElementById(cid).checked;
 	var scoretext = document.getElementById('poll-' + cid);
