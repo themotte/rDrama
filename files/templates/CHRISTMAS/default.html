@@ -367,9 +367,13 @@
 	<script>
 	document.body.addEventListener('focus', (event) => {
 	  console.log(event)
-	  document.body.blur();
 	});
-</script>
+
+	window.onload = function() {
+	  document.body.blur()
+	};
+
+	</script>
 
 </body>
 </html>
