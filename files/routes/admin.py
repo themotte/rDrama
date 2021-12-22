@@ -53,7 +53,7 @@ def distribute(v, cid):
 	return f"Each winner has received {coinsperperson} coins!"
 
 @app.get("/truescore")
-@admin_level_required(2)
+@auth_desired
 def truescore(v):
 	users = g.db.query(User).order_by(User.truecoins.desc()).limit(25).all()
 	if not v or v.oldsite: template = ''

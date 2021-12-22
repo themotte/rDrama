@@ -137,9 +137,9 @@ def login_post():
 	session["session_id"] = token_hex(49)
 	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
+	session.permanent = True
 
-	if account.id not in (PW1_ID,PW2_ID): check_for_alts(account.id)
-
+	check_for_alts(account.id)
 
 	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
 
@@ -339,6 +339,7 @@ def sign_up_post(v):
 
 	session["session_id"] = token_hex(49)
 	session["lo_user"] = new_user.id
+	session.permanent = True
 
 	g.db.commit()
 
@@ -427,7 +428,6 @@ def post_reset(v):
 
 	user_id = request.values.get("user_id")
 
-	if user_id in (PW1_ID,PW2_ID): abort(403)
 	timestamp = int(request.values.get("time"))
 	token = request.values.get("token")
 
