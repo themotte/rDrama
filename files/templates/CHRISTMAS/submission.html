@@ -183,12 +183,12 @@
 		<li>
 			<span id="pinned-{{p.id}}" class="badge badge-pink" data-bs-toggle="tooltip" data-bs-placement="bottom" data-timestamp={{p.stickied[2:]} onmouseover="pinned_timestamp('pinned-{{p.id}}')"}>
 				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
-				Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
+				Pinned by @{{p.stickied}}
 			</span>
 		</li>
 		{% elif p.stickied %}
 		<li>
-			<span id="pinned-{{p.id}}" class="badge badge-pink">
+			<span id="pinned-{{p.id}}" class="badge badge-yellow">
 				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
 				Pinned by @{{p.stickied}}
 			</span>
