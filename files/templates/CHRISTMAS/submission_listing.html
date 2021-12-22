@@ -176,7 +176,7 @@
 				{% endif %}
 
 				{% if p.flair or p.over_18 or p.club or p.stickied or (p.is_pinned and request.path.startswith('/@')) or p.private or p.awards %}
-				<ul class="relative z-10 flex gap-2 items-center mb-0">
+				<ul class="flex-shrink-0 flex space-x-2 items-center mb-0">
 					<!-- Flair -->
 					{% if p.flair %}
 					<li>
