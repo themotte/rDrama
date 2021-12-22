@@ -577,18 +577,19 @@ def edit_post(pid, v):
 @auth_required
 def get_post_title(v):
 
-	url = request.values.get("url", None)
-	if not url: abort(400)
+	abort(400)
+	# url = request.values.get("url", None)
+	# if not url: abort(400)
 
-	try: x = requests.get(url, headers=titleheaders, timeout=5)
-	except: abort(400)
+	# try: x = requests.get(url, headers=titleheaders, timeout=5)
+	# except: abort(400)
 
-	soup = BeautifulSoup(x.content, 'html.parser')
+	# soup = BeautifulSoup(x.content, 'html.parser')
 
-	title = soup.find('title')
-	if not title: abort(400)
+	# title = soup.find('title')
+	# if not title: abort(400)
 
-	return {"url": url, "title": title.string}
+	# return {"url": url, "title": title.string}
 
 
 def archiveorg(url):
