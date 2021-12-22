@@ -169,10 +169,9 @@
 						<i class="fad fa-gavel fa-fw fa-sm text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i>
 					</span>
 				{% endif %}
-			</div>
 
-			{% if p.flair or p.over_18 or p.club or p.stickied or (p.is_pinned and request.path.startswith('/@')) or p.private or p.awards %}
-				<ul class="relative z-10 flex flex-wrap gap-2 items-center mb-1">
+				{% if p.flair or p.over_18 or p.club or p.stickied or (p.is_pinned and request.path.startswith('/@')) or p.private or p.awards %}
+				<ul class="relative z-10 flex flex-wrap gap-2 items-center">
 					<!-- Flair -->
 					{% if p.flair %}
 					<li>
@@ -228,6 +227,7 @@
 					{% endif %}
 				</ul>
 			{% endif %}
+			</div>
 			
 			<h5 class="post-title font-medium text-lg md:text-xl leading-5 mb-2">
 				<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" class="stretched-link text-black dark:text-gray-200 hover:text-primary visited:text-gray-700 dark:visited:text-gray-400 break-words" style="word-break: break-word;">
