@@ -92,25 +92,25 @@
 					<img loading="lazy" src="{{ p.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
 				</div>
 				<span class="flex-shrink-0">
-				{% if v and v.admin_level==6 and p.author.shadowbanned %}
-				<i class="fas fa-user-times fa-fw fa-sm text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
-				{% endif %}
-				{% if p.distinguish_level %}
-				<i class="fas fa-broom fa-fw fa-sm text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>
-				{% endif %}
-				{% if p.is_bot %}
-				<i class="fad fa-robot fa-fw fa-sm text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="" data-bs-original-title="Bot"></i>
-				{% endif %}
-				{% if p.is_blocking %}
-				<i class="fas fa-user-minus fa-fw fa-sm text-yellow-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="You're blocking this user, but you can see this post because you're an admin."></i>
-				{% endif %}
-				{% if p.is_blocked %}
-				<i class="fas fa-user-minus fa-fw fa-sm text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This user is blocking you."></i>
-				{% endif %}
-				{% if p.author.verified %}
-				<i class="fas fa-badge-check fa-fw fa-sm" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
+					{% if v and v.admin_level==6 and p.author.shadowbanned %}
+					<i class="fas fa-user-times fa-fw fa-sm text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Shadowbanned by @{{p.author.shadowbanned}}"></i>
+					{% endif %}
+					{% if p.distinguish_level %}
+					<i class="fas fa-broom fa-fw fa-sm text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>
+					{% endif %}
+					{% if p.is_bot %}
+					<i class="fad fa-robot fa-fw fa-sm text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	title="" data-bs-original-title="Bot"></i>
+					{% endif %}
+					{% if p.is_blocking %}
+					<i class="fas fa-user-minus fa-fw fa-sm text-yellow-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="You're blocking this user, but you can see this post because you're an admin."></i>
+					{% endif %}
+					{% if p.is_blocked %}
+					<i class="fas fa-user-minus fa-fw fa-sm text-red-600" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This user is blocking you."></i>
+					{% endif %}
+					{% if p.author.verified %}
+					<i class="fas fa-badge-check fa-fw fa-sm" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{p.author.verified}}"></i>
+					{% endif %}
 				</span>
-				{% endif %}
 				{% if not p.award_count('ghosts') %}
 				<span class="flex-shrink-0">
 					<a class="user-name" onclick='userPopover({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};">
