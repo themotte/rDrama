@@ -74,12 +74,16 @@
 {% block pagenav %}
 <div class="col-span-full">
 	<ul class="flex flex-wrap items-center mb-4">
-		<li class="{% if page==1 %}opacity-50 pointer-events-none{% endif %}">
+		<li>
+			{% if page > 1 %}
 			<small>
 				<a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1" {% if page==1 %}aria-disabled="true"{% endif %}>
 					Previous
 				</a>
 			</small>
+			{% else %}
+			<button class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 disabled cursor-not-allowed">Prev</button>
+			{% endif %}
 		</li>
 		<li class="{% if not next_exists %}opacity-50 pointer-events-none{% endif %}">
 			<small>
