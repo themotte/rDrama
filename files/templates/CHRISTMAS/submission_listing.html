@@ -238,7 +238,7 @@
 			</h5>
 
 			{% if p.realbody(v) and not p.over_18 %}
-				<div class="relative z-10 gradient-mask max-h-10 overflow-hidden pointer-events-none text-gray-600 break-words" style="word-break: break-word;" id="post-text-{{p.id}}">
+				<div class="relative z-10 gradient-mask max-h-10 overflow-hidden pointer-events-none text-gray-500 break-words" style="word-break: break-word;" id="post-text-{{p.id}}">
 					{{p.realbody(v) | safe}}
 				</div>
 			{% endif %}
@@ -383,7 +383,7 @@
 {% include "CHRISTMAS/expanded_image_modal.html" %}
 
 <script defer src="/assets/CHRISTMAS/js/new_comments_count.js?v=200"></script>
-<script defer src="/assets/CHRISTMAS/js/submission_listing.js?v=203"></script>
+<script defer src="/assets/CHRISTMAS/js/submission_listing.js?v=204"></script>
 
 <style>
 	.mod:before {
