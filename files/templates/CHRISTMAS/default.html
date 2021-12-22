@@ -240,7 +240,7 @@
 {% endblock %}
 
 <div class="flex h-screen pt-16 bg-gray-500 dark:bg-gray-700 dark:text-gray-200">
-	<div class="w-full sm:overflow-y-auto">
+	<div id="scrollable-area" class="w-full sm:overflow-y-auto">
 
 			{% block desktopUserBanner %}
 			{% endblock %}
@@ -365,9 +365,9 @@
 	<script src="/assets/CHRISTMAS/js/default.js?v=204"></script>
 
 	<script>
-	document.body.addEventListener('focus', (event) => {
-	  console.log(event)
-	});
+	window.onload = function() {
+	  document.getElementById("scrollable-area").focus();
+	};
 	</script>
 
 </body>
