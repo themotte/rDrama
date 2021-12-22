@@ -74,7 +74,7 @@
 	</li>
 
 	{% if v and c.parent_submission and c.author_id==v.id %}
-	<li class="hidden md:block">
+	<li>
 		<button class="hover:text-gray-400" onclick="toggleEdit('{{c.id}}')">
 			<i class="fas fa-edit fa-fw mr-2"></i>Edit
 		</button>

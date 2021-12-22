@@ -1,4 +1,4 @@
-<ul class="flex items-center space-x-5 text-sm text-gray-500 mb-0">
+<ul class="flex flex-wrap items-center space-x-3 gap-2 text-sm text-gray-500 mb-0">
 
 	{% if p.realbody(v) and '/post/' not in request.full_path and not p.over_18 %}
 	<li>
@@ -26,7 +26,7 @@
 	{% endif %}
 
 	{% if v and (v.id==p.author_id or v.admin_level > 1 and v.admin_level > 2) and '/post/' in request.full_path %}
-	<li class="hidden md:inline-block">
+	<li>
 		<button class="hover:text-gray-400" onclick="togglePostEdit('{{p.id}}')">
 			<i class="fas fa-pencil fa-fw mr-2"></i>Edit
 		</button>
