@@ -3,6 +3,12 @@ function timestamp(str, ti) {
     document.getElementById(str).setAttribute("data-bs-original-title", date.toString());
 };
 
+function pinned_timestamp(id) {
+    const el = document.getElementById(id)
+    const time =  new Date(parseInt(el.dataset.timestamp)*1000)
+    el.setAttribute("data-bs-original-title", `Pinned until ${time}`)
+}
+
 function expandText(id) {
 	const el = document.getElementById('post-text-'+id);
     ['gradient-mask', 'max-h-10', 'overflow-hidden', 'pointer-events-none', 'text-gray-500', 'dark:text-gray-400'].map(v=> el.classList.toggle(v));
