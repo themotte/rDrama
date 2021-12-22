@@ -9,34 +9,6 @@ function hide_image() {
 	}
 }
 
-function autoSuggestTitle()	{
-
-	var urlField = document.getElementById("post-URL");
-
-	var titleField = document.getElementById("post-title");
-
-	var isValidURL = urlField.checkValidity();
-
-	if (isValidURL && urlField.value.length > 0 && titleField.value === "") {
-
-		var x = new XMLHttpRequest();
-		x.withCredentials=true;
-		x.onreadystatechange = function() {
-			if (x.readyState == 4 && x.status == 200) {
-
-				title=JSON.parse(x.responseText)["title"];
-				titleField.value=title;
-
-				checkForRequired()
-			}
-		}
-		x.open('get','/submit/title?url=' + urlField.value);
-		x.send(null);
-
-	};
-
-};
-
 function checkForRequired() {
 
 	var title = document.getElementById("post-title");

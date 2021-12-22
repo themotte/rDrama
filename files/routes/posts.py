@@ -572,26 +572,6 @@ def edit_post(pid, v):
 
 	return redirect(p.permalink)
 
-@app.get("/submit/title")
-@limiter.limit("6/minute")
-@auth_required
-def get_post_title(v):
-
-	abort(400)
-	# url = request.values.get("url", None)
-	# if not url: abort(400)
-
-	# try: x = requests.get(url, headers=titleheaders, timeout=5)
-	# except: abort(400)
-
-	# soup = BeautifulSoup(x.content, 'html.parser')
-
-	# title = soup.find('title')
-	# if not title: abort(400)
-
-	# return {"url": url, "title": title.string}
-
-
 def archiveorg(url):
 	try: requests.get(f'https://web.archive.org/save/{url}', headers={'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}, timeout=100)
 	except Exception as e: print(e)
