@@ -3748,6 +3748,10 @@ video {
 		border-color: rgba(var(--color-300), var(--tw-divide-opacity));
 	}
 
+	.md\:overflow-x-visible {
+		overflow-x: visible;
+	}
+
 	.md\:border-t {
 		border-top-width: 1px;
 	}
