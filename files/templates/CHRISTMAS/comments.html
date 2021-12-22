@@ -356,7 +356,7 @@
 					{% include "CHRISTMAS/comments/CommentEditForm.html" %}
 				{% endif %}
 				<!-- Comment actions -->
-				<div id="comment-{{c.id}}-actions" class="hidden-on-collapse pt-3 pb-1 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+				<div id="comment-{{c.id}}-actions" class="hidden-on-collapse py-2 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 					{% include "CHRISTMAS/comments/CommentActions.html" %}
 				</div>
 			{% endif %}
