@@ -1126,9 +1126,6 @@ video {
 .h-6 {
 	height: 1.5rem;
 }
-.h-screen {
-	height: 100vh;
-}
 .h-\[10px\] {
 	height: 10px;
 }
@@ -1149,6 +1146,9 @@ video {
 }
 .h-1 {
 	height: 0.25rem;
+}
+.h-screen {
+	height: 100vh;
 }
 .h-3 {
 	height: 0.75rem;
@@ -1468,6 +1468,9 @@ video {
 }
 .overflow-y-auto {
 	overflow-y: auto;
+}
+.overflow-x-hidden {
+	overflow-x: hidden;
 }
 .overflow-y-hidden {
 	overflow-y: hidden;
@@ -3582,10 +3585,6 @@ video {
 
 	.sm\:justify-start {
 		justify-content: flex-start;
-	}
-
-	.sm\:overflow-y-auto {
-		overflow-y: auto;
 	}
 
 	.sm\:px-0 {
