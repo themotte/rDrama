@@ -3426,6 +3426,10 @@ video {
 	border-bottom-width: 1px;
 }
 
+	.dark .dark\:border-none {
+	border-style: none;
+}
+
 	.dark .dark\:border-gray-900 {
 	--tw-border-opacity: 1;
 	border-color: rgba(var(--color-900), var(--tw-border-opacity));
