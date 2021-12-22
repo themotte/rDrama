@@ -72,7 +72,7 @@
 {% endblock %}
 
 {% block pagenav %}
-<nav aria-label="Page navigation">
+<div class="col-span-full">
 	<ul class="flex flex-wrap items-center mb-4">
 		<li class="{% if page==1 %} disabled{% endif %}">
 			<small>
@@ -87,6 +87,5 @@
 			</small>
 		</li>
 	</ul>
-</nav>
-
+</div>
 {% endblock %}
