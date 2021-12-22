@@ -350,13 +350,13 @@
 	<script>
 		var previousTheme = '{{ v.theme2 }}'.split(' ');
 		function changeTheme(theme) {
-			const body = document.body;
-			// if previous selection has a value, remove them from body tag
+			const root = document.documentElement
+			// if previous selection has a value, remove them from root html tag
 			if (previousTheme.length) {
-				previousTheme.map(v => body.classList.toggle(v));
+				previousTheme.map(v => root.classList.toggle(v));
 			}
-			// toggle classes in body tag
-			theme.map(v => body.classList.toggle(v));
+			// toggle classes in root html tag
+			theme.map(v => root.classList.toggle(v));
 			// Set global previous selection to current selection
 			previousTheme = theme;
 		}
