@@ -369,6 +369,10 @@
 	  console.log(event)
 	});
 
+	document.body.addEventListener('blur', (event) => {
+	  console.log(event)
+	});
+
 	window.onload = function() {
 	  document.getElementById("frontpage").blur();
 	  console.log('blurred')
