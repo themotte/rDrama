@@ -1,5 +1,11 @@
+ {% if v and v.theme2 %}
+ 	{% set theme = v.theme2 %}
+ {% else %}
+ 	{% set theme = 'theme-iron dark' %}
+ {% endif %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{{ theme }}">
 <head>  
 	{% if v and v.agendaposter %}
 		<script src="/assets/CHRISTMAS/js/agendaposter.js"></script>
@@ -217,13 +223,7 @@
 
  </head>
 
- {% if v and v.theme2 %}
- 	{% set theme = v.theme2 %}
- {% else %}
- 	{% set theme = 'theme-iron dark' %}
- {% endif %}
-
- <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="{{ theme }} overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-black dark:bg-gray-700 dark:text-gray-100">
+ <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" class="overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-black dark:bg-gray-700 dark:text-gray-100">
 
 {% block Banner %}
 {% endblock %}
