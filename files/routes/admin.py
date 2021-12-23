@@ -37,18 +37,23 @@ def grassed(v):
 def distribute(v, cid):
 	try: int(cid)
 	except: abort(400)
-	post = g.db.query(Comment).filter_by(id=cid).first().post.permalink
+	post = g.db.query(Comment).filter_by(id=cid).first().post
+
+	pool = 0
+	for option in post.bet_options: pool += option.upvotes
 	votes = g.db.query(CommentVote).filter_by(comment_id=cid)
-	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
-	coinsperperson = int(autobetter.coins / votes.count())
-	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post}]({post}) !")
+	coinsperperson = int(pool / votes.count())
+
+	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post.permalink}]({post.permalink}) !")
 	for vote in votes:
 		u = vote.user
 		u.coins += coinsperperson
 		add_notif(cid, u.id)
 
-	autobetter.coins = 0
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
+	autobetter.coins -= pool
 	g.db.add(autobetter)
+
 	g.db.commit()
 	return f"Each winner has received {coinsperperson} coins!"
 
