@@ -18,6 +18,7 @@ from .front import frontlist, changeloglist
 from urllib.parse import ParseResult, urlunparse, urlparse, quote
 from os import path
 import requests
+from shutil import copyfile
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
@@ -1028,6 +1029,10 @@ def submit_post(v):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
 			new_post.url = process_image(name)
+
+			name2 = name.replace('.webp', 'r.webp')
+			copyfile(name, name2)
+			new_post.thumburl = process_image(name2, True)
 			
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
@@ -1042,8 +1047,7 @@ def submit_post(v):
 
 
 
-	if (new_post.url or request.files.get('file')) and request.headers.get('cf-ipcountry')!="T1":
-		gevent.spawn( thumbnail_thread, new_post.id)
+	if not new_post.thumburl and new_post.url and request.headers.get('cf-ipcountry')!="T1": gevent.spawn( thumbnail_thread, new_post.id)
 
 	if not new_post.private:
 

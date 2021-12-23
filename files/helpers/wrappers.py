@@ -29,7 +29,7 @@ def get_logged_in_user():
 		return v
 
 def check_ban_evade(v):
-	if v and v.ban_evade and v.admin_level == 0 and not v.is_suspended:
+	if v and not v.patron and v.ban_evade and v.admin_level == 0 and not v.is_suspended:
 		if random.randint(0,30) < v.ban_evade: v.shadowbanned = "AutoJanny"
 		else: v.ban_evade +=1
 		g.db.add(v)

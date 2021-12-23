@@ -253,18 +253,49 @@ def transfer_coins(v, username):
 	return {"message": f"You can't transfer {app.config['COINS_NAME']} to yourself!"}, 400
 
 
+@app.post("/@<username>/transfer_bux")
+@limiter.limit("1/second")
+@is_not_banned
+@validate_formkey
+def transfer_bux(v, username):
+	receiver = g.db.query(User).filter_by(username=username).first()
+
+	if not receiver: return {"error": "That user doesn't exist."}, 404
+
+	if receiver.id != v.id:
+		amount = request.values.get("amount", "").strip()
+		amount = int(amount) if amount.isdigit() else None
+
+		if not amount or amount < 0: return {"error": f"Invalid amount of marseybux."}, 400
+		if v.procoins < amount: return {"error": f"You don't have enough marseybux"}, 400
+		if amount < 100: return {"error": f"You have to gift at least 100 marseybux."}, 400
+
+		receiver.procoins += amount
+		v.procoins -= amount
+		send_repeatable_notification(receiver.id, f"🤑 [@{v.username}]({v.url}) has gifted you {amount} marseybux!")
+		g.db.add(receiver)
+		g.db.add(v)
+
+		g.db.commit()
+		return {"message": f"{amount} marseybux transferred!"}, 200
+
+	return {"message": f"You can't transfer marseybux to yourself!"}, 400
+
+
 @app.get("/leaderboard")
 @auth_desired
 def leaderboard(v):
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+
 	users = g.db.query(User)
 	users1 = users.order_by(User.coins.desc()).limit(25).all()
-	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(15).all()
-	users3 = users.order_by(User.post_count.desc()).limit(10).all()
-	users4 = users.order_by(User.comment_count.desc()).limit(10).all()
-	users5 = users.order_by(User.received_award_count.desc()).limit(10).all()
-	users7 = users.order_by(User.coins_spent.desc()).limit(20).all()
-
-
+	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
+	users3 = users.order_by(User.post_count.desc()).limit(25).all()
+	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
+	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
+	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
+	users10 = g.db.query(User).order_by(User.truecoins.desc()).limit(25).all()
 
 
 	votes1 = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
@@ -279,20 +310,11 @@ def leaderboard(v):
 
 	users9 = sorted(users9, key=lambda x: x[1], reverse=True)[:25]
 
-
-
-
-
-
-
 	if 'pcmemes.net' == request.host:
 		users6 = users.order_by(User.basedcount.desc()).limit(10).all()
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9)
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users7=users7, users9=users9)
+		return render_template(f"{template}leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9, users10=users10)
+
+	return render_template(f"{template}leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users7=users7, users9=users9, users10=users10)
 
 
 @app.get("/@<username>/css")
@@ -318,11 +340,13 @@ def songs(id):
 	try: id = int(id)
 	except: return "", 400
 	user = g.db.query(User).filter_by(id=id).first()
-	if user and user.song: return redirect(f"/song/{user.song}.mp3")
+	if user and user.song: return redirect(f"/static/song/{user.song}.mp3")
 	else: abort(404)
 
 @app.get("/song/<song>")
+@app.get("/static/song/<song>")
 def song(song):
+	if request.path.startswith('/song/'): return redirect(request.full_path.replace('/song/', '/static/song/'))
 	resp = make_response(send_from_directory('/songs', song))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")

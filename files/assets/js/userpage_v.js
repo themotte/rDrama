@@ -71,10 +71,13 @@ let TRANSFER_TAX = document.getElementById('tax').innerHTML
 function updateTax(mobile=false) {
 	let suf = mobile ? "-mobile" : "";
 	let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
-	if(isNaN(amount) || amount < 0) {
-	amount = 0;
-	}
-	document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+	if(amount > 0) document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+}
+
+function updateBux(mobile=false) {
+	let suf = mobile ? "-mobile" : "";
+	let amount = parseInt(document.getElementById("bux-transfer-amount" + suf).value);
+	if(amount > 0) document.getElementById("bux-transfer-taxed" + suf).innerText = amount;
 }
 
 function transferCoins(mobile=false) {
@@ -92,6 +95,27 @@ function transferCoins(mobile=false) {
 			document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
 			document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
 			document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
+		}
+		}
+	);
+
+	setTimeout(_ => t.disabled = false, 2000);
+}
+
+function transferBux(mobile=false) {
+	let t = event.target;
+	t.disabled = true;
+
+	let amount = parseInt(document.getElementById("bux-transfer-amount").value);
+	let username = document.getElementById('username').innerHTML
+
+	post_toast_callback(`/@${username}/transfer_bux`,
+		{"amount": document.getElementById(mobile ? "bux-transfer-amount-mobile" : "bux-transfer-amount").value},
+		(xhr) => {
+		if(xhr.status == 200) {
+			document.getElementById("user-bux-amount").innerText = parseInt(document.getElementById("user-bux-amount").innerText) - amount;
+			document.getElementById("profile-bux-amount-mobile").innerText = parseInt(document.getElementById("profile-bux-amount-mobile").innerText) + amount;
+			document.getElementById("profile-bux-amount").innerText = parseInt(document.getElementById("profile-bux-amount").innerText) + amount;
 		}
 		}
 	);

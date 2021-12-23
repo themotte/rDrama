@@ -1,5 +1,7 @@
 function formkey() {
-	return document.getElementById("formkey").innerHTML
+	let formkey = document.getElementById("formkey")
+	if (formkey) return formkey.innerHTML;
+	else return null;
 }
 	
 document.addEventListener("DOMContentLoaded", function(){
@@ -24,7 +26,7 @@ function post_toast(url, reload, data) {
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
-		if (xhr.status >= 200 && xhr.status < 300) {
+		if (xhr.status >= 200 && xhr.status < 300 && !data["error"]) {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 			myToast.show();
 			try {

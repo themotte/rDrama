@@ -32,33 +32,40 @@ def grassed(v):
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}grassed.html", v=v, users=users)
 
-@app.get("/distribute/<cid>")
+@app.post("/distribute/<comment>")
+@limiter.limit("1/second")
 @admin_level_required(3)
-def distribute(v, cid):
-	try: int(cid)
+def distribute(v, comment):
+	try: comment = int(comment)
 	except: abort(400)
-	post = g.db.query(Comment).filter_by(id=cid).first().post.permalink
-	votes = g.db.query(CommentVote).filter_by(comment_id=cid)
-	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
-	coinsperperson = int(autobetter.coins / votes.count())
-	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post}]({post}) !")
+	post = g.db.query(Comment).filter_by(id=comment).first().post
+
+	pool = 0
+	for option in post.bet_options: pool += option.upvotes
+	pool *= 200
+
+	votes = g.db.query(CommentVote).filter_by(comment_id=comment)
+	coinsperperson = int(pool / votes.count())
+
+	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post.permalink}]({post.permalink}) :marseyparty:")
 	for vote in votes:
 		u = vote.user
 		u.coins += coinsperperson
 		add_notif(cid, u.id)
 
-	autobetter.coins = 0
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
+	autobetter.coins -= pool
+	if autobetter.coins < 0: return {"error": "Not enough coins in bool"}, 400
 	g.db.add(autobetter)
-	g.db.commit()
-	return f"Each winner has received {coinsperperson} coins!"
 
-@app.get("/truescore")
-@auth_desired
-def truescore(v):
-	users = g.db.query(User).order_by(User.truecoins.desc()).limit(25).all()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}truescore.html", v=v, users=users)
+	cid = notif_comment(f"You lost the 200 coins you bet on [{post.permalink}]({post.permalink}) :marseylaugh:")
+	cids = [x.id for x in post.bet_options]
+	cids.remove(comment)
+	votes = g.db.query(CommentVote).filter(CommentVote.comment_id.in_(cids)).all()
+	for vote in votes: add_notif(cid, vote.user.id)
+
+	g.db.commit()
+	return {"message": f"Each winner has received {coinsperperson} coins!"}
 
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second")
@@ -1022,7 +1029,7 @@ def api_sticky_post(post_id, v):
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if post:
 		if post.stickied:
-			if post.stickied.startswith("t:"): abort(403)
+			if post.stickied.startswith("t:"): return {"error": "Can't unpin temporary pins!"}, 403
 			else: post.stickied = None
 		else:
 			pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()
