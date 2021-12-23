@@ -925,6 +925,10 @@ video {
 	margin-left: 1rem;
 	margin-right: 1rem;
 }
+.mx-2 {
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
+}
 .my-0 {
 	margin-top: 0px;
 	margin-bottom: 0px;
@@ -1383,15 +1387,15 @@ video {
 .gap-y-2 {
 	row-gap: 0.5rem;
 }
-.space-y-1 > :not([hidden]) ~ :not([hidden]) {
-	--tw-space-y-reverse: 0;
-	margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
-	margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
-}
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
 	--tw-space-x-reverse: 0;
 	margin-right: calc(0.5rem * var(--tw-space-x-reverse));
 	margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+.space-y-1 > :not([hidden]) ~ :not([hidden]) {
+	--tw-space-y-reverse: 0;
+	margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
+	margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
 }
 .space-x-3 > :not([hidden]) ~ :not([hidden]) {
 	--tw-space-x-reverse: 0;
@@ -3404,6 +3408,10 @@ video {
 	.active\:outline-none:active {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
+}
+
+	.group:hover .group-hover\:block {
+	display: block;
 }
 
 	.peer:checked ~ .peer-checked\:border-blue-500 {

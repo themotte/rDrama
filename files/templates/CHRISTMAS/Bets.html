@@ -1,6 +1,6 @@
 <ul class="mb-0 list-none">
 	{% for c in p.bet_options %}
-	<li>
+	<li class="group flex items-center space-x-2">
 		<span id="span-{{c.id}}" {% if c.poll_voted(v) %}class="bet_voted"{% endif %}>
 			<input type="radio" id="{{c.id}}" {% if c.poll_voted(v) %}checked{% endif %} class="bet" onchange="bet_vote('{{c.id}}')" {% if not (v and v.coins > 200) or p.total_bet_voted(v) %}disabled{% endif %}>
 		</span>
@@ -11,6 +11,13 @@
 			</a>
 			{% if not p.total_bet_voted(v) %} (cost of entry: 200 coins){% endif %}
 		</label>
+		{% if v and v.admin_level > 2 %}
+		<div class="hidden group-hover:block">
+			<button class="btn btn-gray" onclick="post_toast('/distribute/{{c.id}}')">
+				Declare winner
+			</button>
+		</div>
+		{% endif %}
 	</li>
 	{% endfor %}
 </ul>
