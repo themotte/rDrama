@@ -1,5 +1,7 @@
 function formkey() {
-	return document.getElementById("formkey").innerHTML
+	let formkey = document.getElementById("formkey")
+	if (formkey) return formkey.innerHTML;
+	else return null;
 }
 	
 document.addEventListener("DOMContentLoaded", function(){

@@ -286,11 +286,9 @@
 					<pre></pre>
 					<p>User ID: {{u.id}}</p>
 					<p>Coins spent: {{u.coins_spent}}</p>
-					{% if v and v.admin_level > 1 %}
-						<p>True score: {{u.truecoins}}</p>
-						{% if u.is_private %}
-							<p>User has private mode enabled.</p>
-						{% endif %}
+					<p>True score: {{u.truecoins}}</p>
+					{% if u.is_private %}
+						<p>User has private mode enabled.</p>
 					{% endif %}
 					{% if v and (v.admin_level > 1 or v.alt) %}
 						<span>Alts:</span>
@@ -565,11 +563,9 @@
 				<pre></pre>
 				<p>User ID: {{u.id}}</p>
 				<p>Coins spent: {{u.coins_spent}}</p>
-				{% if v and v.admin_level > 1 %}
-					<p>True score: {{u.truecoins}}</p>
-					{% if u.is_private %}
-						<p>User has private mode enabled.</p>
-					{% endif %}
+				<p>True score: {{u.truecoins}}</p>
+				{% if u.is_private %}
+					<p>User has private mode enabled.</p>
 				{% endif %}
 				{% if v and (v.admin_level > 1 or v.alt) %}
 					<span>Alts:</span>

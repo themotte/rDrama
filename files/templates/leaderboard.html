@@ -74,7 +74,7 @@
 		<tr>
 			<td style="font-weight: bold">{{loop.index}}</td>
 			<td><a style="color:#{{user[0].namecolor}};  font-weight:bold;" href="/@{{user[0].username}}"><img loading="lazy" src="/uid/{{user[0].id}}/pic" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}};"{% endif %}>{{user[0].username}}</span></a></td>
-			<td style="font-weight:bold; text-align:right;">{{user.truescore}}</td>
+			<td style="font-weight:bold; text-align:right;">{{user.truecoins}}</td>
 		</tr>
 	{% endfor %}
 	</tbody>
