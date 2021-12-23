@@ -32,19 +32,19 @@ def grassed(v):
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}grassed.html", v=v, users=users)
 
-@app.get("/distribute/<cid>")
+@app.get("/distribute/<comment>")
 @limiter.limit("1/second")
 @admin_level_required(3)
 def distribute(v, cid):
 	try: int(cid)
 	except: abort(400)
-	post = g.db.query(Comment).filter_by(id=cid).first().post
+	post = g.db.query(Comment).filter_by(id=comment).first().post
 
 	pool = 0
 	for option in post.bet_options: pool += option.upvotes
 	pool *= 200
 
-	votes = g.db.query(CommentVote).filter_by(comment_id=cid)
+	votes = g.db.query(CommentVote).filter_by(comment_id=comment)
 	coinsperperson = int(pool / votes.count())
 
 	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post.permalink}]({post.permalink}) :marseyparty:")
@@ -59,7 +59,7 @@ def distribute(v, cid):
 
 	cid = notif_comment(f"You lost the 200 coins you bet on [{post.permalink}]({post.permalink}) :marseylaugh:")
 	cids = [x.id for x in post.bet_options]
-	cids.remove(cid)
+	cids.remove(comment)
 	votes = g.db.query(CommentVote).filter(CommentVote.comment_id.in_(cids)).all()
 	for vote in votes: add_notif(cid, vote.user.id)
 
