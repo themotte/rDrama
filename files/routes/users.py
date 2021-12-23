@@ -318,11 +318,13 @@ def songs(id):
 	try: id = int(id)
 	except: return "", 400
 	user = g.db.query(User).filter_by(id=id).first()
-	if user and user.song: return redirect(f"/song/{user.song}.mp3")
+	if user and user.song: return redirect(f"/static/song/{user.song}.mp3")
 	else: abort(404)
 
 @app.get("/song/<song>")
+@app.get("/static/song/<song>")
 def song(song):
+	if request.path.startswith('/song/'): return redirect(request.full_path.replace('/song/', '/static/song/'))
 	resp = make_response(send_from_directory('/songs', song))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")

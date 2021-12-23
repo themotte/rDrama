@@ -293,8 +293,11 @@ def static_service2(path):
 	return resp
 
 @app.get('/assets/<path:path>')
+@app.get('/static/assets/<path:path>')
 @limiter.exempt
 def static_service(path):
+	if request.path.startswith('/assets/'): return redirect(request.full_path.replace('/assets/', '/static/assets/'))
+
 	resp = make_response(send_from_directory('assets', path))
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
@@ -306,11 +309,13 @@ def static_service(path):
 
 	return resp
 
-@app.get('/images/<path:path>')
-@app.get('/IMAGES/<path:path>')
-@app.get('/hostedimages/<path:path>')
+@app.get('/images/<path>')
+@app.get('/hostedimages/<path>')
+@app.get("/static/images/<path>")
 @limiter.exempt
 def images(path):
+	if request.path.startswith('/images/') or request.path.lower().startswith('/hostedimages/'):
+		return redirect(request.full_path.replace('/images/', '/static/images/').replace('/hostedimages/', '/static/images/'))
 	resp = make_response(send_from_directory('/images', path.replace('.WEBP','.webp')))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")
