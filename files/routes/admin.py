@@ -41,6 +41,8 @@ def distribute(v, cid):
 
 	pool = 0
 	for option in post.bet_options: pool += option.upvotes
+	pool *= 200
+
 	votes = g.db.query(CommentVote).filter_by(comment_id=cid)
 	coinsperperson = int(pool / votes.count())
 
