@@ -1028,6 +1028,7 @@ def submit_post(v):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
 			new_post.url = process_image(name)
+			new_post.thumburl = process_image(name, True)
 			
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
@@ -1042,8 +1043,7 @@ def submit_post(v):
 
 
 
-	if (new_post.url or request.files.get('file')) and request.headers.get('cf-ipcountry')!="T1":
-		gevent.spawn( thumbnail_thread, new_post.id)
+	if not new_post.thumburl and new_post.url and request.headers.get('cf-ipcountry')!="T1": gevent.spawn( thumbnail_thread, new_post.id)
 
 	if not new_post.private:
 

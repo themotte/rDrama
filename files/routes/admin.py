@@ -52,14 +52,6 @@ def distribute(v, cid):
 	g.db.commit()
 	return f"Each winner has received {coinsperperson} coins!"
 
-@app.get("/truescore")
-@auth_desired
-def truescore(v):
-	users = g.db.query(User).order_by(User.truecoins.desc()).limit(25).all()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}truescore.html", v=v, users=users)
-
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second")
 @admin_level_required(3)
