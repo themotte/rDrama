@@ -26,7 +26,7 @@ function post_toast(url, reload, data) {
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
-		data=JSON.parse(xhr.response);
+		let data=JSON.parse(xhr.response);
 		if (xhr.status >= 200 && xhr.status < 300 && !data["error"]) {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 			myToast.show();
