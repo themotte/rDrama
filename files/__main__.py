@@ -125,14 +125,9 @@ def after_request(response):
 
 @app.route("/<path:path>", subdomain="www")
 @app.route("/<path:path>", subdomain="old")
-def sub_redirect(path):
-    return redirect(f"https://{app.config['SERVER_NAME']}/{path}")
-
-
 @app.route("/", subdomain="www")
 @app.route("/", subdomain="old")
-def sub_redirect2():
-    return redirect(f"https://{app.config['SERVER_NAME']}/")
-
+def sub_redirect(path):
+    return redirect(f"https://{app.config['SERVER_NAME']}{request.full_path}")
 
 from files.routes import *
