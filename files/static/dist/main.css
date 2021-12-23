@@ -849,6 +849,9 @@ video {
 .-right-2 {
 	right: -0.5rem;
 }
+.top-1 {
+	top: 0.25rem;
+}
 .bottom-3 {
 	bottom: 0.75rem;
 }
