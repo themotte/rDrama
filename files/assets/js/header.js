@@ -26,11 +26,12 @@ function post_toast(url, reload, data) {
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
+		let data=JSON.parse(xhr.response);
 		if (xhr.status >= 200 && xhr.status < 300 && !data["error"]) {
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 			myToast.show();
 			try {
-				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
+				document.getElementById('toast-post-success-text').innerText = data["message"];
 			} catch(e) {
 			}
 
@@ -38,11 +39,9 @@ function post_toast(url, reload, data) {
 			return true
 
 		} else if (xhr.status >= 300 && xhr.status < 400) {
-			window.location.href = JSON.parse(xhr.response)["redirect"]
+			window.location.href = data["redirect"]
 		} else {
 			try {
-				data=JSON.parse(xhr.response);
-
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = data["error"];
