@@ -151,6 +151,8 @@ def api_vote_comment(comment_id, new, v):
 
 	comment = get_comment(comment_id)
 
+	if comment.author_id == AUTOBETTER_ID: return {"error": "forbidden."}, 403
+	
 	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
 
 	if existing and existing.vote_type == new: return "", 204
