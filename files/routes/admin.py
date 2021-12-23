@@ -55,6 +55,7 @@ def distribute(v, comment):
 
 	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
 	autobetter.coins -= pool
+	if autobetter.coins < 0: abort(400)
 	g.db.add(autobetter)
 
 	cid = notif_comment(f"You lost the 200 coins you bet on [{post.permalink}]({post.permalink}) :marseylaugh:")
