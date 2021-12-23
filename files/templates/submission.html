@@ -428,9 +428,12 @@
 							{% endfor %}
 
 							{% for c in p.bet_options %}
-								<div class="custom-control">								
+								<div class="custom-control mt-3">								
 									<input {% if c.poll_voted(v) %}checked{% endif %} class="custom-control-input bet" {% if not (v and v.coins > 200) or p.total_bet_voted(v) %}disabled{% endif %} type="radio" id="{{c.id}}" onchange="bet_vote('{{c.id}}')">
 									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="bet-{{c.id}}">{{c.upvotes}}</span> bets</a>{% if not p.total_bet_voted(v) %}<span class="cost"> (cost of entry: 200 coins)</span>{% endif %}</label>
+									{% if v and v.admin_level > 2 %}
+										<button class="btn btn-primary px-2 mx-2" style="font-size:10px;padding:2px;margin-top:-5px" onclick="post_toast('/distribute/{{c.id}}')">Declare winner</button>
+									{% endif %}
 								</div>
 							{% endfor %}
 

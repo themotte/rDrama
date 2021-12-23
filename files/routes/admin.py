@@ -32,7 +32,7 @@ def grassed(v):
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}grassed.html", v=v, users=users)
 
-@app.get("/distribute/<comment>")
+@app.post("/distribute/<comment>")
 @limiter.limit("1/second")
 @admin_level_required(3)
 def distribute(v, comment):
@@ -55,7 +55,7 @@ def distribute(v, comment):
 
 	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
 	autobetter.coins -= pool
-	if autobetter.coins < 0: abort(400)
+	if autobetter.coins < 0: return {"error": "Not enough coins in bool"}
 	g.db.add(autobetter)
 
 	cid = notif_comment(f"You lost the 200 coins you bet on [{post.permalink}]({post.permalink}) :marseylaugh:")
@@ -65,7 +65,7 @@ def distribute(v, comment):
 	for vote in votes: add_notif(cid, vote.user.id)
 
 	g.db.commit()
-	return f"Each winner has received {coinsperperson} coins!"
+	return {"message": f"Each winner has received {coinsperperson} coins!"}
 
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second")
