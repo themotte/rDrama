@@ -33,6 +33,7 @@ def grassed(v):
 	return render_template(f"{template}grassed.html", v=v, users=users)
 
 @app.get("/distribute/<cid>")
+@limiter.limit("1/second")
 @admin_level_required(3)
 def distribute(v, cid):
 	try: int(cid)
