@@ -194,7 +194,7 @@
 						</div>
 
 						<div class="d-none mt-3 profile-toggleable" id="bux-transfer">
-							<input autocomplete="off" id="bux-transfer-amount" class="form-control" name="amount" type="number" oninput="updateTax()">
+							<input autocomplete="off" id="bux-transfer-amount" class="form-control" name="amount" type="number" oninput="updateBux()">
 							<div>{{u.username}} will receive <span id="bux-transfer-taxed">0</span> marseybux</div>
 							<button class="btn btn-primary mt-3" onclick="transferBux()">Gift</button>
 						</div>
@@ -484,7 +484,7 @@
 					</div>
 
 					<div class="d-none mt-3 profile-toggleable-mobile" id="bux-transfer-mobile">
-						<input autocomplete="off" id="bux-transfer-amount-mobile" class="form-control" name="amount" type="number" oninput="updateTax()">
+						<input autocomplete="off" id="bux-transfer-amount-mobile" class="form-control" name="amount" type="number" oninput="updateBux(true)">
 						<div>{{u.username}} will receive <span id="bux-transfer-taxed-mobile">0</span> marseybux</div>
 						<button class="btn btn-primary mt-3" onclick="transferBux(true)">Gift</button>
 					</div>
