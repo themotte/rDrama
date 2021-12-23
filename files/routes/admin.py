@@ -44,7 +44,7 @@ def distribute(v, cid):
 	votes = g.db.query(CommentVote).filter_by(comment_id=cid)
 	coinsperperson = int(pool / votes.count())
 
-	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post.permalink}]({post.permalink}) !")
+	cid = notif_comment(f"You won {coinsperperson} coins betting on [{post.permalink}]({post.permalink}) :marseyparty:")
 	for vote in votes:
 		u = vote.user
 		u.coins += coinsperperson
@@ -53,6 +53,11 @@ def distribute(v, cid):
 	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
 	autobetter.coins -= pool
 	g.db.add(autobetter)
+
+	cid = notif_comment(f"You lost the 200 coins you bet on [{post.permalink}]({post.permalink}) :marseylaugh:")
+	cids = (x.id for x in post.bet_options)
+	votes = g.db.query(CommentVote).filter(CommentVote.comment_id.in_(cids)).all()
+	for vote in votes: dd_notif(cid, vote.user.id)
 
 	g.db.commit()
 	return f"Each winner has received {coinsperperson} coins!"
