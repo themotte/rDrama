@@ -57,7 +57,8 @@ def distribute(v, cid):
 	g.db.add(autobetter)
 
 	cid = notif_comment(f"You lost the 200 coins you bet on [{post.permalink}]({post.permalink}) :marseylaugh:")
-	cids = (x.id for x in post.bet_options if x.id != cid)
+	cids = [x.id for x in post.bet_options]
+	cids.pop(cid)
 	votes = g.db.query(CommentVote).filter(CommentVote.comment_id.in_(cids)).all()
 	for vote in votes: add_notif(cid, vote.user.id)
 
