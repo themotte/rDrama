@@ -257,7 +257,7 @@ def transfer_coins(v, username):
 @limiter.limit("1/second")
 @is_not_banned
 @validate_formkey
-def transfer_coins(v, username):
+def transfer_bux(v, username):
 	receiver = g.db.query(User).filter_by(username=username).first()
 
 	if not receiver: return {"error": "That user doesn't exist."}, 404
