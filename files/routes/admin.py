@@ -36,7 +36,7 @@ def grassed(v):
 @limiter.limit("1/second")
 @admin_level_required(3)
 def distribute(v, comment):
-	try: int(cid)
+	try: comment = int(comment)
 	except: abort(400)
 	post = g.db.query(Comment).filter_by(id=comment).first().post
 
