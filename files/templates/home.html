@@ -19,7 +19,7 @@
 				script.onload = resolve;
 				script.onerror = reject;
 				script.async = true;
-				script.src = '/assets/js/fp.js?v=4';
+				script.src = "/assets/js/fp.js?a=4";
 				document.head.appendChild(script);
 			})
 				.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
@@ -169,12 +169,12 @@
 		<div id="mobile-prompt" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-container="#mobile-prompt-container" data-bs-placement="top" data-bs-trigger="click" data-bs-original-title="Install the {{'SITE_NAME' | app_config}} webapp by saving this page to your home screen!"></div>
 	</div>
 
-	<script src="/assets/js/home.js?v=190"></script>
+	<script src="/assets/js/home.js?a=1"></script>
 {% endif %}
 
 {% if v %}
 	<div class="d-none" id="strid">{{v.strid}}</div>
-	<script src="/assets/js/pusher.js?v=190"></script>
+	<script src="/assets/js/pusher.js?a=1"></script>
 {% endif %}
 
 {% endblock %}
