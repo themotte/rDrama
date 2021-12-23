@@ -16,7 +16,7 @@ import gevent
 from werkzeug.middleware.proxy_fix import ProxyFix
 import redis
 
-app = Flask(__name__, template_folder='./templates')
+app = Flask(__name__, template_folder='templates')
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
@@ -35,14 +35,14 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400
 app.config["SESSION_COOKIE_NAME"] = "session_" + environ.get("SITE_NAME").strip().lower()
 app.config["VERSION"] = "1.0.0"
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
-app.config["SESSION_COOKIE_SECURE"] = bool(int(environ.get("FORCE_HTTPS", 1)))
+app.config["SESSION_COOKIE_SECURE"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 app.config["SLOGAN"] = environ.get("SLOGAN", "").strip()
 app.config["DEFAULT_COLOR"] = environ.get("DEFAULT_COLOR", "ff0000").strip()
 app.config["DEFAULT_THEME"] = environ.get("DEFAULT_THEME", "midnight").strip()
-app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1)) if ("localhost" not in app.config["SERVER_NAME"] and "localhost" not in app.config["SERVER_NAME"]) else 0
+app.config["FORCE_HTTPS"] = 1
 app.config["UserAgent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
 app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","").strip()
 app.config["HCAPTCHA_SECRET"] = environ.get("HCAPTCHA_SECRET","").strip()
@@ -51,7 +51,6 @@ app.config["SPAM_SIMILAR_COUNT_THRESHOLD"] = int(environ.get("SPAM_SIMILAR_COUNT
 app.config["SPAM_URL_SIMILARITY_THRESHOLD"] = float(environ.get("SPAM_URL_SIMILARITY_THRESHOLD", 0.5))
 app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(environ.get("COMMENT_SPAM_SIMILAR_THRESHOLD", 0.5))
 app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 0.5))
-app.config["VIDEO_COIN_REQUIREMENT"] = int(environ.get("VIDEO_COIN_REQUIREMENT", 0))
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
 app.config["RATELIMIT_KEY_PREFIX"] = "flask_limiting_"
@@ -99,11 +98,7 @@ def before_request():
 
 	g.timestamp = int(time.time())
 
-	if not request.path.startswith("/assets") and not request.path.startswith("/images") and not request.path.startswith("/hostedimages"):
-		session.permanent = True
-		if not session.get("session_id"): session["session_id"] = secrets.token_hex(16)
-
-	if app.config["FORCE_HTTPS"] and request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
+	if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
 		url = request.url.replace("http://", "https://", 1)
 		return redirect(url, code=301)
 
@@ -127,5 +122,11 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
+@app.route("/<path:path>", subdomain="www")
+@app.route("/<path:path>", subdomain="old")
+@app.route("/", subdomain="www")
+@app.route("/", subdomain="old")
+def sub_redirect(path):
+    return redirect(request.full_path)
 
 from files.routes import *
