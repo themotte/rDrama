@@ -125,7 +125,6 @@ if 'rdrama.net' in SITE:
 	CARP_ID = 995
 	JOAN_ID = 28
 	AEVANN_ID = 1
-	KLEN_ID = 2050
 	LAWLZ_ID = 3833
 	LLM_ID = 253
 	DAD_ID = 2513
@@ -150,7 +149,6 @@ elif SITE == "pcmemes.net":
 	CARP_ID = 0
 	JOAN_ID = 0
 	AEVANN_ID = 1
-	KLEN_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0
@@ -175,7 +173,6 @@ else:
 	CARP_ID = 0
 	JOAN_ID = 0
 	AEVANN_ID = 0
-	KLEN_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0

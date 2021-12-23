@@ -361,20 +361,6 @@ def settings_profile_post(v):
 
 		if len(bio_html) > 10000: abort(400)
 
-		if v.id == KLEN_ID:
-			notify_users = NOTIFY_USERS(friends_html, v.id)
-			soup = BeautifulSoup(friends_html, features="html.parser")
-			for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
-				username = mention["href"].split("@")[1]
-				user = g.db.query(User).filter_by(username=username).first()
-				if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
-
-			cid = notif_comment(f"@{v.username} has added you to their friends list!")
-
-			for x in notify_users:
-				add_notif(cid, x)
-
-
 		v.bio = bio[:1500]
 		v.bio_html=bio_html
 		g.db.add(v)

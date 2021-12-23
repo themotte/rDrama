@@ -119,22 +119,14 @@
 
 				{% if u.bio_html %}
 					<pre></pre>
-					{% if 'rdrama.net' in request.host and u.id == 2050 %}
-						<div class="text-muted font-weight-bolder">{{u.friends_html | safe}}</div>
-					{% else %}
-						<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
-					{% endif %}
+					<div class="text-muted font-weight-bolder">{{u.bio_html | safe}}</div>
 				{% else %}
 					<p class="text-muted">No bio...</p>
 				{% endif %}
 
 				{% if u.friends_html %}
 					<p class="text-muted font-weight-bold">Friends:</p>
-					{% if 'rdrama.net' in request.host and u.id == 2050 %}
-						{{u.bio_html | safe}}
-					{% else %}
-						{{u.friends_html | safe}}
-					{% endif %}
+					{{u.friends_html | safe}}
 				{% endif %}
 
 				{% if u.enemies_html %}
