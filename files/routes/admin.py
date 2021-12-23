@@ -1014,7 +1014,7 @@ def api_sticky_post(post_id, v):
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if post:
 		if post.stickied:
-			if post.stickied.startswith("t:"): abort(403)
+			if post.stickied.startswith("t:"): return {"error": "Can't unpin temporary pins!"}, 403
 			else: post.stickied = None
 		else:
 			pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()

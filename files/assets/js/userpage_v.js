@@ -98,3 +98,24 @@ function transferCoins(mobile=false) {
 
 	setTimeout(_ => t.disabled = false, 2000);
 }
+
+function transferBux(mobile=false) {
+	let t = event.target;
+	t.disabled = true;
+
+	let amount = parseInt(document.getElementById("bux-transfer-amount").value);
+	let username = document.getElementById('username').innerHTML
+
+	post_toast_callback(`/@${username}/transfer_bux`,
+		{"amount": document.getElementById(mobile ? "bux-transfer-amount-mobile" : "bux-transfer-amount").value},
+		(xhr) => {
+		if(xhr.status == 200) {
+			document.getElementById("user-bux-amount").innerText = parseInt(document.getElementById("user-bux-amount").innerText) - amount;
+			document.getElementById("profile-bux-amount-mobile").innerText = parseInt(document.getElementById("profile-bux-amount-mobile").innerText) + amount;
+			document.getElementById("profile-bux-amount").innerText = parseInt(document.getElementById("profile-bux-amount").innerText) + amount;
+		}
+		}
+	);
+
+	setTimeout(_ => t.disabled = false, 2000);
+}

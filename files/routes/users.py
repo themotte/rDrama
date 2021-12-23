@@ -253,6 +253,35 @@ def transfer_coins(v, username):
 	return {"message": f"You can't transfer {app.config['COINS_NAME']} to yourself!"}, 400
 
 
+@app.post("/@<username>/transfer_bux")
+@limiter.limit("1/second")
+@is_not_banned
+@validate_formkey
+def transfer_coins(v, username):
+	receiver = g.db.query(User).filter_by(username=username).first()
+
+	if not receiver: return {"error": "That user doesn't exist."}, 404
+
+	if receiver.id != v.id:
+		amount = request.values.get("amount", "").strip()
+		amount = int(amount) if amount.isdigit() else None
+
+		if not amount or amount < 0: return {"error": f"Invalid amount of marseybux."}, 400
+		if v.procoins < amount: return {"error": f"You don't have enough marseybux"}, 400
+		if amount < 100: return {"error": f"You have to gift at least 100 marseybux."}, 400
+
+		receiver.procoins += amount
+		v.procoins -= amount
+		send_repeatable_notification(receiver.id, f"🤑 [@{v.username}]({v.url}) has gifted you {amount} marseybux!")
+		g.db.add(receiver)
+		g.db.add(v)
+
+		g.db.commit()
+		return {"message": f"{amount} marseybux transferred!"}, 200
+
+	return {"message": f"You can't transfer marseybux to yourself!"}, 400
+
+
 @app.get("/leaderboard")
 @auth_desired
 def leaderboard(v):
