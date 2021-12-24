@@ -122,7 +122,7 @@ class Renderer(HTMLRenderer):
 		target = token.target[1]
 		return f'{space}<a href="https://old.reddit.com/u/{target}" rel="nofollow noopener noreferrer" class="d-inline-block">u/{target}</a>'
 
-class Renderer(HTMLRenderer):
+class Renderer2(HTMLRenderer):
 
 	def __init__(self, **kwargs):
 		super().__init__(UserMention,
