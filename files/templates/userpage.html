@@ -107,10 +107,8 @@
 					<span id="profile-coins-amount">{{u.coins}}</span>
 					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="20" src="/assets/images/emojis/marseycoin.webp?a=1">&nbsp;&nbsp;
 
-					{% if u.procoins %}
-						<span>{{u.procoins}}</span>
-						<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="20" src="/assets/images/emojis/marseybux.webp?a=1">&nbsp;&nbsp;
-					{% endif %}
+					<span id="profile-bux-amount">{{u.procoins}}</span>
+					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="20" src="/assets/images/emojis/marseybux.webp?a=1">&nbsp;&nbsp;
 
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
