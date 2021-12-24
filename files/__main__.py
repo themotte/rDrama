@@ -121,12 +121,14 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
-@app.route("/", subdomain="<whatever>")
-def sub_redirect(whatever):
+@app.route("/", subdomain="www")
+@app.route("/", subdomain="old")
+def sub_redirect():
     return redirect(request.full_path)
 
-@app.route("/<path:path>", subdomain="<whatever>")
-def sub_redirect2(path, whatever):
+@app.route("/<path:path>", subdomain="www")
+@app.route("/<path:path>", subdomain="old")
+def sub_redirect2(path):
     return redirect(request.full_path)
 
 from files.routes import *
