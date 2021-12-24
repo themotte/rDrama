@@ -656,7 +656,7 @@ def agendaposter(user_id, v):
 
 	expiry = request.values.get("days", 0)
 	if expiry:
-		expiry = int(expiry)
+		expiry = float(expiry)
 		expiry = g.timestamp + expiry*60*60*24
 	else: expiry = 0
 
