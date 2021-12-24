@@ -170,7 +170,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{c.id}}" class="comment anchor {% if c.unread %}bg-primary/20{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed items-center opacity-50 md:hover:opacity-100{% endif %}">
+<div id="comment-{{c.id}}" class="comment anchor {% if c.unread %}bg-primary/20{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed items-center opacity-50 md:hover:opacity-100{% endif %} {% if c.sentto != None and level==1 %}p-2.5 bg-gray-200 md:bg-gray-300 dark:bg-white/[.05] rounded{% endif %}">
 
 	{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %}
 	<div id="comment-collapse-{{c.id}}" class="z-20 absolute w-full h-full bottom-0 left-0 right-0 top-0 cursor-pointer" onclick="collapse_comment('{{c.id}}')"></div>
@@ -180,6 +180,7 @@
 
 	<span class="comment-collapse-desktop hidden" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 
+	{% if c.sentto == None %}
 	<div class="flex flex-col flex-shrink-0 items-center mr-2.5 {{ 'md:mr-4' if not c.parent_comment_id or standalone else 'md:mr-3' }}">
 		<button class="relative {{ 'santa' if c.author.patron else 'cap' }}" onclick="collapse_comment('{{c.id}}')">
 			{% if standalone or level==1 %}
@@ -190,6 +191,7 @@
 		</button>
 		<button onclick="collapse_comment('{{c.id}}')" class="invisible-on-collapse md:ml-4 w-[1px] md:w-4 h-full border-l border-gray-400 dark:border-gray-600"></button>
 	</div>
+	{% endif %}
 
 	<div class="w-full">
 
@@ -316,7 +318,7 @@
 				<div id="comment-banned-warning" class="hidden-on-collapse text-red-600 mb-0">Removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="comment-text hidden-on-collapse mt-2 break-words {% if c.award_count("candycane") %}candycane{% endif %}">
+			<div id="comment-text-{{c.id}}" class="comment-text hidden-on-collapse mt-2 break-words {% if c.award_count("candycane") %}candycane{% endif %} {% if c.sentto != None and v.id==c.author_id %}text-green-700 dark:text-green-400{% endif %}">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
 					{% for o in c.options %}

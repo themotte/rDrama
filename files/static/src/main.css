@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+.theme-mountain-bluebird {
+	--color-primary: 0,132,180;
+	--color-100: 255,255,255;
+	--color-200: 255,255,255;
+	--color-300: 232,232,232;
+	--color-400: 180,180,180;
+	--color-500: 153,153,153;
+	--color-600: 51,51,51;
+	--color-700: 37,37,37;
+	--color-800: 37,37,37;
+	--color-900: 0,0,0;
+}
+
 .theme-blood-orange {
 	--color-primary: 249,115,22;
 	--color-100: 224,231,255;
@@ -81,7 +94,7 @@
 }
 
 .theme-choco-mint {
-	--color-primary: 37, 193, 136;
+	--color-primary: 37,193,136;
 	--color-100: 246,246,244;
 	--color-200: 235,232,229;
 	--color-300: 219,218,209;
@@ -91,6 +104,32 @@
 	--color-700: 70,62,47;
 	--color-800: 52,44,32;
 	--color-900: 40,37,17;
+}
+
+.theme-redwood {
+	--color-primary: 222,176,16;
+	--color-100: 246,244,244;
+	--color-200: 235,229,229;
+	--color-300: 219,209,209;
+	--color-400: 177,159,159;
+	--color-500: 130,110,110;
+	--color-600: 99,96,77;
+	--color-700: 70,47,47;
+	--color-800: 52,32,32;
+	--color-900: 40,17,17;
+}
+
+.theme-sequoia {
+	--color-primary: 54,83,20;
+	--color-100: 246,244,244;
+	--color-200: 235,229,229;
+	--color-300: 219,209,209;
+	--color-400: 177,159,159;
+	--color-500: 130,110,110;
+	--color-600: 99,96,77;
+	--color-700: 70,47,47;
+	--color-800: 52,32,32;
+	--color-900: 40,17,17;
 }
 
 .theme-dramblr {
@@ -372,6 +411,14 @@
 	/* ---------------------- DROPDOWNS --------------------- */
 	.dropdown-item-primary {
 		@apply block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white dark:hover:bg-black bg-gradient-to-t dark:bg-gradient-to-t hover:from-primary hover:to-primary/80 dark:hover:from-primary/80 dark:hover:to-primary hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-b dark:focus:bg-gradient-to-t;
+	}
+
+	/* ---------------------- NAV TABS ---------------------- */
+	.nav.nav-tabs .nav-link {
+		@apply border-b-2 border-transparent
+	}
+	.nav.nav-tabs .nav-link.active {
+		@apply border-primary
 	}
 
 	/* ----------------------- BADGES ----------------------- */

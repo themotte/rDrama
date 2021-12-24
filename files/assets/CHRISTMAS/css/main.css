@@ -3708,13 +3708,14 @@ pre .com, code .com {
    margin: 0;
  }
 
- .post-title a {
+/* .post-title a {
    color: var(--black);
  }
 
  .post-title a:hover, .post-title a:active, .post-title a:focus {
    color: var(--primary);
  }
+*/
 
  #thread .voting {
    min-width: 0;

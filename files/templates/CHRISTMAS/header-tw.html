@@ -47,17 +47,17 @@
         </div>
         <div class="hidden lg:flex items-center sm:ml-4">
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            <a href="/" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/' else 'text-gray-500 hover:text-gray-400' }}" aria-current="page">
+            <a href="/" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/' else 'text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400' }}" aria-current="page">
               <i class="fas fa-home-lg-alt fa-fw mr-2"></i>
               Home
             </a>
 
-            <a href="/comments" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/comments' else 'text-gray-500 hover:text-gray-400' }}" aria-current="page">
+            <a href="/comments" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/comments' else 'text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400' }}" aria-current="page">
               <i class="fas fa-comments-alt fa-fw mr-2"></i>
               Comments
             </a>
 
-            <a href="/leaderboard" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/leaderboard' else 'text-gray-500 hover:text-gray-400' }}" aria-current="page">
+            <a href="/leaderboard" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/leaderboard' else 'text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400' }}" aria-current="page">
               <i class="fas fa-trophy fa-fw mr-2"></i>
               Leaderboard
             </a>
@@ -81,18 +81,18 @@
         </div>
         {% if v.admin_level > 1 %}
         <!-- Admin link -->
-        <a href="{{ '/admin' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+        <a href="{{ '/admin' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">Admin tools</span>
           <i class="fas fa-crown fa-fw"></i>
         </a>
         {% endif %}
         <!-- Profile link -->
-        <a href="{{ '/me' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+        <a href="{{ '/me' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">My profile</span>
           <i class="fas fa-user fa-fw"></i>
         </a>
         <!-- Notifications -->
-        <a href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" class="block bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+        <a href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" class="block bg-transparent p-1 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">View notifications</span>
           <div class="relative">
             <i class="fas fa-envelope fa-fw"></i>
@@ -105,7 +105,7 @@
           </div>
         </a>
         <!-- Post Creation -->
-        <a href="{{ '/submit' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+        <a href="{{ '/submit' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">Submit post</span>
           <i class="fas fa-plus fa-fw"></i>
         </a>
