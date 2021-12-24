@@ -2171,6 +2171,9 @@ video {
 .pb-12 {
 	padding-bottom: 3rem;
 }
+.pt-2\.5 {
+	padding-top: 0.625rem;
+}
 .text-left {
 	text-align: left;
 }
@@ -2964,6 +2967,16 @@ video {
 }
 	.dark .dropdown-item-primary:focus {
 	background-image: linear-gradient(to top, var(--tw-gradient-stops));
+}
+
+	/* ---------------------- NAV TABS ---------------------- */
+	.nav.nav-tabs .nav-link {
+	border-bottom-width: 2px;
+	border-color: transparent;
+}
+	.nav.nav-tabs .nav-link.active {
+	--tw-border-opacity: 1;
+	border-color: rgba(var(--color-primary), var(--tw-border-opacity));
 }
 
 	/* ----------------------- BADGES ----------------------- */

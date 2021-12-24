@@ -387,6 +387,14 @@
 		@apply block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white dark:hover:bg-black bg-gradient-to-t dark:bg-gradient-to-t hover:from-primary hover:to-primary/80 dark:hover:from-primary/80 dark:hover:to-primary hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-b dark:focus:bg-gradient-to-t;
 	}
 
+	/* ---------------------- NAV TABS ---------------------- */
+	.nav.nav-tabs .nav-link {
+		@apply border-b-2 border-transparent
+	}
+	.nav.nav-tabs .nav-link.active {
+		@apply border-primary
+	}
+
 	/* ----------------------- BADGES ----------------------- */
 	.badge {
 		@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded bg-gradient-to-t;
