@@ -217,6 +217,12 @@ def post_id(pid, anything=None, v=None):
 		if len(comments) == len(comments2): offset = None
 		comments = comments2
 
+	for pin in pinned:
+		if pin.is_pinned.startswith("t:") and int(time.time()) > int(pin.is_pinned[2:]):
+			pin.is_pinned = None
+			g.db.add(pin)
+			pinned.remove(pin)
+
 	post.replies = pinned + comments
 
 	post.views += 1

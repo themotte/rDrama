@@ -276,9 +276,19 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 			blocked = [x[0] for x in g.db.query(UserBlock.user_id).filter_by(target_id=v.id).all()]
 			pins = pins.filter(Submission.author_id.notin_(blocking), Submission.author_id.notin_(blocked))
 
-		posts = pins.all() + posts
+		pins = pins.all()
+
+		for pin in pins:
+			if (pin.stickied.startswith("t:") or pin.stickied.startswith("j:")) and int(time.time()) > int(pin.stickied[2:]):
+				pin.stickied = None
+				g.db.add(pin)
+				pins.remove(pin)
+
+		posts = pins + posts
 
 	if ids_only: posts = [x.id for x in posts]
+
+	g.db.commit()
 
 	return posts, next_exists
 

@@ -34,5 +34,4 @@ INSERT INTO public.users (
 			'', 'dark', '30409f', false, false, '', '', 0, false, 0, 
 			0, 0, '', true, 0);
 
-
-SELECT pg_catalog.setval('public.users_id_seq', 6, true);
+SELECT pg_catalog.setval('public.users_id_seq', 7, true);

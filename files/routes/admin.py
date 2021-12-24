@@ -1029,14 +1029,14 @@ def api_sticky_post(post_id, v):
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if post:
 		if post.stickied:
-			if post.stickied.startswith("t:"): return {"error": "Can't unpin temporary pins!"}, 403
+			if post.stickied.startswith("t:"): return {"error": "Can't unpin award pins!"}, 403
 			else: post.stickied = None
 		else:
 			pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()
 			if pins > 2:
 				if v.admin_level > 2:
 					t = int(time.time()) + 3600
-					post.stickied = f"t:{t}"
+					post.stickied = f"j:{t}"
 				else: return {"error": "Can't exceed 3 pinned posts limit!"}, 403
 			else: post.stickied = v.username
 		g.db.add(post)

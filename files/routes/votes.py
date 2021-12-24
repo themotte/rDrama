@@ -5,7 +5,6 @@ from files.classes import *
 from flask import *
 from files.__main__ import app, limiter, cache
 from sqlalchemy.orm import joinedload
-from .front import frontlist
 from os import environ
 
 defaultcolor = environ.get("DEFAULT_COLOR").strip()
@@ -114,11 +113,6 @@ def api_vote_post(post_id, new, v):
 					real = real
 					)
 		g.db.add(vote)
-	
-	if post.stickied and post.stickied.startswith("t:") and int(time.time()) > int(post.stickied[2:]):
-		post.stickied = None
-		g.db.add(post)
-		cache.delete_memoized(frontlist)
 
 	try:
 		g.db.flush()
@@ -186,10 +180,6 @@ def api_vote_comment(comment_id, new, v):
 						)
 
 		g.db.add(vote)
-
-	if comment.is_pinned and comment.is_pinned.startswith("t:") and int(time.time()) > int(comment.is_pinned[2:]):
-		comment.is_pinned = None
-		g.db.add(comment)
 
 	try:
 		g.db.flush()
