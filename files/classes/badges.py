@@ -46,7 +46,7 @@ class Badge(Base):
 	@property
 	@lazy
 	def path(self):
-		return f"/assets/images/badges/{self.name.replace(' ','%20')}.webp"
+		return f"/static/assets/images/badges/{self.name.replace(' ','%20')}.webp"
 
 	@property
 	@lazy

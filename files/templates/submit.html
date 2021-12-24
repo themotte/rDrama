@@ -3,13 +3,13 @@
 <head>
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-		<script src="/assets/js/bootstrap.js?a=1"></script>
+		<script src="/static/assets/js/bootstrap.js?a=3"></script>
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<link rel="icon" type="image/png" href="/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?a=1">
+		<link rel="icon" type="image/png" href="/static/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?a=3">
 
 		{% if request.host == 'pcmemes.net' %}
 			{% set cc='Splash Mountain' %}
@@ -25,18 +25,18 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?a=1"><link rel="stylesheet" href="/assets/css/{{v.theme}}.css?a=1">
-			{% if v.agendaposter %}<link rel="stylesheet" href="/assets/css/agendaposter.css?a=1">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+			<link rel="stylesheet" href="/static/assets/css/main.css?a=3"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
+			{% if v.agendaposter %}<link rel="stylesheet" href="/static/assets/css/agendaposter.css?a=3">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/assets/css/main.css?a=1">
-			<link rel="stylesheet" href="/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=1">
+			<link rel="stylesheet" href="/static/assets/css/main.css?a=3">
+			<link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
 		{% endif %}
 		{% endblock %}
 
-			<link href="/assets/css/fa.css?a=1" rel="stylesheet"> </head>
+			<link href="/static/assets/css/fa.css?a=3" rel="stylesheet"> </head>
 
-<body id="submit" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}display: block;">
+<body id="submit" style="overflow-x: hidden; {% if v and v.background %} background:url(/static/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}display: block;">
 
 				{% include "header.html" %}
 
@@ -175,9 +175,9 @@
 		</div>
 		{% endblock %}
 
-		<script src="/assets/js/marked.js?a=1"></script>
-		<script src="/assets/js/formatting.js?a=1"></script>
-		<script src="/assets/js/submit.js?a=1"></script>
+		<script src="/static/assets/js/marked.js?a=3"></script>
+		<script src="/static/assets/js/formatting.js?a=3"></script>
+		<script src="/static/assets/js/submit.js?a=3"></script>
 
 
 		{% include "emoji_modal.html" %}

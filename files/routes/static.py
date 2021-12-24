@@ -15,7 +15,7 @@ site_name = environ.get("SITE_NAME").strip()
 @app.get("/emojis")
 @auth_desired
 def emojis(v):
-	emojis = (x.replace('.webp','') for x in os.listdir("files/assets/images/emojis"))
+	emojis = (x.replace('.webp','') for x in os.listdir("files/static/assets/images/emojis"))
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}emojis.html", v=v, emojis=emojis)
@@ -235,9 +235,9 @@ def log_item(id, v):
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
-@app.get("/assets/favicon.ico")
+@app.get("/static/assets/favicon.ico")
 def favicon():
-	return send_file(f"./assets/images/{site_name}/icon.webp?v=200")
+	return send_file(f"./static/assets/images/{site_name}/icon.webp?a=200")
 
 @app.get("/api")
 @auth_desired
@@ -388,7 +388,7 @@ def formatting(v):
 
 @app.get("/service-worker.js")
 def serviceworker():
-	with open("files/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
+	with open("files/static/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
 
 @app.get("/settings/security")
 @auth_required

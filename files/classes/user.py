@@ -272,7 +272,7 @@ class User(Base):
 	@lazy
 	def bio_html_eager(self):
 		if self.bio_html == None: return ''
-		return self.bio_html.replace('data-src', 'src').replace('src="/assets/images/loading.webp"', '')
+		return self.bio_html.replace('data-src', 'src').replace('src="/static/assets/images/loading.webp"', '')
 
 	@property
 	@lazy
@@ -419,16 +419,16 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"https://{site}/assets/images/{site_name}/preview.webp?v=200"
+		else: return f"https://{site}/static/assets/images/{site_name}/preview.webp?a=200"
 
 	@property
 	@lazy
 	def profile_url(self):
-		if self.grincheffect: return f"https://{site}/assets/images/grinch.webp?v=200"
-		if self.agendaposter: return f"https://{site}/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?v=200"
+		if self.grincheffect: return f"https://{site}/static/assets/images/grinch.webp?a=200"
+		if self.agendaposter: return f"https://{site}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?a=200"
 		if self.profileurl: return self.profileurl
-		if "rama" in site: return f"https://{site}/assets/images/defaultpictures/{random.randint(1, 150)}.webp?v=200"
-		return f"https://{site}/assets/images/default-profile-pic.webp"
+		if "rama" in site: return f"https://{site}/static/assets/images/defaultpictures/{random.randint(1, 150)}.webp?a=200"
+		return f"https://{site}/static/assets/images/default-profile-pic.webp"
 
 	@lazy
 	def json_popover(self, v):
