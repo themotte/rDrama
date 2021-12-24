@@ -208,7 +208,7 @@
 		</li>
 		{% endif %}
 		<!-- Stickied -->
-		{% if p.stickied and p.stickied.startswith('t:') %}
+		{% if p.stickied and (p.stickied.startswith('t:') or p.stickied.startswith('j:')) %}
 		<li>
 			<span id="pinned-{{p.id}}" class="badge badge-pink" data-bs-toggle="tooltip" data-bs-placement="bottom" data-timestamp={{p.stickied[2:]}} onmouseover="pinned_timestamp(this.id)"}>
 				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
