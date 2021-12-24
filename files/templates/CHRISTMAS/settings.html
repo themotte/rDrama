@@ -12,7 +12,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<link rel="icon" type="image/png" href="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/icon.webp?v=99">
+	<link rel="icon" type="image/png" href="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/icon.webp?a=1">
 
 	<title>{% block pagetitle %}Settings - {{'SITE_NAME' | app_config}}{% endblock %}</title>
 	<meta property="og:type" content="article" >
@@ -34,29 +34,29 @@
 
 	{% block stylesheets %}
 
-	<link rel="stylesheet" href="/assets/CHRISTMAS/css/main.css?v=441">
+	<link rel="stylesheet" href="/assets/CHRISTMAS/css/main.css?a=1">
 
-  	<link rel="stylesheet" href="/static/dist/main.css?v=452">
+  	<link rel="stylesheet" href="/static/dist/main.css?a=1">
 
-	<link rel="stylesheet" href="/assets/CHRISTMAS/css/mistletoe.css?v=400">
+	<link rel="stylesheet" href="/assets/CHRISTMAS/css/mistletoe.css?a=1">
 
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<!-- <link rel="stylesheet" href="/assets/CHRISTMAS/css/{{v.theme}}.css?v=200"> -->
+		<!-- <link rel="stylesheet" href="/assets/CHRISTMAS/css/{{v.theme}}.css?a=1"> -->
 		{% if v.agendaposter %}
-		<link rel="stylesheet" href="/assets/CHRISTMAS/css/agendaposter.css?v=200">
+		<link rel="stylesheet" href="/assets/CHRISTMAS/css/agendaposter.css?a=1">
 		{% elif v.css %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<!-- <link rel="stylesheet" href="/assets/CHRISTMAS/css/{{'DEFAULT_THEME' | app_config}}.css?v=200"> -->
+		<!-- <link rel="stylesheet" href="/assets/CHRISTMAS/css/{{'DEFAULT_THEME' | app_config}}.css?a=1"> -->
 	{% endif %}
 
 	{% endblock %}
 
-	<link rel="preload" href="/assets/CHRISTMAS/css/fa.css?v=200" as="style" onload="this.onload=null;this.rel='stylesheet'">
-	<noscript><link rel="stylesheet" href="/assets/CHRISTMAS/css/fa.css?v=200"></noscript>
+	<link rel="preload" href="/assets/CHRISTMAS/css/fa.css?a=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="/assets/CHRISTMAS/css/fa.css?a=1"></noscript>
 
 	<style>
 		@font-face { font-family: 'Delius Swash Caps'; src: url('/assets/CHRISTMAS/fonts/DeliusSwashCaps-Regular.ttf'); } 
@@ -196,10 +196,10 @@
 
 	<!-- Scripts -->
 
-	<script src="/assets/CHRISTMAS/js/header.js?v=201"></script>
+	<script src="/assets/CHRISTMAS/js/header.js?a=1"></script>
 
 	<!-- Lazy Loading -->
-	<script src="/assets/CHRISTMAS/js/lozad.js?v=200"></script>
+	<script src="/assets/CHRISTMAS/js/lozad.js?a=1"></script>
 	<script>
 		const observer = lozad();
 		observer.observe();
@@ -219,7 +219,7 @@
 		});
 	</script>
 
-	<script src="/assets/CHRISTMAS/js/mobile_navigation_bar.js?v=210"></script>
+	<script src="/assets/CHRISTMAS/js/mobile_navigation_bar.js?a=1"></script>
 
 	{% if v %}
 		<script>function formkey() {return '{{v.formkey}}';}</script>
@@ -240,6 +240,6 @@
 		</script>
 	{% endif %}
 
-	<script src="/assets/CHRISTMAS/js/default.js?v=206"></script>
+	<script src="/assets/CHRISTMAS/js/default.js?a=1"></script>
 </body>
 </html>

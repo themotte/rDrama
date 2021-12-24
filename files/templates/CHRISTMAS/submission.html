@@ -31,7 +31,7 @@
 </script> -->
 
 {% if v %}
-<!-- <script defer src="/assets/CHRISTMAS/js/comments_v.js?v=200"></script> -->
+<!-- <script defer src="/assets/CHRISTMAS/js/comments_v.js?a=1"></script> -->
 {% endif %}
 
 {% endif %}
@@ -431,9 +431,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="/assets/CHRISTMAS/js/twitterlight.js?v=200"></script>
+									<script src="/assets/CHRISTMAS/js/twitterlight.js?a=1"></script>
 								{% else %}
-									<script src="/assets/CHRISTMAS/js/twitter.js?v=200"></script>
+									<script src="/assets/CHRISTMAS/js/twitter.js?a=1"></script>
 								{% endif %}
 								<script>document.getElementById('twitter-widget-0').setAttribute('sandbox','')</script>
 							{% elif "youtu" in p.domain %}
@@ -626,7 +626,7 @@
 			{% endif %}
 
 			{% if offset %}
-				<script src="/assets/CHRISTMAS/js/viewmore.js?v=200"></script>
+				<script src="/assets/CHRISTMAS/js/viewmore.js?a=1"></script>
 			{% endif %}
 
 	</div>
@@ -665,15 +665,15 @@
 	{% include "CHRISTMAS/submission/SubmissionAwards.html" %}
 
 	{% if v %}
-		<script defer src="/assets/CHRISTMAS/js/vote.js?v=200"></script>
+		<script defer src="/assets/CHRISTMAS/js/vote.js?a=1"></script>
 	{% endif %}
 
 	{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-		<script src="/assets/CHRISTMAS/js/submission.js?v=202"></script>
+		<script src="/assets/CHRISTMAS/js/submission.js?a=1"></script>
 	{% endif %}
 
 	{% if not v or v.highlightcomments %}
-		<script defer src="/assets/CHRISTMAS/js/new_comments_count.js?v=200"></script>
+		<script defer src="/assets/CHRISTMAS/js/new_comments_count.js?a=1"></script>
 	{% endif %}
 
 	<script defer>

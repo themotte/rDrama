@@ -5,19 +5,19 @@
 <head>
 	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
-	<script src="/assets/CHRISTMAS/js/bootstrap.js?v=190"></script>
+	<script src="/assets/CHRISTMAS/js/bootstrap.js?a=1"></script>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<meta name="thumbnail" content="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190">
-	<link rel="icon" type="image/png" href="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/icon.webp?v=190">
+	<meta name="thumbnail" content="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/preview.webp?a=1">
+	<link rel="icon" type="image/png" href="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/icon.webp?a=1">
 
 	<meta property="og:type" content="article" >
 	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta property="og:site_name" content="{{request.host}}" >
-	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190" >
+	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/preview.webp?a=1" >
 	<meta property="og:url" content="{{request.path | full_link}}">
 	<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 	<meta property="og:author" name="author" content="{{request.host_url}}" >
@@ -28,7 +28,7 @@
 	<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta name="twitter:creator" content="{{request.host_url}}">
 	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-	<meta name="twitter:image" content="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/preview.webp?v=190" >
+	<meta name="twitter:image" content="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/preview.webp?a=1" >
 	<meta name="twitter:url" content="{{request.path | full_link}}" >
 
 
@@ -38,13 +38,13 @@
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/assets/CHRISTMAS/css/main-deprecated.css?v=190"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{v.theme}}.css?v=191">
+		<link rel="stylesheet" href="/assets/CHRISTMAS/css/main-deprecated.css?a=1"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{v.theme}}.css?a=1">
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/assets/CHRISTMAS/css/main-deprecated.css?v=190"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{'DEFAULT_THEME' | app_config}}.css?v=191">
+		<link rel="stylesheet" href="/assets/CHRISTMAS/css/main-deprecated.css?a=1"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{'DEFAULT_THEME' | app_config}}.css?a=1">
 	{% endif %}
 
-		<link href="/assets/CHRISTMAS/css/fa.css?v=193" rel="stylesheet"> 
+		<link href="/assets/CHRISTMAS/css/fa.css?a=1" rel="stylesheet"> 
 </head>
 
 <body id="settings2" style="overflow-x: hidden; {% if v and v.background %} background:url(/assets/CHRISTMAS/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">

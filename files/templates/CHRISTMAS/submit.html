@@ -55,7 +55,7 @@
 			</label>
 			<div>
 				<!-- Input field -->
-				<input class="form-input" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="https://www.youtube.com/watch?v=iik25wqIuFo" value="{{request.values.get('url','')}}" required oninput="checkForRequired();hide_image()">
+				<input class="form-input" id="post-URL" aria-describedby="URLHelp" type="url" name="url" placeholder="https://www.youtube.com/watch?a=1" value="{{request.values.get('url','')}}" required oninput="checkForRequired();hide_image()">
 				<small class="block mt-1 text-gray-500">
 					To post an image, use a direct image link such as i.imgur.com
 				</small>
@@ -178,7 +178,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script defer src="/assets/CHRISTMAS/js/marked.js?v=202"></script>
-<script defer src="/assets/CHRISTMAS/js/submit.js?v=201"></script>
-<script defer src="/assets/CHRISTMAS/js/christmas/snow.js?v=200"></script>
+<script defer src="/assets/CHRISTMAS/js/marked.js?a=1"></script>
+<script defer src="/assets/CHRISTMAS/js/submit.js?a=1"></script>
+<script defer src="/assets/CHRISTMAS/js/christmas/snow.js?a=1"></script>
 {% endblock %}
