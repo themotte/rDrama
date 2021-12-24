@@ -3353,6 +3353,11 @@ video {
 	color: rgba(245, 158, 11, var(--tw-text-opacity));
 }
 
+	.focus\:text-gray-300:focus {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-300), var(--tw-text-opacity));
+}
+
 	.focus\:text-gray-200:focus {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-200), var(--tw-text-opacity));
@@ -3563,6 +3568,11 @@ video {
 
 	.dark .dark\:focus\:bg-transparent:focus {
 	background-color: transparent;
+}
+
+	.dark .dark\:focus\:text-gray-400:focus {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-400), var(--tw-text-opacity));
 }
 
 	@media (min-width: 640px) {
