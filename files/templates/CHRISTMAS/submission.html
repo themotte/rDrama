@@ -162,11 +162,11 @@
 			<div class="font-medium uppercase text-sm tracking-wider text-red-700 leading-normal mb-2">
 				<i class="fas fa-flag fa-fw mr-2 fa-sm"></i>Reported by:
 			</div>
-			<ul class="mb-0 flex flex-col font-bold space-y-3 divide-y divide-red-300 text-black">
+			<ul class="mb-0 flex flex-col space-y-3 divide-y divide-red-300 text-black">
 				{% for f in p.ordered_flags %}
 					<li>
-						<a class="text-gray-700 hover:text-gray-900" href="{{f.user.url}}">{{f.user.username}}</a>
-						{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}
+						<a class="font-bold text-gray-700 hover:text-gray-900" href="{{f.user.url}}">{{f.user.username}}</a>
+						<p>{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}</p>
 						<button class="text-red-600 hover:underline" onclick="post_toast('/del_report/p{{ f.id }}')">
 							remove
 						</button>
