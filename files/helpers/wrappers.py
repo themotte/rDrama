@@ -7,7 +7,7 @@ def get_logged_in_user():
 	token = request.headers.get("Authorization","").strip()
 
 	if token:
-		if g.db: client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).one_or_none()
+		if hasattr(g, 'db') and g.db: client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).one_or_none()
 		else: return None
 
 		if not client: return None
@@ -21,7 +21,7 @@ def get_logged_in_user():
 
 		nonce = session.get("login_nonce", 0)
 		try:
-			if g.db: v = g.db.query(User).filter_by(id=lo_user).one_or_none()
+			if hasattr(g, 'db') and g.db: v = g.db.query(User).filter_by(id=lo_user).one_or_none()
 			else: return None
 		except: return None
 
