@@ -237,7 +237,7 @@ def log_item(id, v):
 
 @app.get("/static/assets/favicon.ico")
 def favicon():
-	return send_file(f"./static/assets/images/{site_name}/icon.webp?a=200")
+	return send_file(f"./assets/images/{site_name}/icon.webp?a=200")
 
 @app.get("/api")
 @auth_desired
@@ -289,7 +289,6 @@ def static_service2(path):
 	if request.path.endswith('.webp'):
 		resp.headers.remove("Content-Type")
 		resp.headers.add("Content-Type", "image/webp")
-
 	return resp
 
 @app.get('/assets/<path:path>')
