@@ -125,6 +125,9 @@ def notifications(v):
 @auth_desired
 def front_all(v):
 
+	session.permanent = True
+	if not session.get("session_id"): session["session_id"] = secrets.token_hex(49)
+
 	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
 	if v and v.is_banned and not v.unban_utc: return render_template('errors/500.html', error=True, v=v), 500
