@@ -83,7 +83,3 @@ lite-youtube.lyt-activated > .lty-playbtn {
 .ytp-pause-overlay-controls-hidden .ytp-pause-overlay, ytp-pause-overlay ytp-scroll-min {
     display: none!important;
 }
-
-.fug {
-    display:none;
-}
