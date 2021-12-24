@@ -152,7 +152,32 @@
 		</div>
 	{% endif %}	
 </div>
-{% endif %}	
+{% endif %}
+
+
+{% if p.active_flags %}
+	<!-- Reports -->
+	<div id="flaggers-{{p.id}}" class="relative mt-4 p-3 md:rounded-md bg-red-100 border border-red-200 hidden">
+		<div class="font-medium uppercase text-sm tracking-wider text-red-700 leading-normal mb-2">
+			<i class="fas fa-flag fa-fw mr-2 fa-sm"></i>Reported by:
+		</div>
+		<ul class="mb-0 flex flex-col font-bold space-y-3 divide-y divide-red-300 text-black">
+			{% for f in p.ordered_flags %}
+				<li>
+					<a class="text-gray-700 hover:text-gray-900" href="{{f.user.url}}">{{f.user.username}}</a>
+					{% if f.reason %}: {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}
+					<button class="text-red-600 hover:underline" onclick="post_toast('/del_report/p{{ f.id }}')">
+						remove
+					</button>
+					{% endif %}
+				</li>
+			{% endfor %}
+		</ul>
+		<button class="absolute top-1 right-3 text-red-400 hover:text-red-700" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">
+			<i class="fas fa-times"></i>
+		</button>
+	</div>
+{% endif %}
 
 {% if p.awards or p.over_18 or p.stickied or p.is_pinned or p.private or p.flair or p.club %}
 <!-- Mobile post meta, awards, etc -->
