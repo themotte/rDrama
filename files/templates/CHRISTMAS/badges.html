@@ -1,16 +1,13 @@
 {% extends "CHRISTMAS/default.html" %}
 {% block content %}
-<pre>
-
-
-</pre>
-<h1>User Badges</h1>
-<div>This page describes the requirements for obtaining all profile badges.</div>
-<pre>
-
-
-</pre>
-<table class="table table-striped mb-5">
+<div class="col-span-full my-4">
+<h1>
+	User Badges
+</h1>
+<p class="text-gray-400">
+	This page describes the requirements for obtaining all profile badges.
+</p>
+<table class="w-full table table-striped mb-5">
 <thead class="bg-primary text-white">
 	<tr>
 		<th>Name</th>
@@ -26,5 +23,5 @@
 	</tr>
 {% endfor %}
 </table>
-
+</div>
 {% endblock %}
