@@ -144,7 +144,7 @@
 			<input type="checkbox" id="privateCheck-mobile" name="private" form="submitform">
 			<label class="leading-4 ml-2 inline-blue badge badge-blue select-nonee" for="privateCheck">Draft</label>
 		</li>
-		{% if not v.club_banned %}
+		{% if v.paid_dues %}
 		<li class="flex items-center">
 			<input type="checkbox" id="clubCheck-mobile" name="club" form="submitform">
 			<label class="leading-4 ml-2 inline-block badge badge-yellow select-none" for="clubCheck">Country Club Thread</label>
