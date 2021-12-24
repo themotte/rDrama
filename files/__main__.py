@@ -126,7 +126,7 @@ def sub_redirect(whatever):
     return redirect(request.full_path)
 
 @app.route("/<path:path>", subdomain="<whatever>")
-def sub_redirect(path, whatever):
+def sub_redirect2(path, whatever):
     return redirect(request.full_path)
 
 from files.routes import *
