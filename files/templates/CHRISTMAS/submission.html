@@ -402,7 +402,7 @@
 						</a>
 						{% endif %}
 						{% endif %}
-						<div id="post-text" class="text-black dark:text-gray-200 {% if p.award_count("candycane") %}candycane{% endif %}">
+						<div id="post-text" class="post-text text-black dark:text-gray-200 {% if p.award_count("candycane") %}candycane{% endif %}">
 							{% if p.is_image %}
 								<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 									<img loading="lazy" src="{{p.realurl(v)}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">

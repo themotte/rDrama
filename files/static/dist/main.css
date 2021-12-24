@@ -674,13 +674,13 @@ video {
 		ul {
 	margin-bottom: 0.75rem;
 }
-		.comment-text > ul, .post-body > ul {
+		.comment-text > ul, .post-text > ul {
 	list-style-type: disc;
-	padding-left: 1rem;
+	padding-left: 1.25rem;
 }
-		.comment-text > ol, .post-body > ol {
+		.comment-text > ol, .post-text > ol {
 	list-style-type: decimal;
-	padding-left: 1rem;
+	padding-left: 1.25rem;
 }
 		strong {
 	font-weight: 700;
@@ -1118,6 +1118,9 @@ video {
 .h-full {
 	height: 100%;
 }
+.h-16 {
+	height: 4rem;
+}
 .h-14 {
 	height: 3.5rem;
 }
@@ -1126,9 +1129,6 @@ video {
 }
 .h-10 {
 	height: 2.5rem;
-}
-.h-16 {
-	height: 4rem;
 }
 .h-6 {
 	height: 1.5rem;
@@ -1193,6 +1193,9 @@ video {
 .w-full {
 	width: 100%;
 }
+.w-16 {
+	width: 4rem;
+}
 .w-14 {
 	width: 3.5rem;
 }
@@ -1210,9 +1213,6 @@ video {
 }
 .w-32 {
 	width: 8rem;
-}
-.w-16 {
-	width: 4rem;
 }
 .w-48 {
 	width: 12rem;

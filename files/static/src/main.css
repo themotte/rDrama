@@ -308,11 +308,11 @@
 		ul {
 			@apply mb-3
 		}
-		.comment-text > ul, .post-body > ul {
-			@apply list-disc pl-4
+		.comment-text > ul, .post-text > ul {
+			@apply list-disc pl-5
 		}
-		.comment-text > ol, .post-body > ol {
-			@apply list-decimal pl-4
+		.comment-text > ol, .post-text > ol {
+			@apply list-decimal pl-5
 		}
 		strong {
 			@apply font-bold

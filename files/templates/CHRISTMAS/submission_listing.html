@@ -248,7 +248,7 @@
 			</h5>
 
 			{% if p.realbody(v) and not p.over_18 %}
-				<div class="relative z-10 gradient-mask max-h-10 overflow-hidden pointer-events-none text-gray-500 break-words" style="word-break: break-word;" id="post-text-{{p.id}}">
+				<div class="post-text relative z-10 gradient-mask max-h-10 overflow-hidden pointer-events-none text-gray-500 break-words" style="word-break: break-word;" id="post-text-{{p.id}}">
 					{{p.realbody(v) | safe}}
 				</div>
 			{% endif %}
