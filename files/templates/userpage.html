@@ -155,7 +155,7 @@
 
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'coin-transfer')">Gift {{'COINS_NAME' | app_config}}</a>
-						{% if v.procoins > 100 %}
+						{% if v.procoins > 99 %}
 							<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'bux-transfer')">Gift Marseybux</a>
 						{% endif %}
 
@@ -443,8 +443,8 @@
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'message-mobile')">Message</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/suicide')">Get them help</a>
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable-mobile', 'coin-transfer-mobile')">Gift {{'COINS_NAME' | app_config}}</a>
-					{% if v.procoins > 100 %}
-						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'bux-transfer')">Gift Marseybux</a>
+					{% if v.procoins > 99 %}
+						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'bux-transfer-mobile')">Gift Marseybux</a>
 					{% endif %}
 
 					{% if v.admin_level > 2 %} 
