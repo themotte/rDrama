@@ -4,11 +4,11 @@ from files.helpers.const import *
 
 
 def get_logged_in_user():
-	token = request.headers.get("Authorization","").strip()
+	if not (hasattr(g, 'db') and g.db): g.db = db_session()
 
+	token = request.headers.get("Authorization","").strip()
 	if token:
-		if hasattr(g, 'db') and g.db: client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).one_or_none()
-		else: return None
+		client = g.db.query(ClientAuth).filter(ClientAuth.access_token == token).one_or_none()
 
 		if not client: return None
 
@@ -20,10 +20,7 @@ def get_logged_in_user():
 		if not lo_user: return None
 
 		nonce = session.get("login_nonce", 0)
-		try:
-			if hasattr(g, 'db') and g.db: v = g.db.query(User).filter_by(id=lo_user).one_or_none()
-			else: return None
-		except: return None
+		v = g.db.query(User).filter_by(id=lo_user).one_or_none()
 
 		if not v or nonce < v.login_nonce: return None
 
