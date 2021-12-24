@@ -6,7 +6,7 @@
 		<!-- Give awards if none -->
 		{% if not p.awards %}
 		<p class="text-sm text-gray-500">No awards gifted yet...</p>
-		<button class="text-sm text-red-600 hover:text-red-500" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')">
+		<button class="text-sm text-primary hover:underline" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')">
 				Gift award
 		</button>
 		{% endif %}
@@ -56,7 +56,7 @@
 			</li>
 			<li>
 				<p class="text-sm">
-					<a href="/votes?link={{p.fullname}}" class="font-bold text-red-600 hover:text-red-600">
+					<a href="/votes?link={{p.fullname}}" class="font-bold text-primary hover:underline">
 						{{ ups + downs }}
 					</a>
 					{{ 'vote' if ups + downs == 1 else 'votes' }} on this post
