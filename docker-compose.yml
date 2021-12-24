@@ -9,6 +9,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres@postgres:5432
       - MASTER_KEY=3435tdfsdudebussylmaoxxt43
+      - REDIS_URL=redis://redis
       - DOMAIN=localhost
       - SITE_NAME=Drama
       - GIPHY_KEY=3435tdfsdudebussylmaoxxt43
