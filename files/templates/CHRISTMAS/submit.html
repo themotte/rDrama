@@ -92,52 +92,53 @@
 				Post
 				<span class="italic text-sm font-normal text-gray-500">(optional if you have a link)</span>
 			</label>
-
-			<nav>
-				<div class="nav nav-tabs" id="nav-tab" role="tablist">
-					<button class="nav-link active" id="nav-write-tab" data-bs-toggle="tab" data-bs-target="#nav-write" type="button" role="tab" aria-controls="nav-write" aria-selected="true">Write</button>
-					<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-preview" type="button" role="tab" aria-controls="nav-preview" aria-selected="false">Preview</button>
-				</div>
-			</nav>
-			<div class="tab-content" id="nav-tabContent">
-				<div class="tab-pane fade show active" id="nav-write" role="tabpanel" aria-labelledby="nav-write-tab">
-					<!-- Input field -->
-					<div class="relative rounded border border-gray-300 dark:border-gray-900 bg-gray-100 dark:bg-white/[.05] w-full">
-						<textarea form="submitform" id="post-text" class="rounded-t bg-transparent p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown('post-text','preview');charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
-						<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 dark:border-white/[.05] mb-0">
-							<li>
-								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('post-text')">
-									<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
-								</button>
-							</li>
-							<li>
-								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('post-text')">
-									<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
-								</button>
-							</li>
-							<li>
-								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('post-text')">
-									<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
-								</button>
-							</li>
-							<li>
-								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="commentForm('post-text');getGif()">
-									<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
-								</button>
-							</li>
-							<li>
-								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam fa-fw fa-sm"></i>
-								</button>
-							</li>
-						</ul>
-						<span class="absolute right-3 bottom-3 z-10 text-xs font-medium text-gray-500" id="character-count-submit-text-form"></span>
+			<div class="p-2.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-700">
+				<nav>
+					<div class="nav nav-tabs" id="nav-tab" role="tablist">
+						<button class="nav-link active" id="nav-write-tab" data-bs-toggle="tab" data-bs-target="#nav-write" type="button" role="tab" aria-controls="nav-write" aria-selected="true">Write</button>
+						<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-preview" type="button" role="tab" aria-controls="nav-preview" aria-selected="false">Preview</button>
+					</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-write" role="tabpanel" aria-labelledby="nav-write-tab">
+						<!-- Input field -->
+						<div class="relative rounded border border-gray-300 dark:border-gray-900 bg-gray-100 dark:bg-white/[.05] w-full">
+							<textarea form="submitform" id="post-text" class="rounded-t bg-transparent p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown('post-text','preview');charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
+							<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 dark:border-white/[.05] mb-0">
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('post-text')">
+										<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
+									</button>
+								</li>
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('post-text')">
+										<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
+									</button>
+								</li>
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('post-text')">
+										<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
+									</button>
+								</li>
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="commentForm('post-text');getGif()">
+										<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
+									</button>
+								</li>
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam fa-fw fa-sm"></i>
+									</button>
+								</li>
+							</ul>
+							<span class="absolute right-3 bottom-3 z-10 text-xs font-medium text-gray-500" id="character-count-submit-text-form"></span>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="nav-preview" role="tabpanel" aria-labelledby="nav-preview-tab">
+						<div id="preview"></div>
 					</div>
 				</div>
-				<div class="tab-pane fade" id="nav-preview" role="tabpanel" aria-labelledby="nav-preview-tab">
-					<div id="preview"></div>
-				</div>
+				<a href="/formatting" target="_blank" class="block mt-2 text-xs text-gray-500 hover:text-gray-400">Formatting help</a>
 			</div>
-			<a href="/formatting" target="_blank" class="block mt-2 text-xs text-gray-500 hover:text-gray-400">Formatting help</a>
 		</div>
 
 		<!-- <div class="btn btn-secondary" onclick="document.getElementById('preview').classList.toggle('d-none');" style="float: right;">
