@@ -3825,6 +3825,14 @@ video {
 		padding: 0px;
 	}
 
+	.md\:p-2\.5 {
+		padding: 0.625rem;
+	}
+
+	.md\:p-2 {
+		padding: 0.5rem;
+	}
+
 	.md\:p-3 {
 		padding: 0.75rem;
 	}
