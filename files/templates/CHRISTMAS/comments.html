@@ -170,7 +170,7 @@
 </div>
 {% endif %}
 
-<div id="comment-{{c.id}}" class="comment anchor {% if c.unread %}bg-primary/20{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed items-center opacity-50 md:hover:opacity-100{% endif %} {% if c.sentto == None %}p-2.5 bg-gray-300 dark:border-gray-700 shadow-inner{% endif %}">
+<div id="comment-{{c.id}}" class="comment anchor {% if c.unread %}bg-primary/20{% endif %} relative flex mt-4 md:mt-6 {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed items-center opacity-50 md:hover:opacity-100{% endif %} {% if c.sentto == None %}p-2.5 bg-gray-300 dark:border-gray-700 shadow-inner rounded{% endif %}">
 
 	{% if c.collapse_for_user(v) or (standalone and c.over_18 and not (v and v.over_18)) %}
 	<div id="comment-collapse-{{c.id}}" class="z-20 absolute w-full h-full bottom-0 left-0 right-0 top-0 cursor-pointer" onclick="collapse_comment('{{c.id}}')"></div>
