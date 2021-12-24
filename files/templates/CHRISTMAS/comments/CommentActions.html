@@ -1,4 +1,4 @@
-<ul class="flex items-center justify-end md:justify-start space-x-5 text-sm text-gray-500 mb-0">
+<ul class="flex flex-wrap items-center justify-end md:justify-start space-x-3 gap-2 text-sm text-gray-500 mb-0">
 
 	{% if v and request.path.startswith('/@') and v.admin_level == 0%}
 	{% if voted==1 %}
@@ -42,7 +42,7 @@
 	</li>
 	<li class="list-inline-item text-muted hidden md:block">
 		<button href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')">
-			<i class="fas fa-gift fa-fw mr-2" aria-hidden="true"></i>Gift Award
+			<i class="fas fa-gift fa-fw mr-2" aria-hidden="true"></i>Award
 		</button>
 	</li>
 	<li id="unsave-{{c.id}}" class="hidden {% if c.id in v.saved_comment_idlist() %}md:block{% endif %}">
@@ -73,6 +73,14 @@
 		</a>
 	</li>
 
+	{% if v and c.parent_submission and c.author_id==v.id %}
+	<li>
+		<button class="hover:text-gray-400" onclick="toggleEdit('{{c.id}}')">
+			<i class="fas fa-pencil fa-fw mr-2"></i>Edit
+		</button>
+	</li>
+	{% endif %}
+
 	<li class="hidden md:block">
 		<div class="dropdown">
 			<button type="button" id="dropdownComment-{{c.id}}Actions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
@@ -90,12 +98,11 @@
 					</a>
 				</li>
 				{% if v and c.parent_submission and c.author_id==v.id %}
-				<li class="hidden md:block">
+				<li class="hidden">
 					<button class="dropdown-item dropdown-item-primary" onclick="toggleEdit('{{c.id}}')">
-						<i class="fas fa-edit fa-sm fa-fw mr-4"></i>Edit
+						<i class="fas fa-pencil fa-sm fa-fw mr-4"></i>Edit
 					</button>
 				</li>
-
 				{% if c.deleted_utc > 0 %}
 				<li class="hidden md:block">
 					<button class="dropdown-item dropdown-item-primary" onclick="post_toast('/undelete/comment/{{c.id}}')">

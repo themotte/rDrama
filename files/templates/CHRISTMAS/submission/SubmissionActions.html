@@ -1,4 +1,4 @@
-<ul class="flex items-center space-x-5 text-sm text-gray-500 mb-0">
+<ul class="flex flex-wrap items-center space-x-3 gap-2 text-sm text-gray-500 mb-0">
 
 	{% if p.realbody(v) and '/post/' not in request.full_path and not p.over_18 %}
 	<li>
@@ -11,8 +11,9 @@
 	{% if '/post/' not in request.full_path %}
 	<li>
 		<a {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %} class="text-gray-500 hover:text-gray-400">
-			<i class="fas fa-comment-dots fa-fw mr-2"></i>{{ p.comment_count }} comment{{ '' if p.comment_count == 1 else 's' }}
-			<span class="text-info hidden new-comments"></span>
+			<i class="fas fa-comment-dots fa-fw mr-2"></i>{{ p.comment_count }}
+			<span class="hidden lg:inline-block">comment{{ '' if p.comment_count == 1 else 's' }}</span>
+			<span class="text-primary hidden new-comments"></span>
 		</a>
 	</li>
 	{% endif %}
@@ -46,7 +47,7 @@
 	{% if v %}
 	<li class="hidden md:inline-block">
 		<button class="hover:text-gray-400" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/post/{{p.id}}/awards')">
-			<i class="fas fa-gift fa-fw mr-2"></i>Gift Award
+			<i class="fas fa-gift fa-fw mr-2"></i>Award
 		</button>
 	</li>
 	<li id="subscribe-{{p.id}}" class="{% if p.id in v.subscribed_idlist() %}hidden{% endif %}">

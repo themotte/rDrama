@@ -1,3 +1,12 @@
+function post(url) {
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	var form = new FormData()
+	form.append("formkey", formkey());
+	xhr.withCredentials=true;
+	xhr.send(form);
+};
+
 function formkey() {
 	let formkey = document.getElementById("formkey")
 	if (formkey) return formkey.innerHTML;

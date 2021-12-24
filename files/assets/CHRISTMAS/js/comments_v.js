@@ -1,11 +1,11 @@
-function post(url) {
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	var form = new FormData()
-	form.append("formkey", formkey());
-	xhr.withCredentials=true;
-	xhr.send(form);
-};
+// function post(url) {
+// 	var xhr = new XMLHttpRequest();
+// 	xhr.open("POST", url, true);
+// 	var form = new FormData()
+// 	form.append("formkey", formkey());
+// 	xhr.withCredentials=true;
+// 	xhr.send(form);
+// };
 
 function post_toast3(url, button1, button2) {
 	var xhr = new XMLHttpRequest();
@@ -250,10 +250,10 @@ document.onpaste = function(event) {
 
 function poll_vote(cid, parentid) {
 	for(let el of document.getElementsByClassName('presult-'+parentid)) {
-		el.classList.remove('d-none');
+		el.classList.remove('hidden');
 	}
 	for(let el of document.getElementsByClassName('presult')) {
-		el.classList.remove('d-none');
+		el.classList.remove('hidden');
 	}
 	var type = document.getElementById(cid).checked;
 	var scoretext = document.getElementById('poll-' + cid);

@@ -1,38 +1,25 @@
-<script src="/assets/CHRISTMAS/js/delete_post_modal.js?v=200"></script>
+<script src="/assets/CHRISTMAS/js/delete_post_modal.js?v=201"></script>
 
-<div class="modal fade modal-sm-bottom" id="deletePostModal" tabindex="-1" role="dialog" aria-labelledby="deletePostModalTitle" aria-hidden="true">
+<div class="modal fade" id="deletePostModal" tabindex="-1" role="dialog" aria-labelledby="deletePostModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header d-none d-md-flex">
-				<h5 class="modal-title">Delete post?</h5>
+		<div class="modal-content mx-auto max-w-xl bg-gray-100 dark:bg-gray-700 rounded-md shadow-lg">
+			<div class="modal-header">
+				<h5 class="font-bold text-xl leading-normal">Delete post?</h5>
 				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
 			</div>
 			<div class="modal-body text-center">
-
-				<div class="py-4">
-					<i class="fad fa-trash-alt text-muted d-none d-md-block" style="font-size: 3.5rem;"></i>
+				<div class="mb-3">
+					<i class="fad fa-trash-alt fa-lg text-red-600"></i>
 				</div>
-
-				<div class="h4 d-md-none">Delete post?</div>
-
-				<p class="d-none d-md-block">Your post will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.</p>
-
-				<p class="text-muted d-md-none">Your post will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.</p>
-
-				<div class="d-md-none">
-
-					<button type="button" id="deletePostButton-mobile" class="btn btn-danger btn-block btn-lg">Delete post</button>
-
-					<button type="button" class="btn btn-secondary btn-block btn-lg" data-bs-dismiss="modal">Cancel</button>
-
-				</div>
-
+				<p>
+					Your post will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.
+				</p>
 			</div>
-			<div class="modal-footer d-none d-md-flex">
-				<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
-				<button type="button" id="deletePostButton" class="btn btn-danger">Delete post</button>
+			<div class="flex justify-end space-x-2 border-t border-gray-300 dark:border-gray-800 p-4">
+				<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-400" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" id="deletePostButton" class="btn btn-red">Delete post</button>
 			</div>
 		</div>
 	</div>

@@ -2,7 +2,7 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content rounded-t-md w-full bg-gray-200">
 			<div class="relative rounded-t-md border-b border-gray-300 p-3">
-				<h5 class="font-bold font-heading text-lg mb-0">More options</h5>
+				<h5 class="font-bold text-black text-lg mb-0">More options</h5>
 				<button type="button" class="close absolute right-3.5 top-3.5" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">
 						<i class="fas fa-times-circle text-gray-500"></i>
@@ -19,7 +19,7 @@
 					{% if v %}
 					<li>
 						<button class="btn btn-gray w-full text-left" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')">
-							<i class="fas fa-gift fa-fw mr-4"></i>Give Award
+							<i class="fas fa-gift fa-fw mr-4"></i>Award
 						</button>
 					</li>
 					<li id="save2-{{c.id}}" class="{% if c.id in v.saved_comment_idlist() %}hidden{% endif %}">

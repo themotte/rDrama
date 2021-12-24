@@ -1,18 +1,18 @@
 {% if v %}
 	{% include "CHRISTMAS/award_modal.html" %}
 	<script defer src="/assets/CHRISTMAS/js/marked.js?v=202"></script>
-	<script defer src="/assets/CHRISTMAS/js/comments_v.js?v=200"></script>
+	<script defer src="/assets/CHRISTMAS/js/comments_v.js?v=202"></script>
 {% endif %}
 
 {% if v and v.admin_level > 1 %}
 	<script defer src="/assets/CHRISTMAS/js/comments_admin.js?v=200"></script>
 {% endif %}
 
-<script defer src="/assets/CHRISTMAS/js/comments.js?v=200"></script>
+<script defer src="/assets/CHRISTMAS/js/comments.js?v=201"></script>
 
 {% include "CHRISTMAS/expanded_image_modal.html" %}
 
-<script defer>
+<!-- <script defer>
 	function poll_vote(cid, parentid) {
 		{% if v %}
 			for(let el of document.getElementsByClassName('presult-'+parentid)) {
@@ -33,8 +33,7 @@
 			document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
 		{% endif %}
 	}
-</script>
-
+</script> -->
 
 {% macro single_comment(c, level=1) %}
 
@@ -78,24 +77,20 @@
 
 <div id="comment-{{c.id}}" class="comment">
 
-
 		<span class="comment-collapse-desktop hidden d-md-block" style="border-left: 2px solid #{{c.author.namecolor}};" onclick="collapse_comment('{{c.id}}')"></span>
 
 		<div class="comment-body">
 
 				<div id="comment-{{c.id}}-only">
-
-						<div class="user-info">
-							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
-							<button class="p-2 md:hidden" onclick="collapse_comment('{{c.id}}')">
-								<i class="fas fa-minus-circle fa-sm fa-fw comment-toggle-icon-{{c.id}}"></i>
-							</button>
-							{% if standalone and c.over_18 %}<span class="badge badge-red">+18</span>{% endif %}
-							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
-						</div>
-
+					<div class="user-info">
+						<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
+						<button class="p-2 md:hidden" onclick="collapse_comment('{{c.id}}')">
+							<i class="fas fa-minus-circle fa-sm fa-fw comment-toggle-icon-{{c.id}}"></i>
+						</button>
+						{% if standalone and c.over_18 %}<span class="badge badge-red">+18</span>{% endif %}
+						{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
+					</div>
 				</div>
-
 
 	{% if render_replies %} 
 		{% if level<10 %}
@@ -124,17 +119,14 @@
 </div>
 </div>
 
-
 {% else %}
 
 {% set score=c.score %}
 
 {% if v %}
-{% set voted=c.voted %}
-
+	{% set voted=c.voted %}
 {% else %}
-{% set voted=-2 %}
-
+	{% set voted=-2 %}
 {% endif %}
 
 {% if standalone and level==1 %}
@@ -356,7 +348,7 @@
 					{% include "CHRISTMAS/comments/CommentEditForm.html" %}
 				{% endif %}
 				<!-- Comment actions -->
-				<div id="comment-{{c.id}}-actions" class="hidden-on-collapse py-3 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
+				<div id="comment-{{c.id}}-actions" class="hidden-on-collapse pt-3 pb-2 {% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
 					{% include "CHRISTMAS/comments/CommentActions.html" %}
 				</div>
 			{% endif %}
@@ -424,17 +416,15 @@
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content mx-auto max-w-xl bg-gray-100 dark:bg-gray-700 rounded-md shadow-lg">
 				<div class="modal-header">
-					<h5 class="modal-title">Delete comment?</h5>
+					<h5 class="font-bold text-xl leading-normal">Delete comment?</h5>
 					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true"><i class="far fa-times"></i></span>
 					</button>
 				</div>
 				<div class="modal-body text-center">
-
-					<div class="py-4">
-						<i class="fad fa-trash-alt text-gray-400" style="font-size: 3.5rem;"></i>
+					<div class="mb-3">
+						<i class="fad fa-trash-alt fa-lg text-red-600"></i>
 					</div>
-
 					<p>
 						Your comment will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.
 					</p>

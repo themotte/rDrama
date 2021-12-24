@@ -7,17 +7,36 @@ document.getElementsByTagName('body')[0].onscroll = () => {
 	// var dropdown = document.getElementById("mobileSortDropdown");
 	// var navbar = document.getElementById("navbar");
 
+	// if (bottomBar != null) {
+	// 	if (currentScrollPos <= 60 || ((window.innerHeight + currentScrollPos) < document.body.offsetHeight)) {
+	// 		// console.log('less than 60 greater than offsetHeight');
+	// 		bottomBar.style.transform = "translateY(60px)";
+	// 	}
+	// 	else if (prevScrollpos > currentScrollPos) {
+	// 		// console.log('prev greater than current');
+	// 		bottomBar.style.transform = "translateY(0px)"
+	// 	}
+	// 	else {
+	// 		// console.log('else');
+	// 		bottomBar.style.transform = "translateY(60px)";
+	// 	}
+	// }
+
 	if (bottomBar != null) {
-		if (currentScrollPos <= 60 || ((window.innerHeight + currentScrollPos) < document.body.offsetHeight)) {
-			// console.log('less than 60 greater than offsetHeight');
+		if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
+			console.log('case 1')
+			bottomBar.style.transform = "translateY(0px)";
+		} 
+		else if (currentScrollPos <= 125 && (window.innerHeight + currentScrollPos) < (document.body.offsetHeight - 65)) {
+			console.log('case 2')
+			bottomBar.style.transform = "translateY(60px)"
+		}
+		else if (prevScrollpos > currentScrollPos && (window.innerHeight + currentScrollPos) >= (document.body.offsetHeight - 65)) {
+			console.log('case 3')
 			bottomBar.style.transform = "translateY(60px)";
 		}
-		else if (prevScrollpos > currentScrollPos) {
-			// console.log('prev greater than current');
-			bottomBar.style.transform = "translateY(0px)"
-		}
 		else {
-			// console.log('else');
+			console.log('case 4')
 			bottomBar.style.transform = "translateY(60px)";
 		}
 	}

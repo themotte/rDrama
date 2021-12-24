@@ -126,14 +126,16 @@
   </div>
 
   <!-- Mobile menu, show/hide based on menu state. -->
-  <div class="offcanvas offcanvas-end bg-gray-200" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+  <div class="offcanvas offcanvas-start bg-gray-200" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="relative flex w-full bg-gray-700 h-16 px-4 items-center snowcaps">
       <a class="block" href="{{ '/' if v else '/logged_out'}}">
           <img class="block lg:hidden w-32 object-contain" src="/assets/CHRISTMAS/images/logos/winter/logo-{{ random }}.png" alt="logo">
           <img class="hidden lg:block w-32 object-contain" src="/assets/CHRISTMAS/images/logos/winter/logo-{{ random }}.png" alt="logo">
       </a>
-      <button type="button" class="ml-auto close" data-bs-dismiss="offcanvas" aria-label="Close">
-        <span aria-hidden="true"><i class="far fa-times"></i></span>
+      <button type="button" class="ml-auto close p-2" data-bs-dismiss="offcanvas" aria-label="Close">
+        <span aria-hidden="true">
+          <i class="far fa-times"></i>
+        </span>
       </button>
     </div>
     <div class="offcanvas-body">
@@ -160,7 +162,10 @@
               <div class="flex space-x-3 mt-1">
                 <small class="flex items-center block mt-1 text-gray-500">
                   <img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/images/emojis/marseycoin.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}" class="w-6 h-6 object-contain" alt="coin icon"/>
-                  <span class="pl-1">{{v.coins}} {{'COINS_NAME' | app_config}}</span>
+                  <span class="pl-1">
+                      <span id="user-coins-amount">{{v.coins}}</span>
+                    {{'COINS_NAME' | app_config}}
+                  </span>
                 </small>
                 {% if v.procoins %}
                 <small class="flex items-center block mt-1 text-gray-500">

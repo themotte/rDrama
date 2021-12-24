@@ -155,7 +155,7 @@
 				</li>
 				<li>
 					<div class="text-lg mb-0">{{ u.coins }}</div>
-					<small class="block text-gray-500">Dramacoin Earned</small>
+					<small class="block text-gray-500">Dramacoin Balance</small>
 				</li>
 				{% if u.procoins %}
 				<li>
@@ -189,7 +189,7 @@
 				</li>
 				<li>
 					<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
-					<small class="block font-bold text-gray-500">Dramacoin Earned</small>
+					<small class="block font-bold text-gray-500">Dramacoin Balance</small>
 				</li>
 				{% if u.procoins %}
 				<li>
@@ -198,6 +198,16 @@
 				</li>
 				{% endif %}
 			</ul>
+		{% endif %}
+		{% if u.received_awards %}
+		<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
+			{% for a in u.received_awards %}
+			<li>
+				<i class="{{a['icon']}} {{a['color']}} fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
+				<span class="text-gray-500 text-sm">x{{a['count']}}</span>
+			</li>
+			{% endfor %}
+		</ul>
 		{% endif %}
 		{% if u.badges %}
 			<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
