@@ -1,11 +1,11 @@
-function post(url) {
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	var form = new FormData()
-	form.append("formkey", formkey());
-	xhr.withCredentials=true;
-	xhr.send(form);
-};
+// function post(url) {
+// 	var xhr = new XMLHttpRequest();
+// 	xhr.open("POST", url, true);
+// 	var form = new FormData()
+// 	form.append("formkey", formkey());
+// 	xhr.withCredentials=true;
+// 	xhr.send(form);
+// };
 
 function post_toast3(url, button1, button2) {
 	var xhr = new XMLHttpRequest();
