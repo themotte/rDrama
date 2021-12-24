@@ -5,23 +5,23 @@
 {% extends "CHRISTMAS/default.html" %}
 
 {% block subHeader %}
-	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
-		<div class="relative col-span-full flex items-center">
-			<div>
-				<h1 class="font-bold text-xl font-heading leading-normal mb-0">
-					Create post
-				</h1>
-				<small class="block text-gray-700 dark:text-gray-400">
-					Share drama with the community.
-				</small>
-			</div>
-			<div class="ml-auto">
-				{% if error %}<span class="text-danger mr-2">{{error}}</span>{% endif %}
-				<button class="btn btn-primary" id="create_button" type="submit" form="submitform" disabled>Post</button>
-			</div>
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Create post
+			</h1>
+			<small class="block text-gray-700 dark:text-gray-400">
+				Share drama with the community.
+			</small>
+		</div>
+		<div class="ml-auto">
+			{% if error %}<span class="text-danger mr-2">{{error}}</span>{% endif %}
+			<button class="btn btn-primary" id="create_button" type="submit" form="submitform" disabled>Post</button>
 		</div>
 	</div>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -92,44 +92,58 @@
 				Post
 				<span class="italic text-sm font-normal text-gray-500">(optional if you have a link)</span>
 			</label>
-			<!-- Input field -->
-			<div class="relative rounded border border-gray-300 dark:border-gray-900 bg-gray-100 dark:bg-white/[.05] w-full">
-				<textarea form="submitform" id="post-text" class="rounded-t bg-transparent p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown('post-text','preview');charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
-				<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 dark:border-white/[.05] mb-0">
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('post-text')">
-							<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
-						</button>
-					</li>
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('post-text')">
-							<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
-						</button>
-					</li>
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('post-text')">
-							<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
-						</button>
-					</li>
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="commentForm('post-text');getGif()">
-							<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
-						</button>
-					</li>
-					<li>
-						<button type="button" class="text-gray-400 hover:text-gray-500" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam fa-fw fa-sm"></i>
-						</button>
-					</li>
-				</ul>
-				<span class="absolute right-3 bottom-3 z-10 text-xs font-medium text-gray-500" id="character-count-submit-text-form"></span>
+			<div class="md:bg-gray-100 dark:md:bg-transparent md:border border-gray-300 dark:border-gray-900 md:rounded">
+				<nav class="px-2 md:px-5 md:pt-1">
+					<div class="nav nav-tabs" id="nav-tab" role="tablist">
+						<button class="nav-link active" id="nav-write-tab" data-bs-toggle="tab" data-bs-target="#nav-write" type="button" role="tab" aria-controls="nav-write" aria-selected="true">Write</button>
+						<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-preview" type="button" role="tab" aria-controls="nav-preview" aria-selected="false">Preview</button>
+					</div>
+				</nav>
+				<div class="tab-content md:p-2.5 md:pt-0" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-write" role="tabpanel" aria-labelledby="nav-write-tab">
+						<!-- Input field -->
+						<div class="relative rounded border border-gray-300 dark:border-gray-900 bg-white dark:bg-white/[.05] w-full">
+							<textarea form="submitform" id="post-text" class="rounded-t bg-transparent p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Optional if you have a link or an image." rows="7" name="body" oninput="markdown('post-text','preview');charLimit('post-text','character-count-submit-text-form');checkForRequired()" maxlength="10000" required></textarea>
+							<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-300 dark:border-white/[.05] mb-0">
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('post-text')">
+										<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
+									</button>
+								</li>
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('post-text')">
+										<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
+									</button>
+								</li>
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('post-text')">
+										<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
+									</button>
+								</li>
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="commentForm('post-text');getGif()">
+										<span class="font-bold text-sm text-uppercase" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#gifModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add GIF">GIF</span>
+									</button>
+								</li>
+								<li>
+									<button type="button" class="text-gray-400 hover:text-gray-500" onclick="loadEmojis('post-text')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Add Emoji"><i class="fas fa-smile-beam fa-fw fa-sm"></i>
+									</button>
+								</li>
+							</ul>
+							<span class="absolute right-3 bottom-3 z-10 text-xs font-medium text-gray-500" id="character-count-submit-text-form"></span>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="nav-preview" role="tabpanel" aria-labelledby="nav-preview-tab">
+						<div id="preview" class="border border-transparent p-2" style="min-height: 242px;"></div>
+					</div>
+					<a href="/formatting" target="_blank" class="block mt-2.5 text-xs text-gray-500 hover:text-gray-400">Formatting help</a>
+				</div>
 			</div>
-			<a href="/formatting" target="_blank" class="block mt-2 text-xs text-gray-500 hover:text-gray-400">Formatting help</a>
 		</div>
 
 		<!-- <div class="btn btn-secondary" onclick="document.getElementById('preview').classList.toggle('d-none');" style="float: right;">
 			Toggle preview
 		</div> -->
-		<div id="preview" class="hidden my-3"></div>
 
 		<!-- User form key (required) -->
 		<input type="hidden" name="formkey" value="{{v.formkey}}" class="hidden">
@@ -154,17 +168,17 @@
 {% endblock %}
 
 {% block sidebar %}
-	{% include 'CHRISTMAS//sidebars/SubmitSidebar.html' %}
+{% include 'CHRISTMAS//sidebars/SubmitSidebar.html' %}
 {% endblock %}
 
 {% block modals %}
-	{% include "CHRISTMAS/emoji_modal.html" %}
-	{% include "CHRISTMAS/gif_modal.html" %}
-	{% include 'CHRISTMAS//awards/Christmas/Snow.html' %}
+{% include "CHRISTMAS/emoji_modal.html" %}
+{% include "CHRISTMAS/gif_modal.html" %}
+{% include 'CHRISTMAS//awards/Christmas/Snow.html' %}
 {% endblock %}
 
 {% block scripts %}
-	<script defer src="/assets/CHRISTMAS/js/marked.js?v=202"></script>
-	<script defer src="/assets/CHRISTMAS/js/submit.js?v=201"></script>
-	<script defer src="/assets/CHRISTMAS/js/christmas/snow.js?v=200"></script>
+<script defer src="/assets/CHRISTMAS/js/marked.js?v=202"></script>
+<script defer src="/assets/CHRISTMAS/js/submit.js?v=201"></script>
+<script defer src="/assets/CHRISTMAS/js/christmas/snow.js?v=200"></script>
 {% endblock %}
