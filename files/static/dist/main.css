@@ -1957,10 +1957,6 @@ video {
 	--tw-gradient-from: rgb(var(--color-500));
 	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--color-500), 0));
 }
-.from-gray-800 {
-	--tw-gradient-from: rgb(var(--color-800));
-	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--color-800), 0));
-}
 .from-green-700 {
 	--tw-gradient-from: #15803d;
 	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(21, 128, 61, 0));
@@ -1981,9 +1977,6 @@ video {
 }
 .to-gray-400 {
 	--tw-gradient-to: rgb(var(--color-400));
-}
-.to-gray-700 {
-	--tw-gradient-to: rgb(var(--color-700));
 }
 .to-green-600 {
 	--tw-gradient-to: #16a34a;
@@ -2284,13 +2277,13 @@ video {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-700), var(--tw-text-opacity));
 }
-.text-green-700 {
-	--tw-text-opacity: 1;
-	color: rgba(21, 128, 61, var(--tw-text-opacity));
-}
 .text-red-600 {
 	--tw-text-opacity: 1;
 	color: rgba(220, 38, 38, var(--tw-text-opacity));
+}
+.text-green-700 {
+	--tw-text-opacity: 1;
+	color: rgba(21, 128, 61, var(--tw-text-opacity));
 }
 .text-gray-200 {
 	--tw-text-opacity: 1;
@@ -3251,16 +3244,6 @@ video {
 	color: rgba(var(--color-800), var(--tw-text-opacity));
 }
 
-	.hover\:text-red-500:hover {
-	--tw-text-opacity: 1;
-	color: rgba(239, 68, 68, var(--tw-text-opacity));
-}
-
-	.hover\:text-red-600:hover {
-	--tw-text-opacity: 1;
-	color: rgba(220, 38, 38, var(--tw-text-opacity));
-}
-
 	.hover\:underline:hover {
 	text-decoration: underline;
 }
@@ -3288,11 +3271,6 @@ video {
 	background-image: linear-gradient(to top, var(--tw-gradient-stops));
 }
 
-	.focus\:from-gray-700:focus {
-	--tw-gradient-from: rgb(var(--color-700));
-	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--color-700), 0));
-}
-
 	.focus\:from-red-800:focus {
 	--tw-gradient-from: #991b1b;
 	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(153, 27, 27, 0));
@@ -3311,10 +3289,6 @@ video {
 	.focus\:from-green-800:focus {
 	--tw-gradient-from: #166534;
 	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(22, 101, 52, 0));
-}
-
-	.focus\:to-gray-800:focus {
-	--tw-gradient-to: rgb(var(--color-800));
 }
 
 	.focus\:to-red-700:focus {
