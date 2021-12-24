@@ -180,7 +180,7 @@
 
 	<span class="comment-collapse-desktop hidden" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 
-	{% if c.sentto != None %}
+	{% if c.sentto == None %}
 	<div class="flex flex-col flex-shrink-0 items-center mr-2.5 {{ 'md:mr-4' if not c.parent_comment_id or standalone else 'md:mr-3' }}">
 		<button class="relative {{ 'santa' if c.author.patron else 'cap' }}" onclick="collapse_comment('{{c.id}}')">
 			{% if standalone or level==1 %}
