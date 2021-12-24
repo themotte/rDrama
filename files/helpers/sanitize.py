@@ -183,7 +183,7 @@ def sanitize(sanitized, noimages=False):
 				classes = 'height=60 class="emoji-md" '
 				remoji = emoji
 
-			if path.isfile(f'files/static/assets/images/emojis/{remoji}.webp'):
+			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
 				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" {classes}src="/static/assets/images/emojis/{remoji}.webp" >', new, flags=re.I)
 					
 		sanitized = sanitized.replace(old, new)
@@ -193,10 +193,10 @@ def sanitize(sanitized, noimages=False):
 		emoji = i.group(1).lower()
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
-			if path.isfile(f'files/static/assets/images/emojis/{emoji}.webp'):
+			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 class="emoji mirrored" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 
-		elif path.isfile(f'files/static/assets/images/emojis/{emoji}.webp'):
+		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?a=").replace("https://music.youtube.com/watch?a=", "https://youtube.com/watch?a=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?a=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube")
@@ -242,10 +242,10 @@ def filter_emojis_only(title):
 
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
-			if path.isfile(f'files/static/assets/images/emojis/{emoji}.webp'):
+			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 src="/static/assets/images/emojis/{emoji}.webp" class="emoji mirrored">', title, flags=re.I)
 				
-		elif path.isfile(f'files/static/assets/images/emojis/{emoji}.webp'):
+		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
 	
 	if len(title) > 1500: abort(400)

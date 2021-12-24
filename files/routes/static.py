@@ -15,7 +15,7 @@ site_name = environ.get("SITE_NAME").strip()
 @app.get("/emojis")
 @auth_desired
 def emojis(v):
-	emojis = (x.replace('.webp','') for x in os.listdir("files/static/assets/images/emojis"))
+	emojis = (x.replace('.webp','') for x in os.listdir("files/assets/images/emojis"))
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}emojis.html", v=v, emojis=emojis)
@@ -388,7 +388,7 @@ def formatting(v):
 
 @app.get("/service-worker.js")
 def serviceworker():
-	with open("files/static/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
+	with open("files/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
 
 @app.get("/settings/security")
 @auth_required
