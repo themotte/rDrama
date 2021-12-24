@@ -88,13 +88,13 @@
 				{% set path = request.full_path %}
 			{% endif %}
 			{% if request.full_path == "/notifications" %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="{{path}}?page={{page-1}}">Previous</a></small>
+				<small><a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="{{path}}?page={{page-1}}">Back</a></small>
 			{% else %}
-				<small><a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="{{path}}&page={{page-1}}">Previous</a></small>
+				<small><a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="{{path}}&page={{page-1}}">Back</a></small>
 			{% endif %}
 		</li>
 		{% else %}
-		<li><span class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 disabled">Prev</span></li>
+		<li><button disabled class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 cursor-not-allowed">Back</button></li>
 		{% endif %}
 
 		{% if next_exists %}
@@ -113,7 +113,7 @@
 			{% endif %}
 		</li>
 		{% else %}
-		<li><span class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 disabled">Next</span></li>
+		<li><button disabled class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 cursor-not-allowed">Next</button></li>
 		{% endif %}
 	</ul>
 </div>

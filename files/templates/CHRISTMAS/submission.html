@@ -13,7 +13,7 @@
 {% block title %}
 
 {% if 'rama' not in request.host %}
-<script defer>
+<!-- <script defer>
 	function poll_vote(cid) {
 		{% if v %}
 		var type = document.getElementById(cid).checked;
@@ -28,10 +28,10 @@
 		document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
 		{% endif %}
 	}
-</script>
+</script> -->
 
 {% if v %}
-<script defer src="/assets/CHRISTMAS/js/comments_v.js?v=200"></script>
+<!-- <script defer src="/assets/CHRISTMAS/js/comments_v.js?v=200"></script> -->
 {% endif %}
 
 {% endif %}
@@ -41,7 +41,6 @@
 
 {% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc > 0 %}
 <title>{{'@'+comment_info.author.username}} comments on "{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}"</title>
-
 
 <meta property="og:article:author" content="{{'@'+comment_info.author.username}}" >
 <meta property="article:published_time" content="{{comment_info.created_datetime}}" >
@@ -153,7 +152,36 @@
 		</div>
 	{% endif %}	
 </div>
-{% endif %}	
+{% endif %}
+
+
+{% if p.active_flags %}
+	<!-- Reports -->
+	<div class="p-2.5 md:p-0">
+		<div id="flaggers-{{p.id}}" class="relative mt-4 p-3 rounded-lg bg-red-100 border border-red-200 hidden">
+			<div class="font-medium uppercase text-sm tracking-wider text-red-700 leading-normal mb-2">
+				<i class="fas fa-flag fa-fw mr-2 fa-sm"></i>Reported by:
+			</div>
+			<ul class="mb-0 flex flex-col space-y-3 divide-y divide-red-300 text-black">
+				{% for f in p.ordered_flags %}
+					<li class="flex flex-wrap">
+						<a class="font-bold text-black hover:text-primary" href="{{f.user.url}}">
+							{{f.user.username}}
+						</a>
+						<p class="pl-1">{% if f.reason %} - {{f.reason | safe}}{% endif %} {% if v.admin_level==6 %}</p>
+						<button class="text-red-600 hover:underline" onclick="post_toast('/del_report/p{{ f.id }}')">
+							remove
+						</button>
+						{% endif %}
+					</li>
+				{% endfor %}
+			</ul>
+			<button class="absolute top-1 right-3 text-red-400 hover:text-red-700" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">
+				<i class="fas fa-times"></i>
+			</button>
+		</div>
+	</div>
+{% endif %}
 
 {% if p.awards or p.over_18 or p.stickied or p.is_pinned or p.private or p.flair or p.club %}
 <!-- Mobile post meta, awards, etc -->
@@ -180,11 +208,18 @@
 		</li>
 		{% endif %}
 		<!-- Stickied -->
-		{% if p.stickied %}
+		{% if p.stickied and p.stickied.startswith('t:') %}
 		<li>
-			<span class="badge badge-pink">
+			<span id="pinned-{{p.id}}" class="badge badge-pink" data-bs-toggle="tooltip" data-bs-placement="bottom" data-timestamp={{p.stickied[2:]}} onmouseover="pinned_timestamp(this.id)"}>
 				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
-				Pinned {% if p.stickied.startswith('t:') %}until {{p.stickied[2:]}}{% else %}by @{{p.stickied}}{%endif%}
+				Pinned
+			</span>
+		</li>
+		{% elif p.stickied %}
+		<li>
+			<span id="pinned-{{p.id}}" class="badge badge-pink" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned by @{{p.stickied}}">
+				<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw"></i>
+				Pinned
 			</span>
 		</li>
 		{% endif %}
@@ -204,6 +239,15 @@
 				<i class="fas fa-lock-alt fa-sm fa-fw1"></i>
 				Draft
 			</span>
+		</li>
+		{% endif %}
+		<!-- Reports -->
+		{% if p.active_flags %}
+		<li>
+			<button class="badge badge-red" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">
+				<i class="fas fa-gavel fa-sm fa-fw"></i>
+				{{p.active_flags}} Reports
+			</button>
 		</li>
 		{% endif %}
 		<!-- Awards -->
@@ -295,11 +339,17 @@
 						</bdi>
 						{% endif %}
 
-						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp">{{p.age_string}}</span>
+						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="timestamp" onmouseover="timestamp('timestamp','{{p.created_utc}}')">
+							{{p.age_string}}
+						</span>
 
 						{% if p.edited_utc %}
+						<span class="flex-shrink-0 italic">
 						Edited
-						<span class="flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="bottom" id="edited_timestamp">{{p.edited_string}}</span>
+							<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('edited_timestamp','{{p.edited_utc}}')" id="edited_timestamp">
+								{{ p.edited_string }}
+							</span>
+						</span>
 						{% endif %}
 
 						{% if p.is_image %}
@@ -616,13 +666,10 @@
 
 	{% if v %}
 		<script defer src="/assets/CHRISTMAS/js/vote.js?v=200"></script>
-		{% if not p.comment_count %}
-			<script defer src="/assets/CHRISTMAS/js/comments_v.js?v=200"></script>
-		{% endif %}
 	{% endif %}
 
 	{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-		<script src="/assets/CHRISTMAS/js/submission.js?v=201"></script>
+		<script src="/assets/CHRISTMAS/js/submission.js?v=202"></script>
 	{% endif %}
 
 	{% if not v or v.highlightcomments %}

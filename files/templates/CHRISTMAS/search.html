@@ -72,17 +72,30 @@
 {% endblock %}
 
 {% block pagenav %}
-<nav aria-label="Page navigation">
-	<ul class="pagination pagination-sm mb-0">
-		<li class="page-item{% if page==1 %} disabled{% endif %}">
-
-			<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+<div class="col-span-full">
+	<ul class="flex flex-wrap items-center mb-4">
+		<li>
+			{% if page > 1 %}
+			<small>
+				<a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page-1}}" tabindex="-1" {% if page==1 %}aria-disabled="true"{% endif %}>
+					Back
+				</a>
+			</small>
+			{% else %}
+			<button disabled class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 cursor-not-allowed">Back</button>
+			{% endif %}
 		</li>
-		<li class="page-item{% if not next_exists %} disabled{% endif %}">
-			<small><a class="page-link" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">Next</a></small>
-
+		<li>
+			{% if next_exists %}
+			<small>
+				<a class="block px-2 py-1 text-sm font-bold text-primary bg-gray-900" href="?sort={{sort}}&q={{query | urlencode}}&t={{t}}&page={{page+1}}">
+					Next
+				</a>
+			</small>
+			{% else %}
+			<button disabled class="block px-2 py-1 text-sm font-bold text-gray-700 bg-gray-800 cursor-not-allowed">Next</button>
+			{% endif %}
 		</li>
 	</ul>
-</nav>
-
+</div>
 {% endblock %}

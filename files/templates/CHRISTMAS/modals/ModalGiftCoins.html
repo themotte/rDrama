@@ -1,8 +1,8 @@
 <div class="modal fade" id="giftCoinsModal" tabindex="-1" role="dialog" aria-labelledby="giftCoinsTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered mx-auto max-w-xl" role="document">
-		<div class="modal-content mx-auto max-w-xl bg-gray-100 rounded-md shadow-lg">
+		<div class="modal-content mx-auto max-w-xl bg-gray-100 dark:bg-gray-700 rounded-md shadow-lg">
 			<div class="modal-header">
-				<h5 class="font-bold text-xl text-black font-heading leading-normal">Gift Dramacoin to @{{u.username}}</h5>
+				<h5 class="font-bold text-xl leading-normal">Gift Dramacoin to @{{u.username}}</h5>
 				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
@@ -10,8 +10,8 @@
 			<div class="relative modal-body">
 				<!-- If user has less than 100 dramacoin, disable form -->
 				{% if v.coins < 100 %}
-				<div class="absolute left-0 bottom-0 flex flex-col items-center justify-center w-full h-full bg-white/60 z-10">
-					<p class="text-lg font-bold text-gray-900 mb-0">
+				<div class="absolute left-0 bottom-0 flex flex-col items-center justify-center w-full h-full bg-white/60 dark:bg-white/10 z-10">
+					<p class="text-lg font-bold mb-0">
 						You need at least 100 dramacoin to send coins.
 					</p>
 					<small class="mt-1 block text-gray-500">
@@ -21,8 +21,8 @@
 				{% endif %}
 				<!-- Form -->
 				<form class="profile-toggleable" id="message" action="/@{{u.username}}/message" method="post">
-					<div class="relative rounded-lg border border-gray-300 bg-gray-100 shadow-inner w-full"> 
-						<textarea maxlength="1000" id="gift-message" name="message" form="message" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white shadow-inner resize-y focus:outline-none" aria-label="With textarea" placeholder="'tis the season of giving..." rows="3"></textarea>
+					<div class="relative rounded-lg border border-gray-300 dark:border-gray-900 bg-gray-100 dark:bg-white/[.05] shadow-inner w-full"> 
+						<textarea maxlength="1000" id="gift-message" name="message" form="message" class="w-full rounded-t-md p-3 bg-transparent focus:bg-white dark:focus:bg-transparent shadow-inner resize-y focus:outline-none placehoder:text-gray-400" aria-label="With textarea" placeholder="'tis the season of giving..." rows="3"></textarea>
 						<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
 							<li>
 								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('gift-message')">

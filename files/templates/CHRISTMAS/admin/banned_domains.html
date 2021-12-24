@@ -5,12 +5,8 @@
 {% endblock %}
 
 {% block content %}
-
-<pre>
-
-</pre>
-
-<table class="table table-striped mb-5">
+<div class="col-span-full my-2 px-2.5 md:px-0">
+<table class="w-full table table-striped mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
 			<th style="font-weight:bold;">Domain</th>
@@ -33,5 +29,6 @@
 	<input name="reason" placeholder="Enter ban reason here.." onchange="document.getElementById('ban-submit').disabled=false" class="form-control">
 	<input id="ban-submit" type="submit" class="btn btn-primary" value="Toggle ban" disabled>
 </form>
+</div>
 
 {% endblock %}

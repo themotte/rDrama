@@ -1,5 +1,11 @@
+ {% if v and v.theme2 %}
+ 	{% set theme = v.theme2 %}
+ {% else %}
+ 	{% set theme = 'theme-iron dark' %}
+ {% endif %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{{ theme }}">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -30,7 +36,7 @@
 
 	<link rel="stylesheet" href="/assets/CHRISTMAS/css/main.css?v=440">
 
-  	<link rel="stylesheet" href="/static/dist/main.css?v=440">
+  	<link rel="stylesheet" href="/static/dist/main.css?v=450">
 
 	<link rel="stylesheet" href="/assets/CHRISTMAS/css/mistletoe.css?v=400">
 
@@ -57,18 +63,12 @@
 	</style>
 </head>
 
-{% if v and v.theme2 %}
- 	{% set theme = v.theme2 %}
- {% else %}
- 	{% set theme = 'theme-iron dark' %}
- {% endif %}
-
- <body class="{{ theme }} overflow-hidden overflow-y-auto sm:overflow-y-none antialiased bg-cover bg-center bg-gray-500 text-black dark:bg-gray-700 dark:text-gray-100">
+ <body class="overflow-hidden overflow-y-auto antialiased text-black bg-gray-700 dark:text-gray-100">
 
 	{% include "CHRISTMAS/header-tw.html" %}
 
-	<div class="flex h-screen pt-16 bg-gray-500 dark:bg-gray-700 dark:text-gray-200">
-		<div class="w-full sm:overflow-y-auto">
+	<div class="flex h-full pt-16 bg-gray-500 dark:bg-gray-700 dark:text-gray-200">
+		<div class="w-full">
 
 			<div class="md:px-4 bg-gray-700" id="sub-header-row">
 				<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
@@ -186,6 +186,8 @@
 	{% include "CHRISTMAS/modals/ModalThemePicker.html" %}
 	{% endif %}
 
+	{% include "CHRISTMAS/mobile_navigation_bar.html" %}
+
 	{% block modals %}{% endblock %}
 
 	{% block onload %}{% endblock %}
@@ -217,7 +219,7 @@
 		});
 	</script>
 
-	<script src="/assets/CHRISTMAS/js/mobile_navigation_bar.js?v=200"></script>
+	<script src="/assets/CHRISTMAS/js/mobile_navigation_bar.js?v=207"></script>
 
 	{% if v %}
 		<script>function formkey() {return '{{v.formkey}}';}</script>
@@ -225,13 +227,13 @@
 		<script>
 			var previousTheme = '{{ v.theme2 }}'.split(' ');
 			function changeTheme(theme) {
-				const body = document.body;
-				// if previous selection has a value, remove them from body tag
+				const root = document.documentElement
+				// if previous selection has a value, remove them from root html tag
 				if (previousTheme.length) {
-					previousTheme.map(v => body.classList.toggle(v));
+					previousTheme.map(v => root.classList.toggle(v));
 				}
-				// toggle classes in body tag
-				theme.map(v => body.classList.toggle(v));
+				// toggle classes in root html tag
+				theme.map(v => root.classList.toggle(v));
 				// Set global previous selection to current selection
 				previousTheme = theme;
 			}

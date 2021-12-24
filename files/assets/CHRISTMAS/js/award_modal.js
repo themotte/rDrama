@@ -75,21 +75,22 @@ function vote(type, id, dir) {
 }
 
 function awardModal(link) {
-	var target = document.getElementById("awardTarget");
+	const target = document.getElementById("awardTarget");
 	target.action = link;
 }
 
-function bruh(kind) {
-	document.getElementById('giveaward').disabled=false;
+function checkAward(kind) {
 	// document.getElementById('kind').value=kind;
 	// try {document.getElementsByClassName('bg-green-400')[0].classList.toggle('bg-green-400');} catch(e) {}
 	// document.getElementById(kind).classList.toggle('bg-green-400')
 	if (kind == "flairlock") {
+		document.getElementById('notelabel-helper').style.display = 'none';
 		document.getElementById('notelabel').innerHTML = "New flair:";
-		document.getElementById('note').placeholder = "Insert new flair here...";
+		document.getElementById('note').placeholder = "Insert a new flair here...";
 	}
 	else {
+		document.getElementById('notelabel-helper').style.display = 'inline-block';
 		document.getElementById('notelabel').innerHTML = "Note (optional):";
-		document.getElementById('note').placeholder = "Note to include in award notification";
+		document.getElementById('note').placeholder = "Note to include in award notification...";
 	}
 }

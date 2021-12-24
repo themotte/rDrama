@@ -49,3 +49,9 @@ function loadMoreReplies(cid,id,trigger) {
     }
     xhr.send(form)
 }
+
+function poll_vote_no_v() {
+    var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+    myToast.show();
+    document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
+}
