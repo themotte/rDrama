@@ -1963,6 +1963,10 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(222, 176, 16, var(--tw-bg-opacity));
 }
+.bg-\[\#1F3726\] {
+	--tw-bg-opacity: 1;
+	background-color: rgba(31, 55, 38, var(--tw-bg-opacity));
+}
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
