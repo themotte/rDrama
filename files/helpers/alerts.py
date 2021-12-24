@@ -5,13 +5,14 @@ from flask import g
 from .markdown import *
 from .sanitize import *
 from .const import *
+from mistletoe.html_renderer import HTMLRenderer
 
 def create_comment(text, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 
 	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
-	text_html = sanitize(mistletoe.Document(text))
+	text_html = sanitize(HTMLRenderer().render(mistletoe.Document(text)))
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
 							distinguish_level=6,
