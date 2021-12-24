@@ -121,3 +121,11 @@ class Renderer(HTMLRenderer):
 		space = token.target[0]
 		target = token.target[1]
 		return f'{space}<a href="https://old.reddit.com/u/{target}" rel="nofollow noopener noreferrer" class="d-inline-block">u/{target}</a>'
+
+class Renderer2(HTMLRenderer):
+
+	def __init__(self, **kwargs):
+		super().__init__()
+
+		for i in kwargs:
+			self.__dict__[i] = kwargs[i]
