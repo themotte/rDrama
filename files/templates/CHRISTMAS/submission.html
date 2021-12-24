@@ -237,6 +237,12 @@
 			</span>
 		</li>
 		{% endif %}
+		<!-- Reports -->
+		<li>
+			<button class="badge badge-red" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('hidden')">
+				{{p.active_flags}} Reports
+			</button>
+		</li>
 		<!-- Awards -->
 		{% if p.awards %}
 		{% for a in p.awards %}
