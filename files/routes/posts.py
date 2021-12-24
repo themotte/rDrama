@@ -1158,7 +1158,7 @@ def submit_post(v):
 				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 				else: body = "wow, a good lawlzpost for once!"
 			else: body = random.choice(snappyquotes)
-			body += "\n\n"
+			body += "\n<hr>\n"
 		else: body = ""
 
 		if new_post.url:
