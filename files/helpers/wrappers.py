@@ -1,7 +1,7 @@
 from .get import *
 from .alerts import *
 from files.helpers.const import *
-from flask import db_session
+from files.__main__ import db_session
 
 def get_logged_in_user():
 	if not (hasattr(g, 'db') and g.db): g.db = db_session()
