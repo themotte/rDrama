@@ -1046,7 +1046,7 @@ def settings_song_change(v):
 		return redirect("/settings/profile")
 
 	song = song.replace("https://music.youtube.com", "https://youtube.com")
-	if song.startswith(("https://www.youtube.com/watch?a=", "https://youtube.com/watch?a=", "https://m.youtube.com/watch?a=")):
+	if song.startswith(("https://www.youtube.com/watch?v=", "https://youtube.com/watch?v=", "https://m.youtube.com/watch?v=")):
 		id = song.split("v=")[1]
 	elif song.startswith("https://youtu.be/"):
 		id = song.split("https://youtu.be/")[1]
@@ -1099,7 +1099,7 @@ def settings_song_change(v):
 	}
 
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-		try: ydl.download([f"https://youtube.com/watch?a={id}"])
+		try: ydl.download([f"https://youtube.com/watch?v={id}"])
 		except Exception as e:
 			print(e)
 			if not v or v.oldsite: template = ''

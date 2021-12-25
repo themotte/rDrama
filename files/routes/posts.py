@@ -749,7 +749,7 @@ def submit_post(v):
 		for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
 			url = url.replace(rd, "https://old.reddit.com/")
 
-		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?a=").replace("https://music.youtube.com/watch?a=", "https://youtube.com/watch?a=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?a=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
+		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
 
 		if url.startswith("https://streamable.com/") and not url.startswith("https://streamable.com/e/"): url = url.replace("https://streamable.com/", "https://streamable.com/e/")
 
@@ -785,8 +785,8 @@ def submit_post(v):
 		elif "twitter.com" == domain:
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
-		elif url.startswith('https://youtube.com/watch?a='):
-			yt_id = url.split('https://youtube.com/watch?a=')[1].split('&')[0].split('%')[0]
+		elif url.startswith('https://youtube.com/watch?v='):
+			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
 			params = parse_qs(urlparse(url).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if isinstance(t, str): t = t.replace('s','')
