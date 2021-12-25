@@ -141,14 +141,15 @@
 			</div>
 		</div>
 		<div class="ml-auto flex items-center space-x-4">
-			{% if u.id == v.id or not u.is_private %}
 			<ul class="hidden xl:flex items-center space-x-4 mb-0 font-bold text-black dark:text-gray-200">
+				{% if not u.is_nofollow %}
 				<li>
 					<a href="/@{{ u.username }}/followers" class="text-black dark:text-gray-200 text-lg mb-0">
 						{{ u.stored_subscriber_count }}
 					</a>
 					<small class="block text-gray-500">Followers</small>
 				</li>
+				{% endif %}
 				<li>
 					<div class="text-lg mb-0">{{ u.coins_spent }}</div>
 					<small class="block text-gray-500">Dramacoin Spent</small>
@@ -164,7 +165,6 @@
 				</li>
 				{% endif %}
 			</ul>
-			{% endif %}
 		</div>
 	</div>
 	<div class="relative col-span-full flex xl:hidden flex-col">
@@ -175,30 +175,30 @@
 			<p class="italic text-gray-500 text-sm">No bio...</p>
 			{% endif %}
 		</div>
-		{% if u.id == v.id or not u.is_private %}
-			<ul class="flex items-center space-x-3 mt-3 mb-0">
-				<li>
-					<a href="/@{{ u.username }}/followers" class="text-black dark:text-gray-100 text-lg font-bold mb-0">
-						{{ u.stored_subscriber_count }}
-					</a>
-					<small class="block font-bold text-gray-500">Followers</small>
-				</li>
-				<li>
-					<div class="text-lg font-bold mb-0">{{ u.coins_spent }}</div>
-					<small class="block font-bold text-gray-500">Dramacoin Spent</small>
-				</li>
-				<li>
-					<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
-					<small class="block font-bold text-gray-500">Dramacoin Balance</small>
-				</li>
-				{% if u.procoins %}
-				<li>
-					<div class="text-lg font-bold mb-0">{{ u.procoins }}</div>
-					<small class="block font-bold text-gray-500">MarseyBux</small>
-				</li>
-				{% endif %}
-			</ul>
-		{% endif %}
+		<ul class="flex items-center space-x-3 mt-3 mb-0">
+			{% if not u.is_nofollow %}
+			<li>
+				<a href="/@{{ u.username }}/followers" class="text-black dark:text-gray-100 text-lg font-bold mb-0">
+					{{ u.stored_subscriber_count }}
+				</a>
+				<small class="block font-bold text-gray-500">Followers</small>
+			</li>
+			{% endif %}
+			<li>
+				<div class="text-lg font-bold mb-0">{{ u.coins_spent }}</div>
+				<small class="block font-bold text-gray-500">Dramacoin Spent</small>
+			</li>
+			<li>
+				<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
+				<small class="block font-bold text-gray-500">Dramacoin Balance</small>
+			</li>
+			{% if u.procoins %}
+			<li>
+				<div class="text-lg font-bold mb-0">{{ u.procoins }}</div>
+				<small class="block font-bold text-gray-500">MarseyBux</small>
+			</li>
+			{% endif %}
+		</ul>
 		{% if u.received_awards %}
 		<ul class="flex flex-row flex-wrap gap-2 mt-3 mb-0">
 			{% for a in u.received_awards %}
