@@ -727,8 +727,6 @@ def submit_post(v):
 
 	url = request.values.get("url", "").strip()
 
-	thumburl = None
-
 	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
 		title = title.replace('I ', f'@{v.username} ')
@@ -933,28 +931,6 @@ def submit_post(v):
 		body = body.replace('I ', f'@{v.username} ')
 		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
 
-	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
-		file=request.files["file"]
-		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(name)
-			url = process_image(name)
-			body = f"![]({url})\n\n{body}"
-
-			name2 = name.replace('.webp', 'r.webp')
-			copyfile(name, name2)
-			thumburl = process_image(name2, True)
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
-			body += f"\n\n{url}"
-		else:
-			if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
-			if not v or v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}submit.html", v=v, error=f"Image/Video files only."), 400
-	
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file2"]
 		if file.content_type.startswith('image/'):
@@ -1012,8 +988,7 @@ def submit_post(v):
 		embed_url=embed,
 		title=title[:500],
 		title_html=title_html,
-		created_utc=int(time.time()),
-		thumburl = thumburl
+		created_utc=int(time.time())	
 	)
 
 	g.db.add(new_post)
@@ -1045,9 +1020,7 @@ def submit_post(v):
 				submission_id=new_post.id
 				)
 	g.db.add(vote)
-
-
-
+	
 	if not new_post.thumburl and new_post.url and request.headers.get('cf-ipcountry')!="T1": gevent.spawn( thumbnail_thread, new_post.id)
 
 	if not new_post.private:
