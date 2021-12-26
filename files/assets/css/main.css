@@ -4672,3 +4672,7 @@ input[type=radio] ~ .custom-control-label::before {
 .preview-edit img {
     max-width: 20%;
 }
+.twitter-tweet {
+    margin-bottom: 9.8px;
+    padding-bottom: 7px;
+}

@@ -279,8 +279,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		pins = pins.all()
 
 		for pin in pins:
-			if (pin.stickied.startswith("t:") or pin.stickied.startswith("j:")) and int(time.time()) > int(pin.stickied[2:]):
+			if pin.stickied_utc and int(time.time()) > pin.stickied_utc:
 				pin.stickied = None
+				pin.stickied_utc = None
 				g.db.add(pin)
 				pins.remove(pin)
 

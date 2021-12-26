@@ -32,6 +32,7 @@ class Submission(Base):
 	deleted_utc = Column(Integer, default=0)
 	distinguish_level = Column(Integer, default=0)
 	stickied = Column(String)
+	stickied_utc = Column(Integer)
 	is_pinned = Column(Boolean, default=False)
 	private = Column(Boolean, default=False)
 	club = Column(Boolean, default=False)

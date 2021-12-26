@@ -18,14 +18,6 @@ discounts = {
 }
 
 AWARDS3 = {
-	"ban": {
-		"kind": "ban",
-		"title": "1-Day Ban",
-		"description": "Bans the recipient for a day.",
-		"icon": "fas fa-gavel",
-		"color": "text-danger",
-		"price": 3000
-	},
 	"fireflies": {
 		"kind": "fireflies",
 		"title": "Fireflies",
@@ -243,18 +235,21 @@ def award_post(pid, v):
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award on [{post.shortlink}]({post.shortlink})")
 		send_repeatable_notification(DAD_ID, f"@{v.username} used {kind} award on [{post.shortlink}]({post.shortlink})")
 	elif kind == "pin":
-		if post.stickied and post.stickied.startswith("t:"): t = int(post.stickied[2:]) + 3600
-		else: t = int(time.time()) + 3600
-		post.stickied = f"t:{t}"
+		if post.stickied and post.stickied_utc:
+			post.stickied_utc += 3600
+		else:
+			post.stickied = f'{v.username} (pin award)'
+			post.stickied_utc = int(time.time()) + 3600
 		g.db.add(post)
 		cache.delete_memoized(frontlist)
 	elif kind == "unpin":
-		if not (post.stickied and post.stickied.startswith("t:")): abort(403)
-		t = int(post.stickied[2:]) - 3600
+		if not post.stickied_utc: abort(403)
+		t = post.stickied_utc - 3600
 		if time.time() > t:
 			post.stickied = None
+			post.stickied_utc = None
 			cache.delete_memoized(frontlist)
-		else: post.stickied = f"t:{t}"
+		else: post.stickied_utc = t
 		g.db.add(post)
 	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
 		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400
@@ -416,15 +411,18 @@ def award_comment(cid, v):
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award on [{c.shortlink}]({c.shortlink})")
 		send_repeatable_notification(DAD_ID, f"@{v.username} used {kind} award on [{c.shortlink}]({c.shortlink})")
 	elif kind == "pin":
-		if c.is_pinned and c.is_pinned.startswith("t:"): t = int(c.is_pinned[2:]) + 3600
-		else: t = int(time.time()) + 3600
-		c.is_pinned = f"t:{t}"
+		if c.is_pinned and c.is_pinned_utc: c.is_pinned_utc += 3600
+		else:
+			c.is_pinned = f'{v.username} (pin award)'
+			c.is_pinned_utc = int(time.time()) + 3600
 		g.db.add(c)
 	elif kind == "unpin":
-		if not (c.is_pinned and c.is_pinned.startswith("t:")): abort(403)
-		t = int(c.is_pinned[2:]) - 3600
-		if time.time() > t: c.is_pinned = None
-		else: c.is_pinned = f"t:{t}"
+		if not c.is_pinned_utc: abort(403)
+		t = c.is_pinned_utc - 3600
+		if time.time() > t:
+			c.is_pinned = None
+			c.is_pinned_utc = None
+		else: c.is_pinned_utc = t
 		g.db.add(c)
 	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
 		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400

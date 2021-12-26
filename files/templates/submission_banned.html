@@ -18,35 +18,6 @@
 {% endif %}
 {% endblock %}
 
-{% block adminpanel %}
-{% if v.admin_level > 1 %}
-<form action="/sticky/{{p.id}}" method="post">
-<input type="hidden" name="formkey", value="{{v.formkey}}">
-<input type="submit" value="{% if p.stickied %}Un-sticky{% else %}Pin{% endif %}">
-</form>
-{% endif %}
-{% if v.admin_level > 0 and v.id==p.author_id %}
-<form action="/distinguish/{{p.id}}" method="post">
-<input type="hidden" name="formkey", value="{{v.formkey}}">
-<input type="submit" value="{% if p.distinguish_level %}Un-distinguish{% else %}Distinguish{% endif %}">
-</form>
-{% endif %}
-{% if v.admin_level > 1 and v.admin_level > p.author.admin_level %}
-{% if p.is_banned %}
-<form action="/unban_post/{{p.id}}" method="post">
-<input type="hidden" name="formkey", value="{{v.formkey}}">
-<input type="submit" value="Approve Post">
-</form>
-{% else %}
-<form action="/ban_post/{{p.id}}", method="post">
-<input type="hidden" name="formkey", value="{{v.formkey}}">
-<input type="submit" value="Remove Post">
-</form>
-{% endif %}
-{% endif %}
-<p>Score: +{{p.upvotes}}/-{{p.downvotes}}</p>
-{% endblock %}
-
 {% block content %}
 <div class="mb-2 p-3">
 

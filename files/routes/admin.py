@@ -214,17 +214,31 @@ def monthly(v):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
+		data = {'access_token': GUMROAD_TOKEN}
+
+		response = [x['email'] for x in requests.get('https://api.gumroad.com/v2/products/tfcvri/subscribers', data=data, timeout=5).json()["subscribers"]]
+		emails = []
+
+		for email in response:
+			if email.endswith("@gmail.com"):
+				email=email.split('@')[0]
+				email=email.split('+')[0]
+				email=email.replace('.','').replace('_','')
+				email=f"{email}@gmail.com"
+			emails.append(email.lower())
+
 		for u in g.db.query(User).filter(User.patron > 0).all():
-			if u.patron == 1: procoins = 2500
-			elif u.patron == 2: procoins = 5000
-			elif u.patron == 3: procoins = 10000
-			elif u.patron == 4: procoins = 25000
-			elif u.patron == 5: procoins = 50000
-			u.procoins += procoins
-			g.db.add(u)
-			
-			cid = notif_comment(f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
-			add_notif(cid, u.id)
+			if u.patron == 5 or u.email and u.email.lower() in emails or u.id == 1379:
+				if u.patron == 1: procoins = 2500
+				elif u.patron == 2: procoins = 5000
+				elif u.patron == 3: procoins = 10000
+				elif u.patron == 4: procoins = 25000
+				elif u.patron == 5: procoins = 50000
+				u.procoins += procoins
+				g.db.add(u)
+				
+				cid = notif_comment(f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
+				add_notif(cid, u.id)
 
 		g.db.commit()
 	return {"message": "Monthly coins granted"}
@@ -1024,44 +1038,95 @@ def api_distinguish_post(post_id, v):
 @app.post("/sticky/<post_id>")
 @admin_level_required(2)
 @validate_formkey
-def api_sticky_post(post_id, v):
+def sticky_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
-	if post:
-		if post.stickied:
-			if post.stickied.startswith("t:"): return {"error": "Can't unpin award pins!"}, 403
-			else: post.stickied = None
-		else:
-			pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()
-			if pins > 2:
-				if v.admin_level > 2:
-					t = int(time.time()) + 3600
-					post.stickied = f"j:{t}"
-				else: return {"error": "Can't exceed 3 pinned posts limit!"}, 403
-			else: post.stickied = v.username
+	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
+	if post and not post.stickied:
+		pins = g.db.query(Submission.id).filter(Submission.stickied != None, Submission.is_banned == False).count()
+		if pins > 2:
+			if v.admin_level > 2:
+				post.stickied = v.username
+				post.stickied_utc = int(time.time()) + 3600
+			else: return {"error": "Can't exceed 3 pinned posts limit!"}, 403
+		else: post.stickied = v.username
+		g.db.add(post)
+
+		if v.id != post.author_id:
+			send_repeatable_notification(post.author_id, f"@{v.username} has pinned your [post](/post/{post_id})!")
+
+		cache.delete_memoized(frontlist)
+		g.db.commit()
+	return {"message": "Post pinned!"}
+
+@app.post("/unsticky/<post_id>")
+@admin_level_required(2)
+@validate_formkey
+def unsticky_post(post_id, v):
+
+	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
+	if post and post.stickied:
+		if post.stickied.endswith('(pin award)'): return {"error": "Can't unpin award pins!"}, 403
+
+		post.stickied = None
+		post.stickied_utc = None
 		g.db.add(post)
 
 		ma=ModAction(
-			kind="pin_post" if post.stickied else "unpin_post",
+			kind="unpin_post",
 			user_id=v.id,
 			target_submission_id=post.id
 		)
 		g.db.add(ma)
 
-		cache.delete_memoized(frontlist)
+		if v.id != post.author_id:
+			send_repeatable_notification(post.author_id, f"@{v.username} has unpinned your [post](/post/{post_id})!")
 
-		if post.stickied:
-			if v.id != post.author_id:
-				message = f"@{v.username} has pinned your [post](/post/{post_id})!"
-				send_repeatable_notification(post.author_id, message)
-			g.db.commit()
-			return {"message": "Post pinned!"}
-		else:
-			if v.id != post.author_id:
-				message = f"@{v.username} has unpinned your [post](/post/{post_id})!"
-				send_repeatable_notification(post.author_id, message)
-			g.db.commit()
-			return {"message": "Post unpinned!"}
+		cache.delete_memoized(frontlist)
+		g.db.commit()
+	return {"message": "Post unpinned!"}
+
+@app.post("/sticky_comment/<cid>")
+@admin_level_required(2)
+@validate_formkey
+def sticky_comment(cid, v):
+	
+	comment = get_comment(cid, v=v)
+	comment.is_pinned = v.username
+	g.db.add(comment)
+
+	if v.id != comment.author_id:
+		message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
+		send_repeatable_notification(comment.author_id, message)
+
+	g.db.commit()
+	return {"message": "Comment pinned!"}
+	
+
+@app.post("/unsticky_comment/<cid>")
+@admin_level_required(2)
+@validate_formkey
+def unsticky_comment(cid, v):
+	
+	comment = get_comment(cid, v=v)
+	
+	if comment.is_pinned.endswith("(pin award)"): return {"error": "Can't unpin award pins!"}, 403
+
+	g.db.add(comment)
+
+	ma=ModAction(
+		kind="unpin_comment",
+		user_id=v.id,
+		target_comment_id=comment.id
+	)
+	g.db.add(ma)
+
+	if v.id != comment.author_id:
+		message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
+		send_repeatable_notification(comment.author_id, message)
+
+	g.db.commit()
+	return {"message": "Comment unpinned!"}
+
 
 @app.post("/ban_comment/<c_id>")
 @limiter.limit("1/second")

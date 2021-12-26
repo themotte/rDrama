@@ -26,33 +26,14 @@ function post_toast(url, reload, data) {
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
-		let data=JSON.parse(xhr.response);
-		if (xhr.status >= 200 && xhr.status < 300 && !data["error"]) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-			myToast.show();
-			try {
-				document.getElementById('toast-post-success-text').innerText = data["message"];
-			} catch(e) {
-			}
-
+		let data = JSON.parse(xhr.response)
+		if (xhr.status >= 200 && xhr.status < 300 && !data['error']) {
+			document.getElementById('toast-post-success-text').innerText = data["message"];
+			new bootstrap.Toast(document.getElementById('toast-post-success')).show();
 			if (reload == 1) {location.reload(true)}
-			return true
-
-		} else if (xhr.status >= 300 && xhr.status < 400) {
-			window.location.href = data["redirect"]
 		} else {
-			try {
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.show();
-				document.getElementById('toast-post-error-text').innerText = data["error"];
-				return false
-			} catch(e) {
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-				myToast.hide();
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				myToast.show();
-				return false
-			}
+			if (data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 		}
 	};
 

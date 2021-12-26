@@ -11,9 +11,8 @@ function collapse_comment(comment_id) {
 };
 
 function poll_vote_no_v() {
-    var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-    myToast.show();
     document.getElementById('toast-post-error-text').innerText = "Only logged-in users can vote!";
+    new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 }
 
 function morecomments(cid) {

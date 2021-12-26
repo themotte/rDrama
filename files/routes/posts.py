@@ -218,8 +218,9 @@ def post_id(pid, anything=None, v=None):
 		comments = comments2
 
 	for pin in pinned:
-		if pin.is_pinned.startswith("t:") and int(time.time()) > int(pin.is_pinned[2:]):
+		if pin.is_pinned_utc and int(time.time()) > pin.is_pinned_utc:
 			pin.is_pinned = None
+			pin.is_pinned_utc = None
 			g.db.add(pin)
 			pinned.remove(pin)
 
