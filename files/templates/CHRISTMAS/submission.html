@@ -295,7 +295,7 @@
 					<!-- Meta information -->
 					<div class="no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
 
-						<div class="relative md:hidden flex-shrink-0 {{ 'santa' if p.author.patron else 'cap' }}">
+						<div class="relative md:hidden flex-shrink-0">
 							<img loading="lazy" src="{{ p.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
 						</div>
 
@@ -581,7 +581,7 @@
 
 			{% if v %}
 			<div id="comment-form-space-{{p.fullname}}" class="comment-write flex px-2.5 md:px-0">
-				<div class="hidden md:block relative flex-shrink-0 mr-4 {{ 'santa' if p.author.patron else 'cap' }}">
+				<div class="hidden md:block relative flex-shrink-0 mr-4">
 					<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="my avatar"/>
 				</div>
 				{% include "CHRISTMAS/comments/CommentForm.html" %}

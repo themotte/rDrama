@@ -45,12 +45,12 @@
 	</div>
 {% endif %}
 
-<li id="post-{{p.id}}" class="relative p-2.5 mb-2 md:mb-4 md:pb-4 md:pt-0 md:px-0 border-b border-gray-300 dark:border-gray-700 {% if p.is_banned %}bg-red-200{% elif p.deleted_utc %}bg-yellow-200{% else %} md:bg-transparent bg-gray-200 dark:bg-gray-800 dark:md:bg-transparent{% endif %} {% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %} list-none {% if p.award_count("snow") %}snowcaps{% endif %} {% if p.award_count("lights") %}lights{% endif %}">
+<li id="post-{{p.id}}" class="relative p-2.5 mb-2 md:mb-4 md:pb-4 md:pt-0 md:px-0 border-b border-gray-300 dark:border-gray-700 {% if p.is_banned %}bg-red-200{% elif p.deleted_utc %}bg-yellow-200{% else %} md:bg-transparent bg-gray-200 dark:bg-gray-800 dark:md:bg-transparent{% endif %} {% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %} list-none">
 
 	<div class="flex flex-nowrap">
 
 		<div class="relative z-10 hidden md:flex flex-col flex-shrink-0 items-center mr-4">
-			<div class="relative {{ 'santa' if p.author.patron else 'cap' }}">
+			<div class="relative">
 				<img loading="lazy" src="{{ p.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
 			</div>
 
@@ -93,7 +93,7 @@
 
 			<div class="relative z-10 no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
 
-				<div class="relative md:hidden flex-shrink-0 {{ 'santa' if p.author.patron else 'cap' }}">
+				<div class="relative md:hidden flex-shrink-0">
 					<img loading="lazy" src="{{ p.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
 				</div>
 
