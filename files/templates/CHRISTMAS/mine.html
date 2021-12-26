@@ -8,7 +8,7 @@
 {% block content %}
 
 
-<div class="row mt-3 p-md-4">
+<div class="col-span-full">
 
 	{% block maincontent %}
 	{% endblock %}
@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block pagenav %}
-<nav aria-label="Page navigation">
+<nav class="col-span-full" aria-label="Page navigation">
 	<ul class="pagination pagination-sm mb-0">
 		{% if page>1 %}
 		<li class="page-item">
