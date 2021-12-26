@@ -187,7 +187,7 @@ def get_comment(i, v=None, graceful=False):
 
 	if v:
 
-		comment=g.db.query(Comment).filter(Comment.id == i).first()
+		comment=g.db.query(Comment).filter(Comment.id == i).one_or_none()
 
 		if not comment and not graceful: abort(404)
 

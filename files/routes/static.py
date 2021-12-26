@@ -169,7 +169,10 @@ def patrons(v):
 @app.get("/badmins")
 @auth_desired
 def admins(v):
-	admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truecoins.desc()).all()
+	if v and v.admin_level > 2:
+		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truecoins.desc()).all()
+		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truecoins.desc()).all()
+	else: admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truecoins.desc()).all()
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}admins.html", v=v, admins=admins)

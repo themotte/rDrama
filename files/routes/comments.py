@@ -899,48 +899,45 @@ def undelete_comment(cid, v):
 @app.post("/pin_comment/<cid>")
 @auth_required
 @validate_formkey
-def toggle_pin_comment(cid, v):
+def pin_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
-	if v.admin_level < 1 and v.id != comment.post.author_id: abort(403)
-
-	if comment.is_pinned:
-		if comment.is_pinned.startswith("t:"): abort(403)
-		else:
-			if v.admin_level > 1 or comment.is_pinned.endswith(" (OP)"): comment.is_pinned = None
-			else: abort(403)
-	else:
-		if v.admin_level > 1: comment.is_pinned = v.username
-		else: comment.is_pinned = v.username + " (OP)"
+	if v.id != comment.post.author_id: abort(403)
+	
+	comment.is_pinned = v.username + " (OP)"
 
 	g.db.add(comment)
-	g.db.flush()
 
-	if v.admin_level > 1:
-		ma=ModAction(
-			kind="pin_comment" if comment.is_pinned else "unpin_comment",
-			user_id=v.id,
-			target_comment_id=comment.id
-		)
-		g.db.add(ma)
+	if v.id != comment.author_id:
+		message = f"@{v.username} (OP) has pinned your [comment]({comment.permalink})!"
+		send_repeatable_notification(comment.author_id, message)
 
 	g.db.commit()
+	return {"message": "Comment pinned!"}
+	
 
-	if comment.is_pinned:
-		if v.id != comment.author_id:
-			message = f"@{v.username} has pinned your [comment]({comment.permalink})!"
-			send_repeatable_notification(comment.author_id, message)
-		g.db.commit()
-		return {"message": "Comment pinned!"}
-	else:
-		if v.id != comment.author_id:
-			message = f"@{v.username} has unpinned your [comment]({comment.permalink})!"
-			send_repeatable_notification(comment.author_id, message)
-		g.db.commit()
-		return {"message": "Comment unpinned!"}
+@app.post("/unpin_comment/<cid>")
+@auth_required
+@validate_formkey
+def unpin_comment(cid, v):
 	
+	comment = get_comment(cid, v=v)
 	
+	if v.id != comment.post.author_id: abort(403)
+
+	if not comment.is_pinned.endswith(" (OP)"): 
+		return {"error": "You can only unpin comments you have pinned!"}
+
+	comment.is_pinned = None
+	g.db.add(comment)
+
+	if v.id != comment.author_id:
+		message = f"@{v.username} (OP) has unpinned your [comment]({comment.permalink})!"
+		send_repeatable_notification(comment.author_id, message)
+	g.db.commit()
+	return {"message": "Comment unpinned!"}
+
 @app.post("/save_comment/<cid>")
 @limiter.limit("1/second")
 @auth_required

@@ -36,6 +36,7 @@ class Comment(Base):
 	over_18 = Column(Boolean, default=False)
 	is_bot = Column(Boolean, default=False)
 	is_pinned = Column(String)
+	is_pinned_utc = Column(Integer)
 	sentto=Column(Integer, ForeignKey("users.id"))
 	app_id = Column(Integer, ForeignKey("oauth_apps.id"))
 	oauth_app = relationship("OauthApp", viewonly=True)

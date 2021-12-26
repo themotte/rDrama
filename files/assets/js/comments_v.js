@@ -24,35 +24,20 @@ function post_toast3(url, button1, button2) {
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
-		if (xhr.status >= 200 && xhr.status < 300) {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-			myToast.show();
-			try {
-				document.getElementById('toast-post-success-text').innerText = JSON.parse(xhr.response)["message"];
-			} catch(e) {
-			}
-			return true
+		let data = JSON.parse(xhr.response)
+		if (xhr.status >= 200 && xhr.status < 300 && !data['error']) {
+			document.getElementById('toast-post-success-text').innerText = data["message"];
+			new bootstrap.Toast(document.getElementById('toast-post-success')).show();
+			document.getElementById(button1).classList.toggle("d-md-inline-block");
+			document.getElementById(button2).classList.toggle("d-md-inline-block");
 
-		} else if (xhr.status >= 300 && xhr.status < 400) {
-			window.location.href = JSON.parse(xhr.response)["redirect"]
 		} else {
-
-			try {
-				data=JSON.parse(xhr.response);
-			} catch(e) {}
-
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-			myToast.hide();
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-			myToast.show();
-			return false
+			if (data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 		}
 	};
 
 	xhr.send(form);
-
-	document.getElementById(button1).classList.toggle("d-md-inline-block");
-	document.getElementById(button2).classList.toggle("d-md-inline-block");
 }
 
 function report_commentModal(id, author) {
@@ -136,12 +121,7 @@ function post_reply(id){
 			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 		}
 		else {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-			myToast.hide();
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-			myToast.show();
-			try {document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];}
-			catch {}
+			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 		}
 	}
 	xhr.send(form)
@@ -165,12 +145,7 @@ function comment_edit(id){
 			document.getElementById('cancel-edit-'+id).click()
 		}
 		else {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-			myToast.hide();
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-			myToast.show();
-			try {document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];}
-			catch {}
+			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 		}
 	}
 	xhr.send(form)
@@ -197,12 +172,7 @@ function post_comment(fullname){
 			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '');
 		}
 		else {
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-			myToast.hide();
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-			myToast.show();
-			try {document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];}
-			catch {}
+			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 			btn.classList.remove('disabled');
 		}
 	}

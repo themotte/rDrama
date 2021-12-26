@@ -32,32 +32,6 @@ tiers={
 	"(Rich Bich)": 5,
 	}
 
-
-
-@app.get("/sex")
-@admin_level_required(3)
-def sex(v):
-	data = {'access_token': GUMROAD_TOKEN}
-
-	response = [x['email'] for x in requests.get('https://api.gumroad.com/v2/products/tfcvri/subscribers', data=data, timeout=5).json()["subscribers"]]
-	emails = []
-
-	for email in response:
-		if email.endswith("@gmail.com"):
-			email=email.split('@')[0]
-			email=email.split('+')[0]
-			email=email.replace('.','').replace('_','')
-			email=f"{email}@gmail.com"
-		emails.append(email.lower())
-
-	users = g.db.query(User).filter(User.patron > 0, User.patron < 5).all()
-	for u in users:
-		if not u.email or u.email.lower() not in emails: print(f'{u.username} - {u.email}')
-
-	return "sex"
-
-
-
 @app.post("/settings/removebackground")
 @limiter.limit("1/second")
 @auth_required
