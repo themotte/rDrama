@@ -4370,7 +4370,7 @@ div.deleted.banned {
     color: var(--white);
     background-color: var(--white);
     font-weight: 600 !important;
-    padding: 5px;
+    padding: 1px 3px 1px 3px;
 }
 .spoiler:hover {
     color: var(--gray);
