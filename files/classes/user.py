@@ -12,6 +12,7 @@ from .subscriptions import *
 from .userblock import *
 from .badges import *
 from .clients import *
+from .mod_logs import *
 from files.__main__ import Base, cache
 from files.helpers.security import *
 import random
@@ -362,6 +363,12 @@ class User(Base):
 				awards[a.kind]['count'] = 1
 
 		return sorted(list(awards.values()), key=lambda x: x['kind'], reverse=True)
+
+	@property
+	@lazy
+	def modaction_num(self):
+		if self.admin_level < 2: return 0
+		return g.db.query(ModAction.id).filter_by(user_id=self.id).count()
 
 	@property
 	@lazy
