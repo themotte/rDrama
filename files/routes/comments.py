@@ -406,9 +406,6 @@ def api_comment(v):
 		g.db.add(c_jannied)
 		g.db.flush()
 
-
-
-
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
@@ -446,8 +443,6 @@ def api_comment(v):
 		
 		g.db.flush()
 
-
-
 		n = Notification(comment_id=c2.id, user_id=v.id)
 		g.db.add(n)
 
@@ -476,9 +471,6 @@ def api_comment(v):
 
 		g.db.add(c2)
 		g.db.flush()
-
-
-
 		n = Notification(comment_id=c2.id, user_id=v.id)
 		g.db.add(n)
 
@@ -501,13 +493,6 @@ def api_comment(v):
 			)
 
 		g.db.add(c3)
-		g.db.flush()
-		
-		
-
-
-
-		
 	
 		body = "zozzle"
 		body_md = CustomRenderer().render(mistletoe.Document(body))
@@ -528,13 +513,6 @@ def api_comment(v):
 		zozbot.comment_count += 3
 		zozbot.coins += 3
 		g.db.add(zozbot)
-
-		g.db.flush()
-
-
-
-
-
 
 
 
@@ -562,7 +540,6 @@ def api_comment(v):
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
 			g.db.add(n)
-			g.db.flush()
 
 		if parent.author.id != v.id:
 			try:
@@ -821,8 +798,6 @@ def edit_comment(cid, v):
 		if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())
 
 		g.db.add(c)
-
-		g.db.flush()
 		
 		notify_users = NOTIFY_USERS(body_html, v.id)
 		soup = BeautifulSoup(body_html, features="html.parser")
@@ -838,6 +813,9 @@ def edit_comment(cid, v):
 					if v.any_block_exists(user): continue
 					if user.id != v.id: notify_users.add(user.id)
 
+
+		g.db.flush()
+		
 		for x in notify_users:
 			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).first()
 			if not notif:

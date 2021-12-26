@@ -727,6 +727,8 @@ def submit_post(v):
 
 	url = request.values.get("url", "").strip()
 
+	thumburl = None
+
 	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
 		title = title.replace('I ', f'@{v.username} ')
@@ -931,6 +933,28 @@ def submit_post(v):
 		body = body.replace('I ', f'@{v.username} ')
 		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
 
+	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
+		file=request.files["file"]
+		if file.content_type.startswith('image/'):
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			file.save(name)
+			url = process_image(name)
+			body = f"![]({url})\n\n{body}"
+
+			name2 = name.replace('.webp', 'r.webp')
+			copyfile(name, name2)
+			thumburl = process_image(name2, True)
+		elif file.content_type.startswith('video/'):
+			file.save("video.mp4")
+			with open("video.mp4", 'rb') as f:
+				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+			body += f"\n\n{url}"
+		else:
+			if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
+			if not v or v.oldsite: template = ''
+			else: template = 'CHRISTMAS/'
+			return render_template(f"{template}submit.html", v=v, error=f"Image/Video files only."), 400
+	
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file2"]
 		if file.content_type.startswith('image/'):
@@ -988,7 +1012,8 @@ def submit_post(v):
 		embed_url=embed,
 		title=title[:500],
 		title_html=title_html,
-		created_utc=int(time.time())	
+		created_utc=int(time.time()),
+		thumburl = thumburl
 	)
 
 	g.db.add(new_post)
@@ -1020,37 +1045,6 @@ def submit_post(v):
 				submission_id=new_post.id
 				)
 	g.db.add(vote)
-	g.db.flush()
-
-	if request.files.get('file') and request.headers.get("cf-ipcountry") != "T1":
-
-		file = request.files['file']
-
-		if not file.content_type.startswith(('image/', 'video/')):
-			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
-			if not v or v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}submit.html", v=v, error=f"File type not allowed.", title=title, body=request.values.get("body", "")), 400
-
-		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(name)
-			new_post.url = process_image(name)
-
-			name2 = name.replace('.webp', 'r.webp')
-			copyfile(name, name2)
-			new_post.thumburl = process_image(name2, True)
-			
-		elif file.content_type.startswith('video/'):
-			file.save("video.mp4")
-			with open("video.mp4", 'rb') as f:
-				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
-			new_post.url = url
-
-		g.db.add(new_post)
-	
-	g.db.flush()
-
 
 
 
@@ -1076,7 +1070,6 @@ def submit_post(v):
 			add_notif(cid, user.id)
 
 	g.db.add(new_post)
-	g.db.flush()
 
 
 	if "rama" in request.host and "ivermectin" in new_post.body_html.lower():
@@ -1142,79 +1135,73 @@ def submit_post(v):
 		g.db.add(c_jannied)
 		g.db.flush()
 
-
-
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if "rama" in request.host or "pcm" in request.host or new_post.url:
-		new_post.comment_count = 1
-		g.db.add(new_post)
+	new_post.comment_count = 1
+	g.db.add(new_post)
 
-		if "rama" in request.host or "pcm" in request.host:
-			if v.id == CARP_ID:
-				if random.random() < 0.02: body = "i love you carp"
-				else: body = ":#marseyfuckoffcarp:"
-			elif v.id == LAWLZ_ID:
-				if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
-				else: body = "wow, a good lawlzpost for once!"
-			else: body = random.choice(snappyquotes)
-			body += "\n\n"
-		else: body = ""
+	if v.id == CARP_ID:
+		if random.random() < 0.02: body = "i love you carp"
+		else: body = ":#marseyfuckoffcarp:"
+	elif v.id == LAWLZ_ID:
+		if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
+		else: body = "wow, a good lawlzpost for once!"
+	else: body = random.choice(snappyquotes)
+	body += "\n\n"
 
-		if new_post.url:
-			if new_post.url.startswith('https://old.reddit.com/r/'):
-				rev = new_post.url.replace('https://old.reddit.com/', '')
-				rev = f"* [unddit.com](https://unddit.com/{rev})\n"
-			else: rev = ''
-			newposturl = new_post.url
-			if newposturl.startswith('/'): newposturl = f"https://{site}{newposturl}"
-			body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
-			gevent.spawn(archiveorg, newposturl)
+	if new_post.url:
+		if new_post.url.startswith('https://old.reddit.com/r/'):
+			rev = new_post.url.replace('https://old.reddit.com/', '')
+			rev = f"* [unddit.com](https://unddit.com/{rev})\n"
+		else: rev = ''
+		newposturl = new_post.url
+		if newposturl.startswith('/'): newposturl = f"https://{site}{newposturl}"
+		body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
+		gevent.spawn(archiveorg, newposturl)
 
-		url_regex = '<a (target=\"_blank\"  )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
-		for url_match in re.finditer(url_regex, new_post.body_html, flags=re.M|re.I):
-			href = url_match.group(3)
-			if not href: continue
+	url_regex = '<a (target=\"_blank\"  )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
+	for url_match in re.finditer(url_regex, new_post.body_html, flags=re.M|re.I):
+		href = url_match.group(3)
+		if not href: continue
 
-			title = url_match.group(5)
-			if "Snapshots:\n\n"	 not in body: body += "Snapshots:\n\n"			
+		title = url_match.group(5)
+		if "Snapshots:\n\n"	 not in body: body += "Snapshots:\n\n"			
 
-			body += f'**[{title}]({href})**:\n\n'
-			if href.startswith('https://old.reddit.com/'):
-				body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
-			body += f'* [archive.org](https://web.archive.org/{href})\n'
-			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
-			gevent.spawn(archiveorg, href)
+		body += f'**[{title}]({href})**:\n\n'
+		if href.startswith('https://old.reddit.com/'):
+			body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
+		body += f'* [archive.org](https://web.archive.org/{href})\n'
+		body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
+		gevent.spawn(archiveorg, href)
 
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html = sanitize(body_md)
+	body_md = CustomRenderer().render(mistletoe.Document(body))
+	body_html = sanitize(body_md)
 
-		if len(body_html) < 20000:
-			c = Comment(author_id=SNAPPY_ID,
-				distinguish_level=6,
-				parent_submission=new_post.id,
-				level=1,
-				over_18=False,
-				is_bot=True,
-				app_id=None,
-				body_html=body_html,
-				)
+	if len(body_html) < 20000:
+		c = Comment(author_id=SNAPPY_ID,
+			distinguish_level=6,
+			parent_submission=new_post.id,
+			level=1,
+			over_18=False,
+			is_bot=True,
+			app_id=None,
+			body_html=body_html,
+			)
 
-			g.db.add(c)
+		g.db.add(c)
 
-			snappy = g.db.query(User).filter_by(id = SNAPPY_ID).first()
-			snappy.comment_count += 1
-			snappy.coins += 2
-			g.db.add(snappy)
+		snappy = g.db.query(User).filter_by(id = SNAPPY_ID).first()
+		snappy.comment_count += 1
+		snappy.coins += 2
+		g.db.add(snappy)
 
+		if not v.is_blocking(snappy):
 			g.db.flush()
+			n = Notification(comment_id=c.id, user_id=v.id)
+			g.db.add(n)
 
-			if not v.is_blocking(snappy):
-				n = Notification(comment_id=c.id, user_id=v.id)
-				g.db.add(n)
-				g.db.flush()
-	
+
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
@@ -1279,7 +1266,6 @@ def toggle_comment_nsfw(cid, v):
 	if not comment.author_id == v.id and not v.admin_level > 1: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
-	g.db.flush()
 
 	g.db.commit()
 

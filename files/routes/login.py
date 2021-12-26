@@ -44,8 +44,7 @@ def check_for_alts(current_id):
 				new_alt = Alt(user1=past_id, user2=current_id)
 				g.db.add(new_alt)
 				g.db.flush()
-			except BaseException:
-				pass
+			except: pass
 			
 		alts = g.db.query(Alt)
 		otheralts = alts.filter(or_(Alt.user1 == past_id, Alt.user2 == past_id, Alt.user1 == current_id, Alt.user2 == current_id)).all()

@@ -121,9 +121,6 @@ def buy(v, award):
 		g.db.add(v)
 
 
-
-	g.db.flush()
-
 	if award == "lootbox":
 		send_repeatable_notification(995, f"@{v.username} bought a lootbox!")
 		for i in [1,2,3,4,5]:
