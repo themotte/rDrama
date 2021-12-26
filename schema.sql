@@ -265,7 +265,8 @@ CREATE TABLE public.comments (
     body_html character varying(40000),
     ban_reason character varying(25),
     realupvotes integer,
-    top_comment_id integer
+    top_comment_id integer,
+    is_pinned_utc integer
 );
 
 
@@ -577,7 +578,8 @@ CREATE TABLE public.submissions (
     ban_reason character varying(25),
     title_html character varying(1500),
     realupvotes integer,
-    flair character varying(350)
+    flair character varying(350),
+    stickied_utc integer
 );
 
 
@@ -1707,6 +1709,14 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
+
+
+--
+-- Name: FUNCTION pg_stat_statements_reset(userid oid, dbid oid, queryid bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.pg_stat_statements_reset(userid oid, dbid oid, queryid bigint) TO doadmin WITH GRANT OPTION;
+
 
 --
 -- PostgreSQL database dump complete
