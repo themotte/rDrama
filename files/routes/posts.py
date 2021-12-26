@@ -1046,8 +1046,6 @@ def submit_post(v):
 				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
 			new_post.url = url
 
-		g.db.add(new_post)
-
 	if not new_post.thumburl and new_post.url and request.headers.get('cf-ipcountry')!="T1": gevent.spawn( thumbnail_thread, new_post.id)
 
 	if not new_post.private:
@@ -1069,16 +1067,11 @@ def submit_post(v):
 			if new_post.club and not user.paid_dues: continue
 			add_notif(cid, user.id)
 
-	g.db.add(new_post)
-
 
 	if "rama" in request.host and "ivermectin" in new_post.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "AutoJanny"
-
-		g.db.add(new_post)
-
 
 		body = VAXX_MSG.format(username=v.username)
 
@@ -1111,8 +1104,6 @@ def submit_post(v):
 		new_post.is_banned = True
 		new_post.ban_reason = "AutoJanny"
 
-		g.db.add(new_post)
-
 		body = AGENDAPOSTER_MSG.format(username=v.username)
 
 		body_md = CustomRenderer().render(mistletoe.Document(body))
@@ -1139,7 +1130,6 @@ def submit_post(v):
 		g.db.add(n)
 
 	new_post.comment_count = 1
-	g.db.add(new_post)
 
 	if v.id == CARP_ID:
 		if random.random() < 0.02: body = "i love you carp"
