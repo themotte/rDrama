@@ -182,7 +182,7 @@
 
 	{% if c.sentto == None %}
 	<div class="flex flex-col flex-shrink-0 items-center mr-2.5 {{ 'md:mr-4' if not c.parent_comment_id or standalone else 'md:mr-3' }}">
-		<button class="relative {{ 'santa' if c.author.patron else 'cap' }}" onclick="collapse_comment('{{c.id}}')">
+		<button class="relative" onclick="collapse_comment('{{c.id}}')">
 			{% if standalone or level==1 %}
 			<img loading="lazy" src="{{ c.author.profile_url }}" class="hidden md:block flex-shrink-0 w-14 h-14 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 			{% else %}
@@ -195,7 +195,7 @@
 
 	<div class="w-full">
 
-		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="comment-anchor relative {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %} {% if c.award_count("snow") %}snowcaps{% endif %} {% if c.award_count("lights") %}lights{% endif %}">
+		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="comment-anchor relative {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
 
 			<span class="absolute right-4 top-2" id="reddot-{{c.id}}"></span>
 
@@ -221,7 +221,7 @@
 					<i class="fas fa-badge-check" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{c.author.verified}}"></i>
 					{% endif %}
 
-					<div class="relative md:hidden flex-shrink-0 {{ 'santa' if c.author.patron else 'cap' }}">
+					<div class="relative md:hidden flex-shrink-0">
 						<img loading="lazy" src="{{ c.author.profile_url }}" class="flex-shrink-0 w-9 h-9 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover lozad" alt="{{ c.author.username }} avatar"/>
 					</div>
 
@@ -318,7 +318,7 @@
 				<div id="comment-banned-warning" class="hidden-on-collapse text-red-600 mb-0">Removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="comment-text hidden-on-collapse mt-2 break-words {% if c.award_count("candycane") %}candycane{% endif %} {% if c.sentto != None and v.id==c.author_id %}text-green-700 dark:text-green-400{% endif %}">
+			<div id="comment-text-{{c.id}}" class="comment-text hidden-on-collapse mt-2 break-words {% if c.sentto != None and v.id==c.author_id %}text-green-700 dark:text-green-400{% endif %}">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
 					{% for o in c.options %}
