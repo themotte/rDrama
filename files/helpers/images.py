@@ -24,4 +24,4 @@ def process_image(filename=None, resize=False):
 		if i.format.lower() == "gif": gifwebp(input_image=filename, output_image=filename, option="-q 80")
 		else: i.save(filename, format="WEBP")
 
-	return filename
+	return f'/static{filename}'
