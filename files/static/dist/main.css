@@ -912,6 +912,10 @@ video {
 	margin-top: 0.5rem;
 	margin-bottom: 0.5rem;
 }
+.my-0 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
 .mx-0 {
 	margin-left: 0px;
 	margin-right: 0px;
@@ -931,10 +935,6 @@ video {
 .mx-2 {
 	margin-left: 0.5rem;
 	margin-right: 0.5rem;
-}
-.my-0 {
-	margin-top: 0px;
-	margin-bottom: 0px;
 }
 .-mx-4 {
 	margin-left: -1rem;
@@ -1320,9 +1320,6 @@ video {
 }
 .resize-y {
 	resize: vertical;
-}
-.resize {
-	resize: both;
 }
 .list-none {
 	list-style-type: none;
@@ -2091,10 +2088,6 @@ video {
 	padding-top: 0px;
 	padding-bottom: 0px;
 }
-.px-2 {
-	padding-left: 0.5rem;
-	padding-right: 0.5rem;
-}
 .py-4 {
 	padding-top: 1rem;
 	padding-bottom: 1rem;
@@ -2106,6 +2099,10 @@ video {
 .py-2 {
 	padding-top: 0.5rem;
 	padding-bottom: 0.5rem;
+}
+.px-2 {
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
 }
 .px-0 {
 	padding-left: 0px;
@@ -2170,17 +2167,14 @@ video {
 .pl-0 {
 	padding-left: 0px;
 }
-.pt-1 {
-	padding-top: 0.25rem;
-}
-.pl-2 {
-	padding-left: 0.5rem;
-}
 .pr-1 {
 	padding-right: 0.25rem;
 }
 .pl-1 {
 	padding-left: 0.25rem;
+}
+.pl-2 {
+	padding-left: 0.5rem;
 }
 .pr-2 {
 	padding-right: 0.5rem;
@@ -2231,7 +2225,7 @@ video {
 	vertical-align: middle;
 }
 .font-heading {
-	font-family: Delius Swash Caps;
+	font-family: Helvetica Neue, -apple-system, BlinkMacSystemFont, Tahoma, Segoe UI, Helvetica, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 }
 .font-serif {
 	font-family: Georgia;
