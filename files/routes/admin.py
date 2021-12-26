@@ -851,7 +851,7 @@ def ban_user(user_id, v):
 
 	user.ban(admin=v, reason=reason, days=days)
 
-	if request.values.get("alts", ""):
+	if request.values.get("alts"):
 		for x in user.alts:
 			if x.admin_level > 0: break
 			user.ban(admin=v, reason=reason, days=days)
@@ -910,13 +910,12 @@ def unban_user(user_id, v):
 	user.ban_reason = None
 	g.db.add(user)
 
-	if request.values.get("alts", ""):
+	if request.values.get("alts"):
 		for x in user.alts:
-			if x.admin_level == 0:
-				x.is_banned = 0
-				x.unban_utc = 0
-				x.ban_evade = 0
-				g.db.add(x)
+			x.is_banned = 0
+			x.unban_utc = 0
+			x.ban_evade = 0
+			g.db.add(x)
 
 	send_repeatable_notification(user.id,
 					  "Your account has been reinstated. Please carefully review and abide by the [rules](/post/2510) to ensure that you don't get suspended again.")
