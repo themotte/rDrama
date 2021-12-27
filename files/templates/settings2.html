@@ -12,7 +12,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<meta name="thumbnail" content="/static/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?a=3">
-	<link rel="icon" type="image/png" href="/static/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?a=4">
+	<link rel="icon" type="image/png" href="/static/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?a=5">
 
 	<meta property="og:type" content="article" >
 	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
@@ -38,10 +38,10 @@
 	
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=4"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=5"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=4"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=5"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
 	{% endif %}
 
 		<link href="/static/assets/css/fa.css?a=3" rel="stylesheet"> 

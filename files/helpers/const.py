@@ -674,7 +674,8 @@ AWARDS = {
 }
 
 AWARDS2 = deepcopy(AWARDS)
-for i in ["haunt", "upsidedown", "stab", "ghosts", "spiders", "fog"]: del AWARDS2[i]
+for k, val in AWARDS.items():
+	if val['description'] == '???': AWARDS2.pop(k)
 
 TROLLTITLES = [
 	"how will @{username} ever recover?",

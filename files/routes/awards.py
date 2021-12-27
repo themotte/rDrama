@@ -227,6 +227,7 @@ def award_post(pid, v):
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ID
 		author.ban_reason = f"grass award used by @{v.username} on /post/{post.id}"
+		author.unban_utc = int(time.time()) + 30 * 86400
 		link = f"[this post]({post.permalink})"
 		send_repeatable_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award on [{post.shortlink}]({post.shortlink})")
@@ -397,6 +398,7 @@ def award_comment(cid, v):
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ID
 		author.ban_reason = f"grass award used by @{v.username} on /comment/{c.id}"
+		author.unban_utc = int(time.time()) + 30 * 86400
 		link = f"[this comment]({c.permalink})"
 		send_repeatable_notification(author.id, f"Your account has been suspended permanently for {link}. You must [provide the admins](/contact) a timestamped picture of you touching grass to get unbanned!")
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award on [{c.shortlink}]({c.shortlink})")

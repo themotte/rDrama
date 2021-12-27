@@ -4676,3 +4676,7 @@ input[type=radio] ~ .custom-control-label::before {
     margin-bottom: 9.8px;
     padding-bottom: 7px;
 }
+.controversial {
+    color: #f27d0c !important;
+    font-weight: 800;
+}

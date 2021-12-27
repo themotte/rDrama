@@ -315,7 +315,7 @@
 								</li>
 																
 								{% if v %}
-									<a class="list-inline-item" href="javascript:void(0)" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply"></i></a>
+									<a class="list-inline-item mr-3" href="javascript:void(0)" onclick="openReplyBox('reply-to-{{c.id}}')"><i class="fas fa-reply"></i></a>
 								{% endif %}
 								
 								<li class="list-inline-item">
@@ -330,7 +330,7 @@
 											<span class="mr-2 arrow-up comment-{{c.id}}-up active"></span>
 										{% endif %}
 								
-										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
 										{% if voted==-1 %}
 											<span class="ml-2 my-0 arrow-down comment-{{c.id}}-down active"></span>
@@ -342,7 +342,7 @@
 										<span id="comment-mobile-{{c.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('comment-mobile', '{{c.id}}', '1')" class="mx-0 pr-1 arrow-up upvote-button comment-{{c.id}}-up {% if voted==1 %}active{% endif %}">
 										</span>
 								
-										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span id="comment-mobile-score-{{c.id}}" class="score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
 										<span {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="comment-mobile-{{c.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('comment-mobile', '{{c.id}}', '-1')" class="mx-0 pl-1 my-0 arrow-down downvote-button comment-{{c.id}}-down {% if voted==-1 %}active{% endif %}">
 										</span>
@@ -354,7 +354,7 @@
 											<i class="fas fa-arrow-alt-up mx-0" aria-hidden="true"></i>
 										</span>
 								
-										<span id="comment-mobile-score-{{c.id}}" class="score"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+										<span id="comment-mobile-score-{{c.id}}" class="score{% if c.controversial %} controversial{% endif %}"{% if not c.is_banned %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 								
 										<span id="arrow-{{c.id}}-mobile-down" tabindex="0" class="arrow-mobile-down mx-0 pl-1 my-0" onclick="location.href='/login';">
 											<i class="fas fa-arrow-alt-down mx-0" aria-hidden="true"></i>
@@ -389,7 +389,7 @@
 						{% endif %}
 						
 						<button class="btn caction nobackground p-0 m-0">
-							<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}" id="comment-score-{{c.id}}" class="p-2 m-0 score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}">{{score}}</span>
+							<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="+{{ups}} | -{{downs}}" id="comment-score-{{c.id}}" class="p-2 m-0 score comment-score-{{c.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}{% if c.controversial %} controversial{% endif %}">{{score}}</span>
 						</button>
 						
 						{% if v and request.path.startswith('/@') and v.admin_level == 0 %}

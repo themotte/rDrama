@@ -65,6 +65,11 @@ class Submission(Base):
 	def __repr__(self):
 		return f"<Submission(id={self.id})>"
 
+	@property
+	@lazy
+	def controversial(self):
+		if self.downvotes > 5 and 0.25 < self.upvotes / self.downvotes < 4: return True
+		return False
 
 	@property
 	@lazy
