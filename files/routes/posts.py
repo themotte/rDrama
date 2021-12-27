@@ -1327,6 +1327,7 @@ def api_pin_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).first()
 	if post:
+		if v.id != post.author_id: return {"error": "Only the post author's can do that!"}
 		post.is_pinned = not post.is_pinned
 		g.db.add(post)
 		g.db.commit()
