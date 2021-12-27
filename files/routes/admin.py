@@ -149,21 +149,6 @@ def club_ban(v, username):
 	g.db.commit()
 	return {"message": f"@{username} has been kicked from the {cc}. Deserved."}
 
-
-@app.post("/@<username>/make_admin")
-@limiter.limit("1/second")
-@admin_level_required(2)
-@validate_formkey
-def make_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
-		user = get_user(username)
-		if not user: abort(404)
-		user.admin_level = 2
-		g.db.add(user)
-		g.db.commit()
-	return {"message": "User has been made admin!"}
-
-
 @app.post("/@<username>/remove_admin")
 @limiter.limit("1/second")
 @admin_level_required(2)
@@ -962,7 +947,7 @@ def ban_post(post_id, v):
 
 	cache.delete_memoized(frontlist)
 
-	v.coins += 2
+	v.coins += 1
 	g.db.add(v)
 
 	g.db.commit()
@@ -996,7 +981,7 @@ def unban_post(post_id, v):
 
 	cache.delete_memoized(frontlist)
 
-	v.coins -= 2
+	v.coins -= 1
 	g.db.add(v)
 
 	g.db.commit()

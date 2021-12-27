@@ -87,8 +87,6 @@ class User(Base):
 	oldreddit = Column(Boolean, default=True)
 	teddit = Column(Boolean)
 	nitter = Column(Boolean)
-	grinch = Column(Boolean)
-	grincheffect = Column(Boolean)
 	mute = Column(Boolean)
 	unmutable = Column(Boolean)
 	eye = Column(Boolean)
@@ -431,7 +429,6 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
-		if self.grincheffect: return f"https://{site}/static/assets/images/grinch.webp?a=200"
 		if self.agendaposter: return f"https://{site}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?a=200"
 		if self.profileurl: return self.profileurl
 		if "rama" in site: return f"https://{site}/static/assets/images/defaultpictures/{random.randint(1, 150)}.webp?a=200"

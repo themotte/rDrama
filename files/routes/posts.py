@@ -1183,7 +1183,7 @@ def submit_post(v):
 
 		snappy = g.db.query(User).filter_by(id = SNAPPY_ID).first()
 		snappy.comment_count += 1
-		snappy.coins += 2
+		snappy.coins += 1
 		g.db.add(snappy)
 
 		if not v.is_blocking(snappy):

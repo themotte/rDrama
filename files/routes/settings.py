@@ -53,11 +53,7 @@ def settings_profile_post(v):
 
 	updated = False
 
-	if request.values.get("grincheffect", v.grincheffect) != v.grincheffect:
-		updated = True
-		v.grincheffect = request.values.get("grincheffect", None) == 'true'
-
-	elif request.values.get("background", v.background) != v.background:
+	if request.values.get("background", v.background) != v.background:
 		updated = True
 		v.background = request.values.get("background", None)
 

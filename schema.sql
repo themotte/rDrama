@@ -760,8 +760,6 @@ CREATE TABLE public.users (
     teddit boolean,
     bird integer,
     fish boolean,
-    grinch boolean,
-    grincheffect boolean,
     lootboxes_bought integer,
     oldsite boolean,
     theme2 character varying(30)

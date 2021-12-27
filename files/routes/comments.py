@@ -412,7 +412,7 @@ def api_comment(v):
 	if v.id == PIZZA_SHILL_ID:
 		cratvote = CommentVote(user_id=TAX_RECEIVER_ID, comment_id=c.id, vote_type=1)
 		g.db.add(cratvote)
-		v.coins += 2
+		v.coins += 1
 		v.truecoins += 1
 		g.db.add(v)
 		c.upvotes += 1
@@ -438,7 +438,7 @@ def api_comment(v):
 
 		longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ID).first()
 		longpostbot.comment_count += 1
-		longpostbot.coins += 2
+		longpostbot.coins += 1
 		g.db.add(longpostbot)
 		
 		g.db.flush()
@@ -493,7 +493,8 @@ def api_comment(v):
 			)
 
 		g.db.add(c3)
-	
+		g.db.flush()
+		
 		body = "zozzle"
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md)
