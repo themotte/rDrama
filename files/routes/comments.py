@@ -601,8 +601,6 @@ def edit_comment(cid, v):
 
 	if not c.author_id == v.id: abort(403)
 
-	if c.is_banned or c.deleted_utc > 0: abort(403)
-
 	body = request.values.get("body", "").strip()[:10000]
 
 	if len(body) < 1: return {"error":"You have to actually type something!"}, 400
