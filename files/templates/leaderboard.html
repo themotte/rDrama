@@ -17,7 +17,7 @@
 {% for user in users1 %}
 	<tr>
 		<td style="font-weight:bold;">{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
+		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold; text-align:right;">{{user.coins}}</td>
 	</tr>
 {% endfor %}
@@ -45,7 +45,7 @@
 {% for user in users7 %}
 	<tr>
 		<td style="font-weight:bold;">{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
+		<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold; text-align:right;">{{user.coins_spent}}</td>
 	</tr>
 {% endfor %}
@@ -73,7 +73,7 @@
 	{% for user in users10 %}
 		<tr>
 			<td style="font-weight:bold;">{{loop.index}}</td>
-			<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
+			<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
 			<td style="font-weight:bold; text-align:right;">{{user.truecoins}}</td>
 		</tr>
 	{% endfor %}
@@ -100,7 +100,7 @@
 {% for user in users2 %}
 	<tr>
 		<td style="font-weight:bold;">{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
+		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold; text-align:right;">{{user.stored_subscriber_count}}</td>
 	</tr>
 {% endfor %}
@@ -125,7 +125,7 @@
 {% for user in users3 %}
 	<tr>
 		<td style="font-weight:bold;">{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
+		<td><a style="color:#{{user.namecolor}};  font-weight:bold;" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold; text-align:right;">{{user.post_count}}</td>
 	</tr>
 {% endfor %}
@@ -150,7 +150,7 @@
 {% for user in users4 %}
 	<tr>
 		<td style="font-weight:bold;">{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
+		<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold; text-align:right;">{{user.comment_count}}</td>
 	</tr>
 {% endfor %}
@@ -177,7 +177,7 @@
 {% for user in users5 %}
 	<tr>
 		<td style="font-weight:bold;">{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
+		<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold; text-align:right;">{{user.received_award_count}}</td>
 	</tr>
 {% endfor %}
@@ -206,7 +206,7 @@
 	{% for user in users9 %}
 		<tr>
 			<td style="font-weight: bold">{{loop.index}}</td>
-			<td><a style="color:#{{user[0].namecolor}};  font-weight:bold;" href="/@{{user[0].username}}"><img loading="lazy" src="/uid/{{user[0].id}}/pic" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}};"{% endif %}>{{user[0].username}}</span></a></td>
+			<td><a style="color:#{{user[0].namecolor}};  font-weight:bold;" href="/@{{user[0].username}}"><img alt="@{{user[0].username}}'s profile picture" loading="lazy" src="/uid/{{user[0].id}}/pic" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}};"{% endif %}>{{user[0].username}}</span></a></td>
 			<td style="font-weight: bold">{{user[1]}}</td>
 		</tr>
 	{% endfor %}
@@ -237,7 +237,7 @@
 	{% for user in users6 %}
 		<tr>
 			<td style="font-weight:bold;">{{loop.index}}</td>
-			<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
+			<td><a style="color:#{{user.namecolor}};  font-weight:bold; fonts" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
 			<td style="font-weight:bold; text-align:right;">{{user.basedcount}}</td>
 		</tr>
 	{% endfor %}

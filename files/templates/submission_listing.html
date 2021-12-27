@@ -17,9 +17,9 @@
 
 <div style="display:none" id="popover">
 	<div class="popover-user-profile" role="tooltip">
-		<img loading="lazy" class="pop-banner w-100 h-64 object-cover">
+		<img alt="user's banner" loading="lazy" class="pop-banner w-100 h-64 object-cover">
 		<div class="d-flex align-items-end px-3 mt-n6 mb-3">
-			<img loading="lazy" class="pop-picture avatar-72 rounded img-thumbnail shadow-sm">
+			<img alt="user's profile picture" loading="lazy" class="pop-picture avatar-72 rounded img-thumbnail shadow-sm">
 			<div class="px-3 text-truncate">
 			<h5 class="pop-username text-truncate text-black"></h5>
 			</div>
@@ -128,22 +128,22 @@
 
 			<div style="z-index: 3;">
 				{% if p.club and not (v and (v.paid_dues or v.id == p.author_id)) %}
-					<img loading="lazy" src="/static/assets/images/emojis/marseyglow.webp" class="post-img">
+					<img alt="post thumnail" loading="lazy" src="/static/assets/images/emojis/marseyglow.webp" class="post-img">
 				{% elif not p.url %}
 					<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
+						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif p.is_image %}
 					<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
+						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% elif (p.url and (p.url.lower().endswith('.mp4') or p.url.lower().endswith('.webm'))) or (p.embed_url and "youtu" in p.domain) or (p.url and "streamable.com/e/" in p.url) %}
 					<a href="javascript:void(0)" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none')">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
+						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% else %}
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-img">
+						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
 				{% endif %}
 			</div>
@@ -182,7 +182,7 @@
 				{% if p.active_flags %}<a class="btn btn-primary" href="javascript:void(0)" style="padding:1px 5px; font-size:10px;" onclick="document.getElementById('flaggers-{{p.id}}').classList.toggle('d-none')">{{p.active_flags}} Reports</a>{% endif %}
 				{% if p.author.verified %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if p.author.verifiedcolor %}#{{p.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{p.author.verified}}"></i>
 				{% endif %}
-				<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};  font-weight: bold;"><img loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img loading="lazy" height="20" src="/static/assets/images/quadrants/{{p.author.quadrant}}.webp?a=3">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
+				<a class="user-name text-decoration-none" onclick='popclick({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};  font-weight: bold;"><img alt="@{{p.author.profile_url}}'s profile picture" loading="lazy" src="{{p.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if p.author.patron and not p.distinguish_level %}class="patron" style="background-color:#{{p.author.namecolor}};"{% elif p.distinguish_level and 'rama' in request.host %}class="mod"{% endif %}>{{p.author.username}}</span></a>{% if p.author.customtitle %}<bdi  style="color: #{{p.author.titlecolor}}">&nbsp;&nbsp;{% if p.author.quadrant %}<img alt="{{p.author.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{p.author.quadrant}}.webp?a=3">{% endif %}{{p.author.customtitle | safe}}</bdi>{% endif %}
 				<span data-bs-toggle="tooltip" data-bs-placement="bottom" onmouseover="timestamp('timestamp-{{p.id}}','{{p.created_utc}}')" id="timestamp-{{p.id}}">&nbsp;{{p.age_string}}</span>
 				&nbsp;
 				({% if p.is_image %}image post{% elif p.is_video %}video post{% elif p.realurl(v) %}<a href="/search/posts/?q=domain%3A{{p.domain}}&sort=new&t=all" {% if v and v.newtab %}target="_blank"{% endif %}>{{p.domain}}</a>{% else %}text post{% endif %})
@@ -676,5 +676,5 @@
 </style>
 
 <script src="/static/assets/js/clipboard.js?a=3"></script>
-<script src="/static/assets/js/comments+submission_listing.js?a=5"></script>
+<script src="/static/assets/js/comments+submission_listing.js?a=6"></script>
 <script src="/static/assets/js/submission_listing.js?a=3"></script>

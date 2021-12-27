@@ -2,13 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<meta name="description" content="rdrama.net caters to drama in all forms such as: Real life, videos, photos, gossip, rumors, news sites, Reddit, and Beyond™. There isn't drama we won't touch, and we want it all!">
 	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none';">
 
 	<script src="/static/assets/js/bootstrap.js?a=3"></script>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
+
 	<meta name="author" content="">
 
 	<link rel="icon" type="image/png" href="/static/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?a=5">
@@ -165,7 +166,7 @@
 								<span class="font-weight-bold">Step 1:</span> Scan this barcode (or enter the code) using a two-factor authentication app such as Google Authenticator or Authy.
 							</p>
 							<div class="text-center mb-3">
-								<img loading="lazy" class="img-fluid" width=175 src="/2faqr/{{mfa_secret}}">
+								<img alt="two-factor QR code" loading="lazy" class="img-fluid" width=175 src="/2faqr/{{mfa_secret}}">
 								<pre></pre>
 								<div class="text-small text-muted">Or enter this code: {{mfa_secret}}</div>
 							</div>

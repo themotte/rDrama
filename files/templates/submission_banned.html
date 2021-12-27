@@ -12,9 +12,9 @@
 {% block title %}
 <title>{{p.plaintitle(v)}}</title>
 {% if p.is_banned %}
-<meta name="description" content="removed by @{{p.ban_reason}}">
+
 {% else %}
-<meta name="description" content="[deleted by user]">
+
 {% endif %}
 {% endblock %}
 

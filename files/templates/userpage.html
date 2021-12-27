@@ -41,7 +41,7 @@
 				<div class="container-fluid nobackground">
 					<div class="d-md-flex text-center text-md-left">
 						<div>
-							<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img loading="lazy" src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
+							<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img alt="@{{u.username}}'s profile picture" loading="lazy" src="{{u.profile_url}}" class="profile-pic profile-pic-100 mb-5"></a>
 						</div>
 						<div id="profilestuff" class="ml-3 w-100">
 							{% if u.is_suspended %}
@@ -97,7 +97,7 @@
 					</div> 
 				</div>
 
-				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?a=3">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img alt="{{u.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?a=3">{% endif %}{{u.customtitle | safe}}</p>
 				{% else %}<pre></pre>
 				{% endif %}
 
@@ -105,10 +105,10 @@
 
 				<div class="font-weight-bolder">
 					<span id="profile-coins-amount">{{u.coins}}</span>
-					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="20" src="/static/assets/images/emojis/marseycoin.webp?a=3">&nbsp;&nbsp;
+					<img alt="{{'COINS_NAME' | app_config}" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="20" src="/static/assets/images/emojis/marseycoin.webp?a=3">&nbsp;&nbsp;
 
 					<span id="profile-bux-amount">{{u.procoins}}</span>
-					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="20" src="/static/assets/images/emojis/marseybux.webp?a=3">&nbsp;&nbsp;
+					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="20" src="/static/assets/images/emojis/marseybux.webp?a=3">&nbsp;&nbsp;
 
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
@@ -311,9 +311,9 @@
 					<div>
 						{% for b in u.badges %}
 							{% if b.url %}
-								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="60" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
+								<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img alt="{{b.name}}" width="60" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
 							{% else %}
-								<img width="60" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+								<img alt="{{b.name}}" width="60" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
 							{% endif %}
 						{% endfor %}
 					</div>
@@ -333,14 +333,14 @@
 	<div class="row">
 		<div class="col px-0">
 			<a rel="nofollow noopener noreferrer" href="{{u.banner_url}}" {% if not v or v.newtabexternal %}target="_blank"{% endif %}>
-				<img class="userbanner" height="100" width="100%" src="{{u.banner_url}}">
-			</a>
+				<img alt="@{{u.username}}'s banner" class="userbanner" height="100" width="100%" src="{{u.banner_url}}">
+			</a> p
 		</div>
 	</div>
 	<div class="row border-bottom">
 		<div class="col">
 			<div style="margin-top: -34px;">
-				<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img loading="lazy" src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
+				<a rel="nofollow noopener noreferrer" href="{% if u.highres %}{{u.highres}}{% else %}{{u.profile_url}}{% endif %}"><img alt="@{{u.username}}'s profile picture" loading="lazy" src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
 			</div>
 			<div class="mt-n3 py-3">
 				{% if u.is_suspended %}
@@ -366,7 +366,7 @@
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="followsyou badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
-				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?a=3">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img alt="@{{u.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?a=3">{% endif %}{{u.customtitle | safe}}</p>
 				{% else %}
 					<pre></pre>
 				{% endif %}
@@ -375,10 +375,10 @@
 				
 				<div class="font-weight-normal">
 					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span>
-					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="15" src="/static/assets/images/emojis/marseycoin.webp?a=3">&nbsp;&nbsp;
+					<img alt="{{'COINS_NAME' | app_config}}" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'COINS_NAME' | app_config}}" height="15" src="/static/assets/images/emojis/marseycoin.webp?a=3">&nbsp;&nbsp;
 
 					<span id="profile-bux-amount-mobile" class="font-weight-bold">{{u.procoins}}</span>
-					<img class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="15" src="/static/assets/images/emojis/marseybux.webp?a=3">&nbsp;&nbsp;
+					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="15" src="/static/assets/images/emojis/marseybux.webp?a=3">&nbsp;&nbsp;
 
 					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
 					{% if u.basedcount %}
@@ -416,9 +416,9 @@
 				<div class="mb-3">
 					{% for b in u.badges %}
 						{% if b.url %}
-							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
+							<a rel="nofollow noopener noreferrer" href="{{b.url}}"><img alt="{{b.name}}" width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"></a>
 						{% else %}
-							<img width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
+							<img alt="{{b.name}}" width="32" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}">
 						{% endif %}
 					{% endfor %}
 				</div>

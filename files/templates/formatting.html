@@ -1,7 +1,7 @@
 {% extends "default.html" %}
 {% block title %}
 <title>{{'SITE_NAME' | app_config}} - Formatting</title>
-<meta name="description" content="{{'SITE_NAME' | app_config}} Formatting">
+
 {% endblock %}
 
 {% block content %}
@@ -54,7 +54,7 @@ You can use Markdown formatting:
 		<tr>
 			<td>Images</td>
 			<td>https://i.imgur.com/Lf6dfPO.jpg</td>
-			<td><img src="https://i.imgur.com/Lf6dfPO.jpg"></td>
+			<td><img alt="example image" src="https://i.imgur.com/Lf6dfPO.jpg"></td>
 		</tr>
 		<tr>
 			<td>Youtube Videos</td>
@@ -134,7 +134,7 @@ You can use Markdown formatting:
 		<tr>
 			<td>Username Mention</td>
 			<td>@QuadNarca</td>
-			<td><a class="d-inline-block" href="/@QuadNarca"><img loading="lazy" src="/uid/29/pic" class="pp20">@QuadNarca</a></td>
+			<td><a class="d-inline-block" href="/@QuadNarca"><img alt="@QuadNarca profile picture" loading="lazy" src="/uid/29/pic" class="pp20">@QuadNarca</a></td>
 		</tr>
 		<tr>
 			<td>Subreddit Mention</td>
@@ -445,7 +445,7 @@ line breaks
 				&lt;img src="https://i.imgur.com/SwVuagI_d.webp" width="200"&gt;
 			</td>
 			<td>
-				<img src="https://i.imgur.com/SwVuagI_d.webp" width="200">
+				<img alt="example image" src="https://i.imgur.com/SwVuagI_d.webp" width="200">
 			</td>
 		</tr>
 	</tbody>

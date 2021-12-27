@@ -1,7 +1,2 @@
 User-agent: *
-Allow: /$
-Allow: /@
-Allow: /comment
-Allow: /post
-Allow: /logged_out
-Disallow: /
+Allow: /
