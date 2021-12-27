@@ -208,8 +208,8 @@ def api_comment(v):
 
 	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-		body = body.replace(' I ', f' @{v.username} ')
-		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
+		body = body.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
+		body = censor_slurs2(body).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
 
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
@@ -630,8 +630,8 @@ def edit_comment(cid, v):
 
 		if v.agendaposter and not v.marseyawarded:
 			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-			body = body.replace(' I ', f' @{v.username} ')
-			body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
+			body = body.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
+			body = censor_slurs2(body).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
 
 		if not c.options:
 			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):

@@ -4680,3 +4680,6 @@ input[type=radio] ~ .custom-control-label::before {
     color: #f27d0c !important;
     font-weight: 800;
 }
+.agendaposter {
+    text-transform: uppercase !important;
+}

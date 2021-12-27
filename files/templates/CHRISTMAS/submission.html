@@ -368,7 +368,7 @@
 					</div>
 
 					<!-- Title -->
-					<h1 id="post-title" class="post-title font-medium text-lg md:text-3xl leading-normal mb-2">
+					<h1 id="post-title" class="{% if p.author.agendaposter %}agendaposter{% endif %} post-title font-medium text-lg md:text-3xl leading-normal mb-2">
 						{% if p.realurl(v) %}
 						<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}" class="text-black dark:text-gray-200 hover:text-primary" style="word-break: break-word;">
 							{{p.realtitle(v) | safe}}
@@ -379,7 +379,7 @@
 					</h1>
 
 					<!-- Body content -->
-					<div id="post-body" class="post-body mb-3">
+					<div id="post-body" class="{% if p.author.agendaposter %}agendaposter{% endif %} post-body mb-3">
 						{% if p.realurl(v) %}
 						{% if "streamable.com/" in p.realurl(v) %}
 						<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;"><iframe loading="lazy" src="{{p.realurl(v)}}" frameborder="0" width="100%" height="100%" allowfullscreen="" style="width: 100%; height: 100%; position: absolute;"></iframe></div>

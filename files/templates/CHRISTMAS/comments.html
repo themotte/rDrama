@@ -318,7 +318,7 @@
 				<div id="comment-banned-warning" class="hidden-on-collapse text-red-600 mb-0">Removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="comment-text hidden-on-collapse mt-2 break-words {% if c.sentto != None and v.id==c.author_id %}text-green-700 dark:text-green-400{% endif %}">
+			<div id="comment-text-{{c.id}}" class="{% if c.author.agendaposter %}agendaposter{% endif %} comment-text hidden-on-collapse mt-2 break-words {% if c.sentto != None and v.id==c.author_id %}text-green-700 dark:text-green-400{% endif %}">
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
 					{% for o in c.options %}

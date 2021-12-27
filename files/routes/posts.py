@@ -431,8 +431,8 @@ def edit_post(pid, v):
 	if title != p.title:
 		if v.agendaposter and not v.marseyawarded:
 			for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
-			title = title.replace(' I ', f' @{v.username} ')
-			title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
+			title = title.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
+			title = censor_slurs2(title).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
 
 		title_html = filter_emojis_only(title)
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
@@ -459,8 +459,8 @@ def edit_post(pid, v):
 
 		if v.agendaposter and not v.marseyawarded:
 			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-			body = body.replace(' I ', f' @{v.username} ')
-			body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
+			body = body.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
+			body = censor_slurs2(body).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
 
 		if not p.options.count():
 			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):
@@ -729,8 +729,8 @@ def submit_post(v):
 
 	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
-		title = title.replace(' I ', f' @{v.username} ')
-		title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
+		title = title.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
+		title = censor_slurs2(title).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
 
 	title_html = filter_emojis_only(title)
 	body = request.values.get("body", "").strip()
@@ -928,8 +928,8 @@ def submit_post(v):
 
 	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-		body = body.replace(' I ', f' @{v.username} ')
-		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
+		body = body.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
+		body = censor_slurs2(body).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
 
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file2"]

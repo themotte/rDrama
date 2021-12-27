@@ -4076,3 +4076,6 @@ video {
 		width: 20%;
 	}
 }
+.agendaposter {
+    text-transform: uppercase !important;
+}
