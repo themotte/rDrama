@@ -431,7 +431,7 @@ def edit_post(pid, v):
 	if title != p.title:
 		if v.agendaposter and not v.marseyawarded:
 			for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
-			title = title.replace('I ', f'@{v.username} ')
+			title = title.replace(' I ', f'@{v.username} ')
 			title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
 
 		title_html = filter_emojis_only(title)
@@ -459,7 +459,7 @@ def edit_post(pid, v):
 
 		if v.agendaposter and not v.marseyawarded:
 			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-			body = body.replace('I ', f'@{v.username} ')
+			body = body.replace(' I ', f'@{v.username} ')
 			body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
 
 		if not p.options.count():
@@ -729,7 +729,7 @@ def submit_post(v):
 
 	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
-		title = title.replace('I ', f'@{v.username} ')
+		title = title.replace(' I ', f'@{v.username} ')
 		title = censor_slurs2(title).upper().replace(' ME ', f' @{v.username} ')
 
 	title_html = filter_emojis_only(title)
@@ -928,7 +928,7 @@ def submit_post(v):
 
 	if v.agendaposter and not v.marseyawarded:
 		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-		body = body.replace('I ', f'@{v.username} ')
+		body = body.replace(' I ', f'@{v.username} ')
 		body = censor_slurs2(body).upper().replace(' ME ', f' @{v.username} ')
 
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
