@@ -240,7 +240,7 @@ def log_item(id, v):
 
 @app.get("/static/assets/favicon.ico")
 def favicon():
-	return send_file(f"./assets/images/{site_name}/icon.webp?a=200")
+	return send_file(f"./assets/images/{site_name}/icon.webp?a=4")
 
 @app.get("/api")
 @auth_desired
