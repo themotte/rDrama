@@ -17,7 +17,7 @@
 				</a>
 			</div>
 			<div class="flex-grow-1 d-fl d-none d-md-block">
-				<form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search/posts/" method="get">
+				<form class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if error %}style="margin-right:40rem!important"{% endif %} action="/search/posts/" method="get">
 					<input class="form-control w-100" type="search" placeholder="Search" aria-label="Search" name="q" value="{{request.values.get('q', '')}}">
 					<span class="input-group-append">
 						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
