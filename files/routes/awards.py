@@ -152,7 +152,7 @@ def buy(v, award):
 
 	return {"message": "Award bought!"}
 
-
+@app.get("/post/<pid>/awards")
 @app.post("/post/<pid>/awards")
 @limiter.limit("1/second")
 @auth_required
@@ -324,6 +324,7 @@ def award_post(pid, v):
 	else: return redirect("/")
 
 
+@app.get("/comment/<cid>/awards")
 @app.post("/comment/<cid>/awards")
 @limiter.limit("1/second")
 @auth_required
