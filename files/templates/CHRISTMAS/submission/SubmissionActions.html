@@ -124,14 +124,14 @@
 				</li>
 				{% endif %}
 				<!-- Requires auth and admin -->
-				{% if v and v.admin_level>=3 %}
+				{% if v and v.admin_level > 0 %}
 				<li id="pin-{{p.id}}" class="{% if p.stickied %}hidden{% endif %}">
 					<button class="dropdown-item dropdown-item-primary" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')">
 						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Pin
 					</button>
 				</li>
 				<li id="unpin-{{p.id}}" class="{% if not p.stickied %}hidden{% endif %}">
-					<button class="dropdown-item dropdown-item-primary" onclick="post_toast2('/sticky/{{p.id}}','/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')">
+					<button class="dropdown-item dropdown-item-primary" onclick="post_toast2('/unsticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')">
 						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Unpin
 					</button>
 				</li>

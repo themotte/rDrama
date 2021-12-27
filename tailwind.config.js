@@ -31,7 +31,7 @@ module.exports = {
     },
     fontFamily: {
       'sans-serif': ['Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'Tahoma', 'Segoe UI', 'Helvetica', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'],
-      'heading': ['Delius Swash Caps'],
+      'heading': ['Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'Tahoma', 'Segoe UI', 'Helvetica', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'],
       'serif': ['Georgia'],
       'mono': 'SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace'
     },

@@ -102,7 +102,7 @@
 {% block pagetype %}thread{% endblock %}
 
 {% block subHeader %}
-	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t {% if p.award_count("lights") %}lights{% endif %}">
+	<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
 		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
 		<div class="relative col-span-full flex items-center">
 			<div>
@@ -295,7 +295,7 @@
 					<!-- Meta information -->
 					<div class="no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 md:-ml-2 mb-1 text-sm text-gray-500 leading-normal">
 
-						<div class="relative md:hidden flex-shrink-0 {{ 'santa' if p.author.patron else 'cap' }}">
+						<div class="relative md:hidden flex-shrink-0">
 							<img loading="lazy" src="{{ p.author.profile_url }}" class="w-9 h-9 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
 						</div>
 
@@ -402,7 +402,7 @@
 						</a>
 						{% endif %}
 						{% endif %}
-						<div id="post-text" class="post-text text-black dark:text-gray-200 {% if p.award_count("candycane") %}candycane{% endif %}">
+						<div id="post-text" class="post-text text-black dark:text-gray-200">
 							{% if p.is_image %}
 								<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 									<img loading="lazy" src="{{p.realurl(v)}}" class="img-fluid" style="max-height:500px;" alt="Unable to load image">
@@ -581,7 +581,7 @@
 
 			{% if v %}
 			<div id="comment-form-space-{{p.fullname}}" class="comment-write flex px-2.5 md:px-0">
-				<div class="hidden md:block relative flex-shrink-0 mr-4 {{ 'santa' if p.author.patron else 'cap' }}">
+				<div class="hidden md:block relative flex-shrink-0 mr-4">
 					<img loading="lazy" src="{{v.profile_url}}" class="w-14 h-14 p-[3px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="my avatar"/>
 				</div>
 				{% include "CHRISTMAS/comments/CommentForm.html" %}
