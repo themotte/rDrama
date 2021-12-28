@@ -1,79 +1,81 @@
-<div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 my-4 px-4 py-3 rounded-md bg-gray-300/40 dark:bg-gray-700/40 shadow-inner">
-	<div>
-		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">About</h2>
-		<div class="flex flex-col space-y-4">
-			{% if u.bio_html %}
-				<div class="text-break">{{u.bio_html | safe}}</div>
-			{% else %}
-				<p class="italic text-gray-500 text-sm">No bio...</p>
-			{% endif %}
-			{% if u.friends_html %}
-				<p class="text-muted font-weight-bold">Friends:</p>
-				{{u.friends_html | safe}}
-			{% endif %}
-			{% if u.enemies_html %}
-				<p class="text-muted font-weight-bold">Enemies:</p>
-				{{u.enemies_html | safe}}
-			{% endif %}
-		</div>
-	</div>
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<div>
-		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Badges</h2>
-		<ul class="flex flex-row flex-wrap gap-2 mb-0">
-			{% if u.badges %}
-			{% for b in u.badges %}
-			<li>
-				{% if b.url %}
-				<a rel="nofollow noopener noreferrer" href="{{b.url}}">
-					<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
-				</a>
-				{% else %}
-				<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
-				{% endif %}
-			</li>
-			{% endfor %}
-			{% else %}
-				<p class="italic text-gray-500 text-sm">No badges... lame</p>
-			{% endif %}
-		</ul>
-	</div>
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<div>
-		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Awards</h2>
-		<ul class="flex flex-row flex-wrap gap-2 mb-0">
-			{% if u.received_awards %}
-			{% for a in u.received_awards %}
-			<li>
-				<i class="{{a['icon']}} {{a['color']}} fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
-				<span class="text-gray-500 text-sm">x{{a['count']}}</span>
-			</li>
-			{% endfor %}
-			{% else %}
-				<p class="italic text-gray-500 text-sm">No awards... their content probably lacks drama</p>
-			{% endif %}
-		</ul>
-	</div>
-	{% if v and (v.admin_level > 1 or v.alt) %}
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<div>
-		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Alts</h2>
-		<ul class="flex flex-row flex-wrap gap-2 mb-0">
-			{% for account in u.alts_unique %}
-				<li>
-					<a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}
-				</li>
-			{% endfor %}
-		</ul>
-	</div>
-	{% endif %}
+<div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0">
 	{% if v and v.admin_level > 1 %}
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-		<div>
+	<div class="my-4 px-4 py-3 rounded-md bg-gray-300/40 dark:bg-gray-700/40 shadow-inner">
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			Moderate
 			<i class="fas fa-shield text-gray-400" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators"></i>
 		</h2>
 	</div>
 	{% endif %}
+
+	<div class="my-4 px-4 py-3 rounded-md bg-gray-300/40 dark:bg-gray-700/40 shadow-inner">
+		<div>
+			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">About</h2>
+			<div class="flex flex-col space-y-4">
+				{% if u.bio_html %}
+				<div class="text-break">{{u.bio_html | safe}}</div>
+				{% else %}
+				<p class="italic text-gray-500 text-sm">No bio...</p>
+				{% endif %}
+				{% if u.friends_html %}
+				<p class="text-muted font-weight-bold">Friends:</p>
+				{{u.friends_html | safe}}
+				{% endif %}
+				{% if u.enemies_html %}
+				<p class="text-muted font-weight-bold">Enemies:</p>
+				{{u.enemies_html | safe}}
+				{% endif %}
+			</div>
+		</div>
+		<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
+		<div>
+			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Badges</h2>
+			<ul class="flex flex-row flex-wrap gap-2 mb-0">
+				{% if u.badges %}
+				{% for b in u.badges %}
+				<li>
+					{% if b.url %}
+					<a rel="nofollow noopener noreferrer" href="{{b.url}}">
+						<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
+					</a>
+					{% else %}
+					<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
+					{% endif %}
+				</li>
+				{% endfor %}
+				{% else %}
+				<p class="italic text-gray-500 text-sm">No badges... lame</p>
+				{% endif %}
+			</ul>
+		</div>
+		<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
+		<div>
+			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Awards</h2>
+			<ul class="flex flex-row flex-wrap gap-2 mb-0">
+				{% if u.received_awards %}
+				{% for a in u.received_awards %}
+				<li>
+					<i class="{{a['icon']}} {{a['color']}} fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
+					<span class="text-gray-500 text-sm">x{{a['count']}}</span>
+				</li>
+				{% endfor %}
+				{% else %}
+				<p class="italic text-gray-500 text-sm">No awards... their content probably lacks drama</p>
+				{% endif %}
+			</ul>
+		</div>
+		{% if v and (v.admin_level > 1 or v.alt) %}
+		<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
+		<div>
+			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Alts</h2>
+			<ul class="flex flex-row flex-wrap gap-2 mb-0">
+				{% for account in u.alts_unique %}
+				<li>
+					<a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+	</div>
 </div>
