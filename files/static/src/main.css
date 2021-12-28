@@ -404,6 +404,9 @@
 	.btn-blue {
 		@apply bg-gradient-to-t from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-700 border-blue-900 text-gray-100 focus:text-gray-200;
 	}
+	.btn-yellow {
+		@apply bg-gradient-to-t from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 border-yellow-900 text-gray-100 focus:text-gray-200;
+	}
 	.btn-gray {
 		@apply bg-gradient-to-t from-gray-200 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-700 focus:text-gray-900;
 	}
