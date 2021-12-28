@@ -66,6 +66,7 @@
 			Danger Zone
 		</h2>
 		<ul class="flex flex-col mt-3 mb-0 space-y-6">
+			{% if v.admin_level > 2 %} 
 			<li>
 				<div class="label text-black dark:text-gray-200">Meme Moderator Status</div>
 				<div id="sidebar-memeadmin" class="{% if u.admin_level == 1%}hidden{% endif %}">
@@ -81,6 +82,7 @@
 					</button>
 				</div>
 			</li>
+			{% endif %}
 			<li>
 				<div class="label text-black dark:text-gray-200">Agendaposter Mode</div>
 				<form id="sidebar-agendaposter" class="{% if u.agendaposter %}hidden{% endif %}" action="/agendaposter/{{u.id}}" method="post">
@@ -175,6 +177,7 @@
 					</button>
 				</form>
 			</li>
+			{% if u.admin_level > 1 %}
 			<li>
 				<div class="label text-black dark:text-gray-200">Damage Control</div>
 				<button class="btn btn-blue w-full" onclick="postToast('/@{{u.username}}/revert_actions')">
@@ -182,6 +185,7 @@
 					Revert admin actions
 				</button>
 			</li>
+			{% endif %}
 			{% if v.admin_level > 2 and u.admin_level > 2 %}
 			<li>
 				<div class="label text-black dark:text-gray-200">Admin Persmissions</div>
