@@ -220,9 +220,9 @@
 	<script src="/assets/CHRISTMAS/js/mobile_navigation_bar.js?a=1"></script>
 
 	{% if v %}
-		<script>function formkey() {return '{{v.formkey}}';}</script>
-
 		<script>
+			function formkey() {return '{{v.formkey}}';}
+
 			var previousTheme = '{{ v.theme2 }}'.split(' ');
 			function changeTheme(theme) {
 				const root = document.documentElement
@@ -235,7 +235,10 @@
 				// Set global previous selection to current selection
 				previousTheme = theme;
 			}
+
+			const twoStepModal = new bootstrap.Modal(document.getElementById('2faModal'));
 		</script>
+
 	{% endif %}
 
 	<script src="/assets/CHRISTMAS/js/default.js?a=1"></script>
