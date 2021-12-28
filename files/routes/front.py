@@ -130,7 +130,7 @@ def front_all(v):
 	if not session.get("session_id"): session["session_id"] = secrets.token_hex(49)
 
 	if not v and not request.headers.get("Authorization"):
-		if g.system == "mobile" and '/mobile' not in request.path: return redirect(f"/logged_out/mobile{request.full_path.replace('logged_out/','')}")
+		if g.system == "mobile" and '/mobile' not in request.path: return redirect(f"/logged_out/mobile{request.full_path.replace('/logged_out','')}")
 		elif g.system == "desktop" and "/logged_out" not in request.path: return redirect(f"/logged_out{request.full_path}")
 
 	if v and v.is_banned and not v.unban_utc: return render_template('errors/500.html', error=True, v=v), 500
