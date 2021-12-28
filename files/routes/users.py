@@ -221,13 +221,13 @@ def transfer_coins(v, username):
 		if not v.patron and not receiver.patron:
 			tax = math.ceil(amount*0.03)
 			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
-			if 'rdrama.net' in request.host: tax_receiver.coins += tax/3
+			if request.host == 'rdrama.net': tax_receiver.coins += tax/3
 			else: tax_receiver.coins += tax
 			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
 			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 			g.db.add(tax_receiver)
 
-			if 'rdrama.net' in request.host:
+			if request.host == 'rdrama.net':
 				carp = g.db.query(User).filter_by(id=CARP_ID).first()
 				carp.coins += tax/3
 				log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
@@ -535,7 +535,7 @@ def redditor_moment_redirect(username):
 @auth_required
 def followers(username, v):
 	u = get_user(username, v=v)
-	# if 'rdrama.net' in request.host and u.id == 147: abort(404)
+	# if request.host == 'rdrama.net' and u.id == 147: abort(404)
 	ids = [x[0] for x in g.db.query(Follow.user_id).filter_by(target_id=u.id).all()]
 	users = g.db.query(User).filter(User.id.in_(ids)).all()
 	if not v or v.oldsite: template = ''
@@ -546,7 +546,7 @@ def followers(username, v):
 @auth_required
 def following(username, v):
 	u = get_user(username, v=v)
-	# if 'rdrama.net' in request.host and u.id == 147: abort(404)
+	# if request.host == 'rdrama.net' and u.id == 147: abort(404)
 	ids = [x[0] for x in g.db.query(Follow.target_id).filter_by(user_id=u.id).all()]
 	users = g.db.query(User).filter(User.id.in_(ids)).all()
 	if not v or v.oldsite: template = ''
@@ -559,7 +559,7 @@ def visitors(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
-	if 'rdrama.net' in request.host and v.admin_level < 1 and not v.patron: return render_template(f"{template}errors/patron.html", v=v)
+	if request.host == 'rdrama.net' and v.admin_level < 1 and not v.patron: return render_template(f"{template}errors/patron.html", v=v)
 	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc, reverse=True)
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
