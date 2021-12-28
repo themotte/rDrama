@@ -13,7 +13,7 @@
 				<div>
 					<label class="label mb-0" for="verify">Verify</label>
 					<small class="block text-gray-600 dark:text-gray-400">
-						Gives <i class="fas fa-badge-check fa-sm fa-fw"></i> {{ u.username }} a badge.
+						Gives <i class="fas fa-badge-check fa-sm fa-fw"></i> {{ u.username }} a badge
 					</small>
 				</div>
 			</li>
@@ -22,7 +22,7 @@
 				<div>
 					<label class="label mb-0" for="club">Country Club Access</label>
 					<small class="block text-gray-600 dark:text-gray-400">
-						Grant @{{ u.username }} access to the Country Club.
+						Grant @{{ u.username }} access to the Country Club
 					</small>
 				</div>
 			</li>
@@ -31,13 +31,37 @@
 				<div>
 					<label class="label mb-0" for="club">Meme Moderator</label>
 					<small class="block text-gray-600 dark:text-gray-400">
-						Give @{{ u.username }} meme moderator status.
+						Give @{{ u.username }} meme moderator status
 					</small>
 				</div>
 			</li>
+			<li>
+				<form id="sidebar-flair-change" action="/admin/title_change/{{u.id}}" method="post">
+					<input type="hidden" name="formkey" value="{{v.formkey}}">
+					<input type="text" name="title" class="form-input" placeholder='Enter a flair...' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
+					<div class="flex mt-2">
+						<button>
+							<i class="btn btn-secondary format inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i>
+						</button>
+						<div class="flex space-x-2 mb-3">
+							<input type="checkbox" id="sidebar-locked" class="w-5 h-5" name="locked" {% if u.flairchanged %}checked{% endif %}>
+							<div>
+								<label class="label mb-0" for="sidebar-locked">Locked</label>
+								<small class="block text-gray-600 dark:text-gray-400">
+									Restrict @{{ u.username }} from updating their flair
+								</small>
+							</div>
+						</div>
+						<button form="sidebar-flair-change" type="submit" class="btn btn-gray w-full">
+							<i class="fas fa-pen fa-sm fa-fw mr-2"></i>
+							Change flair
+						</button>
+					</div>
+				</form>
+			</li>
 		</ul>
 	</div>
-		<div class="relative my-4 px-4 py-3 rounded-md border border-red-300 dark:border-gray-700 bg-red-100 dark:bg-gray-700/40 group">
+	<div class="relative my-4 px-4 py-3 rounded-md border border-red-300 dark:border-gray-700 bg-red-100 dark:bg-gray-700/40 group">
 		<span class="absolute top-2 right-3 text-base">
 			<i class="fas fa-exclamation-triangle fa-sm text-red-400 dark:text-gray-300 group-hover:animate-pulse" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators. Recommend internal mod discussion before making changes here."></i>
 		</span>
@@ -85,7 +109,7 @@
 						<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
 						Ban user
 					</button>
-		<!-- 			<input id="sidebar-ban-btn" type="submit" class="btn btn-red" value="Ban user" disabled> -->
+					<!-- 			<input id="sidebar-ban-btn" type="submit" class="btn btn-red" value="Ban user" disabled> -->
 				</form>
 			</li>
 			{% endif %}
