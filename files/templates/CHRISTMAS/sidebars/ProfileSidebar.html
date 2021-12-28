@@ -182,7 +182,7 @@
 					Revert admin actions
 				</button>
 			</li>
-			{% if v.admin_level > 2 and u.admin_level < 2 %}
+			{% if v.admin_level > 2 and u.admin_level > 2 %}
 			<li>
 				<div class="label text-black dark:text-gray-200">Admin Persmissions</div>
 				<button class="btn btn-red w-full" onclick="postToast('/@{{u.username}}/remove_admin'); this.disabled = true">
