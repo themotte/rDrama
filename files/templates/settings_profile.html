@@ -24,7 +24,7 @@
 						<div class="body w-lg-100">
 							<p>Choose your quadrant.</p>
 							<div class="input-group mb2">
-								<select id='quadrant' class="form-control" form="profile-settings" name="quadrant" onchange="post_toast('/settings/profile?quadrant='+document.getElementById('quadrant').value, '1')">
+								<select autocomplete="off" id='quadrant' class="form-control" form="profile-settings" name="quadrant" onchange="post_toast('/settings/profile?quadrant='+document.getElementById('quadrant').value, '1')">
 								{% for entry in ["Centrist", "LibLeft", "LibRight", "AuthLeft", "AuthRight", "LibCenter", "AuthCenter", "Left", "Right"] %}
 									<option value="{{entry}}" {% if v.quadrant==entry %} selected {% endif %}>
 										{{entry}}
@@ -110,7 +110,7 @@
 						<div class="body w-lg-100">
 							<p>Change the theme for the website.</p>
 							<div class="input-group mb2">
-								<select id='theme' class="form-control" form="profile-settings" name="theme" onchange="post_toast('/settings/profile?theme='+document.getElementById('theme').value, '1')">
+								<select autocomplete="off" id='theme' class="form-control" form="profile-settings" name="theme" onchange="post_toast('/settings/profile?theme='+document.getElementById('theme').value, '1')">
 								{% if v.background %}
 									{% set entries = ["transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
 								{% else %}
@@ -161,7 +161,7 @@
 				<div class="body w-lg-100">
 					<p>Change the background for the website.</p>
 					<div class="input-group mb2">
-							<select id='backgroundSelector' class="form-control" form="profile-settings" name="background" onchange="updatebgselection();">
+							<select autocomplete="off" id='backgroundSelector' class="form-control" form="profile-settings" name="background" onchange="updatebgselection();">
 							{% for entry in ["fantasy", "solarpunk", "pixelart"] %}
 								<option value="{{entry}}">
 									{{entry}}

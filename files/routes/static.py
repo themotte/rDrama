@@ -12,6 +12,12 @@ from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
 
+
+@app.get("/privacy")
+@auth_desired
+def privacy(v):
+	return render_template(f"privacy.html", v=v)
+
 @app.get("/emojis")
 @auth_desired
 def emojis(v):
