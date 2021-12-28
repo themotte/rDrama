@@ -1608,13 +1608,9 @@ video {
 	--tw-border-opacity: 1;
 	border-color: rgba(var(--color-200), var(--tw-border-opacity));
 }
-.border-yellow-300 {
+.border-yellow-200 {
 	--tw-border-opacity: 1;
-	border-color: rgba(252, 211, 77, var(--tw-border-opacity));
-}
-.border-yellow-100 {
-	--tw-border-opacity: 1;
-	border-color: rgba(254, 243, 199, var(--tw-border-opacity));
+	border-color: rgba(253, 230, 138, var(--tw-border-opacity));
 }
 .border-opacity-10 {
 	--tw-border-opacity: 0.1;
