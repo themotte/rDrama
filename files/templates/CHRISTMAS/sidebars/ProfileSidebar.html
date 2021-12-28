@@ -8,35 +8,40 @@
 			Manage User
 		</h2>
 		<ul class="flex flex-col mt-3 mb-0 space-y-6">
-			<li class="flex space-x-2">
-				<input type="checkbox" value="verify" class="w-5 h-5" onchange="verifyBadge(this,'{{u.id}}')" {% if u.verified %}checked{% endif %}>
-				<div>
-					<label class="label mb-0" for="verify">Verify</label>
-					<small class="block text-gray-600 dark:text-gray-400">
-						Gives <i class="fas fa-badge-check fa-sm fa-fw"></i> {{ u.username }} a badge
-					</small>
-				</div>
-			</li>
-			<li class="flex space-x-2">
-				<input type="checkbox" value="club" class="w-5 h-5" onchange="clubAccess(this,'{{u.username}}')" {% if u.paid_dues %}checked{% endif %}>
-				<div>
-					<label class="label mb-0" for="club">Country Club Access</label>
-					<small class="block text-gray-600 dark:text-gray-400">
-						Grant @{{ u.username }} access to the Country Club
-					</small>
-				</div>
-			</li>
-			<li class="flex space-x-2">
-				<input type="checkbox" value="club" class="w-5 h-5" onchange="memeAdmin(this,'{{u.username}}')" {% if u.admin_level == 1%}checked{% endif %}>
-				<div>
-					<label class="label mb-0" for="club">Meme Moderator</label>
-					<small class="block text-gray-600 dark:text-gray-400">
-						Give @{{ u.username }} meme moderator status
-					</small>
-				</div>
+			<li>
+				<div class="label text-black dark:text-gray-200">Attributes</div>
+				<ul class="flex flex-col mb-0 space-y-2">
+					<li class="flex space-x-2">
+						<input type="checkbox" value="verify" class="w-5 h-5" onchange="verifyBadge(this,'{{u.id}}')" {% if u.verified %}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="verify">Verify</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Gives <i class="fas fa-badge-check fa-sm fa-fw"></i> {{ u.username }} a badge
+							</small>
+						</div>
+					</li>
+					<li class="flex space-x-2">
+						<input type="checkbox" value="club" class="w-5 h-5" onchange="clubAccess(this,'{{u.username}}')" {% if u.paid_dues %}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="club">Country Club Access</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Grant @{{ u.username }} access to the Country Club
+							</small>
+						</div>
+					</li>
+					<li class="flex space-x-2">
+						<input type="checkbox" value="club" class="w-5 h-5" onchange="memeAdmin(this,'{{u.username}}')" {% if u.admin_level == 1%}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="club">Meme Moderator</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Give @{{ u.username }} meme moderator status
+							</small>
+						</div>
+					</li>
+				</ul>
 			</li>
 			<li>
-				<div class="label">Custom flair</div>
+				<div class="label text-black dark:text-gray-200">Custom flair</div>
 				<form id="sidebar-flair-change" action="/admin/title_change/{{u.id}}" method="post">
 					<input type="hidden" name="formkey" value="{{v.formkey}}">
 					<div class="flex items-center space-x-2 mb-2">
@@ -72,7 +77,7 @@
 		<ul class="flex flex-col mt-3 mb-0 space-y-6">
 			<li>
 				{% if u.is_suspended %}
-				<div class="label">Unban {{ u.username }}</div>
+				<div class="label text-black dark:text-gray-200">Unban {{ u.username }}</div>
 				<form id="sidebar-unban" action="/unban_user/{{u.id}}" method="post">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<input type="hidden" name="redir" value="true">
@@ -91,7 +96,7 @@
 					</button>
 				</form>
 				{% else %}
-				<div class="label">Ban {{ u.username }}</div>
+				<div class="label text-black dark:text-gray-200">Ban {{ u.username }}</div>
 				<form id="sidebar-ban" action="/ban_user/{{u.id}}/" method="post">
 					<input type="hidden" name="formkey" value="{{v.formkey}}">
 					<input type="hidden" name="redir" value="true">
@@ -116,7 +121,7 @@
 			{% endif %}
 			{% if v.admin_level > 2 %}
 			<li>
-				<div class="label">Admin persmissions</div>
+				<div class="label text-black dark:text-gray-200">Admin persmissions</div>
 				<button class="btn btn-red w-full" onclick="postToast('/@{{u.username}}/remove_admin'); this.disabled = true">
 					<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
 					Revoke admin permissions
