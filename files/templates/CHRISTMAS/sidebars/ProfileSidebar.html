@@ -7,7 +7,7 @@
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			Manage User
 		</h2>
-		<ul class="flex flex-col mt-3 mb-0 space-y-4">
+		<ul class="flex flex-col mt-3 mb-0 space-y-6">
 			<li class="flex space-x-2">
 				<input type="checkbox" value="verify" class="w-5 h-5" onchange="verifyBadge(this,'{{u.id}}')" {% if u.verified %}checked{% endif %}>
 				<div>
@@ -69,7 +69,7 @@
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			Danger Zone
 		</h2>
-		<ul class="flex flex-col mt-3 mb-0 space-y-4">
+		<ul class="flex flex-col mt-3 mb-0 space-y-6">
 			<li>
 				{% if u.is_suspended %}
 				<div class="label">Unban {{ u.username }}</div>
