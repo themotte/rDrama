@@ -35,9 +35,29 @@
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
 	<link rel="stylesheet" href="/static/assets/css/main.css?a=6"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
-	{% if v.agendaposter %}<link rel="stylesheet" href="/static/assets/css/agendaposter.css?a=3">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
+	{% if v.agendaposter %}
+		<style>
+			html {
+				cursor:url('https://i.ibb.co/4VZB08S/Image.webp'), auto;
+			}
+			.nav-item .text-small.font-weight-bold::before {
+				content: "((("
+			}
+			.nav-item .text-small.font-weight-bold::after {
+				content: ")))"
+			}
+			.nav-item .text-small-extra.text-primary {
+				font-size: 0 !important
+			}
+			.nav-item .text-small-extra.text-primary i {
+				font-size: 11px !important
+			}
+		</style>
+	{% elif v.css %}
+		<link rel="stylesheet" href="/@{{v.username}}/css">
+	{% endif %}
 
-		<link href="/static/assets/css/fa.css?a=3" rel="stylesheet"> 
+	<link href="/static/assets/css/fa.css?a=3" rel="stylesheet"> 
 </head>
 
 <body id="settings" style="overflow-x: hidden; {% if v and v.background %} background:url(/static/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">
