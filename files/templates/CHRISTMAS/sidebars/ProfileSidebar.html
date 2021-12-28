@@ -54,30 +54,32 @@
 					<label class="label mb-0" for="verify">Include alts</label>
 				</div>
 				<button form="sidebar-unban" type="submit" class="btn btn-green w-full">
-					<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
-					Revoke Admin Permissions
+					<i class="fas fa-user-check fa-sm fa-fw mr-2"></i>
+					Unban user
 				</button>
 			</form>
 			{% else %}
-			<form action="/ban_user/{{u.id}}/" method="post">
+			<form id="sidebar-ban" action="/ban_user/{{u.id}}/" method="post">
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<input type="hidden" name="redir" value="true">
-				<input style="font-size:11px;" type="text" class="form-input" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
-				<input style="font-size:11px;" type="number" step="any" class="form-input" name="days" placeholder="Days (blank = permanent)">
-				<br >
+				<input type="text" class="form-input mb-2" name="reason" placeholder="Ban Reason" onchange="document.getElementById('sidebar-ban-btn').disabled=false">
+				<input type="number" step="any" class="form-input" name="days" placeholder="Days (blank = permanent)">
 				<div class="custom-control custom-checkbox">
 					<input type="checkbox" id="alts-2-mobile" class="custom-control-input" name="alts" value="1">
 					<label class="custom-control-label" for="alts-2-mobile">Include alts</label>
 				</div>
-				<br >
-				<input id="user-ban-submit2" type="submit" class="btn btn-red" value="Ban user" disabled>
+				<button form="sidebar-ban" id="sidebar-ban-btn" type="submit" class="btn btn-red w-full">
+					<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
+					Ban user
+				</button>
+	<!-- 			<input id="sidebar-ban-btn" type="submit" class="btn btn-red" value="Ban user" disabled> -->
 			</form>
 			{% endif %}
 			{% if v.admin_level > 2 %}
 			<li class="flex space-x-2">
 				<button class="btn btn-red w-full" onclick="postToast('/@{{u.username}}/remove_admin'); this.disabled = true">
 					<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
-					Revoke Admin Permissions
+					Revoke admin permissions
 				</button>
 			</li>
 			{% endif %}
