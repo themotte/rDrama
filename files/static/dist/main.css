@@ -1615,9 +1615,9 @@ video {
 .border-yellow-700\/20 {
 	border-color: rgba(180, 83, 9, 0.2);
 }
-.border-red-400 {
+.border-red-300 {
 	--tw-border-opacity: 1;
-	border-color: rgba(248, 113, 113, var(--tw-border-opacity));
+	border-color: rgba(252, 165, 165, var(--tw-border-opacity));
 }
 .border-opacity-10 {
 	--tw-border-opacity: 0.1;
