@@ -162,11 +162,11 @@
 		<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 		<div>
 			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Alts</h2>
-			<ul class="flex flex-row flex-wrap gap-2 mb-0">
+			<ul class="flex flex-col space-y-2 mb-0">
 				{% for account in u.alts_unique %}
 				<li class="flex items-center space-x-2">
-					<img src="@{{account.profile_url}}" class="w-7 h-7 object-cover" alt="@{{account.username}} avatar"/>
-					<a href="{{account.url}}">
+					<img src="@{{account.profile_url}}" class="inline-block flex-shrink-0 object-cover h-7 w-7 p-[3px] bg-white border border-gray-800" alt="@{{account.username}} avatar"/>
+					<a href="{{account.url}}" class="text-sm font-bold text-black dark:text-gray-200 hover:text-primary">
 						@{{account.username}}
 					</a>
 					{% if account._is_manual %}
