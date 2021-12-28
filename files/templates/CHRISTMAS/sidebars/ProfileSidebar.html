@@ -46,7 +46,7 @@
 		</h2>
 		<ul class="flex flex-col mt-3 mb-0 space-y-4">
 			<li class="flex space-x-2">
-				<input type="checkbox" value="club" class="w-5 h-5" onchange="memeAdmin(this,'{{u.username}}')" {% if u.admin_level > 1 %}checked{% endif %}>
+				<input type="checkbox" value="club" class="w-5 h-5" onchange="realAdmin(this,'{{u.username}}')" {% if u.admin_level > 1 %}checked{% endif %}>
 				<div class="mt-[-1px]">
 					<label class="label mb-0" for="club">Admin</label>
 					<small class="block text-gray-600 dark:text-gray-400">
