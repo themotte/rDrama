@@ -334,7 +334,7 @@ def sign_up_post(v):
 
 	if email: send_verification_email(new_user)
 
-	if "rama" in request.host: send_notification(new_user.id, WELCOME_MSG)
+	send_notification(new_user.id, WELCOME_MSG)
 
 	session.permanent = True
 	session["session_id"] = token_hex(49)
