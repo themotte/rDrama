@@ -514,7 +514,7 @@ def edit_post(pid, v):
 				over_18=False,
 				is_bot=True,
 				app_id=None,
-				is_pinned=True,
+				is_pinned='AutoJanny',
 				distinguish_level=6,
 				body_html=body_jannied_html,
 				)
@@ -546,7 +546,7 @@ def edit_post(pid, v):
 				over_18=False,
 				is_bot=True,
 				app_id=None,
-				is_pinned=True,
+				is_pinned='AutoJanny',
 				distinguish_level=6,
 				body_html=body_jannied_html,
 				)
@@ -1086,7 +1086,7 @@ def submit_post(v):
 			over_18=False,
 			is_bot=True,
 			app_id=None,
-			is_pinned=True,
+			is_pinned='AutoJanny',
 			distinguish_level=6,
 			body_html=body_jannied_html,
 		)
@@ -1118,7 +1118,7 @@ def submit_post(v):
 			over_18=False,
 			is_bot=True,
 			app_id=None,
-			is_pinned=True,
+			is_pinned='AutoJanny',
 			distinguish_level=6,
 			body_html=body_jannied_html,
 		)
