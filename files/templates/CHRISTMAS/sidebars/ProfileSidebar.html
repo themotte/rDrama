@@ -50,10 +50,6 @@
 				<form id="sidebar-unban" action="/unban_user/{{u.id}}" method="post">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<input type="hidden" name="redir" value="true">
-					<div class="flex items-center mb-2">
-						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
-						<label class="text-base pl-1" for="sidebar-alts">Include alts</label>
-					</div>
 					<div class="flex space-x-2 mb-3">
 						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
 						<div>
