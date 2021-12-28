@@ -9,13 +9,16 @@
 		</h2>
 		<ul class="flex flex-col mt-3">
 			<li class="flex space-x-2">
-				<input type="checkbox" value="verify" class="w-5 h-5">
 				<div class="mt-[-1px]">
-					<label class="label mb-0" for="verify">Verify</label>
+					<label class="label mb-0" for="verify">Verification</label>
 					<small class="block text-gray-600 dark:text-gray-400">
 						Gives <i class="fas fa-badge-check fa-sm fa-fw"></i> {{ u.username }} a badge.
 					</small>
 				</div>
+				<select name="cars" id="cars">
+				  <option value="volvo">Verified</option>
+				  <option value="saab">Unverified</option>
+				</select>
 			</li>
 			<li>
 				<hr class="my-3 h-0.5 border-b border-yellow-700/20 dark:border-gray-900"/>
@@ -59,7 +62,19 @@
 			<li class="flex space-x-2">
 				<input type="checkbox" value="club" class="w-5 h-5">
 				<div class="mt-[-1px]">
-					<label class="label mb-0" for="club">Shadwoban</label>
+					<label class="label mb-0" for="club">Shadowban</label>
+					<small class="block text-gray-600 dark:text-gray-400">
+					Covertly ban @{{ u.username }}. Only visible to moderators.
+					</small>
+				</div>
+			</li>
+			<li>
+				<hr class="my-3 h-0.5 border-b border-yellow-700/20 dark:border-gray-900"/>
+			</li>
+			<li class="flex space-x-2">
+				<input type="checkbox" value="club" class="w-5 h-5">
+				<div class="mt-[-1px]">
+					<label class="label mb-0" for="club">Shadowban</label>
 					<small class="block text-gray-600 dark:text-gray-400">
 					Covertly ban @{{ u.username }}. Only visible to moderators.
 					</small>
