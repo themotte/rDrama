@@ -47,6 +47,7 @@
 		<ul class="flex flex-col mt-3 mb-0 space-y-4">
 			<li>
 				{% if u.is_suspended %}
+				<div class="label">Unban {{ u.username }}</div>
 				<form id="sidebar-unban" action="/unban_user/{{u.id}}" method="post">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<input type="hidden" name="redir" value="true">
