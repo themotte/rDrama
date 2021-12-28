@@ -40,7 +40,7 @@
 					<input type="hidden" name="formkey" value="{{v.formkey}}">
 					<div class="flex items-center mb-2">
 						<input id="sidebar-custom-flair" type="text" name="title" class="form-input" placeholder='Enter a flair...' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
-						<button class="btn btn-gray">
+						<button type="button" class="btn btn-gray">
 							<i class="fas fa-smile-beam fa-fw" onclick="loadEmojis('sidebar-custom-flair')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i>
 						</button>
 					</div>
