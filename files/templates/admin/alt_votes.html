@@ -15,9 +15,9 @@
 
 <form action="/admin/alt_votes" method="get" class="mb-6">
 	<label for="link-input">Usernames</label>
-	<input id="link-input" type="text" class="form-control mb-2" name="u1" value="{{u1.username if u1 else ''}}" placeholder="User 1">
-	<input id="link-input" type="text" class="form-control mb-2" name="u2" value="{{u2.username if u2 else ''}}" placeholder="User 2">
-	<input type="submit" value="Submit" class="btn btn-primary">
+	<input autocomplete="off" id="link-input" type="text" class="form-control mb-2" name="u1" value="{{u1.username if u1 else ''}}" placeholder="User 1">
+	<input autocomplete="off" id="link-input" type="text" class="form-control mb-2" name="u2" value="{{u2.username if u2 else ''}}" placeholder="User 2">
+	<input autocomplete="off" type="submit" value="Submit" class="btn btn-primary">
 </form>
 
 {% if u1 and u2 %}
@@ -74,10 +74,10 @@
 
 <a href="javascript:void(0)" class="btn btn-secondary" onclick="document.getElementById('linkbtn').classList.toggle('d-none');">Link Accounts</a>
 <form action="/admin/link_accounts" method="post">
-	<input type="hidden" name="formkey" value="{{v.formkey}}">
-	<input type="hidden" name="u1" value="{{u1.id}}">
-	<input type="hidden" name="u2" value="{{u2.id}}">
-	<input type="submit" id="linkbtn" class="btn btn-primary d-none" value="Confirm Link: {{u1.username}} and {{u2.username}}">
+	<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+	<input autocomplete="off" type="hidden" name="u1" value="{{u1.id}}">
+	<input autocomplete="off" type="hidden" name="u2" value="{{u2.id}}">
+	<input autocomplete="off" type="submit" id="linkbtn" class="btn btn-primary d-none" value="Confirm Link: {{u1.username}} and {{u2.username}}">
 </form>
 
 {% endif %}

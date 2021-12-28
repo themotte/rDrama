@@ -56,7 +56,7 @@
 </ul>
 
 <div class="custom-control custom-switch">
-	<input type="checkbox" class="custom-control-input" id="disablesignups" name="disablesignups" {% if x == "yes" %}checked{% endif %} onchange="post_toast('/admin/disablesignups');">
+	<input autocomplete="off" type="checkbox" class="custom-control-input" id="disablesignups" name="disablesignups" {% if x == "yes" %}checked{% endif %} onchange="post_toast('/admin/disablesignups');">
 	<label class="custom-control-label" for="disablesignups">Disable signups</label>
 </div>
 

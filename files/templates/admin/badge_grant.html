@@ -36,11 +36,11 @@
 <h5>Badge Grant</h5>
 
 <form action="/admin/badge_grant", method="post">
-<input type="hidden" name="formkey" value="{{v.formkey}}">
+<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 
 
 <label for="input-username">Username</label><br>
-<input id="input-username" class="form-control" type="text" name="username" required>
+<input autocomplete="off" id="input-username" class="form-control" type="text" name="username" required>
 
 <table class="table table-striped">
 <thead class="bg-primary text-white">
@@ -56,7 +56,7 @@
 <tr>
 	<td>
 		<div class="custom-control">
-			<input checked="" class="custom-control-input" type="radio" id="{{k}}" name="badge_id" value="{{k}}">
+			<input autocomplete="off" checked="" class="custom-control-input" type="radio" id="{{k}}" name="badge_id" value="{{k}}">
 			<label class="custom-control-label" for="{{k}}"></label>
 		</div>		
 	</td>
@@ -68,12 +68,12 @@
 </table>
 
 <label for="input-url">URL</label><br>
-<input id="input-url" class="form-control" type="text" name="url" placeholder="Optional">
+<input autocomplete="off" id="input-url" class="form-control" type="text" name="url" placeholder="Optional">
 
 <label for="input-description">Custom description</label><br>
-<input id="input-description" class="form-control" type="text" name="description" placeholder="Leave blank for badge default">
+<input autocomplete="off" id="input-description" class="form-control" type="text" name="description" placeholder="Leave blank for badge default">
 
-<input class="btn btn-primary" type="submit">
+<input autocomplete="off" class="btn btn-primary" type="submit">
 
 </form>
 

@@ -65,7 +65,7 @@
 												<h1 class="h4 font-weight-normal text-center">Whoops! You can't refer yourself!</h1>
 												<p class="text-center text-muted mb-md-5">Send this link to a friend instead :)</p>
 												<label>Referral code</label>
-												<input type="text" class="form-control copy-link" readonly value="{{request.host_url}}signup?ref={{request.values.get('ref')}}" data-clipboard-text="{{request.host_url}}signup?ref={{request.values.get('ref')}}">
+												<input autocomplete="off" type="text" class="form-control copy-link" readonly value="{{request.host_url}}signup?ref={{request.values.get('ref')}}" data-clipboard-text="{{request.host_url}}signup?ref={{request.values.get('ref')}}">
 
 												<div class="text-center mt-5 mb-3">
 														Already have an account? <a href="/login" class="font-weight-bold text-small toggle-login">Log in.</a>

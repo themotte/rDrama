@@ -18,16 +18,16 @@
 				</div>
 				<div class="body w-lg-100">
 			<label for="edit-{{app.id}}-author" class="mb-0 w-lg-25">User</label>
-			<input id="edit-{{app.id}}-author" class="form-control" type="text" name="name" value="{{app.author.username}}" readonly=readonly>
-			<input type="hidden" name="formkey" value="{{v.formkey}}">
+			<input autocomplete="off" id="edit-{{app.id}}-author" class="form-control" type="text" name="name" value="{{app.author.username}}" readonly=readonly>
+			<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 			<label for="edit-{{app.id}}-name" class="mb-0 w-lg-25">App Name</label>
-			<input id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}" readonly=readonly>
+			<input autocomplete="off" id="edit-{{app.id}}-name" class="form-control" type="text" name="name" value="{{app.app_name}}" readonly=readonly>
 
 
 			<label for="edit-{{app.id}}-redirect" class="mb-0 w-lg-25">Redirect URI</label>
-			<input id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}" readonly="readonly">
+			<input autocomplete="off" id="edit-{{app.id}}-redirect" class="form-control" type="text" name="redirect_uri" value="{{app.redirect_uri}}" readonly="readonly">
 			<label for="edit-{{app.id}}-desc" class="mb-0 w-lg-25">Description</label>
-			<textarea form="edit-app-{{app.id}}" class="form-control" name="description" id="edit-{{app.id}}-desc" maxlength="256" readonly="readonly">{{app.description}}</textarea>
+			<textarea autocomplete="off" form="edit-app-{{app.id}}" class="form-control" name="description" id="edit-{{app.id}}-desc" maxlength="256" readonly="readonly">{{app.description}}</textarea>
 		</div>
 	</div>
 	<div class="footer">

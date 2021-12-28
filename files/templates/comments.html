@@ -250,8 +250,8 @@
 					<div id="reply-m-{{c.id}}" class="d-none">
 						<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
 							<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
-								<input type="hidden" name="formkey" value="{{v.formkey}}"> 
-								<textarea maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3"></textarea> 
+								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
+								<textarea autocomplete="off" maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3"></textarea> 
 								<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
 									<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.id}}">
 										<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"></i>
@@ -269,8 +269,8 @@
 				{% if v and v.id==c.author_id %}
 				<div id="comment-edit-{{c.id}}" class="d-none comment-write collapsed child">
 					<form id="comment-edit-form-{{c.id}}" action="/edit_comment/{{c.id}}" method="post" enctype="multipart/form-data"> 
-						<input type="hidden" name="formkey" value="{{v.formkey}}">
-						<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('comment-edit-body-{{c.id}}', 'preview-edit-{{c.id}}');charLimit('comment-edit-body-{{c.id}}','charcount-edit-{{c.id}}')" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
+						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+						<textarea autocomplete="off" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('comment-edit-body-{{c.id}}', 'preview-edit-{{c.id}}');charLimit('comment-edit-body-{{c.id}}','charcount-edit-{{c.id}}')" id="comment-edit-body-{{c.id}}" data-id="{{c.id}}" name="body" form="comment-edit-form-{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3">{{c.body}}</textarea> 
 						
 						<div class="text-small font-weight-bold mt-1" id="charcount-edit-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
@@ -289,7 +289,7 @@
 							
 							<label class="btn btn-secondary format m-0" for="file-edit-reply-{{c.id}}">
 								<div id="filename-edit-reply-{{c.id}}"><i class="far fa-image"></i></div>
-								<input id="file-edit-reply-{{c.id}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-edit-reply-{{c.id}}').innerHTML='image/video';" hidden>
+								<input autocomplete="off" id="file-edit-reply-{{c.id}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-edit-reply-{{c.id}}').innerHTML='image/video';" hidden>
 							</label>
 						</div>
 						<a href="javascript:void(0)" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
@@ -494,10 +494,10 @@
 		<div id="reply-to-{{c.id}}" class="d-none">
 			<div id="comment-form-space-{{c.fullname}}" class="comment-write collapsed child">
 				<form id="reply-to-t3_{{c.id}}" action="/comment" method="post" enctype="multipart/form-data"> 
-					<input type="hidden" name="formkey" value="{{v.formkey}}"> 
-					<input type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
-					<input id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}"> 
-					<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('reply-form-body-{{c.fullname}}', 'reply-edit-{{c.id}}');charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> 
+					<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
+					<input autocomplete="off" type="hidden" name="parent_fullname" value="{{c.fullname}}"> 
+					<input autocomplete="off" id="reply-form-submission-{{c.fullname}}" type="hidden" name="submission" value="{{c.post.id}}"> 
+					<textarea autocomplete="off" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('reply-form-body-{{c.fullname}}', 'reply-edit-{{c.id}}');charLimit('reply-form-body-{{c.fullname}}','charcount-{{c.id}}')" id="reply-form-body-{{c.fullname}}" data-fullname="{{c.fullname}}" name="body" form="reply-to-t3_{{c.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea> 
 					
 					<div class="text-small font-weight-bold mt-1" id="charcount-{{c.id}}" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
@@ -519,7 +519,7 @@
 						&nbsp;
 						<label class="btn btn-secondary format m-0" for="file-upload-reply-{{c.fullname}}">
 							<div id="filename-show-reply-{{c.fullname}}"><i class="far fa-image"></i></div>
-							<input id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image/video';" hidden>
+							<input autocomplete="off" id="file-upload-reply-{{c.fullname}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{c.fullname}}').innerHTML='image/video';" hidden>
 						</label>
 					</div>
 					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary text-white ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" href="javascript:void(0)">Comment</a>
@@ -732,7 +732,7 @@
 						<div class="h6">We're sorry something here is wrong.</div>
 						<small class="form-text text-muted">Please enter a reason for reporting below.</small>
 						<pre></pre>
-						<input maxlength="100" id="reason-comment" class="form-control">
+						<input autocomplete="off" maxlength="100" id="reason-comment" class="form-control">
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>

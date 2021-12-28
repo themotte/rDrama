@@ -422,14 +422,14 @@
 
 							{% for c in p.options %}
 								<div class="custom-control">								
-									<input type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="{% if v %}poll_vote('{{c.id}}'){% else %}poll_vote_no_v(){% endif %}">
+									<input autocomplete="off" type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="{% if v %}poll_vote('{{c.id}}'){% else %}poll_vote_no_v(){% endif %}">
 									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}}<span class="presult {% if not p.total_poll_voted(v) %}d-none{% endif %}"> - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></span></label>
 								</div>
 							{% endfor %}
 
 							{% for c in p.bet_options %}
 								<div class="custom-control mt-3">								
-									<input {% if c.poll_voted(v) %}checked{% endif %} class="custom-control-input bet" {% if not (v and v.coins > 200) or p.total_bet_voted(v) %}disabled{% endif %} type="radio" id="{{c.id}}" onchange="bet_vote('{{c.id}}')">
+									<input autocomplete="off" {% if c.poll_voted(v) %}checked{% endif %} class="custom-control-input bet" {% if not (v and v.coins > 200) or p.total_bet_voted(v) %}disabled{% endif %} type="radio" id="{{c.id}}" onchange="bet_vote('{{c.id}}')">
 									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="bet-{{c.id}}">{{c.upvotes}}</span> bets</a>{% if not p.total_bet_voted(v) %}<span class="cost"> (cost of entry: 200 coins)</span>{% endif %}</label>
 									{% if v and v.admin_level > 2 %}
 										<button class="btn btn-primary px-2 mx-2" style="font-size:10px;padding:2px;margin-top:-5px" onclick="post_toast('/distribute/{{c.id}}')">Declare winner</button>
@@ -455,10 +455,10 @@
 						<div id="edit-post-body-{{p.id}}" class="d-none comment-write collapsed child">
 							<form id="post-edit-form-{{p.id}}" action="/edit_post/{{p.id}}" method="post" enctype="multipart/form-data">
 								<div class="d-flex flex-column">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<input type="hidden" name="current_page" value="{{request.path}}">
-									<input max-length="500" name="title" class="edit-title" required placeholder="title" value="{{p.title}}" >
-									<textarea name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
+									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input autocomplete="off" type="hidden" name="current_page" value="{{request.path}}">
+									<input autocomplete="off" max-length="500" name="title" class="edit-title" required placeholder="title" value="{{p.title}}" >
+									<textarea autocomplete="off" name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
 									
 									<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 
@@ -471,7 +471,7 @@
 
 										<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-edit-{{p.id}}">
 											<div id="filename-show-edit-{{p.id}}"><i class="far fa-image"></i></div>
-											<input id="file-upload-edit-{{p.id}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-edit-{{p.id}}').innerHTML='image/video';" hidden>
+											<input autocomplete="off" id="file-upload-edit-{{p.id}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-edit-{{p.id}}').innerHTML='image/video';" hidden>
 										</label>
 						
 										<small class="format d-none"><i class="fas fa-link" aria-hidden="true"></i></small> 
@@ -721,11 +721,11 @@
 
 	<div id="comment-form-space-{{p.fullname}}" class="comment-write mb-3">
 		<form id="reply-to-{{p.fullname}}" action="/comment" method="post">
-			<input type="hidden" name="formkey" value="{{v.formkey}}">
-			<input type="hidden" name="parent_fullname" value="t2_{{p.id}}">
-			<input id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
+			<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+			<input autocomplete="off" type="hidden" name="parent_fullname" value="t2_{{p.id}}">
+			<input autocomplete="off" id="reply-form-submission-{{p.fullname}}" type="hidden" name="submission" value="{{p.id}}">
 			{% if v %}
-			<textarea {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
+			<textarea autocomplete="off" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('reply-form-body-{{p.fullname}}', 'form-preview-{{p.id}}');charLimit('reply-form-body-{{p.fullname}}','charcount-reply')" id="reply-form-body-{{p.fullname}}" data-fullname="{{p.fullname}}" class="comment-box form-control rounded" id="comment-form" name="body" form="reply-to-{{p.fullname}}" aria-label="With textarea" placeholder="Add your comment..." rows="3"></textarea>
 			{% endif %}
 
 			<div class="text-small font-weight-bold mt-1" id="charcount-reply" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
@@ -746,7 +746,7 @@
 				</label> 
 				<label class="format btn btn-secondary m-0 ml-1 {% if v %}d-inline-block{% else %}d-none{% endif %}" for="file-upload-reply-{{p.fullname}}">
 					<div id="filename-show-reply-{{p.fullname}}"><i class="far fa-image"></i></div>
-					<input id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{p.fullname}}').innerHTML='image/video';" hidden>
+					<input autocomplete="off" id="file-upload-reply-{{p.fullname}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-show-reply-{{p.fullname}}').innerHTML='image/video';" hidden>
 				</label>
 			</div>
 			<a id="save-reply-to-{{p.fullname}}" href="javascript:void(0)" form="reply-to-{{p.fullname}}" class="btn btn-primary text-whitebtn ml-auto fl-r" onclick="post_comment('{{p.fullname}}', '{{p.id}}')">Comment</a>
@@ -757,7 +757,7 @@
 
 	{% if not v and not p.is_banned %}
 	<div class="comment-write mb-3">
-		<textarea maxlength="10000" class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
+		<textarea autocomplete="off" maxlength="10000" class="comment-box form-control rounded" name="body" aria-label="With textarea" placeholder="Add your comment..." rows="3" onclick="location.href='/login?redirect={{request.path | urlencode}}';"></textarea>
 	</div>
 	{% if p.comment_count >= 2 %}
 	<div class="card border-0 mt-4">

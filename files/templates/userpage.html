@@ -167,9 +167,9 @@
 						{% endif %}
 
 						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message" method="post">
-							<input type="hidden" name="formkey" value="{{v.formkey}}"> 
+							<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
 							<pre></pre>
-							<textarea id="input-message" form="message" name="message" rows="3" maxlength="1000" class="form-control b2" required></textarea>
+							<textarea autocomplete="off" id="input-message" form="message" name="message" rows="3" maxlength="1000" class="form-control b2" required></textarea>
 							<pre></pre>
 							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bold"></pre>
 							&nbsp;
@@ -179,7 +179,7 @@
 							&nbsp;
 							<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"></pre>
 							&nbsp;
-							<input type="submit" value="Submit" class="btn btn-primary mt-3">
+							<input autocomplete="off" type="submit" value="Submit" class="btn btn-primary mt-3">
 						</form>
 
 						<div class="d-none mt-3 profile-toggleable" id="coin-transfer">
@@ -210,17 +210,17 @@
 							<div class="w-lg-100">
 
 								<form action="/admin/title_change/{{u.id}}" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<input id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
+									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input autocomplete="off" id="customtitlebody" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitleplain %}{{u.customtitleplain}}{% endif %}">
 									<div class="d-flex mt-2">
 										<a class="format" href="javascript:void(0)"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
 										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="locked" name="locked" {% if u.flairchanged %}checked{% endif %}>
+											<input autocomplete="off" type="checkbox" class="custom-control-input" id="locked" name="locked" {% if u.flairchanged %}checked{% endif %}>
 											<label class="custom-control-label" for="locked">locked</label>
 										</div>
 										&nbsp;&nbsp;&nbsp;
-										<input class="btn btn-primary ml-auto" type="submit" value="Change Flair">
+										<input autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Change Flair">
 									</div>
 								</form>
 							</div>
@@ -229,33 +229,33 @@
 						<pre></pre>
 						{% if u.is_suspended %}
 							<form action="/unban_user/{{u.id}}/" method="post" action="">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
-								<input type="hidden" name="redir" value="true">
+								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+								<input autocomplete="off" type="hidden" name="redir" value="true">
 								<div class="custom-control custom-checkbox">
-									<input type="checkbox" id="alts-1-desktop" class="custom-control-input" name="alts" value="1">
+									<input autocomplete="off" type="checkbox" id="alts-1-desktop" class="custom-control-input" name="alts" value="1">
 									<label class="custom-control-label" for="alts-1-desktop">Include alts</label>
 								</div>
-								<input type="submit" class="btn btn-success" value="Unban user">
+								<input autocomplete="off" type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
 							<form action="/ban_user/{{u.id}}" method="post" action="">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
-								<input type="hidden" name="redir" value="true">
-								<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
-								<input style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
+								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+								<input autocomplete="off" type="hidden" name="redir" value="true">
+								<input autocomplete="off" style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
+								<input autocomplete="off" style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
 								<div class="custom-control custom-checkbox">
-									<input type="checkbox" id="alts-2-desktop" class="custom-control-input" name="alts" value="1">
+									<input autocomplete="off" type="checkbox" id="alts-2-desktop" class="custom-control-input" name="alts" value="1">
 									<label class="custom-control-label" for="alts-2-desktop">Include alts</label>
 								</div>
-								<input id="user-ban-submit" type="submit" class="btn btn-danger" value="Ban user" disabled>
+								<input autocomplete="off" id="user-ban-submit" type="submit" class="btn btn-danger" value="Ban user" disabled>
 							</form>
 						{% endif %}
 						<pre></pre>
 
 						<form id="agendaposter1" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
-							<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" >
+							<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
+							<input autocomplete="off" type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
+							<input autocomplete="off" type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" >
 						</form>
 						<a id="unagendaposter" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter1','unagendaposter')">Disable Agendaposter Theme</a>
 
@@ -273,15 +273,15 @@
 
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input type="hidden" name="user" value="{{u.username}}">
-							<input type="submit" class="btn btn-success" value="Approve User's Content">
+							<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
+							<input autocomplete="off" type="hidden" name="user" value="{{u.username}}">
+							<input autocomplete="off" type="submit" class="btn btn-success" value="Approve User's Content">
 						</form>
 						<pre></pre>
 						<form action="/admin/nuke_user" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input type="hidden" name="user" value="{{u.username}}">
-							<input type="submit" class="btn btn-danger" value="Remove User's Content">
+							<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
+							<input autocomplete="off" type="hidden" name="user" value="{{u.username}}">
+							<input autocomplete="off" type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
 
 						<button id="grant2" class="{% if u.paid_dues %}d-none{% endif %} btn btn-success" onclick="post_toast2('/@{{u.username}}/club_allow','grant2','bar2')">Grant club access</button>
@@ -453,8 +453,8 @@
 
 					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message" method="post">
 						<pre></pre>
-						<input type="hidden" name="formkey" value="{{v.formkey}}"> 
-						<textarea id="input-message-mobile" form="message-mobile" name="message" rows="3" maxlength="1000" class="form-control" required></textarea>
+						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
+						<textarea autocomplete="off" id="input-message-mobile" form="message-mobile" name="message" rows="3" maxlength="1000" class="form-control" required></textarea>
 						<pre></pre>
 						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-bold" aria-hidden="true" onclick="makeBold('input-message-mobile')" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bold"></pre>
 						&nbsp;
@@ -464,7 +464,7 @@
 						&nbsp;
 						<pre class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('input-message-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"></pre>
 						&nbsp;
-						<input type="submit" value="Submit" class="btn btn-primary mt-3">
+						<input autocomplete="off" type="submit" value="Submit" class="btn btn-primary mt-3">
 					</form>
 
 					<div class="d-none mt-3 profile-toggleable-mobile" id="coin-transfer-mobile">
@@ -490,17 +490,17 @@
 							<div class="w-lg-100">
 
 								<form action="/admin/title_change/{{u.id}}" method="post">
-									<input type="hidden" name="formkey" value="{{v.formkey}}">
-									<input id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
+									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+									<input autocomplete="off" id="customtitlebody-mobile" type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
 									<div class="d-flex mt-2">
 										<a class="format" href="javascript:void(0)"><i class="btn btn-secondary format d-inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i></a>
 										&nbsp;&nbsp;&nbsp;
 										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="locked-mobile" name="locked" {% if u.flairchanged %}checked{% endif %}>
+											<input autocomplete="off" type="checkbox" class="custom-control-input" id="locked-mobile" name="locked" {% if u.flairchanged %}checked{% endif %}>
 											<label class="custom-control-label" for="locked-mobile">locked</label>
 										</div>
 										&nbsp;&nbsp;&nbsp;
-										<input class="btn btn-primary ml-auto" type="submit" value="Change Flair">
+										<input autocomplete="off" class="btn btn-primary ml-auto" type="submit" value="Change Flair">
 									</div>
 								</form>
 							</div>
@@ -509,37 +509,37 @@
 						<pre></pre>
 						{% if u.is_suspended %}
 							<form action="/unban_user/{{u.id}}" method="post">
-								<input type="hidden" name="formkey", value="{{v.formkey}}">
-								<input type="hidden" name="redir" value="true">
+								<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
+								<input autocomplete="off" type="hidden" name="redir" value="true">
 								<br>
 								<div class="custom-control custom-checkbox">
-									<input type="checkbox" id="alts-1-mobile" class="custom-control-input" name="alts" value="1">
+									<input autocomplete="off" type="checkbox" id="alts-1-mobile" class="custom-control-input" name="alts" value="1">
 									<label class="custom-control-label" for="alts-1-mobile">Include alts</label>
 								</div>
 								<br >
-								<input type="submit" class="btn btn-success" value="Unban user">
+								<input autocomplete="off" type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
 							<form action="/ban_user/{{u.id}}/" method="post">
-								<input type="hidden" name="formkey" value="{{v.formkey}}">
-								<input type="hidden" name="redir" value="true">
-								<input style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
-								<input style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
+								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+								<input autocomplete="off" type="hidden" name="redir" value="true">
+								<input autocomplete="off" style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
+								<input autocomplete="off" style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
 								<br >
 								<div class="custom-control custom-checkbox">
-									<input type="checkbox" id="alts-2-mobile" class="custom-control-input" name="alts" value="1">
+									<input autocomplete="off" type="checkbox" id="alts-2-mobile" class="custom-control-input" name="alts" value="1">
 									<label class="custom-control-label" for="alts-2-mobile">Include alts</label>
 								</div>
 								<br >
-								<input id="user-ban-submit2" type="submit" class="btn btn-danger" value="Ban user" disabled>
+								<input autocomplete="off" id="user-ban-submit2" type="submit" class="btn btn-danger" value="Ban user" disabled>
 							</form>
 						{% endif %}
 						<pre></pre>
 
 						<form id="agendaposter2" class="{% if u.agendaposter %}d-none{% endif %}" action="/agendaposter/{{u.id}}" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
-							<input type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" >
+							<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
+							<input autocomplete="off" type="number" step="any" name="days" class="form-control" placeholder="Days (0 or blank = permanent)" >
+							<input autocomplete="off" type="submit" class="btn btn-danger" value="Lock Agendaposter Theme" >
 						</form>
 						<a id="unagendaposter2" class="{% if not u.agendaposter %}d-none{% endif %} btn btn-success" href="javascript:void(0)" onclick="post_toast2('/agendaposter/{{u.id}}','agendaposter2','unagendaposter2')">Disable Agendaposter Theme</a>
 
@@ -557,15 +557,15 @@
 
 						<pre></pre>
 						<form action="/admin/unnuke_user" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input type="hidden" name="user" value="{{u.username}}">
-							<input type="submit" class="btn btn-success" value="Approve User's Content">
+							<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
+							<input autocomplete="off" type="hidden" name="user" value="{{u.username}}">
+							<input autocomplete="off" type="submit" class="btn btn-success" value="Approve User's Content">
 						</form>
 						<pre></pre>
 						<form action="/admin/nuke_user" method="post">
-							<input type="hidden" name="formkey", value="{{v.formkey}}">
-							<input type="hidden" name="user" value="{{u.username}}">
-							<input type="submit" class="btn btn-danger" value="Remove User's Content">
+							<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
+							<input autocomplete="off" type="hidden" name="user" value="{{u.username}}">
+							<input autocomplete="off" type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
 					{% endif %}
 				{% endif %}
