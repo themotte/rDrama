@@ -2995,6 +2995,25 @@ video {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-200), var(--tw-text-opacity));
 }
+	.btn-yellow {
+	--tw-border-opacity: 1;
+	border-color: rgba(120, 53, 15, var(--tw-border-opacity));
+	background-image: linear-gradient(to top, var(--tw-gradient-stops));
+	--tw-gradient-from: #b45309;
+	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(180, 83, 9, 0));
+	--tw-gradient-to: #d97706;
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-100), var(--tw-text-opacity));
+}
+	.btn-yellow:hover {
+	--tw-gradient-from: #d97706;
+	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(217, 119, 6, 0));
+	--tw-gradient-to: #b45309;
+}
+	.btn-yellow:focus {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-200), var(--tw-text-opacity));
+}
 	.btn-gray {
 	--tw-border-opacity: 1;
 	border-color: rgba(var(--color-300), var(--tw-border-opacity));
