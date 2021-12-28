@@ -165,7 +165,7 @@
 			<ul class="flex flex-col space-y-2 mb-0">
 				{% for account in u.alts_unique %}
 				<li class="flex items-center space-x-2">
-					<img src="@{{account.profile_url}}" class="flex-shrink-0 object-cover h-7 w-7 p-[3px] bg-white border border-gray-800" alt="@{{account.username}} avatar"/>
+					<img src="@{{account.profile_url}}" class="flex-shrink-0 object-cover h-7 w-7 p-[3px] bg-white border border-gray-300 dark:border-gray-900" alt="@{{account.username}} avatar"/>
 					<a href="{{account.url}}" class="text-sm font-bold text-black dark:text-gray-200 hover:text-primary">
 						@{{account.username}}
 					</a>
