@@ -84,3 +84,11 @@ function clubAccess(el, username) {
   }
 }
 
+function verifyBadge(el, id) {
+  if (el.checked) {
+    postToast(`admin/verify/${id}`)
+  } else {
+    postToast(`admin/unverify/${id}`)
+  }
+}
+
