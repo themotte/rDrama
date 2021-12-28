@@ -825,7 +825,7 @@ def settings_css_get(v):
 @auth_required
 @validate_formkey
 def settings_css(v):
-	if v.agendaposter: return {"error": "Agendapostered users can edit css!"}
+	if v.agendaposter: return {"error": "Agendapostered users can't edit css!"}
 
 	css = request.values.get("css").strip().replace('\\', '').strip()[:4000]
 	v.css = css
