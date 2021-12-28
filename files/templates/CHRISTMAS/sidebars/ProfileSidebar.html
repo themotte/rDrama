@@ -50,9 +50,9 @@
 				<form id="sidebar-unban" action="/unban_user/{{u.id}}" method="post">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
 					<input type="hidden" name="redir" value="true">
-					<div class="flex items-center space-x-2 mb-2">
+					<div class="flex items-center mb-2">
 						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
-						<label class="text-base" for="sidebar-alts">Include alts</label>
+						<label class="text-base pl-1" for="sidebar-alts">Include alts</label>
 					</div>
 					<button form="sidebar-unban" type="submit" class="btn btn-green w-full">
 						<i class="fas fa-user-check fa-sm fa-fw mr-2"></i>
@@ -66,9 +66,9 @@
 					<input type="hidden" name="redir" value="true">
 					<input type="text" class="form-input mb-2" name="reason" placeholder="Ban Reason" onchange="document.getElementById('sidebar-ban-btn').disabled=false">
 					<input type="number" step="any" class="form-input mb-2" name="days" placeholder="Days (blank = permanent)">
-					<div class="flex items-center space-x-2 mb-2">
+					<div class="flex items-center mb-2">
 						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
-						<label class="text-base" for="sidebar-alts">Include alts</label>
+						<label class="text-base pl-1" for="sidebar-alts">Include alts</label>
 					</div>
 					<button form="sidebar-ban" id="sidebar-ban-btn" type="submit" class="btn btn-red w-full">
 						<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
@@ -79,8 +79,8 @@
 			</li>
 			{% endif %}
 			{% if v.admin_level > 2 %}
-			<div class="label">Admin persmissions</div>
 			<li class="flex space-x-2">
+				<div class="label">Admin persmissions</div>
 				<button class="btn btn-red w-full" onclick="postToast('/@{{u.username}}/remove_admin'); this.disabled = true">
 					<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
 					Revoke admin permissions
