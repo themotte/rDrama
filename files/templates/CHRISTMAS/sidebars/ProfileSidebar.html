@@ -79,7 +79,7 @@
 			</li>
 			{% endif %}
 			{% if v.admin_level > 2 %}
-			<li class="flex space-x-2">
+			<li>
 				<div class="label">Admin persmissions</div>
 				<button class="btn btn-red w-full" onclick="postToast('/@{{u.username}}/remove_admin'); this.disabled = true">
 					<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
