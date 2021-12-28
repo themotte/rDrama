@@ -12,17 +12,8 @@ AJ_REPLACEMENTS = {
 	"too": '$#3$3',
 	'to': "too",
 	'$#3$3': 'to',
-	' my ': ' his ',
-	' mine ': ' his ',
-
-	"YOU'RE": '$#3$2',
-	'YOUR': "YOU'RE",
-	'$#3$2': 'YOUR',
-	"TOO": '$#3$3',
-	'TO': "TOO",
-	'$#3$3': 'TO',
-	' MY ': ' HIS ',
-	' MINE ': ' HIS ',
+	' my ': ' their ',
+	' mine ': ' their ',
 
 	"You're": '$#3$2',
 	'Your': "You're",
@@ -30,8 +21,17 @@ AJ_REPLACEMENTS = {
 	"Too": '$#3$3',
 	'To': "Too",
 	'$#3$3': 'To',
-	' My ': ' His ',
-	' Mine ': ' His ',
+	' My ': ' Their ',
+	' Mine ': ' Their ',
+
+	"YOU'RE": '$#3$2',
+	'YOUR': "YOU'RE",
+	'$#3$2': 'YOUR',
+	"TOO": '$#3$3',
+	'TO': "TOO",
+	'$#3$3': 'TO',
+	' MY ': ' THEIR ',
+	' MINE ': ' THEIR ',
 }
 
 SLURS = {
