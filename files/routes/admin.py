@@ -381,6 +381,8 @@ def disablesignups(v):
 @app.get("/admin/badge_grant")
 @admin_level_required(2)
 def badge_grant_get(v):
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
 
 	return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES)
 
