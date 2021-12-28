@@ -47,7 +47,7 @@
 		<ul class="flex flex-col mt-3 mb-0 space-y-4">
 			{% if v.admin_level > 2 %}
 			<li class="flex space-x-2">
-				<button class="btn btn-red" onclick="postToast('/@{{u.username}}/remove_admin')">
+				<button class="btn btn-red" onclick="postToast('/@{{u.username}}/remove_admin'); this.disabled = true">
 					<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
 					Revoke Admin Permissions
 				</button>
