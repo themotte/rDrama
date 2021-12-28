@@ -54,7 +54,7 @@
 						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
 						<label class="text-base pl-1" for="sidebar-alts">Include alts</label>
 					</div>
-					<div class="flex space-x-2">
+					<div class="flex space-x-2 mb-3">
 						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
 						<div>
 							<label class="label mb-0" for="sidebar-alts">Include alts</label>
@@ -75,12 +75,12 @@
 					<input type="hidden" name="redir" value="true">
 					<input type="text" class="form-input mb-2" name="reason" placeholder="Ban Reason" onchange="document.getElementById('sidebar-ban-btn').disabled=false">
 					<input type="number" step="any" class="form-input mb-2" name="days" placeholder="Days (blank = permanent)">
-					<div class="flex space-x-2">
+					<div class="flex space-x-2 mb-3">
 						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
 						<div>
 							<label class="label mb-0" for="sidebar-alts">Include alts</label>
 							<small class="block text-gray-600 dark:text-gray-400">
-								Unban rogue accounts connected to @{{ u.username }}
+								Ban rogue accounts connected to @{{ u.username }}
 							</small>
 						</div>
 					</div>
