@@ -14,7 +14,7 @@ import requests
 site = environ.get("DOMAIN").strip()
 if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
 else: cc = "COUNTRY CLUB"
-CATBOX_KEY = environ.get("CATBOX_KEY").strip()
+IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 beams_client = PushNotifications(
 		instance_id=PUSHER_INSTANCE_ID,
@@ -202,7 +202,7 @@ def api_comment(v):
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
-				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
 			body += f"\n\n{url}"
 		else: return {"error": f"Image/Video files only"}, 400
 
@@ -716,7 +716,7 @@ def edit_comment(cid, v):
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+					url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
 				body += f"\n\n{url}"
 			else: return {"error": f"Image/Video files only"}, 400
 

@@ -22,7 +22,8 @@ YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
-CATBOX_KEY = environ.get("CATBOX_KEY").strip()
+IMGUR_KEY = environ.get("IMGUR_KEY").strip()
+GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 
 tiers={
 	"(Paypig)": 1,
@@ -302,7 +303,7 @@ def settings_profile_post(v):
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {CATBOX_KEY}'}, files=[('video', f)]).json()['data']['link']
+					url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
 				bio += f"\n\n{url}"
 			else:
 				if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
@@ -501,7 +502,7 @@ def gumroad(v):
 
 	data = {'access_token': GUMROAD_TOKEN,}
 
-	response = [x['email'] for x in requests.get('https://api.gumroad.com/v2/products/tfcvri/subscribers', data=data, timeout=5).json()["subscribers"]]
+	response = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
 	emails = []
 
 	for email in response:

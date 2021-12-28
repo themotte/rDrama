@@ -19,6 +19,8 @@ from files.helpers.discord import add_role
 from datetime import datetime
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
+GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
+
 if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 month = datetime.now().strftime('%B')
@@ -201,7 +203,7 @@ def monthly(v):
 
 		data = {'access_token': GUMROAD_TOKEN}
 
-		response = [x['email'] for x in requests.get('https://api.gumroad.com/v2/products/tfcvri/subscribers', data=data, timeout=5).json()["subscribers"]]
+		response = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
 		emails = []
 
 		for email in response:
