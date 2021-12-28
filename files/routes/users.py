@@ -135,15 +135,15 @@ def steal(v):
 		g.db.add(v)
 		u.coins -= 700
 		g.db.add(u)
-		send_repeatable_notification(u.id, f"Some [grubby little rentoid](/@{v.username}) has absconded with 700 of your hard-earned dramacoins to fuel his Funko Pop addiction. Stop being so trusting.")
-		send_repeatable_notification(v.id, f"You have successfully shorted your heroic landlord 700 dramacoins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
+		send_repeatable_notification(u.id, f"Some [grubby little rentoid](/@{v.username}) has absconded with 700 of your hard-earned coins to fuel his Funko Pop addiction. Stop being so trusting.")
+		send_repeatable_notification(v.id, f"You have successfully shorted your heroic landlord 700 coins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
 		g.db.commit()
 		return {"message": "Attempt successful!"}
 
 	else:
 		if random.random() < 0.15:
-			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you sold his Nintendo Switch for 500 dramacoins and called the cops. He was sentenced to one (1) day in renthog prison.")
-			send_repeatable_notification(v.id, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. The police take you away and laugh as you impotently stutter A-ACAB :sob:  You are fined 500 dramacoins and sentenced to one (1) day in renthog prison.")
+			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you sold his Nintendo Switch for 500 coins and called the cops. He was sentenced to one (1) day in renthog prison.")
+			send_repeatable_notification(v.id, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. The police take you away and laugh as you impotently stutter A-ACAB :sob:  You are fined 500 coins and sentenced to one (1) day in renthog prison.")
 			v.ban(days=1, reason="Jailed thief")
 			v.fail_utc = int(time.time())
 		else:

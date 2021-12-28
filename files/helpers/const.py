@@ -333,31 +333,31 @@ BADGES = {
 	},
 	67: {
 		'name': 'Unpausable',
-		'description': 'Spent 40,000 dramacoins on an unpausable profile anthem'
+		'description': 'Spent 40,000 coins on an unpausable profile anthem'
 	},
 	68: {
 		'name': 'Pause Button',
-		'description': 'Spent 20,000 dramacoins on a profile anthem pause button'
+		'description': 'Spent 20,000 coins on a profile anthem pause button'
 	},
 	69: {
 		'name': 'Little Big Spender',
-		'description': 'Dropped 10,000 dramacoins at the shop'
+		'description': 'Dropped 10,000 coins at the shop'
 	},
 	70: {
 		'name': 'Big Spender',
-		'description': 'Dropped 100,000 dramacoins at the shop'
+		'description': 'Dropped 100,000 coins at the shop'
 	},
 	71: {
 		'name': 'Big Big Spender',
-		'description': 'Dropped 250,000 dramacoins at the shop'
+		'description': 'Dropped 250,000 coins at the shop'
 	},
 	72: {
 		'name': 'Big Big Big Spender',
-		'description': 'Dropped 500,000 dramacoins at the shop'
+		'description': 'Dropped 500,000 coins at the shop'
 	},
 	73: {
 		'name': 'Le Rich Gentlesir',
-		'description': 'Spent a fucking million dramacoins at the shop'
+		'description': 'Spent a fucking million coins at the shop'
 	},
 	74: {
 		'name': 'Grass Toucher',
