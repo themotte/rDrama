@@ -3190,18 +3190,6 @@ video {
 	transform: var(--tw-transform);
 }
 
-@keyframes pulse {
-
-	50% {
-		opacity: .5;
-	}
-}
-
-.hover\:animate-pulse:hover {
-	-webkit-animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-	        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
 .hover\:border-gray-400:hover {
 	--tw-border-opacity: 1;
 	border-color: rgba(var(--color-400), var(--tw-border-opacity));
@@ -3536,6 +3524,18 @@ video {
 
 .group:hover .group-hover\:block {
 	display: block;
+}
+
+@keyframes pulse {
+
+	50% {
+		opacity: .5;
+	}
+}
+
+.group:hover .group-hover\:animate-pulse {
+	-webkit-animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+	        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .peer:checked ~ .peer-checked\:border-blue-500 {
