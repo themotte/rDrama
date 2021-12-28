@@ -66,3 +66,11 @@ function toggleElement(group, id) {
 	document.getElementById(id).classList.toggle('hidden');
 }
 
+function memeAdmin(el, username) {
+  if (el.checked) {
+    postToast(`@${username}/make_meme_admin`)
+  } else {
+    postToast(`@${username}/remove_meme_admin`)
+  }
+}
+

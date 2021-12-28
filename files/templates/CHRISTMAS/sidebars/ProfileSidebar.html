@@ -26,17 +26,8 @@
 					</small>
 				</div>
 			</li>
-			<li id="sidebar-memeadmin" class="flex space-x-2 {% if u.admin_level == 1%}hidden{% endif %}">
-				<input type="checkbox" value="club" class="w-5 h-5" onchange="post_toast2('/@{{u.username}}/make_meme_admin','sidebar-memeadmin','sidebar-unmemeadmin')">
-				<div class="mt-[-1px]">
-					<label class="label mb-0" for="club">Meme Moderator</label>
-					<small class="block text-gray-600 dark:text-gray-400">
-						Give @{{ u.username }} meme moderator status.
-					</small>
-				</div>
-			</li>
-			<li id="sidebar-unmemeadmin" class="flex space-x-2 {% if u.admin_level != 1%}hidden{% endif %}">
-				<input type="checkbox" value="club" class="w-5 h-5" onchange="post_toast2('/@{{u.username}}/remove_meme_admin','sidebar-memeadmin','sidebar-unmemeadmin')" checked>
+			<li class="flex space-x-2 {% if u.admin_level == 1%}hidden{% endif %}">
+				<input type="checkbox" value="club" class="w-5 h-5" onchange="memeAdmin(this,'{{ u.username }}')" {% if u.admin_level == 1%}checked{% endif %}>
 				<div class="mt-[-1px]">
 					<label class="label mb-0" for="club">Meme Moderator</label>
 					<small class="block text-gray-600 dark:text-gray-400">
