@@ -199,7 +199,7 @@
 						<a href="/views" class="btn btn-secondary">Profile views</a>
 					{% endif %}
 
-					{% if u.song and v and v.mute and not u.unmutable %}
+					{% if u.song and v and v.mute and (not u.unmutable or v.id == u.id) %}
 						<a id="pause1" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
 						<a id="play1" class="btn btn-secondary d-none" href="javascript:void(0)" onclick="play()">Play anthem</a>
 					{% endif %}
