@@ -18,7 +18,7 @@
 				</div>
 			</li>
 			<li class="flex space-x-2">
-				<input type="checkbox" value="club" class="w-5 h-5">
+				<input type="checkbox" value="club" class="w-5 h-5" onchange="clubAccess(this,'{{ u.username }}')" {% if u.paid_dues %}checked{% endif %}>
 				<div class="mt-[-1px]">
 					<label class="label mb-0" for="club">Country Club Access</label>
 					<small class="block text-gray-600 dark:text-gray-400">
