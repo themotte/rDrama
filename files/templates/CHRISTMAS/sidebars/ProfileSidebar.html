@@ -38,7 +38,7 @@
 			<li>
 				<form id="sidebar-flair-change" action="/admin/title_change/{{u.id}}" method="post">
 					<input type="hidden" name="formkey" value="{{v.formkey}}">
-					<div class="flex items-center mb-2">
+					<div class="flex items-center space-x-2 mb-2">
 						<input id="sidebar-custom-flair" type="text" name="title" class="form-input" placeholder='Enter a flair...' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
 						<button type="button" class="btn btn-gray">
 							<i class="fas fa-smile-beam fa-fw" onclick="loadEmojis('sidebar-custom-flair')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i>
