@@ -119,6 +119,21 @@
 				{% endif %}
 			</li>
 			<li>
+				<div class="label text-black dark:text-gray-200">Shadow Ban</div>
+				<div id="sidebar-shadowban" class="{% if u.shadowbanned %}hidden{% endif %}">
+					<button class="btn btn-red w-full" onclick="post_toast2('/shadowban/{{u.id}}','sidebar-shadowban','sidebar-unshadowban')">
+						<i class="fas fa-eye-slash fa-sm fa-fw mr-2"></i>
+						Shadow ban
+					</button>
+				</div>
+				<div id="sidebar-unshadowban" class="{% if not u.shadowbanned %}hidden{% endif %}">
+					<button class="btn btn-green w-full" onclick="post_toast2('/unshadowban/{{u.id}}','sidebar-shadowban','sidebar-unshadowban')">
+						<i class="fas fa-eye fa-sm fa-fw mr-2"></i>
+						Lift shadow ban
+					</button>
+				</div>
+			</li>
+			<li>
 				<div class="label text-black dark:text-gray-200">Content</div>
 				<form id="sidebar-unnuke" action="/admin/unnuke_user" method="post" class="mb-2">
 					<input type="hidden" name="formkey", value="{{v.formkey}}">
@@ -136,6 +151,13 @@
 						Remove all content
 					</button>
 				</form>
+			</li>
+			<li>
+				<div class="label text-black dark:text-gray-200">Damage control</div>
+				<button class="btn btn-red w-full" onclick="postToast('/@{{u.username}}/revert_actions')">
+					<i class="fas fa-history fa-sm fa-fw mr-2"></i>
+					Revert admin actions
+				</button>
 			</li>
 			{% if v.admin_level > 2 %}
 			<li>
