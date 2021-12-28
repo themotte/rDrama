@@ -1,6 +1,6 @@
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0">
 	{% if v and v.admin_level > 1 %}
-	<div class="relative my-4 px-4 py-3 rounded-md bg-yellow-100 dark:bg-gray-700/40 shadow-inner">
+	<div class="relative my-4 px-4 py-3 rounded-md border border-yellow-400 dark:border-gray-700 bg-yellow-100 dark:bg-gray-700/40">
 		<span class="absolute top-2 right-2 text-base">
 			<i class="fas fa-crown fa-sm text-yellow-400 dark:text-gray-300" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators"></i>
 		</span>
@@ -8,11 +8,11 @@
 			Moderate
 		</h2>
 		<ul class="flex flex-col space-y-4">
-			<li class="flex space-x-2">
-				<input type="checkbox" value="verify">
+			<li class="flex space-x-1">
+				<input type="checkbox" value="verify" class="mt-1 w-5 h-5">
 				<div>
 					<label class="label" for="verify">Verify</label>
-					<small class="block text-gray-500 dark:text-gray-400">
+					<small class="block text-gray-600 dark:text-gray-400">
 						Displays a badge <i class="fas fa-badge"></i> next to their username
 					</small>
 				</div>
