@@ -38,25 +38,25 @@
 			<li>
 				<form id="sidebar-flair-change" action="/admin/title_change/{{u.id}}" method="post">
 					<input type="hidden" name="formkey" value="{{v.formkey}}">
-					<input type="text" name="title" class="form-input" placeholder='Enter a flair...' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
-					<div class="flex mt-2">
-						<button>
-							<i class="btn btn-secondary format inline-block m-0 fas fa-smile-beam" onclick="loadEmojis('customtitlebody-mobile')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i>
-						</button>
-						<div class="flex space-x-2 mb-3">
-							<input type="checkbox" id="sidebar-locked" class="w-5 h-5" name="locked" {% if u.flairchanged %}checked{% endif %}>
-							<div>
-								<label class="label mb-0" for="sidebar-locked">Locked</label>
-								<small class="block text-gray-600 dark:text-gray-400">
-									Restrict @{{ u.username }} from updating their flair
-								</small>
-							</div>
-						</div>
-						<button form="sidebar-flair-change" type="submit" class="btn btn-gray w-full">
-							<i class="fas fa-pen fa-sm fa-fw mr-2"></i>
-							Change flair
+					<div class="flex items-center mb-2">
+						<input id="sidebar-custom-flair" type="text" name="title" class="form-input" placeholder='Enter a flair...' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
+						<button class="btn btn-gray">
+							<i class="fas fa-smile-beam fa-fw" onclick="loadEmojis('sidebar-custom-flair')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i>
 						</button>
 					</div>
+					<div class="flex space-x-2 mb-3">
+						<input type="checkbox" id="sidebar-locked" class="w-5 h-5" name="locked" {% if u.flairchanged %}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="sidebar-locked">Locked</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Restrict @{{ u.username }} from updating their flair
+							</small>
+						</div>
+					</div>
+					<button form="sidebar-flair-change" type="submit" class="btn btn-gray w-full">
+						<i class="fas fa-pen fa-sm fa-fw mr-2"></i>
+						Change flair
+					</button>
 				</form>
 			</li>
 		</ul>
