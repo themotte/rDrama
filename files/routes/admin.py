@@ -418,6 +418,7 @@ def badge_grant_post(v):
 		return redirect("/admin/badge_grant")
 	
 	new_badge = Badge(badge_id=badge_id, user_id=user.id)
+	send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	desc = request.values.get("description")
 	if desc: new_badge.description = desc
@@ -684,6 +685,8 @@ def agendaposter(user_id, v):
 		if not user.has_badge(26):
 			badge = Badge(user_id=user.id, badge_id=26)
 			g.db.add(badge)
+			send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+
 	else:
 		badge = user.has_badge(26)
 		if badge: g.db.delete(badge)

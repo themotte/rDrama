@@ -98,26 +98,31 @@ def buy(v, award):
 		if v.coins_spent >= 1000000 and not v.has_badge(73):
 			new_badge = Badge(badge_id=73, user_id=v.id)
 			g.db.add(new_badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 			old_badge = v.has_badge(72)
 			if old_badge: g.db.delete(old_badge)
 		elif v.coins_spent >= 500000 and not v.has_badge(72):
 			new_badge = Badge(badge_id=72, user_id=v.id)
 			g.db.add(new_badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 			old_badge = v.has_badge(71)
 			if old_badge: g.db.delete(old_badge)
 		elif v.coins_spent >= 250000 and not v.has_badge(71):
 			new_badge = Badge(badge_id=71, user_id=v.id)
 			g.db.add(new_badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 			old_badge = v.has_badge(70)
 			if old_badge: g.db.delete(old_badge)
 		elif v.coins_spent >= 100000 and not v.has_badge(70):
 			new_badge = Badge(badge_id=70, user_id=v.id)
 			g.db.add(new_badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 			old_badge = v.has_badge(69)
 			if old_badge: g.db.delete(old_badge)
 		elif v.coins_spent >= 10000 and not v.has_badge(69):
 			new_badge = Badge(badge_id=69, user_id=v.id)
 			g.db.add(new_badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 		g.db.add(v)
 
 
@@ -134,12 +139,15 @@ def buy(v, award):
 		if v.lootboxes_bought == 10 and not v.has_badge(76):
 			new_badge = Badge(badge_id=76, user_id=v.id)
 			g.db.add(new_badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 		elif v.lootboxes_bought == 50 and not v.has_badge(77):
 			new_badge = Badge(badge_id=77, user_id=v.id)
 			g.db.add(new_badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 		elif v.lootboxes_bought == 150 and not v.has_badge(78):
 			new_badge = Badge(badge_id=78, user_id=v.id)
 			g.db.add(new_badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	else:
 		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
@@ -257,6 +265,7 @@ def award_post(pid, v):
 		if not author.has_badge(26):
 			badge = Badge(user_id=author.id, badge_id=26)
 			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "flairlock":
 		new_name = note[:100].replace("𒐪","")
 		author.customtitleplain = new_name
@@ -269,12 +278,14 @@ def award_post(pid, v):
 		if not author.has_badge(68):
 			new_badge = Badge(badge_id=68, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "unpausable":
 		author.unmutable = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(67):
 			new_badge = Badge(badge_id=67, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = time.time() + 86400
@@ -295,18 +306,21 @@ def award_post(pid, v):
 		if not author.has_badge(83):
 			new_badge = Badge(badge_id=83, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "alt":
 		author.alt = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(84):
 			new_badge = Badge(badge_id=84, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "unblockable":
 		author.unblockable = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(87):
 			new_badge = Badge(badge_id=87, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 	elif kind == "fish":
 		author.fish = True
@@ -314,6 +328,7 @@ def award_post(pid, v):
 		if not author.has_badge(90):
 			new_badge = Badge(badge_id=90, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	if post.author.received_award_count: post.author.received_award_count += 1
 	else: post.author.received_award_count = 1
@@ -426,6 +441,7 @@ def award_comment(cid, v):
 		if not author.has_badge(26):
 			badge = Badge(user_id=author.id, badge_id=26)
 			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "flairlock":
 		new_name = note[:100].replace("𒐪","")
 		author.customtitleplain = new_name
@@ -438,12 +454,14 @@ def award_comment(cid, v):
 		if not author.has_badge(68):
 			new_badge = Badge(badge_id=68, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "unpausable":
 		author.unmutable = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(67):
 			new_badge = Badge(badge_id=67, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = time.time() + 86400
@@ -464,18 +482,21 @@ def award_comment(cid, v):
 		if not author.has_badge(83):
 			new_badge = Badge(badge_id=83, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "alt":
 		author.alt = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(84):
 			new_badge = Badge(badge_id=84, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "unblockable":
 		author.unblockable = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
 		if not author.has_badge(87):
 			new_badge = Badge(badge_id=87, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 		for block in g.db.query(UserBlock).filter_by(target_id=author.id).all(): g.db.delete(block)
 	elif kind == "fish":
 		author.fish = True
@@ -483,6 +504,7 @@ def award_comment(cid, v):
 		if not author.has_badge(90):
 			new_badge = Badge(badge_id=90, user_id=author.id)
 			g.db.add(new_badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	if c.author.received_award_count: c.author.received_award_count += 1
 	else: c.author.received_award_count = 1
