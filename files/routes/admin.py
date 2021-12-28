@@ -413,9 +413,7 @@ def badge_grant_post(v):
 
 	existing = user.has_badge(badge_id)
 	if existing:
-		g.db.delete(existing)
-		g.db.commit()
-		return redirect("/admin/badge_grant")
+		return redirect("/badge_grant?error=User already has that badge!")
 	
 	new_badge = Badge(badge_id=badge_id, user_id=user.id)
 	send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
