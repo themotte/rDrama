@@ -218,6 +218,10 @@ class Submission(Base):
 		if domain.startswith("www."): domain = domain.split("www.")[1]
 		return domain.replace("old.reddit.com", "reddit.com")
 
+	@property
+	@lazy
+	def is_youtube(self):
+		return self.domain == "youtube.com" and self.embed_url and self.embed_url.startswith('<lite-youtube') 
 
 	@property
 	@lazy
@@ -225,7 +229,7 @@ class Submission(Base):
 		if self.over_18: return f"https://{site}/static/assets/images/nsfw.webp"
 		elif not self.url: return f"https://{site}/static/assets/images/{site_name}/default_text.webp"
 		elif self.thumburl: return self.thumburl
-		elif "youtu.be" in self.domain or "youtube.com" == self.domain or self.is_video: return f"https://{site}/static/assets/images/default_thumb_yt.webp"
+		elif self.is_youtube or self.is_video: return f"https://{site}/static/assets/images/default_thumb_yt.webp"
 		else: return f"https://{site}/static/assets/images/default_thumb_link.webp"
 
 	@property

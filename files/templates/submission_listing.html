@@ -137,7 +137,11 @@
 					<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
 						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
-				{% elif (p.url and (p.url.lower().endswith('.mp4') or p.url.lower().endswith('.webm'))) or (p.embed_url and "youtu" in p.domain) or (p.url and "streamable.com/e/" in p.url) %}
+				{% elif p.is_video %}
+					<a href="javascript:void(0)" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none');document.getElementById('video2-{{p.id}}').pause()">
+						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
+					</a>
+				{% elif p.is_youtube %}
 					<a href="javascript:void(0)" onclick="document.getElementById('video-{{p.id}}').classList.toggle('d-none')">
 						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-img">
 					</a>
@@ -512,11 +516,11 @@
 		</div>
 	{% elif p.is_video %}
 		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-4">
-			<video controls preload="none" class="embedvid">
+			<video id="video2-{{p.id}}" controls preload="none" class="embedvid">
 				<source src="{{p.realurl(v)}}" type="video/mp4">
 			</video>
 		</div>
-	{% elif p.embed_url and p.domain in ['youtu.be','youtube.com'] and p.embed_url.startswith('<lite-youtube') %}
+	{% elif p.is_youtube %}
 		<div id="video-{{p.id}}" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}d-none{% endif %} mt-3 mb-4">
 			{{p.embed_url | safe}}
 		</div>
