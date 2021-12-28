@@ -54,6 +54,13 @@
 						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
 						<label class="text-base pl-1" for="sidebar-alts">Include alts</label>
 					</div>
+					<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
+					<div>
+						<label class="label mb-0" for="sidebar-alts">Include alts</label>
+						<small class="block text-gray-600 dark:text-gray-400">
+							Ban rogue accounts connected to @{{ u.username }}
+						</small>
+					</div>
 					<button form="sidebar-unban" type="submit" class="btn btn-green w-full">
 						<i class="fas fa-user-check fa-sm fa-fw mr-2"></i>
 						Unban user
