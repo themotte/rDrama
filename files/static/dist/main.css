@@ -1972,6 +1972,10 @@ video {
 	--tw-bg-opacity: 1;
 	background-color: rgba(54, 83, 20, var(--tw-bg-opacity));
 }
+.bg-yellow-100 {
+	--tw-bg-opacity: 1;
+	background-color: rgba(254, 243, 199, var(--tw-bg-opacity));
+}
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
@@ -2463,6 +2467,10 @@ video {
 .text-\[\#365314\] {
 	--tw-text-opacity: 1;
 	color: rgba(54, 83, 20, var(--tw-text-opacity));
+}
+.text-yellow-400 {
+	--tw-text-opacity: 1;
+	color: rgba(251, 191, 36, var(--tw-text-opacity));
 }
 .antialiased {
 	-webkit-font-smoothing: antialiased;
