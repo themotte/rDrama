@@ -133,7 +133,7 @@ def front_all(v):
 		if request.path.startswith('/logged_out/mobile'):
 			if g.system == "desktop": return redirect(request.full_path.replace('/mobile',''))
 		elif request.path.startswith('/logged_out'):
-			if g.system == "mobile": return redirect(f"/logged_out/mobile{request.full_path.replace('/logged_out','')}")
+			if g.system == "mobile": return redirect(request.full_path.replace('/logged_out','/logged_out/mobile'))
 		else:
 			if g.system == "desktop": return redirect(f"/logged_out{request.full_path}")
 			else: return redirect(f"/logged_out/mobile{request.full_path}")
