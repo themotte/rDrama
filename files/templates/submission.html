@@ -203,8 +203,10 @@
 								<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post_toast('/publish/{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</button>
 							{% endif %}
 
-							<button id="pin-profile2-{{p.id}}" class="{% if p.is_pinned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-muted text-left"href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Pin to profile</button>
-							<button id="unpin-profile2-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-muted text-left" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Unpin from profile</button>
+							{% if request.path.startswith('/@') %}
+								<button id="pin-profile2-{{p.id}}" class="{% if p.is_pinned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-muted text-left"href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Pin to profile</button>
+								<button id="unpin-profile2-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-muted text-left" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Unpin from profile</button>
+							{% endif %}
 
 							{% if p.deleted_utc > 0 %}
 								<button class="nobackground btn btn-link btn-block btn-lg text-left text-success" href="javascript:void(0)" onclick="post_toast('/undelete_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-trash-alt text-center mr-3"></i>Undelete</button>
@@ -534,9 +536,11 @@
 						{% endif %}
 
 						{% if v and v.id==p.author_id %}
-							<a id="pin-profile-{{p.id}}" class="{% if p.is_pinned %}d-none{% endif %} list-inline-item text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin to profile</a>
-							<a id="unpin-profile-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} list-inline-item text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin from profile</a>
-
+							{% if request.path.startswith('/@') %}
+								<a id="pin-profile-{{p.id}}" class="{% if p.is_pinned %}d-none{% endif %} list-inline-item text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin to profile</a>
+								<a id="unpin-profile-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} list-inline-item text-muted" href="javascript:void(0)" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin from profile</a>
+							{% endif %}
+							
 							{% if p.deleted_utc > 0 %}
 								<a class="list-inline-item" href="javascript:void(0)" onclick="post_toast('/undelete_post/{{p.id}}')"><i class="fas fa-trash-alt"></i>Undelete</a>
 							{% else %}

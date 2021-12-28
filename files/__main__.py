@@ -101,13 +101,11 @@ def before_request():
 		url = request.url.replace("http://", "https://", 1)
 		return redirect(url, code=301)
 
-	ua=request.headers.get("User-Agent","")
-	if "CriOS/" in ua: g.system="ios/chrome"
-	elif "Version/" in ua: g.system="android/webview"
-	elif "Mobile Safari/" in ua: g.system="android/chrome"
-	elif "Safari/" in ua: g.system="ios/safari"
-	elif "Mobile/" in ua: g.system="ios/webview"
-	else: g.system="other/other"
+	g.system = 'desktop'
+	ua = request.headers.get("User-Agent","")
+	
+	for i in ('Version','Android','webOS','iPhone','iPad','iPod','BlackBerry','IEMobile','Opera Mini','Mobile','mobile','CriOS'):
+		if i in ua: g.system = 'mobile'
 
 @app.teardown_appcontext
 def teardown_request(error):

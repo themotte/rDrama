@@ -508,7 +508,7 @@ def edit_post(pid, v):
 			body_jannied_html = sanitize(body_md)
 
 
-			c_jannied = Comment(author_id=AUTOJANNY_ID,
+			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
 				parent_submission=p.id,
 				level=1,
 				over_18=False,
@@ -540,7 +540,7 @@ def edit_post(pid, v):
 
 			body_jannied_html = sanitize(body_md)
 
-			c_jannied = Comment(author_id=AUTOJANNY_ID,
+			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
 				parent_submission=p.id,
 				level=1,
 				over_18=False,
@@ -1080,7 +1080,7 @@ def submit_post(v):
 		body_jannied_html = sanitize(body_md)
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ID,
+		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
@@ -1112,7 +1112,7 @@ def submit_post(v):
 
 
 
-		c_jannied = Comment(author_id=AUTOJANNY_ID,
+		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
 			parent_submission=new_post.id,
 			level=1,
 			over_18=False,
