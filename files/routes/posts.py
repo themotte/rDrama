@@ -757,16 +757,24 @@ def submit_post(v):
 		parsed_url = urlparse(url)
 
 		domain = parsed_url.netloc
+		if domain == 'old.reddit.com':
+			new_url = ParseResult(scheme="https",
+					netloc=parsed_url.netloc,
+					path=parsed_url.path,
+					params=parsed_url.params,
+					query=None,
+					fragment=parsed_url.fragment)
+		else:
+			qd = parse_qs(parsed_url.query)
+			filtered = dict((k, val) for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_'))
 
-		qd = parse_qs(parsed_url.query)
-		filtered = dict((k, val) for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_'))
-
-		new_url = ParseResult(scheme="https",
-							netloc=parsed_url.netloc,
-							path=parsed_url.path,
-							params=parsed_url.params,
-							query=urlencode(filtered, doseq=True),
-							fragment=parsed_url.fragment)
+			new_url = ParseResult(scheme="https",
+								netloc=parsed_url.netloc,
+								path=parsed_url.path,
+								params=parsed_url.params,
+								query=urlencode(filtered, doseq=True),
+								fragment=parsed_url.fragment)
+		
 		url = urlunparse(new_url)
 
 		repost = g.db.query(Submission).filter(
