@@ -108,6 +108,7 @@ def buy(v, award):
 			old_badge = v.has_badge(71)
 			if old_badge: g.db.delete(old_badge)
 		elif v.coins_spent >= 250000 and not v.has_badge(71):
+			
 			new_badge = Badge(badge_id=71, user_id=v.id)
 			g.db.add(new_badge)
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
