@@ -10,7 +10,7 @@
 		<ul class="flex flex-col mt-3 mb-0 space-y-4">
 			<li class="flex space-x-2">
 				<input type="checkbox" value="verify" class="w-5 h-5" onchange="verifyBadge(this,'{{u.id}}')" {% if u.verified %}checked{% endif %}>
-				<div class="mt-[-1px]">
+				<div>
 					<label class="label mb-0" for="verify">Verify</label>
 					<small class="block text-gray-600 dark:text-gray-400">
 						Gives <i class="fas fa-badge-check fa-sm fa-fw"></i> {{ u.username }} a badge.
@@ -19,7 +19,7 @@
 			</li>
 			<li class="flex space-x-2">
 				<input type="checkbox" value="club" class="w-5 h-5" onchange="clubAccess(this,'{{u.username}}')" {% if u.paid_dues %}checked{% endif %}>
-				<div class="mt-[-1px]">
+				<div>
 					<label class="label mb-0" for="club">Country Club Access</label>
 					<small class="block text-gray-600 dark:text-gray-400">
 						Grant @{{ u.username }} access to the Country Club.
@@ -28,7 +28,7 @@
 			</li>
 			<li class="flex space-x-2">
 				<input type="checkbox" value="club" class="w-5 h-5" onchange="memeAdmin(this,'{{u.username}}')" {% if u.admin_level == 1%}checked{% endif %}>
-				<div class="mt-[-1px]">
+				<div>
 					<label class="label mb-0" for="club">Meme Moderator</label>
 					<small class="block text-gray-600 dark:text-gray-400">
 						Give @{{ u.username }} meme moderator status.
@@ -49,7 +49,7 @@
 			<form id="sidebar-unban" action="/unban_user/{{u.id}}" method="post">
 				<input type="hidden" name="formkey", value="{{v.formkey}}">
 				<input type="hidden" name="redir" value="true">
-				<div class="flex space-x-2">
+				<div class="flex items-center space-x-2 mb-2">
 					<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
 					<label class="label mb-0" for="sidebar-alts">Include alts</label>
 				</div>
@@ -60,11 +60,12 @@
 			</form>
 			{% else %}
 			<form id="sidebar-ban" action="/ban_user/{{u.id}}/" method="post">
+				<div class="label">Ban {{ u.username }}</div>
 				<input type="hidden" name="formkey" value="{{v.formkey}}">
 				<input type="hidden" name="redir" value="true">
 				<input type="text" class="form-input mb-2" name="reason" placeholder="Ban Reason" onchange="document.getElementById('sidebar-ban-btn').disabled=false">
 				<input type="number" step="any" class="form-input mb-2" name="days" placeholder="Days (blank = permanent)">
-				<div class="flex space-x-2 mb-2">
+				<div class="flex items-center space-x-2 mb-2">
 					<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
 					<label class="label mb-0" for="sidebar-alts">Include alts</label>
 				</div>
