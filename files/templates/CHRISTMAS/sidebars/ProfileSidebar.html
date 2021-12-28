@@ -1,70 +1,278 @@
-<div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 my-4 px-4 py-3 rounded-md bg-gray-300/40 dark:bg-gray-700/40 shadow-inner">
-	<div>
-		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">About</h2>
-		<div class="flex flex-col space-y-4">
-			{% if u.bio_html %}
-				<div class="text-break">{{u.bio_html | safe}}</div>
-			{% else %}
-				<p class="italic text-gray-500 text-sm">No bio...</p>
-			{% endif %}
-			{% if u.friends_html %}
-				<p class="text-muted font-weight-bold">Friends:</p>
-				{{u.friends_html | safe}}
-			{% endif %}
-			{% if u.enemies_html %}
-				<p class="text-muted font-weight-bold">Enemies:</p>
-				{{u.enemies_html | safe}}
-			{% endif %}
-		</div>
-	</div>
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<div>
-		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Badges</h2>
-		<ul class="flex flex-row flex-wrap gap-2 mb-0">
-			{% if u.badges %}
-			{% for b in u.badges %}
+<div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0">
+	{% if v and v.admin_level > 1 and v.id != u.id %}
+	<div class="relative my-4 px-4 py-3 rounded-md border border-yellow-400 dark:border-gray-700 bg-yellow-100 dark:bg-gray-700/40">
+		<span class="absolute top-2 right-3 text-base">
+			<i class="fas fa-crown fa-sm text-yellow-400 dark:text-gray-300" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators"></i>
+		</span>
+		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
+			Manage User
+		</h2>
+		<ul class="flex flex-col mt-3 mb-0 space-y-6">
 			<li>
-				{% if b.url %}
-				<a rel="nofollow noopener noreferrer" href="{{b.url}}">
-					<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
-				</a>
+				<div class="label text-black dark:text-gray-200">Attributes</div>
+				<ul class="flex flex-col mb-0 space-y-3">
+					<li class="flex space-x-2">
+						<input type="checkbox" value="verify" class="w-5 h-5" onchange="verifyBadge(this,'{{u.id}}')" {% if u.verified %}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="verify">Verify</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Gives <i class="fas fa-badge-check fa-sm fa-fw"></i> {{ u.username }} a badge
+							</small>
+						</div>
+					</li>
+					<li class="flex space-x-2">
+						<input type="checkbox" value="club" class="w-5 h-5" onchange="clubAccess(this,'{{u.username}}')" {% if u.paid_dues %}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="club">Country Club Access</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Grant @{{ u.username }} access to the Country Club
+							</small>
+						</div>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<div class="label text-black dark:text-gray-200">Custom flair</div>
+				<form id="sidebar-flair-change" action="/admin/title_change/{{u.id}}" method="post">
+					<input type="hidden" name="formkey" value="{{v.formkey}}">
+					<div class="flex items-center space-x-2 mb-2">
+						<input id="sidebar-custom-flair" type="text" name="title" class="form-input" placeholder='Enter a flair...' value="{% if u.customtitle %}{{u.customtitle}}{% endif %}">
+						<button type="button" class="btn btn-gray">
+							<i class="fas fa-smile-beam fa-fw" onclick="loadEmojis('sidebar-custom-flair')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-original-title="Add Emoji"></i>
+						</button>
+					</div>
+					<div class="flex space-x-2 mb-3">
+						<input type="checkbox" id="sidebar-locked" class="w-5 h-5" name="locked" {% if u.flairchanged %}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="sidebar-locked">Locked</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Restrict @{{ u.username }} from updating their flair
+							</small>
+						</div>
+					</div>
+					<button form="sidebar-flair-change" type="submit" class="btn btn-yellow w-full">
+						<i class="fas fa-pen fa-sm fa-fw mr-2"></i>
+						Change flair
+					</button>
+				</form>
+			</li>
+		</ul>
+	</div>
+	<div class="relative my-4 px-4 py-3 rounded-md border border-red-300 dark:border-gray-700 bg-red-100 dark:bg-gray-700/40 group">
+		<span class="absolute top-2 right-3 text-base">
+			<i class="fas fa-exclamation-triangle fa-sm text-red-400 dark:text-gray-300 group-hover:animate-pulse" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators. Recommend internal mod discussion before making changes here."></i>
+		</span>
+		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
+			Danger Zone
+		</h2>
+		<ul class="flex flex-col mt-3 mb-0 space-y-6">
+			{% if v.admin_level > 2 %} 
+			<li>
+				<div class="label text-black dark:text-gray-200">Meme Moderator Status</div>
+				<div id="sidebar-memeadmin" class="{% if u.admin_level == 1%}hidden{% endif %}">
+					<button class="btn btn-yellow w-full" onclick="post_toast2('/@{{u.username}}/make_meme_admin','sidebar-memeadmin','sidebar-unmemeadmin')">
+						<i class="fas fa-grin-squint-tears fa-sm fa-fw mr-2"></i>
+						Make meme admin
+					</button>
+				</div>
+				<div id="sidebar-unmemeadmin" class="{% if u.admin_level != 1 %}hidden{% endif %}">
+					<button class="btn btn-gray w-full" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','sidebar-memeadmin','sidebar-unmemeadmin')">
+						<i class="fas fa-sad-cry fa-sm fa-fw mr-2"></i>
+						Remove meme admin
+					</button>
+				</div>
+			</li>
+			{% endif %}
+			<li>
+				<div class="label text-black dark:text-gray-200">Agendaposter Mode</div>
+				<form id="sidebar-agendaposter" class="{% if u.agendaposter %}hidden{% endif %}" action="/agendaposter/{{u.id}}" method="post">
+					<input type="hidden" name="formkey", value="{{v.formkey}}">
+					<input type="number" step="any" name="days" class="form-input mb-3" placeholder="Days (0 or blank = permanent)" >
+					<button class="btn btn-red w-full">
+						<i class="fas fa-paint-brush fa-sm fa-fw mr-2"></i>
+						Lock agendaposter theme
+					</button>
+				</form>
+				<div id="sidebar-unagendaposter" class="{% if not u.agendaposter %}hidden{% endif %}">
+					<button class="btn btn-green w-full" onclick="post_toast2('/agendaposter/{{u.id}}','sidebar-agendaposter','sidebar-unagendaposter')">
+						<i class="fas fa-check fa-sm fa-fw mr-2"></i>
+						Disable Agendaposter Theme
+					</button>
+				</div>
+			</li>
+			<li>
+				{% if u.is_suspended %}
+				<div class="label text-black dark:text-gray-200">Unban {{ u.username }}</div>
+				<form id="sidebar-unban" action="/unban_user/{{u.id}}" method="post">
+					<input type="hidden" name="formkey", value="{{v.formkey}}">
+					<input type="hidden" name="redir" value="true">
+					<div class="flex space-x-2 mb-3">
+						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
+						<div>
+							<label class="label mb-0" for="sidebar-alts">Include alts</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Unban rogue accounts connected to @{{ u.username }}
+							</small>
+						</div>
+					</div>
+					<button form="sidebar-unban" type="submit" class="btn btn-green w-full">
+						<i class="fas fa-user-check fa-sm fa-fw mr-2"></i>
+						Unban user
+					</button>
+				</form>
 				{% else %}
-				<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
+				<div class="label text-black dark:text-gray-200">Ban {{ u.username }}</div>
+				<form id="sidebar-ban" action="/ban_user/{{u.id}}/" method="post">
+					<input type="hidden" name="formkey" value="{{v.formkey}}">
+					<input type="hidden" name="redir" value="true">
+					<input type="text" class="form-input mb-2" name="reason" placeholder="Ban Reason" onchange="document.getElementById('sidebar-ban-btn').disabled=false">
+					<input type="number" step="any" class="form-input mb-2" name="days" placeholder="Days (blank = permanent)">
+					<div class="flex space-x-2 mb-3">
+						<input type="checkbox" id="sidebar-alts" class="w-5 h-5" name="alts" value="1">
+						<div>
+							<label class="label mb-0" for="sidebar-alts">Include alts</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Ban rogue accounts connected to @{{ u.username }}
+							</small>
+						</div>
+					</div>
+					<button form="sidebar-ban" id="sidebar-ban-btn" type="submit" class="btn btn-red w-full" disabled>
+						<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
+						Ban user
+					</button>
+				</form>
 				{% endif %}
 			</li>
-			{% endfor %}
-			{% else %}
-				<p class="italic text-gray-500 text-sm">No badges... lame</p>
-			{% endif %}
-		</ul>
-	</div>
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<div>
-		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Awards</h2>
-		<ul class="flex flex-row flex-wrap gap-2 mb-0">
-			{% if u.received_awards %}
-			{% for a in u.received_awards %}
 			<li>
-				<i class="{{a['icon']}} {{a['color']}} fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
-				<span class="text-gray-500 text-sm">x{{a['count']}}</span>
+				<div class="label text-black dark:text-gray-200">Shadow Ban</div>
+				<div id="sidebar-shadowban" class="{% if u.shadowbanned %}hidden{% endif %}">
+					<button class="btn btn-black w-full" onclick="post_toast2('/shadowban/{{u.id}}','sidebar-shadowban','sidebar-unshadowban')">
+						<i class="fas fa-eye-slash fa-sm fa-fw mr-2"></i>
+						Shadow ban
+					</button>
+				</div>
+				<div id="sidebar-unshadowban" class="{% if not u.shadowbanned %}hidden{% endif %}">
+					<button class="btn btn-green w-full" onclick="post_toast2('/unshadowban/{{u.id}}','sidebar-shadowban','sidebar-unshadowban')">
+						<i class="fas fa-eye fa-sm fa-fw mr-2"></i>
+						Lift shadow ban
+					</button>
+				</div>
 			</li>
-			{% endfor %}
-			{% else %}
-				<p class="italic text-gray-500 text-sm">No awards... their content probably lacks drama</p>
+			<li>
+				<div class="label text-black dark:text-gray-200">Content</div>
+				<form id="sidebar-unnuke" action="/admin/unnuke_user" method="post" class="mb-2">
+					<input type="hidden" name="formkey", value="{{v.formkey}}">
+					<input type="hidden" name="user" value="{{u.username}}">
+					<button class="btn btn-green w-full">
+						<i class="fas fa-check fa-sm fa-fw mr-2"></i>
+						Approve all content
+					</button>
+				</form>
+				<form id="sidebar-nuke" action="/admin/nuke_user" method="post">
+					<input type="hidden" name="formkey", value="{{v.formkey}}">
+					<input type="hidden" name="user" value="{{u.username}}">
+					<button class="btn btn-red w-full">
+						<i class="fas fa-trash fa-sm fa-fw mr-2"></i>
+						Remove all content
+					</button>
+				</form>
+			</li>
+			{% if u.admin_level > 1 %}
+			<li>
+				<div class="label text-black dark:text-gray-200">Damage Control</div>
+				<button class="btn btn-blue w-full" onclick="postToast('/@{{u.username}}/revert_actions')">
+					<i class="fas fa-history fa-sm fa-fw mr-2"></i>
+					Revert admin actions
+				</button>
+			</li>
 			{% endif %}
-		</ul>
-	</div>
-	{% if v and (v.admin_level > 1 or v.alt) %}
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<div>
-		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Alts</h2>
-		<ul class="flex flex-row flex-wrap gap-2 mb-0">
-			{% for account in u.alts_unique %}
-				<li>
-					<a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}
-				</li>
-			{% endfor %}
+			{% if v.admin_level > 2 and u.admin_level > 2 %}
+			<li>
+				<div class="label text-black dark:text-gray-200">Admin Persmissions</div>
+				<button class="btn btn-red w-full" onclick="postToast('/@{{u.username}}/remove_admin'); this.disabled = true">
+					<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
+					Revoke admin permissions
+				</button>
+			</li>
+			{% endif %}
 		</ul>
 	</div>
 	{% endif %}
+
+	<div class="my-4 px-4 py-3 rounded-md bg-gray-300/40 dark:bg-gray-700/40 shadow-inner">
+		<div>
+			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">About</h2>
+			<div class="flex flex-col space-y-4">
+				{% if u.bio_html %}
+				<div class="text-break">{{u.bio_html | safe}}</div>
+				{% else %}
+				<p class="italic text-gray-500 text-sm">No bio...</p>
+				{% endif %}
+				{% if u.friends_html %}
+				<p class="text-muted font-weight-bold">Friends:</p>
+				{{u.friends_html | safe}}
+				{% endif %}
+				{% if u.enemies_html %}
+				<p class="text-muted font-weight-bold">Enemies:</p>
+				{{u.enemies_html | safe}}
+				{% endif %}
+			</div>
+		</div>
+		<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
+		<div>
+			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Badges</h2>
+			<ul class="flex flex-row flex-wrap gap-2 mb-0">
+				{% if u.badges %}
+				{% for b in u.badges %}
+				<li>
+					{% if b.url %}
+					<a rel="nofollow noopener noreferrer" href="{{b.url}}">
+						<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
+					</a>
+					{% else %}
+					<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="{{b.path}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{b.name}} - {{b.text}}"/>
+					{% endif %}
+				</li>
+				{% endfor %}
+				{% else %}
+				<p class="italic text-gray-500 text-sm">No badges... lame</p>
+				{% endif %}
+			</ul>
+		</div>
+		<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
+		<div>
+			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Awards</h2>
+			<ul class="flex flex-row flex-wrap gap-2 mb-0">
+				{% if u.received_awards %}
+				{% for a in u.received_awards %}
+				<li>
+					<i class="{{a['icon']}} {{a['color']}} fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{a['title']}} Awards received"></i>
+					<span class="text-gray-500 text-sm">x{{a['count']}}</span>
+				</li>
+				{% endfor %}
+				{% else %}
+				<p class="italic text-gray-500 text-sm">No awards... their content probably lacks drama</p>
+				{% endif %}
+			</ul>
+		</div>
+		{% if v and (v.admin_level > 1 or v.alt) %}
+		<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
+		<div>
+			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Alts</h2>
+			<ul class="flex flex-col space-y-2 mb-0">
+				{% for account in u.alts_unique %}
+				<li class="flex items-center space-x-2">
+					<img src="@{{account.profile_url}}" class="flex-shrink-0 object-cover h-7 w-7 p-[3px] bg-white border border-gray-300 dark:border-gray-900" alt="@{{account.username}} avatar"/>
+					<a href="{{account.url}}" class="text-sm font-bold text-black dark:text-gray-200 hover:text-primary">
+						@{{account.username}}
+					</a>
+					{% if account._is_manual %}
+					<span class="badge badge-yellow" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="This alt was manually connected by a moderator">Manual</span>
+					{% endif %}
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+	</div>
 </div>

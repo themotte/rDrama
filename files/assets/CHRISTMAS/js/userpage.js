@@ -66,3 +66,21 @@ function toggleElement(group, id) {
 	document.getElementById(id).classList.toggle('hidden');
 }
 
+// Admin Actions
+
+function clubAccess(el, username) {
+  if (el.checked) {
+    postToast(`@${username}/club_allow`)
+  } else {
+    postToast(`@${username}/club_ban`)
+  }
+}
+
+function verifyBadge(el, id) {
+  if (el.checked) {
+    postToast(`admin/verify/${id}`)
+  } else {
+    postToast(`admin/unverify/${id}`)
+  }
+}
+

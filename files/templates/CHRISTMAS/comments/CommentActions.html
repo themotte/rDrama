@@ -118,7 +118,7 @@
 				{% endif %}
 				{% endif %}
 
-				{% if v and v.admin_level==6 and v.id==c.author_id %}
+				{% if v and v.admin_level > 0 and v.id==c.author_id %}
 				<li id="undistinguish-{{c.id}}" class="hidden {% if c.distinguish_level %}md:block{% endif %}">
 					<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')">
 						<i class="fas fa-id-badge text-info fa-sm fa-fw mr-4"></i>Undistinguish
