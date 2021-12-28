@@ -164,8 +164,14 @@
 			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Alts</h2>
 			<ul class="flex flex-row flex-wrap gap-2 mb-0">
 				{% for account in u.alts_unique %}
-				<li>
-					<a href="{{account.url}}">@{{account.username}}</a>{% if account._is_manual %} [m]{% endif %}
+				<li class="flex items-center space-x-2">
+					<img src="@{{account.profile_url}}" class="w-7 h-7 object-cover" alt="@{{account.username}} avatar"/>
+					<a href="{{account.url}}">
+						@{{account.username}}
+					</a>
+					{% if account._is_manual %}
+					<span class="badge badge-yellow" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="This alt was manually connected by a moderator">Manual</span>
+					{% endif %}
 				</li>
 				{% endfor %}
 			</ul>
