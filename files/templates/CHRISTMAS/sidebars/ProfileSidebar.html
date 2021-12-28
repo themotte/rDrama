@@ -1,9 +1,11 @@
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0">
 	{% if v and v.admin_level > 1 %}
-	<div class="my-4 px-4 py-3 rounded-md bg-red-200 dark:bg-gray-700/40 shadow-inner">
+	<div class="relative my-4 px-4 py-3 rounded-md bg-yellow-200 dark:bg-gray-700/40 shadow-inner">
+		<span class="absolute top-1 right-2 text-sm">
+			<i class="fas fa-shield fa-sm text-yellow-500 dark:text-gray-300" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators"></i>
+		</span>
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			Moderate
-			<i class="fas fa-shield text-gray-400" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators"></i>
 		</h2>
 	</div>
 	{% endif %}
