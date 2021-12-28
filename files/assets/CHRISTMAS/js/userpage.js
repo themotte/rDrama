@@ -68,14 +68,6 @@ function toggleElement(group, id) {
 
 // Admin Actions
 
-function memeAdmin(el, username) {
-  if (el.checked) {
-    postToast(`@${username}/make_meme_admin`)
-  } else {
-    postToast(`@${username}/remove_meme_admin`)
-  }
-}
-
 function clubAccess(el, username) {
   if (el.checked) {
     postToast(`@${username}/club_allow`)
@@ -89,14 +81,6 @@ function verifyBadge(el, id) {
     postToast(`admin/verify/${id}`)
   } else {
     postToast(`admin/unverify/${id}`)
-  }
-}
-
-function realAdmin(el, username) {
-  if (el.checked) {
-    postToast(`@${username}/make_admin`)
-  } else {
-    postToast(`@${username}/remove_admin`)
   }
 }
 
