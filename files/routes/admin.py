@@ -382,21 +382,7 @@ def disablesignups(v):
 @admin_level_required(2)
 def badge_grant_get(v):
 
-	errors = {"already_owned": "That user already has that badge.",
-			  "no_user": "That user doesn't exist."
-			  }
-
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/badge_grant.html",
-						   v=v,
-						   badge_types=BADGES,
-						   error=errors.get(
-							   request.values.get("error"),
-							   None) if request.values.get('error') else None,
-						   msg="Badge successfully assigned" if request.values.get(
-							   "msg") else None
-						   )
+	return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES)
 
 
 @app.post("/admin/badge_grant")
@@ -404,14 +390,18 @@ def badge_grant_get(v):
 @admin_level_required(2)
 @validate_formkey
 def badge_grant_post(v):
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
 
 	user = get_user(request.values.get("username").strip(), graceful=True)
-	if not user: return redirect("/badge_grant?error=no_user")
+	if not user:
+		return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, error="User not found.")
 
 	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
 
-	if user.has_badge(badge_id): return redirect("/badge_grant?error=User already has that badge!")
+	if user.has_badge(badge_id):
+		return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, error="User already has that badge.")
 	
 	new_badge = Badge(badge_id=badge_id, user_id=user.id)
 	send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
@@ -428,7 +418,7 @@ def badge_grant_post(v):
 	send_notification(user.id, text)	
 	
 	g.db.commit()
-	return redirect("/admin/badge_grant")
+	return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, msg="Badge granted!")
 
 
 @app.get("/admin/users")

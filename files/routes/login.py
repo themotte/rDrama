@@ -203,8 +203,6 @@ def sign_up_get(v):
 
 	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
 
-	error = request.values.get("error", None)
-
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}sign_up.html",
@@ -212,7 +210,6 @@ def sign_up_get(v):
 						   now=now,
 						   redirect=redir,
 						   ref_user=ref_user,
-						   error=error,
 						   hcaptcha=app.config["HCAPTCHA_SITEKEY"]
 						   )
 

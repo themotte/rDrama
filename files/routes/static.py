@@ -407,9 +407,7 @@ def settings_security(v):
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}settings_security.html",
 						   v=v,
-						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None,
-						   error=request.values.get("error") or None,
-						   msg=request.values.get("msg") or None
+						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None
 						   )
 
 @app.post("/dismiss_mobile_tip")
