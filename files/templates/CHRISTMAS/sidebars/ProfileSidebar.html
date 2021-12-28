@@ -5,20 +5,17 @@
 			<i class="fas fa-crown fa-sm text-yellow-400 dark:text-gray-300" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators"></i>
 		</span>
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
-			Moderate
+			Manage User
 		</h2>
 		<ul class="flex flex-col mt-3">
-			<li class="flex justify-between">
-				<div>
-					<label class="label mb-0" for="verify">Verification</label>
+			<li class="flex space-x-2">
+				<input type="checkbox" value="verify" class="w-5 h-5">
+				<div class="mt-[-1px]">
+					<label class="label mb-0" for="verify">Verify</label>
 					<small class="block text-gray-600 dark:text-gray-400">
 						Gives <i class="fas fa-badge-check fa-sm fa-fw"></i> {{ u.username }} a badge.
 					</small>
 				</div>
-				<select name="cars" id="cars" class="text-base">
-				  <option value="volvo">Verified</option>
-				  <option value="saab">Unverified</option>
-				</select>
 			</li>
 			<li>
 				<hr class="my-3 h-0.5 border-b border-yellow-700/20 dark:border-gray-900"/>
@@ -50,33 +47,9 @@
 			<li class="flex space-x-2">
 				<input type="checkbox" value="club" class="w-5 h-5">
 				<div class="mt-[-1px]">
-					<label class="label mb-0" for="club">Banned</label>
-					<small class="block text-gray-600 dark:text-gray-400">
-						Ban @{{ u.username }} and restrict them from posting.
-					</small>
-				</div>
-			</li>
-			<li>
-				<hr class="my-3 h-0.5 border-b border-yellow-700/20 dark:border-gray-900"/>
-			</li>
-			<li class="flex space-x-2">
-				<input type="checkbox" value="club" class="w-5 h-5">
-				<div class="mt-[-1px]">
-					<label class="label mb-0" for="club">Shadowban</label>
-					<small class="block text-gray-600 dark:text-gray-400">
-					Covertly ban @{{ u.username }}. Only visible to moderators.
-					</small>
-				</div>
-			</li>
-			<li>
-				<hr class="my-3 h-0.5 border-b border-yellow-700/20 dark:border-gray-900"/>
-			</li>
-			<li class="flex space-x-2">
-				<input type="checkbox" value="club" class="w-5 h-5">
-				<div class="mt-[-1px]">
-					<label class="label mb-0" for="club">Shadowban</label>
-					<small class="block text-gray-600 dark:text-gray-400">
-					Covertly ban @{{ u.username }}. Only visible to moderators.
+					<label class="label text-red-700 mb-0" for="club">Admin</label>
+					<small class="block text-red-600 dark:text-gray-400">
+						Make @{{ u.username }} an admin.
 					</small>
 				</div>
 			</li>
