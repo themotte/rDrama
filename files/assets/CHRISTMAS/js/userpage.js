@@ -92,3 +92,11 @@ function verifyBadge(el, id) {
   }
 }
 
+function realAdmin(el, username) {
+  if (el.checked) {
+    postToast(`@${username}/make_admin`)
+  } else {
+    postToast(`@${username}/remove_admin`)
+  }
+}
+

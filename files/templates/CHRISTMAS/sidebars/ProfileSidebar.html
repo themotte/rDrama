@@ -44,18 +44,15 @@
 		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
 			Danger Zone
 		</h2>
-		<ul class="flex flex-col mt-3 mb-0">
+		<ul class="flex flex-col mt-3 mb-0 space-y-4">
 			<li class="flex space-x-2">
-				<input type="checkbox" value="club" class="w-5 h-5">
+				<input type="checkbox" value="club" class="w-5 h-5" onchange="memeAdmin(this,'{{u.username}}')" {% if u.admin_level > 1 %}checked{% endif %}>
 				<div class="mt-[-1px]">
 					<label class="label mb-0" for="club">Admin</label>
 					<small class="block text-gray-600 dark:text-gray-400">
 						Make @{{ u.username }} an admin.
 					</small>
 				</div>
-			</li>
-			<li>
-				<hr class="my-3 h-0.5 border-b border-red-200 dark:border-gray-900"/>
 			</li>
 		</ul>
 	</div>
