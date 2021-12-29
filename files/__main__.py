@@ -89,7 +89,8 @@ mail = Mail(app)
 @app.before_request
 def before_request():
 
-	if request.method.lower() != "get" and app.config["READ_ONLY"]: return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
+	if request.method.lower() != "get" and app.config["READ_ONLY"]:
+		return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
 
 	if app.config["BOT_DISABLE"] and request.headers.get("Authorization"): abort(503)
 
@@ -100,12 +101,6 @@ def before_request():
 	if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
 		url = request.url.replace("http://", "https://", 1)
 		return redirect(url, code=301)
-
-	g.system = 'desktop'
-	ua = request.headers.get("User-Agent","")
-	
-	for i in ('Version','Android','webOS','iPhone','iPad','iPod','BlackBerry','IEMobile','Opera Mini','Mobile','mobile','CriOS'):
-		if i in ua: g.system = 'mobile'
 
 @app.teardown_appcontext
 def teardown_request(error):
