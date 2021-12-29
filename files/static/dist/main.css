@@ -1172,8 +1172,8 @@ video {
 .h-7 {
 	height: 1.75rem;
 }
-.max-h-10 {
-	max-height: 2.5rem;
+.max-h-0 {
+	max-height: 0px;
 }
 .max-h-\[20rem\] {
 	max-height: 20rem;
@@ -1225,9 +1225,6 @@ video {
 }
 .w-\[14px\] {
 	width: 14px;
-}
-.w-24 {
-	width: 6rem;
 }
 .w-8 {
 	width: 2rem;
@@ -3760,6 +3757,10 @@ video {
 		display: none;
 	}
 
+	.sm\:max-h-10 {
+		max-height: 2.5rem;
+	}
+
 	.sm\:items-stretch {
 		align-items: stretch;
 	}
@@ -3785,6 +3786,11 @@ video {
 
 	.sm\:pr-0 {
 		padding-right: 0px;
+	}
+
+	.sm\:text-lg {
+		font-size: 1.125rem;
+		line-height: 1.75rem;
 	}
 
 	.sm\:text-base {
