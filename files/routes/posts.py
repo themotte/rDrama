@@ -57,7 +57,7 @@ def publish(pid, v):
 	post.created_utc = int(time.time())
 	g.db.add(post)
 	
-	notify_users = NOTIFY_USERS(f'{post.body_html}{post.title}', v.id)
+	notify_users = NOTIFY_USERS(f'{post.body_html}{post.title}', v)
 
 	cid = notif_comment(f"@{v.username} has mentioned you: [{post.title}]({post.permalink})")
 	for x in notify_users:
@@ -547,7 +547,7 @@ def edit_post(pid, v):
 			g.db.add(n)
 		
 
-		notify_users = NOTIFY_USERS(f'{body_html}{title}', v.id)
+		notify_users = NOTIFY_USERS(f'{body_html}{title}', v)
 		
 		soup = BeautifulSoup(body_html, features="html.parser")
 			
