@@ -22,7 +22,7 @@
 		<span>
 			{{error}}
 		</span>
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<button type="button" role="button" class="close" data-dismiss="alert" aria-label="Close">
 			<span aria-hidden="true"><i class="far fa-times"></i></span>
 		</button>
 	</div>
@@ -33,7 +33,7 @@
 		<span>
 			{{msg}}
 		</span>
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<button type="button" role="button" class="close" data-dismiss="alert" aria-label="Close">
 			<span aria-hidden="true"><i class="far fa-times"></i></span>
 		</button>
 	</div>
@@ -63,8 +63,8 @@
 				<td style="font-weight: bold">{{a['owned']}}</td>
 				{% set kind = a['kind'] %}
 				<td style="font-weight: bold">
-					<a class="d-flex btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" type="button" onclick="post_toast('/buy/{{kind}}')"><span class="m-auto">Buy</span></a>
-					{% if a['kind'] != "grass" %}<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" type="button" onclick="post_toast('/buy/{{kind}}?mb=true')"><span class="m-auto">Buy with Marseybux</span></a>{% endif %}
+					<a class="d-flex btn btn-success {% if v.coins < a['price'] %}disabled{% endif %}" type="button" role="button" onclick="post_toast('/buy/{{kind}}')"><span class="m-auto">Buy</span></a>
+					{% if a['kind'] != "grass" %}<a class="d-flex marseybux btn btn-success {% if v.procoins < a['price'] %}disabled{% endif %}" type="button" role="button" onclick="post_toast('/buy/{{kind}}?mb=true')"><span class="m-auto">Buy with Marseybux</span></a>{% endif %}
 				</td>
 			</tr>
 		{% endfor %}
