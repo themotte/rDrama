@@ -320,26 +320,6 @@ pre code {
     margin-right: auto;
     margin-left: auto;
 }
-@media (min-width: 576px) {
-    .container {
-        max-width: 540px;
-}
-}
-@media (min-width: 768px) {
-    .container {
-        max-width: 720px;
-}
-}
-@media (min-width: 992px) {
-    .container {
-        max-width: 960px;
-}
-}
-@media (min-width: 1200px) {
-    .container {
-        max-width: 1140px;
-}
-}
 .container-fluid {
     width: 100%;
     padding-right: 15px;
@@ -347,25 +327,8 @@ pre code {
     margin-right: auto;
     margin-left: auto;
 }
-@media (min-width: 576px) {
-    .container {
-        max-width: 540px;
-}
-}
-@media (min-width: 768px) {
-    .container {
-        max-width: 720px;
-}
-}
-@media (min-width: 992px) {
-    .container {
-        max-width: 960px;
-}
-}
-@media (min-width: 1200px) {
-    .container {
-        max-width: 1140px;
-}
+.container {
+    max-width: 1410px;
 }
 .row {
     display: flex;
@@ -2664,10 +2627,6 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-@media (min-width: 1200px) {
-    .container {
-        max-width: 1300px;
-}
 }
 p {
     font-size: 14px;
@@ -3469,6 +3428,7 @@ th {
 }
 .post-actions .list-inline .list-inline-item {
     margin-right: 1rem;
+    font-size: 10px;
 }
 .post-actions .list-inline .list-inline-item:last-child {
     margin-right: 0;
@@ -3689,7 +3649,7 @@ th {
     margin-right: 0.5rem;
     box-shadow: none;
     border: none;
-    font-size: 12px;
+    font-size: 10px;
 }
 .comment-actions .list-inline .list-inline-item .dropdown-item {
     font-size: 12px;

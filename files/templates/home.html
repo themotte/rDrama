@@ -92,40 +92,6 @@
 
 {% endblock %}
 
-{% block PseudoSubmitForm %}
-
-<div class="row no-gutters d-none d-lg-flex mt-3 {% if not v %}mb-3{% endif %}">
-
-	<div class="col">
-		<div class="card pseudo-submit-form border">
-			<div class="card-header bg-gray-100">
-				<div class="mb-0">Create post</div>
-				<ul class="list-inline no-bullets mb-0 d-none">
-					<li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
-					<li class="list-inline-item"><i class="fas fa-link text-gray-400"></i></li>
-				</ul>
-			</div>
-			<div class="card-body">
-				{% if v %}
-					<a href="/submit">
-						<input autocomplete="off" type="text" class="form-control"
-						placeholder="Post..." aria-label="Username"
-						aria-describedby="basic-addon1">
-					</a>
-				{% else %}
-					<a href="/signup">
-						<input autocomplete="off" type="text" class="form-control"
-						placeholder="Post..." aria-label="Username"
-						aria-describedby="basic-addon1">
-					</a>
-				{% endif %}
-			</div>
-		</div>
-	</div>
-
-</div>
-{% endblock %}
-
 {% block content %}
 
 <div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
