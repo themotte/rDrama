@@ -14,9 +14,9 @@
 					<div class="card-columns award-columns awards-wrapper">
 						{% for award in v.user_awards %}
 							{% if award.owned %}
-								<a href="javascript:void(0)" id="{{award.kind}}" class="card" onclick="bruh('{{award.kind}}')">
+								<a type="button" id="{{award.kind}}" class="card" onclick="bruh('{{award.kind}}')">
 							{% else %}
-								<a href="javascript:void(0)" id="{{award.kind}}" class="card disabled">
+								<a type="button" id="{{award.kind}}" class="card disabled">
 							{% endif %}
 								<i class="{{award.icon}} {{award.color}}"></i>
 								<div class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</div>
