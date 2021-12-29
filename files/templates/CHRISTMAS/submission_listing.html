@@ -266,17 +266,17 @@
 					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 				</a>
 			{% elif p.is_image %}
-				<button data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
+				<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
 					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
-				</button>
+				</a>
 			{% elif p.is_video %}
-				<button onclick="toggleVideo({{p.id}})">
+				<a href="javascript:void(0)" onclick="toggleVideo({{p.id}})">
 					<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
-				</button>
+				</a>
 			{% elif p.is_youtube %}
-				<button onclick="document.getElementById('video-{{p.id}}').classList.toggle('hidden')">
+				<a href="javascript:void(0)" onclick="document.getElementById('video-{{p.id}}').classList.toggle('hidden')">
 					<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
-				</button>
+				</a>
 			{% else %}
 				<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
 					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover  bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
