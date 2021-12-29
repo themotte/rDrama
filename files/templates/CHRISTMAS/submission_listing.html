@@ -295,9 +295,9 @@
 {% endif %}
 
 {% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
-<div class="relative z-10 md:ml-[4.5rem] mt-3">
+<div class="relative z-10">
 	{% if p.is_video %}
-		<div id="video-{{p.id}}" class="text-center {% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %}">
+		<div id="video-{{p.id}}" class="text-center {% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
 			<video controls loop preload="metadata" class="w-full max-h-[20rem]">
 				<source src="{{p.realurl(v)}}" type="video/mp4">
 			</video>
