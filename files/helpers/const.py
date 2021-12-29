@@ -120,8 +120,8 @@ def censor_slurs(body: str, logged_user) -> str:
 def torture_ap(body, username):
 	body = SLUR_REGEX.sub(sub_matcher, body)
 	for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-	body = re.sub('(^| )(i|me) ', rf'\1@{username} ', body, flags=re.I)
-	body = re.sub("(^| )i'm ", rf'\1@{username} is ', body, flags=re.I)
+	body = re.sub('(^|\s|\n)(i|me) ', rf'\1@{username} ', body, flags=re.I)
+	body = re.sub("(^|\s|\n)i'm ", rf'\1@{username} is ', body, flags=re.I)
 	return body
 
 
