@@ -879,6 +879,7 @@ def unban_user(user_id, v):
 		x.is_banned = 0
 		x.unban_utc = 0
 		x.ban_evade = 0
+		x.ban_reason = None
 		g.db.add(x)
 
 	send_repeatable_notification(user.id,
