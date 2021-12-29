@@ -454,9 +454,7 @@
 					</div>
 
 					{% if v and (v.id==p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-					<div class="py-2">
 						{% include "CHRISTMAS/submission/SubmissionEditForm.html" %}
-					</div>
 					{% endif %}
 
 					{% if p.embed_url and "http" not in p.embed_url and "<" not in p.embed_url %}
