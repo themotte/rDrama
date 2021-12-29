@@ -1,4 +1,65 @@
-{% set random = range(1, 11)|random() %}
+{% set random = range(0,11)|random() %}
+
+{%
+	set banner = [
+		{
+			'username': 'Bartholomew_1',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-1.jpg?a=1'
+		},
+		{
+			'username': 'Yui',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-2.jpg?a=1'
+		},
+		{
+			'username': 'Bartholomew_1',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-3.jpg?a=1'
+		},
+		{
+			'username': 'chiobu',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-4.jpg?a=1'
+		},
+		{
+			'username': 'chiobu',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-5.webp?a=1'
+		},
+		{
+			'username': 'geese_suck',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-6.jpg?a=1'
+		},
+		{
+			'username': 'Bartholomew_1',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-7.jpg?a=1'
+		},
+		{
+			'username': 'drama_enthusiast',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-8.webp?a=1'
+		},
+		{
+			'username': 'dramarama',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-9.jpg?a=1'
+		},
+		{
+			'username': 'geese_suck',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-10.jpg?a=1'
+		},
+		{
+			'username': 'ThreeLetterAgent',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-11.jpg?a=1'
+		},
+		{
+			'username': 'geese_suck',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-12.jpg?a=1'
+		},
+		{
+			'username': 'geese_suck',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-13.jpg?a=1'
+		},
+		{
+			'username': 'geese_suck',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-14.jpg?a=1'
+		}
+	]
+%}
 
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 py-4">
 	<div>
@@ -57,16 +118,11 @@
 		</ul>
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<button data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="/static/assets/CHRISTMAS/banners/banner-1.jpg?a=1" onclick="expandDesktopImage('/static/assets/CHRISTMAS/banners/banner-1.jpg?a=1')" class="w-full h-56 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
-		<img class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="/static/assets/CHRISTMAS/banners/banner-1.jpg?a=1" alt="new year celebration party with drinks"/>
-	</button>
-	<!-- Link to OC post -->
-	<small class="block mt-1 text-right text-gray-500">
-		<a href="/post/32341/" class="font-bold">Share</a> your artwork to have it featured
-	</small>
-	<!-- Creds -->
-	<small class="hidden mt-1 text-right text-gray-500">
-		Artwork by <a href="/@username-here" class="font-bold">@username-here</a>
+	<a href="/post/32341/" class="block w-full h-56 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
+		<img class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="{{ banner[random].image }}" alt="artwork featuring an orange and white cat"/>
+	</a>
+	<small class="mt-1 block text-gray-500">
+		Artwork by <a href="/@{{ banner[random].username }}" class="font-bold">@{{ banner[random].username }}</a>
 	</small>
 	{% if v %}
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>

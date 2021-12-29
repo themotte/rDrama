@@ -1,4 +1,4 @@
-<div id="edit-post-body-{{p.id}}" class="hidden">
+<div id="edit-post-body-{{p.id}}" class="py-2 hidden">
 	<form id="post-edit-form-{{p.id}}" class="flex flex-col w-full" action="/edit_post/{{p.id}}" method="post">
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<input type="hidden" name="current_page" value="{{request.path}}">
