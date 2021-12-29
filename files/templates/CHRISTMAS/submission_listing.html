@@ -248,7 +248,7 @@
 			</h5>
 
 			{% if p.realbody(v) and not p.over_18 %}
-				<div class="{% if p.author.agendaposter %}agendaposter{% endif %} post-text relative z-10 gradient-mask max-h-10 overflow-hidden pointer-events-none text-gray-500 break-words" style="word-break: break-word;" id="post-text-{{p.id}}">
+				<div class="{% if p.author.agendaposter %}agendaposter{% endif %} post-text relative z-10 gradient-mask max-h-0 sm:max-h-10 overflow-hidden pointer-events-none text-gray-500 break-words" style="word-break: break-word;" id="post-text-{{p.id}}">
 					{{p.realbody(v) | safe}}
 				</div>
 			{% endif %}
@@ -388,7 +388,7 @@
 {% include "CHRISTMAS/expanded_image_modal.html" %}
 
 <script defer src="/assets/CHRISTMAS/js/new_comments_count.js?a=1"></script>
-<script defer src="/assets/CHRISTMAS/js/submission_listing.js?a=3"></script>
+<script defer src="/assets/CHRISTMAS/js/submission_listing.js?a=4"></script>
 
 <style>
 	.mod:before {
