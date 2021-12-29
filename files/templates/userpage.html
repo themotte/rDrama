@@ -229,10 +229,6 @@
 							<form action="/unban_user/{{u.id}}/" method="post" action="">
 								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 								<input autocomplete="off" type="hidden" name="redir" value="true">
-								<div class="custom-control custom-checkbox">
-									<input autocomplete="off" type="checkbox" id="alts-1-desktop" class="custom-control-input" name="alts" value="1">
-									<label class="custom-control-label" for="alts-1-desktop">Include alts</label>
-								</div>
 								<input autocomplete="off" type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
@@ -507,12 +503,6 @@
 							<form action="/unban_user/{{u.id}}" method="post">
 								<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
 								<input autocomplete="off" type="hidden" name="redir" value="true">
-								<br>
-								<div class="custom-control custom-checkbox">
-									<input autocomplete="off" type="checkbox" id="alts-1-mobile" class="custom-control-input" name="alts" value="1">
-									<label class="custom-control-label" for="alts-1-mobile">Include alts</label>
-								</div>
-								<br >
 								<input autocomplete="off" type="submit" class="btn btn-success" value="Unban user">
 							</form>
 						{% else %}
