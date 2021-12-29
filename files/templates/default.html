@@ -276,33 +276,35 @@
 		</div>
 		{% block sidebar %}
 		
-		<div class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
-		  <div class="sidebar-section">
-			<img src="/static/assets/images/banners/{{range(1,69)|random()}}.webp?a=1" width=100%>
-			<a class="btn btn-primary btn-block mt-4" href="/submit">SUBMIT DRAMA!</a>
+			{% if request.path == '/' %}
+				<div class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
+				<div class="sidebar-section">
+					<img src="/static/assets/images/banners/{{range(1,69)|random()}}.webp?a=1" width=100%>
+					<a class="btn btn-primary btn-block mt-4" href="/submit">SUBMIT DRAMA!</a>
 
-			<p class="mt-4">Drama: any incident, scene, gaffe, rumor, opinion, or disagreement that is blown entirely out of proportion.</p>
+					<p class="mt-4">Drama: any incident, scene, gaffe, rumor, opinion, or disagreement that is blown entirely out of proportion.</p>
 
-			<p>Do your part to keep our community healthy by blowing everything out of proportion and making literally everything as dramatic as possible.</p>
+					<p>Do your part to keep our community healthy by blowing everything out of proportion and making literally everything as dramatic as possible.</p>
 
-			<p>rdrama.net caters to drama in all forms such as: Real life, videos, photos, gossip, rumors, news sites, Reddit, and Beyond™. There isn't drama we won't touch, and we want it all.</p>
+					<p>rdrama.net caters to drama in all forms such as: Real life, videos, photos, gossip, rumors, news sites, Reddit, and Beyond™. There isn't drama we won't touch, and we want it all.</p>
 
-			What we want
+					What we want
 
-			<ul>
-				<li>Arguments.</li>
-				<li>Gossip.</li>
-				<li>Scandals.</li>
-				<li>Lolcows.</li>
-				<li>Assholes.</li>
-				<li>Trainwrecks.</li>
-				<li>Meltdowns.</li>
-				<li>Dramatic news articles.</li>
-				<li>Dramatic rumours (with context).</li>
-				<li>Dramatic everything from anywhere</li>
-			</ul>
-			</div>
-		  </div>
+					<ul>
+						<li>Arguments.</li>
+						<li>Gossip.</li>
+						<li>Scandals.</li>
+						<li>Lolcows.</li>
+						<li>Assholes.</li>
+						<li>Trainwrecks.</li>
+						<li>Meltdowns.</li>
+						<li>Dramatic news articles.</li>
+						<li>Dramatic rumours (with context).</li>
+						<li>Dramatic everything from anywhere</li>
+					</ul>
+					</div>
+				</div>
+			{% endif %}
 		  {% endblock %}	
 	</div>
 </div>
