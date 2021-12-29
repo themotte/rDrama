@@ -2055,24 +2055,27 @@ a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus
 @media (min-width: 768px) {
     .d-md-none {
         display: none !important;
-}
+    }
     .d-md-inline-block {
         display: inline-block !important;
-}
+    }
     .d-md-block {
         display: block !important;
-}
+    }
     .d-md-flex {
         display: flex !important;
-}
+    }
 }
 @media (min-width: 992px) {
     .d-lg-none {
         display: none !important;
-}
+    }
     .d-lg-flex {
         display: flex !important;
-}
+    }
+    .d-lg-block {
+        display: block !important;
+    }
 }
 .embed-responsive {
     position: relative;
