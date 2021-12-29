@@ -33,10 +33,6 @@ tiers={
 	"(Rich Bich)": 5,
 	}
 
-@app.get("/useragent")
-def useragent():
-	return request.headers.get("User-Agent","")
-
 @app.post("/settings/removebackground")
 @limiter.limit("1/second")
 @auth_required
