@@ -136,11 +136,11 @@
 						<span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Original username: @{{u.original_username}}">@{{u.original_username}}
 						</span>
 					</div>
+					{% endif %}
 					<div>&#183;</div>
 					<div>
 						#{{u.id}}
 					</div>
-					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -157,6 +157,10 @@
 				<li>
 					<div class="text-lg mb-0">{{ u.coins_spent }}</div>
 					<small class="block text-gray-500">Dramacoin Spent</small>
+				</li>
+				<li>
+					<div class="text-lg mb-0">{{ u.truecoins }}</div>
+					<small class="block text-gray-500">Dramacoin Earned</small>
 				</li>
 				<li>
 					<div class="text-lg mb-0">{{ u.coins }}</div>
@@ -191,6 +195,10 @@
 			<li>
 				<div class="text-lg font-bold mb-0">{{ u.coins_spent }}</div>
 				<small class="block font-bold text-gray-500">Dramacoin Spent</small>
+			</li>
+			<li>
+				<div class="text-lg font-bold mb-0">{{ u.truecoins }}</div>
+				<small class="block font-bold text-gray-500">Dramacoin Earned</small>
 			</li>
 			<li>
 				<div class="text-lg font-bold mb-0">{{ u.coins }}</div>
