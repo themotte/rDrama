@@ -3916,6 +3916,9 @@ ul.comment-section {
     .w-lg-75 {
         width: 75% !important;
 }
+    .w-lg-95 {
+        width: 95% !important;
+    }
     .w-lg-100 {
         width: 100% !important;
 }
