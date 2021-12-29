@@ -1,14 +1,54 @@
-{% set random = range(0,1)|random() %}
+{% set random = range(0,11)|random() %}
 
 {%
 	set banner = [
 		{
 			'username': 'asdf',
-			'image': 'https://i.imgur.com/fx5jcvU.jpeg'
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-1.jpg?a=1'
 		},
 		{
 			'username': 'asdf2',
-			'image': 'https://i.imgur.com/fx5jcvU.jpeg'
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-2.jpg?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-3.jpg?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-4.jpg?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-5.webp?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-6.jpg?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-7.jpg?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-8.webp?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-9.jpg?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-10.jpg?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-11.jpg?a=1'
+		},
+		{
+			'username': 'asdf2',
+			'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-12.jpg?a=1'
 		}
 	]
 %}
@@ -79,7 +119,7 @@
 	</small>
 	<!-- Creds -->
 	<small class="block mt-1 text-right text-gray-500">
-		Artwork by <a href="/@{{ banner[1].username }}" class="font-bold">@{{ banner[1].username }}</a>
+		Artwork by <a href="/@{{ banner[random].username }}" class="font-bold">@{{ banner[random].username }}</a>
 	</small>
 	{% if v %}
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
