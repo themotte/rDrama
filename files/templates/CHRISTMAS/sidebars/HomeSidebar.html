@@ -1,18 +1,16 @@
 {% set random = range(0,1)|random() %}
 
 {%
-
 	set banner = [
-	{
-		'credit': 'asdf',
-		'image': 'https://i.imgur.com/fx5jcvU.jpeg'
-	},
-	{
-		'credit': 'asdf2',
-		'image': 'https://i.imgur.com/fx5jcvU.jpeg'
-	}
+		{
+			'username': 'asdf',
+			'image': 'https://i.imgur.com/fx5jcvU.jpeg'
+		},
+		{
+			'username': 'asdf2',
+			'image': 'https://i.imgur.com/fx5jcvU.jpeg'
+		}
 	]
-
 %}
 
 <div class="hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 py-4">
@@ -81,7 +79,7 @@
 	</small>
 	<!-- Creds -->
 	<small class="block mt-1 text-right text-gray-500">
-		Artwork by <a href="/@{{ banner[random].author }}" class="font-bold">@{{ banner[random].author }}</a>
+		Artwork by <a href="/@{{ banner[random].username }}" class="font-bold">@{{ banner[random].username }}</a>
 	</small>
 	{% if v %}
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
