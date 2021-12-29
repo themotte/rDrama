@@ -112,7 +112,7 @@
 														<div class="custom-control custom-checkbox mt-4">
 																<input autocomplete="off" type="checkbox" class="custom-control-input" id="termsCheck" required>
 																<label class="custom-control-label terms" for="termsCheck">I accept the <a
-																		href="/rules" {% if v and v.newtab %}target="_blank"{% endif %}>terms and conditions</a></label>
+																		href="/rules" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>terms and conditions</a></label>
 														</div>
 
 														{% if hcaptcha %}

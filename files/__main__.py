@@ -102,6 +102,9 @@ def before_request():
 		url = request.url.replace("http://", "https://", 1)
 		return redirect(url, code=301)
 
+	if '; wv) ' in request.headers.get("User-Agent",""): g.webview = True
+	else: g.webview = False
+
 @app.teardown_appcontext
 def teardown_request(error):
 	if hasattr(g, 'db') and g.db:
