@@ -259,31 +259,29 @@
 	</div>
 
 		<div class="relative z-10 flex flex-row flex-nowrap pl-3 md:pl-5 flex-shrink-0">
-			<div style="z-index: 3;">
-				{% if p.club and not (v and (v.paid_dues or v.id == p.author_id)) %}
-					<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
-				{% elif not p.url %}
-					<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
-					</a>
-				{% elif p.is_image %}
-					<button data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
-					</button>
-				{% elif p.is_video %}
-					<button onclick="toggleVideo({{p.id}})">
-						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
-					</button>
-				{% elif p.is_youtube %}
-					<button onclick="document.getElementById('video-{{p.id}}').classList.toggle('hidden')">
-						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
-					</button>
-				{% else %}
-					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover  bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
-					</a>
-				{% endif %}
-			</div>
+			{% if p.club and not (v and (v.paid_dues or v.id == p.author_id)) %}
+				<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+			{% elif not p.url %}
+				<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
+					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+				</a>
+			{% elif p.is_image %}
+				<button data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
+					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+				</button>
+			{% elif p.is_video %}
+				<button onclick="toggleVideo({{p.id}})">
+					<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+				</button>
+			{% elif p.is_youtube %}
+				<button onclick="document.getElementById('video-{{p.id}}').classList.toggle('hidden')">
+					<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+				</button>
+			{% else %}
+				<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
+					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover  bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+				</a>
+			{% endif %}
 		</div>
 
 </div>
@@ -303,17 +301,19 @@
 {% endif %}
 
 {% if not p.club or v and (v.paid_dues or v.id == p.author_id) %}
+<div class="relative z-10 md:ml-[4.5rem] mt-3 {% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %}">
 	{% if p.is_video %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
+		<div id="video-{{p.id}}" class="text-center">
 			<video controls loop preload="metadata" class="w-full max-h-[20rem]">
 				<source src="{{p.realurl(v)}}" type="video/mp4">
 			</video>
 		</div>
 	{% elif p.is_youtube %}
-		<div id="video-{{p.id}}" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
+		<div id="video-{{p.id}}">
 			{{p.embed_url | safe}}
 		</div>
 	{% endif %}
+</div>
 {% endif %}
 
 </li>
