@@ -388,8 +388,8 @@ def morecomments(v, cid):
 @validate_formkey
 def edit_post(pid, v):
 	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
-	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
+		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
+	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB."}, 413
 
 	p = get_post(pid)
 
@@ -705,8 +705,11 @@ def thumbnail_thread(pid):
 @validate_formkey
 def submit_post(v):
 	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: return "Max file size is 8 MB.", 413
-	elif request.content_length > 4 * 1024 * 1024: return "Max file size is 4 MB.", 413
+		if request.content_length > 8 * 1024 * 1024: return {"error": "Max file size is 8 MB."}, 413
+	elif request.content_length > 4 * 1024 * 1024: return {"error": "Max file size is 4 MB."}, 413
+
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
 
 	title = request.values.get("title", "").strip()[:500]
 
@@ -923,8 +926,7 @@ def submit_post(v):
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
-			url = process_image(name)
-			body += f"\n\n![]({url})"
+			body += f"\n\n![]({process_image(name)})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -1012,12 +1014,6 @@ def submit_post(v):
 
 		file = request.files['file']
 
-		if not file.content_type.startswith(('image/', 'video/')):
-			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
-			if not v or v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}submit.html", v=v, error=f"File type not allowed.", title=title, body=request.values.get("body", "")), 400
-
 		if file.content_type.startswith('image/'):
 			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 			file.save(name)
@@ -1025,13 +1021,15 @@ def submit_post(v):
 
 			name2 = name.replace('.webp', 'r.webp')
 			copyfile(name, name2)
-			new_post.thumburl = process_image(name2, True)
-			
+			new_post.thumburl = process_image(name2, True)	
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
 				url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
 			new_post.url = url
+		else:
+			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
+			return render_template(f"{template}submit.html", v=v, error=f"File type not allowed.", title=title, body=request.values.get("body", "")), 400
 
 	if not new_post.thumburl and new_post.url and request.headers.get('cf-ipcountry')!="T1": gevent.spawn( thumbnail_thread, new_post.id)
 

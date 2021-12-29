@@ -4669,7 +4669,7 @@ input[type=radio] ~ .custom-control-label::before {
     -o-object-fit: contain;
     object-fit: contain;
 }
-.preview-edit img {
+.preview-edit img, #preview img {
     max-width: 20%;
 }
 .twitter-tweet {

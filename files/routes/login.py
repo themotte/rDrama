@@ -171,7 +171,7 @@ def logout(v):
 @auth_desired
 def sign_up_get(v):
 	with open('disablesignups', 'r') as f:
-		if f.read() == "yes": return "New account registration is currently closed. Please come back later.", 403
+		if f.read() == "yes": return {"error","New account registration is currently closed. Please come back later."}, 403
 
 	if v: return redirect("/")
 
@@ -220,7 +220,7 @@ def sign_up_get(v):
 @auth_desired
 def sign_up_post(v):
 	with open('disablesignups', 'r') as f:
-		if f.read() == "yes": return "New account registration is currently closed. Please come back later.", 403
+		if f.read() == "yes": return {"error","New account registration is currently closed. Please come back later."}, 403
 
 	if v: abort(403)
 

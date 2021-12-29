@@ -17,7 +17,7 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 @auth_required
 def join_discord(v):
 	
-	if v.is_suspended != 0 and v.admin_level == 0: return "Banned users cannot join the discord server!"
+	if v.is_suspended != 0 and v.admin_level == 0: return {"error": "Banned users cannot join the discord server!"}
 	
 	if SITE_NAME == 'Drama' and v.admin_level == 0 and v.patron == 0 and v.truecoins < 150: return f"You must receive 150 upvotes/downvotes from other users before being able to join the Discord server."
 	

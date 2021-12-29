@@ -107,7 +107,7 @@ def downvoting(v, username):
 @auth_required
 @validate_formkey
 def pay_rent(v):
-	if v.coins < 500: return "You must have more than 500 coins."
+	if v.coins < 500: return {"error","You must have more than 500 coins."}
 	v.coins -= 500
 	v.rent_utc = int(time.time())
 	g.db.add(v)
@@ -125,9 +125,9 @@ def pay_rent(v):
 @validate_formkey
 def steal(v):
 	if int(time.time()) - v.created_utc < 604800:
-		return "You must have an account older than 1 week in order to attempt stealing."
+		return {"error":"You must have an account older than 1 week in order to attempt stealing."}
 	if v.coins < 5000:
-		return "You must have more than 5000 coins in order to attempt stealing."
+		return {"error":"You must have more than 5000 coins in order to attempt stealing."}
 	u = get_account(253)
 	if random.randint(1, 10) < 5:
 		v.coins += 700
@@ -973,4 +973,4 @@ def fp(v, fp):
 			print('\n\n' + v.username + ' + ' + u.username + '\n\n')
 		g.db.add(v)
 		g.db.commit()
-	return ''
+	return '', 204
