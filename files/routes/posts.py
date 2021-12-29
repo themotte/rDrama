@@ -1189,7 +1189,7 @@ def submit_post(v):
 
 
 @app.post("/delete_post/<pid>")
-@limiter.limit("1/second")
+@limiter.limit("2/second")
 @auth_required
 @validate_formkey
 def delete_post_pid(pid, v):
