@@ -10,7 +10,6 @@ def create_comment(text, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 
-	text = text.replace('r/', 'r\/').replace('u/', 'u\/')
 	text_html = sanitize(Renderer2().render(mistletoe.Document(text)))
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
@@ -84,10 +83,16 @@ def send_admin(vid, text):
 		g.db.add(notif)
 
 
-def NOTIFY_USERS(text, vid):
-	text = text.lower()
+def NOTIFY_USERS(text, v):
 	notify_users = set()
 	for word, id in NOTIFIED_USERS.items():
 		if id == 0: continue
-		if word in text and id not in notify_users and vid != id: notify_users.add(id)
+		if word in text.lower() and id not in notify_users and v.id != id: notify_users.add(id)
+
+	soup = BeautifulSoup(text, features="html.parser")
+	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
+		username = mention["href"].split("@")[1]
+		user = g.db.query(User).filter_by(username=username).first()
+		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+
 	return notify_users

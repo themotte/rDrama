@@ -156,8 +156,6 @@
 						<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'bux-transfer')">Gift Marseybux</a>
 
 						{% if v.admin_level > 2 %} 
-							<a id="unadmin" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
-
 							<a id="memeadmin" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_meme_admin','memeadmin','unmemeadmin')">Make meme admin</a>
 							<a id="unmemeadmin" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','memeadmin','unmemeadmin')">Remove meme admin</a>
 
@@ -441,8 +439,6 @@
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="toggleElement('profile-toggleable', 'bux-transfer-mobile')">Gift Marseybux</a>
 
 					{% if v.admin_level > 2 %} 
-						<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast('/@{{u.username}}/remove_admin')">Remove admin</a>
-
 						<a id="memeadmin2" class="{% if u.admin_level == 1%}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_meme_admin','memeadmin2','unmemeadmin2')">Make meme admin</a>
 						<a id="unmemeadmin2" class="{% if u.admin_level != 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_meme_admin','memeadmin2','unmemeadmin2')">Remove meme admin</a>
 

@@ -206,10 +206,7 @@ def api_comment(v):
 			body += f"\n\n{url}"
 		else: return {"error": f"Image/Video files only"}, 400
 
-	if v.agendaposter and not v.marseyawarded:
-		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-		body = body.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
-		body = censor_slurs2(body).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
+	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
 
@@ -240,7 +237,7 @@ def api_comment(v):
 
 	is_bot = bool(request.headers.get("Authorization"))
 
-	if not is_bot and not v.marseyawarded and 'trans lives matters' not in body.lower():
+	if not is_bot and not v.marseyawarded and 'trans lives matters' not in body.lower() and len(body) > 10:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
@@ -520,23 +517,11 @@ def api_comment(v):
 
 
 	if not v.shadowbanned:
-		notify_users = NOTIFY_USERS(body_html, v.id)
+		notify_users = NOTIFY_USERS(body_html, v)
 		
 		for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
 		
 		if parent.author.id not in [v.id, BASEDBOT_ID, AUTOJANNY_ID, SNAPPY_ID, LONGPOSTBOT_ID, ZOZBOT_ID, AUTOPOLLER_ID]: notify_users.add(parent.author.id)
-
-		soup = BeautifulSoup(body_html, features="html.parser")
-		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
-
-		for mention in mentions:
-			username = mention["href"].split("@")[1]
-
-			user = g.db.query(User).filter_by(username=username).first()
-
-			if user:
-				if v.any_block_exists(user): continue
-				if user.id != v.id: notify_users.add(user.id)
 
 		for x in notify_users:
 			n = Notification(comment_id=c.id, user_id=x)
@@ -628,10 +613,7 @@ def edit_comment(cid, v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-		if v.agendaposter and not v.marseyawarded:
-			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-			body = body.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
-			body = censor_slurs2(body).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
+		if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 		if not c.options:
 			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):
@@ -798,22 +780,7 @@ def edit_comment(cid, v):
 
 		g.db.add(c)
 		
-		notify_users = NOTIFY_USERS(body_html, v.id)
-		soup = BeautifulSoup(body_html, features="html.parser")
-		mentions = soup.find_all("a", href=re.compile("^/@(\w+)"))
-		
-		if len(mentions) > 0:
-			for mention in mentions:
-				username = mention["href"].split("@")[1]
-
-				user = g.db.query(User).filter_by(username=username).first()
-
-				if user:
-					if v.any_block_exists(user): continue
-					if user.id != v.id: notify_users.add(user.id)
-
-
-		g.db.flush()
+		notify_users = NOTIFY_USERS(body_html, v)
 		
 		for x in notify_users:
 			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).first()

@@ -58,11 +58,6 @@ def publish(pid, v):
 	g.db.add(post)
 	
 	notify_users = NOTIFY_USERS(f'{post.body_html}{post.title}', v.id)
-	soup = BeautifulSoup(post.body_html, features="html.parser")
-	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
-		username = mention["href"].split("@")[1]
-		user = g.db.query(User).filter_by(username=username).first()
-		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
 	cid = notif_comment(f"@{v.username} has mentioned you: [{post.title}]({post.permalink})")
 	for x in notify_users:
@@ -429,10 +424,7 @@ def edit_post(pid, v):
 		elif len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
-		if v.agendaposter and not v.marseyawarded:
-			for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
-			title = title.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
-			title = censor_slurs2(title).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
+		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 		title_html = filter_emojis_only(title)
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
@@ -457,10 +449,7 @@ def edit_post(pid, v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-		if v.agendaposter and not v.marseyawarded:
-			for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-			body = body.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
-			body = censor_slurs2(body).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
+		if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 		if not p.options.count():
 			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body):
@@ -561,10 +550,6 @@ def edit_post(pid, v):
 		notify_users = NOTIFY_USERS(f'{body_html}{title}', v.id)
 		
 		soup = BeautifulSoup(body_html, features="html.parser")
-		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
-			username = mention["href"].split("@")[1]
-			user = g.db.query(User).filter_by(username=username).first()
-			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 			
 		cid = notif_comment(f"@{v.username} has mentioned you: [{p.title}]({p.permalink})")
 		for x in notify_users:
@@ -727,10 +712,7 @@ def submit_post(v):
 
 	url = request.values.get("url", "").strip()
 
-	if v.agendaposter and not v.marseyawarded:
-		for k, l in AJ_REPLACEMENTS.items(): title = title.replace(k, l)
-		title = title.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
-		title = censor_slurs2(title).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
+	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 	title_html = filter_emojis_only(title)
 	body = request.values.get("body", "").strip()
@@ -934,10 +916,7 @@ def submit_post(v):
 		options.append(i.group(1))
 		body = body.replace(i.group(0), "")
 
-	if v.agendaposter and not v.marseyawarded:
-		for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
-		body = body.replace(' I ', f' @{v.username} ').replace(' i ', f' @{v.username} ')
-		body = censor_slurs2(body).replace(' ME ', f' @{v.username} ').replace(' me ', f' @{v.username} ')
+	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file2"]
@@ -1058,12 +1037,7 @@ def submit_post(v):
 
 	if not new_post.private:
 
-		notify_users = NOTIFY_USERS(f'{body_html}{title}', v.id)
-		soup = BeautifulSoup(body_html, features="html.parser")
-		for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
-			username = mention["href"].split("@")[1]
-			user = g.db.query(User).filter_by(username=username).first()
-			if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+		notify_users = NOTIFY_USERS(f'{body_html}{title}', v)
 
 		cid = notif_comment(f"@{v.username} has mentioned you: [{title}]({new_post.permalink})")
 		for x in notify_users:
@@ -1338,7 +1312,9 @@ def api_pin_post(post_id, v):
 		if v.id != post.author_id: return {"error": "Only the post author's can do that!"}
 		post.is_pinned = not post.is_pinned
 		g.db.add(post)
-		g.db.commit()
 
+		cache.delete_memoized(User.userpagelisting)
+
+		g.db.commit()
 		if post.is_pinned: return {"message": "Post pinned!"}
 		else: return {"message": "Post unpinned!"}

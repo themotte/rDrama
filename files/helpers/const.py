@@ -6,30 +6,30 @@ SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 
 AJ_REPLACEMENTS = {
-	"you're": '$#3$2',
-	'your': "you're",
-	'$#3$2': 'your',
-	"too": '$#3$3',
-	'to': "too",
-	'$#3$3': 'to',
+	" you're ": ' $#3$2 ',
+	' your ': " you're ",
+	' $#3$2 ': ' your ',
+	" too ": ' $#3$3 ',
+	' to ': " too ",
+	' $#3$3 ': ' to ',
 	' my ': ' their ',
 	' mine ': ' their ',
 
-	"You're": '$#3$2',
-	'Your': "You're",
-	'$#3$2': 'Your',
-	"Too": '$#3$3',
-	'To': "Too",
-	'$#3$3': 'To',
+	" You're ": ' $#3$2 ',
+	' Your ': " You're ",
+	' $#3$2 ': ' Your ',
+	" Too ": ' $#3$3 ',
+	' To ': " Too ",
+	' $#3$3 ': ' To ',
 	' My ': ' Their ',
 	' Mine ': ' Their ',
 
-	"YOU'RE": '$#3$2',
-	'YOUR': "YOU'RE",
-	'$#3$2': 'YOUR',
-	"TOO": '$#3$3',
-	'TO': "TOO",
-	'$#3$3': 'TO',
+	" YOU'RE ": ' $#3$2 ',
+	' YOUR ': " YOU'RE ",
+	' $#3$2 ': ' YOUR ',
+	" TOO ": ' $#3$3 ',
+	' TO ': " TOO ",
+	' $#3$3 ': ' TO ',
 	' MY ': ' THEIR ',
 	' MINE ': ' THEIR ',
 }
@@ -106,6 +106,24 @@ SLURS = {
 	"elon musk": "rocket daddy",
 	" elon ": " rocket daddy ",
 }
+
+single_words = "|".join([slur.lower() for slur in SLURS.keys()])
+SLUR_REGEX = re.compile(rf"(?i)((?<=\s|>)|^)({single_words})((?=[\s<,.]|s[\s<,.])|$)")
+
+def sub_matcher(match: re.Match) -> str:
+	return SLURS[match.group(0).lower()]
+
+def censor_slurs(body: str, logged_user) -> str:
+	if not logged_user or logged_user.slurreplacer: body = SLUR_REGEX.sub(sub_matcher, body)
+	return body
+
+def torture_ap(body, username):
+	body = SLUR_REGEX.sub(sub_matcher, body)
+	for k, l in AJ_REPLACEMENTS.items(): body = body.replace(k, l)
+	body = re.sub('(^| )(i|me) ', rf'\1@{username} ', body, flags=re.I)
+	body = re.sub("(^| )i'm ", rf'\1@{username} is ', body, flags=re.I)
+	return body
+
 
 LONGPOST_REPLIES = ['Wow, you must be a JP fan.', 'This is one of the worst posts I have EVER seen. Delete it.', "No, don't reply like this, please do another wall of unhinged rant please.", '# 😴😴😴', "Ma'am we've been over this before. You need to stop.", "I've known more coherent downies.", "Your pulitzer's in the mail", "That's great and all, but I asked for my burger without cheese.", 'That degree finally paying off', "That's nice sweaty. Why don't you have a seat in the time out corner with Pizzashill until you calm down, then you can have your Capri Sun.", "All them words won't bring your pa back.", "You had a chance to not be completely worthless, but it looks like you threw it away. At least you're consistent.", 'Some people are able to display their intelligence by going on at length on a subject and never actually saying anything. This ability is most common in trades such as politics, public relations, and law. You have impressed me by being able to best them all, while still coming off as an absolute idiot.', "You can type 10,000 characters and you decided that these were the one's that you wanted.", 'Have you owned the libs yet?', "I don't know what you said, because I've seen another human naked.", 'Impressive. Normally people with such severe developmental disabilities struggle to write much more than a sentence or two. He really has exceded our expectations for the writing portion. Sadly the coherency of his writing, along with his abilities in the social skills and reading portions, are far behind his peers with similar disabilities.', "This is a really long way of saying you don't fuck.", "Sorry ma'am, looks like his delusions have gotten worse. We'll have to admit him.", ':#marseywoah:', 'If only you could put that energy into your relationships', 'Posts like this is why I do Heroine.', 'still unemployed then?', 'K', 'look im gunna have 2 ask u 2 keep ur giant dumps in the toilet not in my replys 😷😷😷', "Mommy is soooo proud of you, sweaty. Let's put this sperg out up on the fridge with all your other failures.", "Good job bobby, here's a star", "That was a mistake. You're about to find out the hard way why.", 'You sat down and wrote all this shit. You could have done so many other things with your life. What happened to your life that made you decide writing novels of bullshit on rdrama.net was the best option?', "I don't have enough spoons to read this shit", "All those words won't bring daddy back.", 'OUT!']
 
@@ -204,19 +222,6 @@ else:
 
 PUSHER_INSTANCE_ID = '02ddcc80-b8db-42be-9022-44c546b4dce6'
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
-
-single_words = "|".join([slur.lower() for slur in SLURS.keys()])
-SLUR_REGEX = re.compile(rf"(?i)((?<=\s|>)|^)({single_words})((?=[\s<,.]|s[\s<,.])|$)")
-
-def sub_matcher(match: re.Match) -> str:
-	return SLURS[match.group(0).lower()]
-
-def censor_slurs(body: str, logged_user) -> str:
-	if not logged_user or logged_user.slurreplacer: body = SLUR_REGEX.sub(sub_matcher, body)
-	return body
-
-def censor_slurs2(body: str) -> str:
-	return SLUR_REGEX.sub(sub_matcher, body)
 
 BADGES = {
 	1: {
@@ -718,5 +723,6 @@ NOTIFIED_USERS = {
 	' llm ': LLM_ID,
 	'landlet': LLM_ID,
 	'dong': DONGER_ID,
-	'dong': FARTBINN_ID
+	'dong': FARTBINN_ID,
+	'kippy': KIPPY_ID,
 }

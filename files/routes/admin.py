@@ -151,19 +151,6 @@ def club_ban(v, username):
 	g.db.commit()
 	return {"message": f"@{username} has been kicked from the {cc}. Deserved."}
 
-@app.post("/@<username>/remove_admin")
-@limiter.limit("1/second")
-@admin_level_required(2)
-@validate_formkey
-def remove_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
-		user = get_user(username)
-		if not user: abort(404)
-		user.admin_level = 0
-		g.db.add(user)
-		g.db.commit()
-	return {"message": "Admin removed!"}
-
 
 @app.post("/@<username>/make_meme_admin")
 @limiter.limit("1/second")
