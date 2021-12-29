@@ -21,7 +21,7 @@ function expandText(id) {
     }
 };
 
-function togglevideo(pid) {
+function toggleVideo(pid) {
     // Video elements
     const vid = document.getElementById(`video-${pid}`)
     const vid2 = document.getElementById(`video2-${pid}`)
