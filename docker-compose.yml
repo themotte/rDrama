@@ -42,6 +42,7 @@ services:
       - DUES=0
       - MAIL_USERNAME=blahblahblah@gmail.com
       - MAIL_PASSWORD=3435tdfsdudebussylmaoxxt43
+      - DESCRIPTION=rdrama.net caters to drama in all forms such as Real life, videos, photos, gossip, rumors, news sites, Reddit, and Beyond™. There isn't drama we won't touch, and we want it all!
     links:
       - "redis"
       - "postgres"
