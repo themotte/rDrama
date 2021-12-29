@@ -35,7 +35,8 @@ def searchparse(text):
 @app.get("/search/posts")
 @auth_desired
 def searchposts(v):
-
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
 
 	query = request.values.get("q", '').strip()
 
@@ -63,6 +64,27 @@ def searchposts(v):
 	
 	if not (v and v.admin_level > 1): posts = posts.filter(Submission.private == False)
 	
+
+	if 'author' in criteria:
+		author = get_user(criteria['author'])
+		if author.is_private:
+			if request.headers.get("Authorization"):
+				return {"error": f"@{author.username}'s profile is private; You can't use the 'author' syntax on them"}
+			return render_template(f"{template}search.html",
+								v=v,
+								query=query,
+								total=0,
+								page=page,
+								listing=[],
+								sort=sort,
+								t=t,
+								next_exists=False,
+								domain=None,
+								domain_obj=None,
+								error=f"@{author.username}'s profile is private; You can't use the 'author' syntax on them."
+								)
+		else: posts = posts.filter(Submission.author_id == author.id)
+
 	if 'q' in criteria:
 		words=criteria['q'].split()
 		words=[Submission.title.ilike('%'+x+'%') for x in words]
@@ -70,10 +92,6 @@ def searchposts(v):
 		posts=posts.filter(*words)
 		
 	if 'over18' in criteria: posts = posts.filter(Submission.over_18==True)
-
-	if 'author' in criteria:
-		author = get_user(criteria['author'])
-		if not author.is_private: posts = posts.filter(Submission.author_id == author.id)
 
 	if 'domain' in criteria:
 		domain=criteria['domain']
@@ -161,8 +179,7 @@ def searchposts(v):
 		domain_obj=None
 
 	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in posts]}
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
+
 	return render_template(f"{template}search.html",
 						   v=v,
 						   query=query,
@@ -180,6 +197,8 @@ def searchposts(v):
 @auth_desired
 def searchcomments(v):
 
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
 
 	query = request.values.get("q", '').strip()
 
@@ -191,10 +210,17 @@ def searchcomments(v):
 
 	criteria=searchparse(query)
 
-
-
-
 	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None)
+
+	if 'author' in criteria:
+		author = get_user(criteria['author'])
+		if author.is_private:
+			if request.headers.get("Authorization"):
+				return {"error": f"@{author.username}'s profile is private; You can't use the 'author' syntax on them"}
+
+			return render_template(f"{template}search_comments.html", v=v, query=query, total=0, page=page, comments=[], sort=sort, t=t, next_exists=False, error=f"@{author.username}'s profile is private; You can't use the 'author' syntax on them.")
+
+		else: comments = comments.filter(Comment.author_id == author.id)
 
 	if 'q' in criteria:
 		words=criteria['q'].split()
@@ -203,10 +229,6 @@ def searchcomments(v):
 		comments=comments.filter(*words)
 
 	if 'over18' in criteria: comments = comments.filter(Comment.over_18==True)
-
-	if 'author' in criteria:
-		author = get_user(criteria['author'])
-		if not author.is_private: comments = comments.filter(Comment.author_id == author.id)
 
 	if not(v and v.admin_level > 1): comments = comments.filter(Comment.deleted_utc == 0, Comment.is_banned == False)
 
@@ -253,8 +275,6 @@ def searchcomments(v):
 	comments = get_comments(ids, v=v)
 
 	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in comments]}
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists)
 
 

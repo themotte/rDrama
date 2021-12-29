@@ -589,7 +589,9 @@
 				<i class="fas fa-square text-gray-500 opacity-25 fa-stack-2x"></i>
 				<i class="fas text-gray-500 fa-ghost fa-stack-1x text-lg"></i>
 			</span>
-			<h2 class="h5">There are no posts here.</h2>
+			{% if request.path.startswith('/search') and error %}
+				<h2 class="h5">{{error}}</h2>
+			{% endif %}
 		</div>			
 	</div>	
 </div>

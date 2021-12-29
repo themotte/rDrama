@@ -2795,7 +2795,7 @@ ol > li::before {
     color: var(--dark);
 }
 .alert {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 3rem 0.5rem 1rem;
 }
 .alert-dismissible .close {
     padding: 0.5rem 1.25rem;
