@@ -253,10 +253,10 @@
 								{% endif %}
 							{% endif %}
 
-							<a type="button" role="button" id="dropdownPostActions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+							<a type="button" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
 								<i class="fas fa-ellipsis-h fa-fw"></i>
 							</a>
-							<ul class="dropdown-menu" aria-labelledby="dropdownPostActions">
+							<ul class="dropdown-menu">
 
 								{% if v and v.admin_level > 0 %}
 									<a id="pin-{{p.id}}" class="dropdown-item {% if p.stickied %}d-none{% endif %} list-inline-item text-info" type="button" role="button" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin</a>
