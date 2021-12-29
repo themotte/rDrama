@@ -270,9 +270,13 @@
 					<button data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
 						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 					</button>
-				{% elif (p.url and p.url.lower().endswith('.mp4')) or (p.embed_url and "youtu" in p.domain) or (p.url and "streamable.com/e/" in p.url) %}
+				{% elif p.is_video %}
+					<button onclick="toggleVideo({{p.id}})">
+						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+					</button>
+				{% elif p.is_youtube %}
 					<button onclick="document.getElementById('video-{{p.id}}').classList.toggle('hidden')">
-						<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+						<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-24 h-16 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 					</button>
 				{% else %}
 					<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
@@ -305,18 +309,9 @@
 				<source src="{{p.realurl(v)}}" type="video/mp4">
 			</video>
 		</div>
-	{% elif p.embed_url and "youtu" in p.domain %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
-			{% if 'lite' in p.embed_url %}
-				{{p.embed_url | safe}}
-			{% else %}
-				<iframe loading="lazy" src="{{p.embed_url}}" frameborder="0" class="w-full max-h-[20rem]" width="600" height="337" allow="fullscreen"></iframe>
-			{% endif %}
-		</div>
-	{% elif p.url and "streamable.com/e/" in p.url %}
-		<div id="video-{{p.id}}" style="text-align: center" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
-			<iframe loading="lazy" src="{{p.url}}" frameborder="0" class="w-full max-h-[20rem]" width="600" height="337" allow="fullscreen">
-			</iframe>
+	{% elif p.is_youtube %}
+		<div id="video-{{p.id}}" class="{% if p.over_18 or not ((v and v.cardview) or (not v and environ.get('CARD_VIEW') == '1')) %}hidden{% endif %} md:ml-[4.5rem] mt-3">
+			{{p.embed_url | safe}}
 		</div>
 	{% endif %}
 {% endif %}
@@ -393,7 +388,7 @@
 {% include "CHRISTMAS/expanded_image_modal.html" %}
 
 <script defer src="/assets/CHRISTMAS/js/new_comments_count.js?a=1"></script>
-<script defer src="/assets/CHRISTMAS/js/submission_listing.js?a=1"></script>
+<script defer src="/assets/CHRISTMAS/js/submission_listing.js?a=2"></script>
 
 <style>
 	.mod:before {

@@ -20,3 +20,17 @@ function expandText(id) {
     	trigger[i].classList.toggle('fa-compress-alt');
     }
 };
+
+function togglevideo(pid) {
+    // Video elements
+    const vid = document.getElementById(`video-${pid}`)
+    const vid2 = document.getElementById(`video2-${pid}`)
+    // Toggle hidden class
+    vid.classList.toggle('hidden')
+    // Controls
+    if (vid.classList.contains('hidden')) {
+        vid2.pause()
+    } else {
+        vid2.play()
+    }
+}
