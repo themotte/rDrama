@@ -118,19 +118,12 @@
 		</ul>
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<button data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{ banner[random].image }}" onclick="expandDesktopImage('{{ banner[random].image }}')" class="w-full h-56 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
+	<a href="/post/32341/" class="w-full h-56 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
 		<img class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="{{ banner[random].image }}" alt="artwork featuring an orange and white cat"/>
-	</button>
-	<div class="mt-1 flex justify-between">
-		<!-- Link to OC post -->
-		<small class="text-gray-500">
-			<a href="/post/32341/" class="font-bold">Share</a> your artwork
-		</small>
-		<!-- Creds -->
-		<small class="text-gray-500">
-			Artwork by <a href="/@{{ banner[random].username }}" class="font-bold">@{{ banner[random].username }}</a>
-		</small>
-	</div>
+	</a>
+	<small class="mt-1 block text-gray-500">
+		Artwork by <a href="/@{{ banner[random].username }}" class="font-bold">@{{ banner[random].username }}</a>
+	</small>
 	{% if v %}
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 	<div class="flex flex-col sticky top-4">
