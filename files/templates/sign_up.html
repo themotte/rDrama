@@ -39,7 +39,7 @@
 
 				<nav class="navbar navbar-expand-lg navbar-dark bg-transparent fixed-top border-0">
 				<div class="container-fluid">
-						<button class="navbar-toggler d-none" type="button" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+						<button class="navbar-toggler d-none" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
 						aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 				</button>
@@ -112,7 +112,7 @@
 														<div class="custom-control custom-checkbox mt-4">
 																<input autocomplete="off" type="checkbox" class="custom-control-input" id="termsCheck" required>
 																<label class="custom-control-label terms" for="termsCheck">I accept the <a
-																		href="/rules" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>terms and conditions</a></label>
+																		href="/sidebar" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>terms and conditions</a></label>
 														</div>
 
 														{% if hcaptcha %}

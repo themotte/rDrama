@@ -741,7 +741,7 @@ def u_username_comments(username, v=None):
 		return render_template(f"{template}userpage_blocked.html", u=u, v=v)
 
 
-	page = int(request.values.get("page", "1"))
+	page = max(int(request.values.get("page", "1")), 1)
 	sort=request.values.get("sort","new")
 	t=request.values.get("t","all")
 

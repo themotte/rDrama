@@ -118,8 +118,28 @@ class Renderer(HTMLRenderer):
 class Renderer2(HTMLRenderer):
 
 	def __init__(self, **kwargs):
-		super().__init__(UserMention2)
+		super().__init__(UserMention2,
+						UserMention,
+						 SubMention,
+						 RedditorMention,
+						 SubMention2,
+						 RedditorMention2)
 		for i in kwargs: self.__dict__[i] = kwargs[i]
 
-	def render_user_mention(self, token):
+	def render_user_mention2(self, token):
 		return f'<a href="/@{token.target}"><img loading="lazy" src="/@{token.target}/pic" class="pp20">@{token.target}</a>'
+
+	def render_user_mention(self, token):
+		space = token.target[0]
+		target = token.target[1]
+		return f"{space}@{target}"
+			
+	def render_sub_mention(self, token):
+		space = token.target[0]
+		target = token.target[1]
+		return f"{space}r/{target}"
+		
+	def render_redditor_mention(self, token):
+		space = token.target[0]
+		target = token.target[1]
+		return f"{space}u/{target}"

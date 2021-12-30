@@ -590,10 +590,12 @@ def thumbnail_thread(pid):
 
 	post = db.query(Submission).filter_by(id=pid).first()
 	
-	if not post:
+	if not post or not post.url:
 		time.sleep(5)
 		post = db.query(Submission).filter_by(id=pid).first()
 
+	if not post or not post.url: return
+	
 	fetch_url = post.url
 
 	if fetch_url.startswith('/'): fetch_url = f"https://{site}{fetch_url}"

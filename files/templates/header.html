@@ -36,7 +36,7 @@
 			{% else %}
 			<a class="mobile-nav-icon d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500 black"></i></a>
 			{% endif %}
-			<button class="navbar-toggler" type="button" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+			<button class="navbar-toggler" role="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
 			aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon {% if v and v.notifications_count %}position-relative{% endif %}"><i class="fal fa-bars text-gray-500 black"></i>
 				{% if v and v.notifications_count %}
@@ -91,7 +91,7 @@
 
 				<li class="nav-item d-flex align-items-center justify-content-center text-center">
 					<div class="dropdown">
-						<a class="nav-link bg-transparent py-0 pr-0" type="button" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+						<a class="nav-link bg-transparent py-0 pr-0" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false">
 						<div class="d-flex">
 							<div><img alt="your profile picture" loading="lazy" src="{{v.profile_url}}" class="profile-pic-35"></div>
@@ -113,8 +113,6 @@
 							</div>
 							<div class="px-2">
 								<a class="dropdown-item" href="/static/assets/{{'SITE_NAME' | app_config}}.apk?a=4"><i class="fab fa-android fa-fw text-left mr-3"></i>Android app</a>
-
-								<a class="dropdown-item" href="/rules"><i class="fas fa-balance-scale fa-fw text-left mr-3"></i>Rules</a>
 
 								<a class="dropdown-item" href="/changelog"><i class="fas fa-clipboard fa-fw text-left mr-3"></i>Changelog</a>
 
@@ -177,8 +175,6 @@
 				<a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
 			</li>
 			<a class="nav-item nav-link" href="/static/assets/{{'SITE_NAME' | app_config}}.apk?a=4"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
-
-			<a class="nav-item nav-link" href="/rules"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a>
 
 			<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 

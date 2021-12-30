@@ -11,7 +11,7 @@
 		<div class="d-flex px-2 align-items-center sortingbarmargin">
 			<div class="text-small font-weight-bold mr-2">‎</div>
 			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" type="button" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					{% if t=="hour" %}<i class="fas fa-clock mr-1"></i>
 					{% elif t=="day" %}<i class="fas fa-calendar-day mr-1"></i>
 					{% elif t=="week" %}<i class="fas fa-calendar-week mr-1"></i>
@@ -33,7 +33,7 @@
 
 			<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
 			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" type="button" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
 					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
 					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}

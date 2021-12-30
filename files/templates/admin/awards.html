@@ -14,7 +14,7 @@
 		<span>
 			{{error}}
 		</span>
-		<button type="button" role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+		<button role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
 			<span aria-hidden="true"><i class="far fa-times"></i></span>
 		</button>
 	</div>
@@ -25,7 +25,7 @@
 		<span>
 			{{msg}}
 		</span>
-		<button type="button" role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+		<button role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
 			<span aria-hidden="true"><i class="far fa-times"></i></span>
 		</button>
 	</div>
@@ -64,6 +64,6 @@
 
 	<pre></pre>
 	{% if 'rdrama.net' not in request.host or v.admin_level > 2 %}
-		<div><a class="btn btn-success" type="button" role="button" onclick="post_toast('/admin/monthly')">Grant Monthly Marseybux</a></div>
+		<div><a class="btn btn-success" role="button" onclick="post_toast('/admin/monthly')">Grant Monthly Marseybux</a></div>
 	{% endif %}
 {% endblock %}

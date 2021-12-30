@@ -153,6 +153,11 @@ ACTIONTYPES={
 		"icon": "fa-balance-scale",
 		"color": "bg-muted",
 	},
+	"change_sidebar": {
+		"str": "changed the sidebar",
+		"icon": "fa-columns",
+		"color": "bg-muted",
+	},
 	"ban_user":{
 		"str":'banned user {self.target_link}',
 		"icon":"fa-user-slash",
@@ -289,6 +294,11 @@ ACTIONTYPES2={
 	"change_rules": {
 		"str": "changed the <a href='/rules'>rules</a>",
 		"icon": "fa-balance-scale",
+		"color": "bg-muted",
+	},
+	"change_sidebar": {
+		"str": "changed the sidebar",
+		"icon": "fa-columns",
 		"color": "bg-muted",
 	},
 	"ban_user":{

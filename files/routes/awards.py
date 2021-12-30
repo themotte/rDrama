@@ -259,6 +259,7 @@ def award_post(pid, v):
 		else: post.stickied_utc = t
 		g.db.add(post)
 	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
+		if author.username == "911roofer": abort(403)
 		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400
 		else: author.agendaposter_expires_utc = time.time() + 86400
 		
@@ -435,6 +436,7 @@ def award_comment(cid, v):
 		else: c.is_pinned_utc = t
 		g.db.add(c)
 	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
+		if author.username == "911roofer": abort(403)
 		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400
 		else: author.agendaposter_expires_utc = time.time() + 86400
 		
