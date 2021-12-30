@@ -4652,3 +4652,6 @@ input[type=radio] ~ .custom-control-label::before {
 .noshadow {
     box-shadow: none !important;
 }
+[role="button"] {
+    cursor: pointer !important;
+}  
