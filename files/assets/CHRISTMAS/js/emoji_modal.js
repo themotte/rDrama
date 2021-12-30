@@ -344,7 +344,7 @@ const EMOJIS_STRINGS = [
 			marseyfrog: 'chiobu scaley fursona furry scalie amphibian fursuit',
 			marseyfrog2: 'chiobu scaley fursona furry scalie amphibian toad fursuit',
 			marseyfrozen: 'dead ice reaction cold frozen',
-			marseyfrozenchosen: 'blonde girl',
+			marseyfrozenchosen: 'lucy blonde girl woman',
 			marseyfrozenpat: 'petting staring unhappy reaction stare animated patting',
 			marseyfry: 'altaccountumbreon phillip fry take my money futurama',
 			marseyfuckoffcarp: 'dramarama reaction carpathianflorist rude snappy animated robot',
