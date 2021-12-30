@@ -12,8 +12,8 @@ def create_comment(text, autojanny=False):
 
 	text_html = sanitize(Renderer2().render(mistletoe.Document(text)))
 
-	for i in re.finditer("^@((\w|-){1,25})", text_html):
-		text_html = text_html.replace(i.group(1), f'<a href="/@{i.group(1)}"><img loading="lazy" src="/@{i.group(1)}/pic" class="pp20">@{i.group(1)}</a>')
+	for i in re.finditer("<p>@((\w|-){1,25})", text_html):
+		text_html = text_html.replace(f'@{i.group(1)}', f'<a href="/@{i.group(1)}"><img loading="lazy" src="/@{i.group(1)}/pic" class="pp20">@{i.group(1)}</a>')
 
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
