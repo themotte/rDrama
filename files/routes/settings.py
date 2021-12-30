@@ -364,6 +364,8 @@ def settings_profile_post(v):
 
 	theme = request.values.get("theme")
 	if theme:
+		if theme == "transparent" and not v.background: 
+			return render_template(f"{template}settings_profile.html", v=v, error="You need to set a background to use the transparent theme!")
 		v.theme = theme
 		if theme == "win98": v.themecolor = "30409f"
 		updated = True
