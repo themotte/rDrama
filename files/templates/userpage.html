@@ -198,8 +198,17 @@
 					{% endif %}
 
 					{% if u.song and v and v.mute and (not u.unmutable or v.id == u.id) %}
-						<a id="pause1" class="btn btn-secondary" role="button" onclick="pause()">Pause anthem</a>
-						<a id="play1" class="btn btn-secondary d-none" role="button" onclick="play()">Play anthem</a>
+						<a id="play1" class="btn btn-secondary" role="button" onclick="play()">Play anthem</a>
+						<a id="pause1" class="btn btn-secondary d-none" role="button" onclick="pause()">Pause anthem</a>
+					{% else %}
+						<script>
+							window.addEventListener('load', (e) => {
+								audio.play();
+								document.getElementById('userpage').addEventListener('click', () => {
+									if (audio.paused) audio.play(); 
+								}, {once : true});
+							});
+						</script>
 					{% endif %}
 
 					{% if v and v.id != u.id and v.admin_level > 1 %}
@@ -676,7 +685,7 @@
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 
-<script src="/static/assets/js/userpage.js?a=3"></script>
+<script src="/static/assets/js/userpage.js?a=4"></script>
 
 {% endblock %}
 
