@@ -1072,6 +1072,7 @@ def unsticky_comment(cid, v):
 	
 	if comment.is_pinned.endswith("(pin award)"): return {"error": "Can't unpin award pins!"}, 403
 
+	comment.is_pinned = None
 	g.db.add(comment)
 
 	ma=ModAction(

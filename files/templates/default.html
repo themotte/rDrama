@@ -278,7 +278,7 @@
 			{% block sidebar %}
 			<div class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
 				<div class="sidebar-section">
-					<img src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,96)|random()}}.webp?a=1" width=100%>
+					<img src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,95)|random()}}.webp?a=2" width=100%>
 					<a class="btn btn-primary btn-block mt-4" href="/submit">SUBMIT DRAMA!</a>
 					{% set template = "sidebar_" + environ.get("SITE_NAME") + ".html" %}
 					{% include template %}

@@ -97,7 +97,8 @@ a:not([href]) {
     color: inherit;
     text-decoration: none;
 }
-a:not([href]):hover {
+a:not([href]):not([role="button"])
+{
     color: inherit;
     text-decoration: none;
 }

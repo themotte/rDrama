@@ -261,10 +261,6 @@ def api_comment(v):
 			v.ban(reason="Spamming.",
 					days=1)
 
-			for alt in v.alts:
-				if not alt.is_suspended:
-					alt.ban(reason="Spamming.", days=1)
-
 			for comment in similar_comments:
 				comment.is_banned = True
 				comment.ban_reason = "AutoJanny"
