@@ -153,16 +153,28 @@
 				<li>
 					<hr class="mt-2 mb-1.5 border-t border-black h-1 shadow-inset-t-white-05"/>
 				</li>
-				<li id="unpin-{{c.id}}" class="hidden {% if c.is_pinned %}md:block{% endif %}">
-					<button class="dropdown-item dropdown-item-primary" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
-						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Unpin
-					</button>
-				</li>
-				<li id="pin-{{c.id}}" class="hidden {% if not c.is_pinned %}md:block{% endif %}">
-					<button class="dropdown-item dropdown-item-primary" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
-						<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Pin
-					</button>
-				</li>
+					{% if v.admin_level > 1 %}
+					<li id="unpin-{{c.id}}" class="hidden {% if c.is_pinned %}md:block{% endif %}">
+						<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/unsticky_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
+							<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Unpin
+						</button>
+					</li>
+					<li id="pin-{{c.id}}" class="hidden {% if not c.is_pinned %}md:block{% endif %}">
+						<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/sticky_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
+							<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Pin
+						</button>
+					</li>
+					{% elif v.id == c.post.author_id %}
+					<li id="unpin-{{c.id}}" class="hidden {% if c.is_pinned %}md:block{% endif %}">
+						<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/unpin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
+							<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Unpin
+						</button>
+					</li>
+					<li id="pin-{{c.id}}" class="hidden {% if not c.is_pinned %}md:block{% endif %}">
+						<button class="dropdown-item dropdown-item-primary" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')">
+							<i class="fas fa-thumbtack fa-rotate--45 fa-sm fa-fw mr-4"></i>Pin
+						</button>
+					</li>
 				{% endif %}
 
 				{% if v and v.admin_level > 1 %}
