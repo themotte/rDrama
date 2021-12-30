@@ -590,7 +590,7 @@ def edit_comment(cid, v):
 
 	if len(body) < 1: return {"error":"You have to actually type something!"}, 400
 
-	if body != c.body and body != "":
+	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		if v.marseyawarded:
 			if time.time() > v.marseyawarded:
 				v.marseyawarded = None
