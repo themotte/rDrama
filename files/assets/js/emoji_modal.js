@@ -445,7 +445,7 @@ const EMOJIS_STRINGS = [
 			marseylifting: 'workout muscular work out bench swole working out gains benchpress weightlifting weights muscles',
 			marseylion: 'fursona furry fursuit leo',
 			marseyliondance: 'parade ccp chinese dancer dancing asian china animated',
-			marseyliquidator: 'gas mask horror exterminator halloween plague doctor holiday scary',
+			marseyliquidator: 'gas mask horror exterminator halloween plague doctor holiday scary nuclear chernobyl suit mask radiation radioactive',
 			marseylizard: 'reptilian',
 			marseyllama: 'alpaca',
 			marseyllama1: 'top',

@@ -7,7 +7,7 @@
 	<script src="/static/assets/js/bootstrap.js?a=3"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=27">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=36">
 		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
 		{% if v.agendaposter %}
 			<style>
@@ -32,7 +32,7 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=27"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=36"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
 	{% endif %}
 
 	<link href="/static/assets/css/fa.css?a=3" rel="stylesheet"> 
@@ -274,36 +274,18 @@
 			{% endblock %}
 
 		</div>
-		{% block sidebar %}
-		
-		<div class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
-		  <div class="sidebar-section">
-			<img src="/static/assets/images/banners/{{range(1,69)|random()}}.webp?a=1" width=100%>
-			<a class="btn btn-primary btn-block mt-4" href="/submit">SUBMIT DRAMA!</a>
-
-			<p class="mt-4">Drama: any incident, scene, gaffe, rumor, opinion, or disagreement that is blown entirely out of proportion.</p>
-
-			<p>Do your part to keep our community healthy by blowing everything out of proportion and making literally everything as dramatic as possible.</p>
-
-			<p>rdrama.net caters to drama in all forms such as: Real life, videos, photos, gossip, rumors, news sites, Reddit, and Beyond™. There isn't drama we won't touch, and we want it all.</p>
-
-			What we want
-
-			<ul>
-				<li>Arguments.</li>
-				<li>Gossip.</li>
-				<li>Scandals.</li>
-				<li>Lolcows.</li>
-				<li>Assholes.</li>
-				<li>Trainwrecks.</li>
-				<li>Meltdowns.</li>
-				<li>Dramatic news articles.</li>
-				<li>Dramatic rumours (with context).</li>
-				<li>Dramatic everything from anywhere</li>
-			</ul>
-			</div>
-		  </div>
-		  {% endblock %}	
+		{% if request.path == '/' %}
+			{% block sidebar %}
+			<div class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
+				<div class="sidebar-section">
+					<img src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,96)|random()}}.webp?a=2" width=100%>
+					<a class="btn btn-primary btn-block mt-4" href="/submit">SUBMIT DRAMA!</a>
+					{% set template = "sidebar_" + environ.get("SITE_NAME") + ".html" %}
+					{% include template %}
+				</div>
+			</div>				
+			{% endblock %}
+		{% endif %}
 	</div>
 </div>
 

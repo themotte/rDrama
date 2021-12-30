@@ -34,7 +34,7 @@
 
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/static/assets/css/main.css?a=27"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
+	<link rel="stylesheet" href="/static/assets/css/main.css?a=36"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
 	{% if v.agendaposter %}
 		<style>
 			html {
@@ -75,7 +75,7 @@
 			<span>
 				{{error}}
 			</span>
-			<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+			<button role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true"><i class="far fa-times"></i></span>
 			</button>
 		</div>
@@ -86,7 +86,7 @@
 			<span>
 				{{msg}}
 			</span>
-			<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+			<button role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true"><i class="far fa-times"></i></span>
 			</button>
 		</div>
@@ -172,7 +172,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">{% if mfa_secret %}Setup two-step login{% elif mfa_secret and not v.email %}Email required for two-step login{% else %}Disable two-step login{% endif %}</h5>
-					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<button role="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true"><i class="far fa-times"></i></span>
 					</button>
 				</div>
@@ -200,7 +200,7 @@
 							<input autocomplete="off" type="password" class="form-control mb-2" id="2fa_input_password" name="password" oninput="document.getElementById('enable2faButton').disabled=false" required>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+							<button role="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
 							<input autocomplete="off" id="enable2faButton" class="btn btn-primary" type="submit" value="Enable 2-step login" disabled>
 						</div>
 					</form>
@@ -224,7 +224,7 @@
 							<input autocomplete="off" type="text" class="form-control mb-2" id="2fa_input" name="2fa_remove" placeholder="# # # # # #" oninput="document.getElementById('disable2faButton').disabled=false" required>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+							<button role="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
 							<input autocomplete="off" id="disable2faButton" class="btn btn-primary" type="submit" value="Disable 2-step login" disabled>
 						</div>
 					</form>

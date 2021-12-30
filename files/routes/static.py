@@ -26,20 +26,15 @@ def emojis(v):
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}emojis.html", v=v, emojis=emojis)
 
-@app.get('/rules')
+@app.get('/sidebar')
 @auth_desired
-def static_rules(v):
+def sidebar(v):
 
-	if not path.exists(f'rules_{site_name}.html'):
-		if v and v.admin_level > 1:
-			return render_template('norules.html', v=v)
-		else:
-			abort(404)
+	if not path.exists(f'files/templates/sidebar_{site_name}.html'): abort(404)
 
-	with open(f'rules_{site_name}.html', 'r') as f:
-		rules = f.read()
+	with open(f'files/templates/sidebar_{site_name}.html', 'r') as f: sidebar = f.read()
 
-	return render_template('rules.html', rules=rules, v=v)
+	return render_template('sidebar.html', sidebar=sidebar, v=v)
 
 
 @app.get("/stats")

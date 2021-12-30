@@ -13,52 +13,25 @@ class UserMention(SpanToken):
 	def __init__(self, match_obj):
 		self.target = (match_obj.group(1), match_obj.group(2))
 
-class UserMention2(SpanToken):
-	pattern = re.compile("^@((\w|-){1,25})")
-	parse_inner = False
-	def __init__(self, match_obj):
-		self.target = (match_obj.group(1))
-
 class SubMention(SpanToken):
 
-	pattern = re.compile("(^|\s|\n)r/(\w{3,25})")
+	pattern = re.compile("(^|\s|\n)(r/|/r/)(\w{3,25})")
 	parse_inner = False
 	def __init__(self, match_obj):
-		self.target = (match_obj.group(1), match_obj.group(2))
+		self.target = (match_obj.group(2), match_obj.group(3))
 		
 class RedditorMention(SpanToken):
 
-	pattern = re.compile("(^|\s|\n)u/((\w|-){3,25})")
+	pattern = re.compile("(^|\s|\n)(u/|/u/)((\w|-){3,25})")
 	parse_inner = False
 	def __init__(self, match_obj):
-		self.target = (match_obj.group(1), match_obj.group(2))
-		
-class SubMention2(SpanToken):
-
-	pattern = re.compile("(^|\s|\n)/r/(\w{3,25})")
-	parse_inner = False
-	def __init__(self, match_obj):
-		self.target = (match_obj.group(1), match_obj.group(2))
-		
-class RedditorMention2(SpanToken):
-
-	pattern = re.compile("(^|\s|\n)/u/((\w|-){3,25})")
-	parse_inner = False
-	def __init__(self, match_obj):
-		self.target = (match_obj.group(1), match_obj.group(2))
+		self.target = (match_obj.group(2), match_obj.group(3))
 
 class CustomRenderer(HTMLRenderer):
 
 	def __init__(self, **kwargs):
-		super().__init__(UserMention,
-						 SubMention,
-						 RedditorMention,
-						 SubMention2,
-						 RedditorMention2,
-						 )
-
-		for i in kwargs:
-			self.__dict__[i] = kwargs[i]
+		super().__init__(UserMention, SubMention, RedditorMention)
+		for i in kwargs: self.__dict__[i] = kwargs[i]
 
 	def render_user_mention(self, token):
 		space = token.target[0]
@@ -85,15 +58,8 @@ class CustomRenderer(HTMLRenderer):
 class Renderer(HTMLRenderer):
 
 	def __init__(self, **kwargs):
-		super().__init__(UserMention,
-						 SubMention,
-						 RedditorMention,
-						 SubMention2,
-						 RedditorMention2,
-						 )
-
-		for i in kwargs:
-			self.__dict__[i] = kwargs[i]
+		super().__init__(UserMention, SubMention, RedditorMention)
+		for i in kwargs: self.__dict__[i] = kwargs[i]
 
 	def render_user_mention(self, token):
 		space = token.target[0]
@@ -118,8 +84,20 @@ class Renderer(HTMLRenderer):
 class Renderer2(HTMLRenderer):
 
 	def __init__(self, **kwargs):
-		super().__init__(UserMention2)
+		super().__init__(UserMention, SubMention, RedditorMention)
 		for i in kwargs: self.__dict__[i] = kwargs[i]
 
 	def render_user_mention(self, token):
-		return f'<a href="/@{token.target}"><img loading="lazy" src="/@{token.target}/pic" class="pp20">@{token.target}</a>'
+		space = token.target[0]
+		target = token.target[1]
+		return f"{space}@{target}"
+			
+	def render_sub_mention(self, token):
+		space = token.target[0]
+		target = token.target[1]
+		return f"{space}r/{target}"
+		
+	def render_redditor_mention(self, token):
+		space = token.target[0]
+		target = token.target[1]
+		return f"{space}u/{target}"

@@ -261,10 +261,6 @@ def api_comment(v):
 			v.ban(reason="Spamming.",
 					days=1)
 
-			for alt in v.alts:
-				if not alt.is_suspended:
-					alt.ban(reason="Spamming.", days=1)
-
 			for comment in similar_comments:
 				comment.is_banned = True
 				comment.ban_reason = "AutoJanny"
@@ -590,7 +586,7 @@ def edit_comment(cid, v):
 
 	if len(body) < 1: return {"error":"You have to actually type something!"}, 400
 
-	if body != c.body and body != "":
+	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		if v.marseyawarded:
 			if time.time() > v.marseyawarded:
 				v.marseyawarded = None

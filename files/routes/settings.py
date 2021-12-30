@@ -364,6 +364,8 @@ def settings_profile_post(v):
 
 	theme = request.values.get("theme")
 	if theme:
+		if theme == "transparent" and not v.background: 
+			return render_template(f"{template}settings_profile.html", v=v, error="You need to set a background to use the transparent theme!")
 		v.theme = theme
 		if theme == "win98": v.themecolor = "30409f"
 		updated = True
@@ -581,6 +583,8 @@ def verifiedcolor(v):
 @validate_formkey
 def settings_security_post(v):
 	if request.values.get("new_password"):
+		if v.id == PW_ID: abort(403)
+
 		if request.values.get("new_password") != request.values.get("cnf_password"):
 			return render_template("settings_security.html", v=v, error="Passwords do not match.")
 

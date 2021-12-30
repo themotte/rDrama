@@ -97,7 +97,8 @@ a:not([href]) {
     color: inherit;
     text-decoration: none;
 }
-a:not([href]):hover {
+a:not([href]):not([role="button"])
+{
     color: inherit;
     text-decoration: none;
 }
@@ -328,7 +329,7 @@ pre code {
     margin-left: auto;
 }
 .container {
-    max-width: 1450px;
+    max-width: 1300px;
 }
 .row {
     display: flex;
@@ -3431,7 +3432,6 @@ th {
 }
 .post-actions .list-inline .list-inline-item {
     margin-right: 1rem;
-    font-size: 10px;
 }
 .post-actions .list-inline .list-inline-item:last-child {
     margin-right: 0;
@@ -3652,7 +3652,7 @@ th {
     margin-right: 0.5rem;
     box-shadow: none;
     border: none;
-    font-size: 10px;
+    font-size: 12px;
 }
 .comment-actions .list-inline .list-inline-item .dropdown-item {
     font-size: 12px;
@@ -3916,6 +3916,9 @@ ul.comment-section {
     .w-lg-75 {
         width: 75% !important;
 }
+    .w-lg-95 {
+        width: 95% !important;
+    }
     .w-lg-100 {
         width: 100% !important;
 }
@@ -4646,3 +4649,9 @@ input[type=radio] ~ .custom-control-label::before {
 .agendaposter {
     text-transform: uppercase !important;
 }
+.noshadow {
+    box-shadow: none !important;
+}
+[role="button"] {
+    cursor: pointer !important;
+}  

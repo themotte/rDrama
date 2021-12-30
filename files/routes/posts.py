@@ -590,10 +590,12 @@ def thumbnail_thread(pid):
 
 	post = db.query(Submission).filter_by(id=pid).first()
 	
-	if not post:
+	if not post or not post.url:
 		time.sleep(5)
 		post = db.query(Submission).filter_by(id=pid).first()
 
+	if not post or not post.url: return
+	
 	fetch_url = post.url
 
 	if fetch_url.startswith('/'): fetch_url = f"https://{site}{fetch_url}"
@@ -872,10 +874,6 @@ def submit_post(v):
 
 		v.ban(reason="Spamming.",
 			  days=1)
-
-		for alt in v.alts:
-			if not alt.is_suspended:
-				alt.ban(reason="Spamming.", days=1)
 
 		for post in similar_posts + similar_urls:
 			post.is_banned = True
@@ -1177,7 +1175,7 @@ def submit_post(v):
 
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
-	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title):
+	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title) and not new_post.private:
 		send_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 

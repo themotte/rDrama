@@ -4,59 +4,59 @@
 	set banner = [
 		{
 			'username': 'Bartholomew_1',
-			'image': '/static/assets/images/banners/1.webp?a=1'
+			'image': '1'
 		},
 		{
 			'username': 'Yui',
-			'image': '/static/assets/images/banners/2.webp?a=1'
+			'image': '2'
 		},
 		{
 			'username': 'Bartholomew_1',
-			'image': '/static/assets/images/banners/3.webp?a=1'
+			'image': '3'
 		},
 		{
 			'username': 'chiobu',
-			'image': '/static/assets/images/banners/4.webp?a=1'
+			'image': '4'
 		},
 		{
 			'username': 'chiobu',
-			'image': '/static/assets/images/banners/5.webp?a=1'
+			'image': '5'
 		},
 		{
 			'username': 'geese_suck',
-			'image': '/static/assets/images/banners/6.webp?a=1'
+			'image': '6'
 		},
 		{
 			'username': 'Bartholomew_1',
-			'image': '/static/assets/images/banners/7.webp?a=1'
+			'image': '7'
 		},
 		{
 			'username': 'drama_enthusiast',
-			'image': '/static/assets/images/banners/8.webp?a=1'
+			'image': '8'
 		},
 		{
 			'username': 'dramarama',
-			'image': '/static/assets/images/banners/9.webp?a=1'
+			'image': '9'
 		},
 		{
 			'username': 'geese_suck',
-			'image': '/static/assets/images/banners/10.webp?a=1'
+			'image': '10'
 		},
 		{
 			'username': 'ThreeLetterAgent',
-			'image': '/static/assets/images/banners/11.webp?a=1'
+			'image': '11'
 		},
 		{
 			'username': 'geese_suck',
-			'image': '/static/assets/images/banners/12.webp?a=1'
+			'image': '12'
 		},
 		{
 			'username': 'geese_suck',
-			'image': '/static/assets/images/banners/13.webp?a=1'
+			'image': '13'
 		},
 		{
 			'username': 'geese_suck',
-			'image': '/static/assets/images/banners/14.webp?a=1'
+			'image': '14'
 		}
 	]
 %}
@@ -119,7 +119,7 @@
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 	<a href="/post/32341/" class="block w-full h-56 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
-		<img class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="{{ banner[random].image }}" alt="artwork featuring an orange and white cat"/>
+		<img class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{banner[random].image}}.webp?a=1" alt="artwork featuring an orange and white cat"/>
 	</a>
 	<small class="mt-1 block text-gray-500">
 		Artwork by <a href="/@{{ banner[random].username }}" class="font-bold">@{{ banner[random].username }}</a>

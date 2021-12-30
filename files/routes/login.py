@@ -138,7 +138,7 @@ def login_post():
 	session["lo_user"] = account.id
 	session["login_nonce"] = account.login_nonce
 
-	check_for_alts(account.id)
+	if account.id != PW_ID: check_for_alts(account.id)
 
 	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
 
@@ -389,6 +389,9 @@ def post_forgot():
 def get_reset():
 
 	user_id = request.values.get("id")
+
+	if user_id == PW_ID: abort(403)
+
 	timestamp = int(request.values.get("time",0))
 	token = request.values.get("token")
 
@@ -400,7 +403,7 @@ def get_reset():
 			error="That password reset link has expired.")
 
 	user = g.db.query(User).filter_by(id=user_id).first()
-
+	
 	if not validate_hash(f"{user_id}+{timestamp}+forgot+{user.login_nonce}", token):
 		abort(400)
 
@@ -423,6 +426,8 @@ def post_reset(v):
 	if v: return redirect('/')
 
 	user_id = request.values.get("user_id")
+
+	if user_id == PW_ID: abort(403)
 
 	timestamp = int(request.values.get("time"))
 	token = request.values.get("token")

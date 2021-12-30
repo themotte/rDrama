@@ -6,7 +6,7 @@
 {% block content %}
 {% if v %}
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/static/assets/css/main.css?a=27"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
+	<link rel="stylesheet" href="/static/assets/css/main.css?a=36"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
 	{% if v.agendaposter %}
 		<style>
 			html {
@@ -30,7 +30,7 @@
 	{% endif %}
 {% else %}
 	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-	<link rel="stylesheet" href="/static/assets/css/main.css?a=27"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
+	<link rel="stylesheet" href="/static/assets/css/main.css?a=36"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
 {% endif %}
 
 <div class="row justify-content-around">
@@ -55,7 +55,7 @@
 						<div class="text-small font-weight-bold mr-2">‎</div>
 						<div class="dropdown dropdown-actions">
 
-							<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								{% if admin %}<img src="/@{{admin}}/pic" alt="avatar" width=20 height=20 class="rounded-circle mr-2">{{admin}}{% else %}<img src="/static/assets/images/emojis/marseyjanny.webp" alt="avatar" width=20 height=20 class="rounded-circle mr-2">All{% endif %}
 							</button>
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
@@ -69,7 +69,7 @@
 						<div class="text-small font-weight-bold mr-2">‎</div>
 						<div class="dropdown dropdown-actions">
 
-							<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								{% if type %}<i class="fas {{types[type]['icon']}} mr-2"></i>{{type}}{% else %}<i class="fas fa-broom mr-2"></i>All{% endif %}
 							</button>
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2s" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
@@ -105,7 +105,7 @@
 						</div>
 
 						<div class="text-gray-500">{{ma.age_string}} <a href="{{ma.permalink}}"><i class="far fa-link ml-1 text-muted"></i></a>
-							<a href="javascript:void(0)" class="copy-link" role="button"data-clipboard-text="{{ma.permalink | full_link}}"><i class="far fa-copy ml-1 text-muted"></i></a>
+							<a role="button" class="copy-link" role="button"data-clipboard-text="{{ma.permalink | full_link}}"><i class="far fa-copy ml-1 text-muted"></i></a>
 						</div>
 
 					</div>

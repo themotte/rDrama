@@ -72,7 +72,7 @@
 <p>Two accounts controlled by different people should have most uniqueness percentages at or above 70-80%</p>
 <p>A sockpuppet account will have its uniqueness percentages significantly lower.</p>
 
-<a href="javascript:void(0)" class="btn btn-secondary" onclick="document.getElementById('linkbtn').classList.toggle('d-none');">Link Accounts</a>
+<a role="button" class="btn btn-secondary" onclick="document.getElementById('linkbtn').classList.toggle('d-none');">Link Accounts</a>
 <form action="/admin/link_accounts" method="post">
 	<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 	<input autocomplete="off" type="hidden" name="u1" value="{{u1.id}}">

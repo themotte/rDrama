@@ -218,39 +218,39 @@ def monthly(v):
 	return {"message": "Monthly coins granted"}
 
 
-@app.get('/admin/rules')
+@app.get('/admin/sidebar')
 @admin_level_required(2)
-def get_rules(v):
+def get_sidebar(v):
 
 	try:
-		with open(f'rules_{SITE_NAME}.html', 'r') as f: rules = f.read()
+		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r') as f: sidebar = f.read()
 	except Exception:
-		rules = None
+		sidebar = None
 
-	return render_template('admin/rules.html', v=v, rules=rules)
+	return render_template('admin/sidebar.html', v=v, sidebar=sidebar)
 
 
-@app.post('/admin/rules')
+@app.post('/admin/sidebar')
 @limiter.limit("1/second")
 @admin_level_required(2)
 @validate_formkey
-def post_rules(v):
+def post_sidebar(v):
 
-	text = request.values.get('rules', '').strip()
+	text = request.values.get('sidebar', '').strip()
 
-	with open(f'rules_{SITE_NAME}.html', 'w+') as f: f.write(text)
+	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'w+') as f: f.write(text)
 
-	with open(f'rules_{SITE_NAME}.html', 'r') as f: rules = f.read()
+	with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r') as f: sidebar = f.read()
 
 	ma = ModAction(
-		kind="change_rules",
+		kind="change_sidebar",
 		user_id=v.id,
 	)
 	g.db.add(ma)
 
 	g.db.commit()
 
-	return render_template('admin/rules.html', v=v, rules=rules)
+	return render_template('admin/sidebar.html', v=v, sidebar=sidebar)
 
 
 @app.get("/admin/shadowbanned")
@@ -625,6 +625,8 @@ def admin_removed_comments(v):
 @validate_formkey
 def agendaposter(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
+
+	if user.username == '911roofer': abort(403)
 
 	expiry = request.values.get("days", 0)
 	if expiry:
@@ -1070,6 +1072,7 @@ def unsticky_comment(cid, v):
 	
 	if comment.is_pinned.endswith("(pin award)"): return {"error": "Can't unpin award pins!"}, 403
 
+	comment.is_pinned = None
 	g.db.add(comment)
 
 	ma=ModAction(

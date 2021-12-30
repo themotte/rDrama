@@ -111,12 +111,7 @@
 							<p>Change the theme for the website.</p>
 							<div class="input-group mb2">
 								<select autocomplete="off" id='theme' class="form-control" form="profile-settings" name="theme" onchange="post_toast('/settings/profile?theme='+document.getElementById('theme').value, '1')">
-								{% if v.background %}
-									{% set entries = ["transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
-								{% else %}
-									{% set entries = ["dark", "light", "win98", "coffee", "tron", "4chan", "midnight"] %}
-								{% endif %}
-								{% for entry in entries %}
+								{% for entry in  ["transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"] %}
 									<option value="{{entry}}" {% if v.theme==entry %} selected {% endif %}>
 										{{entry}}
 									</option>
@@ -171,7 +166,7 @@
 					</div>
 					{% if v.background %}
 						<div class="d-flex mt-2">
-							<a class="btn btn-primary ml-auto" href="javascript:void(0)" onclick="post_toast('/settings/removebackground','1')">Remove Background</a>
+							<a class="btn btn-primary ml-auto" role="button" onclick="post_toast('/settings/removebackground','1')">Remove Background</a>
 							<pre></pre>
 						</div>
 					{% endif %}
