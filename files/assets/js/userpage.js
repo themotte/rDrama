@@ -22,4 +22,11 @@ if (uid)
 		document.getElementById("pause2").classList.toggle("d-none");
 		document.getElementById("play2").classList.toggle("d-none");
 	}
+
+	window.addEventListener('load', (e) => {
+		audio.play();
+		document.getElementById('userpage').addEventListener('click', () => {
+			if (audio.paused) audio.play(); 
+		}, {once : true});
+	});
 }
