@@ -7,7 +7,7 @@
 	<script src="/static/assets/js/bootstrap.js?a=3"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=41">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=42">
 		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
 		{% if v.agendaposter %}
 			<style>
@@ -32,10 +32,8 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=41"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=42"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
 	{% endif %}
-
-	<link href="/static/assets/css/fa.css?a=3" rel="stylesheet"> 
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -278,7 +276,7 @@
 			{% block sidebar %}
 			<div class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
 				<div class="sidebar-section">
-					<img src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,94)|random()}}.webp?a=2" width=100%>
+					<img src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,94)|random()}}.webp?a=3" width=100%>
 					<a class="btn btn-primary btn-block mt-4" href="/submit">SUBMIT DRAMA!</a>
 					{% set template = "sidebar_" + environ.get("SITE_NAME") + ".html" %}
 					{% include template %}
@@ -331,7 +329,6 @@
 	<script src="/static/assets/js/default.js?a=3"></script>
 {% endif %}
 
-<link rel="stylesheet" href="/static/assets/css/lite-youtube.css?a=7">
 <script src="/static/assets/js/lite-youtube.js?a=3"></script>
 
 </body>
