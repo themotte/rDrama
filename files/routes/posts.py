@@ -1175,7 +1175,7 @@ def submit_post(v):
 
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
-	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title):
+	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title) and not new_post.private:
 		send_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
