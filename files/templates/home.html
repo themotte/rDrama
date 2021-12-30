@@ -42,7 +42,7 @@
 			<div class="d-flex align-items-center sortingbarmargin">
 				<div class="text-small font-weight-bold mr-2">‎</div>
 				<div class="dropdown dropdown-actions">
-					<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if t=="hour" %}<i class="fas fa-clock mr-1"></i>
 						{% elif t=="day" %}<i class="fas fa-calendar-day mr-1"></i>
 						{% elif t=="week" %}<i class="fas fa-calendar-week mr-1"></i>
@@ -64,7 +64,7 @@
 
 				<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
 				<div class="dropdown dropdown-actions">
-					<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if sort=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
 						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
 						{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
@@ -90,6 +90,40 @@
 	</div>
 </div>
 
+{% endblock %}
+
+{% block PseudoSubmitForm %}
+
+<div class="row no-gutters d-none d-lg-flex mt-3 {% if not v %}mb-3{% endif %}">
+
+	<div class="col">
+		<div class="card pseudo-submit-form border">
+			<div class="card-header bg-gray-100">
+				<div class="mb-0">Create post</div>
+				<ul class="list-inline no-bullets mb-0 d-none">
+					<li class="list-inline-item active mr-4"><i class="fas fa-align-left text-gray-400"></i></li>
+					<li class="list-inline-item"><i class="fas fa-link text-gray-400"></i></li>
+				</ul>
+			</div>
+			<div class="card-body">
+				{% if v %}
+					<a href="/submit">
+						<input autocomplete="off" type="text" class="form-control"
+						placeholder="Post..." aria-label="Username"
+						aria-describedby="basic-addon1">
+					</a>
+				{% else %}
+					<a href="/signup">
+						<input autocomplete="off" type="text" class="form-control"
+						placeholder="Post..." aria-label="Username"
+						aria-describedby="basic-addon1">
+					</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+</div>
 {% endblock %}
 
 {% block content %}
