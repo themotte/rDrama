@@ -252,7 +252,7 @@ def admin_app_id_comments(v, aid):
 @admin_level_required(2)
 def admin_apps_list(v):
 
-	apps = g.db.query(OauthApp).all()
+	apps = g.db.query(OauthApp).order_by(OauthApp.id.desc()).all()
 
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
