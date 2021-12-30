@@ -18,7 +18,7 @@ class SubMention(SpanToken):
 	pattern = re.compile("(^|\s|\n)(r/|/r/)(\w{3,25})")
 	parse_inner = False
 	def __init__(self, match_obj):
-		self.target = match_obj.group(3)
+		self.target = (match_obj.group(1), match_obj.group(3))
 		
 class RedditorMention(SpanToken):
 
@@ -45,8 +45,9 @@ class CustomRenderer(HTMLRenderer):
 		return f'''{space}<a href="{user.url}"><img alt="@{user.username}'s profile picture" loading="lazy" src="/uid/{user.id}/pic" class="pp20">@{user.username}</a>'''
 			
 	def render_sub_mention(self, token):
-		target = token.target
-		return f'<a href="https://old.reddit.com/r/{target}" rel="nofollow noopener noreferrer" class="d-inline-block">r/{target}</a>'
+		space = token.target[0]
+		target = token.target[1]
+		return f'{space}<a href="https://old.reddit.com/r/{target}" rel="nofollow noopener noreferrer" class="d-inline-block">r/{target}</a>'
 		
 	def render_redditor_mention(self, token):
 		space = token.target[0]
