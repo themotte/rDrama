@@ -1,5 +1,69 @@
 {% set random = range(1, 13)|random() %}
 
+{% set randomBanner = range(0,11)|random() %}
+
+{%
+  set banner = [
+    {
+      'username': 'Bartholomew_1',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-1.jpg?a=1'
+    },
+    {
+      'username': 'Yui',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-2.jpg?a=1'
+    },
+    {
+      'username': 'Bartholomew_1',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-3.jpg?a=1'
+    },
+    {
+      'username': 'chiobu',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-4.jpg?a=1'
+    },
+    {
+      'username': 'chiobu',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-5.webp?a=1'
+    },
+    {
+      'username': 'geese_suck',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-6.jpg?a=1'
+    },
+    {
+      'username': 'Bartholomew_1',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-7.jpg?a=1'
+    },
+    {
+      'username': 'drama_enthusiast',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-8.webp?a=1'
+    },
+    {
+      'username': 'dramarama',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-9.jpg?a=1'
+    },
+    {
+      'username': 'geese_suck',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-10.jpg?a=1'
+    },
+    {
+      'username': 'ThreeLetterAgent',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-11.jpg?a=1'
+    },
+    {
+      'username': 'geese_suck',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-12.jpg?a=1'
+    },
+    {
+      'username': 'geese_suck',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-13.jpg?a=1'
+    },
+    {
+      'username': 'geese_suck',
+      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-14.jpg?a=1'
+    }
+  ]
+%}
+
+
 <!-- This example requires Tailwind CSS v2.0+ -->
 <nav class="fixed top-0 w-full bg-gray-700" style="z-index: 1030;">
   <div class="w-full max-w-screen-2xl mx-auto grid grid-cols-12 px-4">
@@ -233,66 +297,3 @@
     </div>
   </div>
 </nav>
-
-{% set randomBaner = range(0,11)|random() %}
-
-{%
-  set banner = [
-    {
-      'username': 'Bartholomew_1',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-1.jpg?a=1'
-    },
-    {
-      'username': 'Yui',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-2.jpg?a=1'
-    },
-    {
-      'username': 'Bartholomew_1',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-3.jpg?a=1'
-    },
-    {
-      'username': 'chiobu',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-4.jpg?a=1'
-    },
-    {
-      'username': 'chiobu',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-5.webp?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-6.jpg?a=1'
-    },
-    {
-      'username': 'Bartholomew_1',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-7.jpg?a=1'
-    },
-    {
-      'username': 'drama_enthusiast',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-8.webp?a=1'
-    },
-    {
-      'username': 'dramarama',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-9.jpg?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-10.jpg?a=1'
-    },
-    {
-      'username': 'ThreeLetterAgent',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-11.jpg?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-12.jpg?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-13.jpg?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-14.jpg?a=1'
-    }
-  ]
-%}
