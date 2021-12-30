@@ -24,9 +24,9 @@
 
 <div style="display:none" id="popover">
 	<div class="popover-user-profile" role="tooltip">
-		<img alt="user's banner" loading="lazy" class="pop-banner w-100 h-64 object-cover">
+		<img loading="lazy" class="pop-banner w-100 h-64 object-cover">
 		<div class="d-flex align-items-end px-3 mt-n6 mb-3">
-			<img alt="user's profile picture" loading="lazy" class="pop-picture avatar-72 rounded img-thumbnail shadow-sm">
+			<img loading="lazy" class="pop-picture avatar-72 rounded img-thumbnail shadow-sm">
 			<div class="px-3 text-truncate">
 			<h5 class="pop-username text-truncate text-black"></h5>
 			</div>
@@ -167,7 +167,7 @@
 
 			<div class="post-meta text-left x-scroll mb-md-2">
 				{% if p.bannedfor and p.author.banned_by %}
-					<a href="javascript:void(0)"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
+					<a role="button"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
 				{% endif %}
 
 				{% if p.awards %}
@@ -494,7 +494,7 @@
 						<button id="unmark2-{{p.id}}" class="{% if not p.over_18 %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark2-{{p.id}}','unmark2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-eye-evil text-center text-danger mr-3"></i>Unmark +18</button>
 
 						{% if v.id!=p.author_id %}
-							<button id="ban2-{{p.id}}" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')" class="{% if p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" href="javascript:void(0)"><i class="fas fa-user-minus mr-3"></i>Ban user</button>
+							<button id="ban2-{{p.id}}" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')" class="{% if p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button"><i class="fas fa-user-minus mr-3"></i>Ban user</button>
 							<button id="unban2-{{p.id}}" class="{% if not p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left" role="button" onclick="post_toast2('/unban_user/{{p.author_id}}','ban2-{{p.id}}','unban2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-user-minus mr-3"></i>Unban user</button>
 						{% endif %}
 
