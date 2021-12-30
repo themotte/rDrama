@@ -2198,7 +2198,7 @@ a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: -999;
+    z-index: 1;
     pointer-events: auto;
     content: "";
     background-color: rgba(0, 0, 0, 0);
@@ -3394,7 +3394,7 @@ th {
     color: var(--muted);
     font-weight: 600;
     font-size: 12px;
-    z-index: -99;
+    z-index: 3;
 }
 .post-actions .fa, .post-actions .fas, .post-actions .far {
     font-size: 12px;
