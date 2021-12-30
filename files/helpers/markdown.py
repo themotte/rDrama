@@ -18,7 +18,7 @@ class SubMention(SpanToken):
 	pattern = re.compile("(^|\s|\n)(r/|/r/)(\w{3,25})")
 	parse_inner = False
 	def __init__(self, match_obj):
-		self.target = (match_obj.group(2), match_obj.group(3))
+		self.target = (match_obj.group(1), match_obj.group(3))
 		
 class RedditorMention(SpanToken):
 
