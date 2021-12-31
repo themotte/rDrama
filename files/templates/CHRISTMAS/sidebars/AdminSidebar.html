@@ -8,7 +8,7 @@
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Recent Mod Activity</h2>
-	{% for ma in actions %}
+	{% for ma in actions|slice:":10" %}
 	<div id="action-{{ma.id}}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white{% if loop.index > 1 %} border-top{% endif %}">
 
 		<div class="d-flex flex-grow-1 align-items-center">
