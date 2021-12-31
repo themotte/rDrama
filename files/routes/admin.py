@@ -224,7 +224,7 @@ def get_sidebar(v):
 
 	try:
 		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r') as f: sidebar = f.read()
-	except Exception:
+	except:
 		sidebar = None
 
 	return render_template('admin/sidebar.html', v=v, sidebar=sidebar)
@@ -250,7 +250,7 @@ def post_sidebar(v):
 
 	g.db.commit()
 
-	return render_template('admin/sidebar.html', v=v, sidebar=sidebar)
+	return render_template('admin/sidebar.html', v=v, sidebar=sidebar, msg='Sidebar edited successfully!')
 
 
 @app.get("/admin/shadowbanned")
