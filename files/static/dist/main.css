@@ -3641,6 +3641,11 @@ video {
 	        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.group:hover .group-hover\:text-primary {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-primary), var(--tw-text-opacity));
+}
+
 .peer:checked ~ .peer-checked\:border-blue-500 {
 	--tw-border-opacity: 1;
 	border-color: rgba(14, 165, 233, var(--tw-border-opacity));
