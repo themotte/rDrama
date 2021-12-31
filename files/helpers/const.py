@@ -15,18 +15,12 @@ allemojis = marseys + others
 AJ_REPLACEMENTS = {
 	' your ': " you're ",
 	' to ': " too ", 
-	' my ': ' their ',
-	' mine ': ' their ',
 
 	' Your ': " You're ",
 	' To ': " Too ",
-	' My ': ' Their ',
-	' Mine ': ' Their ',
 
 	' YOUR ': " YOU'RE ",
 	' TO ': " TOO ",
-	' MY ': ' THEIR ',
-	' MINE ': ' THEIR ',
 }
 
 SLURS = {
