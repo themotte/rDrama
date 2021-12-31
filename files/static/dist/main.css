@@ -1236,6 +1236,12 @@ video {
 .w-72 {
 	width: 18rem;
 }
+.w-0\.5 {
+	width: 0.125rem;
+}
+.w-0 {
+	width: 0px;
+}
 .w-56 {
 	width: 14rem;
 }
@@ -1458,10 +1464,6 @@ video {
 .divide-red-300 > :not([hidden]) ~ :not([hidden]) {
 	--tw-divide-opacity: 1;
 	border-color: rgba(252, 165, 165, var(--tw-divide-opacity));
-}
-.divide-gray-700 > :not([hidden]) ~ :not([hidden]) {
-	--tw-divide-opacity: 1;
-	border-color: rgba(var(--color-700), var(--tw-divide-opacity));
 }
 .divide-gray-400\/30 > :not([hidden]) ~ :not([hidden]) {
 	border-color: rgba(var(--color-400), 0.3);
