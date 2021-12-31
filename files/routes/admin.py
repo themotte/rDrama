@@ -348,7 +348,7 @@ def admin_home(v):
 
 	with open('disablesignups', 'r') as f: x = f.read()
 
-	if not v or v.oldsite: render_template(f"admin/admin_home.html", v=v, x=x)
+	if not v or v.oldsite: return render_template(f"admin/admin_home.html", v=v, x=x)
 
 	page=int(request.args.get("page",1))
 
@@ -357,7 +357,7 @@ def admin_home(v):
 
 	next_exists=len(actions)==26
 	actions=actions[:25]
-	
+
 	return render_template(f"CHRISTMAS/admin/admin_home.html", actions=actions, v=v, x=x)
 
 @app.post("/admin/disablesignups")
