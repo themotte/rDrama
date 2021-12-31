@@ -786,7 +786,7 @@ def submit_post(v):
 			params = parse_qs(urlparse(url).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if isinstance(t, str): t = t.replace('s','')
-			embed = f'<lite-youtube videoid="{yt_id}" params="controls=0&modestbranding=1'
+			embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
 			if t: embed += f'&start={t}'
 			embed += '"></lite-youtube>'
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
