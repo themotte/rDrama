@@ -17,6 +17,7 @@ from files.__main__ import app, cache, limiter
 from .front import frontlist
 from files.helpers.discord import add_role
 from datetime import datetime
+import requests
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
