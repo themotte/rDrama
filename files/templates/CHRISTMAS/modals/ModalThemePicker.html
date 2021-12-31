@@ -1,3 +1,9 @@
+ {% if v and v.theme2 %}
+ 	{% set theme = v.theme2 %}
+ {% else %}
+ 	{% set theme = 'theme-iron dark' %}
+ {% endif %}
+
 <div class="modal fade" id="themePickerModal" tabindex="-1" role="dialog" aria-labelledby="themePickerModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
 		<div class="modal-content bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded-md shadow-lg">
@@ -12,7 +18,7 @@
 				<div class="flex flex-wrap -mx-2 overflow-hidden">
 					<!-- Evergreen -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-evergreen" type="radio" id="evergreen-theme" class="peer" onchange="changeTheme(['theme-evergreen']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-evergreen'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-evergreen" type="radio" id="evergreen-theme" class="peer" onchange="changeTheme(['theme-evergreen']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-evergreen'%}checked{% endif %}>
 						<label for="evergreen-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#37523e]">
 								<div class="h-3 w-full bg-[#37523e]"></div>
@@ -42,7 +48,7 @@
 					</div>
 					<!-- Iron -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-iron dark" type="radio" id="iron-theme-dark" class="peer" onchange="changeTheme(['theme-iron','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-iron dark'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-iron dark" type="radio" id="iron-theme-dark" class="peer" onchange="changeTheme(['theme-iron','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-iron dark'%}checked{% endif %}>
 						<label for="iron-theme-dark" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#3f3f46]">
 								<div class="h-3 w-full bg-[#3f3f46]"></div>
@@ -72,7 +78,7 @@
 					</div>
 					<!-- Savile Row -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-savile-row" type="radio" id="savile-row-theme" class="peer" onchange="changeTheme(['theme-savile-row']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-savile-row' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-savile-row" type="radio" id="savile-row-theme" class="peer" onchange="changeTheme(['theme-savile-row']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-savile-row' %}checked{% endif %}>
 						<label for="savile-row-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#524737]">
 								<div class="h-3 w-full bg-[#524737]"></div>
@@ -102,7 +108,7 @@
 					</div>
 					<!-- Osmium -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-dramblr" type="radio" id="dramblr-theme" class="peer" onchange="changeTheme(['theme-dramblr']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-dramblr'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-dramblr" type="radio" id="dramblr-theme" class="peer" onchange="changeTheme(['theme-dramblr']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-dramblr'%}checked{% endif %}>
 						<label for="dramblr-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#334155]">
 								<div class="h-3 w-full bg-[#334155]"></div>
@@ -132,7 +138,7 @@
 					</div>
 					<!-- Dramblr -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-dramblr dark" type="radio" id="dramblr-theme-dark" class="peer" onchange="changeTheme(['theme-dramblr','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-dramblr dark'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-dramblr dark" type="radio" id="dramblr-theme-dark" class="peer" onchange="changeTheme(['theme-dramblr','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-dramblr dark'%}checked{% endif %}>
 						<label for="dramblr-theme-dark" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#334155]">
 								<div class="h-3 w-full bg-[#334155]"></div>
@@ -162,7 +168,7 @@
 					</div>
 					<!-- Canary -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-canary" type="radio" id="canary-theme" class="peer" onchange="changeTheme(['theme-canary']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-canary'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-canary" type="radio" id="canary-theme" class="peer" onchange="changeTheme(['theme-canary']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-canary'%}checked{% endif %}>
 						<label for="canary-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#a16207]">
 								<div class="h-3 w-full bg-[#a16207]"></div>
@@ -192,7 +198,7 @@
 					</div>
 					<!-- Confection -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-bubblegum" type="radio" id="bubblegum-theme" class="peer" onchange="changeTheme(['theme-bubblegum']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-bubblegum'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-bubblegum" type="radio" id="bubblegum-theme" class="peer" onchange="changeTheme(['theme-bubblegum']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-bubblegum'%}checked{% endif %}>
 						<label for="bubblegum-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#be185d]">
 								<div class="h-3 w-full bg-[#be185d]"></div>
@@ -222,7 +228,7 @@
 					</div>
 					<!-- Mocha -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-mocha" type="radio" id="mocha-theme" class="peer" onchange="changeTheme(['theme-mocha']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-mocha'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-mocha" type="radio" id="mocha-theme" class="peer" onchange="changeTheme(['theme-mocha']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-mocha'%}checked{% endif %}>
 						<label for="mocha-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#524c37]">
 								<div class="h-3 w-full bg-[#524c37]"></div>
@@ -252,7 +258,7 @@
 					</div>
 					<!-- Blood Orange -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-blood-orange" type="radio" id="blood-orange-theme" class="peer" onchange="changeTheme(['theme-blood-orange']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-blood-orange'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-blood-orange" type="radio" id="blood-orange-theme" class="peer" onchange="changeTheme(['theme-blood-orange']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-blood-orange'%}checked{% endif %}>
 						<label for="blood-orange-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#4338ca]">
 								<div class="h-3 w-full bg-[#4338ca]"></div>
@@ -282,7 +288,7 @@
 					</div>
 					<!-- Choco Mint -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-choco-mint dark" type="radio" id="choco-mint-theme" class="peer" onchange="changeTheme(['theme-choco-mint','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-choco-mint dark' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-choco-mint dark" type="radio" id="choco-mint-theme" class="peer" onchange="changeTheme(['theme-choco-mint','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-choco-mint dark' %}checked{% endif %}>
 						<label for="choco-mint-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#524c37]">
 								<div class="h-3 w-full bg-[#524c37]"></div>
@@ -312,7 +318,7 @@
 					</div>
 					<!-- Limon -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-limon" type="radio" id="limon-theme" class="peer" onchange="changeTheme(['theme-limon']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-limon'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-limon" type="radio" id="limon-theme" class="peer" onchange="changeTheme(['theme-limon']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-limon'%}checked{% endif %}>
 						<label for="limon-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#4d7c0f]">
 								<div class="h-3 w-full bg-[#4d7c0f]"></div>
@@ -342,7 +348,7 @@
 					</div>
 					<!-- Lake Tahoe -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-lake-tahoe dark" type="radio" id="lake-tahoe-theme" class="peer" onchange="changeTheme(['theme-lake-tahoe','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-lake-tahoe dark' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-lake-tahoe dark" type="radio" id="lake-tahoe-theme" class="peer" onchange="changeTheme(['theme-lake-tahoe','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-lake-tahoe dark' %}checked{% endif %}>
 						<label for="lake-tahoe-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#0e7490]">
 								<div class="h-3 w-full bg-[#0e7490]"></div>
@@ -372,7 +378,7 @@
 					</div>
 					<!-- Abyss -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-abyss dark" type="radio" id="abyss-theme" class="peer" onchange="changeTheme(['theme-abyss','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-abyss dark' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-abyss dark" type="radio" id="abyss-theme" class="peer" onchange="changeTheme(['theme-abyss','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-abyss dark' %}checked{% endif %}>
 						<label for="abyss-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-black">
 								<div class="h-3 w-full bg-black"></div>
@@ -402,7 +408,7 @@
 					</div>
 					<!-- Dusk -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-midnight dark" type="radio" id="midnight-theme" class="peer" onchange="changeTheme(['theme-midnight','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-midnight dark' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-midnight dark" type="radio" id="midnight-theme" class="peer" onchange="changeTheme(['theme-midnight','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-midnight dark' %}checked{% endif %}>
 						<label for="midnight-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#374151]">
 								<div class="h-3 w-full bg-[#374151]"></div>
@@ -432,7 +438,7 @@
 					</div>
 					<!-- cambridge -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-cambridge" type="radio" id="cambridge-theme" class="peer" onchange="changeTheme(['theme-cambridge']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-cambridge' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-cambridge" type="radio" id="cambridge-theme" class="peer" onchange="changeTheme(['theme-cambridge']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-cambridge' %}checked{% endif %}>
 						<label for="cambridge-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#44403c]">
 								<div class="h-3 w-full bg-[#44403c]"></div>
@@ -462,7 +468,7 @@
 					</div>
 					<!-- Yale -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-yale dark" type="radio" id="yale-theme" class="peer" onchange="changeTheme(['theme-yale','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-yale dark' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-yale dark" type="radio" id="yale-theme" class="peer" onchange="changeTheme(['theme-yale','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-yale dark' %}checked{% endif %}>
 						<label for="yale-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#d73987]">
 								<div class="h-3 w-full bg-[#d73987]"></div>
@@ -492,7 +498,7 @@
 					</div>
 					<!-- Haskell -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-haskell dark" type="radio" id="haskell-theme" class="peer" onchange="changeTheme(['theme-haskell','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-haskell dark' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-haskell dark" type="radio" id="haskell-theme" class="peer" onchange="changeTheme(['theme-haskell','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-haskell dark' %}checked{% endif %}>
 						<label for="haskell-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#00001f]">
 								<div class="h-3 w-full bg-[#00001f]"></div>
@@ -522,7 +528,7 @@
 					</div>
 					<!-- Alpine -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-alpine" type="radio" id="alpine-theme" class="peer" onchange="changeTheme(['theme-alpine']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-alpine' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-alpine" type="radio" id="alpine-theme" class="peer" onchange="changeTheme(['theme-alpine']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-alpine' %}checked{% endif %}>
 						<label for="alpine-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#44423b]">
 								<div class="h-3 w-full bg-[#44423b]"></div>
@@ -552,7 +558,7 @@
 					</div>
 					<!-- War Games -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-war-games dark" type="radio" id="war-games-theme" class="peer" onchange="changeTheme(['theme-war-games','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-war-games dark' %}checked{% endif %}>
+						<input hidden name="theme" value="theme-war-games dark" type="radio" id="war-games-theme" class="peer" onchange="changeTheme(['theme-war-games','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-war-games dark' %}checked{% endif %}>
 						<label for="war-games-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#001f1b]">
 								<div class="h-3 w-full bg-[#001f1b]"></div>
@@ -582,7 +588,7 @@
 					</div>
 					<!-- Slate -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-iron" type="radio" id="iron-theme" class="peer" onchange="changeTheme(['theme-iron']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-iron'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-iron" type="radio" id="iron-theme" class="peer" onchange="changeTheme(['theme-iron']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-iron'%}checked{% endif %}>
 						<label for="iron-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#3f3f46]">
 								<div class="h-3 w-full bg-[#3f3f46]"></div>
@@ -612,7 +618,7 @@
 					</div>
 					<!-- Mountain Bluebird -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-mountain-bluebird" type="radio" id="mountain-bluebird-theme" class="peer" onchange="changeTheme(['theme-mountain-bluebird']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-mountain-bluebird'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-mountain-bluebird" type="radio" id="mountain-bluebird-theme" class="peer" onchange="changeTheme(['theme-mountain-bluebird']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-mountain-bluebird'%}checked{% endif %}>
 						<label for="mountain-bluebird-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#252525]">
 								<div class="h-3 w-full bg-[#252525]"></div>
@@ -642,7 +648,7 @@
 					</div>
 					<!-- Redwood -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-redwood dark" type="radio" id="redwood-theme" class="peer" onchange="changeTheme(['theme-redwood','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-redwood dark'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-redwood dark" type="radio" id="redwood-theme" class="peer" onchange="changeTheme(['theme-redwood','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-redwood dark'%}checked{% endif %}>
 						<label for="redwood-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#462f2f]">
 								<div class="h-3 w-full bg-[#462f2f]"></div>
@@ -672,7 +678,7 @@
 					</div>
 					<!-- Conifer -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-evergreen dark" type="radio" id="evergreen-theme-dark" class="peer" onchange="changeTheme(['theme-evergreen','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-evergreen dark'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-evergreen dark" type="radio" id="evergreen-theme-dark" class="peer" onchange="changeTheme(['theme-evergreen','dark']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-evergreen dark'%}checked{% endif %}>
 						<label for="evergreen-theme-dark" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#37523e]">
 								<div class="h-3 w-full bg-[#37523e]"></div>
@@ -702,7 +708,7 @@
 					</div>
 					<!-- Sequoia -->
 					<div class="my-2 px-2 w-1/2 lg:w-1/4 flex items-center justify-center">
-						<input hidden name="theme" value="theme-sequoia" type="radio" id="sequoia-theme" class="peer" onchange="changeTheme(['theme-sequoia']); post_toast2('/settings/profile?theme2='+value, '1')" {% if v.theme2 == 'theme-sequoia'%}checked{% endif %}>
+						<input hidden name="theme" value="theme-sequoia" type="radio" id="sequoia-theme" class="peer" onchange="changeTheme(['theme-sequoia']); post_toast2('/settings/profile?theme2='+value, '1')" {% theme == 'theme-sequoia'%}checked{% endif %}>
 						<label for="sequoia-theme" class="flex flex-col items-center justify-center w-full h-full text-center border border-gray-300 hover:border-gray-400 shadow-sm dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 peer-checked:border-blue-500 peer-checked:bg-blue-600/10 rounded-lg overflow-hidden">
 							<div class="flex flex-col w-full h-full bg-[#462f2f]">
 								<div class="h-3 w-full bg-[#462f2f]"></div>
