@@ -13,11 +13,11 @@
 			<p class="text-muted">This user has enabled private mode to cloak their posting history.</p>
 			{% if u.id == 253 and 'rama' in request.host %}
 				{% if v and v.coins > 500 and not v.is_suspended %}
-					<a class="btn btn-primary" href="javascript:void(0)", onclick="post_toast('/pay_rent', '1')">Pay rent to view profile (500 coins)</a>
+					<a class="btn btn-primary" role="button", onclick="post_toast('/pay_rent', '1')">Pay rent to view profile (500 coins)</a>
 				{% endif %}
 				<pre></pre>
 				{% if v and v.coins > 5000 and time - v.created_utc > 604800 and not v.is_suspended %}
-					<a class="btn btn-primary" href="javascript:void(0)", onclick="post_toast('/steal', '1')">Attempt to steal coins</a>
+					<a class="btn btn-primary" role="button", onclick="post_toast('/steal', '1')">Attempt to steal coins</a>
 					<div class="text-small-extra text-muted mt-1">Landlords, like all other men, love to reap where they never sowed.</div>
 				{% endif %}
 				<pre>

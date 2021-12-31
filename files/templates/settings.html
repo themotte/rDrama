@@ -34,7 +34,7 @@
 
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/static/assets/css/main.css?a=41"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
+	<link rel="stylesheet" href="/static/assets/css/main.css?a=42"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
 	{% if v.agendaposter %}
 		<style>
 			html {
@@ -56,8 +56,6 @@
 	{% elif v.css %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 	{% endif %}
-
-	<link href="/static/assets/css/fa.css?a=3" rel="stylesheet"> 
 </head>
 
 <body id="settings" style="overflow-x: hidden; {% if v and v.background %} background:url(/static/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %}">

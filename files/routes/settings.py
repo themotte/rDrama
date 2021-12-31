@@ -52,6 +52,9 @@ def settings_profile_post(v):
 		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
 	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB."}, 413
 
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+
 	updated = False
 
 	if request.values.get("background", v.background) != v.background:
@@ -326,8 +329,6 @@ def settings_profile_post(v):
 		v.bio_html=bio_html
 		g.db.add(v)
 		g.db.commit()
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html",
 							   v=v,
 							   msg="Your bio has been updated.")
@@ -583,7 +584,7 @@ def verifiedcolor(v):
 @validate_formkey
 def settings_security_post(v):
 	if request.values.get("new_password"):
-		if v.id == PW_ID: abort(403)
+		# if v.id == PW_ID: abort(403)
 
 		if request.values.get("new_password") != request.values.get("cnf_password"):
 			return render_template("settings_security.html", v=v, error="Passwords do not match.")
