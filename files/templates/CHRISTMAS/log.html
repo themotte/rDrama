@@ -3,7 +3,7 @@
 	'fa-user-slash': 'text-red-600',
 	'fa-feather-alt': 'text-gray-500',
 	'fa-eye-evil': 'text-red-600'
-	}
+}
 %}
 
 {% extends "CHRISTMAS/default.html" %}
@@ -91,47 +91,44 @@
 
 <div class="col-span-full my-4">
 
-	<div class="rounded border bg-white mx-auto">
-		{% if actions %}
-		<ul class="flex flex-col divide-y divide-gray-300 dark:divide-gray-700 space-y-2.5 mb-0 list-none">
-			{% for ma in actions %}
-			<li id="action-{{ma.id}}" class="relative flex pt-2.5 first:pt-0">
-				<div class="w-6 h-6 flex justify-center items-center flex-shrink-0">
-					<i class="far {{ ma.icon }} {{ colors[ma.icon] }} fa-fw"></i>
+	{% if actions %}
+	<ul class="flex flex-col divide-y divide-gray-300 dark:divide-gray-700 space-y-2.5 mb-0 list-none">
+		{% for ma in actions %}
+		<li id="action-{{ma.id}}" class="relative flex pt-2.5 first:pt-0">
+			<div class="w-6 h-6 flex justify-center items-center flex-shrink-0">
+				<i class="far {{ ma.icon }} {{ colors[ma.icon] }} fa-fw"></i>
+			</div>
+			<div class="pl-2 text-gray-500 dark:text-gray-400 text-sm">
+				<div>
+					<a href="{{ma.user.url}}" class="font-font text-black dark:text-gray-200 hover:text-primary dark:hover:text-primary" target="_self">@{{ma.user.username}}
+					</a>
+					<span>{{ma.string | safe}}</span>
 				</div>
-				<div class="pl-2 text-gray-500 dark:text-gray-400 text-sm">
-					<div>
-						<a href="{{ma.user.url}}" class="font-font text-black dark:text-gray-200 hover:text-primary dark:hover:text-primary" target="_self">@{{ma.user.username}}
-						</a>
-						<span>{{ma.string | safe}}</span>
-					</div>
-					<div class="text-gray-400 dark:text-gray-500 text-xs">
-						<span>{{ma.age_string}}</span>
-					</div>
+				<div class="text-gray-400 dark:text-gray-500 text-xs">
+					<span>{{ma.age_string}}</span>
 				</div>
-			</li>
-			{% endfor %}
-		</ul>
+			</div>
+		</li>
+		{% endfor %}
+	</ul>
+	{% else %}
+	<div class="flex flex-col items-center justify-center py-24 md:py-48">
+		<img loading="lazy" src="https://c.tenor.com/NhDy-AkelhQAAAAM/marsey-drama.gif" class="w-20 h-20 mb-4 rounded-md object-cover">
+		<h2 class="text-xl font-bold leading-normal font-heading">No logs</h2>
+		<p class="text-gray-500 text-sm">
+			When mods perform actions, it will show up here.
+		</p>
+		{% if v and v.admin_level > 2 %}
+		<a href="/admin" class="mt-3 btn btn-gray">
+			Go to admin dashboard
+		</a>
 		{% else %}
-		<div class="flex flex-col items-center justify-center py-24 md:py-48">
-			<img loading="lazy" src="https://c.tenor.com/NhDy-AkelhQAAAAM/marsey-drama.gif" class="w-20 h-20 mb-4 rounded-md object-cover">
-			<h2 class="text-xl font-bold leading-normal font-heading">No logs</h2>
-			<p class="text-gray-500 text-sm">
-				When mods perform actions, it will show up here.
-			</p>
-			{% if v and v.admin_level > 2 %}
-				<a href="/admin" class="mt-3 btn btn-gray">
-					Go to admin dashboard
-				</a>
-			{% else %}
-				<a href="/" class="mt-3 btn btn-gray">
-					Go to homepage
-				</a>
-			{% endif %}
-		</div>
+		<a href="/" class="mt-3 btn btn-gray">
+			Go to homepage
+		</a>
 		{% endif %}
 	</div>
-
+	{% endif %}
 
 	<nav aria-label="Page navigation" class="mb-5">
 		<ul class="pagination pagination-sm mb-0">
