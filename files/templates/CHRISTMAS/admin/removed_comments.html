@@ -1,18 +1,21 @@
 {% extends "CHRISTMAS/admin/removed_posts.html" %}
 
 {% block listing %}
-		<div class="col-span-full px-2.5 md:px-0">
-			{% with comments=listing %}
-				{% include "CHRISTMAS/comments.html" %}
-			{% endwith %}
-			{% if not listing %}
-			<div class="row no-gutters">	
-				<div class="col">			
-					<div class="text-center py-7">
-						<div class="h4 p-2">There are no comments here (yet).</div>
-					</div>			
-				</div>	
-			</div>
-			{% endif %}
-		</div>
+<div class="col-span-full px-2.5 md:px-0">
+	{% with comments=listing %}
+	{% include "CHRISTMAS/comments.html" %}
+	{% endwith %}
+	{% if not listing %}
+	<div class="flex flex-col items-center justify-center py-24 md:py-48">
+		<img loading="lazy" src="https://c.tenor.com/NhDy-AkelhQAAAAM/marsey-drama.gif" class="w-20 h-20 mb-4 rounded-md object-cover">
+		<h2 class="text-xl font-bold leading-normal font-heading">No removed comments</h2>
+		<p class="text-gray-500 text-sm">
+			When mods remove a comment, it will show up here.
+		</p>
+		<a href="/admin" class="mt-3 btn btn-gray">
+			Go to admin dashboard
+		</a>
+	</div>
+	{% endif %}
+</div>
 {% endblock %}
