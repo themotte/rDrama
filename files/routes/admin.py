@@ -182,8 +182,8 @@ def remove_meme_admin(v, username):
 
 
 @app.post("/admin/monthly")
-@limiter.limit("1/day")
-@admin_level_required(2)
+@limiter.limit("2/day")
+@admin_level_required(3)
 @validate_formkey
 def monthly(v):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
