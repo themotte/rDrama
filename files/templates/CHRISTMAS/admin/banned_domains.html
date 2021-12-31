@@ -33,15 +33,15 @@
 <table class="w-full table mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
-			<th style="font-weight:bold;">Domain</th>
-			<th style="font-weight:bold;">Ban reason</th>
+			<th scope="col" class="p-2.5">Domain</th>
+			<th scope="col" class="p-2.5">Ban reason</th>
 		</tr>
 	</thead>
 	<tbody>
 	{% for domain in banned_domains %}
-		<tr>
-			<td style="font-weight:bold;">{{domain.domain}}</td>
-			<td>{{domain.reason}}</td>
+		<tr class="odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10">
+			<td class="px-2.5 font-bold">{{domain.domain}}</td>
+			<td class="px-2.5">{{domain.reason}}</td>
 		</tr>
 	{% endfor %}
 	</tbody>
