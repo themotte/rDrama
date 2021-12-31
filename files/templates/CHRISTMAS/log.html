@@ -35,7 +35,7 @@
 		<div class="ml-auto flex space-x-2">
 			<!-- Filter by mod -->
 			<div class="dropdown">
-				<button class="block px-4 py-2 bg-gradient-to-t from-gray-200 to-gray-100 focus:from-gray-100 focus:to-gray-200 border border-gray-300 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-700 focus:text-gray-900 focus:shadow-inner focus:outline-none dropdown-toggle" type="button" id="dropdownLogSortsButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<button class="inline-flex items-center px-4 py-2 bg-gradient-to-t from-gray-200 to-gray-100 focus:from-gray-100 focus:to-gray-200 border border-gray-300 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-700 focus:text-gray-900 focus:shadow-inner focus:outline-none dropdown-toggle" type="button" id="dropdownLogSortsButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					{% if admin %}
 					<img src="/@{{admin}}/pic" alt="{{ admin }}avatar" class="flex-shrink-0 w-5 h-5 object-cover mr-2">{{ admin }}
 					{% else %}
@@ -59,14 +59,12 @@
 			</div>
 			<!-- Filter by action -->
 			<div class="dropdown">
-				<button class="block px-4 py-2 bg-gradient-to-t from-gray-200 to-gray-100 focus:from-gray-100 focus:to-gray-200 border border-gray-300 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-700 focus:text-gray-900 focus:shadow-inner focus:outline-none dropdown-toggle" type="button" id="dropdownLogActionSortsButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<div class="flex items-center justify-center w-5 h-5">
-						{% if type %}
-						<i class="fas {{types[type]['icon']}} fa-fw mr-2"></i>{{type}}
-						{% else %}
-						<i class="fas fa-broom fa-fw mr-2"></i>All
-						{% endif %}
-					</div>
+				<button class="inline-flex items-center px-4 py-2 bg-gradient-to-t from-gray-200 to-gray-100 focus:from-gray-100 focus:to-gray-200 border border-gray-300 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-700 focus:text-gray-900 focus:shadow-inner focus:outline-none dropdown-toggle" type="button" id="dropdownLogActionSortsButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if type %}
+					<i class="fas {{types[type]['icon']}} fa-fw mr-2"></i>{{type}}
+					{% else %}
+					<i class="fas fa-broom fa-fw mr-2"></i>All
+					{% endif %}
 				</button>
 				<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownLogActionSortsButton" x-placement="bottom-start">
 					<li>
