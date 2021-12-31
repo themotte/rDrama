@@ -25,6 +25,7 @@
 	</div>
 </div>
 {% endblock %}
+
 {% block content %}
 <div class="col-span-full my-2 px-2.5 md:px-0">
 	{% if users %}
@@ -39,7 +40,7 @@
 			{% for user in users %}
 			<tr>
 				<td class="px-2.5 font-bold">{{loop.index}}</td>
-				<td>
+				<td class="px-2.5">
 					<a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}">
 						<img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20">
 						<span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span>
