@@ -17,10 +17,9 @@
 	{% if actions %}
 	<ul class="flex flex-col divide-y space-y-2 mb-0 list-none">
 		{% for ma in actions %}
-		{% set iconColor = ma.icon %}
 		<li id="action-{{ma.id}}" class="relative flex">
 			<div class="w-6 h-6 flex justify-center items-center flex-shrink-0">
-				<i class="far {{ ma.icon }} {{ colors[iconColor] }} text-lg fa-fw"></i>
+				<i class="far {{ ma.icon }} {{ colors[ma.icon] }} text-lg fa-fw"></i>
 			</div>
 			<div class="pl-2 text-gray-500 dark:text-gray-400 text-sm">
 				<div>
