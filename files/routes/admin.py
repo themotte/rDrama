@@ -17,9 +17,11 @@ from files.__main__ import app, cache, limiter
 from .front import frontlist
 from files.helpers.discord import add_role
 from datetime import datetime
+import requests
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
+GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
@@ -182,7 +184,7 @@ def remove_meme_admin(v, username):
 
 @app.post("/admin/monthly")
 @limiter.limit("1/day")
-@admin_level_required(2)
+@admin_level_required(3)
 @validate_formkey
 def monthly(v):
 	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
@@ -208,12 +210,10 @@ def monthly(v):
 				elif u.patron == 3: procoins = 10000
 				elif u.patron == 4: procoins = 25000
 				elif u.patron == 5: procoins = 50000
+				else: print(u.username)
 				u.procoins += procoins
 				g.db.add(u)
-				
-				cid = notif_comment(f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
-				add_notif(cid, u.id)
-
+				send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
 		g.db.commit()
 	return {"message": "Monthly coins granted"}
 
@@ -224,7 +224,7 @@ def get_sidebar(v):
 
 	try:
 		with open(f'files/templates/sidebar_{SITE_NAME}.html', 'r') as f: sidebar = f.read()
-	except Exception:
+	except:
 		sidebar = None
 
 	return render_template('admin/sidebar.html', v=v, sidebar=sidebar)
@@ -250,7 +250,7 @@ def post_sidebar(v):
 
 	g.db.commit()
 
-	return render_template('admin/sidebar.html', v=v, sidebar=sidebar)
+	return render_template('admin/sidebar.html', v=v, sidebar=sidebar, msg='Sidebar edited successfully!')
 
 
 @app.get("/admin/shadowbanned")

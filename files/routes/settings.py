@@ -584,7 +584,7 @@ def verifiedcolor(v):
 @validate_formkey
 def settings_security_post(v):
 	if request.values.get("new_password"):
-		# if v.id == PW_ID: abort(403)
+		if v.id == PW_ID: abort(403)
 
 		if request.values.get("new_password") != request.values.get("cnf_password"):
 			return render_template("settings_security.html", v=v, error="Passwords do not match.")
@@ -601,7 +601,7 @@ def settings_security_post(v):
 
 		g.db.commit()
 
-		return render_template("settings_security.html", v=v, error="Your password has been changed.")
+		return render_template("settings_security.html", v=v, msg="Your password has been changed.")
 
 	if request.values.get("new_email"):
 

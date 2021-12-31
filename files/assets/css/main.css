@@ -4472,7 +4472,7 @@ textarea {
 }
 }
 .container, .container-fluid {
-    padding-bottom: 30px;
+    padding-bottom: 50px;
 }
 .navbar {
     padding: 0.5rem 0.5rem 0.3rem 0.5rem;
@@ -4737,4 +4737,9 @@ lite-youtube.lyt-activated > .lty-playbtn {
 
 .ytp-pause-overlay-controls-hidden .ytp-pause-overlay, ytp-pause-overlay ytp-scroll-min {
     display: none!important;
+}
+
+table {
+    display: inline-block !important;
+    overflow: auto !important;
 }

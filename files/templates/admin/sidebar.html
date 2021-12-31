@@ -4,6 +4,18 @@
 
 {% block content %}
 
+{% if msg %}
+	<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+		<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+		<span>
+			{{msg}}
+		</span>
+		<button role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true"><i class="far fa-times"></i></span>
+		</button>
+	</div>
+{% endif %}
+
 <div class="row my-5">
 	<div class="col col-md-8">
 		<div class="settings">

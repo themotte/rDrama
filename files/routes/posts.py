@@ -7,7 +7,7 @@ from files.helpers.sanitize import *
 from files.helpers.filters import *
 from files.helpers.markdown import *
 from files.helpers.alerts import *
-from files.helpers.discord import send_message
+from files.helpers.discord import send_discord_message
 from files.helpers.const import *
 from files.classes import *
 from flask import *
@@ -103,11 +103,6 @@ def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
-	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
-	elif v: defaultsortingcomments = v.defaultsortingcomments
-	else: defaultsortingcomments = "top"
-
-	sort = request.values.get("sort", defaultsortingcomments)
 
 	try: pid = int(pid)
 	except:
@@ -115,6 +110,11 @@ def post_id(pid, anything=None, v=None):
 		except: abort(404)
 
 	post = get_post(pid, v=v)
+
+	if 'megathread' in post.title.lower(): defaultsortingcomments = 'new'
+	elif v: defaultsortingcomments = v.defaultsortingcomments
+	else: defaultsortingcomments = "top"
+	sort = request.values.get("sort", defaultsortingcomments)
 
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
@@ -786,7 +786,7 @@ def submit_post(v):
 			params = parse_qs(urlparse(url).query)
 			t = params.get('t', params.get('start', [0]))[0]
 			if isinstance(t, str): t = t.replace('s','')
-			embed = f'<lite-youtube videoid="{yt_id}" params="controls=0&modestbranding=1'
+			embed = f'<lite-youtube videoid="{yt_id}" params="autoplay=1&modestbranding=1'
 			if t: embed += f'&start={t}'
 			embed += '"></lite-youtube>'
 		elif app.config['SERVER_NAME'] in domain and "/post/" in url and "context" not in url:
@@ -1176,7 +1176,7 @@ def submit_post(v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title) and not new_post.private:
-		send_message(f"https://{site}{new_post.permalink}")
+		send_discord_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()
