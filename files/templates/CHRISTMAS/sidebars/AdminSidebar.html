@@ -6,7 +6,7 @@
 			<label class="label ml-2" for="disablesignups">Disable signups</label>
 		</div>
 	</div>
-	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Mod Log</h2>
+	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Recent Mod Activity</h2>
 	{% for ma in actions %}
 
 	<div id="action-{{ma.id}}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white{% if loop.index > 1 %} border-top{% endif %}">
@@ -36,7 +36,7 @@
 
 	{% else %}
 	<div class="text-center">
-		<i class="block fas fa-ghost text-lg text-gray-400 dark:text-gray-800"></i>
+		<i class="block fas fa-ghost text-lg text-gray-400 dark:text-gray-700"></i>
 		<p class="mt-1 text-sm text-gray-500">There's nothing here right now.</p>
 	</div>
 	{% endfor %}
