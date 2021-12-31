@@ -68,12 +68,12 @@
 	</div>
 	{% endif %}
 
-	<form id="awards-form" action="/admin/awards", method="post">
+	<form id="awards-form" action="/admin/awards" method="post">
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<label for="input-username" class="label">Username</label>
 		<input autocomplete="off" id="input-username" class="form-input mb-2" type="text" name="username" required placeholder="Enter a username" oninput="document.getElementById('submit-btn').disabled = false">
 
-		<table class="w-full table table-striped">
+		<table class="w-full table mt-6">
 			<thead class="bg-primary text-white">
 				<tr>
 					<th scope="col" class="p-2.5">Icon</th>
