@@ -112,11 +112,11 @@
 					{{single_comment(reply, level=level+1)}}
 				{% endfor %}
 			</div>
-			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
+			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments">
 				<a href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
-			<div id="morecomment-{{c.id}}" class="mt-2 more-comments text-small">
+			<div id="morecomment-{{c.id}}" class="mt-2 more-comments">
 				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
 				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
@@ -545,11 +545,11 @@
 					{{single_comment(reply, level=level+1)}}
 				{% endfor %}
 			</div>
-			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments text-small">
+			<div id="morecomment-{{c.id}}" class="d-md-none mt-2 more-comments">
 				<a href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
 		{% elif replies %}
-			<div id="morecomments-{{c.id}}" class="mt-2 more-comments text-small">
+			<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
 				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
 				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
 			</div>
