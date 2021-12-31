@@ -1,37 +1,26 @@
-from os import environ
+from os import environ, listdir
 import re
 from copy import deepcopy
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 
+marseys = []
+others = []
+for x in sorted(x.replace('.webp','') for x in listdir("files/assets/images/emojis")):
+	if x.startswith('mar') or x.endswith('sey'): marseys.append(x)
+	else: others.append(x)
+allemojis = marseys + others
+
 AJ_REPLACEMENTS = {
-	" you're ": ' $#3$2 ',
 	' your ': " you're ",
-	' $#3$2 ': ' your ',
-	" too ": ' $#3$3 ',
-	' to ': " too ",
-	' $#3$3 ': ' to ',
-	' my ': ' their ',
-	' mine ': ' their ',
+	' to ': " too ", 
 
-	" You're ": ' $#3$2 ',
 	' Your ': " You're ",
-	' $#3$2 ': ' Your ',
-	" Too ": ' $#3$3 ',
 	' To ': " Too ",
-	' $#3$3 ': ' To ',
-	' My ': ' Their ',
-	' Mine ': ' Their ',
 
-	" YOU'RE ": ' $#3$2 ',
 	' YOUR ': " YOU'RE ",
-	' $#3$2 ': ' YOUR ',
-	" TOO ": ' $#3$3 ',
 	' TO ': " TOO ",
-	' $#3$3 ': ' TO ',
-	' MY ': ' THEIR ',
-	' MINE ': ' THEIR ',
 }
 
 SLURS = {
@@ -549,7 +538,7 @@ AWARDS = {
 		"description": "Makes flies swarm the post.",
 		"icon": "fas fa-poop",
 		"color": "text-black-50",
-		"price": 500
+		"price": 300
 	},
 	"fireflies": {
 		"kind": "fireflies",
@@ -557,7 +546,7 @@ AWARDS = {
 		"description": "Makes fireflies swarm the post.",
 		"icon": "fas fa-sparkles",
 		"color": "text-warning",
-		"price": 500
+		"price": 300
 	},
 	"train": {
 		"kind": "train",
@@ -565,8 +554,16 @@ AWARDS = {
 		"description": "Summons a train on the post.",
 		"icon": "fas fa-train",
 		"color": "text-pink",
-		"price": 500
+		"price": 300
 	},
+	"wholesome": {
+        "kind": "wholesome",
+        "title": "Wholesome",
+        "description": "Summons a wholesome marsey on the post.",
+        "icon": "fas fa-smile-beam",
+        "color": "text-yellow",
+        "price": 300
+    },
 	"pin": {
 		"kind": "pin",
 		"title": "1-Hour Pin",
@@ -615,6 +612,14 @@ AWARDS = {
 		"color": "text-purple",
 		"price": 2500
 	},
+	"progressivestack": {
+        "kind": "progressivestack",
+        "title": "Progressive Stack",
+        "description": "Makes votes on the recipient's posts and comments weigh double in the ranking algorithm for 6 hours.",
+        "icon": "fas fa-bullhorn",
+        "color": "text-red",
+        "price": 3000
+    },
 	"marsey": {
 		"kind": "marsey",
 		"title": "Marsey",

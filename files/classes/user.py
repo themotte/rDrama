@@ -100,6 +100,7 @@ class User(Base):
 	fp = Column(String)
 	sigs_disabled = Column(Boolean)
 	fish = Column(Boolean)
+	progressivestack = Column(Integer)
 	friends = deferred(Column(String))
 	friends_html = deferred(Column(String))
 	enemies = deferred(Column(String))

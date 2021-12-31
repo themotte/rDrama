@@ -4473,13 +4473,11 @@ textarea {
 }
 .container, .container-fluid {
     padding-bottom: 50px;
-    padding-left: 50px;
-    padding-right: 50px;
 }
-@media (max-width: 992px) {
+@media (min-width: 992px) {
     .container, .container-fluid {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 50px;
+        padding-right: 50px;
     }
 }
 .navbar {
@@ -4568,6 +4566,9 @@ blockquote p {
 }
 .text-red {
     color: #C30F16 !important;
+}
+.text-yellow {
+    color: yellow !important;
 }
 .timeline-Widget {
     max-height: 500px !important;
