@@ -184,12 +184,12 @@
 
 	<div class="my-4 p-5 flex items-center divide-x divide-gray-700 rounded-md bg-gray-500 shadow-inset-t-white-10 border border-gray-700">
 		{% for section in stats %}
-			<div class="px-5 shadow-inset-r-white-05">
+			<div class="px-5">
 				<div class="text-white dark:text-gray-500 uppercase font-bold text-xs tracking-wider leading-4 mb-2">
 					{{ section.stat }}
 				</div>
 				<h2 class="font-bold text-xl md:text-3xl font-heading leading-normal mb-2 text-shadow-light text-white">{{ section.count }}</h2>
-				<p class="text-gray-300">
+				<p class="text-sm md:text-base text-gray-300">
 					{{ section.description }}
 				</p>
 			</div>
