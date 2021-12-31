@@ -2,10 +2,10 @@
 
 <div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="awardModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-		<div class="modal-content bg-gray-100 rounded-md shadow-lg">
+		<div class="modal-content bg-gray-100 dark:bg-gray-700 rounded-md shadow-lg">
 			<div class="modal-header">
 				<h5 class="font-bold text-xl text-black font-heading leading-normal">Gift Award</h5>
-				<button type="button" class="close text-gray-700 hover:text-gray-900" data-bs-dismiss="modal" aria-label="Close">
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
 			</div>
@@ -23,8 +23,8 @@
 							<label for="{{award.kind}}-award" onclick="document.getElementById('giveaward').disabled=false" class="w-full h-full p-2 text-center hover:bg-gray-300 peer-checked:shadow-inner peer-checked:bg-gray-400 rounded cursor-not-allowed opacity-50">
 							{% endif %}
 								<i class="{{award.icon}} {{award.color}}"></i>
-								<div class="mt-2 font-bold text-base text-black">{{award.title}}</div>
-								<div class="text-sm text-gray-600">{{award.owned}} owned</div>
+								<div class="mt-2 font-bold text-base text-black dark:text-gray-200">{{award.title}}</div>
+								<div class="text-sm text-gray-500">{{award.owned}} owned</div>
 							</label>
 						</div>
 						{% endfor %}
@@ -34,8 +34,8 @@
 						<small id="notelabel-helper" class="font-normal text-gray-500">Optional</small>
 					</label>
 					<textarea id="note" maxlength="200" name="note" class="form-input" placeholder="Note to include in award notification..."></textarea>
-					<div class="flex justify-end space-x-2 border-t border-gray-300 p-4 -mx-4 mt-4">
-						<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700" data-bs-dismiss="modal">
+					<div class="flex justify-end space-x-2 border-t border-gray-300 dark:border-gray-700 p-4 -mx-4 mt-4">
+						<button type="button" class="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-400" data-bs-dismiss="modal">
 							Cancel
 						</button>
 						<input id="giveaward" class="ml-auto btn btn-green" type="submit" value="Gift Award" disabled>
