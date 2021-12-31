@@ -35,20 +35,22 @@
 				<th scope="col" class="p-2.5">Shadowbanned by</th>
 			</tr>
 		</thead>
-		{% for user in users %}
-		<tr>
-			<td class="px-2.5 font-bold">{{loop.index}}</td>
-			<td class="px-2.5">
-				<a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}">
-					<img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20">
-					<span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span>
-				</a>
-			</td>
-			<td class="px-2.5 font-bold">
-				{{user.shadowbanned}}
-			</td>
-		</tr>
-		{% endfor %}
+		<tbody>
+			{% for user in users %}
+			<tr>
+				<td class="px-2.5 font-bold">{{loop.index}}</td>
+				<td class="px-2.5">
+					<a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}">
+						<img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20">
+						<span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span>
+					</a>
+				</td>
+				<td class="px-2.5 font-bold">
+					{{ user.shadowbanned }}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
 	</table>
 	{% else %}
 	<div class="flex flex-col items-center justify-center py-24 md:py-48">
