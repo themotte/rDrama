@@ -4145,8 +4145,8 @@ video {
 		width: 33.333333%;
 	}
 
-	.lg\:max-w-5xl {
-		max-width: 64rem;
+	.lg\:max-w-6xl {
+		max-width: 72rem;
 	}
 
 	.lg\:p-0 {
