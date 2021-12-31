@@ -37,21 +37,21 @@
 			<div class="dropdown">
 				<button class="block px-4 py-1.5 bg-gradient-to-t from-gray-200 to-gray-100 focus:from-gray-100 focus:to-gray-200 border border-gray-300 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-700 focus:text-gray-900 focus:shadow-inner focus:outline-none dropdown-toggle" type="button" id="dropdownLogSortsButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					{% if admin %}
-					<img src="/@{{admin}}/pic" alt="{{ admin }}avatar" class="w-6 h-6 object-cover mr-2">{{ admin }}
+					<img src="/@{{admin}}/pic" alt="{{ admin }}avatar" class="w-5 h-5 object-cover mr-2">{{ admin }}
 					{% else %}
-					<img src="/assets/images/emojis/marseyjanny.webp" alt="default mod avatar" class="w-6 h-6 object-cover mr-4">All
+					<img src="/assets/images/emojis/marseyjanny.webp" alt="default mod avatar" class="w-5 h-5 object-cover mr-4">All
 					{% endif %}
 				</button>
 				<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownLogSortsButton" x-placement="bottom-start">
 					<li>
 						<a class="dropdown-item dropdown-item-primary" href="/log{% if type %}?kind={{type}}{% endif %}">
-							<img src="/assets/images/emojis/marseyjanny.webp" alt="default mod avatar" class="w-6 h-6 object-cover mr-4">All
+							<img src="/assets/images/emojis/marseyjanny.webp" alt="default mod avatar" class="w-5 h-5 object-cover mr-4">All
 						</a>
 					</li>
 					{% for a in admins %}
 					<li>
 						<a class="dropdown-item dropdown-item-primary" href="?admin={{a}}{% if type %}&kind={{type}}{% endif %}">
-							<img src="/@{{a}}/pic" alt="{{ a }} avatar" class="w-6 h-6 object-cover mr-4">{{ a }}
+							<img src="/@{{a}}/pic" alt="{{ a }} avatar" class="w-5 h-5 object-cover mr-4">{{ a }}
 						</a>
 					</li>
 					{% endfor %}
