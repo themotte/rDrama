@@ -27,9 +27,9 @@
 			</ul>
 		</div>
 		<div class="ml-auto">
-			<button type="submit" form="badge-grant-form" class="btn btn-green">
+			<button id="submit-btn" type="submit" form="awards-form" class="btn btn-green" disabled>
 				<i class="fas fa-badge fa-sm fa-fw mr-1"></i>
-				Give Badge
+				Give Awards
 			</button>
 		</div>
 	</div>
@@ -66,10 +66,10 @@
 	<pre></pre>
 	<h5>User Award Grant</h5>
 
-	<form action="/admin/awards", method="post">
+	<form id="awards-form" action="/admin/awards", method="post">
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<label for="input-username">Username</label><br>
-		<input id="input-username" class="form-input mb-3" type="text" name="username" required>
+		<input id="input-username" class="form-input mb-3" type="text" name="username" required onchange="document.getElementById('submit-btn').disabled = false">
 
 		<table class="w-full table table-striped">
 			<thead class="bg-primary text-white">
