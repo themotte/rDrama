@@ -2319,6 +2319,9 @@ video {
 .tracking-wider {
 	letter-spacing: 0.05em;
 }
+.tracking-wide {
+	letter-spacing: 0.025em;
+}
 .text-white {
 	--tw-text-opacity: 1;
 	color: rgba(255, 255, 255, var(--tw-text-opacity));
