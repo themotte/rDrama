@@ -3746,8 +3746,8 @@ video {
 	color: rgba(var(--color-700), var(--tw-text-opacity));
 }
 
-.dark .dark\:odd\:bg-white\/10:nth-child(odd) {
-	background-color: rgba(255, 255, 255, 0.1);
+.dark .dark\:odd\:bg-white\/\[\.05\]:nth-child(odd) {
+	background-color: rgba(255, 255, 255, .05);
 }
 
 .dark .dark\:visited\:text-gray-400:visited {
