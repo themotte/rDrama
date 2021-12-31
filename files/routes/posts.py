@@ -380,8 +380,8 @@ def morecomments(v, cid):
 			comment.voted = c[1] or 0
 			comment.is_blocking = c[2] or 0
 			comment.is_blocked = c[3] or 0
-			output.append(comment)
 			if c[0].parent_comment_id == int(cid): output2.append(comment)
+			else: output.append(comment)
 		comments = output2
 	else:
 		c = g.db.query(Comment).filter_by(id=cid).first()
