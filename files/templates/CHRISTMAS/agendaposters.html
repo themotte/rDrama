@@ -27,9 +27,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="col-span-full my-2 px-2.5 md:px-0">
+<div class="col-span-full my-4 px-2.5 md:px-0">
 	{% if users %}
-	<table class="table table-striped mb-5">
+	<table class="w-full table">
 		<thead class="bg-primary text-white">
 			<tr>
 				<th scope="col" class="p-2.5">#</th>
@@ -38,7 +38,7 @@
 		</thead>
 		<tbody>
 			{% for user in users %}
-			<tr>
+			<tr class="h-16 odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10">
 				<td class="px-2.5 font-bold">{{loop.index}}</td>
 				<td class="px-2.5">
 					<a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}">
