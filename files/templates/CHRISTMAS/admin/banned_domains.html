@@ -38,8 +38,8 @@
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<div class="w-full flex space-x-2 items-center">
 			<input name="domain" placeholder="Enter domain here.." class="form-input" required>
-			<input name="reason" placeholder="Enter ban reason here.." onchange="document.getElementById('ban-submit').disabled=false" class="form-input">
-			<input id="ban-submit" type="submit" class="btn btn-primary" value="Toggle ban" disabled>
+			<input name="reason" placeholder="Enter ban reason here..." oninput="document.getElementById('ban-submit').disabled=false" class="form-input" required>
+			<input id="ban-submit" type="submit" class="btn btn-red" value="Toggle ban" disabled>
 		</div>
 	</form>
 
