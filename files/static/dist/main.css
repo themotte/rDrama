@@ -1077,9 +1077,6 @@ video {
 .-mb-0 {
 	margin-bottom: 0px;
 }
-.mt-8 {
-	margin-top: 2rem;
-}
 .mb-1\.5 {
 	margin-bottom: 0.375rem;
 }
@@ -3910,9 +3907,6 @@ video {
 	}
 		.md\:mr-1 {
 		margin-right: 0.25rem;
-	}
-		.md\:mb-5 {
-		margin-bottom: 1.25rem;
 	}
 		.md\:block {
 		display: block;
