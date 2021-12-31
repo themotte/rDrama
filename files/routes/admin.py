@@ -182,7 +182,7 @@ def remove_meme_admin(v, username):
 
 
 @app.post("/admin/monthly")
-@limiter.limit("2/day")
+@limiter.limit("1/day")
 @admin_level_required(3)
 @validate_formkey
 def monthly(v):
