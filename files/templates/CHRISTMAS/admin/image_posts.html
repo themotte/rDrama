@@ -1,17 +1,4 @@
-{% extends "CHRISTMAS/settings2.html" %}
-
-{% block adminpanel %}{% endblock %}
-{% block pagetype %}userpage{% endblock %}
-{% block banner %}{% endblock %}
-{% block mobileBanner %}{% endblock %}
-{% block desktopBanner %}{% endblock %}
-{% block desktopUserBanner %}{% endblock %}
-{% block mobileUserBanner %}{% endblock %}
-
-{% block postNav %}{% endblock %}
-
-{% block fixedMobileBarJS %}
-{% endblock %}
+{% extends "CHRISTMAS/default.html" %}
 
 {% block title %}
 <title>Image feed</title>
@@ -19,18 +6,37 @@
 {% endblock %}
 
 
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700 sub-header"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Image Posts
+			</h1>
+			<ul class="flex space-x-2 text-xs text-gray-500 dark:text-gray-400 leading-normal mb-0">
+				<li>
+					<a href="/admin" class="text-gray-500 hover:underline">Admin Dashboard</a>
+				</li>
+				<li>
+					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
+				</li>
+				<li>
+					<a href="#" class="text-gray-700 dark:text-gray-500 hover:underline">Image Posts</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
 {% block content %}
-
-<div class="row no-gutters">
-
-	<div class="col">
-
+<div class="col-span-full xl:col-span-9 dark:bg-gray-700 md:dark:bg-gray-800">
 	{% block listing %}
-		<div class="posts">
+		<ul class="flex flex-col sm:py-4 my-2.5 sm:my-0" id="posts">
 			{% include "CHRISTMAS/submission_listing.html" %}
 		</div>
 	{% endblock %}
-	</div>
 </div>
 {% endblock %}
 
