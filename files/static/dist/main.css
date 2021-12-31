@@ -2238,9 +2238,6 @@ video {
 .pb-12 {
 	padding-bottom: 3rem;
 }
-.pl-4 {
-	padding-left: 1rem;
-}
 .text-left {
 	text-align: left;
 }
@@ -3919,6 +3916,9 @@ video {
 		.md\:h-20 {
 		height: 5rem;
 	}
+		.md\:h-12 {
+		height: 3rem;
+	}
 		.md\:w-4 {
 		width: 1rem;
 	}
@@ -3936,6 +3936,9 @@ video {
 	}
 		.md\:w-1\/2 {
 		width: 50%;
+	}
+		.md\:w-12 {
+		width: 3rem;
 	}
 		.md\:max-w-xl {
 		max-width: 36rem;
@@ -4062,6 +4065,9 @@ video {
 		.md\:pt-1 {
 		padding-top: 0.25rem;
 	}
+		.md\:pl-4 {
+		padding-left: 1rem;
+	}
 		.md\:text-xl {
 		font-size: 1.25rem;
 		line-height: 1.75rem;
@@ -4073,6 +4079,14 @@ video {
 		.md\:text-3xl {
 		font-size: 1.875rem;
 		line-height: 2.25rem;
+	}
+		.md\:text-lg {
+		font-size: 1.125rem;
+		line-height: 1.75rem;
+	}
+		.md\:text-base {
+		font-size: 1rem;
+		line-height: 1.5rem;
 	}
 		.md\:hover\:opacity-100:hover {
 		opacity: 1;
