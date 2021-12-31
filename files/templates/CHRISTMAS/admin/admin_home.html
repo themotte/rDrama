@@ -26,7 +26,31 @@
 			'icon': 'fa-trash',
 			'title': 'Removed Posts',
 			'description': 'Posts removed by mods',
-			'link': '/admin/removed'
+			'link': '/admin/users'
+	    }
+	  ]
+	},
+	{
+		'title': 'users',
+		'color': 'blue',
+		'content': [
+	    {
+			'icon': 'fa-ghost',
+			'title': 'Shadow Banned Users',
+			'description': 'Users shadow banned',
+			'link': '/admin/shadowbanned'
+	    },
+	    {
+			'icon': 'fa-republican',
+			'title': 'Agenda Posters',
+			'description': 'Users with agenda poster mode',
+			'link': '/admin/agendaposters'
+	    },
+	    {
+			'icon': 'fa-users',
+			'title': 'Users Feed',
+			'description': 'Updated feed of sign ups',
+			'link': '/admin/image_posts'
 	    }
 	  ]
 	}
@@ -77,7 +101,7 @@
 						<i class="fas {{ item.icon }} fa-fw text-lg text-{{ section.color }}-600"></i>
 					</div>
 					<div class="pl-4">
-						<h3 class="h5 text-black dark:text-gray-200">
+						<h3 class="h5 text-black dark:text-gray-200 capitalize">
 							{{ item.title }}
 						</h3>
 						<p class="text-gray-500 break-words" style="word-break: break-word;">
