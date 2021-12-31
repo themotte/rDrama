@@ -182,7 +182,7 @@
 {% block content %}
 <div class="col-span-full lg:max-w-6xl lg:mx-auto bg-gray-200 dark:bg-gray-800 p-4">
 
-	<div class="mb-8 p-4 md:p-5 flex justify-between md:justify-around items-center rounded-md bg-gray-500 dark:bg-gray-700 shadow-inset-t-white-10 border border-gray-700 dark:border-gray-900">
+	<div class="p-4 md:p-5 flex justify-between md:justify-around items-center rounded-md bg-gray-500 dark:bg-gray-700 shadow-inset-t-white-10 border border-gray-700 dark:border-gray-900">
 		{% for section in stats %}
 			<div class="md:px-5">
 				<div class="text-white dark:text-gray-500 uppercase font-bold text-xs tracking-wider leading-4 mb-2">
@@ -196,6 +196,8 @@
 			</div>
 		{% endfor %}
 	</div>
+
+	<hr class="my-4 border-t border-gray-700 dark:border-gray-900 h-1 shadow-inset-t-white-05"></div>
 
 	{% for section in sections %}
 		<h2 class="font-bold text-xl font-heading leading-normal mb-0 capitalize">
