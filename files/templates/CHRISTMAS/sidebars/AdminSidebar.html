@@ -2,7 +2,7 @@
 	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Quick Actions</h2>
 	<div class="flex flex-col space-y-4 mb-3">
 		<div class="flex items-center">
-			<input type="checkbox" id="disablesignups" name="disablesignups" onchange="post_toast('/admin/disablesignups');" {% if x == "yes" %}checked{% endif %}>
+			<input type="checkbox" id="disablesignups" class="h-5 w-5" name="disablesignups" onchange="post_toast('/admin/disablesignups');" {% if x == "yes" %}checked{% endif %}>
 			<label class="label ml-2" for="disablesignups">Disable signups</label>
 		</div>
 	</div>
