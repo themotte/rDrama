@@ -209,6 +209,7 @@ def monthly(v):
 				elif u.patron == 3: procoins = 10000
 				elif u.patron == 4: procoins = 25000
 				elif u.patron == 5: procoins = 50000
+				else: print(u.username)
 				u.procoins += procoins
 				g.db.add(u)
 				
