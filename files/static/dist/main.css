@@ -1459,6 +1459,10 @@ video {
 	--tw-divide-opacity: 1;
 	border-color: rgba(252, 165, 165, var(--tw-divide-opacity));
 }
+.divide-gray-700 > :not([hidden]) ~ :not([hidden]) {
+	--tw-divide-opacity: 1;
+	border-color: rgba(var(--color-700), var(--tw-divide-opacity));
+}
 .divide-gray-400\/30 > :not([hidden]) ~ :not([hidden]) {
 	border-color: rgba(var(--color-400), 0.3);
 }
@@ -2318,9 +2322,6 @@ video {
 }
 .tracking-wider {
 	letter-spacing: 0.05em;
-}
-.tracking-wide {
-	letter-spacing: 0.025em;
 }
 .text-white {
 	--tw-text-opacity: 1;
