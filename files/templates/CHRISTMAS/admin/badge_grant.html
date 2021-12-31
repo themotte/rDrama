@@ -54,7 +54,7 @@
 	</thead>
 	<tbody>
 {% for k, v in badge_types.items() %}
-<tr>
+<tr class="hover:bg-gray-300 dark:hover:bg-white/10">
 	<td><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}"></td>
 	<td>
 		<label for="badge-{{k}}">
