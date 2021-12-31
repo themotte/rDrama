@@ -15,9 +15,9 @@
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Recent Mod Activity</h2>
 	{% if actions %}
-	<ul class="flex flex-col divide-y space-y-2 mb-0 list-none">
+	<ul class="flex flex-col divide-y divide-gray-400 dark:divide-gray-900 space-y-2 mb-0 list-none">
 		{% for ma in actions %}
-		<li id="action-{{ma.id}}" class="relative flex">
+		<li id="action-{{ma.id}}" class="relative flex pt-2 first:pt-0">
 			<div class="w-6 h-6 flex justify-center items-center flex-shrink-0">
 				<i class="far {{ ma.icon }} {{ colors[ma.icon] }} text-lg fa-fw"></i>
 			</div>
