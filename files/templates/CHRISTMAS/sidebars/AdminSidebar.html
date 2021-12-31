@@ -16,10 +16,13 @@
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 	<div class="flex items-center justify-between ml-2 mb-2">
-		<h2 class="font-bold text-lg font-heading leading-normal mb-0">Recent Mod Activity</h2>
-		<a href="/log" class="text-xs text-gray-500 hover:underline leading-normal">
-			View all activity
-		</a>
+		<h2 class="font-bold text-lg font-heading leading-normal mb-0">
+			Recent
+			<a href="/log" class="text-gray-500 font-normal">
+				Activity
+				<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
+			</a>
+		</h2>
 	</div>
 	{% if actions %}
 	<ul class="flex flex-col divide-y divide-gray-300 dark:divide-gray-700 space-y-2.5 mb-0 list-none">
