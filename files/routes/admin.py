@@ -993,7 +993,8 @@ def api_distinguish_post(post_id, v):
 
 	g.db.commit()
 
-	return {"message": "Post distinguished!"}
+	if post.distinguish_level: return {"message": "Post distinguished!"}
+	else: return {"message": "Post undistinguished!"}
 
 
 @app.post("/sticky/<post_id>")
@@ -1153,13 +1154,10 @@ def admin_distinguish_comment(c_id, v):
 	comment.distinguish_level = 0 if comment.distinguish_level else v.admin_level
 
 	g.db.add(comment)
-	html = render_template("comments.html", v=v, comments=[comment])
-
-	html = str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.id}-only"))
-
 	g.db.commit()
 
-	return html
+	if comment.distinguish_level: return {"message": "Comment distinguished!"}
+	else: return {"message": "Comment undistinguished!"}
 
 @app.get("/admin/dump_cache")
 @admin_level_required(2)
