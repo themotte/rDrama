@@ -4,22 +4,47 @@
 	<title>Banned Domains</title>
 {% endblock %}
 
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700 sub-header"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Banned Domains
+			</h1>
+			<ul class="flex space-x-2 text-xs text-gray-500 dark:text-gray-400 leading-normal mb-0">
+				<li>
+					<a href="/admin" class="text-gray-500 hover:underline">Admin Dashboard</a>
+				</li>
+				<li>
+					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
+				</li>
+				<li>
+					<a href="#" class="text-gray-700 dark:text-gray-500 hover:underline">Banned Domains</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="col-span-full my-2 px-2.5 md:px-0">
-<table class="w-full table table-striped mb-5">
+<table class="w-full table mb-5">
 	<thead class="bg-primary text-white">
 		<tr>
 			<th style="font-weight:bold;">Domain</th>
 			<th style="font-weight:bold;">Ban reason</th>
 		</tr>
 	</thead>
-
+	<tbody>
 	{% for domain in banned_domains %}
 		<tr>
 			<td style="font-weight:bold;">{{domain.domain}}</td>
 			<td>{{domain.reason}}</td>
 		</tr>
 	{% endfor %}
+	</tbody>
 </table>
 
 
