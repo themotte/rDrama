@@ -1140,8 +1140,8 @@ video {
 .h-56 {
 	height: 14rem;
 }
-.h-5 {
-	height: 1.25rem;
+.h-4 {
+	height: 1rem;
 }
 .h-\[10px\] {
 	height: 10px;
@@ -1167,11 +1167,11 @@ video {
 .h-3 {
 	height: 0.75rem;
 }
-.h-4 {
-	height: 1rem;
-}
 .h-2 {
 	height: 0.5rem;
+}
+.h-5 {
+	height: 1.25rem;
 }
 .h-7 {
 	height: 1.75rem;
@@ -1218,8 +1218,8 @@ video {
 .w-32 {
 	width: 8rem;
 }
-.w-5 {
-	width: 1.25rem;
+.w-4 {
+	width: 1rem;
 }
 .w-56 {
 	width: 14rem;
@@ -1247,6 +1247,9 @@ video {
 }
 .w-1\/4 {
 	width: 25%;
+}
+.w-5 {
+	width: 1.25rem;
 }
 .w-7 {
 	width: 1.75rem;
