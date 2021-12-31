@@ -345,6 +345,8 @@ def viewmore(v, pid, sort, offset):
 @limiter.limit("1/second")
 @auth_desired
 def morecomments(v, cid):
+	tcid = g.db.query(Comment.top_comment_id).filter_by(id=cid).one_or_none()[0]
+
 	if v:
 		votes = g.db.query(CommentVote).filter_by(user_id=v.id).subquery()
 
@@ -357,7 +359,7 @@ def morecomments(v, cid):
 			votes.c.vote_type,
 			blocking.c.id,
 			blocked.c.id,
-		).filter_by(parent_comment_id=cid).join(
+		).filter(Comment.top_comment_id == tcid, Comment.level > 10).join(
 			votes,
 			votes.c.comment_id == Comment.id,
 			isouter=True
@@ -377,7 +379,7 @@ def morecomments(v, cid):
 			comment.voted = c[1] or 0
 			comment.is_blocking = c[2] or 0
 			comment.is_blocked = c[3] or 0
-			output.append(comment)
+			if c[0].parent_comment_id == int(cid): output.append(comment)
 		comments = output
 	else:
 		c = g.db.query(Comment).filter_by(id=cid).first()
@@ -511,6 +513,7 @@ def edit_post(pid, v):
 				is_pinned='AutoJanny',
 				distinguish_level=6,
 				body_html=body_jannied_html,
+				top_comment_id=c.top_comment_id
 				)
 
 			g.db.add(c_jannied)
@@ -543,6 +546,7 @@ def edit_post(pid, v):
 				is_pinned='AutoJanny',
 				distinguish_level=6,
 				body_html=body_jannied_html,
+				top_comment_id=c.top_comment_id
 				)
 
 			g.db.add(c_jannied)
@@ -1072,6 +1076,7 @@ def submit_post(v):
 			is_pinned='AutoJanny',
 			distinguish_level=6,
 			body_html=body_jannied_html,
+			top_comment_id=c.top_comment_id
 		)
 
 		g.db.add(c_jannied)
@@ -1104,6 +1109,7 @@ def submit_post(v):
 			is_pinned='AutoJanny',
 			distinguish_level=6,
 			body_html=body_jannied_html,
+			top_comment_id=c.top_comment_id
 		)
 
 		g.db.add(c_jannied)
@@ -1159,7 +1165,7 @@ def submit_post(v):
 			over_18=False,
 			is_bot=True,
 			app_id=None,
-			body_html=body_html,
+			body_html=body_html
 			)
 
 		g.db.add(c)

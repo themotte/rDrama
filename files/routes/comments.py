@@ -330,6 +330,7 @@ def api_comment(v):
 			level=level+1,
 			is_bot=True,
 			body_html=body_based_html,
+			top_comment_id=c.top_comment_id
 			)
 
 		g.db.add(c_based)
@@ -361,6 +362,7 @@ def api_comment(v):
 			level=level+1,
 			is_bot=True,
 			body_html=body_jannied_html,
+			top_comment_id=c.top_comment_id
 			)
 
 		g.db.add(c_jannied)
@@ -394,6 +396,7 @@ def api_comment(v):
 			level=level+1,
 			is_bot=True,
 			body_html=body_jannied_html,
+			top_comment_id=c.top_comment_id
 			)
 
 		g.db.add(c_jannied)
@@ -425,6 +428,7 @@ def api_comment(v):
 			level=level+1,
 			is_bot=True,
 			body_html=body_html2,
+			top_comment_id=c.top_comment_id
 			)
 
 		g.db.add(c2)
@@ -460,6 +464,7 @@ def api_comment(v):
 			level=level+1,
 			is_bot=True,
 			body_html=body_html2,
+			top_comment_id=c.top_comment_id
 			)
 
 		g.db.add(c2)
@@ -483,6 +488,7 @@ def api_comment(v):
 			level=level+2,
 			is_bot=True,
 			body_html=body_html2,
+			top_comment_id=c.top_comment_id
 			)
 
 		g.db.add(c3)
@@ -499,6 +505,7 @@ def api_comment(v):
 			level=level+3,
 			is_bot=True,
 			body_html=body_html2,
+			top_comment_id=c.top_comment_id
 			)
 
 		g.db.add(c4)
@@ -728,6 +735,7 @@ def edit_comment(cid, v):
 				level=c.level+1,
 				is_bot=True,
 				body_html=body_jannied_html,
+				top_comment_id=c.top_comment_id
 				)
 
 			g.db.add(c_jannied)
@@ -762,6 +770,7 @@ def edit_comment(cid, v):
 				level=c.level+1,
 				is_bot=True,
 				body_html=body_jannied_html,
+				top_comment_id=c.top_comment_id
 				)
 
 			g.db.add(c_jannied)
