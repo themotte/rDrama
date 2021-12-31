@@ -1077,6 +1077,9 @@ video {
 .-mb-0 {
 	margin-bottom: 0px;
 }
+.mt-8 {
+	margin-top: 2rem;
+}
 .mb-1\.5 {
 	margin-bottom: 0.375rem;
 }
