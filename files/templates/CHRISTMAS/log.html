@@ -2,16 +2,7 @@
 
 {% block pagetitle %}Moderation Log{% endblock %}
 
-
 {% block content %}
-{% if v %}
-	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/assets/CHRISTMAS/css/main-deprecated.css?a=1"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{v.theme}}.css?a=1">
-	{% if v.agendaposter %}<link rel="stylesheet" href="/assets/CHRISTMAS/css/agendaposter.css?a=1">{% elif v.css %}<link rel="stylesheet" href="/@{{v.username}}/css">{% endif %}
-{% else %}
-	<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-	<link rel="stylesheet" href="/assets/CHRISTMAS/css/main-deprecated.css?a=1"><link rel="stylesheet" href="/assets/CHRISTMAS/css/{{'DEFAULT_THEME' | app_config}}.css?a=1">
-{% endif %}
 
 <div class="col-span-full my-4">
 
