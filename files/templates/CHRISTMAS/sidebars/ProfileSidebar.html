@@ -221,7 +221,7 @@
 		<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 		<div>
 			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Badges</h2>
-			<ul class="flex flex-row flex-wrap gap-2 mb-0">
+			<ul class="flex flex-row flex-wrap gap-2">
 				{% if u.badges %}
 				{% for b in u.badges %}
 				<li>
@@ -238,6 +238,11 @@
 				<p class="italic text-gray-500 text-sm">No badges... lame</p>
 				{% endif %}
 			</ul>
+			{% if v.admin_level > 2 %}
+				<a href="/admin/badge_grant" class="text-sm text-primary hover:underline">
+					Grant @{{ u.username }}badge
+				</a>
+			{% endif %}
 		</div>
 		<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 		<div>
