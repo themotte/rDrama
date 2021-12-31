@@ -374,15 +374,15 @@ def morecomments(v, cid):
 		)
 
 		output = []
-		output2 = []
+		dump = []
 		for c in comments.all():
 			comment = c[0]
 			comment.voted = c[1] or 0
 			comment.is_blocking = c[2] or 0
 			comment.is_blocked = c[3] or 0
-			if c[0].parent_comment_id == int(cid): output2.append(comment)
-			else: output.append(comment)
-		comments = output2
+			if c[0].parent_comment_id == int(cid): output.append(comment)
+			else: dump.append(comment)
+		comments = output
 	else:
 		c = g.db.query(Comment).filter_by(id=cid).first()
 		comments = c.replies
