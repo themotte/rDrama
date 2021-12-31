@@ -350,13 +350,7 @@ def admin_home(v):
 
 	if not v or v.oldsite: return render_template(f"admin/admin_home.html", v=v, x=x)
 
-	page=int(request.args.get("page",1))
-
-	if v and v.admin_level == 6: actions = g.db.query(ModAction).order_by(ModAction.id.desc()).offset(25 * (page - 1)).limit(26).all()
-	else: actions=g.db.query(ModAction).filter(ModAction.kind!="shadowban", ModAction.kind!="unshadowban", ModAction.kind!="club", ModAction.kind!="unclub").order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
-
-	next_exists=len(actions)==26
-	actions=actions[:25]
+	actions = g.db.query(ModAction).order_by(ModAction.id.desc()).limit(10).all()
 
 	return render_template(f"CHRISTMAS/admin/admin_home.html", actions=actions, v=v, x=x)
 
