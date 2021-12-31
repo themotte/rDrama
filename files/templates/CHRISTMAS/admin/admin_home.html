@@ -223,11 +223,6 @@
 			{% endfor %}
 		</div>
 	{% endfor %}
-
-	<div>
-		<input type="checkbox" id="disablesignups" name="disablesignups" {% if x == "yes" %}checked{% endif %} onchange="post_toast('/admin/disablesignups');">
-		<label class="label" for="disablesignups">Disable signups</label>
-	</div>
 </div>
 {% endblock %}
 
