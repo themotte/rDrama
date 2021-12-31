@@ -325,7 +325,7 @@ pre code {
     margin-left: auto;
 }
 .container {
-    max-width: 1300px;
+    max-width: 1800px;
 }
 .row {
     display: flex;
@@ -4473,6 +4473,14 @@ textarea {
 }
 .container, .container-fluid {
     padding-bottom: 50px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+@media (max-width: 992px) {
+    .container, .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 .navbar {
     padding: 0.5rem 0.5rem 0.3rem 0.5rem;
