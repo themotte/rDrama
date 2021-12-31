@@ -31,21 +31,23 @@
 
 {% block content %}
 <div class="col-span-full my-4 px-2.5 md:px-0">
-	<table class="w-full table mb-5">
-		<thead class="bg-primary text-white">
-			<tr>
-				<th scope="col" class="p-2.5">Statistic</th>
-				<th scope="col" class="p-2.5">Value</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for entry in data %}
-			<tr class="h-16 odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10">
-				<td class="px-2.5">{{entry}}</td>
-				<td class="px-2.5 font-bold">{{data[entry]}}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<div class="rounded shadow-inset-t-white-10 overflow-x-auto">
+		<table class="w-full table mb-5">
+			<thead class="bg-primary text-white">
+				<tr>
+					<th scope="col" class="p-2.5">Statistic</th>
+					<th scope="col" class="p-2.5">Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for entry in data %}
+				<tr class="h-16 odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10">
+					<td class="px-2.5">{{entry}}</td>
+					<td class="px-2.5 font-bold">{{data[entry]}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
 </div>
 {% endblock %}
