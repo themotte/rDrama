@@ -104,8 +104,6 @@ def post_id(pid, anything=None, v=None):
 	except Exception as e: pass
 
 
-	sort = request.values.get("sort", defaultsortingcomments)
-
 	try: pid = int(pid)
 	except:
 		try: pid = int(pid, 36)
@@ -116,6 +114,7 @@ def post_id(pid, anything=None, v=None):
 	if 'megathread' in post.title.lower(): defaultsortingcomments = 'new'
 	elif v: defaultsortingcomments = v.defaultsortingcomments
 	else: defaultsortingcomments = "top"
+	sort = request.values.get("sort", defaultsortingcomments)
 
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
