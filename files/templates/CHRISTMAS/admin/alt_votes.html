@@ -34,10 +34,15 @@
 
 <h5>Vote Info</h5>
 
-<form action="/admin/alt_votes" method="get" class="mb-6">
-	<label for="link-input">Usernames</label>
-	<input id="link-input" type="text" class="form-control mb-2" name="u1" value="{{u1.username if u1 else ''}}" placeholder="User 1">
-	<input id="link-input" type="text" class="form-control mb-2" name="u2" value="{{u2.username if u2 else ''}}" placeholder="User 2">
+<form action="/admin/alt_votes" method="get" class="p-5 flex flex-col rounded-md bg-gray-300 dark:bg-gray-700 shadow-inset-t-white-10 border border-gray-400 dark:border-gray-900">
+	<label class="label">
+		Usernames
+	</label>
+	<small class="block mt-1 text-gray-500">
+		Enter two usernames you suspect of voter fraud.
+	</small>
+	<input id="link-input" type="text" class="form-control mb-2" name="u1" value="{{u1.username if u1 else ''}}" placeholder="User #1">
+	<input id="link-input" type="text" class="form-control mb-2" name="u2" value="{{u2.username if u2 else ''}}" placeholder="User #2">
 	<input type="submit" value="Submit" class="btn btn-primary">
 </form>
 
