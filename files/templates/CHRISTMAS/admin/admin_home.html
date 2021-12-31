@@ -90,7 +90,7 @@
 <div class="col-span-full lg:max-w-6xl lg:mx-auto bg-gray-200 dark:bg-gray-800 p-4">
 
 	{% for section in sections %}
-		<h2 class="h4">
+		<h2 class="h4 capitalize">
 			{{ section.title }}
 		</h2>
 		<div class="flex flex-wrap -mx-3 overflow-hidden mb-6">
@@ -101,7 +101,7 @@
 						<i class="fas {{ item.icon }} fa-fw text-lg text-{{ section.color }}-600"></i>
 					</div>
 					<div class="pl-4">
-						<h3 class="h5 text-black dark:text-gray-200 capitalize">
+						<h3 class="h5 text-black dark:text-gray-200">
 							{{ item.title }}
 						</h3>
 						<p class="text-gray-500 break-words" style="word-break: break-word;">
