@@ -4476,6 +4476,12 @@ textarea {
     padding-left: 50px;
     padding-right: 50px;
 }
+@media (max-width: 767.98px) {
+    .container, .container-fluid {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+}
 .navbar {
     padding: 0.5rem 0.5rem 0.3rem 0.5rem;
 }
