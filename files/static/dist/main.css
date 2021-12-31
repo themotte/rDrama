@@ -3801,6 +3801,11 @@ video {
 	color: rgba(var(--color-400), var(--tw-text-opacity));
 }
 
+.dark .dark\:hover\:text-primary:hover {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-primary), var(--tw-text-opacity));
+}
+
 .dark .dark\:focus\:bg-transparent:focus {
 	background-color: transparent;
 }
