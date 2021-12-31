@@ -3965,6 +3965,9 @@ video {
 		.md\:justify-center {
 		justify-content: center;
 	}
+		.md\:justify-around {
+		justify-content: space-around;
+	}
 		.md\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
 		--tw-space-x-reverse: 0;
 		margin-right: calc(0.75rem * var(--tw-space-x-reverse));
@@ -4028,6 +4031,9 @@ video {
 	}
 		.md\:p-3 {
 		padding: 0.75rem;
+	}
+		.md\:p-5 {
+		padding: 1.25rem;
 	}
 		.md\:py-3 {
 		padding-top: 0.75rem;
