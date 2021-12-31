@@ -3898,6 +3898,9 @@ video {
 		.md\:mr-1 {
 		margin-right: 0.25rem;
 	}
+		.md\:mb-5 {
+		margin-bottom: 1.25rem;
+	}
 		.md\:block {
 		display: block;
 	}
