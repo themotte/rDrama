@@ -180,7 +180,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="col-span-full lg:max-w-6xl lg:mx-auto bg-gray-200 dark:bg-gray-800 p-4">
+<div class="col-span-full xl:col-span-9 bg-gray-200 dark:bg-gray-800 p-4">
 
 	<div class="p-4 md:p-5 flex justify-between md:justify-around space-x-4 items-center rounded-md bg-gray-500 dark:bg-gray-700 shadow-inset-t-white-10 border border-gray-700 dark:border-gray-900">
 		{% for section in stats %}
@@ -229,4 +229,8 @@
 		<label class="label" for="disablesignups">Disable signups</label>
 	</div>
 </div>
+{% endblock %}
+
+{% block sidebar %}
+{	% include 'CHRISTMAS//sidebars/SubmitSidebar.html' %}
 {% endblock %}
