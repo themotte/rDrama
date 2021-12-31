@@ -1,10 +1,6 @@
 {% extends "CHRISTMAS/admin/reported_posts.html" %}
 
-
-
 {% block listing %}
-
-
 		<div class="posts">
 			{% with comments=listing %}
 				{% include "CHRISTMAS/comments.html" %}
@@ -19,6 +15,5 @@
 			</div>
 				{% endif %}
 		</div>
-
 {% endblock %}
 
