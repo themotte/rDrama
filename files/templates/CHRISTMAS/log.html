@@ -2,6 +2,54 @@
 
 {% block pagetitle %}Moderation Log{% endblock %}
 
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700 sub-header"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Moderation Log
+			</h1>
+			<ul class="flex space-x-2 text-xs text-gray-500 dark:text-gray-400 leading-normal mb-0">
+				<li>
+					<a href="/admin" class="text-gray-500 hover:underline">Admin Dashboard</a>
+				</li>
+				<li>
+					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
+				</li>
+				<li>
+					<a href="#" class="text-gray-700 dark:text-gray-500 hover:underline">Moderation Log</a>
+				</li>
+			</ul>
+		</div>
+		<div class="ml-auto">
+			<div class="dropdown">
+				<button class="block px-4 py-2 bg-gradient-to-t from-gray-200 to-gray-100 focus:from-gray-100 focus:to-gray-200 border border-gray-300 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-700 focus:text-gray-900 focus:shadow-inner focus:outline-none dropdown-toggle" type="button" id="dropdownLogSortsButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if admin %}
+					<img src="/@{{admin}}/pic" alt="{{ admin }}avatar" class="w-8 h-8 object-cover mr-2">{{ admin }}
+					{% else %}
+					<img src="/assets/images/emojis/marseyjanny.webp" alt="default mod avatar" class="w-8 h-8 object-cover mr-2">All
+					{% endif %}
+				</button>
+				<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownLogSortsButton" x-placement="bottom-start">
+					<li class="{% if request.path=="/admin/reported/posts" %}hidden{% endif %}">
+						<a class="dropdown-item dropdown-item-primary" href="/admin/reported/posts">
+							<i class="fas fa-pencil fa-sm fa-fw mr-4"></i>Posts
+						</a>
+					</li>
+					<li class="{% if request.path=="/admin/reported/comments" %}hidden{% endif %}">
+						<a class="dropdown-item dropdown-item-primary" href="/admin/reported/comments">
+							<i class="fas fa-comment-alt fa-sm fa-fw mr-4"></i>Comments
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
 {% block content %}
 
 <div class="col-span-full my-4">
@@ -18,10 +66,10 @@
 		<div class="row" style="overflow: visible;padding-top:5px;">
 			<div class="col">
 				<div class="d-flex justify-content-between align-items-center mr-2">
-		
+
 					{% block navbar %}
 					<div class="font-weight-bold py-3">‎</div>
-		
+
 					<div class="d-flex align-items-center sortingbarmargin">
 						<div class="text-small font-weight-bold mr-2">‎</div>
 						<div class="dropdown dropdown-actions">
@@ -32,11 +80,11 @@
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 								<a class="dropdown-item" href="/log{% if type %}?kind={{type}}{% endif %}"><img src="/assets/images/emojis/marseyjanny.webp" alt="avatar" width=20 height=20 class="rounded-circle mr-2">All</a>
 								{% for a in admins %}
-									<a class="dropdown-item" href="?admin={{a}}{% if type %}&kind={{type}}{% endif %}"><img src="/@{{a}}/pic" alt="avatar" width=20 height=20 class="rounded-circle mr-2">{{a}}</a>
+								<a class="dropdown-item" href="?admin={{a}}{% if type %}&kind={{type}}{% endif %}"><img src="/@{{a}}/pic" alt="avatar" width=20 height=20 class="rounded-circle mr-2">{{a}}</a>
 								{% endfor %}
 							</div>
 						</div>
-		
+
 						<div class="text-small font-weight-bold mr-2">‎</div>
 						<div class="dropdown dropdown-actions">
 
@@ -46,7 +94,7 @@
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2s" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 								<a class="dropdown-item" href="/log{% if admin %}?admin={{admin}}{% endif %}"><i class="fas fa-broom mr-2"></i>All</a>
 								{% for t, v in types.items() %}
-									<a class="dropdown-item" href="?{% if admin %}admin={{admin}}&{% endif %}kind={{t}}"><i class="fas {{v['icon']}} mr-2"></i>{{t}}</a>
+								<a class="dropdown-item" href="?{% if admin %}admin={{admin}}&{% endif %}kind={{t}}"><i class="fas {{v['icon']}} mr-2"></i>{{t}}</a>
 								{% endfor %}
 							</div>
 						</div>
@@ -59,33 +107,33 @@
 
 		<div class="rounded border bg-white mx-auto">
 			{% for ma in actions %}
-				<div id="action-{{ma.id}}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white{% if loop.index > 1 %} border-top{% endif %}">
+			<div id="action-{{ma.id}}" class="position-relative d-flex justify-content-between flex-wrap align-items-center h-min-16 px-3 py-3 mb-3 mb-md-2 bg-white{% if loop.index > 1 %} border-top{% endif %}">
 
 				<div class="d-flex flex-grow-1 align-items-center">
 					<div class="d-flex align-items-center justify-content-center {{ma.color}} mr-3 rounded-lg flex-shrink-0" style="width: 32px;height: 32px;"><i class="far text-center {{ma.icon}} text-lg text-white fa-fw"></i></div>
 					<div class="d-flex align-items-center">
 						<span class="rounded">
-						<img src="{{ma.user.profile_url}}" alt="avatar" width=42 height=42 class="rounded-circle">
-					</span>
+							<img src="{{ma.user.profile_url}}" alt="avatar" width=42 height=42 class="rounded-circle">
+						</span>
 						<div class="text-muted pl-3">
 							<div>
 								<a href="{{ma.user.url}}" class="font-weight-bold text-black" target="_self">@{{ma.user.username}}</a>
 
-							<span>{{ma.string | safe}}</span>
-						</div>
+								<span>{{ma.string | safe}}</span>
+							</div>
 
-						<div class="text-gray-500">{{ma.age_string}} <a href="{{ma.permalink}}"><i class="far fa-link ml-1 text-muted"></i></a>
-							<a href="javascript:void(0)" class="copy-link" role="button"data-clipboard-text="{{ma.permalink | full_link}}"><i class="far fa-copy ml-1 text-muted"></i></a>
-						</div>
+							<div class="text-gray-500">{{ma.age_string}} <a href="{{ma.permalink}}"><i class="far fa-link ml-1 text-muted"></i></a>
+								<a href="javascript:void(0)" class="copy-link" role="button"data-clipboard-text="{{ma.permalink | full_link}}"><i class="far fa-copy ml-1 text-muted"></i></a>
+							</div>
 
+						</div>
 					</div>
 				</div>
-			</div>
 			</div>
 
 
 			{% else %}
-				<div>There's nothing here right now.</div>
+			<div>There's nothing here right now.</div>
 			{% endfor %}
 		</div>
 
@@ -93,18 +141,18 @@
 		<nav aria-label="Page navigation" class="mb-5">
 			<ul class="pagination pagination-sm mb-0">
 				{% if page>1 %}
-					<li class="page-item">
-						<small><a class="page-link" href="/log?page={{page+1}}{% if admin %}&admin={{admin}}{% endif %}{% if type %}&kind={{type}}{% endif %}" tabindex="-1">Prev</a></small>
-					</li>
+				<li class="page-item">
+					<small><a class="page-link" href="/log?page={{page+1}}{% if admin %}&admin={{admin}}{% endif %}{% if type %}&kind={{type}}{% endif %}" tabindex="-1">Prev</a></small>
+				</li>
 				{% else %}
-					<li class="page-item disabled"><span class="page-link">Prev</span></li>
+				<li class="page-item disabled"><span class="page-link">Prev</span></li>
 				{% endif %}
 				{% if next_exists %}
 				<li class="page-item">
 					<small><a class="page-link" href="/log?page={{page+1}}{% if admin %}&admin={{admin}}{% endif %}{% if type %}&kind={{type}}{% endif %}">Next</a></small>
 				</li>
 				{% else %}
-					<li class="page-item disabled"><span class="page-link">Next</span></li>
+				<li class="page-item disabled"><span class="page-link">Next</span></li>
 				{% endif %}
 			</ul>
 		</nav>
