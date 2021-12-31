@@ -29,12 +29,12 @@
 		<div class="ml-auto flex space-x-2">
 			<button id="submit-btn" type="submit" form="awards-form" class="btn btn-green" disabled>
 				<i class="fas fa-trophy fa-sm fa-fw mr-1"></i>
-				Give Awards
+				Give awards
 			</button>
 			{% if 'rdrama.net' not in request.host or v.admin_level > 2 %}
 			<button onclick="post_toast('/admin/monthly')" class="btn btn-yellow">
-				<i class="fas fa-money-dollar fa-sm fa-fw mr-1"></i>
-				Give Awards
+				<i class="fas fa-dollar-sign fa-sm fa-fw mr-1"></i>
+				Grant monthly MarseyBux
 			</button>
 			{% endif %}
 		</div>
