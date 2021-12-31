@@ -39,7 +39,7 @@
 	</thead>
 	<tbody>
 		{% for user in users %}
-			<tr class="odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10 hover:cursor-pointer">
+			<tr class="h-16 odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10">
 				<td class="px-2.5 font-bold">{{loop.index}}</td>
 				<td class="px-2.5">
 					<a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}">
