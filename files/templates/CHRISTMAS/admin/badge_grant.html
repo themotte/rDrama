@@ -46,16 +46,16 @@
 <table class="w-full table table-striped">
 <thead class="bg-primary text-white">
 		<tr>
-			<th scope="col">Select</th>
-			<th scope="col">Image</th>
-			<th scope="col">Name</th>
-			<th scope="col">Default Description</th>
+			<th scope="col" class="p-2.5">Select</th>
+			<th scope="col" class="p-2.5">Image</th>
+			<th scope="col" class="p-2.5">Name</th>
+			<th scope="col" class="p-2.5">Default Description</th>
 		</tr>
 	</thead>
 	<tbody>
 {% for k, v in badge_types.items() %}
-<tr class="p-2.5 hover:bg-gray-300 dark:hover:bg-white/10">
-	<td><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}"></td>
+<tr class="hover:bg-gray-300 dark:hover:bg-white/10">
+	<td class="p-2.5"><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}"></td>
 	<td>
 		<label for="badge-{{k}}">
 			<img loading="lazy" src="/assets/CHRISTMAS/images/badges/{{v['name']}}.webp?a=1" class="object-contain w-16 h-16 p-2" alt="{{v['name']}} badge"/>
