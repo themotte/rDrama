@@ -2435,6 +2435,10 @@ video {
 	--tw-text-opacity: 1;
 	color: rgba(254, 202, 202, var(--tw-text-opacity));
 }
+.text-green-400 {
+	--tw-text-opacity: 1;
+	color: rgba(74, 222, 128, var(--tw-text-opacity));
+}
 .text-\[\#dc2626\] {
 	--tw-text-opacity: 1;
 	color: rgba(220, 38, 38, var(--tw-text-opacity));
@@ -4084,13 +4088,13 @@ video {
 		font-size: 1.875rem;
 		line-height: 2.25rem;
 	}
-		.md\:text-lg {
-		font-size: 1.125rem;
-		line-height: 1.75rem;
-	}
 		.md\:text-base {
 		font-size: 1rem;
 		line-height: 1.5rem;
+	}
+		.md\:text-lg {
+		font-size: 1.125rem;
+		line-height: 1.75rem;
 	}
 		.md\:hover\:opacity-100:hover {
 		opacity: 1;
