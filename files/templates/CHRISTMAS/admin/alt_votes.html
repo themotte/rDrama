@@ -38,12 +38,14 @@
 	<label class="label">
 		Usernames
 	</label>
-	<small class="block mt-1 text-gray-500">
+	<small class="block text-gray-400">
 		Enter two usernames you suspect of voter fraud.
 	</small>
-	<input id="link-input" type="text" class="form-control mb-2" name="u1" value="{{u1.username if u1 else ''}}" placeholder="User #1">
-	<input id="link-input" type="text" class="form-control mb-2" name="u2" value="{{u2.username if u2 else ''}}" placeholder="User #2">
-	<input type="submit" value="Submit" class="btn btn-primary">
+	<div class="w-full flex space-x-2 items-center">
+		<input id="link-input" type="text" class="form-input" name="u1" value="{{u1.username if u1 else ''}}" placeholder="User #1" required>
+		<input id="link-input" type="text" class="form-input" name="u2" value="{{u2.username if u2 else ''}}" placeholder="User #2" oninput="document.getElementById('analysis-btn').disabled=false" required>
+		<input id="analysis-btn" type="submit" value="Analyze" class="btn btn-primary">
+	</div>
 </form>
 
 {% if u1 and u2 %}
