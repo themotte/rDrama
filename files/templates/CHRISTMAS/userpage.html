@@ -4,9 +4,6 @@
 
 {% block title %}
 
-<!-- {% if u and u.profilecss and (u.admin_level or not (v and v.admin_level)) %}
-<link rel="stylesheet" href="/@{{u.username}}/profilecss">
-{% endif %} -->
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
 {% if u.is_private %}
 <meta name="robots" content="noindex">
@@ -28,6 +25,10 @@
 <meta name="twitter:description" content="{{u.coins}} {{'COINS_NAME' | app_config}} - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{0 if u.shadowbanned else u.post_count}} Posts - {{0 if u.shadowbanned else u.comment_count}} Comments - {% endif %}{{u.bio}}">
 <meta name="twitter:image" content="{{u.banner_url}}" >
 <meta name="twitter:url" content="{{u.url | full_link}}" >
+
+{% if u and u.profilecss and (u.admin_level or not (v and v.admin_level)) %}
+<link rel="stylesheet" href="/@{{u.username}}/profilecss">
+{% endif %}
 {% endblock %}
 
 {% block subHeader %}

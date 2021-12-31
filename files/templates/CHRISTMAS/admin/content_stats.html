@@ -5,21 +5,49 @@
 <meta name="description" content="{{'SITE_NAME' | app_config}} Help">
 {% endblock %}
 
-{% block content %}
-<pre></pre>
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th>Statistic</th>
-		<th>Value</th>
-	</tr>
-</thead>
-{% for entry in data %}
-	<tr>
-		<td>{{entry}}</td>
-		<td>{{data[entry]}}</td>
-	</tr>
-{% endfor %}
-</table>
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700 sub-header"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Content Stats
+			</h1>
+			<ul class="flex space-x-2 text-xs text-gray-500 dark:text-gray-400 leading-normal mb-0">
+				<li>
+					<a href="/admin" class="text-gray-500 hover:underline">Admin Dashboard</a>
+				</li>
+				<li>
+					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
+				</li>
+				<li>
+					<a href="#" class="text-gray-700 dark:text-gray-500 hover:underline">Content Stants</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
 
+{% block content %}
+<div class="col-span-full my-4 px-2.5 md:px-0">
+	<div class="overflow-x-auto">
+		<table class="w-full table mb-5">
+			<thead class="bg-primary text-white shadow-inset-t-white-10">
+				<tr>
+					<th scope="col" class="p-2.5">Statistic</th>
+					<th scope="col" class="p-2.5">Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for entry in data %}
+				<tr class="h-16 odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10">
+					<td class="px-2.5">{{entry}}</td>
+					<td class="px-2.5 font-bold">{{data[entry]}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
 {% endblock %}

@@ -6,8 +6,43 @@
 
 {% block pagetype %}message{% endblock %}
 
-{% block content %}
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700 sub-header"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Awards
+			</h1>
+			<ul class="flex space-x-2 text-xs text-gray-500 dark:text-gray-400 leading-normal mb-0">
+				<li>
+					<a href="/admin" class="text-gray-500 hover:underline">Admin Dashboard</a>
+				</li>
+				<li>
+					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
+				</li>
+				<li>
+					<a href="#" class="text-gray-700 dark:text-gray-500 hover:underline">Awards</a>
+				</li>
+			</ul>
+		</div>
+		<div class="ml-auto flex space-x-2">
+			<button id="submit-btn" type="submit" form="awards-form" class="btn btn-green" disabled>
+				<i class="fas fa-trophy fa-sm fa-fw mr-1"></i>
+				Give awards
+			</button>
+			{% if 'rdrama.net' not in request.host or v.admin_level > 2 %}
+			<button onclick="post_toast('/admin/monthly')" class="btn btn-yellow">
+				<i class="fas fa-dollar-sign fa-sm fa-fw mr-1"></i>
+				Grant monthly MarseyBux
+			</button>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
 
+{% block content %}
 <div class="col-span-full my-4">
 
 	{% if error %}
@@ -33,41 +68,45 @@
 	</div>
 	{% endif %}
 
-	<pre></pre>
-	<pre></pre>
-	<h5>User Award Grant</h5>
-
-	<form action="/admin/awards", method="post">
+	<form id="awards-form" action="/admin/awards" method="post">
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
-		<label for="input-username">Username</label><br>
-		<input id="input-username" class="form-input mb-3" type="text" name="username" required>
+		<label for="input-username" class="label">Username</label>
+		<input autocomplete="off" id="input-username" class="form-input mb-2" type="text" name="username" required placeholder="Enter a username" oninput="document.getElementById('submit-btn').disabled = false">
 
-		<table class="w-full table table-striped">
+		<table class="w-full mt-6">
 			<thead class="bg-primary text-white">
 				<tr>
-					<th scope="col">Icon</th>
-					<th scope="col">Title</th>
-					<th scope="col">Amount</th>
+					<th scope="col" class="p-2.5">Icon</th>
+					<th scope="col" class="p-2.5">Title</th>
+					<th scope="col" class="p-2.5"></th>
+					<th scope="col" class="p-2.5"></th>
+					<th scope="col" class="p-2.5"></th>
+					<th scope="col" class="p-2.5"></th>
+					<th scope="col" class="p-2.5">Amount</th>
 				</tr>
 			</thead>
 			<tbody>
 			{% for a in awards %}
-				<tr>
-					<td><i class="{{a['icon']}} {{a['color']}}" style="font-size: 30px"></i></td>
-					<td style="font-weight: bold">{{a['title']}}</td>
-					<td><input type="number" class="form-input" name="{{a['kind']}}" value="0" min="0" max="10" placeholder="Enter amount..." ></td>
+				<tr class="odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10 hover:cursor-pointer">
+					<td class="px-2.5">
+						<div class="w-16 h-16 p-2 flex items-center justify-center">
+							<i class="{{a['icon']}} {{a['color']}} text-xl"></i>
+						</div>
+					</td>
+					<td class="px-2.5 font-bold">
+						{{a['title']}}
+					</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="px-2.5">
+						<input type="number" class="form-input" name="{{a['kind']}}" value="0" min="0" max="10" placeholder="Enter amount..." >
+					</td>
 				</tr>
 			{% endfor %}
 		</table>
-
-		<input class="btn btn-green mt-3" type="submit" value="Grant Awards">
-
 	</form>
-
-	<pre></pre>
-	{% if 'rdrama.net' not in request.host or v.admin_level > 2 %}
-		<div><a class="btn btn-green mt-3" href="javascript:void(0)" onclick="post_toast('/admin/monthly')">Grant Monthly Marseybux</a></div>
-	{% endif %}
 
 </div>
 {% endblock %}

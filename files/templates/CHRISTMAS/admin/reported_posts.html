@@ -1,63 +1,67 @@
-{% extends "CHRISTMAS/settings2.html" %}
+{% extends "CHRISTMAS/default.html" %}
 
-{% block adminpanel %}{% endblock %}
 {% block pagetype %}userpage{% endblock %}
-{% block banner %}{% endblock %}
-{% block mobileBanner %}{% endblock %}
-{% block desktopBanner %}{% endblock %}
-{% block desktopUserBanner %}{% endblock %}
-{% block mobileUserBanner %}{% endblock %}
-
-	{% block postNav %}
-	<div class="container-fluid bg-white sticky">
-		<div class="row border-bottom">
-			<div class="col">
-				<div class="container">
-					<div class="row bg-white">
-						<div class="col">
-							<div class="d-flex">
-								<ul class="nav post-nav mr-auto">
-									<li class="nav-item">
-										<a class="nav-link {% if request.path=="/admin/reported/posts" %} active{% endif %}" href="/admin/reported/posts">
-											<div>Posts</div>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link {% if request.path=="/admin/reported/comments" %} active{% endif %}" href="/admin/reported/comments">
-											<div>Comments</div>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	{% endblock %}
-
-
-{% block fixedMobileBarJS %}
-{% endblock %}
 
 {% block title %}
 <title>Reported Posts</title>
 <meta name="description" content="on {{'SITE_NAME' | app_config}}">
 {% endblock %}
 
-{% block content %}
-
-<div class="row no-gutters">
-
-	<div class="col">
-
-	{% block listing %}
-		<div class="posts">
-			{% include "CHRISTMAS/submission_listing.html" %}
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700 sub-header"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Reports
+			</h1>
+			<ul class="flex space-x-2 text-xs text-gray-500 dark:text-gray-400 leading-normal mb-0">
+				<li>
+					<a href="/admin" class="text-gray-500 hover:underline">Admin Dashboard</a>
+				</li>
+				<li>
+					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
+				</li>
+				<li>
+					<a href="#" class="text-gray-700 dark:text-gray-500 hover:underline">Reports</a>
+				</li>
+			</ul>
 		</div>
-	{% endblock %}
+		<div class="ml-auto">
+			<div class="dropdown">
+				<button class="block px-4 py-2 bg-gradient-to-t from-gray-200 to-gray-100 focus:from-gray-100 focus:to-gray-200 border border-gray-300 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-700 focus:text-gray-900 focus:shadow-inner focus:outline-none dropdown-toggle" type="button" id="dropdownAdminReportSortsButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if request.path=="/admin/reported/posts" %}
+						<i class="fas fa-pencil text-gray-500 fa-sm fa-fw mr-1"></i>Posts
+					{% endif %}
+					{% if request.path=="/admin/reported/comments" %}
+						<i class="fas fa-comment-alt text-gray-500 fa-sm fa-fw mr-1"></i>Comments
+					{% endif %}
+				</button>
+				<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownAdminReportSortsButton" x-placement="bottom-start">
+					<li class="{% if request.path=="/admin/reported/posts" %}hidden{% endif %}">
+						<a class="dropdown-item dropdown-item-primary" href="/admin/reported/posts">
+							<i class="fas fa-pencil fa-sm fa-fw mr-4"></i>Posts
+						</a>
+					</li>
+					<li class="{% if request.path=="/admin/reported/comments" %}hidden{% endif %}">
+						<a class="dropdown-item dropdown-item-primary" href="/admin/reported/comments">
+							<i class="fas fa-comment-alt fa-sm fa-fw mr-4"></i>Comments
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-span-full xl:col-span-9 dark:bg-gray-700 md:dark:bg-gray-800">
+	{% block listing %}
+	<ul class="flex flex-col sm:py-4 my-2.5 sm:my-0" id="posts">
+		{% include "CHRISTMAS/submission_listing.html" %}
+	</ul>
+	{% endblock %}
 </div>
 {% endblock %}
 

@@ -1,19 +1,72 @@
-{% extends "CHRISTMAS/settings2.html" %}
+{% extends "CHRISTMAS/default.html" %}
+
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700 sub-header"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Agenda Posters
+			</h1>
+			<ul class="flex space-x-2 text-xs text-gray-500 dark:text-gray-400 leading-normal mb-0">
+				{% if v and v.admin_level > 2 %}
+				<li>
+					<a href="/admin" class="text-gray-500 hover:underline">Admin Dashboard</a>
+				</li>
+				<li>
+					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
+				</li>
+				{% endif %}
+				<li>
+					<a href="#" class="text-gray-700 dark:text-gray-500 hover:underline">Agenda Posters</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
 
 {% block content %}
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th style="font-weight:bold;">#</th>
-		<th style="font-weight:bold;">Name</th>
-	</tr>
-</thead>
-{% for user in users %}
-	<tr>
-		<td style="font-weight:bold;">{{loop.index}}</td>
-		<td><a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}"><img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span></a></td>
-	</tr>
-{% endfor %}
-</table>
-
+<div class="col-span-full my-4 px-2.5 md:px-0">
+	{% if users %}
+	<table class="w-full table">
+		<thead class="bg-primary text-white">
+			<tr>
+				<th scope="col" class="p-2.5">#</th>
+				<th scope="col" class="p-2.5">Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in users %}
+			<tr class="h-16 odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10">
+				<td class="px-2.5 font-bold">{{loop.index}}</td>
+				<td class="px-2.5">
+					<a style="color:#{{user.namecolor}}; font-weight:bold;" href="/@{{user.username}}">
+						<img loading="lazy" src="/uid/{{user.id}}/pic" class="pp20">
+						<span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}};"{% endif %}>{{user.username}}</span>
+					</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+	<div class="flex flex-col items-center justify-center py-24 md:py-48">
+		<img loading="lazy" src="https://c.tenor.com/NhDy-AkelhQAAAAM/marsey-drama.gif" class="w-20 h-20 mb-4 rounded-md object-cover">
+		<h2 class="text-xl font-bold leading-normal font-heading">No agenda posters</h2>
+		<p class="text-gray-500 text-sm">
+			When users have active agenda poster theme, it will show up here.
+		</p>
+		{% if v and v.admin_level > 2 %}
+		<a href="/admin" class="mt-3 btn btn-gray">
+			Go to admin dashboard
+		</a>
+		{% else %}
+		<a href="/" class="mt-3 btn btn-gray">
+			Go to homepage
+		</a>
+		{% endif %}
+	</div>
+	{% endif %}
+</div>
 {% endblock %}
