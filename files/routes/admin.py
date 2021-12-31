@@ -20,6 +20,7 @@ from datetime import datetime
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
+GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
 if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
