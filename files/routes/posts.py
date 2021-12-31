@@ -103,9 +103,6 @@ def post_id(pid, anything=None, v=None):
 	try: pid = int(pid)
 	except Exception as e: pass
 
-	if request.host == 'rdrama.net' and pid in [BUG_THREAD, EMOJI_THREAD]: defaultsortingcomments = 'new'
-	elif v: defaultsortingcomments = v.defaultsortingcomments
-	else: defaultsortingcomments = "top"
 
 	sort = request.values.get("sort", defaultsortingcomments)
 
@@ -115,6 +112,10 @@ def post_id(pid, anything=None, v=None):
 		except: abort(404)
 
 	post = get_post(pid, v=v)
+
+	if 'megathread' in post.title.lower(): defaultsortingcomments = 'new'
+	elif v: defaultsortingcomments = v.defaultsortingcomments
+	else: defaultsortingcomments = "top"
 
 	if post.club and not (v and (v.paid_dues or v.id == post.author_id)): abort(403)
 
