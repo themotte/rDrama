@@ -8,7 +8,7 @@
 
 {% block subHeader %}
 <div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
-		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700"></div>
+		<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700 sub-header"></div>
 		<div class="relative col-span-full flex items-center">
 		<div>
 			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
@@ -18,10 +18,10 @@
 				Grant badges to users.
 			</small>
 		</div>
-		<div class="hidden ml-auto">
-			<a href="/notifications?modmail=true" class="btn btn-gray">
-				<i class="fas fa-envelope fa-sm fa-fw mr-1"></i>
-				Mod mail
+		<div class="ml-auto">
+			<button type="submit" form="badge-grant-form" class="btn btn-green">
+				<i class="fas fa-badge fa-sm fa-fw mr-1"></i>
+				Give Badge
 			</a>
 		</div>
 	</div>
@@ -55,12 +55,18 @@
 		{% endif %}
 
 
-<form action="/admin/badge_grant" method="post">
+<form id="badge-grant-form" action="/admin/badge_grant" method="post">
 <input type="hidden" name="formkey" value="{{v.formkey}}">
 
 
 <label for="input-username" class="label">Username</label>
-<input id="input-username" class="form-input mb-4" type="text" name="username" required placeholder="Enter a username">
+<input id="input-username" class="form-input mb-2" type="text" name="username" required placeholder="Enter a username">
+
+<label for="input-url" class="label">URL</label>
+<input id="input-url" class="form-input mb-2" type="text" name="url" placeholder="Optional">
+
+<label for="input-description" class="label">Custom description</label>
+<textarea id="input-description" class="form-input" name="description" placeholder="Leave blank for badge's default desription.">
 
 <table class="w-full table table-striped">
 <thead class="bg-primary text-white">
@@ -85,14 +91,6 @@
 </tr>
 {% endfor %}
 </table>
-
-<label for="input-url" class="label">URL</label>
-<input id="input-url" class="form-input mb-2" type="text" name="url" placeholder="Optional">
-
-<label for="input-description" class="label">Custom description</label>
-<input id="input-description" class="form-input" type="text" name="description" placeholder="Leave blank for badge default">
-
-<input class="btn btn-green mt-2" type="submit">
 
 </form>
 
