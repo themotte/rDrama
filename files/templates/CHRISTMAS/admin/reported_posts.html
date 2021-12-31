@@ -57,17 +57,29 @@
 				</li>
 			</ul>
 		</div>
-		<div class="ml-auto flex space-x-2">
-			<button id="submit-btn" type="submit" form="awards-form" class="btn btn-green" disabled>
-				<i class="fas fa-trophy fa-sm fa-fw mr-1"></i>
-				Give awards
-			</button>
-			{% if 'rdrama.net' not in request.host or v.admin_level > 2 %}
-			<button onclick="post_toast('/admin/monthly')" class="btn btn-yellow">
-				<i class="fas fa-dollar-sign fa-sm fa-fw mr-1"></i>
-				Grant monthly MarseyBux
-			</button>
-			{% endif %}
+		<div class="ml-auto">
+			<div class="dropdown">
+				<button class="block px-4 py-2 bg-gradient-to-t from-gray-200 to-gray-100 focus:from-gray-100 focus:to-gray-200 border border-gray-300 rounded-md text-shadow shadow-inset-t-white-10 text-sm font-bold text-gray-700 focus:text-gray-900 focus:shadow-inner focus:outline-none dropdown-toggle" type="button" id="dropdownAdminReportSortsButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if request.path=="/admin/reported/posts" %}
+						<i class="fas fa-pencil text-gray-500 fa-sm fa-fw mr-1"></i>
+					{% endif %}
+					{% if request.path=="/admin/reported/comments" %}
+						<i class="fas fa-comment-alt text-gray-500 fa-sm fa-fw mr-1"></i>
+					{% endif %}
+				</button>
+				<ul class="dropdown-menu w-56 bg-gray-900 rounded-md shadow-lg" aria-labelledby="dropdownAdminReportSortsButton" x-placement="bottom-start">
+					<li class="{% if request.path=="/admin/reported/posts" %}hidden{% endif %}">
+						<a class="dropdown-item dropdown-item-primary" href="?sort={{sort}}&t=hour">
+							<i class="fas fa-pencil fa-sm fa-fw mr-4"></i>Posts
+						</a>
+					</li>
+					<li class="{% if request.path=="/admin/reported/comments" %}hidden{% endif %}">
+						<a class="dropdown-item dropdown-item-primary" href="?sort={{sort}}&t=day">
+							<i class="fas fa-comment-alt fa-sm fa-fw mr-4"></i>Comments
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>
@@ -78,11 +90,11 @@
 
 	<div class="col">
 
-	{% block listing %}
+		{% block listing %}
 		<div class="posts">
 			{% include "CHRISTMAS/submission_listing.html" %}
 		</div>
-	{% endblock %}
+		{% endblock %}
 	</div>
 </div>
 {% endblock %}
