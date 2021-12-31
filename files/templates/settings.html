@@ -34,7 +34,7 @@
 
 
 	<style>:root{--primary:#{{v.themecolor}}}</style>
-	<link rel="stylesheet" href="/static/assets/css/main.css?a=42"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
+	<link rel="stylesheet" href="/static/assets/css/main.css?a=43"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=3">
 	{% if v.agendaposter %}
 		<style>
 			html {
@@ -53,7 +53,7 @@
 				font-size: 11px !important
 			}
 		</style>
-	{% elif v.css %}
+	{% elif v.css and not request.path.startswith('/settings/css') %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 	{% endif %}
 </head>
