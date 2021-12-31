@@ -1,3 +1,9 @@
+{%
+	set colors = {
+	'fa-user-slash': 'text-red-600'
+	}
+%}
+
 <div class="sidebar hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 my-4 px-4 py-3 rounded-md bg-gray-300/40 dark:bg-gray-700/40 shadow-inner">
 	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Quick Actions</h2>
 	<div class="flex flex-col space-y-4 mb-3">
@@ -13,7 +19,7 @@
 		{% for ma in actions %}
 		<li id="action-{{ma.id}}" class="relative flex">
 			<div class="w-6 h-6 flex justify-center items-center flex-shrink-0">
-				<i class="far {{ ma.icon }} {{ma.color}} text-lg fa-fw"></i>
+				<i class="far {{ ma.icon }} {{ colors[{{ ma.icon }}] }} text-lg fa-fw"></i>
 			</div>
 			<div class="pl-2 text-gray-500 dark:text-gray-400 text-sm">
 				<div>
