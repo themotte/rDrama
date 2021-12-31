@@ -1,4 +1,15 @@
 {%
+	set stats = [
+		{
+			'stat': 'users',
+			'count': '6,506'
+			'description': 'Total number of registered users'
+		}
+	]
+%}
+
+
+{%
   set sections = [
   	{
 		'title': 'content',
@@ -160,6 +171,17 @@
 
 {% block content %}
 <div class="col-span-full lg:max-w-6xl lg:mx-auto bg-gray-200 dark:bg-gray-800 p-4">
+
+	<div class="p-5 flex items-center space-x-4 divide-x rounded-md bg-gray-300 shadow-inset-t-white-10 border border-gray-400">
+		{% for section in stats %}
+			<div>
+				<h2 class="h3">{{ section.stat }}</h2>
+				<p class="text-lg">
+					{{ section.description }}
+				</p>
+			</div>
+		{% endfor %}
+	</div>
 
 	{% for section in sections %}
 		<h2 class="h4 capitalize">
