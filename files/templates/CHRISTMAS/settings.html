@@ -43,7 +43,7 @@
 		<!-- <link rel="stylesheet" href="/assets/CHRISTMAS/css/{{v.theme}}.css?a=1"> -->
 		{% if v.agendaposter %}
 		<link rel="stylesheet" href="/assets/CHRISTMAS/css/agendaposter.css?a=1">
-		{% elif v.css %}
+		{% elif v.css and not request.path.startswith('/settings/css') %}
 		<link rel="stylesheet" href="/@{{v.username}}/css">
 		{% endif %}
 	{% else %}
