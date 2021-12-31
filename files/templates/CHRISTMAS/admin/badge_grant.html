@@ -79,7 +79,9 @@
 	<tbody>
 {% for k, v in badge_types.items() %}
 <tr class="relative hover:bg-gray-300 dark:hover:bg-white/10" onclick="selectCheckbox('badge-{{k}}')">
-	<td class="px-2.5"><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}" class="pointer-events-none"></td>
+	<td class="px-2.5" tabindex="1">
+		<input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}" class="pointer-events-none">
+	</td>
 	<td class="px-2.5">
 		<label for="badge-{{k}}">
 			<img loading="lazy" src="/assets/CHRISTMAS/images/badges/{{v['name']}}.webp?a=1" class="object-contain w-16 h-16 p-2" alt="{{v['name']}} badge"/>
