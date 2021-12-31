@@ -31,7 +31,7 @@
 {% block content %}
 <div class="col-span-full my-2 px-2.5 md:px-0">
 
-	<form action="/admin/banned_domains" method="post" class="flex items-center p-3 md:px-5 md:py-4 rounded border border-gray-400 dark:border-gray-700 hover:bg-gray-300 dark:hover:bg-gray-700">
+	<form action="/admin/banned_domains" method="post" class="flex space-x-3 items-center p-3 md:px-5 md:py-4 rounded border border-gray-400 dark:border-gray-700 hover:bg-gray-300 dark:hover:bg-gray-700">
 		<input type="hidden" name="formkey" value="{{v.formkey}}">
 		<input name="domain" placeholder="Enter domain here.." class="form-input" required>
 		<input name="reason" placeholder="Enter ban reason here.." onchange="document.getElementById('ban-submit').disabled=false" class="form-input">
