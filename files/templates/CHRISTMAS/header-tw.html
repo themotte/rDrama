@@ -1,68 +1,5 @@
 {% set random = range(1, 13)|random() %}
 
-{% set randomBanner = range(0,11)|random() %}
-
-{%
-  set banner = [
-    {
-      'username': 'Bartholomew_1',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-1.jpg?a=1'
-    },
-    {
-      'username': 'Yui',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-2.jpg?a=1'
-    },
-    {
-      'username': 'Bartholomew_1',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-3.jpg?a=1'
-    },
-    {
-      'username': 'chiobu',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-4.jpg?a=1'
-    },
-    {
-      'username': 'chiobu',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-5.webp?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-6.jpg?a=1'
-    },
-    {
-      'username': 'Bartholomew_1',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-7.jpg?a=1'
-    },
-    {
-      'username': 'drama_enthusiast',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-8.webp?a=1'
-    },
-    {
-      'username': 'dramarama',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-9.jpg?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-10.jpg?a=1'
-    },
-    {
-      'username': 'ThreeLetterAgent',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-11.jpg?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-12.jpg?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-13.jpg?a=1'
-    },
-    {
-      'username': 'geese_suck',
-      'image': '/static/assets/CHRISTMAS/banners/sidebar-banner-14.jpg?a=1'
-    }
-  ]
-%}
-
 <!-- This example requires Tailwind CSS v2.0+ -->
 <nav class="fixed top-0 w-full bg-gray-700" style="z-index: 1030;">
   <div class="w-full max-w-screen-2xl mx-auto grid grid-cols-12 px-4">
@@ -287,11 +224,11 @@
         </li>
       </ul>
       {% endif %}
-      <a href="/post/32341/" class="block w-full h-56 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
-        <img loading="lazy" class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="{{ banner[randomBanner].image }}" alt="artwork featuring an orange and white cat"/>
+      <a href="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,95)|random()}}.webp?a=3" class="block w-full h-56 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
+        <img loading="lazy" class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,95)|random()}}.webp?a=3" alt="artwork featuring an orange and white cat"/>
       </a>
-      <small class="mt-1 block text-gray-500">
-        Artwork by <a href="/@{{ banner[randomBanner].username }}" class="font-bold">@{{ banner[randomBanner].username }}</a>
+      <small class="hidden mt-1 text-gray-500">
+        Artwork by <a href="/me" class="font-bold">@username</a>
       </small>
     </div>
   </div>
