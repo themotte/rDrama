@@ -47,14 +47,22 @@
 	<table class="w-full table mt-6">
 		<thead class="bg-primary text-white">
 			<tr>
+				<th scope="col" class="p-2.5"></th>
 				<th scope="col" class="p-2.5">Domain</th>
 				<th scope="col" class="p-2.5">Ban reason</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for domain in banned_domains %}
-			<tr class="h-16 odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10">
-				<td class="px-2.5 font-bold">{{domain.domain}}</td>
+			<tr class="odd:bg-gray-300 dark:odd:bg-white/[.05] hover:bg-gray-400 dark:hover:bg-white/10">
+				<td class="px-2.5 font-bold">
+					<div class="flex items-center justify-center w-16 h-16 p-2">
+						<i clas="fas fa-globe fa-fw"></i>
+					</div>
+				</td>
+				<td class="px-2.5 font-bold">
+					{{domain.domain}}
+				</td>
 				<td class="px-2.5">{{domain.reason}}</td>
 			</tr>
 			{% endfor %}
