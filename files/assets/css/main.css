@@ -4473,6 +4473,8 @@ textarea {
 }
 .container, .container-fluid {
     padding-bottom: 50px;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 .navbar {
     padding: 0.5rem 0.5rem 0.3rem 0.5rem;
