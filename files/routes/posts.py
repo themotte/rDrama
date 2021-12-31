@@ -7,7 +7,7 @@ from files.helpers.sanitize import *
 from files.helpers.filters import *
 from files.helpers.markdown import *
 from files.helpers.alerts import *
-from files.helpers.discord import send_message
+from files.helpers.discord import send_discord_message
 from files.helpers.const import *
 from files.classes import *
 from flask import *
@@ -1176,7 +1176,7 @@ def submit_post(v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title) and not new_post.private:
-		send_message(f"https://{site}{new_post.permalink}")
+		send_discord_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()

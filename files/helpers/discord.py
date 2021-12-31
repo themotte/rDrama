@@ -57,8 +57,8 @@ def set_nick(user, nick):
 	data={"nick": nick}
 	requests.patch(url, headers=headers, json=data, timeout=5)
 
-def send_message(message):
-	url=f"https://discordapp.com/api/channels/924485611715452940/messages"
+def send_discord_message(message):
 	headers = {"Authorization": f"Bot {BOT_TOKEN}"}
 	data={"content": message}
-	requests.post(url, headers=headers, data=data, timeout=5)
+	requests.post(f"https://discordapp.com/api/channels/924485611715452940/messages", headers=headers, data=data, timeout=5)
+	requests.post(f"https://discordapp.com/api/channels/924486091795484732/messages", headers=headers, data=data, timeout=5)
