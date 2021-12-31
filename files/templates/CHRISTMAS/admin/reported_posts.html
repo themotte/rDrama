@@ -2,43 +2,34 @@
 
 {% block adminpanel %}{% endblock %}
 {% block pagetype %}userpage{% endblock %}
-{% block banner %}{% endblock %}
-{% block mobileBanner %}{% endblock %}
-{% block desktopBanner %}{% endblock %}
-{% block desktopUserBanner %}{% endblock %}
-{% block mobileUserBanner %}{% endblock %}
 
-	{% block postNav %}
-	<div class="container-fluid bg-white sticky">
-		<div class="row border-bottom">
-			<div class="col">
-				<div class="container">
-					<div class="row bg-white">
-						<div class="col">
-							<div class="d-flex">
-								<ul class="nav post-nav mr-auto">
-									<li class="nav-item">
-										<a class="nav-link {% if request.path=="/admin/reported/posts" %} active{% endif %}" href="/admin/reported/posts">
-											<div>Posts</div>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link {% if request.path=="/admin/reported/comments" %} active{% endif %}" href="/admin/reported/comments">
-											<div>Comments</div>
-										</a>
-									</li>
-								</ul>
-							</div>
+{% block postNav %}
+<div class="container-fluid bg-white sticky">
+	<div class="row border-bottom">
+		<div class="col">
+			<div class="container">
+				<div class="row bg-white">
+					<div class="col">
+						<div class="d-flex">
+							<ul class="nav post-nav mr-auto">
+								<li class="nav-item">
+									<a class="nav-link {% if request.path=="/admin/reported/posts" %} active{% endif %}" href="/admin/reported/posts">
+										<div>Posts</div>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link {% if request.path=="/admin/reported/comments" %} active{% endif %}" href="/admin/reported/comments">
+										<div>Comments</div>
+									</a>
+								</li>
+							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	{% endblock %}
-
-
-{% block fixedMobileBarJS %}
+</div>
 {% endblock %}
 
 {% block title %}
@@ -46,8 +37,43 @@
 <meta name="description" content="on {{'SITE_NAME' | app_config}}">
 {% endblock %}
 
-{% block content %}
+{% block subHeader %}
+<div class="relative max-w-screen-2xl mx-auto px-4 py-4 grid grid-cols-12 rounded-t">
+	<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-gray-300 to-gray-200 dark:bg-none dark:bg-gray-800 rounded-t sub-header-shadow dark:border-b dark:border-gray-700 sub-header"></div>
+	<div class="relative col-span-full flex items-center">
+		<div>
+			<h1 class="font-bold text-xl font-heading leading-normal mb-0">
+				Reported Posts
+			</h1>
+			<ul class="flex space-x-2 text-xs text-gray-500 dark:text-gray-400 leading-normal mb-0">
+				<li>
+					<a href="/admin" class="text-gray-500 hover:underline">Admin Dashboard</a>
+				</li>
+				<li>
+					<i class="fas fa-arrow-alt-right text-shadow fa-fw fa-sm"></i>
+				</li>
+				<li>
+					<a href="#" class="text-gray-700 dark:text-gray-500 hover:underline">Reported Posts</a>
+				</li>
+			</ul>
+		</div>
+		<div class="ml-auto flex space-x-2">
+			<button id="submit-btn" type="submit" form="awards-form" class="btn btn-green" disabled>
+				<i class="fas fa-trophy fa-sm fa-fw mr-1"></i>
+				Give awards
+			</button>
+			{% if 'rdrama.net' not in request.host or v.admin_level > 2 %}
+			<button onclick="post_toast('/admin/monthly')" class="btn btn-yellow">
+				<i class="fas fa-dollar-sign fa-sm fa-fw mr-1"></i>
+				Grant monthly MarseyBux
+			</button>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
 
+{% block content %}
 <div class="row no-gutters">
 
 	<div class="col">
