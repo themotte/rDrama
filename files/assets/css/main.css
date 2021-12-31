@@ -4747,7 +4747,6 @@ lite-youtube.lyt-activated > .lty-playbtn {
     display: none!important;
 }
 
-table {
-    display: inline-block !important;
-    overflow: auto !important;
+.overflow-x-auto {
+    overflow-x: auto !important;
 }
