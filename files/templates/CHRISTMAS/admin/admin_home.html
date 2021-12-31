@@ -186,14 +186,14 @@
 		<h2 class="hidden font-bold text-2xl md:text-3xl  font-heading leading-normal mb-4 pb-3 border-b border-gray-300 dark:border-gray-700">
 			Metrics
 		</h2>
-		<div class="p-4 md:p-5 flex justify-between md:justify-around space-x-4 items-center rounded-md bg-gray-500 dark:bg-gray-700 shadow-inset-t-white-10 border border-gray-700 dark:border-gray-900">
+		<div class="p-4 md:p-5 flex justify-between md:justify-around space-x-4 items-center rounded-md bg-gray-300 dark:bg-gray-700 shadow-inset-t-white-10 border border-gray-400 dark:border-gray-900">
 			{% for section in stats %}
 				<div class="md:px-5">
-					<div class="text-white dark:text-gray-500 uppercase font-bold text-xs tracking-wider leading-4 mb-2">
+					<div class="text-black dark:text-gray-500 uppercase font-bold text-xs tracking-wider leading-4 mb-2">
 						{{ section.stat }}
 					</div>
-					<h2 class="font-bold text-lg md:text-2xl font-heading leading-normal mb-2 text-shadow-light text-white">{{ section.count }}</h2>
-					<p class="flex items-center text-xs md:text-base text-gray-300">
+					<h2 class="font-bold text-lg md:text-2xl font-heading leading-normal mb-2 text-shadow-light text-black dark:text-gray-200">{{ section.count }}</h2>
+					<p class="flex items-center text-xs md:text-base text-gray-500 dark:text-gray-300">
 						<i class="fas fa-caret-up text-lg text-green-400 mr-2"></i>
 						<span>{{ section.description }}</span>
 					</p>
