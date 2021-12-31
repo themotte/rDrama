@@ -56,13 +56,13 @@
 {% for k, v in badge_types.items() %}
 <tr class="hover:bg-gray-300 dark:hover:bg-white/10">
 	<td class="p-2.5"><input type="radio" id="badge-{{k}}" name="badge_id" value="{{k}}"></td>
-	<td>
+	<td class="p-2.5">
 		<label for="badge-{{k}}">
 			<img loading="lazy" src="/assets/CHRISTMAS/images/badges/{{v['name']}}.webp?a=1" class="object-contain w-16 h-16 p-2" alt="{{v['name']}} badge"/>
 		</label>
 	</td>
-	<td>{{v['name']}}</td>
-	<td>{{v['description']}}</td>
+	<td class="p-2.5">{{v['name']}}</td>
+	<td class="p-2.5">{{v['description']}}</td>
 </tr>
 {% endfor %}
 </table>
