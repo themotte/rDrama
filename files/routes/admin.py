@@ -203,6 +203,7 @@ def monthly(v):
 				email=f"{email}@gmail.com"
 			emails.append(email.lower())
 
+		cid = notif_comment(f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
 		for u in g.db.query(User).filter(User.patron > 0).all():
 			if u.patron == 5 or u.email and u.email.lower() in emails or u.id == 1379:
 				if u.patron == 1: procoins = 2500
@@ -213,8 +214,6 @@ def monthly(v):
 				else: print(u.username)
 				u.procoins += procoins
 				g.db.add(u)
-				
-				cid = notif_comment(f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
 				add_notif(cid, u.id)
 
 		g.db.commit()
