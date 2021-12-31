@@ -3660,9 +3660,9 @@ video {
 	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.dark .dark\:divide-gray-900 > :not([hidden]) ~ :not([hidden]) {
+.dark .dark\:divide-gray-700 > :not([hidden]) ~ :not([hidden]) {
 	--tw-divide-opacity: 1;
-	border-color: rgba(var(--color-900), var(--tw-divide-opacity));
+	border-color: rgba(var(--color-700), var(--tw-divide-opacity));
 }
 
 .dark .dark\:border-b {
