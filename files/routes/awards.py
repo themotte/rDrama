@@ -24,7 +24,7 @@ AWARDS3 = {
 		"description": "Makes fireflies swarm the post.",
 		"icon": "fas fa-sparkles",
 		"color": "text-warning",
-		"price": 500
+		"price": 300
 	},
 	"shit": {
 		"kind": "shit",
@@ -32,7 +32,7 @@ AWARDS3 = {
 		"description": "Makes flies swarm the post.",
 		"icon": "fas fa-poop",
 		"color": "text-black-50",
-		"price": 500
+		"price": 300
 	},
 }
 
@@ -261,7 +261,7 @@ def award_post(pid, v):
 	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
 		if author.username == "911roofer": abort(403)
 		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400
-		else: author.agendaposter_expires_utc = time.time() + 86400
+		else: author.agendaposter_expires_utc = int(time.time()) + 86400
 		
 		author.agendaposter = True
 		if not author.has_badge(26):
@@ -273,7 +273,7 @@ def award_post(pid, v):
 		author.customtitleplain = new_name
 		author.customtitle = filter_emojis_only(new_name)
 		if len(author.customtitle) > 1000: abort(403)
-		author.flairchanged = time.time() + 86400
+		author.flairchanged = int(time.time()) + 86400
 	elif kind == "pause":
 		author.mute = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
@@ -290,18 +290,18 @@ def award_post(pid, v):
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
-		else: author.marseyawarded = time.time() + 86400
+		else: author.marseyawarded = int(time.time()) + 86400
 	elif kind == "pizzashill":
 		if author.bird:
 			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
-		else: author.longpost = time.time() + 86400
+		else: author.longpost = int(time.time()) + 86400
 		send_repeatable_notification(IDIO_ID, f"@{v.username} used {kind} award on [{post.shortlink}]({post.shortlink})")
 	elif kind == "bird":
 		if author.longpost:
 			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404
 		if author.bird: author.bird += 86400
-		else: author.bird = time.time() + 86400
+		else: author.bird = int(time.time()) + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
@@ -331,6 +331,9 @@ def award_post(pid, v):
 			new_badge = Badge(badge_id=90, user_id=author.id)
 			g.db.add(new_badge)
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
+	elif kind == "progressivestack":
+		if author.progressivestack: author.progressivestack += 21600
+		else: author.progressivestack = int(time.time()) + 21600
 
 	if post.author.received_award_count: post.author.received_award_count += 1
 	else: post.author.received_award_count = 1
@@ -438,7 +441,7 @@ def award_comment(cid, v):
 	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
 		if author.username == "911roofer": abort(403)
 		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400
-		else: author.agendaposter_expires_utc = time.time() + 86400
+		else: author.agendaposter_expires_utc = int(time.time()) + 86400
 		
 		author.agendaposter = True
 		if not author.has_badge(26):
@@ -450,7 +453,7 @@ def award_comment(cid, v):
 		author.customtitleplain = new_name
 		author.customtitle = filter_emojis_only(new_name)
 		if len(author.customtitle) > 1000: abort(403)
-		author.flairchanged = time.time() + 86400
+		author.flairchanged = int(time.time()) + 86400
 	elif kind == "pause":
 		author.mute = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
@@ -467,18 +470,18 @@ def award_comment(cid, v):
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
-		else: author.marseyawarded = time.time() + 86400
+		else: author.marseyawarded = int(time.time()) + 86400
 	elif kind == "pizzashill":
 		if author.bird:
 			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
-		else: author.longpost = time.time() + 86400
+		else: author.longpost = int(time.time()) + 86400
 		send_repeatable_notification(IDIO_ID, f"@{v.username} used {kind} award on [{c.shortlink}]({c.shortlink})")
 	elif kind == "bird":
 		if author.longpost:
 			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404
 		if author.bird: author.bird += 86400
-		else: author.bird = time.time() + 86400
+		else: author.bird = int(time.time()) + 86400
 	elif kind == "eye":
 		author.eye = True
 		send_repeatable_notification(CARP_ID, f"@{v.username} used {kind} award!")
@@ -508,6 +511,9 @@ def award_comment(cid, v):
 			new_badge = Badge(badge_id=90, user_id=author.id)
 			g.db.add(new_badge)
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
+	elif kind == "progressivestack":
+		if author.progressivestack: author.progressivestack += 21600
+		else: author.progressivestack = int(time.time()) + 21600
 
 	if c.author.received_award_count: c.author.received_award_count += 1
 	else: c.author.received_award_count = 1

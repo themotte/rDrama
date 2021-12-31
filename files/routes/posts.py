@@ -27,8 +27,7 @@ titleheaders = {"User-Agent": f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleW
 
 if path.exists(f'snappy_{site_name}.txt'):
 	with open(f'snappy_{site_name}.txt', "r") as f:
-		snappyquotes = f.read().split("{[para]}")
-
+		snappyquotes = f.read().split("{[para]}") + [f':#{x}:' for x in marseys]
 @app.post("/toggle_club/<pid>")
 @auth_required
 def toggle_club(pid, v):

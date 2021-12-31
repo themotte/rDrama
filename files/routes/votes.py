@@ -118,6 +118,7 @@ def api_vote_post(post_id, new, v):
 		post.upvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1).count()
 		post.downvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1).count()
 		post.realupvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1, real=True).count() - g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1, real=False).count() + g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1).count()
+		if post.author.progressivestack: post.realupvotes *= 2
 		g.db.add(post)
 		g.db.commit()
 	except: g.db.rollback()
@@ -184,6 +185,7 @@ def api_vote_comment(comment_id, new, v):
 		comment.upvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=1).count()
 		comment.downvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=-1).count()
 		comment.realupvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=1, real=True).count() - g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=1, real=False).count() + g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=-1).count()
+		if comment.author.progressivestack: comment.realupvotes *= 2
 		g.db.add(comment)
 		g.db.commit()
 	except: g.db.rollback()

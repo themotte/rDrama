@@ -219,7 +219,7 @@ def monthly(v):
 
 
 @app.get('/admin/sidebar')
-@admin_level_required(2)
+@admin_level_required(3)
 def get_sidebar(v):
 
 	try:
@@ -232,7 +232,7 @@ def get_sidebar(v):
 
 @app.post('/admin/sidebar')
 @limiter.limit("1/second")
-@admin_level_required(2)
+@admin_level_required(3)
 @validate_formkey
 def post_sidebar(v):
 
@@ -786,7 +786,7 @@ def admin_title_change(user_id, v):
 
 	user=g.db.query(User).with_for_update().filter_by(id=user.id).first()
 	user.customtitle=new_name
-	if request.values.get("locked"): user.flairchanged = time.time() + 2629746
+	if request.values.get("locked"): user.flairchanged = int(time.time()) + 2629746
 	g.db.add(user)
 
 	if user.flairchanged: kind = "set_flair_locked"
