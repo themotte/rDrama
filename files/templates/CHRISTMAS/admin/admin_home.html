@@ -194,8 +194,7 @@
 					<span>{{ section.description }}</span>
 				</p>
 			</div>
-			{{ loop.index }}
-			{% if loop.count != stats.length %}
+			{% if loop.index != stats.length %}
 			<div class="border-l border-gray-700 dark:border-gray-900 shadow-inset-r-white-05"></div>
 			{% endif %}
 		{% endfor %}
