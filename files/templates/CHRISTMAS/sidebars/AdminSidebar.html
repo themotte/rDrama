@@ -8,7 +8,7 @@
 	</div>
 	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
 	<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">Recent Mod Activity</h2>
-	<ul class="flex flex-col divide-y space-y-2 mb-0">
+	<ul class="flex flex-col divide-y space-y-2 mb-0 list-none">
 	{% for ma in actions %}
 		<li id="action-{{ma.id}}" class="relative">
 			<a href="{{ma.permalink}}" class="flex items-center">
