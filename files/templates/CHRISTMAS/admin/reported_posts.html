@@ -86,16 +86,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="row no-gutters">
-
-	<div class="col">
-
-		{% block listing %}
-		<div class="posts">
-			{% include "CHRISTMAS/submission_listing.html" %}
-		</div>
-		{% endblock %}
-	</div>
+<div class="col-span-full xl:col-span-9 dark:bg-gray-700 md:dark:bg-gray-800">
+	{% block listing %}
+	<ul class="flex flex-col sm:py-4 my-2.5 sm:my-0" id="posts">
+		{% include "CHRISTMAS/submission_listing.html" %}
+	</ul>
+	{% endblock %}
 </div>
 {% endblock %}
 
