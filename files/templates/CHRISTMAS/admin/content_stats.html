@@ -30,19 +30,22 @@
 {% endblock %}
 
 {% block content %}
-<table class="table table-striped mb-5">
-<thead class="bg-primary text-white">
-	<tr>
-		<th>Statistic</th>
-		<th>Value</th>
-	</tr>
-</thead>
-{% for entry in data %}
-	<tr>
-		<td>{{entry}}</td>
-		<td>{{data[entry]}}</td>
-	</tr>
-{% endfor %}
-</table>
-
+<div class="col-span-full my-4 px-2.5 md:px-0">
+	<table class="table table-striped mb-5">
+		<thead class="bg-primary text-white">
+			<tr>
+				<th scope="col" class="p-2.5">Statistic</th>
+				<th scope="col" class="p-2.5">Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for entry in data %}
+			<tr>
+				<td class="px-2.5">{{entry}}</td>
+				<td class="px-2.5 font-bold">{{data[entry]}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
 {% endblock %}
