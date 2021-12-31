@@ -12,21 +12,15 @@
 	{% for ma in actions %}
 		<li id="action-{{ma.id}}" class="relative flex items-center">
 
-			<div class="d-flex flex-grow-1 align-items-center">
 				<div class="w-6 h-6 flex justify-center items-center flex-shrink-0">
-					<i class="far {{ ma.icon }} text-lg fa-fw"></i>
+					<i class="far {{ ma.icon }} {{ma.color}} text-lg fa-fw"></i>
 				</div>
-				<div class="flex items-center">
-					<span class="rounded">
-						<img src="{{ ma.user.profile_url }}" alt="avatar" width=42 height=42 class="rounded-circle">
-					</span>
-					<div class="text-gray-500 dark:text-gray-400 text-sm pl-3">
+				<div class="pl-2 flex items-center text-gray-500 dark:text-gray-400 text-sm">
 						<div>
-							<a href="{{ma.user.url}}" class="font-weight-bold text-black" target="_self">@{{ma.user.username}}</a>
-
+							<a href="{{ma.user.url}}" class="font-font text-black dark:text-gray-200 hover:text-primary" target="_self">@{{ma.user.username}}
+							</a>
 							<span>{{ma.string | safe}}</span>
 						</div>
-
 						<div class="text-gray-500">
 							<span>{{ma.age_string}}</span>
 							<a href="{{ma.permalink}}">
@@ -36,10 +30,7 @@
 								<i class="far fa-copy ml-1 text-muted"></i>
 							</button>
 						</div>
-
-					</div>
 				</div>
-			</div>
 		</li>
 	</ul>
 	{% else %}
