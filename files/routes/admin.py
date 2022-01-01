@@ -36,7 +36,7 @@ def sex(v):
 	emails = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
 
 	for u in g.db.query(User).filter(User.patron > 0).all():
-		if u.email.lower() not in emails:
+		if not u.email or u.email.lower() not in emails:
 			print(u.username)
 	
 	return "sex"
@@ -45,11 +45,20 @@ def sex(v):
 @admin_level_required(3)
 def sex2(v):
 	for u in g.db.query(User).filter(User.patron > 0).all():
-		for num in [21,22,23,24,25]:
-			if num == u.patron+20: continue
-			existing = u.has_badge(num)
-			if existing: print(f'{u.username}: {num}')
+		tier = u.patron + 20
 
+		if not u.has_badge(tier):
+			new_badge = Badge(badge_id=tier, user_id=u.id)
+			g.db.add(new_badge)
+			print(f'{u.username} with {u.patron} was given {tier}')
+			
+		for num in [21,22,23,24,25]:
+			if num != tier:
+				existing = u.has_badge(num)
+				if existing:
+					g.db.delete(existing)
+					print(f'{u.username} with {u.patron} was removed {num}')
+	g.db.commit()
 	return "sex"
 
 
