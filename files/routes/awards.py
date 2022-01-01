@@ -34,6 +34,22 @@ AWARDS3 = {
 		"color": "text-black-50",
 		"price": 300
 	},
+	"train": {
+		"kind": "train",
+		"title": "Train",
+		"description": "Summons a train on the post.",
+		"icon": "fas fa-train",
+		"color": "text-pink",
+		"price": 300
+	},
+	"wholesome": {
+        "kind": "wholesome",
+        "title": "Wholesome",
+        "description": "Summons a wholesome marsey on the post.",
+        "icon": "fas fa-smile-beam",
+        "color": "text-yellow",
+        "price": 300
+    },
 }
 
 @app.get("/shop")
