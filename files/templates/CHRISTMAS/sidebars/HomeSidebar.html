@@ -15,22 +15,21 @@
 	<ul class="flex flex-col space-y-2 mt-3 mb-0">
 		<li>
 			<a class="btn btn-primary text-center w-full" href="/submit">
-				<i class="fas fa-pencil fa-fw fa-sm ml-2"></i>
-				Submit drama
+				<span class="w-32">Submit drama</span>
+				<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
 			</a>
 		</li>
 		<li>
 			<a class="btn btn-yellow text-center w-full" href="/submit">
-				<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
-				rDrama Shop
+				<span class="w-32">rDrama Shop</span>
 				<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
 			</a>
 		</li>
 		{% if not v.discord_id %}
 		<li>
 			<a class="btn btn-blue text-center w-full" href="/discord">
+				<span class="w-32">Discord Server</span>
 				<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
-				Discord Server
 			</a>
 		</li>
 		{% endif %}
