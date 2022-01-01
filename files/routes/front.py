@@ -194,6 +194,12 @@ def front_all(v):
 			g.db.add(v)
 			g.db.commit()
 
+		if v.progressivestack and v.progressivestack < time.time():
+			v.progressivestack = None
+			send_repeatable_notification(v.id, "Your progressive stack has expired!")
+			g.db.add(v)
+			g.db.commit()
+
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'

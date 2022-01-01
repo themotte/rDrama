@@ -221,24 +221,10 @@ def transfer_coins(v, username):
 		if not v.patron and not receiver.patron:
 			tax = math.ceil(amount*0.03)
 			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
-			if request.host == 'rdrama.net': tax_receiver.coins += tax/3
-			else: tax_receiver.coins += tax
+			tax_receiver.coins += tax
 			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
 			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 			g.db.add(tax_receiver)
-
-			if request.host == 'rdrama.net':
-				carp = g.db.query(User).filter_by(id=CARP_ID).first()
-				carp.coins += tax/3
-				log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
-				send_repeatable_notification(CARP_ID, log_message)
-				g.db.add(carp)
-				
-				dad = g.db.query(User).filter_by(id=DAD_ID).first()
-				dad.coins += tax/3
-				log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
-				send_repeatable_notification(DAD_ID, log_message)
-				g.db.add(dad)
 		else: tax = 0
 
 		receiver.coins += amount-tax

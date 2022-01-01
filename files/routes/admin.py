@@ -711,9 +711,11 @@ def unshadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).first()
 	if user.admin_level != 0: abort(403)
 	user.shadowbanned = None
+	user.ban_evade = 0
 	g.db.add(user)
 	for alt in user.alts:
 		alt.shadowbanned = None
+		alt.ban_evade = 0
 		g.db.add(alt)
 
 	ma = ModAction(
