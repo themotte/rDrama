@@ -28,8 +28,7 @@ else: cc = "country club"
 month = datetime.now().strftime('%B')
 
 
-
-@app.post("/admin/sex")
+@app.get("/admin/sex")
 @admin_level_required(3)
 def sex(v):
 	data = {'access_token': GUMROAD_TOKEN}
@@ -42,6 +41,16 @@ def sex(v):
 	
 	return "sex"
 
+@app.get("/admin/sex2")
+@admin_level_required(3)
+def sex2(v):
+	for u in g.db.query(User).filter(User.patron > 0).all():
+		for num in [21,22,23,24,25]:
+			if num == u.patron+20: continue
+			existing = u.has_badge(num)
+			if existing: print(f'{u.username}: {num}')
+
+	return "sex"
 
 
 @app.get("/admin/grassed")
