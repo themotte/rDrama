@@ -12,6 +12,45 @@
 
 {% block title %}
 
+{% if p.award_count("wholesome") %}
+	<style>
+		.seal {
+			position:fixed;
+			z-index:9999;
+			pointer-events: none;
+		}
+	</style>
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
+		<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
+			<img width=100 style="height:auto" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
+{% endif %}
+
+{% if p.award_count("wholesome") > 1 %}
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+		<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
+			<img width=100 style="height:auto" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
+{% endif %}
+
+{% if p.award_count("wholesome") > 2 %}
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
+		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+			<img width=100 style="height:auto" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
+{% endif %}
+
+{% if p.award_count("wholesome") > 3 %}
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+			<img width=100 style="height:auto" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
+{% endif %}
+
 {% if 'rama' not in request.host %}
 <!-- <script defer>
 	function poll_vote(cid) {
