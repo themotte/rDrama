@@ -2010,6 +2010,9 @@ video {
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
+.bg-primary\/40 {
+	background-color: rgba(var(--color-primary), 0.4);
+}
 .bg-yellow-100 {
 	--tw-bg-opacity: 1;
 	background-color: rgba(254, 243, 199, var(--tw-bg-opacity));
@@ -2518,6 +2521,10 @@ video {
 .text-\[\#365314\] {
 	--tw-text-opacity: 1;
 	color: rgba(54, 83, 20, var(--tw-text-opacity));
+}
+.text-gray-800 {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-800), var(--tw-text-opacity));
 }
 .text-yellow-400 {
 	--tw-text-opacity: 1;
