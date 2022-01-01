@@ -712,10 +712,7 @@
 
 	{% if v %}
 		<script defer src="/assets/CHRISTMAS/js/vote.js?a=1"></script>
-	{% endif %}
-
-	{% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-		<script src="/assets/CHRISTMAS/js/submission.js?a=1"></script>
+		<script src="/assets/CHRISTMAS/js/submission.js?a=2"></script>
 	{% endif %}
 
 	{% if not v or v.highlightcomments %}

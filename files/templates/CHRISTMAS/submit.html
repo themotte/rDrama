@@ -130,7 +130,10 @@
 									</button>
 								</li>
 							</ul>
-							<span class="absolute right-3 bottom-3 z-10 text-xs font-medium text-gray-500" id="character-count-submit-text-form"></span>
+							<span class="absolute right-3 bottom-3 z-10 text-xs font-medium text-gray-400 flex space-x-3">
+								<span id="character-count-submit-text-form"></span>
+								<span id="draft-text" data-bs-toggle="tooltip" data-bs-delay="500" data-bs-placement="top" title="" data-bs-original-title="Draft saved to browser storage" class="text-green-400"></span>
+							</span>
 						</div>
 					</div>
 					<div class="tab-pane fade" id="nav-preview" role="tabpanel" aria-labelledby="nav-preview-tab">
@@ -178,5 +181,5 @@
 
 {% block scripts %}
 <script defer src="/assets/CHRISTMAS/js/marked.js?a=1"></script>
-<script defer src="/assets/CHRISTMAS/js/submit.js?a=1"></script>
+<script defer src="/assets/CHRISTMAS/js/submit.js?a=4"></script>
 {% endblock %}
