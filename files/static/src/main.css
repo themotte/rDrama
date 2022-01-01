@@ -410,6 +410,9 @@
 	.btn-purple {
 		@apply bg-gradient-to-t from-purple-700 to-purple-600 hover:from-purple-600 hover:to-purple-700 border-purple-900 text-gray-100 focus:text-gray-200;
 	}
+	.btn-pink {
+		@apply bg-gradient-to-t from-pink-700 to-pink-600 hover:from-pink-600 hover:to-pink-700 border-pink-900 text-gray-100 focus:text-gray-200;
+	}
 	.btn-black {
 		@apply bg-white bg-gradient-to-t from-black to-black/80 hover:from-black/90 hover:to-black border-black/10 text-gray-100 focus:text-gray-200;
 	}
