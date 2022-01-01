@@ -2010,9 +2010,6 @@ video {
 .bg-gray-300\/40 {
 	background-color: rgba(var(--color-300), 0.4);
 }
-.bg-primary\/40 {
-	background-color: rgba(var(--color-primary), 0.4);
-}
 .bg-yellow-100 {
 	--tw-bg-opacity: 1;
 	background-color: rgba(254, 243, 199, var(--tw-bg-opacity));
@@ -3352,6 +3349,9 @@ code {
 .hover\:bg-gray-100:hover {
 	--tw-bg-opacity: 1;
 	background-color: rgba(var(--color-100), var(--tw-bg-opacity));
+}
+.hover\:bg-primary\/80:hover {
+	background-color: rgba(var(--color-primary), 0.8);
 }
 .hover\:bg-gradient-to-t:hover {
 	background-image: linear-gradient(to top, var(--tw-gradient-stops));
