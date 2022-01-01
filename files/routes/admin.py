@@ -27,8 +27,25 @@ if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 month = datetime.now().strftime('%B')
 
-@app.get("/admin/grassed")
+
+
+@app.post("/admin/sex")
 @admin_level_required(3)
+def sex(v):
+	data = {'access_token': GUMROAD_TOKEN}
+
+	emails = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
+
+	for u in g.db.query(User).filter(User.patron > 0).all():
+		if u.email.lower() not in emails:
+			print(u.username)
+	
+	return "sex"
+
+
+
+@app.get("/admin/grassed")
+@admin_level_required(2)
 def grassed(v):
 	users = g.db.query(User).filter(User.ban_reason.like('grass award used by @%')).all()
 
@@ -159,7 +176,7 @@ def club_ban(v, username):
 @admin_level_required(2)
 @validate_formkey
 def make_meme_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
+	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 1
@@ -173,7 +190,7 @@ def make_meme_admin(v, username):
 @admin_level_required(2)
 @validate_formkey
 def remove_meme_admin(v, username):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
+	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0
@@ -187,34 +204,27 @@ def remove_meme_admin(v, username):
 @admin_level_required(3)
 @validate_formkey
 def monthly(v):
-	if 'pcm' in request.host or (SITE_NAME == 'Drama' and v.admin_level > 2) or ('rama' not in request.host and 'pcm' not in request.host):
-		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+	if request.host == 'rdrama.net' and v.id != 1: abort (403)
 
-		data = {'access_token': GUMROAD_TOKEN}
+	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
-		response = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
-		emails = []
+	data = {'access_token': GUMROAD_TOKEN}
 
-		for email in response:
-			if email.endswith("@gmail.com"):
-				email=email.split('@')[0]
-				email=email.split('+')[0]
-				email=email.replace('.','').replace('_','')
-				email=f"{email}@gmail.com"
-			emails.append(email.lower())
+	emails = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
 
-		for u in g.db.query(User).filter(User.patron > 0).all():
-			if u.patron == 5 or u.email and u.email.lower() in emails or u.id == 1379:
-				if u.patron == 1: procoins = 2500
-				elif u.patron == 2: procoins = 5000
-				elif u.patron == 3: procoins = 10000
-				elif u.patron == 4: procoins = 25000
-				elif u.patron == 5: procoins = 50000
-				else: print(u.username)
-				u.procoins += procoins
-				g.db.add(u)
-				send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
-		g.db.commit()
+	for u in g.db.query(User).filter(User.patron > 0).all():
+		if u.patron == 5 or u.email and u.email.lower() in emails or u.id == 1379:
+			if u.patron == 1: procoins = 2500
+			elif u.patron == 2: procoins = 5000
+			elif u.patron == 3: procoins = 10000
+			elif u.patron == 4: procoins = 25000
+			elif u.patron == 5: procoins = 50000
+			else: print(u.username)
+			u.procoins += procoins
+			g.db.add(u)
+			send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
+	g.db.commit()
+	
 	return {"message": "Monthly coins granted"}
 
 

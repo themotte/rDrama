@@ -55,7 +55,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	
 	if not pid:
 		if comment.parent_submission: pid = comment.parent_submission
-		elif "rama" in request.host: pid = 6489
+		elif request.host == "rdrama.net": pid = 6489
 		elif 'pcmemes.net' == request.host: pid = 2487
 		else: pid = 1
 	
@@ -340,7 +340,7 @@ def api_comment(v):
 		g.db.add(n)
 
 
-	if "rama" in request.host and "ivermectin" in c.body.lower():
+	if request.host == "rdrama.net" and "ivermectin" in c.body.lower():
 
 		c.is_banned = True
 		c.ban_reason = "AutoJanny"
@@ -414,7 +414,7 @@ def api_comment(v):
 		c.upvotes += 1
 		g.db.add(c)
 
-	if "rama" in request.host and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
+	if request.host == "rdrama.net" and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
 	
 		body = random.choice(LONGPOST_REPLIES)
 		body_md = CustomRenderer().render(mistletoe.Document(body))
@@ -449,7 +449,7 @@ def api_comment(v):
 
 
 
-	if "rama" in request.host and random.random() < 0.001:
+	if request.host == "rdrama.net" and random.random() < 0.001:
 	
 		body = "zoz"
 		body_md = CustomRenderer().render(mistletoe.Document(body))
@@ -713,7 +713,7 @@ def edit_comment(cid, v):
 		c.body = body[:10000]
 		c.body_html = body_html
 
-		if "rama" in request.host and "ivermectin" in c.body_html.lower():
+		if request.host == "rdrama.net" and "ivermectin" in c.body_html.lower():
 
 			c.is_banned = True
 			c.ban_reason = "AutoJanny"

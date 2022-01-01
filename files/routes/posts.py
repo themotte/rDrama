@@ -491,7 +491,7 @@ def edit_post(pid, v):
 
 		p.body_html = body_html
 
-		if "rama" in request.host and "ivermectin" in body_html.lower():
+		if request.host == "rdrama.net" and "ivermectin" in body_html.lower():
 
 			p.is_banned = True
 			p.ban_reason = "AutoJanny"
@@ -1054,7 +1054,7 @@ def submit_post(v):
 			add_notif(cid, user.id)
 
 
-	if "rama" in request.host and "ivermectin" in new_post.body_html.lower():
+	if request.host == "rdrama.net" and "ivermectin" in new_post.body_html.lower():
 
 		new_post.is_banned = True
 		new_post.ban_reason = "AutoJanny"

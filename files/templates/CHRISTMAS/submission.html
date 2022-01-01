@@ -60,7 +60,7 @@
 	</marquee>
 {% endif %}
 
-{% if 'rama' not in request.host %}
+{% if request.host != 'rdrama.net' %}
 <!-- <script defer>
 	function poll_vote(cid) {
 		{% if v %}
@@ -368,7 +368,7 @@
 									<span class="patron" style="background-color:#{{p.author.namecolor}};">
 										{{p.author.username}}
 									</span>
-									{% elif p.distinguish_level and 'rama' in request.host %}
+									{% elif p.distinguish_level and request.host == 'rdrama.net' %}
 									<span class="mod">
 										{{p.author.username}}
 									</span>

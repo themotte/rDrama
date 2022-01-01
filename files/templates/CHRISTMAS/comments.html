@@ -232,7 +232,7 @@
 								<span class="patron" style="background-color:#{{c.author.namecolor}};">
 									{{c.author.username}}
 								</span>
-								{% elif c.distinguish_level and 'rama' in request.host %}
+								{% elif c.distinguish_level and request.host == 'rdrama.net' %}
 								<span class="mod" style="background-color:#{{c.author.namecolor}};">
 									{{c.author.username}}
 								</span>

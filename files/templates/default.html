@@ -210,7 +210,7 @@
 
  </head>
 
- <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="{% if path != '/formatting' %}overflow-x: hidden; {% endif %}{% if v and v.background %} background:url(/static/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %} {% if 'rama' in request.host %}margin-top: 29px!important;{% endif %}">
+ <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="{% if path != '/formatting' %}overflow-x: hidden; {% endif %}{% if v and v.background %} background:url(/static/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %} {% if request.host == 'rdrama.net' %}margin-top: 29px!important;{% endif %}">
 
 {% block Banner %}
 	{% if '@' not in request.path %}
@@ -226,7 +226,7 @@
 		</style>
 		
 		{% if v %}
-			<a href="{% if 'rama' in request.host %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}">
+			<a href="{% if request.host == 'rdrama.net' %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}">
 				<img class="banner" alt="site banner" src="/static/assets/images/{{'SITE_NAME' | app_config}}/banner.webp?a=7" width="100%">
 			</a>
 		{% else %}

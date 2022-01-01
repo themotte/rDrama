@@ -128,7 +128,7 @@
 							<span class="patron flex-shrink-0" style="background-color:#{{p.author.namecolor}};">
 								{{p.author.username}}
 							</span>
-							{% elif p.distinguish_level and 'rama' in request.host %}
+							{% elif p.distinguish_level and request.host == 'rdrama.net' %}
 							<span class="mod flex-shrink-0">
 								{{p.author.username}}
 							</span>

@@ -11,7 +11,7 @@
 			</span>
 			<h2 class="h5">This account is private</h2>
 			<p class="text-muted">This user has enabled private mode to cloak their posting history.</p>
-			{% if u.id == 253 and 'rama' in request.host %}
+			{% if u.id == 253 and request.host == 'rdrama.net' %}
 				{% if v and v.coins > 500 and not v.is_suspended %}
 					<a class="btn btn-primary" role="button", onclick="post_toast('/pay_rent', '1')">Pay rent to view profile (500 coins)</a>
 				{% endif %}

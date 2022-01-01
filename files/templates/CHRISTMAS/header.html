@@ -1,5 +1,5 @@
 <nav class="shadow shadow-md fixed-top">
-	{% if "rama" in request.host %}
+	{% if request.host == "rdrama.net" %}
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;">
 			<a style="color: white" href="https://reddit.com/r/SubredditDrama">/r/SubredditDrama official site</a>
 		</div>
@@ -9,9 +9,7 @@
 			<div class="flex-grow-1">
 				<a href="/" class="navbar-brand mr-auto">
 					<img loading="lazy" height="30" src="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/headericon.webp?a=1">
-					{% if "gigachadlife" in request.host %}
-						<span style="font-weight: bold; font-size: 1.2rem;">GigaChadLife</span>
-					{% elif 'pcm' not in request.host %}
+					{% if request.host != 'pcmemes.net' %}
 						<img loading="lazy" src="/assets/CHRISTMAS/images/{{'SITE_NAME' | app_config}}/logo.webp?a=1" height="20">
 					{% endif %}
 				</a>
@@ -123,11 +121,11 @@
 									<a class="dropdown-item" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw text-left mr-3"></i>Report bugs or suggestions</a>
 								{% endif %}
 
-								{% if 'pcm' not in request.host %}
+								{% if request.host != 'pcmemes.net' %}
 									<a class="dropdown-item" href="/discord"><i class="fab fa-discord fa-fw text-left mr-3"></i>Discord</a>
 								{% endif %}
 								<a class="dropdown-item" rel="nofollow noopener noreferrer" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw text-left mr-3"></i>Donate</a>
-								{% if 'rama' in request.host %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw text-left mr-3"></i>Archives</a>{% endif %}
+								{% if request.host == 'rdrama.net' %}<a class="dropdown-item" href="/archives"><i class="fas fa-book fa-fw text-left mr-3"></i>Archives</a>{% endif %}
 								<a class="dropdown-item" href="/contact"><i class="fas fa-file-signature fa-fw text-left mr-3"></i>Contact us</a>
 							</div>
 							<div class="px-2">
@@ -185,11 +183,11 @@
 				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw mr-3"></i>Report bugs or suggestions</a>
 			{% endif %}
 
-			{% if 'pcm' not in request.host %}
+			{% if request.host != 'pcmemes.net' %}
 				<a class="nav-item nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
 			{% endif %}
 			<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
-			{% if 'rama' in request.host %}<a class="nav-item nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Archives</a>{% endif %}
+			{% if request.host == 'rdrama.net' %}<a class="nav-item nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Archives</a>{% endif %}
 			<a class="nav-item nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
 
 			<li class="nav-item border-top border-bottom mt-2 pt-2">

@@ -10,7 +10,7 @@
 
 		<div class="settings">
 
-			{% if "pcm" in request.host.lower() %}
+			{% if request.host == "pcmemes.net".lower() %}
 
 			<h2 class="h5" name="referral">Quadrant</h2>
 
@@ -295,7 +295,7 @@
 					</div>
 
 					
-					{% if 'pcm' not in request.host %}
+					{% if request.host != 'pcmemes.net' %}
 						<h2 class="h5" name="referral">Linked Accounts</h2>
 
 						<p class="text-small text-muted">Manage your connections to other services.</p>

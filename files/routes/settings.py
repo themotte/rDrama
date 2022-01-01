@@ -493,24 +493,13 @@ def gumroad(v):
 
 	if not (v.email and v.is_activated): return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
 
-	data = {'access_token': GUMROAD_TOKEN,}
+	data = {'access_token': GUMROAD_TOKEN, 'email': v.email}
+	response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
 
-	response = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
-	emails = []
+	if len(response) == 0: return {"error": "Email not found"}, 404
 
-	for email in response:
-		if email.endswith("@gmail.com"):
-			email=email.split('@')[0]
-			email=email.split('+')[0]
-			email=email.replace('.','').replace('_','')
-			email=f"{email}@gmail.com"
-		emails.append(email.lower())
-
-	if v.email.lower() not in emails: return {"error": "Email not found"}, 404
-
-	response = requests.get('https://api.gumroad.com/v2/sales', data=data, timeout=5).json()["sales"][0]
+	response = response[0]
 	tier = tiers[response["variants_and_quantity"]]
-
 	if v.patron == tier: return {"error": f"{patron} rewards already claimed"}, 400
 
 	existing = g.db.query(User.id).filter_by(email=v.email, is_activated=True, patron=tier).one_or_none()
@@ -609,12 +598,6 @@ def settings_security_post(v):
 			return render_template("settings_security.html", v=v, error="Invalid password.")
 
 		new_email = request.values.get("new_email","").strip().lower()
-
-		if new_email.endswith("@gmail.com"):
-			new_email=new_email.split('@')[0]
-			new_email=new_email.split('+')[0]
-			new_email=new_email.replace('.','').replace('_','')
-			new_email=f"{new_email}@gmail.com"
 
 		if new_email == v.email:
 			return render_template("settings_security.html", v=v, error="That email is already yours!")

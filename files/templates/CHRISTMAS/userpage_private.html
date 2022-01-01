@@ -8,7 +8,7 @@
 		<p class="text-gray-500 mb-3">
 			YOU AREN'T WELCOME HERE GO AWAY
 		</p>
-		{% if u.id == 253 and 'rama' in request.host %}
+		{% if u.id == 253 and request.host == 'rdrama.net' %}
 		<div class="bg-gray-100 border border-gray-300 p-4">
 			{% if v and v.coins > 500 and not v.is_suspended %}
 				<p class="text-gray-500 mb-3">
