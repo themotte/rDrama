@@ -347,10 +347,10 @@
 		ul {
 			@apply mb-3
 		}
-		.comment-text > ul, .post-text > ul {
+		.comment-text > ul, .post-text > ul, .prose > ul {
 			@apply list-disc pl-5
 		}
-		.comment-text > ol, .post-text > ol {
+		.comment-text > ol, .post-text > ol, .prose > ul {
 			@apply list-decimal pl-5
 		}
 		strong {
