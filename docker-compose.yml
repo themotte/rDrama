@@ -11,7 +11,7 @@ services:
       - MASTER_KEY=3435tdfsdudebussylmaoxxt43
       - REDIS_URL=redis://redis
       - DOMAIN=localhost
-      - SITE_NAME=Drama
+      - SITE_NAME=PCM
       - GIPHY_KEY=3435tdfsdudebussylmaoxxt43
       - DISCORD_SERVER_ID=3435tdfsdudebussylmaoxxt43
       - DISCORD_CLIENT_ID=3435tdfsdudebussylmaoxxt43
