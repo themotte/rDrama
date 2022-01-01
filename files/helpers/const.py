@@ -564,6 +564,14 @@ AWARDS = {
         "color": "text-yellow",
         "price": 300
     },
+	"progressivestack": {
+        "kind": "progressivestack",
+        "title": "Progressive Stack",
+        "description": "Makes votes on the recipient's posts and comments weigh double in the ranking algorithm for 6 hours.",
+        "icon": "fas fa-bullhorn",
+        "color": "text-red",
+        "price": 1000
+    },
 	"pin": {
 		"kind": "pin",
 		"title": "1-Hour Pin",
@@ -612,14 +620,6 @@ AWARDS = {
 		"color": "text-purple",
 		"price": 2500
 	},
-	"progressivestack": {
-        "kind": "progressivestack",
-        "title": "Progressive Stack",
-        "description": "Makes votes on the recipient's posts and comments weigh double in the ranking algorithm for 6 hours.",
-        "icon": "fas fa-bullhorn",
-        "color": "text-red",
-        "price": 3000
-    },
 	"marsey": {
 		"kind": "marsey",
 		"title": "Marsey",
