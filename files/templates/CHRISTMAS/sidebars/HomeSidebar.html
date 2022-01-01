@@ -1,70 +1,37 @@
-{% set random = range(0,11)|random() %}
-
-{%
-	set banner = [
-		{
-			'username': 'Bartholomew_1',
-			'image': '1'
-		},
-		{
-			'username': 'Yui',
-			'image': '2'
-		},
-		{
-			'username': 'Bartholomew_1',
-			'image': '3'
-		},
-		{
-			'username': 'chiobu',
-			'image': '4'
-		},
-		{
-			'username': 'chiobu',
-			'image': '5'
-		},
-		{
-			'username': 'geese_suck',
-			'image': '6'
-		},
-		{
-			'username': 'Bartholomew_1',
-			'image': '7'
-		},
-		{
-			'username': 'drama_enthusiast',
-			'image': '8'
-		},
-		{
-			'username': 'dramarama',
-			'image': '9'
-		},
-		{
-			'username': 'geese_suck',
-			'image': '10'
-		},
-		{
-			'username': 'ThreeLetterAgent',
-			'image': '11'
-		},
-		{
-			'username': 'geese_suck',
-			'image': '12'
-		},
-		{
-			'username': 'geese_suck',
-			'image': '13'
-		},
-		{
-			'username': 'geese_suck',
-			'image': '14'
-		}
-	]
-%}
+{% set random = range(1,95)|random() %}
 
 <div class="sidebar hidden xl:block xl:col-start-10 xl:col-end-13 flex-shrink-0 py-4">
+	<!-- Artwork -->
 	<div>
-		<h2 class="ml-2 font-bold text-xl text-gray-900 dark:text-gray-300 font-heading leading-normal mb-2">
-			Stickies
+		<a href="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{ random }}.webp?a=3" class="block w-full h-64 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
+			<img class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{ random }}.webp?a=3" alt="artwork featuring an orange and white cat"/>
+		</a>
+		<small class="mt-1 hidden text-gray-500">
+			Submit your <a href="/post/32341/" class="font-bold">artwork</a>
+		</small>
+	</div>
+	<!-- Submit button -->
+	{% if v %}
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
+	<div class="flex flex-col sticky top-20">
+		<a class="btn btn-primary text-center w-full" href="/submit">
+			Submit drama
+			<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
+		</a>
+	</div>
+	{% endif %}
+	<!-- Description -->
+	<!-- Rules list -->
+	<!-- Stickies list -->
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
+	<div>
+		<h2 class="font-bold text-lg font-heading leading-normal mb-0">
+			<a href="/search/posts/?sort=top&q=megathread&t=month" class="group text-black dark:text-gray-200 hover:text-primary dark:hover:text-primary">
+			Mega
+			<span class="text-gray-500 group-hover:text-primary font-normal">
+				Threads
+				<i class="fas fa-arrow-alt-right fa-fw fa-sm"></i>
+			</a>
 		</h2>
 		<ul class="flex flex-col space-y-2 mb-0">
 			<li class="flex">
@@ -72,13 +39,13 @@
 					<img class="object-contain w-5 h-5" src="/assets/images/emojis/marseywords.webp" alt="marsey words icon">
 				</div>
 				<div class="pl-3 mt-[-1px] truncate">
-					<a href="/post/32231/" class="block font-medium text-black dark:text-gray-200 hover:text-primary truncate ellipsis">
-						Merry Christmas rdrama, what did you get?!
+					<a href="/post/16583" class="block font-medium text-black dark:text-gray-200 hover:text-primary truncate ellipsis">
+						Emoji Megathread
 					</a>
 					<small class="block text-gray-500">
 						posted by
-						<a href="/@Klenvastermas" class="text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
-							@Klenvastermas
+						<a href="/@aevann" class="text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
+							@aevann
 						</a>
 					</small>
 				</div>
@@ -88,49 +55,17 @@
 					<img class="object-contain w-5 h-5" src="/assets/images/emojis/marseywords.webp" alt="marsey words icon">
 				</div>
 				<div class="pl-3 mt-[-1px] truncate">
-					<a href="/post/29748/" class="block font-medium text-black dark:text-gray-200 hover:text-primary truncate ellipsis">
-						UI overhaul bug report thread
+					<a href="/post/18459" class="block font-medium text-black dark:text-gray-200 hover:text-primary truncate ellipsis">
+						Bugs/Suggestions Megathread
 					</a>
 					<small class="block text-gray-500">
 						posted by
-						<a href="/@christmaspathianflorist" class="text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
-							@christmaspathianflorist
-						</a>
-					</small>
-				</div>
-			</li>
-			<li class="flex">
-				<div class="flex items-center justify-center px-2 flex-shrink-0">
-					<img class="object-contain w-5 h-5" src="/assets/images/emojis/marseywords.webp" alt="marsey words icon">
-				</div>
-				<div class="pl-3 mt-[-1px] truncate">
-					<a href="/post/32180/" class="block font-medium text-black dark:text-gray-200 hover:text-primary truncate ellipsis">
-						new rdrama.lgbt site for verified LGBTQ+ members only - click to check your eligibility!
-					</a>
-					<small class="block text-gray-500">
-						posted by
-						<a href="/@chiobu" class="text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
-							@chiobu
+						<a href="/@aevann" class="text-gray-500 hover:text-gray-600 dark:hover:text-gray-400">
+							@aevann
 						</a>
 					</small>
 				</div>
 			</li>
 		</ul>
 	</div>
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<a href="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,95)|random()}}.webp?a=3" class="block w-full h-56 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
-		<img class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,95)|random()}}.webp?a=3" alt="artwork featuring an orange and white cat"/>
-	</a>
-	<small class="mt-1 hidden text-gray-500">
-		Artwork by <a href="/me" class="font-bold">@username</a>
-	</small>
-	{% if v %}
-	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
-	<div class="flex flex-col sticky top-4">
-		<a class="btn btn-primary text-center w-full" href="/submit">
-			Submit drama
-			<i class="fas fa-arrow-alt-right fa-fw fa-sm ml-1"></i>
-		</a>
-	</div>
-	{% endif %}
 </div>
