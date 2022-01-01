@@ -28,40 +28,6 @@ else: cc = "country club"
 month = datetime.now().strftime('%B')
 
 
-@app.get("/admin/sex")
-@admin_level_required(3)
-def sex(v):
-	data = {'access_token': GUMROAD_TOKEN}
-
-	emails = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
-
-	for u in g.db.query(User).filter(User.patron > 0).all():
-		if not u.email or u.email.lower() not in emails:
-			print(u.username)
-	
-	return "sex"
-
-@app.get("/admin/sex2")
-@admin_level_required(3)
-def sex2(v):
-	for u in g.db.query(User).filter(User.patron > 0).all():
-		tier = u.patron + 20
-
-		if not u.has_badge(tier):
-			new_badge = Badge(badge_id=tier, user_id=u.id)
-			g.db.add(new_badge)
-			print(f'{u.username} with {u.patron} was given {tier}')
-			
-		for num in [21,22,23,24,25]:
-			if num != tier:
-				existing = u.has_badge(num)
-				if existing:
-					g.db.delete(existing)
-					print(f'{u.username} with {u.patron} was removed {num}')
-	g.db.commit()
-	return "sex"
-
-
 @app.get("/admin/grassed")
 @admin_level_required(2)
 def grassed(v):
@@ -237,7 +203,11 @@ def monthly(v):
 			elif u.patron == 3: procoins = 10000
 			elif u.patron == 4: procoins = 25000
 			elif u.patron == 5: procoins = 50000
-			else: print(u.username)
+			else:
+				print(u.username)
+				u.patron = 0
+				g.db.add(u)
+				continue
 			u.procoins += procoins
 			g.db.add(u)
 			send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
