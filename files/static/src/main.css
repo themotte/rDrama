@@ -486,3 +486,6 @@
 .agendaposter {
 	text-transform: uppercase !important;
 }
+code {
+    text-transform: none !important;
+}

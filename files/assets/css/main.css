@@ -4653,6 +4653,9 @@ input[type=radio] ~ .custom-control-label::before {
 .agendaposter {
     text-transform: uppercase !important;
 }
+code {
+    text-transform: none !important;
+}
 .noshadow {
     box-shadow: none !important;
 }

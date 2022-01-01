@@ -514,7 +514,6 @@ def edit_post(pid, v):
 				is_pinned='AutoJanny',
 				distinguish_level=6,
 				body_html=body_jannied_html,
-				top_comment_id=c.top_comment_id
 				)
 
 			g.db.add(c_jannied)
@@ -547,7 +546,6 @@ def edit_post(pid, v):
 				is_pinned='AutoJanny',
 				distinguish_level=6,
 				body_html=body_jannied_html,
-				top_comment_id=c.top_comment_id
 				)
 
 			g.db.add(c_jannied)
@@ -1077,7 +1075,6 @@ def submit_post(v):
 			is_pinned='AutoJanny',
 			distinguish_level=6,
 			body_html=body_jannied_html,
-			top_comment_id=c.top_comment_id
 		)
 
 		g.db.add(c_jannied)
@@ -1110,7 +1107,6 @@ def submit_post(v):
 			is_pinned='AutoJanny',
 			distinguish_level=6,
 			body_html=body_jannied_html,
-			top_comment_id=c.top_comment_id
 		)
 
 		g.db.add(c_jannied)
