@@ -73,8 +73,8 @@ def publish(pid, v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 
-	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title):
-		send_discord_message(f"https://{site}{new_post.permalink}")
+	if v.admin_level > 1 and ("[changelog]" in post.title or "(changelog)" in post.title):
+		send_discord_message(f"https://{site}{post.permalink}")
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()
