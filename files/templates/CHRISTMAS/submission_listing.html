@@ -55,7 +55,7 @@
 			</div>
 
 			{% if not postembed %}
-			<div class="py-2 text-sm text-gray-400 text-center font-bold hidden md:block">
+			<div class="mt-2 text-sm text-gray-400 text-center font-bold hidden md:block">
 				{% if v and request.path.startswith('/@') and not v.admin_level %}
 
 					{% if voted==1 %}
@@ -253,7 +253,7 @@
 				</div>
 			{% endif %}
 
-			<div class="relative z-20 hidden md:block pt-3">
+			<div class="relative z-20 hidden md:block pt-2">
 				{% include "CHRISTMAS/submission/SubmissionActions.html" %}
 			</div>
 	</div>
