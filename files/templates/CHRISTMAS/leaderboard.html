@@ -386,7 +386,9 @@
 			<!-- User Details -->
 			<div class="ml-3">
 				{% if user[0]=='anton-d' %}
-					{{user[0]}}
+					<span class="block font-heading font-bold text-lg md:text-xl">
+						{{user[0]}}
+					</span>
 					{% else %}
 					<a class="block font-heading font-bold text-lg md:text-xl text-black dark:text-gray-200 hover:text-primary" href="/@{{user[0].username}}">
 						{{user[0].username}}
