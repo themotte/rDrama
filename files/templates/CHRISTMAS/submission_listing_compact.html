@@ -45,7 +45,7 @@
 	</div>
 {% endif %}
 
-<li id="post-{{p.id}}" class="relative p-2.5 md:py-1 md:px-0 border-b border-gray-300 dark:border-gray-700 {% if p.is_banned %}bg-red-200{% elif p.deleted_utc %}bg-yellow-200{% else %} md:bg-transparent bg-gray-200 dark:bg-gray-800 dark:md:bg-transparent{% endif %} {% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %} list-none">
+<li id="post-{{p.id}}" class="relative p-2.5 md:py-1 md:px-0 border-b border-gray-300 dark:border-gray-700 {% if p.is_banned %}bg-red-200{% elif p.deleted_utc %}bg-yellow-200{% else %} md:bg-transparent bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-white/10 dark:md:bg-transparent{% endif %} {% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %} list-none">
 
 	<div class="flex flex-nowrap items-center">
 
@@ -88,7 +88,7 @@
 		  
 		<div class="w-full overflow-x-hidden md:overflow-x-visible">
 
-			<div class="relative z-10 no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 text-xs text-gray-500 leading-normal {% if p.award_count('ghosts') %}ghosts{% endif %}">
+			<div class="relative z-10 no-scrollbar overflow-y-hidden overflow-x-auto flex items-center space-x-2 text-xs text-gray-500 leading-normal mb-1 {% if p.award_count('ghosts') %}ghosts{% endif %}">
 
 				<div class="relative flex-shrink-0">
 					<img loading="lazy" src="{{ p.author.profile_url }}" class="flex-shrink-0 w-5 h-5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
@@ -238,7 +238,7 @@
 			{% endif %}
 			</div>
 			
-			<h5 class="post-title font-medium sm:text-lg leading-5 mb-0">
+			<h5 class="post-title font-medium sm:text-lg leading-5">
 				<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if p.author.agendaposter %}agendaposter{% endif %} stretched-link text-black dark:text-gray-200 hover:text-primary visited:text-gray-700 dark:visited:text-gray-400 break-words" style="word-break: break-word;">
 				{{p.realtitle(v) | safe}}
 				</a>
