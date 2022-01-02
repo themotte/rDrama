@@ -223,7 +223,7 @@ BADGES = {
 	},
 	3: {
 		'name': 'Code Contributor',
-		'description': 'Contributed to Drama source code'
+		'description': "Contributed to the site's source code"
 	},
 	4: {
 		'name': 'White Hat',
@@ -239,19 +239,19 @@ BADGES = {
 	},
 	10: {
 		'name': 'Bronze Recruiter',
-		'description': 'Recruited 1 friend to join Drama'
+		'description': 'Recruited 1 friend to join the site'
 	},
 	11: {
 		'name': 'Silver Recruiter',
-		'description': 'Recruited 10 friends to join Drama'
+		'description': 'Recruited 10 friends to join the site'
 	},
 	12: {
 		'name': 'Gold Recruiter',
-		'description': 'Recruited 100 friends to join Drama'
+		'description': 'Recruited 100 friends to join the site'
 	},
 	15: {
 		'name': 'Idea Maker',
-		'description': 'Had a good idea for Drama which was implemented by the developers'
+		'description': 'Had a good idea for the site which was implemented by the developers'
 	},
 	16: {
 		'name': 'Marsey Master',
@@ -263,7 +263,7 @@ BADGES = {
 	},
 	18: {
 		'name': 'Artisan',
-		'description': 'Contributed to Drama artwork'
+		'description': 'Contributed to site artwork'
 	},
 	21: {
 		'name': 'Paypig',
@@ -293,10 +293,6 @@ BADGES = {
 		'name': 'Lolcow',
 		'description': 'Beautiful and valid milk provider'
 	},
-	58: {
-		'name': 'Diamond Recruiter',
-		'description': 'Recruited 1000 friends to join Drama'
-	},
 	60: {
 		'name': 'Unironically Retarded',
 		'description': 'Demonstrated a wholesale inability to read the room'
@@ -315,7 +311,7 @@ BADGES = {
 	},
 	64: {
 		'name': 'The Other Kind Of Good Journalist',
-		'description': 'Contributed positive media attention to rDrama'
+		'description': 'Contributed positive media attention to the site'
 	},
 	65: {
 		'name': '2021 Spooooooky Marsey Artist',
@@ -614,7 +610,7 @@ AWARDS = {
 	},
 	"agendaposter": {
 		"kind": "agendaposter",
-		"title": "Agendaposter",
+		"title": "Rightoid Agendaposter",
 		"description": "Forces the agendaposter theme on the recipient for 24 hours.",
 		"icon": "fas fa-snooze",
 		"color": "text-purple",
