@@ -45,8 +45,8 @@
 				<span class="badge badge-yellow">New!</span>
 			</h2>
 
-			<div>
-				<input type="checkbox" id="compactMode" name="compact" {% if v.compact %}checked{% endif %} onchange="post_toast('/settings/profile?compact='+this.checked);">
+			<div class="mb-4">
+				<input type="checkbox" id="compactMode" name="compact" {% if v.compact %}checked{% endif %} onchange="post_toast2('/settings/profile?compact='+value, '1')">
 				<label class="inline-block pl-2 text-gray-400" for="compactMode">View posts in a comapct format.</label>
 			</div>
 
