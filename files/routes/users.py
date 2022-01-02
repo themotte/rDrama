@@ -584,7 +584,7 @@ def u_username(username, v=None):
 				ViewerRelationship.viewer_id == v.id,
 				ViewerRelationship.user_id == u.id
 			)
-		).one_or_none()
+		).first()
 
 		if view:
 			view.last_view_utc = g.timestamp
@@ -953,7 +953,7 @@ def fp(v, fp):
 			users += g.db.query(User).filter(User.email == v.email, User.is_activated, User.id != v.id).all()
 		for u in users:
 			li = [v.id, u.id]
-			existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).one_or_none()
+			existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).first()
 			if existing: continue
 			new_alt = Alt(user1=v.id, user2=u.id)
 			g.db.add(new_alt)

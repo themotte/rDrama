@@ -200,7 +200,7 @@ def award_post(pid, v):
 			AwardRelationship.submission_id == None,
 			AwardRelationship.comment_id == None
 		)
-	).one_or_none()
+	).first()
 
 	if not post_award:
 		return {"error": "You don't have that award."}, 404
@@ -374,7 +374,7 @@ def award_comment(cid, v):
 			AwardRelationship.submission_id == None,
 			AwardRelationship.comment_id == None
 		)
-	).one_or_none()
+	).first()
 
 	if not comment_award:
 		return {"error": "You don't have that award."}, 404
