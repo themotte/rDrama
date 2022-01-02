@@ -216,7 +216,7 @@ def award_post(pid, v):
 			AwardRelationship.user_id == v.id,
 			AwardRelationship.kind == kind
 		)
-	).one_or_none()
+	).first()
 
 	post_award.submission_id = post.id
 	g.db.add(post_award)
@@ -390,7 +390,7 @@ def award_comment(cid, v):
 			AwardRelationship.user_id == v.id,
 			AwardRelationship.kind == kind
 		)
-	).one_or_none()
+	).first()
 
 	comment_award.comment_id = c.id
 	g.db.add(comment_award)
