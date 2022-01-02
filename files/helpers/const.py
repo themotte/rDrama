@@ -1,16 +1,31 @@
 from os import environ, listdir
 import re
 from copy import deepcopy
+from json import loads
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 
-marseys = []
-others = []
-for x in sorted(x.replace('.webp','') for x in listdir("files/assets/images/emojis")):
-	if x.startswith('mar') or x.endswith('sey'): marseys.append(x)
-	else: others.append(x)
-allemojis = marseys + others
+import json
+
+with open("files/assets/js/emoji_modal.js", 'r') as file:
+	text = file.read().split('emojis: ')[1].split('cops police"},')[0] + '"}}'
+	result = loads(text)
+
+marseys = {}
+
+for k, val in result.items():
+	marseys[k] = val['author']
+
+del result
+
+topmakers = {}
+for k, val in marseys.items():
+	if val in topmakers: topmakers[val] += 1
+	else: topmakers[val] = 1
+
+topmakers.pop('unknown')
+topmakers = sorted(topmakers.items(), key=lambda x: x[1], reverse=True)[:25]
 
 AJ_REPLACEMENTS = {
 	' your ': " you're ",

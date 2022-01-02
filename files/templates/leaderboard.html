@@ -245,7 +245,7 @@
 
 
 
-{% if request.host == "pcmemes.net" %}
+{% if users6 %}
 	<pre>
 
 
@@ -272,4 +272,36 @@
 	{% endfor %}
 	</table>
 {% endif %}
+
+{% if users13 %}
+	<pre>
+
+
+	</pre>
+	<h5 style="font-weight:bold;text-align: center;">Top 25 by marseys made</h5>
+	<pre>
+
+
+	</pre>
+
+	<div class="overflow-x-auto"><table class="table table-striped mb-5">
+		<thead class="bg-primary text-white">
+			<tr>
+				<th style="font-weight: bold">#</th>
+				<th style="font-weight: bold">Name</th>
+				<th style="font-weight: bold">Marseys</th>
+			</tr>
+		</thead>
+		<tbody id="followers-table">
+		{% for user in users13 %}
+			<tr>
+				<td style="font-weight: bold">{{loop.index}}</td>
+				<td>{% if user[0]=='anton-d' %}{{user[0]}}{% else %}<a style="font-weight:bold;" href="/@{{user[0]}}"><img alt="@{{user[0]}}'s profile picture" loading="lazy" src="/@{{user[0]}}/pic" class="pp20">{{user[0]}}</a>{% endif %}</td>
+				<td style="font-weight: bold">{{user[1]}}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endif %}
+
 {% endblock %}
