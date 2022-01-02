@@ -190,7 +190,7 @@ def remove_meme_admin(v, username):
 def monthly(v):
 	if request.host == 'rdrama.net' and v.id != 1: abort (403)
 
-	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).one_or_none().id
+	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
 	data = {'access_token': GUMROAD_TOKEN}
 

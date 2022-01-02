@@ -146,7 +146,7 @@ def buy(v, award):
 	if award == "lootbox":
 		send_repeatable_notification(995, f"@{v.username} bought a lootbox!")
 		for i in [1,2,3,4,5]:
-			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).one_or_none().id
+			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 			thing += 1
 			award = random.choice(["snow", "gingerbread", "lights", "candycane", "fireplace"])
 			award = AwardRelationship(id=thing, user_id=v.id, kind=award)
@@ -167,7 +167,7 @@ def buy(v, award):
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	else:
-		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).one_or_none().id
+		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 		thing += 1
 		award = AwardRelationship(id=thing, user_id=v.id, kind=award)
 		g.db.add(award)
@@ -547,7 +547,7 @@ def admin_userawards_post(v):
 
 	notify_awards = {}
 
-	latest = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).one_or_none()
+	latest = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first()
 	thing = latest.id
 
 	for key, value in request.values.items():
