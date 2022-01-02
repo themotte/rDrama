@@ -110,10 +110,9 @@
 					<span id="profile-bux-amount">{{u.procoins}}</span>
 					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="20" src="/static/assets/images/emojis/marseybux.webp?a=3">&nbsp;&nbsp;
 
-					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
+					<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp;
 
-					{% if u.follow_count > 0 %}<a href="/@{{u.username}}/following">follows {{u.follow_count}} user{{'s' if u.follow_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
-
+					<a href="/@{{u.username}}/following">follows {{u.follow_count}} user{{'s' if u.follow_count != 1 else ''}}</a>&nbsp;&nbsp;
 
 					joined <span data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.created_datetime}}">{{u.created_date}}</span>
 				</div>
@@ -385,9 +384,9 @@
 					<span id="profile-bux-amount-mobile" class="font-weight-bold">{{u.procoins}}</span>
 					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="15" src="/static/assets/images/emojis/marseybux.webp?a=3">&nbsp;&nbsp;
 
-					{% if u.stored_subscriber_count >=1 and not u.is_nofollow %}<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
+					<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp;
 
-					{% if u.follow_count > 0 %}<a href="/@{{u.username}}/following" class="font-weight-bold">follows {{u.follow_count}} user{{'s' if u.follow_count != 1 else ''}}</a>&nbsp;&nbsp; {% endif %}
+					<a href="/@{{u.username}}/following" class="font-weight-bold">follows {{u.follow_count}} user{{'s' if u.follow_count != 1 else ''}}</a>&nbsp;&nbsp;
 
 					{% if u.basedcount %}
 						<br>Based count: {{u.basedcount}}
