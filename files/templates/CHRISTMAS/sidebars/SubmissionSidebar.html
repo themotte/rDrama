@@ -135,4 +135,91 @@
 			{% endif %}
 		</ul>
 	</div>
+	{% if v and v.admin_level > 1 %}
+	<hr class="mt-6 mb-5 h-0.5 border-b border-gray-300 dark:border-gray-900 shadow-inset-t-white-05"/>
+	<div class="relative my-4 px-4 py-3 rounded-md border border-yellow-400 dark:border-gray-700 bg-yellow-100 dark:bg-gray-700/40">
+		<span class="absolute top-2 right-3 text-base">
+			<i class="fas fa-crown fa-sm text-yellow-400 dark:text-gray-300" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators"></i>
+		</span>
+		<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
+			Manage Post
+		</h2>
+		<ul class="flex flex-col mt-3 mb-0 space-y-6">
+			<li>
+				<div class="label text-black dark:text-gray-200">Attributes</div>
+				<ul class="flex flex-col mb-0 space-y-3">
+					<li class="flex space-x-2">
+						<input type="checkbox" value="verify" class="w-5 h-5" onchange="checkboxSticky(this,'{{p.id}}')" {% if p.stickied %}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="verify">Pinned</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Pin this thread to the top of the frontpage
+							</small>
+						</div>
+					</li>
+					<li class="flex space-x-2">
+						<input type="checkbox" value="club" class="w-5 h-5" onchange="checkboxClub(this,'{{p.id}}')" {% if p.club %}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="club">Country Club</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Require Country Club membership to view this thread
+							</small>
+						</div>
+					</li>
+					<li class="flex space-x-2">
+						<input type="checkbox" value="club" class="w-5 h-5" onchange="checkboxNSFW(this,'{{p.id}}')" {% if p.over_18 %}checked{% endif %}>
+						<div>
+							<label class="label mb-0" for="club">18+</label>
+							<small class="block text-gray-600 dark:text-gray-400">
+								Mark this thread as 18+
+							</small>
+						</div>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	{% if v.id != p.author_id %}
+		<div class="relative my-4 px-4 py-3 rounded-md border border-red-300 dark:border-gray-700 bg-red-100 dark:bg-gray-700/40 group">
+			<span class="absolute top-2 right-3 text-base">
+				<i class="fas fa-exclamation-triangle fa-sm text-red-400 dark:text-gray-300 group-hover:animate-pulse" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Visible only to moderators. Recommend internal mod discussion before making changes here."></i>
+			</span>
+			<h2 class="ml-2 font-bold text-lg font-heading leading-normal mb-2">
+				Danger Zone
+			</h2>
+			<ul class="flex flex-col mt-3 mb-0 space-y-6">
+				<li>
+					<div class="label text-black dark:text-gray-200">Post visibility</div>
+					<div id="sidebar-remove-{{p.id}}" class="{% if p.is_banned %}hidden{% endif %}">
+						<button class="btn btn-red w-full" onclick="post_toast2('/ban_post/{{p.id}}','sidebar-remove-{{p.id}}','sidebar-approve-{{p.id}}')">
+							<i class="fas fa-ban fa-sm fa-fw mr-2"></i>
+							Remove post
+						</button>
+					</div>
+					<div id="sidebar-approve-{{p.id}}" class="{% if not p.is_banned %}hidden{% endif %}">
+						<button class="btn btn-green w-full" onclick="post_toast2('/unban_post/{{p.id}}','sidebar-remove-{{p.id}}','sidebar-approve-{{p.id}}')">
+							<i class="fas fa-check fa-sm fa-fw mr-2"></i>
+							Approve post
+						</button>
+					</div>
+				</li>
+				<li>
+					<div class="label text-black dark:text-gray-200">Manage author</div>
+					<div id="sidebar-ban-{{p.id}}" class="{% if p.author.is_suspended %}hidden{% endif %} text-red-600">
+						<button class="btn btn-red w-full" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')">
+							<i class="fas fa-user-slash fa-sm fa-fw mr-2"></i>
+							Ban user
+						</button>
+					</div>
+					<div id="sidebar-unban-{{p.id}}" class="{% if not p.author.is_suspended %}hidden{% endif %}">
+						<button class="btn btn-green w-full"  onclick="post_toast2('/unban_user/{{p.author_id}}','sidebar-ban-{{p.id}}','sidebar-unban-{{p.id}}')">
+							<i class="fas fa-user-check fa-sm fa-fw mr-2"></i>
+							Unban user
+						</button>
+					</div>
+				</li>
+			</ul>
+		</div>
+	{% endif %}
+	{% endif %}
 </div>

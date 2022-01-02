@@ -4799,6 +4799,9 @@ blockquote p {
 .text-warning {
   color: #facc15;
 }
+.text-yellow {
+  color: #facc15;
+}
 .text-danger {
   color: #dc2626;
 }
@@ -4819,4 +4822,26 @@ blockquote p {
 }
 .text-black-50 {
   color: #57534e;
+}
+
+.text-rainbow:hover {
+  -webkit-animation: zomg 0.5s infinite;
+  animation: zomg 0.5s infinite;
+}
+
+@-webkit-keyframes zomg {
+  0%, 100% { color: #7ccdea; }
+  16%      { color: #0074d9; }
+  32%      { color: #2ecc40; }
+  48%      { color: #ffdc00; }
+  64%      { color: #b10dc9; }
+  80%      { color: #ff4136; }
+}
+@keyframes zomg {
+  0%, 100% { color: #7ccdea; }
+  16%      { color: #0074d9; }
+  32%      { color: #2ecc40; }
+  48%      { color: #ffdc00; }
+  64%      { color: #b10dc9; }
+  80%      { color: #ff4136; }
 }
