@@ -60,7 +60,7 @@
 	</marquee>
 {% endif %}
 
-{% if True %}
+{% if p.award_count("train") %}
 	<style>
 		.train {
 			position:fixed;
@@ -94,19 +94,19 @@
 	</marquee>
 {% endif %}
 
-{% if True %}
+{% if p.award_count("train") > 1 %}
 	<marquee class="train train2" direction="right" scrollamount=10 width="100%">
 		<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=3">
 	</marquee>
 {% endif %}
 
-{% if True %}
+{% if p.award_count("train") > 2 %}
 	<marquee class="train train3" direction="left" scrollamount=10 width="100%">
 		<img alt=":#marseytrain:" class="trainimg mirrored" src="/static/assets/images/emojis/marseytrain.webp?a=3">
 	</marquee>
 {% endif %}
 
-{% if True %}
+{% if p.award_count("train") > 3 %}
 	<marquee class="train train4" direction="right" scrollamount=10 width="100%">
 		<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=3">
 	</marquee>
