@@ -31,7 +31,7 @@
 	</style>
 	<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
 		<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
-			<img class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
 		</marquee>
 	</marquee>
 {% endif %}
@@ -39,7 +39,7 @@
 {% if p.award_count("wholesome") > 1 %}
 	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
 		<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
-			<img class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
 		</marquee>
 	</marquee>
 {% endif %}
@@ -47,7 +47,7 @@
 {% if p.award_count("wholesome") > 2 %}
 	<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
 		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-			<img class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
 		</marquee>
 	</marquee>
 {% endif %}
@@ -55,98 +55,61 @@
 {% if p.award_count("wholesome") > 3 %}
 	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
 		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-			<img class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
 		</marquee>
 	</marquee>
 {% endif %}
 
-{% if p.award_count("train") %}
+{% if True %}
 	<style>
-		@keyframes train {
-			0% {
-				left: -20%;
-			}
-			100% {
-				left: 120%;
+		.train {
+			position:fixed;
+			z-index:9999;
+			pointer-events: none;
+		}
+		.trainimg {
+			width: 100px;
+		}
+		@media (max-width: 992px) {
+			.trainimg {
+				width: 40px;
 			}
 		}
-
-		@keyframes trainrev {
-			0% {
-				left: 120%;
-			}
-			100% {
-				left: -20%;
-			}
+		.train1 {
+			top: 10%
 		}
-
-		@media (max-width: 768px) {
-			.train1 {
-				position: fixed;
-				z-index: 10;
-				width: 35px;
-				animation: train 3s linear infinite !important;
-			}
-			.train2 {
-				display: none !important;
-			}
-			.train3 {
-				display: none !important;
-			}
-			.train4 {
-				display: none !important;
-			}
+		.train2 {
+			top: 35%
 		}
-
-		@media (min-width: 768px) {
-			.train1 {
-				position: absolute;
-				z-index: 10;
-				width: 100px;
-				animation: trainrev 5s linear infinite !important;
-				transform: scaleX(-1);
-				-webkit-transform: scaleX(-1);
-				top: 35%
-			}
-			.train2 {
-				position: absolute;
-				z-index: 10;
-				width: 100px;
-				animation: train 5s linear infinite !important;
-				top: 10%
-			}
-			.train3 {
-				position: absolute;
-				z-index: 10;
-				width: 100px;
-				animation: train 5s linear infinite !important;
-				top: 60%
-			}
-			.train4 {
-				position: absolute;
-				z-index: 10;
-				width: 100px;
-				animation: trainrev 5s linear infinite !important;
-				transform: scaleX(-1);
-				-webkit-transform: scaleX(-1);
-				top: 85%
-			}
+		.train3 {
+			top: 60%
+		}
+		.train4 {
+			top: 85%
 		}
 	</style>
 
-	<img alt="train1" class="train1" src="/static/assets/images/emojis/marseytrain.webp?a=3">
+	<marquee class="train train1" direction="left" scrollamount=10 width="100%">
+		<img alt=":#marseytrain:" class="trainimg mirrored" src="/static/assets/images/emojis/marseytrain.webp?a=3">
+	</marquee>
 {% endif %}
 
-{% if p.award_count("train") > 1 %}
-	<img alt="train2" class="train2" src="/static/assets/images/emojis/marseytrain.webp?a=3">
+{% if True %}
+	<marquee class="train train2" direction="right" scrollamount=10 width="100%">
+		<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=3">
+	</marquee>
 {% endif %}
 
-{% if p.award_count("train") > 2 %}
-	<img alt="train3" class="train3" src="/static/assets/images/emojis/marseytrain.webp?a=3">
+{% if True %}
+	<marquee class="train train3" direction="left" scrollamount=10 width="100%">
+		<img alt=":#marseytrain:" class="trainimg mirrored" src="/static/assets/images/emojis/marseytrain.webp?a=3">
+	</marquee>
 {% endif %}
 
-{% if p.award_count("train") > 3 %}
-	<img alt="train4" class="train4" src="/static/assets/images/emojis/marseytrain.webp?a=3">
+{% if True %}
+	<marquee class="train train4" direction="right" scrollamount=10 width="100%">
+		<img alt=":#marseytrain:" class="trainimg" src="/static/assets/images/emojis/marseytrain.webp?a=3">
+	</marquee>
 {% endif %}
 
 

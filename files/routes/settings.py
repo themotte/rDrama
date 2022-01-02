@@ -33,6 +33,22 @@ tiers={
 	"(Rich Bich)": 5,
 	}
 
+
+@app.get("/sex")
+@admin_level_required(3)
+def sex(v):
+	for u in g.db.query(User).filter(User.patron > 0, User.patron != 5).all():
+		data = {'access_token': GUMROAD_TOKEN, 'email': u.email}
+		response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
+
+		if len(response) == 0: print(f"{u.username}: email not found")
+
+		response = response[0]
+		tier = tiers[response["variants_and_quantity"]]
+		if u.patron != tier:
+			print(f"{u.username}: patron {u.patron} tier {tier}")
+	return "sex"
+
 @app.post("/settings/removebackground")
 @limiter.limit("1/second")
 @auth_required
