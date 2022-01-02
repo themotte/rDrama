@@ -258,11 +258,10 @@
 									</label>
 								</div>
 
-								<div id="message-reply-{{c.id}}" class="preview-edit mt-2"></div>
-
 								<a role="button" onclick="document.getElementById('reply-message-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 								<a id="save-reply-to-{{c.id}}" class="btn btn-primary text-white ml-2" onclick="post_reply('{{c.id}}');" role="button">Reply</a> 
 							</form>
+							<div id="message-reply-{{c.id}}" class="preview-edit mt-2"></div>
 						</div>
 					</div>
 				{% endif %}
