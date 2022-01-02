@@ -555,10 +555,24 @@ def admin_userawards_post(v):
 				g.db.add(award)
 
 	text = "You were given the following awards:\n\n"
-
-	for key, value in notify_awards.items(): text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
+	
+	for key, value in notify_awards.items():
+		text += f" - **{value}** {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}\n"
 
 	send_repeatable_notification(u.id, text)
+
+	note = ""
+
+	for key, value in notify_awards.items():
+		note += f"{value} {AWARDS[key]['title']} {'Awards' if value != 1 else 'Award'}, "
+
+	ma=ModAction(
+		kind="grant_awards",
+		user_id=v.id,
+		target_user_id=u.id,
+		_note=note
+		)
+	g.db.add(ma)
 
 	g.db.commit()
 
