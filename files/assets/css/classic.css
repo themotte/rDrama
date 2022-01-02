@@ -277,3 +277,8 @@ blockquote {
     background-color: var(--black1) !important;
     border: var(--blue) solid 0.1px;
 }
+
+/*assorted patches I don't feel like categorizing*/
+#followers-table td {
+    color: var(--black3);
+}
