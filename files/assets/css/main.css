@@ -4621,13 +4621,19 @@ input[type=radio] ~ .custom-control-label::before {
 .emoji-modal {
     max-width: 90% !important 
 }
-.emoji {
+.emj, .emoji {
     height: 30px !important;
+    width: 30px !important;
 }
-.bigemoji {
+.bigemoji, .emoji-md {
     height: 60px !important;
+    width: 60px !important;
 }
-.bigemoji, .emj, .emoji, .emoji-md, .emoji-lg {
+.emoji-lg {
+    height: 150px !important;
+    width: 150px !important;
+}
+.emj, .emoji, .bigemoji, .emoji-md, .emoji-lg {
     max-width: 10rem !important;
     display: inline-block;
     -o-object-fit: contain;
