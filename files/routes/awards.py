@@ -570,7 +570,7 @@ def admin_userawards_post(v):
 		kind="grant_awards",
 		user_id=v.id,
 		target_user_id=u.id,
-		_note=note
+		_note=note[:-2]
 		)
 	g.db.add(ma)
 
