@@ -365,11 +365,13 @@ def settings_profile_post(v):
 
 	theme = request.values.get("theme")
 	if theme:
-		if theme == "transparent" and not v.background: 
-			return render_template(f"{template}settings_profile.html", v=v, error="You need to set a background to use the transparent theme!")
-		v.theme = theme
-		if theme == "win98": v.themecolor = "30409f"
-		updated = True
+		if theme in ["classic","transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"]:
+			if theme == "transparent" and not v.background: 
+				return render_template(f"{template}settings_profile.html", v=v, error="You need to set a background to use the transparent theme!")
+			v.theme = theme
+			if theme == "win98": v.themecolor = "30409f"
+			updated = True
+		else: abort(400)
 
 	theme2 = request.values.get("theme2")
 	if theme2:
@@ -640,7 +642,7 @@ def settings_security_post(v):
 
 		g.db.commit()
 
-		return render_template("settings_security.html", v=v, error="Two-factor authentication enabled.")
+		return render_template("settings_security.html", v=v, msg="Two-factor authentication enabled.")
 
 	if request.values.get("2fa_remove", ""):
 
@@ -657,7 +659,7 @@ def settings_security_post(v):
 
 		g.db.commit()
 
-		return render_template("settings_security.html", v=v, error="Two-factor authentication disabled.")
+		return render_template("settings_security.html", v=v, msg="Two-factor authentication disabled.")
 
 @app.post("/settings/log_out_all_others")
 @limiter.limit("1/second")

@@ -1,0 +1,243 @@
+:root {
+	--white: #f1f1f1 !important;
+	--black1: #888 !important;
+	--black2: #222222 !important;
+    --black3: #4f4f4f !important;
+	--grey : #ccc !important;
+	--red: #b40457 !important;
+    --blue: #369 !important;
+    --upvote: #ff8b60 !important;
+    --downvote: #9393ff !important;
+    --sticky: #228822 !important;
+    
+    --primary: var(--black1) !important;
+    --bg1: url('http://b.thumbs.redditmedia.com/9FnbxmVwv2i-bfNusiiCz7QTh1LQYuRiqCPFQMrtrMQ.png') !important;
+    --bg2: url('http://b.thumbs.redditmedia.com/xULA8h2eoYv1UwcUovOwwFHPa3WOXqZGMEpNaRjKFUA.png') !important;
+}
+
+/*navbar*/
+.navbar-light, .navbar .container-fluid, #mobile-bottom-navigation-bar {
+    background-color: var(--white) !important;
+}
+
+#srd, .banner {
+    display: none;
+}
+
+.form-inline.search input {
+	background-color: white !important;
+}
+
+.nav.settings-nav {
+    background-color: var(--red);
+}
+
+/*common*/
+body, .card, #main-content-row {
+	background-color: var(--white) !important;
+    background-image: var(--bg2);
+    color: var(--black1);
+}
+
+.posts .card {
+	border-color: var(--grey) !important;
+}
+
+.btn-primary, .btn-secondary {
+	background-color: var(--red) !important;
+    color: white !important;
+	border-color: transparent;
+}
+
+.score-up, .active.arrow-up::before, .arrow-up::after, .arrow-up:hover::before {
+    color: var(--upvote) !important;
+}
+
+.score-down, .active.arrow-down::before, .arrow-down::after, .arrow-down:hover::before {
+    color: var(--downvote) !important;
+}
+
+a {
+    color: var(--blue);
+}
+
+.post-title a {
+	color: var(--blue) !important;
+}
+
+.fa-thumbtack.text-admin, .card.stickied .post-title a {
+    color: var(--sticky) !important;
+}
+
+.flaggers, .flaggers a {
+	background-color: white !important;
+	color: var(--black3) !important;
+	border-color: var(--grey);
+}
+
+.dropdown-menu, .dropdown-menu a {
+    color: var(--black3);
+    background-color: white;
+}
+
+.popover, .pop-username, .pop-bio, .popover-user-profile, .popover-user-profile * {
+    background-color: var(--white);
+    color: var(--black3);
+    border-color: var(--black1) !important;
+}
+
+.text-muted {
+    color: var(--grey) !important;
+}
+
+/*frontpage*/
+#frontpage .container {
+    max-width: 2160px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#frontpage .d-lg-flex, 
+#frontpage .font-weight-bold.py-3 {
+	display: none !important;
+}
+
+#frontpage .sidebar {
+	background-color: white !important;
+	color: black;
+}
+
+#frontpage .col.h-100.custom-gutters .row .col {
+	background-image: var(--bg1);
+}
+
+#frontpage .dropdown .btn {
+	background-color:transparent !important;
+	color:yellow;
+	text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black !important;
+	border-color: transparent;
+    font-size: 1.3rem;
+}
+
+#frontpage i.fas.mr-1 {
+    color:yellow;
+}
+
+/*post*/
+.post-meta, .post-actions a, .nav-link .fas, label, small, .comment-actions * {
+	color: var(--black1) !important;
+}
+
+.comment, .comment-text, .comment-section, .comment-body, .post-body {
+	background-color: white;
+	color: var(--black2) !important;
+}
+
+.post-body * {
+    margin-left:10px;
+    margin-top:10px;
+    margin-right:10px;
+}
+
+.anchor.comment {
+	border-left: 2px dotted var(--black1) !important;
+}
+
+.comment-collapse-desktop {
+    border-left: none !important;
+}
+
+blockquote {
+	border-left: 2px solid #c5c1ad !important;
+	background-color: white !important;
+	color: #4f4f4f !important;
+}
+
+.form-control, .comment-box.form-control.rounded {
+    background-color: white !important;
+    color: var(--black2) !important;
+}
+
+.comment-box, .form-control{
+	border-color: var(--black1) !important;
+}
+
+#thread #dropdownMenuButton {
+	background-color: var(--red) !important;
+    color: white !important;
+	border-color: transparent;
+}
+
+.btn.format {
+    background-color: transparent !important;
+    color: var(--black1) !important;
+    border-color: transparent !important;
+}
+
+/*userpage*/
+#userpage .nav.settings-nav {
+    background-color: transparent;
+}
+
+#userpage .nav-link {
+    color: var(--red) !important;
+}
+
+#userpage .nav-link.active {
+    box-shadow: inset 0 -2px 0 var(--red) !important;
+}
+
+/*leaderboard*/
+#settings2 .container, #settings2 .container-fluid {
+    background-color: transparent !important;
+}
+
+#settings2 .bg-white {
+    background-color: var(--white) !important;
+}
+
+#settings2 .text-muted {
+    color: var(--black1) !important;
+}
+
+#settings2 .nav.settings-nav {
+    margin: auto !important;
+}
+
+#settings2 .table {
+    color: var(--black1);
+}
+
+/*shop*/
+#message .container {
+    background-color: transparent !important;
+}
+
+#message .table {
+    color: var(--black1);
+}
+
+/*submit*/
+#submit .container {
+    background-color: transparent !important
+}
+
+#submit .text-muted {
+    color: var(--black1) !important;
+}
+
+#submit #create_button {
+	background-color: var(--red) !important;
+    color: white !important;
+	border-color: transparent;
+}
+
+#submit .btn.format {
+    background-color: transparent !important;
+    color: var(--black1) !important;
+    border-color: transparent !important;
+}
+
+#submit .row.fixed-bottom {
+    background-color: var(--white) !important
+}
