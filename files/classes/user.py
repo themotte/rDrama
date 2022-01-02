@@ -55,6 +55,7 @@ class User(Base):
 	marseyawarded = Column(Integer)
 	longpost = Column(Integer)
 	unblockable = Column(Boolean)
+	compact = Column(Boolean)
 	bird = Column(Integer)
 	email = deferred(Column(String))
 	css = deferred(Column(String))

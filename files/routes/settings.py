@@ -364,6 +364,11 @@ def settings_profile_post(v):
 			updated = True
 		else: abort(400)
 
+	compact = request.values.get("compact")
+	if compact:
+		v.compact = compact
+		updated = True
+
 	theme = request.values.get("theme")
 	if theme:
 		if theme in ["classic","transparent", "win98", "dark", "light", "coffee", "tron", "4chan", "midnight"]:
