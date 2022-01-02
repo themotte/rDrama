@@ -2530,6 +2530,9 @@ video {
 .opacity-50 {
 	opacity: 0.5;
 }
+.opacity-30 {
+	opacity: 0.3;
+}
 .opacity-\[\.16\] {
 	opacity: .16;
 }
