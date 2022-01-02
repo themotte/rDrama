@@ -1,7 +1,10 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <nav class="fixed top-0 w-full bg-gray-700" style="z-index: 1030;">
+  <!-- Banner -->
+  {% include "CHRISTMAS/banner.html" %}
+  <!-- Navigation bar -->
   <div class="w-full max-w-screen-2xl mx-auto grid grid-cols-12 px-4">
-    <div class="relative col-span-full flex items-center justify-between h-16 px-4">
+    <div class="relative col-span-full flex items-center justify-between h-14 px-4">
       {% if not error %}
       <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
         <!-- Mobile menu button-->
@@ -126,7 +129,7 @@
 
   <!-- Mobile menu, show/hide based on menu state. -->
   <div class="offcanvas offcanvas-start bg-gray-200" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-    <div class="relative flex w-full bg-gray-700 h-16 px-4 items-center">
+    <div class="relative flex w-full bg-gray-700 h-20 px-4 items-center">
       <a class="flex items-center" href="{{ '/' if v else '/logged_out'}}">
           <img class="block lg:hidden h-6 w-6 object-contain" src="/static/assets/images/Drama/headericon.webp?a=7" alt="logo">
           <img class="hidden lg:block h-6 w-6 object-contain" src="/static/assets/images/Drama/headericon.webp?a=7" alt="logo">

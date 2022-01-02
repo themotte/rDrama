@@ -34,3 +34,27 @@ function bet_vote(cid) {
     post('/bet/' + cid);
     document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - 200;
 }
+
+function checkboxSticky(el, id) {
+  if (el.checked) {
+    postToast(`/sticky/${id}`)
+  } else {
+    postToast(`/unsticky/${id}`)
+  }
+}
+
+function checkboxClub(el, id) {
+  if (el.checked) {
+    postToast(`/toggle_club/${id}`)
+  } else {
+    postToast(`/toggle_club/${id}`)
+  }
+}
+
+function checkboxNSFW(el, id) {
+  if (el.checked) {
+    postToast(`/toggle_post_nsfw/${id}`)
+  } else {
+    postToast(`/toggle_post_nsfw/${id}`)
+  }
+}
