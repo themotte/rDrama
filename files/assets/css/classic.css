@@ -11,8 +11,8 @@
     --sticky: #228822 !important;
     
     --primary: var(--black1) !important;
-    --bg1: url('http://b.thumbs.redditmedia.com/9FnbxmVwv2i-bfNusiiCz7QTh1LQYuRiqCPFQMrtrMQ.png') !important;
-    --bg2: url('http://b.thumbs.redditmedia.com/xULA8h2eoYv1UwcUovOwwFHPa3WOXqZGMEpNaRjKFUA.png') !important;
+    --bg1: url('../images/classic1.webp') !important;
+    --bg2: url('../images/classic2.webp') !important;
 }
 
 /*navbar*/
