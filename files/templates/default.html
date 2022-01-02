@@ -272,7 +272,7 @@
 			{% endblock %}
 
 		</div>
-		{% if request.host == 'rdrama.net' and request.path in ('/', '/logged_out', '/logged_out/') %}
+		{% if request.path in ('/', '/logged_out', '/logged_out/') %}
 			{% block sidebar %}
 				{% set template = "sidebar_" + environ.get("SITE_NAME") + ".html" %}
 				{% include template %}
