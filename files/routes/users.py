@@ -218,7 +218,7 @@ def transfer_coins(v, username):
 		if v.coins < amount: return {"error": f"You don't have enough {app.config['COINS_NAME']}"}, 400
 		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['COINS_NAME']}."}, 400
 
-		if not v.patron and not receiver.patron:
+		if not v.patron and not receiver.patron and not v.alts_patron and not receiver.alts_patron:
 			tax = math.ceil(amount*0.03)
 			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).one_or_none()
 			tax_receiver.coins += tax

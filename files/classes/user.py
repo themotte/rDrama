@@ -222,6 +222,13 @@ class User(Base):
 
 	@property
 	@lazy
+	def alts_patron(self):
+		for u in self.alts_unique:
+			if u.patron: return True
+		return False
+
+	@property
+	@lazy
 	def strid(self):
 		return str(self.id)
 
