@@ -238,7 +238,7 @@
 			{% endif %}
 			</div>
 			
-			<h5 class="post-title font-medium sm:text-lg leading-5">
+			<h5 class="post-title font-medium sm:text-lg leading-5 mb-0">
 				<a {% if v and v.newtab %}target="_blank"{% endif %} href="{{p.permalink}}" class="{% if p.author.agendaposter %}agendaposter{% endif %} stretched-link text-black dark:text-gray-200 hover:text-primary visited:text-gray-700 dark:visited:text-gray-400 break-words" style="word-break: break-word;">
 				{{p.realtitle(v) | safe}}
 				</a>
