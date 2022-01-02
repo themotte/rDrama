@@ -26,6 +26,7 @@ IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 
 tiers={
+	"(LlamaBean)": 1,
 	"(Paypig)": 1,
 	"(Renthog)": 2,
 	"(Landchad)": 3,
