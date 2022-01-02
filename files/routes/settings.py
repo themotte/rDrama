@@ -38,11 +38,13 @@ tiers={
 @app.get("/sex")
 @admin_level_required(3)
 def sex(v):
-	for u in g.db.query(User).filter(User.patron > 0, User.patron != 5).all():
+	for u in g.db.query(User).filter(User.patron > 0, User.patron != 5, User.email != None).all():
 		data = {'access_token': GUMROAD_TOKEN, 'email': u.email}
 		response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
 
-		if len(response) == 0: print(f"{u.username}: email not found")
+		if len(response) == 0:
+			print(f"{u.username}: email not found")
+			continue
 
 		response = response[0]
 		tier = tiers[response["variants_and_quantity"]]
