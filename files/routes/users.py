@@ -522,10 +522,9 @@ def redditor_moment_redirect(username):
 	return redirect(f"/@{username}")
 
 @app.get("/@<username>/followers")
-@auth_required
+@auth_desired
 def followers(username, v):
 	u = get_user(username, v=v)
-	# if request.host == 'rdrama.net' and u.id == 147: abort(404)
 	ids = [x[0] for x in g.db.query(Follow.user_id).filter_by(target_id=u.id).all()]
 	users = g.db.query(User).filter(User.id.in_(ids)).all()
 	if not v or v.oldsite: template = ''
@@ -533,10 +532,9 @@ def followers(username, v):
 	return render_template(f"{template}followers.html", v=v, u=u, users=users)
 
 @app.get("/@<username>/following")
-@auth_required
+@auth_desired
 def following(username, v):
 	u = get_user(username, v=v)
-	# if request.host == 'rdrama.net' and u.id == 147: abort(404)
 	ids = [x[0] for x in g.db.query(Follow.target_id).filter_by(user_id=u.id).all()]
 	users = g.db.query(User).filter(User.id.in_(ids)).all()
 	if not v or v.oldsite: template = ''

@@ -459,9 +459,9 @@
 								
 								<button id="pin-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if not c.is_pinned %}d-md-inline-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/sticky_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
 							{% elif v.id == c.post.author_id %}
-								<button id="unpin-{{c.id}}" class="btn caction py-0 nobackground {% if c.is_pinned %}d-md-inline-block{% endif %} text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/unpin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
+								<button id="unpin-{{c.id}}-op" class="btn caction py-0 nobackground {% if c.is_pinned %}d-md-inline-block{% endif %} text-muted d-none text-info"  data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/unpin_comment/{{c.id}}','pin-{{c.id}}-op','unpin-{{c.id}}-op')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Unpin</button>
 									
-								<button id="pin-{{c.id}}" class="btn caction py-0 nobackground px-1 {% if not c.is_pinned %}d-md-inline-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}','unpin-{{c.id}}')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
+								<button id="pin-{{c.id}}-op" class="btn caction py-0 nobackground px-1 {% if not c.is_pinned %}d-md-inline-block{% endif %} text-muted d-none text-info" data-bs-dismiss="modal" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast3('/pin_comment/{{c.id}}','pin-{{c.id}}-op','unpin-{{c.id}}-op')"><i class="fas fa-thumbtack fa-rotate--45 text-info fa-fw"></i>Pin</button>
 							{% endif %}
 						{% endif %}
 						
@@ -607,8 +607,8 @@
 
 
 						{% if c.post and v.id == c.post.author_id and not v.admin_level %}
-							<a id="pin2-{{c.id}}" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a>
-							<a id="unpin2-{{c.id}}" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/unpin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
+							<a id="pin2-{{c.id}}-op" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/pin_comment/{{c.id}}','pin2-{{c.id}}-op','unpin2-{{c.id}}-op')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a>
+							<a id="unpin2-{{c.id}}-op" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/unpin_comment/{{c.id}}','pin2-{{c.id}}-op','unpin2-{{c.id}}-op')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
 						{% endif %}
 					{% endif %}
 				</ul>

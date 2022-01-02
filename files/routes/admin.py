@@ -1126,7 +1126,9 @@ def api_unban_comment(c_id, v):
 
 	comment = g.db.query(Comment).filter_by(id=c_id).first()
 	if not comment: abort(404)
-	g.db.add(comment)
+	
+	if comment.author.agendaposter and 'trans lives matters' not in comment.body.lower():
+		return {"error": "You can't bypass the agendaposter award!"}
 
 	if comment.is_banned:
 		ma=ModAction(
@@ -1138,6 +1140,8 @@ def api_unban_comment(c_id, v):
 
 	comment.is_banned = False
 	comment.is_approved = v.id
+
+	g.db.add(comment)
 
 	g.db.commit()
 

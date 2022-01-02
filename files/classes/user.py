@@ -269,6 +269,11 @@ class User(Base):
 
 	@property
 	@lazy
+	def follow_count(self):
+		return g.db.query(Follow.id).filter_by(user_id=self.id).count()
+
+	@property
+	@lazy
 	def bio_html_eager(self):
 		if self.bio_html == None: return ''
 		return self.bio_html.replace('data-src', 'src').replace('src="/static/assets/images/loading.webp"', '')

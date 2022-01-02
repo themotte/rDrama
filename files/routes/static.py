@@ -140,6 +140,10 @@ def cached_chart(days):
 		comment_stats,
 		color='gold')
 
+	signup_chart.set_ylim(ymin=0)
+	posts_chart.set_ylim(ymin=0)
+	comments_chart.set_ylim(ymin=0)
+
 	signup_chart.set_ylabel("Signups")
 	posts_chart.set_ylabel("Posts")
 	comments_chart.set_ylabel("Comments")
