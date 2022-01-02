@@ -3580,6 +3580,9 @@ code {
 	outline: 2px solid transparent;
 	outline-offset: 2px;
 }
+.group:hover .group-hover\:z-20 {
+	z-index: 20;
+}
 .group:hover .group-hover\:block {
 	display: block;
 }
