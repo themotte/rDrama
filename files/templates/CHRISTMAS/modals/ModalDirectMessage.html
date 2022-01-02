@@ -11,7 +11,7 @@
 				<form id="message" action="/@{{u.username}}/message" method="post" enctype="multipart/form-data">
 					<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 					<div class="relative rounded border border-gray-300 dark:border-gray-900 bg-white dark:bg-white/[.05] w-full"> 
-						<textarea maxlength="1000" id="input-message" name="message" form="message" class="rounded-t bg-transparent focus:bg-white p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Write your message..." rows="3"></textarea>
+						<textarea maxlength="1000" id="input-message" name="message" form="message" class="rounded-t bg-transparent p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Write your message..." rows="3"></textarea>
 						<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-400 mb-0">
 							<li>
 								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('input-message')">
