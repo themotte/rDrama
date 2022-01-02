@@ -762,7 +762,9 @@ CREATE TABLE public.users (
     fish boolean,
     lootboxes_bought integer,
     oldsite boolean,
-    theme2 character varying(30)
+    theme2 character varying(30),
+    progressivestack integer,
+    compact boolean
 );
 
 
