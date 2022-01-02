@@ -926,33 +926,56 @@ function loadEmojis(form) {
 	let search_bar = document.getElementById("emoji_search");
 	let search_container = document.getElementById('emoji-tab-search')
 
-	let fav = document.getElementById(EMOJI_BOX_ID)
+	const fav = document.getElementById(EMOJI_BOX_ID)
 	fav.setAttribute(EMOJI_FORM_DESTINATION_ATTR, form)
 
 	const commentBox = document.getElementById(form);
 	commentBox.setAttribute(TEXTAREA_POS_ATTR, commentBox.selectionStart);
 
+	if (fav.innerHTML == "")
+	{
+		let str = ""
+		const favorite_emojis = JSON.parse(localStorage.getItem("favorite_emojis"))
+		console.log(1)
+		if (favorite_emojis)
+		{
+			console.log(2)
+			const sortable = Object.fromEntries(
+				Object.entries(favorite_emojis).sort(([,a],[,b]) => b-a)
+			);
+					
+			for (const emoji of Object.keys(sortable))
+				str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${emoji}')" data-bs-toggle="tooltip" title=":${emoji}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${emoji}.webp" alt="${emoji}-emoji"></button>`
+		
+			fav.innerHTML = str
+		}
+	}
+
 	if (search_bar.value == "") {
 
-		for (let i = 0; i < EMOJIS_STRINGS.length; i++) {
-			let type = EMOJIS_STRINGS[i].type
-			let container = document.getElementById(`EMOJIS_${type}`)
-			let str = ''
-			let arr = EMOJIS_STRINGS[i].emojis
-			if (i == 0)
-				{
-					for (const [key, value] of Object.entries(arr)) {
-						str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${key}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+		const marseys = document.getElementById("EMOJIS_marsey")
+		if (marseys.innerHTML == "")
+		{
+			for (let i = 0; i < EMOJIS_STRINGS.length; i++) {
+				let type = EMOJIS_STRINGS[i].type
+				let container = document.getElementById(`EMOJIS_${type}`)
+				let str = ''
+				let arr = EMOJIS_STRINGS[i].emojis
+				if (i == 0)
+					{
+						for (const [key, value] of Object.entries(arr)) {
+							str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${key}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+						}
+					}
+				else {
+					for (let j = 0; j < arr.length; j++) {
+						str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 					}
 				}
-			else {
-				for (let j = 0; j < arr.length; j++) {
-					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
-				}
-			}
 
-			container.innerHTML = str
-			search_container.innerHTML = ""
+				container.innerHTML = str
+				search_container.innerHTML = ""
+			}
 		}
 	} else {
 		let str = ''
@@ -983,19 +1006,4 @@ function loadEmojis(form) {
 	search_bar.oninput = function () {
 		loadEmojis(form);
 	};
-}
-
-let str = ""
-const favorite_emojis = JSON.parse(localStorage.getItem("favorite_emojis"))
-
-if (favorite_emojis)
-{
-	const sortable = Object.fromEntries(
-		Object.entries(favorite_emojis).sort(([,a],[,b]) => b-a)
-	);
-			
-	for (const emoji of Object.keys(sortable))
-		str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${emoji}')" data-bs-toggle="tooltip" title=":${emoji}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${emoji}.webp" alt="${emoji}-emoji"></button>`
-
-	document.getElementById('EMOJIS_favorite').innerHTML = str
 }
