@@ -192,7 +192,7 @@
 
 		{% block stylesheets %}
 
-		<link rel="stylesheet" href="/assets/CHRISTMAS/css/main.css?a=7">
+		<link rel="stylesheet" href="/static/assets/CHRISTMAS/css/main.css?a=7">
 
       	<link rel="stylesheet" href="/static/dist/main.css?a=7">
 
@@ -201,7 +201,7 @@
 			<!-- <style>:root{--primary:#{{v.themecolor}}}</style> -->
 			<!-- <link rel="stylesheet" href="/assets/CHRISTMAS/css/{{v.theme}}.css?a=1"> -->
 			{% if v.agendaposter %}
-			<link rel="stylesheet" href="/assets/CHRISTMAS/css/agendaposter.css?a=1">
+			<link rel="stylesheet" href="/static/assets/CHRISTMAS/css/agendaposter.css?a=1">
 			{% elif v.css %}
 			<link rel="stylesheet" href="/@{{v.username}}/css">
 			{% endif %}
@@ -213,7 +213,7 @@
 
 		{% endblock %}
 
-		<link href="/assets/CHRISTMAS/css/fa.css?a=1" rel="stylesheet"> 
+		<link href="/static/assets/CHRISTMAS/css/fa.css?a=1" rel="stylesheet"> 
 
  </head>
 
@@ -305,20 +305,20 @@
 {% block scripts %}{% endblock %}
 
 <!-- Scripts -->
-<script src="/assets/CHRISTMAS/js/header.js?a=1"></script>
+<script src="/static/assets/CHRISTMAS/js/header.js?a=1"></script>
 
 <!-- Lazy Loading -->
-<script src="/assets/CHRISTMAS/js/lozad.js?a=1"></script>
+<script src="/static/assets/CHRISTMAS/js/lozad.js?a=1"></script>
 <script>
 	const observer = lozad();
 	observer.observe();
 </script>
 
 <!-- Bootstrap -->
-<script src="/assets/CHRISTMAS/js/bootstrap.js"></script>
+<script src="/static/assets/CHRISTMAS/js/bootstrap.js"></script>
 
 <!-- Clipboard JS -->
-<script src="/assets/CHRISTMAS/js/clipboard.js"></script>
+<script src="/static/assets/CHRISTMAS/js/clipboard.js"></script>
 <script>
 	var clipboard = new ClipboardJS('.copy-link');
 	clipboard.on('success', function(e) {
@@ -328,15 +328,15 @@
 	});
 </script>
 
-<link rel="stylesheet" href="/assets/CHRISTMAS/css/lite-youtube.css?a=1">
-<script src="/assets/CHRISTMAS/js/lite-youtube.js?a=1"></script>
+<link rel="stylesheet" href="/static/assets/CHRISTMAS/css/lite-youtube.css?a=1">
+<script src="/static/assets/CHRISTMAS/js/lite-youtube.js?a=1"></script>
 
-<script src="/assets/CHRISTMAS/js/gif_modal.js?a=1"></script>
-<script src="/assets/CHRISTMAS/js/emoji_modal.js?a=16"></script>
+<script src="/static/assets/CHRISTMAS/js/gif_modal.js?a=1"></script>
+<script src="/static/assets/CHRISTMAS/js/emoji_modal.js?a=16"></script>
 
-<script defer src="/assets/CHRISTMAS/js/popover.js?a=1"></script>
+<script defer src="/static/assets/CHRISTMAS/js/popover.js?a=1"></script>
 
-<script src="/assets/CHRISTMAS/js/mobile_navigation_bar.js?a=1"></script>
+<script src="/static/assets/CHRISTMAS/js/mobile_navigation_bar.js?a=1"></script>
 
 {% if v %}
 	<script>function formkey() {return '{{v.formkey}}';}</script>
@@ -356,7 +356,7 @@
 		}
 	</script>
 {% endif %}
-	<script src="/assets/CHRISTMAS/js/default.js?a=2"></script>
+	<script src="/static/assets/CHRISTMAS/js/default.js?a=2"></script>
 
 </body>
 </html>
