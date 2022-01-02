@@ -27,6 +27,25 @@ if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 month = datetime.now().strftime('%B')
 
+@app.get("/admin/sex2")
+@admin_level_required(3)
+def sex2(v):
+	for u in g.db.query(User).filter(User.patron > 0).all():
+		tier = u.patron + 20
+
+		if not u.has_badge(tier):
+			new_badge = Badge(badge_id=tier, user_id=u.id)
+			g.db.add(new_badge)
+			print(f'{u.username} with {u.patron} was given {tier}')
+			
+		for num in [21,22,23,24,25]:
+			if num != tier:
+				existing = u.has_badge(num)
+				if existing:
+					g.db.delete(existing)
+					print(f'{u.username} with {u.patron} was removed {num}')
+	g.db.commit()
+	return "sex"
 
 @app.get("/admin/grassed")
 @admin_level_required(2)
