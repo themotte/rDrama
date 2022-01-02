@@ -3736,6 +3736,10 @@ code {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-400), var(--tw-text-opacity));
 }
+.dark .group:hover .dark\:group-hover\:text-primary {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-primary), var(--tw-text-opacity));
+}
 @media (min-width: 640px) {
 
 	.sm\:static {
