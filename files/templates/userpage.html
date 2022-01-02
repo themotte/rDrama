@@ -386,7 +386,7 @@
 
 					<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp;
 
-					<a href="/@{{u.username}}/following" class="font-weight-bold">follows {{u.follow_count}} user{{'s' if u.follow_count != 1 else ''}}</a>&nbsp;&nbsp;
+					<a href="/@{{u.username}}/following" class="font-weight-bold" style="display:block">follows {{u.follow_count}} user{{'s' if u.follow_count != 1 else ''}}</a>&nbsp;&nbsp;
 
 					{% if u.basedcount %}
 						<br>Based count: {{u.basedcount}}
