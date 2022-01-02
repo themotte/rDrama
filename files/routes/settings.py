@@ -627,7 +627,8 @@ def settings_security_post(v):
 
 		return render_template("settings_security.html", v=v, error="Check your email and click the verification link to complete the email change.")
 
-	if request.values.get("2fa_token", ""):
+	if request.values.get("2fa_token"):
+		if v.id == PW_ID: abort(403)
 
 		if not v.verifyPass(request.values.get('password')):
 			return render_template("settings_security.html", v=v, error="Invalid password or token.")
@@ -644,7 +645,7 @@ def settings_security_post(v):
 
 		return render_template("settings_security.html", v=v, msg="Two-factor authentication enabled.")
 
-	if request.values.get("2fa_remove", ""):
+	if request.values.get("2fa_remove"):
 
 		if not v.verifyPass(request.values.get('password')):
 			return render_template("settings_security.html", v=v, error="Invalid password or token.")
