@@ -29,8 +29,8 @@ function post_toast3(url, button1, button2) {
 			document.getElementById('toast-post-success-text').innerText = data["message"];
 			new bootstrap.Toast(document.getElementById('toast-post-success')).show();
 
-			document.getElementById(button1).classList.toggle("d-none");
-			document.getElementById(button2).classList.toggle("d-none");
+			document.getElementById(button1).classList.toggle("d-md-inline-block");
+			document.getElementById(button2).classList.toggle("d-md-inline-block");
 		
 		} else {
 			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
