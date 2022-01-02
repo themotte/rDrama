@@ -257,26 +257,26 @@
 
 		<div class="relative z-10 flex flex-row flex-nowrap pl-3 md:pl-5 flex-shrink-0">
 			{% if p.club and not (v and (v.paid_dues or v.id == p.author_id)) %}
-				<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+				<img loading="lazy" src="/assets/images/emojis/marseyglow.webp" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 			{% elif not p.url %}
 				<a {% if v and v.newtab %}target="_blank"{% endif %} {% if v %}href="{{p.permalink}}"{% else %}href="/logged_out{{p.permalink}}"{% endif %}>
-					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 				</a>
 			{% elif p.is_image %}
 				<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{p.realurl(v)}}" onclick="expandDesktopImage('{{ p.realurl(v) }}')">
-					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 				</a>
 			{% elif p.is_video %}
 				<a href="javascript:void(0)" onclick="toggleVideo({{p.id}})">
-					<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+					<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 				</a>
 			{% elif p.is_youtube %}
 				<a href="javascript:void(0)" onclick="document.getElementById('video-{{p.id}}').classList.toggle('hidden')">
-					<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 md:w-32 md:h-20 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+					<img alt="post thumnail" loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 object-cover bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 				</a>
 			{% else %}
 				<a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14 md:w-32 md:h-20 object-cover  bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
+					<img loading="lazy" src="{{p.thumb_url}}" class="post-thumbnail shadow-sm p-[3px] w-20 h-14  object-cover  bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 flex-shrink-0">
 				</a>
 			{% endif %}
 		</div>
