@@ -210,14 +210,6 @@ def award_post(pid, v):
 	if not post:
 		return {"error": "That post doesn't exist."}, 404
 
-	existing_award = g.db.query(AwardRelationship).filter(
-		and_(
-			AwardRelationship.submission_id == post.id,
-			AwardRelationship.user_id == v.id,
-			AwardRelationship.kind == kind
-		)
-	).first()
-
 	post_award.submission_id = post.id
 	g.db.add(post_award)
 
@@ -383,14 +375,6 @@ def award_comment(cid, v):
 
 	if not c:
 		return {"error": "That comment doesn't exist."}, 404
-
-	existing_award = g.db.query(AwardRelationship).filter(
-		and_(
-			AwardRelationship.comment_id == c.id,
-			AwardRelationship.user_id == v.id,
-			AwardRelationship.kind == kind
-		)
-	).first()
 
 	comment_award.comment_id = c.id
 	g.db.add(comment_award)
