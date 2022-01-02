@@ -274,7 +274,8 @@
 		</div>
 		{% if request.path in ('/', '/logged_out', '/logged_out/') %}
 			{% block sidebar %}
-				{% include "sidebar_PCM.html" %}
+				{% set template = "sidebar_" + environ.get("SITE_NAME") + ".html" %}
+				{% include template %}
 			{% endblock %}
 		{% endif %}
 	</div>
