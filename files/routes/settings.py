@@ -98,6 +98,10 @@ def settings_profile_post(v):
 		updated = True
 		v.teddit = request.values.get("teddit", None) == 'true'
 
+	elif request.values.get("compact", v.compact) != v.compact:
+		updated = True
+		v.teddit = request.values.get("compact", None) == 'true'
+
 	elif request.values.get("nitter", v.nitter) != v.nitter:
 		updated = True
 		v.nitter = request.values.get("nitter", None) == 'true'
@@ -363,11 +367,6 @@ def settings_profile_post(v):
 			v.defaulttime = defaulttime
 			updated = True
 		else: abort(400)
-
-	compact = request.values.get("compact")
-	if compact:
-		v.compact = compact
-		updated = True
 
 	theme = request.values.get("theme")
 	if theme:
