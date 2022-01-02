@@ -273,8 +273,13 @@
 
 		</div>
 		{% if request.path in ('/', '/logged_out', '/logged_out/') %}
-			{% block sidebar %}
+			{% if request.host == 'pcmemes.net' %}
+				{% set template = "sidebar_PCM.html" %}
+			{% else %}
 				{% set template = "sidebar_" + environ.get("SITE_NAME") + ".html" %}
+			{% endif %}
+
+			{% block sidebar %}
 				{% include template %}
 			{% endblock %}
 		{% endif %}
