@@ -34,9 +34,9 @@ def check_for_alts(current_id):
 		if past_id == current_id: continue
 
 		check1 = g.db.query(Alt).filter_by(
-			user1=current_id, user2=past_id).first()
+			user1=current_id, user2=past_id).one_or_none()
 		check2 = g.db.query(Alt).filter_by(
-			user1=past_id, user2=current_id).first()
+			user1=past_id, user2=current_id).one_or_none()
 
 		if not check1 and not check2:
 
@@ -49,25 +49,25 @@ def check_for_alts(current_id):
 		alts = g.db.query(Alt)
 		otheralts = alts.filter(or_(Alt.user1 == past_id, Alt.user2 == past_id, Alt.user1 == current_id, Alt.user2 == current_id)).all()
 		for a in otheralts:
-			existing = alts.filter_by(user1=a.user1, user2=past_id).first()
+			existing = alts.filter_by(user1=a.user1, user2=past_id).one_or_none()
 			if not existing:
 				new_alt = Alt(user1=a.user1, user2=past_id)
 				g.db.add(new_alt)
 				g.db.flush()
 
-			existing = alts.filter_by(user1=a.user1, user2=current_id).first()
+			existing = alts.filter_by(user1=a.user1, user2=current_id).one_or_none()
 			if not existing:
 				new_alt = Alt(user1=a.user1, user2=current_id)
 				g.db.add(new_alt)
 				g.db.flush()
 
-			existing = alts.filter_by(user1=a.user2, user2=past_id).first()
+			existing = alts.filter_by(user1=a.user2, user2=past_id).one_or_none()
 			if not existing:
 				new_alt = Alt(user1=a.user2, user2=past_id)
 				g.db.add(new_alt)
 				g.db.flush()
 
-			existing = alts.filter_by(user1=a.user2, user2=current_id).first()
+			existing = alts.filter_by(user1=a.user2, user2=current_id).one_or_none()
 			if not existing:
 				new_alt = Alt(user1=a.user2, user2=current_id)
 				g.db.add(new_alt)
@@ -85,7 +85,7 @@ def login_post():
 	if not username: abort(400)
 	if "@" in username:
 		account = g.db.query(User).filter(
-			User.email.ilike(username)).first()
+			User.email.ilike(username)).one_or_none()
 	else:
 		account = get_user(username, graceful=True)
 
@@ -180,7 +180,7 @@ def sign_up_get(v):
 
 	ref = request.values.get("ref", None)
 	if ref:
-		ref_user = g.db.query(User).filter(User.username.ilike(ref)).first()
+		ref_user = g.db.query(User).filter(User.username.ilike(ref)).one_or_none()
 
 	else:
 		ref_user = None
@@ -249,7 +249,7 @@ def sign_up_post(v):
 		args = {"error": error}
 		if request.values.get("referred_by"):
 			user = g.db.query(User).filter_by(
-				id=request.values.get("referred_by")).first()
+				id=request.values.get("referred_by")).one_or_none()
 			if user:
 				args["ref"] = user.username
 
@@ -366,7 +366,7 @@ def post_forgot():
 
 	user = g.db.query(User).filter(
 		User.username.ilike(username),
-		User.email.ilike(email)).first()
+		User.email.ilike(email)).one_or_none()
 
 	if user:
 		now = int(time.time())
@@ -401,7 +401,7 @@ def get_reset():
 			title="Password reset link expired",
 			error="That password reset link has expired.")
 
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	
 	if not validate_hash(f"{user_id}+{timestamp}+forgot+{user.login_nonce}", token):
 		abort(400)
@@ -443,7 +443,7 @@ def post_reset(v):
 							   title="Password reset expired",
 							   error="That password reset form has expired.")
 
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	if not validate_hash(f"{user_id}+{timestamp}+reset+{user.login_nonce}", token):
 		abort(400)

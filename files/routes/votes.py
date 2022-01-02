@@ -81,7 +81,7 @@ def api_vote_post(post_id, new, v):
 
 	post = get_post(post_id)
 
-	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).first()
+	existing = g.db.query(Vote).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
 
 	if existing and existing.vote_type == new: return "", 204
 
@@ -147,7 +147,7 @@ def api_vote_comment(comment_id, new, v):
 
 	if comment.author_id == AUTOBETTER_ID: return {"error": "forbidden."}, 403
 	
-	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
+	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 
 	if existing and existing.vote_type == new: return "", 204
 
@@ -205,7 +205,7 @@ def api_vote_poll(comment_id, v):
 	comment_id = int(comment_id)
 	comment = get_comment(comment_id)
 
-	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
+	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 
 	if existing and existing.vote_type == new: return "", 204
 
@@ -239,7 +239,7 @@ def bet(comment_id, v):
 	comment_id = int(comment_id)
 	comment = get_comment(comment_id)
 	
-	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
+	existing = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 	if existing: return "", 204
 
 	vote = CommentVote(user_id=v.id, vote_type=1, comment_id=comment.id)
@@ -250,7 +250,7 @@ def bet(comment_id, v):
 
 	v.coins -= 200
 	g.db.add(v)
-	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).one_or_none()
 	autobetter.coins += 200
 	g.db.add(autobetter)
 

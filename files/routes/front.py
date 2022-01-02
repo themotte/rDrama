@@ -389,7 +389,7 @@ def random_post(v):
 	total = x.count()
 	n = random.randint(1, total - 2)
 
-	post = x.offset(n).limit(1).first()
+	post = x.offset(n).limit(1).one_or_none()
 	return redirect(f"/post/{post.id}")
 
 @cache.memoize(timeout=86400)

@@ -97,7 +97,7 @@ def discord_redirect(v):
 		url=f"https://discord.com/api/guilds/{SERVER_ID}/members/{v.discord_id}"
 		requests.delete(url, headers=headers, timeout=5)
 
-	if g.db.query(User).filter(User.id!=v.id, User.discord_id==x["id"]).first():
+	if g.db.query(User).filter(User.id!=v.id, User.discord_id==x["id"]).one_or_none():
 		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}message.html", title="Discord account already linked.", error="That Discord account is already in use by another user.", v=v)

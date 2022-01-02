@@ -603,7 +603,7 @@ def settings_security_post(v):
 			return render_template("settings_security.html", v=v, error="That email is already yours!")
 
 		existing = g.db.query(User.id).filter(User.id != v.id,
-										   func.lower(User.email) == new_email.lower()).first()
+										   func.lower(User.email) == new_email.lower()).one_or_none()
 		if existing:
 			return render_template("settings_security.html", v=v, error="That email address is already in use.")
 
@@ -960,7 +960,7 @@ def settings_name_change(v):
 			User.username.ilike(name),
 			User.original_username.ilike(name)
 			)
-		).first()
+		).one_or_none()
 
 	if x and x.id != v.id:
 		if not v or v.oldsite: template = ''
@@ -969,7 +969,7 @@ def settings_name_change(v):
 						   v=v,
 						   error=f"Username `{new_name}` is already in use.")
 
-	v=g.db.query(User).with_for_update().filter_by(id=v.id).first()
+	v=g.db.query(User).with_for_update().filter_by(id=v.id).one_or_none()
 
 	v.username=new_name
 	v.name_changed_utc=int(time.time())

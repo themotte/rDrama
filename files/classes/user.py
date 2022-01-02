@@ -182,7 +182,7 @@ class User(Base):
 		return len(self.referrals)
 
 	def is_blocking(self, target):
-		return g.db.query(UserBlock).filter_by(user_id=self.id, target_id=target.id).first()
+		return g.db.query(UserBlock).filter_by(user_id=self.id, target_id=target.id).one_or_none()
 
 	@property
 	@lazy
@@ -193,7 +193,7 @@ class User(Base):
 
 		return g.db.query(UserBlock).filter(
 			or_(and_(UserBlock.user_id == self.id, UserBlock.target_id == other.id), and_(
-				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).first()
+				UserBlock.user_id == other.id, UserBlock.target_id == self.id))).one_or_none()
 
 	def validate_2fa(self, token):
 
@@ -287,10 +287,10 @@ class User(Base):
 	@lazy
 	def banned_by(self):
 		if not self.is_suspended: return None
-		return g.db.query(User).filter_by(id=self.is_banned).first()
+		return g.db.query(User).filter_by(id=self.is_banned).one_or_none()
 
 	def has_badge(self, badge_id):
-		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).first()
+		return g.db.query(Badge).filter_by(user_id=self.id, badge_id=badge_id).one_or_none()
 
 	def hash_password(self, password):
 		return generate_password_hash(
@@ -422,7 +422,7 @@ class User(Base):
 
 	def has_follower(self, user):
 
-		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).first()
+		return g.db.query(Follow).filter_by(target_id=self.id, user_id=user.id).one_or_none()
 
 	@property
 	@lazy

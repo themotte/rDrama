@@ -30,11 +30,11 @@ def send_repeatable_notification(uid, text, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 	
-	existing_comment = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).first()
+	existing_comment = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).one_or_none()
 
 	if existing_comment:
 		cid = existing_comment[0]
-		existing_notif = g.db.query(Notification.id).filter_by(user_id=uid, comment_id=cid).first()
+		existing_notif = g.db.query(Notification.id).filter_by(user_id=uid, comment_id=cid).one_or_none()
 		if existing_notif: cid = create_comment(text, autojanny)
 	else: cid = create_comment(text, autojanny)
 
@@ -53,14 +53,14 @@ def notif_comment(text, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 
-	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).first()
+	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).one_or_none()
 	
 	if existing: return existing[0]
 	else: return create_comment(text, autojanny)
 
 
 def add_notif(cid, uid):
-	existing = g.db.query(Notification.id).filter_by(comment_id=cid, user_id=uid).first()
+	existing = g.db.query(Notification.id).filter_by(comment_id=cid, user_id=uid).one_or_none()
 	if not existing:
 		notif = Notification(comment_id=cid, user_id=uid)
 		g.db.add(notif)
@@ -96,7 +96,7 @@ def NOTIFY_USERS(text, v):
 	soup = BeautifulSoup(text, features="html.parser")
 	for mention in soup.find_all("a", href=re.compile("^/@(\w+)")):
 		username = mention["href"].split("@")[1]
-		user = g.db.query(User).filter_by(username=username).first()
+		user = g.db.query(User).filter_by(username=username).one_or_none()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 
 	return notify_users

@@ -74,7 +74,7 @@ class Comment(Base):
 	@lazy
 	def poll_voted(self, v):
 		if v:
-			vote = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=self.id).first()
+			vote = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=self.id).one_or_none()
 			if vote: return vote.vote_type
 			else: return None
 		else: return None

@@ -206,7 +206,7 @@ def get_coins(v, username):
 @is_not_banned
 @validate_formkey
 def transfer_coins(v, username):
-	receiver = g.db.query(User).filter_by(username=username).first()
+	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
 	if receiver is None: return {"error": "That user doesn't exist."}, 404
 
@@ -220,7 +220,7 @@ def transfer_coins(v, username):
 
 		if not v.patron and not receiver.patron:
 			tax = math.ceil(amount*0.03)
-			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).first()
+			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).one_or_none()
 			tax_receiver.coins += tax
 			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
 			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
@@ -244,7 +244,7 @@ def transfer_coins(v, username):
 @is_not_banned
 @validate_formkey
 def transfer_bux(v, username):
-	receiver = g.db.query(User).filter_by(username=username).first()
+	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
 	if not receiver: return {"error": "That user doesn't exist."}, 404
 
@@ -329,7 +329,7 @@ def get_profilecss(username):
 def songs(id):
 	try: id = int(id)
 	except: return "", 400
-	user = g.db.query(User).filter_by(id=id).first()
+	user = g.db.query(User).filter_by(id=id).one_or_none()
 	if user and user.song: return redirect(f"/static/song/{user.song}.mp3")
 	else: abort(404)
 
@@ -357,7 +357,7 @@ def subscribe(v, post_id):
 @auth_required
 @validate_formkey
 def unsubscribe(v, post_id):
-	sub=g.db.query(Subscription).filter_by(user_id=v.id, submission_id=post_id).first()
+	sub=g.db.query(Subscription).filter_by(user_id=v.id, submission_id=post_id).one_or_none()
 	if sub:
 		g.db.delete(sub)
 		g.db.commit()
@@ -393,7 +393,7 @@ def message2(v, username):
 	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
 															Comment.body_html == text_html,
-															).first()
+															).one_or_none()
 	if existing: return redirect('/notifications?messages=true')
 
 	new_comment = Comment(author_id=v.id,
@@ -504,7 +504,7 @@ def api_is_available(name, v):
 			User.username.ilike(name2),
 			User.original_username.ilike(name2)
 			)
-		).first()
+		).one_or_none()
 
 	if x:
 		return {name: False}
@@ -584,7 +584,7 @@ def u_username(username, v=None):
 				ViewerRelationship.viewer_id == v.id,
 				ViewerRelationship.user_id == u.id
 			)
-		).first()
+		).one_or_none()
 
 		if view:
 			view.last_view_utc = g.timestamp
@@ -806,7 +806,7 @@ def follow_user(username, v):
 
 	if target.id==v.id: return {"error": "You can't follow yourself!"}, 400
 
-	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first(): return {"message": "User followed!"}
+	if g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).one_or_none(): return {"message": "User followed!"}
 
 	new_follow = Follow(user_id=v.id, target_id=target.id)
 	g.db.add(new_follow)
@@ -831,7 +831,7 @@ def unfollow_user(username, v):
 
 	if target.fish: return {"error": "You can't unfollow this user!"}
 
-	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).first()
+	follow = g.db.query(Follow).filter_by(user_id=v.id, target_id=target.id).one_or_none()
 
 	if follow:
 		g.db.delete(follow)
@@ -853,7 +853,7 @@ def unfollow_user(username, v):
 def remove_follow(username, v):
 	target = get_user(username)
 
-	follow = g.db.query(Follow).filter_by(user_id=target.id, target_id=v.id).first()
+	follow = g.db.query(Follow).filter_by(user_id=target.id, target_id=v.id).one_or_none()
 
 	if not follow: return {"message": "Follower removed!"}
 
@@ -953,7 +953,7 @@ def fp(v, fp):
 			users += g.db.query(User).filter(User.email == v.email, User.is_activated, User.id != v.id).all()
 		for u in users:
 			li = [v.id, u.id]
-			existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).first()
+			existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).one_or_none()
 			if existing: continue
 			new_alt = Alt(user1=v.id, user2=u.id)
 			g.db.add(new_alt)

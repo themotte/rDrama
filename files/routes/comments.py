@@ -43,7 +43,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	comment = get_comment(cid, v=v)
 	
 	if v and request.values.get("read"):
-		notif = g.db.query(Notification).filter_by(comment_id=cid, user_id=v.id, read=False).first()
+		notif = g.db.query(Notification).filter_by(comment_id=cid, user_id=v.id, read=False).one_or_none()
 		if notif:
 			notif.read = True
 			g.db.add(notif)
@@ -230,7 +230,7 @@ def api_comment(v):
 															 Comment.parent_comment_id == parent_comment_id,
 															 Comment.parent_submission == parent_submission,
 															 Comment.body_html == body_html
-															 ).first()
+															 ).one_or_none()
 	if existing: return {"error": f"You already made that comment: /comment/{existing.id}"}, 409
 
 	if parent.author.any_block_exists(v) and v.admin_level < 2: return {"error": "You can't reply to users who have blocked you, or users you have blocked."}, 403
@@ -433,7 +433,7 @@ def api_comment(v):
 
 		g.db.add(c2)
 
-		longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ID).first()
+		longpostbot = g.db.query(User).filter_by(id = LONGPOSTBOT_ID).one_or_none()
 		longpostbot.comment_count += 1
 		longpostbot.coins += 1
 		g.db.add(longpostbot)
@@ -510,7 +510,7 @@ def api_comment(v):
 
 		g.db.add(c4)
 
-		zozbot = g.db.query(User).filter_by(id = ZOZBOT_ID).first()
+		zozbot = g.db.query(User).filter_by(id = ZOZBOT_ID).one_or_none()
 		zozbot.comment_count += 3
 		zozbot.coins += 3
 		g.db.add(zozbot)
@@ -788,7 +788,7 @@ def edit_comment(cid, v):
 		notify_users = NOTIFY_USERS(body_html, v)
 		
 		for x in notify_users:
-			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).first()
+			notif = g.db.query(Notification).filter_by(comment_id=c.id, user_id=x).one_or_none()
 			if not notif:
 				n = Notification(comment_id=c.id, user_id=x)
 				g.db.add(n)
@@ -804,7 +804,7 @@ def edit_comment(cid, v):
 @validate_formkey
 def delete_comment(cid, v):
 
-	c = g.db.query(Comment).filter_by(id=cid).first()
+	c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 
 	if not c: abort(404)
 
@@ -826,7 +826,7 @@ def delete_comment(cid, v):
 @validate_formkey
 def undelete_comment(cid, v):
 
-	c = g.db.query(Comment).filter_by(id=cid).first()
+	c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 
 	if not c:
 		abort(404)
@@ -895,7 +895,7 @@ def save_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id, type=2).first()
+	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id, type=2).one_or_none()
 
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, comment_id=comment.id, type=2)
@@ -914,7 +914,7 @@ def unsave_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id, type=2).first()
+	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id, type=2).one_or_none()
 
 	if save:
 		g.db.delete(save)

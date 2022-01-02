@@ -383,7 +383,7 @@ def morecomments(v, cid):
 			else: dump.append(comment)
 		comments = output
 	else:
-		c = g.db.query(Comment).filter_by(id=cid).first()
+		c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 		comments = c.replies
 
 	if not v or v.oldsite: template = ''
@@ -596,11 +596,11 @@ def thumbnail_thread(pid):
 
 	db = db_session()
 
-	post = db.query(Submission).filter_by(id=pid).first()
+	post = db.query(Submission).filter_by(id=pid).one_or_none()
 	
 	if not post or not post.url:
 		time.sleep(5)
-		post = db.query(Submission).filter_by(id=pid).first()
+		post = db.query(Submission).filter_by(id=pid).one_or_none()
 
 	if not post or not post.url: return
 	
@@ -776,7 +776,7 @@ def submit_post(v):
 			Submission.url.ilike(url),
 			Submission.deleted_utc == 0,
 			Submission.is_banned == False
-		).first()
+		).one_or_none()
 
 		if repost: return redirect(repost.permalink)
 
@@ -849,7 +849,7 @@ def submit_post(v):
 		Submission.title == title,
 		Submission.url == url,
 		Submission.body == body
-	).first()
+	).one_or_none()
 
 	if dup: return redirect(dup.permalink)
 
@@ -1167,7 +1167,7 @@ def submit_post(v):
 
 		g.db.add(c)
 
-		snappy = g.db.query(User).filter_by(id = SNAPPY_ID).first()
+		snappy = g.db.query(User).filter_by(id = SNAPPY_ID).one_or_none()
 		snappy.comment_count += 1
 		snappy.coins += 1
 		g.db.add(snappy)
@@ -1238,7 +1238,7 @@ def undelete_post_pid(pid, v):
 @validate_formkey
 def toggle_comment_nsfw(cid, v):
 
-	comment = g.db.query(Comment).filter_by(id=cid).first()
+	comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
 	if not comment.author_id == v.id and not v.admin_level > 1: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
@@ -1282,7 +1282,7 @@ def save_post(pid, v):
 
 	post=get_post(pid)
 
-	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
+	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).one_or_none()
 
 	if not save:
 		new_save=SaveRelationship(user_id=v.id, submission_id=post.id, type=1)
@@ -1299,7 +1299,7 @@ def unsave_post(pid, v):
 
 	post=get_post(pid)
 
-	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).first()
+	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).one_or_none()
 
 	if save:
 		g.db.delete(save)
@@ -1311,7 +1311,7 @@ def unsave_post(pid, v):
 @auth_required
 def api_pin_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
+	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 	if post:
 		if v.id != post.author_id: return {"error": "Only the post author's can do that!"}
 		post.is_pinned = not post.is_pinned

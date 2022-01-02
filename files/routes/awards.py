@@ -146,7 +146,7 @@ def buy(v, award):
 	if award == "lootbox":
 		send_repeatable_notification(995, f"@{v.username} bought a lootbox!")
 		for i in [1,2,3,4,5]:
-			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+			thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).one_or_none().id
 			thing += 1
 			award = random.choice(["snow", "gingerbread", "lights", "candycane", "fireplace"])
 			award = AwardRelationship(id=thing, user_id=v.id, kind=award)
@@ -167,7 +167,7 @@ def buy(v, award):
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	else:
-		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+		thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).one_or_none().id
 		thing += 1
 		award = AwardRelationship(id=thing, user_id=v.id, kind=award)
 		g.db.add(award)
@@ -200,12 +200,12 @@ def award_post(pid, v):
 			AwardRelationship.submission_id == None,
 			AwardRelationship.comment_id == None
 		)
-	).first()
+	).one_or_none()
 
 	if not post_award:
 		return {"error": "You don't have that award."}, 404
 
-	post = g.db.query(Submission).filter_by(id=pid).first()
+	post = g.db.query(Submission).filter_by(id=pid).one_or_none()
 
 	if not post:
 		return {"error": "That post doesn't exist."}, 404
@@ -216,7 +216,7 @@ def award_post(pid, v):
 			AwardRelationship.user_id == v.id,
 			AwardRelationship.kind == kind
 		)
-	).first()
+	).one_or_none()
 
 	post_award.submission_id = post.id
 	g.db.add(post_award)
@@ -374,12 +374,12 @@ def award_comment(cid, v):
 			AwardRelationship.submission_id == None,
 			AwardRelationship.comment_id == None
 		)
-	).first()
+	).one_or_none()
 
 	if not comment_award:
 		return {"error": "You don't have that award."}, 404
 
-	c = g.db.query(Comment).filter_by(id=cid).first()
+	c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 
 	if not c:
 		return {"error": "That comment doesn't exist."}, 404
@@ -390,7 +390,7 @@ def award_comment(cid, v):
 			AwardRelationship.user_id == v.id,
 			AwardRelationship.kind == kind
 		)
-	).first()
+	).one_or_none()
 
 	comment_award.comment_id = c.id
 	g.db.add(comment_award)
@@ -547,7 +547,7 @@ def admin_userawards_post(v):
 
 	notify_awards = {}
 
-	latest = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first()
+	latest = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).one_or_none()
 	thing = latest.id
 
 	for key, value in request.values.items():

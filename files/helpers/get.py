@@ -15,7 +15,7 @@ def get_id(username, v=None, graceful=False):
 			User.username.ilike(username),
 			User.original_username.ilike(username)
 			)
-		).first()
+		).one_or_none()
 
 	if not user:
 		if not graceful:
@@ -43,7 +43,7 @@ def get_user(username, v=None, graceful=False):
 			User.username.ilike(username),
 			User.original_username.ilike(username)
 			)
-		).first()
+		).one_or_none()
 
 	if not user:
 		if not graceful: abort(404)
@@ -60,7 +60,7 @@ def get_user(username, v=None, graceful=False):
 					 UserBlock.target_id == v.id
 					 )
 			)
-		).first()
+		).one_or_none()
 
 		user.is_blocking = block and block.user_id == v.id
 		user.is_blocked = block and block.target_id == v.id
@@ -69,12 +69,12 @@ def get_user(username, v=None, graceful=False):
 
 def get_account(id, v=None):
 
-	user = g.db.query(User).filter_by(id = id).first()
+	user = g.db.query(User).filter_by(id = id).one_or_none()
 				
 	if not user:
 		try: id = int(str(id), 36)
 		except: abort(404)
-		user = g.db.query(User).filter_by(id = id).first()
+		user = g.db.query(User).filter_by(id = id).one_or_none()
 		if not user: abort(404)
 
 	if v:
@@ -88,7 +88,7 @@ def get_account(id, v=None):
 					 UserBlock.target_id == v.id
 					 )
 			)
-		).first()
+		).one_or_none()
 
 		user.is_blocking = block and block.user_id == v.id
 		user.is_blocked = block and block.target_id == v.id
@@ -120,7 +120,7 @@ def get_post(i, v=None, graceful=False):
 			isouter=True
 		)
 
-		items=items.first()
+		items=items.one_or_none()
 
 		if not items and not graceful:
 			abort(404)
@@ -130,7 +130,7 @@ def get_post(i, v=None, graceful=False):
 	else:
 		items = g.db.query(
 			Submission
-		).filter(Submission.id == i).first()
+		).filter(Submission.id == i).one_or_none()
 		if not items and not graceful:
 			abort(404)
 		x=items
@@ -201,16 +201,16 @@ def get_comment(i, v=None, graceful=False):
 					 UserBlock.target_id == v.id
 					 )
 			)
-		).first()
+		).one_or_none()
 
 		vts = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id)
-		vt = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).first()
+		vt = g.db.query(CommentVote).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 		comment.is_blocking = block and block.user_id == v.id
 		comment.is_blocked = block and block.target_id == v.id
 		comment.voted = vt.vote_type if vt else 0
 
 	else:
-		comment = g.db.query(Comment).filter(Comment.id == i).first()
+		comment = g.db.query(Comment).filter(Comment.id == i).one_or_none()
 		if not comment and not graceful:abort(404)
 
 	return comment

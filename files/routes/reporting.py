@@ -17,7 +17,7 @@ def api_flag_post(pid, v):
 		reason = request.values.get("reason", "").strip()[:100]
 
 		if not reason.startswith('!'):
-			existing = g.db.query(Flag.id).filter_by(user_id=v.id, post_id=post.id).first()
+			existing = g.db.query(Flag.id).filter_by(user_id=v.id, post_id=post.id).one_or_none()
 			if existing: return "", 409
 
 		reason = filter_emojis_only(reason)
@@ -45,7 +45,7 @@ def api_flag_comment(cid, v):
 	comment = get_comment(cid)
 	
 	if not v.shadowbanned:
-		existing = g.db.query(CommentFlag.id).filter_by( user_id=v.id, comment_id=comment.id).first()
+		existing = g.db.query(CommentFlag.id).filter_by( user_id=v.id, comment_id=comment.id).one_or_none()
 		if existing: return "", 409
 
 		reason = request.values.get("reason", "").strip()[:100]
@@ -68,9 +68,9 @@ def api_flag_comment(cid, v):
 def remove_report(report_fn, v):
 
 	if report_fn.startswith('c'):
-		report = g.db.query(CommentFlag).filter_by(id=int(report_fn.lstrip('c'))).first()
+		report = g.db.query(CommentFlag).filter_by(id=int(report_fn.lstrip('c'))).one_or_none()
 	elif report_fn.startswith('p'):
-		report = g.db.query(Flag).filter_by(id=int(report_fn.lstrip('p'))).first()
+		report = g.db.query(Flag).filter_by(id=int(report_fn.lstrip('p'))).one_or_none()
 	else:
 		return {"error": "Invalid report ID"}, 400
 

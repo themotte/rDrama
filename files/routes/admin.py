@@ -43,7 +43,7 @@ def grassed(v):
 def distribute(v, comment):
 	try: comment = int(comment)
 	except: abort(400)
-	post = g.db.query(Comment).filter_by(id=comment).first().post
+	post = g.db.query(Comment).filter_by(id=comment).one_or_none().post
 
 	pool = 0
 	for option in post.bet_options: pool += option.upvotes
@@ -58,7 +58,7 @@ def distribute(v, comment):
 		u.coins += coinsperperson
 		add_notif(cid, u.id)
 
-	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).first()
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).one_or_none()
 	autobetter.coins -= pool
 	if autobetter.coins < 0: return {"error": "Not enough coins in bool"}, 400
 	g.db.add(autobetter)
@@ -190,7 +190,7 @@ def remove_meme_admin(v, username):
 def monthly(v):
 	if request.host == 'rdrama.net' and v.id != 1: abort (403)
 
-	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
+	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).one_or_none().id
 
 	data = {'access_token': GUMROAD_TOKEN}
 
@@ -625,7 +625,7 @@ def admin_removed_comments(v):
 @admin_level_required(2)
 @validate_formkey
 def agendaposter(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	if user.username == '911roofer': abort(403)
 
@@ -682,7 +682,7 @@ def agendaposter(user_id, v):
 @admin_level_required(2)
 @validate_formkey
 def shadowban(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	if user.admin_level != 0: abort(403)
 	user.shadowbanned = v.username
 	g.db.add(user)
@@ -708,7 +708,7 @@ def shadowban(user_id, v):
 @admin_level_required(2)
 @validate_formkey
 def unshadowban(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	if user.admin_level != 0: abort(403)
 	user.shadowbanned = None
 	user.ban_evade = 0
@@ -735,7 +735,7 @@ def unshadowban(user_id, v):
 @admin_level_required(2)
 @validate_formkey
 def verify(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	user.verified = "Verified"
 	g.db.add(user)
 
@@ -754,7 +754,7 @@ def verify(user_id, v):
 @admin_level_required(2)
 @validate_formkey
 def unverify(user_id, v):
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	user.verified = None
 	g.db.add(user)
 
@@ -775,7 +775,7 @@ def unverify(user_id, v):
 @validate_formkey
 def admin_title_change(user_id, v):
 
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	if user.admin_level != 0: abort(403)
 
@@ -784,7 +784,7 @@ def admin_title_change(user_id, v):
 	user.customtitleplain=new_name
 	new_name = sanitize(new_name)
 
-	user=g.db.query(User).with_for_update().filter_by(id=user.id).first()
+	user=g.db.query(User).with_for_update().filter_by(id=user.id).one_or_none()
 	user.customtitle=new_name
 	if request.values.get("locked"): user.flairchanged = int(time.time()) + 2629746
 	g.db.add(user)
@@ -809,7 +809,7 @@ def admin_title_change(user_id, v):
 @validate_formkey
 def ban_user(user_id, v):
 	
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	if user.admin_level >= v.admin_level: abort(403)
 
@@ -869,7 +869,7 @@ def ban_user(user_id, v):
 @validate_formkey
 def unban_user(user_id, v):
 
-	user = g.db.query(User).filter_by(id=user_id).first()
+	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
 	if not user:
 		abort(400)
@@ -909,7 +909,7 @@ def unban_user(user_id, v):
 @validate_formkey
 def ban_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
+	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post:
 		abort(400)
@@ -946,7 +946,7 @@ def ban_post(post_id, v):
 @validate_formkey
 def unban_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
+	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post:
 		abort(400)
@@ -979,7 +979,7 @@ def unban_post(post_id, v):
 @validate_formkey
 def api_distinguish_post(post_id, v):
 
-	post = g.db.query(Submission).filter_by(id=post_id).first()
+	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
 	if not post:
 		abort(404)
@@ -1100,7 +1100,7 @@ def unsticky_comment(cid, v):
 @validate_formkey
 def api_ban_comment(c_id, v):
 
-	comment = g.db.query(Comment).filter_by(id=c_id).first()
+	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment:
 		abort(404)
 
@@ -1124,7 +1124,7 @@ def api_ban_comment(c_id, v):
 @validate_formkey
 def api_unban_comment(c_id, v):
 
-	comment = g.db.query(Comment).filter_by(id=c_id).first()
+	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment: abort(404)
 	
 	if comment.author.agendaposter and 'trans lives matters' not in comment.body.lower():
@@ -1193,7 +1193,7 @@ def admin_toggle_ban_domain(v):
 
 	reason=request.values.get("reason", "").strip()
 
-	d = g.db.query(BannedDomain).filter_by(domain=domain).first()
+	d = g.db.query(BannedDomain).filter_by(domain=domain).one_or_none()
 	if d:
 		g.db.delete(d)
 		ma = ModAction(
