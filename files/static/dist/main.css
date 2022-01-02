@@ -3659,6 +3659,9 @@ code {
 .dark .dark\:bg-white\/10 {
 	background-color: rgba(255, 255, 255, 0.1);
 }
+.dark .dark\:bg-gray-700\/70 {
+	background-color: rgba(var(--color-700), 0.7);
+}
 .dark .dark\:bg-gray-700\/40 {
 	background-color: rgba(var(--color-700), 0.4);
 }
@@ -3699,6 +3702,10 @@ code {
 .dark .dark\:visited\:text-gray-400:visited {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-400), var(--tw-text-opacity));
+}
+.dark .dark\:visited\:text-gray-300:visited {
+	--tw-text-opacity: 1;
+	color: rgba(var(--color-300), var(--tw-text-opacity));
 }
 .dark .dark\:hover\:bg-white\/10:hover {
 	background-color: rgba(255, 255, 255, 0.1);
