@@ -281,7 +281,8 @@ def searchcomments(v):
 @app.get("/search/users")
 @auth_desired
 def searchusers(v):
-
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
 
 	query = request.values.get("q", '').strip()
 
@@ -302,8 +303,4 @@ def searchusers(v):
 	next_exists=(len(users)>25)
 	users=users[:25]
 	
-	
-	if request.headers.get("Authorization"): return [x.json for x in users]
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}search_users.html", v=v, query=query, total=total, page=page, users=users, sort=sort, t=t, next_exists=next_exists)
