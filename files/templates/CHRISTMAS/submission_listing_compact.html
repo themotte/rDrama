@@ -45,7 +45,7 @@
 	</div>
 {% endif %}
 
-<li id="post-{{p.id}}" class="relative p-2.5 md:py-1 md:px-1 border-b border-gray-300 dark:border-white/[.05] {% if p.is_banned %}bg-red-200{% elif p.deleted_utc %}bg-yellow-200{% else %} md:bg-transparent bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-white/10 dark:md:bg-transparent{% endif %} {% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %} list-none group">
+<li id="post-{{p.id}}" class="relative p-2.5 md:py-1 md:px-2.5 border-b border-gray-300 dark:border-white/[.05] {% if p.is_banned %}bg-red-200{% elif p.deleted_utc %}bg-yellow-200{% else %} md:bg-transparent bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-white/10 dark:md:bg-transparent{% endif %} {% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}{% if p.over_18 %} nsfw{% endif %} list-none group">
 
 	<div class="flex flex-nowrap items-center">
 
