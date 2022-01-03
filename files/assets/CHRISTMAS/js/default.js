@@ -305,6 +305,7 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	modalTitle.textContent = 'New message to ' + recipient
 
 	form.addEventListener("submit", function(event) {
+		console.log('this worked on the first try wtf')
 		button.disabled = true;
 		button.textContent = button.getAttribute('data-bs-loading');
 		submitFormAjax(event);
