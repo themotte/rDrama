@@ -3,9 +3,13 @@ from files.helpers.get import *
 
 from files.__main__ import app, cache
 from files.classes.submission import Submission
+from os import listdir
 
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
+
+if SITE_NAME == 'Drama': num_banners = len(listdir('files/assets/images/Drama/banners')) + 1
+else: num_banners = None
 
 @app.get("/post/")
 def slash_post():
@@ -203,7 +207,7 @@ def front_all(v):
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
+	return render_template(f"{template}home.html", v=v, num_banners=num_banners, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
 
 
