@@ -2,20 +2,20 @@ function initializeBootstrap() {
     // tooltips
     let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function(element){
-        return new bootstrap.Tooltip(element);
+    	return new bootstrap.Tooltip(element);
     });
     // popovers
     let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
     let popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-        let popoverId = popoverTriggerEl.getAttribute('data-content-id');
-        let contentEl = document.getElementById(popoverId);
-        if (contentEl) {
-            return new bootstrap.Popover(popoverTriggerEl, {
-                content: contentEl.innerHTML,
-                html: true,
-                sanitize: false
-            });
-        }
+    	let popoverId = popoverTriggerEl.getAttribute('data-content-id');
+    	let contentEl = document.getElementById(popoverId);
+    	if (contentEl) {
+    		return new bootstrap.Popover(popoverTriggerEl, {
+    			content: contentEl.innerHTML,
+    			html: true,
+    			sanitize: false
+    		});
+    	}
     })
 }
 
@@ -97,14 +97,14 @@ makeQuote = function (form) {
 
 function autoExpand (field) {
 
-				xpos=window.scrollX;
+	xpos=window.scrollX;
 	ypos=window.scrollY;
 
-					field.style.height = 'inherit';
+	field.style.height = 'inherit';
 
-					var computed = window.getComputedStyle(field);
+	var computed = window.getComputedStyle(field);
 
-					var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+	var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
 	+ parseInt(computed.getPropertyValue('padding-top'), 10)
 	+ field.scrollHeight
 	+ parseInt(computed.getPropertyValue('padding-bottom'), 10)
@@ -113,7 +113,7 @@ function autoExpand (field) {
 
 	field.style.height = height + 'px';
 
-				window.scrollTo(xpos,ypos);
+	window.scrollTo(xpos,ypos);
 
 };
 
@@ -131,7 +131,7 @@ function post_toast2(url, button1, button2) {
 
 	if(typeof data === 'object' && data !== null) {
 		for(let k of Object.keys(data)) {
-				form.append(k, data[k]);
+			form.append(k, data[k]);
 		}
 	}
 
@@ -185,7 +185,7 @@ function postToast(url) {
 
 	if(typeof data === 'object' && data !== null) {
 		for(let k of Object.keys(data)) {
-				form.append(k, data[k]);
+			form.append(k, data[k]);
 		}
 	}
 	form.append("formkey", formkey());
@@ -228,23 +228,23 @@ function submitFormAjax(e) {
 	const form = e.target;
 	const xhr = new XMLHttpRequest();
 
-    e.preventDefault();
-    
-    formData = new FormData(form);
+	e.preventDefault();
+
+	formData = new FormData(form);
 
 	formData.append("formkey", formkey());
 	if(typeof data === 'object' && data !== null) {
 		for(let k of Object.keys(data)) {
-				form.append(k, data[k]);
+			form.append(k, data[k]);
 		}
 	}
 	xhr.withCredentials = true;
 
-    actionPath = form.getAttribute("action");
+	actionPath = form.getAttribute("action");
 
-    xhr.open("POST", actionPath, true);
+	xhr.open("POST", actionPath, true);
 
-    xhr.onload = function() {
+	xhr.onload = function() {
 		data = JSON.parse(xhr.response);
 		if (xhr.status >= 200 && xhr.status < 300 && !data["error"]) {
 			try {
@@ -275,9 +275,9 @@ function submitFormAjax(e) {
 		}
 	};
 
-    xhr.send(formData);
+	xhr.send(formData);
 
-    return false
+	return false
 }
 
 function expandDesktopImage(image) {
@@ -291,16 +291,27 @@ const messageModal = document.getElementById('directMessageModal')
 
 // When message modal opens
 messageModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  const button = event.relatedTarget
-  // Extract info from data-bs-* attributes
-  const recipient = button.getAttribute('data-bs-recipient')
-  // Update the modal's content.
-  const modalTitle = messageModal.querySelector('.modal-title')
-  //
-  messageModal.querySelector('form').action = `/@${recipient}/message`
+	// Form that will send the message
+	const form = messageModal.querySelector('form');
+	// Button that triggered the modal
+	const button = event.relatedTarget;
+	// Extract info from data-bs-* attributes
+	const recipient = button.getAttribute('data-bs-recipient');
+	// Update the modal's content.
+	const modalTitle = messageModal.querySelector('.modal-title');
+	// Set our form's action
+	form.action = `/@${recipient}/message`
 
-  modalTitle.textContent = 'New message to ' + recipient
+	modalTitle.textContent = 'New message to ' + recipient
+
+	form.addEventListener("submit", function(event) {
+		button.disabled = true;
+		button.textContent = button.getAttribute('data-bs-loading');
+		submitFormAjax(event);
+	})
+
+
+
 })
 
 // When message modal closes
@@ -310,14 +321,5 @@ messageModal.addEventListener('hidden.bs.modal', function (event) {
   // Clear the message
   modalBodyInput.value = '';
 })
-
-function sendMessage(el) {
-	// Get our input
-	const input = document.getElementById(el)
-	// Extract info from our input
-	const message = input.value;
-	// Send our message
-	postToast(``)
-}
 
 // Send coins
