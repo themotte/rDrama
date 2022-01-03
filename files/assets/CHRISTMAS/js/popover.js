@@ -37,6 +37,7 @@ function userPopover(author) {
 document.addEventListener("click", function(){
     active = document.activeElement.getAttributeNode("class");
     if (!(active && active.nodeValue == "user-name")){
+        window.location.href = active.href;
         let popfix = document.getElementById("popover-fix")
         if (popfix) document.body.removeChild(popfix);
     }
