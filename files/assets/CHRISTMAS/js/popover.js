@@ -1,21 +1,9 @@
 function userPopover(author) {
-    // Button for sending direct messages
-    const button = document.getElementById('popoverMessageButton');
-    // Pass our author (the recipient) to the button
-    button.setAttribute('data-bs-recipient', 'mdo');
-    console.log("in theFunction: ", button);
-    // "re-render" hack
-    button.style.display = 'none';
-    button.style.display = 'block';
-    // kiss my shiny metal ass if this actually works
-    console.log("in theFunction: ", button);
-
-
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
 
     let popover_old = document.getElementsByClassName("popover")[0];
-    let popover_new = document.createElement("DIV");
+    let popover_new = document.createElement("div");
 
     if (popover_old) {
         popover_new.innerHTML = popover_old.outerHTML;
@@ -41,6 +29,17 @@ function userPopover(author) {
   
         document.body.appendChild(popover_new);
         document.body.removeChild(popover_old);
+
+        // Button for sending direct messages
+        const button = document.getElementById('popoverMessageButton');
+        // Pass our author (the recipient) to the button
+        button.setAttribute('data-bs-recipient', 'mdo');
+        console.log("in theFunction: ", button);
+        // "re-render" hack
+        button.style.display = 'none';
+        button.style.display = 'block';
+        // kiss my shiny metal ass if this actually works
+        console.log("in theFunction: ", button);
     }
 }
 
