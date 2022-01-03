@@ -14,8 +14,8 @@ function popovertrigger() {
 
 popovertrigger()
 
-let popover_old = document.getElementsByClassName("popover")[0];
-let popover_new = document.createElement("DIV");
+var popover_old = document.getElementsByClassName("popover")[0];
+var popover_new = document.createElement("DIV");
 
 function userPopover(author) {
     let popfix = document.getElementById("popover-fix")
