@@ -285,7 +285,7 @@ def shadowbanned(v):
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).all()]
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/shadowbanned.html", v=v, users=users)
+	return render_template(f"{template}shadowbanned.html", v=v, users=users)
 
 @app.get("/agendaposters")
 @auth_desired
