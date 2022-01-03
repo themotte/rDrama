@@ -2,7 +2,7 @@ function sort_table(n) {
 		var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
 		table = document.getElementById("sortable_table");
 		switching = true;
-		dir = "asc";
+		dir = "desc";
 		while (switching) {
 			switching = false;
 			rows = table.rows;

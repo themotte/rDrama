@@ -377,7 +377,7 @@ def blocks(v):
 @auth_desired
 def banned(v):
 
-	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).order_by(User.is_banned).all()]
+	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}banned.html", v=v, users=users)

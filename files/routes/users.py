@@ -31,7 +31,7 @@ def grassed(v):
 @app.get("/agendaposters")
 @auth_desired
 def agendaposters(v):
-	users = [x for x in g.db.query(User).filter_by(agendaposter = True).all()]
+	users = [x for x in g.db.query(User).filter_by(agendaposter = True).order_by(User.username).all()]
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}agendaposters.html", v=v, users=users)
