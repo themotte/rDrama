@@ -2694,6 +2694,11 @@ pre {
 .text-small {
     font-size: 12px !important;
 }
+@media (max-width: 767.98px) {
+    .text-small-mobile {
+        font-size: 12px !important;
+    }
+}
 .text-small-extra {
     font-size: 10.1px !important;
 }

@@ -27,6 +27,33 @@ if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 month = datetime.now().strftime('%B')
 
+@app.post("/@<username>/make_admin")
+@limiter.limit("1/second")
+@admin_level_required(3)
+@validate_formkey
+def make_admin(v, username):
+	if request.host == 'rdrama.net': abort(403)
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 2
+	g.db.add(user)
+	g.db.commit()
+	return {"message": "User has been made admin!"}
+
+
+@app.post("/@<username>/remove_admin")
+@limiter.limit("1/second")
+@admin_level_required(3)
+@validate_formkey
+def remove_admin(v, username):
+	if request.host == 'rdrama.net': abort(403)
+	user = get_user(username)
+	if not user: abort(404)
+	user.admin_level = 0
+	g.db.add(user)
+	g.db.commit()
+	return {"message": "Admin removed!"}
+
 
 @app.get("/admin/grassed")
 @admin_level_required(2)
@@ -258,12 +285,11 @@ def shadowbanned(v):
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).all()]
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}shadowbanned.html", v=v, users=users)
+	return render_template(f"{template}admin/shadowbanned.html", v=v, users=users)
 
-@app.get("/admin/agendaposters")
-@auth_required
+@app.get("/agendaposters")
+@auth_desired
 def agendaposters(v):
-	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter_by(agendaposter = True).all()]
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -404,8 +430,9 @@ def badge_grant_post(v):
 
 	g.db.add(new_badge)
 	
-	text = f"@{v.username} has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
-	send_notification(user.id, text)	
+	if v.id != user.id:
+		text = f"@{v.username} has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
+		send_notification(user.id, text)
 	
 	g.db.commit()
 	return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, msg="Badge granted!")

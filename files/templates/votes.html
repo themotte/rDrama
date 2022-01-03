@@ -19,20 +19,20 @@
 <p><b>Downvotes: </b>{{downs | length}}</p>
 
 <h2>Upvotes</h2>
-<div class="overflow-x-auto"><table class="table table-striped mb-5">
+<div class="overflow-x-auto"><table class="table table-striped mb-5 text-small-mobile">
 	<thead class="bg-primary text-white"><tr><th>User</th></tr></thead>
 
 	{% for vote in ups %}
-		<tr><td><a style="color:#{{vote.user.namecolor}};font-weight:bold" href="/@{{vote.user.username}}"><img alt="@{{vote.user.username}}'s profile picture" loading="lazy" src="/uid/{{vote.user.id}}/pic" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}};"{% endif %}>{{vote.user.username}}</span></a></td></tr>
+		<tr><td><a style="color:#{{vote.user.namecolor}};font-weight:bold" href="/@{{vote.user.username}}"><img alt="@{{vote.user.username}}'s profile picture" loading="lazy" src="/uid/{{vote.user.id}}/pic" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}}"{% endif %}>{{vote.user.username}}</span></a></td></tr>
 	{% endfor %}
 </table>
 
 <h2>Downvotes</h2>
-<div class="overflow-x-auto"><table class="table table-striped mb-5">
+<div class="overflow-x-auto"><table class="table table-striped mb-5 text-small-mobile">
 	<thead class="bg-primary text-white"><tr><th>User</th></tr></thead>
 
 	{% for vote in downs %}
-		<tr><td><a style="color:#{{vote.user.namecolor}};  font-weight:bold;" href="/@{{vote.user.username}}"><img alt="@{{vote.user.username}}'s profile picture" loading="lazy" src="/uid/{{vote.user.id}}/pic" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}};"{% endif %}>{{vote.user.username}}</span></a></td></tr>
+		<tr><td><a style="color:#{{vote.user.namecolor}};  font-weight:bold;" href="/@{{vote.user.username}}"><img alt="@{{vote.user.username}}'s profile picture" loading="lazy" src="/uid/{{vote.user.id}}/pic" class="pp20"><span {% if vote.user.patron %}class="patron" style="background-color:#{{vote.user.namecolor}}"{% endif %}>{{vote.user.username}}</span></a></td></tr>
 	{% endfor %}
 </table>
 

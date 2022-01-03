@@ -1,7 +1,7 @@
 {% extends "settings2.html" %}
 
 {% block content %}
-<div class="overflow-x-auto"><table class="table table-striped mb-5">
+<div class="overflow-x-auto"><table class="table table-striped mb-5 text-small-mobile">
 <thead class="bg-primary text-white">
 	<tr>
 		<th style="font-weight:bold;">#</th>
@@ -12,7 +12,7 @@
 {% for u in users %}
 	<tr>
 		<td style="font-weight:bold;">{{loop.index}}</td>
-		<td><a style="color:#{{u.namecolor}};  font-weight:bold;" href="/@{{u.username}}"><img alt="@{{u.username}}'s profile picture" loading="lazy" src="{{u.profile_url}}" class="pp20"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}};"{% endif %}>{{u.username}}</span></a></td>
+		<td><a style="color:#{{u.namecolor}};  font-weight:bold;" href="/@{{u.username}}"><img alt="@{{u.username}}'s profile picture" loading="lazy" src="{{u.profile_url}}" class="pp20"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span></a></td>
 
 		<td><img alt="Patron-{{u.patron}}" loading="lazy" width=32 height=32 src="/static/assets/images/badges/Patron-{{u.patron}}.webp?a=3"></td>
 	</tr>

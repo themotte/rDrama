@@ -389,8 +389,6 @@ def get_reset():
 
 	user_id = request.values.get("id")
 
-	if user_id == PW_ID: abort(403)
-
 	timestamp = int(request.values.get("time",0))
 	token = request.values.get("token")
 
@@ -425,8 +423,6 @@ def post_reset(v):
 	if v: return redirect('/')
 
 	user_id = request.values.get("user_id")
-
-	if user_id == PW_ID: abort(403)
 
 	timestamp = int(request.values.get("time"))
 	token = request.values.get("token")

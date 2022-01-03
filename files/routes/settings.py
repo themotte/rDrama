@@ -580,8 +580,6 @@ def verifiedcolor(v):
 @validate_formkey
 def settings_security_post(v):
 	if request.values.get("new_password"):
-		if v.id == PW_ID: abort(403)
-
 		if request.values.get("new_password") != request.values.get("cnf_password"):
 			return render_template("settings_security.html", v=v, error="Passwords do not match.")
 
@@ -633,8 +631,6 @@ def settings_security_post(v):
 		return render_template("settings_security.html", v=v, error="Check your email and click the verification link to complete the email change.")
 
 	if request.values.get("2fa_token"):
-		if v.id == PW_ID: abort(403)
-
 		if not v.verifyPass(request.values.get('password')):
 			return render_template("settings_security.html", v=v, error="Invalid password or token.")
 
