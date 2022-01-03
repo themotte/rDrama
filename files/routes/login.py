@@ -186,7 +186,7 @@ def sign_up_get(v):
 		ref_user = None
 
 	if ref_user and (ref_user.id in session.get("history", [])):
-		return render_template(f"sign_up_failed_ref.html")
+		return render_template("sign_up_failed_ref.html")
 
 	now = int(time.time())
 	token = token_hex(16)
@@ -201,7 +201,7 @@ def sign_up_get(v):
 
 	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
 
-	return render_template(f"sign_up.html",
+	return render_template("sign_up.html",
 						   formkey=formkey,
 						   now=now,
 						   redirect=redir,
