@@ -248,9 +248,9 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 })
 
 // When message modal closes
-messageModal.addEventListener('hide.bs.modal', function (event) {
+messageModal.addEventListener('hidden.bs.modal', function (event) {
   // Message input box
-  const modalInput = messageModal.querySelector('.direct-message-input')
+  const modalBodyInput = messageModal.querySelector('.modal-body textarea')
   // Clear the message
   modalInput.value = '';
 })
