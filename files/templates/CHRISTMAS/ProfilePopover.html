@@ -39,15 +39,17 @@
 			</a>
 		</div>
 
+		{% if v %}
 		<!-- Actionable buttons -->
 		<div class="flex items-center space-x-2 absolute top-2 right-3">
-			<a href="#" class="btn btn-gray">
+			<a href="#" class="btn btn-gray" data-bs-toggle="modal" data-bs-target="#giftCoinsModal">
 				<i class="fas fa-gift fa-fw fa-sm"></i>
 			</a>
-			<a href="#" class="btn btn-gray">
+			<a href="#" class="btn btn-gray" data-bs-toggle="modal" data-bs-target="#directMessageModal">
 				<i class="fas fa-paper-plane fa-fw fa-sm mr-2"></i>
 				Message
 			</a>
 		</div>
+		{% endif %}
 	</div>
 </div>
