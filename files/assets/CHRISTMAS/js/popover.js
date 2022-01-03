@@ -1,15 +1,22 @@
 function userPopover(author) {
+    // Button for sending direct messages
+    const button = document.getElementById('popoverMessageButton');
+    // Pass our author (the recipient) to the button
+    button.value = 'test bullshit'
+    // button.setAttribute('data-bs-recipient', 'mdo')
+
+
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
 
     let popover_old = document.getElementsByClassName("popover")[0];
-    let popover_new = document.createElement("div");
+    let popover_new = document.createElement("DIV");
 
     if (popover_old) {
         popover_new.innerHTML = popover_old.outerHTML;
         popover_new.id = "popover-fix";
     }
-
+  
     let badges = ''
     for (const x of author["badges"]) {
         badges += `<img alt="badge" class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="${x}">`
@@ -26,7 +33,7 @@ function userPopover(author) {
         popover_new.getElementsByClassName('pop-viewmore')[0].href = author["url"]
         popover_new.getElementsByClassName('pop-badges')[0].innerHTML = badges
         popover_new.getElementsByClassName('pop-uid')[0].innerHTML = author["id"]
-
+  
         document.body.appendChild(popover_new);
         document.body.removeChild(popover_old);
     }
@@ -37,15 +44,5 @@ document.addEventListener("click", function(){
     if (!(active && active.nodeValue == "user-name")){
         let popfix = document.getElementById("popover-fix")
         if (popfix) document.body.removeChild(popfix);
-
-    // Button for sending direct messages
-    const buttonWrapper = document.getElementById('popoverWrapper');
-    // Pass our author (the recipient) to the button
-    let btn = document.createElement("button");
-    btn.innerHTML = "Submit";
-    btn.type = "submit";
-    btn.name = "formBtn";
-    btn.setAttribute('data-bs-recipient', 'mdo');
-    buttonWrapper.appendChild(btn);
-}
+    }
 });
