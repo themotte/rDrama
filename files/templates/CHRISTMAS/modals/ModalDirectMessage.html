@@ -8,7 +8,8 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<form id="message" action="" method="post" enctype="multipart/form-data">
+				<!-- Form action loaded by JS -->
+				<form id="message" action="" method="post" enctype="multipart/form-data" onsubmit="submitFormAjax(event)">
 					<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 					<div class="relative rounded border border-gray-300 dark:border-gray-900 bg-white dark:bg-white/[.05] w-full"> 
 						<textarea maxlength="1000" id="direct-message-input" name="message" form="message" class="rounded-t bg-transparent p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Write your message..." rows="3"></textarea>

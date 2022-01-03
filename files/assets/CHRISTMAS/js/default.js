@@ -224,6 +224,61 @@ function postToast(url) {
 	xhr.send(form);
 }
 
+function submitFormAjax(e) {
+	var xhr = new XMLHttpRequest();
+
+    e.preventDefault();
+    
+    formData = new FormData(form);
+
+	formData.append("formkey", formkey());
+	if(typeof data === 'object' && data !== null) {
+		for(let k of Object.keys(data)) {
+				form.append(k, data[k]);
+		}
+	}
+	xhr.withCredentials = true;
+
+    actionPath = form.getAttribute("action");
+
+    xhr.open("POST", actionPath, true);
+
+    xhr.onload = function() {
+		data = JSON.parse(xhr.response);
+		if (xhr.status >= 200 && xhr.status < 300 && !data["error"]) {
+			try {
+				document.getElementById('toast-post-success-text').innerText = data["message"];
+			} catch(e) {
+				document.getElementById('toast-post-success-text').innerText = "Action successful!";
+			}
+			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			myToast.show();
+			return true
+		} else if (xhr.status >= 300 && xhr.status < 400) {
+			window.location.href = JSON.parse(xhr.response)["redirect"]
+		} else {
+			try {
+				data=JSON.parse(xhr.response);
+
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.show();
+				document.getElementById('toast-post-error-text').innerText = data["error"];
+				return false
+			} catch(e) {
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				myToast.hide();
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.show();
+				return false
+			}
+		}
+	};
+
+    xhr.send(formData);
+
+    return false
+}
+
 function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image").src = image.replace("200w_d.webp", "giphy.webp");
 	document.getElementById("desktop-expanded-image-link").href = image;
@@ -254,5 +309,14 @@ messageModal.addEventListener('hidden.bs.modal', function (event) {
   // Clear the message
   modalBodyInput.value = '';
 })
+
+function sendMessage(el) {
+	// Get our input
+	const input = document.getElementById(el)
+	// Extract info from our input
+	const message = input.value;
+	// Send our message
+	postToast(``)
+}
 
 // Send coins
