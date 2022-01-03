@@ -2,29 +2,30 @@
 	<div class="modal-dialog modal-dialog-centered mx-auto max-w-xl" role="document">
 		<div class="modal-content mx-auto max-w-xl bg-gray-100 dark:bg-gray-700 rounded-md shadow-lg">
 			<div class="modal-header">
-				<h5 class="font-bold text-xl font-heading leading-normal">Send message to @{{u.username}}</h5>
+				<h5 class="modal-title font-bold text-xl font-heading leading-normal">Send message</h5>
 				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
 				</button>
 			</div>
 			<div class="modal-body">
-				<form id="message" action="/@{{u.username}}/message" method="post" enctype="multipart/form-data">
+				<!-- Form action loaded by JS -->
+				<form id="message">
 					<input type="hidden" name="formkey" value="{{v.formkey}}"> 
 					<div class="relative rounded border border-gray-300 dark:border-gray-900 bg-white dark:bg-white/[.05] w-full"> 
-						<textarea maxlength="1000" id="input-message" name="message" form="message" class="rounded-t bg-transparent p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Write your message..." rows="3"></textarea>
+						<textarea maxlength="1000" id="direct-message-input" name="message" form="message" class="rounded-t bg-transparent p-2 shadow-inner w-full" aria-label="With textarea" placeholder="Write your message..." rows="3"></textarea>
 						<ul class="-mt-1 flex space-x-4 px-3 py-2 border-t border-dashed border-gray-300 dark:border-white/[.05] mb-0">
 							<li>
-								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('input-message')">
+								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeBold('direct-message-input')">
 									<i class="fas fa-bold fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Bold"></i>
 								</button>
 							</li>
 							<li>
-								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('input-message')">
+								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeItalics('direct-message-input')">
 									<i class="fas fa-italic fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Italicize"></i>
 								</button>
 							</li>
 							<li>
-								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('input-message')">
+								<button type="button" class="text-gray-400 hover:text-gray-500" onclick="makeQuote('direct-message-input')">
 									<i class="fas fa-quote-right fa-fw fa-sm" data-bs-toggle="tooltip" data-bs-placement="bottom"  title="" data-bs-original-title="Quote"></i>
 								</button>
 							</li>

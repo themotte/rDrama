@@ -250,7 +250,7 @@
 }
 
 .theme-evergreen {
-	--color-primary: 220, 38, 38;
+	--color-primary: 87,138,157;
 	--color-100: 244,246,244;
 	--color-200: 229,235,231;
 	--color-300: 209,219,213;
@@ -275,220 +275,214 @@
 	--color-900: 40,31,17;
 }
 
-/* ----------------------- VARIABLES --------------------- */
-/*:root {
-	--color-primary: 220, 38, 38;
-	}*/
-
-	/* ---------------- RESPONSIVE UTILITIES ----------------- */
-	@responsive {
-		.text-shadow {
-			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.12)
-		}
-		.text-shadow-t {
-			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12)
-		}
-		.text-shadow-light {
-			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1)
-		}
-		.text-shadow-light-t {
-			text-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1)
-		}
-		.sub-header-shadow {
-			box-shadow: 0 1px 0 rgba(255, 255, 255, 0.10) inset, -1px -1px 0.5px rgba(17, 40, 19, 0.1) inset;
-		}
-		.gradient-mask {
-			-webkit-mask-image: linear-gradient(180deg,#000 60%,transparent); mask-image: linear-gradient(180deg,#000 60%,transparent)
-		}
-		/* Chrome, Safari and Opera */
-		.no-scrollbar::-webkit-scrollbar {
-			display: none;
-		}
-		.no-scrollbar {
-			-ms-overflow-style: none;  /* IE and Edge */
-			scrollbar-width: none;  /* Firefox */
-		}
+/* ---------------- RESPONSIVE UTILITIES ----------------- */
+@responsive {
+	.text-shadow {
+		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.12)
 	}
-
-	/* -------------------- BASE STYLING -------------------- */
-	@layer base {
-		/* Headings */
-		h1, .h1 {
-			@apply text-5xl font-bold leading-10 mb-2;
-		}
-		h2, .h2 {
-			@apply text-4xl font-bold leading-8 mb-2;
-		}
-		h3, .h3 {
-			@apply text-3xl font-bold leading-7 mb-2;
-		}
-		h4, .h4 {
-			@apply text-2xl font-bold leading-6 mb-2;
-		}
-		h5, .h5 {
-			@apply text-lg font-bold leading-5 mb-2;
-		}
-		h6, .h6 {
-			@apply text-base font-bold leading-4 mb-2;
-		}
-		/* Typography */
-		p {
-			@apply mb-3 last:mb-0;
-		}
-		a {
-			@apply text-primary break-all
-		}
-		blockquote {
-			@apply bg-gray-100 dark:bg-gray-700 border-l-2 border-gray-700 dark:border-gray-500 mb-4;
-		}
-		hr {
-			@apply my-3
-		}
-		ul {
-			@apply mb-3
-		}
-		.comment-text > ul, .post-text > ul, .prose > ul {
-			@apply list-disc pl-5
-		}
-		.comment-text > ol, .post-text > ol, .prose > ol {
-			@apply list-decimal pl-5
-		}
-		strong {
-			@apply font-bold
-		}
-		code {
-			@apply text-pink-600 dark:text-pink-300 font-mono;
-		}
-		pre {
-			white-space: pre-wrap;       /* Since CSS 2.1 */
-			white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-			white-space: -pre-wrap;      /* Opera 4-6 */
-			white-space: -o-pre-wrap;    /* Opera 7 */
-			word-wrap: break-word;       /* Internet Explorer 5.5+ */
-		}
-		/* Images */
-		img {
-			@apply inline
-		}
-		img[lazy=loading] {
-			@apply animate-pulse;
-		}
-		img[width], img[height] {
-			max-width: none;
-			height: 24px;
-		}
-		/*Inputs*/
-		.label {
-			@apply block font-bold text-gray-700 dark:text-gray-500 text-sm leading-normal mb-1;
-		}
+	.text-shadow-t {
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12)
 	}
-
-	/* ----------------------- INPUTS ----------------------- */
-	.form-input {
-		@apply text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-white dark:bg-white/[.06] border border-gray-300 hover:border-gray-400 dark:border-gray-900 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
+	.text-shadow-light {
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1)
 	}
-
-	/* ---------------------- BUTTONS ----------------------- */
-	.btn {
-		@apply inline-block px-4 py-2 active:shadow-inner border rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold focus:outline-none disabled:opacity-50;
+	.text-shadow-light-t {
+		text-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1)
 	}
-	.btn-primary {
-		@apply bg-white bg-gradient-to-t from-primary to-primary/80 hover:from-primary/90 hover:to-primary border-black/10 text-gray-100 focus:text-gray-200;
+	.sub-header-shadow {
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.10) inset, -1px -1px 0.5px rgba(17, 40, 19, 0.1) inset;
 	}
-	.btn-red {
-		@apply bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 border-red-900 text-gray-100 focus:text-white;
+	.gradient-mask {
+		-webkit-mask-image: linear-gradient(180deg,#000 60%,transparent); mask-image: linear-gradient(180deg,#000 60%,transparent)
 	}
-	.btn-green {
-		@apply bg-gradient-to-t from-green-700 to-green-600 hover:from-green-600 hover:to-green-700 border-green-900 text-gray-100 focus:text-gray-200;
+	/* Chrome, Safari and Opera */
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
 	}
-	.btn-blue {
-		@apply bg-gradient-to-t from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-700 border-blue-900 text-gray-100 focus:text-gray-200;
+	.no-scrollbar {
+		-ms-overflow-style: none;  /* IE and Edge */
+		scrollbar-width: none;  /* Firefox */
 	}
-	.btn-yellow {
-		@apply bg-gradient-to-t from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 border-yellow-900 text-gray-100 focus:text-gray-200;
-	}
-	.btn-purple {
-		@apply bg-gradient-to-t from-purple-700 to-purple-600 hover:from-purple-600 hover:to-purple-700 border-purple-900 text-gray-100 focus:text-gray-200;
-	}
-	.btn-pink {
-		@apply bg-gradient-to-t from-pink-700 to-pink-600 hover:from-pink-600 hover:to-pink-700 border-pink-900 text-gray-100 focus:text-gray-200;
-	}
-	.btn-black {
-		@apply bg-white bg-gradient-to-t from-black to-black/80 hover:from-black/90 hover:to-black border-black/10 text-gray-100 focus:text-gray-200;
-	}
-	.btn-gray {
-		@apply bg-gradient-to-t from-gray-200 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-700 focus:text-gray-900;
-	}
-
-	/* ---------------------- DROPDOWNS --------------------- */
-	.dropdown-item-primary {
-		@apply block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white dark:hover:bg-black bg-gradient-to-t dark:bg-gradient-to-t hover:from-primary hover:to-primary/80 dark:hover:from-primary/80 dark:hover:to-primary hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-b dark:focus:bg-gradient-to-t;
-	}
-
-	/* ---------------------- NAV TABS ---------------------- */
-	.nav.nav-tabs .nav-link {
-		@apply border-b-2 border-transparent
-	}
-	.nav.nav-tabs .nav-link.active {
-		@apply border-primary
-	}
-
-	/* ----------------------- BADGES ----------------------- */
-	.badge {
-		@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded bg-gradient-to-t;
-	}
-	.badge-pink {
-		@apply from-pink-600 to-pink-500 text-white;
-	}
-	.badge-purple {
-		@apply from-purple-600 to-purple-500 text-white;
-	}
-	.badge-red {
-		@apply from-red-600 to-red-500 text-white;
-	}
-	.badge-yellow {
-		@apply from-yellow-600 to-yellow-500 text-yellow-900;
-	}
-	.badge-blue {
-		@apply from-blue-600 to-blue-500 text-white;
-	}
-	.badge-green {
-		@apply from-green-600 to-green-500 text-white;
-	}
-	.badge-primary {
-		@apply bg-primary text-white;
-	}
-	.patron {
-		@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded;
-	}
-
-	/* ---------------------- TOOLTIPS ---------------------- */
-	.tooltip-inner {
-		background-color: @apply text-black;
-		color: @apply text-white;
-	}
-
-	/* ----------------------- EMOJI ------------------------ */
-	img.emoji {
-		width: 30px;
-		height: 30px;
-		@apply inline-block object-contain
-	}
-
-	img.emoji-md {
-		width: 60px;
-		height: 60px;
-		@apply inline-block object-contain
-	}
-
-	img.emoji-lg {
-		max-width: 100%;
-		@apply inline-block object-contain
-	}
-
-.agendaposter {
-	text-transform: uppercase !important;
 }
-code {
-    text-transform: none !important;
+
+/* -------------------- BASE STYLING -------------------- */
+@layer base {
+	/* Headings */
+	h1, .h1 {
+		@apply text-5xl font-bold leading-10 mb-2;
+	}
+	h2, .h2 {
+		@apply text-4xl font-bold leading-8 mb-2;
+	}
+	h3, .h3 {
+		@apply text-3xl font-bold leading-7 mb-2;
+	}
+	h4, .h4 {
+		@apply text-2xl font-bold leading-6 mb-2;
+	}
+	h5, .h5 {
+		@apply text-lg font-bold leading-5 mb-2;
+	}
+	h6, .h6 {
+		@apply text-base font-bold leading-4 mb-2;
+	}
+	/* Typography */
+	p {
+		@apply mb-3 last:mb-0;
+	}
+	a {
+		@apply text-primary break-all
+	}
+	blockquote {
+		@apply bg-gray-100 dark:bg-gray-700 border-l-2 border-gray-700 dark:border-gray-500 mb-4;
+	}
+	hr {
+		@apply my-3
+	}
+	ul {
+		@apply mb-3
+	}
+	.comment-text > ul, .post-text > ul, .prose > ul {
+		@apply list-disc pl-5
+	}
+	.comment-text > ol, .post-text > ol, .prose > ol {
+		@apply list-decimal pl-5
+	}
+	strong {
+		@apply font-bold
+	}
+	code {
+		@apply text-pink-600 dark:text-pink-300 font-mono;
+	}
+	pre {
+		white-space: pre-wrap;       /* Since CSS 2.1 */
+		white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+		white-space: -pre-wrap;      /* Opera 4-6 */
+		white-space: -o-pre-wrap;    /* Opera 7 */
+		word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	}
+	/* Images */
+	img {
+		@apply inline
+	}
+	img[lazy=loading] {
+		@apply animate-pulse;
+	}
+	img[width], img[height] {
+		max-width: none;
+		height: 24px;
+	}
+	/*Inputs*/
+	.label {
+		@apply block font-bold text-gray-700 dark:text-gray-500 text-sm leading-normal mb-1;
+	}
 }
+
+/* ----------------------- INPUTS ----------------------- */
+.form-input {
+	@apply text-lg sm:text-base appearance-none block w-full rounded shadow-inner p-2 bg-white dark:bg-white/[.06] border border-gray-300 hover:border-gray-400 dark:border-gray-900 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
+}
+
+/* ---------------------- BUTTONS ----------------------- */
+.btn {
+	@apply inline-block px-4 py-2 active:shadow-inner border rounded-md text-shadow-t shadow-inset-t-white-10 text-sm font-bold focus:outline-none disabled:opacity-50;
+}
+.btn-primary {
+	@apply bg-white bg-gradient-to-t from-primary to-primary/80 hover:from-primary/90 hover:to-primary border-black/10 text-gray-100 focus:text-gray-200;
+}
+.btn-red {
+	@apply bg-gradient-to-t from-red-700 to-red-600 hover:from-red-600 hover:to-red-700 border-red-900 text-gray-100 focus:text-white;
+}
+.btn-green {
+	@apply bg-gradient-to-t from-green-700 to-green-600 hover:from-green-600 hover:to-green-700 border-green-900 text-gray-100 focus:text-gray-200;
+}
+.btn-blue {
+	@apply bg-gradient-to-t from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-700 border-blue-900 text-gray-100 focus:text-gray-200;
+}
+.btn-yellow {
+	@apply bg-gradient-to-t from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 border-yellow-900 text-gray-100 focus:text-gray-200;
+}
+.btn-purple {
+	@apply bg-gradient-to-t from-purple-700 to-purple-600 hover:from-purple-600 hover:to-purple-700 border-purple-900 text-gray-100 focus:text-gray-200;
+}
+.btn-pink {
+	@apply bg-gradient-to-t from-pink-700 to-pink-600 hover:from-pink-600 hover:to-pink-700 border-pink-900 text-gray-100 focus:text-gray-200;
+}
+.btn-black {
+	@apply bg-white bg-gradient-to-t from-black to-black/80 hover:from-black/90 hover:to-black border-black/10 text-gray-100 focus:text-gray-200;
+}
+.btn-gray {
+	@apply bg-gradient-to-t from-gray-200 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-gray-300 text-gray-700 focus:text-gray-900;
+}
+
+/* ---------------------- DROPDOWNS --------------------- */
+.dropdown-item-primary {
+	@apply block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white dark:hover:bg-black bg-gradient-to-t dark:bg-gradient-to-t hover:from-primary hover:to-primary/80 dark:hover:from-primary/80 dark:hover:to-primary hover:shadow-inner focus:shadow-inner focus:bg-gradient-to-b dark:focus:bg-gradient-to-t;
+}
+
+/* ---------------------- NAV TABS ---------------------- */
+.nav.nav-tabs .nav-link {
+	@apply border-b-2 border-transparent
+}
+.nav.nav-tabs .nav-link.active {
+	@apply border-primary
+}
+
+/* ----------------------- BADGES ----------------------- */
+.badge {
+	@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded bg-gradient-to-t;
+}
+.badge-pink {
+	@apply from-pink-600 to-pink-500 text-white;
+}
+.badge-purple {
+	@apply from-purple-600 to-purple-500 text-white;
+}
+.badge-red {
+	@apply from-red-600 to-red-500 text-white;
+}
+.badge-yellow {
+	@apply from-yellow-600 to-yellow-500 text-yellow-900;
+}
+.badge-blue {
+	@apply from-blue-600 to-blue-500 text-white;
+}
+.badge-green {
+	@apply from-green-600 to-green-500 text-white;
+}
+.badge-primary {
+	@apply bg-primary text-white;
+}
+.patron {
+	@apply px-1 py-0.5 text-sm text-shadow-light font-bold leading-normal rounded;
+}
+
+/* ---------------------- TOOLTIPS ---------------------- */
+.tooltip-inner {
+	background-color: @apply text-black;
+	color: @apply text-white;
+}
+
+/* ---------------------- POPOVER ----------------------- */
+.popover {
+	@apply rounded-md w-96 shadow-lg overflow-hidden border-none bg-gray-100 dark:bg-gray-900;
+}
+
+/* ----------------------- EMOJI ------------------------ */
+img.emoji {
+	width: 30px;
+	height: 30px;
+	@apply inline-block object-contain
+}
+
+img.emoji-md {
+	width: 60px;
+	height: 60px;
+	@apply inline-block object-contain
+}
+
+img.emoji-lg {
+	max-width: 100%;
+	@apply inline-block object-contain
+}
+
