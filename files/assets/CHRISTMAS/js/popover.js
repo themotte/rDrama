@@ -1,4 +1,9 @@
 function userPopover(author) {
+    // Button for sending direct messages
+    const button = document.getElementById('popoverMessageButton');
+    // Pass our author (the recipient) to the button
+    button.setAttribute('data-bs-recipient', 'mdo')
+
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
 
@@ -30,13 +35,6 @@ function userPopover(author) {
         document.body.appendChild(popover_new);
         document.body.removeChild(popover_old);
     }
-
-    // Button for sending direct messages
-    const button = document.getElementById('popoverMessageButton');
-    // Pass our author (the recipient) to the button
-    console.log(button.innerHTML)
-    // Wait for next event loop cycle
-    setTimeout(() => {button.bsRecipient = 'mdo'}, 0);
 }
 
 document.addEventListener("click", function(){
