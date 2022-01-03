@@ -254,8 +254,10 @@ function submitFormAjax(e, success, error) {
 			}
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 			myToast.show();
-			// Run success function
-			success()
+			setTimeout(() => {
+				const modal = new bootstrap.Modal(messageModal);
+				modal.hide();
+			}, 200);
 			return true
 		} else if (xhr.status >= 300 && xhr.status < 400) {
 			window.location.href = JSON.parse(xhr.response)["redirect"]
@@ -312,11 +314,10 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	// Hide our modal if message is sent
 	const success = () => {
 		submit.textContent = 'Sent!';
-		setTimeout(() => {
-			const container = document.getElementById("directMessageModal");
-      		const modal = new bootstrap.Modal(container);
-			modal.hide();
-		}, 200);
+		// setTimeout(() => {
+  //     		const modal = new bootstrap.Modal(messageModal);
+		// 	modal.hide();
+		// }, 200);
 	};
 	// Enable button if message does not send
 	const error = () => {
