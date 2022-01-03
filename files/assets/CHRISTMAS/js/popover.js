@@ -36,7 +36,7 @@ function userPopover(author) {
     // Pass our author (the recipient) to the button
     console.log(button.innerHTML)
     // Wait for next event loop cycle
-    setTimeout(() => {button.setAttribute('data-bs-recipient', 'username'); console.log('holy shit it works')}, 0);
+    setTimeout(() => {button.bsRecipient = 'mdo'}, 0);
 }
 
 document.addEventListener("click", function(){
