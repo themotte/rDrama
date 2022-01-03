@@ -252,7 +252,7 @@ messageModal.addEventListener('hidden.bs.modal', function (event) {
   // Message input box
   const modalBodyInput = messageModal.querySelector('.modal-body textarea')
   // Clear the message
-  modalInput.value = '';
+  modalBodyInput.value = '';
 })
 
 // Send coins
