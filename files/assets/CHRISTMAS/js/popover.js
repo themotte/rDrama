@@ -1,14 +1,19 @@
 function userPopover(author) {
     // Button for sending direct messages
-    const button = document.getElementById('popoverMessageButton');
+    const buttonWrapper = document.getElementById('popoverWrapper');
     // Pass our author (the recipient) to the button
-    button.setAttribute('data-bs-recipient', 'mdo')
+    let btn = document.createElement("button");
+    btn.innerHTML = "Submit";
+    btn.type = "submit";
+    btn.name = "formBtn";
+    btn.setAttribute('data-bs-recipient', 'mdo');
+    buttonWrapper.appendChild(btn);
 
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
 
     let popover_old = document.getElementsByClassName("popover")[0];
-    let popover_new = document.createElement("DIV");
+    let popover_new = document.createElement("div");
 
     if (popover_old) {
         popover_new.innerHTML = popover_old.outerHTML;
