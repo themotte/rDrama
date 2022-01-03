@@ -400,11 +400,12 @@ def message2(v, username):
 	user = get_user(username, v=v)
 	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
 
-	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked: return {"error": "This user is blocking you."}, 403
+	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
+		return {"error": "This user is blocking you."}, 403
 
 	message = request.values.get("message", "").strip()[:1000].strip()
 
-	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
+	if 'linkedin.com' in message: return {"error": "This domain 'linkedin.com' is banned."}, 403
 
 	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
 
@@ -416,7 +417,8 @@ def message2(v, username):
 															Comment.sentto == user.id,
 															Comment.body_html == text_html,
 															).one_or_none()
-	if existing: return redirect('/notifications?messages=true')
+
+	if existing: return {"error": "Message already exists."}, 403
 
 	new_comment = Comment(author_id=v.id,
 						  parent_submission=None,
@@ -451,7 +453,7 @@ def message2(v, username):
 
 	g.db.commit()
 
-	return redirect(f"/@{username}")
+	return {"message": "Message sent!"}
 
 
 @app.post("/reply")
