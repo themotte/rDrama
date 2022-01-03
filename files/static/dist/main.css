@@ -1401,6 +1401,11 @@ video {
 	margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
 	margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
 }
+.space-x-1 > :not([hidden]) ~ :not([hidden]) {
+	--tw-space-x-reverse: 0;
+	margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+	margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
+}
 .space-x-3 > :not([hidden]) ~ :not([hidden]) {
 	--tw-space-x-reverse: 0;
 	margin-right: calc(0.75rem * var(--tw-space-x-reverse));
@@ -3814,11 +3819,6 @@ img.emoji-lg {
 	color: rgba(var(--color-400), var(--tw-text-opacity));
 }
 
-.dark .dark\:visited\:text-gray-300:visited {
-	--tw-text-opacity: 1;
-	color: rgba(var(--color-300), var(--tw-text-opacity));
-}
-
 .dark .dark\:hover\:bg-white\/10:hover {
 	background-color: rgba(255, 255, 255, 0.1);
 }
@@ -4196,9 +4196,14 @@ img.emoji-lg {
 		padding-bottom: 0.25rem;
 	}
 
-	.md\:px-1 {
-		padding-left: 0.25rem;
-		padding-right: 0.25rem;
+	.md\:px-2\.5 {
+		padding-left: 0.625rem;
+		padding-right: 0.625rem;
+	}
+
+	.md\:px-2 {
+		padding-left: 0.5rem;
+		padding-right: 0.5rem;
 	}
 
 	.md\:px-5 {
