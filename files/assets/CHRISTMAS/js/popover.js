@@ -48,11 +48,9 @@ function userPopover(author) {
 }
 
 document.addEventListener("click", function(){
-    console.log('running click')
     active = document.activeElement.getAttributeNode("class");
     if (!(active && active.nodeValue == "user-name")){
         let popfix = document.getElementById("popover-fix")
         if (popfix) document.body.removeChild(popfix);
-        console.log('running click 2')
     }
 });
