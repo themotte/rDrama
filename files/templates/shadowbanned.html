@@ -3,12 +3,13 @@
 {% block content %}
 <script src="/static/assets/js/sort_table.js?a=2"></script>
 
-<div class="overflow-x-auto"><table class="table table-striped mb-5 text-small-mobile">
+<div class="overflow-x-auto">
+<table id="sortable_table" class="table table-striped mb-5 text-small-mobile">
 <thead class="bg-primary text-white">
 	<tr>
 		<th style="font-weight:bold;">#</th>
-		<th onclick="sort_table(1)" style="font-weight:bold;">Name</th>
-		<th onclick="sort_table(2)" style="font-weight:bold;">Shadowbanned by</th>
+		<th role="button" onclick="sort_table(1)" style="font-weight:bold;">Name</th>
+		<th role="button" onclick="sort_table(2)" style="font-weight:bold;">Shadowbanned by</th>
 	</tr>
 </thead>
 {% for user in users %}

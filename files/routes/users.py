@@ -18,6 +18,25 @@ site = environ.get("DOMAIN").strip()
 beams_client = PushNotifications(instance_id=PUSHER_INSTANCE_ID, secret_key=PUSHER_KEY)
 
 
+
+@app.get("/grassed")
+@auth_desired
+def grassed(v):
+	users = g.db.query(User).filter(User.ban_reason.like('grass award used by @%')).all()
+
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}grassed.html", v=v, users=users)
+
+@app.get("/agendaposters")
+@auth_desired
+def agendaposters(v):
+	users = [x for x in g.db.query(User).filter_by(agendaposter = True).all()]
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+	return render_template(f"{template}agendaposters.html", v=v, users=users)
+
+
 @app.get("/@<username>/upvoters")
 @auth_desired
 def upvoters(v, username):

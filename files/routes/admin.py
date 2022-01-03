@@ -54,16 +54,6 @@ def remove_admin(v, username):
 	g.db.commit()
 	return {"message": "Admin removed!"}
 
-
-@app.get("/admin/grassed")
-@admin_level_required(2)
-def grassed(v):
-	users = g.db.query(User).filter(User.ban_reason.like('grass award used by @%')).all()
-
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}grassed.html", v=v, users=users)
-
 @app.post("/distribute/<comment>")
 @limiter.limit("1/second")
 @admin_level_required(3)
@@ -286,14 +276,6 @@ def shadowbanned(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}shadowbanned.html", v=v, users=users)
-
-@app.get("/agendaposters")
-@auth_desired
-def agendaposters(v):
-	users = [x for x in g.db.query(User).filter_by(agendaposter = True).all()]
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}agendaposters.html", v=v, users=users)
 
 
 @app.get("/admin/image_posts")
