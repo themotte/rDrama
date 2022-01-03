@@ -18,10 +18,14 @@ function userPopover(author) {
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
 
-    var popover_old = document.getElementsByClassName("popover")[0];
-    var popover_new = document.createElement("DIV");
-    popover_new.innerHTML = popover_old.outerHTML;
-    popover_new.id = "popover-fix";
+    try {
+        var popover_old = document.getElementsByClassName("popover")[0];
+        var popover_new = document.createElement("DIV");
+        popover_new.innerHTML = popover_old.outerHTML;
+        popover_new.id = "popover-fix";
+    } catch (error) {
+        console.error(error);
+    }
   
     let badges = ''
     for (const x of author["badges"]) {
