@@ -47,11 +47,16 @@ function userPopover(author) {
         document.body.removeChild(popover_old);
     }
 
-    // Button and modal for sending direct messages
-    const messageModal = document.getElementById('directMessageModal');
+    const messageModal = new bootstrap.Modal(document.getElementById('directMessageModal'));
+
+    // Button for sending direct messages
     const messageButton = document.getElementById('popoverMessageButton');
     // Pass our author (the recipient) to the button
     messageButton.dataset.bsRecipient = author["username"];
+
+    messageButton.addEventListener("click", function(){
+        messageModal.show()
+    }
 }
 
 document.addEventListener("click", function(){
