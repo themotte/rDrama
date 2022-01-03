@@ -35,7 +35,8 @@ function userPopover(author) {
     const button = document.getElementById('popoverMessageButton');
     // Pass our author (the recipient) to the button
     console.log(button.innerHTML)
-    button.setAttribute('data-bs-recipient', 'username')
+    // Wait for next event loop cycle
+    setTimeout(() => {button.setAttribute('data-bs-recipient', 'username')}, 0);
 }
 
 document.addEventListener("click", function(){
