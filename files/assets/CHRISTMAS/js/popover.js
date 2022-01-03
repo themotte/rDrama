@@ -15,7 +15,6 @@ function popovertrigger() {
 popovertrigger()
 
 function userPopover(author) {
-    console.log(author)
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
 
@@ -47,6 +46,12 @@ function userPopover(author) {
         document.body.appendChild(popover_new);
         document.body.removeChild(popover_old);
     }
+
+    // Button and modal for sending direct messages
+    const messageModal = document.getElementById('directMessageModal');
+    const messageButton = document.getElementById('popoverMessageButton');
+    // Pass our author (the recipient) to the button
+    messageButton.dataset.bsRecipient = author["username"];
 }
 
 document.addEventListener("click", function(){

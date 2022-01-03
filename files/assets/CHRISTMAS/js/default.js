@@ -204,3 +204,20 @@ function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image-link").href = image;
 	document.getElementById("desktop-expanded-image-wrap-link").href=image;
 };
+
+// Send Direct Message
+const messageModal = document.getElementById('directMessageModal')
+messageModal.addEventListener('show.bs.modal', function (event) {
+  // Button that triggered the modal
+  const button = event.relatedTarget
+  // Extract info from data-bs-* attributes
+  const recipient = button.getAttribute('data-bs-recipient')
+  // Update the modal's content.
+  const modalTitle = messageModal.querySelector('.modal-title')
+  //
+  messageModal.querySelector('form').action = `/@${recipient}/message`
+
+  modalTitle.textContent = 'New message to ' + recipient
+})
+
+// Send coins
