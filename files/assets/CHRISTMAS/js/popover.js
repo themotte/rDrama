@@ -31,10 +31,10 @@ function userPopover(author) {
         document.body.removeChild(popover_old);
     }
 
-    // Button and modal for sending direct messages
-    const messageButton = document.getElementById('popoverMessageButton');
+    // Button for sending direct messages
+    const button = document.getElementById('popoverMessageButton');
     // Pass our author (the recipient) to the button
-    messageButton.setAttribute("data-bs-recipient", author["username"])
+    button.setAttribute('data-bs-recipient', 'username')
 }
 
 document.addEventListener("click", function(){
