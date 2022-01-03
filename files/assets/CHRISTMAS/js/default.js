@@ -313,6 +313,7 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	const success = () => {
 		submit.textContent = 'Sent!';
 		setTimeout(() => {
+			console.log('closing message modal')
 			const modal = new bootstrap.Modal(messageModal);
 			modal.hide();
 		}, 200);
