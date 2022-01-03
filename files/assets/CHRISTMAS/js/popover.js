@@ -28,7 +28,7 @@ function userPopover(author) {
   
     let badges = ''
     for (const x of author["badges"]) {
-        badges += `<img alt="badge" width="32" loading="lazy" src="${x}">`
+        badges += `<img alt="badge" class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="${x}">`
     }
 
     if (popover_old) {
