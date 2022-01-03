@@ -14,8 +14,12 @@ function expandDesktopImage(image) {
 	document.getElementById("desktop-expanded-image").src = image.replace("200w_d.webp", "giphy.webp");
 	document.getElementById("desktop-expanded-image-link").href = image;
 	document.getElementById("desktop-expanded-image-wrap-link").href=image;
+    history.pushState(null, null, '#modal');
 };
 
+document.getElementById('expandImageModal').addEventListener('hidden.bs.modal', function (event) {
+    window.location.hash = "";
+});
 
 function popovertrigger() {
     const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
