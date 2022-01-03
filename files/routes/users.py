@@ -126,7 +126,7 @@ def downvoting(v, username):
 @auth_required
 @validate_formkey
 def pay_rent(v):
-	if v.coins < 500: return {"error","You must have more than 500 coins."}
+	if v.coins < 500: return {"error":"You must have more than 500 coins."}
 	v.coins -= 500
 	v.rent_utc = int(time.time())
 	g.db.add(v)
