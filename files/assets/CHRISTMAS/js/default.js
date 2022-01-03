@@ -313,7 +313,7 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	const success = () => {
 		submit.textContent = 'Sent!';
 		setTimeout(() => {
-			new bootstrap.Modal(messageModal).hide()
+			messageModal.hide()
 		}, 400);
 	};
 	// Enable button if message does not send
