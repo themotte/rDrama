@@ -19,13 +19,14 @@ for k, val in result.items():
 
 del result
 
-topmakers = {}
-for k, val in marseys.items():
-	if val in topmakers: topmakers[val] += 1
-	else: topmakers[val] = 1
+if SITE == 'rdrama.net':
+	topmakers = {}
+	for k, val in marseys.items():
+		if val in topmakers: topmakers[val] += 1
+		else: topmakers[val] = 1
 
-topmakers.pop('unknown')
-topmakers = sorted(topmakers.items(), key=lambda x: x[1], reverse=True)[:25]
+	topmakers.pop('unknown')
+	topmakers = sorted(topmakers.items(), key=lambda x: x[1], reverse=True)[:25]
 
 AJ_REPLACEMENTS = {
 	' your ': " you're ",
