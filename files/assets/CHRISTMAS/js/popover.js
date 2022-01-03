@@ -32,7 +32,7 @@ function userPopover(author) {
         badges += `<img alt="badge" width="32" loading="lazy" src="${x}">`
     }
 
-    if (popover_old !== 'undefined') {
+    if (popover_new !== 'undefined') {
         popover_new.getElementsByClassName('pop-banner')[0].src = author["bannerurl"]
         popover_new.getElementsByClassName('pop-picture')[0].src = author["profile_url"]
         popover_new.getElementsByClassName('pop-username')[0].innerHTML = author["username"]
