@@ -265,13 +265,13 @@ function submitFormAjax(e, success, error) {
 				// var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				// myToast.show();
 				// document.getElementById('toast-post-error-text').innerText = data["error"];
-				return false
+				// return false
 			} catch(e) {
 				// var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 				// myToast.hide();
 				// var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				// myToast.show();
-				return false
+				// return false
 			}
 			// Run error function
 			if (error) error()
@@ -280,7 +280,7 @@ function submitFormAjax(e, success, error) {
 
 	xhr.send(formData);
 
-	return false
+	// return false
 }
 
 function expandDesktopImage(image) {
