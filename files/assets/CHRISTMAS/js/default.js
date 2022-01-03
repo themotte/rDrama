@@ -245,8 +245,8 @@ function submitFormAjax(e, success, error) {
 	xhr.open("POST", actionPath, true);
 
 	xhr.onload = function() {
-		data = JSON.parse(xhr.response);
 		if (xhr.status >= 200 && xhr.status < 300 && !data["error"]) {
+			data = JSON.parse(xhr.response);
 			try {
 				document.getElementById('toast-post-success-text').innerText = data["message"];
 			} catch(e) {
@@ -262,7 +262,6 @@ function submitFormAjax(e, success, error) {
 		} else {
 			try {
 				data=JSON.parse(xhr.response);
-
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = data["error"];
