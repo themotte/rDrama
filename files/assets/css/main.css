@@ -421,7 +421,6 @@ pre code {
     padding: 0.75rem;
     vertical-align: top;
     border-top: 1px solid var(--gray-400);
-    white-space: nowrap !important;
 }
 .table thead th {
     vertical-align: bottom;
@@ -4754,4 +4753,7 @@ lite-youtube.lyt-activated > .lty-playbtn {
 
 .overflow-x-auto {
     overflow-x: auto !important;
+}
+table {
+    white-space: nowrap !important;
 }
