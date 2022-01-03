@@ -88,7 +88,7 @@
 		  
 		<div class="w-full overflow-x-hidden md:overflow-x-visible">
 
-			<div class="relative z-10 no-scrollbar overflow-y-hidden overflow-x-auto inline-flex items-center space-x-2 text-sm text-gray-500 leading-normal mb-1 {% if p.award_count('ghosts') %}ghosts{% endif %}">
+			<div class="relative z-10 no-scrollbar overflow-y-hidden overflow-x-auto inline-flex items-center space-x-2 text-sm text-gray-500 leading-normal mb-0.5 {% if p.award_count('ghosts') %}ghosts{% endif %}">
 
 				<div class="relative flex-shrink-0">
 					<img loading="lazy" src="{{ p.author.profile_url }}" class="flex-shrink-0 w-5 h-5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 object-cover" alt="{{ p.author.username }} avatar"/>
