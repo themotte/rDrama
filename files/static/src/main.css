@@ -465,7 +465,7 @@
 
 /* ---------------------- POPOVER ----------------------- */
 .popover {
-	@apply rounded-md w-96 shadow-lg overflow-hidden border-none bg-gray-100 dark:bg-gra-900;
+	@apply rounded-md w-96 shadow-lg overflow-hidden border-none bg-gray-100 dark:bg-gray-900;
 }
 
 /* ----------------------- EMOJI ------------------------ */
