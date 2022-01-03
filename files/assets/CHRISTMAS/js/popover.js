@@ -56,7 +56,7 @@ function userPopover(author) {
 
     messageButton.addEventListener("click", function(){
         messageModal.show()
-    }
+    });
 }
 
 document.addEventListener("click", function(){
