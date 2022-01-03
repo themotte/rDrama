@@ -35,7 +35,7 @@ function userPopover(author) {
     if (popover_old) {
         popover_new.getElementsByClassName('pop-banner')[0].src = author["bannerurl"]
         popover_new.getElementsByClassName('pop-picture')[0].src = author["profile_url"]
-        popover_new.getElementsByClassName('pop-uid')[0].src = author["id"]
+        popover_new.getElementsByClassName('pop-uid')[0].src = 'test bullshit'
         popover_new.getElementsByClassName('pop-username')[0].innerHTML = author["username"]
         popover_new.getElementsByClassName('pop-bio')[0].innerHTML = author["bio_html"]
         popover_new.getElementsByClassName('pop-postcount')[0].innerHTML = author["post_count"]
