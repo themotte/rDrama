@@ -1,53 +1,50 @@
-function eventasdf(value){
-    var content_id = value.getAttributeNode("data-content-id").value;
-    value.addEventListener("click", function(){jhkj(content_id)});
+function popovertrigger() {
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+        const popoverId = popoverTriggerEl.getAttribute('data-content-id');
+        const contentEl = document.getElementById(popoverId);
+        if (contentEl) {
+            return new bootstrap.Popover(popoverTriggerEl, {
+                content: contentEl.innerHTML,
+                html: true,
+            });
+        }
+    })
 }
 
-function checkIfBussy(){
-    if (document.getElementById("bussy") != null){
-        document.body.removeChild(document.getElementById("bussy"));
-    }
-}
+popovertrigger()
 
-function dfgh(e){
-    active = document.activeElement;
-    if (active.getAttributeNode("class") == null || active.getAttributeNode("class").nodeValue != "user-name"){
-        checkIfBussy();
-    }
-}
+function popclick(author) {
+    let popfix = document.getElementById("popover-fix")
+    if (popfix) document.body.removeChild(popfix);
 
-function jhkj(value){
-    checkIfBussy();
-    var popover_shit = document.getElementsByClassName("popover")[0];
-    var uiop = document.createElement("DIV");
-
-    uiop.innerHTML = popover_shit.outerHTML;
-    uiop.id = "bussy";
-
-    document.body.appendChild(uiop);
-    document.body.removeChild(popover_shit);
-}
-
-var usernames = document.querySelectorAll("a.user-name");
-usernames.forEach(eventasdf);
-
-document.addEventListener("click", function(e){dfgh(e)});
-
-
-function userPopover(author) {
+    var popover_old = document.getElementsByClassName("popover")[0];
+    var popover_new = document.createElement("DIV");
+    popover_new.innerHTML = popover_old.outerHTML;
+    popover_new.id = "popover-fix";
+  
     let badges = ''
     for (const x of author["badges"]) {
-        badges += `<img class="flex-shrink-0 w-8 h-8 object-contain transform transition-100 hover:scale-[1.15]" loading="lazy" src="${x}"/>`
+        badges += `<img alt="badge" width="32" loading="lazy" src="${x}">`
     }
-    for (let i = 0; i < document.getElementsByClassName('pop-banner').length; i++) {
-        document.getElementsByClassName('pop-banner')[i].src = author["bannerurl"]
-        document.getElementsByClassName('pop-picture')[i].src = author["profile_url"]
-        document.getElementsByClassName('pop-username')[i].innerHTML = author["username"]
-        document.getElementsByClassName('pop-bio')[i].innerHTML = author["bio_html"]
-        document.getElementsByClassName('pop-postcount')[i].innerHTML = author["post_count"]
-        document.getElementsByClassName('pop-commentcount')[i].innerHTML = author["comment_count"]
-        document.getElementsByClassName('pop-coins')[i].innerHTML = author["coins"]
-        document.getElementsByClassName('pop-viewmore')[i].href = author["url"]
-        document.getElementsByClassName('pop-badges')[i].innerHTML = badges
-    }
+    popover_new.getElementsByClassName('pop-banner')[0].src = author["bannerurl"]
+    popover_new.getElementsByClassName('pop-picture')[0].src = author["profile_url"]
+    popover_new.getElementsByClassName('pop-username')[0].innerHTML = author["username"]
+    popover_new.getElementsByClassName('pop-bio')[0].innerHTML = author["bio_html"]
+    popover_new.getElementsByClassName('pop-postcount')[0].innerHTML = author["post_count"]
+    popover_new.getElementsByClassName('pop-commentcount')[0].innerHTML = author["comment_count"]
+    popover_new.getElementsByClassName('pop-coins')[0].innerHTML = author["coins"]
+    popover_new.getElementsByClassName('pop-viewmore')[0].href = author["url"]
+    popover_new.getElementsByClassName('pop-badges')[0].innerHTML = badges
+  
+    document.body.appendChild(popover_new);
+    document.body.removeChild(popover_old);
 }
+
+document.addEventListener("click", function(){
+    active = document.activeElement.getAttributeNode("class");
+    if (!(active && active.nodeValue == "user-name")){
+        let popfix = document.getElementById("popover-fix")
+        if (popfix) document.body.removeChild(popfix);
+    }
+});
