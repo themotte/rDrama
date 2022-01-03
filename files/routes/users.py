@@ -281,7 +281,7 @@ def leaderboard(v):
 	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
 	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
 
-	if 'pcmemes.net' == request.host: users6 = users.order_by(User.basedcount.desc()).limit(10).all()
+	if request.host == 'pcmemes.net': users6 = users.order_by(User.basedcount.desc()).limit(10).all()
 	else: users6 = None
 		
 	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
@@ -304,7 +304,7 @@ def leaderboard(v):
 	for user in users11: users12.append((user, badges[user.id]))
 	users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
 
-	if True: users13 = topmakers
+	if request.host == 'rdrama.net': users13 = topmakers
 	else: users13 = None
 
 	return render_template(f"{template}leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9, users10=users10, users12=users12, users13=users13)
