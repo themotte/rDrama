@@ -280,7 +280,7 @@ function submitFormAjax(e, success, error) {
 
 	xhr.send(formData);
 
-	// return false
+	return false
 }
 
 function expandDesktopImage(image) {
