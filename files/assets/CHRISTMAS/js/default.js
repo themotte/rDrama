@@ -232,6 +232,8 @@ function expandDesktopImage(image) {
 
 // Send Direct Message
 const messageModal = document.getElementById('directMessageModal')
+
+// When message modal opens
 messageModal.addEventListener('show.bs.modal', function (event) {
   // Button that triggered the modal
   const button = event.relatedTarget
@@ -243,6 +245,14 @@ messageModal.addEventListener('show.bs.modal', function (event) {
   messageModal.querySelector('form').action = `/@${recipient}/message`
 
   modalTitle.textContent = 'New message to ' + recipient
+})
+
+// When message modal closes
+messageModal.addEventListener('hide.bs.modal', function (event) {
+  // Message input box
+  const modalInput = messageModal.querySelector('.direct-message-input')
+  // Clear the message
+  modalInput.value = '';
 })
 
 // Send coins
