@@ -47,17 +47,11 @@ function userPopover(author) {
         document.body.removeChild(popover_old);
     }
 
-    const messageModal = new bootstrap.Modal(document.getElementById('directMessageModal'));
-
-    // Button for sending direct messages
+    // Button and modal for sending direct messages
+    const messageModal = document.getElementById('directMessageModal');
     const messageButton = document.getElementById('popoverMessageButton');
     // Pass our author (the recipient) to the button
     messageButton.dataset.bsRecipient = author["username"];
-
-    messageButton.addEventListener("click", function() {
-        console.log('it clicks!');
-        messageModal.show()
-    }​);​
 }
 
 document.addEventListener("click", function(){
