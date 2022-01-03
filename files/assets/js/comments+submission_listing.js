@@ -18,7 +18,7 @@ function expandDesktopImage(image) {
 };
 
 document.getElementById('expandImageModal').addEventListener('hidden.bs.modal', function (event) {
-    window.location.hash = "";
+    history.back();
 });
 
 function popovertrigger() {
