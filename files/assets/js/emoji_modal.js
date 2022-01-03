@@ -213,7 +213,7 @@ const EMOJIS_STRINGS = [
 			"marseyandmarcus": {"author":"unknown", "tags":"bed sleeping cuddling cuddle marseyismywaifu"},
 			"marseyanime": {"author":"altaccountumbreon", "tags":"sayian weeb"},
 			"marseyannoyed": {"author":"jellyfishjam", "tags":"pissed irritation reaction annoyance angry mad irritated stfu grr"},
-			"marseyanticarp": {"author":"unknown", "tags":"reaction fish carpathianflorist"},
+			"marseyanticarp": {"author":"uraniumdonger", "tags":"reaction fish carpathianflorist"},
 			"marseyantiwork": {"author":"chiobu", "tags":"lazy laze bum unemployed animated"},
 			"marseyaoc": {"author":"altaccountumbreon", "tags":"latina latino hispanic cortez mexican puerto rican ocasio congress alexandria"},
 			"marseyargentina": {"author":"killthekaiser", "tags":"south america argentinian sudamericano"},

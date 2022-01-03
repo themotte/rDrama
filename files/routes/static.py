@@ -42,7 +42,7 @@ def participation_stats(v):
 	day = now - 86400
 
 	data = {"marseys": len(marseys),
-			"valid_users": g.db.query(User.id).count(),
+			"users": g.db.query(User.id).count(),
 			"private_users": g.db.query(User.id).filter_by(is_private=True).count(),
 			"banned_users": g.db.query(User.id).filter(User.is_banned > 0).count(),
 			"verified_email_users": g.db.query(User.id).filter_by(is_activated=True).count(),
