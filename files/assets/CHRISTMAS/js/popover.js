@@ -54,10 +54,10 @@ function userPopover(author) {
     messageButton.dataset.bsRecipient = author["username"];
 }
 
-document.addEventListener("click", function(){
-    active = document.activeElement.getAttributeNode("class");
-    if (!(active && active.nodeValue == "user-name")){
-        let popfix = document.getElementById("popover-fix")
-        if (popfix) document.body.removeChild(popfix);
-    }
-});
+// document.addEventListener("click", function(){
+//     active = document.activeElement.getAttributeNode("class");
+//     if (!(active && active.nodeValue == "user-name")){
+//         let popfix = document.getElementById("popover-fix")
+//         if (popfix) document.body.removeChild(popfix);
+//     }
+// });
