@@ -322,7 +322,7 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 		submit.disabled = false;
 		submit.textContent = 'Try again';
 	};
-	// Subit our form
+	// Submit our form
 	form.addEventListener("submit", function(event) {
 		submit.disabled = true;
 		submit.textContent = 'Sending';
@@ -339,7 +339,7 @@ messageModal.addEventListener('hidden.bs.modal', function (event) {
 	// Clear the message
 	modalBodyInput.value = '';
 	// Reset the submit button state and text
-	submit.disabled = true;
+	submit.disabled = false;
 	submit.textContent = 'Send';
 })
 
