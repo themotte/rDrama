@@ -4018,6 +4018,10 @@ img.emoji-lg {
 		height: 5rem;
 	}
 
+	.md\:h-16 {
+		height: 4rem;
+	}
+
 	.md\:h-12 {
 		height: 3rem;
 	}
@@ -4040,6 +4044,10 @@ img.emoji-lg {
 
 	.md\:w-64 {
 		width: 16rem;
+	}
+
+	.md\:w-24 {
+		width: 6rem;
 	}
 
 	.md\:w-1\/2 {
