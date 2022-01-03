@@ -245,7 +245,7 @@ function submitFormAjax(e, success, error) {
 	xhr.open("POST", actionPath, true);
 
 	xhr.onload = function() {
-		if (xhr.status >= 200 && xhr.status < 300 && !data["error"]) {
+		if (xhr.status >= 200 && xhr.status < 300) {
 			data = JSON.parse(xhr.response);
 			try {
 				document.getElementById('toast-post-success-text').innerText = data["message"];
