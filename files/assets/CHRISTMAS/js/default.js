@@ -224,7 +224,7 @@ function postToast(url) {
 	xhr.send(form);
 }
 
-function submitFormAjax(e) {
+function submitFormAjax(e, success, error) {
 	const form = e.target;
 	const xhr = new XMLHttpRequest();
 
@@ -254,6 +254,8 @@ function submitFormAjax(e) {
 			}
 			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 			myToast.show();
+			// Run success function
+			success()
 			return true
 		} else if (xhr.status >= 300 && xhr.status < 400) {
 			window.location.href = JSON.parse(xhr.response)["redirect"]
@@ -272,6 +274,8 @@ function submitFormAjax(e) {
 				myToast.show();
 				return false
 			}
+			// Run error function
+			error()
 		}
 	};
 
@@ -303,17 +307,20 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	const modalTitle = messageModal.querySelector('.modal-title');
 	// Set our form's action
 	form.action = `/@${recipient}/message`
-
+	// Set our modal header text
 	modalTitle.textContent = 'New message to ' + recipient
+
+	// Function if message is sent
+	const success = () => console.log('message sent');
+	// Function if message does not send (fails)
+	const error = () => console.log('message failed to send');
 
 	form.addEventListener("submit", function(event) {
 		console.log('this worked on the first try wtf')
 		submit.disabled = true;
 		submit.textContent = submit.getAttribute('data-bs-loading');
-		submitFormAjax(event);
+		submitFormAjax(event, success, error);
 	})
-
-
 
 })
 
