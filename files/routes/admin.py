@@ -272,7 +272,7 @@ def post_sidebar(v):
 @auth_required
 def shadowbanned(v):
 	if not (v and v.admin_level > 1): abort(404)
-	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).all()]
+	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}shadowbanned.html", v=v, users=users)

@@ -19,6 +19,8 @@ for k, val in result.items():
 
 del result
 
+marseys = dict(sorted(marseys.items(), key=lambda x: x[1]))
+
 if SITE == 'rdrama.net':
 	topmakers = {}
 	for k, val in marseys.items():
