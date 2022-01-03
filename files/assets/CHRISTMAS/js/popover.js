@@ -15,6 +15,7 @@ function popovertrigger() {
 popovertrigger()
 
 function userPopover(author) {
+    console.log(author)
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
 
