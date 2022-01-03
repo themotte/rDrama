@@ -252,7 +252,7 @@ function submitFormAjax(e, success, error) {
 			} catch(e) {
 				document.getElementById('toast-post-success-text').innerText = "Action successful!";
 			}
-			const myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			let myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 			myToast.show();
 			// Run success function
 			success()
@@ -264,14 +264,14 @@ function submitFormAjax(e, success, error) {
 			error()
 			try {
 				data=JSON.parse(xhr.response);
-				const myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				let myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 				return false
 			} catch(e) {
-				const myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				let myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 				myToast.hide();
-				const myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				let myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				myToast.show();
 				return false
 			}
