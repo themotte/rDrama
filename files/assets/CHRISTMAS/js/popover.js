@@ -2,8 +2,8 @@ function userPopover(author) {
     // Button for sending direct messages
     const button = document.getElementById('popoverMessageButton');
     // Pass our author (the recipient) to the button
-    button.value = 'test bullshit'
-    // button.setAttribute('data-bs-recipient', 'mdo')
+    button.setAttribute('data-bs-recipient', 'mdo');
+    console.log("in theFunction: ", button);
 
 
     let popfix = document.getElementById("popover-fix")
