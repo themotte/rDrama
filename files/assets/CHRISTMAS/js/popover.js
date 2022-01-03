@@ -27,7 +27,7 @@ function userPopover(author) {
         popover_new.getElementsByClassName('pop-badges')[0].innerHTML = badges
         popover_new.getElementsByClassName('pop-uid')[0].innerHTML = author["id"]
 
-        popover_new.getElementsById('popoverMessageButton').setAttribute('data-bs-recipient', 'mdo')
+        popover_new.getElementById('popoverMessageButton').setAttribute('data-bs-recipient', 'mdo')
         console.log(button)
 
         document.body.appendChild(popover_new);
