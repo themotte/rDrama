@@ -252,7 +252,7 @@ function submitFormAjax(e, success, error) {
 			} catch(e) {
 				document.getElementById('toast-post-success-text').innerText = "Action successful!";
 			}
-			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			const myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 			myToast.show();
 			// Run success function
 			success()
@@ -264,14 +264,14 @@ function submitFormAjax(e, success, error) {
 			error()
 			try {
 				data=JSON.parse(xhr.response);
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				const myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				myToast.show();
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 				return false
 			} catch(e) {
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				const myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
 				myToast.hide();
-				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				const myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				myToast.show();
 				return false
 			}
@@ -311,7 +311,10 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 
 	// Hide our modal if message is sent
 	const success = () => {
-		new bootstrap.Modal(messageModal).hide()
+		submit.textContent = 'Sent!';
+		setTimeout(() => {
+			new bootstrap.Modal(messageModal).hide()
+		}, 400);
 	};
 	// Enable button if message does not send
 	const error = () => {
