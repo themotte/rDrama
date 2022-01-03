@@ -293,6 +293,8 @@ const messageModal = document.getElementById('directMessageModal')
 messageModal.addEventListener('show.bs.modal', function (event) {
 	// Form that will send the message
 	const form = messageModal.querySelector('form');
+	// Button that submits the form
+	const submit = messageModal.querySelector('[type=submit]');
 	// Button that triggered the modal
 	const button = event.relatedTarget;
 	// Extract info from data-bs-* attributes
@@ -306,8 +308,8 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 
 	form.addEventListener("submit", function(event) {
 		console.log('this worked on the first try wtf')
-		button.disabled = true;
-		button.textContent = button.getAttribute('data-bs-loading');
+		submit.disabled = true;
+		submit.textContent = submit.getAttribute('data-bs-loading');
 		submitFormAjax(event);
 	})
 
