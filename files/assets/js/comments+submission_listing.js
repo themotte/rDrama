@@ -17,8 +17,18 @@ function expandDesktopImage(image) {
     history.pushState(null, null, '#modal');
 };
 
-document.getElementById('expandImageModal').addEventListener('hidden.bs.modal', function (event) {
-    history.back();
+window.addEventListener("hashchange",  function (e) {
+    if(window.location.hash != "#modal") {
+        const expandImageModal = document.querySelector('#expandImageModal');
+        const modal = bootstrap.Modal.getInstance(expandImageModal);    
+        modal.hide();
+    }
+});
+
+document.getElementById('expandImageModal').addEventListener('hidden.bs.modal', function (e) {
+    if(window.location.hash == "#modal") {
+        history.back();
+    }
 });
 
 function popovertrigger() {
