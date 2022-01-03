@@ -54,10 +54,10 @@ function userPopover(author) {
     // Pass our author (the recipient) to the button
     messageButton.dataset.bsRecipient = author["username"];
 
-    messageButton.addEventListener("click", function(){
+    messageButton.addEventListener("click", function() {
         console.log('it clicks!');
         messageModal.show()
-    });
+    }​);​
 }
 
 document.addEventListener("click", function(){
