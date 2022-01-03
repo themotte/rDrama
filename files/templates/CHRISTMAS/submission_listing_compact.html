@@ -117,6 +117,11 @@
 				</span>
 				{% endif %}
 
+				<button id="popoverMessageButton" class="btn btn-gray">
+					<i class="fas fa-paper-plane fa-fw fa-sm mr-2"></i>
+					Message
+				</button>
+
 				{% if not p.award_count('ghosts') %}
 				<span class="flex-shrink-0">
 					<a class="user-name" onclick='userPopover({{p.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" href="javascript:void(0)" tabindex="0" style="color: #{{p.author.namecolor}};">
