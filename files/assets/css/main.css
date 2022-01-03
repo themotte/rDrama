@@ -421,6 +421,7 @@ pre code {
     padding: 0.75rem;
     vertical-align: top;
     border-top: 1px solid var(--gray-400);
+    white-space: nowrap !important;
 }
 .table thead th {
     vertical-align: bottom;
@@ -2693,11 +2694,6 @@ pre {
 }
 .text-small {
     font-size: 12px !important;
-}
-@media (max-width: 767.98px) {
-    table {
-        font-size: 11px !important;
-    }
 }
 .text-small-extra {
     font-size: 10.1px !important;
