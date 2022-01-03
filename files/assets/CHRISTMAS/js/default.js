@@ -313,8 +313,7 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	const success = () => {
 		submit.textContent = 'Sent!';
 		setTimeout(() => {
-			console.log('closing modal')
-			const modal = bootstrap.Modal.getOrCreateInstance(messageModal) // Returns a Bootstrap modal instance
+			const modal = bootstrap.Modal.getOrCreateInstance(messageModal) // Bootstrap modal instance
 			modal.hide();
 		}, 200);
 	};
@@ -325,20 +324,23 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	};
 	// Subit our form
 	form.addEventListener("submit", function(event) {
-		console.log('this worked on the first try wtf')
 		submit.disabled = true;
 		submit.textContent = 'Sending';
 		submitFormAjax(event, success, error);
 	})
-
 })
 
 // When message modal closes
 messageModal.addEventListener('hidden.bs.modal', function (event) {
-  // Message input box
-  const modalBodyInput = messageModal.querySelector('.modal-body textarea')
-  // Clear the message
-  modalBodyInput.value = '';
+	// Button that submits the form
+	const submit = messageModal.querySelector('[type=submit]');
+	// Message input box
+	const modalBodyInput = messageModal.querySelector('.modal-body textarea')
+	// Clear the message
+	modalBodyInput.value = '';
+	// Reset the submit button state and text
+	submit.disabled = true;
+	submit.textContent = 'Send';
 })
 
 // Send coins
