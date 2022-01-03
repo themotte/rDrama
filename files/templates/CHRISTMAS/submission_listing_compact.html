@@ -49,7 +49,7 @@
 
 	<div class="flex flex-nowrap items-center">
 
-		<div class="relative z-10 hidden md:flex flex-col flex-shrink-0 items-center mr-4" style="width: 80px;">
+		<div class="relative z-10 hidden md:flex flex-col flex-shrink-0 items-center mr-4" style="width: 72px;">
 
 			{% if not postembed %}
 			<div class="text-sm text-gray-400 text-center font-bold hidden md:flex space-x-2">
@@ -69,7 +69,7 @@
 
 					<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up upvote-button post-{{p.id}}-up {% if voted==1 %}active{% endif %}"></div>
 
-					<span id="post-score-{{p.id}}" class="w-8 score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+					<span id="post-score-{{p.id}}" class="w-6 score post-score-{{p.id}} {% if voted==1 %}score-up{% elif voted==-1%}score-down{% endif %}"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="mx-auto arrow-down downvote-button post-{{p.id}}-down {% if voted==-1 %}active{% endif %}"></div>
 
@@ -77,7 +77,7 @@
 
 					<div id="post-{{p.id}}-up" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '1')" class="mx-auto arrow-up" onclick="location.href='/login';"></div>
 
-					<span id="post-{{p.id}}-score-none" class="w-8 score"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
+					<span id="post-{{p.id}}-score-none" class="w-6 score"{% if not p.is_banned %} data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="+{{ups}} | -{{downs}}"{% endif %}>{{score}}</span>
 
 					<div {% if environ.get('DISABLE_DOWNVOTES') == '1' %}style="display:None!important"{% endif %} id="post-{{p.id}}-down" tabindex="0" href="javascript:void(0)" onclick="vote('post', '{{p.id}}', '-1')" class="mx-auto arrow-down" onclick="location.href='/login';"></div>
 
