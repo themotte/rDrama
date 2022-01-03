@@ -807,6 +807,12 @@ video {
 	top: 0px;
 	bottom: 0px;
 }
+.top-2 {
+	top: 0.5rem;
+}
+.right-3 {
+	right: 0.75rem;
+}
 .top-0 {
 	top: 0px;
 }
@@ -822,9 +828,6 @@ video {
 .right-4 {
 	right: 1rem;
 }
-.top-2 {
-	top: 0.5rem;
-}
 .top-3 {
 	top: 0.75rem;
 }
@@ -839,9 +842,6 @@ video {
 }
 .-top-1 {
 	top: -0.25rem;
-}
-.right-3 {
-	right: 0.75rem;
 }
 .-right-2\.5 {
 	right: -0.625rem;
@@ -1109,6 +1109,9 @@ video {
 }
 .h-64 {
 	height: 16rem;
+}
+.h-32 {
+	height: 8rem;
 }
 .h-24 {
 	height: 6rem;
