@@ -29,18 +29,18 @@ function userPopover(author) {
   
         document.body.appendChild(popover_new);
         document.body.removeChild(popover_old);
-
-        // Button for sending direct messages
-        const button = document.getElementById('popoverMessageButton');
-        // Pass our author (the recipient) to the button
-        button.setAttribute('data-bs-recipient', 'mdo');
-        console.log("in theFunction: ", button);
-        // "re-render" hack
-        button.style.display = 'none';
-        button.style.display = 'block';
-        // kiss my shiny metal ass if this actually works
-        console.log("in theFunction: ", button);
     }
+
+     // Button for sending direct messages
+    const button = document.getElementById('popoverMessageButton');
+    // Pass our author (the recipient) to the button
+    button.setAttribute('data-bs-recipient', 'mdo');
+    console.log("in theFunction: ", button);
+    // "re-render" hack
+    button.style.display = 'none';
+    button.style.display = 'block';
+    // kiss my shiny metal ass if this actually works
+    console.log("in theFunction: ", button);
 }
 
 document.addEventListener("click", function(){
