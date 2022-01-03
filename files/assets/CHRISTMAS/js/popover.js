@@ -18,13 +18,12 @@ function userPopover(author) {
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
 
-    try {
-        var popover_old = document.getElementsByClassName("popover")[0];
-        var popover_new = document.createElement("DIV");
+    const popover_old = document.getElementsByClassName("popover")[0];
+    const popover_new = document.createElement("DIV");
+
+    if (popover_old) {
         popover_new.innerHTML = popover_old.outerHTML;
         popover_new.id = "popover-fix";
-    } catch (error) {
-        console.error(error);
     }
   
     let badges = ''
@@ -32,20 +31,18 @@ function userPopover(author) {
         badges += `<img alt="badge" width="32" loading="lazy" src="${x}">`
     }
 
-    if (popover_new !== 'undefined') {
-        popover_new.getElementsByClassName('pop-banner')[0].src = author["bannerurl"]
-        popover_new.getElementsByClassName('pop-picture')[0].src = author["profile_url"]
-        popover_new.getElementsByClassName('pop-username')[0].innerHTML = author["username"]
-        popover_new.getElementsByClassName('pop-bio')[0].innerHTML = author["bio_html"]
-        popover_new.getElementsByClassName('pop-postcount')[0].innerHTML = author["post_count"]
-        popover_new.getElementsByClassName('pop-commentcount')[0].innerHTML = author["comment_count"]
-        popover_new.getElementsByClassName('pop-coins')[0].innerHTML = author["coins"]
-        popover_new.getElementsByClassName('pop-viewmore')[0].href = author["url"]
-        popover_new.getElementsByClassName('pop-badges')[0].innerHTML = badges
-      
-        document.body.appendChild(popover_new);
-        document.body.removeChild(popover_old);
-    }
+    popover_new.getElementsByClassName('pop-banner')[0].src = author["bannerurl"]
+    popover_new.getElementsByClassName('pop-picture')[0].src = author["profile_url"]
+    popover_new.getElementsByClassName('pop-username')[0].innerHTML = author["username"]
+    popover_new.getElementsByClassName('pop-bio')[0].innerHTML = author["bio_html"]
+    popover_new.getElementsByClassName('pop-postcount')[0].innerHTML = author["post_count"]
+    popover_new.getElementsByClassName('pop-commentcount')[0].innerHTML = author["comment_count"]
+    popover_new.getElementsByClassName('pop-coins')[0].innerHTML = author["coins"]
+    popover_new.getElementsByClassName('pop-viewmore')[0].href = author["url"]
+    popover_new.getElementsByClassName('pop-badges')[0].innerHTML = badges
+  
+    document.body.appendChild(popover_new);
+    document.body.removeChild(popover_old);
 }
 
 document.addEventListener("click", function(){
