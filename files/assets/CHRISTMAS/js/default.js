@@ -260,6 +260,8 @@ function submitFormAjax(e, success, error) {
 		} else if (xhr.status >= 300 && xhr.status < 400) {
 			window.location.href = JSON.parse(xhr.response)["redirect"]
 		} else {
+			// Run error function
+			error()
 			try {
 				data=JSON.parse(xhr.response);
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
@@ -273,8 +275,6 @@ function submitFormAjax(e, success, error) {
 				myToast.show();
 				return false
 			}
-			// Run error function
-			error()
 		}
 	};
 
