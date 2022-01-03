@@ -1,16 +1,3 @@
-function createDirectMessage() {
-    // Button for sending direct messages
-    const button = document.getElementById('popoverMessageButton');
-    // Pass our author (the recipient) to the button
-    button.setAttribute('data-bs-recipient', 'mdo');
-    console.log("in theFunction: ", button);
-    // "re-render" hack
-    button.style.display = 'none';
-    button.style.display = 'block';
-    // kiss my shiny metal ass if this actually works
-    console.log("in theFunction: ", button);
-}
-
 function userPopover(author) {
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
@@ -44,7 +31,11 @@ function userPopover(author) {
         document.body.removeChild(popover_old);
     }
 
-    setTimeout(() => {createDirectMessage()}, 0);
+    // Button for sending direct messages
+    const button = document.getElementById('popoverMessageButton');
+    // Pass our author (the recipient) to the button
+    button.setAttribute('data-bs-recipient', 'mdo');
+    button.dataset.bsRecipient = 'mdo';
 }
 
 document.addEventListener("click", function(){
