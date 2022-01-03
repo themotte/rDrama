@@ -1,19 +1,3 @@
-function popovertrigger() {
-    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-        const popoverId = popoverTriggerEl.getAttribute('data-content-id');
-        const contentEl = document.getElementById(popoverId);
-        if (contentEl) {
-            return new bootstrap.Popover(popoverTriggerEl, {
-                content: contentEl.innerHTML,
-                html: true,
-            });
-        }
-    })
-}
-
-popovertrigger()
-
 function userPopover(author) {
     let popfix = document.getElementById("popover-fix")
     if (popfix) document.body.removeChild(popfix);
