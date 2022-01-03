@@ -36,6 +36,8 @@ function userPopover(author) {
     // Pass our author (the recipient) to the button
     button.setAttribute('data-bs-recipient', 'mdo');
     button.dataset.bsRecipient = 'mdo';
+
+    console.log(button)
 }
 
 document.addEventListener("click", function(){
