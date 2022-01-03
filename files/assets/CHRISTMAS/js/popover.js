@@ -26,18 +26,13 @@ function userPopover(author) {
         popover_new.getElementsByClassName('pop-viewmore')[0].href = author["url"]
         popover_new.getElementsByClassName('pop-badges')[0].innerHTML = badges
         popover_new.getElementsByClassName('pop-uid')[0].innerHTML = author["id"]
-  
+
+        popover_new.getElementsById('popoverMessageButton').setAttribute('data-bs-recipient', 'mdo')
+        console.log(button)
+
         document.body.appendChild(popover_new);
         document.body.removeChild(popover_old);
     }
-
-    // Button for sending direct messages
-    const button = document.getElementById('popoverMessageButton');
-    // Pass our author (the recipient) to the button
-    button.setAttribute('data-bs-recipient', 'mdo');
-    button.dataset.bsRecipient = 'mdo';
-
-    console.log(button)
 }
 
 document.addEventListener("click", function(){
