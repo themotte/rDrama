@@ -34,7 +34,7 @@ function userPopover(author) {
     // Button and modal for sending direct messages
     const messageButton = document.getElementById('popoverMessageButton');
     // Pass our author (the recipient) to the button
-    messageButton.dataset.bsRecipient = author["username"];
+    messageButton.setAttribute("data-bs-recipient", author["username"])
 }
 
 document.addEventListener("click", function(){
