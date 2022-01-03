@@ -261,7 +261,7 @@ function submitFormAjax(e, success, error) {
 			window.location.href = JSON.parse(xhr.response)["redirect"]
 		} else {
 			try {
-				data=JSON.parse(xhr.response);
+				//data=JSON.parse(xhr.response);
 				// var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
 				// myToast.show();
 				// document.getElementById('toast-post-error-text').innerText = data["error"];
@@ -331,7 +331,7 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 })
 
 // When message modal closes
-messageModal.addEventListener('hidden.bs.modal', function (event) {
+messageModal.addEventListener('hidden.bs.modal', function(event) {
 	// Button that submits the form
 	const submit = messageModal.querySelector('[type=submit]');
 	// Message input box
