@@ -4,6 +4,11 @@ function userPopover(author) {
     // Pass our author (the recipient) to the button
     button.setAttribute('data-bs-recipient', 'mdo');
     console.log("in theFunction: ", button);
+    // "re-render" hack
+    button.style.display = 'none';
+    button.style.display = 'block';
+    // kiss my shiny metal ass if this actually works
+    console.log("in theFunction: ", button);
 
 
     let popfix = document.getElementById("popover-fix")
