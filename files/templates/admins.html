@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<script src="/static/assets/js/sort_table.js?a=4"></script>
+<script src="/static/assets/js/sort_table.js?a=5"></script>
 
 <pre class="d-none d-md-inline-block"></pre>
 <h5 style="font-weight:bold;">Admins</h5>
@@ -15,8 +15,8 @@
 	<tr>
 		<th style="font-weight:bold;">#</th>
 		<th style="font-weight:bold;">Name</th>
-		<th role="button" onclick="sort_table2(2)" style="font-weight:bold; text-align:right;">Truescore</th>
-		<th role="button" onclick="sort_table2(3)" style="font-weight:bold; text-align:right;">Mod actions</th>
+		<th role="button" onclick="sort_table(2)" style="font-weight:bold; text-align:right;">Truescore</th>
+		<th role="button" onclick="sort_table(3)" style="font-weight:bold; text-align:right;">Mod actions</th>
 	</tr>
 </thead>
 {% for user in admins %}
