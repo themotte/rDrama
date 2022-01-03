@@ -42,7 +42,7 @@ function userPopover(author) {
         popover_new.getElementsByClassName('pop-coins')[0].innerHTML = author["coins"]
         popover_new.getElementsByClassName('pop-viewmore')[0].href = author["url"]
         popover_new.getElementsByClassName('pop-badges')[0].innerHTML = badges
-        popover_new.getElementsByClassName('pop-uid')[0].src = author["id"]
+        popover_new.getElementsByClassName('pop-uid')[0].innerHTML = author["id"]
   
         document.body.appendChild(popover_new);
         document.body.removeChild(popover_old);
