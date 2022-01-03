@@ -281,7 +281,7 @@ def leaderboard(v):
 	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
 	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
 
-	if 'pcmemes.net' == request.host: users6 = users.order_by(User.basedcount.desc()).limit(10).all()
+	if request.host == 'pcmemes.net': users6 = users.order_by(User.basedcount.desc()).limit(10).all()
 	else: users6 = None
 		
 	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
