@@ -55,7 +55,7 @@ function userPopover(author) {
     messageButton.dataset.bsRecipient = author["username"];
 
     messageButton.addEventListener("click", function(){
-        console.log('it clicks!')
+        console.log('it clicks!');
         messageModal.show()
     });
 }
