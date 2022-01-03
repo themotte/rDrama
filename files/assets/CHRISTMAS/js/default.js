@@ -225,7 +225,8 @@ function postToast(url) {
 }
 
 function submitFormAjax(e) {
-	var xhr = new XMLHttpRequest();
+	const form = e.target;
+	const xhr = new XMLHttpRequest();
 
     e.preventDefault();
     
