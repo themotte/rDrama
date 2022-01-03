@@ -4754,3 +4754,6 @@ lite-youtube.lyt-activated > .lty-playbtn {
 .overflow-x-auto {
     overflow-x: auto !important;
 }
+table {
+    white-space: nowrap !important;
+}

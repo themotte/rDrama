@@ -41,7 +41,8 @@ def participation_stats(v):
 
 	day = now - 86400
 
-	data = {"valid_users": g.db.query(User.id).count(),
+	data = {"marseys": len(marseys),
+			"users": g.db.query(User.id).count(),
 			"private_users": g.db.query(User.id).filter_by(is_private=True).count(),
 			"banned_users": g.db.query(User.id).filter(User.is_banned > 0).count(),
 			"verified_email_users": g.db.query(User.id).filter_by(is_activated=True).count(),
@@ -102,10 +103,10 @@ def cached_chart(days):
 
 	if days > 31:
 		file = "/weekly_chart.png"
-		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(31)][1:]
+		day_cutoffs = [today_cutoff - 86400 * 7 * i for i in range(35)][1:]
 	else:
 		file = "/daily_chart.png"
-		day_cutoffs = [today_cutoff - 86400 * i for i in range(31)][1:]
+		day_cutoffs = [today_cutoff - 86400 * i for i in range(35)][1:]
 
 	day_cutoffs.insert(0, calendar.timegm(now))
 
