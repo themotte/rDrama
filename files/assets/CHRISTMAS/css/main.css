@@ -4845,3 +4845,10 @@ blockquote p {
   64%      { color: #b10dc9; }
   80%      { color: #ff4136; }
 }
+
+.agendaposter {
+  text-transform: uppercase !important;
+}
+code {
+    text-transform: none !important;
+}
