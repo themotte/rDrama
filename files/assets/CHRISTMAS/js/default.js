@@ -246,7 +246,7 @@ function submitFormAjax(e, success, error) {
 
 	xhr.onload = function() {
 		if (xhr.status >= 200 && xhr.status < 300) {
-			data = JSON.parse(xhr.response);
+			let data = JSON.parse(xhr.response);
 			try {
 				document.getElementById('toast-post-success-text').innerText = data["message"];
 			} catch(e) {
@@ -261,17 +261,17 @@ function submitFormAjax(e, success, error) {
 			window.location.href = JSON.parse(xhr.response)["redirect"]
 		} else {
 			try {
-				//data=JSON.parse(xhr.response);
-				// var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				// myToast.show();
-				// document.getElementById('toast-post-error-text').innerText = data["error"];
-				// return false
+				let data=JSON.parse(xhr.response);
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.show();
+				document.getElementById('toast-post-error-text').innerText = data["error"];
+				return false
 			} catch(e) {
-				// var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
-				// myToast.hide();
-				// var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
-				// myToast.show();
-				// return false
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				myToast.hide();
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.show();
+				return false
 			}
 			// Run error function
 			if (error) error()
