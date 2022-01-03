@@ -310,15 +310,20 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	// Set our modal header text
 	modalTitle.textContent = 'New message to ' + recipient
 
-	// Function if message is sent
-	const success = () => console.log('message sent');
-	// Function if message does not send (fails)
-	const error = () => console.log('message failed to send');
-
+	// Hide our modal if message is sent
+	const success = () => {
+		new bootstrap.Modal(messageModal).hide()
+	};
+	// Enable button if message does not send
+	const error = () => {
+		submit.disabled = false;
+		submit.textContent = 'Try again';
+	};
+	// Subit our form
 	form.addEventListener("submit", function(event) {
 		console.log('this worked on the first try wtf')
 		submit.disabled = true;
-		submit.textContent = submit.getAttribute('data-bs-loading');
+		submit.textContent = 'Sending';
 		submitFormAjax(event, success, error);
 	})
 
