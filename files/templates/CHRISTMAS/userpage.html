@@ -444,7 +444,7 @@
 {% endif %}
 
 {% if u.song %}
-<script>
+<!-- <script>
 	const uid = {{ u.id }}
 
 	let audio = new Audio(`/songs/${uid}`);
@@ -472,8 +472,8 @@
 			if (audio.paused) audio.play(); 
 		}, {once : true});
 	});
-</script>
+</script> -->
 {% endif %}
 
-<script defer src="/assets/CHRISTMAS/js/userpage.js?a=6"></script>
+<!-- <script defer src="/assets/CHRISTMAS/js/userpage.js?a=6"></script> -->
 {% endblock %}
