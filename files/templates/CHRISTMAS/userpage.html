@@ -382,8 +382,8 @@
 </div>
 
 {% if u.song and v and v.mute and not u.unmutable %}
-	<!-- <a id="pause1" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
-	<a id="play1" class="btn btn-secondary hidden" href="javascript:void(0)" onclick="play()">Play anthem</a> -->
+	<a id="pause1" class="btn btn-secondary" href="javascript:void(0)" onclick="pause()">Pause anthem</a>
+	<a id="play1" class="btn btn-secondary hidden" href="javascript:void(0)" onclick="play()">Play anthem</a>
 {% endif %}
 
 {% endblock %}
@@ -405,7 +405,7 @@
 
 {% block scripts %}
 {% if v %}
-<!-- <script>
+<script>
 	const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
 
 	function updateTax() {
@@ -440,11 +440,11 @@
 
 		setTimeout(_ => t.disabled = false, 2000);
 	}
-</script> -->
+</script>
 {% endif %}
 
 {% if u.song %}
-<!-- <script>
+<script>
 	const uid = {{ u.id }}
 
 	let audio = new Audio(`/songs/${uid}`);
@@ -472,8 +472,8 @@
 			if (audio.paused) audio.play(); 
 		}, {once : true});
 	});
-</script> -->
+</script>
 {% endif %}
 
-<!-- <script defer src="/assets/CHRISTMAS/js/userpage.js?a=6"></script> -->
+<script defer src="/assets/CHRISTMAS/js/userpage.js?a=6"></script>
 {% endblock %}
