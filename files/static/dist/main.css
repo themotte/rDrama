@@ -4373,6 +4373,10 @@ img.emoji-lg {
 		display: block;
 	}
 
+	.xl\:inline-block {
+		display: inline-block;
+	}
+
 	.xl\:flex {
 		display: flex;
 	}
