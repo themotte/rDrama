@@ -391,3 +391,79 @@
 {% block sidebar %}
 {% include "CHRISTMAS/sidebars/ProfileSidebar.html" %}
 {% endblock %}
+
+
+{% block scripts %}
+{% if v %}
+<script>
+	const TRANSFER_TAX = {% if v.patron or u.patron %}0{% else %}0.03{% endif %};
+
+	function updateTax() {
+
+		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+		// let suf = mobile ? "-mobile" : "";
+
+		if(isNaN(amount) || amount < 0) {
+			amount = 0;
+		}
+		
+		document.getElementById("coins-transfer-taxed").innerText = amount - Math.ceil(amount*TRANSFER_TAX);
+	}
+
+	function transferCoins() {
+		let t = event.target;
+		t.disabled = true;
+
+		let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+		let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
+
+		post_toast_callback("/@{{u.username}}/transfer_coins",
+			{"amount": document.getElementById("coins-transfer-amount").value},
+			(xhr) => {
+				if(xhr.status == 200) {
+					document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
+					// document.getElementById("profile-coins-amount-mobile").innerText = parseInt(document.getElementById("profile-coins-amount-mobile").innerText) + transferred;
+					document.getElementById("profile-coins-amount").innerText = parseInt(document.getElementById("profile-coins-amount").innerText) + transferred;
+				}
+			}
+			);
+
+		setTimeout(_ => t.disabled = false, 2000);
+	}
+</script>
+{% endif %}
+
+{% if u.song %}
+<script>
+	const uid = {{ u.id }}
+
+	let audio = new Audio(`/songs/${uid}`);
+	audio.loop=true;
+
+	function pause() {
+		audio.pause();
+		document.getElementById("pause1").classList.toggle("hidden");
+		document.getElementById("play1").classList.toggle("hidden");
+		document.getElementById("pause2").classList.toggle("hidden");
+		document.getElementById("play2").classList.toggle("hidden");
+	}
+
+	function play() {
+		audio.play();
+		document.getElementById("pause1").classList.toggle("hidden");
+		document.getElementById("play1").classList.toggle("hidden");
+		document.getElementById("pause2").classList.toggle("hidden");
+		document.getElementById("play2").classList.toggle("hidden");
+	}
+
+	window.addEventListener('load', (e) => {
+		audio.play();
+		document.getElementById('userpage').addEventListener('click', () => {
+			if (audio.paused) audio.play(); 
+		}, {once : true});
+	});
+</script>
+{% endif %}
+
+<script defer src="/assets/CHRISTMAS/js/userpage.js?a=6"></script>
+{% endblock %}
