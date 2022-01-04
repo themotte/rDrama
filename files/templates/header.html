@@ -1,7 +1,7 @@
 <nav class="shadow shadow-md fixed-top">
-	{% if request.host == "rdrama.net" %}
+	{% if SITE_NAME == "Drama" %}
 		<div id="srd" style="width: 100%; background-color: var(--primary); padding: 2px; text-align: center; font-weight: bold;">
-			<a style="color: white" class="text-small-mobile" href="https://reddit.com/r/SubredditDrama">Welcome to rdrama.net: the official site for /r/SubredditDrama</a>
+			<a style="color: white" class="text-small-mobile" href="https://reddit.com/r/SubredditDrama">welcome to rdrama.net: the official site for r/subredditdrama</a>
 		</div>
 	{% endif %}
 	<div class="navbar navbar-expand-md navbar-light" id="navbar">
