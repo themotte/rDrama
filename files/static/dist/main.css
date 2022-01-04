@@ -3920,6 +3920,10 @@ img.emoji-lg {
 		margin-right: 0px;
 	}
 
+	.sm\:mt-1 {
+		margin-top: 0.25rem;
+	}
+
 	.sm\:block {
 		display: block;
 	}
