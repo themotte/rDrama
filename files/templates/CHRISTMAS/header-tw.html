@@ -5,35 +5,7 @@
   <!-- Navigation bar -->
   <div class="w-full max-w-screen-2xl mx-auto grid grid-cols-12 px-4">
     <div class="relative col-span-full flex items-center justify-between h-14 px-4">
-      {% if not error %}
-      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-        <!-- Mobile menu button-->
-        <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-          <span class="sr-only">Open main menu</span>
-          <!--
-            Icon when menu is closed.
-
-            Heroicon name: outline/menu
-
-            Menu open: "hidden", Menu closed: "block"
-          -->
-          <svg class="block h-6 w-6" xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-          <!--
-            Icon when menu is open.
-
-            Heroicon name: outline/x
-
-            Menu open: "block", Menu closed: "hidden"
-          -->
-          <svg class="hidden h-6 w-6" xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      {% endif %}
-      <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+      <div class="flex-1 flex items-center sm:items-stretch sm:justify-start">
         <div class="flex-shrink-0 flex items-center">
           <a class="flex items-center" href="{{ '/' if v else '/logged_out'}}">
             <img class="block lg:hidden h-6 w-6 object-contain" style="margin-left: -21px;" src="/static/assets/images/Drama/headericon.webp?a=7" alt="logo">
@@ -48,28 +20,28 @@
           </form>
         </div>
         <div class="hidden lg:flex items-center sm:ml-4">
-            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            <a href="/" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/' else 'text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400' }}" aria-current="page">
-              <i class="fas fa-home-lg-alt fa-fw mr-2"></i>
-              Home
-            </a>
+          <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+          <a href="/" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/' else 'text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400' }}" aria-current="page">
+            <i class="fas fa-home-lg-alt fa-fw mr-2"></i>
+            Home
+          </a>
 
-            <a href="/comments" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/comments' else 'text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400' }}" aria-current="page">
-              <i class="fas fa-comments-alt fa-fw mr-2"></i>
-              Comments
-            </a>
+          <a href="/comments" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/comments' else 'text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400' }}" aria-current="page">
+            <i class="fas fa-comments-alt fa-fw mr-2"></i>
+            Comments
+          </a>
 
-            <a href="/leaderboard" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/leaderboard' else 'text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400' }}" aria-current="page">
-              <i class="fas fa-trophy fa-fw mr-2"></i>
-              Leaderboard
-            </a>
+          <a href="/leaderboard" class="relative px-3 py-2.5 rounded text-sm leading-normal {{ 'text-gray-200 font-bold text-shadow' if request.path == '/leaderboard' else 'text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400' }}" aria-current="page">
+            <i class="fas fa-trophy fa-fw mr-2"></i>
+            Leaderboard
+          </a>
 
-            {% include "CHRISTMAS/dropdowns/NavbarExtraLinks.html" %}
+          {% include "CHRISTMAS/dropdowns/NavbarExtraLinks.html" %}
 
-            <a href="/shop" class="hidden xl:flex items-center relative px-3 py-2.5 rounded text-sm text-yellow-500 leading-normal {{ 'font-bold text-shadow' if request.path == '/shop' else 'font-medium' }}">
-              <img src="https://i.ibb.co/xFgG6yf/Coinfixed.gif" width="15px" height="12px" class="object-contain mr-2.5"/>
-              Shop
-            </a>
+          <a href="/shop" class="hidden xl:flex items-center relative px-3 py-2.5 rounded text-sm text-yellow-500 leading-normal {{ 'font-bold text-shadow' if request.path == '/shop' else 'font-medium' }}">
+            <img src="https://i.ibb.co/xFgG6yf/Coinfixed.gif" width="15px" height="12px" class="object-contain mr-2.5"/>
+            Shop
+          </a>
 
         </div>
       </div>
@@ -122,6 +94,33 @@
           Sign up
         </a>
         {% endif %}
+
+        {% if not error %}
+        <!-- Mobile menu button-->
+        <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+          <span class="sr-only">Open main menu</span>
+          <!--
+            Icon when menu is closed.
+
+            Heroicon name: outline/menu
+
+            Menu open: "hidden", Menu closed: "block"
+          -->
+          <svg class="block h-6 w-6" xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!--
+            Icon when menu is open.
+
+            Heroicon name: outline/x
+
+            Menu open: "block", Menu closed: "hidden"
+          -->
+          <svg class="hidden h-6 w-6" xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        {% endif %}
       </div>
       {% endif %}
     </div>
@@ -131,9 +130,9 @@
   <div class="offcanvas offcanvas-start bg-gray-200" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="relative flex w-full bg-gray-700 h-20 px-4 items-center">
       <a class="flex items-center" href="{{ '/' if v else '/logged_out'}}">
-          <img class="block lg:hidden h-6 w-6 object-contain" src="/static/assets/images/Drama/headericon.webp?a=7" alt="logo">
-          <img class="hidden lg:block h-6 w-6 object-contain" src="/static/assets/images/Drama/headericon.webp?a=7" alt="logo">
-          <span class="pl-2 text-white text-2xl font-bold">rdrama</span>
+        <img class="block lg:hidden h-6 w-6 object-contain" src="/static/assets/images/Drama/headericon.webp?a=7" alt="logo">
+        <img class="hidden lg:block h-6 w-6 object-contain" src="/static/assets/images/Drama/headericon.webp?a=7" alt="logo">
+        <span class="pl-2 text-white text-2xl font-bold">rdrama</span>
       </a>
       <button type="button" class="ml-auto close p-2" data-bs-dismiss="offcanvas" aria-label="Close">
         <span aria-hidden="true">
@@ -166,7 +165,7 @@
                 <small class="flex items-center block mt-1 text-gray-500">
                   <img data-bs-toggle="tooltip" data-bs-placement="bottom" src="/assets/images/emojis/marseycoin.webp" data-bs-original-title="{{'COINS_NAME' | app_config}}" aria-label="{{'COINS_NAME' | app_config}}" class="w-6 h-6 object-contain" alt="coin icon"/>
                   <span class="pl-1">
-                      <span id="user-coins-amount">{{v.coins}}</span>
+                    <span id="user-coins-amount">{{v.coins}}</span>
                     {{'COINS_NAME' | app_config}}
                   </span>
                 </small>
@@ -206,33 +205,33 @@
             <i class="fas fa-paint-brush fa-fw mr-2"></i>
             Pick theme
           </button>
-        <li>
-          <button class="text-gray-700 hover:text-gray-900 font-bold" onclick="post_toast('/logout', '1')">
-            <i class="fas fa-power-off fa-fw mr-2"></i>
-            Log out
-          </button>
-        </li>
-      </ul>
-      {% else %}
-      <ul class="flex flex-col space-y-2">
-        <li>
-          <a class="btn btn-gray w-full" href="/login?redirect={{request.path | urlencode}}">
-            Login
-          </a>
-        </li>
-        <li>
-          <a class="btn btn-gray w-full" href="/signup?redirect={{request.path | urlencode}}">
-            Signup
-          </a>
-        </li>
-      </ul>
-      {% endif %}
-      <a href="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,95)|random()}}.webp?a=3" class="block w-full h-64 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
-        <img loading="lazy" class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,95)|random()}}.webp?a=3" alt="artwork featuring an orange and white cat"/>
-      </a>
-      <small class="hidden mt-1 text-gray-500">
-        Artwork by <a href="/me" class="font-bold">@username</a>
-      </small>
+          <li>
+            <button class="text-gray-700 hover:text-gray-900 font-bold" onclick="post_toast('/logout', '1')">
+              <i class="fas fa-power-off fa-fw mr-2"></i>
+              Log out
+            </button>
+          </li>
+        </ul>
+        {% else %}
+        <ul class="flex flex-col space-y-2">
+          <li>
+            <a class="btn btn-gray w-full" href="/login?redirect={{request.path | urlencode}}">
+              Login
+            </a>
+          </li>
+          <li>
+            <a class="btn btn-gray w-full" href="/signup?redirect={{request.path | urlencode}}">
+              Signup
+            </a>
+          </li>
+        </ul>
+        {% endif %}
+        <a href="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,95)|random()}}.webp?a=3" class="block w-full h-64 shadow-sm p-[3px] bg-white dark:bg-gray-900 overflow-hidden">
+          <img loading="lazy" class="w-full h-full flex-shrink-0 object-contain cursor-pointer" src="/static/assets/images/{{'SITE_NAME' | app_config}}/banners/{{range(1,95)|random()}}.webp?a=3" alt="artwork featuring an orange and white cat"/>
+        </a>
+        <small class="hidden mt-1 text-gray-500">
+          Artwork by <a href="/me" class="font-bold">@username</a>
+        </small>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
