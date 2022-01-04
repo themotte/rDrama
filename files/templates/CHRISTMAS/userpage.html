@@ -392,6 +392,15 @@
 {% include "CHRISTMAS/sidebars/ProfileSidebar.html" %}
 {% endblock %}
 
+{% block modals %}
+{% if v %}
+	{% include "CHRISTMAS/gif_modal.html" %}
+	{% include "CHRISTMAS/modals/ModalGiftCoins.html" %}
+	{% if v.admin_level > 1 %}
+		{% include "CHRISTMAS/modals/ModalAdminManageUser.html" %}
+	{% endif %}
+{% endif %}
+{% endblock %}
 
 {% block scripts %}
 {% if v %}
