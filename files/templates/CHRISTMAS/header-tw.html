@@ -57,19 +57,19 @@
         <!-- Admin link -->
         <a href="{{ '/admin' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-2 rounded-full text-yellow-500 hover:text-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">Admin tools</span>
-          <i class="fas fa-crown fa-fw"></i>
+          <i class="fas fa-crown fa-fw text-lg sm:text-base"></i>
         </a>
         {% endif %}
         <!-- Profile link -->
         <a href="{{ '/me' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="hidden sm:inline-block bg-transparent p-2 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">My profile</span>
-          <i class="fas fa-user fa-fw"></i>
+          <i class="fas fa-user fa-fw text-lg sm:text-base"></i>
         </a>
         <!-- Notifications -->
         <a href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" class="block bg-transparent p-2 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">View notifications</span>
           <div class="relative">
-            <i class="fas fa-envelope fa-fw"></i>
+            <i class="fas fa-envelope fa-fw text-lg sm:text-base"></i>
             <!-- Counter -->
             {% if v.notifications_count %}
             <div class="absolute -top-1.5 -right-3 {{ 'w-10' if v.notifications_count > 99 else 'w-6' }} h-6 rounded-full border-2 border-gray-700 flex items-center justify-center bg-red-600">
