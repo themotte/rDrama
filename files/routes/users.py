@@ -402,6 +402,10 @@ def message2(v, username):
 
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked: return {"error": "This user is blocking you."}, 403
 
+	if v.is_banned and not v.unban_utc: return render_template('errors/500.html', error=True, v=v), 500
+
+	if v.shadowbanned: return redirect(f"/@{username}")
+
 	message = request.values.get("message", "").strip()[:1000].strip()
 
 	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
@@ -465,6 +469,10 @@ def message3(v, username):
 
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
 		return {"error": "This user is blocking you."}, 403
+
+	if v.is_banned and not v.unban_utc: return {"error": "Internal server error"}, 500
+
+	if v.shadowbanned: return {"message": "Message sent!"}
 
 	message = request.values.get("message", "").strip()[:1000].strip()
 
