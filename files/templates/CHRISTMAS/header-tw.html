@@ -81,7 +81,7 @@
         <!-- Post Creation -->
         <a href="{{ '/submit' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">Submit post</span>
-          <i class="fas fa-pencil fa-fw"></i>
+          <i class="fas fa-pencil fa-fw text-lg sm:text-base"></i>
         </a>
         <!-- Not logged in -->
         {% else %}
@@ -106,7 +106,7 @@
 
             Menu open: "hidden", Menu closed: "block"
           -->
-          <svg class="block h-6 w-6" xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <svg class="block h-7 w-7" xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
           <!--
