@@ -745,3 +745,5 @@ NOTIFIED_USERS = {
 	'dong': FARTBINN_ID,
 	'kippy': KIPPY_ID,
 }
+
+num_banners = len(listdir('files/assets/images/Drama/banners')) + 1
