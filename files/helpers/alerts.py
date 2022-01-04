@@ -18,7 +18,6 @@ def create_comment(text, autojanny=False):
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
 							distinguish_level=6,
-							body=text,
 							created_utc=0,
 							body_html=text_html)
 	g.db.add(new_comment)
@@ -30,7 +29,12 @@ def send_repeatable_notification(uid, text, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 	
-	existing_comment = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).first()
+	text_html = sanitize(Renderer2().render(mistletoe.Document(text)))
+
+	for i in re.finditer("<p>@((\w|-){1,25})", text_html):
+		text_html = text_html.replace(f'@{i.group(1)}', f'<a href="/@{i.group(1)}"><img loading="lazy" src="/@{i.group(1)}/pic" class="pp20">@{i.group(1)}</a>')
+
+	existing_comment = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body_html=text_html, created_utc=0).first()
 
 	if existing_comment:
 		cid = existing_comment[0]
@@ -53,7 +57,12 @@ def notif_comment(text, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 
-	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body=text, created_utc=0).first()
+	text_html = sanitize(Renderer2().render(mistletoe.Document(text)))
+
+	for i in re.finditer("<p>@((\w|-){1,25})", text_html):
+		text_html = text_html.replace(f'@{i.group(1)}', f'<a href="/@{i.group(1)}"><img loading="lazy" src="/@{i.group(1)}/pic" class="pp20">@{i.group(1)}</a>')
+
+	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body_html=text_html, created_utc=0).first()
 	
 	if existing: return existing[0]
 	else: return create_comment(text, autojanny)
