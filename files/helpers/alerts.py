@@ -6,14 +6,9 @@ from .markdown import *
 from .sanitize import *
 from .const import *
 
-def create_comment(text, autojanny=False):
+def create_comment(text_html, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
-
-	text_html = sanitize(Renderer2().render(mistletoe.Document(text)))
-
-	for i in re.finditer("<p>@((\w|-){1,25})", text_html):
-		text_html = text_html.replace(f'@{i.group(1)}', f'<a href="/@{i.group(1)}"><img loading="lazy" src="/@{i.group(1)}/pic" class="pp20">@{i.group(1)}</a>')
 
 	new_comment = Comment(author_id=author_id,
 							parent_submission=None,
@@ -39,8 +34,8 @@ def send_repeatable_notification(uid, text, autojanny=False):
 	if existing_comment:
 		cid = existing_comment[0]
 		existing_notif = g.db.query(Notification.id).filter_by(user_id=uid, comment_id=cid).one_or_none()
-		if existing_notif: cid = create_comment(text, autojanny)
-	else: cid = create_comment(text, autojanny)
+		if existing_notif: cid = create_comment(text_html, autojanny)
+	else: cid = create_comment(text_html, autojanny)
 
 	notif = Notification(comment_id=cid, user_id=uid)
 	g.db.add(notif)
@@ -65,7 +60,7 @@ def notif_comment(text, autojanny=False):
 	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body_html=text_html, created_utc=0).first()
 	
 	if existing: return existing[0]
-	else: return create_comment(text, autojanny)
+	else: return create_comment(text_html, autojanny)
 
 
 def add_notif(cid, uid):
