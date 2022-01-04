@@ -3912,6 +3912,10 @@ img.emoji-lg {
 		margin-left: 1rem;
 	}
 
+	.sm\:mr-0 {
+		margin-right: 0px;
+	}
+
 	.sm\:block {
 		display: block;
 	}
