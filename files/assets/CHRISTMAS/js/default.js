@@ -338,7 +338,7 @@ messageModal.addEventListener('hidden.bs.modal', function(event) {
 	modalBodyInput.value = '';
 	// Reset the submit button state and text
 	submit.disabled = false;
-	submit.textContent = 'Send';
+	submit.textContent = 'Send message';
 })
 
 // Send coins
