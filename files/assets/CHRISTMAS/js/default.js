@@ -322,6 +322,7 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	};
 	// Submit our form
 	form.addEventListener("submit", function(event) {
+        console.log('submit event listener works')
 		submit.disabled = true;
 		submit.textContent = 'Sending';
 		submitFormAjax(event, success, error);
