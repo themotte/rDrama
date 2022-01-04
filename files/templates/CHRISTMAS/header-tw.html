@@ -46,7 +46,7 @@
         </div>
       </div>
       {% if not error %}
-      <div class="absolute inset-y-0 right-0 flex items-center space-x-3 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+      <div class="absolute inset-y-0 right-0 flex items-center space-x-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
         <!-- Logged in -->
         {% if v %}
         <!-- Profile dropdown -->
@@ -55,18 +55,18 @@
         </div>
         {% if v.admin_level > 1 %}
         <!-- Admin link -->
-        <a href="{{ '/admin' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-yellow-500 hover:text-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+        <a href="{{ '/admin' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-2 rounded-full text-yellow-500 hover:text-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">Admin tools</span>
           <i class="fas fa-crown fa-fw"></i>
         </a>
         {% endif %}
         <!-- Profile link -->
-        <a href="{{ '/me' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-1 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+        <a href="{{ '/me' if v else '/signup?redirect={{request.path | urlencode}}' }}" class="bg-transparent p-2 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">My profile</span>
           <i class="fas fa-user fa-fw"></i>
         </a>
         <!-- Notifications -->
-        <a href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" class="block bg-transparent p-1 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+        <a href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" class="block bg-transparent p-2 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
           <span class="sr-only">View notifications</span>
           <div class="relative">
             <i class="fas fa-envelope fa-fw"></i>
@@ -97,7 +97,7 @@
 
         {% if not error %}
         <!-- Mobile menu button-->
-        <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <button type="button" class="bg-transparent p-2 rounded-full text-gray-400 hover:text-gray-300 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
           <span class="sr-only">Open main menu</span>
           <!--
             Icon when menu is closed.
