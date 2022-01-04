@@ -342,4 +342,56 @@ messageModal.addEventListener('hidden.bs.modal', function(event) {
 	submit.textContent = 'Send message';
 })
 
-// Send coins
+// // Send coins
+// const coinModal = document.getElementById('sendCoinsModal')
+
+// // When message modal opens
+// coinModal.addEventListener('show.bs.modal', function (event) {
+// 	// Form that will send the message
+// 	const form = coinModal.querySelector('form');
+// 	// Button that submits the form
+// 	const submit = coinModal.querySelector('[type=submit]');
+// 	// Button that triggered the modal
+// 	const button = event.relatedTarget;
+// 	// Extract info from data-bs-* attributes
+// 	const recipient = button.getAttribute('data-bs-recipient');
+// 	// Update the modal's content.
+// 	const modalTitle = coinModal.querySelector('.modal-title');
+// 	// Set our form's action
+// 	form.action = `/@${recipient}/transfer_coins`
+// 	// Set our modal header text
+// 	modalTitle.textContent = 'Send coins to ' + recipient
+
+// 	// Hide our modal if message is sent
+// 	const success = () => {
+// 		submit.textContent = 'Sent!';
+// 		setTimeout(() => {
+// 			const modal = bootstrap.Modal.getOrCreateInstance(coinModal) // Bootstrap modal instance
+// 			modal.hide();
+// 		}, 200);
+// 	};
+// 	// Enable button if message does not send
+// 	const error = () => {
+// 		submit.disabled = false;
+// 		submit.textContent = 'Try again';
+// 	};
+// 	// Submit our form
+// 	form.addEventListener("submit", function(event) {
+// 		submit.disabled = true;
+// 		submit.textContent = 'Sending';
+// 		submitFormAjax(event, success, error);
+// 	})
+// })
+
+// // When coin modal closes
+// messageModal.addEventListener('hidden.bs.modal', function(event) {
+// 	// Button that submits the form
+// 	const submit = coinModal.querySelector('[type=submit]');
+// 	// Message input box
+// 	const modalBodyInput = coinModal.querySelector('.modal-body textarea');
+// 	// Clear the message
+// 	modalBodyInput.value = '';
+// 	// Reset the submit button state and text
+// 	submit.disabled = false;
+// 	submit.textContent = 'Send coins';
+// })
