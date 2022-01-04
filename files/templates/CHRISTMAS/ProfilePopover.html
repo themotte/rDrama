@@ -1,36 +1,55 @@
 <div style="display:none" id="popover">
-	<div class="popover-user-profile dark:bg-gray-700 text-black dark:text-gray-100" role="tooltip">
-		<img loading="lazy" class="pop-banner w-100 h-32 object-cover">
-		<div class="flex items-end px-3 -mt-12 mb-3">
-			<img loading="lazy" class="pop-picture h-20 w-20 rounded-sm p-[3px] bg-white dark:bg-gray-900 shadow-sm">
-			<div class="px-3 truncate">
-			<h5 class="pop-username truncate ellipsis"></h5>
+	<div class="relative popover-user-profile bg-gray-100 dark:bg-gray-900" role="tooltip">
+		<img loading="lazy" class="pop-banner w-full h-28 object-cover">
+		<div class="flex items-end px-4 -mt-10">
+			<img loading="lazy" class="pop-picture h-24 w-24 rounded-sm p-[3px] bg-white dark:bg-gray-900 shadow-sm">
+			<div class="pl-3 truncate mb-1">
+				<h5 class="pop-username truncate ellipsis"></h5>
+				<div class="text-sm text-gray-500 flex items-center leading-4">
+					<span>
+						#<span class="pop-uid"></span>
+					</span>
+					<strong class="mx-1">&#183;</strong>
+					<span>
+						<span class="pop-coins"></span>
+						coins
+					</span>
+				</div>
 			</div>
 		</div>
-		<div class="px-3">
+		<div class="hidden px-4">
 			<span class="pop-bio popover-bio"></span>
 		</div>
 
-		<div class="pop-badges ml-3 mr-3 my-2">
+		<div class="pop-badges p-4">
 		</div>
 
-	  <div class="border-t flex items-center p-3 gap-3 text-sm">
-		<span>
-		  <strong class="pop-postcount"></strong>
-		  <span class="text-gray-500">posts</span>
-		</span>
-		<span class="ml-3">
-		  <strong class="pop-commentcount"></strong>
-		  <span class="text-gray-500">comments</span>
-		</span>
-		<span class="ml-3">
-			<strong class="pop-coins"></strong>
-			<span class="text-gray-500">coins</span>
-		</span>  
-		<a target="_blank" class="pop-viewmore ml-auto text-decoration-none">
-		  View
-		  <i class="fas fa-arrow-right fa-sm fa-fw px-1"></i>
-		</a>
-	  </div>
+		<div class="border-t border-gray-300 dark:border-gray-800 flex items-center p-4 gap-2 text-sm">
+			<span>
+				<strong class="pop-postcount"></strong>
+				<span class="text-gray-500">posts</span>
+			</span>
+			<span>
+				<strong class="pop-commentcount"></strong>
+				<span class="text-gray-500">comments</span>
+			</span>
+			<a target="_blank" class="pop-viewmore ml-auto text-decoration-none">
+				View
+				<i class="fas fa-arrow-alt-right fa-sm fa-fw px-1"></i>
+			</a>
+		</div>
+
+		{% if v %}
+		<!-- Actionable buttons -->
+		<div class="flex items-center space-x-2 absolute top-2 right-3" id="popoverWrapper">
+			<!-- <a href="#" class="btn btn-gray" data-bs-toggle="modal" data-bs-target="#giftCoinsModal">
+				<i class="fas fa-gift fa-fw fa-sm"></i>
+			</a> -->
+			<button class="btn btn-gray pop-dm-button" data-bs-toggle="modal" data-bs-target="#directMessageModal">
+				<i class="fas fa-paper-plane fa-fw fa-sm mr-2"></i>
+				Message
+			</button>
+		</div>
+		{% endif %}
 	</div>
 </div>

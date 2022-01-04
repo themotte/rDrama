@@ -100,7 +100,7 @@ def settings_profile_post(v):
 
 	elif request.values.get("compact", v.compact) != v.compact:
 		updated = True
-		v.teddit = request.values.get("compact", None) == 'true'
+		v.compact = request.values.get("compact", None) == 'true'
 
 	elif request.values.get("nitter", v.nitter) != v.nitter:
 		updated = True

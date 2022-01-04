@@ -450,6 +450,7 @@ class User(Base):
 	def json_popover(self, v):
 		data = {'username': self.username,
 				'url': self.url,
+				'id': self.id,
 				'profile_url': self.profile_url,
 				'bannerurl': self.banner_url,
 				'bio_html': self.bio_html_eager,

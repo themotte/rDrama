@@ -21,6 +21,17 @@ function expandText(id) {
     }
 };
 
+function expandTextCompact(id) {
+    const el = document.getElementById('post-text-'+id);
+    ['hidden'].map(v=> el.classList.toggle(v));
+
+    const trigger = document.getElementsByClassName('text-expand-icon-'+id);
+    for (let i = 0; i < trigger.length; i++) {
+        trigger[i].classList.toggle('fa-expand-alt');
+        trigger[i].classList.toggle('fa-compress-alt');
+    }
+};
+
 function toggleVideo(pid) {
     // Video elements
     const vid = document.getElementById(`video-${pid}`)

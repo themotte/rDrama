@@ -1,11 +1,19 @@
-<ul class="flex flex-wrap items-center space-x-3 gap-2 text-sm text-gray-500 mb-0">
+<ul class="inline-flex flex-wrap items-center space-x-3 gap-2 text-sm text-gray-500 mb-0">
 
 	{% if p.realbody(v) and '/post/' not in request.full_path and not p.over_18 %}
-	<li>
-		<button class="hover:text-gray-400" onclick="expandText('{{p.id}}')">
-			<i class="fas fa-expand-alt fa-fw text-expand-icon-{{p.id}}"></i>
-		</button>
-	</li>
+		{% if v and v.compact %}
+		<li>
+			<button class="hover:text-gray-400" onclick="expandTextCompact('{{p.id}}')">
+				<i class="fas fa-expand-alt fa-fw text-expand-icon-{{p.id}}"></i>
+			</button>
+		</li>
+		{% else %}
+		<li>
+			<button class="hover:text-gray-400" onclick="expandText('{{p.id}}')">
+				<i class="fas fa-expand-alt fa-fw text-expand-icon-{{p.id}}"></i>
+			</button>
+		</li>
+		{% endif %}
 	{% endif %}
 
 	{% if '/post/' not in request.full_path %}

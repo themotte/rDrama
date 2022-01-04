@@ -1535,10 +1535,10 @@ a.close.disabled {
   display: none;
 }
 
-.popover-body {
+/*.popover-body {
   padding: 0.5rem 0.75rem;
   color: #212529;
-}
+}*/
 
 .carousel {
   position: relative;
@@ -4844,4 +4844,11 @@ blockquote p {
   48%      { color: #ffdc00; }
   64%      { color: #b10dc9; }
   80%      { color: #ff4136; }
+}
+
+.agendaposter {
+  text-transform: uppercase !important;
+}
+code {
+    text-transform: none !important;
 }

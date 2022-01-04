@@ -38,7 +38,7 @@
 	<div class="absolute -top-12 right-3">
 		<ul class="flex flex-wrap space-x-2 items-center mb-0">
 			{% if v.admin_level > 1 %}
-			<li>
+			<li class="md:hidden">
 				{% include 'CHRISTMAS//dropdowns/ProfileAdminDropdown.html' %}
 			</li>
 			{% endif %}
@@ -70,7 +70,13 @@
 				{% endif %}
 				{% if v.id != u.id %}
 				<li>
-					<button class="btn btn-gray shadow" data-bs-toggle="modal" data-bs-target="#directMessageModal">
+					<button class="btn btn-gray shadow" data-bs-toggle="modal" data-bs-target="#giftCoinsModal">
+						<i class="fas fa-gift fa-sm fa-fw md:mr-1"></i>
+						<span class="hidden md:inline-block">Gift Coins</span>
+					</button >
+				</li>
+				<li>
+					<button class="btn btn-gray shadow" data-bs-toggle="modal" data-bs-target="#directMessageModal" data-bs-recipient="{{ u.username }}">
 						<i class="fas fa-paper-plane fa-sm fa-fw md:mr-1"></i>
 						<span class="hidden md:inline-block">Message</span>
 					</button >
@@ -390,7 +396,6 @@
 {% if v %}
 	{% include "CHRISTMAS/emoji_modal.html" %}
 	{% include "CHRISTMAS/gif_modal.html" %}
-	{% include "CHRISTMAS/modals/ModalDirectMessage.html" %}
 	{% include "CHRISTMAS/modals/ModalGiftCoins.html" %}
 	{% if v.admin_level > 1 %}
 		{% include "CHRISTMAS/modals/ModalAdminManageUser.html" %}
