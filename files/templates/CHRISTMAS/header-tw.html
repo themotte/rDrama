@@ -180,13 +180,13 @@
           </a>
         </li>
         <li>
-          <a class="text-gray-700 hover:text-gray-900 dark:text-gray-200 hover:text-gray-100" href="/@me">
+          <a class="text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-gray-100" href="/@me">
             <i class="fas fa-user fa-fw mr-2"></i>
             My Profile
           </a>
         </li>
         <li>
-          <a class="text-gray-700 hover:text-gray-900 dark:text-gray-200 hover:text-gray-100" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}">
+          <a class="text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-gray-100" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}">
             <i class="fas fa-envelope fa-fw mr-2"></i>
             Inbox
             {% if v.notifications_count %}
@@ -195,18 +195,18 @@
           </a>
         </li>
         <li>
-          <a class="text-gray-700 hover:text-gray-900 dark:text-gray-200 hover:text-gray-100" href="/settings">
+          <a class="text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-gray-100" href="/settings">
             <i class="fas fa-cog fa-fw mr-2"></i>
             Settings
           </a>
         </li>
         <li>
-          <button class="text-gray-700 hover:text-gray-900 dark:text-gray-200 hover:text-gray-100 font-bold" data-bs-toggle="modal" data-bs-target="#themePickerModal">
+          <button class="text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-gray-100 font-bold" data-bs-toggle="modal" data-bs-target="#themePickerModal">
             <i class="fas fa-paint-brush fa-fw mr-2"></i>
             Pick theme
           </button>
           <li>
-            <button class="text-gray-700 hover:text-gray-900 dark:text-gray-200 hover:text-gray-100 font-bold" onclick="post_toast('/logout', '1')">
+            <button class="text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-gray-100 font-bold" onclick="post_toast('/logout', '1')">
               <i class="fas fa-power-off fa-fw mr-2"></i>
               Log out
             </button>
