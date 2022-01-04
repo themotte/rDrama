@@ -55,7 +55,7 @@ def notif_comment(text, autojanny=False):
 	text_html = sanitize(Renderer2().render(mistletoe.Document(text)))
 
 	for i in re.finditer("<p>@((\w|-){1,25})", text_html):
-		text_html = text_html.replace(f'@{i.group(1)}', f'<a href="/@{i.group(1)}"><img loading="lazy" src="/@{i.group(1)}/pic" class="pp20">@{i.group(1)}</a>')
+		text_html = text_html.replace(f'<p>@{i.group(1)}', f'<p><a href="/@{i.group(1)}"><img loading="lazy" src="/@{i.group(1)}/pic" class="pp20">@{i.group(1)}</a>')
 
 	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body_html=text_html, created_utc=0).first()
 	
