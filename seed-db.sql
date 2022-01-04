@@ -28,7 +28,7 @@ INSERT INTO public.users (
 		 (6, 'AutoPoller', '', 0, 0, true, true, '', '', 0, false, 
 			0, 'AutoPoller', '', 'hot', 'top', 'day', '62ca56', 'e4432d', '', '',
 			'', 'dark', '30409f', false, false, '', '', 0, false, 0, 
-			0, 0, '', true, 0);
+			0, 0, '', true, 0),
 		 (7, 'AutoBetter', '', 0, 0, true, true, '', '', 0, false, 
 			0, 'AutoBetter', '', 'hot', 'top', 'day', '62ca56', 'e4432d', '', '',
 			'', 'dark', '30409f', false, false, '', '', 0, false, 0, 
