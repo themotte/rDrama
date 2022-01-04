@@ -1056,6 +1056,9 @@ video {
 .mt-\[-1px\] {
 	margin-top: -1px;
 }
+.-mr-4 {
+	margin-right: -1rem;
+}
 .-ml-5 {
 	margin-left: -1.25rem;
 }
@@ -2397,6 +2400,9 @@ video {
 	--tw-text-opacity: 1;
 	color: rgba(245, 158, 11, var(--tw-text-opacity));
 }
+.text-white\/50 {
+	color: rgba(255, 255, 255, 0.5);
+}
 .text-gray-900 {
 	--tw-text-opacity: 1;
 	color: rgba(var(--color-900), var(--tw-text-opacity));
@@ -2471,9 +2477,6 @@ video {
 .text-\[\#db2777\] {
 	--tw-text-opacity: 1;
 	color: rgba(219, 39, 119, var(--tw-text-opacity));
-}
-.text-white\/50 {
-	color: rgba(255, 255, 255, 0.5);
 }
 .text-\[\#155e75\] {
 	--tw-text-opacity: 1;
