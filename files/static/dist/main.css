@@ -4063,8 +4063,8 @@ img.emoji-lg {
 		width: 11rem;
 	}
 
-	.md\:w-32 {
-		width: 8rem;
+	.md\:w-28 {
+		width: 7rem;
 	}
 
 	.md\:w-64 {
@@ -4251,12 +4251,16 @@ img.emoji-lg {
 		padding-left: 0px;
 	}
 
-	.md\:pb-4 {
-		padding-bottom: 1rem;
+	.md\:pb-3\.5 {
+		padding-bottom: 0.875rem;
 	}
 
 	.md\:pt-0 {
 		padding-top: 0px;
+	}
+
+	.md\:pb-3 {
+		padding-bottom: 0.75rem;
 	}
 
 	.md\:pl-5 {
