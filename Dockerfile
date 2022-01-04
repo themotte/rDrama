@@ -1,15 +1,13 @@
 FROM ubuntu:20.04
 
-COPY supervisord.conf /etc/supervisord.conf
+RUN apt update && apt install -y python3.8 python3-pip
 
-RUN apt update && apt install -y python3.8 python3-pip supervisor
+COPY requirements.txt /service/requirements.txt
 
-RUN mkdir -p ./service
+WORKDIR /service
 
-COPY requirements.txt ./service/requirements.txt
-
-RUN cd ./service && pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 EXPOSE 80/tcp
 
-CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+CMD gunicorn files.__main__:app -k gevent -w 2 --reload -b 0.0.0.0:80 --max-requests 1000 --max-requests-jitter 500

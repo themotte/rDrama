@@ -100,10 +100,6 @@ def before_request():
 
 	g.timestamp = int(time.time())
 
-	if request.url.startswith("http://") and "localhost" not in app.config["SERVER_NAME"]:
-		url = request.url.replace("http://", "https://", 1)
-		return redirect(url, code=301)
-
 	if '; wv) ' in request.headers.get("User-Agent",""): g.webview = True
 	else: g.webview = False
 
