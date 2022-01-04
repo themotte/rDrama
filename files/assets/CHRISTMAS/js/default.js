@@ -333,7 +333,7 @@ messageModal.addEventListener('hidden.bs.modal', function(event) {
 	// Button that submits the form
 	const submit = messageModal.querySelector('[type=submit]');
 	// Message input box
-	const modalBodyInput = messageModal.querySelector('.modal-body textarea')
+	const modalBodyInput = messageModal.querySelector('.modal-body textarea');
 	// Clear the message
 	modalBodyInput.value = '';
 	// Reset the submit button state and text
