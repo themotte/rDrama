@@ -1056,6 +1056,9 @@ video {
 .mt-\[-1px\] {
 	margin-top: -1px;
 }
+.-mr-2 {
+	margin-right: -0.5rem;
+}
 .-mr-4 {
 	margin-right: -1rem;
 }
