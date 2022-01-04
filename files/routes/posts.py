@@ -490,6 +490,8 @@ def edit_post(pid, v):
 		elif v.bird:
 			if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
+		if len(body_html) > 20000: return {"error":"Submission body too long!"}, 400
+
 		p.body_html = body_html
 
 		if request.host == "rdrama.net" and "ivermectin" in body_html.lower():
