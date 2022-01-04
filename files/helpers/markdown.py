@@ -42,7 +42,7 @@ class CustomRenderer(HTMLRenderer):
 
 		if not user: return f"{space}@{target}"
 
-		return f'''{space}<a href="{user.url}"><img alt="@{user.username}'s profile picture" loading="lazy" src="/uid/{user.id}/pic" class="pp20">@{user.username}</a>'''
+		return f'''{space}<a href="{user.url2}"><img alt="@{user.username}'s profile picture" loading="lazy" src="/uid/{user.id}/pic" class="pp20">@{user.username}</a>'''
 			
 	def render_sub_mention(self, token):
 		space = token.target[0]
@@ -69,7 +69,7 @@ class Renderer(HTMLRenderer):
 
 		if not user: return f"{space}@{target}"
 
-		return f'{space}<a href="{user.url}">@{user.username}</a>'
+		return f'{space}<a href="{user.url2}">@{user.username}</a>'
 			
 	def render_sub_mention(self, token):
 		space = token.target[0]

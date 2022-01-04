@@ -205,7 +205,7 @@ def suicide(v, username):
 	t = int(time.time())
 	if v.admin_level == 0 and t - v.suicide_utc < 86400: return {"message": "You're on 1-day cooldown!"}
 	user = get_user(username)
-	suicide = f"Hi there,\n\nA [concerned user]({v.url}) reached out to us about you.\n\nWhen you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.\n\nThere are resources available in your area that are free, confidential, and available 24/7:\n\n- Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)\n- Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)\n- Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.\nIf you don't see a resource in your area above, the moderators keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now\n\nIf you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.\n\nIt may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.\n\nYour fellow users care about you and there are people who want to help."
+	suicide = f"Hi there,\n\nA [concerned user]({v.url2}) reached out to us about you.\n\nWhen you're in the middle of something painful, it may feel like you don't have a lot of options. But whatever you're going through, you deserve help and there are people who are here for you.\n\nThere are resources available in your area that are free, confidential, and available 24/7:\n\n- Call, Text, or Chat with Canada's [Crisis Services Canada](https://www.crisisservicescanada.ca/en/)\n- Call, Email, or Visit the UK's [Samaritans](https://www.samaritans.org/)\n- Text CHAT to America's [Crisis Text Line](https://www.crisistextline.org/) at 741741.\nIf you don't see a resource in your area above, the moderators keep a comprehensive list of resources and hotlines for people organized by location. Find Someone Now\n\nIf you think you may be depressed or struggling in another way, don't ignore it or brush it aside. Take yourself and your feelings seriously, and reach out to someone.\n\nIt may not feel like it, but you have options. There are people available to listen to you, and ways to move forward.\n\nYour fellow users care about you and there are people who want to help."
 	send_repeatable_notification(user.id, suicide)
 	v.suicide_utc = t
 	g.db.add(v)
@@ -241,14 +241,14 @@ def transfer_coins(v, username):
 			tax = math.ceil(amount*0.03)
 			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).one_or_none()
 			tax_receiver.coins += tax
-			log_message = f"[@{v.username}]({v.url}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url})"
+			log_message = f"[@{v.username}]({v.url2}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.url2})"
 			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 			g.db.add(tax_receiver)
 		else: tax = 0
 
 		receiver.coins += amount-tax
 		v.coins -= amount
-		send_repeatable_notification(receiver.id, f"🤑 [@{v.username}]({v.url}) has gifted you {amount-tax} {app.config['COINS_NAME']}!")
+		send_repeatable_notification(receiver.id, f"🤑 [@{v.username}]({v.url2}) has gifted you {amount-tax} {app.config['COINS_NAME']}!")
 		g.db.add(receiver)
 		g.db.add(v)
 
@@ -277,7 +277,7 @@ def transfer_bux(v, username):
 
 		receiver.procoins += amount
 		v.procoins -= amount
-		send_repeatable_notification(receiver.id, f"🤑 [@{v.username}]({v.url}) has gifted you {amount} marseybux!")
+		send_repeatable_notification(receiver.id, f"🤑 [@{v.username}]({v.url2}) has gifted you {amount} marseybux!")
 		g.db.add(receiver)
 		g.db.add(v)
 
@@ -714,7 +714,7 @@ def u_username_comments(username, v=None):
 	user = get_user(username, v=v)
 
 
-	if username != user.username: return redirect(f'{user.url}/comments')
+	if username != user.username: return redirect(f'{user.url2}/comments')
 
 	u = user
 

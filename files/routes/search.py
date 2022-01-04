@@ -206,9 +206,9 @@ def searchcomments(v):
 	except: page = 1
 
 	sort = request.values.get("sort", "new").lower()
-	t = request.values.get('t', 'all').lower()
+	t = request.values.get('t', 'month').lower()
 
-	criteria=searchparse(query)
+	criteria = searchparse(query)
 
 	comments = g.db.query(Comment.id).filter(Comment.parent_submission != None)
 
@@ -223,14 +223,14 @@ def searchcomments(v):
 		else: comments = comments.filter(Comment.author_id == author.id)
 
 	if 'q' in criteria:
-		words=criteria['q'].split()
-		words=[Comment.body_html.ilike('%'+x+'%') for x in words]
-		words=tuple(words)
-		comments=comments.filter(*words)
+		words = criteria['q'].split()
+		words = [Comment.body.ilike('%'+x+'%') for x in words]
+		words = tuple(words)
+		comments = comments.filter(*words)
 
-	if 'over18' in criteria: comments = comments.filter(Comment.over_18==True)
+	if 'over18' in criteria: comments = comments.filter(Comment.over_18 == True)
 
-	if not(v and v.admin_level > 1): comments = comments.filter(Comment.deleted_utc == 0, Comment.is_banned == False)
+	if not (v and v.admin_level > 1): comments = comments.filter(Comment.deleted_utc == 0, Comment.is_banned == False)
 
 	if t:
 		now = int(time.time())
@@ -264,10 +264,8 @@ def searchcomments(v):
 	total = comments.count()
 
 	comments = comments.offset(25 * (page - 1)).limit(26).all()
+
 	ids = [x[0] for x in comments]
-
-
-
 
 	next_exists = (len(ids) > 25)
 	ids = ids[:25]
