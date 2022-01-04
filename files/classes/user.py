@@ -324,11 +324,6 @@ class User(Base):
 	def url(self):
 		return f"/@{self.username}"
 
-	@property
-	@lazy
-	def url2(self):
-		return f"/id/{self.id}"
-
 	def __repr__(self):
 		return f"<User(username={self.username})>"
 
