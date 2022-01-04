@@ -400,6 +400,69 @@ def message2(v, username):
 	user = get_user(username, v=v)
 	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
 
+	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked: return {"error": "This user is blocking you."}, 403
+
+	message = request.values.get("message", "").strip()[:1000].strip()
+
+	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
+
+	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
+
+	text_html = Renderer().render(mistletoe.Document(message))
+
+	text_html = sanitize(text_html, True)
+
+	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
+															Comment.sentto == user.id,
+															Comment.body_html == text_html,
+															).one_or_none()
+	if existing: return redirect('/notifications?messages=true')
+
+	new_comment = Comment(author_id=v.id,
+						  parent_submission=None,
+						  level=1,
+						  sentto=user.id,
+						  body_html=text_html,
+						  )
+	g.db.add(new_comment)
+
+	g.db.flush()
+
+
+	notif = Notification(comment_id=new_comment.id, user_id=user.id)
+	g.db.add(notif)
+
+	
+	try:
+		beams_client.publish_to_interests(
+			interests=[str(user.id)],
+			publish_body={
+				'web': {
+					'notification': {
+						'title': f'New message from @{v.username}',
+						'body': message,
+						'deep_link': f'https://{site}/notifications',
+					},
+				},
+			},
+		)
+	except Exception as e:
+		print(e)
+
+	g.db.commit()
+
+	return redirect(f"/@{username}")
+
+@app.post("/@<username>/message2")
+@limiter.limit("1/second")
+@limiter.limit("10/hour")
+@auth_required
+@validate_formkey
+def message3(v, username):
+
+	user = get_user(username, v=v)
+	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
+
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
 		return {"error": "This user is blocking you."}, 403
 
