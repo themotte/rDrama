@@ -122,3 +122,56 @@ function transferBux(mobile=false) {
 
 	setTimeout(_ => t.disabled = false, 2000);
 }
+
+function submitFormAjax(e) {
+	const form = e.target;
+	const xhr = new XMLHttpRequest();
+
+	e.preventDefault();
+
+	formData = new FormData(form);
+
+	formData.append("formkey", formkey());
+	if(typeof data === 'object' && data !== null) {
+		for(let k of Object.keys(data)) {
+			form.append(k, data[k]);
+		}
+	}
+	xhr.withCredentials = true;
+
+	actionPath = form.getAttribute("action");
+
+	xhr.open("POST", actionPath, true);
+
+	xhr.onload = function() {
+		if (xhr.status >= 200 && xhr.status < 300) {
+			let data = JSON.parse(xhr.response);
+			try {
+				document.getElementById('toast-post-success-text').innerText = data["message"];
+			} catch(e) {
+				document.getElementById('toast-post-success-text').innerText = "Action successful!";
+			}
+			var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+			myToast.show();
+			return true
+		} else if (xhr.status >= 300 && xhr.status < 400) {
+			window.location.href = JSON.parse(xhr.response)["redirect"]
+		} else {
+			try {
+				let data=JSON.parse(xhr.response);
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.show();
+				document.getElementById('toast-post-error-text').innerText = data["error"];
+			} catch(e) {
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-success'));
+				myToast.hide();
+				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
+				myToast.show();
+			}
+		}
+	};
+
+	xhr.send(formData);
+
+	return false
+}
