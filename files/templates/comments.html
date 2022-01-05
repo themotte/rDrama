@@ -167,14 +167,14 @@
 </div>
 {% endif %}
 
-{% if not (request.path == '/notifications' and c.level > 1) or c.created_utc < 1641340623 or not c.sentto %}
-	{% set ni = True %}
+{% if c.sentto and c.level > 1 and c.created_utc > 1641340623 }
+	{% set isreply = True %}
 {% else %}
-	{% set ni = False %}
+	{% set isreply = False %}
 {% endif %}
 
-<div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) and request.path != '/admin/removed/comments' or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="{% if ni %}border-left: 2px solid #{{c.author.namecolor}};{% else %}padding-left:0!important;{% endif %} {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
-	{% if ni %}
+<div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) and request.path != '/admin/removed/comments' or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% else %}border-left: 2px solid #{{c.author.namecolor}};{% endif %} {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
+	{% if not isreply %}
 		<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 	{% endif %}
 	<div class="comment-body">
