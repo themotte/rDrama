@@ -169,7 +169,7 @@
 
 <div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) and request.path != '/admin/removed/comments' or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="border-left: 2px solid #{{c.author.namecolor}}; {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
 
-	{% if not (request.path == 'notifications' and c.level > 1) %}<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>{% endif %}
+	{% if not (request.path == '/notifications' and c.level > 1) or c.created_utc < 1641340623 %}<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>{% endif %}
 	<div class="comment-body">
 
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
@@ -245,7 +245,7 @@
 
 
 				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ID and c.author_id!=AUTOJANNY_ID and c.author_id!=v.id %}
-					<a class="btn btn-primary" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
+					{% if not c.replies %}<a class="btn btn-primary" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>{% endif %}
 					<pre></pre>
 					<div id="reply-message-{{c.id}}" class="d-none">
 						<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
