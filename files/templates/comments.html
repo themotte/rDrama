@@ -167,7 +167,7 @@
 </div>
 {% endif %}
 
-{% if not (request.path == '/notifications' and c.level > 1) or c.created_utc < 1641340623 %}
+{% if not (request.path == '/notifications' and c.level > 1) or c.created_utc < 1641340623 or not c.sentto %}
 	{% set ni = True %}
 {% else %}
 	{% set ni = False %}
