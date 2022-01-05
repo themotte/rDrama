@@ -535,7 +535,7 @@
 		{% endif %}
 
 
-		{% if request.path == '/notifications' and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID, v.id) %}
+		{% if request.path == '/notifications' and c.level==1 and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
 			<a class="btn btn-primary" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
 			<pre></pre>
 			<div id="reply-message-{{c.id}}" class="d-none">
