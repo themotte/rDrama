@@ -172,7 +172,7 @@
 							{% endif %}
 						{% endif %}
 
-						<form class="d-none profile-toggleable" id="message" onsubmit="post_toast('/@{{u.username}}/message2',1,document.getElementById('input-message').value); return false;">
+						<form class="d-none profile-toggleable" id="message" onsubmit="post_toast('/@{{u.username}}/message2',document.getElementById('input-message').value); return false;">
 							<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
 							<pre></pre>
 							<textarea autocomplete="off" id="input-message" form="message" name="message" rows="3" maxlength="1000" class="form-control b2" oninput="markdown('input-message', 'message-preview')" required></textarea>
