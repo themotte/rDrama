@@ -461,7 +461,7 @@
 						{% endif %}
 					{% endif %}
 
-					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message" method="post">
+					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message2" onsubmit="submitFormAjax(event)">
 						<pre></pre>
 						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<textarea autocomplete="off" id="input-message-mobile" form="message-mobile" name="message" rows="3" maxlength="1000" class="form-control" oninput="markdown('input-message-mobile', 'message-preview-mobile')" required></textarea>
