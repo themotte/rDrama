@@ -242,29 +242,6 @@
 					<hr>
 					{{c.author.sig_html | safe}}
 				{% endif %}
-
-
-				{% if not c.parent_submission and c.author_id!=NOTIFICATIONS_ID and c.author_id!=AUTOJANNY_ID and c.author_id!=v.id %}
-					{% if not c.replies %}<a class="btn btn-primary" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>{% endif %}
-					<pre></pre>
-					<div id="reply-message-{{c.id}}" class="d-none">
-						<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
-							<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
-								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
-								<textarea autocomplete="off" maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea> 
-								<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
-									<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.id}}">
-										<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"></i>
-									</label>
-								</div>
-
-								<a role="button" onclick="document.getElementById('reply-message-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
-								<a id="save-reply-to-{{c.id}}" class="btn btn-primary text-white ml-2" onclick="post_reply('{{c.id}}');" role="button">Reply</a> 
-							</form>
-							<div id="message-reply-{{c.id}}" class="preview-edit mt-2"></div>
-						</div>
-					</div>
-				{% endif %}
 			</div>
 			{% if c.parent_submission %}
 
@@ -554,6 +531,29 @@
 			<div id="morecomments-{{c.id}}" class="mt-2 more-comments">
 				<button id="btn-{{c.id}}" class="d-none d-md-block btn btn-primary" onclick="morecomments('{{c.id}}')">More comments</button>
 				<a class="d-md-none" href="{{c.shortlink}}">More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+			</div>
+		{% endif %}
+
+
+		{% if request.path == '/notifications' and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID, v.id) %}
+			<a class="btn btn-primary" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
+			<pre></pre>
+			<div id="reply-message-{{c.id}}" class="d-none">
+				<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
+					<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
+						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
+						<textarea autocomplete="off" maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea> 
+						<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
+							<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.id}}">
+								<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"></i>
+							</label>
+						</div>
+
+						<a role="button" onclick="document.getElementById('reply-message-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
+						<a id="save-reply-to-{{c.id}}" class="btn btn-primary text-white ml-2" onclick="post_reply('{{c.id}}');" role="button">Reply</a> 
+					</form>
+					<div id="message-reply-{{c.id}}" class="preview-edit mt-2"></div>
+				</div>
 			</div>
 		{% endif %}
 	{% endif %}
