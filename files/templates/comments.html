@@ -167,9 +167,16 @@
 </div>
 {% endif %}
 
-<div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) and request.path != '/admin/removed/comments' or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="border-left: 2px solid #{{c.author.namecolor}}; {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
+{% if not (request.path == '/notifications' and c.level > 1) or c.created_utc < 1641340623 %}
+	{% set ni = True %}
+{% else %}
+	{% set ni = False %}
+{% endif %}
 
-	{% if not (request.path == '/notifications' and c.level > 1) or c.created_utc < 1641340623 %}<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>{% endif %}
+<div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) and request.path != '/admin/removed/comments' or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="{% if ni %}border-left: 2px solid #{{c.author.namecolor}};{% else %}padding-left:0!important;{% endif %} {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
+	{% if ni %}
+		<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid #{{c.author.namecolor}};"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
+	{% endif %}
 	<div class="comment-body">
 
 		<div id="{% if comment_info and comment_info.id == c.id %}context{%else%}comment-{{c.id}}-only{% endif %}" class="comment-anchor {% if comment_info and comment_info.id == c.id %}context{%endif%}{% if c.is_banned %} banned{% endif %}{% if c.deleted_utc %} deleted{% endif %}">
@@ -232,7 +239,7 @@
 				<div id="comment-banned-warning" class="comment-text text-removed mb-0">removed by @{{c.ban_reason}}</div>
 			{% endif %}
 
-			<div id="comment-text-{{c.id}}" class="comment-text mb-0 {% if c.author.agendaposter %}agendaposter{% endif %}">
+			<div id="comment-text-{{c.id}}" class="comment-text mb-0 {% if c.author.agendaposter %}agendaposter{% endif %}" >
 				{{c.realbody(v) | safe}}
 				{% if c.options %}
 					{{c.options_html(v) | safe}}
@@ -846,7 +853,7 @@
 
 {% if v %}
 	<script src="/static/assets/js/marked.js?a=3"></script>
-	<script src="/static/assets/js/comments_v.js?a=8"></script>
+	<script src="/static/assets/js/comments_v.js?a=9"></script>
 {% endif %}
 
 <script src="/static/assets/js/clipboard.js?a=3"></script>
