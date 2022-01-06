@@ -261,7 +261,7 @@ def contact(v):
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}contact.html", v=v)
 
-@app.post("/contact")
+@app.post("/send_admin")
 @limiter.limit("1/second")
 @auth_required
 @validate_formkey
