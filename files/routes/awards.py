@@ -277,6 +277,10 @@ def award_post(pid, v):
 		author.customtitle = filter_emojis_only(new_name)
 		if len(author.customtitle) > 1000: abort(403)
 		author.flairchanged = int(time.time()) + 86400
+		if not author.has_badge(96):
+			badge = Badge(user_id=author.id, badge_id=96)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "pause":
 		author.mute = True
 		if not author.has_badge(68):
@@ -292,16 +296,28 @@ def award_post(pid, v):
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = int(time.time()) + 86400
+		if not author.has_badge(98):
+			badge = Badge(user_id=author.id, badge_id=98)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "pizzashill":
 		if author.bird:
 			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = int(time.time()) + 86400
+		if not author.has_badge(97):
+			badge = Badge(user_id=author.id, badge_id=97)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "bird":
 		if author.longpost:
 			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404
 		if author.bird: author.bird += 86400
 		else: author.bird = int(time.time()) + 86400
+		if not author.has_badge(95):
+			badge = Badge(user_id=author.id, badge_id=95)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "eye":
 		author.eye = True
 		if not author.has_badge(83):
@@ -330,6 +346,10 @@ def award_post(pid, v):
 	elif kind == "progressivestack":
 		if author.progressivestack: author.progressivestack += 21600
 		else: author.progressivestack = int(time.time()) + 21600
+		if not author.has_badge(94):
+			badge = Badge(user_id=author.id, badge_id=94)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	if post.author.received_award_count: post.author.received_award_count += 1
 	else: post.author.received_award_count = 1
@@ -438,6 +458,10 @@ def award_comment(cid, v):
 		author.customtitle = filter_emojis_only(new_name)
 		if len(author.customtitle) > 1000: abort(403)
 		author.flairchanged = int(time.time()) + 86400
+		if not author.has_badge(96):
+			badge = Badge(user_id=author.id, badge_id=96)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "pause":
 		author.mute = True
 		if not author.has_badge(68):
@@ -453,16 +477,28 @@ def award_comment(cid, v):
 	elif kind == "marsey":
 		if author.marseyawarded: author.marseyawarded += 86400
 		else: author.marseyawarded = int(time.time()) + 86400
+		if not author.has_badge(98):
+			badge = Badge(user_id=author.id, badge_id=98)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "pizzashill":
 		if author.bird:
 			return {"error": "This user is the under the effect of a conflicting award: Bird Site award."}, 404
 		if author.longpost: author.longpost += 86400
 		else: author.longpost = int(time.time()) + 86400
+		if not author.has_badge(97):
+			badge = Badge(user_id=author.id, badge_id=97)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "bird":
 		if author.longpost:
 			return {"error": "This user is the under the effect of a conflicting award: Pizzashill award."}, 404
 		if author.bird: author.bird += 86400
 		else: author.bird = int(time.time()) + 86400
+		if not author.has_badge(95):
+			badge = Badge(user_id=author.id, badge_id=95)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "eye":
 		author.eye = True
 		if not author.has_badge(83):
@@ -491,6 +527,10 @@ def award_comment(cid, v):
 	elif kind == "progressivestack":
 		if author.progressivestack: author.progressivestack += 21600
 		else: author.progressivestack = int(time.time()) + 21600
+		if not author.has_badge(94):
+			badge = Badge(user_id=author.id, badge_id=94)
+			g.db.add(badge)
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	if c.author.received_award_count: c.author.received_award_count += 1
 	else: c.author.received_award_count = 1

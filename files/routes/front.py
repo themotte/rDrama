@@ -171,30 +171,40 @@ def front_all(v):
 			v.flairchanged = None
 			send_repeatable_notification(v.id, "Your flair lock has expired. You can now change your flair!")
 			g.db.add(v)
+			badge = v.has_badge(96)
+			if badge: g.db.delete(badge)
 			g.db.commit()
 
 		if v.marseyawarded and v.marseyawarded < time.time():
 			v.marseyawarded = None
 			send_repeatable_notification(v.id, "Your marsey award has expired!")
 			g.db.add(v)
+			badge = v.has_badge(98)
+			if badge: g.db.delete(badge)
 			g.db.commit()
 
 		if v.longpost and v.longpost < time.time():
 			v.longpost = None
 			send_repeatable_notification(v.id, "Your pizzashill award has expired!")
 			g.db.add(v)
+			badge = v.has_badge(97)
+			if badge: g.db.delete(badge)
 			g.db.commit()
 
 		if v.bird and v.bird < time.time():
 			v.bird = None
 			send_repeatable_notification(v.id, "Your bird site award has expired!")
 			g.db.add(v)
+			badge = v.has_badge(95)
+			if badge: g.db.delete(badge)
 			g.db.commit()
 
 		if v.progressivestack and v.progressivestack < time.time():
 			v.progressivestack = None
 			send_repeatable_notification(v.id, "Your progressive stack has expired!")
 			g.db.add(v)
+			badge = v.has_badge(94)
+			if badge: g.db.delete(badge)
 			g.db.commit()
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}

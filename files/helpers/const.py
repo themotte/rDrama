@@ -295,7 +295,7 @@ BADGES = {
 		'description': 'Contributed at least $100'
 	},
 	26: {
-		'name': 'Agendaposter',
+		'name': 'Rightoid Agendaposter',
 		'description': 'Forced to use the agendaposter theme'
 	},
 	27: {
