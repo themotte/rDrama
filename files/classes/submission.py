@@ -348,9 +348,10 @@ class Submission(Base):
 	def realbody(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{cc} ONLY</p>"
 
-		if not body_html: return ""
-
 		body = self.body_html
+
+		if not body: return ""
+
 		body = censor_slurs(body, v)
 
 		if v:
@@ -377,9 +378,10 @@ class Submission(Base):
 	def plainbody(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{cc} ONLY</p>"
 
+		body = self.body
+
 		if not body: return ""
 
-		body = self.body
 		body = censor_slurs(body, v)
 
 		if v:
