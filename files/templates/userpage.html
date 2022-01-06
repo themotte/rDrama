@@ -172,7 +172,7 @@
 							{% endif %}
 						{% endif %}
 
-						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message2" onsubmit="submitFormAjax(event)">
+						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
 							<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
 							<pre></pre>
 							<textarea autocomplete="off" id="input-message" form="message" name="message" rows="3" maxlength="1000" class="form-control b2" oninput="markdown('input-message', 'message-preview')" required></textarea>
@@ -461,7 +461,7 @@
 						{% endif %}
 					{% endif %}
 
-					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message2" onsubmit="submitFormAjax(event)">
+					<form class="d-none profile-toggleable-mobile" id='message-mobile' action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
 						<pre></pre>
 						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
 						<textarea autocomplete="off" id="input-message-mobile" form="message-mobile" name="message" rows="3" maxlength="1000" class="form-control" oninput="markdown('input-message-mobile', 'message-preview-mobile')" required></textarea>
@@ -692,7 +692,7 @@
 
 {% if v %}
 <div id='tax' class="d-none">{% if v.patron or u.patron or v.alts_patron or u.alts_patron %}0{% else %}0.03{% endif %}</div>
-<script src="/static/assets/js/userpage_v.js?a=6"></script>
+<script src="/static/assets/js/userpage_v.js?a=7"></script>
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 

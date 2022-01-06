@@ -303,7 +303,7 @@ messageModal.addEventListener('show.bs.modal', function (event) {
 	// Update the modal's content.
 	const modalTitle = messageModal.querySelector('.modal-title');
 	// Set our form's action
-	form.action = `/@${recipient}/message2`
+	form.action = `/@${recipient}/message`
 	// Set our modal header text
 	modalTitle.textContent = 'New message to ' + recipient
 

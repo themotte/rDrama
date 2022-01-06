@@ -491,7 +491,7 @@ class User(Base):
 	def json_core(self):
 
 		now = int(time.time())
-		if self.is_banned and (not self.unban_utc or now < self.unban_utc):
+		if self.is_suspended:
 			return {'username': self.username,
 					'url': self.url,
 					'is_banned': True,
@@ -545,7 +545,6 @@ class User(Base):
 
 
 	@property
-	@lazy
 	def is_suspended(self):
 		if self.unban_utc and self.unban_utc < time.time():
 			self.is_banned = 0
@@ -553,7 +552,8 @@ class User(Base):
 			self.ban_evade = 0
 			g.db.add(self)
 			g.db.commit()
-		return (self.is_banned and (not self.unban_utc or self.unban_utc > time.time()))
+			return False
+		return (self.is_banned and (self.unban_utc == 0 or self.unban_utc > time.time()))
 
 
 	@property

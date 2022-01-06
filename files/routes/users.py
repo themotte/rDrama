@@ -140,7 +140,7 @@ def pay_rent(v):
 
 @app.post("/steal")
 @limiter.limit("1/second")
-@is_not_banned
+@auth_required
 @validate_formkey
 def steal(v):
 	if int(time.time()) - v.created_utc < 604800:
@@ -222,7 +222,7 @@ def get_coins(v, username):
 
 @app.post("/@<username>/transfer_coins")
 @limiter.limit("1/second")
-@is_not_banned
+@is_not_permabanned
 @validate_formkey
 def transfer_coins(v, username):
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
@@ -260,7 +260,7 @@ def transfer_coins(v, username):
 
 @app.post("/@<username>/transfer_bux")
 @limiter.limit("1/second")
-@is_not_banned
+@is_not_permabanned
 @validate_formkey
 def transfer_bux(v, username):
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
@@ -393,84 +393,15 @@ def reportbugs(v):
 @app.post("/@<username>/message")
 @limiter.limit("1/second")
 @limiter.limit("10/hour")
-@auth_required
+@is_not_permabanned
 @validate_formkey
 def message2(v, username):
 
 	user = get_user(username, v=v)
 	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
 
-	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked: return {"error": "This user is blocking you."}, 403
-
-	if v.is_banned and not v.unban_utc: return render_template('errors/500.html', error=True, v=v), 500
-
-	if v.shadowbanned: return redirect(f"/@{username}")
-
-	message = request.values.get("message", "").strip()[:1000].strip()
-
-	if 'linkedin.com' in message: return {"error": "this domain 'linkedin.com' is banned"}
-
-	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
-
-	text_html = Renderer().render(mistletoe.Document(message))
-
-	text_html = sanitize(text_html, True)
-
-	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
-															Comment.sentto == user.id,
-															Comment.body_html == text_html,
-															).first()
-	if existing: return redirect('/notifications?messages=true')
-
-	new_comment = Comment(author_id=v.id,
-						  parent_submission=None,
-						  level=1,
-						  sentto=user.id,
-						  body_html=text_html,
-						  )
-	g.db.add(new_comment)
-
-	g.db.flush()
-
-
-	notif = Notification(comment_id=new_comment.id, user_id=user.id)
-	g.db.add(notif)
-
-	
-	try:
-		beams_client.publish_to_interests(
-			interests=[str(user.id)],
-			publish_body={
-				'web': {
-					'notification': {
-						'title': f'New message from @{v.username}',
-						'body': message,
-						'deep_link': f'https://{site}/notifications',
-					},
-				},
-			},
-		)
-	except Exception as e:
-		print(e)
-
-	g.db.commit()
-
-	return redirect(f"/@{username}")
-
-@app.post("/@<username>/message2")
-@limiter.limit("1/second")
-@limiter.limit("10/hour")
-@auth_required
-@validate_formkey
-def message3(v, username):
-
-	user = get_user(username, v=v)
-	if hasattr(user, 'is_blocking') and user.is_blocking: return {"error": "You're blocking this user."}, 403
-
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
 		return {"error": "This user is blocking you."}, 403
-
-	if v.is_banned and not v.unban_utc: return {"error": "Internal server error"}, 500
 
 	if v.shadowbanned: return {"message": "Message sent!"}
 
@@ -542,7 +473,9 @@ def messagereply(v):
 
 	id = int(request.values.get("parent_id"))
 	parent = get_comment(id, v=v)
-	user = parent.author
+	user_id = parent.author.id
+
+	if v.id == user_id: user_id = parent.sentto
 
 	text_html = Renderer().render(mistletoe.Document(message))
 	text_html = sanitize(text_html, True)
@@ -551,13 +484,13 @@ def messagereply(v):
 							parent_submission=None,
 							parent_comment_id=id,
 							level=parent.level + 1,
-							sentto=user.id,
+							sentto=user_id,
 							body_html=text_html,
 							)
 	g.db.add(new_comment)
 	g.db.flush()
 
-	notif = Notification(comment_id=new_comment.id, user_id=user.id)
+	notif = Notification(comment_id=new_comment.id, user_id=user_id)
 	g.db.add(notif)
 
 	g.db.commit()

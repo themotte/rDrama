@@ -16,8 +16,6 @@ def admin_vote_info_get(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
-	if v and v.shadowbanned: return render_template('errors/500.html', error=True, v=v), 500
-
 	link = request.values.get("link")
 	if not link: return render_template(f"{template}votes.html", v=v)
 
@@ -27,36 +25,43 @@ def admin_vote_info_get(v):
 		else: abort(400)
 	except: abort(400)
 
-	if thing.author.shadowbanned and not (v and v.admin_level): return render_template('errors/500.html', error=True, v=v), 500
-
 	if isinstance(thing, Submission):
+
+		if thing.author.shadowbanned and not (v and v.admin_level):
+			thing_id = g.db.query(Submission.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).first()[0]
+		else: thing_id = thing.id
 
 		ups = g.db.query(Vote
 						 ).options(joinedload(Vote.user)
-								   ).filter_by(submission_id=thing.id, vote_type=1
+								   ).filter_by(submission_id=thing_id, vote_type=1
 											   ).order_by(Vote.id).all()
 
 		downs = g.db.query(Vote
 						   ).options(joinedload(Vote.user)
-									 ).filter_by(submission_id=thing.id, vote_type=-1
+									 ).filter_by(submission_id=thing_id, vote_type=-1
 												 ).order_by(Vote.id).all()
 
 	elif isinstance(thing, Comment):
 
+		if thing.author.shadowbanned and not (v and v.admin_level):
+			thing_id = g.db.query(Comment.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).first()[0]
+		else: thing_id = thing.id
+
 		ups = g.db.query(CommentVote
 						 ).options(joinedload(CommentVote.user)
-								   ).filter_by(comment_id=thing.id, vote_type=1
+								   ).filter_by(comment_id=thing_id, vote_type=1
 											   ).order_by(CommentVote.id).all()
 
 		downs = g.db.query(CommentVote
 						   ).options(joinedload(CommentVote.user)
-									 ).filter_by(comment_id=thing.id, vote_type=-1
+									 ).filter_by(comment_id=thing_id, vote_type=-1
 												 ).order_by(CommentVote.id).all()
 
 	else: abort(400)
 
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
+
 	return render_template(f"{template}votes.html",
 						   v=v,
 						   thing=thing,
@@ -71,7 +76,7 @@ def admin_vote_info_get(v):
 @validate_formkey
 def api_vote_post(post_id, new, v):
 
-	if v.is_banned and not v.unban_utc or new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
+	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
 
 	if new not in ["-1", "0", "1"]: abort(400)
 
@@ -130,7 +135,7 @@ def api_vote_post(post_id, new, v):
 @validate_formkey
 def api_vote_comment(comment_id, new, v):
 
-	if v.is_banned and not v.unban_utc or new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
+	if new == "-1" and environ.get('DISABLE_DOWNVOTES') == '1': return {"error": "forbidden."}, 403
 
 	if new not in ["-1", "0", "1"]: abort(400)
 

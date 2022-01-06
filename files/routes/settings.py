@@ -499,7 +499,8 @@ def gumroad(v):
 	if SITE_NAME == 'Drama': patron = 'Paypig'
 	else: patron = 'Patron'
 
-	if not (v.email and v.is_activated): return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
+	if not (v.email and v.is_activated):
+		return {"error": f"You must have a verified email to verify {patron} status and claim your rewards"}, 400
 
 	data = {'access_token': GUMROAD_TOKEN, 'email': v.email}
 	response = requests.get('https://api.gumroad.com/v2/sales', data=data).json()["sales"]
@@ -624,7 +625,7 @@ def settings_security_post(v):
 									   v=v)
 				  )
 
-		return render_template("settings_security.html", v=v, error="Check your email and click the verification link to complete the email change.")
+		return render_template("settings_security.html", v=v, msg="Check your email and click the verification link to complete the email change.")
 
 	if request.values.get("2fa_token"):
 		if not v.verifyPass(request.values.get('password')):
@@ -931,11 +932,9 @@ def settings_content_get(v):
 
 @app.post("/settings/name_change")
 @limiter.limit("1/second")
-@auth_required
+@is_not_permabanned
 @validate_formkey
 def settings_name_change(v):
-
-	if v.is_banned and not v.unban_utc: return {"error": "forbidden."}, 403
 
 	new_name=request.values.get("name").strip()
 

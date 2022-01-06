@@ -39,7 +39,7 @@ def authorize(v):
 
 @app.post("/api_keys")
 @limiter.limit("1/second")
-@is_not_banned
+@is_not_permabanned
 @validate_formkey
 def request_api_keys(v):
 
@@ -82,7 +82,7 @@ def delete_oauth_app(v, aid):
 
 @app.post("/edit_app/<aid>")
 @limiter.limit("1/second")
-@is_not_banned
+@is_not_permabanned
 @validate_formkey
 def edit_oauth_app(v, aid):
 

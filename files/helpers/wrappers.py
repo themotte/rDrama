@@ -28,7 +28,7 @@ def get_logged_in_user():
 		return v
 
 def check_ban_evade(v):
-	if v and not v.patron and v.ban_evade and v.admin_level == 0 and not v.is_suspended:
+	if v and not v.patron and v.admin_level == 0 and v.ban_evade and not v.unban_utc:
 		if random.randint(0,30) < v.ban_evade: v.shadowbanned = "AutoJanny"
 		else: v.ban_evade +=1
 		g.db.add(v)
@@ -65,7 +65,7 @@ def auth_required(f):
 	return wrapper
 
 
-def is_not_banned(f):
+def is_not_permabanned(f):
 
 	def wrapper(*args, **kwargs):
 
@@ -75,7 +75,8 @@ def is_not_banned(f):
 			
 		check_ban_evade(v)
 
-		if v.is_suspended: return {"error": "You can't perform this action while being banned."}, 403
+		if v.is_banned and v.unban_utc == 0:
+			return {"error": "Interal server error"}, 500
 
 		resp = make_response(f(*args, v=v, **kwargs))
 		return resp

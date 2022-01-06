@@ -14,14 +14,13 @@ WELCOME_CHANNEL="846509313941700618"
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.get("/discord")
-@auth_required
+@is_not_permabanned
 def join_discord(v):
 	
-	if v.is_banned and not v.unban_utc: return {"error": "Permabanned users cannot join the discord server!"}
+	if v.shadowbanned: return {"error": "Internal server error"}
 	
-	if SITE_NAME == 'Drama' and v.admin_level == 0 and v.patron == 0 and v.truecoins < 150: return f"You must receive 150 upvotes/downvotes from other users before being able to join the Discord server."
-	
-	if v.shadowbanned or v.agendaposter: return ""
+	if SITE_NAME == 'Drama' and v.admin_level == 0 and v.patron == 0 and v.truecoins < 150:
+		return f"You must receive 150 upvotes/downvotes from other users before being able to join the Discord server."
 
 	now=int(time.time())
 

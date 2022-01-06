@@ -715,9 +715,11 @@ def thumbnail_thread(pid):
 @app.post("/submit")
 @limiter.limit("1/second")
 @limiter.limit("6/minute")
-@is_not_banned
+@auth_required
 @validate_formkey
 def submit_post(v):
+	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
+	
 	if v and v.patron:
 		if request.content_length > 8 * 1024 * 1024: return {"error": "Max file size is 8 MB."}, 413
 	elif request.content_length > 4 * 1024 * 1024: return {"error": "Max file size is 4 MB."}, 413

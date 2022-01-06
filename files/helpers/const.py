@@ -9,8 +9,8 @@ SITE_NAME = environ.get("SITE_NAME", '').strip()
 import json
 
 with open("files/assets/js/emoji_modal.js", 'r') as file:
-	text = file.read().split('emojis: ')[1].split('cops police"},')[0] + '"}}'
-	result = loads(text)
+	marseytext = file.read().split('emojis: ')[1].split('cops police"},')[0] + '"}}'
+	result = loads(marseytext)
 
 marseys = {}
 

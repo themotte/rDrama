@@ -882,7 +882,7 @@ const EMOJIS_STRINGS = [
 	},
 	{
 		type: 'misc',
-		emojis: ['sneed','retardedchildren','bruh','autism','doot','kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
+		emojis: ['etika','sneed','retardedchildren','bruh','autism','doot','kylieface','queenyes','wholesomeseal','chadyescapy','gigachadglow','gigachadorthodox','gigachad','gigachad2','gigachad3']
 	},
 ]
 
