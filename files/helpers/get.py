@@ -60,7 +60,7 @@ def get_user(username, v=None, graceful=False):
 					 UserBlock.target_id == v.id
 					 )
 			)
-		).one_or_none()
+		).first()
 
 		user.is_blocking = block and block.user_id == v.id
 		user.is_blocked = block and block.target_id == v.id
