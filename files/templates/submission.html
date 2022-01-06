@@ -328,7 +328,7 @@
 				<div id="post-content" class="{% if p.deleted_utc > 0 %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
-						{% if p.bannedfor and p.author.banned_by %}
+						{% if p.bannedfor %}
 							<a role="button"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this post by @{{p.author.banned_by.username}}"></i></a>
 						{% endif %}	
 

@@ -192,7 +192,7 @@
 					{% endfor %}
 				{% endif %}
 
-				{% if c.bannedfor and c.author.banned_by %}
+				{% if c.bannedfor %}
 					<a role="button"><i class="fad fa-gavel text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="User was banned for this comment by @{{c.author.banned_by.username}}"></i></a>
 				{% endif %}
 				{% if c.active_flags %}<a class="btn btn-primary" style="padding:1px 5px; font-size:10px;" role="button" onclick="document.getElementById('flaggers-{{c.id}}').classList.toggle('d-none')">{{c.active_flags}} Reports</a>{% endif %}

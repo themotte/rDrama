@@ -562,7 +562,7 @@ const EMOJIS_STRINGS = [
 			"marseyneckbeard": {"author":"above______below", "tags":"mlady bodypillow dakimakura anime otaku fedora weebshit body pillow mra weeb"},
 			"marseyneet": {"author":"seethefarmer", "tags":"cozy comfy wagie"},
 			"marseyneon": {"author":"chiobu", "tags":"wave flashy trippy waving flashing lights animated"},
-			"marseynerd": {"author":"unknown", "tags":"dork loser dweeb geek glasses aevann"},
+			"marseynerd": {"author":"astolfo", "tags":"dork loser dweeb geek glasses aevann"},
 			"marseynietzsche": {"author":"feynmandidnothingwrong", "tags":"philosophy history"},
 			"marseyniggawut": {"author":"chapose", "tags":"weird reaction raised eyebrow disturbing disturbed wtf judgment"},
 			"marseynightmare": {"author":"dramarama", "tags":"striped sweater freddy freddie horror halloween krueger holiday claws monster"},
