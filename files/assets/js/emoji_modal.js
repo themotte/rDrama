@@ -772,7 +772,7 @@ const EMOJIS_STRINGS = [
 			"marseything": {"author":"jannies_deserve_the_rope", "tags":"halloween holiday scary monster teeth"},
 			"marseythinkorino": {"author":"unknown", "tags":"reaction thinking hmm thought"},
 			"marseythinkorino": {"author":"unknown", "tags":"reaction judgment"},
-			"marseythomas": {"author":"unknown", "tags":"tank engine train locomotive"},
+			"marseythomas": {"author":"mom", "tags":"tank engine train locomotive"},
 			"marseythonk": {"author":"john", "tags":"confused reaction thinking thunk thonk"},
 			"marseythroatsinging": {"author":"unknown", "tags":"mongolian music"},
 			"marseytiger": {"author":"chiobu", "tags":"fursona furry fursuit"},
