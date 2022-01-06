@@ -69,7 +69,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def flags(self):
-		return g.db.query(CommentFlag).filter_by(comment_id=self.id)
+		return g.db.query(CommentFlag).filter_by(comment_id=self.id).order_by(CommentFlag.id)
 
 	@lazy
 	def poll_voted(self, v):
@@ -398,10 +398,6 @@ class Comment(Base):
 	@property
 	@lazy
 	def active_flags(self): return self.flags.count()
-
-	@property
-	@lazy
-	def ordered_flags(self): return self.flags.order_by(CommentFlag.id).all()
 
 	def options_html(self, v):
 		html = ""
