@@ -370,7 +370,7 @@
 							<button id="comment-{{c.id}}-up" tabindex="0" role="button" onclick="vote('comment', '{{c.id}}', '1')" class="btn caction py-0 m-0 px-3 nobackground arrow-up upvote-button mx-0 comment-{{c.id}}-up {% if voted==1 %}active{% endif %}"></button>
 						
 						{% else %}
-							<button id="comment-{{c.id}}-up" tabindex="0" class="btn caction py-0 m-0 px-3 arrow-up" onclick="location.href='/login';"></button>
+							<button id="comment-{{c.id}}-up" tabindex="0" class="btn caction nobackground py-0 m-0 px-3 arrow-up" onclick="location.href='/login';"></button>
 						
 						{% endif %}
 						
