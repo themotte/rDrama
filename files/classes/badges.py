@@ -42,7 +42,7 @@ class Badge(Base):
 			elif self.badge_id == 96: ti = self.user.flairchanged
 			elif self.badge_id == 97: ti = self.user.longpost
 			else: ti = self.user.marseyawarded
-			return self.badge['description'] + " until " + datetime.utcfromtimestamp().strftime('%Y-%m-%d %H:%M:%S')
+			return self.badge['description'] + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
 
 		elif self.description: return self.description
 		else: return self.badge['description']
