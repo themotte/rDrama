@@ -57,7 +57,7 @@ class Submission(Base):
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
 	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)
-	awards = relationship("AwardRelationship", viewonly=True, order_by=AwardRelationship.id.desc())
+	awards = relationship("AwardRelationship", viewonly=True, order_by=AwardRelationship.id)
 	reports = relationship("Flag", viewonly=True)
 
 	def __init__(self, *args, **kwargs):

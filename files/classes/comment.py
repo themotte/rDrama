@@ -10,6 +10,7 @@ from files.classes.votes import CommentVote
 from files.helpers.const import AUTOPOLLER_ID, AUTOBETTER_ID, censor_slurs
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
+from .award import AwardRelationship
 from random import randint
 
 site = environ.get("DOMAIN").strip()
@@ -52,7 +53,7 @@ class Comment(Base):
 	senttouser = relationship("User", primaryjoin="User.id==Comment.sentto", viewonly=True)
 	parent_comment = relationship("Comment", remote_side=[id], viewonly=True)
 	child_comments = relationship("Comment", remote_side=[parent_comment_id], viewonly=True)
-	awards = relationship("AwardRelationship", viewonly=True)
+	awards = relationship("AwardRelationship", viewonly=True, order_by=AwardRelationship.id)
 	reports = relationship("CommentFlag", viewonly=True)
 	
 	def __init__(self, *args, **kwargs):
