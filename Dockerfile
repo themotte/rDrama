@@ -10,4 +10,4 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 80/tcp
 
-CMD gunicorn files.__main__:app -k gevent -w 2 --reload -b 0.0.0.0:80 --max-requests 1000 --max-requests-jitter 500
+CMD sudo -E gunicorn files.__main__:app -k gevent -w 2 --reload -b 0.0.0.0:80 --max-requests 1000 --max-requests-jitter 500

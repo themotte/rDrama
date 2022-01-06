@@ -414,21 +414,49 @@ BADGES = {
 		'name': 'Unblockable',
 		'description': 'This user is unblockable'
 	},
-        88: {
+	88: {
 		'name': 'Provider',
 		'description': 'This user provided a bountiful feast for Thanksgiving'
 	},
-        89: {
+	89: {
 		'name': 'Dinner',
 		'description': 'Yes, it is edible'
 	},
-        90: {
+	90: {
 		'name': 'Fish',
 		'description': 'This user cannot be unfollowed'
 	},
 	91: {
 		'name': 'Grinch',
 		'description': 'This user is a joyless grinch who pays money to avoid having fun'
+	},
+	92: {
+		'name': 'NFT Artist',
+		'description': 'Drew a marsey that was used as an NFT'
+	},
+	93: {
+		'name': 'NFT Owner',
+		'description': 'Bought a marsey NFT'
+	},
+	94: {
+		'name': 'Progressive Stack Award',
+		'description': "Upvotes/downvotes on this user's posts and comments have double the ranking effect"
+	},
+	95: {
+		'name': 'Bird Site Award',
+		'description': 'This user is limited to 140 characters'
+	},
+	96: {
+		'name': 'Flairlock Award',
+		'description': "This user's flair has been locked by someone else"
+	},
+	97: {
+		'name': 'Pizzashill Award',
+		'description': 'This user has to make their posts and comments more than 280 characters'
+	},
+	98: {
+		'name': 'Marsey Award',
+		'description': 'This user is limited to posting marseys'
 	},
 }
 
