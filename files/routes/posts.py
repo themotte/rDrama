@@ -495,39 +495,6 @@ def edit_post(pid, v):
 
 		p.body_html = body_html
 
-		if request.host == "rdrama.net" and "ivermectin" in body_html.lower():
-
-			p.is_banned = True
-			p.ban_reason = "AutoJanny"
-
-			g.db.add(p)
-
-			body = VAXX_MSG.format(username=v.username)
-
-			body_md = CustomRenderer().render(mistletoe.Document(body))
-
-			body_jannied_html = sanitize(body_md)
-
-
-			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-				parent_submission=p.id,
-				level=1,
-				over_18=False,
-				is_bot=True,
-				app_id=None,
-				is_pinned='AutoJanny',
-				distinguish_level=6,
-				body_html=body_jannied_html,
-				)
-
-			g.db.add(c_jannied)
-			g.db.flush()
-
-
-			n = Notification(comment_id=c_jannied.id, user_id=v.id)
-			g.db.add(n)
-
-
 		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in body_html.lower():
 
 			p.is_banned = True
@@ -1062,38 +1029,6 @@ def submit_post(v):
 			user = get_account(follow.user_id)
 			if new_post.club and not user.paid_dues: continue
 			add_notif(cid, user.id)
-
-
-	if request.host == "rdrama.net" and "ivermectin" in new_post.body_html.lower():
-
-		new_post.is_banned = True
-		new_post.ban_reason = "AutoJanny"
-
-		body = VAXX_MSG.format(username=v.username)
-
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-
-		body_jannied_html = sanitize(body_md)
-
-
-		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-			parent_submission=new_post.id,
-			level=1,
-			over_18=False,
-			is_bot=True,
-			app_id=None,
-			is_pinned='AutoJanny',
-			distinguish_level=6,
-			body_html=body_jannied_html,
-		)
-
-		g.db.add(c_jannied)
-		g.db.flush()
-
-
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
-
 
 	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in new_post.body_html.lower():
 

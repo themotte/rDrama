@@ -142,16 +142,6 @@ AGENDAPOSTER_MSG = """Hi @{username},\n\nYour comment has been automatically rem
 		included. \n\n*This is an automated message; if you need help,
 		you can message us [here](/contact).*"""
 
-VAXX_MSG = """Hi @{username}, it appears that you may be trying to spread dangerous misinformation regarding ineffective COVID-19 treatments based on pseudoscientific hearsay. Your post has been removed because it contained the word ivermectin. We ask that you understand that horse dewormer neither treats, nor prevents, COVID-19. For more information, please read up on what the FDA has to say on the matter:
-
-https://www.fda.gov/consumers/consumer-updates/why-you-should-not-use-ivermectin-treat-or-prevent-covid-19
-
-COVID-19 is not a joke, it is a global pandemic and it has been hard on all of us. It will likely go down as one of the most defining periods of our generation. Many of us have lost loved ones to the virus. It has caused confusion, fear, frustration, and served to further divide us. Tens of millions around the world have died. There is nothing to be gained by spreading bad science based on very understandable fear.
-
-The only proven method of prevention is the COVID-19 vaccine, paired with appropriate social distancing, handwashing, and masks. Vaccines are free in the United States - if you'd like to locate your nearest vaccine provider, please visit https://www.vaccines.gov/ and schedule an appointment today.
-
-Thank you."""
-
 if SITE == 'rdrama.net':
 	PW_ID = 3750
 	BASEDBOT_ID = 0
@@ -163,7 +153,7 @@ if SITE == 'rdrama.net':
 	ZOZBOT_ID = 1833
 	AUTOPOLLER_ID = 6176
 	AUTOBETTER_ID = 7668
-	TAX_RECEIVER_ID = 747
+	TAX_RECEIVER_ID = 995
 	PIZZA_SHILL_ID = 2424
 	IDIO_ID = 30
 	CARP_ID = 995

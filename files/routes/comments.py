@@ -343,40 +343,6 @@ def api_comment(v):
 		n = Notification(comment_id=c_based.id, user_id=v.id)
 		g.db.add(n)
 
-
-	if request.host == "rdrama.net" and "ivermectin" in c.body.lower():
-
-		c.is_banned = True
-		c.ban_reason = "AutoJanny"
-
-		g.db.add(c)
-
-		body2 = VAXX_MSG.format(username=v.username)
-
-		body_md = CustomRenderer().render(mistletoe.Document(body2))
-
-		body_jannied_html = sanitize(body_md)
-
-
-
-		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-			parent_submission=parent_submission,
-			distinguish_level=6,
-			parent_comment_id=c.id,
-			level=level+1,
-			is_bot=True,
-			body_html=body_jannied_html,
-			top_comment_id=c.top_comment_id
-			)
-
-		g.db.add(c_jannied)
-		g.db.flush()
-
-
-
-		n = Notification(comment_id=c_jannied.id, user_id=v.id)
-		g.db.add(n)
-
 	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body_html.lower():
 
 		c.is_banned = True
@@ -718,40 +684,6 @@ def edit_comment(cid, v):
 
 		c.body = body[:10000]
 		c.body_html = body_html
-
-		if request.host == "rdrama.net" and "ivermectin" in c.body_html.lower():
-
-			c.is_banned = True
-			c.ban_reason = "AutoJanny"
-
-			g.db.add(c)
-
-			body = VAXX_MSG.format(username=v.username)
-
-			body_md = CustomRenderer().render(mistletoe.Document(body))
-
-			body_jannied_html = sanitize(body_md)
-
-
-
-			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
-				parent_submission=c.parent_submission,
-				distinguish_level=6,
-				parent_comment_id=c.id,
-				level=c.level+1,
-				is_bot=True,
-				body_html=body_jannied_html,
-				top_comment_id=c.top_comment_id
-				)
-
-			g.db.add(c_jannied)
-			g.db.flush()
-
-
-
-			n = Notification(comment_id=c_jannied.id, user_id=v.id)
-			g.db.add(n)
-
 
 		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body_html.lower():
 

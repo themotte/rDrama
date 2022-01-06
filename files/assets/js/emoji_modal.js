@@ -42,7 +42,7 @@ const EMOJIS_STRINGS = [
 			"marseymerchant": {"author":"arran", "tags":"kike hebrew shopkeeper yid banker jew moneylender jewish greedy israel"},
 			"marseyno": {"author":"dramarama", "tags":"denied refuse rejection reaction ugh deny hand"},
 			"marseywalking": {"author":"dramarama", "tags":"stroll walk strut gallivant animated"},
-			"marseyhearts": {"author":"unknown", "tags":"reaction flirt loving adoration love happy cute crush"},
+			"marseyhearts": {"author":"mynameisurmom", "tags":"reaction flirt loving adoration love happy cute crush"},
 			"marseybegging": {"author":"chiobu", "tags":"pls plz pleading reaction tears in eyes animated"},
 			"marseytrans": {"author":"uwu", "tags":"pitty transgender pitbull dog pibble transsexual"},
 			"marseygigaretard": {"author":"chapose", "tags":"idiot neurodivergent dumb stupid drooling moron puddle"},
