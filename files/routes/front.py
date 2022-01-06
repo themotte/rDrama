@@ -34,7 +34,7 @@ def notifications(v):
 		comments = comments[:25]
 	elif messages:
 
-		comments = g.db.query(Comment).distinct(Comment.parent_comment_id).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, not_(Comment.child_comments.any())).order_by(Comment.parent_comment_id.desc()).offset(25*(page-1)).limit(26).all()
+		comments = g.db.query(Comment).distinct(Comment.parent_comment_id).filter(or_(Comment.author_id==v.id, Comment.sentto==v.id), Comment.parent_submission == None, Comment.sentto != None, not_(Comment.child_comments.any())).order_by(Comment.parent_comment_id.desc()).offset(25*(page-1)).limit(26).all()
 
 		next_exists = (len(comments) > 25)
 		comments = comments[:25]
