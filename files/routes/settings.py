@@ -303,6 +303,7 @@ def settings_profile_post(v):
 				with open("video.mp4", 'rb') as f:
 					try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
 					except: return {"error": "Imgur error"}, 400
+				if url.endswith('.'): url += 'mp4'
 				bio += f"\n\n{url}"
 			else:
 				if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400

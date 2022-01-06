@@ -85,7 +85,6 @@ def publish(pid, v):
 @app.get("/submit")
 @auth_required
 def submit_get(v):
-
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}submit.html",
@@ -452,6 +451,7 @@ def edit_post(pid, v):
 			with open("video.mp4", 'rb') as f:
 				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
 				except: return {"error": "Imgur error"}, 400
+			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
 		else: return {"error": f"Image/Video files only"}, 400
 
@@ -944,6 +944,7 @@ def submit_post(v):
 			with open("video.mp4", 'rb') as f:
 				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
 				except: return {"error": "Imgur error"}, 400
+			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
 		else:
 			if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
@@ -1040,6 +1041,7 @@ def submit_post(v):
 			with open("video.mp4", 'rb') as f:
 				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
 				except: return {"error": "Imgur error"}, 400
+			if url.endswith('.'): url += 'mp4'
 			new_post.url = url
 		else:
 			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
