@@ -301,7 +301,8 @@ def settings_profile_post(v):
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
-					url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
+					try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
+					except: return {"error": "Imgur error"}, 400
 				bio += f"\n\n{url}"
 			else:
 				if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
@@ -606,11 +607,6 @@ def settings_security_post(v):
 
 		if new_email == v.email:
 			return render_template("settings_security.html", v=v, error="That email is already yours!")
-
-		existing = g.db.query(User.id).filter(User.id != v.id,
-										   func.lower(User.email) == new_email.lower()).one_or_none()
-		if existing:
-			return render_template("settings_security.html", v=v, error="That email address is already in use.")
 
 		url = f"https://{app.config['SERVER_NAME']}/activate"
 
