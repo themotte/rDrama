@@ -559,7 +559,7 @@ class User(Base):
 	@property
 	@lazy
 	def applications(self):
-		return g.db.query(OauthApp).filter_by(author_id=self.id).order_by(OauthApp.id.asc()).all()
+		return g.db.query(OauthApp).filter_by(author_id=self.id).order_by(OauthApp.id)
 
 	@lazy
 	def subscribed_idlist(self, page=1):

@@ -861,9 +861,9 @@
 		redhtml = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Unread"></i>'
 		if (lastCount)
 		{
-			{% for c in comments %}
-				{% if not (v and v.id==c.author_id) %}
-					if ({{c.created_utc*1000}} > lastCount.t) document.getElementById("reddot-{{c.id}}").innerHTML = redhtml
+			{% for c in p.comments %}
+				{% if not (v and v.id==c[0]) %}
+					if ({{c[1]*1000}} > lastCount.t) document.getElementById("reddot-{{c[2]}}").innerHTML = redhtml
 				{% endif %}
 			{% endfor %}
 		}

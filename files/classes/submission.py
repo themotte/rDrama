@@ -68,6 +68,11 @@ class Submission(Base):
 
 	@property
 	@lazy
+	def comments(self):
+		return g.db.query(Comment.author_id, Comment.created_utc, Comment.id).filter_by(parent_submission=self.id)
+
+	@property
+	@lazy
 	def controversial(self):
 		if self.downvotes > 5 and 0.25 < self.upvotes / self.downvotes < 4: return True
 		return False
