@@ -103,7 +103,7 @@ def NOTIFY_USERS(text, v):
 
 	soup = BeautifulSoup(text, features="html.parser")
 	for mention in soup.find_all("a", href=re.compile("^\/id\/([0-9]+)")):
-		id = mention["href"].split("/id/")[1]
+		id = int(mention["href"].split("/id/")[1])
 		if id != v.id:
 			user = g.db.query(User).filter_by(id=id).one_or_none()
 			if user and not v.any_block_exists(user): notify_users.add(user.id)
