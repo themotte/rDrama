@@ -57,6 +57,7 @@ const EMOJIS_STRINGS = [
 			"marseylong1": {"author":"pippy", "tags":"top meme"},
 			"marseylong2": {"author":"pippy", "tags":"middle meme"},
 			"marseylong3": {"author":"pippy", "tags":"bottom meme"},
+			"marseyetika": {"author":"lucy", "tags":"streamer youtuber nft psyops twitter antila trending black suicide bridge llm"},
             "marseybang": {"author":"chapose", "tags":"head wall bang schizo psycho selfharm deranged gif animated"},
             "marseydeadeyes": {"author":"chapose", "tags":"broken suicidal depressed"},
             "marseybangfast": {"author":"chapose", "tags":"head wall bang schizo psycho selfharm deranged gif"},
