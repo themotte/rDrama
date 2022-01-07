@@ -638,7 +638,7 @@ const EMOJIS_STRINGS = [
 			"marseypresents": {"author":"jannies_deserve_the_rope", "tags":"christmas gifts santa holiday candy cane happy"},
 			"marseypretty": {"author":"dramarama", "tags":"flirt starry eyed stars in eyes"},
 			"marseypride": {"author":"chiobu", "tags":"prideflag rights"},
-			"marseyprisma": {"author":"unknown", "tags":"animated fingers anime spin dance weeb"},
+			"marseyprisma": {"author":"aca", "tags":"animated fingers anime spin dance weeb"},
 			"marseyproctologist": {"author":"above______below", "tags":"exam rectal glove reaction anus anal colonoscopy"},
 			"marseyprotestno": {"author":"chapose", "tags":"sign protester refuse reaction deny reject"},
 			"marseyprotestyes": {"author":"chapose", "tags":"agree sign protester reaction approve"},
