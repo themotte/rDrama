@@ -468,7 +468,7 @@ const EMOJIS_STRINGS = [
 			"marseyhungry": {"author":"chiobu", "tags":"food hunger dish feed me bowl animated"},
 			"marseyhypno": {"author":"threeletteragent", "tags":"hypnosis spiral brainwash animated hypnotoad"},
 			"marseyilluminati": {"author":"above______below", "tags":"eye egypt pyramid big brother watching"},
-			"marseyimposter": {"author":"unknown", "tags":"amogus baka among us sussy"},
+			"marseyimposter": {"author":"loli_esports", "tags":"amogus baka among us sussy"},
 			"marseyinshallah": {"author":"chiobu", "tags":"begging muslim animated please"},
 			"marseyinvisible": {"author":"drama_enthusiast", "tags":"stealth"},
 			"marseyira": {"author":"aca", "tags":"car bomb irish ireland"},
