@@ -245,7 +245,7 @@
 					{{c.options_html(v) | safe}}
 				{% endif %}
 
-				{% if c.author.sig_html and (c.author_id == 1904 or not (v and v.sigs_disabled)) %}
+				{% if c.author.sig_html and (c.author_id == MOOSE_ID or not (v and v.sigs_disabled)) %}
 					<hr>
 					{{c.author.sig_html | safe}}
 				{% endif %}

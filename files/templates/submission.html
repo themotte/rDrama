@@ -458,7 +458,7 @@
 						</div>
 
 
-						{% if p.author.sig_html and (p.author_id == 1904 or not (v and v.sigs_disabled)) %}
+						{% if p.author.sig_html and (p.author_id == MOOSE_ID or not (v and v.sigs_disabled)) %}
 							<hr>
 							{{p.author.sig_html | safe}}
 						{% endif %}

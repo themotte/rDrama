@@ -158,6 +158,7 @@ if SITE == 'rdrama.net':
 	IDIO_ID = 30
 	CARP_ID = 995
 	JOAN_ID = 28
+	MOOSE_ID = 1904
 	AEVANN_ID = 1
 	LAWLZ_ID = 3833
 	LLM_ID = 253
@@ -183,6 +184,7 @@ elif SITE == "pcmemes.net":
 	IDIO_ID = 0
 	CARP_ID = 0
 	JOAN_ID = 0
+	MOOSE_ID = 0
 	AEVANN_ID = 1
 	LAWLZ_ID = 0
 	LLM_ID = 0
@@ -208,6 +210,7 @@ else:
 	IDIO_ID = 0
 	CARP_ID = 0
 	JOAN_ID = 0
+	MOOSE_ID = 0
 	AEVANN_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0

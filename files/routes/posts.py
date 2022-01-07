@@ -197,7 +197,7 @@ def post_id(pid, anything=None, v=None):
 
 	offset = 0
 
-	if not request.headers.get("Authorization") and post.comment_count > 60 and not (v and v.id == 1):
+	if not request.headers.get("Authorization") and post.comment_count > 60:
 		comments2 = []
 		count = 0
 		if post.created_utc > 1638672040:
@@ -951,7 +951,7 @@ def submit_post(v):
 		private=bool(request.values.get("private","")),
 		club=club,
 		author_id=v.id,
-		over_18=request.host == 'pcmemes.net' and v.id == 1578 or bool(request.values.get("over_18","")),
+		over_18=bool(request.values.get("over_18","")),
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("Authorization"),
 		url=url,

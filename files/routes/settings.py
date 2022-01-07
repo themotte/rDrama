@@ -162,7 +162,7 @@ def settings_profile_post(v):
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html", v=v, msg="Your enemies list has been updated.")
 
-	elif (v.patron or v.id == 1904) and request.values.get("sig"):
+	elif (v.patron or v.id == MOOSE_ID) and request.values.get("sig"):
 		sig = request.values.get("sig")[:200]
 
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', sig, re.MULTILINE):

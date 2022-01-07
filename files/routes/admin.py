@@ -205,7 +205,7 @@ def remove_meme_admin(v, username):
 @admin_level_required(3)
 @validate_formkey
 def monthly(v):
-	if request.host == 'rdrama.net' and v.id != 1: abort (403)
+	if request.host == 'rdrama.net' and v.id != AEVANN_ID: abort (403)
 
 	thing = g.db.query(AwardRelationship).order_by(AwardRelationship.id.desc()).first().id
 
