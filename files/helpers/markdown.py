@@ -39,6 +39,7 @@ class CustomRenderer(HTMLRenderer):
 
 		user = get_user(target, graceful=True)
 
+		if g.v.admin_level == 0 and g.v.any_block_exists(user): return f"{space}@{target}"
 
 		if not user: return f"{space}@{target}"
 
@@ -66,6 +67,8 @@ class Renderer(HTMLRenderer):
 		target = token.target[1]
 
 		user = get_user(target, graceful=True)
+
+		if g.v.admin_level == 0 and g.v.any_block_exists(user): return f"{space}@{target}"
 
 		if not user: return f"{space}@{target}"
 

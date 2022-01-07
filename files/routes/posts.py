@@ -15,7 +15,7 @@ from io import BytesIO
 from files.__main__ import app, limiter, cache, db_session
 from PIL import Image as PILimage
 from .front import frontlist, changeloglist
-from urllib.parse import ParseResult, urlunparse, urlparse, quote
+from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
 from os import path
 import requests
 from shutil import copyfile
@@ -57,7 +57,7 @@ def publish(pid, v):
 	post.created_utc = int(time.time())
 	g.db.add(post)
 	
-	notify_users = NOTIFY_USERS(f'{post.body_html}{post.title}', v)
+	notify_users = NOTIFY_USERS(post.body_html, v) | NOTIFY_USERS2(post.title, v)
 
 	cid = notif_comment(f"@{v.username} has mentioned you: [{post.title}]({post.permalink})")
 	for x in notify_users:
@@ -526,7 +526,7 @@ def edit_post(pid, v):
 			g.db.add(n)
 		
 
-		notify_users = NOTIFY_USERS(f'{body_html}{title}', v)
+		notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
 		
 		soup = BeautifulSoup(body_html, features="html.parser")
 			
@@ -745,13 +745,14 @@ def submit_post(v):
 		
 		url = urlunparse(new_url)
 
-		repost = g.db.query(Submission).filter(
-			Submission.url.ilike(url),
-			Submission.deleted_utc == 0,
-			Submission.is_banned == False
-		).one_or_none()
+		if SITE != 'localhost':
+			repost = g.db.query(Submission).filter(
+				Submission.url.ilike(url),
+				Submission.deleted_utc == 0,
+				Submission.is_banned == False
+			).one_or_none()
 
-		if repost: return redirect(repost.permalink)
+			if repost: return redirect(repost.permalink)
 
 		domain_obj = get_domain(domain)
 		if domain_obj:
@@ -763,6 +764,7 @@ def submit_post(v):
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
 		elif url.startswith('https://youtube.com/watch?v='):
+			url = unquote(url).replace('?t', '&t')
 			yt_id = url.split('https://youtube.com/watch?v=')[1].split('&')[0].split('%')[0]
 			params = parse_qs(urlparse(url).query)
 			t = params.get('t', params.get('start', [0]))[0]
@@ -1018,7 +1020,7 @@ def submit_post(v):
 
 	if not new_post.private:
 
-		notify_users = NOTIFY_USERS(f'{body_html}{title}', v)
+		notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
 
 		cid = notif_comment(f"@{v.username} has mentioned you: [{title}]({new_post.permalink})")
 		for x in notify_users:
