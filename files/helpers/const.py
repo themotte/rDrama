@@ -458,6 +458,10 @@ BADGES = {
 		'name': 'Marsey Award',
 		'description': 'This user is limited to posting marseys'
 	},
+	99: {
+		'name': 'Sidebar Artist',
+		'description': 'Contributed artwork featured on the sidebar'
+	},
 }
 
 AWARDS = {
