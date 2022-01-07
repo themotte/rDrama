@@ -18,7 +18,7 @@
 	<tr>
 		<td style="font-weight: bold">{{loop.index}}</td>
 		<td style="font-weight: bold">{{marsey}}</td>
-		<td><img loading="lazy" data-bs-toggle="tooltip" alt=":{{marsey}}:" title=":{{marsey}}:" delay="0" src="/static/assets/images/emojis/{{marsey}}.webp" ></td>
+		<td><img loading="lazy" data-bs-toggle="tooltip" alt=":{{marsey}}:" title=":{{marsey}}:" delay="0" src="/static/assets/images/emojis/{{marsey}}.webp?a=1000" ></td>
 		<td>{% if author in ('anton-d','unknown') %}{{author}}{% else %}<a style="font-weight:bold;" href="/@{{author}}"><img alt="@{{author}}'s profile picture" loading="lazy" src="/@{{author}}/pic" class="pp20">{{author}}</a>{% endif %}</td>
 	</tr>
 {% endfor %}

@@ -4,9 +4,9 @@ function commentForm(form) {
 	commentFormID = form;
 };
 
-const search_container = document.getElementById('emoji-tab-search')
-const search_bar = document.getElementById('emoji_search')
-
+const TEXTAREA_POS_ATTR = 'data-curr-pos'
+const EMOJI_BOX_ID = 'EMOJIS_favorite'
+const EMOJI_FORM_DESTINATION_ATTR = 'data-form-destination'
 const EMOJIS_STRINGS = [
 	{
 		type:'marsey',
@@ -29,6 +29,8 @@ const EMOJIS_STRINGS = [
 			"marseydead": {"author":"anton-d", "tags":"murdered dead killed reaction victim die rip"},
 			"marseyparty": {"author":"anton-d", "tags":"excite excitement celebrate happy celebrating"},
 			"marseyrain": {"author":"anton-d", "tags":"cloud upset reaction disappointed storm depressed sad"},
+			"marseyreading": {"author":"anton-d", "tags":"study homework learn nerd novel reaction book"},
+			"marseywave": {"author":"anton-d", "tags":"farewell cya hello greetings bye waving hi"},
 			"marseyagree": {"author":"mom", "tags":"concur nodding nod reaction affirmative yes yeah uh huh animated judgment"},
 			"marseydisagree": {"author":"mom", "tags":"nah uh nod nuh uh reaction wrong no way no negative animated judgment"},
 			"marseyjam": {"author":"tejanx", "tags":"animated bopping excited trippy excitement tejanx dancing rainbow rave happy dance"},
@@ -39,18 +41,18 @@ const EMOJIS_STRINGS = [
 			"marseyglow": {"author":"grizzly", "tags":"fbi mossad cop feds animated glownigger glowie secret service fed atf police cia nsa kgb"},
 			"marseycope": {"author":"unknown", "tags":"dilate mask seethe copium reaction"},
 			"marseyseethe": {"author":"unknown", "tags":"dilate mask crying seething smug cope"},
-			"marseymerchant": {"author":"arran", "tags":"kike hebrew shopkeeper yid banker jew moneylender jewish greedy israel"},
+			"marseymerchant": {"author":"aca", "tags":"kike hebrew shopkeeper yid banker jew moneylender jewish greedy israel"},
 			"marseyno": {"author":"dramarama", "tags":"denied refuse rejection reaction ugh deny hand"},
 			"marseywalking": {"author":"dramarama", "tags":"stroll walk strut gallivant animated"},
 			"marseyhearts": {"author":"mynameisurmom", "tags":"reaction flirt loving adoration love happy cute crush"},
 			"marseybegging": {"author":"chiobu", "tags":"pls plz pleading reaction tears in eyes animated"},
 			"marseytrans": {"author":"uwu", "tags":"pitty transgender pitbull dog pibble transsexual"},
 			"marseygigaretard": {"author":"chapose", "tags":"idiot neurodivergent dumb stupid drooling moron puddle"},
-			"marseysneed": {"author":"unknown", "tags":"feed farmer reaction chuck simpsons"},
+			"marseysneed": {"author":"kellere31", "tags":"feed farmer reaction chuck simpsons"},
 			"marseybaited": {"author":"dramarama", "tags":"laser pointer trolled gullible reaction animated"},
 			"marseyeyeroll": {"author":"mom", "tags":"rolleyes rolling eyes mock animated reaction roll eyes duh"},
-			"marseydepressed": {"author":"kellere31", "tags":"smoke kms doomer cigarette despair reaction depression suicide suicidal smoking hopeless sad"},
-			"marseypat": {"author":"unknown", "tags":"petting reaction animated cute patting"},
+			"marseydepressed": {"author":"aca", "tags":"smoke kms doomer cigarette despair reaction depression suicide suicidal smoking hopeless sad"},
+			"marseypat": {"author":"aca", "tags":"petting reaction animated cute patting"},
 			"marseyking": {"author":"soren", "tags":"based queen prince reaction crown princess"},
 			"marseylong1": {"author":"unknown", "tags":"top meme"},
 			"marseylong2": {"author":"unknown", "tags":"middle meme"},
@@ -98,10 +100,10 @@ const EMOJIS_STRINGS = [
             "marseypunished2": {"author":"threeletteragent", "tags":"punished venom snake metal gear solid kojima eyepatch drama"},
             "marseyfugg": {"author":"feynmandidnothingwrong", "tags":"spurdo sparde fugg"},
             "marseydemiurge": {"author":"feynmandidnothingwrong", "tags":"gnostic gnosticism demiurge"},
-            "marseypadoru": {"author":"unknown", "tags":"menosgrande christmas anime holidays"},
+            "marseypadoru": {"author":"menosgrande", "tags":"menosgrande christmas anime holidays"},
             "marseyklennypat": {"author":"klenvastergan", "tags":"chiobu grunderchin vidunderchin"},
             "marseygeesepat": {"author":"chiobu", "tags":"drugs stimulants creepy pat marcus disconcerting scary uneasy"},
-            "marseyretro": {"author":"unknown", "tags":"cardboard retro gameboy green nerd gamer"},
+            "marseyretro": {"author":"cardboard", "tags":"cardboard retro gameboy green nerd gamer"},
             "marseycoffee": {"author":"dramamine", "tags":"morning wakeup tea"},
             "marseysosa": {"author":"dramacel", "tags":"chief keef sosa glo rap hiphop music drugs lean black"},
             "marseyerasure": {"author":"dramamine", "tags":"erase ignore block"},
@@ -121,7 +123,7 @@ const EMOJIS_STRINGS = [
             "marseyunabomber2": {"author":"drama_enthusiast", "tags":"gift christmas industrial society delivery mail kaczynski uncle ted package"},
             "marseyw": {"author":"dramamine", "tags":"win winner dub"},
             "marseyl": {"author":"dramamine", "tags":"loser loss"},
-            "marseysquint": {"author":"unknown", "tags":"slugabed hmmm squint unsure doubt"},
+            "marseysquint": {"author":"slugabed", "tags":"slugabed hmmm squint unsure doubt"},
 			"marsey40k": {"author":"bartholomew_1", "tags":"warhammer 40k 40000 space space marine marine ultramarine smurf"},
 			"marseyangel2": {"author":"dramarama", "tags":"angelic horn trumpet halo wings"},
 			"marseyblack": {"author":"gigavaccinator", "tags":"basketball black african american bipoc coon fade jersey sports kang gang jogger"},
@@ -129,7 +131,7 @@ const EMOJIS_STRINGS = [
 			"marseybongosnoo": {"author":"chiobu", "tags":"bongo drums music meme jam reddit snoo"},
 			"marseybongosrdine": {"author":"chiobu", "tags":"bongo drums music meme jam srdine"},
 			"marseychonker2": {"author":"dramarama", "tags":"fat obese pig disgusting fatty fattie"},
-			"marseyski": {"author":"unknown", "tags":"skier skiing sking winter snow"},
+			"marseyski": {"author":"altaccountumbreon", "tags":"skier skiing sking winter snow"},
 			"marseychristmasbulb2": {"author":"dramarama", "tags":"ornament holiday christmas"},
 			"marseychristmaself2": {"author":"dramarama", "tags":"elf santa northpole north pole christmas holiday"},
 			"marseychristmasgift": {"author":"dramarama", "tags":"present christmas box unwrapping holiday"},
@@ -171,7 +173,7 @@ const EMOJIS_STRINGS = [
 			"marseyplugged": {"author":"altaccountumbreon", "tags":"electric technology gif animated plug"},
 			"marseyponder": {"author":"bartholomew_1", "tags":"ponder orb wizard magician crystal ball"},
 			"marseypredator": {"author":"geese_suck", "tags":"predator drone obama wedding military"},
-			"marseyraccoon": {"author":"unknown", "tags":"trashpanda trash panda"},
+			"marseyraccoon": {"author":"chiobu", "tags":"trashpanda trash panda"},
 			"marseyrake": {"author":"drumpf", "tags":"canada canadian day of the rake leaf leaves fall autumn genocide"},
 			"marseyreindeer3": {"author":"dramarama", "tags":"rudolf dasher dancer prancer vixen comet cupid donner blitzen santa sleigh sled christmas winter holiday"},
 			"marseyreindeer4": {"author":"dramarama", "tags":"rudolf dasher dancer prancer vixen comet cupid donner blitzen santa sleigh sled christmas winter holiday"},
@@ -181,7 +183,7 @@ const EMOJIS_STRINGS = [
 			"marseysnow": {"author":"dramarama", "tags":"snowman snowmarsey cold winter christmas holiday"},
 			"marseysnowman": {"author":"dramarama", "tags":"christmas cold snow winter"},
 			"marseysnowman2": {"author":"gigavaccinator", "tags":"christmas cold snow winter"},
-			"marseytransflag": {"author":"unknown", "tags":"trans flag then consumeproduct"},
+			"marseytransflag": {"author":"then", "tags":"trans flag then consumeproduct"},
 			"marseyvirus": {"author":"dramamine", "tags":"phage infect infection plagued"},
 			"marseywholesome": {"author":"dramarama", "tags":"seal award reddit tene"},
 			"chudsey": {"author":"tenshi", "tags":"4chan virgin pol rightoid"},
@@ -191,7 +193,7 @@ const EMOJIS_STRINGS = [
 			"marchipmunk": {"author":"dramarama", "tags":"rodent squirrel wuzizname"},
 			"marchipmunklove": {"author":"dramarama", "tags":"chipmonk adoration loving rodent heart eyes adore acorn"},
 			"marcusfootball": {"author":"kellere31", "tags":"sport handegg hand egg athlete helmet"},
-			"marfield": {"author":"unknown", "tags":"mondays garfield lasagna"},
+			"marfield": {"author":"bennewenus", "tags":"mondays garfield lasagna"},
 			"marje": {"author":"konrad", "tags":"juicebox juice box madje marsey"},
 			"marlion": {"author":"chiobu", "tags":"animated flippers wave fins waving mermaid"},
 			"marmsey": {"author":"marmot", "tags":"rodent happy"},
@@ -204,10 +206,10 @@ const EMOJIS_STRINGS = [
 			"marsey4chan": {"author":"altaccountumbreon", "tags":"neckbeard anonymous loser hacker"},
 			"marsey666": {"author":"chiobu", "tags":"wings hell halloween demon satan holiday devil animated"},
 			"marsey666black": {"author":"chiobu", "tags":"wings hell halloween demon satan holiday devil animated"},
-			"marsey69": {"author":"unknown", "tags":"6ix9ine snitch tattooed tattoos rapper"},
+			"marsey69": {"author":"aca", "tags":"6ix9ine snitch tattooed tattoos rapper"},
 			"marseyairquotes": {"author":"altaccountumbreon", "tags":"reaction patronizing animated uh huh"},
 			"marseyakshually": {"author":"unknown", "tags":"contrarian false disagree meme neckbeard nerd wrong correction actually weeb"},
-			"marseyakumu": {"author":"unknown", "tags":"simp love loving weebshit"},
+			"marseyakumu": {"author":"elfbinn", "tags":"simp love loving weebshit"},
 			"marseyalien": {"author":"chapose", "tags":"green man martian scepter"},
 			"marseyamazon": {"author":"dramarama", "tags":"warehouse piss bottle driver wagecuck piss jug pissbottle pissjug wagie"},
 			"marseyandmarcus": {"author":"unknown", "tags":"bed sleeping cuddling cuddle marseyismywaifu"},
@@ -220,13 +222,13 @@ const EMOJIS_STRINGS = [
 			"marseyarmy": {"author":"seethefarmer", "tags":"chiobu soldiers o7 salute saluting"},
 			"marseyascii": {"author":"wild_lain", "tags":"blurry"},
 			"marseyascii2": {"author":"wild_lain", "tags":"oldschool"},
-			"marseyasian": {"author":"unknown", "tags":"chinese china srdine sardine"},
+			"marseyasian": {"author":"kellere31", "tags":"chinese china srdine sardine"},
 			"marseyatsume": {"author":"tejanx", "tags":"kitten kitty weebshit"},
 			"marseyauthleft": {"author":"feynmandidnothingwrong", "tags":"marxist ussr marxism ccp communist khmer rouge leftoid communism juche"},
 			"marseyauthright": {"author":"feynmandidnothingwrong", "tags":"rightoid national socialism ss national socialist nazi wehrmacht hitler fascist"},
 			"marseyautism": {"author":"threeletteragent", "tags":"retarded neurodivergent hat sped aspergers"},
 			"marseyaward": {"author":"dramarama", "tags":"medal good job good work retard reaction great job great work nice"},
-			"marseyayy": {"author":"unknown", "tags":"wop tone guido wooden doors sopranos greaser dego"},
+			"marseyayy": {"author":"mom", "tags":"wop tone guido wooden doors sopranos greaser dego"},
 			"marseybaby": {"author":"chapose", "tags":"pacifier bb little"},
 			"marseybackstab": {"author":"altaccountumbreon", "tags":"betrayal kill knife caesar assassinate betrayer murder"},
 			"marseybadger": {"author":"dramamine", "tags":"animal marmot"},
@@ -248,12 +250,12 @@ const EMOJIS_STRINGS = [
 			"marseybigbrain": {"author":"chapose", "tags":"high iq highiq smart genius"},
 			"marseybigdog": {"author":"tejanx", "tags":"bussy big dog poster"},
 			"marseybiker": {"author":"sylveon", "tags":"motorcycle harley bicycle helmet"},
-			"marseybingus": {"author":"unknown", "tags":"floppa shaved hairless"},
+			"marseybingus": {"author":"aca", "tags":"floppa shaved hairless"},
 			"marseybinladen": {"author":"chapose", "tags":"turban al qaeda terrorist islam beard osama martyr muslim"},
 			"marseybiting": {"author":"unknown", "tags":"reaction datass lip bite dat ass"},
 			"marseyblackface": {"author":"chiobu", "tags":"moon cricket jogger nigger racism coon racist minstrelsy jigaboo"},
 			"marseyblackfacexmas": {"author":"chiobu", "tags":"uncle tom moon cricket christmas santa beard nigger racist claus coon"},
-			"marseyblm": {"author":"unknown", "tags":"social justice black lives matter sjw"},
+			"marseyblm": {"author":"kellere31", "tags":"social justice black lives matter sjw"},
 			"marseyblueanime": {"author":"soren", "tags":"cirno touhou weebshit"},
 			"marseybluecheck": {"author":"suprememe", "tags":"journoid checkmark verified journalist drolling drool twitter"},
 			"marseyblush": {"author":"unknown", "tags":"shy flirting reaction blushing happy cute embarrassed"},
@@ -306,12 +308,12 @@ const EMOJIS_STRINGS = [
 			"marseychef": {"author":"altaccountumbreon", "tags":"mustache cooking food"},
 			"marseycherokee": {"author":"elfbinn", "tags":"savage pocahontas elizabeth warren injun indian redskin liz warren"},
 			"marseychonker": {"author":"chapose", "tags":"brap rolls fat obese reaction fds heifer"},
-			"marseychristmas": {"author":"unknown", "tags":"candy cane santa christmas holiday"},
+			"marseychristmas": {"author":"tax", "tags":"candy cane santa christmas holiday"},
 			"marseychristmasbulb": {"author":"uraniumdonger", "tags":"ornament christmas happy holiday"},
 			"marseychristmaself": {"author":"cantwakeupjpg", "tags":"christmas xmas santa holiday happy worker"},
 			"marseychristmastree": {"author":"chapose", "tags":"christmas retard special holiday"},
 			"marseychucky": {"author":"dramarama", "tags":"doll halloween kill stab knife holiday possessed monster"},
-			"marseychungus": {"author":"unknown", "tags":"bugs bunny meme fat chonker big"},
+			"marseychungus": {"author":"hecking_invalid", "tags":"bugs bunny meme fat chonker big"},
 			"marseyclapping": {"author":"unknown", "tags":"good job animated good work reaction great job well done applaud applause great work nice celebrate approve judgment"},
 			"marseycleonpeterson": {"author":"chiobu", "tags":"wtf scary art"},
 			"marseyclown": {"author":"unknown", "tags":"makeup joker"},
@@ -321,10 +323,10 @@ const EMOJIS_STRINGS = [
 			"marseycoin": {"author":"dramarama", "tags":"dramacoin money dc spinning rich payment gold dinero animated dollars"},
 			"marseycolossal": {"author":"chiobu", "tags":"halloween skin holiday scary mouths"},
 			"marseycommitted": {"author":"conspiracy_theorist", "tags":"psycho crazy insane straitjacket asylum reaction loony bin straightjacket"},
-			"marseycomrade": {"author":"unknown", "tags":"marxist ussr ccp communist authleft communism juche soviet kgb"},
-			"marseycomradehandshake": {"author":"unknown", "tags":"ussr russia communist shaking hand communism soviet"},
+			"marseycomrade": {"author":"aca", "tags":"marxist ussr ccp communist authleft communism juche soviet kgb"},
+			"marseycomradehandshake": {"author":"dramarama", "tags":"ussr russia communist shaking hand communism soviet"},
 			"marseyconfused": {"author":"grizzly", "tags":"questionmark reaction question mark idgi confusion"},
-			"marseycontemplate": {"author":"unknown", "tags":"reaction consternation thinking hmm"},
+			"marseycontemplate": {"author":"rpd", "tags":"reaction consternation thinking hmm"},
 			"marseycool": {"author":"chapose", "tags":"finger gun shades sunglasses reaction judgment"},
 			"marseycool2": {"author":"dramarama", "tags":"cigarette hip shades sunglasses jacket smoking"},
 			"marseycoomer": {"author":"unknown", "tags":"masturbation goon cumbrain porn masturbate"},
@@ -334,7 +336,7 @@ const EMOJIS_STRINGS = [
 			"marseycorn": {"author":"mom", "tags":"iowa vegetable"},
 			"marseycountryclub": {"author":"mom", "tags":"golfer elite rich golfing cc elitist preppy"},
 			"marseycow": {"author":"chiobu", "tags":"cow fursona skin animal costume furry heifer fursuit"},
-			"marseycowboy": {"author":"unknown", "tags":"western pardner reaction hat tootin yeehaw rootin"},
+			"marseycowboy": {"author":"aca", "tags":"western pardner reaction hat tootin yeehaw rootin"},
 			"marseycreepy": {"author":"chapose", "tags":"pervert pedophile weird reaction chomo creeper sketchy molester"},
 			"marseycrucified": {"author":"jesus", "tags":"christ crucifix cross christian"},
 			"marseycrusader": {"author":"dramarama", "tags":"knight deusvult templar crusades catholic"},
@@ -347,7 +349,7 @@ const EMOJIS_STRINGS = [
 			"marseycut": {"author":"mom", "tags":"cutting selfharm emo self harm cutter reaction depressed"},
 			"marseycwc": {"author":"dramamine", "tags":"sonichu chan chris chan chandler sweater chrischan medallion striped chris"},
 			"marseydab": {"author":"dramarama", "tags":"reaction haters"},
-			"marseydaemon": {"author":"unknown", "tags":"pitchfork hell halloween demon satan devil scary holiday"},
+			"marseydaemon": {"author":"fic8", "tags":"pitchfork hell halloween demon satan devil scary holiday"},
 			"marseydarwin": {"author":"feynmandidnothingwrong", "tags":"history darwinian euphoric atheist charles"},
 			"marseydawnbreaker": {"author":"elfbinn", "tags":"gamer video game warhammer"},
 			"marseydeadhorse": {"author":"unknown", "tags":"drowned pony drowning"},
@@ -356,13 +358,12 @@ const EMOJIS_STRINGS = [
 			"marseyderp": {"author":"chiobu", "tags":"hehe teehee troll animated durr giggle"},
 			"marseydespair": {"author":"chapose", "tags":"doomer reaction depression horrified suicidal depressed judgment"},
 			"marseydetective": {"author":"altaccountumbreon", "tags":"holmes sherlock magnifying glass bowtie"},
-			"marseydeux": {"author":"unknown", "tags":"frenchman deuxrama baguette frog frenchie"},
+			"marseydeux": {"author":"kellere31", "tags":"frenchman deuxrama baguette frog frenchie"},
 			"marseydeuxfoid": {"author":"tejanx", "tags":"deuxrama asian azn hardislife hil"},
 			"marseydevil": {"author":"elfbinn", "tags":"pitchfork daemon hell halloween demon mischievous satan holiday heck evil"},
 			"marseydicklet": {"author":"chapose", "tags":"babydick penis micro dick reaction laugh point and laugh micropenis judgment"},
 			"marseydildo": {"author":"kellere31", "tags":"horse"},
-			"marseydio": {"author":"unknown", "tags":"diogenesjr diogenesjunior meme cat"},
-			"marseydisabled": {"author":"unknown", "tags":"retarded handicapable handicapped wheelchair crippled"},
+			"marseydisabled": {"author":"altaccountumbreon", "tags":"retarded handicapable handicapped wheelchair crippled"},
 			"marseydisgust": {"author":"elfbinn", "tags":"pissed gross eww angry mad disturbing disturbed yuck"},
 			"marseyditzy": {"author":"dramarama", "tags":"pokemon"},
 			"marseydizzy": {"author":"altaccountumbreon", "tags":"puke nausea spinning vomit reaction nauseous sick rolling barf animated"},
@@ -387,7 +388,7 @@ const EMOJIS_STRINGS = [
 			"marseyespeon": {"author":"sylveon", "tags":"trick or treat pokemon halloween eevee costume holiday"},
 			"marseyespeonheadpat": {"author":"unknown", "tags":"trick or treat pokemon petting halloween eevee reaction costume holiday animated patting"},
 			"marseyface": {"author":"altaccountumbreon", "tags":"mask psycho face horror halloween kill killer stab knife holiday evil murder scary murderer"},
-			"marseyfacepalm": {"author":"unknown", "tags":"reaction omfg judgment"},
+			"marseyfacepalm": {"author":"kellere31", "tags":"reaction omfg judgment"},
 			"marseyfamily": {"author":"chapose", "tags":"family guy family man peter griffin griffin peter"},
 			"marseyfans": {"author":"dramarama", "tags":"of thot taxpayer slut onlyfans whore"},
 			"marseyfattie": {"author":"chiobu", "tags":"brap fatass chonker pig lorg"},
@@ -400,7 +401,7 @@ const EMOJIS_STRINGS = [
 			"marseyfine": {"author":"dramarama", "tags":"this is fine meme thisisfine burning fire"},
 			"marseyfinger": {"author":"unknown", "tags":"flipping middle finger bird reaction flicking judgment"},
 			"marseyflamethrower": {"author":"unknown", "tags":"vietname soldier fire"},
-			"marseyflamewar": {"author":"unknown", "tags":"troll fight fire reaction gasoline"},
+			"marseyflamewar": {"author":"fic8", "tags":"troll fight fire reaction gasoline"},
 			"marseyflareon": {"author":"sylveon", "tags":"trick or treat pokemon halloween eevee costume holiday"},
 			"marseyflareonpat": {"author":"chiobu", "tags":"trick or treat pokemon petting halloween eevee reaction costume holiday animated patting"},
 			"marseyfloyd": {"author":"unknown", "tags":"dead blm chauvin fentanyl george"},
@@ -409,7 +410,7 @@ const EMOJIS_STRINGS = [
 			"marseyfreezepeach": {"author":"chiobu", "tags":"1984 censorship free speech reaction freespeech ruqqus"},
 			"marseyfrog": {"author":"chiobu", "tags":"scaley fursona furry scalie amphibian fursuit"},
 			"marseyfrog2": {"author":"chiobu", "tags":"scaley fursona furry scalie amphibian toad fursuit"},
-			"marseyfrozen": {"author":"unknown", "tags":"dead ice reaction cold frozen"},
+			"marseyfrozen": {"author":"rpd", "tags":"dead ice reaction cold frozen"},
 			"marseyfrozenchosen": {"author":"lucy", "tags":"blonde girl woman"},
 			"marseyfrozenpat": {"author":"unknown", "tags":"petting staring unhappy reaction stare animated patting"},
 			"marseyfry": {"author":"altaccountumbreon", "tags":"phillip fry take my money futurama"},
@@ -427,10 +428,10 @@ const EMOJIS_STRINGS = [
 			"marseygiveup": {"author":"chiobu", "tags":"despair reaction depression miserable fall over depressed falling over animated sad"},
 			"marseyglaceon": {"author":"sylveon", "tags":"trick or treat pokemon halloween eevee costume holiday"},
 			"marseyglaceonpat": {"author":"sylveon", "tags":"trick or treat pokemon petting halloween eevee reaction costume holiday animated patting"},
-			"marseyglam": {"author":"unknown", "tags":"rocker pretty glamorous beautiful"},
+			"marseyglam": {"author":"aca", "tags":"rocker pretty glamorous beautiful"},
 			"marseyglancing": {"author":"mom", "tags":"eyes animated nervous paranoid"},
 			"marseyglow2": {"author":"threeletteragent", "tags":"fbi mossad feds agent glownigger reaction glowie fed atf cia nsa"},
-			"marseyglowaward": {"author":"unknown", "tags":"medal fbi ribbon animated glownigger retard glowie fed atf cia nsa"},
+			"marseyglowaward": {"author":"chiobu", "tags":"medal fbi ribbon animated glownigger retard glowie fed atf cia nsa"},
 			"marseygodel": {"author":"feynmandidnothingwrong", "tags":"old philosophy glasses history"},
 			"marseygodfather": {"author":"chapose", "tags":"wop italy italian dego mafia"},
 			"marseygodzilla": {"author":"unknown", "tags":"raptor halloween dinosaur gojira evil bug"},
@@ -462,15 +463,15 @@ const EMOJIS_STRINGS = [
 			"marseyhomosupremacist": {"author":"chiobu", "tags":"klan lgbt faggot kkk homocracy sodomy queer gay wholesome"},
 			"marseyhoodwink": {"author":"dramacel", "tags":"cloak crossbow"},
 			"marseyhope": {"author":"dramarama", "tags":"mask whitepill reaction happy hopium"},
-			"marseyhorseshoe": {"author":"unknown", "tags":"rightoid leftoid theory"},
+			"marseyhorseshoe": {"author":"altaccountumbreon", "tags":"rightoid leftoid theory"},
 			"marseyhungry": {"author":"unknown", "tags":"food hunger dish feed me bowl animated"},
 			"marseyhypno": {"author":"threeletteragent", "tags":"hypnosis spiral brainwash animated hypnotoad"},
 			"marseyilluminati": {"author":"above______below", "tags":"eye egypt pyramid big brother watching"},
 			"marseyimposter": {"author":"unknown", "tags":"amogus baka among us sussy"},
 			"marseyinshallah": {"author":"chiobu", "tags":"begging muslim animated please"},
 			"marseyinvisible": {"author":"drama_enthusiast", "tags":"stealth"},
-			"marseyira": {"author":"unknown", "tags":"car bomb irish ireland"},
-			"marseyisis": {"author":"unknown", "tags":"daesh terrorist islam muslim"},
+			"marseyira": {"author":"aca", "tags":"car bomb irish ireland"},
+			"marseyisis": {"author":"aca", "tags":"daesh terrorist islam muslim"},
 			"marseyit": {"author":"dramarama", "tags":"balloon halloween pennywise clown holiday evil"},
 			"marseyjanny": {"author":"kellere31", "tags":"jannie unpaid volunteer administrator janitor free moderator"},
 			"marseyjanny2": {"author":"dramamine", "tags":"jannie unpaid volunteer administrator janitor free moderator"},
@@ -498,7 +499,7 @@ const EMOJIS_STRINGS = [
 			"marseykkk": {"author":"cantwakeupjpg", "tags":"klan kukluxklan ku klux klan racist costume klux ku sheet"},
 			"marseykneel": {"author":"skabadabadoo", "tags":"blm bow black lives matter chauvin supremacy respect supreme"},
 			"marseykvlt": {"author":"elfbinn", "tags":"horgh abbath black metal krieg bullet belt immortal corpsepaint"},
-			"marseykween": {"author":"unknown", "tags":"hoop earring fds black shaniqua"},
+			"marseykween": {"author":"bballbelle", "tags":"hoop earring fds black shaniqua"},
 			"marseykweenxmas": {"author":"chiobu", "tags":"blm black christmas santa bipoc nigger bame hat holiday"},
 			"marseykyle": {"author":"sylveon", "tags":"killer konvict rifle rittenhouse kid gun kenosha kylie"},
 			"marseykys": {"author":"chiobu", "tags":"reaction keep yourself safe kill yourself suicide"},
@@ -518,9 +519,8 @@ const EMOJIS_STRINGS = [
 			"marseyllama2": {"author":"threeletteragent", "tags":"middle"},
 			"marseyllama3": {"author":"threeletteragent", "tags":"bottom"},
 			"marseylolcow": {"author":"altaccountumbreon", "tags":"reaction trolled lulz judgment"},
-			"marseylongpost": {"author":"unknown", "tags":"tldr reaction wall of text wordswordswords animated words"},
-			"marseylongpost": {"author":"unknown", "tags":"reaction judgment"},
-			"marseylongpost2": {"author":"unknown", "tags":"tldr reaction wall of text scrolling wordswordswords animated words judgment"},
+			"marseylongpost": {"author":"pippy", "tags":"tldr reaction wall of text wordswordswords animated words"},
+			"marseylongpost2": {"author":"pippy", "tags":"tldr reaction wall of text scrolling wordswordswords animated words judgment"},
 			"marseylovedrama": {"author":"chiobu", "tags":"hearts rdrama reaction happy animated"},
 			"marseyloveyou": {"author":"chiobu", "tags":"hearts ilu reaction adoration loving ily love adore animated"},
 			"marseylowpoly": {"author":"dramarama", "tags":"polygonal spinning 3d lopoly animated"},
@@ -529,7 +529,7 @@ const EMOJIS_STRINGS = [
 			"marseymancer": {"author":"dramarama", "tags":"dead undead horror lich halloween necromancer zombies zombie holiday evil"},
 			"marseymanlet": {"author":"chapose", "tags":"llm short midget dwarf little king"},
 			"marseymao": {"author":"pjim", "tags":"zedong ccp chinese communist communism china"},
-			"marseymaoist": {"author":"unknown", "tags":"marxist little red book marxism ccp chinese communist authleft maoism communism china"},
+			"marseymaoist": {"author":"wangpangthankyoumaam", "tags":"marxist little red book marxism ccp chinese communist authleft maoism communism china"},
 			"marseymask": {"author":"conspiracy_theorist", "tags":"plague coronavirus covid pandemic coof sickness love heart eyes illness"},
 			"marseymati": {"author":"seethefarmer", "tags":"annoyed irritation top hat reaction angry irritated tophat"},
 			"marseymayo": {"author":"altaccountumbreon", "tags":"yt jakubian crying cracker reaction crackkka crakkka white sad tears"},
@@ -552,7 +552,7 @@ const EMOJIS_STRINGS = [
 			"marseymugshot": {"author":"chiobu", "tags":"arran prison arrested criminal jail"},
 			"marseymummy": {"author":"feynmandidnothingwrong", "tags":"egyptian halloween monster holiday"},
 			"marseymummy2": {"author":"unknown", "tags":"egyptian halloween monster holiday"},
-			"marseymutt": {"author":"unknown", "tags":"american burger 56 percent mayo"},
+			"marseymutt": {"author":"konrad", "tags":"american burger 56 percent mayo"},
 			"marseymyeisha": {"author":"feynmandidnothingwrong", "tags":"kween black fds"},
 			"marseymyspacetom": {"author":"bartholomew_1", "tags":"carp friend carpathianflrost anderson"},
 			"marseyn8": {"author":"n8thegr8", "tags":"nate redditor powermod powerjannie moderator"},
@@ -571,11 +571,11 @@ const EMOJIS_STRINGS = [
 			"marseynooo": {"author":"dramarama", "tags":"reaction snob no way"},
 			"marseynosleep": {"author":"chapose", "tags":"horror scary halloween holiday"},
 			"marseynoyou": {"author":"dramarama", "tags":"nou no u pointing"},
-			"marseynoyouglow": {"author":"unknown", "tags":"fbi no u animated feds glowies glowniggers atf cia nsa"},
+			"marseynoyouglow": {"author":"chiobu", "tags":"fbi no u animated feds glowies glowniggers atf cia nsa"},
 			"marseynpc": {"author":"unknown", "tags":"sheeple"},
 			"marseynpc2": {"author":"chapose", "tags":"reaction idiot sheep"},
 			"marseynun": {"author":"mom", "tags":"habit catholic"},
-			"marseynut": {"author":"unknown", "tags":"orgasm ahegao cum reaction coom"},
+			"marseynut": {"author":"aca", "tags":"orgasm ahegao cum reaction coom"},
 			"marseynyan": {"author":"chiobu", "tags":"space animated meme poptart"},
 			"marseyobese": {"author":"chiobu", "tags":"fat chonker bbw chonk chunky pig lorg"},
 			"marseyobesescale": {"author":"chiobu", "tags":"fat chonker bbw chonk chunky pig lorg"},
@@ -585,13 +585,13 @@ const EMOJIS_STRINGS = [
 			"marseyohno": {"author":"dramarama", "tags":"panic frightened scared horror scream afraid reaction horrified nervous shock gasp"},
 			"marseyonacid": {"author":"chiobu", "tags":"tripping trippy drugs lcd animated"},
 			"marseyorthodox": {"author":"above______below", "tags":"priest schismatic"},
-			"marseyorthodoxpat": {"author":"unknown", "tags":"petting patting schismatic priest animated russian"},
+			"marseyorthodoxpat": {"author":"bartholomew_1", "tags":"petting patting schismatic priest animated russian"},
 			"marseyowow": {"author":"chapose", "tags":"reaction excited owo"},
 			"marseypaint": {"author":"crabby_cummy", "tags":"low effort art"},
 			"marseypainter": {"author":"saveusuncleted", "tags":"palet reaction pallet paintbrush paints artist pallette"},
 			"marseypanda": {"author":"mom", "tags":"red panda bear happy redpanda"},
 			"marseypanda2": {"author":"chiobu", "tags":"panda bear fursona skin animal costume furry fursuit"},
-			"marseypanties": {"author":"unknown", "tags":"reaction underwear panty pantsu"},
+			"marseypanties": {"author":"aca", "tags":"reaction underwear panty pantsu"},
 			"marseyparty1": {"author":"chiobu", "tags":"trippy animated happy dance"},
 			"marseyparty2": {"author":"chiobu", "tags":"trippy animated happy dance"},
 			"marseyparty3": {"author":"chiobu", "tags":"trippy animated happy dance"},
@@ -603,7 +603,7 @@ const EMOJIS_STRINGS = [
 			"marseypedobear": {"author":"chiobu", "tags":"groomer molest nonce"},
 			"marseypenguin": {"author":"grizzly", "tags":"bird linux puffin"},
 			"marseypepe": {"author":"unknown", "tags":"ok rightoid mellokind frog reaction"},
-			"marseypepe2": {"author":"unknown", "tags":"reaction frog mellokind"},
+			"marseypepe2": {"author":"need4sneed", "tags":"reaction frog mellokind"},
 			"marseypharaoh": {"author":"frozenchosen", "tags":"egyptian aevann pyramids"},
 			"marseypharaoh2": {"author":"chiobu", "tags":"gods egyptian aevann animated"},
 			"marseypickle": {"author":"picklerick", "tags":"funniest shit morty rick"},
@@ -632,7 +632,7 @@ const EMOJIS_STRINGS = [
 			"marseypopcorn": {"author":"unknown", "tags":"eating entertained drama happy animated"},
 			"marseypopcorntime": {"author":"chiobu", "tags":"eating popped corn drama animated watch"},
 			"marseypope": {"author":"unknown", "tags":"priest catholicism rome"},
-			"marseypostmodern": {"author":"unknown", "tags":"postmodernist obscurantist art"},
+			"marseypostmodern": {"author":"carpathianflorist", "tags":"postmodernist obscurantist art"},
 			"marseypresents": {"author":"jannies_deserve_the_rope", "tags":"christmas gifts santa holiday candy cane happy"},
 			"marseypretty": {"author":"dramarama", "tags":"flirt starry eyed stars in eyes"},
 			"marseypride": {"author":"chiobu", "tags":"prideflag rights"},
@@ -650,7 +650,7 @@ const EMOJIS_STRINGS = [
 			"marseypumpking": {"author":"dramarama", "tags":"jackolantern jack o lantern halloween holiday"},
 			"marseypumpkinglow": {"author":"chiobu", "tags":"halloween drama holiday jack o lantern animated"},
 			"marseypunching": {"author":"mom", "tags":"battle squaring up hit square up boxer fight throwdown reaction boxing fistfight fighting"},
-			"marseypunisher": {"author":"unknown", "tags":"thin blue line rightoid police cops"},
+			"marseypunisher": {"author":"aca", "tags":"thin blue line rightoid police cops"},
 			"marseyqoomer": {"author":"geese_suck", "tags":"shaman viking qanon jan6 capitol january6"},
 			"marseyquadmagyar": {"author":"elfbinn", "tags":"bow and arrow hungary hungarian archery bowman quadnarca"},
 			"marseyqueen": {"author":"mom", "tags":"england bong english british elizabeth"},
@@ -661,12 +661,11 @@ const EMOJIS_STRINGS = [
 			"marseyrage": {"author":"unknown", "tags":"troll anger seethe furious reaction angry mad fury"},
 			"marseyraging": {"author":"dramamine", "tags":"rage angry mad fury animated"},
 			"marseyramen": {"author":"chiobu", "tags":"eating noodles food bowl animated soup"},
-			"marseyrare": {"author":"unknown", "tags":"kangaroo wtf"},
+			"marseyrare": {"author":"jasongrace999", "tags":"kangaroo wtf"},
 			"marseyrasta": {"author":"mom", "tags":"marijuana weed dude weed lmao ganja drugs pot reggae joint jamaican"},
 			"marseyrat": {"author":"chapose", "tags":"rodent black"},
 			"marseyrave": {"author":"dramarama", "tags":"dead animated party death sandstorm darude crab dance"},
-			"marseyreading": {"author":"unknown", "tags":"study homework learn nerd novel reaction book"},
-			"marseyreich": {"author":"unknown", "tags":"nazi pol authright fuhrer hitler fascist"},
+			"marseyreich": {"author":"aca", "tags":"nazi pol authright fuhrer hitler fascist"},
 			"marseyreindeer": {"author":"cynic", "tags":"christmas santa rudolf capy cold aevann holiday animated walking"},
 			"marseyreindeer2": {"author":"feynmandidnothingwrong", "tags":"santa christmas rudolf holiday"},
 			"marseyrentfree": {"author":"kellere31", "tags":"reaction no charge obsessed obsession"},
@@ -685,7 +684,7 @@ const EMOJIS_STRINGS = [
 			"marseyrussel": {"author":"feynmandidnothingwrong", "tags":"old pipe history"},
 			"marseyrussiadolls": {"author":"chiobu", "tags":"toys ussr babushka matryoshka soviet"},
 			"marseysad2": {"author":"unknown", "tags":"reaction disappointed disappointment upset"},
-			"marseysadcat": {"author":"kellere31", "tags":"upset disappointing disappointment reaction disappointed sad"},
+			"marseysadcat": {"author":"kellere31", "tags":"upset disappointing disappointment reaction disappointed sad crying"},
 			"marseysadge": {"author":"gigavaccinator", "tags":"frog pepe"},
 			"marseysaint": {"author":"chiobu", "tags":"wings angel blessed halo animated"},
 			"marseysalad": {"author":"chapose", "tags":"vegan cabbage vegetarian lettuce vegetable"},
@@ -710,7 +709,7 @@ const EMOJIS_STRINGS = [
 			"marseysheep": {"author":"chiobu", "tags":"follower wool lamb fursona bah furry fursuit"},
 			"marseysheepdog": {"author":"dramarama", "tags":"shaggy scruffy woof"},
 			"marseyshiftyeyes": {"author":"elfbinn", "tags":"suspicious sussy paranoid weird reaction sketchy"},
-			"marseyshisha": {"author":"unknown", "tags":"weed smoker smoking hookah"},
+			"marseyshisha": {"author":"elfbinn", "tags":"weed smoker smoking hookah"},
 			"marseyshooting": {"author":"unknown", "tags":"blam blatt shotgun kill pow murder"},
 			"marseyshroom": {"author":"feynmandidnothingwrong", "tags":"smug fungus shrigma"},
 			"marseyshy": {"author":"chiobu", "tags":"flirting anxious twiddle nervous flirty coy animated"},
@@ -767,8 +766,8 @@ const EMOJIS_STRINGS = [
 			"marseyteaparty": {"author":"elfbinn", "tags":"donger arran soren carp duck"},
 			"marseytears": {"author":"chapose", "tags":"pout teary crying cried reaction sob eyes cry sad"},
 			"marseyteruteru": {"author":"dramarama", "tags":"ghost flying spooky halloween holiday floating"},
-			"marseythegrey": {"author":"unknown", "tags":"lord of the rings magic gandalf lotr mage wizard warlock"},
-			"marseytheorist": {"author":"unknown", "tags":"ancient aliens meme"},
+			"marseythegrey": {"author":"mom", "tags":"lord of the rings magic gandalf lotr mage wizard warlock"},
+			"marseytheorist": {"author":"chapose", "tags":"ancient aliens meme"},
 			"marseything": {"author":"jannies_deserve_the_rope", "tags":"halloween holiday scary monster teeth"},
 			"marseythinkorino": {"author":"unknown", "tags":"reaction thinking hmm thought"},
 			"marseythinkorino": {"author":"unknown", "tags":"reaction judgment"},
@@ -813,7 +812,6 @@ const EMOJIS_STRINGS = [
 			"marseywagie": {"author":"seethefarmer", "tags":"crypto rightoid ancap poor wagecuck mcdonalds maccas reaction"},
 			"marseywallst": {"author":"chiobu", "tags":"hodl crypto wall street bets invest gme bitcoin wallstreetbets wsb stock"},
 			"marseywarhol": {"author":"dramamine", "tags":"modern art"},
-			"marseywave": {"author":"unknown", "tags":"farewell cya hello greetings bye waving hi"},
 			"marseyweeb": {"author":"chapose", "tags":"neckbeard sword fedora kitana"},
 			"marseywendy": {"author":"unknown", "tags":"jellyfishjam pigtails redhead pippi"},
 			"marseywheredrama": {"author":"chiobu", "tags":"seriouspost reaction agendapost dramawhere animated"},
@@ -853,7 +851,7 @@ const EMOJIS_STRINGS = [
 			"mlm": {"author":"chiobu", "tags":"marseylivesmatter marsey lives matter blm"},
 			"owlsey": {"author":"dramarama", "tags":"bird hoot feathers"},
 			"plarsy": {"author":"chapose", "tags":"platy crossover platypus marsey plarsey"},
-			"thinbluefeline": {"author":"unknown", "tags":"cops police"},
+			"thinbluefeline": {"author":"arran", "tags":"cops police"},
 		}
 	},
 	{
@@ -908,7 +906,7 @@ function getEmoji(searchTerm) {
 
 	const newPos = curPos + emoji.length
 
-	commentBox.setAttribute('data-curr-pos', newPos.toString());
+	commentBox.setAttribute(TEXTAREA_POS_ATTR, newPos.toString());
 
 	if (typeof checkForRequired === "function") checkForRequired();
 
@@ -919,10 +917,15 @@ function getEmoji(searchTerm) {
 }
 
 function loadEmojis(form) {
-	const fav = document.getElementById('EMOJIS_favorite')
-	fav.setAttribute('data-form-destination', form)
+
+	let search_bar = document.getElementById("emoji_search");
+	let search_container = document.getElementById('emoji-tab-search')
+
+	const fav = document.getElementById(EMOJI_BOX_ID)
+	fav.setAttribute(EMOJI_FORM_DESTINATION_ATTR, form)
+
 	const commentBox = document.getElementById(form);
-	document.getElementById(form).setAttribute('data-curr-pos', commentBox.selectionStart);
+	commentBox.setAttribute(TEXTAREA_POS_ATTR, commentBox.selectionStart);
 
 	if (fav.innerHTML == "")
 	{
@@ -941,56 +944,61 @@ function loadEmojis(form) {
 		}
 	}
 
-	if (document.getElementById("EMOJIS_marsey").innerHTML == "")
-	{
-		for (let i = 0; i < EMOJIS_STRINGS.length; i++) {
-			let type = EMOJIS_STRINGS[i].type
-			let container = document.getElementById(`EMOJIS_${type}`)
-			let str = ''
-			let arr = EMOJIS_STRINGS[i].emojis
-			if (i == 0)
-				{
-					for (const [key, value] of Object.entries(arr)) {
-						str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${key}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+	if (search_bar.value == "") {
+
+		const marseys = document.getElementById("EMOJIS_marsey")
+		if (marseys.innerHTML == "")
+		{
+			for (let i = 0; i < EMOJIS_STRINGS.length; i++) {
+				let type = EMOJIS_STRINGS[i].type
+				let container = document.getElementById(`EMOJIS_${type}`)
+				let str = ''
+				let arr = EMOJIS_STRINGS[i].emojis
+				if (i == 0)
+					{
+						for (const [key, value] of Object.entries(arr)) {
+							str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${key}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+						}
+					}
+				else {
+					for (let j = 0; j < arr.length; j++) {
+						str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 					}
 				}
-			else {
-				for (let j = 0; j < arr.length; j++) {
+
+				container.innerHTML = str
+				search_container.innerHTML = ""
+			}
+		}
+	} else {
+		let str = ''
+		for (let i = 0; i < EMOJIS_STRINGS.length; i++) {
+			let arr = EMOJIS_STRINGS[i].emojis
+
+			let container = document.getElementById(`EMOJIS_${EMOJIS_STRINGS[i].type}`)
+			for (let j = 0; j < arr.length; j++) {
+				if (arr[j].match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(arr[j])) {
 					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
 				}
 			}
 
-			container.innerHTML = str
-			search_container.innerHTML = ""
-		}
-	}
-}
-
-function searchEmojis() {
-	let str = ''
-	for (let i = 0; i < EMOJIS_STRINGS.length; i++) {
-		let arr = EMOJIS_STRINGS[i].emojis
-
-		let container = document.getElementById(`EMOJIS_${EMOJIS_STRINGS[i].type}`)
-		for (let j = 0; j < arr.length; j++) {
-			if (arr[j].match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(arr[j])) {
-				str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${arr[j]}')" style="background: None!important; width:60px; overflow: hidden; border: none;" data-bs-toggle="tooltip" title=":${arr[j]}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${arr[j]}.webp" alt="${arr[j]}-emoji"></button>`;
-			}
-		}
-
-		if (i == 0)
-		{
-			let arr2 = EMOJIS_STRINGS[i].emojis;
-			for (const [key, value] of Object.entries(arr2)) {
-				if (str.includes(`'${key}'`)) continue;
-				let realvalue = Object.values(value)
-				realvalue = realvalue[0] + realvalue[1]
-				if (key.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(key) || realvalue.match(search_bar.value.toLowerCase())) {
-					str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+			if (i == 0)
+			{
+				let arr2 = EMOJIS_STRINGS[i].emojis;
+				for (const [key, value] of Object.entries(arr2)) {
+					if (str.includes(`'${key}'`)) continue;
+					let realvalue = Object.values(value)
+					realvalue = realvalue[0] + realvalue[1]
+					if (key.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(key) || realvalue.match(search_bar.value.toLowerCase())) {
+						str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
+					}
 				}
+				container.innerHTML = ""
 			}
-			container.innerHTML = ""
 		}
+		search_container.innerHTML = str
 	}
-	search_container.innerHTML = str
+	search_bar.oninput = function () {
+		loadEmojis(form);
+	};
 }
