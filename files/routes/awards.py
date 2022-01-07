@@ -211,9 +211,10 @@ def award_post(pid, v):
 	post_award.submission_id = post.id
 	g.db.add(post_award)
 
+	note = request.values.get("note", "").strip()
+
 	if v.id != post.author.id:
 		msg = f"@{v.username} has given your [post]({post.permalink}) the {AWARDS[kind]['title']} Award!"
-		note = request.values.get("note", "").strip()
 		if note: msg += f"\n\n> {note}"
 		send_repeatable_notification(post.author.id, msg)
 
@@ -394,9 +395,10 @@ def award_comment(cid, v):
 	comment_award.comment_id = c.id
 	g.db.add(comment_award)
 
+	note = request.values.get("note", "").strip()
+
 	if v.id != c.author.id:
 		msg = f"@{v.username} has given your [comment]({c.permalink}) the {AWARDS[kind]['title']} Award!"
-		note = request.values.get("note", "").strip()
 		if note: msg += f"\n\n> {note}"
 		send_repeatable_notification(c.author.id, msg)
 
