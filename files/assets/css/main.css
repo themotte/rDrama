@@ -4682,7 +4682,6 @@ lite-youtube {
     background-size: cover;
     cursor: pointer;
     max-width: 720px;
-    margin: auto;
     margin-bottom: 1.3rem !important
 }
 
