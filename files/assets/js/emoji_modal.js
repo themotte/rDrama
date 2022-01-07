@@ -413,7 +413,7 @@ const EMOJIS_STRINGS = [
 			"marseyfrog2": {"author":"chiobu", "tags":"scaley fursona furry scalie amphibian toad fursuit"},
 			"marseyfrozen": {"author":"rpd", "tags":"dead ice reaction cold frozen"},
 			"marseyfrozenchosen": {"author":"lucy", "tags":"blonde girl woman"},
-			"marseyfrozenpat": {"author":"unknown", "tags":"petting staring unhappy reaction stare animated patting"},
+			"marseyfrozenpat": {"author":"marseyismywaifu", "tags":"petting staring unhappy reaction stare animated patting"},
 			"marseyfry": {"author":"altaccountumbreon", "tags":"phillip fry take my money futurama"},
 			"marseyfuckoffcarp": {"author":"dramarama", "tags":"reaction carpathianflorist rude snappy animated robot"},
 			"marseyfug": {"author":"unknown", "tags":"benis mustache snallygaster meme"},
