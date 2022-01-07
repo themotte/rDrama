@@ -386,7 +386,7 @@ const EMOJIS_STRINGS = [
 			"marseyemo": {"author":"threeletteragent", "tags":"girl goth scene"},
 			"marseyemperor": {"author":"feynmandidnothingwrong", "tags":"gold"},
 			"marseyespeon": {"author":"sylveon", "tags":"trick or treat pokemon halloween eevee costume holiday"},
-			"marseyespeonheadpat": {"author":"unknown", "tags":"trick or treat pokemon petting halloween eevee reaction costume holiday animated patting"},
+			"marseyespeonheadpat": {"author":"chiobu", "tags":"trick or treat pokemon petting halloween eevee reaction costume holiday animated patting"},
 			"marseyface": {"author":"altaccountumbreon", "tags":"mask psycho face horror halloween kill killer stab knife holiday evil murder scary murderer"},
 			"marseyfacepalm": {"author":"kellere31", "tags":"reaction omfg judgment"},
 			"marseyfamily": {"author":"chapose", "tags":"family guy family man peter griffin griffin peter"},
