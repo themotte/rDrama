@@ -245,7 +245,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		)
 
 	if not (v and v.changelogsub):
-		posts=posts.filter(not_(Submission.title.ilike(f'[changelog]%')))
+		posts=posts.filter(not_(Submission.title.ilike('[changelog]%')))
 
 	if v and filter_words:
 		for word in filter_words:

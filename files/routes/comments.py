@@ -65,7 +65,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	post = get_post(pid, v=v)
 		
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
-		if request.headers.get("Authorization"): return {'error': f'This content is not suitable for some users and situations.'}
+		if request.headers.get("Authorization"): return {'error': 'This content is not suitable for some users and situations.'}
 		else: render_template(f"{template2}errors/nsfw.html", v=v)
 
 	try: context = int(request.values.get("context", 0))
@@ -208,7 +208,7 @@ def api_comment(v):
 				except: return {"error": "Imgur error"}, 400
 			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
-		else: return {"error": f"Image/Video files only"}, 400
+		else: return {"error": "Image/Video files only"}, 400
 
 	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
@@ -618,7 +618,7 @@ def edit_comment(cid, v):
 			
 			if ban.reason: reason += f" {ban.reason}"	
 		
-			if request.headers.get("Authorization"): return {'error': f'A blacklisted domain was used.'}, 400
+			if request.headers.get("Authorization"): return {'error': 'A blacklisted domain was used.'}, 400
 			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}comment_failed.html",
@@ -675,7 +675,7 @@ def edit_comment(cid, v):
 					except: return {"error": "Imgur error"}, 400
 				if url.endswith('.'): url += 'mp4'
 				body += f"\n\n{url}"
-			else: return {"error": f"Image/Video files only"}, 400
+			else: return {"error": "Image/Video files only"}, 400
 
 			body_md = CustomRenderer().render(mistletoe.Document(body))
 			body_html = sanitize(body_md)

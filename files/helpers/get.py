@@ -276,7 +276,7 @@ def get_comments(cids, v=None, load_parent=False):
 def get_domain(s):
 
 	parts = s.split(".")
-	domain_list = set([])
+	domain_list = set()
 	for i in range(len(parts)):
 		new_domain = parts[i]
 		for j in range(i + 1, len(parts)):

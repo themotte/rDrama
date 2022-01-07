@@ -155,19 +155,19 @@ def steal(v):
 		u.coins -= 700
 		g.db.add(u)
 		send_repeatable_notification(u.id, f"Some [grubby little rentoid](/@{v.username}) has absconded with 700 of your hard-earned coins to fuel his Funko Pop addiction. Stop being so trusting.")
-		send_repeatable_notification(v.id, f"You have successfully shorted your heroic landlord 700 coins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
+		send_repeatable_notification(v.id, "You have successfully shorted your heroic landlord 700 coins in rent. You're slightly less materially poor, but somehow even moreso morally. Are you proud of yourself?")
 		g.db.commit()
 		return {"message": "Attempt successful!"}
 
 	else:
 		if random.random() < 0.15:
 			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you sold his Nintendo Switch for 500 coins and called the cops. He was sentenced to one (1) day in renthog prison.")
-			send_repeatable_notification(v.id, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. The police take you away and laugh as you impotently stutter A-ACAB :sob:  You are fined 500 coins and sentenced to one (1) day in renthog prison.")
+			send_repeatable_notification(v.id, "The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. The police take you away and laugh as you impotently stutter A-ACAB :sob:  You are fined 500 coins and sentenced to one (1) day in renthog prison.")
 			v.ban(days=1, reason="Jailed thief")
 			v.fail_utc = int(time.time())
 		else:
 			send_repeatable_notification(u.id, f"You caught [this sniveling little renthog](/@{v.username}) trying to rob you. After beating him within an inch of his life, you showed mercy in exchange for a 500 dramacoin tip. This time.")
-			send_repeatable_notification(v.id, f"The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. You were able to convince him to spare your life with a 500 dramacoin tip. This time.")
+			send_repeatable_notification(v.id, "The ever-vigilant landchad has caught you trying to steal his hard-earned rent money. You were able to convince him to spare your life with a 500 dramacoin tip. This time.")
 			v.fail2_utc = int(time.time())
 		v.coins -= 500
 		g.db.add(v)
@@ -271,9 +271,9 @@ def transfer_bux(v, username):
 		amount = request.values.get("amount", "").strip()
 		amount = int(amount) if amount.isdigit() else None
 
-		if not amount or amount < 0: return {"error": f"Invalid amount of marseybux."}, 400
-		if v.procoins < amount: return {"error": f"You don't have enough marseybux"}, 400
-		if amount < 100: return {"error": f"You have to gift at least 100 marseybux."}, 400
+		if not amount or amount < 0: return {"error": "Invalid amount of marseybux."}, 400
+		if v.procoins < amount: return {"error": "You don't have enough marseybux"}, 400
+		if amount < 100: return {"error": "You have to gift at least 100 marseybux."}, 400
 
 		receiver.procoins += amount
 		v.procoins -= amount
@@ -284,7 +284,7 @@ def transfer_bux(v, username):
 		g.db.commit()
 		return {"message": f"{amount} marseybux transferred!"}, 200
 
-	return {"message": f"You can't transfer marseybux to yourself!"}, 400
+	return {"message": "You can't transfer marseybux to yourself!"}, 400
 
 
 @app.get("/leaderboard")

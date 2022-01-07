@@ -22,7 +22,7 @@ def api_flag_post(pid, v):
 
 		reason = filter_emojis_only(reason)
 
-		if len(reason) > 350: return {"error": f"Too long."}
+		if len(reason) > 350: return {"error": "Too long."}
 
 		if reason.startswith('!') and v.admin_level > 1:
 			post.flair = reason[1:]
@@ -51,7 +51,7 @@ def api_flag_comment(cid, v):
 		reason = request.values.get("reason", "").strip()[:100]
 		reason = filter_emojis_only(reason)
 
-		if len(reason) > 350: return {"error": f"Too long."}
+		if len(reason) > 350: return {"error": "Too long."}
 
 		flag = CommentFlag(comment_id=comment.id, user_id=v.id, reason=reason)
 

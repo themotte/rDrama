@@ -15,12 +15,12 @@ site_name = environ.get("SITE_NAME").strip()
 @app.get("/privacy")
 @auth_desired
 def privacy(v):
-	return render_template(f"privacy.html", v=v)
+	return render_template("privacy.html", v=v)
 
 @app.get("/marseys")
 @auth_desired
 def emojis(v):
-	return render_template(f"marseys.html", v=v, marseys=marseys.items())
+	return render_template("marseys.html", v=v, marseys=marseys.items())
 
 @app.get('/sidebar')
 @auth_desired

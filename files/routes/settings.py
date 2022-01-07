@@ -306,10 +306,10 @@ def settings_profile_post(v):
 				if url.endswith('.'): url += 'mp4'
 				bio += f"\n\n{url}"
 			else:
-				if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
+				if request.headers.get("Authorization"): return {"error": "Image/Video files only"}, 400
 				if not v or v.oldsite: template = ''
 				else: template = 'CHRISTMAS/'
-				return render_template(f"{template}settings_profile.html", v=v, error=f"Image/Video files only."), 400
+				return render_template(f"{template}settings_profile.html", v=v, error="Image/Video files only."), 400
 		
 		bio_html = CustomRenderer().render(mistletoe.Document(bio))
 		bio_html = sanitize(bio_html)
@@ -951,7 +951,7 @@ def settings_name_change(v):
 		else: template = 'CHRISTMAS/'
 		return render_template(f"{template}settings_profile.html",
 						   v=v,
-						   error=f"This isn't a valid username.")
+						   error="This isn't a valid username.")
 
 	name=new_name.replace('_','\_')
 
@@ -1004,7 +1004,7 @@ def settings_song_change(v):
 	else:
 		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}settings_profile.html", v=v, error=f"Not a youtube link.")
+		return render_template(f"{template}settings_profile.html", v=v, error="Not a youtube link.")
 
 	if "?" in id: id = id.split("?")[0]
 	if "&" in id: id = id.split("&")[0]
@@ -1021,19 +1021,19 @@ def settings_song_change(v):
 	if duration == 'P0D':
 		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}settings_profile.html", v=v, error=f"Can't use a live youtube video!")
+		return render_template(f"{template}settings_profile.html", v=v, error="Can't use a live youtube video!")
 
 	if "H" in duration:
 		if not v or v.oldsite: template = ''
 		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}settings_profile.html", v=v, error=f"Duration of the video must not exceed 10 minutes.")
+		return render_template(f"{template}settings_profile.html", v=v, error="Duration of the video must not exceed 10 minutes.")
 
 	if "M" in duration:
 		duration = int(duration.split("PT")[1].split("M")[0])
 		if duration > 10: 
 			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}settings_profile.html", v=v, error=f"Duration of the video must not exceed 10 minutes.")
+			return render_template(f"{template}settings_profile.html", v=v, error="Duration of the video must not exceed 10 minutes.")
 
 
 	if v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
@@ -1057,7 +1057,7 @@ def settings_song_change(v):
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}settings_profile.html",
 						   v=v,
-						   error=f"Age-restricted videos aren't allowed.")
+						   error="Age-restricted videos aren't allowed.")
 
 	files = os.listdir("/songs/")
 	paths = [path.join("/songs/", basename) for basename in files]

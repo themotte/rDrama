@@ -354,11 +354,11 @@ def admin_home(v):
 
 	with open('disablesignups', 'r') as f: x = f.read()
 
-	if not v or v.oldsite: return render_template(f"admin/admin_home.html", v=v, x=x)
+	if not v or v.oldsite: return render_template("admin/admin_home.html", v=v, x=x)
 
 	actions = g.db.query(ModAction).order_by(ModAction.id.desc()).limit(10).all()
 
-	return render_template(f"CHRISTMAS/admin/admin_home.html", actions=actions, v=v, x=x)
+	return render_template("CHRISTMAS/admin/admin_home.html", actions=actions, v=v, x=x)
 
 @app.post("/admin/disablesignups")
 @admin_level_required(2)
@@ -679,7 +679,7 @@ def agendaposter(user_id, v):
 		if badge: g.db.delete(badge)
 
 	if user.agendaposter: send_repeatable_notification(user.id, f"You have been marked by an admin as an agendaposter ({note}).")
-	else: send_repeatable_notification(user.id, f"You have been unmarked by an admin as an agendaposter.")
+	else: send_repeatable_notification(user.id, "You have been unmarked by an admin as an agendaposter.")
 
 	g.db.commit()
 	if user.agendaposter: return redirect(user.url)

@@ -288,7 +288,7 @@ class Comment(Base):
 
 			data=self.json_raw
 
-			if self.level>=2: data['parent_comment_id']= self.parent_comment_id,
+			if self.level>=2: data['parent_comment_id']= self.parent_comment_id
 
 		if "replies" in self.__dict__:
 			data['replies']=[x.json_core for x in self.replies]
@@ -386,7 +386,7 @@ class Comment(Base):
 
 		if not v: return False
 			
-		if v.filter_words and self.body and any([x in self.body for x in v.filter_words]): return True
+		if v.filter_words and self.body and any(x in self.body for x in v.filter_words): return True
 		
 		if self.is_banned: return True
 		

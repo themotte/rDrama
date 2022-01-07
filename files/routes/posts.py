@@ -453,7 +453,7 @@ def edit_post(pid, v):
 				except: return {"error": "Imgur error"}, 400
 			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
-		else: return {"error": f"Image/Video files only"}, 400
+		else: return {"error": "Image/Video files only"}, 400
 
 	if body != p.body:
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
@@ -734,7 +734,7 @@ def submit_post(v):
 					fragment=parsed_url.fragment)
 		else:
 			qd = parse_qs(parsed_url.query)
-			filtered = dict((k, val) for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_'))
+			filtered = {k: val for k, val in qd.items() if not k.startswith('utm_') and not k.startswith('ref_')}
 
 			new_url = ParseResult(scheme="https",
 								netloc=parsed_url.netloc,
@@ -916,7 +916,7 @@ def submit_post(v):
 			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
 		else:
-			if request.headers.get("Authorization"): return {"error": f"Image/Video files only"}, 400
+			if request.headers.get("Authorization"): return {"error": "Image/Video files only"}, 400
 			if not v or v.oldsite: template = ''
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}submit.html", v=v, error=f"Image/Video files only."), 400
@@ -1013,8 +1013,8 @@ def submit_post(v):
 			if url.endswith('.'): url += 'mp4'
 			new_post.url = url
 		else:
-			if request.headers.get("Authorization"): return {"error": f"File type not allowed"}, 400
-			return render_template(f"{template}submit.html", v=v, error=f"File type not allowed.", title=title, body=request.values.get("body", "")), 400
+			if request.headers.get("Authorization"): return {"error": "File type not allowed"}, 400
+			return render_template(f"{template}submit.html", v=v, error="File type not allowed.", title=title, body=request.values.get("body", "")), 400
 
 	if not new_post.thumburl and new_post.url and request.headers.get('cf-ipcountry')!="T1": gevent.spawn( thumbnail_thread, new_post.id)
 

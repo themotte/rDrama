@@ -134,7 +134,7 @@ def admin_app_approve(v, aid):
 
 	g.db.commit()
 
-	return {"message": f"Application approved"}
+	return {"message": "Application approved"}
 
 
 @app.post("/admin/app/revoke/<aid>")
@@ -160,7 +160,7 @@ def admin_app_revoke(v, aid):
 
 		g.db.commit()
 
-	return {"message": f"App revoked"}
+	return {"message": "App revoked"}
 
 
 @app.post("/admin/app/reject/<aid>")
@@ -186,7 +186,7 @@ def admin_app_reject(v, aid):
 
 	g.db.commit()
 
-	return {"message": f"App rejected"}
+	return {"message": "App rejected"}
 
 
 @app.get("/admin/app/<aid>")

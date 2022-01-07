@@ -553,6 +553,7 @@ const EMOJIS_STRINGS = [
 			"marseymummy": {"author":"feynmandidnothingwrong", "tags":"egyptian halloween monster holiday"},
 			"marseymummy2": {"author":"unknown", "tags":"egyptian halloween monster holiday"},
 			"marseymutt": {"author":"konrad", "tags":"american burger 56 percent mayo"},
+			"marseymutt2": {"author":"aca", "tags":"american burger 56 percent mayo"},
 			"marseymyeisha": {"author":"feynmandidnothingwrong", "tags":"kween black fds"},
 			"marseymyspacetom": {"author":"bartholomew_1", "tags":"carp friend carpathianflrost anderson"},
 			"marseyn8": {"author":"n8thegr8", "tags":"nate redditor powermod powerjannie moderator"},

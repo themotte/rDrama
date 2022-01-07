@@ -20,7 +20,7 @@ def join_discord(v):
 	if v.shadowbanned: return {"error": "Internal server error"}
 	
 	if SITE_NAME == 'Drama' and v.admin_level == 0 and v.patron == 0 and v.truecoins < 150:
-		return f"You must receive 150 upvotes/downvotes from other users before being able to join the Discord server."
+		return "You must receive 150 upvotes/downvotes from other users before being able to join the Discord server."
 
 	now=int(time.time())
 

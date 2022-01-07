@@ -325,8 +325,8 @@ def sign_up_post(v):
 		email=email,
 		created_utc=int(time.time()),
 		referred_by=ref_id or None,
-		ban_evade =  int(any([(x.is_banned or x.shadowbanned) and not x.unban_utc for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x])),
-		agendaposter = any([x.agendaposter for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x])
+		ban_evade =  int(any((x.is_banned or x.shadowbanned) and not x.unban_utc for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x)),
+		agendaposter = any(x.agendaposter for x in g.db.query(User).filter(User.id.in_(tuple(session.get("history", [])))).all() if x)
 		)
 
 	g.db.add(new_user)
@@ -350,7 +350,7 @@ def sign_up_post(v):
 
 @app.get("/forgot")
 def get_forgot():
-	return render_template(f"forgot_password.html")
+	return render_template("forgot_password.html")
 
 
 @app.post("/forgot")
@@ -376,7 +376,7 @@ def post_forgot():
 									   v=user)
 				  )
 
-	return render_template(f"forgot_password.html",
+	return render_template("forgot_password.html",
 						   msg="If the username and email matches an account, you will be sent a password reset email. You have ten minutes to complete the password reset process.")
 
 
@@ -391,7 +391,7 @@ def get_reset():
 	now = int(time.time())
 
 	if now - timestamp > 600:
-		return render_template(f"message.html", 
+		return render_template("message.html", 
 			title="Password reset link expired",
 			error="That password reset link has expired.")
 
@@ -405,7 +405,7 @@ def get_reset():
 
 	reset_token = generate_hash(f"{user.id}+{timestamp}+reset+{user.login_nonce}")
 
-	return render_template(f"reset_password.html",
+	return render_template("reset_password.html",
 						   v=user,
 						   token=reset_token,
 						   time=timestamp,
@@ -479,7 +479,7 @@ def request_2fa_disable():
 	username=request.values.get("username")
 	user=get_user(username, graceful=True)
 	if not user or not user.email or not user.mfa_secret:
-		return render_template(f"message.html",
+		return render_template("message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
@@ -488,7 +488,7 @@ def request_2fa_disable():
 
 	password =request.values.get("password")
 	if not user.verifyPass(password):
-		return render_template(f"message.html",
+		return render_template("message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
@@ -504,7 +504,7 @@ def request_2fa_disable():
 								   v=user)
 			  )
 
-	return render_template(f"message.html",
+	return render_template("message.html",
 						   title="Removal request received",
 						   message="If username, password, and email match, we will send you an email.")
 
@@ -515,7 +515,7 @@ def reset_2fa():
 	t=int(request.values.get("t"))
 
 	if now > t+3600*24:
-		return render_template(f"message.html",
+		return render_template("message.html",
 						   title="Expired Link",
 						   error="That link has expired.")
 
@@ -533,6 +533,6 @@ def reset_2fa():
 
 	g.db.commit()
 
-	return render_template(f"message_success.html",
+	return render_template("message_success.html",
 						   title="Two-factor authentication removed.",
 						   message="Login normally to access your account.")

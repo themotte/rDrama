@@ -233,12 +233,12 @@ def award_post(pid, v):
 
 		if author.unban_utc - time.time() > 86400:
 			author.unban_utc -= 86400
-			send_repeatable_notification(author.id, f"Your ban duration has been reduced by 1 day!")
+			send_repeatable_notification(author.id, "Your ban duration has been reduced by 1 day!")
 		else:
 			author.unban_utc = 0
 			author.is_banned = 0
 			author.ban_evade = 0
-			send_repeatable_notification(author.id, f"You have been unbanned!")
+			send_repeatable_notification(author.id, "You have been unbanned!")
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ID
 		author.ban_reason = f"grass award used by @{v.username} on /post/{post.id}"
@@ -418,12 +418,12 @@ def award_comment(cid, v):
 
 		if author.unban_utc - time.time() > 86400:
 			author.unban_utc -= 86400
-			send_repeatable_notification(author.id, f"Your ban duration has been reduced by 1 day!")
+			send_repeatable_notification(author.id, "Your ban duration has been reduced by 1 day!")
 		else:
 			author.unban_utc = 0
 			author.is_banned = 0
 			author.ban_evade = 0
-			send_repeatable_notification(author.id, f"You have been unbanned!")
+			send_repeatable_notification(author.id, "You have been unbanned!")
 	elif kind == "grass":
 		author.is_banned = AUTOJANNY_ID
 		author.ban_reason = f"grass award used by @{v.username} on /comment/{c.id}"
