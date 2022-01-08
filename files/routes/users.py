@@ -545,8 +545,9 @@ def api_is_available(name, v):
 
 @app.get("/id/<id>")
 def user_id(id):
-
-	user = get_account(int(id))
+	try: id = int(id)
+	except: abort(404)
+	user = get_account(id)
 	return redirect(user.url)
 		
 @app.get("/u/<username>")
