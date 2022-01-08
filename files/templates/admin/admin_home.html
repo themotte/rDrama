@@ -56,9 +56,11 @@
 	<li><a href="/admin/sidebar">Edit Sidebar</a></li>
 </ul>
 
-<div class="custom-control custom-switch">
-	<input autocomplete="off" type="checkbox" class="custom-control-input" id="disablesignups" name="disablesignups" {% if x == "yes" %}checked{% endif %} onchange="post_toast('/admin/disablesignups');">
-	<label class="custom-control-label" for="disablesignups">Disable signups</label>
-</div>
+{% if v.admin_level > 2 %}
+	<div class="custom-control custom-switch">
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="disablesignups" name="disablesignups" {% if x == "yes" %}checked{% endif %} onchange="post_toast('/admin/disablesignups');">
+		<label class="custom-control-label" for="disablesignups">Disable signups</label>
+	</div>
+{% endif %}
 
 {% endblock %}

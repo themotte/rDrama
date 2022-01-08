@@ -22,6 +22,11 @@ def privacy(v):
 def emojis(v):
 	return render_template("marseys.html", v=v, marseys=marseys.items())
 
+@app.get("/terms")
+@auth_desired
+def terms(v):
+	return render_template("terms.html", v=v)
+
 @app.get('/sidebar')
 @auth_desired
 def sidebar(v):

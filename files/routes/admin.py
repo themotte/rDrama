@@ -361,7 +361,7 @@ def admin_home(v):
 	return render_template("CHRISTMAS/admin/admin_home.html", actions=actions, v=v, x=x)
 
 @app.post("/admin/disablesignups")
-@admin_level_required(2)
+@admin_level_required(3)
 @validate_formkey
 def disablesignups(v):
 	with open('disablesignups', 'r') as f: content = f.read()
@@ -369,9 +369,21 @@ def disablesignups(v):
 	with open('disablesignups', 'w') as f:
 		if content == "yes":
 			f.write("no")
-			return {"message": "Signups enabed!"}
+			ma = ModAction(
+				kind="enable_signups",
+				user_id=v.id,
+			)
+			g.db.add(ma)
+			g.db.commit()
+			return {"message": "Signups enabled!"}
 		else:
 			f.write("yes")
+			ma = ModAction(
+				kind="disable_signups",
+				user_id=v.id,
+			)
+			g.db.add(ma)
+			g.db.commit()
 			return {"message": "Signups disabled!"}
 
 @app.get("/admin/badge_grant")

@@ -164,6 +164,16 @@ ACTIONTYPES={
 		"icon": "fa-columns",
 		"color": "bg-muted",
 	},
+	"disable_signups": {
+		"str": "disabled signups",
+		"icon": "fa-user-slash",
+		"color": "bg-danger",
+	},
+	"enable_signups": {
+		"str": "enabled signups",
+		"icon": "fa-user",
+		"color": "bg-success",
+	},
 	"ban_user":{
 		"str":'banned user {self.target_link}',
 		"icon":"fa-user-slash",
