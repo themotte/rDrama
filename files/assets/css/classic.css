@@ -287,3 +287,39 @@ blockquote {
     border-color: #E53E3E !important;
     color: red !important;
 }
+
+.btn.caction .score-up {
+    color: var(--upvote) !important;
+}
+
+.btn.caction .score-down {
+    color: var(--downvote) !important;
+}
+
+.user-info .text-muted {
+    color: var(--black1) !important;
+}
+
+.shop .btn {
+    background-color: var(--black1) !important;
+}
+
+#mobile-bottom-navigation-bar .text-primary {
+    color: var(--red) !important;
+}
+
+#mobile-bottom-navigation-bar .text-muted {
+    color: var(--black1) !important;
+}
+
+#settings2 .nav-link.active .fas {
+    color: var(--white) !important;
+}
+
+#navbarResponsive .nav-link {
+    color: var(--black1) !important;
+}
+
+.mobile-nav-icon {
+    color: var(--black1);
+}
