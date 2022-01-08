@@ -465,6 +465,10 @@ BADGES = {
 		'name': 'Sidebar Artist',
 		'description': 'Contributed artwork featured on the sidebar'
 	},
+	100: {
+		'name': 'True Believer',
+		'description': 'This user sees through communist lies'
+	},
 }
 
 AWARDS = {
