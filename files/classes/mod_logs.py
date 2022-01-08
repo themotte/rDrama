@@ -117,17 +117,17 @@ ACTIONTYPES={
 	"grant_awards": {
 		"str": "granted awards to {self.target_link}",
 		"icon": "fa-user",
-		"color": "bg-muted",
+		"color": "bg-primary",
 	},
 	"check": {
 		"str": "gave {self.target_link} a checkmark",
 		"icon": "fa-user",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 	"uncheck": {
 		"str": "removed checkmark from {self.target_link}",
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
+		"color": "bg-danger",
 	},
 	"ban_domain": {
 		"str": "banned a domain",
@@ -137,12 +137,12 @@ ACTIONTYPES={
 	"unban_domain": {
 		"str": "unbanned a domain",
 		"icon": "fa-globe",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 	"approve_app": {
 		"str": "approved an application by {self.target_link}",
 		"icon": "fa-robot",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 	"revoke_app": {
 		"str": "revoked an application by {self.target_link}",
@@ -157,12 +157,12 @@ ACTIONTYPES={
 	"change_rules": {
 		"str": "changed the <a href='/rules'>rules</a>",
 		"icon": "fa-balance-scale",
-		"color": "bg-muted",
+		"color": "bg-primary",
 	},
 	"change_sidebar": {
 		"str": "changed the sidebar",
 		"icon": "fa-columns",
-		"color": "bg-muted",
+		"color": "bg-primary",
 	},
 	"disable_signups": {
 		"str": "disabled signups",
@@ -182,7 +182,7 @@ ACTIONTYPES={
 	"unban_user":{
 		"str":'unbanned user {self.target_link}',
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 	"nuke_user":{
 		"str":'removed all content of {self.target_link}',
@@ -192,7 +192,7 @@ ACTIONTYPES={
 	"unnuke_user":{
 		"str":'approved all content of {self.target_link}',
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 	"shadowban": {
 		"str": 'shadowbanned {self.target_link}',
@@ -202,37 +202,37 @@ ACTIONTYPES={
 	"unshadowban": {
 		"str": 'unshadowbanned {self.target_link}',
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 	"agendaposter": {
 		"str": "set agendaposter theme on {self.target_link}",
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
+		"color": "bg-danger",
 	},
 	"unagendaposter": {
 		"str": "removed agendaposter theme from {self.target_link}",
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 	"set_flair_locked":{
 		"str":"set {self.target_link}'s flair (locked)",
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
+		"color": "bg-primary",
 	},
 	"set_flair_notlocked":{
 		"str":"set {self.target_link}'s flair (not locked)",
 		"icon": "fa-user-slash",
-		"color": "bg-muted",
+		"color": "bg-primary",
 	},
 	"pin_comment":{
 		"str":'pinned a {self.target_link}',
 		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-info",
+		"color": "bg-success",
 	},
 	"unpin_comment":{
 		"str":'un-pinned a {self.target_link}',
 		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-muted",
+		"color": "bg-danger",
 	},
 	"pin_post":{
 		"str":'pinned post {self.target_link}',
@@ -242,7 +242,7 @@ ACTIONTYPES={
 	"unpin_post":{
 		"str":'un-pinned post {self.target_link}',
 		"icon":"fa-thumbtack fa-rotate--45",
-		"color": "bg-muted",
+		"color": "bg-danger",
 	},
 	"set_nsfw":{
 		"str":'set nsfw on post {self.target_link}',
@@ -252,7 +252,7 @@ ACTIONTYPES={
 	"unset_nsfw":{
 		"str":'un-set nsfw on post {self.target_link}',
 		"icon":"fa-eye-evil",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 	"ban_post":{
 		"str": 'removed post {self.target_link}',
@@ -262,7 +262,7 @@ ACTIONTYPES={
 	"unban_post":{
 		"str": 'reinstated post {self.target_link}',
 		"icon":"fa-feather-alt",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 	"ban_comment":{
 		"str": 'removed {self.target_link}',
@@ -272,7 +272,7 @@ ACTIONTYPES={
 	"unban_comment":{
 		"str": 'reinstated {self.target_link}',
 		"icon":"fa-comment",
-		"color": "bg-muted",
+		"color": "bg-success",
 	},
 }
 
