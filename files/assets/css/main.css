@@ -113,6 +113,7 @@ figure {
 img {
     vertical-align: middle;
     border-style: none;
+    object-fit: contain !important;
 }
 svg {
     overflow: hidden;
