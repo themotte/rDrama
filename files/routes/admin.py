@@ -46,7 +46,6 @@ def make_admin(v, username):
 @admin_level_required(3)
 @validate_formkey
 def remove_admin(v, username):
-	if request.host == 'rdrama.net': abort(403)
 	user = get_user(username)
 	if not user: abort(404)
 	user.admin_level = 0
