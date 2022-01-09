@@ -39,8 +39,6 @@ class CustomRenderer(HTMLRenderer):
 
 		user = get_user(target, graceful=True)
 
-		if not user or g.v.admin_level == 0 and g.v.any_block_exists(user): return f"{space}@{target}"
-
 		return f'''{space}<a href="/id/{user.id}"><img alt="@{user.username}'s profile picture" loading="lazy" src="/uid/{user.id}/pic" class="pp20">@{user.username}</a>'''
 			
 	def render_sub_mention(self, token):
@@ -65,8 +63,6 @@ class Renderer(HTMLRenderer):
 		target = token.target[1]
 
 		user = get_user(target, graceful=True)
-
-		if not user or g.v.admin_level == 0 and g.v.any_block_exists(user): return f"{space}@{target}"
 
 		return f'{space}<a href="/id/{user.id}">@{user.username}</a>'
 			

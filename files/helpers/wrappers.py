@@ -43,7 +43,6 @@ def auth_desired(f):
 	def wrapper(*args, **kwargs):
 
 		v = get_logged_in_user()
-		g.v = v
 
 		check_ban_evade(v)
 
@@ -61,7 +60,6 @@ def auth_required(f):
 		v = get_logged_in_user()
 		if not v: abort(401)
 
-		g.v = v
 		check_ban_evade(v)
 
 		resp = make_response(f(*args, v=v, **kwargs))
@@ -79,7 +77,6 @@ def is_not_permabanned(f):
 
 		if not v: abort(401)
 		
-		g.v = v
 		check_ban_evade(v)
 
 		if v.is_banned and v.unban_utc == 0:
@@ -104,7 +101,6 @@ def admin_level_required(x):
 
 			if v.admin_level < x: abort(403)
 			
-			g.v = v
 			response = f(*args, v=v, **kwargs)
 
 			if isinstance(response, tuple): resp = make_response(response[0])

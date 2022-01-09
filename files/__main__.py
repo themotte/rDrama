@@ -100,6 +100,9 @@ def before_request():
 
 	g.timestamp = int(time.time())
 
+	session.permanent = True
+	if not session.get("session_id"): session["session_id"] = secrets.token_hex(49)
+
 	if '; wv) ' in request.headers.get("User-Agent",""): g.webview = True
 	else: g.webview = False
 
@@ -114,15 +117,5 @@ def after_request(response):
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
 	return response
-
-@app.route("/", subdomain="www")
-@app.route("/", subdomain="old")
-def sub_redirect():
-    return redirect(f"https://{app.config['SERVER_NAME']}")
-
-@app.route("/<path:path>", subdomain="www")
-@app.route("/<path:path>", subdomain="old")
-def sub_redirect2(path):
-    return redirect(f"https://{app.config['SERVER_NAME']}{request.full_path}")
 
 from files.routes import *
