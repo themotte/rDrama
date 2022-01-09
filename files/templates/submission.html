@@ -561,7 +561,7 @@
 								<a class="list-inline-item" role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a>
 							{% endif %}
 						{% endif %}
-						{% if v and v.admin_level > 0 %}
+						{% if v and v.admin_level > 1 %}
 							<a id="pin-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin</a>
 							<a id="unpin-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/unsticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin</a>
 							{% if v==p.author %}

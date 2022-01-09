@@ -98,7 +98,7 @@
 
 		{% if not postembed %}
 			<div class="voting my-2 d-none d-md-block pr-2">
-				{% if v and request.path.startswith('/@') and not v.admin_level %}
+				{% if v and request.path.startswith('/@') and v.admin_level < 2 %}
 
 					{% if voted==1 %}
 					<div class="mx-auto arrow-up post-{{p.id}}-up active"></div>
@@ -257,7 +257,7 @@
 							<a class="list-inline-item" role="button" data-bs-toggle="dropdown" aria-expanded="false" ><i class="fas fa-ellipsis-h fa-fw"></i></a>
 							<ul class="dropdown-menu">
 
-								{% if v.admin_level > 0 %}
+								{% if v.admin_level > 1 %}
 									<a id="pin-{{p.id}}" class="dropdown-item {% if p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin</a>
 									<a id="unpin-{{p.id}}" class="dropdown-item {% if not p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/unsticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin</a>
 									{% if v == p.author %}
@@ -342,7 +342,7 @@
 				</li>
 			{% endif %}
 			{% if not postembed %}
-				{% if v and request.path.startswith('/@') and not v.admin_level %}
+				{% if v and request.path.startswith('/@') and v.admin_level < 2 %}
 				<li id="voting-{{p.id}}-mobile" class="voting list-inline-item d-md-none">
 
 					{% if voted==1 %}

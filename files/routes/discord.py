@@ -121,7 +121,7 @@ def discord_redirect(v):
 			add_role(v, "owner")
 			time.sleep(0.1)
 		
-		if v.admin_level > 0: add_role(v, "admin")
+		if v.admin_level > 1: add_role(v, "admin")
 
 		time.sleep(0.1)
 		add_role(v, "linked")
