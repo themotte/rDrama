@@ -8,7 +8,6 @@ from files.helpers.sanitize import filter_emojis_only
 @app.post("/report/post/<pid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def api_flag_post(pid, v):
 
 	post = get_post(pid)
@@ -39,7 +38,6 @@ def api_flag_post(pid, v):
 @app.post("/report/comment/<cid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def api_flag_comment(cid, v):
 
 	comment = get_comment(cid)
@@ -64,7 +62,6 @@ def api_flag_comment(cid, v):
 @app.post('/del_report/<report_fn>')
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def remove_report(report_fn, v):
 
 	if report_fn.startswith('c'):

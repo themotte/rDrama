@@ -49,7 +49,6 @@ def toggle_club(pid, v):
 @app.post("/publish/<pid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def publish(pid, v):
 	post = get_post(pid)
 	if not post.author_id == v.id: abort(403)
@@ -393,7 +392,6 @@ def morecomments(v, cid):
 @app.post("/edit_post/<pid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def edit_post(pid, v):
 	if v and v.patron:
 		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
@@ -683,7 +681,6 @@ def thumbnail_thread(pid):
 @limiter.limit("1/second")
 @limiter.limit("6/minute")
 @auth_required
-@validate_formkey
 def submit_post(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 	
@@ -1144,7 +1141,6 @@ def submit_post(v):
 @app.post("/delete_post/<pid>")
 @limiter.limit("2/second")
 @auth_required
-@validate_formkey
 def delete_post_pid(pid, v):
 
 	post = get_post(pid)
@@ -1166,7 +1162,6 @@ def delete_post_pid(pid, v):
 @app.post("/undelete_post/<pid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def undelete_post_pid(pid, v):
 	post = get_post(pid)
 	if not post.author_id == v.id: abort(403)
@@ -1182,7 +1177,6 @@ def undelete_post_pid(pid, v):
 
 @app.post("/toggle_comment_nsfw/<cid>")
 @auth_required
-@validate_formkey
 def toggle_comment_nsfw(cid, v):
 
 	comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
@@ -1197,7 +1191,6 @@ def toggle_comment_nsfw(cid, v):
 	
 @app.post("/toggle_post_nsfw/<pid>")
 @auth_required
-@validate_formkey
 def toggle_post_nsfw(pid, v):
 
 	post = get_post(pid)
@@ -1224,7 +1217,6 @@ def toggle_post_nsfw(pid, v):
 @app.post("/save_post/<pid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def save_post(pid, v):
 
 	post=get_post(pid)
@@ -1241,7 +1233,6 @@ def save_post(pid, v):
 @app.post("/unsave_post/<pid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def unsave_post(pid, v):
 
 	post=get_post(pid)

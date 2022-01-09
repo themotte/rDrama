@@ -21,7 +21,6 @@ def authorize_prompt(v):
 @app.post("/authorize")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def authorize(v):
 
 	client_id = request.values.get("client_id")
@@ -40,7 +39,6 @@ def authorize(v):
 @app.post("/api_keys")
 @limiter.limit("1/second")
 @is_not_permabanned
-@validate_formkey
 def request_api_keys(v):
 
 	new_app = OauthApp(
@@ -62,7 +60,6 @@ def request_api_keys(v):
 @app.post("/delete_app/<aid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def delete_oauth_app(v, aid):
 
 	aid = int(aid)
@@ -83,7 +80,6 @@ def delete_oauth_app(v, aid):
 @app.post("/edit_app/<aid>")
 @limiter.limit("1/second")
 @is_not_permabanned
-@validate_formkey
 def edit_oauth_app(v, aid):
 
 	aid = int(aid)
@@ -105,7 +101,6 @@ def edit_oauth_app(v, aid):
 @app.post("/admin/app/approve/<aid>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def admin_app_approve(v, aid):
 
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
@@ -140,7 +135,6 @@ def admin_app_approve(v, aid):
 @app.post("/admin/app/revoke/<aid>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def admin_app_revoke(v, aid):
 
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
@@ -166,7 +160,6 @@ def admin_app_revoke(v, aid):
 @app.post("/admin/app/reject/<aid>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def admin_app_reject(v, aid):
 
 	app = g.db.query(OauthApp).filter_by(id=aid).one_or_none()
@@ -262,7 +255,6 @@ def admin_apps_list(v):
 @app.post("/oauth/reroll/<aid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def reroll_oauth_tokens(aid, v):
 
 	aid = aid

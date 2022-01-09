@@ -124,7 +124,6 @@ def downvoting(v, username):
 @app.post("/pay_rent")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def pay_rent(v):
 	if v.coins < 500: return {"error":"You must have more than 500 coins."}
 	v.coins -= 500
@@ -141,7 +140,6 @@ def pay_rent(v):
 @app.post("/steal")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def steal(v):
 	if int(time.time()) - v.created_utc < 604800:
 		return {"error":"You must have an account older than 1 week in order to attempt stealing."}
@@ -200,7 +198,6 @@ def thiefs(v):
 @app.post("/@<username>/suicide")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def suicide(v, username):
 	t = int(time.time())
 	if v.admin_level == 0 and t - v.suicide_utc < 86400: return {"message": "You're on 1-day cooldown!"}
@@ -223,7 +220,6 @@ def get_coins(v, username):
 @app.post("/@<username>/transfer_coins")
 @limiter.limit("1/second")
 @is_not_permabanned
-@validate_formkey
 def transfer_coins(v, username):
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
@@ -261,7 +257,6 @@ def transfer_coins(v, username):
 @app.post("/@<username>/transfer_bux")
 @limiter.limit("1/second")
 @is_not_permabanned
-@validate_formkey
 def transfer_bux(v, username):
 	receiver = g.db.query(User).filter_by(username=username).one_or_none()
 
@@ -367,7 +362,6 @@ def song(song):
 @app.post("/subscribe/<post_id>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def subscribe(v, post_id):
 	new_sub = Subscription(user_id=v.id, submission_id=post_id)
 	g.db.add(new_sub)
@@ -377,7 +371,6 @@ def subscribe(v, post_id):
 @app.post("/unsubscribe/<post_id>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def unsubscribe(v, post_id):
 	sub=g.db.query(Subscription).filter_by(user_id=v.id, submission_id=post_id).one_or_none()
 	if sub:
@@ -394,7 +387,6 @@ def reportbugs(v):
 @limiter.limit("1/second")
 @limiter.limit("10/hour")
 @is_not_permabanned
-@validate_formkey
 def message2(v, username):
 
 	user = get_user(username, v=v)
@@ -464,7 +456,6 @@ def message2(v, username):
 @limiter.limit("1/second")
 @limiter.limit("6/minute")
 @auth_required
-@validate_formkey
 def messagereply(v):
 
 	message = request.values.get("body", "").strip()[:1000].strip()
@@ -832,7 +823,6 @@ def u_username_info(username, v=None):
 @app.post("/follow/<username>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def follow_user(username, v):
 
 	target = get_user(username)
@@ -857,7 +847,6 @@ def follow_user(username, v):
 @app.post("/unfollow/<username>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def unfollow_user(username, v):
 
 	target = get_user(username)
@@ -882,7 +871,6 @@ def unfollow_user(username, v):
 @app.post("/remove_follow/<username>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def remove_follow(username, v):
 	target = get_user(username)
 
@@ -977,7 +965,6 @@ def saved_comments(v, username):
 
 @app.post("/fp/<fp>")
 @auth_required
-@validate_formkey
 def fp(v, fp):
 	if v.username != fp:
 		v.fp = fp

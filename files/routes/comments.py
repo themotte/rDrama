@@ -136,7 +136,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 @limiter.limit("1/second")
 @limiter.limit("6/minute")
 @auth_required
-@validate_formkey
 def api_comment(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 
@@ -549,7 +548,6 @@ def api_comment(v):
 @app.post("/edit_comment/<cid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def edit_comment(cid, v):
 	if v and v.patron:
 		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
@@ -739,7 +737,6 @@ def edit_comment(cid, v):
 @app.post("/delete/comment/<cid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def delete_comment(cid, v):
 
 	c = g.db.query(Comment).filter_by(id=cid).one_or_none()
@@ -761,7 +758,6 @@ def delete_comment(cid, v):
 @app.post("/undelete/comment/<cid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def undelete_comment(cid, v):
 
 	c = g.db.query(Comment).filter_by(id=cid).one_or_none()
@@ -785,7 +781,6 @@ def undelete_comment(cid, v):
 
 @app.post("/pin_comment/<cid>")
 @auth_required
-@validate_formkey
 def pin_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
@@ -806,7 +801,6 @@ def pin_comment(cid, v):
 
 @app.post("/unpin_comment/<cid>")
 @auth_required
-@validate_formkey
 def unpin_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
@@ -828,7 +822,6 @@ def unpin_comment(cid, v):
 @app.post("/save_comment/<cid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def save_comment(cid, v):
 
 	comment=get_comment(cid)
@@ -847,7 +840,6 @@ def save_comment(cid, v):
 @app.post("/unsave_comment/<cid>")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def unsave_comment(cid, v):
 
 	comment=get_comment(cid)

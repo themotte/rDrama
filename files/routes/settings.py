@@ -37,7 +37,6 @@ tiers={
 @app.post("/settings/removebackground")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def removebackground(v):
 	v.background = None
 	g.db.add(v)
@@ -47,7 +46,6 @@ def removebackground(v):
 @app.post("/settings/profile")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_profile_post(v):
 	if v and v.patron:
 		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
@@ -431,7 +429,6 @@ def settings_profile_post(v):
 
 @app.post("/settings/filters")
 @auth_required
-@validate_formkey
 def filters(v):
 	filters=request.values.get("filters")[:1000].strip()
 
@@ -449,7 +446,6 @@ def filters(v):
 
 @app.post("/changelogsub")
 @auth_required
-@validate_formkey
 def changelogsub(v):
 	v.changelogsub = not v.changelogsub
 	g.db.add(v)
@@ -463,7 +459,6 @@ def changelogsub(v):
 @app.post("/settings/namecolor")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def namecolor(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -479,7 +474,6 @@ def namecolor(v):
 @app.post("/settings/themecolor")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def themecolor(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -495,7 +489,6 @@ def themecolor(v):
 @app.post("/settings/gumroad")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def gumroad(v):
 	if SITE_NAME == 'Drama': patron = 'Paypig'
 	else: patron = 'Patron'
@@ -548,7 +541,6 @@ def gumroad(v):
 @app.post("/settings/titlecolor")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def titlecolor(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -564,7 +556,6 @@ def titlecolor(v):
 @app.post("/settings/verifiedcolor")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def verifiedcolor(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -580,7 +571,6 @@ def verifiedcolor(v):
 @app.post("/settings/security")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_security_post(v):
 	if request.values.get("new_password"):
 		if request.values.get("new_password") != request.values.get("cnf_password"):
@@ -664,7 +654,6 @@ def settings_security_post(v):
 @app.post("/settings/log_out_all_others")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_log_out_others(v):
 
 	submitted_password = request.values.get("password", "").strip()
@@ -690,7 +679,6 @@ def settings_log_out_others(v):
 @app.post("/settings/images/profile")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_images_profile(v):
 	if v and v.patron:
 		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
@@ -728,7 +716,6 @@ def settings_images_profile(v):
 @app.post("/settings/images/banner")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_images_banner(v):
 	if v and v.patron:
 		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
@@ -756,7 +743,6 @@ def settings_images_banner(v):
 @app.post("/settings/delete/profile")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_delete_profile(v):
 
 	if v.profileurl or v.highres:
@@ -772,7 +758,6 @@ def settings_delete_profile(v):
 @app.post("/settings/delete/banner")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_delete_banner(v):
 
 	if v.bannerurl:
@@ -804,7 +789,6 @@ def settings_css_get(v):
 @app.post("/settings/css")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_css(v):
 	if v.agendaposter: return {"error": "Agendapostered users can't edit css!"}
 
@@ -829,7 +813,6 @@ def settings_profilecss_get(v):
 @app.post("/settings/profilecss")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_profilecss(v):
 	if v.truecoins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a paypig to set profile css."
 	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
@@ -844,7 +827,6 @@ def settings_profilecss(v):
 @app.post("/settings/block")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_block_user(v):
 
 	user = get_user(request.values.get("username"), graceful=True)
@@ -879,7 +861,6 @@ def settings_block_user(v):
 @app.post("/settings/unblock")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_unblock_user(v):
 
 	user = get_user(request.values.get("username"))
@@ -911,7 +892,6 @@ def settings_apps(v):
 @app.post("/settings/remove_discord")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_remove_discord(v):
 
 	remove_user(v)
@@ -934,7 +914,6 @@ def settings_content_get(v):
 @app.post("/settings/name_change")
 @limiter.limit("1/second")
 @is_not_permabanned
-@validate_formkey
 def settings_name_change(v):
 
 	new_name=request.values.get("name").strip()
@@ -985,7 +964,6 @@ def settings_name_change(v):
 @app.post("/settings/song_change")
 @limiter.limit("5/day;1/second")
 @auth_required
-@validate_formkey
 def settings_song_change(v):
 	song=request.values.get("song").strip()
 
@@ -1074,7 +1052,6 @@ def settings_song_change(v):
 @app.post("/settings/title_change")
 @limiter.limit("1/second")
 @auth_required
-@validate_formkey
 def settings_title_change(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'

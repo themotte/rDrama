@@ -23,14 +23,18 @@ SITE_NAME = environ.get("SITE_NAME", "").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
+CF_KEY = environ.get("CF_KEY", "").strip()
+CF_ZONE = environ.get("CF_ZONE", "").strip()
+CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
+
 if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 month = datetime.now().strftime('%B')
 
+
 @app.post("/@<username>/make_admin")
 @limiter.limit("1/second")
 @admin_level_required(3)
-@validate_formkey
 def make_admin(v, username):
 	if request.host == 'rdrama.net': abort(403)
 	user = get_user(username)
@@ -44,7 +48,6 @@ def make_admin(v, username):
 @app.post("/@<username>/remove_admin")
 @limiter.limit("1/second")
 @admin_level_required(3)
-@validate_formkey
 def remove_admin(v, username):
 	user = get_user(username)
 	if not user: abort(404)
@@ -91,7 +94,6 @@ def distribute(v, comment):
 @app.post("/@<username>/revert_actions")
 @limiter.limit("1/second")
 @admin_level_required(3)
-@validate_formkey
 def revert_actions(v, username):
 	user = get_user(username)
 	if not user: abort(404)
@@ -130,7 +132,6 @@ def revert_actions(v, username):
 @app.post("/@<username>/club_allow")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def club_allow(v, username):
 
 	u = get_user(username, v=v)
@@ -152,7 +153,6 @@ def club_allow(v, username):
 @app.post("/@<username>/club_ban")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def club_ban(v, username):
 
 	u = get_user(username, v=v)
@@ -174,7 +174,6 @@ def club_ban(v, username):
 @app.post("/@<username>/make_meme_admin")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def make_meme_admin(v, username):
 	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
 		user = get_user(username)
@@ -188,7 +187,6 @@ def make_meme_admin(v, username):
 @app.post("/@<username>/remove_meme_admin")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def remove_meme_admin(v, username):
 	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
 		user = get_user(username)
@@ -202,7 +200,6 @@ def remove_meme_admin(v, username):
 @app.post("/admin/monthly")
 @limiter.limit("1/day")
 @admin_level_required(3)
-@validate_formkey
 def monthly(v):
 	if request.host == 'rdrama.net' and v.id != AEVANN_ID: abort (403)
 
@@ -247,7 +244,6 @@ def get_sidebar(v):
 @app.post('/admin/sidebar')
 @limiter.limit("1/second")
 @admin_level_required(3)
-@validate_formkey
 def post_sidebar(v):
 
 	text = request.values.get('sidebar', '').strip()
@@ -351,21 +347,21 @@ def reported_comments(v):
 @admin_level_required(2)
 def admin_home(v):
 
-	with open('disablesignups', 'r') as f: x = f.read()
+	with open('disable_signups', 'r') as f: x = f.read()
+	with open('under_attack', 'r') as f: x2 = f.read()
 
-	if not v or v.oldsite: return render_template("admin/admin_home.html", v=v, x=x)
+	if not v or v.oldsite: return render_template("admin/admin_home.html", v=v, x=x, x2=x2)
 
 	actions = g.db.query(ModAction).order_by(ModAction.id.desc()).limit(10).all()
 
-	return render_template("CHRISTMAS/admin/admin_home.html", actions=actions, v=v, x=x)
+	return render_template("CHRISTMAS/admin/admin_home.html", actions=actions, v=v, x=x, x2=x2)
 
-@app.post("/admin/disablesignups")
+@app.post("/admin/disable_signups")
 @admin_level_required(3)
-@validate_formkey
-def disablesignups(v):
-	with open('disablesignups', 'r') as f: content = f.read()
+def disable_signups(v):
+	with open('disable_signups', 'r') as f: content = f.read()
 
-	with open('disablesignups', 'w') as f:
+	with open('disable_signups', 'w') as f:
 		if content == "yes":
 			f.write("no")
 			ma = ModAction(
@@ -385,6 +381,35 @@ def disablesignups(v):
 			g.db.commit()
 			return {"message": "Signups disabled!"}
 
+
+@app.post("/admin/under_attack")
+@admin_level_required(2)
+def under_attack(v):
+	with open('under_attack', 'r') as f: content = f.read()
+
+	with open('under_attack', 'w') as f:
+		if content == "yes":
+			f.write("no")
+			ma = ModAction(
+				kind="disable_under_attack",
+				user_id=v.id,
+			)
+			g.db.add(ma)
+			g.db.commit()
+			data='{"value":"high"}'
+		else:
+			f.write("yes")
+			ma = ModAction(
+				kind="enable_under_attack",
+				user_id=v.id,
+			)
+			g.db.add(ma)
+			g.db.commit()
+			data='{"value":"under_attack"}'
+
+	response = requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data)
+	return {"message": response.text}
+
 @app.get("/admin/badge_grant")
 @admin_level_required(2)
 def badge_grant_get(v):
@@ -397,7 +422,6 @@ def badge_grant_get(v):
 @app.post("/admin/badge_grant")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def badge_grant_post(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -571,7 +595,6 @@ def alt_votes_get(v):
 @app.post("/admin/link_accounts")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def admin_link_accounts(v):
 
 	u1 = int(request.values.get("u1"))
@@ -643,7 +666,6 @@ def admin_removed_comments(v):
 
 @app.post("/agendaposter/<user_id>")
 @admin_level_required(2)
-@validate_formkey
 def agendaposter(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
@@ -700,7 +722,6 @@ def agendaposter(user_id, v):
 @app.post("/shadowban/<user_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def shadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	if user.admin_level != 0: abort(403)
@@ -726,7 +747,6 @@ def shadowban(user_id, v):
 @app.post("/unshadowban/<user_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def unshadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	if user.admin_level != 0: abort(403)
@@ -753,7 +773,6 @@ def unshadowban(user_id, v):
 @app.post("/admin/verify/<user_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def verify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	user.verified = "Verified"
@@ -772,7 +791,6 @@ def verify(user_id, v):
 @app.post("/admin/unverify/<user_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def unverify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 	user.verified = None
@@ -792,7 +810,6 @@ def unverify(user_id, v):
 @app.post("/admin/title_change/<user_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def admin_title_change(user_id, v):
 
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -826,7 +843,6 @@ def admin_title_change(user_id, v):
 @app.post("/ban_user/<user_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def ban_user(user_id, v):
 	
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -886,7 +902,6 @@ def ban_user(user_id, v):
 @app.post("/unban_user/<user_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def unban_user(user_id, v):
 
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -926,7 +941,6 @@ def unban_user(user_id, v):
 @app.post("/ban_post/<post_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def ban_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
@@ -963,7 +977,6 @@ def ban_post(post_id, v):
 @app.post("/unban_post/<post_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def unban_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
@@ -996,7 +1009,6 @@ def unban_post(post_id, v):
 
 @app.post("/distinguish/<post_id>")
 @admin_level_required(1)
-@validate_formkey
 def api_distinguish_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
@@ -1022,7 +1034,6 @@ def api_distinguish_post(post_id, v):
 
 @app.post("/sticky/<post_id>")
 @admin_level_required(2)
-@validate_formkey
 def sticky_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
@@ -1045,7 +1056,6 @@ def sticky_post(post_id, v):
 
 @app.post("/unsticky/<post_id>")
 @admin_level_required(2)
-@validate_formkey
 def unsticky_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
@@ -1072,7 +1082,6 @@ def unsticky_post(post_id, v):
 
 @app.post("/sticky_comment/<cid>")
 @admin_level_required(2)
-@validate_formkey
 def sticky_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
@@ -1089,7 +1098,6 @@ def sticky_comment(cid, v):
 
 @app.post("/unsticky_comment/<cid>")
 @admin_level_required(2)
-@validate_formkey
 def unsticky_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
@@ -1117,7 +1125,6 @@ def unsticky_comment(cid, v):
 @app.post("/ban_comment/<c_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def api_ban_comment(c_id, v):
 
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
@@ -1141,7 +1148,6 @@ def api_ban_comment(c_id, v):
 @app.post("/unban_comment/<c_id>")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def api_unban_comment(c_id, v):
 
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
@@ -1170,7 +1176,6 @@ def api_unban_comment(c_id, v):
 
 @app.post("/distinguish_comment/<c_id>")
 @admin_level_required(1)
-@validate_formkey
 def admin_distinguish_comment(c_id, v):
 	
 	
@@ -1205,7 +1210,6 @@ def admin_banned_domains(v):
 @app.post("/admin/banned_domains")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def admin_toggle_ban_domain(v):
 
 	domain=request.values.get("domain", "").strip()
@@ -1241,7 +1245,6 @@ def admin_toggle_ban_domain(v):
 @app.post("/admin/nuke_user")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def admin_nuke_user(v):
 
 	user=get_user(request.values.get("user"))
@@ -1275,7 +1278,6 @@ def admin_nuke_user(v):
 @app.post("/admin/unnuke_user")
 @limiter.limit("1/second")
 @admin_level_required(2)
-@validate_formkey
 def admin_nunuke_user(v):
 
 	user=get_user(request.values.get("user"))

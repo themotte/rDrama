@@ -12,7 +12,6 @@ def slash_post():
 
 @app.post("/clear")
 @auth_required
-@validate_formkey
 def clear(v):
 	for n in v.notifications.filter_by(read=False).all():
 		n.read = True

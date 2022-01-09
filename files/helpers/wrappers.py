@@ -23,8 +23,13 @@ def get_logged_in_user():
 		v = g.db.query(User).filter_by(id=lo_user).one_or_none()
 
 		if not v or nonce < v.login_nonce: return None
-
 		v.client = None
+
+		if request.method != "GET":
+			submitted_key = request.values.get("formkey")
+			if not submitted_key: abort(401)
+			elif not v.validate_formkey(submitted_key): abort(401)
+
 		return v
 
 def check_ban_evade(v):
@@ -111,20 +116,3 @@ def admin_level_required(x):
 		return wrapper
 
 	return wrapper_maker
-
-
-def validate_formkey(f):
-	def wrapper(*args, v, **kwargs):
-
-		if not request.headers.get("Authorization"):
-
-			submitted_key = request.values.get("formkey", None)
-
-			if not submitted_key: abort(401)
-
-			elif not v.validate_formkey(submitted_key): abort(401)
-
-		return f(*args, v=v, **kwargs)
-
-	wrapper.__name__ = f.__name__
-	return wrapper

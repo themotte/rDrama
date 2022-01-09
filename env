@@ -32,3 +32,5 @@ export DEFAULT_COLOR="ff66ac" # YOU HAVE TO PICK ONE OF THOSE COLORS OR SHIT WIL
 export MAIL_USERNAME="blahblahblah@gmail.com"
 export MAIL_PASSWORD="3435tdfsdudebussylmaoxxt43"
 export DESCRIPTION="rdrama.net caters to drama in all forms such as: Real life, videos, photos, gossip, rumors, news sites, Reddit, and Beyond™. There isn't drama we won't touch, and we want it all!"
+export CF_KEY="3435tdfsdudebussylmaoxxt43"
+export CF_ZONE="3435tdfsdudebussylmaoxxt43"

@@ -174,6 +174,16 @@ ACTIONTYPES={
 		"icon": "fa-user",
 		"color": "bg-success",
 	},
+	"disable_under_attack": {
+		"str": "disabled under attack mode",
+		"icon": "fa-shield",
+		"color": "bg-success",
+	},
+	"enable_under_attack": {
+		"str": "enabled under attack mode",
+		"icon": "fa-shield",
+		"color": "bg-danger",
+	},
 	"ban_user":{
 		"str":'banned user {self.target_link}',
 		"icon":"fa-user-slash",
