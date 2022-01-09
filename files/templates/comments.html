@@ -77,7 +77,7 @@
 	{% set replies=c.replies %}
 {% endif %}
 
-{% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking) and not (v and v.admin_level>0) and not (v and v.id==c.author_id) %}
+{% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
 
 <div id="comment-{{c.id}}" class="comment">
 
@@ -310,7 +310,7 @@
 									</a>
 								</li>
 					
-								{% if v and request.path.startswith('/@') and not v.admin_level %}
+								{% if v and request.path.startswith('/@') and v.admin_level < 2 %}
 									<li id="voting-{{c.id}}-mobile" class="voting list-inline-item d-md-none">
 										{% if voted==1 %}
 											<span class="mr-2 arrow-up comment-{{c.id}}-up active"></span>
@@ -459,7 +459,7 @@
 							{% endif %}
 						{% endif %}
 						
-						{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 0) %}
+						{% if v and c.parent_submission and (c.author_id==v.id or v.admin_level > 1) %}
 							<button id="unmark-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if c.over_18 %}d-md-inline-block{% endif %} text-danger" onclick="post_toast3('/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Unmark +18</button>
 							<button id="mark-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if not c.over_18 %}d-md-inline-block{% endif %} text-danger" onclick="post_toast3('/toggle_comment_nsfw/{{c.id}}','mark-{{c.id}}','unmark-{{c.id}}')"><i class="fas fa-eye-evil text-danger fa-fw"></i>Mark +18</button>
 						{% endif %}
@@ -599,7 +599,7 @@
 						{% endif %}
 
 
-						{% if c.post and v.id == c.post.author_id and not v.admin_level %}
+						{% if c.post and v.id == c.post.author_id and v.admin_level < 2 %}
 							<a id="pin2-{{c.id}}" class="list-group-item {% if c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/pin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Pin</a>
 							<a id="unpin2-{{c.id}}" class="list-group-item {% if not c.is_pinned %}d-none{% endif %} text-info" role="button" data-bs-target="#actionsModal-{{c.id}}" onclick="post_toast2('/unpin_comment/{{c.id}}','pin2-{{c.id}}','unpin2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-info"></i>Unpin</a>
 						{% endif %}
