@@ -397,6 +397,10 @@ def under_attack(v):
 			g.db.add(ma)
 			g.db.commit()
 			data='{"value":"high"}'
+
+			response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data))
+			if response == "<Response [200]>": return {"message": "Under attack mode disabled!"}
+			return {"error": "Failed to disable under attack mode."}
 		else:
 			f.write("yes")
 			ma = ModAction(
@@ -407,8 +411,9 @@ def under_attack(v):
 			g.db.commit()
 			data='{"value":"under_attack"}'
 
-	response = requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data)
-	return {"message": response.text}
+			response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data))
+			if response == "<Response [200]>": return {"message": "Under attack mode enabled!"}
+			return {"error": "Failed to enable under attack mode."}
 
 @app.get("/admin/badge_grant")
 @admin_level_required(2)
