@@ -11,7 +11,6 @@ from files.helpers.const import AUTOPOLLER_ID, AUTOBETTER_ID, censor_slurs, TROL
 from files.helpers.lazy import lazy
 from .flags import Flag
 from .comment import Comment
-from .award import AwardRelationship
 from flask import g
 
 site = environ.get("DOMAIN").strip()
@@ -57,7 +56,7 @@ class Submission(Base):
 	author = relationship("User", primaryjoin="Submission.author_id==User.id")
 	oauth_app = relationship("OauthApp", viewonly=True)
 	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)
-	awards = relationship("AwardRelationship", viewonly=True, order_by=AwardRelationship.id)
+	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
 
 	def __init__(self, *args, **kwargs):
