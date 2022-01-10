@@ -401,9 +401,9 @@ def edit_post(pid, v):
 
 	if p.author_id != v.id and not (v.admin_level > 1 and v.admin_level > 2): abort(403)
 
-	title = request.values.get("title", "").strip()
+	title = request.values.get("title", "").strip().replace('‎','')
 
-	body = request.values.get("body", "").strip()
+	body = request.values.get("body", "").strip().replace('‎','')
 
 	if len(body) > 10000: return {"error":"Character limit is 10000!"}, 403
 
@@ -691,14 +691,14 @@ def submit_post(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 
-	title = request.values.get("title", "").strip()[:500]
+	title = request.values.get("title", "").strip()[:500].replace('‎','')
 
 	url = request.values.get("url", "").strip()
 
 	if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 	title_html = filter_emojis_only(title)
-	body = request.values.get("body", "").strip()
+	body = request.values.get("body", "").strip().replace('‎','')
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
 
