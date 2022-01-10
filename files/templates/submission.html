@@ -18,11 +18,16 @@
 		.seal {
 			position:absolute;
 			z-index:9999;
+			pointer-events: none;
+		}
+		.sealimg {
+			width: 100px;
+			height: 89.5px;
 		}
 	</style>
-		<marquee>
-			<img class="seal" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
-		</marquee>
+	<marquee class="seal">
+		<img class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+	</marquee>
 {% endif %}
 
 {% if p.award_count("wholesome") > 1 %}
