@@ -16,7 +16,7 @@
 {% if p.award_count("wholesome") %}
 	<style>
 		.seal {
-			position:absolute;
+			position:fixed;
 			z-index:9999;
 			pointer-events: none;
 		}
@@ -24,9 +24,17 @@
 			width: 100px;
 			height: 89.5px;
 		}
+		@media (max-width: 992px) {
+			.sealimg {
+				width: 30px;
+				height: 27px;
+			}
+		}
 	</style>
-	<marquee class="seal">
-		<img class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%" width="100%">
+		<marquee direction="right" scrollamount=10 behavior="alternate" height="100%" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
 	</marquee>
 {% endif %}
 
