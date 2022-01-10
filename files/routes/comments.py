@@ -342,7 +342,7 @@ def api_comment(v):
 		n = Notification(comment_id=c_based.id, user_id=v.id)
 		g.db.add(n)
 
-	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body_html.lower():
+	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body.lower():
 
 		c.is_banned = True
 		c.ban_reason = "AutoJanny"
@@ -350,7 +350,7 @@ def api_comment(v):
 		g.db.add(c)
 
 
-		body = AGENDAPOSTER_MSG.format(username=v.username)
+		body = AGENDAPOSTER_MSG.format(username=v.username, type='comment')
 
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 
@@ -683,7 +683,7 @@ def edit_comment(cid, v):
 		c.body = body[:10000]
 		c.body_html = body_html
 
-		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body_html.lower():
+		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body.lower():
 
 			c.is_banned = True
 			c.ban_reason = "AutoJanny"
@@ -691,7 +691,7 @@ def edit_comment(cid, v):
 			g.db.add(c)
 
 
-			body = AGENDAPOSTER_MSG.format(username=v.username)
+			body = AGENDAPOSTER_MSG.format(username=v.username, type='comment')
 
 			body_md = CustomRenderer().render(mistletoe.Document(body))
 

@@ -19,6 +19,7 @@ from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
 from os import path
 import requests
 from shutil import copyfile
+from psutil import cpu_percent
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
@@ -493,14 +494,14 @@ def edit_post(pid, v):
 
 		p.body_html = body_html
 
-		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in body_html.lower():
+		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in f'{p.body}{p.title}'.lower():
 
 			p.is_banned = True
 			p.ban_reason = "AutoJanny"
 
 			g.db.add(p)
 
-			body = AGENDAPOSTER_MSG.format(username=v.username)
+			body = AGENDAPOSTER_MSG.format(username=v.username, type='post')
 
 			body_md = CustomRenderer().render(mistletoe.Document(body))
 
@@ -548,6 +549,30 @@ def archiveorg(url):
 
 
 def thumbnail_thread(pid):
+
+	print(cpu_percent(), flush=True)
+
+	time.sleep(0.1)
+
+	cpu = cpu_percent()
+
+	if cpu > 7:
+		with open('under_attack', 'r') as f: content = f.read()
+
+		with open('under_attack', 'w') as f:
+			if content != "yes":
+				f.write("yes")
+				ma = ModAction(
+					kind="enable_under_attack",
+					user_id=AUTOJANNY_ID,
+				)
+				g.db.add(ma)
+				g.db.commit()
+				data='{"value":"under_attack"}'
+
+				response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data))
+				if response == "<Response [200]>": return {"message": "Under attack mode enabled!"}
+				return {"error": "Failed to enable under attack mode."}
 
 	def expand_url(post_url, fragment_url):
 
@@ -1029,12 +1054,11 @@ def submit_post(v):
 			if new_post.club and not user.paid_dues: continue
 			add_notif(cid, user.id)
 
-	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in new_post.body_html.lower():
-
+	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in f'{new_post.body}{new_post.title}'.lower():
 		new_post.is_banned = True
 		new_post.ban_reason = "AutoJanny"
 
-		body = AGENDAPOSTER_MSG.format(username=v.username)
+		body = AGENDAPOSTER_MSG.format(username=v.username, type='post')
 
 		body_md = CustomRenderer().render(mistletoe.Document(body))
 
