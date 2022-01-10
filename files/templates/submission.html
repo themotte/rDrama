@@ -17,25 +17,11 @@
 	<style>
 		.seal {
 			position:absolute;
-			z-index:9999;
-			pointer-events: none;
-		}
-		.sealimg {
-			width: 100px;
-			height: 89.5px;
-		}
-		@media (max-width: 992px) {
-			.sealimg {
-				width: 30px;
-				height: 27px;
-			}
 		}
 	</style>
-	<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
-		<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
-			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		<marquee>
+			<img class="seal" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
 		</marquee>
-	</marquee>
 {% endif %}
 
 {% if p.award_count("wholesome") > 1 %}
