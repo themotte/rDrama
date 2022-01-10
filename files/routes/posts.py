@@ -556,7 +556,7 @@ def thumbnail_thread(pid):
 
 	cpu = cpu_percent()
 
-	if cpu > 70:
+	if cpu > 50:
 		print('wtf', flush=True)
 		with open('under_attack', 'r') as f: content = f.read()
 
