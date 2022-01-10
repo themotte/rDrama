@@ -557,22 +557,23 @@ def thumbnail_thread(pid):
 	cpu = cpu_percent()
 
 	if cpu > 7:
-		with open('under_attack', 'r') as f: content = f.read()
+		print('wtf', flush=True)
+		# with open('under_attack', 'r') as f: content = f.read()
 
-		with open('under_attack', 'w') as f:
-			if content != "yes":
-				f.write("yes")
-				ma = ModAction(
-					kind="enable_under_attack",
-					user_id=AUTOJANNY_ID,
-				)
-				g.db.add(ma)
-				g.db.commit()
-				data='{"value":"under_attack"}'
+		# with open('under_attack', 'w') as f:
+		# 	if content != "yes":
+		# 		f.write("yes")
+		# 		ma = ModAction(
+		# 			kind="enable_under_attack",
+		# 			user_id=AUTOJANNY_ID,
+		# 		)
+		# 		g.db.add(ma)
+		# 		g.db.commit()
+		# 		data='{"value":"under_attack"}'
 
-				response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data))
-				if response == "<Response [200]>": return {"message": "Under attack mode enabled!"}
-				return {"error": "Failed to enable under attack mode."}
+		# 		response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data))
+		# 		if response == "<Response [200]>": return {"message": "Under attack mode enabled!"}
+		# 		return {"error": "Failed to enable under attack mode."}
 
 	def expand_url(post_url, fragment_url):
 
