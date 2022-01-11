@@ -55,13 +55,7 @@ def error_500(e):
 
 
 @app.post("/allow_nsfw")
-def allow_nsfw():
+@auth_desired
+def allow_nsfw(v):
 	session["over_18"] = int(time.time()) + 3600
 	return redirect(request.values.get("redir", "/"))
-
-
-@app.get("/error/<error>")
-def error_all_preview(error):
-
-	try: return render_template(f"errors/{error}.html", error=True)
-	except: abort(400)

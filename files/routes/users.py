@@ -347,7 +347,8 @@ def leaderboard(v):
 
 
 @app.get("/@<username>/css")
-def get_css(username):
+@auth_desired
+def get_css(v, username):
 	user = get_user(username)
 	if user.css: css = user.css
 	else: css = ""
@@ -356,7 +357,8 @@ def get_css(username):
 	return resp
 
 @app.get("/@<username>/profilecss")
-def get_profilecss(username):
+@auth_desired
+def get_profilecss(v, username):
 	user = get_user(username)
 	if user.profilecss: profilecss = user.profilecss
 	else: profilecss = ""
@@ -365,7 +367,8 @@ def get_profilecss(username):
 	return resp
 
 @app.get("/songs/<id>")
-def songs(id):
+@auth_desired
+def songs(v, id):
 	try: id = int(id)
 	except: return "", 400
 	user = g.db.query(User).filter_by(id=id).one_or_none()
@@ -374,7 +377,8 @@ def songs(id):
 
 @app.get("/song/<song>")
 @app.get("/static/song/<song>")
-def song(song):
+@auth_desired
+def song(v, song):
 	if request.path.startswith('/song/'): return redirect(request.full_path.replace('/song/', '/static/song/'))
 	resp = make_response(send_from_directory('/songs', song))
 	resp.headers.remove("Cache-Control")
@@ -560,6 +564,7 @@ def api_is_available(name, v):
 		return {name: True}
 
 @app.get("/id/<id>")
+@auth_desired
 def user_id(id):
 	try: id = int(id)
 	except: abort(404)
@@ -567,6 +572,7 @@ def user_id(id):
 	return redirect(user.url)
 		
 @app.get("/u/<username>")
+@auth_desired
 def redditor_moment_redirect(username):
 	return redirect(f"/@{username}")
 
@@ -917,8 +923,8 @@ def remove_follow(username, v):
 
 @app.get("/uid/<id>/pic")
 @app.get("/uid/<id>/pic/profile")
-@limiter.exempt
-def user_profile_uid(id):
+@auth_desired
+def user_profile_uid(v, id):
 	try: id = int(id)
 	except:
 		try: id = int(id, 36)
@@ -927,8 +933,8 @@ def user_profile_uid(id):
 	return redirect(x.profile_url)
 
 @app.get("/@<username>/pic")
-@limiter.exempt
-def user_profile_name(username):
+@auth_desired
+def user_profile_name(v, username):
 	x = get_user(username)
 	return redirect(x.profile_url)
 

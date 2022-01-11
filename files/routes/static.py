@@ -246,7 +246,8 @@ def log_item(id, v):
 	return render_template(f"{template}log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
 @app.get("/static/assets/favicon.ico")
-def favicon():
+@auth_desired
+def favicon(v):
 	return send_file(f"./assets/images/{site_name}/icon.webp")
 
 @app.get("/api")
@@ -278,18 +279,21 @@ def submit_contact(v):
 	return render_template(f"{template}contact.html", v=v, msg="Your message has been sent.")
 
 @app.get('/archives')
-def archivesindex():
+@auth_desired
+def archivesindex(v):
 	return redirect("/archives/index.html")
 
 @app.get('/archives/<path:path>')
-def archives(path):
+@auth_desired
+def archives(v, path):
 	resp = make_response(send_from_directory('/archives', path))
 	if request.path.endswith('.css'): resp.headers.add("Content-Type", "text/css")
 	return resp
 
 @app.get('/static/<path:path>')
 @limiter.exempt
-def static_service2(path):
+@auth_desired
+def static_service2(v, path):
 	resp = make_response(send_from_directory('./static', path))
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
@@ -303,7 +307,8 @@ def static_service2(path):
 @app.get('/assets/<path:path>')
 @app.get('/static/assets/<path:path>')
 @limiter.exempt
-def static_service(path):
+@auth_desired
+def static_service(v, path):
 	if request.path.startswith('/assets/'): return redirect(request.full_path.replace('/assets/', '/static/assets/'))
 
 	resp = make_response(send_from_directory('assets', path))
@@ -321,7 +326,8 @@ def static_service(path):
 @app.get('/hostedimages/<path>')
 @app.get("/static/images/<path>")
 @limiter.exempt
-def images(path):
+@auth_desired
+def images(v, path):
 	if request.path.startswith('/images/') or request.path.lower().startswith('/hostedimages/'):
 		return redirect(request.full_path.replace('/images/', '/static/images/').replace('/hostedimages/', '/static/images/'))
 	resp = make_response(send_from_directory('/images', path.replace('.WEBP','.webp')))
@@ -395,7 +401,8 @@ def formatting(v):
 	return render_template(f"{template}formatting.html", v=v)
 
 @app.get("/service-worker.js")
-def serviceworker():
+@auth_desired
+def serviceworker(v):
 	with open("files/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
 
 @app.get("/settings/security")
@@ -409,12 +416,3 @@ def settings_security(v):
 						   v=v,
 						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None
 						   )
-
-@app.post("/dismiss_mobile_tip")
-@limiter.limit("1/second")
-def dismiss_mobile_tip():
-
-	session["tooltip_last_dismissed"]=int(time.time())
-	session.modified=True
-
-	return "", 204

@@ -4,11 +4,13 @@ from datetime import datetime
 from files.helpers.jinja2 import full_link
 from files.helpers.get import *
 from yattag import Doc
+from files.helpers.wrappers import *
 
 from files.__main__ import app
 
 @app.get('/rss/<sort>/<t>')
-def feeds_user(sort='hot', t='all'):
+@auth_desired
+def feeds_user(v=None, sort='hot', t='all'):
 
 	page = int(request.values.get("page", 1))
 

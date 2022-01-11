@@ -7,7 +7,8 @@ defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.get("/post/")
-def slash_post():
+@auth_desired
+def slash_post(v):
 	return redirect("/")
 
 @app.post("/clear")

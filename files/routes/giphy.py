@@ -1,6 +1,7 @@
 from flask import *
 from os import environ
 import requests
+from files.helpers.wrappers import *
 
 from files.__main__ import app
 
@@ -9,7 +10,8 @@ GIPHY_KEY = environ.get('GIPHY_KEY').rstrip()
 
 @app.get("/giphy")
 @app.get("/giphy<path>")
-def giphy(path=None):
+@auth_desired
+def giphy(v=None, path=None):
 
 	searchTerm = request.values.get("searchTerm", "").strip()
 	limit = int(request.values.get("limit", 48))
