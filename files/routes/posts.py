@@ -25,6 +25,10 @@ site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
+CF_KEY = environ.get("CF_KEY", "").strip()
+CF_ZONE = environ.get("CF_ZONE", "").strip()
+CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
+
 if path.exists(f'snappy_{site_name}.txt'):
 	with open(f'snappy_{site_name}.txt', "r") as f:
 		if site == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
