@@ -64,9 +64,11 @@
 	</div>
 {% endif %}
 
-<div class="custom-control custom-switch">
-	<input autocomplete="off" type="checkbox" class="custom-control-input" id="under_attack" name="under_attack" {% if x2 == "yes" %}checked{% endif %} onchange="post_toast('/admin/under_attack');">
-	<label class="custom-control-label" for="under_attack">Under attack mode</label>
-</div>
+{% if v.id == 1 %}
+	<div class="custom-control custom-switch">
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="under_attack" name="under_attack" {% if x2 == "yes" %}checked{% endif %} onchange="post_toast('/admin/under_attack');">
+		<label class="custom-control-label" for="under_attack">Under attack mode</label>
+	</div>
+{% endif %}
 
 {% endblock %}
