@@ -556,28 +556,28 @@ def thumbnail_thread(pid):
 
 	db = db_session()
 
-	cpu = cpu_percent()
+	# cpu = cpu_percent()
 
-	time.sleep(0.1)
+	# time.sleep(0.1)
 
-	cpu = cpu_percent()
+	# cpu = cpu_percent()
 
-	if cpu > 70:
-		print(f'Cpu usage at {cpu}%, Enabling under attack mode!', flush=True)
-		with open('under_attack', 'r') as f: content = f.read()
+	# if cpu > 70:
+	# 	print(f'Cpu usage at {cpu}%, Enabling under attack mode!', flush=True)
+	# 	with open('under_attack', 'r') as f: content = f.read()
 
-		with open('under_attack', 'w') as f:
-			if content == "no":
-				f.write("yes")
-				ma = ModAction(
-					kind="enable_under_attack",
-					user_id=AUTOJANNY_ID,
-				)
-				db.add(ma)
-				db.commit()
-				data='{"value":"under_attack"}'
-				response = requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data)
-				print(response.text, flush=True)
+	# 	with open('under_attack', 'w') as f:
+	# 		if content == "no":
+	# 			f.write("yes")
+	# 			ma = ModAction(
+	# 				kind="enable_under_attack",
+	# 				user_id=AUTOJANNY_ID,
+	# 			)
+	# 			db.add(ma)
+	# 			db.commit()
+	# 			data='{"value":"under_attack"}'
+	# 			response = requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data)
+	# 			print(response.text, flush=True)
 
 	def expand_url(post_url, fragment_url):
 
