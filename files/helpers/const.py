@@ -1,9 +1,10 @@
-from os import environ
+from os import environ, listdir
 import re
 from copy import deepcopy
 from json import loads
 
 SITE = environ.get("DOMAIN", '').strip()
+SITE_NAME = environ.get("SITE_NAME", '').strip()
 
 import json
 
@@ -766,3 +767,5 @@ NOTIFIED_USERS = {
 	'dong': FARTBINN_ID,
 	'kippy': KIPPY_ID,
 }
+
+num_banners = len(listdir('files/assets/images/Drama/banners')) + 1
