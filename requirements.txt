@@ -1,4 +1,3 @@
-assertpy
 beautifulsoup4
 bleach
 Flask
@@ -9,10 +8,8 @@ Flask-Mail==0.9.1
 gevent
 greenlet
 gunicorn
-ImageHash
+markdown
 matplotlib
-mistletoe
-piexif
 Pillow
 psutil
 pyotp

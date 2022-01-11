@@ -5,6 +5,7 @@ from functools import partial
 from .get import *
 from os import path, environ
 import re
+from markdown import markdown
 
 site = environ.get("DOMAIN").strip()
 
@@ -97,9 +98,29 @@ allowed_protocols = ['http', 'https']
 
 allowed_styles = ['color', 'background-color', 'font-weight', 'transform', '-webkit-transform']
 
-def sanitize(sanitized, noimages=False):
+def sanitize(sanitized, noimages=False, alert=False):
 
-	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","")
+	sanitized = markdown(sanitized)
+
+	sanitized = sanitized.replace("\ufeff", "").replace("𒐪","").replace("<script","").replace('‎','')
+
+	if alert:
+		for i in re.finditer("<p>@((\w|-){1,25})", sanitized):
+			u = get_user(i.group(1), graceful=True)
+			if u:
+				sanitized = re.sub("<p>@((\w|-){1,25})", f'<p><a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>', sanitized)
+	else:
+		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/\w{3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized)
+
+		for i in re.finditer('(^|\s|\n|<p>)@((\w|-){1,25})', sanitized):
+			u = get_user(i.group(2), graceful=True)
+
+			if u and (not g.v.any_block_exists(u) or g.v.admin_level > 1):
+				if noimages:
+					sanitized = re.sub("(^|\s|\n|<p>)@((\w|-){1,25})", rf'\1<a href="/id/{u.id}">@{u.username}</a>', sanitized)
+				else:
+					sanitized = re.sub("(^|\s|\n|<p>)@((\w|-){1,25})", rf'\1<a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>', sanitized)
+
 
 	for i in re.finditer('https://i\.imgur\.com/(([^_]*?)\.(jpg|png|jpeg))', sanitized):
 		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d." + i.group(3) + "?maxwidth=9999")

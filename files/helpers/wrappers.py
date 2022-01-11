@@ -46,8 +46,8 @@ def auth_desired(f):
 
 		check_ban_evade(v)
 
-		resp = make_response(f(*args, v=v, **kwargs))
-		return resp
+		g.v = v
+		return make_response(f(*args, v=v, **kwargs))
 
 	wrapper.__name__ = f.__name__
 	return wrapper
@@ -62,8 +62,8 @@ def auth_required(f):
 
 		check_ban_evade(v)
 
-		resp = make_response(f(*args, v=v, **kwargs))
-		return resp
+		g.v = v
+		return make_response(f(*args, v=v, **kwargs))
 
 	wrapper.__name__ = f.__name__
 	return wrapper
@@ -82,8 +82,8 @@ def is_not_permabanned(f):
 		if v.is_banned and v.unban_utc == 0:
 			return {"error": "Interal server error"}, 500
 
-		resp = make_response(f(*args, v=v, **kwargs))
-		return resp
+		g.v = v
+		return make_response(f(*args, v=v, **kwargs))
 
 	wrapper.__name__ = f.__name__
 	return wrapper
@@ -101,12 +101,8 @@ def admin_level_required(x):
 
 			if v.admin_level < x: abort(403)
 			
-			response = f(*args, v=v, **kwargs)
-
-			if isinstance(response, tuple): resp = make_response(response[0])
-			else: resp = make_response(response)
-
-			return resp
+			g.v = v
+			return make_response(f(*args, v=v, **kwargs))
 
 		wrapper.__name__ = f.__name__
 		return wrapper

@@ -5,7 +5,6 @@ import math
 from files.classes.user import ViewerRelationship
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
-from files.helpers.markdown import *
 from files.helpers.const import *
 from files.mail import *
 from flask import *
@@ -415,9 +414,7 @@ def message2(v, username):
 
 	message = re.sub('!\[\]\((.*?)\)', r'\1', message)
 
-	text_html = Renderer().render(mistletoe.Document(message))
-
-	text_html = sanitize(text_html, True)
+	text_html = sanitize(message, noimages=True)
 
 	existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 															Comment.sentto == user.id,
@@ -482,8 +479,7 @@ def messagereply(v):
 
 	if v.id == user_id: user_id = parent.sentto
 
-	text_html = Renderer().render(mistletoe.Document(message))
-	text_html = sanitize(text_html, True)
+	text_html = sanitize(message, noimages=True)
 
 	new_comment = Comment(author_id=v.id,
 							parent_submission=None,

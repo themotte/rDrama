@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
 from files.helpers.filters import filter_comment_html
-from files.helpers.markdown import *
 from files.helpers.discord import remove_user, set_nick
 from files.helpers.const import *
 from files.mail import *
@@ -166,8 +165,7 @@ def settings_profile_post(v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', sig, re.MULTILINE):
 			if "wikipedia" not in i.group(1): sig = sig.replace(i.group(1), f'![]({i.group(1)})')
 
-		sig_html = CustomRenderer().render(mistletoe.Document(sig))
-		sig_html = sanitize(sig_html)
+		sig_html = sanitize(sig)
 		bans = filter_comment_html(sig_html)
 
 
@@ -205,8 +203,7 @@ def settings_profile_post(v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', friends, re.MULTILINE):
 			if "wikipedia" not in i.group(1): friends = friends.replace(i.group(1), f'![]({i.group(1)})')
 
-		friends_html = CustomRenderer().render(mistletoe.Document(friends))
-		friends_html = sanitize(friends_html)
+		friends_html = sanitize(friends)
 		bans = filter_comment_html(friends_html)
 
 		if bans:
@@ -247,8 +244,7 @@ def settings_profile_post(v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', enemies, re.MULTILINE):
 			if "wikipedia" not in i.group(1): enemies = enemies.replace(i.group(1), f'![]({i.group(1)})')
 
-		enemies_html = CustomRenderer().render(mistletoe.Document(enemies))
-		enemies_html = sanitize(enemies_html)
+		enemies_html = sanitize(enemies)
 		bans = filter_comment_html(enemies_html)
 
 		if bans:
@@ -309,8 +305,7 @@ def settings_profile_post(v):
 				else: template = 'CHRISTMAS/'
 				return render_template(f"{template}settings_profile.html", v=v, error="Image/Video files only."), 400
 		
-		bio_html = CustomRenderer().render(mistletoe.Document(bio))
-		bio_html = sanitize(bio_html)
+		bio_html = sanitize(bio)
 		bans = filter_comment_html(bio_html)
 
 		if len(bio_html) > 10000:
@@ -696,7 +691,7 @@ def settings_images_profile(v):
 
 	name2 = name.replace('.webp', 'r.webp')
 	copyfile(name, name2)
-	imageurl = process_image(name2, True)
+	imageurl = process_image(name2, resize=True)
 
 	if not imageurl: abort(400)
 

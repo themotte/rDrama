@@ -1,11 +1,9 @@
 import time
-import mistletoe
 import gevent
 import requests
 from files.helpers.wrappers import *
 from files.helpers.sanitize import *
 from files.helpers.filters import *
-from files.helpers.markdown import *
 from files.helpers.alerts import *
 from files.helpers.discord import send_discord_message
 from files.helpers.const import *
@@ -68,7 +66,7 @@ def publish(pid, v):
 		add_notif(cid, x)
 
 	
-	cid = notif_comment(f"@{v.username} has made a new post: [{post.title}]({post.permalink})", True)
+	cid = notif_comment(f"@{v.username} has made a new post: [{post.title}]({post.permalink})", autojanny=True)
 	for follow in v.followers:
 		user = get_account(follow.user_id)
 		if post.club and not user.paid_dues: continue
@@ -475,7 +473,7 @@ def edit_post(pid, v):
 					)
 				g.db.add(c)
 
-		body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
+		body_html = sanitize(body)
 
 		bans = filter_comment_html(body_html)
 		if bans:
@@ -507,9 +505,7 @@ def edit_post(pid, v):
 
 			body = AGENDAPOSTER_MSG.format(username=v.username, type='post')
 
-			body_md = CustomRenderer().render(mistletoe.Document(body))
-
-			body_jannied_html = sanitize(body_md)
+			body_jannied_html = sanitize(body)
 
 			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
 				parent_submission=p.id,
@@ -698,7 +694,7 @@ def thumbnail_thread(pid):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = process_image(name, True)
+	post.thumburl = process_image(name, resize=True)
 	db.add(post)
 	db.commit()
 	db.close()
@@ -946,7 +942,7 @@ def submit_post(v):
 			else: template = 'CHRISTMAS/'
 			return render_template(f"{template}submit.html", v=v, error=f"Image/Video files only."), 400
 
-	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
+	body_html = sanitize(body)
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 400
 
@@ -1029,7 +1025,7 @@ def submit_post(v):
 
 			name2 = name.replace('.webp', 'r.webp')
 			copyfile(name, name2)
-			new_post.thumburl = process_image(name2, True)	
+			new_post.thumburl = process_image(name2, resize=True)	
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -1051,7 +1047,7 @@ def submit_post(v):
 		for x in notify_users:
 			add_notif(cid, x)
 
-		cid = notif_comment(f"@{v.username} has made a new post: [{title}]({new_post.permalink})", True)
+		cid = notif_comment(f"@{v.username} has made a new post: [{title}]({new_post.permalink})", autojanny=True)
 		for follow in v.followers:
 			user = get_account(follow.user_id)
 			if new_post.club and not user.paid_dues: continue
@@ -1063,9 +1059,7 @@ def submit_post(v):
 
 		body = AGENDAPOSTER_MSG.format(username=v.username, type='post')
 
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-
-		body_jannied_html = sanitize(body_md)
+		body_jannied_html = sanitize(body)
 
 
 
@@ -1122,8 +1116,7 @@ def submit_post(v):
 		body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
 		gevent.spawn(archiveorg, href)
 
-	body_md = CustomRenderer().render(mistletoe.Document(body))
-	body_html = sanitize(body_md)
+	body_html = sanitize(body)
 
 	if len(body_html) < 20000:
 		c = Comment(author_id=SNAPPY_ID,
@@ -1158,8 +1151,16 @@ def submit_post(v):
 		send_discord_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
-	g.db.commit()
+	if v.id in AUTO_UPVOTE_IDS:
+		autovote = Vote(user_id=TAX_RECEIVER_ID, submission_id=new_post.id, vote_type=1)
+		g.db.add(autovote)
+		v.coins += 1
+		v.truecoins += 1
+		g.db.add(v)
+		new_post.upvotes += 1
+		g.db.add(new_post)
 
+	g.db.commit()
 
 	if request.headers.get("Authorization"): return new_post.json
 	else: return redirect(new_post.permalink)

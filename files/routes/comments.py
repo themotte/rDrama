@@ -211,7 +211,7 @@ def api_comment(v):
 
 	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
-	body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
+	body_html = sanitize(body)
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 
@@ -322,9 +322,7 @@ def api_comment(v):
 		body2 = f"@{basedguy.username}'s Based Count has increased by 1. Their Based Count is now {basedguy.basedcount}."
 		if basedguy.pills: body2 += f"\n\nPills: {basedguy.pills}"
 		
-		body_md = CustomRenderer().render(mistletoe.Document(body2))
-
-		body_based_html = sanitize(body_md)
+		body_based_html = sanitize(body2)
 
 		c_based = Comment(author_id=BASEDBOT_ID,
 			parent_submission=parent_submission,
@@ -352,9 +350,7 @@ def api_comment(v):
 
 		body = AGENDAPOSTER_MSG.format(username=v.username, type='comment')
 
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-
-		body_jannied_html = sanitize(body_md)
+		body_jannied_html = sanitize(body)
 
 
 
@@ -374,22 +370,11 @@ def api_comment(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	if v.id == PIZZA_SHILL_ID:
-		cratvote = CommentVote(user_id=TAX_RECEIVER_ID, comment_id=c.id, vote_type=1)
-		g.db.add(cratvote)
-		v.coins += 1
-		v.truecoins += 1
-		g.db.add(v)
-		c.upvotes += 1
-		g.db.add(c)
-
 	if request.host == "rdrama.net" and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
 	
 		body = random.choice(LONGPOST_REPLIES)
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md)
 
-
+		body_html2 = sanitize(body)
 
 		c2 = Comment(author_id=LONGPOSTBOT_ID,
 			parent_submission=parent_submission,
@@ -421,8 +406,7 @@ def api_comment(v):
 	if request.host == "rdrama.net" and random.random() < 0.001:
 	
 		body = "zoz"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md)
+		body_html2 = sanitize(body)
 
 
 
@@ -446,8 +430,7 @@ def api_comment(v):
 
 	
 		body = "zle"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md)
+		body_html2 = sanitize(body)
 
 
 
@@ -464,8 +447,7 @@ def api_comment(v):
 		g.db.flush()
 		
 		body = "zozzle"
-		body_md = CustomRenderer().render(mistletoe.Document(body))
-		body_html2 = sanitize(body_md)
+		body_html2 = sanitize(body)
 
 
 		c4 = Comment(author_id=ZOZBOT_ID,
@@ -536,6 +518,15 @@ def api_comment(v):
 
 	c.voted = 1
 	
+	if v.id in AUTO_UPVOTE_IDS:
+		autovote = CommentVote(user_id=TAX_RECEIVER_ID, comment_id=c.id, vote_type=1)
+		g.db.add(autovote)
+		v.coins += 1
+		v.truecoins += 1
+		g.db.add(v)
+		c.upvotes += 1
+		g.db.add(c)
+
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
@@ -598,7 +589,7 @@ def edit_comment(cid, v):
 					)
 				g.db.add(c_option)
 
-		body_html = sanitize(CustomRenderer().render(mistletoe.Document(body)))
+		body_html = sanitize(body)
 
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
 
@@ -675,8 +666,7 @@ def edit_comment(cid, v):
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
 
-			body_md = CustomRenderer().render(mistletoe.Document(body))
-			body_html = sanitize(body_md)
+			body_html = sanitize(body)
 
 		if len(body_html) > 20000: abort(400)
 
@@ -693,9 +683,7 @@ def edit_comment(cid, v):
 
 			body = AGENDAPOSTER_MSG.format(username=v.username, type='comment')
 
-			body_md = CustomRenderer().render(mistletoe.Document(body))
-
-			body_jannied_html = sanitize(body_md)
+			body_jannied_html = sanitize(body)
 
 
 

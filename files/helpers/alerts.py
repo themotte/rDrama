@@ -1,8 +1,5 @@
-import mistletoe
-
 from files.classes import *
 from flask import g
-from .markdown import *
 from .sanitize import *
 from .const import *
 
@@ -24,12 +21,7 @@ def send_repeatable_notification(uid, text, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 	
-	text_html = sanitize(Renderer2().render(mistletoe.Document(text)))
-
-	for i in re.finditer("<p>@((\w|-){1,25})", text_html):
-		u = get_user(i.group(1), graceful=True)
-		if u:
-			text_html = text_html.replace(f'<p>@{u.username}', f'<p><a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>')
+	text_html = sanitize(text, alert=True)
 
 	existing_comment = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body_html=text_html, created_utc=0).first()
 
@@ -54,12 +46,7 @@ def notif_comment(text, autojanny=False):
 	if autojanny: author_id = AUTOJANNY_ID
 	else: author_id = NOTIFICATIONS_ID
 
-	text_html = sanitize(Renderer2().render(mistletoe.Document(text)))
-
-	for i in re.finditer("<p>@((\w|-){1,25})", text_html):
-		u = get_user(i.group(1), graceful=True)
-		if u:
-			text_html = text_html.replace(f'<p>@{u.username}', f'<p><a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>')
+	text_html = sanitize(text, alert=True)
 
 	existing = g.db.query(Comment.id).filter_by(author_id=author_id, parent_submission=None, distinguish_level=6, body_html=text_html, created_utc=0).first()
 	
@@ -76,9 +63,7 @@ def add_notif(cid, uid):
 
 def send_admin(vid, text):
 
-	text_html = Renderer().render(mistletoe.Document(text))
-
-	text_html = sanitize(text_html, True)
+	text_html = sanitize(text, noimages=True)
 
 	new_comment = Comment(author_id=vid,
 						  parent_submission=None,
