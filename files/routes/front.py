@@ -121,7 +121,7 @@ def notifications(v):
 
 @app.get("/")
 @app.get("/logged_out")
-@auth_required
+@auth_desired
 def front_all(v):
 
 	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")

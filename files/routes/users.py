@@ -611,7 +611,7 @@ def visitors(v):
 
 @app.get("/@<username>")
 @app.get("/logged_out/@<username>")
-@auth_required
+@auth_desired
 def u_username(username, v=None):
 
 
@@ -732,7 +732,7 @@ def u_username(username, v=None):
 
 @app.get("/@<username>/comments")
 @app.get("/logged_out/@<username>/comments")
-@auth_required
+@auth_desired
 def u_username_comments(username, v=None):
 
 

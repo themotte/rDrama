@@ -25,7 +25,7 @@ beams_client = PushNotifications(
 @app.get("/post/<pid>/<anything>/<cid>")
 @app.get("/logged_out/comment/<cid>")
 @app.get("/logged_out/post/<pid>/<anything>/<cid>")
-@auth_required
+@auth_desired
 def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	
 	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")

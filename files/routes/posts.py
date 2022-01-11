@@ -96,7 +96,7 @@ def submit_get(v):
 @app.get("/post/<pid>/<anything>")
 @app.get("/logged_out/post/<pid>")
 @app.get("/logged_out/post/<pid>/<anything>")
-@auth_required
+@auth_desired
 def post_id(pid, anything=None, v=None):
 	if not v or v.oldsite: template2 = ''
 	else: template2 = 'CHRISTMAS/'
