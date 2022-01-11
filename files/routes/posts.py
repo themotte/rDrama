@@ -556,14 +556,14 @@ def thumbnail_thread(pid):
 
 	db = db_session()
 
-	print(cpu_percent(), flush=True)
+	cpu = cpu_percent()
 
 	time.sleep(0.1)
 
 	cpu = cpu_percent()
 
-	if cpu > 5:
-		print('wtf', flush=True)
+	if cpu > 70:
+		print(f'Cpu usage at {cpu}%, Enabling under attack mode!', flush=True)
 		with open('under_attack', 'r') as f: content = f.read()
 
 		with open('under_attack', 'w') as f:
