@@ -274,7 +274,7 @@
 								{% if v.admin_level > 1 %}
 									{% if "/reported/" in request.path %}
 										{% if v.id != p.author.id %}<a class="dropdown-item list-inline-item text-danger" role="button" onclick="post_toast('/ban_post/{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
-										<a class="list-inline-item text-success" role="button" onclick="post_toast('/unban_post/{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
+										<a class="dropdown-item list-inline-item text-success" role="button" onclick="post_toast('/unban_post/{{p.id}}')"><i class="fas fa-check"></i>Approve</a>
 									{% else %}
 										{% if v.id != p.author.id %}<a id="remove-{{p.id}}" class="dropdown-item {% if p.is_banned %}d-none{% endif %} list-inline-item text-danger" role="button" onclick="post_toast2('/ban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-ban"></i>Remove</a>{% endif %}
 										<a id="approve-{{p.id}}" class="dropdown-item {% if not p.is_banned %}d-none{% endif %} list-inline-item text-success" role="button" onclick="post_toast2('/unban_post/{{p.id}}','remove-{{p.id}}','approve-{{p.id}}')"><i class="fas fa-check"></i>Approve</a>

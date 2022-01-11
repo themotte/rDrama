@@ -8,36 +8,6 @@
 {% block desktopUserBanner %}{% endblock %}
 {% block mobileUserBanner %}{% endblock %}
 
-	{% block postNav %}
-	<div class="container-fluid bg-white sticky">
-		<div class="row border-bottom">
-			<div class="col">
-				<div class="container">
-					<div class="row bg-white">
-						<div class="col">
-							<div class="d-flex">
-								<ul class="nav post-nav mr-auto">
-									<li class="nav-item">
-										<a class="nav-link {% if request.path=="/admin/reported/posts" %} active{% endif %}" href="/admin/reported/posts">
-											<div>Posts</div>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link {% if request.path=="/admin/reported/comments" %} active{% endif %}" href="/admin/reported/comments">
-											<div>Comments</div>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	{% endblock %}
-
-
 {% block fixedMobileBarJS %}
 {% endblock %}
 
@@ -47,6 +17,19 @@
 {% endblock %}
 
 {% block content %}
+
+<ul class="nav post-nav py-2">
+	<li class="nav-item">
+		<a class="nav-link {% if request.path=="/admin/reported/posts" %} active{% endif %}" href="/admin/reported/posts">
+			<div>Posts</div>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link {% if request.path=="/admin/reported/comments" %} active{% endif %}" href="/admin/reported/comments">
+			<div>Comments</div>
+		</a>
+	</li>
+</ul>
 
 <div class="row no-gutters">
 
