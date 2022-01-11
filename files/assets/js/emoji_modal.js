@@ -422,7 +422,7 @@ const EMOJIS_STRINGS = [
 			"marseygandalf": {"author":"mom", "tags":"lord of the rings magic lotr mage wizard warlock"},
 			"marseygarfield": {"author":"soren", "tags":"mondays lasagna"},
 			"marseyghost": {"author":"cantwakeupjpg", "tags":"spooky halloween costume holiday scary sheet"},
-			"marseygift": {"author":"unknown", "tags":"present christmas wrapping paper holiday"},
+			"marseygift": {"author":"anton-d", "tags":"present christmas wrapping paper holiday"},
 			"marseygigachad": {"author":"seethefarmer", "tags":"reaction hunter eyes canthal tilt jawline"},
 			"marseygigavaxxer": {"author":"altaccountumbreon", "tags":"covid vaccine coronavirus vaccination"},
 			"marseygivecrown": {"author":"unknown", "tags":"king based swole reaction muscles"},
