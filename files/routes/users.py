@@ -321,7 +321,16 @@ def leaderboard(v):
 	if request.host == 'rdrama.net': users13 = topmakers
 	else: users13 = None
 
-	return render_template(f"{template}leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9, users10=users10, users12=users12, users13=users13)
+	votes1 = g.db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+	votes1 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
+	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
+	users14 = g.db.query(User).filter(User.id.in_(votes3.keys())).all()
+	users15 = []
+	for user in users14: users15.append((user, votes3[user.id]))
+	users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
+
+
+	return render_template(f"{template}leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9, users10=users10, users12=users12, users13=users13, users15=users15)
 
 
 @app.get("/@<username>/css")
