@@ -8,7 +8,7 @@ Flask-Mail==0.9.1
 gevent
 greenlet
 gunicorn
-markdown
+mistletoe
 matplotlib
 Pillow
 psutil
