@@ -3,6 +3,7 @@ from .get import *
 from os import listdir, environ
 
 num_banners = len(listdir('files/assets/images/Drama/banners')) + 1
+SITE_NAME = environ.get("SITE_NAME", '').strip()
 
 @app.template_filter("full_link")
 def full_link(url):
@@ -27,4 +28,4 @@ def post_embed(id, v):
 
 @app.context_processor
 def inject_constants():
-	return {"num_banners":num_banners, "environ":environ}
+	return {"num_banners":num_banners, "environ":environ, "SITE_NAME":SITE_NAME}

@@ -4,7 +4,6 @@ from copy import deepcopy
 from json import loads
 
 SITE = environ.get("DOMAIN", '').strip()
-SITE_NAME = environ.get("SITE_NAME", '').strip()
 
 import json
 
