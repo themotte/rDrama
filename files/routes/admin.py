@@ -460,6 +460,38 @@ def badge_grant_post(v):
 	return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, msg="Badge granted!")
 
 
+
+@app.get("/admin/badge_remove")
+@admin_level_required(2)
+def badge_remove_get(v):
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+
+	return render_template(f"{template}admin/badge_remove.html", v=v, badge_types=BADGES)
+
+
+@app.post("/admin/badge_remove")
+@limiter.limit("1/second")
+@admin_level_required(2)
+def badge_remove_post(v):
+	if not v or v.oldsite: template = ''
+	else: template = 'CHRISTMAS/'
+
+	user = get_user(request.values.get("username").strip(), graceful=True)
+	if not user:
+		return render_template(f"{template}admin/badge_remove.html", v=v, badge_types=BADGES, error="User not found.")
+
+	try: badge_id = int(request.values.get("badge_id"))
+	except: abort(400)
+
+	badge = user.has_badge(badge_id)
+	if badge:
+		g.db.delete(badge)
+		g.db.commit()
+	
+	return render_template(f"{template}admin/badge_remove.html", v=v, badge_types=BADGES, msg="Badge removed!")
+
+
 @app.get("/admin/users")
 @admin_level_required(2)
 def users_list(v):

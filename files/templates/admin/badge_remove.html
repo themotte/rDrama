@@ -1,0 +1,89 @@
+{% extends "default.html" %}
+
+{% block title %}
+<title>Badge Remove</title>
+{% endblock %}
+
+{% block pagetype %}message{% endblock %}
+
+{% block content %}
+
+		{% if error %}
+		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-exclamation-circle my-auto"></i>
+			<span>
+				{{error}}
+			</span>
+			<button role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
+		{% if msg %}
+		<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+			<span>
+				{{msg}}
+			</span>
+			<button role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
+
+<pre></pre>
+<pre></pre>
+<h5>Badge Remove</h5>
+
+<form action="/admin/badge_remove", method="post">
+<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
+
+
+<label for="input-username">Username</label><br>
+<input autocomplete="off" id="input-username" class="form-control" type="text" name="username" required>
+
+<div class="overflow-x-auto"><table class="table table-striped">
+<thead class="bg-primary text-white">
+		<tr>
+			<th scope="col">Select</th>
+			<th scope="col">Image</th>
+			<th scope="col">Name</th>
+			<th scope="col">Default Description</th>
+		</tr>
+	</thead>
+	<tbody>
+{% for k, v in badge_types.items() %}
+<tr>
+	<td>
+		<div class="custom-control">
+			<input autocomplete="off" checked="" class="custom-control-input" type="radio" id="{{k}}" name="badge_id" value="{{k}}">
+			<label class="custom-control-label" for="{{k}}"></label>
+		</div>		
+	</td>
+	<td><label for="badge-{{k}}"><img alt="{{v['name']}}" loading="lazy" src="/static/assets/images/badges/{{v['name']}}.webp?a=3" width="70px" height="70px"></label></td>
+	<td>{{v['name']}}</td>
+	<td>{{v['description']}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<label for="input-url">URL</label><br>
+<input autocomplete="off" id="input-url" class="form-control" type="text" name="url" placeholder="Optional">
+
+<label for="input-description">Custom description</label><br>
+<input autocomplete="off" id="input-description" class="form-control" type="text" name="description" placeholder="Leave blank for badge default">
+
+<input autocomplete="off" class="btn btn-primary" type="submit">
+
+</form>
+
+<style>
+	@media (max-width: 767.98px) {
+		table {
+			display: inline-block;
+			overflow: auto;
+		}
+	}
+</style>
+
+{% endblock %}
