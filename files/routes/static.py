@@ -13,22 +13,22 @@ site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
 
 @app.get("/privacy")
-@auth_desired
+@auth_required
 def privacy(v):
 	return render_template("privacy.html", v=v)
 
 @app.get("/marseys")
-@auth_desired
+@auth_required
 def emojis(v):
 	return render_template("marseys.html", v=v, marseys=marseys.items())
 
 @app.get("/terms")
-@auth_desired
+@auth_required
 def terms(v):
 	return render_template("terms.html", v=v)
 
 @app.get('/sidebar')
-@auth_desired
+@auth_required
 def sidebar(v):
 
 	if not path.exists(f'files/templates/sidebar_{site_name}.html'): abort(404)
@@ -174,7 +174,7 @@ def patrons(v):
 
 @app.get("/admins")
 @app.get("/badmins")
-@auth_desired
+@auth_required
 def admins(v):
 	if v and v.admin_level > 2:
 		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truecoins.desc()).all()
@@ -187,7 +187,7 @@ def admins(v):
 
 @app.get("/log")
 @app.get("/modlog")
-@auth_desired
+@auth_required
 def log(v):
 
 	page = int(request.values.get("page",1))
@@ -220,7 +220,7 @@ def log(v):
 	return render_template(f"{template}log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
 
 @app.get("/log/<id>")
-@auth_desired
+@auth_required
 def log_item(id, v):
 
 	try: id = int(id)
@@ -246,12 +246,12 @@ def log_item(id, v):
 	return render_template(f"{template}log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
 @app.get("/static/assets/favicon.ico")
-@auth_desired
+@auth_required
 def favicon(v):
 	return send_file(f"./assets/images/{site_name}/icon.webp")
 
 @app.get("/api")
-@auth_desired
+@auth_required
 def api(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -279,12 +279,12 @@ def submit_contact(v):
 	return render_template(f"{template}contact.html", v=v, msg="Your message has been sent.")
 
 @app.get('/archives')
-@auth_desired
+@auth_required
 def archivesindex(v):
 	return redirect("/archives/index.html")
 
 @app.get('/archives/<path:path>')
-@auth_desired
+@auth_required
 def archives(v, path):
 	resp = make_response(send_from_directory('/archives', path))
 	if request.path.endswith('.css'): resp.headers.add("Content-Type", "text/css")
@@ -292,7 +292,7 @@ def archives(v, path):
 
 @app.get('/static/<path:path>')
 @limiter.exempt
-@auth_desired
+@auth_required
 def static_service2(v, path):
 	resp = make_response(send_from_directory('./static', path))
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
@@ -307,7 +307,7 @@ def static_service2(v, path):
 @app.get('/assets/<path:path>')
 @app.get('/static/assets/<path:path>')
 @limiter.exempt
-@auth_desired
+@auth_required
 def static_service(v, path):
 	if request.path.startswith('/assets/'): return redirect(request.full_path.replace('/assets/', '/static/assets/'))
 
@@ -326,7 +326,7 @@ def static_service(v, path):
 @app.get('/hostedimages/<path>')
 @app.get("/static/images/<path>")
 @limiter.exempt
-@auth_desired
+@auth_required
 def images(v, path):
 	if request.path.startswith('/images/') or request.path.lower().startswith('/hostedimages/'):
 		return redirect(request.full_path.replace('/images/', '/static/images/').replace('/hostedimages/', '/static/images/'))
@@ -361,14 +361,14 @@ def settings_profile(v):
 						   v=v)
 
 @app.get("/badges")
-@auth_desired
+@auth_required
 def badges(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}badges.html", v=v, badges=BADGES)
 
 @app.get("/blocks")
-@auth_desired
+@auth_required
 def blocks(v):
 
 
@@ -384,7 +384,7 @@ def blocks(v):
 	return render_template(f"{template}blocks.html", v=v, users=users, targets=targets)
 
 @app.get("/banned")
-@auth_desired
+@auth_required
 def banned(v):
 
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
@@ -393,7 +393,7 @@ def banned(v):
 	return render_template(f"{template}banned.html", v=v, users=users)
 
 @app.get("/formatting")
-@auth_desired
+@auth_required
 def formatting(v):
 
 	if not v or v.oldsite: template = ''
@@ -401,7 +401,7 @@ def formatting(v):
 	return render_template(f"{template}formatting.html", v=v)
 
 @app.get("/service-worker.js")
-@auth_desired
+@auth_required
 def serviceworker(v):
 	with open("files/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
 

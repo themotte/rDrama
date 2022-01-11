@@ -33,7 +33,7 @@ def searchparse(text):
 
 
 @app.get("/search/posts")
-@auth_desired
+@auth_required
 def searchposts(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -195,7 +195,7 @@ def searchposts(v):
 						   )
 
 @app.get("/search/comments")
-@auth_desired
+@auth_required
 def searchcomments(v):
 
 	if not v or v.oldsite: template = ''
@@ -279,7 +279,7 @@ def searchcomments(v):
 
 
 @app.get("/search/users")
-@auth_desired
+@auth_required
 def searchusers(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'

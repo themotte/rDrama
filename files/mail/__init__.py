@@ -51,7 +51,7 @@ def api_verify_email(v):
 
 
 @app.get("/activate")
-@auth_desired
+@auth_required
 def activate(v):
 
 	email = request.values.get("email", "").strip().lower()

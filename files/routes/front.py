@@ -7,7 +7,7 @@ defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.get("/post/")
-@auth_desired
+@auth_required
 def slash_post(v):
 	return redirect("/")
 
@@ -121,7 +121,7 @@ def notifications(v):
 
 @app.get("/")
 @app.get("/logged_out")
-@auth_desired
+@auth_required
 def front_all(v):
 
 	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
@@ -305,7 +305,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 
 @app.get("/changelog")
-@auth_desired
+@auth_required
 def changelog(v):
 
 
@@ -386,7 +386,7 @@ def changeloglist(v=None, sort="new", page=1 ,t="all"):
 
 
 @app.get("/random")
-@auth_desired
+@auth_required
 def random_post(v):
 
 	x = g.db.query(Submission).filter(Submission.deleted_utc == 0, Submission.is_banned == False)
@@ -449,7 +449,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 	return [x[0] for x in comments]
 
 @app.get("/comments")
-@auth_desired
+@auth_required
 def all_comments(v):
 
 

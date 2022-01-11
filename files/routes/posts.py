@@ -96,7 +96,7 @@ def submit_get(v):
 @app.get("/post/<pid>/<anything>")
 @app.get("/logged_out/post/<pid>")
 @app.get("/logged_out/post/<pid>/<anything>")
-@auth_desired
+@auth_required
 def post_id(pid, anything=None, v=None):
 	if not v or v.oldsite: template2 = ''
 	else: template2 = 'CHRISTMAS/'
@@ -242,7 +242,7 @@ def post_id(pid, anything=None, v=None):
 
 @app.post("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second")
-@auth_desired
+@auth_required
 def viewmore(v, pid, sort, offset):
 	offset = int(offset)
 	if v:
@@ -344,7 +344,7 @@ def viewmore(v, pid, sort, offset):
 
 @app.post("/morecomments/<cid>")
 @limiter.limit("1/second")
-@auth_desired
+@auth_required
 def morecomments(v, cid):
 	tcid = g.db.query(Comment.top_comment_id).filter_by(id=cid).one_or_none()[0]
 

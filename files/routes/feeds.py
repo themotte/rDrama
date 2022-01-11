@@ -9,7 +9,7 @@ from files.helpers.wrappers import *
 from files.__main__ import app
 
 @app.get('/rss/<sort>/<t>')
-@auth_desired
+@auth_required
 def feeds_user(v=None, sort='hot', t='all'):
 
 	page = int(request.values.get("page", 1))

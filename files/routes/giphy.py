@@ -10,7 +10,7 @@ GIPHY_KEY = environ.get('GIPHY_KEY').rstrip()
 
 @app.get("/giphy")
 @app.get("/giphy<path>")
-@auth_desired
+@auth_required
 def giphy(v=None, path=None):
 
 	searchTerm = request.values.get("searchTerm", "").strip()

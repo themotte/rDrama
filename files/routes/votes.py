@@ -11,7 +11,7 @@ defaultcolor = environ.get("DEFAULT_COLOR").strip()
 
 @app.get("/votes")
 @limiter.limit("5/second;60/minute;200/hour")
-@auth_desired
+@auth_required
 def admin_vote_info_get(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'

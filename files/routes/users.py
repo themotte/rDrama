@@ -32,7 +32,7 @@ if True:
 	db.close()
 
 @app.get("/grassed")
-@auth_desired
+@auth_required
 def grassed(v):
 	users = g.db.query(User).filter(User.ban_reason.like('grass award used by @%')).all()
 
@@ -41,7 +41,7 @@ def grassed(v):
 	return render_template(f"{template}grassed.html", v=v, users=users)
 
 @app.get("/agendaposters")
-@auth_desired
+@auth_required
 def agendaposters(v):
 	users = [x for x in g.db.query(User).filter_by(agendaposter = True).order_by(User.username).all()]
 	if not v or v.oldsite: template = ''
@@ -50,7 +50,7 @@ def agendaposters(v):
 
 
 @app.get("/@<username>/upvoters")
-@auth_desired
+@auth_required
 def upvoters(v, username):
 	id = get_user(username).id
 
@@ -71,7 +71,7 @@ def upvoters(v, username):
 	return render_template(f"{template}voters.html", v=v, users=users, name='Up', name2=f'@{username} biggest simps')
 
 @app.get("/@<username>/downvoters")
-@auth_desired
+@auth_required
 def downvoters(v, username):
 	id = get_user(username).id
 
@@ -92,7 +92,7 @@ def downvoters(v, username):
 	return render_template(f"{template}voters.html", v=v, users=users, name='Down', name2=f'@{username} biggest haters')
 
 @app.get("/@<username>/upvoting")
-@auth_desired
+@auth_required
 def upvoting(v, username):
 	id = get_user(username).id
 
@@ -113,7 +113,7 @@ def upvoting(v, username):
 	return render_template(f"{template}voters.html", v=v, users=users, name='Up', name2=f'Who @{username} simps for')
 
 @app.get("/@<username>/downvoting")
-@auth_desired
+@auth_required
 def downvoting(v, username):
 	id = get_user(username).id
 
@@ -188,7 +188,7 @@ def steal(v):
 
 
 @app.get("/rentoids")
-@auth_desired
+@auth_required
 def rentoids(v):
 	users = g.db.query(User).filter(User.rent_utc > 0).all()
 	if not v or v.oldsite: template = ''
@@ -197,7 +197,7 @@ def rentoids(v):
 
 
 @app.get("/thiefs")
-@auth_desired
+@auth_required
 def thiefs(v):
 	successful = g.db.query(User).filter(User.steal_utc > 0).all()
 	failed = g.db.query(User).filter(User.fail_utc > 0).all()
@@ -295,7 +295,7 @@ def transfer_bux(v, username):
 
 
 @app.get("/leaderboard")
-@auth_desired
+@auth_required
 def leaderboard(v):
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -347,7 +347,7 @@ def leaderboard(v):
 
 
 @app.get("/@<username>/css")
-@auth_desired
+@auth_required
 def get_css(v, username):
 	user = get_user(username)
 	if user.css: css = user.css
@@ -357,7 +357,7 @@ def get_css(v, username):
 	return resp
 
 @app.get("/@<username>/profilecss")
-@auth_desired
+@auth_required
 def get_profilecss(v, username):
 	user = get_user(username)
 	if user.profilecss: profilecss = user.profilecss
@@ -367,7 +367,7 @@ def get_profilecss(v, username):
 	return resp
 
 @app.get("/songs/<id>")
-@auth_desired
+@auth_required
 def songs(v, id):
 	try: id = int(id)
 	except: return "", 400
@@ -377,7 +377,7 @@ def songs(v, id):
 
 @app.get("/song/<song>")
 @app.get("/static/song/<song>")
-@auth_desired
+@auth_required
 def song(v, song):
 	if request.path.startswith('/song/'): return redirect(request.full_path.replace('/song/', '/static/song/'))
 	resp = make_response(send_from_directory('/songs', song))
@@ -541,7 +541,7 @@ def mfa_qr(secret, v):
 
 
 @app.get("/is_available/<name>")
-@auth_desired
+@auth_required
 def api_is_available(name, v):
 
 	name=name.strip()
@@ -564,7 +564,7 @@ def api_is_available(name, v):
 		return {name: True}
 
 @app.get("/id/<id>")
-@auth_desired
+@auth_required
 def user_id(id):
 	try: id = int(id)
 	except: abort(404)
@@ -572,12 +572,12 @@ def user_id(id):
 	return redirect(user.url)
 		
 @app.get("/u/<username>")
-@auth_desired
+@auth_required
 def redditor_moment_redirect(username):
 	return redirect(f"/@{username}")
 
 @app.get("/@<username>/followers")
-@auth_desired
+@auth_required
 def followers(username, v):
 	u = get_user(username, v=v)
 	ids = [x[0] for x in g.db.query(Follow.user_id).filter_by(target_id=u.id).all()]
@@ -587,7 +587,7 @@ def followers(username, v):
 	return render_template(f"{template}followers.html", v=v, u=u, users=users)
 
 @app.get("/@<username>/following")
-@auth_desired
+@auth_required
 def following(username, v):
 	u = get_user(username, v=v)
 	ids = [x[0] for x in g.db.query(Follow.target_id).filter_by(user_id=u.id).all()]
@@ -611,7 +611,7 @@ def visitors(v):
 
 @app.get("/@<username>")
 @app.get("/logged_out/@<username>")
-@auth_desired
+@auth_required
 def u_username(username, v=None):
 
 
@@ -732,7 +732,7 @@ def u_username(username, v=None):
 
 @app.get("/@<username>/comments")
 @app.get("/logged_out/@<username>/comments")
-@auth_desired
+@auth_required
 def u_username_comments(username, v=None):
 
 
@@ -838,7 +838,7 @@ def u_username_comments(username, v=None):
 
 
 @app.get("/@<username>/info")
-@auth_desired
+@auth_required
 def u_username_info(username, v=None):
 
 	user=get_user(username, v=v)
@@ -923,7 +923,7 @@ def remove_follow(username, v):
 
 @app.get("/uid/<id>/pic")
 @app.get("/uid/<id>/pic/profile")
-@auth_desired
+@auth_required
 def user_profile_uid(v, id):
 	try: id = int(id)
 	except:
@@ -933,7 +933,7 @@ def user_profile_uid(v, id):
 	return redirect(x.profile_url)
 
 @app.get("/@<username>/pic")
-@auth_desired
+@auth_required
 def user_profile_name(v, username):
 	x = get_user(username)
 	return redirect(x.profile_url)
