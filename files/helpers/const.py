@@ -1,4 +1,4 @@
-from os import environ, listdir
+from os import environ
 import re
 from copy import deepcopy
 from json import loads
@@ -20,15 +20,6 @@ for k, val in result.items():
 del result
 
 marseys = dict(sorted(marseys.items(), key=lambda x: x[1]))
-
-if SITE == 'rdrama.net':
-	topmakers = {}
-	for k, val in marseys.items():
-		if val in topmakers: topmakers[val] += 1
-		else: topmakers[val] = 1
-
-	topmakers.pop('unknown')
-	topmakers = sorted(topmakers.items(), key=lambda x: x[1], reverse=True)[:25]
 
 AJ_REPLACEMENTS = {
 	' your ': " you're ",
@@ -776,5 +767,3 @@ NOTIFIED_USERS = {
 	'dong': FARTBINN_ID,
 	'kippy': KIPPY_ID,
 }
-
-num_banners = len(listdir('files/assets/images/Drama/banners')) + 1

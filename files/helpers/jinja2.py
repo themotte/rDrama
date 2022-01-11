@@ -1,7 +1,8 @@
 from files.__main__ import app
 from .get import *
-from files.helpers import const
+from os import listdir, environ
 
+num_banners = len(listdir('files/assets/images/Drama/banners')) + 1
 
 @app.template_filter("full_link")
 def full_link(url):
@@ -26,5 +27,4 @@ def post_embed(id, v):
 
 @app.context_processor
 def inject_constants():
-	constants = [c for c in dir(const) if not c.startswith("_")]
-	return {c:getattr(const, c) for c in constants}
+	return {"num_banners":num_banners, "environ":environ}

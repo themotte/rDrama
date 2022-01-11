@@ -8,7 +8,7 @@ from files.helpers.sanitize import *
 from files.helpers.const import *
 from files.mail import *
 from flask import *
-from files.__main__ import app, limiter
+from files.__main__ import app, limiter, db_session
 from pusher_push_notifications import PushNotifications
 from collections import Counter
 
@@ -16,7 +16,20 @@ site = environ.get("DOMAIN").strip()
 
 beams_client = PushNotifications(instance_id=PUSHER_INSTANCE_ID, secret_key=PUSHER_KEY)
 
+if True:
+	topmakers = {}
+	for k, val in marseys.items():
+		if val in topmakers: topmakers[val] += 1
+		else: topmakers[val] = 1
 
+	topmakers.pop('unknown','anton-d')
+	db = db_session()
+	topmakers2 = db.query(User).filter(func.lower(User.username).in_(topmakers.keys())).all()
+	topmakers3 = []
+	for user in topmakers2:
+		topmakers3.append((user, topmakers[user.username.lower()]))
+	topmakers = sorted(topmakers3, key=lambda x: x[1], reverse=True)[:25]
+	db.close()
 
 @app.get("/grassed")
 @auth_desired
@@ -317,7 +330,7 @@ def leaderboard(v):
 	for user in users11: users12.append((user, badges[user.id]))
 	users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
 
-	if request.host == 'rdrama.net': users13 = topmakers
+	if True: users13 = topmakers
 	else: users13 = None
 
 	votes1 = g.db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
