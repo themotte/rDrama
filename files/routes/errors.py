@@ -55,7 +55,6 @@ def error_500(e):
 
 
 @app.post("/allow_nsfw")
-@auth_required
-def allow_nsfw(v):
+def allow_nsfw():
 	session["over_18"] = int(time.time()) + 3600
 	return redirect(request.values.get("redir", "/"))
