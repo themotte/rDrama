@@ -377,8 +377,7 @@ def songs(v, id):
 
 @app.get("/song/<song>")
 @app.get("/static/song/<song>")
-@auth_required
-def song(v, song):
+def song(song):
 	if request.path.startswith('/song/'): return redirect(request.full_path.replace('/song/', '/static/song/'))
 	resp = make_response(send_from_directory('/songs', song))
 	resp.headers.remove("Cache-Control")
