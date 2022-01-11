@@ -565,7 +565,7 @@ def api_is_available(name, v):
 
 @app.get("/id/<id>")
 @auth_required
-def user_id(id):
+def user_id(id, v):
 	try: id = int(id)
 	except: abort(404)
 	user = get_account(id)
@@ -573,7 +573,7 @@ def user_id(id):
 		
 @app.get("/u/<username>")
 @auth_required
-def redditor_moment_redirect(username):
+def redditor_moment_redirect(username, v):
 	return redirect(f"/@{username}")
 
 @app.get("/@<username>/followers")
