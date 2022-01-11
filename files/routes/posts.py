@@ -567,7 +567,7 @@ def thumbnail_thread(pid):
 		with open('under_attack', 'r') as f: content = f.read()
 
 		with open('under_attack', 'w') as f:
-			if content != "yes":
+			if content == "no":
 				f.write("yes")
 				ma = ModAction(
 					kind="enable_under_attack",
