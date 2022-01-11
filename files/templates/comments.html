@@ -518,7 +518,7 @@
 
 
 	{% if render_replies %} 
-		{% if request.path == '/notifications' and not replies and c.sentto and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
+		{% if request.path == '/notifications' and not replies and c.sentto != None and not c.parent_submission and c.author_id not in (NOTIFICATIONS_ID, AUTOJANNY_ID) %}
 			<a class="btn btn-primary" role="button" onclick="openReplyBox('reply-message-{{c.id}}')">Reply</a>
 			<pre></pre>
 			<div id="reply-message-{{c.id}}" class="d-none">
