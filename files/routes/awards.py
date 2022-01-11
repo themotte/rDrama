@@ -272,14 +272,17 @@ def award_post(pid, v):
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "flairlock":
 		new_name = note[:100].replace("𒐪","")
-		author.customtitleplain = new_name
-		author.customtitle = filter_emojis_only(new_name)
-		if len(author.customtitle) > 1000: abort(403)
-		author.flairchanged = int(time.time()) + 86400
-		if not author.has_badge(96):
-			badge = Badge(user_id=author.id, badge_id=96)
-			g.db.add(badge)
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+		if not new_name and author.flairchanged:
+			author.flairchanged += 86400
+		else:
+			author.customtitleplain = new_name
+			author.customtitle = filter_emojis_only(new_name)
+			if len(author.customtitle) > 1000: abort(403)
+			author.flairchanged = int(time.time()) + 86400
+			if not author.has_badge(96):
+				badge = Badge(user_id=author.id, badge_id=96)
+				g.db.add(badge)
+				send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "pause":
 		author.mute = True
 		if not author.has_badge(68):
@@ -453,14 +456,17 @@ def award_comment(cid, v):
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "flairlock":
 		new_name = note[:100].replace("𒐪","")
-		author.customtitleplain = new_name
-		author.customtitle = filter_emojis_only(new_name)
-		if len(author.customtitle) > 1000: abort(403)
-		author.flairchanged = int(time.time()) + 86400
-		if not author.has_badge(96):
-			badge = Badge(user_id=author.id, badge_id=96)
-			g.db.add(badge)
-			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+		if not new_name and author.flairchanged:
+			author.flairchanged += 86400
+		else:
+			author.customtitleplain = new_name
+			author.customtitle = filter_emojis_only(new_name)
+			if len(author.customtitle) > 1000: abort(403)
+			author.flairchanged = int(time.time()) + 86400
+			if not author.has_badge(96):
+				badge = Badge(user_id=author.id, badge_id=96)
+				g.db.add(badge)
+				send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 	elif kind == "pause":
 		author.mute = True
 		if not author.has_badge(68):
