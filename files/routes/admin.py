@@ -297,13 +297,13 @@ def reported_posts(v):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	posts = g.db.query(Submission).filter_by(
+	listing = g.db.query(Submission).filter_by(
 		is_approved=0,
 		is_banned=False
 	).join(Submission.reports).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
 
-	listing = [p.id for p in posts]
-	next_exists = (len(listing) > 25)
+	listing = (p.id for p in listing)
+	next_exists = len(listing) > 25
 	listing = listing[:25]
 
 	listing = get_posts(listing, v=v)
@@ -320,14 +320,14 @@ def reported_comments(v):
 
 	page = max(1, int(request.values.get("page", 1)))
 
-	posts = g.db.query(Comment
+	listing = g.db.query(Comment
 					   ).filter_by(
 		is_approved=0,
 		is_banned=False
 	).join(Comment.reports).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
-	listing = [p.id for p in posts]
-	next_exists = (len(listing) > 25)
+	listing = (c.id for c in listing)
+	next_exists = len(listing) > 25
 	listing = listing[:25]
 
 	listing = get_comments(listing, v=v)
