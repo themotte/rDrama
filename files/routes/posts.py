@@ -574,7 +574,8 @@ def thumbnail_thread(pid):
 				g.db.add(ma)
 				g.db.commit()
 				data='{"value":"under_attack"}'
-				requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data)
+				response = requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data)
+				print(response.text, flush=True)
 
 	def expand_url(post_url, fragment_url):
 
