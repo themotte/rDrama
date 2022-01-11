@@ -302,7 +302,7 @@ def reported_posts(v):
 		is_banned=False
 	).join(Submission.reports).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26)
 
-	listing = (p.id for p in listing)
+	listing = [p.id for p in listing]
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
@@ -326,7 +326,7 @@ def reported_comments(v):
 		is_banned=False
 	).join(Comment.reports).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
-	listing = (c.id for c in listing)
+	listing = [c.id for c in listing]
 	next_exists = len(listing) > 25
 	listing = listing[:25]
 
