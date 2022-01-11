@@ -201,7 +201,7 @@ def post_id(pid, anything=None, v=None):
 
 	offset = 0
 
-	if not request.headers.get("Authorization") and post.comment_count > 60:
+	if not request.headers.get("Authorization") and post.comment_count > 60 and not (v and v.id == 1):
 		comments2 = []
 		count = 0
 		if post.created_utc > 1638672040:
