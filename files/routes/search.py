@@ -68,7 +68,7 @@ def searchposts(v):
 	if 'author' in criteria:
 		author = get_user(criteria['author'])
 		if not author: return {"error": f"User not found"}
-		if author.is_private and v.admin_level < 2 and not v.eye:
+		if author.is_private and author.id != v.id and v.admin_level < 2 and not v.eye:
 			if request.headers.get("Authorization"):
 				return {"error": f"@{author.username}'s profile is private; You can't use the 'author' syntax on them"}
 			return render_template(f"{template}search.html",
@@ -216,7 +216,7 @@ def searchcomments(v):
 	if 'author' in criteria:
 		author = get_user(criteria['author'])
 		if not author: return {"error": f"User not found"}
-		if author.is_private and v.admin_level < 2 and not v.eye:
+		if author.is_private and author.id != v.id and v.admin_level < 2 and not v.eye:
 			if request.headers.get("Authorization"):
 				return {"error": f"@{author.username}'s profile is private; You can't use the 'author' syntax on them"}
 
