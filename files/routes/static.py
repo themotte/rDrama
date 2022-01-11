@@ -246,8 +246,7 @@ def log_item(id, v):
 	return render_template(f"{template}log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
 @app.get("/static/assets/favicon.ico")
-@auth_required
-def favicon(v):
+def favicon():
 	return send_file(f"./assets/images/{site_name}/icon.webp")
 
 @app.get("/api")
@@ -292,8 +291,7 @@ def archives(v, path):
 
 @app.get('/static/<path:path>')
 @limiter.exempt
-@auth_required
-def static_service2(v, path):
+def static_service2(path):
 	resp = make_response(send_from_directory('./static', path))
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
@@ -307,8 +305,7 @@ def static_service2(v, path):
 @app.get('/assets/<path:path>')
 @app.get('/static/assets/<path:path>')
 @limiter.exempt
-@auth_required
-def static_service(v, path):
+def static_service(path):
 	if request.path.startswith('/assets/'): return redirect(request.full_path.replace('/assets/', '/static/assets/'))
 
 	resp = make_response(send_from_directory('assets', path))
@@ -326,8 +323,7 @@ def static_service(v, path):
 @app.get('/hostedimages/<path>')
 @app.get("/static/images/<path>")
 @limiter.exempt
-@auth_required
-def images(v, path):
+def images(path):
 	if request.path.startswith('/images/') or request.path.lower().startswith('/hostedimages/'):
 		return redirect(request.full_path.replace('/images/', '/static/images/').replace('/hostedimages/', '/static/images/'))
 	resp = make_response(send_from_directory('/images', path.replace('.WEBP','.webp')))
