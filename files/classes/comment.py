@@ -68,6 +68,11 @@ class Comment(Base):
 
 	@property
 	@lazy
+	def top_comment(self):
+		return g.db.query(Comment).filter_by(id=self.top_comment_id).first()
+
+	@property
+	@lazy
 	def flags(self):
 		return g.db.query(CommentFlag).filter_by(comment_id=self.id).order_by(CommentFlag.id)
 

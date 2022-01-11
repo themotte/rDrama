@@ -478,6 +478,7 @@ def messagereply(v):
 	new_comment = Comment(author_id=v.id,
 							parent_submission=None,
 							parent_comment_id=id,
+							top_comment_id=parent.top_comment_id if parent.top_comment_id else parent.id,
 							level=parent.level + 1,
 							sentto=user_id,
 							body_html=text_html,
@@ -488,6 +489,11 @@ def messagereply(v):
 	notif = Notification(comment_id=new_comment.id, user_id=user_id)
 	g.db.add(notif)
 
+	if new_comment.top_comment.sentto == 0:
+		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id, User.id != user_id).all()
+		for admin in admins:
+			notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+			g.db.add(notif)
 	g.db.commit()
 
 	if not v or v.oldsite: template = ''
