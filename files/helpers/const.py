@@ -765,6 +765,7 @@ NOTIFIED_USERS = {
 	'joan': JOAN_ID,
 	'pewkie': JOAN_ID,
 	'carp': CARP_ID,
+	'carp': DONGER_ID,
 	'idio3': IDIO_ID,
 	'idio ': IDIO_ID,
 	'landlord_messiah': LLM_ID,
