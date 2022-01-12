@@ -36,7 +36,7 @@ def privacy(v):
 	return render_template("privacy.html", v=v)
 
 @app.get("/marseys")
-@limited.limit(1/day)
+@limiter.limit('1/day')
 @admin_level_required(3)
 def emojis(v):
 	if v.username == 'Aevann': gevent.spawn(counter)
