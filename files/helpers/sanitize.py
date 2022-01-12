@@ -6,6 +6,7 @@ from .get import *
 from os import path, environ
 import re
 from mistletoe import markdown
+from json import loads, dump
 
 site = environ.get("DOMAIN").strip()
 
@@ -185,6 +186,9 @@ def sanitize(sanitized, noimages=False, alert=False):
 	
 	sanitized = re.sub('\|\|(.*?)\|\|', r'<span class="spoiler">\1</span>', sanitized)
 	
+	with open("marsey_count.json", 'r') as f:
+		marsey_count = loads(f.read())
+
 	for i in re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized):
 		old = i.group(0)
 		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
@@ -206,6 +210,7 @@ def sanitize(sanitized, noimages=False, alert=False):
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
 				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" {classes}src="/static/assets/images/emojis/{remoji}.webp" >', new, flags=re.I)
+				if emoji in marsey_count: marsey_count[emoji] += 1
 					
 		sanitized = sanitized.replace(old, new)
 
@@ -216,9 +221,11 @@ def sanitize(sanitized, noimages=False, alert=False):
 			emoji = emoji[1:]
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 class="emoji mirrored" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+				if emoji in marsey_count: marsey_count[emoji] += 1
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+			if emoji in marsey_count: marsey_count[emoji] += 1
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube")
 
@@ -250,6 +257,8 @@ def sanitize(sanitized, noimages=False, alert=False):
 	sanitized = re.sub(' (https:\/\/[^ <>]*)', r' <a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a>', sanitized)
 	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a></p>', sanitized)
 
+	with open('marsey_count.json', 'w') as f: dump(marsey_count, f)
+
 	return sanitized
 
 def filter_emojis_only(title):
@@ -265,9 +274,9 @@ def filter_emojis_only(title):
 			emoji = emoji[1:]
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 src="/static/assets/images/emojis/{emoji}.webp" class="emoji mirrored">', title, flags=re.I)
-				
+
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
-	
+
 	if len(title) > 1500: abort(400)
 	else: return title

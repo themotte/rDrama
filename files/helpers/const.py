@@ -16,7 +16,7 @@ for k, val in result.items():
 	marseys[k] = val['author']
 
 del result
-
+	
 AJ_REPLACEMENTS = {
 	' your ': " you're ",
 	' to ': " too ", 
