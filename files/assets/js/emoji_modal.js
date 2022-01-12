@@ -817,7 +817,7 @@ const EMOJIS_STRINGS = [
 			"marseywendy": {"author":"jellyfishjam", "tags":"jellyfishjam pigtails redhead pippi"},
 			"marseywheredrama": {"author":"chiobu", "tags":"seriouspost reaction agendapost dramawhere animated"},
 			"marseywheredrama2": {"author":"chiobu", "tags":"seriouspost animated agendapost"},
-			"marseywhirlyhat": {"author":"unknown", "tags":"idiot retard hat dumb sped slow stupid special kid"},
+			"marseywhirlyhat": {"author":"wt900", "tags":"idiot retard hat dumb sped slow stupid special kid"},
 			"marseywinner": {"author":"dramamine", "tags":"reaction trophy gold prize first place"},
 			"marseywise": {"author":"mom", "tags":"hood cloak wizard pipe"},
 			"marseywitch": {"author":"elfbinn", "tags":"spooky halloween magick holiday evil scary"},
