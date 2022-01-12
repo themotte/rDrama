@@ -436,7 +436,7 @@ def edit_post(pid, v):
 		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
 		title_html = filter_emojis_only(title)
-		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 403
+		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))): return {"error":"You can only type marseys!"}, 403
 		p.title = title[:500]
 		p.title_html = title_html
 
@@ -485,7 +485,7 @@ def edit_post(pid, v):
 			return {"error": reason}, 403
 
 		p.body = body
-		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 40
+		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))): return {"error":"You can only type marseys!"}, 40
 
 		if v.longpost:
 			if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -724,7 +724,7 @@ def submit_post(v):
 	title_html = filter_emojis_only(title)
 	body = request.values.get("body", "").strip().replace('‎','')
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))) > 0: return {"error":"You can only type marseys!"}, 40
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))): return {"error":"You can only type marseys!"}, 40
 
 	if v.longpost:
 		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -736,8 +736,8 @@ def submit_post(v):
 		elif "/media.giphy.com/" in url or "/c.tenor.com/" in url: url = url.replace(".gif", ".webp")
 		elif "/i.ibb.com/" in url: url = url.replace(".png", ".webp").replace(".jpg", ".webp").replace(".jpeg", ".webp").replace(".gif", ".webp")
 
-		for rd in ["https://reddit.com/", "https://new.reddit.com/", "https://www.reddit.com/", "https://redd.it/"]:
-			url = url.replace(rd, "https://old.reddit.com/")
+		for rd in ["://reddit.com", "://new.reddit.com", "://www.reddit.com", "://redd.it", "://libredd.it"]:
+			url = url.replace(rd, "://old.reddit.com")
 
 		url = url.replace("old.reddit.com/gallery", "new.reddit.com/gallery").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube").replace("https://www.youtube", "https://youtube")
 
@@ -944,7 +944,7 @@ def submit_post(v):
 
 	body_html = sanitize(body)
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 400
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))): return {"error":"You can only type marseys!"}, 400
 
 	if v.longpost:
 		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403

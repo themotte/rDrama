@@ -223,7 +223,7 @@ def award_post(pid, v):
 		if not author.is_suspended:
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /post/{post.id}", days=1)
 			send_repeatable_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
-		elif author.unban_utc > 0:
+		elif author.unban_utc:
 			author.unban_utc += 86400
 			send_repeatable_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
@@ -410,7 +410,7 @@ def award_comment(cid, v):
 		if not author.is_suspended:
 			author.ban(reason=f"1-Day ban award used by @{v.username} on /comment/{c.id}", days=1)
 			send_repeatable_notification(author.id, f"Your account has been suspended for a day for {link}. It sucked and you should feel bad.")
-		elif author.unban_utc > 0:
+		elif author.unban_utc:
 			author.unban_utc += 86400
 			send_repeatable_notification(author.id, f"Your account has been suspended for yet another day for {link}. Seriously man?")
 	elif kind == "unban":
@@ -580,7 +580,7 @@ def admin_userawards_post(v):
 			
 			if int(value) > 10: abort(403)
 
-			if int(value) > 0: notify_awards[key] = int(value)
+			if int(value): notify_awards[key] = int(value)
 
 			for x in range(int(value)):
 				thing += 1

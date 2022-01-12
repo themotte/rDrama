@@ -72,7 +72,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	except: context = 0
 	comment_info = comment
 	c = comment
-	while context > 0 and c.level > 1:
+	while context and c.level > 1:
 		c = c.parent_comment
 		context -= 1
 	top_comment = c
@@ -213,7 +213,7 @@ def api_comment(v):
 
 	body_html = sanitize(body)
 
-	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
+	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))): return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost:
 		if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -591,7 +591,7 @@ def edit_comment(cid, v):
 
 		body_html = sanitize(body)
 
-		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))) > 0: return {"error":"You can only type marseys!"}, 403
+		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))): return {"error":"You can only type marseys!"}, 403
 
 		if v.longpost:
 			if len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403

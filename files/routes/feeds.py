@@ -42,7 +42,7 @@ def feeds_user(v=None, sort='hot', t='all'):
 				with tag("id"):
 					text(post.fullname)
 
-				if (post.edited_utc > 0):
+				if (post.edited_utc):
 					with tag("updated"):
 						text(datetime.utcfromtimestamp(post.edited_utc).isoformat())
 
@@ -61,7 +61,7 @@ def feeds_user(v=None, sort='hot', t='all'):
 
 				doc.stag("media:thumbnail", url=image_url)
 
-				if len(post.body_html) > 0:
+				if len(post.body_html):
 					with tag("content", type="html"):
 						doc.cdata(f'''<img alt="{post.realtitle(None)}" loading="lazy" src={image_url}><br>{post.realbody(None)}''')
 

@@ -300,7 +300,7 @@ def sign_up_post(v):
 		ref_user = g.db.query(User).filter_by(id=ref_id).one_or_none()
 
 		if ref_user:
-			if ref_user.referral_count > 0:
+			if ref_user.referral_count:
 				new_badge = Badge(user_id=ref_user.id, badge_id=10)
 				g.db.add(new_badge)
 			if ref_user.referral_count > 9:

@@ -207,7 +207,7 @@ def monthly(v):
 
 	emails = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
 
-	for u in g.db.query(User).filter(User.patron > 0).all():
+	for u in g.db.query(User).filter(User.patron).all():
 		if u.patron == 5 or u.email and u.email.lower() in emails or u.id == 1379:
 			if u.patron == 1: procoins = 2500
 			elif u.patron == 2: procoins = 5000
@@ -716,7 +716,7 @@ def agendaposter(user_id, v):
 	user.agendaposter_expires_utc = expiry
 	g.db.add(user)
 	for alt in user.alts:
-		if alt.admin_level > 0: break
+		if alt.admin_level: break
 		alt.agendaposter = user.agendaposter
 		alt.agendaposter_expires_utc = expiry
 		g.db.add(alt)
@@ -763,7 +763,7 @@ def shadowban(user_id, v):
 	user.shadowbanned = v.username
 	g.db.add(user)
 	for alt in user.alts:
-		if alt.admin_level > 0: break
+		if alt.admin_level: break
 		alt.shadowbanned = v.username
 		g.db.add(alt)
 	ma = ModAction(
@@ -894,10 +894,10 @@ def ban_user(user_id, v):
 
 	if request.values.get("alts"):
 		for x in user.alts:
-			if x.admin_level > 0: break
+			if x.admin_level: break
 			user.ban(admin=v, reason=reason, days=days)
 
-	if days > 0:
+	if days:
 		if message: text = f"Your account has been suspended for {days} days for the following reason:\n\n> {message}"
 		else: text = f"Your account has been suspended for {days} days."
 	else:

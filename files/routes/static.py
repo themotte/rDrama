@@ -49,7 +49,7 @@ def participation_stats(v):
 	data = {"marseys": len(marseys),
 			"users": g.db.query(User.id).count(),
 			"private_users": g.db.query(User.id).filter_by(is_private=True).count(),
-			"banned_users": g.db.query(User.id).filter(User.is_banned > 0).count(),
+			"banned_users": g.db.query(User.id).filter(User.is_banned).count(),
 			"verified_email_users": g.db.query(User.id).filter_by(is_activated=True).count(),
 			"total_coins": g.db.query(func.sum(User.coins)).scalar(),
 			"signups_last_24h": g.db.query(User.id).filter(User.created_utc > day).count(),
@@ -57,7 +57,7 @@ def participation_stats(v):
 			"posting_users": g.db.query(Submission.author_id).distinct().count(),
 			"listed_posts": g.db.query(Submission.id).filter_by(is_banned=False).filter(Submission.deleted_utc == 0).count(),
 			"removed_posts": g.db.query(Submission.id).filter_by(is_banned=True).count(),
-			"deleted_posts": g.db.query(Submission.id).filter(Submission.deleted_utc > 0).count(),
+			"deleted_posts": g.db.query(Submission.id).filter(Submission.deleted_utc).count(),
 			"posts_last_24h": g.db.query(Submission.id).filter(Submission.created_utc > day).count(),
 			"total_comments": g.db.query(Comment.id).filter(Comment.author_id.notin_((AUTOJANNY_ID,NOTIFICATIONS_ID))).count(),
 			"commenting_users": g.db.query(Comment.author_id).distinct().count(),
@@ -166,7 +166,7 @@ def cached_chart(days):
 @app.get("/paypigs")
 @admin_level_required(3)
 def patrons(v):
-	users = g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc(), User.id).all()
+	users = g.db.query(User).filter(User.patron).order_by(User.patron.desc(), User.id).all()
 
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
@@ -383,7 +383,7 @@ def blocks(v):
 @auth_required
 def banned(v):
 
-	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
+	users = [x for x in g.db.query(User).filter(User.is_banned, User.unban_utc == 0).all()]
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}banned.html", v=v, users=users)

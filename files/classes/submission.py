@@ -317,7 +317,7 @@ class Submission(Base):
 
 		data=self.json_core
 		
-		if self.deleted_utc > 0 or self.is_banned:
+		if self.deleted_utc or self.is_banned:
 			return data
 
 		data["author"]=self.author.json_core

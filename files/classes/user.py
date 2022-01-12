@@ -530,7 +530,7 @@ class User(Base):
 		self.bannerurl = None
 
 	def ban(self, admin=None, reason=None, days=0):
-		if days > 0:
+		if days:
 			ban_time = int(time.time()) + (days * 86400)
 			self.unban_utc = ban_time
 		else:

@@ -281,7 +281,7 @@ class Comment(Base):
 					'level': self.level,
 					'parent': self.parent_fullname
 					}
-		elif self.deleted_utc > 0:
+		elif self.deleted_utc:
 			data= {'deleted_utc': self.deleted_utc,
 					'id': self.id,
 					'post': self.post.id if self.post else 0,
@@ -305,7 +305,7 @@ class Comment(Base):
 	
 		data=self.json_core
 
-		if self.deleted_utc > 0 or self.is_banned:
+		if self.deleted_utc or self.is_banned:
 			return data
 
 		data["author"]=self.author.json_core

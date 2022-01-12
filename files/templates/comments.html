@@ -77,7 +77,7 @@
 	{% set replies=c.replies %}
 {% endif %}
 
-{% if (c.is_banned or c.deleted_utc > 0 or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
+{% if (c.is_banned or c.deleted_utc or c.is_blocking) and not (v and v.admin_level > 1) and not (v and v.id==c.author_id) %}
 
 <div id="comment-{{c.id}}" class="comment">
 
@@ -91,7 +91,7 @@
 						<div class="user-info">
 							<span class="comment-collapse-icon" onclick="collapse_comment('{{c.id}}')"></span>
 							{% if standalone and c.over_18 %}<span class="badge badge-danger">+18</span> {% endif %}
-							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
+							{% if c.is_banned %}removed by @{{c.ban_reason}}{% elif c.deleted_utc %}Deleted by author{% elif c.is_blocking %}You are blocking @{{c.author.username}}{% endif %}
 						</div>
 
 				</div>
@@ -416,14 +416,14 @@
 						
 						<button class="btn caction py-0 nobackground px-1 text-muted" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</button>
 						
-						{% if c.deleted_utc > 0 %}
+						{% if c.deleted_utc %}
 							<button class="btn caction py-0 nobackground px-1 text-muted" onclick="post_toast('/undelete/comment/{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
 						{% else %}
 							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
 						{% endif %}
 						
 						{% endif %}
-						{% if v and v.admin_level > 0 and v.id==c.author_id %}
+						{% if v and v.admin_level and v.id==c.author_id %}
 							<button id="undistinguish-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if c.distinguish_level %}d-md-inline-block{% endif %} text-info"  onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')"><i class="fas fa-id-badge text-info fa-fw"></i>Undistinguish</button>
 							<button id="distinguish-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %} text-info" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</button>
 						{% endif %}
@@ -584,7 +584,12 @@
 						{% if c.author_id == v.id %}
 							<a role="button" data-bs-dismiss="modal" onclick="toggleEdit('{{c.id}}')" class="list-group-item"><i class="fas fa-edit"></i>Edit</a>
 
-							{% if c.deleted_utc > 0 %}
+							{% if v.admin_level %}
+								<a id="distinguish2-{{c.id}}" class="list-group-item {% if c.distinguish_level %}d-none{% endif %} text-info" role="button" onclick="post_toast2('/distinguish_comment/{{c.id}}','distinguish2-{{c.id}}','undistinguish2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-id-badge text-info"></i>Distinguish</a>
+								<a id="undistinguish2-{{c.id}}" class="list-group-item {% if not c.distinguish_level %}d-none{% endif %} text-info" role="button" onclick="post_toast2('/distinguish_comment/{{c.id}}','distinguish2-{{c.id}}','undistinguish2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-id-badge text-info"></i>Undistinguish</a>
+							{% endif %}
+							
+							{% if c.deleted_utc %}
 								<a role="button" onclick="post_toast('/undelete/comment/{{c.id}}')" data-bs-dismiss="modal" class="list-group-item"><i class="fas fa-trash-alt"></i>Undelete</a>
 							{% else %}
 								<a role="button" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')" class="list-group-item"><i class="fas fa-trash-alt"></i>Delete</a>
@@ -635,10 +640,7 @@
 							<a id="unmark2-{{c.id}}" class="{% if not c.over_18 %}d-none{% endif %} list-group-item text-danger" role="button" onclick="post_toast2('/toggle_comment_nsfw/{{c.id}}','mark2-{{c.id}}','unmark2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye-evil text-danger"></i>Unmark +18</a>
 						{% endif %}
 
-						{% if v.id == c.author_id %}
-							<a id="distinguish2-{{c.id}}" class="list-group-item {% if c.distinguish_level %}d-none{% endif %} text-info" role="button" onclick="post_toast2('/distinguish_comment/{{c.id}}','distinguish2-{{c.id}}','undistinguish2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-id-badge text-info"></i>Distinguish</a>
-							<a id="undistinguish2-{{c.id}}" class="list-group-item {% if not c.distinguish_level %}d-none{% endif %} text-info" role="button" onclick="post_toast2('/distinguish_comment/{{c.id}}','distinguish2-{{c.id}}','undistinguish2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-id-badge text-info"></i>Undistinguish</a>
-						{% else %}
+						{% if v.id != c.author_id %}
 							<a id="ban2-{{c.id}}" class="{% if c.author.is_suspended %}d-none{% endif %} list-group-item text-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{ c.author.id }}', '{{c.author.username}}')" role="button"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</a>
 							<a id="unban2-{{c.id}}" class="{% if not c.author.is_suspended %}d-none{% endif %} list-group-item text-success" role="button" onclick="post_toast2('/unban_user/{{c.author_id}}','ban2-{{c.id}}','unban2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-user-minus fa-fw text-success"></i>Unban user</a>
 						{% endif %}

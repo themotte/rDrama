@@ -124,7 +124,7 @@
 <meta charset="utf-8" >
 <meta property="og:type" content="article" >
 
-{% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc > 0 %}
+{% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc %}
 <title>{{'@'+comment_info.author.username}} comments on "{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}"</title>
 
 
@@ -217,6 +217,11 @@
 						{% if v.id==p.author_id %}
 							<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" data-bs-dismiss="modal" onclick="togglePostEdit('{{p.id}}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
 
+							{% if v.admin_level %}
+								<button id="distinguish2-{{p.id}}" class="{% if p.distinguish_level %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" role="button" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Distinguish</button>
+								<button id="undistinguish2-{{p.id}}" class="{% if not p.distinguish_level %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" role="button" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Undistinguish</button>
+							{% endif %}
+
 							{% if p.private %}
 								<button class="nobackground btn btn-link btn-block btn-lg text-left text-muted" role="button" onclick="post_toast('/publish/{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-globe text-center text-muted mr-3"></i>Publish</button>
 							{% endif %}
@@ -226,7 +231,7 @@
 								<button id="unpin-profile2-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-muted text-left" role="button" onclick="post_toast2('/pin/{{p.id}}','pin-profile2-{{p.id}}','unpin-profile2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Unpin from profile</button>
 							{% endif %}
 
-							{% if p.deleted_utc > 0 %}
+							{% if p.deleted_utc %}
 								<button class="nobackground btn btn-link btn-block btn-lg text-left text-success" role="button" onclick="post_toast('/undelete_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-trash-alt text-center mr-3"></i>Undelete</button>
 							{% else %}
 								<button class="nobackground btn btn-link btn-block btn-lg text-left text-danger" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="far fa-trash-alt mr-3"></i>Delete</button>
@@ -274,11 +279,6 @@
 						<button id="pin2-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" role="button" onclick="post_toast2('/sticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Pin</button>
 						<button id="unpin2-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" role="button" onclick="post_toast2('/unsticky/{{p.id}}','pin2-{{p.id}}','unpin2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-thumbtack fa-rotate--45 text-center mr-3"></i>Unpin</button>
 
-						{% if v==p.author %}
-							<button id="distinguish2-{{p.id}}" class="{% if p.distinguish_level %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" role="button" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Distinguish</button>
-							<button id="undistinguish2-{{p.id}}" class="{% if not p.distinguish_level %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left" role="button" onclick="post_toast2('/distinguish/{{p.id}}','distinguish2-{{p.id}}','undistinguish2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-crown text-center mr-3"></i>Undistinguish</button>
-						{% endif %}
-
 						{% if "/reported/" in request.path %}
 							<button class="nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button" onclick="post_toast('/ban_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-ban text-center mr-3"></i>Remove</button>
 							<button class="nobackground btn btn-link btn-block btn-lg text-success text-left" role="button" onclick="post_toast('/unban_post/{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-check text-center mr-3"></i>Approve</button>
@@ -321,7 +321,7 @@
 	<div id="post-root" class="col-12">
 
 		<div id="post-{{p.id}}" class="card border-0 mt-3{% if p.is_banned %} banned{% endif %}{% if p.stickied %} stickied{% endif %}{% if voted==1 %} upvoted{% elif voted==-1 %} downvoted{% endif %}">
-			<div class="{% if p.deleted_utc > 0 %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
+			<div class="{% if p.deleted_utc %}deleted {% endif %}d-flex flex-row-reverse flex-nowrap justify-content-end">
 
 				{% if not p.is_image and p.thumb_url and not p.embed_url %}
 				<div class="card-header bg-transparent border-0 d-none d-md-flex flex-row flex-nowrap pl-3 p-0">
@@ -329,7 +329,7 @@
 				</div>
 				{% endif %}
 
-				<div id="post-content" class="{% if p.deleted_utc > 0 %}deleted {% endif %}card-block w-100 my-md-auto">
+				<div id="post-content" class="{% if p.deleted_utc %}deleted {% endif %}card-block w-100 my-md-auto">
 
 					<div class="post-meta text-left mb-2">
 						{% if p.bannedfor %}
@@ -559,22 +559,24 @@
 								<a id="unpin-profile-{{p.id}}" class="{% if not p.is_pinned %}d-none{% endif %} list-inline-item text-muted" role="button" onclick="post_toast2('/pin/{{p.id}}','unpin-profile-{{p.id}}','pin-profile-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin from profile</a>
 							{% endif %}
 							
-							{% if p.deleted_utc > 0 %}
+							{% if p.deleted_utc %}
 								<a class="list-inline-item" role="button" onclick="post_toast('/undelete_post/{{p.id}}')"><i class="fas fa-trash-alt"></i>Undelete</a>
 							{% else %}
 								<a class="list-inline-item" role="button" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#deletePostModal" onclick="delete_postModal('{{p.id}}')"><i class="fas fa-trash-alt"></i>Delete</a>
 							{% endif %}
 						{% endif %}
-						{% if v and v.admin_level > 1 %}
-							<a id="pin-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin</a>
-							<a id="unpin-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/unsticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin</a>
-							{% if v==p.author %}
+
+						{% if v %}
+							{% if v.admin_level and v == p.author %}
 								<a id="distinguish-{{p.id}}" class="{% if p.distinguish_level %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/distinguish/{{p.id}}','distinguish-{{p.id}}','undistinguish-{{p.id}}')"><i class="fas fa-crown"></i>Distinguish</a>
 								<a id="undistinguish-{{p.id}}" class="{% if not p.distinguish_level %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/distinguish/{{p.id}}','distinguish-{{p.id}}','undistinguish-{{p.id}}')"><i class="fas fa-crown"></i>Undistinguish</a>
 							{% endif %}
-						{% endif %}
 
-						{% if v %}
+							{% if v.admin_level > 1 %}
+								<a id="pin-{{p.id}}" class="{% if p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/sticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Pin</a>
+								<a id="unpin-{{p.id}}" class="{% if not p.stickied %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/unsticky/{{p.id}}','pin-{{p.id}}','unpin-{{p.id}}')"><i class="fas fa-thumbtack fa-rotate--45"></i>Unpin</a>
+							{% endif %}
+
 							{% if v.admin_level > 1 or v.id == p.author.id and v.club_allowed != False %}
 								<a id="club-{{p.id}}" class="{% if p.club %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye-slash"></i>Mark club</a>
 								<a id="unclub-{{p.id}}" class="{% if not p.club %}d-none{% endif %} list-inline-item text-info" role="button" onclick="post_toast2('/toggle_club/{{p.id}}','club-{{p.id}}','unclub-{{p.id}}')"><i class="fas fa-eye"></i>Unmark club</a>
