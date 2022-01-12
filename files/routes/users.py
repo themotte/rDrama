@@ -933,6 +933,7 @@ def user_profile_uid(v, id):
 	return redirect(x.profile_url)
 
 @app.get("/@<username>/pic")
+@limiter.exempt
 @auth_required
 def user_profile_name(v, username):
 	x = get_user(username)
