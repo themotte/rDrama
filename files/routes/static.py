@@ -1,5 +1,5 @@
 from files.mail import *
-from files.__main__ import app, limiter, mail
+from files.__main__ import app, limiter, mail, db_session
 from files.helpers.alerts import *
 from files.helpers.const import *
 from files.classes.award import AWARDS
@@ -8,9 +8,27 @@ from os import path
 import calendar
 import matplotlib.pyplot as plt
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
+import gevent
 
 site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
+
+def counter():
+	print('fuc', flush=True)
+	print(marseys.items(), flush=True)
+	db = db_session()
+	sorted_marseys = []
+	index = 0
+	for k, val in marseys.items():
+		count = db.query(Comment.id).where(Comment.body.like(f'%:{k}:%')).count()
+		sorted_marseys.append((k, val, count))
+		index += 1
+		print(f'{index}- {k}: {count}', flush=True)
+	db.close()
+	sorted_marseys = sorted(sorted_marseys, key=lambda x: x[2], reverse=True)
+
+	text = render_template("marseys.html", marseys=sorted_marseys)
+	with open(f'files/templates/marseys.html', 'w+') as f: f.write(text)
 
 @app.get("/privacy")
 @auth_required
@@ -20,16 +38,8 @@ def privacy(v):
 @app.get("/marseys")
 @admin_level_required(3)
 def emojis(v):
-	sorted_marseys = []
-	for k, val in marseys.items():
-		count = g.db.query(Comment.id).where(Comment.body.like(f'%:{k}:%')).count()
-		sorted_marseys.append((k, val, count))
-
-	sorted_marseys = sorted(sorted_marseys, key=lambda x: x[2])
-
-	text = render_template("marseys.html", v=v, marseys=sorted_marseys)
-	with open(f'files/templates/marseys.html', 'w+') as f: f.write(text)
-	return text
+	if v.username == 'Aevann': gevent.spawn(counter)
+	return 'sex'
 
 @app.get("/terms")
 @auth_required
