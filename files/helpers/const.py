@@ -6,8 +6,6 @@ from json import loads
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 
-import json
-
 with open("files/assets/js/emoji_modal.js", 'r') as file:
 	marseytext = file.read().split('emojis: ')[1].split('cops police"},')[0] + '"}}'
 	result = loads(marseytext)
@@ -18,8 +16,6 @@ for k, val in result.items():
 	marseys[k] = val['author']
 
 del result
-
-marseys = dict(sorted(marseys.items(), key=lambda x: x[1]))
 
 AJ_REPLACEMENTS = {
 	' your ': " you're ",

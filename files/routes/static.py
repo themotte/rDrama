@@ -18,9 +18,18 @@ def privacy(v):
 	return render_template("privacy.html", v=v)
 
 @app.get("/marseys")
-@auth_required
+@admin_level_required(3)
 def emojis(v):
-	return render_template("marseys.html", v=v, marseys=marseys.items())
+	sorted_marseys = []
+	for k, val in marseys.items():
+		count = g.db.query(Comment.id).where(Comment.body.like(f'%:{k}:%')).count()
+		sorted_marseys.append((k, val, count))
+
+	sorted_marseys = sorted(sorted_marseys, key=lambda x: x[2])
+
+	text = render_template("marseys.html", v=v, marseys=sorted_marseys)
+	with open(f'files/templates/marseys.html', 'w+') as f: f.write(text)
+	return text
 
 @app.get("/terms")
 @auth_required
