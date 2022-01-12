@@ -377,10 +377,6 @@ BADGES = {
 		'name': 'Patron of the Arts',
 		'description': 'Sponsored the creation of an approved Marsey'
 	},
-	82: {
-		'name': 'Background',
-		'description': 'Bought a profile background from the shop'
-	},
 	83: {
 		'name': 'All-Seeing Eye',
 		'description': 'Can view private profiles'
