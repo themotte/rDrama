@@ -543,8 +543,8 @@ const EMOJIS_STRINGS = [
 			"marseyminimalism2": {"author":"drama_enthusiast", "tags":"minimalist polygons polygonal art"},
 			"marseyminion": {"author":"jellyfishjam", "tags":"gru pixar"},
 			"marseymissing": {"author":"crisco", "tags":"absent low effort"},
-			"marseymodelo": {"author":"mrs_peacock_from_cluedo", "tags":"cheers alcohol drinking beer"},
-			"marseymodelo2": {"author":"mrs_peacock_from_cluedo", "tags":"cheers alcohol beer drinking"},
+			"marseymodelo": {"author":"reginald_bp", "tags":"cheers alcohol drinking beer"},
+			"marseymodelo2": {"author":"reginald_bp", "tags":"cheers alcohol beer drinking"},
 			"marseymonk": {"author":"chiobu", "tags":"meditate levitating pray buddhist fish asian levitate animated"},
 			"marseymonke": {"author":"unknown", "tags":"retvrn return"},
 			"marseymoose": {"author":"chiobu", "tags":"moosin antlers"},
@@ -938,7 +938,7 @@ function loadEmojis(form) {
 				Object.entries(favorite_emojis).sort(([,a],[,b]) => b-a)
 			);
 					
-			for (const emoji of Object.keys(sortable))
+			for (const emoji of Object.keys(sortable).slice(0, 25))
 				str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${emoji}')" data-bs-toggle="tooltip" title=":${emoji}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${emoji}.webp" alt="${emoji}-emoji"></button>`
 		
 			fav.innerHTML = str
