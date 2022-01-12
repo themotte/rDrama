@@ -1,7 +1,6 @@
 import time
 from os import remove
 from PIL import Image as IMAGE
-
 from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
@@ -11,11 +10,12 @@ from files.helpers.images import *
 from files.helpers.const import *
 from files.classes import *
 from flask import *
-from files.__main__ import app, cache, limiter
+from files.__main__ import app, cache, limiter, db_session
 from .front import frontlist
 from files.helpers.discord import add_role
 from datetime import datetime
 import requests
+import gevent
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
@@ -29,6 +29,27 @@ if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 month = datetime.now().strftime('%B')
 
+def counter():
+	print('fuc', flush=True)
+	db = db_session()
+	marsey_count = {}
+	index = 0
+	for k, val in marseys.items():
+		count = db.query(Comment.id).where(Comment.body.like(f'%{k}:%')).count()
+		marsey_count[k] = count
+		index += 1 
+		print(f'{index}- {k}: {count}', flush=True)
+	db.close()
+
+	with open('marsey_count.json', 'w') as f: dump(marsey_count, f)
+	print('success', flush=True)
+
+@app.get("/admin/count")
+@limiter.limit('1/day')
+@admin_level_required(3)
+def count(v):
+	if v.username == 'Aevann': gevent.spawn(counter)
+	return 'sex'
 
 @app.post("/@<username>/make_admin")
 @limiter.limit("1/second")
