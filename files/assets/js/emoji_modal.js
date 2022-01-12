@@ -209,7 +209,7 @@ const EMOJIS_STRINGS = [
 			"marsey666black": {"author":"chiobu", "tags":"wings hell halloween demon satan holiday devil animated"},
 			"marsey69": {"author":"aca", "tags":"6ix9ine snitch tattooed tattoos rapper"},
 			"marseyairquotes": {"author":"altaccountumbreon", "tags":"reaction patronizing animated uh huh"},
-			"marseyakshually": {"author":"unknown", "tags":"contrarian false disagree meme neckbeard nerd wrong correction actually weeb"},
+			"marseyakshually": {"author":"platy-pilled", "tags":"contrarian false disagree meme neckbeard nerd wrong correction actually weeb"},
 			"marseyakumu": {"author":"elfbinn", "tags":"simp love loving weebshit"},
 			"marseyalien": {"author":"chapose", "tags":"green man martian scepter"},
 			"marseyamazon": {"author":"dramarama", "tags":"warehouse piss bottle driver wagecuck piss jug pissbottle pissjug wagie"},
