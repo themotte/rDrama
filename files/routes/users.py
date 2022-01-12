@@ -190,7 +190,7 @@ def steal(v):
 @app.get("/rentoids")
 @auth_required
 def rentoids(v):
-	users = g.db.query(User).filter(User.rent_utc).all()
+	users = g.db.query(User).filter(User.rent_utc > 0).all()
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}rentoids.html", v=v, users=users)
@@ -199,9 +199,9 @@ def rentoids(v):
 @app.get("/thiefs")
 @auth_required
 def thiefs(v):
-	successful = g.db.query(User).filter(User.steal_utc).all()
-	failed = g.db.query(User).filter(User.fail_utc).all()
-	failed2 = g.db.query(User).filter(User.fail2_utc).all()
+	successful = g.db.query(User).filter(User.steal_utc > 0).all()
+	failed = g.db.query(User).filter(User.fail_utc > 0).all()
+	failed2 = g.db.query(User).filter(User.fail2_utc > 0).all()
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}thiefs.html", v=v, successful=successful, failed=failed, failed2=failed2)
