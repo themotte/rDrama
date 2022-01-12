@@ -781,7 +781,7 @@ const EMOJIS_STRINGS = [
 			"marseytinfoil2": {"author":"dramarama", "tags":"alex jones rightoid psycho schizo alexjones conspiracy"},
 			"marseytoilet": {"author":"altaccountumbreon", "tags":"flush loo bog roll toilet paper swirly"},
 			"marseytrad": {"author":"unknown", "tags":"dramarama dress foid tradwife floral girl"},
-			"marseytrain": {"author":"troomer", "tags":"tranny transgender trains troid transsexual animated"},
+			"marseytrain": {"author":"dramarama", "tags":"troomer tranny transgender trains troid transsexual animated"},
 			"marseytrans2": {"author":"chapose", "tags":"troon tranny transgender troomer lgbt trannies troid transsexual"},
 			"marseytrickortreat": {"author":"uwu", "tags":"candy trick or treat halloween holiday"},
 			"marseytroll": {"author":"dw-im-here", "tags":"dio diogenesjr diogenesjunior trollface reaction"},
