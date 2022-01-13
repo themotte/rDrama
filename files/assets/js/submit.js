@@ -9,43 +9,6 @@ function hide_image() {
 	}
 }
 
-function checkForRequired() {
-
-	var title = document.getElementById("post-title");
-
-	var url = document.getElementById("post-URL");
-
-	var text = document.getElementById("post-text");
-
-	var button = document.getElementById("create_button");
-
-	var image = document.getElementById("file-upload");
-
-	if (url.value.length > 0 || image.value.length > 0) {
-		text.required = false;
-		url.required=false;
-	} else if (text.value.length > 0 || image.value.length > 0) {
-		url.required = false;
-	} else {
-		text.required = true;
-		url.required = true;
-	}
-
-	var isValidTitle = title.checkValidity();
-
-	var isValidURL = url.checkValidity();
-
-	var isValidText = text.checkValidity();
-
-	if (isValidTitle && (isValidURL || image.value.length>0)) {
-		button.disabled = false;
-	} else if (isValidTitle && isValidText) {
-		button.disabled = false;
-	} else {
-		button.disabled = true;
-	}
-}
-
 document.onpaste = function(event) {
 	f=document.getElementById('file-upload');
 	files = event.clipboardData.files

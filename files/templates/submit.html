@@ -26,7 +26,7 @@
 		{% block stylesheets %}
 		{% if v %}
 			<style>:root{--primary:#{{v.themecolor}}}</style>
-			<link rel="stylesheet" href="/static/assets/css/main.css?a=71"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=11">
+			<link rel="stylesheet" href="/static/assets/css/main.css?a=72"><link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=11">
 			{% if v.agendaposter %}
 				<style>
 					html {
@@ -50,7 +50,7 @@
 			{% endif %}
 		{% else %}
 			<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-			<link rel="stylesheet" href="/static/assets/css/main.css?a=71">
+			<link rel="stylesheet" href="/static/assets/css/main.css?a=72">
 			<link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
 		{% endif %}
 		{% endblock %}
@@ -199,11 +199,49 @@
 			document.getElementById('post-title').value = fetched_title
 			let fetched_text = window.localStorage.getItem("post_text")
 			document.getElementById('post-text').value = fetched_text
+
+			function checkForRequired() {
+
+				var title = document.getElementById("post-title");
+
+				var url = document.getElementById("post-URL");
+
+				var text = document.getElementById("post-text");
+
+				var button = document.getElementById("create_button");
+
+				var image = document.getElementById("file-upload");
+
+				if (url.value.length > 0 || image.value.length > 0) {
+					text.required = false;
+					url.required=false;
+				} else if (text.value.length > 0 || image.value.length > 0) {
+					url.required = false;
+				} else {
+					text.required = true;
+					url.required = true;
+				}
+
+				var isValidTitle = title.checkValidity();
+
+				var isValidURL = url.checkValidity();
+
+				var isValidText = text.checkValidity();
+
+				if (isValidTitle && (isValidURL || image.value.length>0)) {
+					button.disabled = false;
+				} else if (isValidTitle && isValidText) {
+					button.disabled = false;
+				} else {
+					button.disabled = true;
+				}
+			}
+			checkForRequired()
 		</script>
 
 		<script src="/static/assets/js/marked.js?a=3"></script>
 		<script src="/static/assets/js/formatting.js?a=3"></script>
-		<script src="/static/assets/js/submit.js?a=4"></script>
+		<script src="/static/assets/js/submit.js?a=5"></script>
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 

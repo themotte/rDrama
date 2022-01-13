@@ -1037,7 +1037,12 @@ def submit_post(v):
 			if request.headers.get("Authorization"): return {"error": "File type not allowed"}, 400
 			return render_template(f"{template}submit.html", v=v, error="File type not allowed.", title=title, body=request.values.get("body", "")), 400
 
-	if not new_post.thumburl and new_post.url and request.headers.get('cf-ipcountry')!="T1": gevent.spawn( thumbnail_thread, new_post.id)
+		
+	if not new_post.thumburl and new_post.url:
+		if request.host in new_post.url or new_post.url.startswith('/') or request.host == 'rdrama.net' and 'rdrama' in new_post.url:
+			new_post.thumburl = '/static/assets/images/{site_name}/site_preview.webp'
+		elif request.headers.get('cf-ipcountry')!="T1":
+			gevent.spawn( thumbnail_thread, new_post.id)
 
 	if not new_post.private:
 
@@ -1162,8 +1167,13 @@ def submit_post(v):
 
 	g.db.commit()
 
+
 	if request.headers.get("Authorization"): return new_post.json
-	else: return redirect(new_post.permalink)
+	else:
+		if 'megathread' in new_post.title.lower(): sort = 'new'
+		else: sort = v.defaultsortingcomments
+		new_post.replies = [c]
+		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True)
 
 
 @app.post("/delete_post/<pid>")

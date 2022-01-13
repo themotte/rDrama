@@ -9,9 +9,6 @@
 	<link rel="stylesheet" href="/@{{u.username}}/profilecss">
 {% endif %}
 <title>{{u.username}}'s profile - {{'SITE_NAME' | app_config}}</title>
-{% if u.is_private %}
-<meta name="robots" content="noindex">
-{% endif %}
 <meta property="og:article:author" content="@{{u.username}}" >
 <meta property="article:section" content="{{u.username}}'s profile - {{'SITE_NAME' | app_config}}" >
 <meta property="article:published_time" content="{{u.created_date}}" >

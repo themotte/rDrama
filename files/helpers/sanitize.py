@@ -109,7 +109,7 @@ def sanitize(sanitized, noimages=False, alert=False):
 		for i in re.finditer("<p>@((\w|-){1,25})", sanitized):
 			u = get_user(i.group(1), graceful=True)
 			if u:
-				sanitized = sanitized.replace(i.group(0), f'<p><a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>')
+				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''')
 	else:
 		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/\w{3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized)
 
@@ -120,7 +120,7 @@ def sanitize(sanitized, noimages=False, alert=False):
 				if noimages:
 					sanitized = sanitized.replace(i.group(0), f'{i.group(1)}<a href="/id/{u.id}">@{u.username}</a>')
 				else:
-					sanitized = sanitized.replace(i.group(0), f'{i.group(1)}<a href="/id/{u.id}"><img loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>')
+					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''')
 
 
 	for i in re.finditer('https://i\.imgur\.com/(([^_]*?)\.(jpg|png|jpeg))', sanitized):
@@ -160,7 +160,7 @@ def sanitize(sanitized, noimages=False, alert=False):
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
 			tag["src"] = "/static/assets/images/loading.webp"
-			tag['alt'] = f'![]({tag["src"]})'
+			tag['alt'] = f'![]({tag["data-src"]})'
 
 			link = soup.new_tag("a")
 			link["href"] = tag["data-src"]
@@ -203,10 +203,10 @@ def sanitize(sanitized, noimages=False, alert=False):
 				classes = 'class="emoji-lg" '
 				remoji = emoji[1:]
 			elif emoji.startswith("!"):
-				classes = 'height=60 class="emoji-md mirrored" '
+				classes = 'class="emoji-md mirrored" '
 				remoji = emoji[1:]
 			else:
-				classes = 'height=60 class="emoji-md" '
+				classes = 'class="emoji-md" '
 				remoji = emoji
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
@@ -221,11 +221,11 @@ def sanitize(sanitized, noimages=False, alert=False):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 class="emoji mirrored" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="emoji mirrored" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 				marseys_used.add(emoji)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 			marseys_used.add(emoji)
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube")
@@ -277,10 +277,10 @@ def filter_emojis_only(title):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" height=30 src="/static/assets/images/emojis/{emoji}.webp" class="emoji mirrored">', title, flags=re.I)
+				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="emoji mirrored">', title, flags=re.I)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" height=30 class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
+			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
 
 	if len(title) > 1500: abort(400)
 	else: return title

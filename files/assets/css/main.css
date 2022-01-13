@@ -2696,7 +2696,7 @@ pre {
 }
 @media (max-width: 500px) {
     .text-small-mobile {
-        font-size: 3vw !important;
+        font-size: 70% !important;
     }
 }
 
@@ -4635,13 +4635,9 @@ input[type=radio] ~ .custom-control-label::before {
     height: 60px !important;
     width: 60px !important;
 }
-.emoji-lg {
-    height: 150px !important;
-    width: 150px !important;
-}
 .emj, .emoji, .bigemoji, .emoji-md, .emoji-lg {
-    max-width: 20vw !important;
-    max-height: 20vh !important;
+    max-width: 40vw !important;
+    max-height: 40vh !important;
     display: inline-block;
     -o-object-fit: contain;
     object-fit: contain;

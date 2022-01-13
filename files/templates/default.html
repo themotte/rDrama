@@ -7,7 +7,7 @@
 	<script src="/static/assets/js/bootstrap.js?a=3"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=71">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=72">
 		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=11">
 		{% if v.agendaposter %}
 			<style>
@@ -32,13 +32,13 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=71"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=72"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
 	{% endif %}
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<meta name="thumbnail" content="/static/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?a=3">
+	<meta name="thumbnail" content="/static/assets/images/{{'SITE_NAME' | app_config}}/site_preview.webp?a=1">
 
 	<link rel="icon" type="image/png" href="/static/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?a=8">
 	{% block title %}
@@ -47,7 +47,7 @@
 	<meta property="og:type" content="article" >
 	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta property="og:site_name" content="{{request.host}}" >
-	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/static/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?a=3" >
+	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/static/assets/images/{{'SITE_NAME' | app_config}}/site_preview.webp?a=1" >
 	<meta property="og:url" content="{{request.path | full_link}}">
 	<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
 	<meta property="og:author" name="author" content="@{{request.host_url}}" >
@@ -58,7 +58,7 @@
 	<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
 	<meta name="twitter:creator" content="@{{request.host_url}}">
 	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-	<meta name="twitter:image" content="/static/assets/images/{{'SITE_NAME' | app_config}}/preview.webp?a=3" >
+	<meta name="twitter:image" content="/static/assets/images/{{'SITE_NAME' | app_config}}/site_preview.webp?a=1" >
 	<meta name="twitter:url" content="{{request.path | full_link}}" >
 	{% endblock %}
 
@@ -227,11 +227,11 @@
 		
 		{% if v %}
 			<a href="{% if request.host == 'rdrama.net' %}https://secure.transequality.org/site/Donation2?df_id=1480{% else %}/{% endif %}">
-				<img class="banner" alt="site banner" src="/static/assets/images/{{'SITE_NAME' | app_config}}/banner.webp?a=8" width="100%">
+				<img class="banner" alt="site banner" src="/static/assets/images/{{'SITE_NAME' | app_config}}/banner.webp?a=9" width="100%">
 			</a>
 		{% else %}
 			<a href="/login">
-				<img class="banner" alt="site banner" src="/static/assets/images/{{'SITE_NAME' | app_config}}/cached.webp?a=6" width="100%">
+				<img class="banner" alt="site banner" src="/static/assets/images/{{'SITE_NAME' | app_config}}/cached.webp?a=7" width="100%">
 			</a>
 		{% endif %}
 	{% endif %}

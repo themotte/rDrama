@@ -13,6 +13,14 @@
 
 {% block title %}
 
+{% if success %}
+	<script data-cfasync="false">
+		history.pushState(null, null, '{{p.permalink | full_link}}');
+		window.localStorage.setItem("post_title", "")
+		window.localStorage.setItem("post_text", "")
+	</script>
+{% endif %}
+
 {% if p.award_count("wholesome") %}
 	<style>
 		.seal {
@@ -149,10 +157,6 @@
 <meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/static/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" >
 <meta name="twitter:url" content="{{p.permalink | full_link}}" >
 
-{% if linked_comment.author.is_private %}
-<meta name="robots" content="noindex">
-{% endif %}
-
 {% else %}
 <title>{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}</title>
 
@@ -177,10 +181,6 @@
 <meta name="twitter:description" content="{{p.plainbody(v)}}" >
 <meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/static/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" >
 <meta name="twitter:url" content="{{p.permalink | full_link}}" >
-
-{% if p.author.is_private %}
-<meta name="robots" content="noindex">
-{% endif %}
 
 {% endif %}
 {% endblock %}
