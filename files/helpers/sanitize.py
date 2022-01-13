@@ -5,7 +5,7 @@ from functools import partial
 from .get import *
 from os import path, environ
 import re
-from markdown import markdown
+from mistletoe import markdown
 from json import loads, dump
 
 site = environ.get("DOMAIN").strip()
