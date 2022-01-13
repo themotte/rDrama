@@ -53,7 +53,7 @@ const EMOJIS_STRINGS = [
 			"marseyeyeroll": {"author":"mom", "tags":"rolleyes rolling eyes mock animated reaction roll eyes duh"},
 			"marseydepressed": {"author":"aca", "tags":"smoke kms doomer cigarette despair reaction depression suicide suicidal smoking hopeless sad"},
 			"marseypat": {"author":"unknown", "tags":"petting reaction animated cute patting"},
-			"marseyking": {"author":"soren", "tags":"based queen prince reaction crown princess"},
+			"marseyking": {"author":"dart200", "tags":"based queen prince reaction crown princess"},
 			"marseylong1": {"author":"pippy", "tags":"top meme"},
 			"marseylong2": {"author":"pippy", "tags":"middle meme"},
 			"marseylong3": {"author":"pippy", "tags":"bottom meme"},
