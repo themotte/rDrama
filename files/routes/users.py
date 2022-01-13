@@ -479,6 +479,7 @@ def message2(v, username):
 @app.post("/reply")
 @limiter.limit("1/second")
 @limiter.limit("6/minute")
+@limiter.limit("50/hour")
 @auth_required
 def messagereply(v):
 

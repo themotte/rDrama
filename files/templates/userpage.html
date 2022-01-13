@@ -42,12 +42,12 @@
 						</div>
 						<div id="profilestuff" class="ml-3 w-100">
 							{% if u.is_suspended %}
-								<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}:
+								<h5 class="text-primary">BANNED USER{% if u.ban_reason %}:
 									{% if u.ban_reason_link %}<a href="{{ u.ban_reason_link }}"><i class="fas fa-link"></i>{% endif %}
 										{{ u.ban_reason }}
 									{% if u.ban_reason_link %}</a>{% endif %}
 								{% endif %}</h5>
-								{% if u.unban_utc %}<h5 style="color:#ff66ac;">{{u.unban_string}}</h5>{% endif %}
+								{% if u.unban_utc %}<h5 class="text-primary">>{{u.unban_string}}</h5>{% endif %}
 							{% endif %}
 							<div class="d-flex align-items-center mt-1 mb-2">
 								<h1 class="font-weight-bolder h3 mb-0" style="color: #{{u.namecolor}}"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span></h1>
@@ -346,8 +346,8 @@
 			</div>
 			<div class="mt-n3 py-3">
 				{% if u.is_suspended %}
-					<h5 style="color:#ff66ac;">BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
-					{% if u.unban_utc %}<h5 style="color:#ff66ac;">{{u.unban_string}}</h5>{% endif %}
+					<h5 class="text-primary">>BANNED USER{% if u.ban_reason %}: {{u.ban_reason}}{% endif %}</h5>
+					{% if u.unban_utc %}<h5 class="text-primary">>{{u.unban_string}}</h5>{% endif %}
 				{% endif %}
 				{% if u.verified %}<span><i class="fas fa-badge-check align-middle ml-1" style="color:{% if u.verifiedcolor %}#{{u.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{u.verified}}"></i></span>&nbsp;{% endif %}
 				<a class="text-black"><h1 class="h5 d-inline-block" style="color: #{{u.namecolor}}"><span {% if u.patron %}class="patron" style="background-color:#{{u.namecolor}}"{% endif %}>{{u.username}}</span></h1></a>

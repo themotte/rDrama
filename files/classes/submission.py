@@ -342,8 +342,8 @@ class Submission(Base):
 			if v.teddit: url = self.url.replace("old.reddit.com", "teddit.net")
 			elif not v.oldreddit: url = self.url.replace("old.reddit.com", "reddit.com")
 			if '/comments/' in url and "sort=" not in url:
-				if "?" in url: url += "&context=99" 
-				else: url += "?context=99"
+				if "?" in url: url += "&context=9" 
+				else: url += "?context=9"
 				if v.controversial: url += "&sort=controversial"
 			return url
 		elif self.url:

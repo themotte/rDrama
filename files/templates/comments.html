@@ -1,3 +1,9 @@
+{% if comment_info and not request.full_path.endswith('#context') %}
+	<script data-cfasync="false">
+		history.pushState(null, null, '#context');
+	</script>
+{% endif %}
+
 {% if v %}
 	{% include "award_modal.html" %}
 {% endif %}

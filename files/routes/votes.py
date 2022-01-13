@@ -28,7 +28,7 @@ def admin_vote_info_get(v):
 	if isinstance(thing, Submission):
 
 		if thing.author.shadowbanned and not (v and v.admin_level):
-			thing_id = g.db.query(Submission.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).first()[0]
+			thing_id = g.db.query(Submission.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).order_by(Submission.id).first()[0]
 		else: thing_id = thing.id
 
 		ups = g.db.query(Vote
@@ -44,7 +44,7 @@ def admin_vote_info_get(v):
 	elif isinstance(thing, Comment):
 
 		if thing.author.shadowbanned and not (v and v.admin_level):
-			thing_id = g.db.query(Comment.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).first()[0]
+			thing_id = g.db.query(Comment.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).order_by(Comment.id).first()[0]
 		else: thing_id = thing.id
 
 		ups = g.db.query(CommentVote

@@ -879,26 +879,29 @@ def ban_user(user_id, v):
 	
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
+	if not user: abort(404)
+
 	if user.admin_level >= v.admin_level: abort(403)
 
 	days = float(request.values.get("days")) if request.values.get('days') else 0
-	reason = sanitize(request.values.get("reason", ""))[:256]
-	message = request.values.get("reason", "").strip()[:256]
 
-	if not user: abort(400)
+	reason = request.values.get("reason", "").strip()[:256]
+	passed_reason = filter_emojis_only(reason)
 
-	user.ban(admin=v, reason=reason, days=days)
+	if len(passed_reason) > 256: passed_reason = reason
+
+	user.ban(admin=v, reason=passed_reason, days=days)
 
 	if request.values.get("alts"):
 		for x in user.alts:
 			if x.admin_level: break
-			user.ban(admin=v, reason=reason, days=days)
+			user.ban(admin=v, reason=passed_reason, days=days)
 
 	if days:
-		if message: text = f"Your account has been suspended for {days} days for the following reason:\n\n> {message}"
+		if reason: text = f"Your account has been suspended for {days} days for the following reason:\n\n> {reason}"
 		else: text = f"Your account has been suspended for {days} days."
 	else:
-		if message: text = f"Your account has been permanently suspended for the following reason:\n\n> {message}"
+		if reason: text = f"Your account has been permanently suspended for the following reason:\n\n> {reason}"
 		else: text = "Your account has been permanently suspended."
 
 	send_repeatable_notification(user.id, text)
