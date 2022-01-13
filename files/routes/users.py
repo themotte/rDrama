@@ -580,8 +580,7 @@ def redditor_moment_redirect(username, v):
 @auth_required
 def followers(username, v):
 	u = get_user(username, v=v)
-	ids = [x[0] for x in g.db.query(Follow.user_id).filter_by(target_id=u.id).order_by(Follow.id).all()]
-	users = g.db.query(User).filter(User.id.in_(ids)).all()
+	users = g.db.query(User).join(Follow, Follow.target_id == u.id).filter(Follow.user_id == User.id).order_by(Follow.id).all()
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}followers.html", v=v, u=u, users=users)
@@ -590,8 +589,7 @@ def followers(username, v):
 @auth_required
 def following(username, v):
 	u = get_user(username, v=v)
-	ids = [x[0] for x in g.db.query(Follow.target_id).filter_by(user_id=u.id).order_by(Follow.id).all()]
-	users = g.db.query(User).filter(User.id.in_(ids)).all()
+	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.id).all()
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
 	return render_template(f"{template}following.html", v=v, u=u, users=users)
