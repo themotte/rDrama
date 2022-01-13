@@ -853,9 +853,9 @@ def admin_title_change(user_id, v):
 	new_name=request.values.get("title").strip()[:256]
 
 	user.customtitleplain=new_name
-	new_name = sanitize(new_name)
+	new_name = filter_emojis_only(new_name)
 
-	user=g.db.query(User).with_for_update().filter_by(id=user.id).one_or_none()
+	user=g.db.query(User).filter_by(id=user.id).one_or_none()
 	user.customtitle=new_name
 	if request.values.get("locked"): user.flairchanged = int(time.time()) + 2629746
 	g.db.add(user)
