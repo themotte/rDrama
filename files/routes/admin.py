@@ -440,7 +440,6 @@ def badge_grant_post(v):
 		return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, error="User already has that badge.")
 	
 	new_badge = Badge(badge_id=badge_id, user_id=user.id)
-	send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	desc = request.values.get("description")
 	if desc: new_badge.description = desc
