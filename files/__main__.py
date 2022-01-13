@@ -73,7 +73,7 @@ r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_respons
 limiter = Limiter(
 	app,
 	key_func=get_ipaddr,
-	default_limits=["3/second;30/minute;100/hour;500/day"],
+	default_limits=["3/second;30/minute;200/hour;500/day"],
 	headers_enabled=True,
 	strategy="fixed-window"
 )

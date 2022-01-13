@@ -19,9 +19,9 @@ def process_image(filename=None, resize=False):
 
 		om = next(frames)
 		om.info = i.info
-		om.save(filename, format="WEBP", save_all=True, append_images=list(frames), loop=0)
+		om.save(filename, format="WEBP", save_all=True, append_images=list(frames), loop=0, lossless=True, quality=100, method=6)
 	elif i.format.lower() != "webp":
-		if i.format.lower() == "gif": gifwebp(input_image=filename, output_image=filename, option="-q 100")
-		else: i.save(filename, format="WEBP")
+		if i.format.lower() == "gif": gifwebp(input_image=filename, output_image=filename, option="-q 100 -m 6 -metadata 'none' -mt")
+		else: i.save(filename, format="WEBP", lossless=True, quality=100, method=6)
 
 	return f'/static{filename}'
