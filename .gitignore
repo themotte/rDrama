@@ -4,6 +4,7 @@ video.webm
 cache/
 __pycache__/
 disable_signups
+marsey_count.json
 under_attack
 .idea/
 **/.pytest_cache/
