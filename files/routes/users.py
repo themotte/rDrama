@@ -16,6 +16,17 @@ site = environ.get("DOMAIN").strip()
 
 beams_client = PushNotifications(instance_id=PUSHER_INSTANCE_ID, secret_key=PUSHER_KEY)
 
+db = db_session()
+
+votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
+votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
+users14 = db.query(User).filter(User.id.in_(votes3.keys())).all()
+users15 = []
+for user in users14:
+	users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
+users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
+
 if site == 'rdrama.net':
 	topmakers = {}
 	for k, val in marseys.items():
@@ -23,13 +34,13 @@ if site == 'rdrama.net':
 		else: topmakers[val] = 1
 
 	topmakers.pop('unknown','anton-d')
-	db = db_session()
 	topmakers2 = db.query(User).filter(func.lower(User.username).in_(topmakers.keys())).all()
 	topmakers3 = []
 	for user in topmakers2:
 		topmakers3.append((user, topmakers[user.username.lower()]))
 	topmakers = sorted(topmakers3, key=lambda x: x[1], reverse=True)[:25]
-	db.close()
+
+db.close()
 
 @app.get("/grassed")
 @auth_required
@@ -332,16 +343,6 @@ def leaderboard(v):
 
 	if request.host == 'rdrama.net': users13 = topmakers
 	else: users13 = None
-
-	votes1 = g.db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
-	votes2 = g.db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
-	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
-	users14 = g.db.query(User).filter(User.id.in_(votes3.keys())).all()
-	users15 = []
-	for user in users14:
-		users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
-	users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
-
 
 	return render_template(f"{template}leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9, users10=users10, users12=users12, users13=users13, users15=users15)
 
