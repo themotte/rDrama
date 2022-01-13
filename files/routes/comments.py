@@ -211,7 +211,7 @@ def api_comment(v):
 
 	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
 
-	body_html = sanitize(body)
+	body_html = sanitize(body, comment=True)
 
 	if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))): return {"error":"You can only type marseys!"}, 403
 
