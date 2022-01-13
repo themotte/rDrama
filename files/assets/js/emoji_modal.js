@@ -728,7 +728,7 @@ const EMOJIS_STRINGS = [
 			"marseysmug": {"author":"kellere31", "tags":"reaction superior haha"},
 			"marseysmug2": {"author":"dramarama", "tags":"snicker scoff mock reaction guffaw ridicule judgment"},
 			"marseysmug3": {"author":"dramarama", "tags":"reaction yikes judgment oof cringe"},
-			"marseysnappypat": {"author":"unknown", "tags":"petting animated sentient reaction snapshillbot robot patting"},
+			"marseysnappypat": {"author":"chiobu", "tags":"petting animated sentient reaction snapshillbot robot patting"},
 			"marseysnek": {"author":"pippy", "tags":"snake serpent"},
 			"marseysniff": {"author":"altaccountumbreon", "tags":"brap huff gas reaction fart creep"},
 			"marseysnoo": {"author":"altaccountumbreon", "tags":"shaking redditor scared reaction nervous schizo reddit"},
