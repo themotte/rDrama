@@ -449,6 +449,14 @@ BADGES = {
 		'name': 'True Believer',
 		'description': 'This user sees through communist lies'
 	},
+	101: {
+		'name': 'Banner Artist',
+		'description': 'Contributed a banner image to the site'
+	},
+	102: {
+		'name': 'Christmas 21',
+		'description': 'Awarded for surviving Fistmas 2021'
+	},
 }
 
 AWARDS = {
