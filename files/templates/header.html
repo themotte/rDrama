@@ -60,7 +60,7 @@
 				{% if v.notifications_count %}
 
 				<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-					<a class="nav-link position-relative" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Notifications"><i class="fas fa-bell text-danger" {% if not v.not_post_notifications_count %}style="color:blue!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if not v.not_post_notifications_count %}background:blue{% endif %}">{{v.notifications_count}}</span></a>
+					<a class="nav-link position-relative" href="/notifications{% if v.not_post_notifications_count %}?posts=true{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Notifications"><i class="fas fa-bell text-danger" {% if not v.not_post_notifications_count %}style="color:blue!important"{% endif %}></i><span class="notif-count ml-1" style="padding-left: 4.5px;{% if not v.not_post_notifications_count %}background:blue{% endif %}">{{v.notifications_count}}</span></a>
 				</li>
 
 				{% else %}
@@ -162,10 +162,10 @@
 				<a class="nav-link" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{v.username}}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if v.notifications_count and v.notifications_count == v.post_notifications_count %}?posts=true{% endif %}">
+				<a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if v.not_post_notifications_count %}?posts=true{% endif %}">
 					<i class="fas fa-envelope fa-fw mr-3"></i>Inbox
 					{% if v.notifications_count %}
-					<i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;"></i>
+					<i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;{% if v.not_post_notifications_count %}color:blue{% endif %}"></i>
 					{% endif %}
 				</a>
 			</li>
