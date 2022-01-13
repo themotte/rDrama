@@ -848,8 +848,6 @@ def admin_title_change(user_id, v):
 
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
-	if user.admin_level != 0: abort(403)
-
 	new_name=request.values.get("title").strip()[:256]
 
 	user.customtitleplain=new_name
