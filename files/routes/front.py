@@ -3,7 +3,7 @@ from files.helpers.get import *
 from files.__main__ import app, cache
 from files.classes.submission import Submission
 
-defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "day").strip()
+defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.get("/post/")
