@@ -12,29 +12,29 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<meta name="author" content="">
-	<meta name="thumbnail" content="/static/assets/images/{{'SITE_NAME' | app_config}}/site_preview.webp?a=1">
-	<link rel="icon" type="image/png" href="/static/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?a=8">
+	<meta name="thumbnail" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1">
+	<link rel="icon" type="image/png" href="/static/assets/images/{{SITE_NAME}}/icon.webp?a=8">
 
 	<meta property="og:type" content="article" >
-	<meta property="og:title" content="{{'SITE_NAME' | app_config}}" >
+	<meta property="og:title" content="{{SITE_NAME}}" >
 	<meta property="og:site_name" content="{{request.host}}" >
-	<meta property="og:image" content="{{'SITE_NAME' | app_config}}/static/assets/images/{{'SITE_NAME' | app_config}}/site_preview.webp?a=1" >
+	<meta property="og:image" content="{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1" >
 	<meta property="og:url" content="{{request.path | full_link}}">
-	<meta property="og:description" name="description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}">
+	<meta property="og:description" name="description" content="{{SITE_NAME}} - {{'SLOGAN' | app_config}}">
 	<meta property="og:author" name="author" content="{{request.host_url}}" >
 	<meta property="og:site_name" content="{{request.host}}" >
 
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:site" content="{{request.host_url}}">
-	<meta name="twitter:title" content="{{'SITE_NAME' | app_config}}" >
+	<meta name="twitter:title" content="{{SITE_NAME}}" >
 	<meta name="twitter:creator" content="{{request.host_url}}">
-	<meta name="twitter:description" content="{{'SITE_NAME' | app_config}} - {{'SLOGAN' | app_config}}" >
-	<meta name="twitter:image" content="/static/assets/images/{{'SITE_NAME' | app_config}}/site_preview.webp?a=1" >
+	<meta name="twitter:description" content="{{SITE_NAME}} - {{'SLOGAN' | app_config}}" >
+	<meta name="twitter:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1" >
 	<meta name="twitter:url" content="{{request.path | full_link}}" >
 
 
 
-	<title>{% block pagetitle %}{{'SITE_NAME' | app_config}}{% endblock %}</title>
+	<title>{% block pagetitle %}{{SITE_NAME}}{% endblock %}</title>
 
 	
 	{% if v %}

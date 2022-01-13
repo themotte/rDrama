@@ -133,7 +133,7 @@
 <meta property="og:type" content="article" >
 
 {% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc %}
-<title>{{'@'+comment_info.author.username}} comments on "{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}"</title>
+<title>{{'@'+comment_info.author.username}} comments on "{{p.plaintitle(v)}} - {{SITE_NAME}}"</title>
 
 
 <meta property="og:article:author" content="{{'@'+comment_info.author.username}}" >
@@ -141,8 +141,8 @@
 {% if comment_info.edited_utc %}<meta property="article:modified_time" content="{{comment_info.edited_string}}" >{% endif %}
 <meta property="og:description" name="description" content="{{comment_info.plainbody(v)}}" >
 <meta property="og:author" name="author" content="{{'@'+comment_info.author.username}}" >
-<meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}" >
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/static/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" >
+<meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/preview.gif{% endif %}" >
 {% if p.url and (p.url.lower().endswith('.mp4') or p.url.lower().endswith('.webm') or p.url.lower().endswith('.mov')) %}
 	<meta property="og:video" content="{{ p.realurl(v) }}" >
 {% endif %}
@@ -151,14 +151,14 @@
 
 <meta name="twitter:card" content="summary" >
 <meta name="twitter:site" content="{{request.host_url}}">
-<meta name="twitter:title" content="{{'@'+comment_info.author.username}} comments on {{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}" >
+<meta name="twitter:title" content="{{'@'+comment_info.author.username}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
 <meta name="twitter:creator" content="{{'@'+comment_info.author.username}}">
 <meta name="twitter:description" content="{{comment_info.plainbody(v)}}" >
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/static/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" >
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/preview.gif{% endif %}" >
 <meta name="twitter:url" content="{{p.permalink | full_link}}" >
 
 {% else %}
-<title>{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}</title>
+<title>{{p.plaintitle(v)}} - {{SITE_NAME}}</title>
 
 
 {% if p.author %}<meta property="og:article:author" content="{{'@'+p.author.username}}">{% endif %}
@@ -166,8 +166,8 @@
 {% if p.edited_utc %}<meta property="article:modified_time" content="{{p.edited_string}}" >{% endif %}
 <meta property="og:description" name="description" content="{{p.plainbody(v)}}" >
 {% if p.author %}<meta property="og:author" name="author" content="{{'@'+p.author.username}}" >{% endif %}
-<meta property="og:title" content="{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}" >
-<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/static/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" >
+<meta property="og:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}" >
+<meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/preview.gif{% endif %}" >
 {% if p.url and (p.url.lower().endswith('.mp4') or p.url.lower().endswith('.webm') or p.url.lower().endswith('.mov')) %}
 <meta property="og:video" content="{{ p.realurl(v) }}" >
 {% endif %}
@@ -176,10 +176,10 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="{{request.host_url}}">
-<meta name="twitter:title" content="{{p.plaintitle(v)}} - {{'SITE_NAME' | app_config}}" >
+<meta name="twitter:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}" >
 {% if p.author %}<meta name="twitter:creator" content="{{'@'+p.author.username}}">{% endif %}
 <meta name="twitter:description" content="{{p.plainbody(v)}}" >
-<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{'SITE_NAME' | app_config}}/static/assets/images/{{'SITE_NAME' | app_config}}/preview.gif{% endif %}" >
+<meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb %}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/preview.gif{% endif %}" >
 <meta name="twitter:url" content="{{p.permalink | full_link}}" >
 
 {% endif %}
@@ -348,7 +348,7 @@
 						{% endif %}
 
 						{% if p.is_pinned %}<i class="fas fa-thumbtack fa-rotate--45 fa-fw text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned to profile"></i>{% endif %}
-						{% if p.distinguish_level %} <i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}
+						{% if p.distinguish_level %} <i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
 						{% if p.is_bot %} <i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom"	data-bs-original-title="Bot"></i>{% endif %}
 						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.private %}<span class="badge border-warning border-1 text-small-extra">Draft</span>{% endif %}

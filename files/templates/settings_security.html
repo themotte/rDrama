@@ -1,6 +1,6 @@
 {% extends "settings.html" %}
 
-{% block pagetitle %}Security Settings - {{'SITE_NAME' | app_config}}{% endblock %}
+{% block pagetitle %}Security Settings - {{SITE_NAME}}{% endblock %}
 
 {% block content %}
 
@@ -166,7 +166,7 @@
 
 <h2 class="h5">Log Out Everywhere</h2>
 
-<p class="text-small text-muted">Log all other devices out of your {{'SITE_NAME' | app_config}} account.</p>
+<p class="text-small text-muted">Log all other devices out of your {{SITE_NAME}} account.</p>
 
 <div class="settings-section rounded">
 
@@ -221,7 +221,7 @@
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">
 <div class="modal-header">
-	<h5 class="modal-title">Delete your {{'SITE_NAME' | app_config}} account</h5>
+	<h5 class="modal-title">Delete your {{SITE_NAME}} account</h5>
 	<button role="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 		<span aria-hidden="true"><i class="far fa-times"></i></span>
 	</button>

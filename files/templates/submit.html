@@ -10,7 +10,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 		<meta name="author" content="">
-		<link rel="icon" type="image/png" href="/static/assets/images/{{'SITE_NAME' | app_config}}/icon.webp?a=8">
+		<link rel="icon" type="image/png" href="/static/assets/images/{{SITE_NAME}}/icon.webp?a=8">
 
 		{% if request.host == 'pcmemes.net' %}
 			{% set cc='Splash Mountain' %}
@@ -19,7 +19,7 @@
 		{% endif %}
 
 		{% block title %}
-		<title>Create a post - {{'SITE_NAME' | app_config}}</title>
+		<title>Create a post - {{SITE_NAME}}</title>
 		{% endblock %}
 
 		

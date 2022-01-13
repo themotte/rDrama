@@ -161,7 +161,7 @@
 			<span class="font-weight-bold"><a href="{{c.post.permalink}}">{{c.post.realtitle(v) | safe}}</a></span>
 		{% endif %}
 	{% elif c.author_id==NOTIFICATIONS_ID or c.author_id==AUTOJANNY_ID %}
-	<span class="font-weight-bold">{{'SITE_NAME' | app_config}} Notification</span>
+	<span class="font-weight-bold">{{SITE_NAME}} Notification</span>
 	{% else %}
 		{% if c.sentto == 0 %}
 			<span class="font-weight-bold">Sent to admins</span>
@@ -207,7 +207,7 @@
 				{% if c.is_pinned %}
 					<i id='pinned-{{c.id}}'class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned by @{{c.is_pinned}}" {% if c.is_pinned_utc %}onmouseover="pinned_timestamp('pinned-{{c.id}}')" data-timestamp={{c.is_pinned_utc}} {% endif %}></i>
 				{% endif %}
-				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{'SITE_NAME' | app_config}} Admin, speaking officially"></i>{% endif %}
+				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
 				{% if c.is_op %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="OP"></i>{% endif %}
 				{% if c.is_bot %}<i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bot"></i>{% endif %}
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="You're blocking this user, but you can see this comment because you're an admin"></i>{% endif %}
@@ -712,7 +712,7 @@
 						<i class="fad fa-trash-alt text-muted" style="font-size: 3.5rem;"></i>
 					</div>
 
-					<p>Your comment will be removed everywhere on {{'SITE_NAME' | app_config}}. This action can be undone.</p>
+					<p>Your comment will be removed everywhere on {{SITE_NAME}}. This action can be undone.</p>
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>

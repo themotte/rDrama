@@ -1,6 +1,6 @@
 {% extends "default.html" %}
 {% block title %}
-<title>{{'SITE_NAME' | app_config}} - Formatting</title>
+<title>{{SITE_NAME}} - Formatting</title>
 
 {% endblock %}
 
@@ -48,8 +48,8 @@ You can use Markdown formatting:
 		</tr>
 		<tr>
 			<td>Links</td>
-			<td>[{{'SITE_NAME' | app_config}}]({{request.host_url}})</td>
-			<td><a href="{{request.host_url}}">{{'SITE_NAME' | app_config}}</a></td>
+			<td>[{{SITE_NAME}}]({{request.host_url}})</td>
+			<td><a href="{{request.host_url}}">{{SITE_NAME}}</a></td>
 		</tr>
 		<tr>
 			<td>Images</td>
@@ -138,8 +138,8 @@ You can use Markdown formatting:
 		</tr>
 		<tr>
 			<td>Subreddit Mention</td>
-			<td>r/{{'SITE_NAME' | app_config}}</td>
-			<td><a class="d-inline-block" rel="nofollow noopener noreferrer" href="https://www.reddit.com/r/{{'SITE_NAME' | app_config}}/">r/{{'SITE_NAME' | app_config}}</a></td>
+			<td>r/{{SITE_NAME}}</td>
+			<td><a class="d-inline-block" rel="nofollow noopener noreferrer" href="https://www.reddit.com/r/{{SITE_NAME}}/">r/{{SITE_NAME}}</a></td>
 		</tr>
 		<tr>
 			<td>Redditor Mention</td>

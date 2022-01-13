@@ -1,7 +1,7 @@
 {% extends "default.html" %}
 
 {% block title %}
-<title>{{'SITE_NAME' | app_config}} - Contact</title>
+<title>{{SITE_NAME}} - Contact</title>
 
 {% endblock %}
 
@@ -19,9 +19,9 @@
 		</div>
 	{% endif %}
 
-	<h1 class="article-title">Contact {{'SITE_NAME' | app_config}} Admins</h1>
+	<h1 class="article-title">Contact {{SITE_NAME}} Admins</h1>
 
-	<p>Use this form to contact {{'SITE_NAME' | app_config}} Admins.</p>
+	<p>Use this form to contact {{SITE_NAME}} Admins.</p>
 
 	<label class="mt-3">Your Email</label>
 	<input autocomplete="off" class="form-control" value="{{v.email}}" readonly="readonly" disabled>

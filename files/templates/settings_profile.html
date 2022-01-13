@@ -1,6 +1,6 @@
 {% extends "settings.html" %}
 
-{% block pagetitle %}Profile Settings - {{'SITE_NAME' | app_config}}{% endblock %}
+{% block pagetitle %}Profile Settings - {{SITE_NAME}}{% endblock %}
 
 {% block content %}
 
@@ -316,10 +316,10 @@
 									<input autocomplete="off" type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Disconnect Discord">
 									</form>
 
-									<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{'SITE_NAME' | app_config}} Discord server.</div>
+									<div class="text-small-extra text-muted mt-3">Disconnecting your Discord account will remove you from the {{SITE_NAME}} Discord server.</div>
 								{% else %}
 									<a href="/discord" class="btn btn-primary">Link Discord</a>
-									<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{'SITE_NAME' | app_config}} Discord server.</div>
+									<div class="text-small-extra text-muted mt-3">Link your Discord account to join the {{SITE_NAME}} Discord server.</div>
 								{% endif %}
 
 							</div>
@@ -332,7 +332,7 @@
 
 					<h2 class="h5" name="referral">RSS Feed</h2>
 
-					<p class="text-small text-muted">Subscribe to the {{'SITE_NAME' | app_config}} RSS feed.</p>
+					<p class="text-small text-muted">Subscribe to the {{SITE_NAME}} RSS feed.</p>
 
 					<div class="settings-section rounded">
 
@@ -352,7 +352,7 @@
 
 						<h2 class="h5" id="bio" name="bio">Your Profile</h2>
 
-						<p class="text-small text-muted">Edit how others see you on {{'SITE_NAME' | app_config}}.</p>
+						<p class="text-small text-muted">Edit how others see you on {{SITE_NAME}}.</p>
 
 						<div class="settings-section rounded mb-0">
 
