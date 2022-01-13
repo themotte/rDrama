@@ -2694,9 +2694,9 @@ pre {
 .text-small {
     font-size: 12px !important;
 }
-@media (max-width: 500px) {
+@media (max-width: 768px) {
     .text-small-mobile {
-        font-size: 70% !important;
+        font-size: 50% !important;
     }
 }
 
