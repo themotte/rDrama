@@ -538,7 +538,7 @@
 					<div id="message-reply-{{c.id}}" class="preview-edit mt-2"></div>
 				</div>
 			</div>
-		{% elif level<10 %}
+		{% elif level<10 or request.path == '/notifications' %}
 			<div id="replies-of-{{c.id}}">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}

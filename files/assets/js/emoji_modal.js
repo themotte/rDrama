@@ -697,7 +697,7 @@ const EMOJIS_STRINGS = [
 			"marseysalutenavy": {"author":"chiobu", "tags":"saluting semen o7 homosexual soldier"},
 			"marseysanders": {"author":"altaccountumbreon", "tags":"bernie rich socialism socialist jewish"},
 			"marseysanta": {"author":"pippy", "tags":"christmas gifts presents claus holiday"},
-			"marseysanta2": {"author":"unknown", "tags":"christmas gifts presents claus holiday"},
+			"marseysanta2": {"author":"elfbinn", "tags":"christmas gifts presents claus holiday"},
 			"marseysartre": {"author":"feynmandidnothingwrong", "tags":"philosophy frenchman history"},
 			"marseysaw": {"author":"dramarama", "tags":"doll horror halloween jigsaw monster evil torture game holiday"},
 			"marseyscared": {"author":"dramarama", "tags":"hide halloween afraid nervous holiday traumatized fearful"},
