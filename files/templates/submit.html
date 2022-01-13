@@ -194,13 +194,16 @@
 		</div>
 		{% endblock %}
 
+		<script data-cfasync="false">
+			let fetched_title = window.localStorage.getItem("post_title")
+			document.getElementById('post-title').value = fetched_title
+			let fetched_text = window.localStorage.getItem("post_text")
+			document.getElementById('post-text').value = fetched_text
+		</script>
+
 		<script src="/static/assets/js/marked.js?a=3"></script>
 		<script src="/static/assets/js/formatting.js?a=3"></script>
-		<script src="/static/assets/js/submit.js?a=3"></script>
-		<script>
-			function savetext() {
-			}
-		</script>
+		<script src="/static/assets/js/submit.js?a=4"></script>
 		{% include "emoji_modal.html" %}
 		{% include "gif_modal.html" %}
 
