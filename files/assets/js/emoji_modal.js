@@ -429,7 +429,7 @@ const EMOJIS_STRINGS = [
 			"marseygiveup": {"author":"chiobu", "tags":"despair reaction depression miserable fall over depressed falling over animated sad"},
 			"marseyglaceon": {"author":"sylveon", "tags":"trick or treat pokemon halloween eevee costume holiday"},
 			"marseyglaceonpat": {"author":"sylveon", "tags":"trick or treat pokemon petting halloween eevee reaction costume holiday animated patting"},
-			"marseyglam": {"author":"aca", "tags":"rocker pretty glamorous beautiful"},
+			"marseyglam": {"author":"unknown", "tags":"rocker pretty glamorous beautiful"},
 			"marseyglancing": {"author":"mom", "tags":"eyes animated nervous paranoid"},
 			"marseyglow2": {"author":"threeletteragent", "tags":"fbi mossad feds agent glownigger reaction glowie fed atf cia nsa"},
 			"marseyglowaward": {"author":"chiobu", "tags":"medal fbi ribbon animated glownigger retard glowie fed atf cia nsa"},
