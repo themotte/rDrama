@@ -22,7 +22,7 @@ site = environ.get("DOMAIN").strip()
 site_name = environ.get("SITE_NAME").strip()
 defaulttheme = environ.get("DEFAULT_THEME", "midnight").strip()
 defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
-defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
+defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "day").strip()
 cardview = bool(int(environ.get("CARD_VIEW", 1)))
 
 class User(Base):
