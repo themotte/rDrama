@@ -207,8 +207,8 @@ def monthly(v):
 
 	emails = [x['email'] for x in requests.get(f'https://api.gumroad.com/v2/products/{GUMROAD_ID}/subscribers', data=data, timeout=5).json()["subscribers"]]
 
-	for u in g.db.query(User).filter(User.patron > 0).all():
-		if u.patron == 5 or u.email and u.email.lower() in emails or u.id == 1379:
+	for u in g.db.query(User).filter(User.patron > 0, User.patron != 5).all():
+		if u.email and u.email.lower() in emails or u.id == 1379:
 			if u.patron == 1: procoins = 2500
 			elif u.patron == 2: procoins = 5000
 			elif u.patron == 3: procoins = 10000
@@ -216,8 +216,6 @@ def monthly(v):
 			elif u.patron == 5: procoins = 50000
 			else:
 				print(u.username)
-				u.patron = 0
-				g.db.add(u)
 				continue
 			u.procoins += procoins
 			g.db.add(u)
