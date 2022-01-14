@@ -1133,12 +1133,16 @@ def submit_post(v):
 		cache.delete_memoized(changeloglist)
 
 	if v.id in AUTO_UPVOTE_IDS:
-		autovote = Vote(user_id=TAX_RECEIVER_ID, submission_id=new_post.id, vote_type=1)
+		autovote = Vote(user_id=CARP_ID, submission_id=new_post.id, vote_type=1)
 		g.db.add(autovote)
-		v.coins += 1
-		v.truecoins += 1
+		autovote = Vote(user_id=AEVANN_ID, submission_id=new_post.id, vote_type=1)
+		g.db.add(autovote)
+		autovote = Vote(user_id=CRAT_ID, submission_id=new_post.id, vote_type=1)
+		g.db.add(autovote)
+		v.coins += 3
+		v.truecoins += 3
 		g.db.add(v)
-		new_post.upvotes += 1
+		new_post.upvotes += 3
 		g.db.add(new_post)
 
 	g.db.commit()

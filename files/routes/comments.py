@@ -507,12 +507,16 @@ def api_comment(v):
 	c.voted = 1
 	
 	if v.id in AUTO_UPVOTE_IDS:
-		autovote = CommentVote(user_id=TAX_RECEIVER_ID, comment_id=c.id, vote_type=1)
+		autovote = CommentVote(user_id=CARP_ID, comment_id=c.id, vote_type=1)
 		g.db.add(autovote)
-		v.coins += 1
-		v.truecoins += 1
+		autovote = CommentVote(user_id=AEVANN_ID, comment_id=c.id, vote_type=1)
+		g.db.add(autovote)
+		autovote = CommentVote(user_id=CRAT_ID, comment_id=c.id, vote_type=1)
+		g.db.add(autovote)
+		v.coins += 3
+		v.truecoins += 3
 		g.db.add(v)
-		c.upvotes += 1
+		c.upvotes += 3
 		g.db.add(c)
 
 	g.db.commit()
