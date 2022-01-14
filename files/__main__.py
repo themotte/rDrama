@@ -8,7 +8,6 @@ from flask_limiter import Limiter
 from flask_compress import Compress
 from flask_limiter.util import get_ipaddr
 from flask_mail import Mail
-
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
@@ -16,13 +15,14 @@ import gevent
 from werkzeug.middleware.proxy_fix import ProxyFix
 import redis
 import time
+from sys import stdout
+import faulthandler
 
 app = Flask(__name__, template_folder='templates')
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
-import faulthandler
 faulthandler.enable()
 
 app.config["SITE_NAME"]=environ.get("SITE_NAME").strip()
@@ -110,6 +110,7 @@ def before_request():
 def teardown_request(error):
 	if hasattr(g, 'db') and g.db:
 		g.db.close()
+	stdout.flush()
 
 @app.after_request
 def after_request(response):

@@ -124,7 +124,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False):
 
 
 	for i in re.finditer('https://i\.imgur\.com/(([^_]*?)\.(jpg|png|jpeg))', sanitized):
-		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d." + i.group(3) + "?maxwidth=9999")
+		sanitized = sanitized.replace(i.group(1), i.group(2) + "_d.webp?maxwidth=9999&fidelity=high")
 
 	if noimages:
 		sanitized = bleach.Cleaner(tags=no_images,

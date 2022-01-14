@@ -1167,9 +1167,9 @@ def submit_post(v):
 
 	g.db.commit()
 
-
 	if request.headers.get("Authorization"): return new_post.json
 	else:
+		new_post = get_post(new_post.id)
 		if 'megathread' in new_post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		new_post.replies = [c]

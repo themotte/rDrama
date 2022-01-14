@@ -64,11 +64,12 @@
 	</div>
 {% endif %}
 
-{% if v.id == 1 %}
-	<div class="custom-control custom-switch">
+{% if v.admin_level == 3 %}
+	<div class="custom-control custom-switch mt-3">
 		<input autocomplete="off" type="checkbox" class="custom-control-input" id="under_attack" name="under_attack" {% if x2 == "yes" %}checked{% endif %} onchange="post_toast('/admin/under_attack');">
 		<label class="custom-control-label" for="under_attack">Under attack mode</label>
 	</div>
-{% endif %}
 
+	<button class="btn btn-primary mt-3" onclick="post_toast('/admin/purge_cache');">PURGE CACHE</button>
+{% endif %}
 {% endblock %}
