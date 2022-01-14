@@ -1169,7 +1169,7 @@ def submit_post(v):
 
 	if request.headers.get("Authorization"): return new_post.json
 	else:
-		new_post = get_post(new_post.id)
+		new_post.voted = 1
 		if 'megathread' in new_post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
 		new_post.replies = [c]
