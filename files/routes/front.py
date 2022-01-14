@@ -1,6 +1,6 @@
 from files.helpers.wrappers import *
 from files.helpers.get import *
-from files.__main__ import app, cache
+from files.__main__ import app, cache, limiter
 from files.classes.submission import Submission
 
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
@@ -121,6 +121,7 @@ def notifications(v):
 
 @app.get("/")
 @app.get("/logged_out")
+@limiter.limit("3/second;30/minute;400/hour;2000/day")
 @auth_desired
 def front_all(v):
 
