@@ -323,3 +323,171 @@ blockquote {
 .mobile-nav-icon {
     color: var(--black1);
 }
+
+/*patch*/
+#frontpage .container {
+    margin-top: -22px
+}
+
+.table {
+    color: var(--black3)
+}
+
+:root {    
+    --gold: #f59e0b !important;
+    --pink: #ec72de !important;
+    --purple: #9333ea !important;
+    --bluecheck: #1DA1F2 !important;
+    --red-hover: #d2106c !important
+}
+
+#settings2 .text-muted {
+    color: var(--black3)!important;
+}
+
+.fa-robot {
+    color: var(--purple) !important;
+}
+
+.fa-broom {
+    color: var(--sticky) !important;
+}
+
+.post-title span.patron {
+    background-color: var(--purple)
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+    background-color: var(--red-hover) !important;
+    color: white!important;
+    border-color: var(--red-hover)
+}
+
+.dropdown-menu a:hover {
+    color: var(--red);
+    background-color: #fff;
+    font-weight: bold;
+}
+
+#frontpage .card-header div {
+    z-index: 2 !important;
+}
+
+#navbarResponsive .nav-link:hover i {
+    color: var(--red) !important;
+}
+
+.btn-secondary:focus, .btn-secondary.focus {
+    box-shadow: none;
+    background-color: white!important;
+    color: var(--red)!important;
+    border-color: var(--red);
+}
+
+.shop .btn {
+    border-color: var(--grey) !important;
+    background-color: var(--red) !important;
+}
+
+.nav-link.active {
+    font-weight: bold;
+}
+
+a.text-danger, button.text-danger {
+    color: #dc3545 !important
+}
+
+a.text-info, button.text-info {
+    color: var(--sticky) !important
+}
+
+label.custom-control-label::after, label.custom-control-label::before {
+    background-color: var(--black1) !important
+}
+
+.custom-control-input:checked ~ .custom-control-label::after {
+    background-color: var(--grey) !important;
+}
+
+#settings .sticky {
+    top: 70px;
+}
+
+.border-bottom {
+    border-bottom: 1px solid var(--grey) !important;
+}
+
+a.nav-link:hover {
+    color: white !important
+}
+
+.nav.settings-nav {
+    border: 1px solid var(--red-hover)
+}
+
+#thread .anchor.comment {
+    border-left: 2px solid var(--grey)!important;
+}  
+
+.anchor.comment.mt-0 {
+    border-left: none !important;
+}
+
+.notifs .anchor.comment {
+    border-left: none !important;
+}
+
+.notifs .comment-collapse-desktop {
+    border-left: 2px solid var(--grey)!important;
+}
+
+#userpage .nav.settings-nav {
+    border:none;
+}
+
+#userpage .btn-danger {
+    background-color:red !important;
+    color: white !important;
+    border-color: var(--gold) !important
+}
+
+#userpage .btn-success {
+    background-color: var(--sticky) !important;
+    color: white !important;
+    border-color: var(--gold) !important
+}
+
+#userpage .container-fluid.pb-0.text-center.bg-white.d-md-none {
+    margin-top: -32px !important;
+}
+
+#userpage .profile-pic-65 {
+    border-radius: 0;
+    border-color: transparent !important;
+}
+
+@media (max-width: 765px) { 
+    #frontpage .container {
+        margin-top: -35px
+    }   
+}
+
+#settings2 .nav.settings-nav .fas {
+    color: var(--grey) !important
+}
+
+#settings2 .nav-link.active .fas {
+    color: white !important
+}
+
+#settings2 .btn .fas {
+    color: white !important
+}
+
+#frontpage .settings .d-lg-flex {
+    display: block !important;
+}
+
+#frontpage .container .col-lg-8 {
+    background-image: none !important;
+}
