@@ -923,7 +923,7 @@ def remove_follow(username, v):
 @app.get("/uid/<id>/pic")
 @app.get("/uid/<id>/pic/profile")
 @limiter.exempt
-@auth_required
+@auth_desired
 def user_profile_uid(v, id):
 	try: id = int(id)
 	except:
