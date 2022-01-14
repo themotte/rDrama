@@ -29,13 +29,21 @@ def emojis(v):
 	return render_template("marseys.html", v=v, marseys=marsey_counted)
 
 @app.get("/terms")
-@auth_required
+@app.get("/logged_out/terms")
+@auth_desired
 def terms(v):
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
+	if v and request.path.startswith('/logged_out'): v = None
+
 	return render_template("terms.html", v=v)
 
 @app.get('/sidebar')
-@auth_required
+@app.get('/logged_out/sidebar')
+@auth_desired
 def sidebar(v):
+	if not v and not request.path.startswith('/logged_out'): return redirect(f"/logged_out{request.full_path}")
+	if v and request.path.startswith('/logged_out'): v = None
+
 	return render_template('sidebar.html', v=v)
 
 
