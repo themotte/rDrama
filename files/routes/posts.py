@@ -1039,8 +1039,8 @@ def submit_post(v):
 
 		
 	if not new_post.thumburl and new_post.url:
-		if request.host in new_post.url or new_post.url.startswith('/') or request.host == 'rdrama.net' and 'rdrama' in new_post.url:
-			new_post.thumburl = '/static/assets/images/{site_name}/site_preview.webp'
+		if request.host in new_post.url or new_post.url.startswith('/') or request.host == 'rdrama.net' and 'rdrama' in new_post.domain:
+			new_post.thumburl = f'/static/assets/images/{site_name}/site_preview.webp'
 		elif request.headers.get('cf-ipcountry')!="T1":
 			gevent.spawn( thumbnail_thread, new_post.id)
 
