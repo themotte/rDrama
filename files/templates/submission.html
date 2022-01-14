@@ -144,7 +144,7 @@
 <meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/preview.gif{% endif %}" >
 {% if p.is_video %}
-	<meta property="og:video" content="{{ p.realurl(v) }}" >
+	<meta property="og:video" content="{{p.realurl(v)}}" >
 {% endif %}
 <meta property="og:url" content="{{comment_info.permalink | full_link}}" >
 <meta property="og:site_name" content="{{request.host}}" >
@@ -169,7 +169,7 @@
 <meta property="og:title" content="{{p.plaintitle(v)}} - {{SITE_NAME}}" >
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/preview.gif{% endif %}" >
 {% if p.url and p.is_video %}
-<meta property="og:video" content="{{ p.realurl(v) }}" >
+<meta property="og:video" content="{{p.realurl(v)}}" >
 {% endif %}
 <meta property="og:url" content="{{p.permalink | full_link}}" >
 <meta property="og:site_name" content="{{request.host}}" >
@@ -295,7 +295,7 @@
 						<button id="unmark2-{{p.id}}" class="{% if not p.over_18 %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark2-{{p.id}}','unmark2-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-eye-evil text-center text-danger mr-3"></i>Unmark +18</button>
 
 						{% if v.id!=p.author_id %}
-							<button id="ban2-{{p.id}}" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')" class="{% if p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button"><i class="fas fa-user-minus mr-3"></i>Ban user</button>
+							<button id="ban2-{{p.id}}" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{p.author.id}}', '{{p.author.username}}')" class="{% if p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-danger text-left" role="button"><i class="fas fa-user-minus mr-3"></i>Ban user</button>
 							<button id="unban2-{{p.id}}" class="{% if not p.author.is_suspended %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-success text-left" role="button" onclick="post_toast2('/unban_user/{{p.author_id}}','ban2-{{p.id}}','unban2-{{p.id}}')" data-bs-dismiss="modal"><i class="fas fa-user-minus mr-3"></i>Unban user</button>
 						{% endif %}
 
@@ -370,7 +370,7 @@
 						<pre></pre>
 						<ul style="padding-left:20px; margin-bottom: 0;">
 							{% for f in p.flags %}
-								<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %} {% if v and v.admin_level > 1 %}<a role="button" onclick="post_toast('/del_report/p{{ f.id }}')">[remove]</a>{% endif %}</li>
+								<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %} {% if v and v.admin_level > 1 %}<a role="button" onclick="post_toast('/del_report/p{{f.id}}')">[remove]</a>{% endif %}</li>
 							{% endfor %}
 						</ul>
 					</div>
@@ -508,7 +508,7 @@
 							<div class="row no-gutters">
 								<div id="frontpage" class="col-12 pt-0">
 								<div class="posts" id="posts">
-									{{ p.embed_url | post_embed(v) | safe }}
+									{{p.embed_url | post_embed(v) | safe}}
 								</div>
 								</div>
 							</div>
@@ -610,7 +610,7 @@
 							{% endif %}
 
 							{% if v.admin_level > 1 and v.id!=p.author_id %}
-								<a id="ban-{{p.id}}" class="{% if p.author.is_suspended %}d-none{% endif %} list-inline-item text-danger" role="button" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{ p.author.id }}', '{{p.author.username}}')"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</a>
+								<a id="ban-{{p.id}}" class="{% if p.author.is_suspended %}d-none{% endif %} list-inline-item text-danger" role="button" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/post/{{p.id}}', '{{p.author.id}}', '{{p.author.username}}')"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</a>
 								<a id="unban-{{p.id}}" class="{% if not p.author.is_suspended %}d-none{% endif %} list-inline-item text-danger" id="unexile2-user-{{p.id}}" role="button" onclick="post_toast2('/unban_user/{{p.author_id}}','ban-{{p.id}}','unban-{{p.id}}')"><i class="fas fa-user-slash"></i>Unban user</a>
 							{% endif %}
 						{% endif %}
@@ -869,8 +869,8 @@
 
 		{% if "?context" not in request.full_path %}
 			const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
-			const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || { c: 0 }).c + 1)
-			comments['{{p.id}}'] = { c: newTotal, t: Date.now() }
+			const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || {c: 0}).c + 1)
+			comments['{{p.id}}'] = {c: newTotal, t: Date.now()}
 			window.localStorage.setItem("comment-counts", JSON.stringify(comments))
 		{% endif %}
 	})()

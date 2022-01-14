@@ -43,8 +43,8 @@
 						<div id="profilestuff" class="ml-3 w-100">
 							{% if u.is_suspended %}
 								<h5 class="text-primary">BANNED USER{% if u.ban_reason %}:
-									{% if u.ban_reason_link %}<a href="{{ u.ban_reason_link }}"><i class="fas fa-link"></i>{% endif %}
-										{{ u.ban_reason }}
+									{% if u.ban_reason_link %}<a href="{{u.ban_reason_link}}"><i class="fas fa-link"></i>{% endif %}
+										{{u.ban_reason}}
 									{% if u.ban_reason_link %}</a>{% endif %}
 								{% endif %}</h5>
 								{% if u.unban_utc %}<h5 class="text-primary">>{{u.unban_string}}</h5>{% endif %}

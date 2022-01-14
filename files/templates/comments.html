@@ -219,7 +219,7 @@
 				<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img alt="@{{c.author.username}}'s profile picture" loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and request.host == 'rdrama.net' %}class="mod"{% endif %}>{{c.author.username}}</span></a>
 				{% if c.author.customtitle %}&nbsp;<bdi style="color: #{{c.author.titlecolor}}">&nbsp;{% if c.author.quadrant %}<img alt="{{c.author.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{c.author.quadrant}}.webp?a=3">{% endif %}{{c.author.customtitle | safe}}</bdi>{% endif %}
 
-				{% if c.parent_comment_id and not standalone and level != 1 %}<a href="#comment-{{ c.parent_comment_id }}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{ c.parent_comment.author.username }}</a>{% endif %}
+				{% if c.parent_comment_id and not standalone and level != 1 %}<a href="#comment-{{c.parent_comment_id}}-only" class="text-muted ml-2"><i class="fas fa-reply fa-sm fa-fw fa-flip-horizontal mr-1"></i>{{c.parent_comment.author.username}}</a>{% endif %}
 
 				{% if c.created_utc %}
 					<span id="timestamp-{{c.id}}" onmouseover="timestamp('timestamp-{{c.id}}','{{c.created_utc}}')" data-bs-toggle="tooltip" data-bs-placement="bottom" class="time-stamp">&nbsp;{{c.age_string}}</span>
@@ -235,7 +235,7 @@
 				<pre></pre>
 				<ul style="padding-left:20px; margin-bottom: 0;">
 					{% for f in c.flags %}
-						<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %} {% if v and v.admin_level > 1 %}<a role="button" onclick="post_toast('/del_report/c{{ f.id }}')">[remove]</a>{% endif %}</li>
+						<li><a style="font-weight:bold" href="{{f.user.url}}">{{f.user.username}}</a>{% if f.reason %}: {{f.realreason(v) | safe}}{% endif %} {% if v and v.admin_level > 1 %}<a role="button" onclick="post_toast('/del_report/c{{f.id}}')">[remove]</a>{% endif %}</li>
 					{% endfor %}
 				</ul>
 			</div>
@@ -472,7 +472,7 @@
 						
 						{% if v and v.admin_level > 1 and v.id != c.author_id %}
 							<button id="unban-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if c.author.is_suspended %}d-md-inline-block{% endif %} text-success" id="unexile-comment-{{c.id}}" onclick="post_toast3('/unban_user/{{c.author_id}}','ban-{{c.id}}','unban-{{c.id}}')"><i class="fas fa-user-slash text-success fa-fw"></i>Unban user</button>
-							<button id="ban-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if not c.author.is_suspended %}d-md-inline-block{% endif %} text-danger" id="exile-comment-{{c.id}}" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{ c.author.id }}', '{{c.author.username}}')"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</button>
+							<button id="ban-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if not c.author.is_suspended %}d-md-inline-block{% endif %} text-danger" id="exile-comment-{{c.id}}" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{c.author.id}}', '{{c.author.username}}')"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</button>
 						{% endif %}
 						
 						{% if v and v.admin_level > 1 and c.oauth_app %}
@@ -647,7 +647,7 @@
 						{% endif %}
 
 						{% if v.id != c.author_id %}
-							<a id="ban2-{{c.id}}" class="{% if c.author.is_suspended %}d-none{% endif %} list-group-item text-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{ c.author.id }}', '{{c.author.username}}')" role="button"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</a>
+							<a id="ban2-{{c.id}}" class="{% if c.author.is_suspended %}d-none{% endif %} list-group-item text-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#banModal" onclick="banModal('/comment/{{c.id}}', '{{c.author.id}}', '{{c.author.username}}')" role="button"><i class="fas fa-user-slash text-danger fa-fw"></i>Ban user</a>
 							<a id="unban2-{{c.id}}" class="{% if not c.author.is_suspended %}d-none{% endif %} list-group-item text-success" role="button" onclick="post_toast2('/unban_user/{{c.author_id}}','ban2-{{c.id}}','unban2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-user-minus fa-fw text-success"></i>Unban user</a>
 						{% endif %}
 
