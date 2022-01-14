@@ -3592,7 +3592,7 @@ th {
     color: var(--black);
     overflow: hidden;
     padding-right: 10px !important;
-    padding-top: 5px !important;
+    padding-top: 10px !important;
 }
 .modal .comment-actions .list-group-item {
     border: none;
