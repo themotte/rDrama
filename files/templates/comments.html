@@ -369,7 +369,7 @@
 					<ul class="d-none d-md-flex list-inline text-right text-md-left"><li>
 						{% if v and request.path.startswith('/@') and v.admin_level == 0%}
 							{% if voted==1 %}
-								<button class="btn caction py-0 m-0 px-3 arrow-up mx-0 comment-{{c.id}}-up active"></button>
+								<button class="btn caction py-0 m-0 px-3 nobackground arrow-up mx-0 comment-{{c.id}}-up active"></button>
 							{% endif %}
 						{% elif v %}
 						
