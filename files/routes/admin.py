@@ -383,7 +383,7 @@ def disable_signups(v):
 @app.post("/admin/purge_cache")
 @admin_level_required(3)
 def purge_cache(v):
-	response = str(requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_everything', headers=CF_HEADERS, data={"purge_everything":"true"}))
+	response = str(requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={"purge_everything":"true"}))
 	print(response)
 	if response == "<Response [200]>": return {"message": "Cache purged!"}
 	return {"error": "Failed to purge cache."}
