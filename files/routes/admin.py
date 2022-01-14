@@ -1,7 +1,6 @@
 import time
 from os import remove
 from PIL import Image as IMAGE
-
 from files.helpers.wrappers import *
 from files.helpers.alerts import *
 from files.helpers.sanitize import *
@@ -11,11 +10,12 @@ from files.helpers.images import *
 from files.helpers.const import *
 from files.classes import *
 from flask import *
-from files.__main__ import app, cache, limiter
+from files.__main__ import app, cache, limiter, db_session
 from .front import frontlist
 from files.helpers.discord import add_role
 from datetime import datetime
 import requests
+import gevent
 
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
@@ -29,6 +29,27 @@ if SITE_NAME == 'PCM': cc = "splash mountain"
 else: cc = "country club"
 month = datetime.now().strftime('%B')
 
+def counter():
+	print('fuc', flush=True)
+	db = db_session()
+	marsey_count = {}
+	index = 0
+	for k, val in marseys.items():
+		count = db.query(Comment.id).where(Comment.body.like(f'%{k}:%')).count()
+		marsey_count[k] = count
+		index += 1 
+		print(f'{index}- {k}: {count}', flush=True)
+	db.close()
+
+	with open('marsey_count.json', 'w') as f: dump(marsey_count, f)
+	print('success', flush=True)
+
+@app.get("/admin/count")
+@limiter.limit('1/day')
+@admin_level_required(3)
+def count(v):
+	if v.username == 'Aevann': gevent.spawn(counter)
+	return 'sex'
 
 @app.post("/@<username>/make_admin")
 @limiter.limit("1/second")
@@ -380,14 +401,6 @@ def disable_signups(v):
 			return {"message": "Signups disabled!"}
 
 
-@app.post("/admin/purge_cache")
-@admin_level_required(3)
-def purge_cache(v):
-	response = str(requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data='{"purge_everything":true}'))
-	if response == "<Response [200]>": return {"message": "Cache purged!"}
-	return {"error": "Failed to purge cache."}
-
-
 @app.post("/admin/under_attack")
 @admin_level_required(2)
 def under_attack(v):
@@ -402,8 +415,9 @@ def under_attack(v):
 			)
 			g.db.add(ma)
 			g.db.commit()
+			data='{"value":"high"}'
 
-			response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"medium"}'))
+			response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data))
 			if response == "<Response [200]>": return {"message": "Under attack mode disabled!"}
 			return {"error": "Failed to disable under attack mode."}
 		else:
@@ -414,8 +428,9 @@ def under_attack(v):
 			)
 			g.db.add(ma)
 			g.db.commit()
+			data='{"value":"under_attack"}'
 
-			response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data='{"value":"under_attack"}'))
+			response = str(requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data))
 			if response == "<Response [200]>": return {"message": "Under attack mode enabled!"}
 			return {"error": "Failed to enable under attack mode."}
 
@@ -446,6 +461,7 @@ def badge_grant_post(v):
 		return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, error="User already has that badge.")
 	
 	new_badge = Badge(badge_id=badge_id, user_id=user.id)
+	send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 
 	desc = request.values.get("description")
 	if desc: new_badge.description = desc
@@ -854,12 +870,14 @@ def admin_title_change(user_id, v):
 
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
+	if user.admin_level != 0: abort(403)
+
 	new_name=request.values.get("title").strip()[:256]
 
 	user.customtitleplain=new_name
-	new_name = filter_emojis_only(new_name)
+	new_name = sanitize(new_name)
 
-	user=g.db.query(User).filter_by(id=user.id).one_or_none()
+	user=g.db.query(User).with_for_update().filter_by(id=user.id).one_or_none()
 	user.customtitle=new_name
 	if request.values.get("locked"): user.flairchanged = int(time.time()) + 2629746
 	g.db.add(user)
@@ -885,29 +903,26 @@ def ban_user(user_id, v):
 	
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
-	if not user: abort(404)
-
 	if user.admin_level >= v.admin_level: abort(403)
 
 	days = float(request.values.get("days")) if request.values.get('days') else 0
+	reason = sanitize(request.values.get("reason", ""))[:256]
+	message = request.values.get("reason", "").strip()[:256]
 
-	reason = request.values.get("reason", "").strip()[:256]
-	passed_reason = filter_emojis_only(reason)
+	if not user: abort(400)
 
-	if len(passed_reason) > 256: passed_reason = reason
-
-	user.ban(admin=v, reason=passed_reason, days=days)
+	user.ban(admin=v, reason=reason, days=days)
 
 	if request.values.get("alts"):
 		for x in user.alts:
 			if x.admin_level: break
-			user.ban(admin=v, reason=passed_reason, days=days)
+			user.ban(admin=v, reason=reason, days=days)
 
 	if days:
-		if reason: text = f"Your account has been suspended for {days} days for the following reason:\n\n> {reason}"
+		if message: text = f"Your account has been suspended for {days} days for the following reason:\n\n> {message}"
 		else: text = f"Your account has been suspended for {days} days."
 	else:
-		if reason: text = f"Your account has been permanently suspended for the following reason:\n\n> {reason}"
+		if message: text = f"Your account has been permanently suspended for the following reason:\n\n> {message}"
 		else: text = "Your account has been permanently suspended."
 
 	send_repeatable_notification(user.id, text)

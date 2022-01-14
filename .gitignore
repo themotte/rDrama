@@ -4,7 +4,6 @@ video.webm
 cache/
 __pycache__/
 disable_signups
-marsey_count.json
 under_attack
 .idea/
 **/.pytest_cache/
@@ -12,3 +11,4 @@ venv/
 .vscode/
 .sass-cache/
 flask_session/
+marsey_count.json
