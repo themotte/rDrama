@@ -761,10 +761,7 @@ CREATE TABLE public.users (
     bird integer,
     fish boolean,
     lootboxes_bought integer,
-    oldsite boolean,
-    theme2 character varying(30),
-    progressivestack integer,
-    compact boolean
+    progressivestack integer
 );
 
 

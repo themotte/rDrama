@@ -85,17 +85,9 @@ def settings_profile_post(v):
 		updated = True
 		v.oldreddit = request.values.get("oldreddit", None) == 'true'
 
-	elif request.values.get("oldsite", v.oldsite) != v.oldsite:
-		updated = True
-		v.oldsite = request.values.get("oldsite", None) == 'true'
-
 	elif request.values.get("teddit", v.teddit) != v.teddit:
 		updated = True
 		v.teddit = request.values.get("teddit", None) == 'true'
-
-	elif request.values.get("compact", v.compact) != v.compact:
-		updated = True
-		v.compact = request.values.get("compact", None) == 'true'
 
 	elif request.values.get("nitter", v.nitter) != v.nitter:
 		updated = True
@@ -346,11 +338,6 @@ def settings_profile_post(v):
 			if theme == "win98": v.themecolor = "30409f"
 			updated = True
 		else: abort(400)
-
-	theme2 = request.values.get("theme2")
-	if theme2:
-		v.theme2 = theme2
-		updated = True
 
 	quadrant = request.values.get("quadrant")
 	if quadrant and request.host == 'pcmemes.net'.lower():
