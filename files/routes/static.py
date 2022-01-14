@@ -82,9 +82,7 @@ def participation_stats(v):
 			}
 
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/content_stats.html", v=v, title="Content Statistics", data=data)
+	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
 
 
 @app.get("/chart")
@@ -177,9 +175,7 @@ def cached_chart(days):
 def patrons(v):
 	users = g.db.query(User).filter(User.patron > 0).order_by(User.patron.desc(), User.id).all()
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}patrons.html", v=v, users=users)
+	return render_template("patrons.html", v=v, users=users)
 
 @app.get("/admins")
 @app.get("/badmins")
@@ -189,9 +185,7 @@ def admins(v):
 		admins = g.db.query(User).filter(User.admin_level>1).order_by(User.truecoins.desc()).all()
 		admins += g.db.query(User).filter(User.admin_level==1).order_by(User.truecoins.desc()).all()
 	else: admins = g.db.query(User).filter(User.admin_level>0).order_by(User.truecoins.desc()).all()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admins.html", v=v, admins=admins)
+	return render_template("admins.html", v=v, admins=admins)
 
 
 @app.get("/log")
@@ -224,9 +218,7 @@ def log(v):
 
 	admins = [x[0] for x in g.db.query(User.username).filter(User.admin_level > 1).all()]
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
+	return render_template("log.html", v=v, admins=admins, types=types, admin=admin, type=kind, actions=actions, next_exists=next_exists, page=page)
 
 @app.get("/log/<id>")
 @auth_required
@@ -250,9 +242,7 @@ def log_item(id, v):
 	if v and v.admin_level > 1: types = ACTIONTYPES
 	else: types = ACTIONTYPES2
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
+	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
 @app.get("/static/assets/favicon.ico")
 def favicon():
@@ -261,9 +251,7 @@ def favicon():
 @app.get("/api")
 @auth_required
 def api(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}api.html", v=v)
+	return render_template("api.html", v=v)
 
 @app.get("/contact")
 @app.get("/press")
@@ -271,9 +259,7 @@ def api(v):
 @auth_required
 def contact(v):
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}contact.html", v=v)
+	return render_template("contact.html", v=v)
 
 @app.post("/send_admin")
 @limiter.limit("1/second")
@@ -317,9 +303,7 @@ def submit_contact(v):
 		g.db.add(notif)
 
 	g.db.commit()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}contact.html", v=v, msg="Your message has been sent.")
+	return render_template("contact.html", v=v, msg="Your message has been sent.")
 
 @app.get('/archives')
 @auth_required
@@ -382,17 +366,13 @@ def settings(v):
 def settings_profile(v):
 
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}settings_profile.html",
+	return render_template("settings_profile.html",
 						   v=v)
 
 @app.get("/badges")
 @auth_required
 def badges(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}badges.html", v=v, badges=BADGES)
+	return render_template("badges.html", v=v, badges=BADGES)
 
 @app.get("/blocks")
 @auth_required
@@ -406,26 +386,20 @@ def blocks(v):
 		users.append(get_account(x.user_id))
 		targets.append(get_account(x.target_id))
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}blocks.html", v=v, users=users, targets=targets)
+	return render_template("blocks.html", v=v, users=users, targets=targets)
 
 @app.get("/banned")
 @auth_required
 def banned(v):
 
 	users = [x for x in g.db.query(User).filter(User.is_banned > 0, User.unban_utc == 0).all()]
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}banned.html", v=v, users=users)
+	return render_template("banned.html", v=v, users=users)
 
 @app.get("/formatting")
 @auth_required
 def formatting(v):
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}formatting.html", v=v)
+	return render_template("formatting.html", v=v)
 
 @app.get("/service-worker.js")
 @auth_required
@@ -436,10 +410,7 @@ def serviceworker(v):
 @auth_required
 def settings_security(v):
 
-
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}settings_security.html",
+	return render_template("settings_security.html",
 						   v=v,
 						   mfa_secret=pyotp.random_base32() if not v.mfa_secret else None
 						   )

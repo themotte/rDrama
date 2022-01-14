@@ -13,11 +13,8 @@ defaultcolor = environ.get("DEFAULT_COLOR").strip()
 @limiter.limit("5/second;60/minute;200/hour")
 @auth_required
 def admin_vote_info_get(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-
 	link = request.values.get("link")
-	if not link: return render_template(f"{template}votes.html", v=v)
+	if not link: return render_template("votes.html", v=v)
 
 	try:
 		if "t2_" in link: thing = get_post(int(link.split("t2_")[1]), v=v)
@@ -59,10 +56,7 @@ def admin_vote_info_get(v):
 
 	else: abort(400)
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-
-	return render_template(f"{template}votes.html",
+	return render_template("votes.html",
 						   v=v,
 						   thing=thing,
 						   ups=ups,

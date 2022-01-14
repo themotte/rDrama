@@ -13,9 +13,7 @@ def authorize_prompt(v):
 	client_id = request.values.get("client_id")
 	application = g.db.query(OauthApp).filter_by(client_id=client_id).one_or_none()
 	if not application: return {"oauth_error": "Invalid `client_id`"}, 401
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}oauth.html", v=v, application=application)
+	return render_template("oauth.html", v=v, application=application)
 
 
 @app.post("/authorize")
@@ -217,9 +215,7 @@ def admin_app_id(v, aid):
 
 	posts=get_posts(pids, v=v)
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/app.html",
+	return render_template("admin/app.html",
 						   v=v,
 						   app=oauth,
 						   listing=posts,
@@ -246,9 +242,7 @@ def admin_app_id_comments(v, aid):
 	comments=get_comments(cids, v=v)
 
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/app.html",
+	return render_template("admin/app.html",
 						   v=v,
 						   app=oauth,
 						   comments=comments,
@@ -263,9 +257,7 @@ def admin_apps_list(v):
 
 	apps = g.db.query(OauthApp).order_by(OauthApp.id.desc()).all()
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/apps.html", v=v, apps=apps)
+	return render_template("admin/apps.html", v=v, apps=apps)
 
 
 @app.post("/oauth/reroll/<aid>")

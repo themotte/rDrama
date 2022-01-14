@@ -47,17 +47,13 @@ db.close()
 def grassed(v):
 	users = g.db.query(User).filter(User.ban_reason.like('grass award used by @%')).all()
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}grassed.html", v=v, users=users)
+	return render_template("grassed.html", v=v, users=users)
 
 @app.get("/agendaposters")
 @auth_required
 def agendaposters(v):
 	users = [x for x in g.db.query(User).filter_by(agendaposter = True).order_by(User.username).all()]
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}agendaposters.html", v=v, users=users)
+	return render_template("agendaposters.html", v=v, users=users)
 
 
 @app.get("/@<username>/upvoters")
@@ -77,9 +73,7 @@ def upvoters(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}voters.html", v=v, users=users, name='Up', name2=f'@{username} biggest simps')
+	return render_template("voters.html", v=v, users=users, name='Up', name2=f'@{username} biggest simps')
 
 @app.get("/@<username>/downvoters")
 @auth_required
@@ -98,9 +92,7 @@ def downvoters(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}voters.html", v=v, users=users, name='Down', name2=f'@{username} biggest haters')
+	return render_template("voters.html", v=v, users=users, name='Down', name2=f'@{username} biggest haters')
 
 @app.get("/@<username>/upvoting")
 @auth_required
@@ -119,9 +111,7 @@ def upvoting(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}voters.html", v=v, users=users, name='Up', name2=f'Who @{username} simps for')
+	return render_template("voters.html", v=v, users=users, name='Up', name2=f'Who @{username} simps for')
 
 @app.get("/@<username>/downvoting")
 @auth_required
@@ -140,9 +130,7 @@ def downvoting(v, username):
 
 	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}voters.html", v=v, users=users, name='Down', name2=f'Who @{username} hates')
+	return render_template("voters.html", v=v, users=users, name='Down', name2=f'Who @{username} hates')
 
 @app.post("/pay_rent")
 @limiter.limit("1/second")
@@ -202,9 +190,7 @@ def steal(v):
 @auth_required
 def rentoids(v):
 	users = g.db.query(User).filter(User.rent_utc > 0).all()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}rentoids.html", v=v, users=users)
+	return render_template("rentoids.html", v=v, users=users)
 
 
 @app.get("/thiefs")
@@ -213,9 +199,7 @@ def thiefs(v):
 	successful = g.db.query(User).filter(User.steal_utc > 0).all()
 	failed = g.db.query(User).filter(User.fail_utc > 0).all()
 	failed2 = g.db.query(User).filter(User.fail2_utc > 0).all()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}thiefs.html", v=v, successful=successful, failed=failed, failed2=failed2)
+	return render_template("thiefs.html", v=v, successful=successful, failed=failed, failed2=failed2)
 
 
 @app.post("/@<username>/suicide")
@@ -308,9 +292,6 @@ def transfer_bux(v, username):
 @app.get("/leaderboard")
 @auth_required
 def leaderboard(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-
 	users = g.db.query(User)
 	users1 = users.order_by(User.coins.desc()).limit(25).all()
 	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
@@ -344,7 +325,7 @@ def leaderboard(v):
 	if request.host == 'rdrama.net': users13 = topmakers
 	else: users13 = None
 
-	return render_template(f"{template}leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9, users10=users10, users12=users12, users13=users13, users15=users15)
+	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9, users10=users10, users12=users12, users13=users13, users15=users15)
 
 
 @app.get("/@<username>/css")
@@ -520,9 +501,7 @@ def messagereply(v):
 			g.db.add(notif)
 	g.db.commit()
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}comments.html", v=v, comments=[new_comment])
+	return render_template("comments.html", v=v, comments=[new_comment])
 
 @app.get("/2faqr/<secret>")
 @auth_required
@@ -582,30 +561,21 @@ def redditor_moment_redirect(username, v):
 def followers(username, v):
 	u = get_user(username, v=v)
 	users = g.db.query(User).join(Follow, Follow.target_id == u.id).filter(Follow.user_id == User.id).order_by(Follow.id).all()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}followers.html", v=v, u=u, users=users)
+	return render_template("followers.html", v=v, u=u, users=users)
 
 @app.get("/@<username>/following")
 @auth_required
 def following(username, v):
 	u = get_user(username, v=v)
 	users = g.db.query(User).join(Follow, Follow.user_id == u.id).filter(Follow.target_id == User.id).order_by(Follow.id).all()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}following.html", v=v, u=u, users=users)
+	return render_template("following.html", v=v, u=u, users=users)
 
 @app.get("/views")
 @auth_required
 def visitors(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-
-	if request.host == 'rdrama.net' and v.admin_level < 1 and not v.patron: return render_template(f"{template}errors/patron.html", v=v)
+	if request.host == 'rdrama.net' and v.admin_level < 1 and not v.patron: return render_template("errors/patron.html", v=v)
 	viewers=sorted(v.viewers, key = lambda x: x.last_view_utc, reverse=True)
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}viewers.html", v=v, viewers=viewers)
+	return render_template("viewers.html", v=v, viewers=viewers)
 
 
 @app.get("/@<username>")
@@ -628,9 +598,7 @@ def u_username(username, v=None):
 
 	if u.reserved:
 		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}userpage_reserved.html", u=u, v=v)
+		return render_template("userpage_reserved.html", u=u, v=v)
 
 	if v and u.id != v.id:
 		view = g.db.query(ViewerRelationship).filter(
@@ -655,28 +623,20 @@ def u_username(username, v=None):
 		if v and u.id == LLM_ID:
 			if int(time.time()) - v.rent_utc > 600:
 				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-				if not v or v.oldsite: template = ''
-				else: template = 'CHRISTMAS/'
-				return render_template(f"{template}userpage_private.html", time=int(time.time()), u=u, v=v)
+				return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 		else:
 			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-			if not v or v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}userpage_private.html", time=int(time.time()), u=u, v=v)
+			return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}userpage_blocking.html", u=u, v=v)
+		return render_template("userpage_blocking.html", u=u, v=v)
 
 
 	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}userpage_blocked.html", u=u, v=v)
+		return render_template("userpage_blocked.html", u=u, v=v)
 
 
 	sort = request.values.get("sort", "new")
@@ -700,9 +660,7 @@ def u_username(username, v=None):
 
 	if u.unban_utc:
 		if request.headers.get("Authorization"): {"data": [x.json for x in listing]}
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}userpage.html",
+		return render_template("userpage.html",
 												unban=u.unban_string,
 												u=u,
 												v=v,
@@ -716,9 +674,7 @@ def u_username(username, v=None):
 
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}userpage.html",
+	return render_template("userpage.html",
 									u=u,
 									v=v,
 									listing=listing,
@@ -750,9 +706,7 @@ def u_username_comments(username, v=None):
 
 	if u.reserved:
 		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}userpage_reserved.html",
+		return render_template("userpage_reserved.html",
 												u=u,
 												v=v)
 
@@ -761,26 +715,18 @@ def u_username_comments(username, v=None):
 		if v and u.id == LLM_ID:
 			if int(time.time()) - v.rent_utc > 600:
 				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-				if not v or v.oldsite: template = ''
-				else: template = 'CHRISTMAS/'
-				return render_template(f"{template}userpage_private.html", time=int(time.time()), u=u, v=v)
+				return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 		else:
 			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
-			if not v or v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}userpage_private.html", time=int(time.time()), u=u, v=v)
+			return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
 		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}userpage_blocking.html", u=u, v=v)
+		return render_template("userpage_blocking.html", u=u, v=v)
 
 	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
 		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}userpage_blocked.html", u=u, v=v)
+		return render_template("userpage_blocked.html", u=u, v=v)
 
 
 	page = max(int(request.values.get("page", "1")), 1)
@@ -831,9 +777,7 @@ def u_username_comments(username, v=None):
 	is_following = (v and user.has_follower(v))
 
 	if request.headers.get("Authorization"): return {"data": [c.json for c in listing]}
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}userpage_comments.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
+	return render_template("userpage_comments.html", u=user, v=v, listing=listing, page=page, sort=sort, t=t,next_exists=next_exists, is_following=is_following, standalone=True)
 
 
 @app.get("/@<username>/info")
@@ -954,9 +898,7 @@ def saved_posts(v, username):
 	listing = get_posts(ids, v=v)
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}userpage.html",
+	return render_template("userpage.html",
 											u=v,
 											v=v,
 											listing=listing,
@@ -984,9 +926,7 @@ def saved_comments(v, username):
 
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in listing]}
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}userpage_comments.html",
+	return render_template("userpage_comments.html",
 											u=v,
 											v=v,
 											listing=listing,

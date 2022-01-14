@@ -32,9 +32,6 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 	if v and request.path.startswith('/logged_out'): v = None
 	
-	if not v or v.oldsite: template2 = ''
-	else: template2 = 'CHRISTMAS/'
-
 	try: cid = int(cid)
 	except:
 		try: cid = int(cid, 36)
@@ -522,9 +519,7 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}comments.html", v=v, comments=[c])
+	return render_template("comments.html", v=v, comments=[c])
 
 
 
@@ -588,9 +583,7 @@ def edit_comment(cid, v):
 			if ban.reason: reason += f" {ban.reason}"	
 		
 			if request.headers.get("Authorization"): return {'error': 'A blacklisted domain was used.'}, 400
-			if not v or v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}comment_failed.html",
+			return render_template("comment_failed.html",
 													action=f"/edit_comment/{c.id}",
 													badlinks=[x.domain for x in bans],
 													body=body,
