@@ -411,26 +411,14 @@ def edit_post(pid, v):
 	if len(body) > 10000: return {"error":"Character limit is 10000!"}, 403
 
 	if v.marseyawarded:
-		if time.time() > v.marseyawarded:
-			v.marseyawarded = None
-			g.db.add(v)
-		else:
-			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
+		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
+		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+		if body:
+			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
-			if body:
-				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
-				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
-	if v.longpost:
-		if time.time() > v.longpost:
-			v.longpost = None
-			g.db.add(v)
-		elif len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
-	elif v.bird:
-		if time.time() > v.bird:
-			v.bird = None
-			g.db.add(v)
-		elif len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
+	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
+	elif v.bird and len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
 	if title != p.title:
 		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
@@ -818,26 +806,14 @@ def submit_post(v):
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
 
 	if v.marseyawarded:
-		if time.time() > v.marseyawarded:
-			v.marseyawarded = None
-			g.db.add(v)
-		else:
-			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
+		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
+		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
+		if body:
+			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
-			if body:
-				marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
-				if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
-	if v.longpost:
-		if time.time() > v.longpost:
-			v.longpost = None
-			g.db.add(v)
-		elif len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
-	elif v.bird:
-		if time.time() > v.bird:
-			v.bird = None
-			g.db.add(v)
-		elif len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
+	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
+	elif v.bird and len(body) > 140: return {"error":"You have to type less than 140 characters!"}, 403
 
 	dup = g.db.query(Submission).filter(
 		Submission.author_id == v.id,
