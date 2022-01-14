@@ -4075,9 +4075,9 @@ pre .com, code .com {
     #thread, #userpage {
         background-color: var(--gray-600);
 }
-    .custom-gutters {
-        padding-left: 0;
-        padding-right: 0;
+    .custom-gutters, .user-gutters {
+        padding-left: 2px;
+        padding-right: 2px;
 }
     .navbar.bg-primary {
         background-color: var(--dark) !important;
