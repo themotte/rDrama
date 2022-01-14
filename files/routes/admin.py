@@ -264,9 +264,7 @@ def post_sidebar(v):
 def shadowbanned(v):
 	if not (v and v.admin_level > 1): abort(404)
 	users = [x for x in g.db.query(User).filter(User.shadowbanned != None).order_by(User.shadowbanned).all()]
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}shadowbanned.html", v=v, users=users)
+	return render_template("shadowbanned.html", v=v, users=users)
 
 
 @app.get("/admin/image_posts")
@@ -284,9 +282,7 @@ def image_posts_listing(v):
 	next_exists = (len(posts) > 25)
 	posts = get_posts(posts[:25], v=v)
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/image_posts.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
+	return render_template("admin/image_posts.html", v=v, listing=posts, next_exists=next_exists, page=page, sort="new")
 
 
 @app.get("/admin/reported/posts")
@@ -306,9 +302,7 @@ def reported_posts(v):
 
 	listing = get_posts(listing, v=v)
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/reported_posts.html",
+	return render_template("admin/reported_posts.html",
 						   next_exists=next_exists, listing=listing, page=page, v=v)
 
 
@@ -330,9 +324,7 @@ def reported_comments(v):
 
 	listing = get_comments(listing, v=v)
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/reported_comments.html",
+	return render_template("admin/reported_comments.html",
 						   next_exists=next_exists,
 						   listing=listing,
 						   page=page,
@@ -346,11 +338,7 @@ def admin_home(v):
 	with open('disable_signups', 'r') as f: x = f.read()
 	with open('under_attack', 'r') as f: x2 = f.read()
 
-	if not v or v.oldsite: return render_template("admin/admin_home.html", v=v, x=x, x2=x2)
-
-	actions = g.db.query(ModAction).order_by(ModAction.id.desc()).limit(10).all()
-
-	return render_template("CHRISTMAS/admin/admin_home.html", actions=actions, v=v, x=x, x2=x2)
+	return render_template("admin/admin_home.html", v=v, x=x, x2=x2)
 
 @app.post("/admin/disable_signups")
 @admin_level_required(3)
@@ -420,28 +408,23 @@ def under_attack(v):
 @app.get("/admin/badge_grant")
 @admin_level_required(2)
 def badge_grant_get(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
 
-	return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES)
+	return render_template("admin/badge_grant.html", v=v, badge_types=BADGES)
 
 
 @app.post("/admin/badge_grant")
 @limiter.limit("1/second")
 @admin_level_required(2)
 def badge_grant_post(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-
 	user = get_user(request.values.get("username").strip(), graceful=True)
 	if not user:
-		return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, error="User not found.")
+		return render_template("admin/badge_grant.html", v=v, badge_types=BADGES, error="User not found.")
 
 	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
 
 	if user.has_badge(badge_id):
-		return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, error="User already has that badge.")
+		return render_template("admin/badge_grant.html", v=v, badge_types=BADGES, error="User already has that badge.")
 	
 	new_badge = Badge(badge_id=badge_id, user_id=user.id)
 
@@ -458,29 +441,23 @@ def badge_grant_post(v):
 		send_notification(user.id, text)
 	
 	g.db.commit()
-	return render_template(f"{template}admin/badge_grant.html", v=v, badge_types=BADGES, msg="Badge granted!")
+	return render_template("admin/badge_grant.html", v=v, badge_types=BADGES, msg="Badge granted!")
 
 
 
 @app.get("/admin/badge_remove")
 @admin_level_required(2)
 def badge_remove_get(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-
-	return render_template(f"{template}admin/badge_remove.html", v=v, badge_types=BADGES)
+	return render_template("admin/badge_remove.html", v=v, badge_types=BADGES)
 
 
 @app.post("/admin/badge_remove")
 @limiter.limit("1/second")
 @admin_level_required(2)
 def badge_remove_post(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-
 	user = get_user(request.values.get("username").strip(), graceful=True)
 	if not user:
-		return render_template(f"{template}admin/badge_remove.html", v=v, badge_types=BADGES, error="User not found.")
+		return render_template("admin/badge_remove.html", v=v, badge_types=BADGES, error="User not found.")
 
 	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
@@ -490,7 +467,7 @@ def badge_remove_post(v):
 		g.db.delete(badge)
 		g.db.commit()
 	
-	return render_template(f"{template}admin/badge_remove.html", v=v, badge_types=BADGES, msg="Badge removed!")
+	return render_template("admin/badge_remove.html", v=v, badge_types=BADGES, msg="Badge removed!")
 
 
 @app.get("/admin/users")
@@ -508,9 +485,7 @@ def users_list(v):
 	next_exists = (len(users) > 25)
 	users = users[:25]
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/new_users.html",
+	return render_template("admin/new_users.html",
 						   v=v,
 						   users=users,
 						   next_exists=next_exists,
@@ -522,9 +497,7 @@ def users_list(v):
 def alt_votes_get(v):
 
 	if not request.values.get("u1") or not request.values.get("u2"):
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}admin/alt_votes.html", v=v)
+		return render_template("admin/alt_votes.html", v=v)
 
 	u1 = request.values.get("u1")
 	u2 = request.values.get("u2")
@@ -620,9 +593,7 @@ def alt_votes_get(v):
 		data['u2_only_comment_downs'] // len(
 			u2_comment_downs) if u2_comment_downs else 0
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/alt_votes.html",
+	return render_template("admin/alt_votes.html",
 						   u1=u1,
 						   u2=u2,
 						   v=v,
@@ -666,9 +637,7 @@ def admin_removed(v):
 
 	posts = get_posts(ids, v=v)
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/removed_posts.html",
+	return render_template("admin/removed_posts.html",
 						   v=v,
 						   listing=posts,
 						   page=page,
@@ -692,9 +661,7 @@ def admin_removed_comments(v):
 
 	comments = get_comments(ids, v=v)
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/removed_comments.html",
+	return render_template("admin/removed_comments.html",
 						   v=v,
 						   listing=comments,
 						   page=page,
@@ -1242,9 +1209,7 @@ def admin_dump_cache(v):
 def admin_banned_domains(v):
 
 	banned_domains = g.db.query(BannedDomain).all()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}admin/banned_domains.html", v=v, banned_domains=banned_domains)
+	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
 @app.post("/admin/banned_domains")
 @limiter.limit("1/second")

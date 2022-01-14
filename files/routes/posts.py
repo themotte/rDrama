@@ -87,9 +87,7 @@ def publish(pid, v):
 @app.get("/submit")
 @auth_required
 def submit_get(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}submit.html",
+	return render_template("submit.html",
 						   v=v)
 
 @app.get("/post/<pid>")
@@ -98,9 +96,6 @@ def submit_get(v):
 @app.get("/logged_out/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None):
-	if not v or v.oldsite: template2 = ''
-	else: template2 = 'CHRISTMAS/'
-
 	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
 
 	if v and request.path.startswith('/logged_out'): v = None
@@ -337,9 +332,7 @@ def viewmore(v, pid, sort, offset):
 	if len(comments) == len(comments2): offset = None
 	comments = comments2
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}comments.html", v=v, comments=comments, render_replies=True, pid=pid, sort=sort, offset=offset)
+	return render_template("comments.html", v=v, comments=comments, render_replies=True, pid=pid, sort=sort, offset=offset)
 
 
 @app.post("/morecomments/<cid>")
@@ -388,9 +381,7 @@ def morecomments(v, cid):
 		c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 		comments = c.replies
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}comments.html", v=v, comments=comments, render_replies=True)
+	return render_template("comments.html", v=v, comments=comments, render_replies=True)
 
 @app.post("/edit_post/<pid>")
 @limiter.limit("1/second")
@@ -700,8 +691,6 @@ def submit_post(v):
 		if request.content_length > 8 * 1024 * 1024: return {"error": "Max file size is 8 MB."}, 413
 	elif request.content_length > 4 * 1024 * 1024: return {"error": "Max file size is 4 MB."}, 413
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
 
 	title = request.values.get("title", "").strip()[:500].replace('‎','')
 
@@ -766,9 +755,7 @@ def submit_post(v):
 		domain_obj = get_domain(domain)
 		if domain_obj:
 			if request.headers.get("Authorization"): return {"error":domain_obj.reason}, 400
-			if not v or v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}submit.html", v=v, error=domain_obj.reason, title=title, url=url, body=request.values.get("body", "")), 400
+			return render_template("submit.html", v=v, error=domain_obj.reason, title=title, url=url, body=request.values.get("body", "")), 400
 		elif "twitter.com" == domain:
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
 			except: embed = None
@@ -790,15 +777,11 @@ def submit_post(v):
 
 	if not url and not request.values.get("body") and not request.files.get("file", None):
 		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
+		return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if not title:
 		if request.headers.get("Authorization"): return {"error": "Please enter a better title"}, 400
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.values.get("body", "")), 400
+		return render_template("submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.values.get("body", "")), 400
 
 
 	elif len(title) > 500:
@@ -872,16 +855,12 @@ def submit_post(v):
 	if len(str(body)) > 10000:
 
 		if request.headers.get("Authorization"): return {"error":"10000 character limit for text body."}, 400
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}submit.html", v=v, error="10000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
+		return render_template("submit.html", v=v, error="10000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if len(url) > 2048:
 
 		if request.headers.get("Authorization"): return {"error":"2048 character limit for URLs."}, 400
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
+		return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
 
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 		if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
@@ -914,9 +893,7 @@ def submit_post(v):
 			body += f"\n\n{url}"
 		else:
 			if request.headers.get("Authorization"): return {"error": "Image/Video files only"}, 400
-			if not v or v.oldsite: template = ''
-			else: template = 'CHRISTMAS/'
-			return render_template(f"{template}submit.html", v=v, error=f"Image/Video files only."), 400
+			return render_template("submit.html", v=v, error=f"Image/Video files only."), 400
 
 	body_html = sanitize(body)
 
@@ -935,9 +912,7 @@ def submit_post(v):
 		reason = f"Remove the {ban.domain} link from your post and try again."
 		if ban.reason: reason += f" {ban.reason}"
 		if request.headers.get("Authorization"): return {"error": reason}, 403
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
+		return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 
 	if v.club_allowed == False: club = False
 	else: club = bool(request.values.get("club",""))
@@ -1011,7 +986,7 @@ def submit_post(v):
 			new_post.url = url
 		else:
 			if request.headers.get("Authorization"): return {"error": "File type not allowed"}, 400
-			return render_template(f"{template}submit.html", v=v, error="File type not allowed.", title=title, body=request.values.get("body", "")), 400
+			return render_template("submit.html", v=v, error="File type not allowed.", title=title, body=request.values.get("body", "")), 400
 
 		
 	if not new_post.thumburl and new_post.url:

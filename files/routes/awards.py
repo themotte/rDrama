@@ -77,9 +77,7 @@ def shop(v):
 		val["price"] = int(val["price"]*discount)
 
 	sales = g.db.query(Vote.id).count() + g.db.query(CommentVote.id).count() - g.db.query(func.sum(User.coins)).scalar()
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}shop.html", awards=list(AWARDS.values()), v=v, sales=sales)
+	return render_template("shop.html", awards=list(AWARDS.values()), v=v, sales=sales)
 
 
 @app.post("/buy/<award>")
@@ -548,20 +546,16 @@ def award_comment(cid, v):
 @app.get("/admin/awards")
 @admin_level_required(2)
 def admin_userawards_get(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
 
 	if v.admin_level != 3:
-		return render_template(f"{template}admin/awards.html", awards=list(AWARDS3.values()), v=v)
+		return render_template("admin/awards.html", awards=list(AWARDS3.values()), v=v)
 
-	return render_template(f"{template}admin/awards.html", awards=list(AWARDS.values()), v=v) 
+	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 
 
 @app.post("/admin/awards")
 @limiter.limit("1/second")
 @admin_level_required(2)
 def admin_userawards_post(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
 
 	try: u = request.values.get("username").strip()
 	except: abort(404)
@@ -616,5 +610,5 @@ def admin_userawards_post(v):
 
 	g.db.commit()
 
-	if v.admin_level != 3: return render_template(f"{template}admin/awards.html", awards=list(AWARDS3.values()), v=v)
-	return render_template(f"{template}admin/awards.html", awards=list(AWARDS.values()), v=v) 
+	if v.admin_level != 3: return render_template("admin/awards.html", awards=list(AWARDS3.values()), v=v)
+	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 

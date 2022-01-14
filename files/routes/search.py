@@ -35,8 +35,6 @@ def searchparse(text):
 @app.get("/search/posts")
 @auth_required
 def searchposts(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
 
 	query = request.values.get("q", '').strip()
 
@@ -71,7 +69,7 @@ def searchposts(v):
 		if author.is_private and author.id != v.id and v.admin_level < 2 and not v.eye:
 			if request.headers.get("Authorization"):
 				return {"error": f"@{author.username}'s profile is private; You can't use the 'author' syntax on them"}
-			return render_template(f"{template}search.html",
+			return render_template("search.html",
 								v=v,
 								query=query,
 								total=0,
@@ -181,7 +179,7 @@ def searchposts(v):
 
 	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in posts]}
 
-	return render_template(f"{template}search.html",
+	return render_template("search.html",
 						   v=v,
 						   query=query,
 						   total=total,
@@ -198,8 +196,6 @@ def searchposts(v):
 @auth_required
 def searchcomments(v):
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
 
 	query = request.values.get("q", '').strip()
 
@@ -220,7 +216,7 @@ def searchcomments(v):
 			if request.headers.get("Authorization"):
 				return {"error": f"@{author.username}'s profile is private; You can't use the 'author' syntax on them"}
 
-			return render_template(f"{template}search_comments.html", v=v, query=query, total=0, page=page, comments=[], sort=sort, t=t, next_exists=False, error=f"@{author.username}'s profile is private; You can't use the 'author' syntax on them.")
+			return render_template("search_comments.html", v=v, query=query, total=0, page=page, comments=[], sort=sort, t=t, next_exists=False, error=f"@{author.username}'s profile is private; You can't use the 'author' syntax on them.")
 
 		else: comments = comments.filter(Comment.author_id == author.id)
 
@@ -275,14 +271,12 @@ def searchcomments(v):
 	comments = get_comments(ids, v=v)
 
 	if request.headers.get("Authorization"): return {"total":total, "data":[x.json for x in comments]}
-	return render_template(f"{template}search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists)
+	return render_template("search_comments.html", v=v, query=query, total=total, page=page, comments=comments, sort=sort, t=t, next_exists=next_exists)
 
 
 @app.get("/search/users")
 @auth_required
 def searchusers(v):
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
 
 	query = request.values.get("q", '').strip()
 
@@ -304,4 +298,4 @@ def searchusers(v):
 	users=users[:25]
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in users]}
-	return render_template(f"{template}search_users.html", v=v, query=query, total=total, page=page, users=users, sort=sort, t=t, next_exists=next_exists)
+	return render_template("search_users.html", v=v, query=query, total=total, page=page, users=users, sort=sort, t=t, next_exists=next_exists)

@@ -16,9 +16,7 @@ def login_get(v):
 	if v:
 		return redirect(redir)
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}login.html",
+	return render_template("login.html",
 						   failed=False,
 						   redirect=redir)
 
@@ -91,19 +89,19 @@ def login_post():
 
 	if not account:
 		time.sleep(random.uniform(0, 2))
-		return render_template(f"{template}login.html", failed=True)
+		return render_template("login.html", failed=True)
 
 
 	if request.values.get("password"):
 
 		if not account.verifyPass(request.values.get("password")):
 			time.sleep(random.uniform(0, 2))
-			return render_template(f"{template}login.html", failed=True)
+			return render_template("login.html", failed=True)
 
 		if account.mfa_secret:
 			now = int(time.time())
 			hash = generate_hash(f"{account.id}+{now}+2fachallenge")
-			return render_template(f"{template}login_2fa.html",
+			return render_template("login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
@@ -123,7 +121,7 @@ def login_post():
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
 			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
-			return render_template(f"{template}login_2fa.html",
+			return render_template("login_2fa.html",
 								   v=account,
 								   time=now,
 								   hash=hash,
@@ -428,9 +426,7 @@ def post_reset(v):
 	now = int(time.time())
 
 	if now - timestamp > 600:
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}message.html",
+		return render_template("message.html",
 							   title="Password reset expired",
 							   error="That password reset form has expired.")
 
@@ -442,9 +438,7 @@ def post_reset(v):
 		abort(404)
 
 	if not password == confirm_password:
-		if not v or v.oldsite: template = ''
-		else: template = 'CHRISTMAS/'
-		return render_template(f"{template}reset_password.html",
+		return render_template("reset_password.html",
 							   v=user,
 							   token=token,
 							   time=timestamp,
@@ -455,9 +449,7 @@ def post_reset(v):
 
 	g.db.commit()
 
-	if not v or v.oldsite: template = ''
-	else: template = 'CHRISTMAS/'
-	return render_template(f"{template}message_success.html",
+	return render_template("message_success.html",
 						   title="Password reset successful!",
 						   message="Login normally to access your account.")
 
