@@ -61,25 +61,6 @@ def add_notif(cid, uid):
 		g.db.add(notif)
 
 
-def send_admin(vid, text):
-
-	text_html = sanitize(text, noimages=True)
-
-	new_comment = Comment(author_id=vid,
-						  parent_submission=None,
-						  level=1,
-						  sentto=0,
-						  body_html=text_html,
-						  )
-	g.db.add(new_comment)
-	g.db.flush()
-
-	admins = g.db.query(User).filter(User.admin_level > 2).all()
-	for admin in admins:
-		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
-		g.db.add(notif)
-
-
 def NOTIFY_USERS(text, v):
 	notify_users = set()
 	for word, id in NOTIFIED_USERS.items():

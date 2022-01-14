@@ -4527,6 +4527,7 @@ blockquote p {
     border-radius: 0.2rem !important;
     margin-top: 0.5rem !important;
     margin-bottom: 0.5rem !important;
+    cursor: pointer;
 }
 .embedvid {
     max-height: 20rem !important;

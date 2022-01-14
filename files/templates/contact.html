@@ -26,13 +26,16 @@
 	<label class="mt-3">Your Email</label>
 	<input autocomplete="off" class="form-control" value="{{v.email}}" readonly="readonly" disabled>
 
-	<form id="contactform" action="/send_admin" method="post">
+	<form id="contactform" action="/send_admin" method="post" enctype="multipart/form-data">
 
 		<label for="input-message" class="mt-3">Your message</label>
 		<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 		<textarea autocomplete="off" maxlength="10000" id="input-message" form="contactform" name="message" class="form-control" required></textarea>
+		<label class="btn btn-secondary m-0 mt-3" for="file-upload">
+			<div id="filename"><i class="far fa-image"></i></div>
+			<input autocomplete="off" id="file-upload" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename').innerHTML='image/video';" hidden>
+		</label>
 		<input autocomplete="off" type="submit" value="Submit" class="btn btn-primary mt-3">
-
 	</form>
 
 	<pre>

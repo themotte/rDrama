@@ -50,7 +50,23 @@ def request_api_keys(v):
 
 	g.db.add(new_app)
 
-	send_admin(NOTIFICATIONS_ID, f"{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps).")
+	text = f"{v.username} has requested API keys for `{request.values.get('name')}`. You can approve or deny the request [here](/admin/apps)."
+
+	text_html = sanitize(text, noimages=True)
+
+	new_comment = Comment(author_id=NOTIFICATIONS_ID,
+						  parent_submission=None,
+						  level=1,
+						  sentto=0,
+						  body_html=text_html,
+						  )
+	g.db.add(new_comment)
+	g.db.flush()
+
+	admins = g.db.query(User).filter(User.admin_level > 2).all()
+	for admin in admins:
+		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+		g.db.add(notif)
 
 	g.db.commit()
 

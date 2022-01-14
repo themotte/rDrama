@@ -154,22 +154,14 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False):
 	for tag in soup.find_all("img"):
 
 		if tag.get("src") and "pp20" not in tag.get("class", ""):
-
-			if site not in tag["src"] and not tag["src"].startswith('/'): tag["rel"] = "nofollow noopener noreferrer"
 			tag["class"] = "in-comment-image"
 			tag["loading"] = "lazy"
 			tag["data-src"] = tag["src"]
 			tag["src"] = "/static/assets/images/loading.webp"
 			tag['alt'] = f'![]({tag["data-src"]})'
-
-			link = soup.new_tag("a")
-			link["href"] = tag["data-src"]
-			if site not in link["href"] and not link["href"].startswith('/'): link["rel"] = "nofollow noopener noreferrer"
-			link["onclick"] = f"expandDesktopImage('{tag['data-src']}');"
-			link["data-bs-toggle"] = "modal"
-			link["data-bs-target"] = "#expandImageModal"
-
-			tag.wrap(link)
+			tag["onclick"] = f"expandDesktopImage(this.data-src);"
+			tag["data-bs-toggle"] = "modal"
+			tag["data-bs-target"] = "#expandImageModal"
 
 	for tag in soup.find_all("a"):
 		if tag.get("href"):

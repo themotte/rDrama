@@ -280,8 +280,42 @@ def contact(v):
 @limiter.limit("6/hour")
 @auth_required
 def submit_contact(v):
-	message = f'This message has been sent automatically to all admins via [/contact](/contact), user email is "{v.email}"\n\nMessage:\n\n' + request.values.get("message", "")
-	send_admin(v.id, message)
+	body = request.values.get("message")
+	if not body: abort(400)
+
+	body = f'This message has been sent automatically to all admins via [/contact](/contact), user email is "{v.email}"\n\nMessage:\n\n' + body
+	body_html = sanitize(body, noimages=True)
+
+	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
+		file=request.files["file"]
+		if file.content_type.startswith('image/'):
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			file.save(name)
+			url = process_image(name)
+			body_html += f'<img data-bs-target="#expandImageModal" data-bs-toggle="modal" onclick="expandDesktopImage(this.src)" class="in-comment-image" src="{url}" loading="lazy">'
+		elif file.content_type.startswith('video/'):
+			file.save("video.mp4")
+			with open("video.mp4", 'rb') as f:
+				try: url = requests.request("POST", "https://api.imgur.com/3/upload", headers={'Authorization': f'Client-ID {IMGUR_KEY}'}, files=[('video', f)]).json()['data']['link']
+				except: return {"error": "Imgur error"}, 400
+			if url.endswith('.'): url += 'mp4'
+			body_html += f"<p>{url}</p>"
+		else: return {"error": "Image/Video files only"}, 400
+
+	new_comment = Comment(author_id=v.id,
+						  parent_submission=None,
+						  level=1,
+						  sentto=0,
+						  body_html=body_html,
+						  )
+	g.db.add(new_comment)
+	g.db.flush()
+
+	admins = g.db.query(User).filter(User.admin_level > 2).all()
+	for admin in admins:
+		notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+		g.db.add(notif)
+
 	g.db.commit()
 	if not v or v.oldsite: template = ''
 	else: template = 'CHRISTMAS/'
