@@ -63,7 +63,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		
 	if post.over_18 and not (v and v.over_18) and not session.get('over_18', 0) >= int(time.time()):
 		if request.headers.get("Authorization"): return {'error': 'This content is not suitable for some users and situations.'}
-		else: render_template(f"{template2}errors/nsfw.html", v=v)
+		else: render_template("errors/nsfw.html", v=v)
 
 	try: context = int(request.values.get("context", 0))
 	except: context = 0
@@ -126,7 +126,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	else: 
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(f"{template2}{template}", v=v, p=post, sort=sort, linked_comment=comment, comment_info=comment_info, render_replies=True)
+		return render_template(template, v=v, p=post, sort=sort, linked_comment=comment, comment_info=comment_info, render_replies=True)
 
 
 @app.post("/comment")
