@@ -146,7 +146,7 @@
 			{% endif %}
 		</ul>
 
-				<ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
+		<ul style="overflow:auto" class="navbar-nav ml-auto d-flex d-md-none mt-3">
 			<li class="nav-item pb-3">
 				<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="/search/posts/" method="get">
 					<input autocomplete="off" class="form-control form-control-sm w-100" type="search" placeholder="Search" aria-label="Search" name="q">
@@ -158,49 +158,48 @@
 				</form>
 			</li>
 			{% if v %}
-			<li class="nav-item">
-				<a class="nav-link" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{v.username}}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if not v.not_post_notifications_count %}?posts=true{% endif %}">
-					<i class="fas fa-envelope fa-fw mr-3"></i>Inbox
-					{% if v.notifications_count %}
-					<i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;{% if not v.not_post_notifications_count %}color:blue!important{% endif %}"></i>
-					{% endif %}
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
-			</li>
-			<a class="nav-item nav-link" href="https://play.google.com/store/apps/details?id=com.rdrama"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
+				<li class="nav-item">
+					<a class="nav-link" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{v.username}}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications{% if not v.not_post_notifications_count %}?posts=true{% endif %}">
+						<i class="fas fa-envelope fa-fw mr-3"></i>Inbox
+						{% if v.notifications_count %}
+						<i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;{% if not v.not_post_notifications_count %}color:blue!important{% endif %}"></i>
+						{% endif %}
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/settings"><i class="fas fa-cog fa-fw mr-3"></i>Settings</a>
+				</li>
+				<a class="nav-item nav-link" href="https://play.google.com/store/apps/details?id=com.rdrama"><i class="fab fa-android fa-fw mr-3"></i>Android app</a>
 
-			<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
+				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a>
 
-			{% if request.host in ['rdrama.net', 'pcmemes.net'] %}
-				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="/report_bugs"><i class="fas fa-bug fa-fw mr-3"></i>Bugs/Suggestions</a>
-			{% endif %}
+				{% if request.host != 'pcmemes.net' %}
+					<a class="nav-item nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
+				{% endif %}
+				<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
+				{% if request.host == 'rdrama.net' %}<a class="nav-item nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Archives</a>{% endif %}
+				<a class="nav-item nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
 
-			{% if request.host != 'pcmemes.net' %}
-				<a class="nav-item nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a>
-			{% endif %}
-			<a class="nav-item nav-link" rel="nofollow noopener noreferrer" href="{{'GUMROAD_LINK' | app_config}}"><i class="fas fa-dollar-sign fa-fw mr-3"></i>Donate</a>
-			{% if request.host == 'rdrama.net' %}<a class="nav-item nav-link" href="/archives"><i class="fas fa-book fa-fw mr-3"></i>Archives</a>{% endif %}
-			<a class="nav-item nav-link" href="/contact"><i class="fas fa-file-signature fa-fw mr-3"></i>Contact us</a>
-
-			<li class="nav-item border-top border-bottom mt-2 pt-2">
-				<a class="nav-link" role="button", onclick="post_toast('/logout', '1')"><i class="fas fa-sign-out fa-fw mr-3 text-danger"></i>Log out</a>
-			</li>
+				<li class="nav-item border-top border-bottom mt-2 pt-2">
+					<a class="nav-link" role="button", onclick="post_toast('/logout', '1')"><i class="fas fa-sign-out fa-fw mr-3 text-danger"></i>Log out</a>
+				</li>
 			{% else %}
-			<li class="nav-item d-flex align-items-center justify-content-center pb-3">
-				<a class="btn btn-outline-purple btn-block" href="/contact">Contact us</a>
-			</li>
-			<li class="nav-item d-flex align-items-center justify-content-center pb-3">
-				<a class="btn btn-outline-purple btn-block" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
-			</li>
-			<li class="nav-item d-flex align-items-center justify-content-center">
-				<a class="btn btn-outline-purple btn-block" href="/signup?redirect={{request.path | urlencode}}">Sign up</a>
-			</li>
+				<li class="nav-item d-flex align-items-center justify-content-center pb-3">
+					<a class="btn btn-outline-purple btn-block" href="/contact">Contact us</a>
+				</li>
+				<li class="nav-item d-flex align-items-center justify-content-center pb-3">
+					<a class="btn btn-outline-purple btn-block" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
+				</li>
+				<li class="nav-item d-flex align-items-center justify-content-center">
+					<a class="btn btn-outline-purple btn-block" href="/signup?redirect={{request.path | urlencode}}">Sign up</a>
+				</li>
 			{% endif %}
+			<li class="mt-3">
+				{% include "sidebar_" + SITE_NAME + ".html" %}
+			</li>
 		</ul>
 	</div>
 	{% endif %}
@@ -217,6 +216,9 @@
 		color: white;
 		padding: 2px 5px;
 		font-weight: 700;
+	}
+	li > .sidebar {
+		display: block !important;
 	}
 </style>
 
