@@ -5,9 +5,10 @@
 
 {% block title %}
 
-{% if u and u.profilecss and (u.admin_level or not (v and v.admin_level)) %}
+{% if u and u.profilecss and not request.values.get('nocss') %}
 	<link rel="stylesheet" href="/@{{u.username}}/profilecss">
 {% endif %}
+
 <title>{{u.username}}'s profile - {{SITE_NAME}}</title>
 <meta property="og:article:author" content="@{{u.username}}" >
 <meta property="article:section" content="{{u.username}}'s profile - {{SITE_NAME}}" >
