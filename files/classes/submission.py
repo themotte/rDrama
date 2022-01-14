@@ -424,7 +424,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def is_video(self):
-		return self.url and any((self.url.lower().endswith(x) for x in ('.mp4','.webm','.mov', '#t=0.1')))
+		return self.url and any((self.url.lower().endswith(x) for x in ('.mp4','.webm','.mov')))
 
 	@property
 	@lazy
