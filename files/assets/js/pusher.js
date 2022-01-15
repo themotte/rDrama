@@ -2612,3 +2612,5 @@ beamsClient.start()
 .then(() => beamsClient.addDeviceInterest(strid))
 .then(() => beamsClient.getDeviceInterests())
 .catch(console.error);
+
+Android.Subscribe(strid);

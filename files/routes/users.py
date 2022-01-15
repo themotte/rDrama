@@ -444,6 +444,7 @@ def message2(v, username):
 						'title': f'New message from @{v.username}',
 						'body': message,
 						'deep_link': f'https://{site}/notifications',
+						'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
 					}
 				},
 				'fcm': {
