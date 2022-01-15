@@ -74,7 +74,7 @@ limiter = Limiter(
 	app,
 	key_func=get_ipaddr,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
-	application_limits=["5/second;100/minute;5000/hour;10000/day"],
+	application_limits=["10/second;200/minute;5000/hour;10000/day"],
 	headers_enabled=True,
 	strategy="fixed-window"
 )
