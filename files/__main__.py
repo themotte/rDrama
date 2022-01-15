@@ -53,14 +53,8 @@ app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(environ.get("COMMENT_SPAM_S
 app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 10))
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
-app.config["RATELIMIT_KEY_PREFIX"] = "flask_limiting_"
-app.config["RATELIMIT_ENABLED"] = True
-app.config["RATELIMIT_DEFAULTS_DEDUCT_WHEN"]=lambda:True
-app.config["RATELIMIT_DEFAULTS_EXEMPT_WHEN"]=lambda:False
-app.config["RATELIMIT_HEADERS_ENABLED"]=True
 app.config["CACHE_TYPE"] = "filesystem"
 app.config["CACHE_DIR"] = "cache"
-app.config["RATELIMIT_STORAGE_URL"] = environ.get("REDIS_URL", "redis://localhost")
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -75,8 +69,7 @@ limiter = Limiter(
 	key_func=get_ipaddr,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
-	headers_enabled=True,
-	strategy="fixed-window"
+	storage_uri=environ.get("REDIS_URL", "redis://localhost")
 )
 
 Base = declarative_base()
