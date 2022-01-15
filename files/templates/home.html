@@ -165,8 +165,9 @@
 {% endif %}
 
 {% if v %}
-	<div class="d-none" id="strid">{{v.strid}}</div>
-	<script src="/static/assets/js/pusher.js?a=3"></script>
+	<div class="d-none" id="strid">{{request.host}}{{v.id}}</div>
+	<div class="d-none" id="pusherid">{{PUSHER_ID}}</div>
+	<script src="/static/assets/js/pusher.js?a=5"></script>
 {% endif %}
 
 {% endblock %}

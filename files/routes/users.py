@@ -14,7 +14,7 @@ from collections import Counter
 
 site = environ.get("DOMAIN").strip()
 
-beams_client = PushNotifications(instance_id=PUSHER_INSTANCE_ID, secret_key=PUSHER_KEY)
+beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 db = db_session()
 
@@ -438,7 +438,7 @@ def message2(v, username):
 	
 	try:
 		beams_client.publish_to_interests(
-			interests=[str(user.id)],
+			interests=[f'{request.host}{parent.author.id}'],
 			publish_body={
 				'web': {
 					'notification': {

@@ -21,6 +21,7 @@ services:
       - HCAPTCHA_SECRET=3435tdfsdudebussylmaoxxt43
       - YOUTUBE_KEY=3435tdfsdudebussylmaoxxt43
       - PUSHER_KEY=3435tdfsdudebussylmaoxxt43
+      - PUSHER_ID=3435tdfsdudebussylmaoxxt43
       - IMGUR_KEY=3435tdfsdudebussylmaoxxt43
       - SPAM_SIMILARITY_THRESHOLD=0.5
       - SPAM_URL_SIMILARITY_THRESHOLD=0.1

@@ -208,7 +208,7 @@ else:
 	BUG_THREAD = 0
 	WELCOME_MSG = f"Welcome to {SITE}!"
 
-PUSHER_INSTANCE_ID = '02ddcc80-b8db-42be-9022-44c546b4dce6'
+PUSHER_ID = environ.get("PUSHER_ID", "").strip()
 PUSHER_KEY = environ.get("PUSHER_KEY", "").strip()
 
 BADGES = {

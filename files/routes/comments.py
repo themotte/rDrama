@@ -17,7 +17,7 @@ else: cc = "COUNTRY CLUB"
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 beams_client = PushNotifications(
-		instance_id=PUSHER_INSTANCE_ID,
+		instance_id=PUSHER_ID,
 		secret_key=PUSHER_KEY,
 )
 
@@ -469,7 +469,7 @@ def api_comment(v):
 		if parent.author.id != v.id:
 			try:
 				beams_client.publish_to_interests(
-				  interests=[str(parent.author.id)],
+				  interests=[f'{request.host}{parent.author.id}'],
 				  publish_body={
 					'web': {
 					  'notification': {

@@ -2603,7 +2603,8 @@ var PusherPushNotifications = (function (exports) {
   }({}));
 
 
-const beamsClient = new PusherPushNotifications.Client({instanceId: '02ddcc80-b8db-42be-9022-44c546b4dce6'});
+const pusherid = document.getElementById('pusherid').innerHTML;
+const beamsClient = new PusherPushNotifications.Client({instanceId: pusherid});
 const strid = document.getElementById('strid').innerHTML;
 
 beamsClient.start()

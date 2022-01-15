@@ -225,11 +225,6 @@ class User(Base):
 			if u.patron: return True
 		return False
 
-	@property
-	@lazy
-	def strid(self):
-		return str(self.id)
-
 	@cache.memoize(timeout=86400)
 	def userpagelisting(self, v=None, page=1, sort="new", t="all"):
 
