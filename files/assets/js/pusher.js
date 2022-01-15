@@ -2609,6 +2609,8 @@ const strid = document.getElementById('strid').innerHTML;
 
 beamsClient.start()
 .then((beamsClient) => beamsClient.getDeviceId())
-.then(() => beamsClient.addDeviceInterest(`${strid}`))
+.then(() => beamsClient.addDeviceInterest(strid))
 .then(() => beamsClient.getDeviceInterests())
 .catch(console.error);
+
+Android.Subscribe(strid);
