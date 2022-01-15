@@ -50,7 +50,7 @@ def toggle_club(pid, v):
 
 
 @app.post("/publish/<pid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def publish(pid, v):
 	post = get_post(pid)
@@ -236,7 +236,7 @@ def post_id(pid, anything=None, v=None):
 		return render_template(template, v=v, p=post, sort=sort, render_replies=True, offset=offset)
 
 @app.post("/viewmore/<pid>/<sort>/<offset>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def viewmore(v, pid, sort, offset):
 	offset = int(offset)
@@ -336,7 +336,7 @@ def viewmore(v, pid, sort, offset):
 
 
 @app.post("/morecomments/<cid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def morecomments(v, cid):
 	tcid = g.db.query(Comment.top_comment_id).filter_by(id=cid).one_or_none()[0]
@@ -384,7 +384,7 @@ def morecomments(v, cid):
 	return render_template("comments.html", v=v, comments=comments, render_replies=True)
 
 @app.post("/edit_post/<pid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_post(pid, v):
 	if v and v.patron:
@@ -681,8 +681,7 @@ def thumbnail_thread(pid):
 
 
 @app.post("/submit")
-@limiter.limit("1/second")
-@limiter.limit("6/minute")
+@limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
 def submit_post(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
@@ -1132,7 +1131,7 @@ def submit_post(v):
 
 
 @app.post("/delete_post/<pid>")
-@limiter.limit("2/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_post_pid(pid, v):
 
@@ -1153,7 +1152,7 @@ def delete_post_pid(pid, v):
 	return {"message": "Post deleted!"}
 
 @app.post("/undelete_post/<pid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def undelete_post_pid(pid, v):
 	post = get_post(pid)
@@ -1208,7 +1207,7 @@ def toggle_post_nsfw(pid, v):
 	else: return {"message": "Post has been unmarked as +18!"}
 
 @app.post("/save_post/<pid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_post(pid, v):
 
@@ -1224,7 +1223,7 @@ def save_post(pid, v):
 	return {"message": "Post saved!"}
 
 @app.post("/unsave_post/<pid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsave_post(pid, v):
 

@@ -31,7 +31,7 @@ month = datetime.now().strftime('%B')
 
 
 @app.post("/@<username>/make_admin")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def make_admin(v, username):
 	if request.host == 'rdrama.net': abort(403)
@@ -44,7 +44,7 @@ def make_admin(v, username):
 
 
 @app.post("/@<username>/remove_admin")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def remove_admin(v, username):
 	user = get_user(username)
@@ -55,7 +55,7 @@ def remove_admin(v, username):
 	return {"message": "Admin removed!"}
 
 @app.post("/distribute/<comment>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def distribute(v, comment):
 	try: comment = int(comment)
@@ -90,7 +90,7 @@ def distribute(v, comment):
 	return {"message": f"Each winner has received {coinsperperson} coins!"}
 
 @app.post("/@<username>/revert_actions")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def revert_actions(v, username):
 	user = get_user(username)
@@ -128,7 +128,7 @@ def revert_actions(v, username):
 	return {"message": "Admin actions reverted!"}
 
 @app.post("/@<username>/club_allow")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def club_allow(v, username):
 
@@ -149,7 +149,7 @@ def club_allow(v, username):
 	return {"message": f"@{username} has been allowed into the {cc}!"}
 
 @app.post("/@<username>/club_ban")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def club_ban(v, username):
 
@@ -170,7 +170,7 @@ def club_ban(v, username):
 
 
 @app.post("/@<username>/make_meme_admin")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def make_meme_admin(v, username):
 	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
@@ -183,7 +183,7 @@ def make_meme_admin(v, username):
 
 
 @app.post("/@<username>/remove_meme_admin")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def remove_meme_admin(v, username):
 	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
@@ -238,7 +238,7 @@ def get_sidebar(v):
 
 
 @app.post('/admin/sidebar')
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def post_sidebar(v):
 
@@ -413,7 +413,7 @@ def badge_grant_get(v):
 
 
 @app.post("/admin/badge_grant")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def badge_grant_post(v):
 	user = get_user(request.values.get("username").strip(), graceful=True)
@@ -452,7 +452,7 @@ def badge_remove_get(v):
 
 
 @app.post("/admin/badge_remove")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def badge_remove_post(v):
 	user = get_user(request.values.get("username").strip(), graceful=True)
@@ -602,7 +602,7 @@ def alt_votes_get(v):
 
 
 @app.post("/admin/link_accounts")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_link_accounts(v):
 
@@ -725,7 +725,7 @@ def agendaposter(user_id, v):
 
 
 @app.post("/shadowban/<user_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def shadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -750,7 +750,7 @@ def shadowban(user_id, v):
 
 
 @app.post("/unshadowban/<user_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def unshadowban(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -776,7 +776,7 @@ def unshadowban(user_id, v):
 	return {"message": "User unshadowbanned!"}
 
 @app.post("/admin/verify/<user_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def verify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -794,7 +794,7 @@ def verify(user_id, v):
 	return {"message": "User verfied!"}
 
 @app.post("/admin/unverify/<user_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def unverify(user_id, v):
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
@@ -813,7 +813,7 @@ def unverify(user_id, v):
 
 
 @app.post("/admin/title_change/<user_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_title_change(user_id, v):
 
@@ -844,7 +844,7 @@ def admin_title_change(user_id, v):
 	return redirect(user.url)
 
 @app.post("/ban_user/<user_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def ban_user(user_id, v):
 	
@@ -906,7 +906,7 @@ def ban_user(user_id, v):
 
 
 @app.post("/unban_user/<user_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def unban_user(user_id, v):
 
@@ -945,7 +945,7 @@ def unban_user(user_id, v):
 
 
 @app.post("/ban_post/<post_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def ban_post(post_id, v):
 
@@ -981,7 +981,7 @@ def ban_post(post_id, v):
 
 
 @app.post("/unban_post/<post_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def unban_post(post_id, v):
 
@@ -1129,7 +1129,7 @@ def unsticky_comment(cid, v):
 
 
 @app.post("/ban_comment/<c_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def api_ban_comment(c_id, v):
 
@@ -1152,7 +1152,7 @@ def api_ban_comment(c_id, v):
 
 
 @app.post("/unban_comment/<c_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def api_unban_comment(c_id, v):
 
@@ -1212,7 +1212,7 @@ def admin_banned_domains(v):
 	return render_template("admin/banned_domains.html", v=v, banned_domains=banned_domains)
 
 @app.post("/admin/banned_domains")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_toggle_ban_domain(v):
 
@@ -1247,7 +1247,7 @@ def admin_toggle_ban_domain(v):
 
 
 @app.post("/admin/nuke_user")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_nuke_user(v):
 
@@ -1280,7 +1280,7 @@ def admin_nuke_user(v):
 
 
 @app.post("/admin/unnuke_user")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_nunuke_user(v):
 

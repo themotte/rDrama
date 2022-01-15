@@ -262,8 +262,7 @@ def contact(v):
 	return render_template("contact.html", v=v)
 
 @app.post("/send_admin")
-@limiter.limit("1/second")
-@limiter.limit("6/hour")
+@limiter.limit("1/second;2/minute;6/hour;10/day")
 @auth_required
 def submit_contact(v):
 	body = request.values.get("message")

@@ -73,8 +73,7 @@ def check_for_alts(current_id):
 
 
 @app.post("/login")
-@limiter.limit("1/second")
-@limiter.limit("6/minute")
+@limiter.limit("1/second;6/minute;200/hour;1000/day")
 def login_post():
 	template = ''
 
@@ -154,7 +153,7 @@ def me(v):
 
 
 @app.post("/logout")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def logout(v):
 
@@ -208,8 +207,7 @@ def sign_up_get(v):
 
 
 @app.post("/signup")
-@limiter.limit("1/second")
-@limiter.limit("5/day")
+@limiter.limit("1/minute;5/day")
 @auth_desired
 def sign_up_post(v):
 	with open('disable_signups', 'r') as f:
@@ -351,7 +349,7 @@ def get_forgot():
 
 
 @app.post("/forgot")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 def post_forgot():
 
 	username = request.values.get("username").lstrip('@')
@@ -410,7 +408,7 @@ def get_reset():
 
 
 @app.post("/reset")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def post_reset(v):
 	if v: return redirect('/')
@@ -463,8 +461,7 @@ def lost_2fa(v):
 		)
 
 @app.post("/request_2fa_disable")
-@limiter.limit("1/second")
-@limiter.limit("6/minute")
+@limiter.limit("1/second;6/minute;200/hour;1000/day")
 def request_2fa_disable():
 
 	username=request.values.get("username")

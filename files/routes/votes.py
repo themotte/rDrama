@@ -10,7 +10,7 @@ from os import environ
 defaultcolor = environ.get("DEFAULT_COLOR").strip()
 
 @app.get("/votes")
-@limiter.limit("5/second;60/minute;200/hour")
+@limiter.limit("5/second;60/minute;200/hour;1000/day")
 @auth_required
 def admin_vote_info_get(v):
 	link = request.values.get("link")
@@ -65,7 +65,7 @@ def admin_vote_info_get(v):
 
 
 @app.post("/vote/post/<post_id>/<new>")
-@limiter.limit("5/second;60/minute;600/hour")
+@limiter.limit("5/second;60/minute;600/hour;1000/day")
 @auth_required
 def api_vote_post(post_id, new, v):
 
@@ -123,7 +123,7 @@ def api_vote_post(post_id, new, v):
 	return "", 204
 
 @app.post("/vote/comment/<comment_id>/<new>")
-@limiter.limit("5/second;60/minute;600/hour")
+@limiter.limit("5/second;60/minute;600/hour;1000/day")
 @auth_required
 def api_vote_comment(comment_id, new, v):
 
@@ -224,7 +224,7 @@ def api_vote_poll(comment_id, v):
 
 
 @app.post("/bet/<comment_id>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def bet(comment_id, v):
 	

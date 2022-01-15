@@ -130,8 +130,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
 
 @app.post("/comment")
-@limiter.limit("1/second")
-@limiter.limit("6/minute")
+@limiter.limit("1/second;6/minute;200/hour;1000/day")
 @auth_required
 def api_comment(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
@@ -524,7 +523,7 @@ def api_comment(v):
 
 
 @app.post("/edit_comment/<cid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def edit_comment(cid, v):
 	if v and v.patron:
@@ -696,7 +695,7 @@ def edit_comment(cid, v):
 
 
 @app.post("/delete/comment/<cid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def delete_comment(cid, v):
 
@@ -717,7 +716,7 @@ def delete_comment(cid, v):
 	return {"message": "Comment deleted!"}
 
 @app.post("/undelete/comment/<cid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def undelete_comment(cid, v):
 
@@ -781,7 +780,7 @@ def unpin_comment(cid, v):
 	return {"message": "Comment unpinned!"}
 
 @app.post("/save_comment/<cid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def save_comment(cid, v):
 
@@ -799,7 +798,7 @@ def save_comment(cid, v):
 	return {"message": "Comment saved!"}
 
 @app.post("/unsave_comment/<cid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def unsave_comment(cid, v):
 

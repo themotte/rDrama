@@ -176,7 +176,7 @@ def buy(v, award):
 
 @app.get("/post/<pid>/awards")
 @app.post("/post/<pid>/awards")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def award_post(pid, v):
 
@@ -362,7 +362,7 @@ def award_post(pid, v):
 
 @app.get("/comment/<cid>/awards")
 @app.post("/comment/<cid>/awards")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def award_comment(cid, v):
 
@@ -553,7 +553,7 @@ def admin_userawards_get(v):
 	return render_template("admin/awards.html", awards=list(AWARDS.values()), v=v) 
 
 @app.post("/admin/awards")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def admin_userawards_post(v):
 

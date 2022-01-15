@@ -6,7 +6,7 @@ from os import path
 from files.helpers.sanitize import filter_emojis_only
 
 @app.post("/report/post/<pid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_post(pid, v):
 
@@ -36,7 +36,7 @@ def api_flag_post(pid, v):
 
 
 @app.post("/report/comment/<cid>")
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def api_flag_comment(cid, v):
 
@@ -60,7 +60,7 @@ def api_flag_comment(cid, v):
 
 
 @app.post('/del_report/<report_fn>')
-@limiter.limit("1/second")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def remove_report(report_fn, v):
 
