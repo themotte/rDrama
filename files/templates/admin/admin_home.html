@@ -74,11 +74,4 @@
 {% endif %}
 
 <input type="button" value="Say hello" onClick="Subscribe('{{request.host}}{{v.id}}')" />
-
-<script type="text/javascript">
-    Android.Subscribe('{{request.host}}{{v.id}}');
-    function Subscribe(toast) {
-        Android.Subscribe(toast);
-    }
-</script>
 {% endblock %}
