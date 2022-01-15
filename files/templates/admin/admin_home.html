@@ -76,7 +76,7 @@
 <input type="button" value="Say hello" onClick="Subscribe('{{request.host}}{{v.id}}')" />
 
 <script type="text/javascript">
-    Android.Subscribe(toast);
+    Android.Subscribe('{{request.host}}{{v.id}}');
     function Subscribe(toast) {
         Android.Subscribe(toast);
     }
