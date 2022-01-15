@@ -450,6 +450,7 @@ def message2(v, username):
 					'notification': {
 						'title': f'New reply by @{v.username}',
 						'body': c.body,
+						'deep_link': f'https://{site}/notifications',
 					}
 				}
 			},
