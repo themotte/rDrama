@@ -475,8 +475,14 @@ def api_comment(v):
 							'title': f'New reply by @{v.username}',
 							'body': c.body,
 							'deep_link': f'https://{site}/comment/{c.id}?context=9&read=true#context',
-					  },
+					  	}
 					},
+					'fcm': {
+						'notification': {
+							'title': f'New reply by @{v.username}',
+							'body': c.body,
+						}
+					}
 				  },
 				)
 			except Exception as e:

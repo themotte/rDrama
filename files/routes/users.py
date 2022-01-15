@@ -444,8 +444,14 @@ def message2(v, username):
 						'title': f'New message from @{v.username}',
 						'body': message,
 						'deep_link': f'https://{site}/notifications',
-					},
+					}
 				},
+				'fcm': {
+					'notification': {
+						'title': f'New reply by @{v.username}',
+						'body': c.body,
+					}
+				}
 			},
 		)
 	except Exception as e:
