@@ -434,6 +434,8 @@ def message2(v, username):
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 
+	if len(message) > 100: notifbody = message[:100] + '...'
+	else: notifbody = message
 	
 	beams_client.publish_to_interests(
 		interests=[str(user.id)],
@@ -441,7 +443,7 @@ def message2(v, username):
 			'web': {
 				'notification': {
 					'title': f'New message from @{v.username}',
-					'body': message,
+					'body': notifbody,
 					'deep_link': f'https://{site}/notifications',
 					'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
 				}
@@ -449,7 +451,7 @@ def message2(v, username):
 			'fcm': {
 				'notification': {
 					'title': f'New message from @{v.username}',
-					'body': message,
+					'body': notifbody,
 					'click_action': 'android.intent.category.DEFAULT',
 				},
 				'data': {

@@ -466,13 +466,16 @@ def api_comment(v):
 			g.db.add(n)
 
 		if parent.author.id != v.id:
+			if len(message) > 100: notifbody = c.body[:100] + '...'
+			else: notifbody = c.body
+
 			beams_client.publish_to_interests(
 				interests=[f'{request.host}{parent.author.id}'],
 				publish_body={
 				'web': {
 					'notification': {
 						'title': f'New reply by @{v.username}',
-						'body': c.body,
+						'body': notifbody,
 						'deep_link': f'https://{site}/comment/{c.id}?context=9&read=true#context',
 						'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
 					}
@@ -480,7 +483,7 @@ def api_comment(v):
 				'fcm': {
 					'notification': {
 						'title': f'New reply by @{v.username}',
-						'body': c.body,
+						'body': notifbody,
 						'click_action': 'android.intent.category.DEFAULT',
 					},
 					'data': {
