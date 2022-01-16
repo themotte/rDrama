@@ -434,7 +434,7 @@ def message2(v, username):
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 
-	if len(message) > 100: notifbody = message[:100] + '...'
+	if len(message) > 500: notifbody = message[:500] + '...'
 	else: notifbody = message
 	
 	beams_client.publish_to_interests(
@@ -501,7 +501,7 @@ def messagereply(v):
 		notif = Notification(comment_id=new_comment.id, user_id=user_id)
 		g.db.add(notif)
 
-		if len(message) > 100: notifbody = message[:100] + '...'
+		if len(message) > 500: notifbody = message[:500] + '...'
 		else: notifbody = message
 		
 		beams_client.publish_to_interests(
