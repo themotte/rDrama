@@ -199,7 +199,7 @@ class Comment(Base):
 	def replies(self):
 		r = self.__dict__.get("replies", None)
 		if r: r = [x for x in r if not x.author.shadowbanned]
-		if not r and r != []: r = sorted([x for x in self.child_comments if not x.author.shadowbanned and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)], key=lambda x: x.realupvotes, reverse=True)
+		if not r and r != []: r = sorted((x for x in self.child_comments if not x.author.shadowbanned and x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
 		return r
 
 	@replies.setter
@@ -217,7 +217,7 @@ class Comment(Base):
 	@property
 	def replies3(self):
 		r = self.__dict__.get("replies", None)
-		if not r and r != []: r = sorted([x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)], key=lambda x: x.realupvotes, reverse=True)
+		if not r and r != []: r = sorted((x for x in self.child_comments if x.author_id not in (AUTOPOLLER_ID, AUTOBETTER_ID)), key=lambda x: x.realupvotes, reverse=True)
 		return r
 
 	@property
