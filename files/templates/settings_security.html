@@ -152,7 +152,7 @@
 	<div class="body w-lg-100">
 
 		<div class="custom-control custom-switch">
-		<input autocomplete="off" type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" onchange="twoStepModal.show()" {% if mfa_secret %}checked{% endif %}>
+		<input autocomplete="off" type="checkbox" class="custom-control-input" id="2faToggle" name="2faToggle" onchange="twoStepModal.show()" {% if v.mfa_secret %}checked{% endif %}>
 		<label class="custom-control-label" for="2faToggle"></label>
 		</div>
 
