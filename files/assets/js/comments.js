@@ -22,8 +22,8 @@ function morecomments(cid) {
     var form = new FormData();
     form.append("formkey", formkey());
     const xhr = new XMLHttpRequest();
-    xhr.setRequestHeader('Authorization', 'xhr');
     xhr.open("post", `/morecomments/${cid}`);
+    xhr.setRequestHeader('xhr', 'xhr');
     xhr.withCredentials=true;
     xhr.onload=function(){
         if (xhr.status==200) {

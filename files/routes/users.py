@@ -631,7 +631,7 @@ def u_username(username, v=None):
 		return redirect(request.path.replace(username, u.username))
 
 	if u.reserved:
-		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
 		return render_template("userpage_reserved.html", u=u, v=v)
 
 	if v and u.id != v.id:
@@ -656,20 +656,20 @@ def u_username(username, v=None):
 		
 		if v and u.id == LLM_ID:
 			if int(time.time()) - v.rent_utc > 600:
-				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+				if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
 				return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 		else:
-			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
 			return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
-		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
 		return render_template("userpage_blocking.html", u=u, v=v)
 
 
 	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
-		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "This person is blocking you."}
 		return render_template("userpage_blocked.html", u=u, v=v)
 
 
@@ -739,7 +739,7 @@ def u_username_comments(username, v=None):
 	u = user
 
 	if u.reserved:
-		if request.headers.get("Authorization"): return {"error": f"That username is reserved for: {u.reserved}"}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
 		return render_template("userpage_reserved.html",
 												u=u,
 												v=v)
@@ -748,18 +748,18 @@ def u_username_comments(username, v=None):
 	if u.is_private and (not v or (v.id != u.id and v.admin_level < 2 and not v.eye)):
 		if v and u.id == LLM_ID:
 			if int(time.time()) - v.rent_utc > 600:
-				if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+				if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
 				return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 		else:
-			if request.headers.get("Authorization"): return {"error": "That userpage is private"}
+			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "That userpage is private"}
 			return render_template("userpage_private.html", time=int(time.time()), u=u, v=v)
 
 	if v and hasattr(u, 'is_blocking') and u.is_blocking:
-		if request.headers.get("Authorization"): return {"error": f"You are blocking @{u.username}."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"You are blocking @{u.username}."}
 		return render_template("userpage_blocking.html", u=u, v=v)
 
 	if v and v.admin_level < 2 and hasattr(u, 'is_blocked') and u.is_blocked:
-		if request.headers.get("Authorization"): return {"error": "This person is blocking you."}
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "This person is blocking you."}
 		return render_template("userpage_blocked.html", u=u, v=v)
 
 

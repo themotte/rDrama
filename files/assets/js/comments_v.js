@@ -1,7 +1,7 @@
 function post(url) {
 	const xhr = new XMLHttpRequest();
-	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", url, true);
+	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
 	xhr.withCredentials=true;
@@ -12,8 +12,8 @@ function post_toast3(url, button1, button2) {
 	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 
 	const xhr = new XMLHttpRequest();
-	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", url, true);
+	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
 
@@ -56,8 +56,8 @@ function report_commentModal(id, author) {
 	this.innerHTML='Reporting comment';
 	this.disabled = true;
 	const xhr = new XMLHttpRequest();
-	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", '/report/comment/'+id, true);
+	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
 	form.append("reason", document.getElementById("reason-comment").value);
@@ -103,8 +103,8 @@ function delete_commentModal(id) {
 
 		var url = '/delete/comment/' + id
 		const xhr = new XMLHttpRequest();
-		xhr.setRequestHeader('Authorization', 'xhr');
 		xhr.open("POST", url, true);
+		xhr.setRequestHeader('xhr', 'xhr');
 		var form = new FormData()
 		form.append("formkey", formkey());
 		xhr.withCredentials=true;
@@ -122,8 +122,8 @@ function post_reply(id){
 	form.append('parent_id', id);
 	form.append('body', document.getElementById('reply-form-body-'+id).value);
 	const xhr = new XMLHttpRequest();
-	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("post", "/reply");
+	xhr.setRequestHeader('xhr', 'xhr');
 	xhr.withCredentials=true;
 	xhr.onload=function(){
 		if (xhr.status==200) {
@@ -152,8 +152,8 @@ function comment_edit(id){
 	form.append('file', document.getElementById('file-edit-reply-'+id).files[0]);
 
 	const xhr = new XMLHttpRequest();
-	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("post", "/edit_comment/"+id);
+	xhr.setRequestHeader('xhr', 'xhr');
 	xhr.withCredentials=true;
 	xhr.onload=function(){
 		if (xhr.status==200) {
@@ -188,8 +188,8 @@ function post_comment(fullname){
 	form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
 
 	const xhr = new XMLHttpRequest();
-	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("post", "/comment");
+	xhr.setRequestHeader('xhr', 'xhr');
 	xhr.withCredentials=true;
 	xhr.onload=function(){
 		if (xhr.status==200) {

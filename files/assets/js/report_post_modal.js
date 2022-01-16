@@ -8,8 +8,8 @@ function report_postModal(id) {
 		this.disabled = true;
 
 		const xhr = new XMLHttpRequest();
-		xhr.setRequestHeader('Authorization', 'xhr');
 		xhr.open("POST", '/report/post/'+id, true);
+		xhr.setRequestHeader('xhr', 'xhr');
 		var form = new FormData()
 		form.append("formkey", formkey());
 		form.append("reason", document.getElementById("reason").value);

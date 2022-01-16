@@ -15,8 +15,8 @@ function post_toast(url, reload, data) {
 	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 
 	const xhr = new XMLHttpRequest();
-	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", url, true);
+	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
 

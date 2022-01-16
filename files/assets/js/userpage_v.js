@@ -1,7 +1,7 @@
 function post_toast_callback(url, data, callback) {
 	const xhr = new XMLHttpRequest();
-	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", url, true);
+	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
 
@@ -134,8 +134,6 @@ function submitFormAjax(e) {
 	
 	const form = e.target;
 	const xhr = new XMLHttpRequest();
-	xhr.setRequestHeader('Authorization', 'xhr');
-
 	e.preventDefault();
 
 	formData = new FormData(form);
@@ -151,6 +149,7 @@ function submitFormAjax(e) {
 	actionPath = form.getAttribute("action");
 
 	xhr.open("POST", actionPath, true);
+	xhr.setRequestHeader('xhr', 'xhr');
 
 	xhr.onload = function() {
 		if (xhr.status >= 200 && xhr.status < 300) {

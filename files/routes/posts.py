@@ -225,7 +225,7 @@ def post_id(pid, anything=None, v=None):
 	post.views += 1
 	g.db.add(post)
 	if request.host != 'old.rdrama.net' and post.over_18 and not (v and v.over_18) and session.get('over_18', 0) < int(time.time()):
-		if request.headers.get("Authorization"): return {"error":"Must be 18+ to view"}, 451
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"Must be 18+ to view"}, 451
 		return render_template("errors/nsfw.html", v=v)
 
 	g.db.commit()
@@ -753,7 +753,7 @@ def submit_post(v):
 
 		domain_obj = get_domain(domain)
 		if domain_obj:
-			if request.headers.get("Authorization"): return {"error":domain_obj.reason}, 400
+			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":domain_obj.reason}, 400
 			return render_template("submit.html", v=v, error=domain_obj.reason, title=title, url=url, body=request.values.get("body", "")), 400
 		elif "twitter.com" == domain:
 			try: embed = requests.get("https://publish.twitter.com/oembed", timeout=5, params={"url":url, "omit_script":"t"}).json()["html"]
@@ -775,16 +775,16 @@ def submit_post(v):
 	else: embed = None
 
 	if not url and not request.values.get("body") and not request.files.get("file", None):
-		if request.headers.get("Authorization"): return {"error": "`url` or `body` parameter required."}, 400
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "`url` or `body` parameter required."}, 400
 		return render_template("submit.html", v=v, error="Please enter a url or some text.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if not title:
-		if request.headers.get("Authorization"): return {"error": "Please enter a better title"}, 400
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Please enter a better title"}, 400
 		return render_template("submit.html", v=v, error="Please enter a better title.", title=title, url=url, body=request.values.get("body", "")), 400
 
 
 	elif len(title) > 500:
-		if request.headers.get("Authorization"): return {"error": "500 character limit for titles"}, 400
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "500 character limit for titles"}, 400
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
 
 	if v.marseyawarded:
@@ -853,12 +853,12 @@ def submit_post(v):
 
 	if len(str(body)) > 10000:
 
-		if request.headers.get("Authorization"): return {"error":"10000 character limit for text body."}, 400
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"10000 character limit for text body."}, 400
 		return render_template("submit.html", v=v, error="10000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if len(url) > 2048:
 
-		if request.headers.get("Authorization"): return {"error":"2048 character limit for URLs."}, 400
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"2048 character limit for URLs."}, 400
 		return render_template("submit.html", v=v, error="2048 character limit for URLs.", title=title, url=url,body=request.values.get("body", "")), 400
 
 	for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
@@ -891,7 +891,7 @@ def submit_post(v):
 			if url.endswith('.'): url += 'mp4'
 			body += f"\n\n{url}"
 		else:
-			if request.headers.get("Authorization"): return {"error": "Image/Video files only"}, 400
+			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Image/Video files only"}, 400
 			return render_template("submit.html", v=v, error=f"Image/Video files only."), 400
 
 	body_html = sanitize(body)
@@ -910,7 +910,7 @@ def submit_post(v):
 		ban = bans[0]
 		reason = f"Remove the {ban.domain} link from your post and try again."
 		if ban.reason: reason += f" {ban.reason}"
-		if request.headers.get("Authorization"): return {"error": reason}, 403
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": reason}, 403
 		return render_template("submit.html", v=v, error=reason, title=title, url=url, body=request.values.get("body", "")), 403
 
 	if v.club_allowed == False: club = False
@@ -984,7 +984,7 @@ def submit_post(v):
 			if url.endswith('.'): url += 'mp4'
 			new_post.url = url
 		else:
-			if request.headers.get("Authorization"): return {"error": "File type not allowed"}, 400
+			if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "File type not allowed"}, 400
 			return render_template("submit.html", v=v, error="File type not allowed.", title=title, body=request.values.get("body", "")), 400
 
 		

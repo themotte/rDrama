@@ -270,7 +270,7 @@ def settings_profile_post(v):
 				if url.endswith('.'): url += 'mp4'
 				bio += f"\n\n{url}"
 			else:
-				if request.headers.get("Authorization"): return {"error": "Image/Video files only"}, 400
+				if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "Image/Video files only"}, 400
 				return render_template("settings_profile.html", v=v, error="Image/Video files only."), 400
 		
 		bio_html = sanitize(bio)
