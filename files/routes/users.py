@@ -438,7 +438,7 @@ def message2(v, username):
 	else: notifbody = message
 	
 	beams_client.publish_to_interests(
-		interests=[str(user.id)],
+		interests=[f'{request.host}{user.id}'],
 		publish_body={
 			'web': {
 				'notification': {
@@ -454,7 +454,7 @@ def message2(v, username):
 					'body': notifbody,
 				},
 				'data': {
-					'url': f'notifications',
+					'url': 'notifications',
 				}
 			}
 		},
