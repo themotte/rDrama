@@ -169,7 +169,9 @@
 	<div class="d-none" id="pusherid">{{PUSHER_ID}}</div>
 	<script src="/static/assets/js/pusher.js?a=161"></script>
 	<script>
-		Android.Subscribe('{{request.host}}{{v.id}}');
+		if (Android){
+			Android.Subscribe('{{request.host}}{{v.id}}');
+		}
 	</script>
 {% endif %}
 
