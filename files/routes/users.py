@@ -444,7 +444,7 @@ def message2(v, username):
 				'notification': {
 					'title': f'New message from @{v.username}',
 					'body': notifbody,
-					'deep_link': f'https://{site}/notifications',
+					'deep_link': f'https://{site}/notifications?messages=true',
 					'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
 				}
 			},
@@ -454,7 +454,7 @@ def message2(v, username):
 					'body': notifbody,
 				},
 				'data': {
-					'url': 'notifications',
+					'url': 'notifications?messages=true',
 				}
 			}
 		},
@@ -511,7 +511,7 @@ def messagereply(v):
 				'notification': {
 					'title': f'New message from @{v.username}',
 					'body': notifbody,
-					'deep_link': f'https://{site}/notifications',
+					'deep_link': f'https://{site}/notifications?messages=true',
 					'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
 				}
 			},
@@ -521,7 +521,7 @@ def messagereply(v):
 					'body': notifbody,
 				},
 				'data': {
-					'url': 'notifications',
+					'url': 'notifications?messages=true',
 				}
 			}
 		},
