@@ -522,13 +522,8 @@ class User(Base):
 		self.bannerurl = None
 
 	def ban(self, admin=None, reason=None, days=0):
-		if days:
-			ban_time = int(time.time()) + (days * 86400)
-			self.unban_utc = ban_time
-		else:
-			self.deletepfp()
-			self.deletebanner()
-			if self.discord_id: remove_user(self)
+		if days: self.unban_utc = int(time.time()) + (days * 86400)
+		elif self.discord_id: remove_user(self)
 
 		self.is_banned = admin.id if admin else AUTOJANNY_ID
 		if reason: self.ban_reason = reason
