@@ -630,6 +630,8 @@ def admin_link_accounts(v):
 def admin_removed(v):
 
 	page = int(request.values.get("page", 1))
+
+	if page < 1: abort(400)
 	
 	ids = g.db.query(Submission.id).join(User, User.id == Submission.author_id).filter(or_(Submission.is_banned==True, User.shadowbanned != None)).order_by(Submission.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
