@@ -124,6 +124,8 @@ function transferBux(mobile=false) {
 }
 
 function submitFormAjax(e) {
+	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
+
 	document.getElementById('message').classList.add('d-none');
 	document.getElementById('message-mobile').classList.add('d-none');
 	document.getElementById('message-preview').classList.add('d-none');

@@ -8,6 +8,8 @@ function post(url) {
 };
 
 function post_toast3(url, button1, button2) {
+	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
+
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	var form = new FormData()
@@ -24,7 +26,8 @@ function post_toast3(url, button1, button2) {
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
-		let data = JSON.parse(xhr.response)
+		try {let data = JSON.parse(xhr.response)}
+		catch(e) {}
 		if (xhr.status >= 200 && xhr.status < 300 && data && data["message"]) {
 			document.getElementById('toast-post-success-text').innerText = data["message"];
 			new bootstrap.Toast(document.getElementById('toast-post-success')).show();
@@ -107,9 +110,9 @@ function delete_commentModal(id) {
 };
 
 function post_reply(id){
+	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 
 	var form = new FormData();
-
 	form.append('formkey', formkey());
 	form.append('parent_id', id);
 	form.append('body', document.getElementById('reply-form-body-'+id).value);
@@ -122,8 +125,11 @@ function post_reply(id){
 			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '').replace('comment-collapse-desktop d-none d-md-block','d-none').replace('border-left: 2px solid','padding-left:0;border-left: 0px solid')
 		}
 		else {
-			let data = JSON.parse(xhr.response)
-			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			try{
+				let data = JSON.parse(xhr.response)
+				document.getElementById('toast-post-error-text').innerText = data["error"];
+			}
+			catch(e) {}
 			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 		}
 	}
@@ -131,6 +137,7 @@ function post_reply(id){
 }
 
 function comment_edit(id){
+	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 
 	var form = new FormData();
 
@@ -148,8 +155,11 @@ function comment_edit(id){
 			document.getElementById('cancel-edit-'+id).click()
 		}
 		else {
-			let data = JSON.parse(xhr.response)
-			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			try{
+				let data = JSON.parse(xhr.response)
+				document.getElementById('toast-post-error-text').innerText = data["error"];
+			}
+			catch(e) {}
 			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 		}
 	}
@@ -157,6 +167,8 @@ function comment_edit(id){
 }
 
 function post_comment(fullname){
+	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
+
 	const btn = document.getElementById('save-reply-to-'+fullname)
 	btn.classList.add('disabled');
 
@@ -177,8 +189,11 @@ function post_comment(fullname){
 			commentForm.innerHTML = xhr.response.replace(/data-src/g, 'src').replace(/data-cfsrc/g, 'src').replace(/style="display:none;visibility:hidden;"/g, '')
 		}
 		else {
-			let data = JSON.parse(xhr.response)
-			if (data && data["error"]) document.getElementById('toast-post-error-text').innerText = data["error"];
+			try{
+				let data = JSON.parse(xhr.response)
+				document.getElementById('toast-post-error-text').innerText = data["error"];
+			}
+			catch(e) {}
 			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 			btn.classList.remove('disabled');
 		}

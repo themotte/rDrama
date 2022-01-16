@@ -1,4 +1,6 @@
 function post_toast2(url, button1, button2) {
+	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
+
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	var form = new FormData()
@@ -15,7 +17,8 @@ function post_toast2(url, button1, button2) {
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
-		let data = JSON.parse(xhr.response)
+		try {let data = JSON.parse(xhr.response)}
+		catch(e) {}
 		if (xhr.status >= 200 && xhr.status < 300 && data && data["message"]) {
 			document.getElementById('toast-post-success-text').innerText = data["message"];
 			new bootstrap.Toast(document.getElementById('toast-post-success')).show();
