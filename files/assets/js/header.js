@@ -28,7 +28,8 @@ function post_toast(url, reload, data) {
 	xhr.withCredentials=true;
 
 	xhr.onload = function() {
-		try {let data = JSON.parse(xhr.response)}
+		let data
+		try {data = JSON.parse(xhr.response)}
 		catch(e) {}
 		if (xhr.status >= 200 && xhr.status < 300 && data && data['message']) {
 			document.getElementById('toast-post-success-text').innerText = data["message"];
