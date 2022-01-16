@@ -82,7 +82,7 @@ function awardModal(link) {
 function bruh(kind) {
 	document.getElementById('giveaward').disabled=false;
 	document.getElementById('kind').value=kind;
-	try {document.getElementsByClassName('picked')[0].classList.toggle('picked');} catch(e) {}
+	try {document.getElementsByClassName('picked')[0].classList.toggle('picked');} catch(e) {console.log(e)}
 	document.getElementById(kind).classList.toggle('picked')
 	if (kind == "flairlock") {
 		document.getElementById('notelabel').innerHTML = "New flair:";

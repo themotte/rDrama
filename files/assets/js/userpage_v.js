@@ -46,7 +46,7 @@ function post_toast_callback(url, data, callback) {
 					document.getElementById('toast-post-error-text').innerText = JSON.parse(xhr.response)["error"];
 				}
 				return false
-			} catch(e) {}
+			} catch(e) {console.log(e)}
 
 			return false;
 		}

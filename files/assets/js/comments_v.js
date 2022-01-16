@@ -28,7 +28,7 @@ function post_toast3(url, button1, button2) {
 	xhr.onload = function() {
 		let data
 		try {data = JSON.parse(xhr.response)}
-		catch(e) {}
+		catch(e) {console.log(e)}
 		if (xhr.status >= 200 && xhr.status < 300 && data && data["message"]) {
 			document.getElementById('toast-post-success-text').innerText = data["message"];
 			new bootstrap.Toast(document.getElementById('toast-post-success')).show();
@@ -130,7 +130,7 @@ function post_reply(id){
 				let data = JSON.parse(xhr.response)
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 			}
-			catch(e) {}
+			catch(e) {console.log(e)}
 			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 		}
 	}
@@ -160,7 +160,7 @@ function comment_edit(id){
 				let data = JSON.parse(xhr.response)
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 			}
-			catch(e) {}
+			catch(e) {console.log(e)}
 			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 		}
 	}
@@ -194,7 +194,7 @@ function post_comment(fullname){
 				let data = JSON.parse(xhr.response)
 				document.getElementById('toast-post-error-text').innerText = data["error"];
 			}
-			catch(e) {}
+			catch(e) {console.log(e)}
 			new bootstrap.Toast(document.getElementById('toast-post-error')).show();
 			btn.classList.remove('disabled');
 		}
@@ -216,7 +216,7 @@ document.onpaste = function(event) {
 				document.getElementById('filename-show-reply-' + fullname).textContent = filename;
 			}
 		}
-		catch(e) {}
+		catch(e) {console.log(e)}
 	}
 	else if (focused.id.includes('comment-edit-body-')) {
 		var id = focused.dataset.id;
