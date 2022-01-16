@@ -466,7 +466,7 @@ def api_comment(v):
 			g.db.add(n)
 
 		if parent.author.id != v.id:
-			if len(message) > 100: notifbody = c.body[:100] + '...'
+			if len(c.body) > 100: notifbody = c.body[:100] + '...'
 			else: notifbody = c.body
 
 			beams_client.publish_to_interests(
