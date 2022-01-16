@@ -40,13 +40,25 @@
 				height: 27px;
 			}
 		}
+		
+		@keyframes wholesome {
+		    0% {top:0%; left: 50%;}
+		    25% {top:50%; left:98%;}
+		    50% {top:98%; left: 50%}
+		    75% {top:50%; left:0%;}
+		    100% {top:0%; left: 50%;}
+		}
+
+		.seal {
+		    animation-name: wholesome !important;
+		    animation-duration: 10s !important;
+		    animation-iteration-count: infinite !important;
+		    animation-fill-mode: forwards !important;
+		    animation-timing-function: linear !important;
+		}
 	</style>
 	<div class="seal" height="100%" width="100%">
-		<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%" width="100%">
-			<marquee direction="right" scrollamount=10 behavior="alternate" height="100%" width="100%">
-				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
-			</marquee>
-		</marquee>
+		<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
 	</div>
 {% endif %}
 
