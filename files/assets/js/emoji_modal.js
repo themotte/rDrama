@@ -4,9 +4,6 @@ function commentForm(form) {
 	commentFormID = form;
 };
 
-const TEXTAREA_POS_ATTR = 'data-curr-pos'
-const EMOJI_BOX_ID = 'EMOJIS_favorite'
-const EMOJI_FORM_DESTINATION_ATTR = 'data-form-destination'
 const EMOJIS_STRINGS = [
 	{
 		type:'marsey',
@@ -907,7 +904,7 @@ function getEmoji(searchTerm) {
 
 	const newPos = curPos + emoji.length
 
-	commentBox.setAttribute(TEXTAREA_POS_ATTR, newPos.toString());
+	commentBox.setAttribute('data-curr-pos', newPos.toString());
 
 	if (typeof checkForRequired === "function") checkForRequired();
 
@@ -922,11 +919,11 @@ function loadEmojis(form) {
 	let search_bar = document.getElementById("emoji_search");
 	let search_container = document.getElementById('emoji-tab-search')
 
-	const fav = document.getElementById(EMOJI_BOX_ID)
-	fav.setAttribute(EMOJI_FORM_DESTINATION_ATTR, form)
+	const fav = document.getElementById('EMOJIS_favorite')
+	fav.setAttribute('data-form-destination', form)
 
 	const commentBox = document.getElementById(form);
-	commentBox.setAttribute(TEXTAREA_POS_ATTR, commentBox.selectionStart);
+	commentBox.setAttribute('data-curr-pos', commentBox.selectionStart);
 
 	if (fav.innerHTML == "")
 	{
