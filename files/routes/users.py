@@ -500,6 +500,34 @@ def messagereply(v):
 	notif = Notification(comment_id=new_comment.id, user_id=user_id)
 	g.db.add(notif)
 
+
+	if len(message) > 100: notifbody = message[:100] + '...'
+	else: notifbody = message
+	
+	beams_client.publish_to_interests(
+		interests=[f'{request.host}{user_id}'],
+		publish_body={
+			'web': {
+				'notification': {
+					'title': f'New message from @{v.username}',
+					'body': notifbody,
+					'deep_link': f'https://{site}/notifications',
+					'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
+				}
+			},
+			'fcm': {
+				'notification': {
+					'title': f'New message from @{v.username}',
+					'body': notifbody,
+				},
+				'data': {
+					'url': 'notifications',
+				}
+			}
+		},
+	)
+
+
 	if new_comment.top_comment.sentto == 0:
 		admins = g.db.query(User).filter(User.admin_level > 2, User.id != v.id, User.id != user_id).all()
 		for admin in admins:
