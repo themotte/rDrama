@@ -1,5 +1,6 @@
 function post(url) {
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", url, true);
 	var form = new FormData()
 	form.append("formkey", formkey());
@@ -10,7 +11,8 @@ function post(url) {
 function post_toast3(url, button1, button2) {
 	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", url, true);
 	var form = new FormData()
 	form.append("formkey", formkey());
@@ -53,7 +55,8 @@ function report_commentModal(id, author) {
 
 	this.innerHTML='Reporting comment';
 	this.disabled = true;
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", '/report/comment/'+id, true);
 	var form = new FormData()
 	form.append("formkey", formkey());
@@ -99,7 +102,8 @@ function delete_commentModal(id) {
 		this.disabled = true; 
 
 		var url = '/delete/comment/' + id
-		var xhr = new XMLHttpRequest();
+		const xhr = new XMLHttpRequest();
+		xhr.setRequestHeader('Authorization', 'xhr');
 		xhr.open("POST", url, true);
 		var form = new FormData()
 		form.append("formkey", formkey());
@@ -117,7 +121,8 @@ function post_reply(id){
 	form.append('formkey', formkey());
 	form.append('parent_id', id);
 	form.append('body', document.getElementById('reply-form-body-'+id).value);
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("post", "/reply");
 	xhr.withCredentials=true;
 	xhr.onload=function(){
@@ -146,7 +151,8 @@ function comment_edit(id){
 	form.append('body', document.getElementById('comment-edit-body-'+id).value);
 	form.append('file', document.getElementById('file-edit-reply-'+id).files[0]);
 
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("post", "/edit_comment/"+id);
 	xhr.withCredentials=true;
 	xhr.onload=function(){
@@ -181,7 +187,8 @@ function post_comment(fullname){
 	form.append('body', document.getElementById('reply-form-body-'+fullname).value);
 	form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
 
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("post", "/comment");
 	xhr.withCredentials=true;
 	xhr.onload=function(){

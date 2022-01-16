@@ -6,7 +6,8 @@ function delete_postModal(id) {
         this.disabled = true; 
 
         var url = '/delete_post/' + id
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
+        xhr.setRequestHeader('Authorization', 'xhr');
         xhr.open("POST", url, true);
         var form = new FormData()
         form.append("formkey", formkey());

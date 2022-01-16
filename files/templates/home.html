@@ -6,7 +6,8 @@
 	{% if not v.fp %}
 		<script>
 			function fp(fp) {
-				var xhr = new XMLHttpRequest();
+				const xhr = new XMLHttpRequest();
+				xhr.setRequestHeader('Authorization', 'xhr');
 				xhr.open("POST", '{{request.host_url}}fp/'+fp, true);
 				var form = new FormData()
 				form.append("formkey", formkey());
@@ -19,7 +20,7 @@
 				script.onload = resolve;
 				script.onerror = reject;
 				script.async = true;
-				script.src = "/static/assets/js/fp.js?a=5";
+				script.src = "/static/assets/js/fp.js?a=200";
 				document.head.appendChild(script);
 			})
 				.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
@@ -167,7 +168,7 @@
 {% if v %}
 	<div class="d-none" id="strid">{{request.host}}{{v.id}}</div>
 	<div class="d-none" id="pusherid">{{PUSHER_ID}}</div>
-	<script src="/static/assets/js/pusher.js?a=161"></script>
+	<script src="/static/assets/js/pusher.js?a=200"></script>
 	<script>
 		if (Android){
 			Android.Subscribe('{{request.host}}{{v.id}}');

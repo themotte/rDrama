@@ -8,7 +8,8 @@ function block_user() {
 
     if (isValidUsername) {
 
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
+        xhr.setRequestHeader('Authorization', 'xhr');
         xhr.open("post", "/settings/block");
         xhr.withCredentials=true;
         f=new FormData();

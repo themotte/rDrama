@@ -21,7 +21,8 @@ function morecomments(cid) {
     btn.innerHTML = "Requesting...";
     var form = new FormData();
     form.append("formkey", formkey());
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
+    xhr.setRequestHeader('Authorization', 'xhr');
     xhr.open("post", `/morecomments/${cid}`);
     xhr.withCredentials=true;
     xhr.onload=function(){

@@ -1,5 +1,6 @@
 function post_toast_callback(url, data, callback) {
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", url, true);
 	var form = new FormData()
 	form.append("formkey", formkey());
@@ -133,6 +134,7 @@ function submitFormAjax(e) {
 	
 	const form = e.target;
 	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 
 	e.preventDefault();
 

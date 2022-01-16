@@ -1,5 +1,6 @@
 function post(url) {
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", url, true);
 	var form = new FormData()
 	form.append("formkey", formkey());

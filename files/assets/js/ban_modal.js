@@ -7,7 +7,8 @@ function banModal(link, id, name) {
         let fd = new FormData(document.getElementById("banModalForm"));
         fd.append("formkey", formkey());
 
-        let xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
+        xhr.setRequestHeader('Authorization', 'xhr');
         xhr.open("POST", `/ban_user/${id}?form`, true);
         xhr.withCredentials = true;
 

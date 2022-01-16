@@ -66,7 +66,8 @@ function vote(type, id, dir) {
 		}
 	}
 
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
+	xhr.setRequestHeader('Authorization', 'xhr');
 	xhr.open("POST", "/vote/" + type.replace('-mobile','') + "/" + id + "/" + votedirection, true);
 	var form = new FormData()
 	form.append("formkey", formkey());

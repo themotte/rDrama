@@ -40,6 +40,10 @@ def error_405(e):
 	else: return render_template('errors/405.html', err=True), 405
 
 
+@app.errorhandler(413)
+def error_413(e):
+	return {"error": "Max file size is 4 MB (8 MB for paypigs)"}, 413
+
 @app.errorhandler(429)
 def error_429(e):
 	if request.headers.get("Authorization"): return {"error": "429 Too Many Requests"}, 429

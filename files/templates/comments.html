@@ -847,20 +847,20 @@
 </style>
 
 {% if v %}
-	<script src="/static/assets/js/marked.js?a=3"></script>
-	<script src="/static/assets/js/comments_v.js?a=15"></script>
+	<script src="/static/assets/js/marked.js?a=200"></script>
+	<script src="/static/assets/js/comments_v.js?a=200"></script>
 {% endif %}
 
-<script src="/static/assets/js/clipboard.js?a=3"></script>
+<script src="/static/assets/js/clipboard.js?a=200"></script>
 
 {% if v and v.admin_level > 1 %}
-	<script src="/static/assets/js/comments_admin.js?a=3"></script>
+	<script src="/static/assets/js/comments_admin.js?a=200"></script>
 {% endif %}
 
 {% include "expanded_image_modal.html" %}
 
-<script src="/static/assets/js/comments+submission_listing.js?a=9"></script>
-<script src="/static/assets/js/comments.js?a=4"></script>
+<script src="/static/assets/js/comments+submission_listing.js?a=200"></script>
+<script src="/static/assets/js/comments.js?a=200"></script>
 
 <script>
 	{% if p and (not v or v.highlightcomments) %}
