@@ -388,8 +388,8 @@ def morecomments(v, cid):
 @auth_required
 def edit_post(pid, v):
 	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
-	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB."}, 413
+		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}
+	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB."}
 
 	p = get_post(pid)
 
@@ -687,8 +687,8 @@ def submit_post(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
 	
 	if v and v.patron:
-		if request.content_length > 8 * 1024 * 1024: return {"error": "Max file size is 8 MB."}, 413
-	elif request.content_length > 4 * 1024 * 1024: return {"error": "Max file size is 4 MB."}, 413
+		if request.content_length > 8 * 1024 * 1024: return {"error": "Max file size is 8 MB."}
+	elif request.content_length > 4 * 1024 * 1024: return {"error": "Max file size is 4 MB."}
 
 
 	title = request.values.get("title", "").strip()[:500].replace('‎','')
