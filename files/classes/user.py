@@ -522,13 +522,14 @@ class User(Base):
 		self.bannerurl = None
 
 	def ban(self, admin=None, reason=None, days=0):
-		if days: self.unban_utc = int(time.time()) + (days * 86400)
+		if days:
+			self.unban_utc = int(time.time()) + (days * 86400)
+			g.db.add(self)
 		elif self.discord_id: remove_user(self)
 
 		self.is_banned = admin.id if admin else AUTOJANNY_ID
 		if reason: self.ban_reason = reason
 
-		g.db.add(self)
 
 
 	@property

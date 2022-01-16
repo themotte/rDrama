@@ -436,7 +436,7 @@ def message2(v, username):
 
 	
 	beams_client.publish_to_interests(
-		interests=[f'{request.host}{parent.author.id}'],
+		interests=[str(user.id)],
 		publish_body={
 			'web': {
 				'notification': {
