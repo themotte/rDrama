@@ -484,7 +484,6 @@ def api_comment(v):
 					'notification': {
 						'title': f'New reply by @{v.username}',
 						'body': notifbody,
-						'click_action': 'android.intent.category.DEFAULT',
 					},
 					'data': {
 						'url': f'comment/{c.id}?context=9&read=true#context',

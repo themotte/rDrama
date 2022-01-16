@@ -15,7 +15,7 @@
 				</a>
 			</div>
 			<div class="flex-grow-1 d-fl d-none d-md-block">
-				<form class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if error %}style="margin-right:40rem!important"{% endif %} action="{% if request.path.startswith('/search') %}{{request.path}}{% else %}/search/posts/{% endif %}" method="get">
+				<form class="form-inline search flex-nowrap mx-0 mx-lg-auto" {% if err %}style="margin-right:40rem!important"{% endif %} action="{% if request.path.startswith('/search') %}{{request.path}}{% else %}/search/posts/{% endif %}" method="get">
 					<input autocomplete="off" class="form-control w-100" type="search" placeholder="Search" aria-label="Search" name="q" value="{{request.values.get('q', '')}}">
 					<span class="input-group-append">
 						<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
@@ -24,7 +24,7 @@
 					</span>
 				</form>
 			</div>
-			{% if not error %}
+			{% if not err %}
 			<a class="mobile-nav-icon d-md-none" href="/random"><i class="fas fa-random align-middle text-gray-500 black"></i></a>
 			{% if v and v.admin_level > 1 %}
 			<a class="mobile-nav-icon d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500 black"></i></a>
@@ -226,6 +226,6 @@
 	}
 </style>
 
-{% if v and not error %}
+{% if v and not err %}
 	<div id="formkey" class="d-none">{{v.formkey}}</div>
 {% endif %}

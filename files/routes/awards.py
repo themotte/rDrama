@@ -180,7 +180,7 @@ def buy(v, award):
 @auth_required
 def award_post(pid, v):
 
-	if v.shadowbanned: return render_template('errors/500.html', error=True, v=v), 500
+	if v.shadowbanned: return render_template('errors/500.html', err=True, v=v), 500
 	
 	kind = request.values.get("kind", "").strip()
 	
@@ -366,7 +366,7 @@ def award_post(pid, v):
 @auth_required
 def award_comment(cid, v):
 
-	if v.shadowbanned: return render_template('errors/500.html', error=True, v=v), 500
+	if v.shadowbanned: return render_template('errors/500.html', err=True, v=v), 500
 
 	kind = request.values.get("kind", "").strip()
 

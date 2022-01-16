@@ -452,7 +452,6 @@ def message2(v, username):
 				'notification': {
 					'title': f'New message from @{v.username}',
 					'body': notifbody,
-					'click_action': 'android.intent.category.DEFAULT',
 				},
 				'data': {
 					'url': f'notifications',
