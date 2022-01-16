@@ -60,7 +60,8 @@ def remove_admin(v, username):
 def distribute(v, comment):
 	try: comment = int(comment)
 	except: abort(400)
-	post = g.db.query(Comment).filter_by(id=comment).one_or_none().post
+	post = g.db.query(Comment.parent_submission).filter_by(id=comment).one_or_none()[0]
+	post = g.db.query(Submission).filter_by(id=post).one_or_none()
 
 	pool = 0
 	for option in post.bet_options: pool += option.upvotes
@@ -86,6 +87,9 @@ def distribute(v, comment):
 	votes = g.db.query(CommentVote).filter(CommentVote.comment_id.in_(cids)).all()
 	for vote in votes: add_notif(cid, vote.user.id)
 
+	post.body += '\n\nclosed'
+	g.db.add(post)
+	
 	g.db.commit()
 	return {"message": f"Each winner has received {coinsperperson} coins!"}
 

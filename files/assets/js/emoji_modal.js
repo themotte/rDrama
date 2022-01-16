@@ -826,7 +826,7 @@ const EMOJIS_STRINGS = [
 			"marseywoah": {"author":"dramarama", "tags":"tldr reaction wall of text wordswordswords stfu"},
 			"marseywolf": {"author":"dramarama", "tags":"halloween werewolf holiday scary monster"},
 			"marseywords": {"author":"dramarama", "tags":"longpost too long tldr reaction wordswordswords"},
-			"marseyworried": {"author":"gigavaccinator", "tags":"anxiety sweat panic scared sweaty sweating anxious nervous stressed"},
+			"marseyworried": {"author":"gigavaccinator", "tags":"monkaw anxiety sweat panic scared sweaty sweating anxious nervous stressed"},
 			"marseywtf": {"author":"chapose", "tags":"scared reaction shook surprised shocked"},
 			"marseywtf2": {"author":"altaccountumbreon", "tags":"shocked reaction wth disturbing disturbed what the fuck"},
 			"marseywut": {"author":"dramarama", "tags":"pathetic asuka"},
