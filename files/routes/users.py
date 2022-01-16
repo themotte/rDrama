@@ -435,31 +435,28 @@ def message2(v, username):
 	g.db.add(notif)
 
 	
-	try:
-		beams_client.publish_to_interests(
-			interests=[f'{request.host}{parent.author.id}'],
-			publish_body={
-				'web': {
-					'notification': {
-						'title': f'New message from @{v.username}',
-						'body': message,
-						'deep_link': f'https://{site}/notifications',
-						'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
-					}
-				},
-				'fcm': {
-					'notification': {
-						'title': f'New reply by @{v.username}',
-						'body': c.body,
-					},
-					'data': {
-						'url': f'https://{site}/notifications',
-					}
+	beams_client.publish_to_interests(
+		interests=[f'{request.host}{parent.author.id}'],
+		publish_body={
+			'web': {
+				'notification': {
+					'title': f'New message from @{v.username}',
+					'body': message,
+					'deep_link': f'https://{site}/notifications',
+					'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
 				}
 			},
-		)
-	except Exception as e:
-		print(e)
+			'fcm': {
+				'notification': {
+					'title': f'New message from @{v.username}',
+					'body': message,
+				},
+				'data': {
+					'url': f'notifications',
+				}
+			}
+		},
+	)
 
 	g.db.commit()
 
