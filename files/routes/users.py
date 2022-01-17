@@ -437,8 +437,7 @@ def message2(v, username):
 	g.db.add(notif)
 
 	if len(message) > 500: notifbody = message[:500] + '...'
-	elif message: notifbody = message
-	else: notifbody = ''
+	else: notifbody = message
 
 	beams_client.publish_to_interests(
 		interests=[f'{request.host}{user.id}'],
@@ -505,8 +504,7 @@ def messagereply(v):
 		g.db.add(notif)
 
 		if len(message) > 500: notifbody = message[:500] + '...'
-		elif message: notifbody = message
-		else: notifbody = ''
+		else: notifbody = message
 		
 		beams_client.publish_to_interests(
 			interests=[f'{request.host}{user_id}'],
