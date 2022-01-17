@@ -224,7 +224,7 @@ def api_comment(v):
 
 	is_bot = bool(request.headers.get("Authorization"))
 
-	if not is_bot and not v.marseyawarded and 'trans lives matters' not in body.lower() and len(body) > 10:
+	if not is_bot and not v.marseyawarded and 'black lives matters' not in body.lower() and len(body) > 10:
 		now = int(time.time())
 		cutoff = now - 60 * 60 * 24
 
@@ -324,7 +324,7 @@ def api_comment(v):
 		n = Notification(comment_id=c_based.id, user_id=v.id)
 		g.db.add(n)
 
-	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body.lower():
+	if v.agendaposter and not v.marseyawarded and "black lives matter" not in c.body.lower():
 
 		c.is_banned = True
 		c.ban_reason = "AutoJanny"
@@ -609,7 +609,7 @@ def edit_comment(cid, v):
 													body=body,
 													v=v
 													)
-		if 'trans lives matters' not in body.lower():
+		if 'black lives matters' not in body.lower():
 			now = int(time.time())
 			cutoff = now - 60 * 60 * 24
 
@@ -666,7 +666,7 @@ def edit_comment(cid, v):
 		c.body = body[:10000]
 		c.body_html = body_html
 
-		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in c.body.lower():
+		if v.agendaposter and not v.marseyawarded and "black lives matter" not in c.body.lower():
 
 			c.is_banned = True
 			c.ban_reason = "AutoJanny"

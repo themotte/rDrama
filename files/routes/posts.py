@@ -476,7 +476,7 @@ def edit_post(pid, v):
 
 		p.body_html = body_html
 
-		if v.agendaposter and not v.marseyawarded and "trans lives matter" not in f'{p.body}{p.title}'.lower():
+		if v.agendaposter and not v.marseyawarded and "black lives matter" not in f'{p.body}{p.title}'.lower():
 
 			p.is_banned = True
 			p.ban_reason = "AutoJanny"
@@ -1009,7 +1009,7 @@ def submit_post(v):
 			if new_post.club and not user.paid_dues: continue
 			add_notif(cid, user.id)
 
-	if v.agendaposter and not v.marseyawarded and "trans lives matter" not in f'{new_post.body}{new_post.title}'.lower():
+	if v.agendaposter and not v.marseyawarded and "black lives matter" not in f'{new_post.body}{new_post.title}'.lower():
 		new_post.is_banned = True
 		new_post.ban_reason = "AutoJanny"
 
