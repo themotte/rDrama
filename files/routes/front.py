@@ -476,4 +476,5 @@ def transfers(v):
 	next_exists = len(comments) > 25
 	comments = comments[:25]
 
+	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
 	return render_template("transfers.html", v=v, page=page, comments=comments, standalone=True, next_exists=next_exists)
