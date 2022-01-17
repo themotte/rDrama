@@ -6,11 +6,6 @@ from files.classes.submission import Submission
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
 SITE_NAME = environ.get("SITE_NAME", "").strip()
 
-@app.get("/post/")
-@auth_required
-def slash_post(v):
-	return redirect("/")
-
 @app.post("/clear")
 @auth_required
 def clear(v):
@@ -123,7 +118,8 @@ def notifications(v):
 @auth_desired
 def front_all(v):
 
-	if not v and request.path == "/" and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
+	if not v and request.path == "/" and not request.headers.get("Authorization"):
+		return redirect(f"/logged_out{request.full_path}")
 
 	if v and request.path.startswith('/logged_out'): v = None
 
@@ -436,7 +432,7 @@ def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 	elif sort == "controversial":
 		comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 	elif sort == "top":
-		comments = comments.order_by(Comment.realupvotes.desc())
+		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 	elif sort == "bottom":
 		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
@@ -467,3 +463,17 @@ def all_comments(v):
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
 	return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)
+
+
+@app.get("/transfers")
+@auth_required
+def transfers(v):
+
+	page = int(request.values.get("page", 1))
+
+	comments = g.db.query(Comment).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.distinguish_level == 6, Comment.body_html.like("%</a> has transferred %"), Comment.created_utc == 0).offset(25 * (page - 1)).limit(26).all()
+
+	next_exists = len(comments) > 25
+	comments = comments[:25]
+
+	return render_template("transfers.html", v=v, page=page, comments=comments, standalone=True, next_exists=next_exists)

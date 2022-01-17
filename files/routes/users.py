@@ -244,10 +244,12 @@ def transfer_coins(v, username):
 			tax = math.ceil(amount*0.03)
 			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).one_or_none()
 			tax_receiver.coins += tax
-			log_message = f"[@{v.username}](/id/{v.id}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.id})"
-			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 			g.db.add(tax_receiver)
 		else: tax = 0
+
+		if TAX_RECEIVER_ID:
+			log_message = f"[@{v.username}](/id/{v.id}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.id})"
+			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 
 		receiver.coins += amount-tax
 		v.coins -= amount
@@ -436,7 +438,7 @@ def message2(v, username):
 
 	if len(message) > 500: notifbody = message[:500] + '...'
 	else: notifbody = message
-	
+
 	beams_client.publish_to_interests(
 		interests=[f'{request.host}{user.id}'],
 		publish_body={
@@ -628,7 +630,7 @@ def u_username(username, v=None):
 
 
 	if username != u.username:
-		return redirect(request.path.replace(username, u.username))
+		return redirect(request.full_path.replace(username, u.username))
 
 	if u.reserved:
 		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": f"That username is reserved for: {u.reserved}"}
@@ -796,7 +798,7 @@ def u_username_comments(username, v=None):
 	elif sort == "controversial":
 		comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 	elif sort == "top":
-		comments = comments.order_by(Comment.realupvotes.desc())
+		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 	elif sort == "bottom":
 		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 

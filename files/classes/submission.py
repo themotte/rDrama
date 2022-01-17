@@ -68,7 +68,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def comments(self):
-		return g.db.query(Comment.author_id, Comment.created_utc, Comment.id).filter_by(parent_submission=self.id)
+		return g.db.query(Comment.author_id, Comment.created_utc, Comment.id).filter(Submission.parent_submission == self.id, Submission.author_id.notin_((AUTOPOLLER_ID,AUTOBETTER_ID)))
 
 	@property
 	@lazy

@@ -58,6 +58,9 @@ def remove_admin(v, username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def distribute(v, comment):
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).one_or_none()
+	if autobetter.coins == 0: return {"error": "@AutoBetter has 0 coins"}
+
 	try: comment = int(comment)
 	except: abort(400)
 	post = g.db.query(Comment.parent_submission).filter_by(id=comment).one_or_none()[0]
@@ -67,6 +70,10 @@ def distribute(v, comment):
 	for option in post.bet_options: pool += option.upvotes
 	pool *= 200
 
+	autobetter.coins -= pool
+	if autobetter.coins < 0: autobetter.coins = 0
+	g.db.add(autobetter)
+
 	votes = g.db.query(CommentVote).filter_by(comment_id=comment)
 	coinsperperson = int(pool / votes.count())
 
@@ -75,11 +82,6 @@ def distribute(v, comment):
 		u = vote.user
 		u.coins += coinsperperson
 		add_notif(cid, u.id)
-
-	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).one_or_none()
-	autobetter.coins -= pool
-	if autobetter.coins < 0: return {"error": "Not enough coins in bool"}, 400
-	g.db.add(autobetter)
 
 	cid = notif_comment(f"You lost the 200 coins you bet on [{post.permalink}]({post.permalink}) :marseylaugh:")
 	cids = [x.id for x in post.bet_options]
@@ -500,14 +502,11 @@ def users_list(v):
 @admin_level_required(2)
 def alt_votes_get(v):
 
-	if not request.values.get("u1") or not request.values.get("u2"):
-		return render_template("admin/alt_votes.html", v=v)
-
 	u1 = request.values.get("u1")
 	u2 = request.values.get("u2")
 
 	if not u1 or not u2:
-		return redirect("/admin/alt_votes")
+		return render_template("admin/alt_votes.html", v=v)
 
 	u1 = get_user(u1)
 	u2 = get_user(u2)

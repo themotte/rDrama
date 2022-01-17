@@ -1,0 +1,42 @@
+{% extends "default.html" %}
+
+{% block PseudoSubmitForm %}{% endblock %}
+{% block sortnav %}{% endblock %}
+
+{% block content %}
+	<pre></pre>
+	<div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
+
+		<div class="col-12 px-3">
+
+			<div class="posts" id="posts">
+
+				{% include "comments.html" %}
+
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}
+
+{% block pagenav %}
+<nav aria-label="Page navigation">
+	<ul class="pagination pagination-sm mb-0">
+		{% if page>1 %}
+		<li class="page-item">
+			<small><a class="page-link" href="?page={{page-1}}" tabindex="-1">Prev</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Prev</span></li>
+		{% endif %}
+		{% if next_exists %}
+		<li class="page-item">
+			<small><a class="page-link" href="?page={{page+1}}">Next</a></small>
+		</li>
+		{% else %}
+		<li class="page-item disabled"><span class="page-link">Next</span></li>
+		{% endif %}
+	</ul>
+</nav>
+{% endblock %}

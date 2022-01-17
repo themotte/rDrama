@@ -12,13 +12,14 @@ valid_password_regex = re.compile("^.{8,100}$")
 @auth_desired
 def login_get(v):
 
-	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
-	if v:
-		return redirect(redir)
+	redir = request.values.get("redirect")
+	if redir:
+		redir = redir.replace("/logged_out", "").strip()
+		if not redir.startswith(request.host_url) and not redir.startswith('/'): redir = None
 
-	return render_template("login.html",
-						   failed=False,
-						   redirect=redir)
+	if v and redir: return redirect(redir)
+
+	return render_template("login.html", failed=False, redirect=redir)
 
 
 def check_for_alts(current_id):
@@ -137,9 +138,12 @@ def login_post():
 
 	if account.id != PW_ID: check_for_alts(account.id)
 
-	redir = request.values.get("redirect", "/").replace("/logged_out", "").strip()
-
 	g.db.commit()
+
+	redir = request.values.get("redirect")
+	if redir:
+		redir = redir.replace("/logged_out", "").strip()
+		if not redir.startswith(request.host_url) and not redir.startswith('/'): redir = '/'
 
 	return redirect(redir)
 

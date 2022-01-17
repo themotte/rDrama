@@ -469,29 +469,32 @@ def api_comment(v):
 			if len(c.body) > 500: notifbody = c.body[:500] + '...'
 			else: notifbody = c.body
 
-			beams_client.publish_to_interests(
-				interests=[f'{request.host}{parent.author.id}'],
-				publish_body={
-				'web': {
-					'notification': {
-						'title': f'New reply by @{v.username}',
-						'body': notifbody,
-						'deep_link': f'https://{site}/comment/{c.id}?context=9&read=true#context',
-						'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
-					}
-				},
-				'fcm': {
-					'notification': {
-						'title': f'New reply by @{v.username}',
-						'body': notifbody,
+			try:
+				beams_client.publish_to_interests(
+					interests=[f'{request.host}{parent.author.id}'],
+					publish_body={
+					'web': {
+						'notification': {
+							'title': f'New reply by @{v.username}',
+							'body': notifbody,
+							'deep_link': f'https://{site}/comment/{c.id}?context=9&read=true#context',
+							'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
+						}
 					},
-					'data': {
-						'url': f'comment/{c.id}?context=9&read=true#context',
+					'fcm': {
+						'notification': {
+							'title': f'New reply by @{v.username}',
+							'body': notifbody,
+						},
+						'data': {
+							'url': f'comment/{c.id}?context=9&read=true#context',
+						}
 					}
-				}
-				},
-			)
-
+					},
+				)
+			except Exception as e:
+				print(e)
+				print(c.id)
 
 
 	vote = CommentVote(user_id=v.id,
@@ -512,7 +515,7 @@ def api_comment(v):
 
 	c.voted = 1
 	
-	if v.id in AUTO_UPVOTE_IDS:
+	if v.id == PIZZASHILL_ID:
 		autovote = CommentVote(user_id=CARP_ID, comment_id=c.id, vote_type=1)
 		g.db.add(autovote)
 		autovote = CommentVote(user_id=AEVANN_ID, comment_id=c.id, vote_type=1)
@@ -523,6 +526,14 @@ def api_comment(v):
 		v.truecoins += 3
 		g.db.add(v)
 		c.upvotes += 3
+		g.db.add(c)
+	elif v.id == HIL_ID:
+		autovote = CommentVote(user_id=CARP_ID, comment_id=c.id, vote_type=1)
+		g.db.add(autovote)
+		v.coins += 1
+		v.truecoins += 1
+		g.db.add(v)
+		c.upvotes += 1
 		g.db.add(c)
 
 	g.db.commit()

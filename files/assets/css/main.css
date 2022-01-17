@@ -2627,7 +2627,6 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-}
 p {
     font-size: 14px;
 }
@@ -3508,7 +3507,8 @@ th {
 @media (max-width: 767.98px) {
     .post-actions .list-inline .list-inline-item {
         margin-right: 1.5rem;
-        margin-top: 5px;
+        margin-top: auto;
+        margin-bottom: auto;
 }
     .post-actions .list-inline .list-inline-item:last-child {
         margin-right: 0;
@@ -4637,8 +4637,8 @@ input[type=radio] ~ .custom-control-label::before {
     width: 60px !important;
 }
 .emj, .emoji, .bigemoji, .emoji-md, .emoji-lg {
-    max-width: 50% !important;
-    max-height: 50% !important;
+    max-width: min(150px,50%) !important;
+    max-height: min(150px,50%) !important;
     display: inline-block;
     -o-object-fit: contain;
     object-fit: contain;
@@ -4759,4 +4759,13 @@ lite-youtube.lyt-activated > .lty-playbtn {
 }
 table {
     white-space: nowrap !important;
+}
+
+@media (max-width: 768px) {
+    .comment .comment-body .comment-text {
+        padding-top: 5px;
+    }
+    p {
+        margin-bottom: 7px;
+    }
 }

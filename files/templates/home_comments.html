@@ -4,7 +4,6 @@
 {% block sortnav %}{% endblock %}
 
 {% block content %}
-
 	<pre></pre>
 	<div class="d-flex justify-content-between align-items-center">
 
@@ -52,7 +51,6 @@
 		</div>
 	</div>
 
-
 	<div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
 
 		<div class="col-12 px-3">
@@ -73,14 +71,14 @@
 	<ul class="pagination pagination-sm mb-0">
 		{% if page>1 %}
 		<li class="page-item">
-			<small><a class="page-link" href="?page={{page-1}}&sort={{sort}}&t={{t}}{% if shadowbanned %}&shadowbanned=true{% endif %}" tabindex="-1">Prev</a></small>
+			<small><a class="page-link" href="?page={{page-1}}&sort={{sort}}&t={{t}}" tabindex="-1">Prev</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Prev</span></li>
 		{% endif %}
 		{% if next_exists %}
 		<li class="page-item">
-			<small><a class="page-link" href="?page={{page+1}}&sort={{sort}}&t={{t}}{% if shadowbanned %}&shadowbanned=true{% endif %}">Next</a></small>
+			<small><a class="page-link" href="?page={{page+1}}&sort={{sort}}&t={{t}}">Next</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Next</span></li>

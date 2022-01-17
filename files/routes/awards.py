@@ -356,7 +356,8 @@ def award_post(pid, v):
 	g.db.add(post.author)
 
 	g.db.commit()
-	if request.referrer and len(request.referrer) > 1: return redirect(request.referrer)
+	if request.referrer and len(request.referrer) > 1 and (request.referrer.startswith('/') or request.referrer.startswith(request.host_url)):
+		return redirect(request.referrer)
 	else: return redirect("/")
 
 
@@ -540,7 +541,8 @@ def award_comment(cid, v):
 	g.db.add(c.author)
 
 	g.db.commit()
-	if request.referrer and len(request.referrer) > 1: return redirect(request.referrer)
+	if request.referrer and len(request.referrer) > 1 and (request.referrer.startswith('/') or request.referrer.startswith(request.host_url)):
+		return redirect(request.referrer)
 	else: return redirect("/")
 
 @app.get("/admin/awards")
