@@ -170,6 +170,10 @@
 								<a class="btn btn-primary" role="button" onclick="post_toast('/@{{u.username}}/revert_actions')">Revert admin actions</a>
 							{% endif %}
 						{% endif %}
+						
+						{% if '/comments' not in request.path %}
+							{% include "emoji_modal.html" %}
+						{% endif %}
 
 						<form class="d-none profile-toggleable" id="message" action="/@{{u.username}}/message" onsubmit="submitFormAjax(event)">
 							<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
@@ -728,11 +732,6 @@
 		object-fit: cover !important;
 	}
 </style>
-
-
-{% if v %}
-	{% include "emoji_modal.html" %}
-{% endif %}
 
 {% endblock %}
 
