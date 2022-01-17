@@ -174,16 +174,16 @@
 <meta charset="utf-8" >
 <meta property="og:type" content="article" >
 
-{% if comment_info and not comment_info.is_banned and not linked_comment.deleted_utc %}
-<title>{{'@'+comment_info.author.username}} comments on "{{p.plaintitle(v)}} - {{SITE_NAME}}"</title>
+{% if comment_info and not comment_info.is_banned and not comment_info.deleted_utc %}
+<title>{{'@'+comment_info.author_name}} comments on "{{p.plaintitle(v)}} - {{SITE_NAME}}"</title>
 
 
-<meta property="og:article:author" content="{{'@'+comment_info.author.username}}" >
+<meta property="og:article:author" content="{{'@'+comment_info.author_name}}" >
 <meta property="article:published_time" content="{{comment_info.created_datetime}}" >
 {% if comment_info.edited_utc %}<meta property="article:modified_time" content="{{comment_info.edited_string}}" >{% endif %}
 <meta property="og:description" name="description" content="{{comment_info.plainbody(v)}}" >
-<meta property="og:author" name="author" content="{{'@'+comment_info.author.username}}" >
-<meta property="og:title" content="{{'@'+comment_info.author.username}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
+<meta property="og:author" name="author" content="{{'@'+comment_info.author_name}}" >
+<meta property="og:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
 <meta property="og:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/preview.gif{% endif %}" >
 {% if p.is_video %}
 	<meta property="og:video" content="{{p.realurl(v)}}" >
@@ -193,8 +193,8 @@
 
 <meta name="twitter:card" content="summary" >
 <meta name="twitter:site" content="{{request.host_url}}">
-<meta name="twitter:title" content="{{'@'+comment_info.author.username}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
-<meta name="twitter:creator" content="{{'@'+comment_info.author.username}}">
+<meta name="twitter:title" content="{{'@'+comment_info.author_name}} comments on {{p.plaintitle(v)}} - {{SITE_NAME}}" >
+<meta name="twitter:creator" content="{{'@'+comment_info.author_name}}">
 <meta name="twitter:description" content="{{comment_info.plainbody(v)}}" >
 <meta name="twitter:image" content="{% if p.is_image %}{{p.realurl(v)}}{% elif p.has_thumb%}{{p.thumb_url}}{% else %}{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/preview.gif{% endif %}" >
 <meta name="twitter:url" content="{{p.permalink | full_link}}" >
@@ -779,7 +779,7 @@
 					{% if sort != "old" %}<a class="dropdown-item" href="?sort=old"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
 					{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
 				</div>
-				{% if linked_comment and p.comment_count >= 2%}
+				{% if comment_info and p.comment_count >= 2%}
 					<pre></pre>
 					<div class="total"><a href="{{p.permalink}}">View entire discussion</a></div>
 				{% endif %}

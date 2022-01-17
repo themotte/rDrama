@@ -227,6 +227,12 @@ class Comment(Base):
 
 	@property
 	@lazy
+	def author_name(self):
+		if self.post and (self.award_count('ghosts') or self.post.award_count('ghosts')): return '👻'
+		else: return self.author.username
+
+	@property
+	@lazy
 	def permalink(self):
 		if self.post and self.post.club: return f"/comment/{self.id}?context=9#context"
 

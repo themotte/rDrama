@@ -126,7 +126,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 	else: 
 		if post.is_banned and not (v and (v.admin_level > 1 or post.author_id == v.id)): template = "submission_banned.html"
 		else: template = "submission.html"
-		return render_template(template, v=v, p=post, sort=sort, linked_comment=comment, comment_info=comment_info, render_replies=True)
+		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
 
 
 @app.post("/comment")

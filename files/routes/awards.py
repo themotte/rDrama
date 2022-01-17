@@ -207,6 +207,8 @@ def award_post(pid, v):
 	if not post:
 		return {"error": "That post doesn't exist."}, 404
 
+	if kind == "ghosts" and post.distinguish_level: return {"error": "You can't use the ghosts award on distinguished posts."}, 403
+
 	post_award.submission_id = post.id
 	g.db.add(post_award)
 
@@ -404,6 +406,8 @@ def award_comment(cid, v):
 
 	if not c:
 		return {"error": "That comment doesn't exist."}, 404
+
+	if kind == "ghosts" and c.distinguish_level: return {"error": "You can't use the ghosts award on distinguished comments."}, 403
 
 	comment_award.comment_id = c.id
 	g.db.add(comment_award)
