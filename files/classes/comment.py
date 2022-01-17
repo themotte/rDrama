@@ -248,7 +248,7 @@ class Comment(Base):
 		data= {
 			'id': self.id,
 			'level': self.level,
-			'author_name': self.author.username,
+			'author_name': self.author_name,
 			'body': self.body,
 			'body_html': self.body_html,
 			'is_bot': self.is_bot,
@@ -314,7 +314,7 @@ class Comment(Base):
 		if self.deleted_utc or self.is_banned:
 			return data
 
-		data["author"]=self.author.json_core
+		data["author"]=self.author.json_core if self.author_name != '👻' else ''
 		data["post"]=self.post.json_core if self.post else ''
 
 		if self.level >= 2:
