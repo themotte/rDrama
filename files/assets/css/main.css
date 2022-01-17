@@ -3508,7 +3508,8 @@ th {
 @media (max-width: 767.98px) {
     .post-actions .list-inline .list-inline-item {
         margin-right: 1.5rem;
-        margin-top: 10px;
+        margin-top: auto;
+        margin-bottom: auto;
 }
     .post-actions .list-inline .list-inline-item:last-child {
         margin-right: 0;
