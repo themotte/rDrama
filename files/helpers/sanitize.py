@@ -109,18 +109,18 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False):
 		for i in re.finditer("<p>@((\w|-){1,25})", sanitized):
 			u = get_user(i.group(1), graceful=True)
 			if u:
-				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''')
+				sanitized = sanitized.replace(i.group(0), f'''<p><a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 	else:
 		sanitized = re.sub('(^|\s|\n|<p>)\/?((r|u)\/\w{3,25})', r'\1<a href="https://old.reddit.com/\2" rel="nofollow noopener noreferrer">\2</a>', sanitized)
 
-		for i in re.finditer('(^|\s|\n|<p>)@((\w|-){1,25})($|\s|\n|</p>| )', sanitized):
+		for i in re.finditer('(^|\s|\n|<p>)@((\w|-){1,25})', sanitized):
 			u = get_user(i.group(2), graceful=True)
 
 			if u and (not g.v.any_block_exists(u) or g.v.admin_level > 1):
 				if noimages:
-					sanitized = sanitized.replace(i.group(0), f'{i.group(1)}<a href="/id/{u.id}">@{u.username}</a>{i.group(4)}')
+					sanitized = sanitized.replace(i.group(0), f'{i.group(1)}<a href="/id/{u.id}">@{u.username}</a>', 1)
 				else:
-					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>{i.group(4)}''')
+					sanitized = sanitized.replace(i.group(0), f'''{i.group(1)}<a href="/id/{u.id}"><img alt="@{u.username}'s profile picture" loading="lazy" src="/uid/{u.id}/pic" class="pp20">@{u.username}</a>''', 1)
 
 
 	for i in re.finditer('https://i\.imgur\.com/(([^_]*?)\.(jpg|png|jpeg))', sanitized):
