@@ -255,7 +255,7 @@ def searchcomments(v):
 	elif sort == "controversial":
 		comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 	elif sort == "top":
-		comments = comments.order_by(Comment.realupvotes.desc())
+		comments = comments.order_by(Comment.downvotes - Comment.upvotes)
 	elif sort == "bottom":
 		comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 

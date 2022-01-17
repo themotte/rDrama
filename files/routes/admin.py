@@ -500,14 +500,11 @@ def users_list(v):
 @admin_level_required(2)
 def alt_votes_get(v):
 
-	if not request.values.get("u1") or not request.values.get("u2"):
-		return render_template("admin/alt_votes.html", v=v)
-
 	u1 = request.values.get("u1")
 	u2 = request.values.get("u2")
 
 	if not u1 or not u2:
-		return redirect("/admin/alt_votes")
+		return render_template("admin/alt_votes.html", v=v)
 
 	u1 = get_user(u1)
 	u2 = get_user(u2)

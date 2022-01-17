@@ -467,7 +467,8 @@ def api_comment(v):
 
 		if parent.author.id != v.id:
 			if len(c.body) > 500: notifbody = c.body[:500] + '...'
-			else: notifbody = c.body
+			elif c.body: notifbody = c.body
+			else: notifbody = ''
 
 			beams_client.publish_to_interests(
 				interests=[f'{request.host}{parent.author.id}'],

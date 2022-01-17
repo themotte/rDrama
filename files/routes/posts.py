@@ -96,7 +96,8 @@ def submit_get(v):
 @app.get("/logged_out/post/<pid>/<anything>")
 @auth_desired
 def post_id(pid, anything=None, v=None):
-	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"): return redirect(f"/logged_out{request.full_path}")
+	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"):
+		return redirect(f"/logged_out{request.full_path}")
 
 	if v and request.path.startswith('/logged_out'): v = None
 
@@ -169,7 +170,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "controversial":
 			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
-			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
@@ -186,7 +187,7 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "controversial":
 			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
-			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
@@ -288,7 +289,7 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "controversial":
 			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
-			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
@@ -305,7 +306,7 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "controversial":
 			comments = comments.order_by(-1 * Comment.upvotes * Comment.downvotes * Comment.downvotes)
 		elif sort == "top":
-			comments = comments.order_by(-Comment.upvotes - Comment.downvotes)
+			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 

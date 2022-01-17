@@ -13,13 +13,12 @@ def error_400(e):
 @app.errorhandler(401)
 def error_401(e):
 
-	path = request.path
-	qs = urlencode(dict(request.values))
-	argval = quote(f"{path}?{qs}", safe='')
-	output = f"/login?redirect={argval}"
-
 	if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error": "401 Not Authorized"}, 401
-	else: return redirect(output)
+	else:
+		path = request.path
+		qs = urlencode(dict(request.values))
+		argval = quote(f"{path}?{qs}", safe='')
+		return redirect(f"/login?redirect={argval}")
 
 
 @app.errorhandler(403)
@@ -61,4 +60,6 @@ def error_500(e):
 @app.post("/allow_nsfw")
 def allow_nsfw():
 	session["over_18"] = int(time.time()) + 3600
-	return redirect(request.values.get("redir", "/"))
+	redir = request.values.get("redir")
+	if redir and redir.startswith(request.host_url) or redir.startswith('/'): return redirect(redir)
+	return redirect('/')
