@@ -1024,16 +1024,12 @@ def api_distinguish_post(post_id, v):
 
 	post = g.db.query(Submission).filter_by(id=post_id).one_or_none()
 
-	if not post:
-		abort(404)
+	if not post: abort(404)
 
-	if not post.author_id == v.id:
-		abort(403)
+	if post.author_id != v.id and v.admin_level < 2 : abort(403)
 
-	if post.distinguish_level:
-		post.distinguish_level = 0
-	else:
-		post.distinguish_level = v.admin_level
+	if post.distinguish_level: post.distinguish_level = 0
+	else: post.distinguish_level = v.admin_level
 
 	g.db.add(post)
 
