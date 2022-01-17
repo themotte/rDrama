@@ -58,6 +58,9 @@ def remove_admin(v, username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(3)
 def distribute(v, comment):
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).one_or_none()
+	if autobetter.coins == 0: return {"error": "@AutoBetter has 0 coins"}
+
 	try: comment = int(comment)
 	except: abort(400)
 	post = g.db.query(Comment.parent_submission).filter_by(id=comment).one_or_none()[0]
@@ -67,7 +70,6 @@ def distribute(v, comment):
 	for option in post.bet_options: pool += option.upvotes
 	pool *= 200
 
-	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).one_or_none()
 	autobetter.coins -= pool
 	if autobetter.coins < 0: autobetter.coins = 0
 	g.db.add(autobetter)
