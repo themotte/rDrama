@@ -691,7 +691,7 @@ AWARDS = {
         "title": "Benefactor",
         "description": "Grants one month of paypig status and 2500 marseybux to the recipient. Cannot be used on yourself.",
         "icon": "fas fa-gift",
-        "color": "text-orange",
+        "color": "text-blue",
         "price": 4000
     },
 	"grass": {
