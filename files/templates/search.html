@@ -28,7 +28,7 @@
 					{% if not t=="week" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
 					{% if not t=="month" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
 					{% if not t=="year" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
-					{% if not t=="all" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+					{% if not t=="all" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort={{sort}}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
 				</div>
 			</div>
 
