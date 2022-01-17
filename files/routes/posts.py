@@ -1065,6 +1065,7 @@ def submit_post(v):
 		title = url_match.group(5)
 		if "Snapshots:\n\n"	 not in body: body += "Snapshots:\n\n"			
 
+		if f'**[{title}]({href})**:\n\n' in body: continue
 		body += f'**[{title}]({href})**:\n\n'
 		if href.startswith('https://old.reddit.com/'):
 			body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
@@ -1107,7 +1108,7 @@ def submit_post(v):
 		send_discord_message(f"https://{site}{new_post.permalink}")
 		cache.delete_memoized(changeloglist)
 
-	if v.id in AUTO_UPVOTE_IDS:
+	if v.id in (PIZZASHILL_ID, HIL_ID):
 		autovote = Vote(user_id=CARP_ID, submission_id=new_post.id, vote_type=1)
 		g.db.add(autovote)
 		autovote = Vote(user_id=AEVANN_ID, submission_id=new_post.id, vote_type=1)

@@ -67,6 +67,11 @@ def distribute(v, comment):
 	for option in post.bet_options: pool += option.upvotes
 	pool *= 200
 
+	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).one_or_none()
+	autobetter.coins -= pool
+	if autobetter.coins < 0: autobetter.coins = 0
+	g.db.add(autobetter)
+
 	votes = g.db.query(CommentVote).filter_by(comment_id=comment)
 	coinsperperson = int(pool / votes.count())
 
@@ -75,11 +80,6 @@ def distribute(v, comment):
 		u = vote.user
 		u.coins += coinsperperson
 		add_notif(cid, u.id)
-
-	autobetter = g.db.query(User).filter_by(id=AUTOBETTER_ID).one_or_none()
-	autobetter.coins -= pool
-	if autobetter.coins < 0: return {"error": "Not enough coins in bool"}, 400
-	g.db.add(autobetter)
 
 	cid = notif_comment(f"You lost the 200 coins you bet on [{post.permalink}]({post.permalink}) :marseylaugh:")
 	cids = [x.id for x in post.bet_options]
