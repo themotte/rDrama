@@ -248,12 +248,12 @@ def transfer_coins(v, username):
 		else: tax = 0
 
 		if TAX_RECEIVER_ID:
-			log_message = f"[@{v.username}](/id/{v.id}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.id})"
+			log_message = f"@{v.username} has transferred {amount} {app.config['COINS_NAME']} to @{receiver.username}"
 			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 
 		receiver.coins += amount-tax
 		v.coins -= amount
-		send_repeatable_notification(receiver.id, f"🤑 [@{v.username}](/id/{v.id}) has gifted you {amount-tax} {app.config['COINS_NAME']}!")
+		send_repeatable_notification(receiver.id, f":marseycapitalistmanlet: @{v.username} has gifted you {amount-tax} {app.config['COINS_NAME']}!")
 		g.db.add(receiver)
 		g.db.add(v)
 
@@ -280,12 +280,12 @@ def transfer_bux(v, username):
 		if amount < 100: return {"error": "You have to gift at least 100 marseybux."}, 400
 
 		if TAX_RECEIVER_ID:
-			log_message = f"[@{v.username}](/id/{v.id}) has transferred {amount} Marseybux to [@{receiver.username}]({receiver.id})"
+			log_message = f"@{v.username} has transferred {amount} Marseybux to @{receiver.username}"
 			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 
 		receiver.procoins += amount
 		v.procoins -= amount
-		send_repeatable_notification(receiver.id, f"🤑 [@{v.username}](/id/{v.id}) has gifted you {amount} marseybux!")
+		send_repeatable_notification(receiver.id, f":marseycapitalistmanlet: @{v.username} has gifted you {amount} marseybux!")
 		g.db.add(receiver)
 		g.db.add(v)
 
