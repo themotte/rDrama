@@ -11,7 +11,6 @@ from files.helpers.const import AUTOPOLLER_ID, AUTOBETTER_ID, censor_slurs
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
 from random import randint
-from .award import AwardRelationship
 
 site = environ.get("DOMAIN").strip()
 if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
@@ -229,7 +228,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def author_name(self):
-		if self.award_count('ghosts') or self.parent_submission and g.db.query(AwardRelationship.id).filter_by(submission_id=self.parent_submission).first(): return '👻'
+		if self.post and (self.award_count('ghosts') or self.post.award_count('ghosts')): return '👻'
 		else: return self.author.username
 
 	@property
