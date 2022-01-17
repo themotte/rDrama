@@ -219,8 +219,8 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		else: cutoff = now - 86400
 		posts = posts.filter(Submission.created_utc >= cutoff)
 
-	if sort != "hot": posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
-	else: posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
+	if sort == "hot" or v.id == Q_ID: posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
+	else: posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
 
 	if v and v.admin_level == 0:
 		blocking = [x[0] for x in g.db.query(
@@ -247,7 +247,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	if not (v and v.shadowbanned):
 		posts = posts.join(User, User.id == Submission.author_id).filter(User.shadowbanned == None)
 
-	if sort == "hot":
+	if sort == "hot" or v.id == Q_ID:
 		ti = int(time.time()) + 3600
 		posts = posts.order_by(-1000000*(Submission.realupvotes + 1 + Submission.comment_count/5)/(func.power(((ti - Submission.created_utc)/1000), 1.23)))
 	elif sort == "new":
@@ -272,7 +272,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	posts = posts[:size]
 
-	if sort == "hot" and page == 1:
+	if (sort == "hot" or v.id == Q_ID) and page == 1:
 		pins = g.db.query(Submission).filter(Submission.stickied != None, Submission.is_banned == False)
 		if v and v.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(UserBlock.target_id).filter_by(user_id=v.id).all()]

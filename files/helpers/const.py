@@ -149,6 +149,7 @@ if SITE == 'rdrama.net':
 	JOAN_ID = 28
 	MOOSE_ID = 1904
 	AEVANN_ID = 1
+	Q_ID = 1480
 	LAWLZ_ID = 3833
 	LLM_ID = 253
 	DAD_ID = 2513
@@ -176,6 +177,7 @@ elif SITE == "pcmemes.net":
 	JOAN_ID = 0
 	MOOSE_ID = 0
 	AEVANN_ID = 1
+	Q_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0
@@ -203,6 +205,7 @@ else:
 	JOAN_ID = 0
 	MOOSE_ID = 0
 	AEVANN_ID = 0
+	Q_ID = 0
 	LAWLZ_ID = 0
 	LLM_ID = 0
 	DAD_ID = 0
@@ -288,8 +291,8 @@ BADGES = {
 		'description': 'Contributed at least $100'
 	},
 	26: {
-		'name': 'Rightoid Agendaposter',
-		'description': 'Forced to use the agendaposter theme'
+		'name': 'Rightoid',
+		'description': 'Forced to use the rightoid theme'
 	},
 	27: {
 		'name': 'Lolcow',
@@ -656,8 +659,8 @@ AWARDS = {
 	},
 	"agendaposter": {
 		"kind": "agendaposter",
-		"title": "Rightoid Agendaposter",
-		"description": "Forces the agendaposter theme on the recipient for 24 hours.",
+		"title": "Rightoid",
+		"description": "Forces the rightoid theme on the recipient for 24 hours.",
 		"icon": "fas fa-snooze",
 		"color": "text-purple",
 		"price": 2500

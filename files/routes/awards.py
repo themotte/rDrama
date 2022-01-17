@@ -84,7 +84,7 @@ def shop(v):
 @auth_required
 def buy(v, award):
 	if award == 'benefactor' and not request.values.get("mb"):
-		return {"error": "You can only buy this award with marseybux."}, 403
+		return {"error": "You can only buy the Benefactor award with marseybux."}, 403
 
 	AWARDS = deepcopy(AWARDS2)
 
