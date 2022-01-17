@@ -37,3 +37,9 @@ function morecomments(cid) {
     }
     xhr.send(form)
 }
+
+function expandMarkdown(id) {
+    document.getElementById('markdown-'+id).classList.toggle('d-none');
+    document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-expand-alt');
+    document.getElementsByClassName('text-expand-icon-'+id)[0].classList.toggle('fa-compress-alt');
+};

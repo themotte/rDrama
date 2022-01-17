@@ -101,8 +101,7 @@
 						</div>
 
 				</div>
-
-
+				
 	{% if render_replies %} 
 		{% if level<10 %}
 			<div id="replies-of-{{c.id}}" class="">
@@ -417,18 +416,20 @@
 							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#reportCommentModal" onclick="report_commentModal('{{c.id}}','{{c.author.username}}',)"><i class="fas fa-flag fa-fw"></i>Report</button>
 						{% endif %}
 						
-						
-						{% if v and c.parent_submission and c.author_id==v.id %}
-						
-						<button class="btn caction py-0 nobackground px-1 text-muted" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</button>
-						
-						{% if c.deleted_utc %}
-							<button class="btn caction py-0 nobackground px-1 text-muted" onclick="post_toast('/undelete/comment/{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
-						{% else %}
-							<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
+						{% if c.parent_submission %}
+							{% if v and c.author_id == v.id %}
+								<button class="btn caction py-0 nobackground px-1 text-muted" onclick="toggleEdit('{{c.id}}')"><i class="fas fa-edit fa-fw"></i>Edit</button>
+								
+								{% if c.deleted_utc %}
+									<button class="btn caction py-0 nobackground px-1 text-muted" onclick="post_toast('/undelete/comment/{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Undelete</button>
+								{% else %}
+									<button class="btn caction py-0 nobackground px-1 text-muted" data-bs-toggle="modal" data-bs-target="#deleteCommentModal" onclick="delete_commentModal('{{c.id}}')"><i class="fas fa-trash-alt fa-fw"></i>Delete</button>
+								{% endif %}
+							{% else %}
+								<button class="btn caction py-0 nobackground px-1 text-muted" onclick="expandMarkdown('{{c.id}}')"><i class="fas text-expand-icon-{{c.id}} fa-compress-alt"></i>View source</button>
+							{% endif %}
 						{% endif %}
-						
-						{% endif %}
+
 						{% if v and v.admin_level and v.id==c.author_id %}
 							<button id="undistinguish-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if c.distinguish_level %}d-md-inline-block{% endif %} text-info"  onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','no')"><i class="fas fa-id-badge text-info fa-fw"></i>Undistinguish</button>
 							<button id="distinguish-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %} text-info" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</button>
@@ -482,6 +483,15 @@
 				</div>
 				{% endif %}
 			</div>
+
+		{% if not (v and v.id == c.author_id) %}
+			<div class="d-none card rounded border my-2 " id="markdown-{{c.id}}">
+				<div style="padding:5px">
+					{{c.body}}
+				</div>
+			</div>
+		{% endif %}
+
 
 		<div id="reply-to-{{c.id}}" class="d-none">
 			<div id="comment-form-space-{{c.fullname}}" class="comment-write collapsed child">
@@ -604,6 +614,8 @@
 							<a id="mark2-{{c.id}}" class="{% if c.over_18 %}d-none{% endif %} list-group-item text-danger" role="button" onclick="post_toast2('/toggle_comment_nsfw/{{c.id}}','mark2-{{c.id}}','unmark2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye-evil text-danger"></i>Mark +18</a>
 							<a id="unmark2-{{c.id}}" class="{% if not c.over_18 %}d-none{% endif %} list-group-item text-danger" role="button" onclick="post_toast2('/toggle_comment_nsfw/{{c.id}}','mark2-{{c.id}}','unmark2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye-evil text-danger"></i>Unmark +18</a>
 						{% else %}
+							<a role="button" data-bs-dismiss="modal" onclick="expandMarkdown('{{c.id}}')" class="list-group-item"><i class="fas text-expand-icon-{{c.id}} fa-compress-alt"></i>View source</a>
+
 							<a id="unblock2-{{c.id}}" data-bs-dismiss="modal" class="text-success list-group-item {% if not c.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2('/settings/unblock?username={{c.author.username}}','block2-{{c.id}}','unblock2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye-slash text-success"></i>Unblock user</a>
 							<a id="prompt2-{{c.id}}" data-bs-dismiss="modal" class="blockuser list-group-item d-none text-danger" role="button" onclick="post_toast2('/settings/block?username={{c.author.username}}','prompt2-{{c.id}}','unblock2-{{c.id}}')"><i class="fas fa-eye-slash fa-fw text-danger"></i>Are you sure?</a>
 							<a id="block2-{{c.id}}" class="{% if c.is_blocking %}d-none{% endif %} list-group-item text-danger" role="button" onclick="document.getElementById('block2-{{c.id}}').classList.toggle('d-none');document.getElementById('prompt2-{{c.id}}').classList.toggle('d-none');"><i class="fas fa-eye-slash fa-fw text-danger"></i>Block user</a>
@@ -860,7 +872,7 @@
 {% include "expanded_image_modal.html" %}
 
 <script src="/static/assets/js/comments+submission_listing.js?a=202"></script>
-<script src="/static/assets/js/comments.js?a=202"></script>
+<script src="/static/assets/js/comments.js?a=204"></script>
 
 <script>
 	{% if p and (not v or v.highlightcomments) %}
