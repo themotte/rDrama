@@ -463,6 +463,10 @@ BADGES = {
 		'name': 'Christmas 21',
 		'description': 'Awarded for surviving Fistmas 2021'
 	},
+	103: {
+		'name': 'Benefactor',
+		'description': 'Gave the Benefactor award to someone'
+	},
 }
 
 AWARDS = {
@@ -682,6 +686,14 @@ AWARDS = {
 		"color": "text-success",
 		"price": 3500
 	},
+	"benefactor": {
+        "kind": "benefactor",
+        "title": "Benefactor",
+        "description": "Grants one month of paypig status and 2500 marseybux to the recipient. Cannot be used on yourself.",
+        "icon": "fas fa-gift",
+        "color": "text-purple",
+        "price": 4000
+    },
 	"grass": {
 		"kind": "grass",
 		"title": "Grass",

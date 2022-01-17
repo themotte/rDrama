@@ -215,6 +215,10 @@ def award_post(pid, v):
 		send_repeatable_notification(post.author.id, msg)
 
 	author = post.author
+
+	if kind == "benefactor" and author.id == v.id:
+		return {"error": "You can't use this award on yourself."}, 400
+
 	if kind == "ban":
 		link = f"[this post]({post.permalink})"
 
@@ -350,6 +354,13 @@ def award_post(pid, v):
 			badge = Badge(user_id=author.id, badge_id=94)
 			g.db.add(badge)
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+	elif kind == "benefactor":
+		author.patron = 1
+		author.procoins += 2500
+		if not v.has_badge(103):
+			badge = Badge(user_id=v.id, badge_id=103)
+			g.db.add(badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	if post.author.received_award_count: post.author.received_award_count += 1
 	else: post.author.received_award_count = 1
@@ -402,6 +413,9 @@ def award_comment(cid, v):
 		send_repeatable_notification(c.author.id, msg)
 
 	author = c.author
+
+	if kind == "benefactor" and author.id == v.id:
+		return {"error": "You can't use this award on yourself."}, 400
 
 	if kind == "ban":
 		link = f"[this comment]({c.permalink})"
@@ -535,6 +549,13 @@ def award_comment(cid, v):
 			badge = Badge(user_id=author.id, badge_id=94)
 			g.db.add(badge)
 			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+	elif kind == "benefactor":
+		author.patron = 1
+		author.procoins += 2500
+		if not v.has_badge(103):
+			badge = Badge(user_id=v.id, badge_id=103)
+			g.db.add(badge)
+			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	if c.author.received_award_count: c.author.received_award_count += 1
 	else: c.author.received_award_count = 1
