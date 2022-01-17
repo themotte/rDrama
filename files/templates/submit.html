@@ -96,7 +96,7 @@
 												<div id="image-upload-block">
 													<div><label class="mt-3">Attachment Upload</label></div>
 
-													<img loading="lazy" id="image-preview" class="w-100">
+													<img loading="lazy" id="image-preview">
 													<label class="btn btn-secondary m-0" for="file-upload">
 														<div id="filename-show">Select File</div>
 														<input autocomplete="off" id="file-upload" type="file" name="file" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} accept="image/*, video/*" hidden>
