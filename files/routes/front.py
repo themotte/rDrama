@@ -463,3 +463,17 @@ def all_comments(v):
 
 	if request.headers.get("Authorization"): return {"data": [x.json for x in comments]}
 	return render_template("home_comments.html", v=v, sort=sort, t=t, page=page, comments=comments, standalone=True, next_exists=next_exists)
+
+
+@app.get("/transfers")
+@auth_required
+def transfers(v):
+
+	page = int(request.values.get("page", 1))
+
+	comments = g.db.query(Comment).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.distinguish_level == 6, Comment.body_html.like("%</a> has transferred %"), Comment.created_utc == 0).offset(25 * (page - 1)).limit(26).all()
+
+	next_exists = len(comments) > 25
+	comments = comments[:25]
+
+	return render_template("home_comments.html", v=v, page=page, comments=comments, standalone=True, next_exists=next_exists)

@@ -4,54 +4,54 @@
 {% block sortnav %}{% endblock %}
 
 {% block content %}
-
 	<pre></pre>
-	<div class="d-flex justify-content-between align-items-center">
+	{% if request.path != '/transfers' %}
+		<div class="d-flex justify-content-between align-items-center">
 
-		<div class="d-flex px-2 align-items-center sortingbarmargin">
-			<div class="text-small font-weight-bold mr-2">‎</div>
-			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					{% if t=="hour" %}<i class="fas fa-clock mr-1"></i>
-					{% elif t=="day" %}<i class="fas fa-calendar-day mr-1"></i>
-					{% elif t=="week" %}<i class="fas fa-calendar-week mr-1"></i>
-					{% elif t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>
-					{% elif t=="year" %}<i class="fas fa-calendar mr-1"></i>
-					{% elif t=="all" %}<i class="fas fa-infinity mr-1"></i>
-					{% endif %}
-				{{t | capitalize}}
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-					{% if t !="hour" %}<a class="dropdown-item" href="?sort={{sort}}&t=hour"><i class="fas fa-clock mr-2"></i>Hour</a>{% endif %}
-					{% if t !="day" %}<a class="dropdown-item" href="?sort={{sort}}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
-					{% if t !="week" %}<a class="dropdown-item" href="?sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
-					{% if t !="month" %}<a class="dropdown-item" href="?sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
-					{% if t !="year" %}<a class="dropdown-item" href="?sort={{sort}}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
-					{% if t !="all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+			<div class="d-flex px-2 align-items-center sortingbarmargin">
+				<div class="text-small font-weight-bold mr-2">‎</div>
+				<div class="dropdown dropdown-actions">
+					<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						{% if t=="hour" %}<i class="fas fa-clock mr-1"></i>
+						{% elif t=="day" %}<i class="fas fa-calendar-day mr-1"></i>
+						{% elif t=="week" %}<i class="fas fa-calendar-week mr-1"></i>
+						{% elif t=="month" %}<i class="fas fa-calendar-alt mr-1"></i>
+						{% elif t=="year" %}<i class="fas fa-calendar mr-1"></i>
+						{% elif t=="all" %}<i class="fas fa-infinity mr-1"></i>
+						{% endif %}
+					{{t | capitalize}}
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+						{% if t !="hour" %}<a class="dropdown-item" href="?sort={{sort}}&t=hour"><i class="fas fa-clock mr-2"></i>Hour</a>{% endif %}
+						{% if t !="day" %}<a class="dropdown-item" href="?sort={{sort}}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
+						{% if t !="week" %}<a class="dropdown-item" href="?sort={{sort}}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
+						{% if t !="month" %}<a class="dropdown-item" href="?sort={{sort}}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
+						{% if t !="year" %}<a class="dropdown-item" href="?sort={{sort}}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
+						{% if t !="all" %}<a class="dropdown-item" href="?sort={{sort}}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+					</div>
 				</div>
-			</div>
 
-			<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
-			<div class="dropdown dropdown-actions">
-				<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
-					{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
-					{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
-					{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
-					{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
-					{{sort | capitalize}}
-				</button>
-				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-					{% if sort != "top" %}<a class="dropdown-item" href="?sort=top&t={{t}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-					{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom&t={{t}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
-					{% if sort != "new" %}<a class="dropdown-item" href="?sort=new&t={{t}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-					{% if sort != "old" %}<a class="dropdown-item" href="?sort=old&t={{t}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
-					{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{t}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
+				<div class="text-small font-weight-bold ml-3 mr-2">‎</div>
+				<div class="dropdown dropdown-actions">
+					<button class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+						{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
+						{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+						{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
+						{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
+						{{sort | capitalize}}
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton2" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
+						{% if sort != "top" %}<a class="dropdown-item" href="?sort=top&t={{t}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+						{% if sort != "bottom" %}<a class="dropdown-item" href="?sort=bottom&t={{t}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
+						{% if sort != "new" %}<a class="dropdown-item" href="?sort=new&t={{t}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+						{% if sort != "old" %}<a class="dropdown-item" href="?sort=old&t={{t}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
+						{% if sort != "controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{t}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-
+	{% endif %}
 
 	<div class="row no-gutters {% if listing %}mt-md-3{% elif not listing %}my-md-3{% endif %}">
 

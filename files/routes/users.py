@@ -244,10 +244,12 @@ def transfer_coins(v, username):
 			tax = math.ceil(amount*0.03)
 			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).one_or_none()
 			tax_receiver.coins += tax
-			log_message = f"[@{v.username}](/id/{v.id}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.id})"
-			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 			g.db.add(tax_receiver)
 		else: tax = 0
+
+		if TAX_RECEIVED_ID:
+			log_message = f"[@{v.username}](/id/{v.id}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.id})"
+			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 
 		receiver.coins += amount-tax
 		v.coins -= amount
