@@ -14,7 +14,7 @@ def login_get(v):
 
 	redir = request.values.get("redirect")
 	if redir:
-		redir = replace("/logged_out", "").strip()
+		redir = redir.replace("/logged_out", "").strip()
 		if not redir.startswith(request.host_url) and not redir.startswith('/'): redir = None
 
 	if v and redir: return redirect(redir)
@@ -142,7 +142,7 @@ def login_post():
 
 	redir = request.values.get("redirect")
 	if redir:
-		redir = replace("/logged_out", "").strip()
+		redir = redir.replace("/logged_out", "").strip()
 		if not redir.startswith(request.host_url) and not redir.startswith('/'): redir = '/'
 
 	return redirect(redir)
