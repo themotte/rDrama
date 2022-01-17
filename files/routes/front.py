@@ -471,7 +471,7 @@ def transfers(v):
 
 	page = int(request.values.get("page", 1))
 
-	comments = g.db.query(Comment).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.distinguish_level == 6, Comment.body_html.like("%</a> has transferred %"), Comment.created_utc == 0).offset(25 * (page - 1)).limit(26).all()
+	comments = g.db.query(Comment).filter(Comment.author_id == NOTIFICATIONS_ID, Comment.parent_submission == None, Comment.distinguish_level == 6, Comment.body_html.like("%</a> has transferred %"), Comment.created_utc == 0).order_by(Comment.id.desc()).offset(25 * (page - 1)).limit(26).all()
 
 	next_exists = len(comments) > 25
 	comments = comments[:25]

@@ -280,7 +280,7 @@ def transfer_bux(v, username):
 		if amount < 100: return {"error": "You have to gift at least 100 marseybux."}, 400
 
 		if TAX_RECEIVER_ID:
-			log_message = f"[@{v.username}](/id/{v.id}) has transferred {amount} marseybux to [@{receiver.username}]({receiver.id})"
+			log_message = f"[@{v.username}](/id/{v.id}) has transferred {amount} Marseybux to [@{receiver.username}]({receiver.id})"
 			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 
 		receiver.procoins += amount
