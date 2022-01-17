@@ -247,7 +247,7 @@ def transfer_coins(v, username):
 			g.db.add(tax_receiver)
 		else: tax = 0
 
-		if TAX_RECEIVED_ID:
+		if TAX_RECEIVER_ID:
 			log_message = f"[@{v.username}](/id/{v.id}) has transferred {amount} {app.config['COINS_NAME']} to [@{receiver.username}]({receiver.id})"
 			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 
