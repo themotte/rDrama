@@ -102,7 +102,7 @@ def api_vote_post(post_id, new, v):
 		post.author.coins += 1
 		post.author.truecoins += 1
 		g.db.add(post.author)
-		real = (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor) and not v.agendaposter and not v.shadowbanned
+		real = new == -1 or (not v.agendaposter and not v.shadowbanned and (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor))
 		vote = Vote(user_id=v.id,
 					vote_type=new,
 					submission_id=post_id,
@@ -115,7 +115,7 @@ def api_vote_post(post_id, new, v):
 		g.db.flush()
 		post.upvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1).count()
 		post.downvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1).count()
-		post.realupvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=1, real=True).count() + g.db.query(Vote.id).filter_by(submission_id=post.id, vote_type=-1).count()
+		post.realupvotes = g.db.query(Vote.id).filter_by(submission_id=post.id, real=True).count()
 		if post.author.progressivestack: post.realupvotes *= 2
 		g.db.add(post)
 		g.db.commit()
@@ -167,7 +167,7 @@ def api_vote_comment(comment_id, new, v):
 		comment.author.coins += 1
 		comment.author.truecoins += 1
 		g.db.add(comment.author)
-		real = (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor) and not v.agendaposter and not v.shadowbanned
+		real = new == -1 or (not v.agendaposter and not v.shadowbanned and (bool(v.profileurl) or bool(v.customtitle) or v.namecolor != defaultcolor))
 		vote = CommentVote(user_id=v.id,
 						vote_type=new,
 						comment_id=comment_id,
@@ -181,7 +181,7 @@ def api_vote_comment(comment_id, new, v):
 		g.db.flush()
 		comment.upvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=1).count()
 		comment.downvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=-1).count()
-		comment.realupvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=1, real=True).count() + g.db.query(CommentVote.id).filter_by(comment_id=comment.id, vote_type=-1).count()
+		comment.realupvotes = g.db.query(CommentVote.id).filter_by(comment_id=comment.id, real=True).count()
 		if comment.author.progressivestack: comment.realupvotes *= 2
 		g.db.add(comment)
 		g.db.commit()
