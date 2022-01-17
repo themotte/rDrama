@@ -475,7 +475,7 @@ def api_comment(v):
 					publish_body={
 					'web': {
 						'notification': {
-							'title': f'New reply by @{v.username}',
+							'title': f'New reply by @{c.author_name}',
 							'body': notifbody,
 							'deep_link': f'https://{site}/comment/{c.id}?context=9&read=true#context',
 							'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
@@ -483,7 +483,7 @@ def api_comment(v):
 					},
 					'fcm': {
 						'notification': {
-							'title': f'New reply by @{v.username}',
+							'title': f'New reply by @{c.author_name}',
 							'body': notifbody,
 						},
 						'data': {
