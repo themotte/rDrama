@@ -3508,7 +3508,7 @@ th {
 @media (max-width: 767.98px) {
     .post-actions .list-inline .list-inline-item {
         margin-right: 1.5rem;
-        margin-top: 5px;
+        margin-top: 10px;
 }
     .post-actions .list-inline .list-inline-item:last-child {
         margin-right: 0;
@@ -4759,4 +4759,13 @@ lite-youtube.lyt-activated > .lty-playbtn {
 }
 table {
     white-space: nowrap !important;
+}
+
+@media (max-width: 768px) {
+    .comment .comment-body .comment-text {
+        padding-top: 5px;
+    }
+    p {
+        margin-bottom: 5px;
+    }
 }
