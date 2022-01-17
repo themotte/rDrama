@@ -400,7 +400,7 @@
 						
 						{% endif %}
 						
-						{% if c.author_name != '👻' %}:<a href="/votes?link={{c.fullname}}" class="btn caction nobackground px-1 text-muted"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
+						{% if c.author_name != '👻' %}<a href="/votes?link={{c.fullname}}" class="btn caction nobackground px-1 text-muted"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
 						
 						{% if v %}
 							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</button>
