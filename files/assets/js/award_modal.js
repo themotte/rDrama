@@ -80,36 +80,17 @@ function awardModal(link) {
 	target.action = link;
 }
 
-function bruh(kind) {
-	document.getElementById('buy1').disabled=false;
-	document.getElementById('buy2').disabled=false;
+function pick(kind) {
+	let buy1 = document.getElementById('buy1')
+	if (kind == "grass") buy1.disabled=true;
+	else buy1.disabled=false;
+	let buy2 = document.getElementById('buy2')
+	if (kind == "benefactor") buy2.disabled=true;
+	else buy2.disabled=false;
 	let ownednum = Number(document.getElementById(`${kind}-owned`).textContent);
 	document.getElementById('giveaward').disabled = (ownednum == 0);
 	document.getElementById('kind').value=kind;
 	try {document.getElementsByClassName('picked')[0].classList.toggle('picked');} catch(e) {console.log(e)}
-	document.getElementById(kind).classList.toggle('picked')
-	if (kind == "flairlock") {
-		document.getElementById('notelabel').innerHTML = "New flair:";
-		document.getElementById('note').placeholder = "Insert new flair here, or leave empty to add 1 day to the duration of the current flair";
-	}
-	else {
-		document.getElementById('notelabel').innerHTML = "Note (optional):";
-		document.getElementById('note').placeholder = "Note to include in award notification";
-	}
-}
-
-function bruh2(kind) {
-	console.log(kind)
-	let buy1 = document.getElementById('buy1')
-	if (kind == "grass") buy1.disabled=true;
-	else buy1.disabled=false;
-	let buy2 = document.getElementById('buy1')
-	if (kind == "benefactor") buy2.disabled=true;
-	else buy2.disabled=false;
-	document.getElementById('giveaward').disabled=true;
-	document.getElementById('kind').value=kind;
-	let picked = document.getElementsByClassName('picked')[0]
-	if (picked) picked.classList.remove('picked')
 	document.getElementById(kind).classList.toggle('picked')
 	if (kind == "flairlock") {
 		document.getElementById('notelabel').innerHTML = "New flair:";
