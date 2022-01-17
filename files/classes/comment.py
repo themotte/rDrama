@@ -228,7 +228,7 @@ class Comment(Base):
 	@property
 	@lazy
 	def author_name(self):
-		if self.post and (self.award_count('ghosts') or self.post.award_count('ghosts')): return '👻'
+		if self.award_count('ghosts') or self.post and self.post.award_count('ghosts'): return '👻'
 		else: return self.author.username
 
 	@property
