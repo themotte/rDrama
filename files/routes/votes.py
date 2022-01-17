@@ -39,6 +39,7 @@ def admin_vote_info_get(v):
 												 ).order_by(Vote.id).all()
 
 	elif isinstance(thing, Comment):
+		if thing.author_name == '👻': abort(403)
 
 		if thing.author.shadowbanned and not (v and v.admin_level):
 			thing_id = g.db.query(Comment.id).filter_by(upvotes=thing.upvotes, downvotes=thing.downvotes).order_by(Comment.id).first()[0]

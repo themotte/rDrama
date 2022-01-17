@@ -545,14 +545,6 @@ AWARDS = {
 		"color": "text-red",
 		"price": 300
 	},
-	"ghosts": {
-		"kind": "ghosts",
-		"title": "Ghosts",
-		"description": "Hides the usernames of everyone in the thread",
-		"icon": "fas fa-ghost",
-		"color": "text-white",
-		"price": 200
-	},
 	"spiders": {
 		"kind": "spiders",
 		"title": "Spiders",
@@ -609,6 +601,14 @@ AWARDS = {
         "color": "text-yellow",
         "price": 300
     },
+	"ghosts": {
+		"kind": "ghosts",
+		"title": "Ghosts",
+		"description": "Hides the usernames of everyone in the thread",
+		"icon": "fas fa-ghost",
+		"color": "text-white",
+		"price": 500
+	},
 	"progressivestack": {
         "kind": "progressivestack",
         "title": "Progressive Stack",
