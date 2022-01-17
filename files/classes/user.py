@@ -433,10 +433,10 @@ class User(Base):
 	@property
 	@lazy
 	def profile_url(self):
-		if self.agendaposter: return f"https://{site}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?a=203"
+		if self.agendaposter: return f"https://{site}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?a=204"
 		if self.profileurl: return self.profileurl
 		if "rama" in site: return f"https://{site}/static/assets/images/defaultpictures/{random.randint(1, 150)}.webp?a=202"
-		return f"https://{site}/static/assets/images/default-profile-pic.webp?a=203"
+		return f"https://{site}/static/assets/images/default-profile-pic.webp?a=204"
 
 	@lazy
 	def json_popover(self, v):
