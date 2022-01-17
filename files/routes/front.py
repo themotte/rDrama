@@ -247,7 +247,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 	if not (v and v.shadowbanned):
 		posts = posts.join(User, User.id == Submission.author_id).filter(User.shadowbanned == None)
 
-	if sort == "hot" or v.id == Q_ID:
+	if sort == "hot":
 		ti = int(time.time()) + 3600
 		posts = posts.order_by(-1000000*(Submission.realupvotes + 1 + Submission.comment_count/5)/(func.power(((ti - Submission.created_utc)/1000), 1.23)))
 	elif sort == "new":
