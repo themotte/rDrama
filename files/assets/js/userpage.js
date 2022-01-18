@@ -12,10 +12,8 @@ if (uid)
 		else audio.pause()
 	}
 
-	window.addEventListener('load', (e) => {
-		audio.play();
-		document.getElementById('userpage').addEventListener('click', () => {
-			if (audio.paused) audio.play(); 
-		}, {once : true});
-	});
+	audio.play();
+	document.getElementById('userpage').addEventListener('click', () => {
+		if (audio.paused) audio.play(); 
+	}, {once : true});
 }
