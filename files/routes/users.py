@@ -368,13 +368,17 @@ def leaderboard(v):
 	except: pos12 = None
 	userss12 = users12[:25]
 
-	if users13 == None:
+	try:
+		if users13 == None:
+			pos13 = None
+			userss13 = None
+		else:
+			pos13 = [x[0] for x in users13].index(v.username.lower())
+			pos13 = (pos13, users13[pos13][1])
+			userss13 = users13[:25]
+	except:
 		pos13 = None
 		userss13 = None
-	else:
-		pos13 = [x[0] for x in users13].index(v.username.lower())
-		pos13 = (pos13, users13[pos13][1])
-		userss13 = users13[:25]
 
 	try:
 		pos15 = [x[0].id for x in users15].index(v.id)
