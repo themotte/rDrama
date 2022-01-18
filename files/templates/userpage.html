@@ -207,8 +207,7 @@
 					{% endif %}
 
 					{% if u.song and v and (v.id == u.id or v.mute and not u.unmutable) %}
-						<a id="pause1" class="btn btn-secondary" role="button" onclick="pause()">Pause anthem</a>
-						<a id="play1" class="btn btn-secondary d-none" role="button" onclick="play()">Play anthem</a>
+						<a class="btn btn-secondary" role="button" onclick="toggle()">Toggle anthem</a>
 					{% endif %}
 
 					{% if v and v.id != u.id and v.admin_level > 1 %}
@@ -434,8 +433,7 @@
 				{% endif %}
 
 				{% if u.song and v and (v.id == u.id or v.mute and not u.unmutable) %}
-					<a id="pause2" class="btn btn-secondary" role="button" onclick="pause()">Pause anthem</a>
-					<a id="play2" class="btn btn-secondary d-none" role="button" onclick="play()">Play anthem</a>
+					<a class="btn btn-secondary" role="button" onclick="toggle()">Toggle anthem</a>
 				{% endif %}
 
 				{% if v and v.id != u.id %}
@@ -696,7 +694,7 @@
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 
-<script src="/static/assets/js/userpage.js?a=202"></script>
+<script src="/static/assets/js/userpage.js?a=203"></script>
 
 {% endblock %}
 
