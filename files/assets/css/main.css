@@ -4769,3 +4769,14 @@ table {
         margin-bottom: 7px;
     }
 }
+@keyframes golden {
+    from {filter: sepia(100%) saturate(2) drop-shadow(-1px 1px 1px gold)}
+    to {filter: sepia(100%) saturate(3) drop-shadow(-1px 1px 12px gold)}
+}
+img.golden {
+    animation-name: golden !important;
+    animation-duration: 1s !important;
+    animation-iteration-count: infinite !important;
+    animation-direction: alternate !important;
+    animation-timing-function: linear !important;
+}

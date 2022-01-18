@@ -7,6 +7,7 @@ from os import path, environ
 import re
 from mistletoe import markdown
 from json import loads, dump
+from random import random
 
 site = environ.get("DOMAIN").strip()
 
@@ -189,20 +190,22 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False):
 		for i in re.finditer('(?<!"):([!#A-Za-z0-9]{1,30}?):', new):
 			emoji = i.group(1).lower()
 			if emoji.startswith("#!") or emoji.startswith("!#"):
-				classes = 'class="emoji-lg mirrored" '
+				classes = 'emoji-lg mirrored'
 				remoji = emoji[2:]
 			elif emoji.startswith("#"):
-				classes = 'class="emoji-lg" '
+				classes = 'emoji-lg'
 				remoji = emoji[1:]
 			elif emoji.startswith("!"):
-				classes = 'class="emoji-md mirrored" '
+				classes = 'emoji-md mirrored'
 				remoji = emoji[1:]
 			else:
-				classes = 'class="emoji-md" '
+				classes = 'emoji-md'
 				remoji = emoji
 
+			if random() < 0.01: classes += ' golden'
+
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
-				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" {classes}src="/static/assets/images/emojis/{remoji}.webp" >', new, flags=re.I)
+				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{remoji}.webp" >', new, flags=re.I)
 				if comment: marseys_used.add(emoji)
 					
 		sanitized = sanitized.replace(old, new)
@@ -212,12 +215,16 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False):
 		emoji = i.group(1).lower()
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
+			classes = 'emoji mirrored'
+			if random() < 0.01: classes += ' golden'
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="emoji mirrored" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 				if comment: marseys_used.add(emoji)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
+			classes = 'emoji'
+			if random() < 0.01: classes += ' golden'
+			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 			if comment: marseys_used.add(emoji)
 
 	sanitized = sanitized.replace("https://www.", "https://").replace("https://youtu.be/", "https://youtube.com/watch?v=").replace("https://music.youtube.com/watch?v=", "https://youtube.com/watch?v=").replace("https://open.spotify.com/", "https://open.spotify.com/embed/").replace("https://streamable.com/", "https://streamable.com/e/").replace("https://youtube.com/shorts/", "https://youtube.com/watch?v=").replace("https://mobile.twitter", "https://twitter").replace("https://m.facebook", "https://facebook").replace("m.wikipedia.org", "wikipedia.org").replace("https://m.youtube", "https://youtube")
@@ -268,11 +275,15 @@ def filter_emojis_only(title):
 
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
+			classes = 'emoji mirrored'
+			if random() < 0.01: classes += ' golden'
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="emoji mirrored">', title, flags=re.I)
+				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="{classes}">', title, flags=re.I)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="emoji" src="/static/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
+			classes = 'emoji mirrored'
+			if random() < 0.01: classes += ' golden'
+			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
 
 	if len(title) > 1500: abort(400)
 	else: return title
