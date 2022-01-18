@@ -202,7 +202,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False):
 				classes = 'emoji-md'
 				remoji = emoji
 
-			if random() < 0.01: classes += ' golden'
+			if random() < 0.01 and 'marsey' in emoji: classes += ' golden'
 
 			if path.isfile(f'files/assets/images/emojis/{remoji}.webp'):
 				new = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{remoji}.webp" >', new, flags=re.I)
@@ -216,14 +216,14 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			classes = 'emoji mirrored'
-			if random() < 0.01: classes += ' golden'
+			if random() < 0.01 and 'marsey' in emoji: classes += ' golden'
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				sanitized = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 				if comment: marseys_used.add(emoji)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			classes = 'emoji'
-			if random() < 0.01: classes += ' golden'
+			if random() < 0.01 and 'marsey' in emoji: classes += ' golden'
 			sanitized = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', sanitized, flags=re.I)
 			if comment: marseys_used.add(emoji)
 
@@ -276,13 +276,13 @@ def filter_emojis_only(title):
 		if emoji.startswith("!"):
 			emoji = emoji[1:]
 			classes = 'emoji mirrored'
-			if random() < 0.01: classes += ' golden'
+			if random() < 0.01 and 'marsey' in emoji: classes += ' golden'
 			if path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="{classes}">', title, flags=re.I)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
 			classes = 'emoji'
-			if random() < 0.01: classes += ' golden'
+			if random() < 0.01 and 'marsey' in emoji: classes += ' golden'
 			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
 
 	if len(title) > 1500: abort(400)
