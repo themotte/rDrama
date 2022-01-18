@@ -355,8 +355,10 @@ def leaderboard(v):
 	users9 = []
 	for user in users8: users9.append((user, votes3[user.id]))
 	users9 = sorted(users9, key=lambda x: x[1], reverse=True)
-	pos9 = [x[0].id for x in users9].index(v.id)
-	pos9 = (pos9, users9[pos9][1])
+	try:
+		pos9 = [x[0].id for x in users9].index(v.id)
+		pos9 = (pos9, users9[pos9][1])
+	except: pos9 = None
 	users9 = users9[:25]
 
 	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=users9, pos9=pos9, users10=users10, pos10=pos10, users12=users12, users13=users13, users15=users15)
