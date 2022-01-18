@@ -11,71 +11,87 @@ from flask import *
 from files.__main__ import app, limiter, db_session
 from pusher_push_notifications import PushNotifications
 from collections import Counter
+import gevent
 
 site = environ.get("DOMAIN").strip()
 
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
-db = db_session()
+def leaderboard_thread():
+	global users1
+	global users2
+	global users3
+	global users4
+	global users5
+	global users6
+	global users7
+	global userss9
+	global users10
+	global userss12
+	global userss13
+	global userss15
 
-users = db.query(User)
+	db = db_session()
 
-users1 = users.order_by(User.coins.desc()).limit(25).all()
-users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
-users3 = users.order_by(User.post_count.desc()).limit(25).all()
-users4 = users.order_by(User.comment_count.desc()).limit(25).all()
-users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
-if SITE == 'pcmemes.net': users6 = users.order_by(User.basedcount.desc()).limit(25).all()
-else: users6 = None
-users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
+	users = db.query(User)
 
-votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
-votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
-votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
-users8 = db.query(User).filter(User.id.in_(votes3.keys())).all()
-users9 = []
-for user in users8: users9.append((user, votes3[user.id]))
-users9 = sorted(users9, key=lambda x: x[1], reverse=True)
-userss9 = users9[:25]
+	users1 = users.order_by(User.coins.desc()).limit(25).all()
+	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
+	users3 = users.order_by(User.post_count.desc()).limit(25).all()
+	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
+	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
+	if SITE == 'pcmemes.net': users6 = users.order_by(User.basedcount.desc()).limit(25).all()
+	else: users6 = None
+	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
 
-users10 = users.order_by(User.truecoins.desc()).limit(25).all()
+	votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
+	votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
+	users8 = db.query(User).filter(User.id.in_(votes3.keys())).all()
+	users9 = []
+	for user in users8: users9.append((user, votes3[user.id]))
+	users9 = sorted(users9, key=lambda x: x[1], reverse=True)
+	userss9 = users9[:25]
 
-badges = db.query(Badge.user_id, func.count(Badge.user_id)).group_by(Badge.user_id).order_by(func.count(Badge.user_id).desc()).all()
-badges = dict(badges)
-users11 = db.query(User).filter(User.id.in_(badges.keys())).all()
-users12 = []
-for user in users11: users12.append((user, badges[user.id]))
-users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
-userss12 = users12[:25]
+	users10 = users.order_by(User.truecoins.desc()).limit(25).all()
 
-if site == 'rdrama.net':
-	topmakers = {}
-	for k, val in marseys.items():
-		if val in topmakers: topmakers[val] += 1
-		else: topmakers[val] = 1
+	badges = db.query(Badge.user_id, func.count(Badge.user_id)).group_by(Badge.user_id).order_by(func.count(Badge.user_id).desc()).all()
+	badges = dict(badges)
+	users11 = db.query(User).filter(User.id.in_(badges.keys())).all()
+	users12 = []
+	for user in users11: users12.append((user, badges[user.id]))
+	users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
+	userss12 = users12[:25]
 
-	topmakers.pop('unknown','anton-d')
-	topmakers2 = db.query(User).filter(func.lower(User.username).in_(topmakers.keys())).all()
-	topmakers3 = []
-	for user in topmakers2:
-		topmakers3.append((user, topmakers[user.username.lower()]))
-	topmakers = sorted(topmakers3, key=lambda x: x[1], reverse=True)[:25]
-	users13 = topmakers
-	userss13 = users13[:25]
-else: userss13 = None
+	if site == 'rdrama.net':
+		topmakers = {}
+		for k, val in marseys.items():
+			if val in topmakers: topmakers[val] += 1
+			else: topmakers[val] = 1
 
-votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
-votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
-votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
-users14 = db.query(User).filter(User.id.in_(votes3.keys())).all()
-users15 = []
-for user in users14:
-	users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
-users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
-userss15 = users15[:25]
+		topmakers.pop('unknown','anton-d')
+		topmakers2 = db.query(User).filter(func.lower(User.username).in_(topmakers.keys())).all()
+		topmakers3 = []
+		for user in topmakers2:
+			topmakers3.append((user, topmakers[user.username.lower()]))
+		topmakers = sorted(topmakers3, key=lambda x: x[1], reverse=True)[:25]
+		users13 = topmakers
+		userss13 = users13[:25]
+	else: userss13 = None
 
-db.close()
+	votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+	votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
+	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
+	users14 = db.query(User).filter(User.id.in_(votes3.keys())).all()
+	users15 = []
+	for user in users14:
+		users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
+	users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
+	userss15 = users15[:25]
 
+	db.close()
+
+gevent.spawn(leaderboard_thread())
 @app.get("/grassed")
 @auth_required
 def grassed(v):
