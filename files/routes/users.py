@@ -27,6 +27,18 @@ for user in users14:
 	users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
 users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
 
+users = db.query(User)
+
+users1 = users.order_by(User.coins.desc()).limit(25).all()
+users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
+users3 = users.order_by(User.post_count.desc()).limit(25).all()
+users4 = users.order_by(User.comment_count.desc()).limit(25).all()
+users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
+if SITE == 'pcmemes.net': users6 = users.order_by(User.basedcount.desc()).limit(25).all()
+else: users6 = None
+users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
+users10 = users.order_by(User.truecoins.desc()).limit(25).all()
+
 if site == 'rdrama.net':
 	topmakers = {}
 	for k, val in marseys.items():
@@ -46,6 +58,14 @@ users11 = db.query(User).filter(User.id.in_(badges.keys())).all()
 users12 = []
 for user in users11: users12.append((user, badges[user.id]))
 users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
+
+votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
+votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
+users8 = db.query(User).filter(User.id.in_(votes3.keys())).all()
+users9 = []
+for user in users8: users9.append((user, votes3[user.id]))
+users9 = sorted(users9, key=lambda x: x[1], reverse=True)
 
 if SITE == 'rdrama.net': users13 = topmakers
 else: users13 = None
@@ -310,60 +330,52 @@ def transfer_bux(v, username):
 @app.get("/leaderboard")
 @auth_required
 def leaderboard(v):
-	users = g.db.query(User)
-
-	users1 = users.order_by(User.coins.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.coins.desc()).label("rank")).subquery()
 	pos1 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
-	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.stored_subscriber_count.desc()).label("rank")).subquery()
 	pos2 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
-	users3 = users.order_by(User.post_count.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.post_count.desc()).label("rank")).subquery()
 	pos3 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
-	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.comment_count.desc()).label("rank")).subquery()
 	pos4 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
-	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.received_award_count.desc()).label("rank")).subquery()
 	pos5 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
 	if request.host == 'pcmemes.net':
-		users6 = users.order_by(User.basedcount.desc()).limit(25).all()
 		sq = g.db.query(User.id, func.rank().over(order_by=User.basedcount.desc()).label("rank")).subquery()
 		pos6 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-	else:
-		users6 = None
-		pos6 = None
+	else: pos6 = None
 		
-	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.coins_spent.desc()).label("rank")).subquery()
 	pos7 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
-	users10 = users.order_by(User.truecoins.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.truecoins.desc()).label("rank")).subquery()
 	pos10 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
-	votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
-	votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
-	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
-	users8 = db.query(User).filter(User.id.in_(votes3.keys())).all()
-	users9 = []
-	for user in users8: users9.append((user, votes3[user.id]))
-	users9 = sorted(users9, key=lambda x: x[1], reverse=True)
 	try:
 		pos9 = [x[0].id for x in users9].index(v.id)
 		pos9 = (pos9, users9[pos9][1])
 	except: pos9 = None
-	users9 = users9[:25]
+	userss9 = users9[:25]
 
-	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=users9, pos9=pos9, users10=users10, pos10=pos10, users12=users12, users13=users13, users15=users15)
+	try:
+		pos12 = [x[0].id for x in users12].index(v.id)
+		pos12 = (pos12, users12[pos12][1])
+	except: pos12 = None
+	userss12 = users12[:25]
 
-def leaderboard
+	try:
+		pos15 = [x[0].id for x in users15].index(v.id)
+		pos15 = (pos15, users15[pos15][1])
+	except: pos15 = None
+	userss15 = users15[:25]
+
+	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=userss9, pos9=pos9, users10=users10, pos10=pos10, users12=userss12, pos12=pos12, users13=users13, users15=userss15, pos15=pos15)
+
 @app.get("/@<username>/css")
 @auth_required
 def get_css(v, username):
