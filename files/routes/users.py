@@ -40,9 +40,6 @@ if site == 'rdrama.net':
 		topmakers3.append((user, topmakers[user.username.lower()]))
 	topmakers = sorted(topmakers3, key=lambda x: x[1], reverse=True)[:25]
 
-users = db.query(User)
-
-
 votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
 votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
@@ -58,7 +55,7 @@ users12 = []
 for user in users11: users12.append((user, badges[user.id]))
 users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
 
-if request.host == 'rdrama.net': users13 = topmakers
+if SITE == 'rdrama.net': users13 = topmakers
 else: users13 = None
 
 db.close()
@@ -321,6 +318,8 @@ def transfer_bux(v, username):
 @app.get("/leaderboard")
 @auth_required
 def leaderboard(v):
+	users = g.db.query(User)
+
 	users1 = users.order_by(User.coins.desc()).all()
 	pos1 = users1.index(v)
 	users1 = users1[:25]
@@ -353,7 +352,7 @@ def leaderboard(v):
 	pos7 = users7.index(v)
 	users7 = users7[:25]
 
-	users10 = db.query(User).order_by(User.truecoins.desc()).all()
+	users10 = users.order_by(User.truecoins.desc()).all()
 	pos10 = users10.index(v)
 	users10 = users10[:25]
 
