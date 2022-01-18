@@ -4771,7 +4771,7 @@ table {
 }
 @keyframes golden {
     from {filter: sepia(100%) saturate(2) drop-shadow(-1px 1px 1px gold)}
-    to {filter: sepia(100%) saturate(3) drop-shadow(-1px 1px 12px gold)}
+    to {filter: sepia(100%) saturate(3) drop-shadow(-1px 1px 3px gold)}
 }
 img.golden {
     animation-name: golden !important;
