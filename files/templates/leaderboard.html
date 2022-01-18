@@ -223,6 +223,13 @@
 		<td style="font-weight:bold; text-align:right;">{{user.received_award_count}}</td>
 	</tr>
 {% endfor %}
+{% if pos5 > 25 %}
+	<tr style="border-top:2px solid var(--primary)">
+		<td style="font-weight:bold;">{{pos5}}</td>
+		<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+		<td style="font-weight:bold; text-align:right;">{{v.received_award_count}}</td>
+	</tr>
+{% endif %}
 </table>
 
 
@@ -312,6 +319,13 @@
 			<td style="font-weight:bold; text-align:right;">{{user.basedcount}}</td>
 		</tr>
 	{% endfor %}
+	{% if pos6 > 25 %}
+		<tr style="border-top:2px solid var(--primary)">
+			<td style="font-weight:bold;">{{pos6}}</td>
+			<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+			<td style="font-weight:bold; text-align:right;">{{v.basedcount}}</td>
+		</tr>
+	{% endif %}
 	</table>
 {% endif %}
 
