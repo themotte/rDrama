@@ -301,7 +301,9 @@ def transfer_bux(v, username):
 @auth_required
 def leaderboard(v):
 	users = g.db.query(User)
-	users1 = users.order_by(User.coins.desc()).limit(25).all()
+	users1 = users.order_by(User.coins.desc()).all()
+	pos = users1.index(v)
+	users1 = users1[:25]
 	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
 	users3 = users.order_by(User.post_count.desc()).limit(25).all()
 	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
@@ -333,7 +335,7 @@ def leaderboard(v):
 	if request.host == 'rdrama.net': users13 = topmakers
 	else: users13 = None
 
-	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9, users10=users10, users12=users12, users13=users13, users15=users15)
+	return render_template("leaderboard.html", v=v, users1=users1, pos=pos, users2=users2, users3=users3, users4=users4, users5=users5, users6=users6, users7=users7, users9=users9, users10=users10, users12=users12, users13=users13, users15=users15)
 
 
 @app.get("/@<username>/css")
