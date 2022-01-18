@@ -390,10 +390,7 @@ def random_post(v):
 @cache.memoize(timeout=86400)
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):
 
-	posts = g.db.query(Submission)
 	cc_idlist = [x[0] for x in g.db.query(Submission.id).filter(Submission.club == True).all()]
-
-	posts = posts.subquery()
 
 	comments = g.db.query(Comment.id).filter(Comment.parent_submission.notin_(cc_idlist))
 
