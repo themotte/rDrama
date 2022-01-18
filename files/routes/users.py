@@ -46,7 +46,7 @@ users11 = db.query(User).filter(User.id.in_(badges.keys())).all()
 users12 = []
 for user in users11: users12.append((user, badges[user.id]))
 users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
-userss12 = users12[:1]
+userss12 = users12[:25]
 
 if site == 'rdrama.net':
 	topmakers = {}
