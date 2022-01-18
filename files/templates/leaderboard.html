@@ -296,6 +296,13 @@
 			<td style="font-weight: bold">{{user[1]}}</td>
 		</tr>
 	{% endfor %}
+	{% if pos12 and pos12[0] > 25 %}
+		<tr style="border-top:2px solid var(--primary)">
+			<td style="font-weight:bold;">{{pos12[0]}}</td>
+			<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+			<td style="font-weight:bold">{{pos12[1]}}</td>
+		</tr>
+	{% endif %}
 	</tbody>
 </table>
 
@@ -363,6 +370,13 @@
 				<td style="font-weight: bold">{{user[1]}}</td>
 			</tr>
 		{% endfor %}
+		{% if pos13 and pos13[0] > 25 %}
+			<tr style="border-top:2px solid var(--primary)">
+				<td style="font-weight:bold;">{{pos13[0]}}</td>
+				<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+				<td style="font-weight:bold">{{pos13[1]}}</td>
+			</tr>
+		{% endif %}
 		</tbody>
 	</table>
 {% endif %}
@@ -394,6 +408,13 @@
 				<td style="font-weight: bold">{{user[1]}}</td>
 			</tr>
 		{% endfor %}
+		{% if pos15 and pos15[0] > 25 %}
+			<tr style="border-top:2px solid var(--primary)">
+				<td style="font-weight:bold;">{{pos15[0]}}</td>
+				<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+				<td style="font-weight:bold">{{pos15[1]}}</td>
+			</tr>
+		{% endif %}
 		</tbody>
 	</table>
 {% endif %}
