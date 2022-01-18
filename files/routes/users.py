@@ -26,6 +26,7 @@ users15 = []
 for user in users14:
 	users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
 users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
+userss15 = users15[:25]
 
 users = db.query(User)
 
@@ -58,6 +59,7 @@ users11 = db.query(User).filter(User.id.in_(badges.keys())).all()
 users12 = []
 for user in users11: users12.append((user, badges[user.id]))
 users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
+userss12 = users12[:25]
 
 votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
@@ -66,9 +68,12 @@ users8 = db.query(User).filter(User.id.in_(votes3.keys())).all()
 users9 = []
 for user in users8: users9.append((user, votes3[user.id]))
 users9 = sorted(users9, key=lambda x: x[1], reverse=True)
+userss9 = users9[:25]
 
-if SITE == 'rdrama.net': users13 = topmakers
-else: users13 = None
+if SITE == 'rdrama.net':
+	users13 = topmakers
+	userss13 = users13[:25]
+else: userss13 = None
 
 db.close()
 
@@ -360,29 +365,23 @@ def leaderboard(v):
 		pos9 = [x[0].id for x in users9].index(v.id)
 		pos9 = (pos9, users9[pos9][1])
 	except: pos9 = None
-	userss9 = users9[:25]
 
 	try:
 		pos12 = [x[0].id for x in users12].index(v.id)
 		pos12 = (pos12, users12[pos12][1])
 	except: pos12 = None
-	userss12 = users12[:25]
 
-	if users13 == None:
-		pos13 = None
-		userss13 = None
-	else:
-		try:
-			pos13 = [x[0] for x in users13].index(v.username.lower())
-			pos13 = (pos13, users13[pos13][1])
-		except: pos13 = None
-		userss13 = users13[:25]
+	try:
+		pos13 = [x[0] for x in users13].index(v.username.lower())
+		pos13 = (pos13, users13[pos13][1])
+	except: pos13 = None
 
 	try:
 		pos15 = [x[0].id for x in users15].index(v.id)
 		pos15 = (pos15, users15[pos15][1])
-	except: pos15 = None
-	userss15 = users15[:25]
+	except Exception as e:
+		print(e)
+		pos15 = None
 
 	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=userss9, pos9=pos9, users10=users10, pos10=pos10, users12=userss12, pos12=pos12, users13=userss13, pos13=pos13, users15=userss15, pos15=pos15)
 
