@@ -73,7 +73,7 @@ users15 = []
 for user in users14:
 	users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
 users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
-userss15 = users15[:10]
+userss15 = users15[:25]
 
 db.close()
 
