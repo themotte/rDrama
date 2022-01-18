@@ -320,10 +320,30 @@ def transfer_bux(v, username):
 def leaderboard(v):
 	users = g.db.query(User)
 
-	users1 = users.order_by(User.coins.desc()).limit(25).all()
-	pos1 = g.db.query(User, func.rank().over(order_by=User.coins)).filter_by(id=v.id).first()
 
-	print(pos1)
+	# Assuming you have a session established somewhere
+	# though `MoviePersonScores.query` may work just the same
+
+	query = g.db.query(
+		User, 
+		func.rank()\
+			.over(
+				order_by=User.coins
+			)\
+			.label('rank')
+		)
+
+	# now filter
+	query = query.filter_by(id=v.id)
+
+	# Or, just get the first value
+	my_movie = query.first()
+
+	print(my_movie)
+
+
+	users1 = users.order_by(User.coins.desc()).limit(25).all()
+	pos1 = g.db.query(User, func.rank().over(order_by=User.coins.desc())).filter_by(id=v.id).first()[1]
 
 	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
 	pos2 = g.db.query(User, func.rank().over(order_by=User.stored_subscriber_count.desc())).filter_by(id=v.id).first()[1]
