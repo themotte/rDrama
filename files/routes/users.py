@@ -362,25 +362,22 @@ def leaderboard(v):
 
 	try:
 		pos9 = [x[0].id for x in users9].index(v.id)
-		pos9 = (pos9, users9[pos9][1])
+		pos9 = (pos9+1, users9[pos9][1])
 	except: pos9 = None
 
 	try:
 		pos12 = [x[0].id for x in users12].index(v.id)
-		pos12 = (pos12, users12[pos12][1])
-	except Exception as e:
-		print([x[0].id for x in users12])
-		print(e)
-		pos12 = None
+		pos12 = (pos12+1, users12[pos12][1])
+	except: pos12 = None
 
 	try:
 		pos13 = [x[0] for x in users13].index(v.username.lower())
-		pos13 = (pos13, users13[pos13][1])
+		pos13 = (pos13+1, users13[pos13][1])
 	except: pos13 = None
 
 	try:
 		pos15 = [x[0].id for x in users15].index(v.id)
-		pos15 = (pos15, users15[pos15][1])
+		pos15 = (pos15+1, users15[pos15][1])
 	except: pos15 = None
 
 	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=userss9, pos9=pos9, users10=users10, pos10=pos10, users12=userss12, pos12=pos12, users13=userss13, pos13=pos13, users15=userss15, pos15=pos15)
