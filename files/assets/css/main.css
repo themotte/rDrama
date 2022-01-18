@@ -2622,7 +2622,7 @@ html {
 }
 body {
     color: var(--black);
-    padding-top: 49px;
+    padding-top: 72px;
     background-color: var(--gray-700);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -2642,7 +2642,7 @@ pre {
     background-color: var(--gray-600);
 }
 #page {
-    padding-top: 49px;
+    padding-top: 72px;
     background-color: var(--gray-700);
 }
 #article {
@@ -4057,7 +4057,7 @@ pre .com, code .com {
 }
 @media (max-width: 991.98px) {
     #frontpage, #search {
-        padding-top: 49px;
+        padding-top: 72px;
 }
 }
 @media (max-width: 767.98px) {
@@ -4069,7 +4069,7 @@ pre .com, code .com {
         max-width: none;
 }
     body, #settings, #notifications, #submit {
-        padding-top: 49px;
+        padding-top: 72px;
         background-color: var(--gray-700);
 }
     #thread, #userpage {
@@ -4113,7 +4113,7 @@ pre .com, code .com {
         background-color: var(--light);
 }
     #frontpage {
-        padding-top: 49px;
+        padding-top: 72px;
 }
     #search .search-results.card {
         border-bottom: 0.1px solid var(--gray-400);

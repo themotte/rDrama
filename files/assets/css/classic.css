@@ -20,10 +20,6 @@
     background-color: var(--white) !important;
 }
 
-#srd, .banner {
-    display: none;
-}
-
 .form-inline.search input {
 	background-color: white !important;
 }

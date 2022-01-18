@@ -7,7 +7,7 @@
 	<script src="/static/assets/js/bootstrap.js?a=202"></script>
 	{% if v %}
 		<style>:root{--primary:#{{v.themecolor}}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=85">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=86">
 		<link rel="stylesheet" href="/static/assets/css/{{v.theme}}.css?a=11">
 		{% if v.agendaposter %}
 			<style>
@@ -32,7 +32,7 @@
 		{% endif %}
 	{% else %}
 		<style>:root{--primary:#{{'DEFAULT_COLOR' | app_config}}</style>
-		<link rel="stylesheet" href="/static/assets/css/main.css?a=85"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
+		<link rel="stylesheet" href="/static/assets/css/main.css?a=86"><link rel="stylesheet" href="/static/assets/css/{{'DEFAULT_THEME' | app_config}}.css?a=3">
 	{% endif %}
 
 	<meta charset="utf-8">
@@ -213,18 +213,7 @@
  <body id="{% if request.path != '/comments' %}{% block pagetype %}frontpage{% endblock %}{% endif %}" style="{% if path != '/formatting' %}overflow-x: hidden; {% endif %}{% if v and v.background %} background:url(/static/assets/images/backgrounds/{{v.background}}) no-repeat center center fixed !important; background-size: cover!important; background-color: #000!important;{% endif %} {% if request.host == 'rdrama.net' %}margin-top: 29px!important;{% endif %}">
 
 {% block Banner %}
-	{% if '@' not in request.path %}
-		<style>
-			.banner {
-				margin-top: -3px;
-			}
-			@media (min-width: 992px) {
-				.banner {
-					margin-top: 10px !important;
-				}
-			}
-		</style>
-		
+	{% if '@' not in request.path %}		
 		{% if v %}
 			
 			{% if SITE_NAME == 'Drama' %}
