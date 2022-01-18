@@ -28,7 +28,25 @@ users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
 if SITE == 'pcmemes.net': users6 = users.order_by(User.basedcount.desc()).limit(25).all()
 else: users6 = None
 users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
+
+votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
+votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
+users8 = db.query(User).filter(User.id.in_(votes3.keys())).all()
+users9 = []
+for user in users8: users9.append((user, votes3[user.id]))
+users9 = sorted(users9, key=lambda x: x[1], reverse=True)
+userss9 = users9[:25]
+
 users10 = users.order_by(User.truecoins.desc()).limit(25).all()
+
+badges = db.query(Badge.user_id, func.count(Badge.user_id)).group_by(Badge.user_id).order_by(func.count(Badge.user_id).desc()).all()
+badges = dict(badges)
+users11 = db.query(User).filter(User.id.in_(badges.keys())).all()
+users12 = []
+for user in users11: users12.append((user, badges[user.id]))
+users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
+userss12 = users12[:1]
 
 if site == 'rdrama.net':
 	topmakers = {}
@@ -42,25 +60,6 @@ if site == 'rdrama.net':
 	for user in topmakers2:
 		topmakers3.append((user, topmakers[user.username.lower()]))
 	topmakers = sorted(topmakers3, key=lambda x: x[1], reverse=True)[:25]
-
-badges = db.query(Badge.user_id, func.count(Badge.user_id)).group_by(Badge.user_id).order_by(func.count(Badge.user_id).desc()).all()
-badges = dict(badges)
-users11 = db.query(User).filter(User.id.in_(badges.keys())).all()
-users12 = []
-for user in users11: users12.append((user, badges[user.id]))
-users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
-userss12 = users12[:25]
-
-votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
-votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
-votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
-users8 = db.query(User).filter(User.id.in_(votes3.keys())).all()
-users9 = []
-for user in users8: users9.append((user, votes3[user.id]))
-users9 = sorted(users9, key=lambda x: x[1], reverse=True)
-userss9 = users9[:25]
-
-if SITE == 'rdrama.net':
 	users13 = topmakers
 	userss13 = users13[:25]
 else: userss13 = None
