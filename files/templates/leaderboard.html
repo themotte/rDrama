@@ -24,7 +24,7 @@
 {% if pos > 25 %}
 	<tr>
 		<td style="font-weight:bold;">pos</td>
-		<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+		<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
 		<td style="font-weight:bold; text-align:right;">{{v.coins}}</td>
 	</tr>
 {% endif %}
