@@ -18,16 +18,6 @@ if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key
 
 db = db_session()
 
-votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
-votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
-votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
-users14 = db.query(User).filter(User.id.in_(votes3.keys())).all()
-users15 = []
-for user in users14:
-	users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
-users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
-userss15 = users15[:25]
-
 users = db.query(User)
 
 users1 = users.order_by(User.coins.desc()).limit(25).all()
@@ -74,6 +64,16 @@ if SITE == 'rdrama.net':
 	users13 = topmakers
 	userss13 = users13[:25]
 else: userss13 = None
+
+votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
+votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
+votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
+users14 = db.query(User).filter(User.id.in_(votes3.keys())).all()
+users15 = []
+for user in users14:
+	users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
+users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
+userss15 = users15[:10]
 
 db.close()
 
