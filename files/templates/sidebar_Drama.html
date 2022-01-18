@@ -1,6 +1,6 @@
 <div class="col sidebar text-left d-none d-lg-block pt-3 bg-white" style="max-width:300px">
 
-    {% set image = "/static/assets/images/" + SITE_NAME + "/banners/" + range(1,num_banners)|random()|string + ".webp?a=15" %}
+    {% set image = "/static/assets/images/" + SITE_NAME + "/sidebar/" + range(1,num_sidebar)|random()|string + ".webp?a=15" %}
 
     <a role="button" data-bs-toggle="modal" data-bs-target="#expandImageModal" data-bs-url="{{image}}" onclick="expandDesktopImage('{{image}}')">
         <img loading="lazy" src="{{image}}" width=100%>

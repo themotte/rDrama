@@ -16,10 +16,7 @@ if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
 else: cc = "COUNTRY CLUB"
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
-beams_client = PushNotifications(
-		instance_id=PUSHER_ID,
-		secret_key=PUSHER_KEY,
-)
+if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
@@ -161,7 +158,7 @@ def api_comment(v):
 	body = request.values.get("body", "").strip()[:10000]
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body))
 		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -332,7 +329,7 @@ def api_comment(v):
 		g.db.add(c)
 
 
-		body = AGENDAPOSTER_MSG.format(username=v.username, type='comment')
+		body = AGENDAPOSTER_MSG.format(username=v.username, type='comment', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
 
 		body_jannied_html = sanitize(body)
 
@@ -465,7 +462,7 @@ def api_comment(v):
 			n = Notification(comment_id=c.id, user_id=x)
 			g.db.add(n)
 
-		if parent.author.id != v.id:
+		if parent.author.id != v.id and PUSHER_ID:
 			if len(c.body) > 500: notifbody = c.body[:500] + '...'
 			else: notifbody = c.body
 
@@ -561,7 +558,7 @@ def edit_comment(cid, v):
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		if v.marseyawarded:
-			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 		if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -674,7 +671,7 @@ def edit_comment(cid, v):
 			g.db.add(c)
 
 
-			body = AGENDAPOSTER_MSG.format(username=v.username, type='comment')
+			body = AGENDAPOSTER_MSG.format(username=v.username, type='comment', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
 
 			body_jannied_html = sanitize(body)
 

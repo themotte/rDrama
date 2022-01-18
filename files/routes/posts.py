@@ -403,10 +403,10 @@ def edit_post(pid, v):
 	if len(body) > 10000: return {"error":"Character limit is 10000!"}, 403
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
+		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title))
 		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 		if body:
-			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -483,7 +483,7 @@ def edit_post(pid, v):
 
 			g.db.add(p)
 
-			body = AGENDAPOSTER_MSG.format(username=v.username, type='post')
+			body = AGENDAPOSTER_MSG.format(username=v.username, type='post', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
 
 			body_jannied_html = sanitize(body)
 
@@ -789,10 +789,10 @@ def submit_post(v):
 		else: render_template("submit.html", v=v, error="500 character limit for titles.", title=title[:500], url=url, body=request.values.get("body", "")), 400
 
 	if v.marseyawarded:
-		marregex = list(re.finditer("^(:!?m\w+:\s*)+$", title))
+		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title))
 		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 		if body:
-			marregex = list(re.finditer("^(:!?m\w+:\s*)+$", body))
+			marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body))
 			if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403
 
 	if v.longpost and len(body) < 280 or ' [](' in body or body.startswith('[]('): return {"error":"You have to type more than 280 characters!"}, 403
@@ -1013,7 +1013,7 @@ def submit_post(v):
 		new_post.is_banned = True
 		new_post.ban_reason = "AutoJanny"
 
-		body = AGENDAPOSTER_MSG.format(username=v.username, type='post')
+		body = AGENDAPOSTER_MSG.format(username=v.username, type='post', AGENDAPOSTER_PHRASE=AGENDAPOSTER_PHRASE)
 
 		body_jannied_html = sanitize(body)
 

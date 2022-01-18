@@ -165,7 +165,7 @@
 </nav>
 {% endif %}
 
-{% if v %}
+{% if PUSHER_ID and v %}
 	<div class="d-none" id="strid">{{request.host}}{{v.id}}</div>
 	<div class="d-none" id="pusherid">{{PUSHER_ID}}</div>
 	<script src="/static/assets/js/pusher.js?a=202"></script>

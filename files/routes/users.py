@@ -14,7 +14,7 @@ from collections import Counter
 
 site = environ.get("DOMAIN").strip()
 
-beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
+if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 db = db_session()
 
@@ -442,31 +442,32 @@ def message2(v, username):
 	notif = Notification(comment_id=new_comment.id, user_id=user.id)
 	g.db.add(notif)
 
-	if len(message) > 500: notifbody = message[:500] + '...'
-	else: notifbody = message
+	if PUSHER_ID:
+		if len(message) > 500: notifbody = message[:500] + '...'
+		else: notifbody = message
 
-	beams_client.publish_to_interests(
-		interests=[f'{request.host}{user.id}'],
-		publish_body={
-			'web': {
-				'notification': {
-					'title': f'New message from @{v.username}',
-					'body': notifbody,
-					'deep_link': f'https://{site}/notifications?messages=true',
-					'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
+		beams_client.publish_to_interests(
+			interests=[f'{request.host}{user.id}'],
+			publish_body={
+				'web': {
+					'notification': {
+						'title': f'New message from @{v.username}',
+						'body': notifbody,
+						'deep_link': f'https://{site}/notifications?messages=true',
+						'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
+					}
+				},
+				'fcm': {
+					'notification': {
+						'title': f'New message from @{v.username}',
+						'body': notifbody,
+					},
+					'data': {
+						'url': 'notifications?messages=true',
+					}
 				}
 			},
-			'fcm': {
-				'notification': {
-					'title': f'New message from @{v.username}',
-					'body': notifbody,
-				},
-				'data': {
-					'url': 'notifications?messages=true',
-				}
-			}
-		},
-	)
+		)
 
 	g.db.commit()
 
@@ -505,7 +506,7 @@ def messagereply(v):
 	g.db.add(new_comment)
 	g.db.flush()
 
-	if user_id != v.id:
+	if PUSHER_ID and user_id != v.id:
 		notif = Notification(comment_id=new_comment.id, user_id=user_id)
 		g.db.add(notif)
 
