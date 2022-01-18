@@ -281,7 +281,7 @@ def filter_emojis_only(title):
 				title = re.sub(f'(?<!"):!{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":!{emoji}:" title=":!{emoji}:" delay="0" src="/static/assets/images/emojis/{emoji}.webp" class="{classes}">', title, flags=re.I)
 
 		elif path.isfile(f'files/assets/images/emojis/{emoji}.webp'):
-			classes = 'emoji mirrored'
+			classes = 'emoji'
 			if random() < 0.01: classes += ' golden'
 			title = re.sub(f'(?<!"):{emoji}:', f'<img loading="lazy" data-bs-toggle="tooltip" alt=":{emoji}:" title=":{emoji}:" delay="0" class="{classes}" src="/static/assets/images/emojis/{emoji}.webp">', title, flags=re.I)
 
