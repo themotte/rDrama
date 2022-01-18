@@ -21,9 +21,9 @@
 		<td style="font-weight:bold; text-align:right;">{{user.coins}}</td>
 	</tr>
 {% endfor %}
-{% if pos > 25 %}
-	<tr style="border-top:2px solid var(--primary)">
-		<td style="font-weight:bold;">{{pos}}</td>
+{% if pos1 > 25 %}
+	<tr style="border-top:1px solid var(--primary)">
+		<td style="font-weight:bold;">{{pos1}}</td>
 		<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
 		<td style="font-weight:bold; text-align:right;">{{v.coins}}</td>
 	</tr>
@@ -56,6 +56,13 @@
 		<td style="font-weight:bold; text-align:right;">{{user.coins_spent}}</td>
 	</tr>
 {% endfor %}
+{% if pos7 > 25 %}
+	<tr style="border-top:1px solid var(--primary)">
+		<td style="font-weight:bold;">{{pos7}}</td>
+		<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+		<td style="font-weight:bold; text-align:right;">{{v.coins_spent}}</td>
+	</tr>
+{% endif %}
 </table>
 
 
@@ -84,6 +91,13 @@
 			<td style="font-weight:bold; text-align:right;">{{user.truecoins}}</td>
 		</tr>
 	{% endfor %}
+	{% if pos10 > 25 %}
+		<tr style="border-top:1px solid var(--primary)">
+			<td style="font-weight:bold;">{{pos10}}</td>
+			<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+			<td style="font-weight:bold; text-align:right;">{{v.truecoins}}</td>
+		</tr>
+	{% endif %}
 	</tbody>
 </table>
 
@@ -111,6 +125,13 @@
 		<td style="font-weight:bold; text-align:right;">{{user.stored_subscriber_count}}</td>
 	</tr>
 {% endfor %}
+{% if pos2 > 25 %}
+	<tr style="border-top:1px solid var(--primary)">
+		<td style="font-weight:bold;">{{pos2}}</td>
+		<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+		<td style="font-weight:bold; text-align:right;">{{v.stored_subscriber_count}}</td>
+	</tr>
+{% endif %}
 </table>
 <pre>
 
@@ -136,6 +157,13 @@
 		<td style="font-weight:bold; text-align:right;">{{user.post_count}}</td>
 	</tr>
 {% endfor %}
+{% if pos3 > 25 %}
+	<tr style="border-top:1px solid var(--primary)">
+		<td style="font-weight:bold;">{{pos3}}</td>
+		<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+		<td style="font-weight:bold; text-align:right;">{{v.post_count}}</td>
+	</tr>
+{% endif %}
 </table>
 <pre>
 
@@ -161,6 +189,13 @@
 		<td style="font-weight:bold; text-align:right;">{{user.comment_count}}</td>
 	</tr>
 {% endfor %}
+{% if pos4 > 25 %}
+	<tr style="border-top:1px solid var(--primary)">
+		<td style="font-weight:bold;">{{pos4}}</td>
+		<td><a style="color:#{{v.namecolor}};  font-weight:bold;" href="/@{{v.username}}"><img alt="@{{v.username}}'s profile picture" loading="lazy" src="{{v.profile_url}}" class="pp20"><span {% if v.patron %}class="patron" style="background-color:#{{v.namecolor}}"{% endif %}>{{v.username}}</span></a></td>
+		<td style="font-weight:bold; text-align:right;">{{v.comment_count}}</td>
+	</tr>
+{% endif %}
 </table>
 
 
