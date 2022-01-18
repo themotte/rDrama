@@ -323,6 +323,8 @@ def leaderboard(v):
 	users1 = users.order_by(User.coins.desc()).limit(25).all()
 	pos1 = g.db.query(User, func.rank().over(order_by=User.coins.desc())).filter_by(id=v.id).first()[1]
 
+	print(pos1)
+
 	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
 	pos2 = g.db.query(User, func.rank().over(order_by=User.stored_subscriber_count.desc())).filter_by(id=v.id).first()[1]
 
