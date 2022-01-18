@@ -380,8 +380,7 @@ def get_profilecss(v, username):
 	return resp
 
 @app.get("/songs/<id>")
-@auth_required
-def songs(v, id):
+def songs(id):
 	try: id = int(id)
 	except: return "", 400
 	user = g.db.query(User).filter_by(id=id).one_or_none()
