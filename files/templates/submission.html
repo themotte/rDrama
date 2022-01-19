@@ -34,12 +34,16 @@
 			}
 		}
 		
-		@keyframes wholesome1 {
-		    0% {top:0%; left: 50%;}
-		    25% {top:50%; left:98%;}
-		    50% {top:98%; left: 50%}
-		    75% {top:50%; left:0%;}
-		    100% {top:0%; left: 50%;}
+		@keyframes moveX {
+			from { left: 0; } to { left: 98%; }
+		}
+
+		@keyframes moveY {
+			from { top: 0; } to { top: 98%; }    
+		}
+
+		.seal {
+			animation: moveX 4s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
 		}
 
 		.seal {
@@ -48,13 +52,6 @@
 			pointer-events: none;
 			width: 100% !important;
 			height: 100% !important;
-		    animation-duration: 10s !important;
-		    animation-iteration-count: infinite !important;
-		    animation-fill-mode: forwards !important;
-		    animation-timing-function: linear !important;
-		}
-		.seal1 {
-			animation-name: wholesome1 !important;
 		}
 	</style>
 	<div class="seal seal1" height="100%" width="100%">
