@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 13.5
--- Dumped by pg_dump version 13.4 (Ubuntu 13.4-1.pgdg20.04+1)
+-- Dumped by pg_dump version 14.1 (Ubuntu 14.1-2.pgdg20.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -572,8 +572,8 @@ CREATE TABLE public.submissions (
     stickied character varying(40),
     title character varying(500),
     url character varying(2083),
-    body character varying(10000),
-    body_html character varying(20000),
+    body character varying(20000),
+    body_html character varying(40000),
     embed_url character varying(1500),
     ban_reason character varying(25),
     title_html character varying(1500),
@@ -1706,3 +1706,8 @@ ALTER TABLE ONLY public.flags
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_comment_id_fkey FOREIGN KEY (comment_id) REFERENCES public.comments(id);
+
+--
+-- PostgreSQL database dump complete
+--
+
