@@ -35,7 +35,7 @@ def leaderboard_thread():
 	users11 = db.query(User).filter(User.id.in_(badges.keys())).all()
 	users12 = []
 	for user in users11: users12.append((user, badges[user.id]))
-	users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
+	users12 = sorted(users12, key=lambda x: x[1], reverse=True)
 	userss12 = users12[:25]
 
 	if SITE_NAME == 'Drama':
@@ -50,7 +50,6 @@ def leaderboard_thread():
 		for user in users132:
 			users133.append((user, users13[user.username.lower()]))
 		users13 = sorted(users133, key=lambda x: x[1], reverse=True)
-		users13 = users13
 		userss13 = users13[:25]
 	else: userss13 = None
 
@@ -61,7 +60,7 @@ def leaderboard_thread():
 	users15 = []
 	for user in users14:
 		users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
-	users15 = sorted(users15, key=lambda x: x[1], reverse=True)[:25]
+	users15 = sorted(users15, key=lambda x: x[1], reverse=True)
 	userss15 = users15[:25]
 
 	db.close()
