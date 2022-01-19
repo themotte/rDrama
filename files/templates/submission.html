@@ -34,27 +34,25 @@
 			}
 		}
 		
-		@keyframes wholesome1 {
-		    0% {top:0%; left: 50%;}
-		    25% {top:50%; left:98%;}
-		    50% {top:98%; left: 50%}
-		    75% {top:50%; left:0%;}
-		    100% {top:0%; left: 50%;}
-		}
-
 		.seal {
 			position:fixed;
 			z-index:9999;
 			pointer-events: none;
 			width: 100% !important;
 			height: 100% !important;
-		    animation-duration: 10s !important;
-		    animation-iteration-count: infinite !important;
-		    animation-fill-mode: forwards !important;
-		    animation-timing-function: linear !important;
 		}
+		
+		@keyframes moveX {
+			from { left: 0; } to { left: 98%; }
+		}
+
+		@keyframes moveY {
+			from { top: 0; } to { top: 98%; }    
+		}
+
 		.seal1 {
-			animation-name: wholesome1 !important;
+			animation: moveX 4s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
+			animation-delay:0s;
 		}
 	</style>
 	<div class="seal seal1" height="100%" width="100%">
@@ -64,15 +62,9 @@
 
 {% if p.award_count("wholesome") > 1 %}
 	<style>
-		@keyframes wholesome2 {
-		    0% {top:50%; left:98%;}
-		    25% {top:98%; left: 50%}
-		    50% {top:50%; left:0%;}
-		    75% {top:0%; left: 50%;}
-		    100% {top:50%; left:98%;}
-		}
 		.seal2 {
-			animation-name: wholesome2 !important;
+			animation: moveX 5s linear 0s infinite alternate, moveY 8s linear 0s infinite alternate !important;
+			animation-delay:1s;
 		}
 	</style>
 	<div class="seal seal2" height="100%" width="100%">
@@ -82,15 +74,9 @@
 
 {% if p.award_count("wholesome") > 2 %}
 	<style>
-		@keyframes wholesome3 {
-		    0% {top:50%; left:0%;}
-		    25% {top:0%; left: 50%;}
-		    50% {top:50%; left:98%;}
-		    75% {top:98%; left: 50%}
-		    100% {top:50%; left:0%;}
-		}
 		.seal3 {
-			animation-name: wholesome3 !important;
+			animation: moveX 4s linear 0s infinite alternate, moveY 5s linear 0s infinite alternate !important;
+			animation-delay:2s;
 		}
 	</style>
 	<div class="seal seal3" height="100%" width="100%">
@@ -100,15 +86,9 @@
 
 {% if p.award_count("wholesome") > 3 %}
 	<style>
-		@keyframes wholesome4 {
-		    0% {top:98%; left: 50%}
-		    25% {top:50%; left:0%;}
-		    50% {top:0%; left: 50%;}
-		    75% {top:50%; left:98%;}
-		    100% {top:98%; left: 50%}
-		}
 		.seal4 {
-			animation-name: wholesome4 !important;
+			animation: moveX 5s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
+			animation-delay:3s;
 		}
 	</style>
 	<div class="seal seal4" height="100%" width="100%">
