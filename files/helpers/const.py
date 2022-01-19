@@ -2,8 +2,6 @@ from os import environ, listdir
 import re
 from copy import deepcopy
 from json import loads
-from files.__main__ import app
-from .get import get_post
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
@@ -795,26 +793,3 @@ NOTIFIED_USERS = {
 
 num_banners = len(listdir('files/assets/images/Drama/banners')) + 1
 num_sidebar = len(listdir('files/assets/images/Drama/sidebar')) + 1
-
-@app.template_filter("full_link")
-def full_link(url):
-
-	return f"{SITE_FULL}{url}"
-
-@app.template_filter("app_config")
-def app_config(x):
-	return app.config.get(x)
-
-@app.template_filter("post_embed")
-def post_embed(id, v):
-
-	try: id = int(id)
-	except: return None
-	
-	p = get_post(id, v, graceful=True)
-	
-	return render_template("submission_listing.html", listing=[p], v=v)
-
-@app.context_processor
-def inject_constants():
-	return {"num_banners":num_banners, "num_sidebar":num_sidebar, "environ":environ, "SITE_NAME":SITE_NAME, "AUTOJANNY_ID":AUTOJANNY_ID, "NOTIFICATIONS_ID":NOTIFICATIONS_ID, "PUSHER_ID":PUSHER_ID, "CC":CC, "CC_TITLE":CC_TITLE}

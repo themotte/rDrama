@@ -1,7 +1,7 @@
 import html
 from .front import frontlist
 from datetime import datetime
-from files.helpers.const import *
+from files.helpers.jinja2 import full_link
 from files.helpers.get import *
 from yattag import Doc
 from files.helpers.wrappers import *
