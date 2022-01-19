@@ -18,31 +18,12 @@ site = environ.get("DOMAIN").strip()
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 def leaderboard_thread():
-	global users1
-	global users2
-	global users3
-	global users4
-	global users5
-	global users6
-	global users7
 	global userss9
-	global users10
 	global userss12
 	global userss13
 	global userss15
 
 	db = db_session()
-
-	users = db.query(User)
-
-	users1 = users.order_by(User.coins.desc()).limit(25).all()
-	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
-	users3 = users.order_by(User.post_count.desc()).limit(25).all()
-	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
-	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
-	if SITE == 'pcmemes.net': users6 = users.order_by(User.basedcount.desc()).limit(25).all()
-	else: users6 = None
-	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
 
 	votes1 = db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 	votes2 = db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
@@ -53,7 +34,6 @@ def leaderboard_thread():
 	users9 = sorted(users9, key=lambda x: x[1], reverse=True)
 	userss9 = users9[:25]
 
-	users10 = users.order_by(User.truecoins.desc()).limit(25).all()
 
 	badges = db.query(Badge.user_id, func.count(Badge.user_id)).group_by(Badge.user_id).order_by(func.count(Badge.user_id).desc()).all()
 	badges = dict(badges)
@@ -350,6 +330,19 @@ def transfer_bux(v, username):
 @app.get("/leaderboard")
 @auth_required
 def leaderboard(v):
+
+	users = g.db.query(User)
+
+	users1 = users.order_by(User.coins.desc()).limit(25).all()
+	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
+	users3 = users.order_by(User.post_count.desc()).limit(25).all()
+	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
+	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
+	if SITE == 'pcmemes.net': users6 = users.order_by(User.basedcount.desc()).limit(25).all()
+	else: users6 = None
+	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
+	users10 = users.order_by(User.truecoins.desc()).limit(25).all()
+
 	sq = g.db.query(User.id, func.rank().over(order_by=User.coins.desc()).label("rank")).subquery()
 	pos1 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
