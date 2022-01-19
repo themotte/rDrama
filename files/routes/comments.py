@@ -581,7 +581,7 @@ def edit_comment(cid, v):
 					)
 				g.db.add(c_option)
 
-		body_html = sanitize(body)
+		body_html = sanitize(body, edit=True)
 
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', body_html))): return {"error":"You can only type marseys!"}, 403
 
@@ -656,7 +656,7 @@ def edit_comment(cid, v):
 				body += f"\n\n{url}"
 			else: return {"error": "Image/Video files only"}, 400
 
-			body_html = sanitize(body)
+			body_html = sanitize(body, edit=True)
 
 		if len(body_html) > 20000: abort(400)
 

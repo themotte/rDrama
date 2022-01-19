@@ -372,9 +372,11 @@ def award_post(pid, v):
 	g.db.add(post.author)
 
 	g.db.commit()
-	if request.referrer and len(request.referrer) > 1 and (request.referrer.startswith('/') or request.referrer.startswith(request.host_url)):
-		return redirect(request.referrer)
-	else: return redirect("/")
+	if request.referrer and len(request.referrer) > 1:
+		if request.referrer == f'{request.host_url}submit': return redirect(post.permalink)
+		elif request.referrer.startswith('/') or request.referrer.startswith(request.host_url):
+			return redirect(request.referrer)
+	return redirect("/")
 
 
 @app.get("/comment/<cid>/awards")

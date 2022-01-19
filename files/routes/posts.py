@@ -453,7 +453,7 @@ def edit_post(pid, v):
 					)
 				g.db.add(c)
 
-		body_html = sanitize(body)
+		body_html = sanitize(body, edit=True)
 
 		bans = filter_comment_html(body_html)
 		if bans:

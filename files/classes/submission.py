@@ -247,7 +247,7 @@ class Submission(Base):
 	@property
 	@lazy
 	def full_url(self):
-		if self.url.startswith('/'): return f'https://{site}' + self.url
+		if self.url and self.url.startswith('/'): return f'https://{site}' + self.url
 		return self.url
 
 	@property

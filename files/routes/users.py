@@ -91,7 +91,6 @@ def leaderboard_thread():
 
 	db.close()
 
-gevent.spawn(leaderboard_thread())
 @app.get("/grassed")
 @auth_required
 def grassed(v):
@@ -350,6 +349,8 @@ def transfer_bux(v, username):
 @app.get("/leaderboard")
 @auth_required
 def leaderboard(v):
+	gevent.spawn(leaderboard_thread())
+
 	sq = g.db.query(User.id, func.rank().over(order_by=User.coins.desc()).label("rank")).subquery()
 	pos1 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
@@ -472,7 +473,7 @@ def message2(v, username):
 
 	if v.shadowbanned: return {"message": "Message sent!"}
 
-	message = request.values.get("message", "").strip()[:1000].strip()
+	message = request.values.get("message", "").strip()[:10000].strip()
 
 	if not message: return {"error": "message is empty"}
 
@@ -540,7 +541,7 @@ def message2(v, username):
 @auth_required
 def messagereply(v):
 
-	message = request.values.get("body", "").strip()[:1000].strip()
+	message = request.values.get("body", "").strip()[:10000].strip()
 
 	if not message: return {"error": "message is empty"}
 

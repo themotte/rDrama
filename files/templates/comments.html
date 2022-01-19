@@ -207,7 +207,7 @@
 					<i id='pinned-{{c.id}}'class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned by @{{c.is_pinned}}" {% if c.is_pinned_utc %}onmouseover="pinned_timestamp('pinned-{{c.id}}')" data-timestamp={{c.is_pinned_utc}} {% endif %}></i>
 				{% endif %}
 				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
-				{% if c.is_op %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="OP"></i>{% endif %}
+				{% if c.is_op and c.author_name != '👻' %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="OP"></i>{% endif %}
 				{% if c.is_bot %}<i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bot"></i>{% endif %}
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="You're blocking this user, but you can see this comment because you're an admin"></i>{% endif %}
 				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="This user is blocking you."></i>{% endif %}
@@ -541,7 +541,7 @@
 				<div id="comment-form-space-{{c.id}}" class="comment-write collapsed child">		
 					<form id="reply-to-message-{{c.id}}" action="/reply" method="post" class="input-group" enctype="multipart/form-data">
 						<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}"> 
-						<textarea autocomplete="off" minlength="1" maxlength="1000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea> 
+						<textarea autocomplete="off" minlength="1" maxlength="10000" name="body" form="reply-to-t3_{{c.id}}" data-id="{{c.id}}" class="comment-box form-control rounded" id="reply-form-body-{{c.id}}" aria-label="With textarea" rows="3" oninput="markdown('reply-form-body-{{c.id}}', 'message-reply-{{c.id}}')"></textarea> 
 						<div class="comment-format" id="comment-format-bar-{{c.id}}"> 
 							<label class="btn btn-secondary format m-0" for="gif-reply-btn-{{c.id}}">
 								<i id="emoji-reply-btn-{{c.id}}" class="fas fa-smile-beam" onclick="loadEmojis('reply-form-body-{{c.id}}')" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#emojiModal" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Emoji"></i>

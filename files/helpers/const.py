@@ -702,7 +702,7 @@ AWARDS = {
 	"grass": {
 		"kind": "grass",
 		"title": "Grass",
-		"description": "Ban the recipient permanently (must provide a timestamped picture of them touching grass to the admins to get unbanned)",
+		"description": "Ban the recipient for 30 days (if they provide a timestamped picture of them touching grass/snow/sand/ass to the admins, they will get unbanned immediately)",
 		"icon": "fas fa-seedling",
 		"color": "text-success",
 		"price": 10000
