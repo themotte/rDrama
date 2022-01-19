@@ -4517,7 +4517,11 @@ blockquote p {
 }
 }
 .in-comment-image {
-    max-height: 150px !important;
+    height: 150px !important;
+    width: 150px !important;
+    display: inline-block;
+    -o-object-fit: contain;
+    object-fit: contain;
     max-width: 100% !important;
     border-radius: 0.2rem !important;
     margin-top: 0.5rem !important;
@@ -4632,8 +4636,8 @@ input[type=radio] ~ .custom-control-label::before {
     width: 60px !important;
 }
 .emj, .emoji, .bigemoji, .emoji-md, .emoji-lg {
-    max-width: min(150px,50%) !important;
-    max-height: min(150px,50%) !important;
+    width: min(150px,50%) !important;
+    height: min(150px,50%) !important;
     display: inline-block;
     -o-object-fit: contain;
     object-fit: contain;
