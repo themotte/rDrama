@@ -4517,19 +4517,20 @@ blockquote p {
 }
 }
 .in-comment-image {
-    height: min(500px,10%) !important;
-    width: min(500px,100%) !important;
-    display: inline-block;
-    -o-object-fit: contain;
-    object-fit: contain;
     border-radius: 0.2rem !important;
     margin-top: 0.5rem !important;
     margin-bottom: 0.5rem !important;
     cursor: pointer;
 }
-@media (min-width: 576px) {
-    .in-comment-image {
-        height: min(500px,50%) !important;    
+.in-comment-image {
+    height: min(500px,1%);
+    width: min(300px,100%);
+    border-radius: 0.2rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    cursor: pointer;
+    -o-object-fit: contain;
+    object-fit: contain;
 }
 .embedvid {
     max-height: 20rem !important;
@@ -4643,7 +4644,6 @@ input[type=radio] ~ .custom-control-label::before {
     width: min(150px,100%) !important;
 }
 .emj, .emoji, .bigemoji, .emoji-md, .emoji-lg {
-    display: inline-block;
     -o-object-fit: contain;
     object-fit: contain;
 }
