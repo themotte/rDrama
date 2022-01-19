@@ -377,8 +377,7 @@ def leaderboard(v):
 	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=userss9, pos9=pos9, users10=users10, pos10=pos10, users11=users11, pos11=pos11, users13=userss13, pos13=pos13, users15=userss15, pos15=pos15)
 
 @app.get("/@<username>/css")
-@auth_required
-def get_css(v, username):
+def get_css(username):
 	user = get_user(username)
 	if user.css: css = user.css
 	else: css = ""
