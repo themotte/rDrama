@@ -706,7 +706,7 @@ def edit_comment(cid, v):
 
 		g.db.commit()
 
-	return c.body_html + c.options_html(v)
+	return c.realbody(v) + c.options_html(v)
 
 
 @app.post("/delete/comment/<cid>")
