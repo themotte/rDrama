@@ -4518,7 +4518,7 @@ blockquote p {
 }
 .in-comment-image {
     height: min(500px,25%) !important;
-    width: min(500px,100%) !important;
+    width: min(500px,25%) !important;
     display: inline-block;
     -o-object-fit: contain;
     object-fit: contain;
