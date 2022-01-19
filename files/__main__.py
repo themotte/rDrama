@@ -26,7 +26,6 @@ app.jinja_env.auto_reload = True
 faulthandler.enable()
 
 app.config["SITE_NAME"]=environ.get("SITE_NAME").strip()
-app.config["COINS_NAME"]=environ.get("COINS_NAME").strip()
 app.config["GUMROAD_LINK"]=environ.get("GUMROAD_LINK", "https://marsey1.gumroad.com/l/tfcvri").strip()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get("DATABASE_URL")

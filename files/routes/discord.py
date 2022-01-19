@@ -8,7 +8,6 @@ SERVER_ID = environ.get("DISCORD_SERVER_ID",'').strip()
 CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').strip()
 CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').strip()
 BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN").strip()
-COINS_NAME = environ.get("COINS_NAME").strip()
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 WELCOME_CHANNEL="846509313941700618"
 
