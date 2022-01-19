@@ -91,6 +91,7 @@ def leaderboard_thread():
 
 	db.close()
 
+gevent.spawn(leaderboard_thread())
 @app.get("/grassed")
 @auth_required
 def grassed(v):
@@ -349,8 +350,6 @@ def transfer_bux(v, username):
 @app.get("/leaderboard")
 @auth_required
 def leaderboard(v):
-	gevent.spawn(leaderboard_thread())
-
 	sq = g.db.query(User.id, func.rank().over(order_by=User.coins.desc()).label("rank")).subquery()
 	pos1 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
