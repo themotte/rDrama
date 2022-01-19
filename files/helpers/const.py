@@ -3,6 +3,7 @@ import re
 from copy import deepcopy
 from json import loads
 from files.__main__ import app
+from .get import *
 
 SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
