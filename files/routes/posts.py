@@ -77,7 +77,7 @@ def publish(pid, v):
 	cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 1 and ("[changelog]" in post.title or "(changelog)" in post.title):
-		send_discord_message(f"https://{site}{post.permalink}")
+		send_discord_message(f"{request.host_url}{post.permalink[1:]}")
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()
@@ -579,7 +579,7 @@ def thumbnail_thread(pid):
 	
 	fetch_url = post.url
 
-	if fetch_url.startswith('/'): fetch_url = f"https://{site}{fetch_url}"
+	if fetch_url.startswith('/'): fetch_url = f"{request.host_url}{fetch_url[1:]}"
 
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
@@ -1053,7 +1053,7 @@ def submit_post(v):
 			rev = f"* [unddit.com](https://unddit.com/{rev})\n"
 		else: rev = ''
 		newposturl = new_post.url
-		if newposturl.startswith('/'): newposturl = f"https://{site}{newposturl}"
+		if newposturl.startswith('/'): newposturl = f"{request.host_url}{newposturl[1:]}"
 		body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
 		gevent.spawn(archiveorg, newposturl)
 
@@ -1105,7 +1105,7 @@ def submit_post(v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title) and not new_post.private:
-		send_discord_message(f"https://{site}{new_post.permalink}")
+		send_discord_message(f"{request.host_url}{new_post.permalink[1:]}")
 		cache.delete_memoized(changeloglist)
 
 	if v.id in (PIZZASHILL_ID, HIL_ID):
