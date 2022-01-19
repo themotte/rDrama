@@ -29,6 +29,21 @@ def leaderboard_thread():
 	users9 = sorted(users9, key=lambda x: x[1], reverse=True)
 	userss9 = users9[:25]
 
+	if SITE_NAME == 'Drama':
+		users13 = {}
+		for k, val in marseys.items():
+			if val in users13: users13[val] += 1
+			else: users13[val] = 1
+
+		users13.pop('unknown','anton-d')
+		users132 = db.query(User).filter(func.lower(User.username).in_(users13.keys())).all()
+		users133 = []
+		for user in users132:
+			users133.append((user, users13[user.username.lower()]))
+		users13 = sorted(users133, key=lambda x: x[1], reverse=True)
+		userss13 = users13[:25]
+	else: userss13 = None
+
 	votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 	votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
 	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
