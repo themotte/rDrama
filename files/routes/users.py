@@ -364,10 +364,12 @@ def leaderboard(v):
 	pos11 = g.db.query(User.id, sq.c.rank, sq.c.count).join(sq, User.id==sq.c.user_id).filter(User.id == v.id).one_or_none()
 	if pos11: pos11 = (pos11[1],pos11[2])
 
-	try:
-		pos13 = [x[0].id for x in users13].index(v.id)
-		pos13 = (pos13+1, users13[pos13][1])
-	except: pos13 = (len(users13)+1, 0)
+	if SITE_NAME == 'Drama':
+		try:
+			pos13 = [x[0].id for x in users13].index(v.id)
+			pos13 = (pos13+1, users13[pos13][1])
+		except: pos13 = (len(users13)+1, 0)
+	else: pos13 = None
 
 	try:
 		pos15 = [x[0].id for x in users15].index(v.id)
