@@ -13,15 +13,10 @@ from pusher_push_notifications import PushNotifications
 from collections import Counter
 import gevent
 
-site = environ.get("DOMAIN").strip()
-
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 def leaderboard_thread():
-	global userss9
-	global userss12
-	global userss13
-	global userss15
+	global users9, userss9, users12, userss12, users13, userss13, users15, userss15
 
 	db = db_session()
 
@@ -43,7 +38,7 @@ def leaderboard_thread():
 	users12 = sorted(users12, key=lambda x: x[1], reverse=True)[:25]
 	userss12 = users12[:25]
 
-	if site == 'rdrama.net':
+	if SITE == 'rdrama.net':
 		topmakers = {}
 		for k, val in marseys.items():
 			if val in topmakers: topmakers[val] += 1
@@ -369,25 +364,19 @@ def leaderboard(v):
 	sq = g.db.query(User.id, func.rank().over(order_by=User.truecoins.desc()).label("rank")).subquery()
 	pos10 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
-	try:
-		pos9 = [x[0].id for x in users9].index(v.id)
-		pos9 = (pos9+1, users9[pos9][1])
-	except: pos9 = None
+	pos9 = [x[0].id for x in users9].index(v.id)
+	pos9 = (pos9+1, users9[pos9][1])
+
+	pos12 = [x[0].id for x in users12].index(v.id)
+	pos12 = (pos12+1, users12[pos12][1])
 
 	try:
-		pos12 = [x[0].id for x in users12].index(v.id)
-		pos12 = (pos12+1, users12[pos12][1])
-	except: pos12 = None
-
-	try:
-		pos13 = [x[0] for x in users13].index(v.username.lower())
+		pos13 = [x[0].id for x in users13].index(v.id)
 		pos13 = (pos13+1, users13[pos13][1])
 	except: pos13 = None
 
-	try:
-		pos15 = [x[0].id for x in users15].index(v.id)
-		pos15 = (pos15+1, users15[pos15][1])
-	except: pos15 = None
+	pos15 = [x[0].id for x in users15].index(v.id)
+	pos15 = (pos15+1, users15[pos15][1])
 
 	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=userss9, pos9=pos9, users10=users10, pos10=pos10, users12=userss12, pos12=pos12, users13=userss13, pos13=pos13, users15=userss15, pos15=pos15)
 
@@ -507,8 +496,8 @@ def message2(v, username):
 					'notification': {
 						'title': f'New message from @{v.username}',
 						'body': notifbody,
-						'deep_link': f'https://{site}/notifications?messages=true',
-						'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
+						'deep_link': f'{request.host_url}notifications?messages=true',
+						'icon': f'{request.host_url}assets/images/{SITE_NAME}/icon.webp',
 					}
 				},
 				'fcm': {
@@ -574,8 +563,8 @@ def messagereply(v):
 					'notification': {
 						'title': f'New message from @{v.username}',
 						'body': notifbody,
-						'deep_link': f'https://{site}/notifications?messages=true',
-						'icon': f'https://{request.host}/assets/images/{SITE_NAME}/icon.webp',
+						'deep_link': f'{request.host_url}notifications?messages=true',
+						'icon': f'{request.host_url}assets/images/{SITE_NAME}/icon.webp',
 					}
 				},
 				'fcm': {
