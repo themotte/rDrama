@@ -2,6 +2,7 @@ from .get import *
 from .alerts import *
 from files.helpers.const import *
 from files.__main__ import db_session
+from random import randint
 
 def get_logged_in_user():
 	if not (hasattr(g, 'db') and g.db): g.db = db_session()
@@ -34,7 +35,7 @@ def get_logged_in_user():
 
 def check_ban_evade(v):
 	if v and not v.patron and v.admin_level == 0 and v.ban_evade and not v.unban_utc:
-		if random.randint(0,30) < v.ban_evade: v.shadowbanned = "AutoJanny"
+		if randint(0,30) < v.ban_evade: v.shadowbanned = "AutoJanny"
 		else: v.ban_evade +=1
 		g.db.add(v)
 		g.db.commit()
