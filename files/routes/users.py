@@ -363,6 +363,7 @@ def leaderboard(v):
 	users11 = g.db.query(User, sq.c.count).join(sq, User.id==sq.c.user_id).limit(25).all()
 	pos11 = g.db.query(User, sq.c.rank, sq.c.count).join(sq, User.id==sq.c.user_id).filter(User.id == v.id).one()
 	pos11 = (pos11[1],pos11[2])
+
 	try:
 		pos13 = [x[0].id for x in users13].index(v.id)
 		pos13 = (pos13+1, users13[pos13][1])
