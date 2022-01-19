@@ -357,6 +357,15 @@ class Comment(Base):
 				g.db.add(self.author)
 				g.db.commit()
 
+		for o in self.options:
+			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{o.id}" name="option"'
+			if o.poll_voted(v): body += " checked"
+			if v: body += f''' onchange="poll_vote('{o.id}', '{self.id}')"'''
+			else: body += f''' onchange="poll_vote_no_v('{o.id}', '{self.id}')"'''
+			body += f'''><label class="custom-control-label" for="{o.id}">{o.body_html}<span class="presult-{self.id}'''
+			if not self.total_poll_voted(v): body += ' d-none'	
+			body += f'"> - <a href="/votes?link=t3_{o.id}"><span id="poll-{o.id}">{o.upvotes}</span> votes</a></span></label></div>'
+
 		return body
 
 	def plainbody(self, v):
@@ -405,18 +414,6 @@ class Comment(Base):
 	@property
 	@lazy
 	def active_flags(self): return self.flags.count()
-
-	def options_html(self, v):
-		html = ""
-		for o in self.options:
-			html += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{o.id}" name="option"'
-			if o.poll_voted(v): html += " checked"
-			if v: html += f''' onchange="poll_vote('{o.id}', '{self.id}')"'''
-			else: html += f''' onchange="poll_vote_no_v('{o.id}', '{self.id}')"'''
-			html += f'''><label class="custom-control-label" for="{o.id}">{o.body_html}<span class="presult-{self.id}'''
-			if not self.total_poll_voted(v): html += ' d-none'	
-			html += f'"> - <a href="/votes?link=t3_{o.id}"><span id="poll-{o.id}">{o.upvotes}</span> votes</a></span></label></div>'
-		return html
 
 class Notification(Base):
 
