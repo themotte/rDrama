@@ -16,7 +16,7 @@ import gevent
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 def leaderboard_thread():
-	global users9, userss9, users12, userss12, users13, userss13, users15, userss15
+	global users9, userss9, users11, users13, userss13, users15, userss15
 
 	db = db_session()
 
@@ -28,30 +28,6 @@ def leaderboard_thread():
 	for user in users8: users9.append((user, votes3[user.id]))
 	users9 = sorted(users9, key=lambda x: x[1], reverse=True)
 	userss9 = users9[:25]
-
-
-	badges = db.query(Badge.user_id, func.count(Badge.user_id)).group_by(Badge.user_id).order_by(func.count(Badge.user_id).desc()).all()
-	badges = dict(badges)
-	users11 = db.query(User).filter(User.id.in_(badges.keys())).all()
-	users12 = []
-	for user in users11: users12.append((user, badges[user.id]))
-	users12 = sorted(users12, key=lambda x: x[1], reverse=True)
-	userss12 = users12[:25]
-
-	if SITE_NAME == 'Drama':
-		users13 = {}
-		for k, val in marseys.items():
-			if val in users13: users13[val] += 1
-			else: users13[val] = 1
-
-		users13.pop('unknown','anton-d')
-		users132 = db.query(User).filter(func.lower(User.username).in_(users13.keys())).all()
-		users133 = []
-		for user in users132:
-			users133.append((user, users13[user.username.lower()]))
-		users13 = sorted(users133, key=lambda x: x[1], reverse=True)
-		userss13 = users13[:25]
-	else: userss13 = None
 
 	votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 	votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
@@ -328,50 +304,49 @@ def leaderboard(v):
 	users = g.db.query(User)
 
 	users1 = users.order_by(User.coins.desc()).limit(25).all()
-	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
-	users3 = users.order_by(User.post_count.desc()).limit(25).all()
-	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
-	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
-	if SITE == 'pcmemes.net': users6 = users.order_by(User.basedcount.desc()).limit(25).all()
-	else: users6 = None
-	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
-	users10 = users.order_by(User.truecoins.desc()).limit(25).all()
-
 	sq = g.db.query(User.id, func.rank().over(order_by=User.coins.desc()).label("rank")).subquery()
 	pos1 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
+	users2 = users.order_by(User.stored_subscriber_count.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.stored_subscriber_count.desc()).label("rank")).subquery()
 	pos2 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
+	users3 = users.order_by(User.post_count.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.post_count.desc()).label("rank")).subquery()
 	pos3 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
+	users4 = users.order_by(User.comment_count.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.comment_count.desc()).label("rank")).subquery()
 	pos4 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
+	users5 = users.order_by(User.received_award_count.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.received_award_count.desc()).label("rank")).subquery()
 	pos5 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
 	if request.host == 'pcmemes.net':
+		users6 = users.order_by(User.basedcount.desc()).limit(25).all()
 		sq = g.db.query(User.id, func.rank().over(order_by=User.basedcount.desc()).label("rank")).subquery()
 		pos6 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-	else: pos6 = None
-		
+	else:
+		users6 = None
+		pos6 = None
+
+	users7 = users.order_by(User.coins_spent.desc()).limit(25).all()
 	sq = g.db.query(User.id, func.rank().over(order_by=User.coins_spent.desc()).label("rank")).subquery()
 	pos7 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
-
-	sq = g.db.query(User.id, func.rank().over(order_by=User.truecoins.desc()).label("rank")).subquery()
-	pos10 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
 	try:
 		pos9 = [x[0].id for x in users9].index(v.id)
 		pos9 = (pos9+1, users9[pos9][1])
 	except: pos9 = (len(users9)+1, 0)
 
-	try:
-		pos12 = [x[0].id for x in users12].index(v.id)
-		pos12 = (pos12+1, users12[pos12][1])
-	except: pos12 = (len(users12)+1, 0)
+	users10 = users.order_by(User.truecoins.desc()).limit(25).all()
+	sq = g.db.query(User.id, func.rank().over(order_by=User.truecoins.desc()).label("rank")).subquery()
+	pos10 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
+
+	sq = g.db.query(Badge.user_id, func.count(Badge.user_id).label("count"), func.rank().over(order_by=func.count(Badge.user_id).desc()).label("rank")).order_by(func.count(Badge.user_id).desc()).group_by(Badge.user_id).subquery()
+	users11 = g.db.query(User, sq.c.count).join(sq, User.id==sq.c.user_id).limit(25).all()
+	pos11 = g.db.query(sq.c.rank, sq.c.count).filter(User.id == v.id).limit(1).one()
 
 	try:
 		pos13 = [x[0].id for x in users13].index(v.id)
@@ -383,7 +358,7 @@ def leaderboard(v):
 		pos15 = (pos15+1, users15[pos15][1])
 	except: pos15 = (len(users15)+1, 0)
 
-	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=userss9, pos9=pos9, users10=users10, pos10=pos10, users12=userss12, pos12=pos12, users13=userss13, pos13=pos13, users15=userss15, pos15=pos15)
+	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=userss9, pos9=pos9, users10=users10, pos10=pos10, users11=users11, pos11=pos11, users13=userss13, pos13=pos13, users15=userss15, pos15=pos15)
 
 @app.get("/@<username>/css")
 @auth_required

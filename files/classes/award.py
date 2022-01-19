@@ -3,11 +3,7 @@ from sqlalchemy.orm import relationship
 from files.__main__ import Base
 from os import environ
 from files.helpers.lazy import lazy
-from files.helpers.const import AWARDS
-
-site_name = environ.get("SITE_NAME").strip()
-
-
+from files.helpers.const import *
 
 class AwardRelationship(Base):
 

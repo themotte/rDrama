@@ -19,17 +19,15 @@ import requests
 from shutil import copyfile
 from psutil import cpu_percent
 
-site = environ.get("DOMAIN").strip()
-site_name = environ.get("SITE_NAME").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 CF_KEY = environ.get("CF_KEY", "").strip()
 CF_ZONE = environ.get("CF_ZONE", "").strip()
 CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
 
-if path.exists(f'snappy_{site_name}.txt'):
-	with open(f'snappy_{site_name}.txt', "r") as f:
-		if site == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
+if path.exists(f'snappy_{SITE_NAME}.txt'):
+	with open(f'snappy_{SITE_NAME}.txt', "r") as f:
+		if SITE == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
 		else: snappyquotes = f.read().split("{[para]}") + [f':#{x}:' for x in marseys]
 
 @app.post("/toggle_club/<pid>")
@@ -77,7 +75,7 @@ def publish(pid, v):
 	cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 1 and ("[changelog]" in post.title or "(changelog)" in post.title):
-		send_discord_message(f"https://{site}{post.permalink}")
+		send_discord_message(f"{request.host_url}{post.permalink[1:]}")
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()
@@ -400,7 +398,7 @@ def edit_post(pid, v):
 
 	body = request.values.get("body", "").strip().replace('‎','')
 
-	if len(body) > 10000: return {"error":"Character limit is 10000!"}, 403
+	if len(body) > 20000: return {"error":"Character limit is 20000!"}, 403
 
 	if v.marseyawarded:
 		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title))
@@ -472,7 +470,7 @@ def edit_post(pid, v):
 		elif v.bird:
 			if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
-		if len(body_html) > 20000: return {"error":"Submission body too long!"}, 400
+		if len(body_html) > 40000: return {"error":"Submission body too long!"}, 400
 
 		p.body_html = body_html
 
@@ -579,7 +577,7 @@ def thumbnail_thread(pid):
 	
 	fetch_url = post.url
 
-	if fetch_url.startswith('/'): fetch_url = f"https://{site}{fetch_url}"
+	if fetch_url.startswith('/'): fetch_url = f"{request.host_url}{fetch_url[1:]}"
 
 	headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
@@ -852,10 +850,10 @@ def submit_post(v):
 			g.db.add(ma)
 		return redirect("/notifications")
 
-	if len(str(body)) > 10000:
+	if len(str(body)) > 20000:
 
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"10000 character limit for text body."}, 400
-		return render_template("submit.html", v=v, error="10000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"There's a 20000 character limit for text body."}, 400
+		return render_template("submit.html", v=v, error="There's a 20000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if len(url) > 2048:
 
@@ -904,7 +902,7 @@ def submit_post(v):
 	elif v.bird:
 		if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
-	if len(body_html) > 20000: return {"error":"Submission body too long!"}, 400
+	if len(body_html) > 40000: return {"error":"Submission body too long!"}, 400
 
 	bans = filter_comment_html(body_html)
 	if bans:
@@ -927,7 +925,7 @@ def submit_post(v):
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("Authorization"),
 		url=url,
-		body=body[:10000],
+		body=body[:20000],
 		body_html=body_html,
 		embed_url=embed,
 		title=title[:500],
@@ -991,7 +989,7 @@ def submit_post(v):
 		
 	if not new_post.thumburl and new_post.url:
 		if request.host in new_post.url or new_post.url.startswith('/') or request.host == 'rdrama.net' and 'rdrama' in new_post.domain:
-			new_post.thumburl = f'/static/assets/images/{site_name}/site_preview.webp'
+			new_post.thumburl = f'/static/assets/images/{SITE_NAME}/site_preview.webp'
 		elif request.headers.get('cf-ipcountry')!="T1":
 			gevent.spawn( thumbnail_thread, new_post.id)
 
@@ -1053,7 +1051,7 @@ def submit_post(v):
 			rev = f"* [unddit.com](https://unddit.com/{rev})\n"
 		else: rev = ''
 		newposturl = new_post.url
-		if newposturl.startswith('/'): newposturl = f"https://{site}{newposturl}"
+		if newposturl.startswith('/'): newposturl = f"{request.host_url}{newposturl[1:]}"
 		body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
 		gevent.spawn(archiveorg, newposturl)
 
@@ -1075,7 +1073,7 @@ def submit_post(v):
 
 	body_html = sanitize(body)
 
-	if len(body_html) < 20000:
+	if len(body_html) < 40000:
 		c = Comment(author_id=SNAPPY_ID,
 			distinguish_level=6,
 			parent_submission=new_post.id,
@@ -1105,7 +1103,7 @@ def submit_post(v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 	if v.admin_level > 1 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title) and not new_post.private:
-		send_discord_message(f"https://{site}{new_post.permalink}")
+		send_discord_message(f"{request.host_url}{new_post.permalink[1:]}")
 		cache.delete_memoized(changeloglist)
 
 	if v.id in (PIZZASHILL_ID, HIL_ID):

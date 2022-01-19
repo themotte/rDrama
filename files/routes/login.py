@@ -366,7 +366,7 @@ def post_forgot():
 	if user:
 		now = int(time.time())
 		token = generate_hash(f"{user.id}+{now}+forgot+{user.login_nonce}")
-		url = f"https://{app.config['SERVER_NAME']}/reset?id={user.id}&time={now}&token={token}"
+		url = f"{request.host_url}reset?id={user.id}&time={now}&token={token}"
 
 		send_mail(to_address=user.email,
 				  subject="Password Reset Request",
@@ -487,7 +487,7 @@ def request_2fa_disable():
 	valid=int(time.time())
 	token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}+{user.login_nonce}")
 
-	action_url=f"https://{app.config['SERVER_NAME']}/reset_2fa?id={user.id}&t={valid}&token={token}"
+	action_url=f"{request.host_url}reset_2fa?id={user.id}&t={valid}&token={token}"
 	
 	send_mail(to_address=user.email,
 			  subject="2FA Removal Request",

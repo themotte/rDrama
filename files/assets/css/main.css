@@ -2622,7 +2622,7 @@ html {
 }
 body {
     color: var(--black);
-    padding-top: 72px;
+    padding-top: 90px;
     background-color: var(--gray-700);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -2642,7 +2642,6 @@ pre {
     background-color: var(--gray-600);
 }
 #page {
-    padding-top: 72px;
     background-color: var(--gray-700);
 }
 #article {
@@ -4056,7 +4055,7 @@ pre .com, code .com {
     border-radius: 0.35rem;
 }
 @media (max-width: 991.98px) {
-    #frontpage, #search {
+    body {
         padding-top: 72px;
 }
 }
@@ -4069,7 +4068,6 @@ pre .com, code .com {
         max-width: none;
 }
     body, #settings, #notifications, #submit {
-        padding-top: 72px;
         background-color: var(--gray-700);
 }
     #thread, #userpage {
@@ -4111,9 +4109,6 @@ pre .com, code .com {
 }
     #thread, #submit {
         background-color: var(--light);
-}
-    #frontpage {
-        padding-top: 72px;
 }
     #search .search-results.card {
         border-bottom: 0.1px solid var(--gray-400);

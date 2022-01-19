@@ -11,7 +11,6 @@ BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 WELCOME_CHANNEL="846509313941700618"
-SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.get("/discord")
 @is_not_permabanned
@@ -58,7 +57,7 @@ def discord_redirect(v):
 		'client_secret': CLIENT_SECRET,
 		'grant_type': 'authorization_code',
 		'code': code,
-		'redirect_uri': f"https://{app.config['SERVER_NAME']}/discord_redirect",
+		'redirect_uri': f"{request.host_url}discord_redirect",
 		'scope': 'identify guilds.join'
 	}
 	headers={

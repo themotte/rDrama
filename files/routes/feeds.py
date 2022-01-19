@@ -1,7 +1,7 @@
 import html
 from .front import frontlist
 from datetime import datetime
-from files.helpers.jinja2 import full_link
+from files.helpers.const import *
 from files.helpers.get import *
 from yattag import Doc
 from files.helpers.wrappers import *
@@ -53,7 +53,7 @@ def feeds_user(v=None, sort='hot', t='all'):
 					with tag("name"):
 						text(post.author.username)
 					with tag("uri"):
-						text(f'https://{site}/@{post.author.username}')
+						text(f'{request.host_url}@{post.author.username}')
 
 				doc.stag("link", href=full_link(post.permalink))
 

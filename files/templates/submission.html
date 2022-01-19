@@ -23,6 +23,13 @@
 
 {% if p.award_count("wholesome") %}
 	<style>
+		.seal {
+			position:fixed;
+			z-index:9999;
+			pointer-events: none;
+			width: 100% !important;
+			height: 100% !important;
+		}
 		.sealimg {
 			width: 100px;
 			height: 89.5px;
@@ -33,87 +40,38 @@
 				height: 27px;
 			}
 		}
-		
-		@keyframes wholesome1 {
-		    0% {top:0%; left: 50%;}
-		    25% {top:50%; left:98%;}
-		    50% {top:98%; left: 50%}
-		    75% {top:50%; left:0%;}
-		    100% {top:0%; left: 50%;}
-		}
-
-		.seal {
-			position:fixed;
-			z-index:9999;
-			pointer-events: none;
-			width: 100% !important;
-			height: 100% !important;
-		    animation-duration: 10s !important;
-		    animation-iteration-count: infinite !important;
-		    animation-fill-mode: forwards !important;
-		    animation-timing-function: linear !important;
-		}
-		.seal1 {
-			animation-name: wholesome1 !important;
-		}
 	</style>
-	<div class="seal seal1" height="100%" width="100%">
-		<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+	<div class="seal" height="100%" width="100%">
+		<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%" width="100%">
+			<marquee direction="right" scrollamount=10 behavior="alternate" height="100%" width="100%">
+				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+			</marquee>
+		</marquee>
 	</div>
 {% endif %}
 
 {% if p.award_count("wholesome") > 1 %}
-	<style>
-		@keyframes wholesome2 {
-		    0% {top:50%; left:98%;}
-		    25% {top:98%; left: 50%}
-		    50% {top:50%; left:0%;}
-		    75% {top:0%; left: 50%;}
-		    100% {top:50%; left:98%;}
-		}
-		.seal2 {
-			animation-name: wholesome2 !important;
-		}
-	</style>
-	<div class="seal seal2" height="100%" width="100%">
-		<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
-	</div>
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+		<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
 {% endif %}
 
 {% if p.award_count("wholesome") > 2 %}
-	<style>
-		@keyframes wholesome3 {
-		    0% {top:50%; left:0%;}
-		    25% {top:0%; left: 50%;}
-		    50% {top:50%; left:98%;}
-		    75% {top:98%; left: 50%}
-		    100% {top:50%; left:0%;}
-		}
-		.seal3 {
-			animation-name: wholesome3 !important;
-		}
-	</style>
-	<div class="seal seal3" height="100%" width="100%">
-		<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
-	</div>
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
+		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
 {% endif %}
 
 {% if p.award_count("wholesome") > 3 %}
-	<style>
-		@keyframes wholesome4 {
-		    0% {top:98%; left: 50%}
-		    25% {top:50%; left:0%;}
-		    50% {top:0%; left: 50%;}
-		    75% {top:50%; left:98%;}
-		    100% {top:98%; left: 50%}
-		}
-		.seal4 {
-			animation-name: wholesome4 !important;
-		}
-	</style>
-	<div class="seal seal4" height="100%" width="100%">
-		<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
-	</div>
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
 {% endif %}
 
 {% if p.award_count("train") %}
@@ -422,13 +380,13 @@
 					{% endif %}
 					{% if p.realurl(v) %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3 {% if p.author.agendaposter %}agendaposter{% endif %}"><a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{cc}}</span>{% endif %}
+							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
 						</a></h1>					
 					{% else %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3 {% if p.author.agendaposter %}agendaposter{% endif %}">
-							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{cc}}</span>{% endif %}
+							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
 						</h1>
@@ -521,7 +479,7 @@
 									<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 									<input autocomplete="off" type="hidden" name="current_page" value="{{request.path}}">
 									<textarea autocomplete="off" max-length="500" name="title" class="comment-box form-control rounded" required placeholder="title">{{p.title}}</textarea>
-									<textarea autocomplete="off" name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}10000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
+									<textarea autocomplete="off" name="body" {% if v.longpost %}minlength="280"{% endif %} maxlength="{% if v.bird %}140{% else %}20000{% endif %}" oninput="markdown('post-edit-box-{{p.id}}', 'post-edit-{{p.id}}');charLimit('post-edit-box-{{p.id}}','charcount-post-edit')" id="post-edit-box-{{p.id}}" form="post-edit-form-{{p.id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="10" data-id="{{p.id}}">{{p.body}}</textarea> 
 									
 									<div class="text-small font-weight-bold mt-1" id="charcount-post-edit" style="right: 1rem; bottom: 0.5rem; z-index: 3;"></div>
 

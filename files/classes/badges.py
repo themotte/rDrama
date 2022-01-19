@@ -3,10 +3,8 @@ from sqlalchemy.orm import relationship
 from files.__main__ import Base, app
 from os import environ
 from files.helpers.lazy import lazy
-from files.helpers.const import BADGES
+from files.helpers.const import *
 from datetime import datetime
-
-site_name = environ.get("SITE_NAME").strip()
 
 class Badge(Base):
 
@@ -63,5 +61,5 @@ class Badge(Base):
 		return {'text': self.text,
 				'name': self.name,
 				'url': self.url,
-				'icon_url':f"https://{app.config['SERVER_NAME']}{self.path}"
+				'icon_url':f"{SITE_FULL}{self.path}"
 				}
