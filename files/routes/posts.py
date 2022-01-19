@@ -1057,10 +1057,10 @@ def submit_post(v):
 
 	url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.+)<\/a>'
 	for url_match in re.finditer(url_regex, new_post.body_html):
-		href = url_match.group(3)
+		href = url_match.group(1)
 		if not href: continue
 
-		title = url_match.group(5)
+		title = url_match.group(2)
 		if "Snapshots:\n\n" not in body: body += "Snapshots:\n\n"			
 
 		if f'**[{title}]({href})**:\n\n' not in body:
