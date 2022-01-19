@@ -1055,21 +1055,21 @@ def submit_post(v):
 		body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
 		gevent.spawn(archiveorg, newposturl)
 
-	url_regex = '<a (target=\"_blank\"  )?(rel=\"nofollow noopener noreferrer\" )?href=\"(https?://[a-z]{1,20}\.[^\"]+)\"( rel=\"nofollow noopener noreferrer\" target=\"_blank\")?>([^\"]+)</a>'
-	for url_match in re.finditer(url_regex, new_post.body_html, flags=re.M|re.I):
+	url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.+)<\/a>'
+	for url_match in re.finditer(url_regex, new_post.body_html):
 		href = url_match.group(3)
 		if not href: continue
 
 		title = url_match.group(5)
-		if "Snapshots:\n\n"	 not in body: body += "Snapshots:\n\n"			
+		if "Snapshots:\n\n" not in body: body += "Snapshots:\n\n"			
 
-		if f'**[{title}]({href})**:\n\n' in body: continue
-		body += f'**[{title}]({href})**:\n\n'
-		if href.startswith('https://old.reddit.com/'):
-			body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
-		body += f'* [archive.org](https://web.archive.org/{href})\n'
-		body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
-		gevent.spawn(archiveorg, href)
+		if f'**[{title}]({href})**:\n\n' not in body:
+			body += f'**[{title}]({href})**:\n\n'
+			if href.startswith('https://old.reddit.com/'):
+				body += f'* [unddit.com](https://unddit.com/{href.replace("https://old.reddit.com/", "")})\n'
+			body += f'* [archive.org](https://web.archive.org/{href})\n'
+			body += f'* [archive.ph](https://archive.ph/?url={quote(href)}&run=1) (click to archive)\n\n'
+			gevent.spawn(archiveorg, href)
 
 	body_html = sanitize(body)
 
