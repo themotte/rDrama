@@ -398,7 +398,7 @@ def edit_post(pid, v):
 
 	body = request.values.get("body", "").strip().replace('‎','')
 
-	if len(body) > 10000: return {"error":"Character limit is 10000!"}, 403
+	if len(body) > 20000: return {"error":"Character limit is 20000!"}, 403
 
 	if v.marseyawarded:
 		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", title))
@@ -470,7 +470,7 @@ def edit_post(pid, v):
 		elif v.bird:
 			if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
-		if len(body_html) > 20000: return {"error":"Submission body too long!"}, 400
+		if len(body_html) > 40000: return {"error":"Submission body too long!"}, 400
 
 		p.body_html = body_html
 
@@ -850,10 +850,10 @@ def submit_post(v):
 			g.db.add(ma)
 		return redirect("/notifications")
 
-	if len(str(body)) > 10000:
+	if len(str(body)) > 20000:
 
-		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"10000 character limit for text body."}, 400
-		return render_template("submit.html", v=v, error="10000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
+		if request.headers.get("Authorization") or request.headers.get("xhr"): return {"error":"There's a 20000 character limit for text body."}, 400
+		return render_template("submit.html", v=v, error="There's a 20000 character limit for text body.", title=title, url=url, body=request.values.get("body", "")), 400
 
 	if len(url) > 2048:
 
@@ -902,7 +902,7 @@ def submit_post(v):
 	elif v.bird:
 		if len(body) > 140 : return {"error":"You have to type less than 140 characters!"}, 403
 
-	if len(body_html) > 20000: return {"error":"Submission body too long!"}, 400
+	if len(body_html) > 40000: return {"error":"Submission body too long!"}, 400
 
 	bans = filter_comment_html(body_html)
 	if bans:
@@ -925,7 +925,7 @@ def submit_post(v):
 		app_id=v.client.application.id if v.client else None,
 		is_bot = request.headers.get("Authorization"),
 		url=url,
-		body=body[:10000],
+		body=body[:20000],
 		body_html=body_html,
 		embed_url=embed,
 		title=title[:500],
@@ -1073,7 +1073,7 @@ def submit_post(v):
 
 	body_html = sanitize(body)
 
-	if len(body_html) < 20000:
+	if len(body_html) < 40000:
 		c = Comment(author_id=SNAPPY_ID,
 			distinguish_level=6,
 			parent_submission=new_post.id,
