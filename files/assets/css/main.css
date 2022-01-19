@@ -4517,14 +4517,8 @@ blockquote p {
 }
 }
 .in-comment-image {
-    border-radius: 0.2rem !important;
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
-    cursor: pointer;
-}
-.in-comment-image {
-    height: min(500px,1%);
-    width: 300px;
+    height: min(1px,1%);
+    width: min(300px,100%);
     border-radius: 0.2rem !important;
     margin-top: 0.5rem !important;
     margin-bottom: 0.5rem !important;
@@ -4640,7 +4634,7 @@ input[type=radio] ~ .custom-control-label::before {
     width: 60px !important;
 }
 .emoji-lg {
-    height: min(150px,25%) !important;
+    height: min(1px,1%) !important;
     width: min(150px,100%) !important;
 }
 .emj, .emoji, .bigemoji, .emoji-md, .emoji-lg {
