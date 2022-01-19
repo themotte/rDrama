@@ -65,6 +65,7 @@ def leaderboard_thread():
 
 	db.close()
 
+gevent.spawn(leaderboard_thread())
 @app.get("/grassed")
 @auth_required
 def grassed(v):
@@ -323,7 +324,6 @@ def transfer_bux(v, username):
 @app.get("/leaderboard")
 @auth_required
 def leaderboard(v):
-	gevent.spawn(leaderboard_thread())
 
 	users = g.db.query(User)
 
