@@ -39,18 +39,18 @@ def leaderboard_thread():
 	userss12 = users12[:25]
 
 	if SITE_NAME == 'Drama':
-		topmakers = {}
+		users13 = {}
 		for k, val in marseys.items():
-			if val in topmakers: topmakers[val] += 1
-			else: topmakers[val] = 1
+			if val in users13: users13[val] += 1
+			else: users13[val] = 1
 
-		topmakers.pop('unknown','anton-d')
-		topmakers2 = db.query(User).filter(func.lower(User.username).in_(topmakers.keys())).all()
-		topmakers3 = []
-		for user in topmakers2:
-			topmakers3.append((user, topmakers[user.username.lower()]))
-		topmakers = sorted(topmakers3, key=lambda x: x[1], reverse=True)[:25]
-		users13 = topmakers
+		users13.pop('unknown','anton-d')
+		users132 = db.query(User).filter(func.lower(User.username).in_(users13.keys())).all()
+		users133 = []
+		for user in users132:
+			users133.append((user, users13[user.username.lower()]))
+		users13 = sorted(users133, key=lambda x: x[1], reverse=True)
+		users13 = users13
 		userss13 = users13[:25]
 	else: userss13 = None
 
