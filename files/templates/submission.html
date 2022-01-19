@@ -14,7 +14,7 @@
 {% block title %}
 
 {% if success %}
-	<script data-cfasync="false">
+	<script>
 		history.pushState(null, null, '{{p.permalink | full_link}}');
 		window.localStorage.setItem("post_title", "")
 		window.localStorage.setItem("post_text", "")

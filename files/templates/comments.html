@@ -1,5 +1,5 @@
 {% if comment_info and not request.full_path.endswith('#context') %}
-	<script data-cfasync="false">
+	<script>
 		history.pushState(null, null, '#context');
 	</script>
 {% endif %}
