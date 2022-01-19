@@ -9,9 +9,6 @@ import calendar
 import matplotlib.pyplot as plt
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
 
-site = environ.get("DOMAIN").strip()
-site_name = environ.get("SITE_NAME").strip()
-
 @app.get("/privacy")
 @auth_required
 def privacy(v):
@@ -246,7 +243,7 @@ def log_item(id, v):
 
 @app.get("/static/assets/favicon.ico")
 def favicon():
-	return send_file(f"./assets/images/{site_name}/icon.webp")
+	return send_file(f"./assets/images/{SITE_NAME}/icon.webp")
 
 @app.get("/api")
 @auth_required

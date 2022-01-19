@@ -7,14 +7,10 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
 from files.classes.votes import CommentVote
-from files.helpers.const import AUTOPOLLER_ID, AUTOBETTER_ID, censor_slurs
+from files.helpers.const import *
 from files.helpers.lazy import lazy
 from .flags import CommentFlag
 from random import randint
-
-site = environ.get("DOMAIN").strip()
-if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
-else: cc = "COUNTRY CLUB"
 
 class Comment(Base):
 
@@ -324,7 +320,7 @@ class Comment(Base):
 		return data
 
 	def realbody(self, v):
-		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{cc} ONLY</p>"
+		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{CC} ONLY</p>"
 
 		body = self.body_html
 
@@ -364,7 +360,7 @@ class Comment(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{cc} ONLY</p>"
+		if self.post and self.post.club and not (v and (v.paid_dues or v.id in [self.author_id, self.post.author_id])): return f"<p>{CC} ONLY</p>"
 
 		body = self.body
 

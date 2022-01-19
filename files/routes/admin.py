@@ -17,7 +17,6 @@ from files.helpers.discord import add_role
 from datetime import datetime
 import requests
 
-SITE_NAME = environ.get("SITE_NAME", "").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 
@@ -25,10 +24,7 @@ CF_KEY = environ.get("CF_KEY", "").strip()
 CF_ZONE = environ.get("CF_ZONE", "").strip()
 CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
 
-if SITE_NAME == 'PCM': cc = "splash mountain"
-else: cc = "country club"
 month = datetime.now().strftime('%B')
-
 
 @app.get("/refund")
 @admin_level_required(3)
@@ -166,7 +162,7 @@ def club_allow(v, username):
 		g.db.add(x)
 
 	g.db.commit()
-	return {"message": f"@{username} has been allowed into the {cc}!"}
+	return {"message": f"@{username} has been allowed into the {CC_TITLE}!"}
 
 @app.post("/@<username>/club_ban")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -186,7 +182,7 @@ def club_ban(v, username):
 		g.db.add(x)
 
 	g.db.commit()
-	return {"message": f"@{username} has been kicked from the {cc}. Deserved."}
+	return {"message": f"@{username} has been kicked from the {CC_TITLE}. Deserved."}
 
 
 @app.post("/@<username>/make_meme_admin")

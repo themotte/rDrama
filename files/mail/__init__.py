@@ -5,17 +5,16 @@ from urllib.parse import quote
 
 from files.helpers.security import *
 from files.helpers.wrappers import *
+from files.helpers.const import *
 from files.classes import *
 from files.__main__ import app, mail, limiter
 from flask_mail import Message
 
-site = environ.get("DOMAIN").strip()
 name = environ.get("SITE_NAME").strip()
-
 
 def send_mail(to_address, subject, html):
 
-	msg = Message(html=html, subject=subject, sender=f"{name}@{site}", recipients=[to_address])
+	msg = Message(html=html, subject=subject, sender=f"{name}@{SITE}", recipients=[to_address])
 	mail.send(msg)
 
 

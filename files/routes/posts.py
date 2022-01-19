@@ -19,17 +19,15 @@ import requests
 from shutil import copyfile
 from psutil import cpu_percent
 
-site = environ.get("DOMAIN").strip()
-site_name = environ.get("SITE_NAME").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 CF_KEY = environ.get("CF_KEY", "").strip()
 CF_ZONE = environ.get("CF_ZONE", "").strip()
 CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
 
-if path.exists(f'snappy_{site_name}.txt'):
-	with open(f'snappy_{site_name}.txt', "r") as f:
-		if site == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
+if path.exists(f'snappy_{SITE_NAME}.txt'):
+	with open(f'snappy_{SITE_NAME}.txt', "r") as f:
+		if SITE == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
 		else: snappyquotes = f.read().split("{[para]}") + [f':#{x}:' for x in marseys]
 
 @app.post("/toggle_club/<pid>")
@@ -991,7 +989,7 @@ def submit_post(v):
 		
 	if not new_post.thumburl and new_post.url:
 		if request.host in new_post.url or new_post.url.startswith('/') or request.host == 'rdrama.net' and 'rdrama' in new_post.domain:
-			new_post.thumburl = f'/static/assets/images/{site_name}/site_preview.webp'
+			new_post.thumburl = f'/static/assets/images/{SITE_NAME}/site_preview.webp'
 		elif request.headers.get('cf-ipcountry')!="T1":
 			gevent.spawn( thumbnail_thread, new_post.id)
 

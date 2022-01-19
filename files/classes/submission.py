@@ -7,16 +7,11 @@ from flask import render_template
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from files.__main__ import Base
-from files.helpers.const import AUTOPOLLER_ID, AUTOBETTER_ID, censor_slurs, TROLLTITLES
+from files.helpers.const import *
 from files.helpers.lazy import lazy
 from .flags import Flag
 from .comment import Comment
 from flask import g
-
-site = environ.get("DOMAIN").strip()
-site_name = environ.get("SITE_NAME").strip()
-if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
-else: cc = "COUNTRY CLUB"
 
 class Submission(Base):
 	__tablename__ = "submissions"
@@ -232,22 +227,22 @@ class Submission(Base):
 	@property
 	@lazy
 	def thumb_url(self):
-		if self.over_18: return f"https://{site}/static/assets/images/nsfw.webp"
-		elif not self.url: return f"https://{site}/static/assets/images/{site_name}/default_text.webp"
+		if self.over_18: return f"{SITE_FULL}/static/assets/images/nsfw.webp"
+		elif not self.url: return f"{SITE_FULL}/static/assets/images/{SITE_NAME}/default_text.webp"
 		elif self.thumburl: return self.thumburl
-		elif self.is_youtube or self.is_video: return f"https://{site}/static/assets/images/default_thumb_yt.webp"
-		else: return f"https://{site}/static/assets/images/default_thumb_link.webp"
+		elif self.is_youtube or self.is_video: return f"{SITE_FULL}/static/assets/images/default_thumb_yt.webp"
+		else: return f"{SITE_FULL}/static/assets/images/default_thumb_link.webp"
 
 	@property
 	@lazy
 	def full_thumb(self):
-		if self.thumb_url.startswith('/'): return f'https://{site}' + self.thumb_url
+		if self.thumb_url.startswith('/'): return SITE_FULL + self.thumb_url
 		return self.thumb_url
 
 	@property
 	@lazy
 	def full_url(self):
-		if self.url and self.url.startswith('/'): return f'https://{site}' + self.url
+		if self.url and self.url.startswith('/'): return SITE_FULL + self.url
 		return self.url
 
 	@property
@@ -352,7 +347,7 @@ class Submission(Base):
 		else: return ""
  
 	def realbody(self, v):
-		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{cc} ONLY</p>"
+		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
 
 		body = self.body_html
 
@@ -382,7 +377,7 @@ class Submission(Base):
 		return body
 
 	def plainbody(self, v):
-		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{cc} ONLY</p>"
+		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
 
 		body = self.body
 
@@ -402,7 +397,7 @@ class Submission(Base):
 	def realtitle(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)):
 			if v: return random.choice(TROLLTITLES).format(username=v.username)
-			else: return f'{cc} MEMBERS ONLY'
+			else: return f'{CC} MEMBERS ONLY'
 		elif self.title_html: title = self.title_html
 		else: title = self.title
 
@@ -414,7 +409,7 @@ class Submission(Base):
 	def plaintitle(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)):
 			if v: return random.choice(TROLLTITLES).format(username=v.username)
-			else: return f'{cc} MEMBERS ONLY'
+			else: return f'{CC} MEMBERS ONLY'
 		else: title = self.title
 
 		title = censor_slurs(title, v)

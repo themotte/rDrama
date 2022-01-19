@@ -18,8 +18,6 @@ from files.helpers.security import *
 import random
 from os import environ, remove, path
 
-site = environ.get("DOMAIN").strip()
-site_name = environ.get("SITE_NAME").strip()
 defaulttheme = environ.get("DEFAULT_THEME", "midnight").strip()
 defaultcolor = environ.get("DEFAULT_COLOR", "fff").strip()
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
@@ -28,7 +26,7 @@ cardview = bool(int(environ.get("CARD_VIEW", 1)))
 class User(Base):
 	__tablename__ = "users"
 
-	if site == "pcmemes.net":
+	if SITE == "pcmemes.net":
 		quadrant = Column(String)
 		basedcount = Column(Integer, default=0)
 		pills = deferred(Column(String, default=""))
@@ -428,15 +426,15 @@ class User(Base):
 	@lazy
 	def banner_url(self):
 		if self.bannerurl: return self.bannerurl
-		else: return f"https://{site}/static/assets/images/{site_name}/site_preview.webp?a=1"
+		else: return f"{SITE_FULL}/static/assets/images/{SITE_NAME}/site_preview.webp?a=1"
 
 	@property
 	@lazy
 	def profile_url(self):
-		if self.agendaposter: return f"https://{site}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?a=204"
+		if self.agendaposter: return f"{SITE_FULL}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 50)}.webp?a=204"
 		if self.profileurl: return self.profileurl
-		if "rama" in site: return f"https://{site}/static/assets/images/defaultpictures/{random.randint(1, 150)}.webp?a=202"
-		return f"https://{site}/static/assets/images/default-profile-pic.webp?a=204"
+		if SITE_NAME == 'Drama': return f"{SITE_FULL}/static/assets/images/defaultpictures/{random.randint(1, 150)}.webp?a=202"
+		return f"{SITE_FULL}/static/assets/images/default-profile-pic.webp?a=204"
 
 	@lazy
 	def json_popover(self, v):
@@ -457,7 +455,7 @@ class User(Base):
 	@property
 	@lazy
 	def full_profileurl(self):
-		if self.profile_url.startswith('/'): return f'https://{site}' + self.profile_url
+		if self.profile_url.startswith('/'): return SITE_FULL + self.profile_url
 		return self.profile_url
 
 	@property

@@ -9,8 +9,6 @@ from mistletoe import markdown
 from json import loads, dump
 from random import random
 
-site = environ.get("DOMAIN").strip()
-
 allowed_tags = tags = ['b',
 						'blockquote',
 						'br',
@@ -166,7 +164,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 	for tag in soup.find_all("a"):
 		if tag.get("href"):
-			if site not in tag["href"] and not tag["href"].startswith('/'):
+			if not tag["href"].startswith(SITE_FULL) and not tag["href"].startswith('/'):
 				tag["target"] = "_blank"
 				tag["rel"] = "nofollow noopener noreferrer"
 

@@ -23,6 +23,13 @@
 
 {% if p.award_count("wholesome") %}
 	<style>
+		.seal {
+			position:fixed;
+			z-index:9999;
+			pointer-events: none;
+			width: 100% !important;
+			height: 100% !important;
+		}
 		.sealimg {
 			width: 100px;
 			height: 89.5px;
@@ -33,67 +40,38 @@
 				height: 27px;
 			}
 		}
-		
-		.seal {
-			position:fixed;
-			z-index:9999;
-			pointer-events: none;
-			width: 100% !important;
-			height: 100% !important;
-		}
-		
-		@keyframes moveX {
-			from { left: 0; } to { left: 98%; }
-		}
-
-		@keyframes moveY {
-			from { top: 0; } to { top: 98%; }    
-		}
-
-		.seal1 {
-			animation: moveX 4s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
-			animation-delay:0s;
-		}
 	</style>
-	<div class="seal seal1" height="100%" width="100%">
-		<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+	<div class="seal" height="100%" width="100%">
+		<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%" width="100%">
+			<marquee direction="right" scrollamount=10 behavior="alternate" height="100%" width="100%">
+				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+			</marquee>
+		</marquee>
 	</div>
 {% endif %}
 
 {% if p.award_count("wholesome") > 1 %}
-	<style>
-		.seal2 {
-			animation: moveX 5s linear 0s infinite alternate, moveY 8s linear 0s infinite alternate !important;
-			animation-delay:1s;
-		}
-	</style>
-	<div class="seal seal2" height="100%" width="100%">
-		<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
-	</div>
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+		<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
 {% endif %}
 
 {% if p.award_count("wholesome") > 2 %}
-	<style>
-		.seal3 {
-			animation: moveX 4s linear 0s infinite alternate, moveY 5s linear 0s infinite alternate !important;
-			animation-delay:2s;
-		}
-	</style>
-	<div class="seal seal3" height="100%" width="100%">
-		<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
-	</div>
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
+		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
 {% endif %}
 
 {% if p.award_count("wholesome") > 3 %}
-	<style>
-		.seal4 {
-			animation: moveX 5s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
-			animation-delay:3s;
-		}
-	</style>
-	<div class="seal seal4" height="100%" width="100%">
-		<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
-	</div>
+	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</marquee>
+	</marquee>
 {% endif %}
 
 {% if p.award_count("train") %}
@@ -402,13 +380,13 @@
 					{% endif %}
 					{% if p.realurl(v) %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3 {% if p.author.agendaposter %}agendaposter{% endif %}"><a {% if not v or v.newtabexternal %}target="_blank"{% endif %} rel="nofollow noopener noreferrer" href="{{p.realurl(v)}}">
-							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{cc}}</span>{% endif %}
+							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
 						</a></h1>					
 					{% else %}
 						<h1 id="post-title" class="card-title post-title text-left mb-md-3 {% if p.author.agendaposter %}agendaposter{% endif %}">
-							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{cc}}</span>{% endif %}
+							{% if p.club %}<span class="patron font-weight-bolder mr-1" style="background-color:red; font-size:12px; line-height:2;">{{CC}}</span>{% endif %}
 							{% if p.flair %}<span class="patron font-weight-bolder mr-1" style="background-color:var(--primary); font-size:12px; line-height:2;">{{p.flair | safe}}</span>{% endif %}
 							{{p.realtitle(v) | safe}}
 						</h1>

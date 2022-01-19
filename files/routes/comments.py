@@ -11,9 +11,6 @@ from files.__main__ import app, limiter
 from files.helpers.sanitize import filter_emojis_only
 import requests
 
-site = environ.get("DOMAIN").strip()
-if site == 'pcmemes.net': cc = "SPLASH MOUNTAIN"
-else: cc = "COUNTRY CLUB"
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)

@@ -4,7 +4,6 @@ from files.__main__ import app, cache, limiter
 from files.classes.submission import Submission
 
 defaulttimefilter = environ.get("DEFAULT_TIME_FILTER", "all").strip()
-SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.post("/clear")
 @auth_required

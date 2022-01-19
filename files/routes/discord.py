@@ -11,7 +11,6 @@ BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN").strip()
 COINS_NAME = environ.get("COINS_NAME").strip()
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 WELCOME_CHANNEL="846509313941700618"
-SITE_NAME = environ.get("SITE_NAME", "").strip()
 
 @app.get("/discord")
 @is_not_permabanned
