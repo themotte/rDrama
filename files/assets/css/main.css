@@ -4517,8 +4517,8 @@ blockquote p {
 }
 }
 .in-comment-image {
-    height: min(150px,100%) !important;
-    width: min(150px,100%) !important;
+    height: min(500px,25%) !important;
+    width: min(500px,100%) !important;
     display: inline-block;
     -o-object-fit: contain;
     object-fit: contain;
@@ -4635,8 +4635,8 @@ input[type=radio] ~ .custom-control-label::before {
     width: 60px !important;
 }
 .emoji-lg {
-    width: min(150px,50%) !important;
-    height: min(150px,50%) !important;
+    height: min(150px,25%) !important;
+    width: min(150px,100%) !important;
 }
 .emj, .emoji, .bigemoji, .emoji-md, .emoji-lg {
     display: inline-block;
