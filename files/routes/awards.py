@@ -76,7 +76,7 @@ def shop(v):
 	for val in AWARDS.values():
 		val["price"] = int(val["price"]*discount)
 
-	sales = g.db.query(Vote.id).count() + g.db.query(CommentVote.id).count() - g.db.query(func.sum(User.coins)).scalar()
+	sales = g.db.query(func.sum(User.coins_spent)).scalar()
 	return render_template("shop.html", awards=list(AWARDS.values()), v=v, sales=sales)
 
 
