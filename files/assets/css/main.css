@@ -4524,7 +4524,7 @@ blockquote p {
 }
 .in-comment-image {
     height: min(500px,1%);
-    width: min(300px,100%);
+    width: 300px;
     border-radius: 0.2rem !important;
     margin-top: 0.5rem !important;
     margin-bottom: 0.5rem !important;
