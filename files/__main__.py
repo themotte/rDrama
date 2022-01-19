@@ -94,9 +94,6 @@ def before_request():
 
 	g.timestamp = int(time.time())
 
-	session.permanent = True
-	if not session.get("session_id"): session["session_id"] = secrets.token_hex(49)
-
 	if '; wv) ' in request.headers.get("User-Agent",""): g.webview = True
 	else: g.webview = False
 
