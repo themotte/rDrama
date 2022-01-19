@@ -857,7 +857,7 @@ def settings_name_change(v):
 						   v=v,
 						   error=f"Username `{new_name}` is already in use.")
 
-	v=g.db.query(User).with_for_update().filter_by(id=v.id).one_or_none()
+	v=g.db.query(User).filter_by(id=v.id).one_or_none()
 
 	v.username=new_name
 	v.name_changed_utc=int(time.time())
@@ -876,8 +876,9 @@ def settings_name_change(v):
 def settings_song_change(v):
 	song=request.values.get("song").strip()
 
-	if song == "" and v.song and path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
-		os.remove(f"/songs/{v.song}.mp3")
+	if song == "" and v.song:
+		if path.isfile(f"/songs/{v.song}.mp3") and g.db.query(User.id).filter_by(song=v.song).count() == 1:
+			os.remove(f"/songs/{v.song}.mp3")
 		v.song = None
 		g.db.add(v)
 		g.db.commit()
