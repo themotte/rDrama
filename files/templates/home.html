@@ -168,7 +168,7 @@
 {% if PUSHER_ID and v %}
 	<div class="d-none" id="strid">{{request.host}}{{v.id}}</div>
 	<div class="d-none" id="pusherid">{{PUSHER_ID}}</div>
-	<script src="/static/assets/js/pusher.js?a=202"></script>
+	<script defer src="/static/assets/js/pusher.js?a=202"></script>
 	<script>
 		if (typeof Android !== 'undefined') {
 			Android.Subscribe('{{request.host}}{{v.id}}');

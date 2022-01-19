@@ -409,9 +409,9 @@
 							{% if p.domain == "twitter.com" %}
 								{{p.embed_url | safe}}
 								{% if v and v.theme.split("_")[0] in ["light", "coffee", "4chan"] %}
-									<script src="/static/assets/js/twitterlight.js?a=202"></script>
+									<script defer src="/static/assets/js/twitterlight.js?a=202"></script>
 								{% else %}
-									<script src="/static/assets/js/twitter.js?a=202"></script>
+									<script defer src="/static/assets/js/twitter.js?a=202"></script>
 								{% endif %}
 							{% elif p.domain in ['youtu.be','youtube.com'] and p.embed_url and p.embed_url.startswith('<lite-youtube') %}
 								{{p.embed_url | safe}}
@@ -804,7 +804,7 @@
  </div>
  
 {% if offset %}
-	<script src="/static/assets/js/viewmore.js?a=202"></script>
+	<script defer src="/static/assets/js/viewmore.js?a=202"></script>
 {% endif %}
 
 {% elif not p.replies and p.deleted_utc == 0 %}
@@ -835,32 +835,32 @@
 {% endif %}
 
 {% if v and (v.id == p.author_id or v.admin_level > 1 and v.admin_level > 2) %}
-	<script src="/static/assets/js/togglePostEdit.js?a=202"></script>
+	<script defer src="/static/assets/js/togglePostEdit.js?a=202"></script>
 {% endif %}
 
 {% if v %}
-	<script src="/static/assets/js/submission.js?a=202"></script>
+	<script defer src="/static/assets/js/submission.js?a=202"></script>
 {% endif %}
 
 {% if not v or v.highlightcomments %}
-	<script src="/static/assets/js/new_comments_count.js?a=202"></script>
+	<script defer src="/static/assets/js/new_comments_count.js?a=202"></script>
 {% endif %}
 
-<script src="/static/assets/js/clipboard.js?a=202"></script>
+<script defer src="/static/assets/js/clipboard.js?a=202"></script>
 
 {% if not p.comment_count %}
 	{% include "comments.html" %}
 {% endif %}
 
 {% if p.award_count("shit") %}
-	<script src="/static/assets/js/critters.js?a=202"></script>
-	<script src="/static/assets/js/bugs.js?a=202"></script>
+	<script defer src="/static/assets/js/critters.js?a=202"></script>
+	<script defer src="/static/assets/js/bugs.js?a=202"></script>
 {% endif %}
 
 
 {% if p.award_count("fireflies") %}
-	<script src="/static/assets/js/critters.js?a=202"></script>
-	<script src="/static/assets/js/fireflies.js?a=202"></script>
+	<script defer src="/static/assets/js/critters.js?a=202"></script>
+	<script defer src="/static/assets/js/fireflies.js?a=202"></script>
 {% endif %}
 
 
