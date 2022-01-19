@@ -253,9 +253,9 @@ def transfer_coins(v, username):
 		amount = request.values.get("amount", "").strip()
 		amount = int(amount) if amount.isdigit() else None
 
-		if amount is None or amount <= 0: return {"error": f"Invalid amount of {app.config['COINS_NAME']}."}, 400
-		if v.coins < amount: return {"error": f"You don't have enough {app.config['COINS_NAME']}"}, 400
-		if amount < 100: return {"error": f"You have to gift at least 100 {app.config['COINS_NAME']}."}, 400
+		if amount is None or amount <= 0: return {"error": f"Invalid amount of coins."}, 400
+		if v.coins < amount: return {"error": f"You don't have enough coins."}, 400
+		if amount < 100: return {"error": f"You have to gift at least 100 coins."}, 400
 
 		if not v.patron and not receiver.patron and not v.alts_patron and not receiver.alts_patron:
 			tax = math.ceil(amount*0.03)
@@ -265,19 +265,19 @@ def transfer_coins(v, username):
 		else: tax = 0
 
 		if TAX_RECEIVER_ID:
-			log_message = f"@{v.username} has transferred {amount} {app.config['COINS_NAME']} to @{receiver.username}"
+			log_message = f"@{v.username} has transferred {amount} coins to @{receiver.username}"
 			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
 
 		receiver.coins += amount-tax
 		v.coins -= amount
-		send_repeatable_notification(receiver.id, f":marseycapitalistmanlet: @{v.username} has gifted you {amount-tax} {app.config['COINS_NAME']}!")
+		send_repeatable_notification(receiver.id, f":marseycapitalistmanlet: @{v.username} has gifted you {amount-tax} coins!")
 		g.db.add(receiver)
 		g.db.add(v)
 
 		g.db.commit()
-		return {"message": f"{amount-tax} {app.config['COINS_NAME']} transferred!"}, 200
+		return {"message": f"{amount-tax} coins transferred!"}, 200
 
-	return {"message": f"You can't transfer {app.config['COINS_NAME']} to yourself!"}, 400
+	return {"message": f"You can't transfer coins to yourself!"}, 400
 
 
 @app.post("/@<username>/transfer_bux")

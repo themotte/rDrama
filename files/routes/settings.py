@@ -18,7 +18,6 @@ valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 YOUTUBE_KEY = environ.get("YOUTUBE_KEY", "").strip()
-COINS_NAME = environ.get("COINS_NAME").strip()
 GUMROAD_TOKEN = environ.get("GUMROAD_TOKEN", "").strip()
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 GUMROAD_ID = environ.get("GUMROAD_ID", "tfcvri").strip()
@@ -729,14 +728,14 @@ def settings_css(v):
 @auth_required
 def settings_profilecss_get(v):
 
-	if v.truecoins < 1000 and not v.patron and v.admin_level == 0 : return f"You must have +1000 {COINS_NAME} or be a paypig to set profile css."
+	if v.truecoins < 1000 and not v.patron and v.admin_level == 0 : return f"You must have +1000 truescore or be a paypig to set profile css."
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profilecss(v):
-	if v.truecoins < 1000 and not v.patron: return f"You must have +1000 {COINS_NAME} or be a paypig to set profile css."
+	if v.truecoins < 1000 and not v.patron: return f"You must have +1000 truescore or be a paypig to set profile css."
 	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
 	v.profilecss = profilecss
 	g.db.add(v)
