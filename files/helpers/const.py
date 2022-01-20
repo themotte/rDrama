@@ -477,6 +477,10 @@ BADGES = {
 		'name': 'Benefactor',
 		'description': 'Gave the Benefactor award to someone'
 	},
+	104: {
+		'name': 'BADASS OUTLAW',
+		'description': 'Bad boy who does not play by the rules'
+	},
 }
 
 AWARDS = {
