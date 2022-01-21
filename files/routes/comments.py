@@ -636,7 +636,9 @@ def edit_comment(cid, v):
 				if v.admin_level == 3:
 					if parent_post.id == 48:
 						filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'
-						process_image(file.stream, filename, 400)
+						print('sex')
+						text = process_image(file.stream, filename, 400)
+						print(text)
 					elif parent_post.id == 49:
 						filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
 						process_image(file.stream, filename, 400)
