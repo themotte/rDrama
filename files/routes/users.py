@@ -16,7 +16,7 @@ import gevent
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 def leaderboard_thread():
-	global users9, userss9, users11, users13, userss13, users15, userss15
+	global users9, userss9, users13, userss13, users15, userss15
 
 	db = db_session()
 
