@@ -19,6 +19,10 @@ from sys import stdout
 import faulthandler
 import atexit
 
+def get_CF() -> str:
+    with app.app_context():
+		return request.headers.get('CF-Connecting-IP')
+
 app = Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
@@ -65,7 +69,7 @@ r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_respons
 
 limiter = Limiter(
 	app,
-	key_func=request.headers.get('CF-Connecting-IP'),
+	key_func=,
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
 	storage_uri=environ.get("REDIS_URL", "redis://localhost")
