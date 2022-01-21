@@ -111,15 +111,15 @@ def downvoters(v, username):
 
 @app.get("/@<username>/upvoting")
 @auth_required
+@cache.memoize(timeout=3600)
 def upvoting(v, username):
 	id = get_user(username).id
 
 	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
-	# votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
 
-	votes = Counter(dict(votes))
-	#  + Counter(dict(votes2))
+	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
 	users = g.db.query(User).filter(User.id.in_(votes.keys())).all()
 	users2 = []
@@ -131,15 +131,15 @@ def upvoting(v, username):
 
 @app.get("/@<username>/downvoting")
 @auth_required
+@cache.memoize(timeout=3600)
 def downvoting(v, username):
 	id = get_user(username).id
 
 	votes = g.db.query(Submission.author_id, func.count(Submission.author_id)).join(Vote, Vote.submission_id==Submission.id).filter(Vote.vote_type==-1, Vote.user_id==id).group_by(Submission.author_id).order_by(func.count(Submission.author_id).desc()).all()
 
-	# votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
+	votes2 = g.db.query(Comment.author_id, func.count(Comment.author_id)).join(CommentVote, CommentVote.comment_id==Comment.id).filter(CommentVote.vote_type==-1, CommentVote.user_id==id).group_by(Comment.author_id).order_by(func.count(Comment.author_id).desc()).all()
 
-	votes = Counter(dict(votes))
-	#  + Counter(dict(votes2))
+	votes = Counter(dict(votes)) + Counter(dict(votes2))
 
 	users = g.db.query(User).filter(User.id.in_(votes.keys())).all()
 	users2 = []
@@ -778,12 +778,9 @@ def u_username_comments(username, v=None):
 
 	if v and request.path.startswith('/logged_out'): v = None
 
-
-
 	user = get_user(username, v=v)
 
-
-	if username != user.username: return redirect(f'/id/{user.id}/comments')
+	if username != user.username: return redirect(f'/@{user.username}/comments')
 
 	u = user
 
