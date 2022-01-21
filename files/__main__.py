@@ -109,8 +109,4 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
-if cache.get("marsey_count") == None:
-	with open("marsey_count.json", 'r') as f:
-		cache.set("marsey_count", loads(f.read()))
-
 from files.routes import *

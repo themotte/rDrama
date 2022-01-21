@@ -385,9 +385,6 @@ def disable_signups(v):
 @app.post("/admin/purge_cache")
 @admin_level_required(3)
 def purge_cache(v):
-	with open('marsey_count.json', 'w') as f: dump(cache.get("marsey_count"), f)
-	cache.clear()
-	with open("marsey_count.json", 'r') as f: cache.set("marsey_count", loads(f.read()))
 	response = str(requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data='{"purge_everything":true}'))
 	if response == "<Response [200]>": return {"message": "Cache purged!"}
 	return {"error": "Failed to purge cache."}
@@ -1198,6 +1195,7 @@ def api_unban_comment(c_id, v):
 @admin_level_required(1)
 def admin_distinguish_comment(c_id, v):
 	
+	
 	comment = get_comment(c_id, v=v)
 
 	if comment.author_id != v.id: abort(403)
@@ -1213,9 +1211,7 @@ def admin_distinguish_comment(c_id, v):
 @app.get("/admin/dump_cache")
 @admin_level_required(2)
 def admin_dump_cache(v):
-	with open('marsey_count.json', 'w') as f: dump(cache.get("marsey_count"), f)
 	cache.clear()
-	with open("marsey_count.json", 'r') as f: cache.set("marsey_count", loads(f.read()))
 	return {"message": "Internal cache cleared."}
 
 
