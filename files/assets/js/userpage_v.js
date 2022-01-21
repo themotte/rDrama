@@ -125,8 +125,6 @@ function transferBux(mobile=false) {
 }
 
 function submitFormAjax(e) {
-	document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
-
 	document.getElementById('message').classList.add('d-none');
 	document.getElementById('message-mobile').classList.add('d-none');
 	document.getElementById('message-preview').classList.add('d-none');
@@ -165,6 +163,7 @@ function submitFormAjax(e) {
 		} else if (xhr.status >= 300 && xhr.status < 400) {
 			window.location.href = JSON.parse(xhr.response)["redirect"]
 		} else {
+			document.getElementById('toast-post-error-text').innerText = "Error, please try again later."
 			try {
 				let data=JSON.parse(xhr.response);
 				var myToast = new bootstrap.Toast(document.getElementById('toast-post-error'));
