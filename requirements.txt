@@ -3,7 +3,7 @@ bleach
 Flask
 Flask-Caching
 Flask-Compress
-Flask-Limiter==1.1.0
+Flask-Limiter
 Flask-Mail
 gevent
 greenlet

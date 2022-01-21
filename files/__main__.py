@@ -17,6 +17,7 @@ import redis
 import time
 from sys import stdout
 import faulthandler
+import atexit
 
 app = Flask(__name__, template_folder='templates')
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
@@ -84,6 +85,8 @@ mail = Mail(app)
 @app.before_request
 def before_request():
 
+	print(request.access_route[0])
+	print(request.remote_addr)
 	if request.method.lower() != "get" and app.config["READ_ONLY"]:
 		return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
 
@@ -110,3 +113,12 @@ def after_request(response):
 	return response
 
 from files.routes import *
+
+def close_running_threads():
+	with open("marsey_count.json", 'r') as f: marsey_file = loads(f.read())
+	print(marsey_count['marseylove'])
+	if marsey_file != marsey_count:
+		with open('marsey_count.json', 'w') as f: dump(marsey_count, f)
+		print("Marsey count saved!")
+	stdout.flush()
+atexit.register(close_running_threads)

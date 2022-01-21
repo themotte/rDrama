@@ -503,7 +503,7 @@ def message2(v, username):
 						'body': notifbody,
 					},
 					'data': {
-						'url': 'notifications?messages=true',
+						'url': '/notifications?messages=true',
 					}
 				}
 			},
@@ -570,7 +570,7 @@ def messagereply(v):
 						'body': notifbody,
 					},
 					'data': {
-						'url': 'notifications?messages=true',
+						'url': '/notifications?messages=true',
 					}
 				}
 			},

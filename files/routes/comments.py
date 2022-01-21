@@ -481,7 +481,7 @@ def api_comment(v):
 							'body': notifbody,
 						},
 						'data': {
-							'url': f'comment/{c.id}?context=9&read=true#context',
+							'url': f'/comment/{c.id}?context=9&read=true#context',
 						}
 					}
 					},
