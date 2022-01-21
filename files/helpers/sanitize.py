@@ -184,7 +184,6 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	emojis = list(re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized))
 	if len(emojis) > 20: edit = True
 	for i in emojis:
-		print(i)
 		old = i.group(0)
 		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
 		else: new = old.lower()
