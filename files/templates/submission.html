@@ -16,8 +16,8 @@
 {% if success %}
 	<script>
 		history.pushState(null, null, '{{p.permalink | full_link}}');
-		window.localStorage.setItem("post_title", "")
-		window.localStorage.setItem("post_text", "")
+		localStorage.setItem("post_title", "")
+		localStorage.setItem("post_text", "")
 	</script>
 {% endif %}
 
@@ -878,7 +878,7 @@
 			const comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
 			const newTotal = {{p.comment_count}} || ((comments['{{p.id}}'] || {c: 0}).c + 1)
 			comments['{{p.id}}'] = {c: newTotal, t: Date.now()}
-			window.localStorage.setItem("comment-counts", JSON.stringify(comments))
+			localStorage.setItem("comment-counts", JSON.stringify(comments))
 		{% endif %}
 	})()
 </script>

@@ -915,7 +915,7 @@ function getEmoji(searchTerm) {
 	const favorite_emojis = JSON.parse(localStorage.getItem("favorite_emojis")) || {}
 	if (favorite_emojis[searchTerm]) favorite_emojis[searchTerm] += 1
 	else favorite_emojis[searchTerm] = 1
-	window.localStorage.setItem("favorite_emojis", JSON.stringify(favorite_emojis))	
+	localStorage.setItem("favorite_emojis", JSON.stringify(favorite_emojis))	
 }
 
 function loadEmojis(form) {

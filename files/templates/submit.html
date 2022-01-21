@@ -195,9 +195,9 @@
 		{% endblock %}
 
 		<script>
-			let fetched_title = window.localStorage.getItem("post_title")
+			let fetched_title = localStorage.getItem("post_title")
 			document.getElementById('post-title').value = fetched_title
-			let fetched_text = window.localStorage.getItem("post_text")
+			let fetched_text = localStorage.getItem("post_text")
 			document.getElementById('post-text').value = fetched_text
 
 			function checkForRequired() {
