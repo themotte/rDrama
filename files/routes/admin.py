@@ -1170,7 +1170,7 @@ def api_unban_comment(c_id, v):
 	comment = g.db.query(Comment).filter_by(id=c_id).one_or_none()
 	if not comment: abort(404)
 	
-	if comment.author.agendaposter and 'black lives matters' not in comment.body.lower():
+	if comment.author.agendaposter and AGENDAPOSTER_PHRASE not in comment.body.lower():
 		return {"error": "You can't bypass the agendaposter award!"}
 
 	if comment.is_banned:
