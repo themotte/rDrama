@@ -174,14 +174,14 @@ def api_comment(v):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
-			body += f"\n\n![]({process_image(file.stream)})"
+			body += f"\n\n![]({process_image(file)})"
 			if v.admin_level == 3:
 				if parent_post.id == 37696:
 					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'
-					text = process_image(file.stream, filename, 400)
+					text = process_image(file, filename, 400)
 				elif parent_post.id == 37697:
 					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
-					process_image(file.stream, filename)
+					process_image(file, filename)
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -639,7 +639,7 @@ def edit_comment(cid, v):
 		if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 			file=request.files["file"]
 			if file.content_type.startswith('image/'):
-				body += f"\n\n![]({process_image(file.stream)})"
+				body += f"\n\n![]({process_image(file)})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:

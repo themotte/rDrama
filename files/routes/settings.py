@@ -255,7 +255,7 @@ def settings_profile_post(v):
 		if request.files.get('file'):
 			file = request.files['file']
 			if file.content_type.startswith('image/'):
-				bio += f"\n\n![]({process_image(file.stream)})"
+				bio += f"\n\n![]({process_image(file)})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
@@ -621,11 +621,11 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 
-	highres = process_image(file.stream)
+	highres = process_image(file)
 
 	if not highres: abort(400)
 
-	imageurl = process_image(file.stream, resize=100)
+	imageurl = process_image(file, resize=100)
 
 	if not imageurl: abort(400)
 
@@ -652,7 +652,7 @@ def settings_images_banner(v):
 
 	file = request.files["banner"]
 
-	bannerurl = process_image(file.stream)
+	bannerurl = process_image(file)
 
 	if bannerurl:
 		if v.bannerurl and '/images/' in v.bannerurl : os.remove('/images/' + v.bannerurl.split('/images/')[1])

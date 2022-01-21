@@ -419,7 +419,7 @@ def edit_post(pid, v):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
-			body += f"\n\n![]({process_image(file.stream)})"
+			body += f"\n\n![]({process_image(file)})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -848,7 +848,7 @@ def submit_post(v):
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file2"]
 		if file.content_type.startswith('image/'):
-			body += f"\n\n![]({process_image(file.stream)})"
+			body += f"\n\n![]({process_image(file)})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -935,8 +935,8 @@ def submit_post(v):
 		file = request.files['file']
 
 		if file.content_type.startswith('image/'):
-			new_post.url = process_image(file.stream)
-			new_post.thumburl = process_image(file.stream, resize=100)	
+			new_post.url = process_image(file)
+			new_post.thumburl = process_image(file, resize=100)	
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
