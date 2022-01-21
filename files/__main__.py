@@ -107,7 +107,7 @@ def after_request(response):
 
 	print('first: ' + request.access_route[0])
 	print('second: ' + request.remote_addr)
-	print('third: ' + request.headers.get('True-Client-IP'))
+	print('third: ' + request.headers.get('CF-Connecting-IP'))
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
