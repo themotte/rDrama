@@ -574,7 +574,7 @@ def award_comment(cid, v):
 	if v.id == 1: print(request.referrer)
 	if request.referrer and len(request.referrer) > 1 and (request.referrer.startswith('/') or request.referrer.startswith(request.host_url)):
 		return redirect(request.referrer)
-	if v.id == 1: print('host: ' request.host_url)
+	if v.id == 1: print('host: ' + request.host_url)
 	return redirect("/")
 
 @app.get("/admin/awards")
