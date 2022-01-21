@@ -1211,6 +1211,7 @@ def admin_distinguish_comment(c_id, v):
 @app.get("/admin/dump_cache")
 @admin_level_required(2)
 def admin_dump_cache(v):
+	with open('marsey_count.json', 'w') as f: dump(cache.get("marsey_count"), f)
 	cache.clear()
 	return {"message": "Internal cache cleared."}
 

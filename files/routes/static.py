@@ -17,6 +17,11 @@ def privacy(v):
 @app.get("/marseys")
 @auth_required
 def emojis(v):
+	marsey_count = cache.get("marsey_count")
+	marsey_counted = []
+	for k, val in marseys.items():
+		marsey_counted.append((k, val, marsey_count[k]))
+	marsey_counted = sorted(marsey_counted, key=lambda x: x[2], reverse=True)
 	return render_template("marseys.html", v=v, marseys=marsey_counted)
 
 @app.get("/terms")

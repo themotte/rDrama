@@ -797,10 +797,3 @@ NOTIFIED_USERS = {
 
 num_banners = len(listdir('files/assets/images/Drama/banners')) + 1
 num_sidebar = len(listdir('files/assets/images/Drama/sidebar')) + 1
-
-
-with open("marsey_count.json", 'r') as f: marsey_count = loads(f.read())
-marsey_counted = []
-for k, val in marseys.items():
-	marsey_counted.append((k, val, marsey_count[k]))
-marsey_counted = sorted(marsey_counted, key=lambda x: x[2], reverse=True)

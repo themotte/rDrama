@@ -6,18 +6,15 @@ from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
-from flask_limiter.util import get_remote_address
 from flask_mail import Mail
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import *
 import gevent
-from werkzeug.middleware.proxy_fix import ProxyFix
 import redis
 import time
 from sys import stdout
 import faulthandler
-import atexit
 
 app = Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
@@ -111,13 +108,6 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
-from files.routes import *
+with open("marsey_count.json", 'r') as f: cache.set("marsey_count", loads(f.read()))
 
-def close_running_threads():
-	with open("marsey_count.json", 'r') as f: marsey_file = loads(f.read())
-	print(marsey_count['marseylove'])
-	if marsey_file != marsey_count:
-		with open('marsey_count.json', 'w') as f: dump(marsey_count, f)
-		print("Marsey count saved!")
-	stdout.flush()
-atexit.register(close_running_threads)
+from files.routes import *
