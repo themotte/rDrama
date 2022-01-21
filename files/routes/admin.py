@@ -26,6 +26,11 @@ CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/
 
 month = datetime.now().strftime('%B')
 
+@app.post("/ratelimittest")
+@limiter.limit("1/day")
+def ratelimittest():
+	return 'sex'
+
 @app.get("/refund")
 @admin_level_required(3)
 def refund(v):
