@@ -85,8 +85,6 @@ mail = Mail(app)
 @app.before_request
 def before_request():
 
-	print('first: ' + request.access_route[0])
-	print('second: ' + request.remote_addr)
 	if request.method.lower() != "get" and app.config["READ_ONLY"]:
 		return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
 
@@ -107,6 +105,9 @@ def teardown_request(error):
 
 @app.after_request
 def after_request(response):
+
+	print('first: ' + request.access_route[0])
+	print('second: ' + request.remote_addr)
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
