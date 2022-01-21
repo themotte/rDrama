@@ -684,8 +684,12 @@
 
 </div>
 
-{% if u.song %}
-<div id="uid" class="d-none">{{u.id}}</div>
+{% if u.song%}
+	{% if v and v.id == u.id %}
+		<div id="vid" class="d-none">{{v.id}}</div>
+	{% else %}
+		<div id="uid" class="d-none">{{u.id}}</div>
+	{% endif %}
 {% endif %}
 
 {% if v %}
@@ -694,7 +698,7 @@
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 
-<script src="/static/assets/js/userpage.js?a=204"></script>
+<script src="/static/assets/js/userpage.js?a=205"></script>
 
 {% endblock %}
 
@@ -720,7 +724,7 @@
 </nav>
 {% endif %}
 
-<script src="/static/assets/js/marked.js?a=203"></script>
+<script src="/static/assets/js/marked.js?a=202"></script>
 
 <style>
 	.userbanner {
