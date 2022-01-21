@@ -221,6 +221,12 @@ class Submission(Base):
 
 	@property
 	@lazy
+	def author_name(self):
+		if self.award_count('ghosts'): return '👻'
+		else: return self.author.username
+
+	@property
+	@lazy
 	def is_youtube(self):
 		return self.domain == "youtube.com" and self.embed_url and self.embed_url.startswith('<lite-youtube') 
 
@@ -251,7 +257,7 @@ class Submission(Base):
 		flags = {}
 		for f in self.flags: flags[f.user.username] = f.reason
 
-		data = {'author_name': self.author.username if self.author else '',
+		data = {'author_name': self.author_name if self.author else '',
 				'permalink': self.permalink,
 				'is_banned': bool(self.is_banned),
 				'deleted_utc': self.deleted_utc,

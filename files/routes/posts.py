@@ -411,7 +411,7 @@ def edit_post(pid, v):
 	if title != p.title:
 		if v.agendaposter and not v.marseyawarded: title = torture_ap(title, v.username)
 
-		title_html = filter_emojis_only(title)
+		title_html = filter_emojis_only(title, edit=True)
 		if v.marseyawarded and len(list(re.finditer('>[^<\s+]|[^>\s+]<', title_html))): return {"error":"You can only type marseys!"}, 403
 		p.title = title[:500]
 		p.title_html = title_html
