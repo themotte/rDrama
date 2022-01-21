@@ -996,8 +996,6 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	new_post.comment_count = 1
-
 	if v.id == CARP_ID:
 		if random.random() < 0.02: body = "i love you carp"
 		else: body = ":#marseyfuckoffcarp:"
@@ -1057,7 +1055,8 @@ def submit_post(v):
 			g.db.flush()
 			n = Notification(comment_id=c.id, user_id=v.id)
 			g.db.add(n)
-
+		
+		new_post.comment_count += 1
 
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
