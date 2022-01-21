@@ -481,6 +481,10 @@ BADGES = {
 		'name': 'BADASS OUTLAW',
 		'description': 'Bad boy who does not play by the rules'
 	},
+	105: {
+		'name': 'SCAM',
+		'description': 'lmao get fucked retard'
+	},
 }
 
 AWARDS = {
