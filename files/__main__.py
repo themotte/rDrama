@@ -15,6 +15,7 @@ import redis
 import time
 from sys import stdout
 import faulthandler
+from json import loads
 
 app = Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
