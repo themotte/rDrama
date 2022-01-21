@@ -1088,7 +1088,7 @@ def submit_post(v):
 		new_post.voted = 1
 		if 'megathread' in new_post.title.lower(): sort = 'new'
 		else: sort = v.defaultsortingcomments
-		new_post.replies = [c]
+		if c: new_post.replies = [c]
 		return render_template('submission.html', v=v, p=new_post, sort=sort, render_replies=True, offset=0, success=True)
 
 
