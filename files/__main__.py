@@ -85,8 +85,8 @@ mail = Mail(app)
 @app.before_request
 def before_request():
 
-	print(request.access_route[0])
-	print(request.remote_addr)
+	print('first: ' + request.access_route[0])
+	print('second: ' + request.remote_addr)
 	if request.method.lower() != "get" and app.config["READ_ONLY"]:
 		return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
 
