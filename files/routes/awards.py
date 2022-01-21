@@ -571,9 +571,11 @@ def award_comment(cid, v):
 	g.db.add(c.author)
 
 	g.db.commit()
+	print(request.referrer)
 	if request.referrer and len(request.referrer) > 1 and (request.referrer.startswith('/') or request.referrer.startswith(request.host_url)):
 		return redirect(request.referrer)
-	else: return redirect("/")
+	print(request.host_url)
+	return redirect("/")
 
 @app.get("/admin/awards")
 @admin_level_required(2)
