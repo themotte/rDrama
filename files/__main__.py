@@ -63,12 +63,9 @@ app.config['DESCRIPTION'] = environ.get("DESCRIPTION", "rdrama.net caters to dra
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
-with app.app_context():
-	print('first: ' + get_remote_address())
-
 def get_CF() -> str:
 	with app.app_context():
-		print('second: ' + request.headers.get('CF-Connecting-IP'))
+		print('real: ' + request.headers.get('CF-Connecting-IP'))
 		return request.headers.get('CF-Connecting-IP')
 
 limiter = Limiter(
@@ -91,6 +88,9 @@ mail = Mail(app)
 
 @app.before_request
 def before_request():
+	print('first: ' + request.access_route[0])
+	print('second: ' + request.remote_addr)
+	print('third: ' + request.headers.get('CF-Connecting-IP'))
 
 	if request.method.lower() != "get" and app.config["READ_ONLY"]:
 		return {"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}, 500
