@@ -460,7 +460,7 @@ def api_comment(v):
 			if len(c.body) > 500: notifbody = c.body[:500] + '...'
 			else: notifbody = c.body
 
-			try:
+			if PUSHER_ID:
 				beams_client.publish_to_interests(
 					interests=[f'{request.host}{parent.author.id}'],
 					publish_body={
@@ -483,10 +483,6 @@ def api_comment(v):
 					}
 					},
 				)
-			except Exception as e:
-				print(e)
-				print(c.id)
-
 
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,
