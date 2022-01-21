@@ -6,7 +6,6 @@ from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
-from flask_limiter.util import get_ipaddr
 from flask_mail import Mail
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
