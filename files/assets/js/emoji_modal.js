@@ -38,7 +38,7 @@ const EMOJIS_STRINGS = [
 			"marseyglow": {"author":"grizzly", "tags":"fbi mossad cop feds animated glownigger glowie secret service fed atf police cia nsa kgb"},
 			"marseycope": {"author":"fic8", "tags":"dilate mask seethe copium reaction"},
 			"marseyseethe": {"author":"fic8", "tags":"dilate mask crying seething smug cope"},
-			"marseymerchant": {"author":"aca", "tags":"kike hebrew shopkeeper yid banker jew moneylender jewish greedy israel"},
+			"marseymerchant": {"author":"aca", "tags":"kike hebrew shopkeeper yid banker jew moneylender jewish greedy israel chosen"},
 			"marseyno": {"author":"dramarama", "tags":"denied refuse rejection reaction ugh deny hand"},
 			"marseywalking": {"author":"dramarama", "tags":"stroll walk strut gallivant animated"},
 			"marseyhearts": {"author":"mynameisurmom", "tags":"reaction flirt loving adoration love happy cute crush"},
