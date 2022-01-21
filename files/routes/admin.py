@@ -1213,6 +1213,7 @@ def admin_distinguish_comment(c_id, v):
 def admin_dump_cache(v):
 	with open('marsey_count.json', 'w') as f: dump(cache.get("marsey_count"), f)
 	cache.clear()
+	with open("marsey_count.json", 'r') as f: cache.set("marsey_count", loads(f.read()))
 	return {"message": "Internal cache cleared."}
 
 
