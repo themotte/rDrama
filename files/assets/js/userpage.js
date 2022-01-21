@@ -12,8 +12,16 @@ if (!playing)
 		audio.loop=true;
 
 		function toggle() {
-			if (audio.paused) audio.play()
-			else audio.pause()
+			if (audio.paused)
+			{
+				audio.play()
+				localStorage.setItem("playing", "1")
+			}
+			else
+			{
+				audio.pause()
+				localStorage.setItem("playing", "")
+			}
 		}
 
 		audio.play();
@@ -43,11 +51,13 @@ if (!playing)
 				{
 					audio.play()
 					localStorage.setItem("paused", "")
+					localStorage.setItem("playing", "1")
 				}
 				else
 				{
 					audio.pause()
 					localStorage.setItem("paused", "1")
+					localStorage.setItem("playing", "")
 				}
 			}
 		
