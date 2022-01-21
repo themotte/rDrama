@@ -175,20 +175,13 @@ def api_comment(v):
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
 			body += f"\n\n![]({process_image(file.stream)})"
-			if file and request.headers.get("cf-ipcountry") != "T1":
-				if file.content_type.startswith('image/'):
-					body += f"\n\n![]({process_image(file.stream)})"
-					print(v.admin_level)
-					if v.admin_level == 3:
-						print(parent_post.id)
-						if parent_post.id == 48:
-							filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'
-							print('sex')
-							text = process_image(file.stream, filename, 400)
-							print(text)
-						elif parent_post.id == 49:
-							filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
-							process_image(file.stream, filename, 400)
+			if v.admin_level == 3:
+				if parent_post.id == 37696:
+					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'
+					text = process_image(file.stream, filename, 400)
+				elif parent_post.id == 37697:
+					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
+					process_image(file.stream, filename)
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
