@@ -20,7 +20,7 @@ import faulthandler
 import atexit
 
 app = Flask(__name__, template_folder='templates')
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=2)
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
