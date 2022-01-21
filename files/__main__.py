@@ -20,7 +20,7 @@ import faulthandler
 import atexit
 
 def get_CF() -> str:
-    with app.app_context():
+	with app.app_context():
 		return request.headers.get('CF-Connecting-IP')
 
 app = Flask(__name__, template_folder='templates')
