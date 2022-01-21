@@ -20,7 +20,6 @@ import faulthandler
 import atexit
 
 app = Flask(__name__, template_folder='templates')
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=2)
 app.url_map.strict_slashes = False
 app.jinja_env.cache = {}
 app.jinja_env.auto_reload = True
@@ -108,6 +107,7 @@ def after_request(response):
 
 	print('first: ' + request.access_route[0])
 	print('second: ' + request.remote_addr)
+	print('third: ' + request.headers['True-Client-IP'])
 
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
