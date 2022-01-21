@@ -28,5 +28,6 @@ def process_image(file=None, filename=None, resize=0):
 			file.save(filename)
 			gifwebp(input_image=filename, output_image=filename, option="-mixed -metadata none -f 100 -mt -m 6")
 		else: i.save(filename, format="WEBP", method=6)
+	else: file.save(filename)
 
 	return f'/static{filename}'
