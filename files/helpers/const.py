@@ -246,7 +246,7 @@ BADGES = {
 		'description': 'Joined during open beta'
 	},
 	7: {
-		'name': 'Bug Finder',
+		'name': 'Bug Chaser',
 		'description': 'Found a bug'
 	},
 	10: {
