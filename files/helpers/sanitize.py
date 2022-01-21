@@ -181,9 +181,10 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 		with open("marsey_count.json", 'r') as f: marsey_count = loads(f.read())
 		marseys_used = set()
 
-	emojis = re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized)
-	if len(list(emojis)) > 20: edit = True
+	emojis = list(re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized))
+	if len(emojis) > 20: edit = True
 	for i in emojis:
+		print(i)
 		old = i.group(0)
 		if 'marseylong1' in old or 'marseylong2' in old or 'marseyllama1' in old or 'marseyllama2' in old: new = old.lower().replace(">", " class='mb-0'>")
 		else: new = old.lower()
@@ -210,8 +211,8 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 					
 		sanitized = sanitized.replace(old, new)
 
-	emojis = re.finditer('(?<!"):([!A-Za-z0-9]{1,30}?):', sanitized)
-	if len(list(emojis)) > 20: edit = True
+	emojis = list(re.finditer('(?<!"):([!A-Za-z0-9]{1,30}?):', sanitized))
+	if len(emojis) > 20: edit = True
 	for i in emojis:
 		emoji = i.group(1).lower()
 		if emoji.startswith("!"):
@@ -275,8 +276,8 @@ def filter_emojis_only(title, edit=False):
 
 	title = bleach.clean(title, tags=[])
 
-	emojis = re.finditer('(?<!"):([!A-Za-z0-9]{1,30}?):', title)
-	if len(list(emojis)) > 20: edit = True
+	emojis = list(re.finditer('(?<!"):([!A-Za-z0-9]{1,30}?):', title))
+	if len(emojis) > 20: edit = True
 	for i in emojis:
 		emoji = i.group(1).lower()
 
