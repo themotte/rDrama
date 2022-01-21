@@ -63,7 +63,8 @@ app.config['DESCRIPTION'] = environ.get("DESCRIPTION", "rdrama.net caters to dra
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
-print('first: ' + get_remote_address())
+with app.app_context():
+	print('first: ' + get_remote_address())
 
 def get_CF() -> str:
 	with app.app_context():
