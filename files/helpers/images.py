@@ -1,12 +1,14 @@
 from PIL import Image as IImage, ImageSequence
 from webptools import gifwebp
+import time
 
-def process_image(filename=None, resize=False):
+def process_image(file=None, filename=None, resize=False):
 	
-	i = IImage.open(filename)
+	i = IImage.open(file)
+	if not filename: filename = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 
 	if resize:
-		size = 100, 100
+		size = resize, resize
 		frames = ImageSequence.Iterator(i)
 
 		def thumbnails(frames):
@@ -21,7 +23,9 @@ def process_image(filename=None, resize=False):
 		om.info = i.info
 		om.save(filename, format="WEBP", save_all=True, append_images=list(frames), loop=0, method=6, allow_mixed=True)
 	elif i.format.lower() != "webp":
-		if i.format.lower() == "gif": gifwebp(input_image=filename, output_image=filename, option="-mixed -metadata none -f 100 -mt -m 6")
+		if i.format.lower() == "gif":
+			i.save(filename)
+			gifwebp(input_image=filename, output_image=filename, option="-mixed -metadata none -f 100 -mt -m 6")
 		else: i.save(filename, format="WEBP", method=6)
 
 	return f'/static{filename}'

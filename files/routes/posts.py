@@ -16,8 +16,6 @@ from .front import frontlist, changeloglist
 from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
 from os import path
 import requests
-from shutil import copyfile
-from psutil import cpu_percent
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
@@ -421,10 +419,7 @@ def edit_post(pid, v):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(name)
-			url = process_image(name)
-			body += f"\n\n![]({url})"
+			body += f"\n\n![]({process_image(file.stream)})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -530,29 +525,6 @@ def thumbnail_thread(pid):
 
 	db = db_session()
 
-	# cpu = cpu_percent()
-
-	# time.sleep(0.1)
-
-	# cpu = cpu_percent()
-
-	# if cpu > 70:
-	# 	print(f'Cpu usage at {cpu}%, Enabling under attack mode!', flush=True)
-	# 	with open('under_attack', 'r') as f: content = f.read()
-
-	# 	with open('under_attack', 'w') as f:
-	# 		if content == "no":
-	# 			f.write("yes")
-	# 			ma = ModAction(
-	# 				kind="enable_under_attack",
-	# 				user_id=AUTOJANNY_ID,
-	# 			)
-	# 			db.add(ma)
-	# 			db.commit()
-	# 			data='{"value":"under_attack"}'
-	# 			response = requests.patch(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/settings/security_level', headers=CF_HEADERS, data=data)
-	# 			print(response.text, flush=True)
-
 	def expand_url(post_url, fragment_url):
 
 		if fragment_url.startswith("https://"):
@@ -646,10 +618,11 @@ def thumbnail_thread(pid):
 			if image_req.headers.get("Content-Type","").startswith("image/svg"):
 				continue
 
-			image = PILimage.open(BytesIO(image_req.content))
-			if image.width < 30 or image.height < 30:
+			image = BytesIO(image_req.content)
+			image2 = PILimage.open(image)
+			if image2.width < 30 or image2.height < 30:
 				continue
-
+			
 			break
 
 		else:
@@ -660,7 +633,7 @@ def thumbnail_thread(pid):
 
 	elif x.headers.get("Content-Type","").startswith("image/"):
 		image_req=x
-		image = PILimage.open(BytesIO(x.content))
+		image = BytesIO(x.content)
 
 	else:
 		db.close()
@@ -668,11 +641,7 @@ def thumbnail_thread(pid):
 
 	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 
-	with open(name, "wb") as file:
-		for chunk in image_req.iter_content(1024):
-			file.write(chunk)
-
-	post.thumburl = process_image(name, resize=True)
+	post.thumburl = process_image(image, resize=100)
 	db.add(post)
 	db.commit()
 	db.close()
@@ -879,9 +848,7 @@ def submit_post(v):
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file2"]
 		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(name)
-			body += f"\n\n![]({process_image(name)})"
+			body += f"\n\n![]({process_image(file.stream)})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -968,13 +935,8 @@ def submit_post(v):
 		file = request.files['file']
 
 		if file.content_type.startswith('image/'):
-			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-			file.save(name)
-			new_post.url = process_image(name)
-
-			name2 = name.replace('.webp', 'r.webp')
-			copyfile(name, name2)
-			new_post.thumburl = process_image(name2, resize=True)	
+			new_post.url = process_image(file.stream)
+			new_post.thumburl = process_image(file.stream, resize=100)	
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
