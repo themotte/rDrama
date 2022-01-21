@@ -16,7 +16,7 @@ import gevent
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 def leaderboard_thread():
-	global users9, userss9, users13, userss13, users15, userss15
+	global users9, users9_25, users13, userss13_25, users15, userss15_25
 
 	db = db_session()
 
@@ -27,7 +27,7 @@ def leaderboard_thread():
 	users9 = []
 	for user in users8: users9.append((user, votes3[user.id]))
 	users9 = sorted(users9, key=lambda x: x[1], reverse=True)
-	userss9 = users9[:25]
+	users9_25 = users9[:25]
 
 	if SITE_NAME == 'Drama':
 		users13 = {}
@@ -41,8 +41,8 @@ def leaderboard_thread():
 		for user in users132:
 			users133.append((user, users13[user.username.lower()]))
 		users13 = sorted(users133, key=lambda x: x[1], reverse=True)
-		userss13 = users13[:25]
-	else: userss13 = None
+		userss13_25 = users13[:25]
+	else: userss13_25 = None
 
 	votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 	votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
@@ -52,7 +52,7 @@ def leaderboard_thread():
 	for user in users14:
 		users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
 	users15 = sorted(users15, key=lambda x: x[1], reverse=True)
-	userss15 = users15[:25]
+	userss15_25 = users15[:25]
 
 	db.close()
 
@@ -376,7 +376,7 @@ def leaderboard(v):
 		pos15 = (pos15+1, users15[pos15][1])
 	except: pos15 = (len(users15)+1, 0)
 
-	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=userss9, pos9=pos9, users10=users10, pos10=pos10, users11=users11, pos11=pos11, users13=userss13, pos13=pos13, users15=userss15, pos15=pos15)
+	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=users9_25, pos9=pos9, users10=users10, pos10=pos10, users11=users11, pos11=pos11, users13=userss13_25, pos13=pos13, users15=userss15_25, pos15=pos15)
 
 @app.get("/@<username>/css")
 def get_css(username):
