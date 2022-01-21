@@ -65,7 +65,7 @@ r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_respons
 
 limiter = Limiter(
 	app,
-	key_func=get_ipaddr,
+	key_func=request.headers.get('CF-Connecting-IP'),
 	default_limits=["3/second;30/minute;200/hour;1000/day"],
 	application_limits=["10/second;200/minute;5000/hour;10000/day"],
 	storage_uri=environ.get("REDIS_URL", "redis://localhost")
@@ -104,11 +104,6 @@ def teardown_request(error):
 
 @app.after_request
 def after_request(response):
-
-	print('first: ' + request.access_route[0])
-	print('second: ' + request.remote_addr)
-	print('third: ' + request.headers.get('CF-Connecting-IP'))
-
 	response.headers.add("Strict-Transport-Security", "max-age=31536000")
 	response.headers.add("X-Frame-Options", "deny")
 	return response
