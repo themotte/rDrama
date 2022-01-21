@@ -2,7 +2,7 @@ from PIL import Image as IImage, ImageSequence
 from webptools import gifwebp
 import time
 
-def process_image(file=None, filename=None, resize=False):
+def process_image(file=None, filename=None, resize=0):
 	
 	i = IImage.open(file)
 	if not filename: filename = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'

@@ -460,10 +460,9 @@ def api_comment(v):
 			if len(c.body) > 500: notifbody = c.body[:500] + '...'
 			else: notifbody = c.body
 
-			if PUSHER_ID:
-				beams_client.publish_to_interests(
-					interests=[f'{request.host}{parent.author.id}'],
-					publish_body={
+			beams_client.publish_to_interests(
+				interests=[f'{request.host}{parent.author.id}'],
+				publish_body={
 					'web': {
 						'notification': {
 							'title': f'New reply by @{c.author_name}',
@@ -481,8 +480,8 @@ def api_comment(v):
 							'url': f'/comment/{c.id}?context=9&read=true#context',
 						}
 					}
-					},
-				)
+				},
+			)
 
 	vote = CommentVote(user_id=v.id,
 						 comment_id=c.id,
