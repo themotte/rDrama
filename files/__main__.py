@@ -6,6 +6,7 @@ from flask import *
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_compress import Compress
+from flask_limiter.util import get_remote_address
 from flask_mail import Mail
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -62,8 +63,11 @@ app.config['DESCRIPTION'] = environ.get("DESCRIPTION", "rdrama.net caters to dra
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
+print('first: ' + get_remote_address())
+
 def get_CF() -> str:
 	with app.app_context():
+		print('second: ' + request.headers.get('CF-Connecting-IP'))
 		return request.headers.get('CF-Connecting-IP')
 
 limiter = Limiter(
