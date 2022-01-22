@@ -170,7 +170,7 @@ def api_comment(v):
 					marsey_dict = list(loads(body.lower()).items())
 					marsey_key = marsey_dict[0][0]
 					marsey_body = marsey_dict[0][1]
-					marseys_body["count"] = 0
+					marsey_body["count"] = 0
 				except: return {"error": "You didn't follow the format retard"}, 400
 				with open("marseys.json", 'r') as f: marseys = loads(f.read())
 				marseys[marsey_key] = marsey_body
