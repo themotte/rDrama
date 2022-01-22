@@ -263,7 +263,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	if comment:
 		for emoji in marseys_used:
 			if emoji in marsey_count: marsey_count[emoji]["count"] += 1
-		marsey_count = cache.set("marseys", marsey_count)
+		cache.set("marseys", marsey_count)
 
 	return sanitized
 
