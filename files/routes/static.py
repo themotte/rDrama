@@ -365,6 +365,8 @@ def settings_profile(v):
 @app.get("/badges")
 @auth_required
 def badges(v):
+	with open("badges.json", 'r') as f: BADGES = loads(f.read())
+
 	return render_template("badges.html", v=v, badges=BADGES)
 
 @app.get("/blocks")
