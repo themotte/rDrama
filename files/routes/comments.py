@@ -165,7 +165,7 @@ def api_comment(v):
 				badge_number = str(len(listdir('files/assets/images/badges'))+1)
 				with open("badges.json", 'r') as f: badges = loads(f.read())
 				badges[badge_number] = badge_body
-			elif parent_post.id == 37838:
+			elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
 				try:
 					marsey_dict = list(loads(body.lower()).items())
 					marsey_key = marsey_dict[0][0]
@@ -207,7 +207,7 @@ def api_comment(v):
 					filename = f'files/assets/images/badges/{badge_number}.webp'
 					process_image(file, filename, 200)
 					with open('badges.json', 'w') as f: dump(badges, f)
-				elif parent_post.id == 37838:
+				elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
 					filename = f'files/assets/images/emojis/{marsey_key}.webp'
 					process_image(file, filename, 200)
 					with open('marseys.json', 'w') as f: dump(marseys, f)
