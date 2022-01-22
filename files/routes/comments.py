@@ -154,6 +154,10 @@ def api_comment(v):
 
 	body = request.values.get("body", "").strip()[:10000]
 
+	if v.admin_level == 3 and parent_post.id == 37749:
+		with open(f"snappy_{SITE_NAME}.txt", "a") as f:
+			f.write('\n{[para]}\n' + body)
+
 	if v.marseyawarded:
 		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body))
 		if len(marregex) == 0: return {"error":"You can only type marseys!"}, 403

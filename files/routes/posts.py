@@ -23,11 +23,6 @@ CF_KEY = environ.get("CF_KEY", "").strip()
 CF_ZONE = environ.get("CF_ZONE", "").strip()
 CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
 
-if path.exists(f'snappy_{SITE_NAME}.txt'):
-	with open(f'snappy_{SITE_NAME}.txt', "r") as f:
-		if SITE == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
-		else: snappyquotes = f.read().split("{[para]}") + [f':#{x}:' for x in marseys]
-
 @app.post("/toggle_club/<pid>")
 @auth_required
 def toggle_club(pid, v):
@@ -658,7 +653,6 @@ def submit_post(v):
 		if request.content_length > 8 * 1024 * 1024: return {"error": "Max file size is 8 MB."}, 413
 	elif request.content_length > 4 * 1024 * 1024: return {"error": "Max file size is 4 MB."}, 413
 
-
 	title = request.values.get("title", "").strip()[:500].replace('‎','')
 
 	url = request.values.get("url", "").strip()
@@ -1002,7 +996,11 @@ def submit_post(v):
 	elif v.id == LAWLZ_ID:
 		if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 		else: body = "wow, a good lawlzpost for once!"
-	else: body = random.choice(snappyquotes)
+	elif path.exists(f'snappy_{SITE_NAME}.txt'):
+		with open(f'snappy_{SITE_NAME}.txt', "r") as f:
+			if request.host == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
+			else: snappyquotes = f.read().split("{[para]}") + [f':#{x}:' for x in marseys]
+		body = random.choice(snappyquotes)
 	body += "\n\n"
 
 	if new_post.url:
