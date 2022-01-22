@@ -546,13 +546,6 @@
 							{% endif %}
 
 						</div>
-
-
-						{% if p.author.sig_html and not p.ghost and (p.author_id == MOOSE_ID or not (v and v.sigs_disabled)) %}
-							<hr>
-							{{p.author.sig_html | safe}}
-						{% endif %}
-
 					</div>
 
 					{% if v and (v.id==p.author_id or v.admin_level > 2) and not v.is_suspended %}

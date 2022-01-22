@@ -368,6 +368,10 @@ class Comment(Base):
 			if not self.total_poll_voted(v): body += ' d-none'	
 			body += f'"> - <a href="/votes?link=t3_{o.id}"><span id="poll-{o.id}">{o.upvotes}</span> votes</a></span></label></div>'
 
+
+		if self.author.sig_html and not self.ghost and (self.author_id == MOOSE_ID or not (v and v.sigs_disabled)):
+			body += "<hr>{self.author.sig_html}"
+
 		return body
 
 	def plainbody(self, v):

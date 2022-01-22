@@ -252,11 +252,6 @@
 
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0 {% if c.author.agendaposter %}agendaposter{% endif %}" >
 				{{c.realbody(v) | safe}}
-
-				{% if c.author.sig_html and not c.ghost and (c.author_id == MOOSE_ID or not (v and v.sigs_disabled)) %}
-					<hr>
-					{{c.author.sig_html | safe}}
-				{% endif %}
 			</div>
 			{% if c.parent_submission %}
 
