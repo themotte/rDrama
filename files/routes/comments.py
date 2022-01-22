@@ -163,7 +163,7 @@ def api_comment(v):
 				try: badge_body = loads(body.lower())
 				except: return {"error": "You didn't follow the format retard"}, 500
 				badge_number = str(len(listdir('files/assets/images/badges'))+1)
-				with open("badges.json", 'r') as f: badges = loads(f.read())
+				with open("badges.json", 'r') as f: badges = loads(f.read().replace("'",'"'))
 				badges[badge_number] = badge_body
 			elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
 				try:
@@ -172,7 +172,7 @@ def api_comment(v):
 					marsey_body = marsey_dict[0][1]
 					marsey_body["count"] = 0
 				except: return {"error": "You didn't follow the format retard"}, 400
-				with open("marseys.json", 'r') as f: marseys = loads(f.read())
+				with open("marseys.json", 'r') as f: marseys = loads(f.read().replace("'",'"'))
 				marseys[marsey_key] = marsey_body
 
 	if v.marseyawarded:

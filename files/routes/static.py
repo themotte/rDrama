@@ -17,7 +17,7 @@ def privacy(v):
 @app.get("/marseys")
 @auth_required
 def marseys(v):
-	with open("marseys.json", 'r') as f: marsey_count = list(loads(f.read()).items())
+	with open("marseys.json", 'r') as f: marsey_count = list(loads(f.read().replace("'",'"')).items())
 	marsey_count = sorted(marsey_count, key=lambda x: list(x[1].values())[2], reverse=True)
 	return render_template("marseys.html", v=v, marseys=marsey_count)
 
@@ -48,7 +48,7 @@ def participation_stats(v):
 
 	day = now - 86400
 
-	with open("marseys.json", 'r') as f: marseys = loads(f.read())
+	with open("marseys.json", 'r') as f: marseys = loads(f.read().replace("'",'"'))
 
 	data = {"marseys": len(marseys),
 			"users": g.db.query(User.id).count(),
@@ -366,14 +366,14 @@ def settings_profile(v):
 @app.get("/badges")
 @auth_required
 def badges(v):
-	with open("badges.json", 'r') as f: BADGES = loads(f.read())
+	with open("badges.json", 'r') as f: BADGES = loads(f.read().replace("'",'"'))
 
 	return render_template("badges.html", v=v, badges=BADGES)
 
 @app.get("/marsey_list")
 @auth_required
 def marsey_list(v):
-	with open("marseys.json", 'r') as f: return loads(f.read())
+	with open("marseys.json", 'r') as f: return loads(f.read().replace("'",'"'))
 
 @app.get("/blocks")
 @auth_required
