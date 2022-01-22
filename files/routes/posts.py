@@ -627,6 +627,7 @@ def thumbnail_thread(pid):
 
 	elif x.headers.get("Content-Type","").startswith("image/"):
 		image_req=x
+		image = PILimage.open(BytesIO(x.content))
 
 	else:
 		db.close()
@@ -638,7 +639,7 @@ def thumbnail_thread(pid):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = process_image(filename=name, resize=True)
+	post.thumburl = process_image(filename=name, resize=100)
 	db.add(post)
 	db.commit()
 	db.close()
