@@ -370,7 +370,7 @@ class Comment(Base):
 
 
 		if self.author.sig_html and not self.ghost and (self.author_id == MOOSE_ID or not (v and v.sigs_disabled)):
-			body += "<hr>{self.author.sig_html}"
+			body += f"<hr>{self.author.sig_html}"
 
 		return body
 
