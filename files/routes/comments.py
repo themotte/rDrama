@@ -195,7 +195,9 @@ def api_comment(v):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
-			body += f"\n\n![]({process_image(file)})"
+			image = process_image(file)
+			if image == "": return {"error":"Image upload failed"}
+			body += f"\n\n![]({image})"
 			if v.admin_level == 3:
 				if parent_post.id == 37696:
 					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'

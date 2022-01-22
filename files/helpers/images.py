@@ -11,7 +11,7 @@ def process_image(file=None, filename=None, resize=0):
 			file.save(filename)
 			i = IImage.open(file)
 		else: i = IImage.open(filename)
-	except: abort(400)
+	except: return ""
 
 	if resize:
 		size = resize, resize
