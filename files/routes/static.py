@@ -48,6 +48,8 @@ def participation_stats(v):
 
 	day = now - 86400
 
+	with open("marseys.json", 'r') as f: marseys = loads(f.read())
+
 	data = {"marseys": len(marseys),
 			"users": g.db.query(User.id).count(),
 			"private_users": g.db.query(User.id).filter_by(is_private=True).count(),
