@@ -76,10 +76,9 @@ function openReplyBox(id) {
 	let text = getSelection().toString()
     if (text)
 	{
-		text = '>' + text
-		if (!text.endsWith('\n\n')) text += '\n\n'
-		text = text.replace(/\n\n/g,"\n\n>").replace(/>\n\n/g,"\n\n")
-		textarea.value = text
+		textarea.value = '>' + text
+		if (!textarea.value.endsWith('\n\n')) textarea.value += '\n\n'
+		textarea.value = textarea.value.replace(/\n\n/g,"\n\n>").replace(/>\n\n/g,"\n\n")
 	}
 	element.classList.remove('d-none')
 	textarea.focus()
