@@ -77,7 +77,7 @@ function openReplyBox(id) {
     if (text)
 	{
 		text = text.replace(/\n\n/g,"\n\n>")
-		text = text.replace(/\n\n>\n\n/g,"\n\n")
+		text = text.replace(/>\n\n/g,"\n\n")
 		if (!text.endsWith('\n\n')) text += '\n\n'
 		textarea.value = `>${text}`
 	}
