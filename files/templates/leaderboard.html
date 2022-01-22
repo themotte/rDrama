@@ -15,7 +15,7 @@
 	</tr>
 </thead>
 {% for user in users1 %}
-	<tr>
+	<tr {% if v.id == user.id %}class="self"{% endif %}>
 		<td style="font-weight:bold">{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold">{{user.coins}}</td>
@@ -50,7 +50,7 @@
 </thead>
 
 {% for user in users7 %}
-	<tr>
+	<tr {% if v.id == user.id %}class="self"{% endif %}>
 		<td style="font-weight:bold">{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold">{{user.coins_spent}}</td>
@@ -85,7 +85,7 @@
 	</thead>
 	<tbody id="followers-table">
 	{% for user in users10 %}
-		<tr>
+		<tr {% if v.id == user.id %}class="self"{% endif %}>
 			<td style="font-weight:bold">{{loop.index}}</td>
 			<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
 			<td style="font-weight:bold">{{user.truecoins}}</td>
@@ -119,7 +119,7 @@
 	</tr>
 </thead>
 {% for user in users2 %}
-	<tr>
+	<tr {% if v.id == user.id %}class="self"{% endif %}>
 		<td style="font-weight:bold">{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold">{{user.stored_subscriber_count}}</td>
@@ -151,7 +151,7 @@
 	</tr>
 </thead>
 {% for user in users3 %}
-	<tr>
+	<tr {% if v.id == user.id %}class="self"{% endif %}>
 		<td style="font-weight:bold">{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold">{{user.post_count}}</td>
@@ -183,7 +183,7 @@
 	</tr>
 </thead>
 {% for user in users4 %}
-	<tr>
+	<tr {% if v.id == user.id %}class="self"{% endif %}>
 		<td style="font-weight:bold">{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold">{{user.comment_count}}</td>
@@ -217,7 +217,7 @@
 	</tr>
 </thead>
 {% for user in users5 %}
-	<tr>
+	<tr {% if v.id == user.id %}class="self"{% endif %}>
 		<td style="font-weight:bold">{{loop.index}}</td>
 		<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
 		<td style="font-weight:bold">{{user.received_award_count}}</td>
@@ -253,7 +253,7 @@
 	</thead>
 	<tbody id="followers-table">
 	{% for user in users9 %}
-		<tr>
+		<tr {% if v.id == user[0].id %}class="self"{% endif %}>
 			<td style="font-weight: bold">{{loop.index}}</td>
 			<td><a style="color:#{{user[0].namecolor}};font-weight:bold" href="/@{{user[0].username}}"><img alt="@{{user[0].username}}'s profile picture" loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
 			<td style="font-weight: bold">{{user[1]}}</td>
@@ -290,7 +290,7 @@
 	</thead>
 	<tbody id="followers-table">
 	{% for user in users11 %}
-		<tr>
+		<tr {% if v.id == user[0].id %}class="self"{% endif %}>
 			<td style="font-weight: bold">{{loop.index}}</td>
 			<td><a style="color:#{{user[0].namecolor}};font-weight:bold" href="/@{{user[0].username}}"><img alt="@{{user[0].username}}'s profile picture" loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
 			<td style="font-weight: bold">{{user[1]}}</td>
@@ -327,7 +327,7 @@
 		</tr>
 	</thead>
 	{% for user in users6 %}
-		<tr>
+		<tr {% if v.id == user.id %}class="self"{% endif %}>
 			<td style="font-weight:bold">{{loop.index}}</td>
 			<td><a style="color:#{{user.namecolor}};font-weight:bold" href="/@{{user.username}}"><img alt="@{{user.username}}'s profile picture" loading="lazy" src="{{user.profile_url}}" class="pp20"><span {% if user.patron %}class="patron" style="background-color:#{{user.namecolor}}"{% endif %}>{{user.username}}</span></a></td>
 			<td style="font-weight:bold">{{user.basedcount}}</td>
@@ -364,7 +364,7 @@
 		</thead>
 		<tbody id="followers-table">
 		{% for user in users13 %}
-			<tr>
+			<tr {% if v.id == user[0].id %}class="self"{% endif %}>
 				<td style="font-weight: bold">{{loop.index}}</td>
 				<td><a style="color:#{{user[0].namecolor}};font-weight:bold" href="/@{{user[0].username}}"><img alt="@{{user[0].username}}'s profile picture" loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
 				<td style="font-weight: bold">{{user[1]}}</td>
@@ -402,7 +402,7 @@
 		</thead>
 		<tbody id="followers-table">
 		{% for user in users15 %}
-			<tr>
+			<tr {% if v.id == user[0].id %}class="self"{% endif %}>
 				<td style="font-weight: bold">{{loop.index}}</td>
 				<td><a style="color:#{{user[0].namecolor}};font-weight:bold" href="/@{{user[0].username}}"><img alt="@{{user[0].username}}'s profile picture" loading="lazy" src="{{user[0].profile_url}}" class="pp20"><span {% if user[0].patron %}class="patron" style="background-color:#{{user[0].namecolor}}"{% endif %}>{{user[0].username}}</span></a></td>
 				<td style="font-weight: bold">{{user[1]}}</td>
@@ -419,4 +419,10 @@
 	</table>
 {% endif %}
 
+<style>
+	.self {
+		border-top:2px solid var(--primary);
+		border-bottom:2px solid var(--primary);
+	}
+</style>
 {% endblock %}
