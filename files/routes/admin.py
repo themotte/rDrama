@@ -1217,7 +1217,7 @@ def admin_distinguish_comment(c_id, v):
 @app.get("/admin/dump_cache")
 @admin_level_required(2)
 def admin_dump_cache(v):
-	cache.clear()
+	# cache.clear()
 	return {"message": "Internal cache cleared."}
 
 

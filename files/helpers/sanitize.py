@@ -178,7 +178,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = re.sub('\|\|(.*?)\|\|', r'<span class="spoiler">\1</span>', sanitized)
 	
 	if comment:
-		with open("marseys.json", 'r') as f: marsey_count = loads(f.read().replace("'",'"'))
+		marsey_count = cache.get("marseys")
 		marseys_used = set()
 
 	emojis = list(re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized))
@@ -263,7 +263,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	if comment:
 		for emoji in marseys_used:
 			if emoji in marsey_count: marsey_count[emoji]["count"] += 1
-		with open('marseys.json', 'w') as f: dump(marsey_count, f)
+		marsey_count = cache.set("marseys", marsey_count)
 
 	return sanitized
 

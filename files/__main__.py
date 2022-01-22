@@ -16,6 +16,7 @@ import time
 from sys import stdout
 import faulthandler
 from json import loads
+import atexit
 
 app = Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
@@ -50,8 +51,8 @@ app.config["COMMENT_SPAM_SIMILAR_THRESHOLD"] = float(environ.get("COMMENT_SPAM_S
 app.config["COMMENT_SPAM_COUNT_THRESHOLD"] = int(environ.get("COMMENT_SPAM_COUNT_THRESHOLD", 10))
 app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", "0")))
 app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
-app.config["CACHE_TYPE"] = "filesystem"
-app.config["CACHE_DIR"] = "cache"
+app.config["CACHE_TYPE"] = "RedisCache"
+app.config["CACHE_REDIS_URL"] = environ.get("REDIS_URL", "redis://localhost")
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -115,4 +116,12 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
+if not cache.get("marseys"):
+	with open("marseys.json", 'r') as f: cache.set("marseys", loads(f.read()))
+
 from files.routes import *
+
+def close_running_threads():
+	with open('marsey_count.json', 'w') as f: dump(cache.get("marseys"), f)
+	stdout.flush()
+atexit.register(close_running_threads)
