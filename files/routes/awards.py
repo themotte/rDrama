@@ -374,8 +374,7 @@ def award_post(pid, v):
 	g.db.commit()
 	if request.referrer and len(request.referrer) > 1:
 		if request.referrer == f'{request.host_url}submit': return redirect(post.permalink)
-		elif request.referrer.startswith('/') or request.referrer.startswith(request.host_url):
-			return redirect(request.referrer)
+		elif request.host in request.referrer: return redirect(request.referrer)
 	return redirect("/")
 
 
@@ -571,10 +570,8 @@ def award_comment(cid, v):
 	g.db.add(c.author)
 
 	g.db.commit()
-	if v.id == 1: print(request.referrer)
-	if request.referrer and len(request.referrer) > 1 and (request.referrer.startswith('/') or request.referrer.startswith(request.host_url)):
+	if request.referrer and len(request.referrer) > 1 and request.host in request.referrer:
 		return redirect(request.referrer)
-	if v.id == 1: print('host: ' + request.host_url)
 	return redirect("/")
 
 @app.get("/admin/awards")
