@@ -116,7 +116,8 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
-with open("marseys.json", 'r') as f: cache.set("marseys", loads(f.read()))
+if not cache.get("marseys"):
+	with open("marseys.json", 'r') as f: cache.set("marseys", loads(f.read()))
 
 from files.routes import *
 
