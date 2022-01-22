@@ -5,9 +5,13 @@ import time
 def process_image(file=None, filename=None, resize=0):
 	
 	if not filename: filename = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-	
-	if file: i = IImage.open(file)
-	else: i = IImage.open(filename)
+
+	try:
+		if file:
+			file.save(filename)
+			i = IImage.open(file)
+		else: i = IImage.open(filename)
+	except: abort(400)
 
 	if resize:
 		size = resize, resize
@@ -26,8 +30,6 @@ def process_image(file=None, filename=None, resize=0):
 		om.save(filename, format="WEBP", save_all=True, append_images=list(frames), loop=0, method=6, allow_mixed=True)
 	elif i.format.lower() != "webp":
 		if i.format.lower() == "gif":
-			file.save(filename)
-			time.sleep(0.1)
 			gifwebp(input_image=filename, output_image=filename, option="-mixed -metadata none -f 100 -mt -m 6")
 		else: i.save(filename, format="WEBP", method=6)
 

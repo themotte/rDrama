@@ -8,7 +8,7 @@ RUN mkdir -p ./service
 
 COPY requirements.txt ./service/requirements.txt
 
-RUN cd ./service && pip3 install -r requirements.txt
+RUN cd ./service && pip3 install -r requirements.txt && mkdir /images && mkdir /songs
 
 EXPOSE 80/tcp
 
