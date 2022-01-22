@@ -160,14 +160,14 @@ def api_comment(v):
 				f.write('\n{[para]}\n' + body)
 		elif request.files.get("file"):
 			if parent_post.id == 37833:
-				try: badge_body = loads(body)
+				try: badge_body = loads(body.lower())
 				except: return {"error": "You didn't follow the format retard"}, 500
 				badge_number = str(len(listdir('files/assets/images/badges'))+1)
 				with open("badges.json", 'r') as f: badges = loads(f.read())
 				badges[badge_number] = badge_body
 			elif parent_post.id == 37838:
 				try:
-					marsey_dict = list(loads(body).items())
+					marsey_dict = list(loads(body.lower()).items())
 					marsey_key = marsey_dict[0][0]
 					marsey_body = marsey_dict[0][1]
 				except Exception as e: return {"error": "You didn't follow the format retard"}, 400
