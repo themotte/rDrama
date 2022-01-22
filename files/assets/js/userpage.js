@@ -14,6 +14,9 @@ if (u_username)
 		{
 			audio.play()
 			localStorage.setItem("playing", "1")
+			window.addEventListener("unload", function(e) {
+				localStorage.setItem("playing", "")
+			});
 		}
 		else
 		{
@@ -53,6 +56,9 @@ else
 				audio.play()
 				localStorage.setItem("paused", "")
 				localStorage.setItem("playing", "1")
+				window.addEventListener("unload", function(e) {
+					localStorage.setItem("playing", "")
+				});
 			}
 			else
 			{

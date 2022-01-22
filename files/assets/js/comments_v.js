@@ -73,8 +73,14 @@ function report_commentModal(id, author) {
 function openReplyBox(id) {
 	const element = document.getElementById(id);
 	const textarea = element.getElementsByTagName('textarea')[0]
-	const text = window.getSelection().toString()
-    if (text) textarea.value = `>${text}`
+	let text = getSelection().toString()
+    if (text)
+	{
+		text = text.replace(/\n\n/g,"\n\n>")
+		if (!text.endsWith('\n\n')) text += '\n\n'
+		text = text.replace(/\n\n>\n\n/g,"\n\n")
+		textarea.value = `>${text}`
+	}
 	element.classList.remove('d-none')
 	textarea.focus()
 }
