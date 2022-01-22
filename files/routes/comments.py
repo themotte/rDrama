@@ -159,10 +159,10 @@ def api_comment(v):
 		if parent_post.id == 37749:
 			with open(f"snappy_{SITE_NAME}.txt", "a") as f:
 				f.write('\n{[para]}\n' + body)
-		elif request.files["file"]:
+		elif request.files.get("file"):
 			if parent_post.id == 37833:
 				try: badge_body = loads(body)
-				except: return {"error": "You didn't follow the format retard"}
+				except: return {"error": "You didn't follow the format retard"}, 500
 				badge_number = str(len(listdir('files/assets/images/badges'))+1)
 				with open("badges.json", 'r') as f: badges = loads(f.read())
 				badges[badge_number] = badge_body
@@ -171,9 +171,7 @@ def api_comment(v):
 					marsey_dict = list(loads(body).items())
 					marsey_key = marsey_dict[0][0]
 					marsey_body = marsey_dict[0][1]
-				except Exception as e:
-					print(e, flush=True)
-					return {"error": "You didn't follow the format retard"}
+				except Exception as e: return {"error": "You didn't follow the format retard"}, 400
 				with open("marsey_list.json", 'r') as f: marsey_list = loads(f.read())
 				marsey_list[marsey_key] = marsey_body
 
