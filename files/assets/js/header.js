@@ -22,8 +22,6 @@ function post_toast(url, reload, data) {
 		}
 	}
 
-	xhr.withCredentials=true;
-
 	xhr.onload = function() {
 		let data
 		try {data = JSON.parse(xhr.response)}

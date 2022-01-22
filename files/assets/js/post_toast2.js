@@ -13,7 +13,6 @@ function post_toast2(url, button1, button2) {
 
 
 	form.append("formkey", formkey());
-	xhr.withCredentials=true;
 
 	xhr.onload = function() {
 		let data

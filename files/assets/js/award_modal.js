@@ -71,7 +71,6 @@ function vote(type, id, dir) {
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
-	xhr.withCredentials=true;
 	xhr.send(form);
 }
 
@@ -120,8 +119,6 @@ function buy(mb) {
 
 
 	form.append("formkey", formkey());
-	xhr.withCredentials=true;
-
 	xhr.onload = function() {
 		let data
 		try {data = JSON.parse(xhr.response)}

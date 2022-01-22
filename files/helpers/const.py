@@ -11,15 +11,10 @@ if SITE == 'pcmemes.net': CC = "SPLASH MOUNTAIN"
 else: CC = "COUNTRY CLUB"
 CC_TITLE = CC.title()
 
-with open("files/assets/js/emoji_modal.js", 'r') as f:
-	marseytext = f.read().split('emojis: ')[1].split('cops police"},')[0] + '"}}'
-	result = loads(marseytext)
-
+with open("marsey_list.json", 'r') as f: result = loads(f.read())
 marseys = {}
-
 for k, val in result.items():
 	marseys[k] = val['author']
-
 del result
 	
 AJ_REPLACEMENTS = {

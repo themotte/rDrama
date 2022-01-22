@@ -12,8 +12,6 @@ function post_toast_callback(url, data, callback) {
 	}
 
 	form.append("formkey", formkey());
-	xhr.withCredentials=true;
-
 	xhr.onload = function() {
 		let result = callback(xhr);
 		if (xhr.status >= 200 && xhr.status < 300) {
@@ -142,8 +140,6 @@ function submitFormAjax(e) {
 			form.append(k, data[k]);
 		}
 	}
-	xhr.withCredentials = true;
-
 	actionPath = form.getAttribute("action");
 
 	xhr.open("POST", actionPath, true);

@@ -4,7 +4,6 @@ function post(url) {
 	xhr.setRequestHeader('xhr', 'xhr');
 	var form = new FormData()
 	form.append("formkey", formkey());
-	xhr.withCredentials=true;
 	xhr.send(form);
 };
 
@@ -23,7 +22,6 @@ function post_toast3(url, button1, button2) {
 
 
 	form.append("formkey", formkey());
-	xhr.withCredentials=true;
 
 	xhr.onload = function() {
 		let data
@@ -60,8 +58,6 @@ function report_commentModal(id, author) {
 	var form = new FormData()
 	form.append("formkey", formkey());
 	form.append("reason", document.getElementById("reason-comment").value);
-
-	xhr.withCredentials=true;
 
 	xhr.onload=function() {
 		document.getElementById("reportCommentFormBefore").classList.add('d-none');
@@ -106,7 +102,6 @@ function delete_commentModal(id) {
 		xhr.setRequestHeader('xhr', 'xhr');
 		var form = new FormData()
 		form.append("formkey", formkey());
-		xhr.withCredentials=true;
 		xhr.onload = function() {location.reload(true);};
 		xhr.send(form);
 }
@@ -121,7 +116,6 @@ function post_reply(id){
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/reply");
 	xhr.setRequestHeader('xhr', 'xhr');
-	xhr.withCredentials=true;
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			commentForm=document.getElementById('comment-form-space-'+id);
@@ -150,7 +144,6 @@ function comment_edit(id){
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/edit_comment/"+id);
 	xhr.setRequestHeader('xhr', 'xhr');
-	xhr.withCredentials=true;
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			commentForm=document.getElementById('comment-text-'+id);
@@ -185,7 +178,6 @@ function post_comment(fullname){
 	const xhr = new XMLHttpRequest();
 	xhr.open("post", "/comment");
 	xhr.setRequestHeader('xhr', 'xhr');
-	xhr.withCredentials=true;
 	xhr.onload=function(){
 		if (xhr.status==200) {
 			commentForm=document.getElementById('comment-form-space-'+fullname);

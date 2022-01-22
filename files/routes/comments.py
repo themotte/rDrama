@@ -159,12 +159,23 @@ def api_comment(v):
 		if parent_post.id == 37749:
 			with open(f"snappy_{SITE_NAME}.txt", "a") as f:
 				f.write('\n{[para]}\n' + body)
-		elif parent_post.id == 37833 and request.files["file"]:
-			try: badge_body = loads(body)
-			except: return {"error": "You didn't follow the format, retard"}
-			badge_number = str(len(listdir('files/assets/images/badges'))+1)
-			with open("badges.json", 'r') as f: badges = loads(f.read())
-			badges[badge_number] = badge_body
+		elif request.files["file"]:
+			if parent_post.id == 37833:
+				try: badge_body = loads(body)
+				except: return {"error": "You didn't follow the format retard"}
+				badge_number = str(len(listdir('files/assets/images/badges'))+1)
+				with open("badges.json", 'r') as f: badges = loads(f.read())
+				badges[badge_number] = badge_body
+			elif parent_post.id == 57:
+				try:
+					marsey_dict = list(loads(body).items())
+					marsey_key = marsey_dict[0][0]
+					marsey_body = marsey_dict[0][1]
+				except Exception as e:
+					print(e, flush=True)
+					return {"error": "You didn't follow the format retard"}
+				with open("marsey_list.json", 'r') as f: marsey_list = loads(f.read())
+				marsey_list[marsey_key] = marsey_body
 
 	if v.marseyawarded:
 		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body))
@@ -198,6 +209,10 @@ def api_comment(v):
 					filename = f'files/assets/images/badges/{badge_number}.webp'
 					process_image(file, filename, 200)
 					with open('badges.json', 'w') as f: dump(badges, f)
+				elif parent_post.id == 57:
+					filename = f'files/assets/images/emojis/{marsey_key}.webp'
+					process_image(file, filename, 200)
+					with open('marsey_list.json', 'w') as f: dump(marsey_list, f)
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:

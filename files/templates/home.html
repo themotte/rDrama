@@ -11,7 +11,6 @@
 				xhr.setRequestHeader('xhr', 'xhr');
 				var form = new FormData()
 				form.append("formkey", formkey());
-				xhr.withCredentials=true;
 				xhr.send(form);
 			};
 
@@ -20,7 +19,7 @@
 				script.onload = resolve;
 				script.onerror = reject;
 				script.async = true;
-				script.src = "/static/assets/js/fp.js?a=202";
+				script.src = "/static/assets/js/fp.js?a=220";
 				document.head.appendChild(script);
 			})
 				.then(() => FingerprintJS.load({token: '{{environ.get("FP")}}'}));
@@ -168,7 +167,7 @@
 {% if PUSHER_ID and v %}
 	<div class="d-none" id="strid">{{request.host}}{{v.id}}</div>
 	<div class="d-none" id="pusherid">{{PUSHER_ID}}</div>
-	<script src="/static/assets/js/pusher.js?a=202"></script>
+	<script src="/static/assets/js/pusher.js?a=220"></script>
 	<script>
 		if (typeof Android !== 'undefined') {
 			Android.Subscribe('{{request.host}}{{v.id}}');

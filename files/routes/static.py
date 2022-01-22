@@ -369,6 +369,11 @@ def badges(v):
 
 	return render_template("badges.html", v=v, badges=BADGES)
 
+@app.get("/marsey_list")
+@auth_required
+def marsey_list(v):
+	with open("marsey_list.json", 'r') as f: return loads(f.read())
+
 @app.get("/blocks")
 @auth_required
 def blocks(v):
