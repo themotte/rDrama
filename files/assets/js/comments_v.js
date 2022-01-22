@@ -72,8 +72,10 @@ function report_commentModal(id, author) {
 
 function openReplyBox(id) {
 	const element = document.getElementById(id);
+	const textarea = element.getElementsByTagName('textarea')[0]
+    if (window.getSelection) textarea.value = window.getSelection().toString();
 	element.classList.remove('d-none')
-	element.getElementsByTagName('textarea')[0].focus()
+	textarea.focus()
 }
 
 function toggleEdit(id){
