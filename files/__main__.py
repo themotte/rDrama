@@ -94,8 +94,14 @@ def before_request():
 
 	g.timestamp = int(time.time())
 
-	if '; wv) ' in request.headers.get("User-Agent",""): g.webview = True
+	ua = request.headers.get("User-Agent","").lower()
+
+	if '; wv) ' in ua: g.webview = True
 	else: g.webview = False
+
+	if 'iphone' in ua or 'ipad' in ua or 'ipod' in ua or 'mac os' in ua or ' firefox/': g.seal = True
+	else: g.seal = False
+	 
 
 @app.teardown_appcontext
 def teardown_request(error):

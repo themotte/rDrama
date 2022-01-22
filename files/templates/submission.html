@@ -21,57 +21,136 @@
 	</script>
 {% endif %}
 
-{% if p.award_count("wholesome") %}
-	<style>
-		.seal {
-			position:fixed;
-			z-index:9999;
-			pointer-events: none;
-			width: 100% !important;
-			height: 100% !important;
-		}
-		.sealimg {
-			width: 100px;
-			height: 89.5px;
-		}
-		@media (max-width: 992px) {
+
+
+{% if g.seal %}
+	{% if p.award_count("wholesome") %}
+		<style>
 			.sealimg {
-				width: 30px;
-				height: 27px;
+				width: 100px;
+				height: 89.5px;
 			}
-		}
-	</style>
-	<div class="seal" height="100%" width="100%">
-		<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%" width="100%">
-			<marquee direction="right" scrollamount=10 behavior="alternate" height="100%" width="100%">
+			@media (max-width: 992px) {
+				.sealimg {
+					width: 30px;
+					height: 27px;
+				}
+			}
+			
+			.seal {
+				position:fixed;
+				z-index:9999;
+				pointer-events: none;
+				width: 100% !important;
+				height: 100% !important;
+			}
+			
+			@keyframes moveX {
+				from { left: 0; } to { left: 98%; }
+			}
+
+			@keyframes moveY {
+				from { top: 0; } to { top: 98%; }    
+			}
+
+			.seal1 {
+				animation: moveX 4s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
+				animation-delay:0s;
+			}
+		</style>
+		<div class="seal seal1" height="100%" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</div>
+	{% endif %}
+
+	{% if p.award_count("wholesome") > 1 %}
+		<style>
+			.seal2 {
+				animation: moveX 5s linear 0s infinite alternate, moveY 8s linear 0s infinite alternate !important;
+				animation-delay:1s;
+			}
+		</style>
+		<div class="seal seal2" height="100%" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</div>
+	{% endif %}
+
+	{% if p.award_count("wholesome") > 2 %}
+		<style>
+			.seal3 {
+				animation: moveX 4s linear 0s infinite alternate, moveY 5s linear 0s infinite alternate !important;
+				animation-delay:2s;
+			}
+		</style>
+		<div class="seal seal3" height="100%" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</div>
+	{% endif %}
+
+	{% if p.award_count("wholesome") > 3 %}
+		<style>
+			.seal4 {
+				animation: moveX 5s linear 0s infinite alternate, moveY 6.8s linear 0s infinite alternate !important;
+				animation-delay:3s;
+			}
+		</style>
+		<div class="seal seal4" height="100%" width="100%">
+			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+		</div>
+	{% endif %}
+{% else %}
+	{% if p.award_count("wholesome") %}
+		<style>
+			.seal {
+				position:fixed;
+				z-index:9999;
+				pointer-events: none;
+				width: 100% !important;
+				height: 100% !important;
+			}
+			.sealimg {
+				width: 100px;
+				height: 89.5px;
+			}
+			@media (max-width: 992px) {
+				.sealimg {
+					width: 30px;
+					height: 27px;
+				}
+			}
+		</style>
+		<div class="seal" height="100%" width="100%">
+			<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%" width="100%">
+				<marquee direction="right" scrollamount=10 behavior="alternate" height="100%" width="100%">
+					<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+				</marquee>
+			</marquee>
+		</div>
+	{% endif %}
+
+	{% if p.award_count("wholesome") > 1 %}
+		<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+			<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
 				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
 			</marquee>
 		</marquee>
-	</div>
-{% endif %}
+	{% endif %}
 
-{% if p.award_count("wholesome") > 1 %}
-	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
-		<marquee direction="right" scrollamount=10 behavior="alternate" width="100%">
-			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+	{% if p.award_count("wholesome") > 2 %}
+		<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
+			<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+			</marquee>
 		</marquee>
-	</marquee>
-{% endif %}
+	{% endif %}
 
-{% if p.award_count("wholesome") > 2 %}
-	<marquee class="seal" scrollamount=10 behavior="alternate" direction="up" height="100%">
-		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+	{% if p.award_count("wholesome") > 3 %}
+		<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
+			<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
+				<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
+			</marquee>
 		</marquee>
-	</marquee>
-{% endif %}
-
-{% if p.award_count("wholesome") > 3 %}
-	<marquee class="seal" scrollamount=10 behavior="alternate" direction="down" height="100%">
-		<marquee direction="left" scrollamount=10 behavior="alternate" width="100%">
-			<img alt=":#marseywholesome:" class="sealimg" src="/static/assets/images/emojis/marseywholesome.webp?a=3">
-		</marquee>
-	</marquee>
+	{% endif %}
 {% endif %}
 
 {% if p.award_count("train") %}
