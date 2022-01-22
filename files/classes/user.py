@@ -231,7 +231,7 @@ class User(Base):
 		posts = g.db.query(Submission.id).filter_by(author_id=self.id, is_pinned=False)
 
 		if not (v and (v.admin_level > 1 or v.id == self.id)):
-			posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False, ghosts=None)
+			posts = posts.filter_by(deleted_utc=0, is_banned=False, private=False, ghost=None)
 
 		now = int(time.time())
 		if t == 'hour':

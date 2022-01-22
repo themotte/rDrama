@@ -814,7 +814,7 @@ def u_username_comments(username, v=None):
 	comments = g.db.query(Comment.id).filter(Comment.author_id == u.id, Comment.parent_submission != None)
 
 	if not v or (v.id != u.id and v.admin_level == 0):
-		comments = comments.filter(Comment.deleted_utc == 0, Comment.is_banned == False, Comment.ghosts == None)
+		comments = comments.filter(Comment.deleted_utc == 0, Comment.is_banned == False, Comment.ghost == None)
 
 	now = int(time.time())
 	if t == 'hour':
