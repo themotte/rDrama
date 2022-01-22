@@ -482,7 +482,7 @@ def api_comment(v):
 
 
 
-	if not v.shadowbanned:
+	if not v.shadowbanned and parent_post.id not in (37696,37697,37749,37833,37838):
 		notify_users = NOTIFY_USERS(body_html, v)
 		
 		for x in g.db.query(Subscription.user_id).filter_by(submission_id=c.parent_submission).all(): notify_users.add(x[0])
