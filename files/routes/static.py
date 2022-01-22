@@ -73,6 +73,8 @@ def participation_stats(v):
 			"post_voting_users": g.db.query(Vote.user_id).distinct().count(),
 			"comment_votes": g.db.query(CommentVote.id).count(),
 			"comment_voting_users": g.db.query(CommentVote.user_id).distinct().count(),
+			"total_upvotes": g.db.query(Vote.id).filter_by(vote_type=1).count() + g.db.query(CommentVote.id).filter_by(vote_type=1).count(),
+			"total_downvotes": g.db.query(Vote.id).filter_by(vote_type=-1).count() + g.db.query(CommentVote.id).filter_by(vote_type=-1).count(),
 			"total_awards": g.db.query(AwardRelationship.id).count(),
 			"awards_given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
 			}
