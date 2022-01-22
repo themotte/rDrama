@@ -45,7 +45,7 @@ def toggle_club(pid, v):
 @auth_required
 def publish(pid, v):
 	post = get_post(pid)
-	if not post.author_id == v.id: abort(403)
+	if post.author_id != v.id: abort(403)
 	post.private = False
 	post.created_utc = int(time.time())
 	g.db.add(post)
@@ -437,7 +437,8 @@ def edit_post(pid, v):
 					parent_submission=p.id,
 					level=1,
 					body_html=filter_emojis_only(i.group(1)),
-					upvotes=0
+					upvotes=0,
+					is_bot=True
 					)
 				g.db.add(c)
 
@@ -906,7 +907,8 @@ def submit_post(v):
 				parent_submission=new_post.id,
 				level=1,
 				body_html=filter_emojis_only(option),
-				upvotes=0
+				upvotes=0,
+				is_bot=True
 				)
 
 			g.db.add(bet_option)
@@ -916,7 +918,8 @@ def submit_post(v):
 			parent_submission=new_post.id,
 			level=1,
 			body_html=filter_emojis_only(option),
-			upvotes=0
+			upvotes=0,
+			is_bot=True
 			)
 
 		g.db.add(c)
@@ -1098,7 +1101,7 @@ def submit_post(v):
 def delete_post_pid(pid, v):
 
 	post = get_post(pid)
-	if not post.author_id == v.id:
+	if post.author_id != v.id:
 		abort(403)
 
 	post.deleted_utc = int(time.time())
@@ -1118,7 +1121,7 @@ def delete_post_pid(pid, v):
 @auth_required
 def undelete_post_pid(pid, v):
 	post = get_post(pid)
-	if not post.author_id == v.id: abort(403)
+	if post.author_id != v.id: abort(403)
 	post.deleted_utc =0
 	g.db.add(post)
 
@@ -1134,7 +1137,7 @@ def undelete_post_pid(pid, v):
 def toggle_comment_nsfw(cid, v):
 
 	comment = g.db.query(Comment).filter_by(id=cid).one_or_none()
-	if not comment.author_id == v.id and not v.admin_level > 1: abort(403)
+	if comment.author_id != v.id and not v.admin_level > 1: abort(403)
 	comment.over_18 = not comment.over_18
 	g.db.add(comment)
 
@@ -1149,7 +1152,7 @@ def toggle_post_nsfw(pid, v):
 
 	post = get_post(pid)
 
-	if not post.author_id == v.id and not v.admin_level > 1:
+	if post.author_id != v.id and not v.admin_level > 1:
 		abort(403)
 
 	post.over_18 = not post.over_18

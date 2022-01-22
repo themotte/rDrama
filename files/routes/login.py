@@ -441,7 +441,7 @@ def post_reset(v):
 	if not user:
 		abort(404)
 
-	if not password == confirm_password:
+	if password != confirm_password:
 		return render_template("reset_password.html",
 							   v=user,
 							   token=token,

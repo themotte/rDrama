@@ -271,7 +271,7 @@ def api_comment(v):
 				parent_comment_id=parent_comment_id,
 				top_comment_id=top_comment_id,
 				level=level,
-				over_18=parent_post.over_18 or request.values.get("over_18","")=="true",
+				over_18=parent_post.over_18 or request.values.get("over_18")=="true",
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
 				body_html=body_html,
@@ -288,7 +288,8 @@ def api_comment(v):
 			parent_comment_id=c.id,
 			level=level+1,
 			body_html=filter_emojis_only(option),
-			upvotes=0
+			upvotes=0,
+			is_bot=True
 			)
 
 		g.db.add(c_option)
@@ -550,7 +551,7 @@ def edit_comment(cid, v):
 
 	c = get_comment(cid, v=v)
 
-	if not c.author_id == v.id: abort(403)
+	if c.author_id != v.id: abort(403)
 
 	body = request.values.get("body", "").strip()[:10000]
 
@@ -577,7 +578,8 @@ def edit_comment(cid, v):
 					parent_comment_id=c.id,
 					level=c.level+1,
 					body_html=filter_emojis_only(i.group(1)),
-					upvotes=0
+					upvotes=0,
+					is_bot=True
 					)
 				g.db.add(c_option)
 
@@ -718,7 +720,7 @@ def delete_comment(cid, v):
 
 	if not c: abort(404)
 
-	if not c.author_id == v.id: abort(403)
+	if c.author_id != v.id: abort(403)
 
 	c.deleted_utc = int(time.time())
 
@@ -740,7 +742,7 @@ def undelete_comment(cid, v):
 	if not c:
 		abort(404)
 
-	if not c.author_id == v.id:
+	if c.author_id != v.id:
 		abort(403)
 
 	c.deleted_utc = 0

@@ -287,7 +287,7 @@
 
 
 
-								{% if not v.id==p.author_id %}
+								{% if v.id != p.author_id and p.author_name != '👻' %}
 									<a id="unblock-{{p.id}}" class="text-success list-inline-item {% if not p.is_blocking %} d-none{% endif %}" role="button" onclick="post_toast2('/settings/unblock?username={{p.author_name}}','block-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye text-success"></i>Unblock user</a>
 
 									<a id="prompt-{{p.id}}" class="dropdown-item text-danger blockuser list-inline-item d-none" role="button" onclick="post_toast2('/settings/block?username={{p.author_name}}','prompt-{{p.id}}','unblock-{{p.id}}')"><i class="fas fa-eye-slash text-danger"></i>Are you sure?</a>
@@ -444,7 +444,7 @@
 
 							<button id="mark3-{{p.id}}" class="{% if p.over_18 %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-danger" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark3-{{p.id}}','unmark3-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-eye-evil text-center mr-3"></i>Mark +18</button>
 							<button id="unmark3-{{p.id}}" class="{% if not p.over_18 %}d-none{% endif %} nobackground btn btn-link btn-block btn-lg text-left text-success" onclick="post_toast2('/toggle_post_nsfw/{{p.id}}','mark3-{{p.id}}','unmark3-{{p.id}}')" data-bs-dismiss="modal"><i class="far fa-eye-evil text-center mr-3"></i>Unmark +18</button>
-						{% else %}
+						{% elif p.author_name != '👻' %}
 							<button id="unblock2-{{p.id}}" class="nobackground btn btn-link btn-block btn-lg text-success text-left{% if not p.is_blocking %} d-none{% endif %}" data-bs-dismiss="modal" onclick="post_toast2('/settings/unblock?username={{p.author_name}}','block2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye mr-3"></i>Unblock user</button>
 							<button id="prompt2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-danger text-left d-none" data-bs-dismiss="modal" onclick="post_toast2('/settings/block?username={{p.author_name}}','prompt2-{{p.id}}','unblock2-{{p.id}}')"><i class="fas fa-eye-slash mr-3"></i>Are you sure?</button>
 							<button id="block2-{{p.id}}" class="blockuser nobackground btn btn-link btn-block btn-lg text-danger text-left{% if p.is_blocking %} d-none{% endif %}" onclick="document.getElementById('block2-{{p.id}}').classList.toggle('d-none');document.getElementById('prompt2-{{p.id}}').classList.toggle('d-none');"><i class="fas fa-eye-slash mr-3"></i>Block user</button>
