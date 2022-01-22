@@ -218,7 +218,7 @@
 			
 			{% if SITE_NAME == 'Drama' %}
 				{% set path = "assets/images/" + SITE_NAME + "/banners" %}
-				{% set image = "/static/" + path + "/" + listdir('files/' + path)|random() %}
+				{% set image = "/static/" + path + "/" + listdir('files/' + path)|random() + '?a=20' %}
 
 				<a href="https://secure.transequality.org/site/Donation2?df_id=1480">
 					<img alt="site banner" src="{{image}}" width="100%">
