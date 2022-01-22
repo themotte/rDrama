@@ -11,3 +11,5 @@ venv/
 .vscode/
 .sass-cache/
 flask_session/
+marsey_count.json
+.DS_Store
