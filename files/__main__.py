@@ -99,7 +99,7 @@ def before_request():
 	if '; wv) ' in ua: g.webview = True
 	else: g.webview = False
 
-	if 'iphone' in ua or 'ipad' in ua or 'ipod' in ua or 'mac os' in ua or ' firefox/': g.seal = True
+	if 'iphone' in ua or 'ipad' in ua or 'ipod' in ua or 'mac os' in ua or ' firefox/' in ua: g.seal = True
 	else: g.seal = False
 	 
 
