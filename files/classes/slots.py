@@ -44,7 +44,7 @@ class Slots:
                             result = self.pull_the_arm(from_user, wagerValue, from_comment)
                             return { 'pulled': True, 'result': result }
 
-                    except exception as e: break
+                    except: break
         return { 'pulled': False, 'result': '' }
 
     # Ensure user is capable of the wager
