@@ -22,7 +22,7 @@ def admin_vote_info_get(v):
 		else: abort(400)
 	except: abort(400)
 
-	if thing.author_name == '👻': abort(403)
+	if thing.ghost: abort(403)
 
 	if isinstance(thing, Submission):
 		if thing.author.shadowbanned and not (v and v.admin_level):

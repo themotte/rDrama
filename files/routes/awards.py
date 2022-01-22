@@ -268,6 +268,9 @@ def award_post(pid, v):
 		else: post.stickied_utc = t
 		g.db.add(post)
 	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
+		if author.marseyawarded:
+			return {"error": "This user is the under the effect of a conflicting award: Marsey award."}, 404
+
 		if author.username == "911roofer": abort(403)
 		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400
 		else: author.agendaposter_expires_utc = int(time.time()) + 86400
@@ -366,6 +369,12 @@ def award_post(pid, v):
 			badge = Badge(user_id=v.id, badge_id=103)
 			g.db.add(badge)
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+	elif kind == "ghosts":
+		post.ghost = True
+		g.db.add(post)
+		for c in post.comments:
+			c.ghost = True
+			g.db.add(c)
 
 	if post.author.received_award_count: post.author.received_award_count += 1
 	else: post.author.received_award_count = 1
@@ -466,6 +475,9 @@ def award_comment(cid, v):
 		else: c.is_pinned_utc = t
 		g.db.add(c)
 	elif kind == "agendaposter" and not (author.agendaposter and author.agendaposter_expires_utc == 0):
+		if author.marseyawarded:
+			return {"error": "This user is the under the effect of a conflicting award: Marsey award."}, 404
+
 		if author.username == "911roofer": abort(403)
 		if author.agendaposter_expires_utc and time.time() < author.agendaposter_expires_utc: author.agendaposter_expires_utc += 86400
 		else: author.agendaposter_expires_utc = int(time.time()) + 86400
@@ -564,6 +576,9 @@ def award_comment(cid, v):
 			badge = Badge(user_id=v.id, badge_id=103)
 			g.db.add(badge)
 			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+	elif kind == "ghosts":
+		c.ghost = True
+		g.db.add(c)
 
 	if c.author.received_award_count: c.author.received_award_count += 1
 	else: c.author.received_award_count = 1

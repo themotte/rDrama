@@ -178,9 +178,9 @@
 	{% set isreply = False %}
 {% endif %}
 
-<div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) and request.path != '/admin/removed/comments' or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% elif not c.unread %}border-left: 2px solid {% if c.author_name == '👻' %}var(--primary){% else %}#{{c.author.namecolor}};{% endif %}{% endif %} {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
+<div id="comment-{{c.id}}" class="anchor {% if c.unread %}unread{% endif %} comment {% if standalone and level==1 %} mt-0{% endif %}{% if c.collapse_for_user(v) and request.path != '/admin/removed/comments' or (standalone and c.over_18 and not (v and v.over_18)) %} collapsed{% endif %}" style="{% if isreply %}padding-left:0!important;{% elif not c.unread %}border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}};{% endif %}{% endif %} {% if c.unread %}padding: 10px 10px 10px !important;{% endif %}">
 	{% if not isreply %}
-		<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid {% if c.author_name == '👻' %}var(--primary){% else %}#{{c.author.namecolor}}{% endif %}"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
+		<span class="comment-collapse-desktop d-none d-md-block" {% if not c.unread %}style="border-left: 2px solid {% if c.ghost %}var(--primary){% else %}#{{c.author.namecolor}}{% endif %}"{% endif %} onclick="collapse_comment('{{c.id}}')"></span>
 	{% endif %}
 	<div class="comment-body">
 
@@ -207,15 +207,15 @@
 					<i id='pinned-{{c.id}}'class="fas fa-thumbtack fa-rotate--45 text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Pinned by @{{c.is_pinned}}" {% if c.is_pinned_utc %}onmouseover="pinned_timestamp('pinned-{{c.id}}')" data-timestamp={{c.is_pinned_utc}} {% endif %}></i>
 				{% endif %}
 				{% if c.distinguish_level %}<i class="fas fa-broom text-admin" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{SITE_NAME}} Admin, speaking officially"></i>{% endif %}
-				{% if c.is_op and c.author_name != '👻' %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="OP"></i>{% endif %}
+				{% if c.is_op and not c.ghost %}<i class="fas fa-microphone-stand text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="OP"></i>{% endif %}
 				{% if c.is_bot %}<i class="fad fa-robot text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Bot"></i>{% endif %}
 				{% if c.is_blocking %}<i class="fas fa-user-minus text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="You're blocking this user, but you can see this comment because you're an admin"></i>{% endif %}
 				{% if c.is_blocked %}<i class="fas fa-user-minus text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="This user is blocking you."></i>{% endif %}
 
-				{% if c.author.verified and c.author_name != '👻' %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{c.author.verified}}"></i>
+				{% if c.author.verified and not c.ghost %}<i class="fas fa-badge-check align-middle ml-1" style="color:{% if c.author.verifiedcolor %}#{{c.author.verifiedcolor}}{% else %}#1DA1F2{% endif %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{c.author.verified}}"></i>
 				{% endif %}
 
-				{% if c.author_name == '👻' %}
+				{% if c.ghost %}
 					👻
 				{% else %}
 					<a class="user-name text-decoration-none" onclick='popclick({{c.author.json_popover(v) | tojson}})' data-bs-placement="bottom" data-bs-toggle="popover" data-bs-trigger="focus" data-content-id="popover" role="button" tabindex="0" style="color:#{{c.author.namecolor}}; font-size:12px; font-weight:bold;"><img alt="@{{c.author_name}}'s profile picture" loading="lazy" src="{{c.author.profile_url}}" class="profile-pic-25 mr-2"><span {% if c.author.patron and not c.distinguish_level %}class="patron" style="background-color:#{{c.author.namecolor}};"{% elif c.distinguish_level and request.host == 'rdrama.net' %}class="mod"{% endif %}>{{c.author_name}}</span></a>
@@ -251,7 +251,7 @@
 			<div id="comment-text-{{c.id}}" class="comment-text mb-0 {% if c.author.agendaposter %}agendaposter{% endif %}" >
 				{{c.realbody(v) | safe}}
 
-				{% if c.author.sig_html and c.author_name != '👻' and (c.author_id == MOOSE_ID or not (v and v.sigs_disabled)) %}
+				{% if c.author.sig_html and not c.ghost and (c.author_id == MOOSE_ID or not (v and v.sigs_disabled)) %}
 					<hr>
 					{{c.author.sig_html | safe}}
 				{% endif %}
@@ -397,7 +397,7 @@
 						
 						{% endif %}
 						
-						{% if c.author_name != '👻' %}<a href="/votes?link={{c.fullname}}" class="btn caction nobackground px-1 text-muted"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
+						{% if not c.ghost %}<a href="/votes?link={{c.fullname}}" class="btn caction nobackground px-1 text-muted"><i class="fas fa-arrows-v"></i>Votes</a>{% endif %}
 						
 						{% if v %}
 							<button class="btn caction py-0 nobackground px-1 text-muted" role="button" data-bs-toggle="modal" data-bs-target="#awardModal" onclick="awardModal('/comment/{{c.id}}/awards')"><i class="fas fa-gift" aria-hidden="true"></i>Give Award</button>
@@ -436,7 +436,7 @@
 							<button id="distinguish-{{c.id}}" class="btn caction py-0 nobackground px-1 d-none {% if not c.distinguish_level %}d-md-inline-block{% endif %} text-info" onclick="post_toast3('/distinguish_comment/{{c.id}}','distinguish-{{c.id}}','undistinguish-{{c.id}}','yes')"><i class="fas fa-id-badge text-info fa-fw"></i>Distinguish</button>
 						{% endif %}
 						
-						{% if v and v.id != c.author_id and c.author_name != '👻' %}
+						{% if v and v.id != c.author_id and not c.ghost %}
 							<button id="unblock-{{c.id}}" class="nobackground text-success {% if c.is_blocking %}d-md-inline-block{% endif %} d-none" onclick="post_toast3('/settings/unblock?username={{c.author_name}}','block-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash fa-fw text-success"></i>Unblock user</button>
 							
 							<button id="prompt-{{c.id}}" class="blockuser d-none text-danger nobackground" onclick="post_toast3('/settings/block?username={{c.author_name}}','prompt-{{c.id}}','unblock-{{c.id}}')"><i class="fas fa-eye-slash fa-fw text-danger"></i>Are you sure?</button>
@@ -579,7 +579,7 @@
 			<div class="modal-body">
 				<ul class="list-group comment-actions">
 
-					{% if c.author_name != '👻' %}<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v"></i>Votes</li></a>{% endif %}
+					{% if not c.ghost %}<a href="/votes?link={{c.fullname}}"><li class="list-group-item"><i class="fas fa-arrows-v"></i>Votes</li></a>{% endif %}
 
 					<a role="button" role="button" class="list-group-item copy-link" data-bs-dismiss="modal" data-clipboard-text="{% if request.host == 'rdrama.net' %}https://rdrama.com{{c.permalink}}{% else %}{{c.permalink | full_link}}{% endif %}"><i class="fas fa-copy"></i>Copy link</a>
 
@@ -616,7 +616,7 @@
 								<a id="hide-{{c.id}}" role="button" data-bs-dismiss="modal" onclick="expandMarkdown('{{c.id}}')" class="list-group-item d-none"><i class="fas text-expand-icon-{{c.id}} fa-compress-alt"></i>Hide source</a>
 							{% endif %}
 
-							{% if c.author_name != '👻' %}
+							{% if not c.ghost %}
 								<a id="unblock2-{{c.id}}" data-bs-dismiss="modal" class="text-success list-group-item {% if not c.is_blocking %}d-none{% endif %}" role="button" onclick="post_toast2('/settings/unblock?username={{c.author_name}}','block2-{{c.id}}','unblock2-{{c.id}}')" data-bs-dismiss="modal"><i class="fas fa-eye-slash text-success"></i>Unblock user</a>
 								<a id="prompt2-{{c.id}}" data-bs-dismiss="modal" class="blockuser list-group-item d-none text-danger" role="button" onclick="post_toast2('/settings/block?username={{c.author_name}}','prompt2-{{c.id}}','unblock2-{{c.id}}')"><i class="fas fa-eye-slash fa-fw text-danger"></i>Are you sure?</a>
 								<a id="block2-{{c.id}}" class="{% if c.is_blocking %}d-none{% endif %} list-group-item text-danger" role="button" onclick="document.getElementById('block2-{{c.id}}').classList.toggle('d-none');document.getElementById('prompt2-{{c.id}}').classList.toggle('d-none');"><i class="fas fa-eye-slash fa-fw text-danger"></i>Block user</a>
@@ -888,7 +888,7 @@
 		redhtml = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Unread"></i>'
 		if (lastCount)
 		{
-			{% for c in p.comments %}
+			{% for c in p.comments2 %}
 				{% if not (v and v.id==c[0]) %}
 					if ({{c[1]*1000}} > lastCount.t) document.getElementById("reddot-{{c[2]}}").innerHTML = redhtml
 				{% endif %}
