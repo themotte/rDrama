@@ -1004,8 +1004,10 @@ def submit_post(v):
 		else: body = "wow, a good lawlzpost for once!"
 	elif path.exists(f'snappy_{SITE_NAME}.txt'):
 		with open(f'snappy_{SITE_NAME}.txt', "r") as f:
-			if request.host == 'pcmemes.net': snappyquotes = f.read().split("{[para]}")
-			else: snappyquotes = f.read().split("{[para]}") + [f':#{x}:' for x in marseys]
+			snappyquotes = f.read().split("{[para]}")
+			if request.host != 'pcmemes.net': 
+				with open("marseys.json", 'r') as f: marseys = loads(f.read()).keys()
+				snappyquotes += [f':#{x}:' for x in marseys]
 		body = random.choice(snappyquotes)
 	body += "\n\n"
 

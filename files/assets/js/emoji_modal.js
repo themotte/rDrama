@@ -1,14 +1,14 @@
-let marsey_list, EMOJIS_STRINGS;
+let marseys, EMOJIS_STRINGS;
 const xhr = new XMLHttpRequest();
 xhr.open("GET", '/marsey_list', true);
 xhr.setRequestHeader('xhr', 'xhr');
 var form = new FormData()
 xhr.onload = function() {
-	marsey_list = JSON.parse(xhr.response)
+	marseys = JSON.parse(xhr.response)
 	EMOJIS_STRINGS = [
 		{
 			type:'marsey',
-			emojis: marsey_list
+			emojis: marseys
 		},
 		{
 			type:'platy',

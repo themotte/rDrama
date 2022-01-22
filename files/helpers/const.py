@@ -10,12 +10,6 @@ else: SITE_FULL = 'https://' + SITE
 if SITE == 'pcmemes.net': CC = "SPLASH MOUNTAIN"
 else: CC = "COUNTRY CLUB"
 CC_TITLE = CC.title()
-
-with open("marsey_list.json", 'r') as f: result = loads(f.read())
-marseys = {}
-for k, val in result.items():
-	marseys[k] = val['author']
-del result
 	
 AJ_REPLACEMENTS = {
 	' your ': " you're ",

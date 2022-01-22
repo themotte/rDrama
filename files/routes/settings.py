@@ -718,14 +718,14 @@ def settings_css(v):
 @auth_required
 def settings_profilecss_get(v):
 
-	if v.truecoins < 1000 and not v.patron and v.admin_level == 0 : return f"You must have +1000 truescore or be a paypig to set profile css."
+	if not v.patron : return f"You must be a paypig to set profile css."
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/profilecss")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profilecss(v):
-	if v.truecoins < 1000 and not v.patron: return f"You must have +1000 truescore or be a paypig to set profile css."
+	if not v.patron: return f"You must be a paypig to set profile css."
 	profilecss = request.values.get("profilecss").strip().replace('\\', '').strip()[:4000]
 	v.profilecss = profilecss
 	g.db.add(v)

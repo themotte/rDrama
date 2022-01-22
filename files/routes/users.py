@@ -31,9 +31,10 @@ def leaderboard_thread():
 
 	if SITE_NAME == 'Drama':
 		users13 = {}
-		for k, val in marseys.items():
-			if val in users13: users13[val] += 1
-			else: users13[val] = 1
+		with open("marseys.json", 'r') as f: authors = (x for x in loads(f.read()).values())
+		for x in authors:
+			if x["author"] in users13: users13[x["author"]] += 1
+			else: users13[x["author"]] = 1
 
 		users13.pop('unknown','anton-d')
 		users132 = db.query(User).filter(func.lower(User.username).in_(users13.keys())).all()

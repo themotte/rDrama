@@ -170,9 +170,10 @@ def api_comment(v):
 					marsey_dict = list(loads(body.lower()).items())
 					marsey_key = marsey_dict[0][0]
 					marsey_body = marsey_dict[0][1]
-				except Exception as e: return {"error": "You didn't follow the format retard"}, 400
-				with open("marsey_list.json", 'r') as f: marsey_list = loads(f.read())
-				marsey_list[marsey_key] = marsey_body
+					marseys_body["count"] = 0
+				except: return {"error": "You didn't follow the format retard"}, 400
+				with open("marseys.json", 'r') as f: marseys = loads(f.read())
+				marseys[marsey_key] = marsey_body
 
 	if v.marseyawarded:
 		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body))
@@ -209,7 +210,7 @@ def api_comment(v):
 				elif parent_post.id == 37838:
 					filename = f'files/assets/images/emojis/{marsey_key}.webp'
 					process_image(file, filename, 200)
-					with open('marsey_list.json', 'w') as f: dump(marsey_list, f)
+					with open('marseys.json', 'w') as f: dump(marseys, f)
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
