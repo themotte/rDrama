@@ -10,6 +10,7 @@ from flask import *
 from files.__main__ import app, limiter
 from files.helpers.sanitize import filter_emojis_only
 import requests
+from json import loads
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
@@ -153,10 +154,17 @@ def api_comment(v):
 	else: abort(400)
 
 	body = request.values.get("body", "").strip()[:10000]
-
-	if v.admin_level == 3 and parent_post.id == 37749:
-		with open(f"snappy_{SITE_NAME}.txt", "a") as f:
-			f.write('\n{[para]}\n' + body)
+	
+	if v.admin_level == 3:
+		if parent_post.id == 37749:
+			with open(f"snappy_{SITE_NAME}.txt", "a") as f:
+				f.write('\n{[para]}\n' + body)
+		elif parent_post.id == 56 and request.files["file"]:
+			try: badge_body = loads(body)
+			except: return {"error": "You didn't follow the format, retard"}
+			badge_number = str(len(listdir('files/assets/images/badges'))+1)
+			with open("badges.json", 'r') as f: badges = loads(f.read())
+			badges[badge_number] = badge_body
 
 	if v.marseyawarded:
 		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body))
@@ -186,6 +194,10 @@ def api_comment(v):
 				elif parent_post.id == 37697:
 					filename = 'files/assets/images/Drama/banners/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
 					process_image(file, filename)
+				elif parent_post.id == 56:
+					filename = f'files/assets/images/badges/{badge_number}.webp'
+					process_image(file, filename, 200)
+					with open('badges.json', 'w') as f: dump(badges, f)
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:

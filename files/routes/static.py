@@ -17,8 +17,8 @@ def privacy(v):
 @app.get("/marseys")
 @auth_required
 def emojis(v):
-	with open("marsey_count.json", 'r') as file:
-		marsey_count = loads(file.read())
+	with open("marsey_count.json", 'r') as f:
+		marsey_count = loads(f.read())
 	marsey_counted = []
 	for k, val in marseys.items():
 		marsey_counted.append((k, val, marsey_count[k]))

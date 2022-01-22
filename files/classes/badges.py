@@ -5,6 +5,7 @@ from os import environ
 from files.helpers.lazy import lazy
 from files.helpers.const import *
 from datetime import datetime
+from json import loads
 
 class Badge(Base):
 
@@ -24,31 +25,32 @@ class Badge(Base):
 	@property
 	@lazy
 	def badge(self):
-		return BADGES[self.badge_id]
+		with open("badges.json", 'r') as f:
+			return loads(f.read())[str(self.badge_id)]
 
 	@property
 	@lazy
 	def text(self):
 		if self.name == "Agendaposter":
 			ti = self.user.agendaposter_expires_utc
-			if ti: text = self.badge['description'] + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
-			else: text = self.badge['description'] + " permanently"
+			if ti: text = self.badge["description"] + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
+			else: text = self.badge["description"] + " permanently"
 		elif self.badge_id in (94,95,96,97,98):
 			if self.badge_id == 94: ti = self.user.progressivestack
 			elif self.badge_id == 95: ti = self.user.bird
 			elif self.badge_id == 96: ti = self.user.flairchanged
 			elif self.badge_id == 97: ti = self.user.longpost
 			else: ti = self.user.marseyawarded
-			text = self.badge['description'] + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
+			text = self.badge["description"] + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
 		elif self.description: text = self.description
-		elif self.badge['description']: text = self.badge['description']
+		elif self.badge["description"]: text = self.badge["description"]
 		else: return ''
 		return f' - {text}'
 
 	@property
 	@lazy
 	def name(self):
-		return self.badge['name']
+		return self.badge["name"]
 
 	@property
 	@lazy
