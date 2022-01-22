@@ -73,7 +73,8 @@ function report_commentModal(id, author) {
 function openReplyBox(id) {
 	const element = document.getElementById(id);
 	const textarea = element.getElementsByTagName('textarea')[0]
-    if (window.getSelection) textarea.value = '>' + window.getSelection().toString()
+	const text = window.getSelection().toString()
+    if (text) textarea.value = `>${text}`
 	element.classList.remove('d-none')
 	textarea.focus()
 }
