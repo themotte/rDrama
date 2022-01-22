@@ -77,8 +77,8 @@ function openReplyBox(id) {
     if (text)
 	{
 		textarea.value = '>' + text
-		if (!textarea.value.endsWith('\n\n')) textarea.value += '\n\n'
 		textarea.value = textarea.value.replace(/\n\n/g,"\n\n>")
+		if (!textarea.value.endsWith('\n\n')) textarea.value += '\n\n'
 	}
 	element.classList.remove('d-none')
 	textarea.focus()
