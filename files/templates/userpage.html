@@ -686,9 +686,9 @@
 
 {% if u.song%}
 	{% if v and v.id == u.id %}
-		<div id="vid" class="d-none">{{v.id}}</div>
+		<div id="v_username" class="d-none">{{v.username}}</div>
 	{% else %}
-		<div id="uid" class="d-none">{{u.id}}</div>
+		<div id="u_username" class="d-none">{{u.username}}</div>
 	{% endif %}
 {% endif %}
 
@@ -698,7 +698,7 @@
 <div id="username" class="d-none">{{u.username}}</div>
 {% endif %}
 
-<script src="/static/assets/js/userpage.js?a=208"></script>
+<script src="/static/assets/js/userpage.js?a=209"></script>
 
 {% endblock %}
 

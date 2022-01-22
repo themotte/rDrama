@@ -397,14 +397,6 @@ def get_profilecss(v, username):
 	resp.headers.add("Content-Type", "text/css")
 	return resp
 
-@app.get("/songs/<id>")
-def songs(id):
-	try: id = int(id)
-	except: return "", 400
-	user = g.db.query(User).filter_by(id=id).one_or_none()
-	if user and user.song: return redirect(f"/static/song/{user.song}.mp3")
-	else: abort(404)
-
 @app.get("/@<username>/song")
 def usersong(username):
 	user = get_user(username)

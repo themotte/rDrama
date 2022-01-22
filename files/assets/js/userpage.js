@@ -1,12 +1,12 @@
 const playing = localStorage.getItem("playing")
 
-let uid = document.getElementById('uid')
+let u_username = document.getElementById('u_username')
 
-if (uid)
+if (u_username)
 {
-	uid = uid.innerHTML
+	u_username = u_username.innerHTML
 
-	let audio = new Audio(`/songs/${uid}`);
+	let audio = new Audio(`/@${u_username}/song`);
 	audio.loop=true;
 
 	function toggle() {
@@ -37,14 +37,14 @@ if (uid)
 }
 else
 {
-	let uid = document.getElementById('vid')
-	if (uid)
+	let v_username = document.getElementById('v_username')
+	if (v_username)
 	{
-		uid = uid.innerHTML
+		v_username = v_username.innerHTML
 
 		const paused = localStorage.getItem("paused")
 
-		let audio = new Audio(`/songs/${uid}`);
+		let audio = new Audio(`/@${v_username}/song`);
 		audio.loop=true;
 	
 		function toggle() {
