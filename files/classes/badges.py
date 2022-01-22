@@ -26,7 +26,7 @@ class Badge(Base):
 	@lazy
 	def badge(self):
 		with open("badges.json", 'r') as f:
-			return loads(f.read().replace("'",'"'))[str(self.badge_id)]
+			return loads(f.read())[str(self.badge_id)]
 
 	@property
 	@lazy

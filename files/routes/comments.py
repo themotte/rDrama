@@ -163,7 +163,7 @@ def api_comment(v):
 				try: badge_body = loads(body.lower())
 				except: return {"error": "You didn't follow the format retard"}, 500
 				badge_number = str(len(listdir('files/assets/images/badges'))+1)
-				with open("badges.json", 'r') as f: badges = loads(f.read().replace("'",'"'))
+				with open("badges.json", 'r') as f: badges = loads(f.read())
 				badges[badge_number] = badge_body
 			elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
 				try:
