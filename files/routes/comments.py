@@ -558,17 +558,14 @@ def api_comment(v):
 		c.upvotes += 1
 		g.db.add(c)
 
-	g.db.commit()
-
-	# Slots
 	slots = Slots(g)
 	slots_check = slots.check_for_slots_command(body, v, c)
 
 	if (slots_check['pulled'] == True):
 		c.slots_result = slots_check['result']
 		g.db.add(c)
-		g.db.commit()
 
+	g.db.commit()
 	if request.headers.get("Authorization"): return c.json
 	return render_template("comments.html", v=v, comments=[c])
 

@@ -44,8 +44,7 @@ class Slots:
                             result = self.pull_the_arm(from_user, wagerValue, from_comment)
                             return { 'pulled': True, 'result': result }
 
-                    except ValueError:
-                        break
+                    except exception as e: break
         return { 'pulled': False, 'result': '' }
 
     # Ensure user is capable of the wager
@@ -133,13 +132,9 @@ class Slots:
     # Credit the user's account
     def credit_user(self, from_user, amount):
         from_user.coins += amount
-
         self.db.add(from_user)
-        self.db.commit()
 
     # Charge the user's account
     def charge_user(self, from_user, amount):
         from_user.coins -= amount
-
         self.db.add(from_user)
-        self.db.commit()
