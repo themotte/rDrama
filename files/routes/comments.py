@@ -159,7 +159,7 @@ def api_comment(v):
 		if parent_post.id == 37749:
 			with open(f"snappy_{SITE_NAME}.txt", "a") as f:
 				f.write('\n{[para]}\n' + body)
-		elif parent_post.id == 56 and request.files["file"]:
+		elif parent_post.id == 37833 and request.files["file"]:
 			try: badge_body = loads(body)
 			except: return {"error": "You didn't follow the format, retard"}
 			badge_number = str(len(listdir('files/assets/images/badges'))+1)
@@ -194,7 +194,7 @@ def api_comment(v):
 				elif parent_post.id == 37697:
 					filename = 'files/assets/images/Drama/banners/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
 					process_image(file, filename)
-				elif parent_post.id == 56:
+				elif parent_post.id == 37833:
 					filename = f'files/assets/images/badges/{badge_number}.webp'
 					process_image(file, filename, 200)
 					with open('badges.json', 'w') as f: dump(badges, f)
