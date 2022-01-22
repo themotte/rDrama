@@ -178,14 +178,13 @@ def api_comment(v):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
-			file = process_image(file)
-			body += f"\n\n![]({file})"
+			body += f"\n\n![]({process_image(file)})"
 			if v.admin_level == 3:
 				if parent_post.id == 37696:
 					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'
 					text = process_image(file, filename, 400)
 				elif parent_post.id == 37697:
-					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
+					filename = 'files/assets/images/Drama/banners/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
 					process_image(file, filename)
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
