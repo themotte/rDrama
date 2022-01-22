@@ -5,9 +5,11 @@ import time
 def process_image(file=None, filename=None, resize=0):
 	
 	if not filename: filename = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
-	file.save(filename)
 
-	i = IImage.open(file)
+	if file:
+		file.save(filename)
+		i = IImage.open(file)
+	else: i = IImage.open(filename)
 
 	if resize:
 		size = resize, resize

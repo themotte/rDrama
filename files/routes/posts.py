@@ -613,11 +613,10 @@ def thumbnail_thread(pid):
 			if image_req.headers.get("Content-Type","").startswith("image/svg"):
 				continue
 
-			image = BytesIO(image_req.content)
-			image2 = PILimage.open(image)
-			if image2.width < 30 or image2.height < 30:
+			image = PILimage.open(BytesIO(image_req.content))
+			if image.width < 30 or image.height < 30:
 				continue
-			
+
 			break
 
 		else:
@@ -628,7 +627,6 @@ def thumbnail_thread(pid):
 
 	elif x.headers.get("Content-Type","").startswith("image/"):
 		image_req=x
-		image = BytesIO(x.content)
 
 	else:
 		db.close()
@@ -636,7 +634,11 @@ def thumbnail_thread(pid):
 
 	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
 
-	post.thumburl = process_image(image, resize=100)
+	with open(name, "wb") as file:
+		for chunk in image_req.iter_content(1024):
+			file.write(chunk)
+
+	post.thumburl = process_image(filename=name, resize=True)
 	db.add(post)
 	db.commit()
 	db.close()
