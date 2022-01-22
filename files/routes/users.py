@@ -405,6 +405,12 @@ def songs(id):
 	if user and user.song: return redirect(f"/static/song/{user.song}.mp3")
 	else: abort(404)
 
+@app.get("/@<username>/song")
+def songs(username):
+	user = get_user(username)
+	if user.song: return redirect(f"/static/song/{user.song}.mp3")
+	else: abort(404)
+
 @app.get("/song/<song>")
 @app.get("/static/song/<song>")
 def song(song):
