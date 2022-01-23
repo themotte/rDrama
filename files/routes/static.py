@@ -8,6 +8,7 @@ from os import path
 import calendar
 import matplotlib.pyplot as plt
 from files.classes.mod_logs import ACTIONTYPES, ACTIONTYPES2
+from files.classes.badges import BadgeDef
 
 @app.get("/privacy")
 @auth_required
@@ -366,9 +367,9 @@ def settings_profile(v):
 @app.get("/badges")
 @auth_required
 def badges(v):
-	with open("badges.json", 'r') as f: BADGES = loads(f.read())
+	badges = g.db.query(BadgeDef).all()
 
-	return render_template("badges.html", v=v, badges=BADGES)
+	return render_template("badges.html", v=v, badges=badges)
 
 @app.get("/marsey_list")
 @auth_required

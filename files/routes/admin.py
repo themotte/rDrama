@@ -424,25 +424,25 @@ def under_attack(v):
 @app.get("/admin/badge_grant")
 @admin_level_required(2)
 def badge_grant_get(v):
-	with open("badges.json", 'r') as f: BADGES = loads(f.read())
-	return render_template("admin/badge_grant.html", v=v, badge_types=BADGES)
+	badges = g.db.query(BadgeDef).all()
+	return render_template("admin/badge_grant.html", v=v, badge_types=badges)
 
 
 @app.post("/admin/badge_grant")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def badge_grant_post(v):
-	with open("badges.json", 'r') as f: BADGES = loads(f.read())
+	badges = g.db.query(BadgeDef).all()
 
 	user = get_user(request.values.get("username").strip(), graceful=True)
 	if not user:
-		return render_template("admin/badge_grant.html", v=v, badge_types=BADGES, error="User not found.")
+		return render_template("admin/badge_grant.html", v=v, badge_types=badges, error="User not found.")
 
 	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
 
 	if user.has_badge(badge_id):
-		return render_template("admin/badge_grant.html", v=v, badge_types=BADGES, error="User already has that badge.")
+		return render_template("admin/badge_grant.html", v=v, badge_types=badges, error="User already has that badge.")
 	
 	new_badge = Badge(badge_id=badge_id, user_id=user.id)
 
@@ -459,27 +459,27 @@ def badge_grant_post(v):
 		send_notification(user.id, text)
 	
 	g.db.commit()
-	return render_template("admin/badge_grant.html", v=v, badge_types=BADGES, msg="Badge granted!")
+	return render_template("admin/badge_grant.html", v=v, badge_types=badges, msg="Badge granted!")
 
 
 
 @app.get("/admin/badge_remove")
 @admin_level_required(2)
 def badge_remove_get(v):
-	with open("badges.json", 'r') as f: BADGES = loads(f.read())
+	badges = g.db.query(BadgeDef).all()
 
-	return render_template("admin/badge_remove.html", v=v, badge_types=BADGES)
+	return render_template("admin/badge_remove.html", v=v, badge_types=badges)
 
 
 @app.post("/admin/badge_remove")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def badge_remove_post(v):
-	with open("badges.json", 'r') as f: BADGES = loads(f.read())
+	badges = g.db.query(BadgeDef).all()
 
 	user = get_user(request.values.get("username").strip(), graceful=True)
 	if not user:
-		return render_template("admin/badge_remove.html", v=v, badge_types=BADGES, error="User not found.")
+		return render_template("admin/badge_remove.html", v=v, badge_types=badges, error="User not found.")
 
 	try: badge_id = int(request.values.get("badge_id"))
 	except: abort(400)
@@ -489,7 +489,7 @@ def badge_remove_post(v):
 		g.db.delete(badge)
 		g.db.commit()
 	
-	return render_template("admin/badge_remove.html", v=v, badge_types=BADGES, msg="Badge removed!")
+	return render_template("admin/badge_remove.html", v=v, badge_types=badges, msg="Badge removed!")
 
 
 @app.get("/admin/users")

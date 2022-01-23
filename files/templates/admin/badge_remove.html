@@ -52,17 +52,17 @@
 		</tr>
 	</thead>
 	<tbody>
-{% for k, v in badge_types.items() %}
+{% for badge in badge_types %}
 <tr>
 	<td>
 		<div class="custom-control">
-			<input autocomplete="off" checked="" class="custom-control-input" type="radio" id="{{k}}" name="badge_id" value="{{k}}">
-			<label class="custom-control-label" for="{{k}}"></label>
+			<input autocomplete="off" checked="" class="custom-control-input" type="radio" id="{{badge.id}}" name="badge_id" value="{{badge.id}}">
+			<label class="custom-control-label" for="{{badge.id}}"></label>
 		</div>		
 	</td>
-	<td><label for="badge-{{k}}"><img alt="{{v['name']}}" loading="lazy" src="/static/assets/images/badges/{{k}}.webp?a=6" width=64.16 height=70></label></td>
-	<td>{{v['name']}}</td>
-	<td>{{v['description']}}</td>
+	<td><label for="badge-{{badge.id}}"><img alt="{{badge.name}}" loading="lazy" src="/static/assets/images/badges/{{badge.id}}.webp?a=6" width=64.16 height=70></label></td>
+	<td>{{badge.name}}</td>
+	<td>{{badge.description}}</td>
 </tr>
 {% endfor %}
 </table>

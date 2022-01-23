@@ -18,11 +18,11 @@
 		<th>Description</th>
 	</tr>
 </thead>
-{% for k,v in badges.items() %}
+{% for badge in badges %}
 	<tr>
-		<td>{{v['name']}}</td>
-		<td><img alt="{{v['name']}}" loading="lazy" src="/static/assets/images/badges/{{k}}.webp?a=6" width=45.83 height=50>
-		<td>{{v['description']}}</td>
+		<td>{{badge.name}}</td>
+		<td><img alt="{{badge.name}}" loading="lazy" src="/static/assets/images/badges/{{badge.id}}.webp?a=6" width=45.83 height=50>
+		<td>{{badge.description}}</td>
 	</tr>
 {% endfor %}
 </table>
