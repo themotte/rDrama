@@ -18,9 +18,16 @@ def privacy(v):
 @app.get("/marseys")
 @auth_required
 def marseys(v):
-	with open("marseys.json", 'r') as f: marsey_count = list(loads(f.read().replace("'",'"')).items())
-	marsey_count = sorted(marsey_count, key=lambda x: list(x[1].values())[2], reverse=True)
-	return render_template("marseys.html", v=v, marseys=marsey_count)
+	marseys = g.db.query(Marsey, User).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())
+	return render_template("marseys.html", v=v, marseys=marseys)
+
+@app.get("/marsey_list")
+@cache.memoize(timeout=600)
+def marsey_list():
+	marseys = {}
+	for marsey, user in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc()):
+		marseys[marsey.name] = f"{user} {marsey.tags}"
+	return marseys
 
 @app.get("/terms")
 @app.get("/logged_out/terms")
@@ -49,9 +56,7 @@ def participation_stats(v):
 
 	day = now - 86400
 
-	with open("marseys.json", 'r') as f: marseys = loads(f.read().replace("'",'"'))
-
-	data = {"marseys": len(marseys),
+	data = {"marseys": g.db.query(Marsey.name).count(),
 			"users": g.db.query(User.id).count(),
 			"private_users": g.db.query(User.id).filter_by(is_private=True).count(),
 			"banned_users": g.db.query(User.id).filter(User.is_banned > 0).count(),
@@ -85,15 +90,9 @@ def participation_stats(v):
 
 
 @app.get("/chart")
-@auth_required
-def chart(v):
-	days = int(request.values.get("days", 0))
-	file = cached_chart(days)
-	return send_file(file)
-
-
 @cache.memoize(timeout=86400)
-def cached_chart(days):
+def chart():
+	days = int(request.values.get("days", 0))
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,
 											  now.tm_mon,
@@ -165,7 +164,7 @@ def cached_chart(days):
 
 	plt.savefig(file)
 	plt.clf()
-	return file
+	return send_file(file)
 
 
 @app.get("/patrons")
@@ -244,6 +243,7 @@ def log_item(id, v):
 	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
 @app.get("/static/assets/favicon.ico")
+@cache.memoize(timeout=86400)
 def favicon():
 	return send_file(f"./assets/images/{SITE_NAME}/icon.webp")
 
@@ -345,6 +345,7 @@ def images(path):
 	return resp
 
 @app.get("/robots.txt")
+@cache.memoize(timeout=86400)
 def robots_txt():
 	return send_file("assets/robots.txt")
 
@@ -370,11 +371,6 @@ def badges(v):
 	badges = g.db.query(BadgeDef).all()
 
 	return render_template("badges.html", v=v, badges=badges)
-
-@app.get("/marsey_list")
-@auth_required
-def marsey_list(v):
-	with open("marseys.json", 'r') as f: return loads(f.read().replace("'",'"'))
 
 @app.get("/blocks")
 @auth_required

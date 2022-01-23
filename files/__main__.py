@@ -61,7 +61,7 @@ app.config['DESCRIPTION'] = environ.get("DESCRIPTION", "rdrama.net caters to dra
 
 r=redis.Redis(host=environ.get("REDIS_URL", "redis://localhost"), decode_responses=True, ssl_cert_reqs=None)
 
-def get_CF() -> str:
+def get_CF():
 	with app.app_context():
 		return request.headers.get('CF-Connecting-IP')
 

@@ -271,7 +271,7 @@ class Comment(Base):
 
 		return data
 
-	def award_count(self, kind) -> int:
+	def award_count(self, kind):
 		return len([x for x in self.awards if x.kind == kind])
 
 	@property

@@ -15,13 +15,13 @@
 	</tr>
 </thead>
 <tbody id="followers-table">
-{% for k, val in marseys %}
+{% for marsey, author in marseys %}
 	<tr>
 		<td style="font-weight: bold">{{loop.index}}</td>
-		<td style="font-weight: bold">{{k}}</td>
-		<td><img class="marsey" loading="lazy" data-bs-toggle="tooltip" alt=":{{k}}:" title=":{{k}}:" delay="0" src="/static/assets/images/emojis/{{k}}.webp?a=1007" ></td>
-		<td style="font-weight: bold">{{val["count"]}}</td>
-		<td>{% if val['author'] in ('anton-d','unknown') %}{{val['author']}}{% else %}<a style="font-weight:bold;" href="/@{{val['author']}}"><img alt="@{{val['author']}}'s profile picture" loading="lazy" src="/@{{val['author']}}/pic" class="pp20">{{val['author']}}</a>{% endif %}</td>
+		<td style="font-weight: bold">{{marsey.name}}</td>
+		<td><img class="marsey" loading="lazy" data-bs-toggle="tooltip" alt=":{{marsey.name}}:" title=":{{marsey.name}}:" delay="0" src="/static/assets/images/emojis/{{marsey.name}}.webp?a=1007" ></td>
+		<td style="font-weight: bold">{{marsey.count}}</td>
+		<td><a style="color:#{{author.namecolor}};font-weight:bold" href="/@{{author.username}}"><img alt="@{{author.username}}'s profile picture" loading="lazy" src="{{author.profile_url}}" class="pp20"><span {% if author.patron %}class="patron" style="background-color:#{{author.namecolor}}"{% endif %}>{{author.username}}</span></a></td>
 	</tr>
 {% endfor %}
 </tbody>

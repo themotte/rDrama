@@ -177,9 +177,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	
 	sanitized = re.sub('\|\|(.*?)\|\|', r'<span class="spoiler">\1</span>', sanitized)
 	
-	if comment:
-		with open("marseys.json", 'r') as f: marsey_count = loads(f.read().replace("'",'"'))
-		marseys_used = set()
+	if comment: marseys_used = set()
 
 	emojis = list(re.finditer("[^a]>\s*(:[!#]{0,2}\w+:\s*)+<\/", sanitized))
 	if len(emojis) > 20: edit = True
@@ -261,9 +259,9 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 	sanitized = re.sub('<p>(https:\/\/[^ <>]*)', r'<p><a target="_blank" rel="nofollow noopener noreferrer" href="\1">\1</a></p>', sanitized)
 
 	if comment:
-		for emoji in marseys_used:
-			if emoji in marsey_count: marsey_count[emoji]["count"] += 1
-		with open('marseys.json', 'w') as f: dump(marsey_count, f)
+		for marsey in g.db.query(Marsey).filter(Marsey.name.in_(marseys_used)).all():
+			marsey.count += 1
+			g.db.add(marsey)
 
 	return sanitized
 

@@ -1,13 +1,14 @@
 from sqlalchemy import *
 from files.__main__ import Base
+from files.helpers.lazy import lazy
 
 class Marsey(Base):
 	__tablename__ = "marseys"
 
 	name = Column(String, primary_key=True)
-	author = Column(Integer, ForeignKey("users.id"))
-	tags = Column(String, ForeignKey("users.id"))
-	count = Column(Integer)
+	author_id = Column(Integer, ForeignKey("users.id"))
+	tags = Column(String)
+	count = Column(Integer, default=0)
 
 	def __repr__(self):
 		return f"<Marsey(name={self.name})>"

@@ -26,19 +26,6 @@ CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/
 
 month = datetime.now().strftime('%B')
 
-@app.get("/refund")
-@admin_level_required(3)
-def refund(v):
-	users = (x[0] for x in g.db.query(AwardRelationship.user_id).filter(AwardRelationship.submission_id == None, AwardRelationship.comment_id == None, AwardRelationship.kind.in_(('snow','gingerbread','lights','candycane','fireplace','haunt','upsidedown','stab','spiders','fog'))).all())
-
-	for uid in users:
-		user = get_account(uid)
-		user.coins += 500
-		g.db.add(user)
-
-	g.db.commit()
-	return 'sex'
-
 
 @app.post("/@<username>/make_admin")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -1217,7 +1204,7 @@ def admin_distinguish_comment(c_id, v):
 @app.get("/admin/dump_cache")
 @admin_level_required(2)
 def admin_dump_cache(v):
-	# cache.clear()
+	cache.clear()
 	return {"message": "Internal cache cleared."}
 
 

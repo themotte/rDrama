@@ -14,3 +14,4 @@ from .subscriptions import *
 from files.__main__ import app
 from .mod_logs import *
 from .award import *
+from .marsey import *

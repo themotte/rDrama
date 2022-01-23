@@ -16,7 +16,7 @@ import gevent
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
 def leaderboard_thread():
-	global users9, users9_25, users13, userss13_25, users15, userss15_25
+	global users9, users9_25, users13, users13_25
 
 	db = db_session()
 
@@ -29,31 +29,15 @@ def leaderboard_thread():
 	users9 = sorted(users9, key=lambda x: x[1], reverse=True)
 	users9_25 = users9[:25]
 
-	if SITE_NAME == 'Drama':
-		users13 = {}
-		with open("marseys.json", 'r') as f: authors = (x for x in loads(f.read().replace("'",'"')).values())
-		for x in authors:
-			if x["author"] in users13: users13[x["author"]] += 1
-			else: users13[x["author"]] = 1
-
-		users13.pop('unknown','anton-d')
-		users132 = db.query(User).filter(func.lower(User.username).in_(users13.keys())).all()
-		users133 = []
-		for user in users132:
-			users133.append((user, users13[user.username.lower()]))
-		users13 = sorted(users133, key=lambda x: x[1], reverse=True)
-		userss13_25 = users13[:25]
-	else: userss13_25 = None
-
 	votes1 = db.query(Vote.user_id, func.count(Vote.user_id)).filter(Vote.vote_type==1).group_by(Vote.user_id).order_by(func.count(Vote.user_id).desc()).all()
 	votes2 = db.query(CommentVote.user_id, func.count(CommentVote.user_id)).filter(CommentVote.vote_type==1).group_by(CommentVote.user_id).order_by(func.count(CommentVote.user_id).desc()).all()
 	votes3 = Counter(dict(votes1)) + Counter(dict(votes2))
 	users14 = db.query(User).filter(User.id.in_(votes3.keys())).all()
-	users15 = []
+	users13 = []
 	for user in users14:
-		users15.append((user, votes3[user.id]-user.post_count-user.comment_count))
-	users15 = sorted(users15, key=lambda x: x[1], reverse=True)
-	userss15_25 = users15[:25]
+		users13.append((user, votes3[user.id]-user.post_count-user.comment_count))
+	users13 = sorted(users13, key=lambda x: x[1], reverse=True)
+	users13_25 = users13[:25]
 
 	db.close()
 
@@ -352,23 +336,29 @@ def leaderboard(v):
 	pos10 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
 
 	sq = g.db.query(Badge.user_id, func.count(Badge.user_id).label("count"), func.rank().over(order_by=func.count(Badge.user_id).desc()).label("rank")).group_by(Badge.user_id).subquery()
-	users11 = g.db.query(User, sq.c.count).join(sq, User.id==sq.c.user_id).order_by(sq.c.count.desc()).limit(25).all()
+	users11 = g.db.query(User, sq.c.count).join(sq, User.id==sq.c.user_id).order_by(sq.c.count.desc())
 	pos11 = g.db.query(User.id, sq.c.rank, sq.c.count).join(sq, User.id==sq.c.user_id).filter(User.id == v.id).one_or_none()
 	if pos11: pos11 = (pos11[1],pos11[2])
+	else: pos11 = (users11.count()+1, 0)
+	users11 = users11.limit(25).all()
 
 	if SITE_NAME == 'Drama':
-		try:
-			pos13 = [x[0].id for x in users13].index(v.id)
-			pos13 = (pos13+1, users13[pos13][1])
-		except: pos13 = (len(users13)+1, 0)
-	else: pos13 = None
+		sq = g.db.query(Marsey.author_id, func.count(Marsey.author_id).label("count"), func.rank().over(order_by=func.count(Marsey.author_id).desc()).label("rank")).group_by(Marsey.author_id).subquery()
+		users12 = g.db.query(User, sq.c.count).join(sq, User.id==sq.c.author_id).order_by(sq.c.count.desc())
+		pos12 = g.db.query(User.id, sq.c.rank, sq.c.count).join(sq, User.id==sq.c.author_id).filter(User.id == v.id).one_or_none()
+		if pos12: pos12 = (pos12[1],pos12[2])
+		else: pos12 = (users12.count()+1, 0)
+		users12 = users12.limit(25).all()
+	else:
+		users12 = None
+		pos12 = None
 
 	try:
-		pos15 = [x[0].id for x in users15].index(v.id)
-		pos15 = (pos15+1, users15[pos15][1])
-	except: pos15 = (len(users15)+1, 0)
+		pos13 = [x[0].id for x in users13].index(v.id)
+		pos13 = (pos13+1, users13[pos13][1])
+	except: pos13 = (len(users13)+1, 0)
 
-	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=users9_25, pos9=pos9, users10=users10, pos10=pos10, users11=users11, pos11=pos11, users13=userss13_25, pos13=pos13, users15=userss15_25, pos15=pos15)
+	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=users9_25, pos9=pos9, users10=users10, pos10=pos10, users11=users11, pos11=pos11, users12=users12, pos12=pos12, users13=users13_25, pos13=pos13)
 
 @app.get("/@<username>/css")
 def get_css(username):

@@ -17,6 +17,16 @@ from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
 from os import path
 import requests
 
+db = db_session()
+marseys = tuple(f':#{x[0]}:' for x in db.query(Marsey.name).all())
+db.close()
+
+if path.exists(f'snappy_{SITE_NAME}.txt'):
+	with open(f'snappy_{SITE_NAME}.txt', "r") as f:
+		if SITE == 'pcmemes.net': snappyquotes = tuple(f.read().split("{[para]}"))
+		else: snappyquotes = tuple(f.read().split("{[para]}")) + marseys
+else: snappyquotes = marseys
+
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 CF_KEY = environ.get("CF_KEY", "").strip()
@@ -1004,13 +1014,7 @@ def submit_post(v):
 	elif v.id == LAWLZ_ID:
 		if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 		else: body = "wow, a good lawlzpost for once!"
-	elif path.exists(f'snappy_{SITE_NAME}.txt'):
-		with open(f'snappy_{SITE_NAME}.txt', "r") as f:
-			snappyquotes = f.read().split("{[para]}")
-			if request.host != 'pcmemes.net': 
-				with open("marseys.json", 'r') as f: marseys = loads(f.read().replace("'",'"')).keys()
-				snappyquotes += [f':#{x}:' for x in marseys]
-		body = random.choice(snappyquotes)
+	else: body = random.choice(snappyquotes)
 	body += "\n\n"
 
 	if new_post.url:

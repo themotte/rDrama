@@ -81,7 +81,6 @@ function loadEmojis(form) {
 			const marseys = document.getElementById("EMOJIS_marsey")
 			if (marseys.innerHTML == "")
 			{
-				console.log(EMOJIS_STRINGS)
 				for (let i = 0; i < EMOJIS_STRINGS.length; i++) {
 					let type = EMOJIS_STRINGS[i].type
 					let container = document.getElementById(`EMOJIS_${type}`)
@@ -120,9 +119,7 @@ function loadEmojis(form) {
 					let arr2 = EMOJIS_STRINGS[i].emojis;
 					for (const [key, value] of Object.entries(arr2)) {
 						if (str.includes(`'${key}'`)) continue;
-						let realvalue = Object.values(value)
-						realvalue = realvalue[0] + realvalue[2]
-						if (key.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(key) || realvalue.match(search_bar.value.toLowerCase())) {
+						if (key.match(search_bar.value.toLowerCase()) || search_bar.value.toLowerCase().match(key) || value.match(search_bar.value.toLowerCase())) {
 							str += `<button class="btn m-1 px-0 emoji2" onclick="getEmoji('${key}')" data-bs-toggle="tooltip" title=":${key}:" delay:="0"><img loading="lazy" width=50 src="/static/assets/images/emojis/${key}.webp" alt="${key}-emoji"></button>`;
 						}
 					}

@@ -16,6 +16,10 @@ IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
 if PUSHER_ID: beams_client = PushNotifications(instance_id=PUSHER_ID, secret_key=PUSHER_KEY)
 
+CF_KEY = environ.get("CF_KEY", "").strip()
+CF_ZONE = environ.get("CF_ZONE", "").strip()
+CF_HEADERS = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
+
 @app.get("/comment/<cid>")
 @app.get("/post/<pid>/<anything>/<cid>")
 @app.get("/logged_out/comment/<cid>")
@@ -154,26 +158,9 @@ def api_comment(v):
 
 	body = request.values.get("body", "").strip()[:10000]
 	
-	if v.admin_level == 3:
-		if parent_post.id == 37749:
-			with open(f"snappy_{SITE_NAME}.txt", "a") as f:
-				f.write('\n{[para]}\n' + body)
-		elif request.files.get("file"):
-			if parent_post.id == 37833:
-				try: badge_body = loads(body.lower())
-				except: return {"error": "You didn't follow the format retard"}, 500
-				badge_number = str(len(listdir('files/assets/images/badges'))+1)
-				with open("badges.json", 'r') as f: badges = loads(f.read())
-				badges[badge_number] = badge_body
-			elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
-				try:
-					marsey_dict = list(loads(body.lower()).items())
-					marsey_key = marsey_dict[0][0]
-					marsey_body = marsey_dict[0][1]
-					marsey_body["count"] = 0
-				except: return {"error": "You didn't follow the format retard"}, 400
-				with open("marseys.json", 'r') as f: marseys = loads(f.read().replace("'",'"'))
-				marseys[marsey_key] = marsey_body
+	if v.admin_level == 3 and parent_post.id == 37749:
+		with open(f"snappy_{SITE_NAME}.txt", "a") as f:
+			f.write('\n{[para]}\n' + body)
 
 	if v.marseyawarded:
 		marregex = list(re.finditer("^(:[!#]{0,2}m\w+:\s*)+$", body))
@@ -197,7 +184,6 @@ def api_comment(v):
 		if file.content_type.startswith('image/'):
 			image = process_image(file)
 			if image == "": return {"error":"Image upload failed"}
-			body += f"\n\n![]({image})"
 			if v.admin_level == 3:
 				if parent_post.id == 37696:
 					filename = 'files/assets/images/Drama/sidebar/' + str(len(listdir('files/assets/images/Drama/sidebar'))+1) + '.webp'
@@ -205,14 +191,31 @@ def api_comment(v):
 				elif parent_post.id == 37697:
 					filename = 'files/assets/images/Drama/banners/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
 					process_image(file, filename)
-				elif parent_post.id == 37833:
-					filename = f'files/assets/images/badges/{badge_number}.webp'
+				elif parent_post.id == 50:
+					try: badge_def = loads(body.lower())
+					except: return {"error": "You didn't follow the format retard"}, 500
+					name = badge_def["name"]
+					badge = g.db.query(BadgeDef).filter_by(name=name).first()
+					if not badge:
+						badge = BadgeDef(name=name, description=badge_def["description"])
+						g.db.add(badge)
+						g.db.flush()
+					filename = f'files/assets/images/badges/{badge.id}.webp'
 					process_image(file, filename, 200)
-					with open('badges.json', 'w') as f: dump(badges, f)
-				elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
-					filename = f'files/assets/images/emojis/{marsey_key}.webp'
+					requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]})
+				elif parent_post.id == 49:
+					try: marsey = loads(body.lower())
+					except Exception as e:
+						print(body.lower(), flush=True)
+						return {"error": f"{e}"}, 500
+					name = marsey["name"]
+					if not g.db.query(Marsey.name).filter_by(name=name).first():
+						marsey = Marsey(name=marsey["name"], author_id=marsey["author_id"], tags=marsey["tags"], count=0)
+						g.db.add(marsey)
+					filename = f'files/assets/images/emojis/{name}.webp'
 					process_image(file, filename, 200)
-					with open('marseys.json', 'w') as f: dump(marseys, f)
+					requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/emojis/{name}.webp"]})
+			body += f"\n\n![]({image})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
