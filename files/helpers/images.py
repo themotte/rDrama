@@ -3,13 +3,6 @@ from webptools import gifwebp
 import time
 
 
-from PIL import Image
-
-original_image = Image.open(filename)
-
-fixed_image = ImageOps.exif_transpose(original_image)
-
-
 def process_image(file=None, filename=None, resize=0):
 	
 	if not filename: filename = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
@@ -21,7 +14,13 @@ def process_image(file=None, filename=None, resize=0):
 		else: i = IImage.open(filename)
 	except: return ""
 
-	i = ImageOps.exif_transpose(i)
+	exif = i.getexif()
+	for k in exif.keys():
+		if k != 0x0112:
+			exif[k] = None
+			del exif[k]
+	i.info["exif"] = exif.tobytes()
+	transposed = ImageOps.exif_transpose(i)
 
 	if resize:
 		size = resize, resize
