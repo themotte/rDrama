@@ -56,7 +56,7 @@ class Badge(Base):
 	@property
 	@lazy
 	def name(self):
-		return self.badge.name
+		return ""
 
 	@property
 	@lazy
