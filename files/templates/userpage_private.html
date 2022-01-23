@@ -32,7 +32,11 @@
 </div>
 
 {% if u.song %}
-<div id="uid" class="d-none">{{u.id}}</div>
+	{% if v and v.id == u.id %}
+		<div id="v_username" class="d-none">{{v.username}}</div>
+	{% else %}
+		<div id="u_username" class="d-none">{{u.username}}</div>
+	{% endif %}
 {% endif %}
 
 {% endblock %}
