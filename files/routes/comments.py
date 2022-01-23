@@ -172,7 +172,7 @@ def api_comment(v):
 					marsey_body = marsey_dict[0][1]
 					marsey_body["count"] = 0
 				except: return {"error": "You didn't follow the format retard"}, 400
-				marseys = cache.get("marseys")
+				with open("marseys.json", 'r') as f: marseys = loads(f.read().replace("'",'"'))
 				marseys[marsey_key] = marsey_body
 
 	if v.marseyawarded:
@@ -212,7 +212,7 @@ def api_comment(v):
 				elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
 					filename = f'files/assets/images/emojis/{marsey_key}.webp'
 					process_image(file, filename, 200)
-					cache.set("marseys", marseys)
+					with open('marseys.json', 'w') as f: dump(marseys, f)
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:

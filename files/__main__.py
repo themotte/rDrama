@@ -16,7 +16,6 @@ import time
 from sys import stdout
 import faulthandler
 from json import loads
-import atexit
 
 app = Flask(__name__, template_folder='templates')
 app.url_map.strict_slashes = False
@@ -116,12 +115,4 @@ def after_request(response):
 	response.headers.add("X-Frame-Options", "deny")
 	return response
 
-if not cache.get("marseys"):
-	with open("marseys.json", 'r') as f: cache.set("marseys", loads(f.read()))
-
 from files.routes import *
-
-def close_running_threads():
-	with open('marseys.json', 'w') as f: dump(cache.get("marseys"), f)
-	stdout.flush()
-atexit.register(close_running_threads)

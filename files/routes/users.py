@@ -31,7 +31,7 @@ def leaderboard_thread():
 
 	if SITE_NAME == 'Drama':
 		users13 = {}
-		authors = (x for x in cache.get("marseys").values())
+		with open("marseys.json", 'r') as f: authors = (x for x in loads(f.read().replace("'",'"')).values())
 		for x in authors:
 			if x["author"] in users13: users13[x["author"]] += 1
 			else: users13[x["author"]] = 1

@@ -1008,7 +1008,7 @@ def submit_post(v):
 		with open(f'snappy_{SITE_NAME}.txt', "r") as f:
 			snappyquotes = f.read().split("{[para]}")
 			if request.host != 'pcmemes.net': 
-				marseys = cache.get("marseys").keys()
+				with open("marseys.json", 'r') as f: marseys = loads(f.read().replace("'",'"')).keys()
 				snappyquotes += [f':#{x}:' for x in marseys]
 		body = random.choice(snappyquotes)
 	body += "\n\n"
