@@ -69,10 +69,7 @@ def discord_redirect(v):
 	x=x.json()
 
 
-	try:
-		token=x["access_token"]
-	except KeyError:
-		abort(403)
+	token=x["access_token"]
 
 
 	url="https://discord.com/api/users/@me"
