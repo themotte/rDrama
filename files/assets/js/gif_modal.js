@@ -1,3 +1,9 @@
+let commentFormID;
+
+function commentForm(form) {
+	commentFormID = form;
+};
+
 async function getGif(searchTerm) {
 
 	if (searchTerm !== undefined) {
