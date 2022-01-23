@@ -1,5 +1,3 @@
-const playing = localStorage.getItem("playing")
-
 let u_username = document.getElementById('u_username')
 
 if (u_username)
@@ -10,33 +8,14 @@ if (u_username)
 	audio.loop=true;
 
 	function toggle() {
-		if (audio.paused)
-		{
-			audio.play()
-			localStorage.setItem("playing", "1")
-			window.addEventListener("unload", function(e) {
-				localStorage.setItem("playing", "")
-			});
-		}
-		else
-		{
-			audio.pause()
-			localStorage.setItem("playing", "")
-		}
+		if (audio.paused) audio.play()
+		else audio.pause()
 	}
 
-	if (!playing)
-	{
-		audio.play();
-		document.getElementById('userpage').addEventListener('click', () => {
-			if (audio.paused) audio.play(); 
-		}, {once : true});
-
-		localStorage.setItem("playing", "1")
-		window.addEventListener("unload", function(e) {
-			localStorage.setItem("playing", "")
-		});
-	}
+	audio.play();
+	document.getElementById('userpage').addEventListener('click', () => {
+		if (audio.paused) audio.play(); 
+	}, {once : true});
 }
 else
 {
@@ -55,30 +34,20 @@ else
 			{
 				audio.play()
 				localStorage.setItem("paused", "")
-				localStorage.setItem("playing", "1")
-				window.addEventListener("unload", function(e) {
-					localStorage.setItem("playing", "")
-				});
 			}
 			else
 			{
 				audio.pause()
 				localStorage.setItem("paused", "1")
-				localStorage.setItem("playing", "")
 			}
 		}
 	
-		if (!paused && !playing)
+		if (!paused)
 		{
 			audio.play();
 			document.getElementById('userpage').addEventListener('click', () => {
 				if (audio.paused) audio.play(); 
 			}, {once : true});
-
-			localStorage.setItem("playing", "1")
-			window.addEventListener("unload", function(e) {
-				localStorage.setItem("playing", "")
-			});
 		}
 	}
 }

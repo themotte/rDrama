@@ -54,7 +54,7 @@ class Submission(Base):
 	approved_by = relationship("User", uselist=False, primaryjoin="Submission.is_approved==User.id", viewonly=True)
 	awards = relationship("AwardRelationship", viewonly=True)
 	reports = relationship("Flag", viewonly=True)
-	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id", viewonly=True)
+	comments = relationship("Comment", primaryjoin="Comment.parent_submission==Submission.id")
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
@@ -357,9 +357,7 @@ class Submission(Base):
 	def realbody(self, v):
 		if self.club and not (v and (v.paid_dues or v.id == self.author_id)): return f"<p>{CC} ONLY</p>"
 
-		body = self.body_html
-
-		if not body: return ""
+		body = self.body_html or ""
 
 		body = censor_slurs(body, v)
 
@@ -381,6 +379,29 @@ class Submission(Base):
 				self.author.coins += amount
 				g.db.add(self.author)
 				g.db.commit()
+
+		for o in self.options:
+			body += f'<div class="custom-control"><input type="checkbox" class="custom-control-input" id="{o.id}" name="option"'
+			if o.poll_voted(v): body += " checked"
+			if v: body += f''' onchange="poll_vote('{o.id}', '{self.id}')"'''
+			else: body += f''' onchange="poll_vote_no_v('{o.id}', '{self.id}')"'''
+			body += f'''><label class="custom-control-label" for="{o.id}">{o.body_html}<span class="presult-{self.id}'''
+			if not self.total_poll_voted(v): body += ' d-none'	
+			body += f'"> - <a href="/votes?link=t3_{o.id}"><span id="poll-{o.id}">{o.upvotes}</span> votes</a></span></label></div>'
+
+
+		for c in self.bet_options:
+			body += f'''<div class="custom-control mt-3"><input autocomplete="off" class="custom-control-input bet" type="radio" id="{c.id}" onchange="bet_vote('{c.id}')"'''
+			if c.poll_voted(v): body += " checked "
+			if not (v and v.coins > 200) or self.total_bet_voted(v): body += " disabled "
+			body += f'''><label class="custom-control-label" for="{c.id}">{c.body_html} - <a href="/votes?link=t3_{c.id}"><span id="bet-{c.id}">{c.upvotes}</span> bets</a>'''
+			if not self.total_bet_voted(v):
+				body += '''<span class="cost"> (cost of entry: 200 coins)</span>'''
+			body += "</label>"
+			if v and v.admin_level > 2:
+				body += f'''<button class="btn btn-primary px-2 mx-2" style="font-size:10px;padding:2px;margin-top:-5px" onclick="post_toast('/distribute/{c.id}')">Declare winner</button>'''
+			body += "</div>"
+
 
 		if self.author.sig_html and not self.ghost and (self.author_id == MOOSE_ID or not (v and v.sigs_disabled)):
 			body += f"<hr>{self.author.sig_html}"

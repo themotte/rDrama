@@ -256,16 +256,10 @@ def transfer_coins(v, username):
 		if v.coins < amount: return {"error": f"You don't have enough coins."}, 400
 		if amount < 100: return {"error": f"You have to gift at least 100 coins."}, 400
 
-		if not v.patron and not receiver.patron and not v.alts_patron and not receiver.alts_patron:
-			tax = math.ceil(amount*0.03)
-			tax_receiver = g.db.query(User).filter_by(id=TAX_RECEIVER_ID).one_or_none()
-			tax_receiver.coins += tax
-			g.db.add(tax_receiver)
-		else: tax = 0
+		tax = math.ceil(amount*0.03)
 
-		if TAX_RECEIVER_ID:
-			log_message = f"@{v.username} has transferred {amount} coins to @{receiver.username}"
-			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
+		log_message = f"@{v.username} has transferred {amount} coins to @{receiver.username}"
+		send_repeatable_notification(CARP_ID, log_message)
 
 		receiver.coins += amount-tax
 		v.coins -= amount
@@ -295,9 +289,8 @@ def transfer_bux(v, username):
 		if v.procoins < amount: return {"error": "You don't have enough marseybux"}, 400
 		if amount < 100: return {"error": "You have to gift at least 100 marseybux."}, 400
 
-		if TAX_RECEIVER_ID:
-			log_message = f"@{v.username} has transferred {amount} Marseybux to @{receiver.username}"
-			send_repeatable_notification(TAX_RECEIVER_ID, log_message)
+		log_message = f"@{v.username} has transferred {amount} Marseybux to @{receiver.username}"
+		send_repeatable_notification(CARP_ID, log_message)
 
 		receiver.procoins += amount
 		v.procoins -= amount

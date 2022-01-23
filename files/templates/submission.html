@@ -524,23 +524,6 @@
 							{% endif %}
 							{{p.realbody(v) | safe}}
 
-							{% for c in p.options %}
-								<div class="custom-control">								
-									<input autocomplete="off" type="checkbox" class="custom-control-input" id="{{c.id}}" name="option" {% if c.poll_voted(v) %}checked{% endif %} onchange="{% if v %}poll_vote('{{c.id}}'){% else %}poll_vote_no_v(){% endif %}">
-									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}}<span class="presult {% if not p.total_poll_voted(v) %}d-none{% endif %}"> - <a href="/votes?link=t3_{{c.id}}"><span id="poll-{{c.id}}">{{c.upvotes}}</span> votes</a></span></label>
-								</div>
-							{% endfor %}
-
-							{% for c in p.bet_options %}
-								<div class="custom-control mt-3">								
-									<input autocomplete="off" {% if c.poll_voted(v) %}checked{% endif %} class="custom-control-input bet" {% if not (v and v.coins > 200) or p.total_bet_voted(v) %}disabled{% endif %} type="radio" id="{{c.id}}" onchange="bet_vote('{{c.id}}')">
-									<label class="custom-control-label" for="{{c.id}}">{{c.body_html | safe}} - <a href="/votes?link=t3_{{c.id}}"><span id="bet-{{c.id}}">{{c.upvotes}}</span> bets</a>{% if not p.total_bet_voted(v) %}<span class="cost"> (cost of entry: 200 coins)</span>{% endif %}</label>
-									{% if v and v.admin_level > 2 %}
-										<button class="btn btn-primary px-2 mx-2" style="font-size:10px;padding:2px;margin-top:-5px" onclick="post_toast('/distribute/{{c.id}}')">Declare winner</button>
-									{% endif %}
-								</div>
-							{% endfor %}
-
 							{% if p.is_banned and p.ban_reason %}
 								<div class="text-removed mb-0">removed by @{{p.ban_reason}}</div>
 							{% endif %}
