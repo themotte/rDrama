@@ -1,6 +1,14 @@
-from PIL import Image as IImage, ImageSequence
+from PIL import Image as IImage, ImageSequence, ImageOps
 from webptools import gifwebp
 import time
+
+
+from PIL import Image
+
+original_image = Image.open(filename)
+
+fixed_image = ImageOps.exif_transpose(original_image)
+
 
 def process_image(file=None, filename=None, resize=0):
 	
@@ -12,6 +20,8 @@ def process_image(file=None, filename=None, resize=0):
 			i = IImage.open(file)
 		else: i = IImage.open(filename)
 	except: return ""
+
+	i = ImageOps.exif_transpose(i)
 
 	if resize:
 		size = resize, resize
