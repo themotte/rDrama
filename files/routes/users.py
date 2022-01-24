@@ -387,7 +387,6 @@ def usersong(username):
 
 @app.get("/song/<song>")
 @app.get("/static/song/<song>")
-@cache.memoize(timeout=2592000)
 def song(song):
 	resp = make_response(send_from_directory('/songs', song))
 	resp.headers.remove("Cache-Control")

@@ -87,9 +87,15 @@ def stats():
 			}
 
 @app.get("/chart")
-@cache.memoize(timeout=86400)
-def chart():
+@auth_required
+def chart(v):
 	days = int(request.values.get("days", 0))
+	file = cached_chart(days)
+	return send_file(file)
+
+
+@cache.memoize(timeout=86400)
+def cached_chart(days):
 	now = time.gmtime()
 	midnight_this_morning = time.struct_time((now.tm_year,
 											  now.tm_mon,
@@ -161,7 +167,7 @@ def chart():
 
 	plt.savefig(file)
 	plt.clf()
-	return send_file(file)
+	return file
 
 
 @app.get("/patrons")
@@ -240,7 +246,6 @@ def log_item(id, v):
 	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
 @app.get("/static/assets/favicon.ico")
-@cache.memoize(timeout=2592000)
 def favicon():
 	return send_file(f"./assets/images/{SITE_NAME}/icon.webp")
 
@@ -298,12 +303,10 @@ def submit_contact(v):
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
 
 @app.get('/archives')
-@cache.memoize(timeout=86400)
 def archivesindex():
 	return redirect(f"{SITE_FULL}/archives/index.html")
 
 @app.get('/archives/<path:path>')
-@cache.memoize(timeout=86400)
 def archives(path):
 	resp = make_response(send_from_directory('/archives', path))
 	if request.path.endswith('.css'): resp.headers.add("Content-Type", "text/css")
@@ -312,7 +315,6 @@ def archives(path):
 @app.get('/assets/<path:path>')
 @app.get('/static/assets/<path:path>')
 @limiter.exempt
-@cache.memoize(timeout=2592000)
 def static_service(path):
 	resp = make_response(send_from_directory('assets', path))
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
@@ -329,7 +331,6 @@ def static_service(path):
 @app.get('/hostedimages/<path>')
 @app.get("/static/images/<path>")
 @limiter.exempt
-@cache.memoize(timeout=2592000)
 def images(path):
 	resp = make_response(send_from_directory('/images', path.replace('.WEBP','.webp')))
 	resp.headers.remove("Cache-Control")
@@ -340,7 +341,6 @@ def images(path):
 	return resp
 
 @app.get("/robots.txt")
-@cache.memoize(timeout=86400)
 def robots_txt():
 	return send_file("assets/robots.txt")
 
@@ -391,7 +391,6 @@ def formatting(v):
 	return render_template("formatting.html", v=v)
 
 @app.get("/service-worker.js")
-@cache.memoize(timeout=86400)
 def serviceworker():
 	with open("files/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
 
