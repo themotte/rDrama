@@ -243,7 +243,7 @@ def transfer_coins(v, username):
 		tax = math.ceil(amount*0.03)
 
 		log_message = f"@{v.username} has transferred {amount} coins to @{receiver.username}"
-		send_repeatable_notification(CARP_ID, log_message)
+		send_repeatable_notification(TAX_NOTIF_ID, log_message)
 
 		receiver.coins += amount-tax
 		v.coins -= amount
@@ -278,7 +278,7 @@ def transfer_bux(v, username):
 
 		receiver.procoins += amount
 		v.procoins -= amount
-		send_repeatable_notification(receiver.id, f":marseycapitalistmanlet: @{v.username} has gifted you {amount} marseybux!")
+		send_repeatable_notification(TAX_NOTIF_ID, f":marseycapitalistmanlet: @{v.username} has gifted you {amount} marseybux!")
 		g.db.add(receiver)
 		g.db.add(v)
 
