@@ -77,7 +77,7 @@ def publish(pid, v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 
-	if v.admin_level > 0 and ("[changelog]" in post.title or "(changelog)" in post.title):
+	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
 		send_discord_message(f"{request.host_url}{post.permalink[1:]}")
 		cache.delete_memoized(changeloglist)
 
@@ -1075,7 +1075,7 @@ def submit_post(v):
 
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
-	if v.admin_level > 0 and ("[changelog]" in new_post.title or "(changelog)" in new_post.title) and not new_post.private:
+	if v.admin_level > 0 and ("[changelog]" in new_post.title.lower() or "(changelog)" in new_post.title.lower()) and not new_post.private:
 		send_discord_message(f"{request.host_url}{new_post.permalink[1:]}")
 		cache.delete_memoized(changeloglist)
 

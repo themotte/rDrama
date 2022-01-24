@@ -56,7 +56,12 @@ def participation_stats(v):
 
 	day = now - 86400
 
-	data = {"marseys": g.db.query(Marsey.name).count(),
+	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats())
+
+
+@cache.memoize(timeout=86400)
+def stats():
+	return {"marseys": g.db.query(Marsey.name).count(),
 			"users": g.db.query(User.id).count(),
 			"private_users": g.db.query(User.id).filter_by(is_private=True).count(),
 			"banned_users": g.db.query(User.id).filter(User.is_banned > 0).count(),
@@ -84,10 +89,6 @@ def participation_stats(v):
 			"total_awards": g.db.query(AwardRelationship.id).count(),
 			"awards_given": g.db.query(AwardRelationship.id).filter(or_(AwardRelationship.submission_id != None, AwardRelationship.comment_id != None)).count()
 			}
-
-
-	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=data)
-
 
 @app.get("/chart")
 @cache.memoize(timeout=86400)
@@ -301,13 +302,13 @@ def submit_contact(v):
 	return render_template("contact.html", v=v, msg="Your message has been sent.")
 
 @app.get('/archives')
-@auth_required
-def archivesindex(v):
+@cache.memoize(timeout=86400)
+def archivesindex():
 	return redirect("/archives/index.html")
 
 @app.get('/archives/<path:path>')
-@auth_required
-def archives(v, path):
+@cache.memoize(timeout=86400)
+def archives(path):
 	resp = make_response(send_from_directory('/archives', path))
 	if request.path.endswith('.css'): resp.headers.add("Content-Type", "text/css")
 	return resp
@@ -352,18 +353,14 @@ def robots_txt():
 @app.get("/settings")
 @auth_required
 def settings(v):
-
-
 	return redirect("/settings/profile")
 
 
 @app.get("/settings/profile")
 @auth_required
 def settings_profile(v):
+	return render_template("settings_profile.html", v=v)
 
-
-	return render_template("settings_profile.html",
-						   v=v)
 
 @app.get("/badges")
 @auth_required
@@ -400,8 +397,8 @@ def formatting(v):
 	return render_template("formatting.html", v=v)
 
 @app.get("/service-worker.js")
-@auth_required
-def serviceworker(v):
+@cache.memoize(timeout=86400)
+def serviceworker():
 	with open("files/assets/js/service-worker.js", "r") as f: return Response(f.read(), mimetype='application/javascript')
 
 @app.get("/settings/security")
