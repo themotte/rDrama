@@ -98,7 +98,7 @@ def submit_get(v):
 @auth_desired
 def post_id(pid, anything=None, v=None):
 	if not v and not request.path.startswith('/logged_out') and not request.headers.get("Authorization"):
-		return redirect(f"/logged_out{request.full_path}")
+		return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
 
 	if v and request.path.startswith('/logged_out'): v = None
 
