@@ -135,10 +135,6 @@ def notifications(v):
 @auth_desired
 def front_all(v):
 
-	if not session.get("session_id"):
-		session.permanent = True
-		session["session_id"] = secrets.token_hex(49)
-
 	if not v and request.path == "/" and not request.headers.get("Authorization"):
 		return redirect(f"{SITE_FULL}/logged_out{request.full_path}")
 
