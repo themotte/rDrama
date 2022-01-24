@@ -24,10 +24,8 @@ def marseys(v):
 @app.get("/marsey_list")
 @cache.memoize(timeout=600)
 def marsey_list():
-	marseys = {}
-	for marsey, user in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc()):
-		marseys[marsey.name] = f"{user} {marsey.tags}"
-	return marseys
+	marseys = [f"{x.name} : {y} {x.tags}" for x, y in g.db.query(Marsey, User.username).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())]
+	return str(marseys).replace("'",'"')
 
 @app.get("/terms")
 @app.get("/logged_out/terms")
