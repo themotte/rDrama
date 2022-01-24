@@ -442,6 +442,7 @@ def badge_grant_post(v):
 	g.db.add(new_badge)
 	
 	if v.id != user.id:
+		g.db.flush()
 		text = f"@{v.username} has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}"
 		send_notification(user.id, text)
 	
@@ -718,6 +719,7 @@ def agendaposter(user_id, v):
 		if not user.has_badge(26):
 			badge = Badge(user_id=user.id, badge_id=26)
 			g.db.add(badge)
+			g.db.flush()
 			send_notification(user.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	else:
