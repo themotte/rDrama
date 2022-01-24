@@ -157,9 +157,7 @@
 						<a class="btn btn-primary" role="button" onclick="toggleElement('profile-toggleable', 'bux-transfer')">Gift Marseybux</a>
 
 						{% if v.admin_level > 2 %}
-							{% if request.host != "rdrama.net" %}
-								<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
-							{% endif %}
+							<a id="admin" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin','unadmin')">Make admin</a>
 
 							<a id="unadmin" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin','unadmin')">Remove admin</a>
 
@@ -445,9 +443,7 @@
 					<a class="btn btn-primary" role="button" onclick="toggleElement('profile-toggleable', 'bux-transfer-mobile')">Gift Marseybux</a>
 
 					{% if v.admin_level > 2 %} 
-						{% if request.host != "rdrama.net" %}
-							<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
-						{% endif %}
+						<a id="admin2" class="{% if u.admin_level > 1 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/make_admin','admin2','unadmin2')">Make admin</a>
 
 						<a id="unadmin2" class="{% if u.admin_level < 2 %}d-none{% endif %} btn btn-primary" href="javascript:void(0)" onclick="post_toast2('/@{{u.username}}/remove_admin','admin2','unadmin2')">Remove admin</a>
 
