@@ -56,7 +56,11 @@ class Badge(Base):
 	@property
 	@lazy
 	def name(self):
-		return self.badge.name
+		try: return self.badge.name
+		except Exception as e:
+			print(e)
+			print(self.badge_id)
+			return ""
 
 	@property
 	@lazy
