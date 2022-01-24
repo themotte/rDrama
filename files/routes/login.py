@@ -15,7 +15,7 @@ def login_get(v):
 	redir = request.values.get("redirect")
 	if redir:
 		redir = redir.replace("/logged_out", "").strip()
-		if not redir.startswith(request.host_url) and not redir.startswith('/'): redir = None
+		if not redir.startswith(SITE_FULL) and not redir.startswith('/'): redir = None
 
 	if v and redir: return redirect(redir)
 
@@ -143,7 +143,7 @@ def login_post():
 	redir = request.values.get("redirect")
 	if redir:
 		redir = redir.replace("/logged_out", "").strip()
-		if not redir.startswith(request.host_url) and not redir.startswith('/'): redir = '/'
+		if not redir.startswith(SITE_FULL) and not redir.startswith('/'): redir = '/'
 
 	return redirect(redir)
 
@@ -366,7 +366,7 @@ def post_forgot():
 	if user:
 		now = int(time.time())
 		token = generate_hash(f"{user.id}+{now}+forgot+{user.login_nonce}")
-		url = f"{request.host_url}reset?id={user.id}&time={now}&token={token}"
+		url = f"{SITE_FULL}/reset?id={user.id}&time={now}&token={token}"
 
 		send_mail(to_address=user.email,
 				  subject="Password Reset Request",
@@ -489,7 +489,7 @@ def request_2fa_disable():
 	valid=int(time.time())
 	token=generate_hash(f"{user.id}+{user.username}+disable2fa+{valid}+{user.mfa_secret}+{user.login_nonce}")
 
-	action_url=f"{request.host_url}reset_2fa?id={user.id}&t={valid}&token={token}"
+	action_url=f"{SITE_FULL}/reset_2fa?id={user.id}&t={valid}&token={token}"
 	
 	send_mail(to_address=user.email,
 			  subject="2FA Removal Request",

@@ -507,8 +507,8 @@ def api_comment(v):
 						'notification': {
 							'title': f'New reply by @{c.author_name}',
 							'body': notifbody,
-							'deep_link': f'{request.host_url}comment/{c.id}?context=9&read=true#context',
-							'icon': f'{request.host_url}assets/images/{SITE_NAME}/icon.webp',
+							'deep_link': f'{SITE_FULL}/comment/{c.id}?context=9&read=true#context',
+							'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp',
 						}
 					},
 					'fcm': {

@@ -20,7 +20,7 @@ def process_image(file=None, filename=None, resize=0):
 			exif[k] = None
 			del exif[k]
 	i.info["exif"] = exif.tobytes()
-	transposed = ImageOps.exif_transpose(i)
+	i = ImageOps.exif_transpose(i)
 
 	if resize:
 		size = resize, resize

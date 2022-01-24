@@ -473,8 +473,8 @@ def message2(v, username):
 					'notification': {
 						'title': f'New message from @{v.username}',
 						'body': notifbody,
-						'deep_link': f'{request.host_url}notifications?messages=true',
-						'icon': f'{request.host_url}assets/images/{SITE_NAME}/icon.webp',
+						'deep_link': f'{SITE_FULL}/notifications?messages=true',
+						'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp',
 					}
 				},
 				'fcm': {
@@ -540,8 +540,8 @@ def messagereply(v):
 					'notification': {
 						'title': f'New message from @{v.username}',
 						'body': notifbody,
-						'deep_link': f'{request.host_url}notifications?messages=true',
-						'icon': f'{request.host_url}assets/images/{SITE_NAME}/icon.webp',
+						'deep_link': f'{SITE_FULL}/notifications?messages=true',
+						'icon': f'{SITE_FULL}/assets/images/{SITE_NAME}/icon.webp',
 					}
 				},
 				'fcm': {

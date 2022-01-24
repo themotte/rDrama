@@ -382,7 +382,7 @@ def award_post(pid, v):
 
 	g.db.commit()
 	if request.referrer and len(request.referrer) > 1:
-		if request.referrer == f'{request.host_url}submit': return redirect(post.permalink)
+		if request.referrer == f'{SITE_FULL}/submit': return redirect(post.permalink)
 		elif request.host in request.referrer: return redirect(request.referrer)
 	return redirect("/")
 
