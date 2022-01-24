@@ -50,15 +50,15 @@ def sidebar(v):
 @auth_required
 def participation_stats(v):
 
-	now = int(time.time())
-
-	day = now - 86400
-
 	return render_template("admin/content_stats.html", v=v, title="Content Statistics", data=stats())
 
 
 @cache.memoize(timeout=86400)
 def stats():
+	now = int(time.time())
+
+	day = now - 86400
+
 	return {"marseys": g.db.query(Marsey.name).count(),
 			"users": g.db.query(User.id).count(),
 			"private_users": g.db.query(User.id).filter_by(is_private=True).count(),
