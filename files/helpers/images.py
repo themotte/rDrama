@@ -35,6 +35,7 @@ def process_image(file=None, filename=None, resize=0):
 
 		om = next(frames)
 		om.info = i.info
+		om = ImageOps.exif_transpose(om)
 		om.save(filename, format="WEBP", save_all=True, append_images=list(frames), loop=0, method=6, allow_mixed=True)
 	elif i.format.lower() != "webp":
 		if i.format.lower() == "gif":
