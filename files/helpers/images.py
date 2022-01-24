@@ -14,12 +14,12 @@ def process_image(file=None, filename=None, resize=0):
 		else: i = IImage.open(filename)
 	except: return ""
 
-	# exif = i.getexif()
-	# for k in exif.keys():
-	# 	if k != 0x0112:
-	# 		exif[k] = None
-	# 		del exif[k]
-	# i.info["exif"] = exif.tobytes()
+	exif = i.getexif()
+	for k in exif.keys():
+		if k != 0x0112:
+			exif[k] = None
+			del exif[k]
+	i.info["exif"] = exif.tobytes()
 
 	if resize:
 		size = resize, resize
