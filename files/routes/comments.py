@@ -191,7 +191,7 @@ def api_comment(v):
 				elif parent_post.id == 37697:
 					filename = 'files/assets/images/Drama/banners/' + str(len(listdir('files/assets/images/Drama/banners'))+1) + '.webp'
 					process_image(file, filename)
-				elif parent_post.id == 50:
+				elif parent_post.id == 37833:
 					try: badge_def = loads(body.lower())
 					except: return {"error": "You didn't follow the format retard"}, 500
 					name = badge_def["name"]
@@ -203,7 +203,7 @@ def api_comment(v):
 					filename = f'files/assets/images/badges/{badge.id}.webp'
 					process_image(file, filename, 200)
 					requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]})
-				elif parent_post.id == 49:
+				elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
 					try: marsey = loads(body.lower())
 					except Exception as e:
 						print(body.lower(), flush=True)
