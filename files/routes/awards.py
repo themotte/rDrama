@@ -81,6 +81,7 @@ def shop(v):
 
 
 @app.post("/buy/<award>")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def buy(v, award):
 	if award == 'benefactor' and not request.values.get("mb"):
