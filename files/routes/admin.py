@@ -175,7 +175,7 @@ def club_ban(v, username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def make_meme_admin(v, username):
-	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
+	if request.host == 'pcmemes.net' or (SITE_NAME == 'rdrama.net' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 1
@@ -188,7 +188,7 @@ def make_meme_admin(v, username):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @admin_level_required(2)
 def remove_meme_admin(v, username):
-	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
+	if request.host == 'pcmemes.net' or (SITE_NAME == 'rdrama.net' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
 		user = get_user(username)
 		if not user: abort(404)
 		user.admin_level = 0

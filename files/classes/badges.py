@@ -59,7 +59,7 @@ class Badge(Base):
 		try: return self.badge.name
 		except Exception as e:
 			print(e)
-			print(self.badge_id)
+			print(self.badge_id, flush=True)
 			return ""
 
 	@property

@@ -1,7 +1,7 @@
 export DATABASE_URL="postgresql://postgres@localhost:5432"
 export MASTER_KEY="3435tdfsdudebussylmaoxxt43"
 export DOMAIN="localhost"
-export SITE_NAME="Drama"
+export SITE_NAME="rdrama.net"
 export GIPHY_KEY="3435tdfsdudebussylmaoxxt43"
 export DISCORD_SERVER_ID="3435tdfsdudebussylmaoxxt43"
 export DISCORD_CLIENT_ID="3435tdfsdudebussylmaoxxt43"
