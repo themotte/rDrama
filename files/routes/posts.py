@@ -16,6 +16,7 @@ from .front import frontlist, changeloglist
 from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
 from os import path
 import requests
+from shutil import copyfile
 
 db = db_session()
 marseys = tuple(f':#{x[0]}:' for x in db.query(Marsey.name).all())
@@ -426,7 +427,10 @@ def edit_post(pid, v):
 	if request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file"]
 		if file.content_type.startswith('image/'):
-			body += f"\n\n![]({process_image(file)})"
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			file.save(name)
+			url = process_image(name)
+			body += f"\n\n![]({url})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -652,7 +656,7 @@ def thumbnail_thread(pid):
 		for chunk in image_req.iter_content(1024):
 			file.write(chunk)
 
-	post.thumburl = process_image(filename=name, resize=100)
+	post.thumburl = process_image(name, resize=100)
 	db.add(post)
 	db.commit()
 	db.close()
@@ -858,7 +862,9 @@ def submit_post(v):
 	if request.files.get("file2") and request.headers.get("cf-ipcountry") != "T1":
 		file=request.files["file2"]
 		if file.content_type.startswith('image/'):
-			body += f"\n\n![]({process_image(file)})"
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			file.save(name)
+			body += f"\n\n![]({process_image(name)})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:
@@ -947,8 +953,13 @@ def submit_post(v):
 		file = request.files['file']
 
 		if file.content_type.startswith('image/'):
-			new_post.url = process_image(file)
-			new_post.thumburl = process_image(file, resize=100)	
+			name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+			file.save(name)
+			new_post.url = process_image(name)
+
+			name2 = name.replace('.webp', 'r.webp')
+			copyfile(name, name2)
+			new_post.thumburl = process_image(name2, resize=100)	
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
 			with open("video.mp4", 'rb') as f:

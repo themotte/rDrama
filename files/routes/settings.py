@@ -11,6 +11,7 @@ from .front import frontlist
 import os
 from files.helpers.sanitize import filter_emojis_only
 from files.helpers.discord import add_role
+from shutil import copyfile
 import requests
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_\-]{3,25}$")
@@ -255,7 +256,10 @@ def settings_profile_post(v):
 		if request.files.get('file'):
 			file = request.files['file']
 			if file.content_type.startswith('image/'):
-				bio += f"\n\n![]({process_image(file)})"
+				name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+				file.save(name)
+				url = process_image(name)
+				bio += f"\n\n![]({url})"
 			elif file.content_type.startswith('video/'):
 				file.save("video.mp4")
 				with open("video.mp4", 'rb') as f:
@@ -621,11 +625,15 @@ def settings_images_profile(v):
 
 	file = request.files["profile"]
 
-	highres = process_image(file)
+	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	file.save(name)
+	highres = process_image(name)
 
 	if not highres: abort(400)
 
-	imageurl = process_image(file, resize=100)
+	name2 = name.replace('.webp', 'r.webp')
+	copyfile(name, name2)
+	imageurl = process_image(name2, resize=100)
 
 	if not imageurl: abort(400)
 
@@ -652,7 +660,9 @@ def settings_images_banner(v):
 
 	file = request.files["banner"]
 
-	bannerurl = process_image(file)
+	name = f'/images/{time.time()}'.replace('.','')[:-5] + '.webp'
+	file.save(name)
+	bannerurl = process_image(name)
 
 	if bannerurl:
 		if v.bannerurl and '/images/' in v.bannerurl : os.remove('/images/' + v.bannerurl.split('/images/')[1])
