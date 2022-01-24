@@ -4640,6 +4640,9 @@ lite-youtube {
     cursor: pointer;
     max-width: 720px;
     margin-bottom: 1.3rem !important;
+}
+
+div > lite-youtube {
     margin: auto
 }
 
