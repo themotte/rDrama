@@ -70,7 +70,7 @@ let TRANSFER_TAX = document.getElementById('tax').innerHTML
 
 function updateTax(mobile=false) {
 	let suf = mobile ? "-mobile" : "";
-	let amount = parseInt(document.getElementById("coins-transfer-amount" + suf).value);
+	let amount = parseInt(document.getElementById("coin-transfer-amount" + suf).value);
 	if(amount > 0) document.getElementById("coins-transfer-taxed" + suf).innerText = amount - Math.ceil(amount*TRANSFER_TAX);
 }
 
@@ -84,12 +84,12 @@ function transferCoins(mobile=false) {
 	let t = event.target;
 	t.disabled = true;
 
-	let amount = parseInt(document.getElementById("coins-transfer-amount").value);
+	let amount = parseInt(document.getElementById("coin-transfer-amount").value);
 	let transferred = amount - Math.ceil(amount*TRANSFER_TAX);
 	let username = document.getElementById('username').innerHTML
 
 	post_toast_callback(`/@${username}/transfer_coins`,
-		{"amount": document.getElementById(mobile ? "coins-transfer-amount-mobile" : "coins-transfer-amount").value},
+		{"amount": document.getElementById(mobile ? "coin-transfer-amount-mobile" : "coin-transfer-amount").value},
 		(xhr) => {
 		if(xhr.status == 200) {
 			document.getElementById("user-coins-amount").innerText = parseInt(document.getElementById("user-coins-amount").innerText) - amount;
