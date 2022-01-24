@@ -55,9 +55,7 @@ def participation_stats(v):
 
 @cache.memoize(timeout=86400)
 def stats():
-	now = int(time.time())
-
-	day = now - 86400
+	day = int(time.time()) - 86400
 
 	return {"marseys": g.db.query(Marsey.name).count(),
 			"users": g.db.query(User.id).count(),
