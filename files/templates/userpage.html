@@ -95,7 +95,7 @@
 					</div> 
 				</div>
 
-				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img alt="{{u.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?a=1007">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p class="font-weight-bolder" style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img alt="{{u.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?a=1008">{% endif %}{{u.customtitle | safe}}</p>
 				{% else %}<pre></pre>
 				{% endif %}
 
@@ -103,10 +103,10 @@
 
 				<div class="font-weight-bolder">
 					<span id="profile-coins-amount">{{u.coins}}</span>
-					<img alt="coins" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="coins" height="20" src="/static/assets/images/marseycoin.webp?a=4">&nbsp;&nbsp;
+					<img alt="coins" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="coins" height="20" src="/static/assets/images/marseycoin.webp?a=1008">&nbsp;&nbsp;
 
 					<span id="profile-bux-amount">{{u.procoins}}</span>
-					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="20" src="/static/assets/images/marseybux.webp?a=4">&nbsp;&nbsp;
+					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="20" src="/static/assets/images/marseybux.webp?a=1008">&nbsp;&nbsp;
 
 					<a href="/@{{u.username}}/followers">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp;
 
@@ -366,7 +366,7 @@
 				{% if v and v.has_follower(u) and not v.is_nofollow %}
 					<span class="followsyou badge badge-secondary text-small align-middle mx-1">Follows you</span>
 				{% endif %}
-				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img alt="@{{u.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?a=1007">{% endif %}{{u.customtitle | safe}}</p>
+				{% if u.customtitle %}<p style="color: #{{u.titlecolor}}">{% if u.quadrant %}<img alt="@{{u.quadrant}} quadrant" loading="lazy" height="20" src="/static/assets/images/quadrants/{{u.quadrant}}.webp?a=1008">{% endif %}{{u.customtitle | safe}}</p>
 				{% else %}
 					<pre></pre>
 				{% endif %}
@@ -375,10 +375,10 @@
 				
 				<div class="font-weight-normal">
 					<span id="profile-coins-amount-mobile" class="font-weight-bold">{{u.coins}}</span>
-					<img alt="coins" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="coins" height="15" src="/static/assets/images/marseycoin.webp?a=4">&nbsp;&nbsp;
+					<img alt="coins" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="coins" height="15" src="/static/assets/images/marseycoin.webp?a=1008">&nbsp;&nbsp;
 
 					<span id="profile-bux-amount-mobile" class="font-weight-bold">{{u.procoins}}</span>
-					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="15" src="/static/assets/images/marseybux.webp?a=4">&nbsp;&nbsp;
+					<img alt="marseybux" class="ml-1 mb-1" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Marseybux" height="15" src="/static/assets/images/marseybux.webp?a=1008">&nbsp;&nbsp;
 
 					<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.stored_subscriber_count}} follower{{'s' if u.stored_subscriber_count != 1 else ''}}</a>&nbsp;&nbsp;
 
