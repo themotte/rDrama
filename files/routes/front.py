@@ -402,7 +402,7 @@ def random_post(v):
 	n = random.randint(1, total - 2)
 
 	post = x.offset(n).limit(1).one_or_none()
-	return redirect(f"/post/{post.id}")
+	return redirect(f"{SITE_FULL}/post/{post.id}")
 
 @cache.memoize(timeout=86400)
 def comment_idlist(page=1, v=None, nsfw=False, sort="new", t="all"):

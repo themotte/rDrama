@@ -382,7 +382,7 @@ def get_profilecss(v, username):
 @app.get("/@<username>/song")
 def usersong(username):
 	user = get_user(username)
-	if user.song: return redirect(f"/static/song/{user.song}.mp3")
+	if user.song: return redirect(f"{SITE_FULL}/static/song/{user.song}.mp3")
 	else: abort(404)
 
 @app.get("/song/<song>")
@@ -416,7 +416,7 @@ def unsubscribe(v, post_id):
 @app.get("/report_bugs")
 @auth_required
 def reportbugs(v):
-	return redirect(f'/post/{BUG_THREAD}')
+	return redirect(f'{SITE_FULL}/post/{BUG_THREAD}')
 
 @app.post("/@<username>/message")
 @limiter.limit("1/second;2/minute;10/hour;50/day")
@@ -617,7 +617,7 @@ def user_id(id, v):
 @app.get("/u/<username>")
 @auth_required
 def redditor_moment_redirect(username, v):
-	return redirect(f"/@{username}")
+	return redirect(f"{SITE_FULL}/@{username}")
 
 @app.get("/@<username>/followers")
 @auth_required
@@ -760,7 +760,7 @@ def u_username_comments(username, v=None):
 
 	user = get_user(username, v=v)
 
-	if username != user.username: return redirect(f'/@{user.username}/comments')
+	if username != user.username: return redirect(f'{SITE_FULL}/@{user.username}/comments')
 
 	u = user
 

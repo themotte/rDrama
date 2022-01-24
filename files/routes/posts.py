@@ -827,7 +827,7 @@ def submit_post(v):
 					_note="spam"
 					)
 			g.db.add(ma)
-		return redirect("/notifications")
+		return redirect(f"{SITE_FULL}/notifications")
 
 	if len(str(body)) > 20000:
 

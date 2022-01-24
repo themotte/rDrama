@@ -302,7 +302,7 @@ def submit_contact(v):
 @app.get('/archives')
 @cache.memoize(timeout=86400)
 def archivesindex():
-	return redirect("/archives/index.html")
+	return redirect(f"{SITE_FULL}/archives/index.html")
 
 @app.get('/archives/<path:path>')
 @cache.memoize(timeout=86400)
@@ -351,7 +351,7 @@ def robots_txt():
 @app.get("/settings")
 @auth_required
 def settings(v):
-	return redirect("/settings/profile")
+	return redirect(f"{SITE_FULL}/settings/profile")
 
 
 @app.get("/settings/profile")

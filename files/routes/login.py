@@ -111,13 +111,13 @@ def login_post():
 		now = int(time.time())
 
 		if now - int(request.values.get("time")) > 600:
-			return redirect('/login')
+			return redirect(f'{SITE_FULL}/login')
 
 		formhash = request.values.get("hash")
 		if not validate_hash(f"{account.id}+{request.values.get('time')}+2fachallenge",
 							 formhash
 							 ):
-			return redirect("/login")
+			return redirect(f"{SITE_FULL}/login")
 
 		if not account.validate_2fa(request.values.get("2fa_token", "").strip()):
 			hash = generate_hash(f"{account.id}+{time}+2fachallenge")
@@ -173,7 +173,7 @@ def sign_up_get(v):
 	with open('disable_signups', 'r') as f:
 		if f.read() == "yes": return {"error": "New account registration is currently closed. Please come back later."}, 403
 
-	if v: return redirect("/")
+	if v: return redirect(f"{SITE_FULL}/")
 
 	agent = request.headers.get("User-Agent", None)
 	if not agent: abort(403)
@@ -248,7 +248,7 @@ def sign_up_post(v):
 			if user:
 				args["ref"] = user.username
 
-		return redirect(f"/signup?{urlencode(args)}")
+		return redirect(f"{SITE_FULL}/signup?{urlencode(args)}")
 
 	if now - int(form_timestamp) < 5:
 		return new_signup("There was a problem. Please try again.")
@@ -344,7 +344,7 @@ def sign_up_post(v):
 
 	g.db.commit()
 
-	return redirect("/")
+	return redirect(f"{SITE_FULL}/")
 
 
 @app.get("/forgot")
@@ -417,7 +417,7 @@ def get_reset():
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_desired
 def post_reset(v):
-	if v: return redirect('/')
+	if v: return redirect(f'{SITE_FULL}/')
 
 	user_id = request.values.get("user_id")
 

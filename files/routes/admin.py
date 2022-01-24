@@ -624,7 +624,7 @@ def admin_link_accounts(v):
 	g.db.add(new_alt)
 
 	g.db.commit()
-	return redirect(f"/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
+	return redirect(f"{SITE_FULL}/admin/alt_votes?u1={g.db.query(User).get(u1).username}&u2={g.db.query(User).get(u2).username}")
 
 
 @app.get("/admin/removed/posts")
@@ -1247,7 +1247,7 @@ def admin_toggle_ban_domain(v):
 
 	g.db.commit()
 
-	return redirect("/admin/banned_domains/")
+	return redirect(f"{SITE_FULL}/admin/banned_domains/")
 
 
 @app.post("/admin/nuke_user")

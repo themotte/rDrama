@@ -385,7 +385,7 @@ def award_post(pid, v):
 	if request.referrer and len(request.referrer) > 1:
 		if request.referrer == f'{SITE_FULL}/submit': return redirect(post.permalink)
 		elif request.host in request.referrer: return redirect(request.referrer)
-	return redirect("/")
+	return redirect(f"{SITE_FULL}/")
 
 
 @app.get("/comment/<cid>/awards")
@@ -588,7 +588,7 @@ def award_comment(cid, v):
 	g.db.commit()
 	if request.referrer and len(request.referrer) > 1 and request.host in request.referrer:
 		return redirect(request.referrer)
-	return redirect("/")
+	return redirect(f"{SITE_FULL}/")
 
 @app.get("/admin/awards")
 @admin_level_required(2)

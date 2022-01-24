@@ -413,7 +413,7 @@ def namecolor(v):
 	v.namecolor = color
 	g.db.add(v)
 	g.db.commit()
-	return redirect("/settings/profile")
+	return redirect(f"{SITE_FULL}/settings/profile")
 	
 @app.post("/settings/themecolor")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -426,7 +426,7 @@ def themecolor(v):
 	v.themecolor = themecolor
 	g.db.add(v)
 	g.db.commit()
-	return redirect("/settings/profile")
+	return redirect(f"{SITE_FULL}/settings/profile")
 
 @app.post("/settings/gumroad")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -491,7 +491,7 @@ def titlecolor(v):
 	v.titlecolor = titlecolor
 	g.db.add(v)
 	g.db.commit()
-	return redirect("/settings/profile")
+	return redirect(f"{SITE_FULL}/settings/profile")
 
 @app.post("/settings/verifiedcolor")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -503,7 +503,7 @@ def verifiedcolor(v):
 	v.verifiedcolor = verifiedcolor
 	g.db.add(v)
 	g.db.commit()
-	return redirect("/settings/profile")
+	return redirect(f"{SITE_FULL}/settings/profile")
 
 @app.post("/settings/security")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -808,7 +808,7 @@ def settings_remove_discord(v):
 
 	g.db.commit()
 
-	return redirect("/settings/profile")
+	return redirect(f"{SITE_FULL}/settings/profile")
 
 @app.get("/settings/content")
 @auth_required
@@ -858,7 +858,7 @@ def settings_name_change(v):
 
 	g.db.commit()
 
-	return redirect("/settings/profile")
+	return redirect(f"{SITE_FULL}/settings/profile")
 
 @app.post("/settings/song_change")
 @limiter.limit("1/second;5/day")
@@ -872,7 +872,7 @@ def settings_song_change(v):
 		v.song = None
 		g.db.add(v)
 		g.db.commit()
-		return redirect("/settings/profile")
+		return redirect(f"{SITE_FULL}/settings/profile")
 
 	song = song.replace("https://music.youtube.com", "https://youtube.com")
 	if song.startswith(("https://www.youtube.com/watch?v=", "https://youtube.com/watch?v=", "https://m.youtube.com/watch?v=")):
@@ -889,7 +889,7 @@ def settings_song_change(v):
 		v.song = id
 		g.db.add(v)
 		g.db.commit()
-		return redirect("/settings/profile")
+		return redirect(f"{SITE_FULL}/settings/profile")
 		
 	
 	req = requests.get(f"https://www.googleapis.com/youtube/v3/videos?id={id}&key={YOUTUBE_KEY}&part=contentDetails", timeout=5).json()
@@ -937,7 +937,7 @@ def settings_song_change(v):
 
 	g.db.commit()
 
-	return redirect("/settings/profile")
+	return redirect(f"{SITE_FULL}/settings/profile")
 
 @app.post("/settings/title_change")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
@@ -958,4 +958,4 @@ def settings_title_change(v):
 		g.db.add(v)
 		g.db.commit()
 
-	return redirect("/settings/profile")
+	return redirect(f"{SITE_FULL}/settings/profile")
