@@ -140,6 +140,10 @@ def front_all(v):
 
 	if v and request.path.startswith('/logged_out'): v = None
 
+	if not session.get("session_id"):
+		session.permanent = True
+		session["session_id"] = secrets.token_hex(49)
+
 	try: page = max(int(request.values.get("page", 1)), 1)
 	except: abort(400)
 
