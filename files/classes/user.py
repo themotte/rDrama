@@ -432,7 +432,9 @@ class User(Base):
 	@lazy
 	def profile_url(self):
 		if self.agendaposter: return f"{SITE_FULL}/static/assets/images/defaultpictures/agendaposter/{random.randint(1, 51)}.webp?a=1008"
-		if self.profileurl: return self.profileurl
+		if self.profileurl: 
+			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
+			return self.profileurl
 		if SITE_NAME == 'Drama': return f"{SITE_FULL}/static/assets/images/defaultpictures/{random.randint(1, 150)}.webp?a=1008"
 		return f"{SITE_FULL}/static/assets/images/default-profile-pic.webp?a=1008"
 
