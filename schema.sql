@@ -128,6 +128,37 @@ ALTER SEQUENCE public.award_relationships_id_seq OWNED BY public.award_relations
 
 
 --
+-- Name: badge_defs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.badge_defs (
+    id integer NOT NULL,
+    name character varying(50) NOT NULL,
+    description character varying(200)
+);
+
+
+--
+-- Name: badge_defs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.badge_defs_id_seq
+    AS integer
+    START WITH 106
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: badge_defs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.badge_defs_id_seq OWNED BY public.badge_defs.id;
+
+
+--
 -- Name: badges; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -264,11 +295,11 @@ CREATE TABLE public.comments (
     body character varying(10000),
     body_html character varying(40000),
     ban_reason character varying(25),
-    slots_result character varying(30),
     realupvotes integer,
     top_comment_id integer,
     is_pinned_utc integer,
-    ghost boolean
+    ghost boolean,
+    slots_result character varying(30)
 );
 
 
@@ -408,6 +439,18 @@ CREATE SEQUENCE public.follows_id_seq
 --
 
 ALTER SEQUENCE public.follows_id_seq OWNED BY public.follows.id;
+
+
+--
+-- Name: marseys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.marseys (
+    name character varying(30) NOT NULL,
+    author_id integer NOT NULL,
+    tags character varying(200) NOT NULL,
+    count integer DEFAULT 0 NOT NULL
+);
 
 
 --
@@ -870,6 +913,13 @@ ALTER TABLE ONLY public.award_relationships ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: badge_defs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badge_defs ALTER COLUMN id SET DEFAULT nextval('public.badge_defs_id_seq'::regclass);
+
+
+--
 -- Name: badges id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1020,6 +1070,14 @@ ALTER TABLE ONLY public.award_relationships
 
 
 --
+-- Name: badge_defs badge_defs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badge_defs
+    ADD CONSTRAINT badge_defs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: badges badges_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1097,6 +1155,14 @@ ALTER TABLE ONLY public.follows
 
 ALTER TABLE ONLY public.follows
     ADD CONSTRAINT follows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: marseys marseys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.marseys
+    ADD CONSTRAINT marseys_pkey PRIMARY KEY (name);
 
 
 --
@@ -1193,6 +1259,14 @@ ALTER TABLE ONLY public.subscriptions
 
 ALTER TABLE ONLY public.client_auths
     ADD CONSTRAINT unique_access UNIQUE (access_token);
+
+
+--
+-- Name: badge_defs unique_badge_name; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badge_defs
+    ADD CONSTRAINT unique_badge_name UNIQUE (name);
 
 
 --
@@ -1443,6 +1517,27 @@ CREATE INDEX follow_user_id_index ON public.follows USING btree (user_id);
 
 
 --
+-- Name: marseys_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX marseys_idx ON public.marseys USING btree (name);
+
+
+--
+-- Name: marseys_idx2; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX marseys_idx2 ON public.marseys USING btree (author_id);
+
+
+--
+-- Name: marseys_idx3; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX marseys_idx3 ON public.marseys USING btree (count DESC);
+
+
+--
 -- Name: modaction_action_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1685,6 +1780,14 @@ CREATE INDEX votes_submission_id_index ON public.votes USING btree (submission_i
 --
 
 CREATE INDEX votes_type_index ON public.votes USING btree (vote_type);
+
+
+--
+-- Name: badges badges_badge_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badges
+    ADD CONSTRAINT badges_badge_id_fkey FOREIGN KEY (badge_id) REFERENCES public.badge_defs(id);
 
 
 --
