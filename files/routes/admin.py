@@ -28,7 +28,7 @@ month = datetime.now().strftime('%B')
 
 
 @app.post("/@<username>/make_admin")
-@limiter.limit("1/day")
+@limiter.limit("1/second;5/day")
 @admin_level_required(3)
 def make_admin(v, username):
 	user = get_user(username)
