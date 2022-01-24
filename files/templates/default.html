@@ -216,7 +216,7 @@
 	{% if '@' not in request.path %}		
 		{% if v %}
 			
-			{% if SITE_NAME == 'rdrama.net' %}
+			{% if SITE_NAME == 'Drama' %}
 				{% set path = "assets/images/" + SITE_NAME + "/banners" %}
 				{% set image = "/static/" + path + "/" + listdir('files/' + path)|random() + '?a=20' %}
 

@@ -432,7 +432,7 @@ def themecolor(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def gumroad(v):
-	if SITE_NAME == 'rdrama.net': patron = 'Paypig'
+	if SITE_NAME == 'Drama': patron = 'Paypig'
 	else: patron = 'Patron'
 
 	if not (v.email and v.is_activated):
