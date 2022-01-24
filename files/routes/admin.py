@@ -28,10 +28,9 @@ month = datetime.now().strftime('%B')
 
 
 @app.post("/@<username>/make_admin")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/day")
 @admin_level_required(3)
 def make_admin(v, username):
-	if request.host == 'rdrama.net': abort(403)
 	user = get_user(username)
 	if not user: abort(404)
 	user.admin_level = 2
