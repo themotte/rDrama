@@ -14,12 +14,12 @@ def process_image(file=None, filename=None, resize=0):
 		else: i = IImage.open(filename)
 	except: return ""
 
-	exif = i.getexif()
-	for k in exif.keys():
-		if k != 0x0112:
-			exif[k] = None
-			del exif[k]
-	i.info["exif"] = exif.tobytes()
+	# exif = i.getexif()
+	# for k in exif.keys():
+	# 	if k != 0x0112:
+	# 		exif[k] = None
+	# 		del exif[k]
+	# i.info["exif"] = exif.tobytes()
 
 	if resize:
 		size = resize, resize
@@ -39,6 +39,8 @@ def process_image(file=None, filename=None, resize=0):
 	elif i.format.lower() != "webp":
 		if i.format.lower() == "gif":
 			gifwebp(input_image=filename, output_image=filename, option="-mixed -metadata none -f 100 -mt -m 6")
-		else: i.save(filename, format="WEBP", method=6)
+		else:
+			i = ImageOps.exif_transpose(i)
+			i.save(filename, format="WEBP", method=6)
 
 	return f'/static{filename}'
