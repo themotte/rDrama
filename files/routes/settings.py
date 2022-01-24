@@ -478,6 +478,7 @@ def gumroad(v):
 	if not v.has_badge(20+tier):
 		new_badge = Badge(badge_id=20+tier, user_id=v.id)
 		g.db.add(new_badge)
+		g.db.flush()
 		send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({new_badge.path})\n\n{new_badge.name}")
 	
 	g.db.commit()
