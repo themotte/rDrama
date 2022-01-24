@@ -204,10 +204,7 @@ def api_comment(v):
 					process_image(file, filename, 200)
 					requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]})
 				elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
-					try: marsey = loads(body.lower())
-					except Exception as e:
-						print(body.lower(), flush=True)
-						return {"error": f"{e}"}, 500
+					marsey = loads(body.lower())
 					name = marsey["name"]
 					if not g.db.query(Marsey.name).filter_by(name=name).first():
 						marsey = Marsey(name=marsey["name"], author_id=marsey["author_id"], tags=marsey["tags"], count=0)
