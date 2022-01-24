@@ -240,7 +240,7 @@ def log_item(id, v):
 	return render_template("log.html", v=v, actions=[action], next_exists=False, page=1, action=action, admins=admins, types=types)
 
 @app.get("/static/assets/favicon.ico")
-@cache.memoize(timeout=86400)
+@cache.memoize(timeout=2592000)
 def favicon():
 	return send_file(f"./assets/images/{SITE_NAME}/icon.webp")
 
@@ -312,9 +312,8 @@ def archives(path):
 @app.get('/assets/<path:path>')
 @app.get('/static/assets/<path:path>')
 @limiter.exempt
+@cache.memoize(timeout=2592000)
 def static_service(path):
-	if request.path.startswith('/assets/'): return redirect(request.full_path.replace('/assets/', '/static/assets/'))
-
 	resp = make_response(send_from_directory('assets', path))
 	if request.path.endswith('.webp') or request.path.endswith('.gif') or request.path.endswith('.ttf') or request.path.endswith('.woff') or request.path.endswith('.woff2'):
 		resp.headers.remove("Cache-Control")
@@ -330,9 +329,8 @@ def static_service(path):
 @app.get('/hostedimages/<path>')
 @app.get("/static/images/<path>")
 @limiter.exempt
+@cache.memoize(timeout=2592000)
 def images(path):
-	if request.path.startswith('/images/') or request.path.lower().startswith('/hostedimages/'):
-		return redirect(request.full_path.replace('/images/', '/static/images/').replace('/hostedimages/', '/static/images/'))
 	resp = make_response(send_from_directory('/images', path.replace('.WEBP','.webp')))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")

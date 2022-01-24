@@ -387,8 +387,8 @@ def usersong(username):
 
 @app.get("/song/<song>")
 @app.get("/static/song/<song>")
+@cache.memoize(timeout=2592000)
 def song(song):
-	if request.path.startswith('/song/'): return redirect(request.full_path.replace('/song/', '/static/song/'))
 	resp = make_response(send_from_directory('/songs', song))
 	resp.headers.remove("Cache-Control")
 	resp.headers.add("Cache-Control", "public, max-age=2628000")
