@@ -15,7 +15,7 @@ Installing Drama locally is the fastest way to get the software up and running a
 2- Download Drama into your machine by running this command.
 
 ```
-git clone https://github.com/Aevann11/Drama/
+git clone https://github.com/Aevann1/Drama/
 ```
 
 3- Press shift+right click inside the Drama code folder and run PowerShell. Then in PowerShell, run the following command:
@@ -35,7 +35,7 @@ docker-compose up
 1- Download Drama into your machine by running this command.
 
 ```
-git clone https://github.com/Aevann11/Drama/ /drama
+git clone https://github.com/Aevann1/Drama/ /drama
 ```
 
 2- Navigate to `/drama`

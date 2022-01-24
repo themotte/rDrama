@@ -162,7 +162,7 @@
 					<a class="nav-link" href="{{v.url}}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{v.username}}</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="/notifications{% if v.notifications_count and not v.not_post_notifications_count %}?posts=true{% endif %}">
+					<a class="nav-link position-relative" href="/notifications{% if v.notifications_count and not v.not_post_notifications_count %}?posts=true{% endif %}">
 						<i class="fas fa-envelope fa-fw mr-3"></i>Inbox
 						{% if v.notifications_count %}
 						<i class="fas fa-circle text-danger position-absolute" style="left: 19px; top: 5px; font-size: 10px;{% if not v.not_post_notifications_count %}color:blue!important{% endif %}"></i>
