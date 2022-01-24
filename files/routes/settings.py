@@ -43,9 +43,9 @@ def removebackground(v):
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
 @auth_required
 def settings_profile_post(v):
-	# if v and v.patron:
-	# 	if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
-	# elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB."}, 413
+	if v and v.patron:
+		if request.content_length > 8 * 1024 * 1024: return {"error":"Max file size is 8 MB."}, 413
+	elif request.content_length > 4 * 1024 * 1024: return {"error":"Max file size is 4 MB."}, 413
 
 
 	updated = False
@@ -537,7 +537,7 @@ def settings_security_post(v):
 		if new_email == v.email:
 			return render_template("settings_security.html", v=v, error="That email is already yours!")
 
-		url = f"{SITE_FULL}/activate"
+		url = f"{request.host_url}activate"
 
 		now = int(time.time())
 
