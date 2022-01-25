@@ -38,8 +38,7 @@ class Slots:
                             from_user.coins += reward
                             self.db.add(from_user)
 
-                            from_comment.slots_result = symbols
-                            from_comment.slots_text = text
+                            from_comment.slots_result = f'{symbols}<em>{text}</em>'
                             self.db.add(from_comment)
                             
                             self.db.commit()

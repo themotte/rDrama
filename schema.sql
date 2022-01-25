@@ -300,7 +300,6 @@ CREATE TABLE public.comments (
     is_pinned_utc integer,
     ghost boolean,
     slots_result character varying(30),
-    slots_text character varying(100)
 );
 
 
