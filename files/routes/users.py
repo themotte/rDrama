@@ -358,7 +358,15 @@ def leaderboard(v):
 		pos13 = (pos13+1, users13[pos13][1])
 	except: pos13 = (len(users13)+1, 0)
 
-	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=users9_25, pos9=pos9, users10=users10, pos10=pos10, users11=users11, pos11=pos11, users12=users12, pos12=pos12, users13=users13_25, pos13=pos13)
+	users14 = users.order_by(User.winnings.desc()).limit(25).all()
+	sq = g.db.query(User.id, func.rank().over(order_by=User.winnings.desc()).label("rank")).subquery()
+	pos14 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
+
+	users15 = users.order_by(User.winnings).limit(25).all()
+	sq = g.db.query(User.id, func.rank().over(order_by=User.winnings).label("rank")).subquery()
+	pos15 = g.db.query(sq.c.id, sq.c.rank).filter(sq.c.id == v.id).limit(1).one()[1]
+
+	return render_template("leaderboard.html", v=v, users1=users1, pos1=pos1, users2=users2, pos2=pos2, users3=users3, pos3=pos3, users4=users4, pos4=pos4, users5=users5, pos5=pos5, users6=users6, pos6=pos6, users7=users7, pos7=pos7, users9=users9_25, pos9=pos9, users10=users10, pos10=pos10, users11=users11, pos11=pos11, users12=users12, pos12=pos12, users13=users13_25, pos13=pos13, users14=users14, pos14=pos14, users15=users15, pos15=pos15)
 
 @app.get("/@<username>/css")
 def get_css(username):

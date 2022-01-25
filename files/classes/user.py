@@ -50,6 +50,7 @@ class User(Base):
 	verifiedcolor = Column(String)
 	marseyawarded = Column(Integer)
 	longpost = Column(Integer)
+	winnings = Column(Integer, default=0)
 	unblockable = Column(Boolean)
 	bird = Column(Integer)
 	email = deferred(Column(String))
