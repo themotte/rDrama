@@ -4642,7 +4642,7 @@ lite-youtube {
     margin-bottom: 1.3rem !important;
 }
 
-div > lite-youtube {
+.youtube_embed > lite-youtube {
     margin: auto
 }
 
