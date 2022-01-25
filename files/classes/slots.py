@@ -73,7 +73,7 @@ class Slots:
 
 
 	def determine_payout(self):
-		value = random.randint(0, 100)
+		value = random.randint(1, 100)
 		if value == 100: return 12
 		elif value >= 96: return 5
 		elif value >= 88: return 3
@@ -92,7 +92,10 @@ class Slots:
 				
 		if for_payout == 0: return "".join([all_symbols[0], all_symbols[1], all_symbols[2]])
 		elif for_payout == 1: return "".join([all_symbols[0], all_symbols[0], all_symbols[2]])
-		else: return "".join([all_symbols[0], all_symbols[0], all_symbols[0]])
+		else:
+			relevantSymbols = shuffle(self.payout_to_symbols[for_payout])
+			symbol = relevantSymbols[0]
+			return "".join([symbol, symbol, symbol])
 	
 	def build_text(self, wager_value, result, user, currency):
 		if result == 0:
