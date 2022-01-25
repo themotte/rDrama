@@ -46,7 +46,9 @@ class Slots:
 
 							from_comment.slots_result = f'{symbols} {text}'
 							self.db.add(from_comment)
-					except: break
+					except Exception as e:
+						print(e, flush=True)
+						break
 
 		if self.casino_word in in_text:
 			for word in in_text.split():
@@ -73,7 +75,9 @@ class Slots:
 
 							from_comment.slots_result = f'{symbols} {text}'
 							self.db.add(from_comment)
-					except: break
+					except Exception as e:
+						print(e, flush=True)
+						break
 
 
 	def determine_payout(self):
