@@ -25,30 +25,28 @@ class Slots:
 			for word in in_text.split():
 				if self.command_word in word:
 					try:
-						wager = word[len(self.command_word):]
+						wager = word[len(self.casino_word):]
 						wager_value = int(wager, base=10)
+					except Exception as e: break
 
-						if (wager_value < self.minimum_bet): wager_is_valid = False
-						elif (wager_value > self.maximum_bet): wager_is_valid = False
-						elif (wager_value > from_user.coins): wager_is_valid = False
-						else: wager_is_valid = True
+					if (wager_value < self.minimum_bet): wager_is_valid = False
+					elif (wager_value > self.maximum_bet): wager_is_valid = False
+					elif (wager_value > from_user.coins): wager_is_valid = False
+					else: wager_is_valid = True
 
-						if wager_is_valid:
-							from_user.coins -= wager_value
+					if wager_is_valid:
+						from_user.coins -= wager_value
 
-							payout = self.determine_payout()
-							symbols = self.build_symbols(payout)
-							text = self.build_text(wager_value, payout, from_user, "Coins")
-							reward = wager_value * payout
+						payout = self.determine_payout()
+						symbols = self.build_symbols(payout)
+						text = self.build_text(wager_value, payout, from_user, "Coins")
+						reward = wager_value * payout
 
-							from_user.coins += reward
-							self.db.add(from_user)
+						from_user.coins += reward
+						self.db.add(from_user)
 
-							from_comment.slots_result = f'{symbols} {text}'
-							self.db.add(from_comment)
-					except Exception as e:
-						print(e, flush=True)
-						break
+						from_comment.slots_result = f'{symbols} {text}'
+						self.db.add(from_comment)
 
 		if self.casino_word in in_text:
 			for word in in_text.split():
@@ -56,28 +54,26 @@ class Slots:
 					try:
 						wager = word[len(self.casino_word):]
 						wager_value = int(wager, base=10)
+					except Exception as e: break
 
-						if (wager_value < self.minimum_bet): wager_is_valid = False
-						elif (wager_value > self.maximum_bet): wager_is_valid = False
-						elif (wager_value > from_user.procoins): wager_is_valid = False
-						else: wager_is_valid = True
+					if (wager_value < self.minimum_bet): wager_is_valid = False
+					elif (wager_value > self.maximum_bet): wager_is_valid = False
+					elif (wager_value > from_user.procoins): wager_is_valid = False
+					else: wager_is_valid = True
 
-						if wager_is_valid:
-							from_user.procoins -= wager_value
+					if wager_is_valid:
+						from_user.procoins -= wager_value
 
-							payout = self.determine_payout()
-							symbols = self.build_symbols(payout)
-							text = self.build_text(wager_value, payout, from_user, "Marseybux")
-							reward = wager_value * payout
+						payout = self.determine_payout()
+						symbols = self.build_symbols(payout)
+						text = self.build_text(wager_value, payout, from_user, "Marseybux")
+						reward = wager_value * payout
 
-							from_user.procoins += reward
-							self.db.add(from_user)
+						from_user.procoins += reward
+						self.db.add(from_user)
 
-							from_comment.slots_result = f'{symbols} {text}'
-							self.db.add(from_comment)
-					except Exception as e:
-						print(e, flush=True)
-						break
+						from_comment.slots_result = f'{symbols} {text}'
+						self.db.add(from_comment)
 
 
 	def determine_payout(self):
