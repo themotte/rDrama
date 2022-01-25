@@ -887,7 +887,9 @@
 		{
 			{% for c in p.comments2 %}
 				{% if not (v and v.id==c[0]) %}
-					if ({{c[1]*1000}} > lastCount.t) document.getElementById("reddot-{{c[2]}}").innerHTML = redhtml
+					if ({{c[1]*1000}} > lastCount.t) 
+					try {document.getElementById("reddot-{{c[2]}}").innerHTML = redhtml}
+					catch(e) {}
 				{% endif %}
 			{% endfor %}
 		}
