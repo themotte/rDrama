@@ -787,8 +787,7 @@ def undelete_comment(cid, v):
 
 	c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 
-	if not c:
-		abort(404)
+	if not c: abort(404)
 
 	if c.author_id != v.id:
 		abort(403)
@@ -810,6 +809,8 @@ def pin_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
+	if not comment: abort(404)
+
 	if v.id != comment.post.author_id: abort(403)
 	
 	comment.is_pinned = v.username + " (OP)"
@@ -830,6 +831,8 @@ def unpin_comment(cid, v):
 	
 	comment = get_comment(cid, v=v)
 	
+	if not comment: abort(404)
+
 	if v.id != comment.post.author_id: abort(403)
 
 	if not comment.is_pinned.endswith(" (OP)"): 
