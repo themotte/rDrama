@@ -281,7 +281,7 @@
 								<input autocomplete="off" id="file-edit-reply-{{c.id}}" type="file" name="file" accept="image/*, video/*" {% if request.headers.get('cf-ipcountry')=="T1" %}disabled{% endif %} onchange="document.getElementById('filename-edit-reply-{{c.id}}').innerHTML='image/video';" hidden>
 							</label>
 						</div>
-						<a role="button" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
+						<a id="edit-btn-{{c.id}}" role="button" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
 						<a id="cancel-edit-{{c.id}}" role="button" onclick="toggleEdit('{{c.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 					</form>
 					<div id="preview-edit-{{c.id}}" class="preview-edit mb-3 mt-5"></div>
@@ -864,7 +864,7 @@
 
 {% if v %}
 	<script src="/static/assets/js/marked.js?a=220"></script>
-	<script src="/static/assets/js/comments_v.js?a=232"></script>
+	<script src="/static/assets/js/comments_v.js?a=233"></script>
 {% endif %}
 
 <script src="/static/assets/js/clipboard.js?a=220"></script>
