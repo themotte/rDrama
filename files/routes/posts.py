@@ -18,15 +18,15 @@ from os import path
 import requests
 from shutil import copyfile
 
-db = db_session()
-marseys = tuple(f':#{x[0]}:' for x in db.query(Marsey.name).all())
-db.close()
+# db = db_session()
+# marseys = tuple(f':#{x[0]}:' for x in db.query(Marsey.name).all())
+# db.close()
 
-if path.exists(f'snappy_{SITE_NAME}.txt'):
-	with open(f'snappy_{SITE_NAME}.txt', "r") as f:
-		if SITE == 'pcmemes.net': snappyquotes = tuple(f.read().split("{[para]}"))
-		else: snappyquotes = tuple(f.read().split("{[para]}")) + marseys
-else: snappyquotes = marseys
+# if path.exists(f'snappy_{SITE_NAME}.txt'):
+# 	with open(f'snappy_{SITE_NAME}.txt', "r") as f:
+# 		if SITE == 'pcmemes.net': snappyquotes = tuple(f.read().split("{[para]}"))
+# 		else: snappyquotes = tuple(f.read().split("{[para]}")) + marseys
+# else: snappyquotes = marseys
 
 IMGUR_KEY = environ.get("IMGUR_KEY").strip()
 
@@ -1025,7 +1025,7 @@ def submit_post(v):
 	elif v.id == LAWLZ_ID:
 		if random.random() < 0.5: body = "wow, this lawlzpost sucks!"
 		else: body = "wow, a good lawlzpost for once!"
-	else: body = random.choice(snappyquotes)
+	else: body = '!slots10000'
 	body += "\n\n"
 
 	if new_post.url:
@@ -1079,6 +1079,9 @@ def submit_post(v):
 			n = Notification(comment_id=c.id, user_id=v.id)
 			g.db.add(n)
 		
+		slots = Slots(g)
+		slots.check_for_slots_command(body, snappy, c)
+
 		new_post.comment_count += 1
 
 	v.post_count = g.db.query(Submission.id).filter_by(author_id=v.id, is_banned=False, deleted_utc=0).count()
