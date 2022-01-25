@@ -1,6 +1,5 @@
-from PIL import Image, ImageOps
+from PIL import Image, ImageSequence, ImageOps
 from webptools import gifwebp
-import subprocess
 
 def process_image(filename=None, resize=0):
 	
@@ -14,7 +13,21 @@ def process_image(filename=None, resize=0):
 	i.info["exif"] = exif.tobytes()
 
 	if resize:
-		subprocess.call(['convert',filename,'-coalesce','-layers', 'TrimBounds','-resize', f'{resize}x>',filename])
+		size = resize, resize
+		frames = ImageSequence.Iterator(i)
+
+		def thumbnails(frames):
+			for frame in frames:
+				thumbnail = frame.copy()
+				thumbnail.thumbnail(size)
+				yield thumbnail
+
+		frames = thumbnails(frames)
+
+		om = next(frames)
+		om.info = i.info
+		om = ImageOps.exif_transpose(om)
+		om.save(filename, format="WEBP", save_all=True, append_images=list(frames), loop=0, method=6, allow_mixed=True)
 	elif i.format.lower() != "webp":
 		if i.format.lower() == "gif":
 			gifwebp(input_image=filename, output_image=filename, option="-mixed -metadata none -f 100 -mt -m 6")
