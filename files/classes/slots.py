@@ -81,20 +81,13 @@ class Slots:
 
 
 	def determine_payout(self):
-		value = random.randint(1, 100)
-		
-		if value == 100:
-			return 12
-		elif value >= 96:
-			return 5
-		elif value >= 88:
-			return 3
-		elif value >= 72:
-			return 2
-		elif value >= 61:
-			return 1
-		else:
-			return 0
+		value = random.randint(0, 100)
+		if value == 100: return 12
+		elif value >= 96: return 5
+		elif value >= 88: return 3
+		elif value >= 72: return 2
+		elif value >= 61: return 1
+		else: return 0
 
 	def build_symbols(self, for_payout):
 		all_symbols = []
