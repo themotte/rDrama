@@ -231,7 +231,7 @@
 				{% endif %}
 
 				{% if c.slots_result %}
-					<em style="position: relative; top: 2px; margin-left: 0.5rem">{{c.slots_result}}</em>
+					<span style="position: relative; top: 2px; margin-left: 0.5rem">{{c.slots_result.split(' ')[0]}} <em>{{c.slots_text.split(' ')[1]}}</em></span>
 				{% endif %}
 			</div>
 			{% if c.active_flags %}
