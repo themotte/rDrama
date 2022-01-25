@@ -27,7 +27,7 @@ class Slots:
 					try:
 						wager = word[len(self.casino_word):]
 						wager_value = int(wager, base=10)
-					except Exception as e: break
+					except: break
 
 					if (wager_value < self.minimum_bet): wager_is_valid = False
 					elif (wager_value > self.maximum_bet): wager_is_valid = False
@@ -54,7 +54,7 @@ class Slots:
 					try:
 						wager = word[len(self.casino_word):]
 						wager_value = int(wager, base=10)
-					except Exception as e: break
+					except: break
 
 					if (wager_value < self.minimum_bet): wager_is_valid = False
 					elif (wager_value > self.maximum_bet): wager_is_valid = False
