@@ -101,8 +101,8 @@ class Slots:
 		elif result == 1:
 			return 'Broke Even'
 		elif result == 12:
-			user.winnings += wager_value * result
+			user.winnings += wager_value * (result-1)
 			return f'Jackpot! Won {wager_value * result} Coins'
 		else:
-			user.winnings += wager_value * result
+			user.winnings += wager_value * (result-1)
 			return f'Won {wager_value * result} Coins'
