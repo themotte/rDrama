@@ -255,7 +255,7 @@ def api_comment(v):
 		if ban.reason: reason += f" {ban.reason}"
 		return {"error": reason}, 401
 
-	if parent_post.id not in (37696,37697,37749,37833,37838):
+	if parent_post.id not in (37696,37697,37749,37833,37838) and not body.startswith('!slots') and not body.startswith('!casino'):
 		existing = g.db.query(Comment.id).filter(Comment.author_id == v.id,
 																	Comment.deleted_utc == 0,
 																	Comment.parent_comment_id == parent_comment_id,
@@ -579,6 +579,7 @@ def api_comment(v):
 	slots = Slots(g)
 	slots.check_for_slots_command(body, v, c)
 
+	print('hey bro', flush=True)
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
