@@ -7,6 +7,7 @@ def shuffle(stuff):
 
 class Slots:
 	command_word = "!slots"
+	casino_word = "!casino"
 	minimum_bet = 5
 	maximum_bet = INFINITY
 	payout_to_symbols = {
@@ -27,12 +28,17 @@ class Slots:
 						wager = word[len(self.command_word):]
 						wager_value = int(wager, base=10)
 
-						if self.wager_is_valid(from_user, wager_value):
+						if (wager_value < self.minimum_bet): wager_is_valid = False
+						elif (wager_value > self.maximum_bet): wager_is_valid = False
+						elif (wager_value > from_user.coins): wager_is_valid = False
+						else: wager_is_valid = True
+
+						if wager_is_valid:
 							from_user.coins -= wager_value
 
 							payout = self.determine_payout()
 							symbols = self.build_symbols(payout)
-							text = self.build_text(wager_value, payout, from_user)
+							text = self.build_text(wager_value, payout, from_user, "Coins")
 							reward = wager_value * payout
 
 							from_user.coins += reward
@@ -42,15 +48,33 @@ class Slots:
 							self.db.add(from_comment)
 					except: break
 
-	def wager_is_valid(self, from_user, wager):
-			if (wager < self.minimum_bet):
-				return False
-			elif (wager > self.maximum_bet):
-				return False
-			elif (wager > from_user.coins):
-				return False
-			else:
-				return True
+		if self.casino_word in in_text:
+			for word in in_text.split():
+				if self.casino_word in word:
+					try:
+						wager = word[len(self.casino_word):]
+						wager_value = int(wager, base=10)
+
+						if (wager_value < self.minimum_bet): wager_is_valid = False
+						elif (wager_value > self.maximum_bet): wager_is_valid = False
+						elif (wager_value > from_user.procoins): wager_is_valid = False
+						else: wager_is_valid = True
+
+						if wager_is_valid:
+							from_user.procoins -= wager_value
+
+							payout = self.determine_payout()
+							symbols = self.build_symbols(payout)
+							text = self.build_text(wager_value, payout, from_user, "Marseybux")
+							reward = wager_value * payout
+
+							from_user.procoins += reward
+							self.db.add(from_user)
+
+							from_comment.slots_result = f'{symbols} {text}'
+							self.db.add(from_comment)
+					except: break
+
 
 	def determine_payout(self):
 		value = random.randint(0, 100)
@@ -94,15 +118,15 @@ class Slots:
 			symbol = relevantSymbols[0]
 			return "".join([symbol, symbol, symbol])
 	
-	def build_text(self, wager_value, result, user):
+	def build_text(self, wager_value, result, user, currency):
 		if result == 0:
 			user.winnings -= wager_value
-			return f'Lost {wager_value} Coins'
+			return f'Lost {wager_value} {currency}'
 		elif result == 1:
 			return 'Broke Even'
 		elif result == 12:
 			user.winnings += wager_value * (result-1)
-			return f'Jackpot! Won {wager_value * result} Coins'
+			return f'Jackpot! Won {wager_value * result} {currency}'
 		else:
 			user.winnings += wager_value * (result-1)
-			return f'Won {wager_value * result} Coins'
+			return f'Won {wager_value * result} {currency}'
