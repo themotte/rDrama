@@ -579,7 +579,6 @@ def api_comment(v):
 	slots = Slots(g)
 	slots.check_for_slots_command(body, v, c)
 
-	print('hey bro', flush=True)
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
