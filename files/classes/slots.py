@@ -81,7 +81,7 @@ class Slots:
 
 
 	def determine_payout(self):
-		value = random.randint(0, 100)
+		value = random.randint(1, 100)
 		
 		if value == 100:
 			return 12
