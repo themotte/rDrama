@@ -212,7 +212,7 @@ def api_comment(v):
 					except Exception as e:
 						print(e)
 						return {"error": "You didn't follow the format retard"}, 400
-				elif v.id in (CARP_ID,AEVANN_ID) and parent_post.id == 37838:
+				elif v.admin_level > 2 and parent_post.id == 37838:
 					try:
 						marsey = loads(body.lower())
 						name = marsey["name"]
@@ -600,7 +600,8 @@ def edit_comment(cid, v):
 
 	body = request.values.get("body", "").strip()[:10000]
 
-	if len(body) < 1: return {"error":"You have to actually type something!"}, 400
+	if len(body) < 1 and not (request.files.get("file") and request.headers.get("cf-ipcountry") != "T1"):
+		return {"error":"You have to actually type something!"}, 400
 
 	if body != c.body or request.files.get("file") and request.headers.get("cf-ipcountry") != "T1":
 		if v.marseyawarded:
