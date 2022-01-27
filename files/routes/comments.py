@@ -317,7 +317,8 @@ def api_comment(v):
 				is_bot=is_bot,
 				app_id=v.client.application.id if v.client else None,
 				body_html=body_html,
-				body=body[:10000]
+				body=body[:10000],
+				ghost=parent_post.ghost
 				)
 
 	c.upvotes = 1
@@ -340,7 +341,7 @@ def api_comment(v):
 	if request.host == 'pcmemes.net' and c.body.lower().startswith("based"):
 		pill = re.match("based and (.{1,20}?)(-| )pilled", body, re.IGNORECASE)
 
-		if level == 1: basedguy = get_account(c.post.author_id)
+		if level == 1: basedguy = get_account(parent_post.author_id)
 		else: basedguy = get_account(c.parent_comment.author_id)
 		basedguy.basedcount += 1
 		if pill:
@@ -360,7 +361,8 @@ def api_comment(v):
 			level=level+1,
 			is_bot=True,
 			body_html=body_based_html,
-			top_comment_id=c.top_comment_id
+			top_comment_id=c.top_comment_id,
+			ghost=parent_post.ghost
 			)
 
 		g.db.add(c_based)
@@ -390,7 +392,8 @@ def api_comment(v):
 			level=level+1,
 			is_bot=True,
 			body_html=body_jannied_html,
-			top_comment_id=c.top_comment_id
+			top_comment_id=c.top_comment_id,
+			ghost=parent_post.ghost
 			)
 
 		g.db.add(c_jannied)
@@ -411,7 +414,8 @@ def api_comment(v):
 			level=level+1,
 			is_bot=True,
 			body_html=body_html2,
-			top_comment_id=c.top_comment_id
+			top_comment_id=c.top_comment_id,
+			ghost=parent_post.ghost
 			)
 
 		g.db.add(c2)
@@ -446,7 +450,8 @@ def api_comment(v):
 			level=level+1,
 			is_bot=True,
 			body_html=body_html2,
-			top_comment_id=c.top_comment_id
+			top_comment_id=c.top_comment_id,
+			ghost=parent_post.ghost
 			)
 
 		g.db.add(c2)
@@ -469,7 +474,8 @@ def api_comment(v):
 			level=level+2,
 			is_bot=True,
 			body_html=body_html2,
-			top_comment_id=c.top_comment_id
+			top_comment_id=c.top_comment_id,
+			ghost=parent_post.ghost
 			)
 
 		g.db.add(c3)
@@ -485,7 +491,8 @@ def api_comment(v):
 			level=level+3,
 			is_bot=True,
 			body_html=body_html2,
-			top_comment_id=c.top_comment_id
+			top_comment_id=c.top_comment_id,
+			ghost=parent_post.ghost
 			)
 
 		g.db.add(c4)
@@ -732,7 +739,8 @@ def edit_comment(cid, v):
 				level=c.level+1,
 				is_bot=True,
 				body_html=body_jannied_html,
-				top_comment_id=c.top_comment_id
+				top_comment_id=c.top_comment_id,
+				ghost=c.ghost
 				)
 
 			g.db.add(c_jannied)
