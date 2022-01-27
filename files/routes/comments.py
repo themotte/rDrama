@@ -129,7 +129,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		return render_template(template, v=v, p=post, sort=sort, comment_info=comment_info, render_replies=True)
 
 @app.post("/comment")
-@limiter.limit("1/second;6/minute;200/hour;1000/day")
+@limiter.limit("1/second;20/minute;200/hour;1000/day")
 @auth_required
 def api_comment(v):
 	if v.is_suspended: return {"error": "You can't perform this action while banned."}, 403
