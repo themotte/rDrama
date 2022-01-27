@@ -704,7 +704,7 @@ def submit_post(v):
 		parsed_url = urlparse(url)
 
 		domain = parsed_url.netloc
-		if domain == 'old.reddit.com':
+		if domain in ('old.reddit.com','twitter.com'):
 			new_url = ParseResult(scheme="https",
 					netloc=parsed_url.netloc,
 					path=parsed_url.path,
