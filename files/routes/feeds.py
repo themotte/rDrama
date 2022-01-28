@@ -31,11 +31,11 @@ def feeds_user(v=None, sort='hot', t='all'):
 		with tag("title", type="text"):
 			text(f"{sort} posts from {domain}")
 
-		doc.stag("link", href=request.url)
-		doc.stag("link", href=request.url_root)
+		doc.stag("link", href=SITE_FULL + request.full_path)
+		doc.stag("link", href=SITE_FULL)
 
 		for post in posts:
-			with tag("entry", ("xml:base", request.url)):
+			with tag("entry", ("xml:base", SITE_FULL + request.full_path)):
 				with tag("title", type="text"):
 					text(post.realtitle(None))
 
