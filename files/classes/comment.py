@@ -235,7 +235,7 @@ class Comment(Base):
 	def permalink(self):
 		if self.post and self.post.club: return f"{SITE_FULL}/comment/{self.id}?context=9#context"
 
-		if self.post: return f"{SITE_FULL}{self.post.permalink}/{self.id}?context=9#context"
+		if self.post: return f"{self.post.permalink}/{self.id}?context=9#context"
 		else: return f"{SITE_FULL}/comment/{self.id}?context=9#context"
 
 	@property
