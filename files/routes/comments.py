@@ -160,7 +160,7 @@ def api_comment(v):
 	else: abort(400)
 
 	body = request.values.get("body", "").strip()[:10000]
-	
+
 	if v.admin_level == 3 and parent_post.id == 37749:
 		with open(f"snappy_{SITE_NAME}.txt", "a") as f:
 			f.write('\n{[para]}\n' + body)
@@ -587,6 +587,9 @@ def api_comment(v):
 	slots = Slots(g)
 	slots.check_for_slots_command(body, v, c)
 
+	blackjack = Blackjack(g)
+	blackjack.check_for_blackjack_command(body, v, c)
+
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
@@ -889,3 +892,19 @@ def unsave_comment(cid, v):
 		g.db.commit()
 
 	return {"message": "Comment unsaved!"}
+
+@app.post("/blackjack/<cid>")
+@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@auth_required
+def handle_blackjack_action(cid, v):
+	comment = get_comment(cid)
+	action = request.values.get("action", "")
+	blackjack = Blackjack(g)
+
+	if action == 'hit':
+		blackjack.player_hit(comment)
+	elif action == 'stay':
+		blackjack.player_stayed(comment)
+	
+
+	return { "message" : "..." }
