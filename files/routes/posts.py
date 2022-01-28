@@ -660,16 +660,13 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 
-	for i in requests.get('https://api.pushshift.io/reddit/submission/search?html_decode=true&q=rdrama&size=100').json()["data"]:
-		print(i)
+	for i in requests.get('https://api.pushshift.io/reddit/submission/search?html_decode=true&q=rdrama&size=10').json()["data"]:
 
 		body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}', noimages=True)
 
 		existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
 
 		if existing_comment: break
-
-		print('sex')
 
 		new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
@@ -685,18 +682,14 @@ def thumbnail_thread(pid):
 		for admin in admins:
 			notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 			db.add(notif)
-		break
 
-	for i in requests.get('https://api.pushshift.io/reddit/comment/search?html_decode=true&q=rdrama&size=100').json()["data"]:
-		print(i)
-
-		body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}', noimages=True)
+	for i in requests.get('https://api.pushshift.io/reddit/comment/search?html_decode=true&q=rdrama&size=10').json()["data"]:
+		body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}?context=99', noimages=True)
 
 		existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
 		
 		if existing_comment: break
 
-		print('ffugq')
 		new_comment = Comment(author_id=NOTIFICATIONS_ID,
 							parent_submission=None,
 							distinguish_level=6,
@@ -711,7 +704,6 @@ def thumbnail_thread(pid):
 		for admin in admins:
 			notif = Notification(comment_id=new_comment.id, user_id=admin.id)
 			db.add(notif)
-		break
 
 	db.commit()
 	db.close()

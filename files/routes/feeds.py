@@ -4,6 +4,7 @@ from datetime import datetime
 from files.helpers.get import *
 from yattag import Doc
 from files.helpers.wrappers import *
+from files.helpers.jinja2 import *
 
 from files.__main__ import app
 
