@@ -663,35 +663,32 @@ def thumbnail_thread(pid):
 
 	if SITE == 'rdrama.net':
 		for t in ("submission","comment"):
-			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=rdrama&size=10').json()["data"]:
+			for term in ('rdrama','freeghettohoes.biz'):
+				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={term}&size=10').json()["data"]:
 
-				body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}?context=99', noimages=True)
+					body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}?context=99', noimages=True)
 
-				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
+					existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
 
-				if existing_comment: break
+					if existing_comment: break
 
-				new_comment = Comment(author_id=NOTIFICATIONS_ID,
-									parent_submission=None,
-									distinguish_level=6,
-									body_html=body_html,
-									level=1,
-									sentto=0,
-									)
-				db.add(new_comment)
-				db.flush()
+					new_comment = Comment(author_id=NOTIFICATIONS_ID,
+										parent_submission=None,
+										distinguish_level=6,
+										body_html=body_html,
+										level=1,
+										sentto=0,
+										)
+					db.add(new_comment)
+					db.flush()
 
-				admins = db.query(User).filter(User.admin_level > 0).all()
-				for admin in admins:
-					notif = Notification(comment_id=new_comment.id, user_id=admin.id)
-					db.add(notif)
+					admins = db.query(User).filter(User.admin_level > 0).all()
+					for admin in admins:
+						notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+						db.add(notif)
 
 			for k,v in REDDIT_NOTIFS.items():
-				if v == CARP_ID: num = 25
-				elif v == AEVANN_ID: num = 1
-				elif v == IDIO_ID: num = 10
-
-				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size={num}').json()["data"]:
+				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=10').json()["data"]:
 					try: body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=99', noimages=True)
 					except: continue
 					existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html).first()
