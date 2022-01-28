@@ -75,10 +75,10 @@
 	<ul class="pagination pagination-sm mb-0">
 		{% if page>1 %}
 		<li class="page-item">
-			{% if request.full_path == "/notifications?" %}
-				<small><a class="page-link" href="{{request.path}}?page={{page-1}}">Previous</a></small>
+			{% if request.args %}
+				<small><a class="page-link" href="{{request.full_path}}&page={{page-1}}">Previous</a></small>
 			{% else %}
-				<small><a class="page-link" href="{{request.path}}&page={{page-1}}">Previous</a></small>
+				<small><a class="page-link" href="{{request.path}}?page={{page-1}}">Previous</a></small>
 			{% endif %}
 		</li>
 		{% else %}
@@ -87,10 +87,10 @@
 
 		{% if next_exists %}
 		<li class="page-item">
-			{% if request.full_path == "/notifications?" %}
-				<small><a class="page-link" href="{{request.path}}?page={{page+1}}">Next</a></small>
+			{% if request.args %}
+				<small><a class="page-link" href="{{request.full_path}}&page={{page+1}}">Next</a></small>
 			{% else %}
-				<small><a class="page-link" href="{{request.path}}&page={{page+1}}">Next</a></small>
+				<small><a class="page-link" href="{{request.path}}?page={{page+1}}">Next</a></small>
 			{% endif %}
 		</li>
 		{% else %}
