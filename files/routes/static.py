@@ -354,17 +354,6 @@ def images(path):
 def robots_txt():
 	return send_file("assets/robots.txt")
 
-@app.get("/settings")
-@auth_required
-def settings(v):
-	return redirect(f"{SITE_FULL}/settings/profile")
-
-
-@app.get("/settings/profile")
-@auth_required
-def settings_profile(v):
-	return render_template("settings_profile.html", v=v)
-
 
 @app.get("/badges")
 @auth_required
