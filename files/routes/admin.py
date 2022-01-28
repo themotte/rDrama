@@ -211,7 +211,6 @@ def monthly(v):
 
 	for u in g.db.query(User).filter(User.patron > 0).all():
 		if u.email and u.email.lower() in emails:
-			continue
 			if u.patron == 1: procoins = 2500
 			elif u.patron == 2: procoins = 5000
 			elif u.patron == 3: procoins = 10000
