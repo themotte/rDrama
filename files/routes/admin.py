@@ -211,11 +211,22 @@ def monthly(v):
 
 	for u in g.db.query(User).filter(User.patron > 0).all():
 		if u.email and u.email.lower() in emails:
+			continue
 			if u.patron == 1: procoins = 2500
 			elif u.patron == 2: procoins = 5000
 			elif u.patron == 3: procoins = 10000
 			elif u.patron == 4: procoins = 25000
 			elif u.patron == 5: procoins = 50000
+			u.procoins += procoins
+			g.db.add(u)
+			send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
+		elif u.patron == 5:
+			procoins = 50000
+			u.procoins += procoins
+			g.db.add(u)
+			send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
+		elif u.patron == 1 and u.admin_level > 0:
+			procoins = 2500
 			u.procoins += procoins
 			g.db.add(u)
 			send_repeatable_notification(u.id, f"You were given {procoins} Marseybux for the month of {month}! You can use them to buy awards in the [shop](/shop).")
