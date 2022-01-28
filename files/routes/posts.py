@@ -659,6 +659,7 @@ def thumbnail_thread(pid):
 	post.thumburl = process_image(name, resize=100)
 	db.add(post)
 	db.commit()
+
 	db.close()
 	return
 

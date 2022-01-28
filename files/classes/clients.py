@@ -5,6 +5,7 @@ from .submission import Submission
 from .comment import Comment
 from files.__main__ import Base
 from files.helpers.lazy import lazy
+from files.helpers.const import *
 import time
 
 class OauthApp(Base):
