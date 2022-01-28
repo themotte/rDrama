@@ -17,6 +17,7 @@ from urllib.parse import ParseResult, urlunparse, urlparse, quote, unquote
 from os import path
 import requests
 from shutil import copyfile
+from sys import stdout
 
 db = db_session()
 marseys = tuple(f':#{x[0]}:' for x in db.query(Marsey.name).all())
