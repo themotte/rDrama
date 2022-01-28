@@ -1,7 +1,6 @@
 import html
 from .front import frontlist
 from datetime import datetime
-from files.helpers.jinja2 import full_link
 from files.helpers.get import *
 from yattag import Doc
 from files.helpers.wrappers import *
@@ -55,7 +54,7 @@ def feeds_user(v=None, sort='hot', t='all'):
 					with tag("uri"):
 						text(f'{SITE_FULL}/@{post.author_name}')
 
-				doc.stag("link", href=full_link(post.permalink))
+				doc.stag("link", href=post.permalink)
 
 				image_url = post.thumb_url or post.embed_url or post.url
 

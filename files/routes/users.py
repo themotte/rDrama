@@ -1022,7 +1022,8 @@ def fp(v, fp):
 			new_alt = Alt(user1=v.id, user2=u.id)
 			g.db.add(new_alt)
 			g.db.flush()
-			print('\n\n' + v.username + ' + ' + u.username + '\n\n')
+			if v.email == u.email: print('\n\n' + v.username + ' + ' + u.username + v.email + '\n\n')
+			if v.fp == u.fp: print('\n\n' + v.username + ' + ' + u.username + v.fp + '\n\n')
 		g.db.add(v)
 		g.db.commit()
 	return '', 204

@@ -19,7 +19,7 @@
 	<meta property="og:title" content="{{SITE_NAME}}" >
 	<meta property="og:site_name" content="{{request.host}}" >
 	<meta property="og:image" content="{{SITE_NAME}}/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1008" >
-	<meta property="og:url" content="{{request.path | full_link}}">
+	<meta property="og:url" content="{{request.url}}">
 	<meta property="og:description" name="description" content="{{SITE_NAME}} - {{'SLOGAN' | app_config}}">
 	<meta property="og:author" name="author" content="{{SITE_FULL}}/" >
 	<meta property="og:site_name" content="{{request.host}}" >
@@ -30,7 +30,7 @@
 	<meta name="twitter:creator" content="{{SITE_FULL}}/">
 	<meta name="twitter:description" content="{{SITE_NAME}} - {{'SLOGAN' | app_config}}" >
 	<meta name="twitter:image" content="/static/assets/images/{{SITE_NAME}}/site_preview.webp?a=1008" >
-	<meta name="twitter:url" content="{{request.path | full_link}}" >
+	<meta name="twitter:url" content="{{request.url}}" >
 
 
 

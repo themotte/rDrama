@@ -3,11 +3,6 @@ from .get import *
 from os import listdir, environ
 from .const import * 
 
-@app.template_filter("full_link")
-def full_link(url):
-
-	return f"{SITE_FULL}{url}"
-
 @app.template_filter("app_config")
 def app_config(x):
 	return app.config.get(x)

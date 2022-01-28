@@ -17,7 +17,7 @@
 <meta property="og:author" name="author" content="@{{u.username}}" >
 <meta property="og:title" content="{{u.username}}" >
 <meta property="og:image" content="{{u.banner_url}}" >
-<meta property="og:url" content="{{u.url | full_link}}" >
+<meta property="og:url" content="{{u.url}}" >
 <meta property="og:site_name" content="{{request.host}}" >
 
 <meta name="twitter:card" content="summary_large_image">
@@ -26,7 +26,7 @@
 <meta name="twitter:creator" content="@{{u.username}}">
 <meta name="twitter:description" content="{{u.coins}} coins - Joined {{u.created_date}} - {% if u.stored_subscriber_count >=1 and not u.is_private and not u.is_nofollow %}{{u.stored_subscriber_count}} Followers -{% endif %} {% if not u.is_private %} {{0 if u.shadowbanned else u.post_count}} Posts - {{0 if u.shadowbanned else u.comment_count}} Comments - {% endif %}{{u.bio}}">
 <meta name="twitter:image" content="{{u.banner_url}}" >
-<meta name="twitter:url" content="{{u.url | full_link}}" >
+<meta name="twitter:url" content="{{u.url}}" >
 {% endblock %}
 
 {% block desktopUserBanner %}
