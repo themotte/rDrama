@@ -313,7 +313,7 @@ class User(Base):
 	@property
 	@lazy
 	def url(self):
-		return f"/@{self.username}"
+		return f"{SITE_FULL}/@{self.username}"
 
 	def __repr__(self):
 		return f"<User(id={self.id})>"
