@@ -299,7 +299,8 @@ CREATE TABLE public.comments (
     top_comment_id integer,
     is_pinned_utc integer,
     ghost boolean,
-    slots_result character varying(50)
+    slots_result character varying(50),
+    blackjack_result character varying(3000)
 );
 
 
