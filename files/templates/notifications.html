@@ -75,10 +75,17 @@
 	<ul class="pagination pagination-sm mb-0">
 		{% if page>1 %}
 		<li class="page-item">
-			{% if request.args %}
-				<small><a class="page-link" href="{{request.full_path}}&page={{page-1}}">Previous</a></small>
+			{% if "?page=" in request.full_path %}
+				{% set path = request.full_path.split("?page=")[0] %}
+			{% elif "&page=" in request.full_path %}
+				{% set path = request.full_path.split("&page=")[0] %}
 			{% else %}
-				<small><a class="page-link" href="{{request.path}}?page={{page-1}}">Previous</a></small>
+				{% set path = request.full_path %}
+			{% endif %}
+			{% if request.full_path == "/notifications?" %}
+				<small><a class="page-link" href="{{path}}page={{page-1}}">Previous</a></small>
+			{% else %}
+				<small><a class="page-link" href="{{path}}&page={{page-1}}">Previous</a></small>
 			{% endif %}
 		</li>
 		{% else %}
@@ -87,10 +94,17 @@
 
 		{% if next_exists %}
 		<li class="page-item">
-			{% if request.args %}
-				<small><a class="page-link" href="{{request.full_path}}&page={{page+1}}">Next</a></small>
+			{% if "?page=" in request.full_path %}
+				{% set path = request.full_path.split("?page=")[0] %}
+			{% elif "&page=" in request.full_path %}
+				{% set path = request.full_path.split("&page=")[0] %}
 			{% else %}
-				<small><a class="page-link" href="{{request.path}}?page={{page+1}}">Next</a></small>
+				{% set path = request.full_path %}
+			{% endif %}
+			{% if request.full_path == "/notifications?" %}
+				<small><a class="page-link" href="{{path}}page={{page+1}}">Next</a></small>
+			{% else %}
+				<small><a class="page-link" href="{{path}}&page={{page+1}}">Next</a></small>
 			{% endif %}
 		</li>
 		{% else %}
