@@ -661,50 +661,53 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 
-	for i in requests.get('https://api.pushshift.io/reddit/submission/search?html_decode=true&q=rdrama&size=10').json()["data"]:
+	if SITE == 'rdrama.net':
+		for t in ("submission","comment"):
+			for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q=rdrama&size=10').json()["data"]:
 
-		body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}', noimages=True)
+				body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}?context=99', noimages=True)
 
-		existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
+				existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
 
-		if existing_comment: break
+				if existing_comment: break
 
-		new_comment = Comment(author_id=NOTIFICATIONS_ID,
-							parent_submission=None,
-							distinguish_level=6,
-							body_html=body_html,
-							level=1,
-							sentto=0,
-							)
-		db.add(new_comment)
-		db.flush()
+				new_comment = Comment(author_id=NOTIFICATIONS_ID,
+									parent_submission=None,
+									distinguish_level=6,
+									body_html=body_html,
+									level=1,
+									sentto=0,
+									)
+				db.add(new_comment)
+				db.flush()
 
-		admins = db.query(User).filter(User.admin_level > 0).all()
-		for admin in admins:
-			notif = Notification(comment_id=new_comment.id, user_id=admin.id)
-			db.add(notif)
+				admins = db.query(User).filter(User.admin_level > 0).all()
+				for admin in admins:
+					notif = Notification(comment_id=new_comment.id, user_id=admin.id)
+					db.add(notif)
 
-	for i in requests.get('https://api.pushshift.io/reddit/comment/search?html_decode=true&q=rdrama&size=10').json()["data"]:
-		body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}?context=99', noimages=True)
+			for k,v in REDDIT_NOTIFS.items():
+				if v == CARP_ID: num = 25
+				elif v == AEVANN_ID: num = 1
+				elif v == IDIO_ID: num = 10
 
-		existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html, level=1, sentto=0).first()
-		
-		if existing_comment: break
+				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size={num}').json()["data"]:
+					try: body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=99', noimages=True)
+					except: continue
+					existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html).first()
+					if existing_comment: break
+					new_comment = Comment(author_id=NOTIFICATIONS_ID,
+										parent_submission=None,
+										distinguish_level=6,
+										body_html=body_html
+										)
 
-		new_comment = Comment(author_id=NOTIFICATIONS_ID,
-							parent_submission=None,
-							distinguish_level=6,
-							body_html=body_html,
-							level=1,
-							sentto=0,
-							)
-		db.add(new_comment)
-		db.flush()
+					db.add(new_comment)
+					db.flush()
 
-		admins = db.query(User).filter(User.admin_level > 0).all()
-		for admin in admins:
-			notif = Notification(comment_id=new_comment.id, user_id=admin.id)
-			db.add(notif)
+					notif = Notification(comment_id=new_comment.id, user_id=v)
+					db.add(notif)
+
 
 	db.commit()
 	db.close()
