@@ -18,7 +18,10 @@ def privacy(v):
 @app.get("/marseys")
 @auth_required
 def marseys(v):
-	marseys = g.db.query(Marsey, User).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())
+	if request.host == 'rdrama.net':
+		marseys = g.db.query(Marsey, User).join(User, User.id==Marsey.author_id).order_by(Marsey.count.desc())
+	else:
+		marseys = g.db.query(Marsey).order_by(Marsey.count.desc())
 	return render_template("marseys.html", v=v, marseys=marseys)
 
 @app.get("/marsey_list")
