@@ -226,6 +226,11 @@ class Comment(Base):
 
 	@property
 	@lazy
+	def shortlink_context(self):
+		return f"/comment/{self.id}?context=9#context"
+
+	@property
+	@lazy
 	def author_name(self):
 		if self.ghost: return '👻'
 		else: return self.author.username
