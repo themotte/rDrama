@@ -64,9 +64,11 @@ class Blackjack:
         if self.command_word in in_text:
             for word in in_text.split():
                 if self.command_word in word:
-                    wager = word[len(self.command_word):]
-                    wager_value = int(wager)
-
+                    try:
+                        wager = word[len(self.command_word):]
+                        wager_value = int(wager)
+                    except: break
+                    
                     if (wager_value < self.minimum_bet):
                         break
                     elif (wager_value > self.maximum_bet):
