@@ -727,7 +727,7 @@ def agendaposter(user_id, v):
 
 	g.db.commit()
 	if user.agendaposter: return redirect(user.url)
-	return {"message": "Agendaposter theme disabled!"}
+	return {"message": "Chud theme disabled!"}
 
 
 @app.post("/shadowban/<user_id>")
