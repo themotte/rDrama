@@ -80,7 +80,7 @@ def publish(pid, v):
 	cache.delete_memoized(User.userpagelisting)
 
 	if v.admin_level > 0 and ("[changelog]" in post.title.lower() or "(changelog)" in post.title.lower()):
-		send_discord_message(f"{SITE_FULL}{post.permalink}")
+		send_discord_message(post.permalink)
 		cache.delete_memoized(changeloglist)
 
 	g.db.commit()
@@ -1144,7 +1144,7 @@ def submit_post(v):
 	cache.delete_memoized(frontlist)
 	cache.delete_memoized(User.userpagelisting)
 	if v.admin_level > 0 and ("[changelog]" in new_post.title.lower() or "(changelog)" in new_post.title.lower()) and not new_post.private:
-		send_discord_message(f"{SITE_FULL}{new_post.permalink}")
+		send_discord_message(new_post.permalink)
 		cache.delete_memoized(changeloglist)
 
 	if v.id in (PIZZASHILL_ID, HIL_ID):
