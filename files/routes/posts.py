@@ -661,10 +661,10 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 
-	if SITE == 'rdrama.net':
+	if SITE == 'rdrama.net' and random.random() < 0.05:
 		for t in ("submission","comment"):
 			for term in ('rdrama','freeghettohoes.biz'):
-				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={term}&size=10').json()["data"]:
+				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={term}&size=100').json()["data"]:
 
 					body_html = sanitize(f'New rdrama mention: https://old.reddit.com{i["permalink"]}?context=99', noimages=True)
 
@@ -688,7 +688,7 @@ def thumbnail_thread(pid):
 						db.add(notif)
 
 			for k,v in REDDIT_NOTIFS.items():
-				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=10').json()["data"]:
+				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={k}&size=100').json()["data"]:
 					try: body_html = sanitize(f'New mention of you: https://old.reddit.com{i["permalink"]}?context=99', noimages=True)
 					except: continue
 					existing_comment = db.query(Comment.id).filter_by(author_id=NOTIFICATIONS_ID, parent_submission=None, distinguish_level=6, body_html=body_html).first()
