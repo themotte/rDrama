@@ -548,23 +548,11 @@ class User(Base):
 		posts = g.db.query(Subscription.submission_id).filter_by(user_id=self.id).all()
 		return [x[0] for x in posts]
 
-	@property
-	@lazy
-	def saved_count(self):
-		return g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id == self.id, SaveRelationship.submission_id != None).count()
-
-	@property
-	@lazy
-	def saved_comment_count(self):
-		return g.db.query(SaveRelationship.comment_id).filter(SaveRelationship.user_id == self.id, SaveRelationship.comment_id != None).count()
-
 	@lazy
 	def saved_idlist(self, page=1):
 
-		posts = g.db.query(Submission.id).filter_by(is_banned=False, deleted_utc=0)
-
 		saved = [x[0] for x in g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id == self.id).all()]
-		posts = posts.filter(Submission.id.in_(saved))
+		posts = g.db.query(Submission.id).filter(Submission.id.in_(saved), Submission.is_banned == False, Submission.deleted_utc == 0)
 
 		if self.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(
@@ -579,16 +567,14 @@ class User(Base):
 				Submission.author_id.notin_(blocked)
 			)
 
-		posts = posts.order_by(Submission.created_utc.desc())
-
-		return [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
+		return [x[0] for x in posts.order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).all()]
 
 	@lazy
 	def saved_comment_idlist(self):
 
 		try: saved = [x[0] for x in g.db.query(SaveRelationship.comment_id).filter(SaveRelationship.user_id == self.id).all()]
 		except: return []
-		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved))
+		comments = g.db.query(Comment.id).filter(Comment.id.in_(saved), Comment.is_banned == False, Comment.deleted_utc == 0)
 
 		if self.admin_level == 0:
 			blocking = [x[0] for x in g.db.query(
@@ -604,6 +590,16 @@ class User(Base):
 			)
 
 		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).all()]
+
+	@property
+	@lazy
+	def saved_count(self):
+		return len(self.saved_idlist())
+
+	@property
+	@lazy
+	def saved_comment_count(self):
+		return len(self.saved_comment_idlist())
 
 	@property
 	@lazy
