@@ -1013,8 +1013,12 @@ def fp(v, fp):
 	if v.username != fp:
 		v.fp = fp
 		users = g.db.query(User).filter(User.fp == fp, User.id != v.id).all()
+		if users: print(f'{v.username}: fp {v.fp}')
 		if v.email and v.is_activated:
-			users += g.db.query(User).filter(User.email == v.email, User.is_activated, User.id != v.id).all()
+			alts = g.db.query(User).filter(User.email == v.email, User.is_activated, User.id != v.id).all()
+			if alts:
+				print(f'{v.username}: email {v.email}')
+				users += alts
 		for u in users:
 			li = [v.id, u.id]
 			existing = g.db.query(Alt).filter(Alt.user1.in_(li), Alt.user2.in_(li)).first()
@@ -1022,8 +1026,7 @@ def fp(v, fp):
 			new_alt = Alt(user1=v.id, user2=u.id)
 			g.db.add(new_alt)
 			g.db.flush()
-			if v.email == u.email: print('\n\n' + v.username + ' + ' + u.username + v.email + '\n\n')
-			if v.fp == u.fp: print('\n\n' + v.username + ' + ' + u.username + v.fp + '\n\n')
+			print('\n\n' + v.username + ' + ' + u.username + '\n\n')
 		g.db.add(v)
 		g.db.commit()
 	return '', 204

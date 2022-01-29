@@ -118,12 +118,14 @@ def revert_actions(v, username):
 		user.is_banned = 0
 		user.unban_utc = 0
 		user.ban_evade = 0
+		send_repeatable_notification(user.id, "Your account has been unbanned!")
 		g.db.add(user)
 		for u in user.alts:
 			u.shadowbanned = None
 			u.is_banned = 0
 			u.unban_utc = 0
 			u.ban_evade = 0
+			send_repeatable_notification(u.id, "Your account has been unbanned!")
 			g.db.add(u)
 
 	g.db.commit()
@@ -935,6 +937,7 @@ def unban_user(user_id, v):
 	user.unban_utc = 0
 	user.ban_evade = 0
 	user.ban_reason = None
+	send_repeatable_notification(user.id, "Your account has been unbanned!")
 	g.db.add(user)
 
 	for x in user.alts:
@@ -942,10 +945,8 @@ def unban_user(user_id, v):
 		x.unban_utc = 0
 		x.ban_evade = 0
 		x.ban_reason = None
+		send_repeatable_notification(x.id, "Your account has been unbanned!")
 		g.db.add(x)
-
-	send_repeatable_notification(user.id,
-					  "Your account has been reinstated. Please carefully review and abide by the [rules](/sidebar) to ensure that you don't get suspended again.")
 
 	ma=ModAction(
 		kind="unban_user",

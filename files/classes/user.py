@@ -529,13 +529,6 @@ class User(Base):
 
 	@property
 	def is_suspended(self):
-		if self.unban_utc and self.unban_utc < time.time():
-			self.is_banned = 0
-			self.unban_utc = 0
-			self.ban_evade = 0
-			g.db.add(self)
-			g.db.commit()
-			return False
 		return (self.is_banned and (self.unban_utc == 0 or self.unban_utc > time.time()))
 
 
