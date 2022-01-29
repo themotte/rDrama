@@ -810,7 +810,8 @@ CREATE TABLE public.users (
     fish boolean,
     lootboxes_bought integer,
     progressivestack integer,
-    winnings integer
+    winnings integer,
+    patron_utc integer
 );
 
 
@@ -1342,6 +1343,13 @@ ALTER TABLE ONLY public.viewers
 
 ALTER TABLE ONLY public.votes
     ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: alts_unique_combination; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX alts_unique_combination ON public.alts USING btree (GREATEST(user1, user2), LEAST(user1, user2));
 
 
 --
