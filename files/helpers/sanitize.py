@@ -269,7 +269,7 @@ def sanitize(sanitized, noimages=False, alert=False, comment=False, edit=False):
 
 def filter_emojis_only(title, edit=False):
 
-	title = title.replace('<','').replace("\n", "").replace("\r", "").replace("\t", "").strip()
+	title = title.replace('<','&lt;').replace('>','&gt;').replace("\n", "").replace("\r", "").replace("\t", "").strip()
 
 	title = bleach.clean(title, tags=[])
 
