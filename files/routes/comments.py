@@ -239,7 +239,8 @@ def api_comment(v):
 			body += f"\n\n{url}"
 		else: return {"error": "Image/Video files only"}, 400
 
-	if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
+	if v.agendaposter and not v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
+		body = torture_ap(body, v.username)
 
 	if '#fortune' in body:
 		body = body.replace('#fortune', '')
@@ -629,7 +630,8 @@ def edit_comment(cid, v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-		if v.agendaposter and not v.marseyawarded: body = torture_ap(body, v.username)
+		if v.agendaposter and not v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
+			body = torture_ap(body, v.username)
 
 		if not c.options:
 			for i in re.finditer('\s*\$\$([^\$\n]+)\$\$\s*', body, flags=re.A):
