@@ -243,7 +243,7 @@ def post_id(pid, anything=None, v=None):
 
 @app.post("/viewmore/<pid>/<sort>/<offset>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
+@auth_desired
 def viewmore(v, pid, sort, offset):
 	offset = int(offset)
 	if v:
@@ -343,7 +343,7 @@ def viewmore(v, pid, sort, offset):
 
 @app.post("/morecomments/<cid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@auth_required
+@auth_desired
 def morecomments(v, cid):
 	tcid = g.db.query(Comment.top_comment_id).filter_by(id=cid).one_or_none()[0]
 
