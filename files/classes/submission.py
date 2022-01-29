@@ -463,4 +463,3 @@ class SaveRelationship(Base):
 	user_id=Column(Integer)
 	submission_id=Column(Integer)
 	comment_id=Column(Integer)
-	type=Column(Integer)

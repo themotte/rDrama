@@ -566,7 +566,6 @@ CREATE TABLE public.save_relationship (
     id integer NOT NULL,
     submission_id integer,
     user_id integer,
-    type integer,
     comment_id integer
 );
 

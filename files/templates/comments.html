@@ -264,8 +264,10 @@
 					{% elif blackjack_status == 'lost' %}
 					<strong>Lost {{wager}} Coins.</strong>
 					{% elif blackjack_status == 'won' %}
+					{% set wager = wager|int*2 %}
 					<strong>Won {{wager}} Coins.</strong>
 					{% elif blackjack_status == 'blackjack' %}
+					{% set wager = wager|int*5/2 %}
 					<strong>Blackjack! Won <span id="blackjack-result-{{c.id}}">{{wager}}</span> Coins.</strong>
 					<script>
 						var blackjackResult = document.getElementById('blackjack-result-{{c.id}}');

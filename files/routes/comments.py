@@ -876,10 +876,10 @@ def save_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id, type=2).one_or_none()
+	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 
 	if not save:
-		new_save=SaveRelationship(user_id=v.id, comment_id=comment.id, type=2)
+		new_save=SaveRelationship(user_id=v.id, comment_id=comment.id)
 		g.db.add(new_save)
 
 		try: g.db.commit()
@@ -894,7 +894,7 @@ def unsave_comment(cid, v):
 
 	comment=get_comment(cid)
 
-	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id, type=2).one_or_none()
+	save=g.db.query(SaveRelationship).filter_by(user_id=v.id, comment_id=comment.id).one_or_none()
 
 	if save:
 		g.db.delete(save)

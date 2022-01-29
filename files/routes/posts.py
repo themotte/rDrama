@@ -1254,10 +1254,10 @@ def save_post(pid, v):
 
 	post=get_post(pid)
 
-	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).one_or_none()
+	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
 
 	if not save:
-		new_save=SaveRelationship(user_id=v.id, submission_id=post.id, type=1)
+		new_save=SaveRelationship(user_id=v.id, submission_id=post.id)
 		g.db.add(new_save)
 		g.db.commit()
 
@@ -1270,7 +1270,7 @@ def unsave_post(pid, v):
 
 	post=get_post(pid)
 
-	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id, type=1).one_or_none()
+	save = g.db.query(SaveRelationship).filter_by(user_id=v.id, submission_id=post.id).one_or_none()
 
 	if save:
 		g.db.delete(save)
