@@ -7,10 +7,13 @@ SITE = environ.get("DOMAIN", '').strip()
 SITE_NAME = environ.get("SITE_NAME", '').strip()
 if SITE == "localhost": SITE_FULL = 'http://' + SITE
 else: SITE_FULL = 'https://' + SITE
+
+SITE_FULL2 = 'http://' + SITE
+
 if SITE == 'pcmemes.net': CC = "SPLASH MOUNTAIN"
 else: CC = "COUNTRY CLUB"
 CC_TITLE = CC.title()
-	
+
 AJ_REPLACEMENTS = {
 	' your ': " you're ",
 	' to ': " too ", 

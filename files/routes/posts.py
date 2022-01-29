@@ -1091,7 +1091,7 @@ def submit_post(v):
 		body += f"Snapshots:\n\n{rev}* [archive.org](https://web.archive.org/{newposturl})\n* [archive.ph](https://archive.ph/?url={quote(newposturl)}&run=1) (click to archive)\n\n"			
 		gevent.spawn(archiveorg, newposturl)
 
-	url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.+)<\/a>'
+	url_regex = '<a href=\"(https?:\/\/[a-z]{1,20}\.[^\"]+)\" rel=\"nofollow noopener noreferrer\" target=\"_blank\">(.*?)<\/a>'
 	for url_match in re.finditer(url_regex, new_post.body_html):
 		href = url_match.group(1)
 		if not href: continue
