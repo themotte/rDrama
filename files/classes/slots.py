@@ -36,6 +36,7 @@ class Slots:
 					elif (wager_value > from_user.coins): break
 
 					from_user.coins -= wager_value
+					from_user.winnings -= wager_value
 
 					payout = self.determine_payout()
 					symbols = self.build_symbols(payout)
@@ -43,6 +44,7 @@ class Slots:
 					reward = wager_value * payout
 
 					from_user.coins += reward
+					from_user.winnings += reward
 					self.db.add(from_user)
 
 					from_comment.slots_result = f'{symbols} {text}'
@@ -61,6 +63,7 @@ class Slots:
 					elif (wager_value > from_user.procoins): break
 
 					from_user.procoins -= wager_value
+					from_user.winnings -= wager_value
 
 					payout = self.determine_payout()
 					symbols = self.build_symbols(payout)
@@ -68,6 +71,7 @@ class Slots:
 					reward = wager_value * payout
 
 					from_user.procoins += reward
+					from_user.winnings += reward
 					self.db.add(from_user)
 
 					from_comment.slots_result = f'{symbols} {text}'
@@ -114,14 +118,7 @@ class Slots:
 			return "".join([symbol, symbol, symbol])
 	
 	def build_text(self, wager_value, result, user, currency):
-		if result == 0:
-			user.winnings -= wager_value
-			return f'Lost {wager_value} {currency}'
-		elif result == 1:
-			return 'Broke Even'
-		elif result == 12:
-			user.winnings += wager_value * (result-1)
-			return f'Jackpot! Won {wager_value * result} {currency}'
-		else:
-			user.winnings += wager_value * (result-1)
-			return f'Won {wager_value * result} {currency}'
+		if result == 0: return f'Lost {wager_value} {currency}'
+		elif result == 1: return 'Broke Even'
+		elif result == 12: return f'Jackpot! Won {wager_value * result} {currency}'
+		else: return f'Won {wager_value * result} {currency}'
