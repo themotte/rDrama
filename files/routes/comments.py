@@ -630,7 +630,7 @@ def edit_comment(cid, v):
 		for i in re.finditer('^(https:\/\/.*\.(png|jpg|jpeg|gif|webp|PNG|JPG|JPEG|GIF|WEBP|9999))', body, re.MULTILINE):
 			if "wikipedia" not in i.group(1): body = body.replace(i.group(1), f'![]({i.group(1)})')
 
-		if v.agendaposter and not v.marseyawarded and parent_post.id not in (37696,37697,37749,37833,37838):
+		if v.agendaposter and not v.marseyawarded:
 			body = torture_ap(body, v.username)
 
 		if not c.options:
