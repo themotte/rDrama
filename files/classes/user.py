@@ -548,6 +548,16 @@ class User(Base):
 		posts = g.db.query(Subscription.submission_id).filter_by(user_id=self.id).all()
 		return [x[0] for x in posts]
 
+	@property
+	@lazy
+	def saved_count(self):
+		return g.db.query(SaveRelationship.submission_id).filter(SaveRelationship.user_id == self.id).count()
+
+	@property
+	@lazy
+	def saved_comment_count(self):
+		return g.db.query(SaveRelationship.comment_id).filter(SaveRelationship.user_id == self.id).count()
+
 	@lazy
 	def saved_idlist(self, page=1):
 
