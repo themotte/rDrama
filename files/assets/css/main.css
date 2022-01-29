@@ -4001,6 +4001,11 @@ pre .com, code .com {
     -ms-transition: all 0.15s ease;
     transition: all 0.15s ease;
 }
+@media (min-width: 991.98px) {
+    .gif-categories img {
+        height: 300px;
+    }
+}
 .gif-categories img:hover {
     border: 3px solid var(--primary);
 }
