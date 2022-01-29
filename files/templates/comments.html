@@ -327,7 +327,7 @@
 						<a id="edit-btn-{{c.id}}" role="button" form="comment-edit-form-{{c.id}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="comment_edit('{{c.id}}')">Save Edit</a> 
 						<a id="cancel-edit-{{c.id}}" role="button" onclick="toggleEdit('{{c.id}}')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 					</form>
-					<div id="preview-edit-{{c.id}}" class="preview-edit mb-3 mt-5"></div>
+					<div id="preview-edit-{{c.id}}" class="preview mb-3 mt-5"></div>
 					<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
 				</div>
 				{% endif %}
@@ -564,7 +564,7 @@
 					<a id="save-reply-to-{{c.fullname}}" class="btn btn-primary ml-2 fl-r commentmob" onclick="post_comment('{{c.fullname}}', '{{c.post.id}}');" role="button">Comment</a>
 					<a role="button" onclick="document.getElementById('reply-to-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form fl-r commentmob">Cancel</a> 
 				</form>
-				<div id="reply-edit-{{c.id}}" class="mb-3 mt-5"></div>
+				<div id="reply-edit-{{c.id}}" class="preview mb-3 mt-5"></div>
 				<div class="form-text text-small p-0 m-0"><a href="/formatting" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %}>Formatting help</a></div>
 			</div>
 		</div>
@@ -588,7 +588,7 @@
 						<a role="button" onclick="document.getElementById('reply-message-{{c.id}}').classList.add('d-none')" class="btn btn-link text-muted ml-auto cancel-form">Cancel</a> 
 						<a id="save-reply-to-{{c.id}}" class="btn btn-primary ml-2" onclick="post_reply('{{c.id}}');" role="button">Reply</a> 
 					</form>
-					<div id="message-reply-{{c.id}}" class="preview-edit mt-2"></div>
+					<div id="message-reply-{{c.id}}" class="preview mt-2"></div>
 				</div>
 			</div>
 		{% elif level<10 or request.path == '/notifications' %}

@@ -4488,7 +4488,7 @@ blockquote p {
         margin: 1.75rem auto !important;
 }
 }
-.in-comment-image {
+.in-comment-image, .preview img {
     max-height: 150px !important;
     max-width: 100% !important;
     border-radius: 0.2rem !important;
@@ -4609,9 +4609,6 @@ input[type=radio] ~ .custom-control-label::before {
     display: inline-block;
     -o-object-fit: contain;
     object-fit: contain;
-}
-.preview-edit img, #preview img {
-    max-width: 20%;
 }
 .twitter-tweet {
     margin-bottom: 9.8px;
