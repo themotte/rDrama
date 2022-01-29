@@ -64,11 +64,9 @@ class Blackjack:
         if self.command_word in in_text:
             for word in in_text.split():
                 if self.command_word in word:
-                    try:
-                        wager = word[len(self.command_word):]
-                        wager_value = int(wager)
-                    except: break
-                    
+                    wager = word[len(self.command_word):]
+                    wager_value = int(wager)
+
                     if (wager_value < self.minimum_bet):
                         break
                     elif (wager_value > self.maximum_bet):
@@ -158,11 +156,12 @@ class Blackjack:
         elif result == 'won':
             reward = int(wager) * 2
         elif result == 'blackjack':
-            reward = floor(int(wager) * (3/2))
+            reward = int(wager) + floor(int(wager) * (3/2))
 
         if (reward > 0):
             user = from_comment.author
             user.coins += reward
+            user.winnings += reward - int(wager)
 
             self.db.add(user)
             self.db.commit()
