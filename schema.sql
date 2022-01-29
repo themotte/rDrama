@@ -70,7 +70,8 @@ CREATE TABLE public.alts (
     id integer NOT NULL,
     user1 integer NOT NULL,
     user2 integer NOT NULL,
-    is_manual boolean DEFAULT false
+    is_manual boolean DEFAULT false,
+    CONSTRAINT alts_cant_be_equal CHECK ((user1 <> user2))
 );
 
 
