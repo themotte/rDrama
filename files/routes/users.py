@@ -985,10 +985,7 @@ def saved_comments(v, username):
 
 	page=int(request.values.get("page",1))
 
-	firstrange = 25 * (page - 1)
-	secondrange = firstrange+26
-
-	ids=v.saved_comment_idlist()[firstrange:secondrange]
+	ids=v.saved_comment_idlist(page=page)
 
 	next_exists=len(ids) > 25
 

@@ -570,7 +570,7 @@ class User(Base):
 		return [x[0] for x in posts.order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).all()]
 
 	@lazy
-	def saved_comment_idlist(self):
+	def saved_comment_idlist(self, page=1):
 
 		try: saved = [x[0] for x in g.db.query(SaveRelationship.comment_id).filter(SaveRelationship.user_id == self.id).all()]
 		except: return []
@@ -589,7 +589,7 @@ class User(Base):
 				Comment.author_id.notin_(blocked)
 			)
 
-		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).all()]
+		return [x[0] for x in comments.order_by(Comment.created_utc.desc()).offset(25 * (page - 1)).all()]
 
 	@property
 	@lazy
