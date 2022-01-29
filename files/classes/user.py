@@ -46,6 +46,7 @@ class User(Base):
 	profileurl = Column(String)
 	bannerurl = Column(String)
 	patron = Column(Integer, default=0)
+	patron_utc = Column(Integer, default=0)
 	verified = Column(String)
 	verifiedcolor = Column(String)
 	marseyawarded = Column(Integer)
