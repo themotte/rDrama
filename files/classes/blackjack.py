@@ -75,6 +75,7 @@ class Blackjack:
                         break
 
                     from_user.coins -= wager_value
+                    from_user.winnings -= wager_value
 
                     player_hand, dealer_hand, rest_of_deck = deal_initial_cards()
                     status = 'active'
@@ -161,7 +162,7 @@ class Blackjack:
         if (reward > 0):
             user = from_comment.author
             user.coins += reward
-            user.winnings += reward - int(wager)
+            user.winnings += reward
 
             self.db.add(user)
             self.db.commit()
