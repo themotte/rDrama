@@ -427,7 +427,7 @@ def reportbugs(v):
 	return redirect(f'{SITE_FULL}/post/{BUG_THREAD}')
 
 @app.post("/@<username>/message")
-@limiter.limit("1/second;2/minute;10/hour;50/day")
+@limiter.limit("1/second;10/minute;20/hour;50/day")
 @is_not_permabanned
 def message2(v, username):
 
