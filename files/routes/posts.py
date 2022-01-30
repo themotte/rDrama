@@ -338,7 +338,7 @@ def viewmore(v, pid, sort, offset):
 	if len(comments) == len(comments2): offset = None
 	comments = comments2
 
-	return render_template("comments.html", v=v, comments=comments, render_replies=True, pid=pid, sort=sort, offset=offset)
+	return render_template("comments.html", v=v, comments=comments, render_replies=True, pid=pid, sort=sort, offset=offset, ajax=True)
 
 
 @app.post("/morecomments/<cid>")
@@ -387,7 +387,7 @@ def morecomments(v, cid):
 		c = g.db.query(Comment).filter_by(id=cid).one_or_none()
 		comments = c.replies
 
-	return render_template("comments.html", v=v, comments=comments, render_replies=True)
+	return render_template("comments.html", v=v, comments=comments, render_replies=True, ajax=True)
 
 @app.post("/edit_post/<pid>")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

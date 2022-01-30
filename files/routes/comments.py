@@ -604,7 +604,7 @@ def api_comment(v):
 	g.db.commit()
 
 	if request.headers.get("Authorization"): return c.json
-	return render_template("comments.html", v=v, comments=[c])
+	return render_template("comments.html", v=v, comments=[c], ajax=True)
 
 
 

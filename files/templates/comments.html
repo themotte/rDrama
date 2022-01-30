@@ -1,75 +1,77 @@
-{% if comment_info and not request.full_path.endswith('#context') %}
-	<script>
-		history.pushState(null, null, '#context');
-	</script>
-{% endif %}
+{% if not ajax %}
+	{% if comment_info and not request.full_path.endswith('#context') %}
+		<script>
+			history.pushState(null, null, '#context');
+		</script>
+	{% endif %}
 
-{% if v %}
-	{% include "award_modal.html" %}
-{% endif %}
+	{% if v %}
+		{% include "award_modal.html" %}
+	{% endif %}
 
-<style>
-	html {
-		scroll-padding-top: 75px;
-	}
-	.comment {
-		overflow: hidden;
-	}
-	.comment .comment-body {
-		padding: 3px 0 0 0;
-	}
-	.comment-anchor {
-		margin-top: -75px;
-		padding: 1px;
-	}
-	.comment-anchor::before {
-		content: '';
-		display: block;
-		padding-top: 75px;
-	}
-	.comment-anchor:target {
-		background: rgba(255,255,255,0.2);
-		padding: 12px;
-	}
-</style>
+	<style>
+		html {
+			scroll-padding-top: 75px;
+		}
+		.comment {
+			overflow: hidden;
+		}
+		.comment .comment-body {
+			padding: 3px 0 0 0;
+		}
+		.comment-anchor {
+			margin-top: -75px;
+			padding: 1px;
+		}
+		.comment-anchor::before {
+			content: '';
+			display: block;
+			padding-top: 75px;
+		}
+		.comment-anchor:target {
+			background: rgba(255,255,255,0.2);
+			padding: 12px;
+		}
+	</style>
 
-<div style="display:none" id="popover">
-	<div class="popover-user-profile" role="tooltip">
-		<img loading="lazy" class="pop-banner w-100 h-64 object-cover">
-		<div class="d-flex align-items-end px-3 mt-n6 mb-3">
-			<img  loading="lazy" class="pop-picture avatar-72 rounded img-thumbnail shadow-sm">
-			<div class="px-3 text-truncate">
-			<h5 class="pop-username text-truncate text-black"></h5>
+	<div style="display:none" id="popover">
+		<div class="popover-user-profile" role="tooltip">
+			<img loading="lazy" class="pop-banner w-100 h-64 object-cover">
+			<div class="d-flex align-items-end px-3 mt-n6 mb-3">
+				<img  loading="lazy" class="pop-picture avatar-72 rounded img-thumbnail shadow-sm">
+				<div class="px-3 text-truncate">
+				<h5 class="pop-username text-truncate text-black"></h5>
+				</div>
 			</div>
-		</div>
-		<div class="px-3">
-			<span class="pop-bio popover-bio text-black"></span>
-		</div>
+			<div class="px-3">
+				<span class="pop-bio popover-bio text-black"></span>
+			</div>
 
-		<div class="pop-badges ml-3 mr-3 my-2">
-		</div>
+			<div class="pop-badges ml-3 mr-3 my-2">
+			</div>
 
-	 <div class="border-top d-flex align-items-center p-3 gap-3 smol">
-		<span>
-		 <strong class="pop-postcount text-black"></strong>
-		 <span class="text-black">posts</span>
-		</span>
-		<span class="ml-3">
-		 <strong class="pop-commentcount text-black"></strong>
-		 <span class="text-black">comments</span>
-		</span>
-		<span class="ml-3">
-			<strong class="pop-coins text-black"></strong>
-			<span class="text-black">coins</span>
-		</span> 
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="/" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} class="pop-viewmore ml-auto text-decoration-none">
-		 View
-		 <i class="fas fa-arrow-right fa-sm px-1"></i>
-		</a>
-	 </div>
+		<div class="border-top d-flex align-items-center p-3 gap-3 smol">
+			<span>
+			<strong class="pop-postcount text-black"></strong>
+			<span class="text-black">posts</span>
+			</span>
+			<span class="ml-3">
+			<strong class="pop-commentcount text-black"></strong>
+			<span class="text-black">comments</span>
+			</span>
+			<span class="ml-3">
+				<strong class="pop-coins text-black"></strong>
+				<span class="text-black">coins</span>
+			</span> 
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="/" {% if v and v.newtab and not g.webview %}target="_blank"{% endif %} class="pop-viewmore ml-auto text-decoration-none">
+			View
+			<i class="fas fa-arrow-right fa-sm px-1"></i>
+			</a>
+		</div>
+		</div>
 	</div>
-</div>
+{% endif %}
 
 {% macro single_comment(c, level=1) %}
 
@@ -742,206 +744,209 @@
 
 {% endfor %}
 
-{% if v %}
-	{% include "gif_modal.html" %}
-	{% include "emoji_modal.html" %}
-	{% if v.admin_level > 1 %}
-		{% include "ban_modal.html" %}
-	{% endif %}
+{% if not ajax %}
+	{% if v %}
+		{% include "gif_modal.html" %}
+		{% include "emoji_modal.html" %}
+		{% if v.admin_level > 1 %}
+			{% include "ban_modal.html" %}
+		{% endif %}
 
-		<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Delete comment?</h5>
-					<button class="close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true"><i class="far fa-times"></i></span>
-					</button>
-				</div>
-				<div class="modal-body text-center">
-
-					<div class="py-4">
-						<i class="fad fa-trash-alt text-muted" style="font-size: 3.5rem;"></i>
+			<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Delete comment?</h5>
+						<button class="close" data-bs-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true"><i class="far fa-times"></i></span>
+						</button>
 					</div>
+					<div class="modal-body text-center">
 
-					<p>Your comment will be removed everywhere on {{SITE_NAME}}. This action can be undone.</p>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
-					<button id="deleteCommentButton" class="btn btn-danger">Delete comment</button>
-				</div>
-			</div>
-		</div>
-	</div>
+						<div class="py-4">
+							<i class="fad fa-trash-alt text-muted" style="font-size: 3.5rem;"></i>
+						</div>
 
-	<div class="modal fade" id="reportCommentModal" tabindex="-1" role="dialog" aria-labelledby="reportCommentModalTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Report <span id="comment-author"></span>'s comment</h5>
-					<button class="close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true"><i class="far fa-times"></i></span>
-					</button>
-				</div>
-				<div class="" id="reportCommentFormBefore">
-					<div class="modal-body">
-						<div class="h6">We're sorry something here is wrong.</div>
-						<small class="form-text text-muted">Please enter a reason for reporting below.</small>
-						<pre></pre>
-						<input autocomplete="off" maxlength="100" id="reason-comment" class="form-control">
+						<p>Your comment will be removed everywhere on {{SITE_NAME}}. This action can be undone.</p>
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
-						<button id="reportCommentButton" class="btn btn-danger">Report comment</button>
-					</div>
-				</div>
-				
-				<div class="d-none" id="reportCommentFormAfter">
-					<div class="modal-body">
-						<div class="h6">Thank you for reporting this comment!</div>
-						<small class="form-text text-muted">We'll take it from here.</small>
-					</div>
-					<div class="modal-footer">
-						<button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+						<button id="deleteCommentButton" class="btn btn-danger">Delete comment</button>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-{% endif %}
 
-<style>
-	.mod:before {
-		content: '(((';
-	}
-
-	.mod:after {
-		content: ')))';
-	}
-
-	.mod {
-		padding: 2px 5px 3px 5px;
-		border-radius: 5px;
-		color:white!important;
-		background: -moz-linear-gradient(180deg, red, orange, yellow, green, blue, indigo, violet);
-		background: -webkit-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet );
-		text-shadow:-1px -1px 0 black,1px -1px 0 black,-1px 1px 0 black,1px 1px 0 black;
-	}
-
-	.popover {
-		max-width: 50%;
-		box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
-		border-color: #dadada;
-	}
-
-	@media (max-width: 991.98px) {
-		.popover {
-			max-width: 90% !important;
-		}
-	}
-
-	.popover-arrow {
-		display: none !important;
-	}
-
-	.popover-user-profile {
-		display: flex;
-		flex-direction: column;
-		padding: 0;
-		background: var(--gray-600);
-	}
-
-	.popover-body {
-		padding: 0;
-		border-radius: .25rem;
-		overflow: hidden;
-	}
-
-	.mt-n6 {
-		margin-top: -1.75rem !important;
-	}
-
-	.avatar-72 {
-		width: 72px;
-		height: 72px;
-		object-fit: cover;
-	}
-
-	.h-64 {
-		height: 64px;
-	}
-
-	.object-cover {
-		object-fit: cover;
-	}
-
-	.text-black {
-		color: var(--black);
-	}
-
-	.smolbtn {
-		font-weight: 600;
-		font-size: .9rem;
-		border-radius: 0.2rem;
-		padding: 0.1rem 0.50rem 0rem 0.30rem;
-		background-color: var(--black) !important;
-	}
-
-	.smol {
-		font-size: 11.5px;
-	}
-
-	@media (max-width: 768px) {
-		.commentmob {
-			margin-top: 0.5rem !important;
-		}
-	}
-	.treasure {
-		margin-left: 10px;
-		margin-right: 3px;
-		margin-top: -2px;
-	}
-</style>
-
-{% if v %}
-	<script src="/static/assets/js/marked.js?a=220"></script>
-	<script src="/static/assets/js/comments_v.js?a=235"></script>
-{% endif %}
-
-<script src="/static/assets/js/clipboard.js?a=220"></script>
-
-{% if v and v.admin_level > 1 %}
-	<script src="/static/assets/js/comments_admin.js?a=220"></script>
-{% endif %}
-
-{% include "expanded_image_modal.html" %}
-
-<script src="/static/assets/js/comments+submission_listing.js?a=221"></script>
-<script src="/static/assets/js/comments.js?a=221"></script>
-
-<script>
-	{% if p and (not v or v.highlightcomments) %}
-		comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
-		lastCount = comments['{{p.id}}']
-		redhtml = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Unread"></i>'
-		if (lastCount)
-		{
-			{% for c in p.comments2 %}
-				{% if not (v and v.id==c[0]) %}
-					if ({{c[1]*1000}} > lastCount.t) 
-					try {document.getElementById("reddot-{{c[2]}}").innerHTML = redhtml}
-					catch(e) {}
-				{% endif %}
-			{% endfor %}
-		}
+		<div class="modal fade" id="reportCommentModal" tabindex="-1" role="dialog" aria-labelledby="reportCommentModalTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Report <span id="comment-author"></span>'s comment</h5>
+						<button class="close" data-bs-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true"><i class="far fa-times"></i></span>
+						</button>
+					</div>
+					<div class="" id="reportCommentFormBefore">
+						<div class="modal-body">
+							<div class="h6">We're sorry something here is wrong.</div>
+							<small class="form-text text-muted">Please enter a reason for reporting below.</small>
+							<pre></pre>
+							<input autocomplete="off" maxlength="100" id="reason-comment" class="form-control">
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+							<button id="reportCommentButton" class="btn btn-danger">Report comment</button>
+						</div>
+					</div>
+					
+					<div class="d-none" id="reportCommentFormAfter">
+						<div class="modal-body">
+							<div class="h6">Thank you for reporting this comment!</div>
+							<small class="form-text text-muted">We'll take it from here.</small>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	{% endif %}
-</script>
+
+	<style>
+		.mod:before {
+			content: '(((';
+		}
+
+		.mod:after {
+			content: ')))';
+		}
+
+		.mod {
+			padding: 2px 5px 3px 5px;
+			border-radius: 5px;
+			color:white!important;
+			background: -moz-linear-gradient(180deg, red, orange, yellow, green, blue, indigo, violet);
+			background: -webkit-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet );
+			text-shadow:-1px -1px 0 black,1px -1px 0 black,-1px 1px 0 black,1px 1px 0 black;
+		}
+
+		.popover {
+			max-width: 50%;
+			box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
+			border-color: #dadada;
+		}
+
+		@media (max-width: 991.98px) {
+			.popover {
+				max-width: 90% !important;
+			}
+		}
+
+		.popover-arrow {
+			display: none !important;
+		}
+
+		.popover-user-profile {
+			display: flex;
+			flex-direction: column;
+			padding: 0;
+			background: var(--gray-600);
+		}
+
+		.popover-body {
+			padding: 0;
+			border-radius: .25rem;
+			overflow: hidden;
+		}
+
+		.mt-n6 {
+			margin-top: -1.75rem !important;
+		}
+
+		.avatar-72 {
+			width: 72px;
+			height: 72px;
+			object-fit: cover;
+		}
+
+		.h-64 {
+			height: 64px;
+		}
+
+		.object-cover {
+			object-fit: cover;
+		}
+
+		.text-black {
+			color: var(--black);
+		}
+
+		.smolbtn {
+			font-weight: 600;
+			font-size: .9rem;
+			border-radius: 0.2rem;
+			padding: 0.1rem 0.50rem 0rem 0.30rem;
+			background-color: var(--black) !important;
+		}
+
+		.smol {
+			font-size: 11.5px;
+		}
+
+		@media (max-width: 768px) {
+			.commentmob {
+				margin-top: 0.5rem !important;
+			}
+		}
+		.treasure {
+			margin-left: 10px;
+			margin-right: 3px;
+			margin-top: -2px;
+		}
+	</style>
+
+	{% if v %}
+		<script src="/static/assets/js/marked.js?a=220"></script>
+		<script src="/static/assets/js/comments_v.js?a=235"></script>
+	{% endif %}
+
+	<script src="/static/assets/js/clipboard.js?a=220"></script>
+
+	{% if v and v.admin_level > 1 %}
+		<script src="/static/assets/js/comments_admin.js?a=220"></script>
+	{% endif %}
+
+	{% include "expanded_image_modal.html" %}
+
+	<script src="/static/assets/js/comments+submission_listing.js?a=221"></script>
+	<script src="/static/assets/js/comments.js?a=221"></script>
+
+	<script>
+		{% if p and (not v or v.highlightcomments) %}
+			comments = JSON.parse(localStorage.getItem("comment-counts")) || {}
+			lastCount = comments['{{p.id}}']
+			redhtml = '<i style="color:red !important" class="text-admin fas fa-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Unread"></i>'
+			if (lastCount)
+			{
+				{% for c in p.comments2 %}
+					{% if not (v and v.id==c[0]) %}
+						if ({{c[1]*1000}} > lastCount.t) 
+						try {document.getElementById("reddot-{{c[2]}}").innerHTML = redhtml}
+						catch(e) {}
+					{% endif %}
+				{% endfor %}
+			}
+		{% endif %}
+	</script>
+{% endif %}
 
 {% if offset %}
 	{% if p %}
 		{% set pid = p.id %}
 	{% endif %}
- 	<br>
+	<br>
 	<div id="viewmore-{{offset}}"><button id="viewbtn" class="btn btn-primary" onclick="viewmore({{pid}},'{{sort}}',{{offset}})">VIEW MORE COMMENTS</a></div>
 {% endif %}
+
 </body>

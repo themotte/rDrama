@@ -573,7 +573,7 @@ def messagereply(v):
 			g.db.add(notif)
 	g.db.commit()
 
-	return render_template("comments.html", v=v, comments=[new_comment])
+	return render_template("comments.html", v=v, comments=[new_comment], ajax=True)
 
 @app.get("/2faqr/<secret>")
 @auth_required
