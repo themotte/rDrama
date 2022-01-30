@@ -101,7 +101,7 @@
 				</div>
 				
 	{% if render_replies %} 
-		{% if level<10 %}
+		{% if level<9 %}
 			<div id="replies-of-{{c.id}}" class="">
 				{% set standalone=False %}
 				{% for reply in replies %}
@@ -267,7 +267,7 @@
 					{% set wager = wager|int*2 %}
 					<strong>Won {{wager}} Coins.</strong>
 					{% elif blackjack_status == 'blackjack' %}
-					{% set wager = wager|int*5/2 %}
+					{% set wager = wager %}
 					<strong>Blackjack! Won <span id="blackjack-result-{{c.id}}">{{wager}}</span> Coins.</strong>
 					<script>
 						var blackjackResult = document.getElementById('blackjack-result-{{c.id}}');
@@ -593,7 +593,7 @@
 					<div id="message-reply-{{c.id}}" class="preview mt-2"></div>
 				</div>
 			</div>
-		{% elif level<10 or request.path == '/notifications' %}
+		{% elif level<9 or request.path == '/notifications' %}
 			<div id="replies-of-{{c.id}}">
 				{% for reply in replies %}
 					{{single_comment(reply, level=level+1)}}
