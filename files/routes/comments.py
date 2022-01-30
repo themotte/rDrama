@@ -5,6 +5,7 @@ from files.helpers.images import *
 from files.helpers.const import *
 from files.classes import *
 from files.routes.front import comment_idlist
+from files.routes.static import marsey_list
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
@@ -229,6 +230,7 @@ def api_comment(v):
 						copyfile(oldname, filename)
 						process_image(filename, 200)
 						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/emojis/{name}.webp"]})
+						cache.delete_memoized(marsey_list)
 					except Exception as e:
 						print(e)
 						return {"error": "You didn't follow the format retard"}, 400
