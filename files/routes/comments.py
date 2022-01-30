@@ -219,7 +219,7 @@ def api_comment(v):
 					try:
 						marsey = loads(body.lower())
 						name = marsey["name"]
-						if "author" in marsey: author_id = get_user(marsey["author"])
+						if "author" in marsey: author_id = get_user(marsey["author"]).id
 						elif "author_id" in marsey: author_id = marsey["author_id"]
 						else: abort(400)
 						if not g.db.query(Marsey.name).filter_by(name=name).first():
