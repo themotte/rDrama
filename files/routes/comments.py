@@ -219,8 +219,11 @@ def api_comment(v):
 					try:
 						marsey = loads(body.lower())
 						name = marsey["name"]
+						if "author" in marsey: author_id = get_user(marsey["author"])
+						elif "author_id" in marsey: author_id = marsey["author_id"]
+						else: abort(400)
 						if not g.db.query(Marsey.name).filter_by(name=name).first():
-							marsey = Marsey(name=marsey["name"], author_id=marsey["author_id"], tags=marsey["tags"], count=0)
+							marsey = Marsey(name=marsey["name"], author_id=author_id, tags=marsey["tags"], count=0)
 							g.db.add(marsey)
 						filename = f'files/assets/images/emojis/{name}.webp'
 						copyfile(oldname, filename)
