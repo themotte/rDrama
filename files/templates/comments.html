@@ -264,16 +264,9 @@
 					{% elif blackjack_status == 'lost' %}
 					<strong>Lost {{wager}} Coins.</strong>
 					{% elif blackjack_status == 'won' %}
-					<strong>Won {{wager}} Coins.</strong>
+					<strong>Won {{wager|int * 2}} Coins.</strong>
 					{% elif blackjack_status == 'blackjack' %}
-					<strong>Blackjack! Won <span id="blackjack-result-{{c.id}}">{{wager|int + wager|int/1.5}}</span> Coins.</strong>
-					<script>
-						var blackjackResult = document.getElementById('blackjack-result-{{c.id}}');
-
-						if (blackjackResult) {
-							blackjackResult.innerText = Math.floor(parseInt(blackjackResult.innerText) * (3/2))
-						}
-					</script>
+					<strong>Blackjack! Won <span id="blackjack-result-{{c.id}}">{{(wager|int * 5/2}}</span> Coins.</strong>
 					{% endif %}
 				{% endif %}
 			</div>
