@@ -266,7 +266,7 @@
 					{% elif blackjack_status == 'won' %}
 					<strong>Won {{wager}} Coins.</strong>
 					{% elif blackjack_status == 'blackjack' %}
-					<strong>Blackjack! Won <span id="blackjack-result-{{c.id}}">{{wager}}</span> Coins.</strong>
+					<strong>Blackjack! Won <span id="blackjack-result-{{c.id}}">{{wager+wager}}</span> Coins.</strong>
 					<script>
 						var blackjackResult = document.getElementById('blackjack-result-{{c.id}}');
 
