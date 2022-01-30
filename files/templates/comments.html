@@ -266,7 +266,7 @@
 					{% elif blackjack_status == 'won' %}
 					<strong>Won {{wager|int * 2}} Coins.</strong>
 					{% elif blackjack_status == 'blackjack' %}
-					<strong>Blackjack! Won <span id="blackjack-result-{{c.id}}">{{(wager|int * 5/2}}</span> Coins.</strong>
+					<strong>Blackjack! Won <span id="blackjack-result-{{c.id}}">{{(wager|int * 5/2)|round(0, 'floor')}}</span> Coins.</strong>
 					{% endif %}
 				{% endif %}
 			</div>
