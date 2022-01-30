@@ -37,7 +37,7 @@ class Badge(Base):
 	@property
 	@lazy
 	def text(self):
-		if self.name == "Agendaposter":
+		if self.name == "Chud":
 			ti = self.user.agendaposter_expires_utc
 			if ti: text = self.badge.description + " until " + datetime.utcfromtimestamp(ti).strftime('%Y-%m-%d %H:%M:%S')
 			else: text = self.badge.description + " permanently"
