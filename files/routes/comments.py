@@ -67,7 +67,7 @@ def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 		if request.headers.get("Authorization"): return {'error': 'This content is not suitable for some users and situations.'}
 		else: render_template("errors/nsfw.html", v=v)
 
-	try: context = int(request.values.get("context", 0))
+	try: context = min(int(request.values.get("context", 0)), 8)
 	except: context = 0
 	comment_info = comment
 	c = comment
