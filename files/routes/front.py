@@ -91,7 +91,7 @@ def notifications(v):
 	if not posts:
 		listing = []
 		all = set()
-		for c in comments:
+		for c in comments.reverse():
 			c.is_blocked = False
 			c.is_blocking = False
 			if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
@@ -133,6 +133,7 @@ def notifications(v):
 					all.add(c.id)
 					listing.append(c)
 
+	listing = listing.reverse()
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
 	return render_template("notifications.html",
