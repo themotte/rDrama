@@ -241,7 +241,7 @@
 							<form action="/ban_user/{{u.id}}" method="post" action="">
 								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 								<input autocomplete="off" type="hidden" name="redir" value="true">
-								<input autocomplete="off" style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit').disabled=false">
+								<input autocomplete="off" style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit').disabled=false">
 								<input autocomplete="off" style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
 								<div class="custom-control custom-checkbox">
 									<input autocomplete="off" type="checkbox" id="alts-2-desktop" class="custom-control-input" name="alts" value="1">
@@ -524,7 +524,7 @@
 							<form action="/ban_user/{{u.id}}/" method="post">
 								<input autocomplete="off" type="hidden" name="formkey" value="{{v.formkey}}">
 								<input autocomplete="off" type="hidden" name="redir" value="true">
-								<input autocomplete="off" style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" onchange="document.getElementById('user-ban-submit2').disabled=false">
+								<input autocomplete="off" style="font-size:11px;" type="text" class="form-control" name="reason" placeholder="Ban Reason" oninput="document.getElementById('user-ban-submit2').disabled=false">
 								<input autocomplete="off" style="font-size:11px;" type="number" step="any" class="form-control" name="days" placeholder="Days (blank = permanent)">
 								<br >
 								<div class="custom-control custom-checkbox">

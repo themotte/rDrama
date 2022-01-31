@@ -761,6 +761,12 @@ def shadowban(user_id, v):
 	
 	cache.delete_memoized(frontlist)
 
+	body = f"@{v.username} has shadowbanned @{user.username}"
+
+	body_html = sanitize(body)
+
+	send_admin(NOTIFICATIONS_ID, body_html)
+
 	g.db.commit()
 	return {"message": "User shadowbanned!"}
 
@@ -897,11 +903,13 @@ def ban_user(user_id, v):
 	if days == 0: duration = "permanent"
 	elif days == 1: duration = "1 day"
 	else: duration = f"{days} days"
+
+	note = f'reason: "{reason}", duration: {duration}'
 	ma=ModAction(
 		kind="ban_user",
 		user_id=v.id,
 		target_user_id=user.id,
-		_note=f'reason: "{reason}", duration: {duration}'
+		_note=note
 		)
 	g.db.add(ma)
 
@@ -916,6 +924,14 @@ def ban_user(user_id, v):
 			comment = get_comment(comment)
 			comment.bannedfor = True
 			g.db.add(comment)
+
+
+	body = f"@{v.username} has banned @{user.username} ({note})"
+
+	body_html = sanitize(body)
+
+	send_admin(NOTIFICATIONS_ID, body_html)
+
 	g.db.commit()
 
 	if 'redir' in request.values: return redirect(user.url)
@@ -929,8 +945,7 @@ def unban_user(user_id, v):
 
 	user = g.db.query(User).filter_by(id=user_id).one_or_none()
 
-	if not user:
-		abort(400)
+	if not user: abort(400)
 
 	user.is_banned = 0
 	user.unban_utc = 0

@@ -1,7 +1,7 @@
 <script src="/static/assets/js/award_modal.js?a=221"></script>
 <div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="awardModalTitle" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered awardmodal" role="document">
-		<div class="modal-content pb-4">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered awardmodal my-5" role="document">
+		<div class="modal-content pb-5">
 			<div class="modal-header">
 				<h5 class="modal-title">Give Award</h5>
 				<button role="button" class="close" data-bs-dismiss="modal" aria-label="Close">
@@ -77,14 +77,11 @@
 		column-count: 1;
 	}
 
-	@media (min-width: 767.98px) {
-		.award-columns {
-			column-count: 7 !important;
-		}
-	}
-
 	.awardmodal {
 		max-width: 90% !important;
+		min-height: 90% !important;
+		max-height: 90% !important;
+		height: 90% !important;
 	}
 
 	toast {

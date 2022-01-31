@@ -751,7 +751,7 @@ def settings_profilecss(v):
 	return render_template("settings_profilecss.html", v=v)
 
 @app.post("/settings/block")
-@limiter.limit("1/second;30/minute;200/hour;1000/day")
+@limiter.limit("1/second;10/day")
 @auth_required
 def settings_block_user(v):
 
