@@ -173,11 +173,13 @@ def front_all(v):
 
 	sort=request.values.get("sort", defaultsorting)
 	t=request.values.get('t', defaulttime)
+	ccmode=request.values.get('ccmode', "false")
 
 	ids, next_exists = frontlist(sort=sort,
 					page=page,
 					t=t,
 					v=v,
+					ccmode=ccmode,
 					filter_words=v.filter_words if v else [],
 					gt=int(request.values.get("utc_greater_than", 0)),
 					lt=int(request.values.get("utc_less_than", 0)),
@@ -266,7 +268,7 @@ def front_all(v):
 
 
 @cache.memoize(timeout=86400)
-def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='', gt=None, lt=None):
+def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, ccmode="false", filter_words='', gt=None, lt=None):
 
 	posts = g.db.query(Submission)
 
@@ -279,6 +281,9 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 		elif t == 'year': cutoff = now - 31536000
 		else: cutoff = now - 86400
 		posts = posts.filter(Submission.created_utc >= cutoff)
+
+	if (ccmode == "true"):
+		posts = posts.filter(Submission.club == True)
 
 	if sort == "hot" or (v and v.id == Q_ID): posts = posts.filter_by(is_banned=False, stickied=None, private=False, deleted_utc = 0)
 	else: posts = posts.filter_by(is_banned=False, private=False, deleted_utc = 0)
