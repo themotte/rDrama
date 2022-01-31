@@ -51,7 +51,7 @@ def notifications(v):
 	elif posts:
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ID).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
 
-		listing = set()
+		listing = []
 
 		for index, x in enumerate(notifications[:100]):
 			c = x.comment
@@ -60,7 +60,7 @@ def notifications(v):
 				x.read = True
 				c.unread = True
 				g.db.add(x)
-			listing.add(c)
+			listing.append(c)
 
 		g.db.commit()
 
@@ -89,17 +89,17 @@ def notifications(v):
 		g.db.commit()
 		
 	if not posts:
-		listing = set()
+		listing = []
 		all = set()
 		for c in comments:
 			c.is_blocked = False
 			c.is_blocking = False
 			if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
-				replies = set()
+				replies = []
 				for x in c.replies:
 					if x.id not in all and x.author_id == v.id:
 						x.voted = 1
-						replies.add(x)
+						replies.append(x)
 						all.add(x.id)
 				c.replies = replies
 				while c.parent_comment and c.parent_comment.author_id == v.id:
@@ -110,19 +110,19 @@ def notifications(v):
 					c = parent
 				if c.id not in all and c not in listing:
 					all.add(c.id)
-					listing.add(c)
+					listing.append(c)
 					c.replies = c.replies2
 			elif c.parent_submission:
 				replies = set()
 				for x in c.replies:
 					if x.id not in all and x.author_id == v.id:
 						x.voted = 1
-						replies.add(x)
+						replies.append(x)
 						all.add(x.id)
 				c.replies = replies
 				if x.id not in all and c not in listing:
 					all.add(c.id)
-					listing.add(c)
+					listing.append(c)
 			else:
 				if c.parent_comment:
 					while c.level > 1:
@@ -131,7 +131,7 @@ def notifications(v):
 
 				if c.id not in all and c not in listing:
 					all.add(c.id)
-					listing.add(c)
+					listing.append(c)
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
