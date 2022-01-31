@@ -43,10 +43,8 @@
 				<div class="text-small font-weight-bold mr-2">‎</div>
 
 				{% if v.admin_level > 1 or v.club_allowed != False %}
-				{% set ccmode = request.args.get("ccmode") %}
 				<div class="toggle-cc-mode">
 					<button class="btn btn-secondary ccMode-toggle" type="button" id="toggleCCMode">
-
 						{% if ccmode=="true"%}<a class="cc-activated" href="?sort={{sort}}&t={{t}}&ccmode=false"><i class="fas fa-angry mr-2"></i>COUNTRY CLUB MODE: ACTIVATED</a>{% endif %}
 						{% if ccmode=="false" or not ccmode %}<a class="cc-deactivated" href="?sort={{sort}}&t={{t}}&ccmode=true"><i class="fas fa-angry mr-2"></i>CC Mode</a>{% endif %}
 					</button>
