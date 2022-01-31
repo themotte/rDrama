@@ -418,6 +418,8 @@ class Comment(Base):
 		
 		if self.is_banned: return True
 		
+		if (self.slots_result or self.blackjack_result) and len(self.body) <= 20 and level > 1: return True
+		
 		return False
 
 	@property
