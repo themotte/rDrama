@@ -175,7 +175,7 @@ def club_ban(v, username):
 
 @app.post("/@<username>/make_meme_admin")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@admin_level_required(2)
+@admin_level_required(3)
 def make_meme_admin(v, username):
 	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
 		user = get_user(username)
@@ -188,7 +188,7 @@ def make_meme_admin(v, username):
 
 @app.post("/@<username>/remove_meme_admin")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@admin_level_required(2)
+@admin_level_required(3)
 def remove_meme_admin(v, username):
 	if request.host == 'pcmemes.net' or (SITE_NAME == 'Drama' and v.admin_level > 2) or (request.host != 'rdrama.net' and request.host != 'pcmemes.net'):
 		user = get_user(username)
@@ -387,7 +387,7 @@ def purge_cache(v):
 
 
 @app.post("/admin/under_attack")
-@admin_level_required(2)
+@admin_level_required(3)
 def under_attack(v):
 	if environ.get('under_attack'):
 		environ["under_attack"] = ""
@@ -1217,7 +1217,7 @@ def admin_dump_cache(v):
 
 
 @app.get("/admin/banned_domains/")
-@admin_level_required(2)
+@admin_level_required(3)
 def admin_banned_domains(v):
 
 	banned_domains = g.db.query(BannedDomain).all()
@@ -1225,7 +1225,7 @@ def admin_banned_domains(v):
 
 @app.post("/admin/banned_domains")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")
-@admin_level_required(2)
+@admin_level_required(3)
 def admin_toggle_ban_domain(v):
 
 	domain=request.values.get("domain", "").strip()

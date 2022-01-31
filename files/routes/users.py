@@ -457,7 +457,7 @@ def message2(v, username):
 	if v.admin_level <= 1 and hasattr(user, 'is_blocked') and user.is_blocked:
 		return {"error": "This user is blocking you."}, 403
 
-	if v.shadowbanned: return {"message": "Message sent!"}
+	if v.shadowbanned and user.admin_level < 2: return {"message": "Message sent!"}
 
 	message = request.values.get("message", "").strip()[:10000].strip()
 
