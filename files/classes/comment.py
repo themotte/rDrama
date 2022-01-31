@@ -409,7 +409,7 @@ class Comment(Base):
 
 	@lazy
 	def collapse_for_user(self, v, path):
-		if self.author_id == v.id: return False
+		if v and self.author_id == v.id: return False
 
 		if path == '/admin/removed/comments': return False
 
