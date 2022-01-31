@@ -920,5 +920,7 @@ def handle_blackjack_action(cid, v):
 	elif action == 'stay':
 		blackjack.player_stayed(comment)
 	
-
+	g.db.add(comment)
+	g.db.add(v)
+	g.db.commit()
 	return { "message" : "..." }
