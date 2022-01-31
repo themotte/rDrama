@@ -1,4 +1,4 @@
-<script src="/static/assets/js/award_modal.js?a=220"></script>
+<script src="/static/assets/js/award_modal.js?a=221"></script>
 <div class="modal fade" id="awardModal" tabindex="-1" role="dialog" aria-labelledby="awardModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered awardmodal" role="document">
 		<div class="modal-content pb-4">
@@ -13,7 +13,7 @@
 					<input autocomplete="off" type="hidden" name="formkey", value="{{v.formkey}}">
 					<div class="card-columns award-columns awards-wrapper">
 						{% for award in v.user_awards %}
-							<a role="button" id="{{award.kind}}" class="card" onclick="pick('{{award.kind}}')">
+							<a role="button" id="{{award.kind}}" class="card" onclick="pick('{{award.kind}}', {{award.price}} < {{v.procoins}}, {{award.price}} < {{v.coins}})">
 								<i class="{{award.icon}} {{award.color}}"></i>
 								<div class="pt-2" style="font-weight: bold; font-size: 14px; color:#E1E1E1">{{award.title}}</div>
 								<div class="text-muted"><span id="{{award.kind}}-owned">{{award.owned}}</span> owned</div>
