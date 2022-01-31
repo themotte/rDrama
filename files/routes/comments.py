@@ -5,6 +5,7 @@ from files.helpers.images import *
 from files.helpers.const import *
 from files.classes import *
 from files.routes.front import comment_idlist
+from files.routes.static import marsey_list
 from pusher_push_notifications import PushNotifications
 from flask import *
 from files.__main__ import app, limiter
@@ -201,7 +202,7 @@ def api_comment(v):
 					process_image(filename)
 				elif parent_post.id == 37833:
 					try:
-						badge_def = loads(body.lower())
+						badge_def = loads(body)
 						name = badge_def["name"]
 						badge = g.db.query(BadgeDef).filter_by(name=name).first()
 						if not badge:
@@ -213,8 +214,7 @@ def api_comment(v):
 						process_image(filename, 200)
 						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/badges/{badge.id}.webp"]})
 					except Exception as e:
-						print(e)
-						return {"error": "You didn't follow the format retard"}, 400
+						return {"error": e}, 400
 				elif v.admin_level > 2 and parent_post.id == 37838:
 					try:
 						marsey = loads(body.lower())
@@ -229,9 +229,9 @@ def api_comment(v):
 						copyfile(oldname, filename)
 						process_image(filename, 200)
 						requests.post(f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache', headers=CF_HEADERS, data={'files': [f"https://{request.host}/static/assets/images/emojis/{name}.webp"]})
+						cache.delete_memoized(marsey_list)
 					except Exception as e:
-						print(e)
-						return {"error": "You didn't follow the format retard"}, 400
+						return {"error": e}, 400
 			body += f"\n\n![]({image})"
 		elif file.content_type.startswith('video/'):
 			file.save("video.mp4")
@@ -566,9 +566,6 @@ def api_comment(v):
 	v.comment_count = g.db.query(Comment.id).filter(Comment.author_id == v.id, Comment.parent_submission != None).filter_by(is_banned=False, deleted_utc=0).count()
 	g.db.add(v)
 
-	parent_post.comment_count += 1
-	g.db.add(parent_post)
-
 	c.voted = 1
 	
 	if v.id == PIZZASHILL_ID:
@@ -592,14 +589,19 @@ def api_comment(v):
 		c.upvotes += 1
 		g.db.add(c)
 
-	slots = Slots(g)
-	slots.check_for_slots_command(body, v, c)
+	if not v.rehab:
+		slots = Slots(g)
+		slots.check_for_slots_command(body, v, c)
 
-	blackjack = Blackjack(g)
-	blackjack.check_for_blackjack_command(body, v, c)
+		blackjack = Blackjack(g)
+		blackjack.check_for_blackjack_command(body, v, c)
 
 	treasure = Treasure(g)
 	treasure.check_for_treasure(body, c)
+
+	if not c.slots_result and not c.blackjack_result:
+		parent_post.comment_count += 1
+		g.db.add(parent_post)
 
 	g.db.commit()
 

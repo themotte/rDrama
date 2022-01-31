@@ -45,10 +45,8 @@ class Slots:
 
 					from_user.coins += reward
 					from_user.winnings += reward
-					self.db.add(from_user)
 
 					from_comment.slots_result = f'{symbols} {text}'
-					self.db.add(from_comment)
 
 		if self.casino_word in in_text:
 			for word in in_text.split():
@@ -72,10 +70,8 @@ class Slots:
 
 					from_user.procoins += reward
 					from_user.winnings += reward
-					self.db.add(from_user)
 
 					from_comment.slots_result = f'{symbols} {text}'
-					self.db.add(from_comment)
 
 
 	def determine_payout(self):

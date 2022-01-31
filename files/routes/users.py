@@ -71,9 +71,14 @@ def upvoters(v, username):
 	users2 = []
 	for user in users: users2.append((user, votes[user.id]))
 
-	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
+	users = sorted(users2, key=lambda x: x[1], reverse=True)
+	
+	try:
+		pos = [x[0].id for x in users].index(v.id)
+		pos = (pos+1, users[pos][1])
+	except: pos = (len(users)+1, 0)
 
-	return render_template("voters.html", v=v, users=users, name='Up', name2=f'@{username} biggest simps')
+	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up', name2=f'@{username} biggest simps')
 
 @app.get("/@<username>/downvoters")
 @auth_required
@@ -90,9 +95,14 @@ def downvoters(v, username):
 	users2 = []
 	for user in users: users2.append((user, votes[user.id]))
 
-	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
+	users = sorted(users2, key=lambda x: x[1], reverse=True)
+	
+	try:
+		pos = [x[0].id for x in users].index(v.id)
+		pos = (pos+1, users[pos][1])
+	except: pos = (len(users)+1, 0)
 
-	return render_template("voters.html", v=v, users=users, name='Down', name2=f'@{username} biggest haters')
+	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'@{username} biggest haters')
 
 @app.get("/@<username>/upvoting")
 @auth_required
@@ -109,9 +119,14 @@ def upvoting(v, username):
 	users2 = []
 	for user in users: users2.append((user, votes[user.id]))
 
-	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
+	users = sorted(users2, key=lambda x: x[1], reverse=True)
+	
+	try:
+		pos = [x[0].id for x in users].index(v.id)
+		pos = (pos+1, users[pos][1])
+	except: pos = (len(users)+1, 0)
 
-	return render_template("voters.html", v=v, users=users, name='Up', name2=f'Who @{username} simps for')
+	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Up', name2=f'Who @{username} simps for')
 
 @app.get("/@<username>/downvoting")
 @auth_required
@@ -128,9 +143,14 @@ def downvoting(v, username):
 	users2 = []
 	for user in users: users2.append((user, votes[user.id]))
 
-	users = sorted(users2, key=lambda x: x[1], reverse=True)[:25]
+	users = sorted(users2, key=lambda x: x[1], reverse=True)
+	
+	try:
+		pos = [x[0].id for x in users].index(v.id)
+		pos = (pos+1, users[pos][1])
+	except: pos = (len(users)+1, 0)
 
-	return render_template("voters.html", v=v, users=users, name='Down', name2=f'Who @{username} hates')
+	return render_template("voters.html", v=v, users=users[:25], pos=pos, name='Down', name2=f'Who @{username} hates')
 
 @app.post("/pay_rent")
 @limiter.limit("1/second;30/minute;200/hour;1000/day")

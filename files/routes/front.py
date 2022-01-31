@@ -94,7 +94,12 @@ def notifications(v):
 			c.is_blocked = False
 			c.is_blocking = False
 			if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
-				c.replies = []
+				replies = []
+				for x in c.replies:
+					if x.author_id == v.id:
+						x.voted = 1
+						replies.append(x)
+				c.replies = replies
 				while c.parent_comment and c.parent_comment.author_id == v.id:
 					parent = c.parent_comment
 					if c not in parent.replies2:
@@ -105,7 +110,12 @@ def notifications(v):
 					listing.append(c)
 					c.replies = c.replies2
 			elif c.parent_submission:
-				c.replies = []
+				replies = []
+				for x in c.replies:
+					if x.author_id == v.id:
+						x.voted = 1
+						replies.append(x)
+				c.replies = replies
 				if c not in listing:
 					listing.append(c)
 			else:
@@ -234,6 +244,14 @@ def front_all(v):
 			if badge: g.db.delete(badge)
 			g.db.commit()
 
+		if v.rehab and v.rehab < time.time():
+			v.rehab = None
+			send_repeatable_notification(v.id, "Your rehab has finished!")
+			g.db.add(v)
+			badge = v.has_badge(109)
+			if badge: g.db.delete(badge)
+			g.db.commit()
+
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
@@ -284,7 +302,7 @@ def frontlist(v=None, sort="hot", page=1, t="all", ids_only=True, filter_words='
 
 	if sort == "hot":
 		ti = int(time.time()) + 3600
-		posts = posts.order_by(-1000000*(Submission.realupvotes + 1)/(func.power(((ti - Submission.created_utc)/1000), 1.23)))
+		posts = posts.order_by(-1000000*(Submission.realupvotes + 1 + Submission.comment_count/5)/(func.power(((ti - Submission.created_utc)/1000), 1.23)))
 	elif sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
 	elif sort == "old":

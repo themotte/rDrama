@@ -179,7 +179,9 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		comments = [c[0] for c in comments.all()]
+		first = [c[0] for c in comments.filter(Comment.slots_result == None, Comment.blackjack_result == None).all()]
+		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None)).all()]
+		comments = first + second
 	else:
 		pinned = g.db.query(Comment).filter(Comment.parent_submission == post.id, Comment.is_pinned != None).all()
 
@@ -196,7 +198,9 @@ def post_id(pid, anything=None, v=None):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		comments = comments.all()
+		first = comments.filter(Comment.slots_result == None, Comment.blackjack_result == None).all()
+		second = comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None)).all()
+		comments = first + second
 
 	offset = 0
 
@@ -298,9 +302,10 @@ def viewmore(v, pid, sort, offset):
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
 
-		comments = comments.offset(offset)
-
-		comments = [c[0] for c in comments.all()]
+		first = [c[0] for c in comments.filter(Comment.slots_result == None, Comment.blackjack_result == None).all()]
+		second = [c[0] for c in comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None)).all()]
+		comments = first + second
+		comments = comments[offset:]
 	else:
 		comments = g.db.query(Comment).join(User, User.id == Comment.author_id).filter(User.shadowbanned == None, Comment.parent_submission == pid, Comment.author_id.notin_((AUTOPOLLER_ID, AUTOBETTER_ID)), Comment.level == 1, Comment.is_pinned == None)
 
@@ -314,10 +319,11 @@ def viewmore(v, pid, sort, offset):
 			comments = comments.order_by(Comment.realupvotes.desc())
 		elif sort == "bottom":
 			comments = comments.order_by(Comment.upvotes - Comment.downvotes)
-
-		comments = comments.offset(offset)
 		
-		comments = comments.all()
+		first = comments.filter(Comment.slots_result == None, Comment.blackjack_result == None).all()
+		second = comments.filter(or_(Comment.slots_result != None, Comment.blackjack_result != None)).all()
+		comments = first + second
+		comments = comments[offset:]
 
 	comments2 = []
 	count = 0
@@ -661,7 +667,7 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 
-	if SITE == 'rdrama.net' and random.random() < 0.05:
+	if SITE == 'rdrama.net' and random.random() < 0.02:
 		for t in ("submission","comment"):
 			for term in ('rdrama','freeghettohoes.biz','marsey'):
 				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={term}&size=10').json()["data"]:

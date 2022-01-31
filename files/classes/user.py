@@ -50,6 +50,7 @@ class User(Base):
 	verified = Column(String)
 	verifiedcolor = Column(String)
 	marseyawarded = Column(Integer)
+	rehab = Column(Integer)
 	longpost = Column(Integer)
 	winnings = Column(Integer, default=0)
 	unblockable = Column(Boolean)
