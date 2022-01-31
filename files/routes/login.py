@@ -316,7 +316,7 @@ def sign_up_post(v):
 				g.db.add(new_badge)
 
 
-	id_1 = g.db.query(User.id).filter_by(id=7).count()
+	id_1 = g.db.query(User.id).filter_by(id=8).count()
 	users_count = g.db.query(User.id).count()
 	if id_1 == 0 and users_count == 7: admin_level=3
 	else: admin_level=0
