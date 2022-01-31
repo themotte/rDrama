@@ -51,7 +51,7 @@ def notifications(v):
 	elif posts:
 		notifications = v.notifications.join(Notification.comment).filter(Comment.author_id == AUTOJANNY_ID).order_by(Notification.id.desc()).offset(25 * (page - 1)).limit(101).all()
 
-		listing = []
+		listing = set()
 
 		for index, x in enumerate(notifications[:100]):
 			c = x.comment
@@ -60,7 +60,7 @@ def notifications(v):
 				x.read = True
 				c.unread = True
 				g.db.add(x)
-			listing.append(c)
+			listing.add(c)
 
 		g.db.commit()
 
@@ -89,16 +89,18 @@ def notifications(v):
 		g.db.commit()
 		
 	if not posts:
-		listing = []
+		listing = set()
+		all = set()
 		for c in comments:
 			c.is_blocked = False
 			c.is_blocking = False
 			if c.parent_submission and c.parent_comment and c.parent_comment.author_id == v.id:
-				replies = []
+				replies = set()
 				for x in c.replies:
-					if x.author_id == v.id:
+					if x.id not in all and x.author_id == v.id:
 						x.voted = 1
-						replies.append(x)
+						replies.add(x)
+						all.add(x.id)
 				c.replies = replies
 				while c.parent_comment and c.parent_comment.author_id == v.id:
 					parent = c.parent_comment
@@ -106,25 +108,30 @@ def notifications(v):
 						parent.replies2 = parent.replies2 + [c]
 						parent.replies = parent.replies2
 					c = parent
-				if c not in listing:
-					listing.append(c)
+				if c.id not in all and c not in listing:
+					all.add(c.id)
+					listing.add(c)
 					c.replies = c.replies2
 			elif c.parent_submission:
-				replies = []
+				replies = set()
 				for x in c.replies:
-					if x.author_id == v.id:
+					if x.id not in all and x.author_id == v.id:
 						x.voted = 1
-						replies.append(x)
+						replies.add(x)
+						all.add(x.id)
 				c.replies = replies
-				if c not in listing:
-					listing.append(c)
+				if x.id not in all and c not in listing:
+					all.add(c.id)
+					listing.add(c)
 			else:
 				if c.parent_comment:
 					while c.level > 1:
+						all.add(c.id)
 						c = c.parent_comment
 
-				if c not in listing:
-					listing.append(c)
+				if c.id not in all and c not in listing:
+					all.add(c.id)
+					listing.add(c)
 
 	if request.headers.get("Authorization"): return {"data":[x.json for x in listing]}
 
