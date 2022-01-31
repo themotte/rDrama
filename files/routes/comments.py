@@ -202,7 +202,7 @@ def api_comment(v):
 					process_image(filename)
 				elif parent_post.id == 37833:
 					try:
-						badge_def = loads(body.lower())
+						badge_def = loads(body)
 						name = badge_def["name"]
 						badge = g.db.query(BadgeDef).filter_by(name=name).first()
 						if not badge:
@@ -589,11 +589,12 @@ def api_comment(v):
 		c.upvotes += 1
 		g.db.add(c)
 
-	slots = Slots(g)
-	slots.check_for_slots_command(body, v, c)
+	if not v.rehab:
+		slots = Slots(g)
+		slots.check_for_slots_command(body, v, c)
 
-	blackjack = Blackjack(g)
-	blackjack.check_for_blackjack_command(body, v, c)
+		blackjack = Blackjack(g)
+		blackjack.check_for_blackjack_command(body, v, c)
 
 	treasure = Treasure(g)
 	treasure.check_for_treasure(body, c)

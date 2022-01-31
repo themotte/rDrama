@@ -667,7 +667,7 @@ def thumbnail_thread(pid):
 	db.add(post)
 	db.commit()
 
-	if SITE == 'rdrama.net' and random.random() < 0.05:
+	if SITE == 'rdrama.net' and random.random() < 0.02:
 		for t in ("submission","comment"):
 			for term in ('rdrama','freeghettohoes.biz','marsey'):
 				for i in requests.get(f'https://api.pushshift.io/reddit/{t}/search?html_decode=true&q={term}&size=10').json()["data"]:

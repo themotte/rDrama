@@ -54,6 +54,7 @@ def format_all(player_hand, dealer_hand, deck, status, wager):
 
 class Blackjack:
 	command_word = "!blackjack"
+	casino_word = "!blackjackmb"
 	minimum_bet = 100
 	maximum_bet = INFINITY
 
@@ -94,9 +95,6 @@ class Blackjack:
 					from_comment.blackjack_result = format_all(
 						player_hand, dealer_hand, rest_of_deck, status, wager)
 
-					self.db.add(from_comment)
-					self.db.commit()
-
 	def player_hit(self, from_comment):
 		player_hand, dealer_hand, deck, status, wager = from_comment.blackjack_result.split(
 			"_")
@@ -112,9 +110,6 @@ class Blackjack:
 
 		from_comment.blackjack_result = format_all(
 			player_hand, dealer_hand, deck, status, wager)
-
-		self.db.add(from_comment)
-		self.db.commit()
 
 		if (player_value == 21):
 			self.player_stayed(from_comment)
@@ -143,9 +138,6 @@ class Blackjack:
 		from_comment.blackjack_result = format_all(
 			player_hand, dealer_hand, deck, status, wager)
 
-		self.db.add(from_comment)
-		self.db.commit()
-
 		self.apply_game_result(from_comment, wager, status)
 
 	def apply_game_result(self, from_comment, wager, result):
@@ -162,6 +154,3 @@ class Blackjack:
 			user = from_comment.author
 			user.coins += reward
 			user.winnings += reward
-
-			self.db.add(user)
-			self.db.commit()

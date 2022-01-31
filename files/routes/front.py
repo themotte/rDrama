@@ -244,6 +244,14 @@ def front_all(v):
 			if badge: g.db.delete(badge)
 			g.db.commit()
 
+		if v.rehab and v.rehab < time.time():
+			v.rehab = None
+			send_repeatable_notification(v.id, "Your rehab has finished!")
+			g.db.add(v)
+			badge = v.has_badge(109)
+			if badge: g.db.delete(badge)
+			g.db.commit()
+
 	if request.headers.get("Authorization"): return {"data": [x.json for x in posts], "next_exists": next_exists}
 	return render_template("home.html", v=v, listing=posts, next_exists=next_exists, sort=sort, t=t, page=page)
 
