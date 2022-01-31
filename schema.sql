@@ -811,7 +811,8 @@ CREATE TABLE public.users (
     lootboxes_bought integer,
     progressivestack integer,
     winnings integer,
-    patron_utc integer
+    patron_utc integer,
+    rehab integer
 );
 
 
