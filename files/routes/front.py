@@ -113,7 +113,7 @@ def notifications(v):
 					listing.append(c)
 					c.replies = c.replies2
 			elif c.parent_submission:
-				replies = set()
+				replies = []
 				for x in c.replies:
 					if x.id not in all and x.author_id == v.id:
 						x.voted = 1
