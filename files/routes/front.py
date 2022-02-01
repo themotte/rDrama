@@ -92,41 +92,39 @@ def notifications(v):
 				replies = []
 				for x in c.replies:
 					if x.id not in all and x.author_id == v.id:
-						all.add(x.id)
 						replies.append(x)
+						all.add(x.id)
 				c.replies = replies
-				all.add(c.id)
 				while c.parent_comment and (c.parent_comment.author_id == v.id or c.parent_comment in comments):
 					parent = c.parent_comment
 					if c not in parent.replies2:
 						parent.replies2 = parent.replies2 + [c]
+						all.add(c.id)
 						parent.replies = parent.replies2
 					c = parent
-					all.add(c.id)
 				if c.id not in all and c not in listing:
-					all.add(c.id)
 					listing.append(c)
+					all.add(c.id)
 					c.replies = c.replies2
 			elif c.parent_submission:
 				if c.id not in all and c not in listing:
-					all.add(c.id)
 					listing.append(c)
+					all.add(c.id)
 					replies = []
 					for x in c.replies:
 						if x.id not in all and x.author_id == v.id:
-							all.add(x.id)
 							replies.append(x)
+							all.add(x.id)
 					c.replies = replies
 			else:
 				if c.parent_comment:
-					all.add(c.id)
 					while c.level > 1:
-						c = c.parent_comment
 						all.add(c.id)
+						c = c.parent_comment
 
 				if c.id not in all and c not in listing:
-					all.add(c.id)
 					listing.append(c)
+					all.add(c.id)
 
 		comments = get_comments(list(all), v=v)
 
