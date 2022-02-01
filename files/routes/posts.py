@@ -520,7 +520,7 @@ def edit_post(pid, v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
-		elif 'nigg' in f'{p.body}{p.title}'.lower() and not v.nwordpass:
+		elif request.host == 'rdrama.net' and 'nigg' in f'{p.body}{p.title}'.lower() and not v.nwordpass:
 
 			p.is_banned = True
 			p.ban_reason = "AutoJanny"
@@ -1112,7 +1112,7 @@ def submit_post(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 
-	elif 'nigg' in f'{new_post.body}{new_post.title}'.lower() and not v.nwordpass:
+	elif request.host == 'rdrama.net' and 'nigg' in f'{new_post.body}{new_post.title}'.lower() and not v.nwordpass:
 
 		new_post.is_banned = True
 		new_post.ban_reason = "AutoJanny"

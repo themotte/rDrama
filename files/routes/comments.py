@@ -416,7 +416,7 @@ def api_comment(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 	
-	elif 'nigg' in c.body.lower() and not v.nwordpass:
+	elif request.host == 'rdrama.net' and 'nigg' in c.body.lower() and not v.nwordpass:
 
 		c.is_banned = True
 		c.ban_reason = "AutoJanny"
@@ -789,7 +789,7 @@ def edit_comment(cid, v):
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
 
-		elif 'nigg' in c.body.lower() and not v.nwordpass:
+		elif request.host == 'rdrama.net' and 'nigg' in c.body.lower() and not v.nwordpass:
 
 			c.is_banned = True
 			c.ban_reason = "AutoJanny"
