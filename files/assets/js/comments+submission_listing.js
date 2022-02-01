@@ -53,7 +53,8 @@ function popclick(author) {
 document.addEventListener("click", function(){
     active = document.activeElement.getAttributeNode("class");
     if (!(active && active.nodeValue == "user-name text-decoration-none")){
-        let popfix = document.getElementById("popover-fix")
-        if (popfix) document.body.removeChild(popfix);
+        let pop = document.getElementByClassName("popover")
+        pop = pop[pop.length-1]
+        if (pop) document.body.removeChild(pop);
     }
 });
