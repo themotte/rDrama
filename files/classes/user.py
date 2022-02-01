@@ -125,7 +125,8 @@ class User(Base):
 	ban_evade = Column(Integer, default=0)
 	original_username = deferred(Column(String))
 	referred_by = Column(Integer, ForeignKey("users.id"))
-
+	nwordpass = Column(Boolean)
+	
 	badges = relationship("Badge", viewonly=True)
 	subscriptions = relationship("Subscription", viewonly=True)
 	following = relationship("Follow", primaryjoin="Follow.user_id==User.id", viewonly=True)
@@ -438,7 +439,7 @@ class User(Base):
 		if self.profileurl: 
 			if self.profileurl.startswith('/'): return SITE_FULL + self.profileurl
 			return self.profileurl
-		if SITE_NAME == 'Drama': return f"{SITE_FULL}/static/assets/images/defaultpictures/{random.randint(1, 150)}.webp?a=1008"
+		if SITE_NAME == 'Drama': return f"{SITE_FULL}/static/assets/images/defaultpictures/bhm/{random.randint(1, 25)}.webp?a=1008"
 		return f"{SITE_FULL}/static/assets/images/default-profile-pic.webp?a=1008"
 
 	@lazy

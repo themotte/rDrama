@@ -415,7 +415,37 @@ def api_comment(v):
 
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
+	
+	if 'nigg' in body and not v.nwordpass:
 
+		no_pass_phrase = """Sorry whiteboy, we're gonna need to see some ID before you start throwin that word around like it's nothing.\n\nTake a 30 minute time-out and come back when you've learned your lesson and/or paid reparations (by purchasing a BIPOC Approved™ Rdrama NWord Pass© from the shop) \n\n*This is an automated message; if you need help,
+		you can message us [here](/contact).*"""
+
+		body_jannied_html = sanitize(no_pass_phrase)
+
+		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
+			parent_submission=parent_submission,
+			distinguish_level=6,
+			parent_comment_id=c.id,
+			level=level+1,
+			is_bot=True,
+			body_html=body_jannied_html,
+			top_comment_id=c.top_comment_id,
+			ghost=parent_post.ghost
+			)
+
+		g.db.add(c_jannied)
+		g.db.flush()
+
+		v.ban(reason="White people nonsense.",
+				days=0.02)
+
+		text = "Your account has been suspended for 30 minutes for the following reason:\n\n> Unsacntioned Racism"
+		send_repeatable_notification(v.id, text)		
+
+		n = Notification(comment_id=c_jannied.id, user_id=v.id)
+		g.db.add(n)	
+		
 	if request.host == "rdrama.net" and len(c.body) >= 1000 and "<" not in body and "</blockquote>" not in body_html:
 	
 		body = random.choice(LONGPOST_REPLIES)
