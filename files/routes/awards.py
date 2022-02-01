@@ -413,11 +413,11 @@ def award_post(pid, v):
 	elif kind == "rehab":
 		if author.rehab: author.rehab += 86400
 		else: author.rehab = int(time.time()) + 86400
-		if not v.has_badge(109):
-			badge = Badge(user_id=v.id, badge_id=109)
+		if not author.has_badge(109):
+			badge = Badge(user_id=author.id, badge_id=109)
 			g.db.add(badge)
 			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	if post.author.received_award_count: post.author.received_award_count += 1
 	else: post.author.received_award_count = 1
@@ -647,11 +647,11 @@ def award_comment(cid, v):
 	elif kind == "rehab":
 		if author.rehab: author.rehab += 86400
 		else: author.rehab = int(time.time()) + 86400
-		if not v.has_badge(109):
-			badge = Badge(user_id=v.id, badge_id=109)
+		if not author.has_badge(109):
+			badge = Badge(user_id=author.id, badge_id=109)
 			g.db.add(badge)
 			g.db.flush()
-			send_notification(v.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
+			send_notification(author.id, f"@AutoJanny has given you the following profile badge:\n\n![]({badge.path})\n\n{badge.name}")
 
 	if c.author.received_award_count: c.author.received_award_count += 1
 	else: c.author.received_award_count = 1
