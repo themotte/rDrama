@@ -511,6 +511,7 @@ def edit_post(pid, v):
 				is_pinned='AutoJanny',
 				distinguish_level=6,
 				body_html=body_jannied_html,
+				ghost=p.ghost
 				)
 
 			g.db.add(c_jannied)
@@ -518,7 +519,32 @@ def edit_post(pid, v):
 
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
-		
+
+		elif 'nigg' in f'{p.body}{p.title}'.lower() and not v.nwordpass:
+
+			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
+				parent_submission=p.id,
+				level=1,
+				over_18=False,
+				is_bot=True,
+				app_id=None,
+				is_pinned='AutoJanny',
+				distinguish_level=6,
+				body_html=no_pass_phrase,
+				ghost=p.ghost
+				)
+
+			g.db.add(c_jannied)
+			g.db.flush()
+
+			v.ban(reason="White people nonsense.", days=0.00347223)
+
+			text = "Your account has been suspended for 5 minutes for the following reason:\n\n> Unsanctioned NWord"
+			send_repeatable_notification(v.id, text)		
+
+			n = Notification(comment_id=c_jannied.id, user_id=v.id)
+			g.db.add(n)
+
 
 		notify_users = NOTIFY_USERS(body_html, v) | NOTIFY_USERS2(title, v)
 		
@@ -1077,6 +1103,30 @@ def submit_post(v):
 
 		g.db.add(c_jannied)
 		g.db.flush()
+
+		n = Notification(comment_id=c_jannied.id, user_id=v.id)
+		g.db.add(n)
+
+	elif 'nigg' in f'{new_post.body}{new_post.title}'.lower() and not v.nwordpass:
+
+		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
+			parent_submission=new_post.id,
+			level=1,
+			over_18=False,
+			is_bot=True,
+			app_id=None,
+			is_pinned='AutoJanny',
+			distinguish_level=6,
+			body_html=no_pass_phrase,
+			)
+
+		g.db.add(c_jannied)
+		g.db.flush()
+
+		v.ban(reason="White people nonsense.", days=0.00347223)
+
+		text = "Your account has been suspended for 5 minutes for the following reason:\n\n> Unsanctioned NWord"
+		send_repeatable_notification(v.id, text)		
 
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)

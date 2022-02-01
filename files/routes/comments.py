@@ -416,12 +416,7 @@ def api_comment(v):
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
 		g.db.add(n)
 	
-	if 'nigg' in body and not v.nwordpass:
-
-		no_pass_phrase = """Sorry whiteboy, we're gonna need to see some ID before you start throwin that word around like it's nothing.\n\nTake a 30 minute time-out and come back when you've learned your lesson and/or paid reparations (by purchasing a BIPOC Approved™ Rdrama NWord Pass© from the shop) \n\n*This is an automated message; if you need help,
-		you can message us [here](/contact).*"""
-
-		body_jannied_html = sanitize(no_pass_phrase)
+	elif 'nigg' in c.body.lower() and not v.nwordpass:
 
 		c_jannied = Comment(author_id=NOTIFICATIONS_ID,
 			parent_submission=parent_submission,
@@ -429,7 +424,7 @@ def api_comment(v):
 			parent_comment_id=c.id,
 			level=level+1,
 			is_bot=True,
-			body_html=body_jannied_html,
+			body_html=no_pass_phrase,
 			top_comment_id=c.top_comment_id,
 			ghost=parent_post.ghost
 			)
@@ -437,10 +432,9 @@ def api_comment(v):
 		g.db.add(c_jannied)
 		g.db.flush()
 
-		v.ban(reason="White people nonsense.",
-				days=0.02)
+		v.ban(reason="White people nonsense.", days=0.00347223)
 
-		text = "Your account has been suspended for 30 minutes for the following reason:\n\n> Unsacntioned Racism"
+		text = "Your account has been suspended for 5 minutes for the following reason:\n\n> Unsanctioned NWord"
 		send_repeatable_notification(v.id, text)		
 
 		n = Notification(comment_id=c_jannied.id, user_id=v.id)
@@ -788,16 +782,39 @@ def edit_comment(cid, v):
 				is_bot=True,
 				body_html=body_jannied_html,
 				top_comment_id=c.top_comment_id,
-				ghost=c.ghost
+				ghost=c.post.ghost
 				)
 
 			g.db.add(c_jannied)
 			g.db.flush()
 
-
-
 			n = Notification(comment_id=c_jannied.id, user_id=v.id)
 			g.db.add(n)
+
+		elif 'nigg' in c.body.lower() and not v.nwordpass:
+
+			c_jannied = Comment(author_id=NOTIFICATIONS_ID,
+				parent_submission=c.parent_submission,
+				distinguish_level=6,
+				parent_comment_id=c.id,
+				level=c.level+1,
+				is_bot=True,
+				body_html=no_pass_phrase,
+				top_comment_id=c.top_comment_id,
+				ghost=c.post.ghost
+				)
+
+			g.db.add(c_jannied)
+			g.db.flush()
+
+			v.ban(reason="White people nonsense.", days=0.00347223)
+
+			text = "Your account has been suspended for 5 minutes for the following reason:\n\n> Unsanctioned NWord"
+			send_repeatable_notification(v.id, text)		
+
+			n = Notification(comment_id=c_jannied.id, user_id=v.id)
+			g.db.add(n)	
+
 
 		if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())
 
