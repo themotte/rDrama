@@ -117,7 +117,7 @@ def notifications(v):
 						replies.append(x)
 						all.add(x.id)
 				c.replies = replies
-				if c.id not in all and c not in listing:
+				if c not in listing:
 					all.add(c.id)
 					listing.append(c)
 			else:
