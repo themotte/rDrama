@@ -4003,7 +4003,7 @@ pre .com, code .com {
 }
 @media (min-width: 991.98px) {
     .gif-categories img {
-        height: 300px;
+        height: 200px;
     }
 }
 .gif-categories img:hover {
