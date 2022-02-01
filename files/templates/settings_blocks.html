@@ -16,7 +16,7 @@
 			<span>
 				{{error}}
 			</span>
-			<button role="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+			<button class="close" data-bs-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true"><i class="far fa-times"></i></span>
 			</button>
 		</div>
@@ -98,7 +98,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Block users</h5>
-					<button role="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<button class="close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true"><i class="far fa-times"></i></span>
 					</button>
 				</div>
@@ -107,8 +107,8 @@
 					<input autocomplete="off" type="text" name="username" placeholder="enter username" id="exile-username" class="form-control" maxlength=25 required>
 				</div>
 				<div class="modal-footer">
-					<button role="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
-					<button role="button" class="btn btn-primary" id="exileUserButton" onclick="block_user()">Block user</button>
+					<button class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+					<button class="btn btn-primary" id="exileUserButton" onclick="block_user()">Block user</button>
 				</div>
 			</div>
 		</form>
